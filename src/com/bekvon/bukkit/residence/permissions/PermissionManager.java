@@ -10,6 +10,7 @@ import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -29,12 +30,14 @@ public class PermissionManager {
     protected static PermissionHandler authority;
     protected static String defaultGroup;
     protected Map<String,PermissionGroup> groups;
+    protected Map<String,String> playersGroup;
 
     public PermissionManager(Configuration config)
     {
         try
         {
         groups = Collections.synchronizedMap(new HashMap<String,PermissionGroup>());
+        playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
         boolean enable = config.getBoolean("EnablePermissions", true);
         this.readConfig(config);
         if(enable)
@@ -66,15 +69,18 @@ public class PermissionManager {
 
     public String getGroupNameByPlayer(Player player)
     {
-        return this.getGroupNameByPlayer(player.getName().toLowerCase(), player.getWorld().getName());
+        return this.getGroupNameByPlayer(player.getName(), player.getWorld().getName());
     }
 
     public String getGroupNameByPlayer(String player, String world) {
+        player = player.toLowerCase();
+        if(playersGroup.containsKey(player))
+            return playersGroup.get(player);
         if (authority == null) {
             return defaultGroup;
         } else {
-            String group = authority.getGroup(world, player);
-            if (group == null) {
+            String group = authority.getGroup(world, player).toLowerCase();
+            if (group == null || !groups.containsKey(group)) {
                 return defaultGroup;
             } else {
                 return group;
@@ -124,7 +130,11 @@ public class PermissionManager {
         {
             groups.put(defaultGroup, new PermissionGroup(defaultGroup));
         }
-        
+        List<String> keys = config.getKeys("PlayerGroupAssigments");
+        for(String key : keys)
+        {
+            playersGroup.put(key.toLowerCase(), config.getString("PlayerGroupAssignments."+key, defaultGroup).toLowerCase());
+        }
     }
 
     public boolean hasGroup(String group)

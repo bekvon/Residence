@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.bekvon.bukkit.residence.permissions;
+package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
