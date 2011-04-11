@@ -574,6 +574,7 @@ public class Residence extends JavaPlugin {
                     player.sendMessage("§amirror §6[source] [target]§3 - clone residence permissions.");
                     player.sendMessage("§amarket§3 - buy / sell residence /res market ? for details.");
                     player.sendMessage("§alease§3 - lease management /res lease ? for details.");
+                    player.sendMessage("§alists§3 - predefined permission lists /res lists ? for details.");
                     player.sendMessage("§aversion§3 - show version.");
                     return true;
                 } else if (args[0].equals("unstuck")) {
