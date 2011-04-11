@@ -68,7 +68,7 @@ public class TransactionManager {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
             }
-            if(!Residence.getPermissionManager().getGroup(player).canSellLand() && gm.hasAuthority(player, "residence.admin", player.isOp()))
+            if(!Residence.getPermissionManager().getGroup(player).canSellLand() && !Residence.getPermissionManager().isResidenceAdmin(player))
             {
                 player.sendMessage("§cYou dont have permission to sell plots.");
                 return;
