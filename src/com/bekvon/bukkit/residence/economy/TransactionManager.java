@@ -256,7 +256,8 @@ public class TransactionManager {
 
     public static TransactionManager load(Map root, PermissionManager p, ResidenceManager r) {
         TransactionManager tman = new TransactionManager(r,p);
-        tman.sellAmount = Collections.synchronizedMap(root);
+        if(root!=null)
+            tman.sellAmount = Collections.synchronizedMap(root);
         return tman;
     }
 }

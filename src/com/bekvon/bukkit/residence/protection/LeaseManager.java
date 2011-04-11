@@ -179,7 +179,8 @@ public class LeaseManager {
     public static LeaseManager load(Map root,ResidenceManager m)
     {
         LeaseManager l = new LeaseManager(m);
-        l.leaseExpireTime = Collections.synchronizedMap(root);
+        if(root!=null)
+            l.leaseExpireTime = Collections.synchronizedMap(root);
         return l;
     }
 }

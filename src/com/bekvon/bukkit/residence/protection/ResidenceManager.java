@@ -323,16 +323,19 @@ public class ResidenceManager {
     public static ResidenceManager load(Map<String,Object> root)
     {
         ResidenceManager resm = new ResidenceManager();
-        for(Entry<String, Object> res : root.entrySet())
+        if(root != null)
         {
-            try
+            for(Entry<String, Object> res : root.entrySet())
             {
-                resm.residences.put(res.getKey(), ClaimedResidence.load((Map<String, Object>) res.getValue(), null));
-            }
-            catch (Exception ex)
-            {
-                System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage());
-                //Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
+                try
+                {
+                    resm.residences.put(res.getKey(), ClaimedResidence.load((Map<String, Object>) res.getValue(), null));
+                }
+                catch (Exception ex)
+                {
+                    System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage());
+                    //Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         return resm;
