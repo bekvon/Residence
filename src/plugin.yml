@@ -1,0 +1,12 @@
+name: Residence
+main: com.bekvon.bukkit.residence.Residence
+version: v2.0 ALPHA
+description: Cuboid Residence Plugin
+author: bekvon
+commands:
+  res:
+    description: Manage Residences
+    usage: §c/res ? for more info
+  resadmin:
+    description: Residence admin functions.
+    usage: §c/resadmin ? for more info
