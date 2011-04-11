@@ -5,19 +5,17 @@
 package com.bekvon.bukkit.residence;
 
 import com.bekvon.bukkit.residence.protection.LeaseManager;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
-import com.bekvon.bukkit.residence.permissions.PermissionListManager;
+import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.PermissionList;
-import com.bekvon.bukkit.residence.protection.PermissionList.FlagState;
 import com.nijiko.coelho.iConomy.iConomy;
 import java.io.File;
 import java.util.logging.Level;
