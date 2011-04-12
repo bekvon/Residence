@@ -13,10 +13,12 @@ import org.bukkit.util.config.Configuration;
 public class ConfigManager {
 
     private boolean worldbuild;
-    private boolean worldfire;
+    private boolean worldignite;
+    private boolean worldfirespread;
     private boolean worlduse;
     private boolean worlddamage;
-    private boolean worldexplosions;
+    private boolean worldcreeper;
+    private boolean worldtnt;
     private boolean worldpvp;
     private String defaultGroup;
     private boolean useLeases;
@@ -33,10 +35,12 @@ public class ConfigManager {
         defaultGroup = config.getString("DefaultGroupName", "default");
         adminsOnly = config.getBoolean("AdminsOnly", false);
         worldbuild = config.getBoolean("WorldFlags.build", true);
-        worldfire = config.getBoolean("WorldFlags.fire", true);
+        worldignite = config.getBoolean("WorldFlags.ignite", true);
+        worldfirespread = config.getBoolean("WorldFlags.firespread", true);
         worlduse = config.getBoolean("WorldFlags.use", true);
         worlddamage = config.getBoolean("WorldFlags.damage", true);
-        worldexplosions = config.getBoolean("WorldFlags.explosions", true);
+        worldcreeper = config.getBoolean("WorldFlags.creeper", true);
+        worldtnt = config.getBoolean("WorldFlags.tnt", true);
         worldpvp = config.getBoolean("WorldFlags.pvp", true);
         useLeases = config.getBoolean("UseLeaseSystem", false);
         enableBuySell = config.getBoolean("EnableBuySell", false);
@@ -66,17 +70,25 @@ public class ConfigManager {
     public boolean worldDamageEnabled() {
         return worlddamage;
     }
-
-    public boolean worldExplosionsEnabled() {
-        return worldexplosions;
+    public boolean worldCreeperEnabled()
+    {
+        return worldcreeper;
+    }
+    public boolean worldTNTEnabled()
+    {
+        return worldtnt;
     }
 
     public boolean worldUseEnabled() {
         return worlduse;
     }
 
-    public boolean worldFireEnabled() {
-        return worldfire;
+    public boolean worldFireSpreadEnabled() {
+        return worldfirespread;
+    }
+    public boolean worldIgniteEnabled()
+    {
+        return worldignite;
     }
 
     public boolean worldBuildEnabled() {
@@ -86,4 +98,5 @@ public class ConfigManager {
     {
         return allowEmptyResidences;
     }
+
 }

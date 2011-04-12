@@ -100,11 +100,11 @@ public class PermissionList {
     }
 
     public boolean checkValidFlag(String flag, boolean globalflag) {
-        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp")) {
+        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite")) {
             return true;
         }
         if (globalflag) {
-            if (flag.equals("pvp") || flag.equals("damage") || flag.equals("monsters") || flag.equals("fire") || flag.equals("tp") || flag.equals("explosions") || flag.equals("flow")) {
+            if (flag.equals("pvp") || flag.equals("damage") || flag.equals("monsters") || flag.equals("firespread") || flag.equals("tnt") || flag.equals("creeper") || flag.equals("flow")) {
                 return true;
             }
         } else {

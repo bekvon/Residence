@@ -589,4 +589,51 @@ public class ClaimedResidence {
     {
         return areas.size();
     }
+
+    public void renameSubzone(Player player, String oldName, String newName)
+    {
+        newName = newName.replace(".", "_");
+        newName = newName.replace(":", "_");
+        ClaimedResidence res = subzones.get(oldName);
+        if(!res.getPermissions().hasResidencePermission(player, true))
+        {
+            player.sendMessage("§cYou dont have permission...");
+            return;
+        }
+        if(res==null)
+        {
+            player.sendMessage("§cInvalid Subzone...");
+            return;
+        }
+        if(subzones.containsKey(newName))
+        {
+            player.sendMessage("§cNew subzone name already exists...");
+            return;
+        }
+        subzones.put(newName, res);
+        subzones.remove(oldName);
+        player.sendMessage("§aRenamed " + oldName + " to " + newName + "...");
+    }
+    public void renameArea(Player player, String oldName, String newName)
+    {
+        newName = newName.replace(".", "_");
+        newName = newName.replace(":", "_");
+        if(perms.hasResidencePermission(player, true))
+        {
+            if(areas.containsKey(newName))
+            {
+                player.sendMessage("§cArea name already exists...");
+                return;
+            }
+            CuboidArea area = areas.get(oldName);
+            if(area == null)
+            {
+                player.sendMessage("§cInvalid Area Name...");
+                return;
+            }
+            areas.put(newName, area);
+            areas.remove(oldName);
+            player.sendMessage("§aRenamed area " + oldName + " to " + newName);
+        }
+    }
 }

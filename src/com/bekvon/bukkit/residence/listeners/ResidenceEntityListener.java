@@ -7,8 +7,10 @@ package com.bekvon.bukkit.residence.listeners;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -37,12 +39,10 @@ public class ResidenceEntityListener extends EntityListener {
     public void onEntityCombust(EntityCombustEvent event) {
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getEntity().getLocation());
         if (res != null) {
-            if (!res.getPermissions().has("fire", true)) {
+            if (!res.getPermissions().has("ignite", true)) {
                 event.setCancelled(true);
             }
         }
-        else if(!Residence.getConfig().worldFireEnabled())
-            event.setCancelled(true);
         super.onEntityCombust(event);
     }
 
@@ -50,13 +50,31 @@ public class ResidenceEntityListener extends EntityListener {
     public void onEntityExplode(EntityExplodeEvent event) {
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getLocation());
         if (res != null) {
-            if (!res.getPermissions().has("explosions", true)) {
-                event.setCancelled(true);
+            Entity ent = event.getEntity();
+            if (ent instanceof TNTPrimed) {
+                if (!res.getPermissions().has("tnt", true)) {
+                    event.setCancelled(true);
+                }
+            }
+            else if(ent instanceof Creeper) {
+                if (!res.getPermissions().has("creeper", true)) {
+                    event.setCancelled(true);
+                }
             }
         }
-        else if(!Residence.getConfig().worldExplosionsEnabled())
+        else
         {
-            event.setCancelled(true);
+            Entity ent = event.getEntity();
+            if(ent instanceof TNTPrimed)
+            {
+                if(!Residence.getConfig().worldTNTEnabled())
+                    event.setCancelled(true);
+            }
+            else if (ent instanceof Creeper)
+            {
+                if(!Residence.getConfig().worldCreeperEnabled())
+                    event.setCancelled(true);
+            }
         }
         super.onEntityExplode(event);
     }

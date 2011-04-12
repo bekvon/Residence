@@ -9,10 +9,10 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -75,50 +75,37 @@ public class ResidenceBlockListener extends BlockListener {
     @Override
     public void onBlockIgnite(BlockIgniteEvent event) {
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
-        Player player = event.getPlayer();
-        if (player != null) {
-            if (res != null) {
-                if (!res.getPermissions().playerHas(player.getName(), "build", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+        if (res != null) {
+            if (event.getCause() == IgniteCause.FLINT_AND_STEEL) {
+                Player player = event.getPlayer();
+                if (!res.getPermissions().playerHas(player.getName(), "ignite", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
                     event.setCancelled(true);
-                    player.sendMessage("§cYou dont have permission to build here.");
+                    player.sendMessage("§cYou dont have permission to ignite here.");
                 }
-            } else {
-                if (!Residence.getConfig().worldFireEnabled() && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            }
+            else
+            {
+                if(!res.getPermissions().has("firespread", true))
+                {
                     event.setCancelled(true);
-
-                    player.sendMessage("§cWorld fire is disabled.");
                 }
             }
         } else {
-            if (res != null) {
-                if (!res.getPermissions().has("fire", true)) {
+            if(event.getCause() == IgniteCause.SPREAD)
+            {
+                if (!Residence.getConfig().worldFireSpreadEnabled()) {
                     event.setCancelled(true);
                 }
             }
             else
             {
-                if(!Residence.getConfig().worldFireEnabled())
+                if(!Residence.getConfig().worldIgniteEnabled())
                 {
                     event.setCancelled(true);
                 }
             }
         }
         super.onBlockIgnite(event);
-    }
-
-    @Override
-    public void onBlockBurn(BlockBurnEvent event) {
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
-        if (res != null) {
-            if (!res.getPermissions().has("fire", true)) {
-                event.setCancelled(true);
-            }
-        } else {
-            if (!Residence.getConfig().worldFireEnabled()) {
-                event.setCancelled(true);
-            }
-        }
-        super.onBlockBurn(event);
     }
 
     @Override
