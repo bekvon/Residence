@@ -99,13 +99,13 @@ public class ResidenceManager {
         name = name.replace(":", "_");
         if(player == null)
             return;
-        if(loc1==null || loc2==null || !loc1.getWorld().equals(loc2.getWorld()))
+        if(loc1==null || loc2==null || !loc1.getWorld().getName().equals(loc2.getWorld().getName()))
         {
             player.sendMessage("§cInvalid selection points.");
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        if (!group.canCreateResidences()) {
+        if (!group.canCreateResidences() && !Residence.getPermissionManager().isResidenceAdmin(player)) {
             player.sendMessage("§cYou dont have permission to create residences.");
             return;
         }
@@ -339,5 +339,41 @@ public class ResidenceManager {
             }
         }
         return resm;
+    }
+
+    public void renameResidence(Player player, String oldName, String newName)
+    {
+        newName = newName.replace(".", "_");
+        newName = newName.replace(":", "_");
+        ClaimedResidence res = this.getByName(oldName);
+        if(res==null)
+        {
+            player.sendMessage("Invalid Residence...");
+            return;
+        }
+        if(res.getPermissions().hasResidencePermission(player, true))
+        {
+            if(res.getParent()==null)
+            {
+                if(residences.containsKey(newName))
+                {
+                    player.sendMessage("Another residence already has that name...");
+                    return;
+                }
+                residences.put(newName, res);
+                residences.remove(oldName);
+                player.sendMessage("Renamed " + oldName + " to " + newName + "...");
+            }
+            else
+            {
+                String[] oldname = oldName.split("\\.");
+                ClaimedResidence parent = res.getParent();
+                parent.renameSubzone(player, oldname[oldname.length-1], newName);
+            }
+        }
+        else
+        {
+            player.sendMessage("You dont have permission...");
+        }
     }
 }

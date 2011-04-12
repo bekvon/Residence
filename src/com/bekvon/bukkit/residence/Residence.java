@@ -482,7 +482,8 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§abuild§3 - globally allow everyone build rights");
                             player.sendMessage("§ause§3 - globally allow everyone use rights");
                             player.sendMessage("§apvp§3 - allows or dissallows pvp.");
-                            player.sendMessage("§afire§3 - allows / disallows fire.");
+                            player.sendMessage("§aignite§3 - allows / disallows fire starting.");
+                            player.sendMessage("§afirespread§3 - allows / disallows fire spread.");
                             player.sendMessage("§adamage§3 - allows / disallows damage while in zone.");
                             player.sendMessage("§aexplosions§3 - allows / disallows explosions.");
                             player.sendMessage("§amonsters§3 - allows / disallows monster spawns.");
@@ -575,7 +576,29 @@ public class Residence extends JavaPlugin {
                     player.sendMessage("§alists§3 - predefined permission lists /res lists ? for details."); 
                     player.sendMessage("§aversion§3 - show version.");
                     return true;
-                } else if (args[0].equals("unstuck")) {
+                }
+                else if(args[0].equals("rename"))
+                {
+                    if(args.length==3)
+                    {
+                        rmanager.renameResidence(player, args[1], args[2]);
+                        return true;
+                    }
+                }
+                else if(args[0].equals("renamearea"))
+                {
+                    if(args.length==4)
+                    {
+                        ClaimedResidence res = rmanager.getByName(args[1]);
+                        if(res==null)
+                        {
+                            player.sendMessage("§cInvalid Residence...");
+                            return true;
+                        }
+                        res.renameArea(player, args[2], args[3]);
+                    }
+                }
+                else if (args[0].equals("unstuck")) {
                     if (args.length != 1) {
                         return false;
                     }
