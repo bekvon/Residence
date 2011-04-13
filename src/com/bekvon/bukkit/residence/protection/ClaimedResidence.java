@@ -86,7 +86,7 @@ public class ClaimedResidence {
             if(parent==null)
             {
                 int chargeamount = (int) Math.ceil((double)area.getSize() * group.getCostPerBlock());
-                if(!TransactionManager.chargeIConomyMoney(player, chargeamount, "new residence area"))
+                if(!TransactionManager.chargeEconomyMoney(player, chargeamount, "new residence area"))
                 {
                     return;
                 }
