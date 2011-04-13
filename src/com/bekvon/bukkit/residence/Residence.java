@@ -106,10 +106,7 @@ public class Residence extends JavaPlugin {
         cmanager = new ConfigManager(this.getConfiguration());
         gmanager = new PermissionManager(this.getConfiguration());
         enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
-<<<<<<< HEAD
-=======
         econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
->>>>>>> a256ec64a822ec14349f97893df0cffc743352fb
         ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
         economy = null;
         if (firstenable) {
