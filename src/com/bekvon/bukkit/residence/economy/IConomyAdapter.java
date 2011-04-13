@@ -56,12 +56,9 @@ public class IConomyAdapter extends EconomyInterface
         Account accTo = plugin.getBank().getAccount(playerTo);
         if (accFrom != null && accTo != null)
         {
-            if (accFrom.hasEnough(amount))
-            {
-                accFrom.subtract(amount);
-                accTo.add(amount);
-                return true;
-            }
+            accFrom.subtract(amount);
+            accTo.add(amount);
+            return true;
         }
         return false;
     }

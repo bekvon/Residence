@@ -72,7 +72,7 @@ public class TransactionManager {
                 return;
             }
         }
-        String pname = player.getName().toLowerCase();
+        String pname = player.getName();
         ClaimedResidence area = manager.getByName(areaname);
         if(area==null)
         {
@@ -120,7 +120,7 @@ public class TransactionManager {
                 sellAmount.remove(areaname);
                 return;
             }
-            if(res.getPermissions().getOwner().equals(player.getName().toLowerCase()))
+            if(res.getPermissions().getOwner().equals(player.getName()))
             {
                 player.sendMessage("§cCan't buy your own land!");
                 return;
@@ -152,19 +152,15 @@ public class TransactionManager {
                 player.sendMessage("§cError, economy system not available.");
                 return;
             }
-            /*Account baccount = iConomy.getBank().getAccount(player.getName());
-            Account saccount = iConomy.getBank().getAccount(res.getPermissions().getOwner());
-            if(baccount == null || saccount == null)
-            {
-                player.sendMessage("§cError, unable to get iConomy accounts.");
-                return;
-            }*/
             String buyerName = player.getName();
             String sellerName = res.getPermissions().getOwner();
-            if(econ.transfer(buyerName, sellerName, amount)/*baccount.hasEnough(amount)*/)
+            if(econ.canAfford(buyerName, amount))
             {
-                /*baccount.subtract(amount);
-                saccount.add(amount);*/
+                if (!econ.transfer(buyerName, sellerName, amount))
+                {
+                    player.sendMessage("§cError, could not transfer $" + amount + " from " + buyerName + " to " + sellerName);
+                    return;
+                }
                 res.getPermissions().setOwner(player.getName(),true);
                 this.removeFromSale(areaname);
                 player.sendMessage("§aCharged " + amount +" to your " + econ.getName() + " account.");
@@ -195,7 +191,7 @@ public class TransactionManager {
                 player.sendMessage("§cResidence is not for sale.");
                 return;
             }
-            if (area.getPermissions().getOwner().equals(player.getName().toLowerCase()) || Residence.getPermissionManager().isResidenceAdmin(player)) {
+            if (area.getPermissions().getOwner().equals(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)) {
                 removeFromSale(areaname);
                 player.sendMessage("§aNo longer selling.");
             }

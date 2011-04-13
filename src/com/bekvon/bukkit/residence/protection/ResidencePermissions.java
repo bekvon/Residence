@@ -30,13 +30,13 @@ public class ResidencePermissions extends PermissionList {
 
     public ResidencePermissions(String creator, String inworld)
     {
-        owner = creator.toLowerCase();
+        owner = creator;
         world = inworld.toLowerCase();
     }
 
     public boolean playerHas(String player, String flag, boolean def)
     {
-        player = player.toLowerCase();
+        player = player;
         String group = Residence.getPermissionManager().getGroupNameByPlayer(player, world);
         if(playerFlags.containsKey(player))
         {
@@ -68,7 +68,7 @@ public class ResidencePermissions extends PermissionList {
         if(player!=null)
         {
             resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
-            if(!player.getName().toLowerCase().equals(owner) && !resadmin)
+            if(!player.getName().equals(owner) && !resadmin)
             {
                 player.sendMessage("§cOnly the residence owner can apply permission lists.");
                 return;
@@ -131,7 +131,7 @@ public class ResidencePermissions extends PermissionList {
         if(this.hasResidenceAdmin(player))
             return true;
         if(requireOwner)
-            return(owner.equals(player.getName().toLowerCase()));
+            return(owner.equals(player.getName()));
         return (playerHas(player.getName(), "admin",false) || owner.equals(player.getName().toLowerCase()));
     }
 
@@ -258,7 +258,7 @@ public class ResidencePermissions extends PermissionList {
 
     public void setOwner(String newOwner, boolean resetFlags)
     {
-        owner = newOwner.toLowerCase();
+        owner = newOwner;
         if(resetFlags)
             this.applyDefaultFlags();
     }

@@ -19,7 +19,7 @@ Global:
     EnablePermissions: true
     # Enable / Disable Residence's Economy System.
     EnableEconomy: true
-    # The economy system to use (currently only iConomy is supported).
+    # The economy system to use (iConomy or MineConomy).
     EconomySystem: iConomy
     # Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.
     AdminOnlyCommands: false

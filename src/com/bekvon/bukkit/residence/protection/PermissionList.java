@@ -31,7 +31,7 @@ public class PermissionList {
     }
 
     public void setPlayer(String player, String flag, FlagState state) {
-        player = player.toLowerCase();
+        player = player;
         if (!playerFlags.containsKey(player)) {
             playerFlags.put(player, Collections.synchronizedMap(new HashMap<String, Boolean>()));
         }
@@ -162,7 +162,7 @@ public class PermissionList {
 
     public String listPlayerFlags(String player)
     {
-        player = player.toLowerCase();
+        player = player;
         if(playerFlags.containsKey(player))
         {
             StringBuilder sbuild = new StringBuilder();
@@ -203,7 +203,7 @@ public class PermissionList {
 
     public String listOtherPlayersFlags(String player)
     {
-        player = player.toLowerCase();
+        player = player;
         StringBuilder sbuild = new StringBuilder();
         Set<String> set = playerFlags.keySet();
         synchronized(playerFlags)
