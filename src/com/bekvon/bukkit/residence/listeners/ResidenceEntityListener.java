@@ -9,6 +9,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -51,13 +52,13 @@ public class ResidenceEntityListener extends EntityListener {
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getLocation());
         if (res != null) {
             Entity ent = event.getEntity();
-            if (ent instanceof TNTPrimed) {
-                if (!res.getPermissions().has("tnt", true)) {
+            if (ent instanceof LivingEntity) {
+                if (!res.getPermissions().has("creeper", true)) {
                     event.setCancelled(true);
                 }
             }
-            else if(ent instanceof Creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
+            else {
+                if (!res.getPermissions().has("tnt", true)) {
                     event.setCancelled(true);
                 }
             }
@@ -65,14 +66,14 @@ public class ResidenceEntityListener extends EntityListener {
         else
         {
             Entity ent = event.getEntity();
-            if(ent instanceof TNTPrimed)
-            {
-                if(!Residence.getConfig().worldTNTEnabled())
-                    event.setCancelled(true);
-            }
-            else if (ent instanceof Creeper)
+            if(ent instanceof LivingEntity)
             {
                 if(!Residence.getConfig().worldCreeperEnabled())
+                    event.setCancelled(true);
+            }
+            else
+            {
+                if(!Residence.getConfig().worldTNTEnabled())
                     event.setCancelled(true);
             }
         }
