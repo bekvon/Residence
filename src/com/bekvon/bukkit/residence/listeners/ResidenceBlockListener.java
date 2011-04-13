@@ -63,7 +63,7 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockFromTo(BlockFromToEvent event) {
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getToBlock().getLocation());
         if (res != null) {
             if (!res.getPermissions().has("flow", true)) {
                 event.setCancelled(true);
