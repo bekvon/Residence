@@ -9,6 +9,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -115,6 +116,20 @@ public class SelectionManager {
     {
         playerLoc1.remove(player.getName());
         playerLoc2.remove(player.getName());
+    }
+
+    public synchronized void selectChunk(Player player)
+    {
+        Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+        int xcoord = chunk.getX() * 16;
+        int zcoord = chunk.getZ() * 16;
+        int ycoord = -127;
+        int xmax = xcoord + 16;
+        int zmax = zcoord + 16;
+        int ymax = 128;
+        this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
+        this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
+        player.sendMessage("§aSelected current chunk...");
     }
 
     public synchronized void modify(Player player, boolean shift, int amount)
@@ -251,5 +266,6 @@ public class SelectionManager {
             return Direction.PLUSZ;
         return null;
     }
+
 
 }

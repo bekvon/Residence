@@ -1,88 +1,120 @@
-#this is the item id of the item you want players to be able to use to select areas
-SelectionItemId: 271
-
-#this is a lag prevention setting, setting it to higher will mean less cpu usage but less precise player movement tracking.
-#less precice movement tracking, means that a player may be able to spend a little time in a area he shouldn't
-#have access to before he gets booted out.  this setting is in milliseconds.  default is 500 (half a second) which
-#is a good balance between lag and safety.
-MinMoveCheckInterval: 500
-
-#how often protected areas are autosaved, in minutes
-AutoSaveInterval: 10
-
-#this is ONLY for if your either not using permissions, or you are using permissions and 
-#a player is in a group that does not exist in the below groups configuration. in either case,
-#residence will treat that player like he or she is in this group.
-DefaultGroup: default
-
-#globally enable or disable the land lease system.  this system requires users to renew or
-#refresh their protections every X amount of days.  see the lease settings section under
-#each group for controling this system
-UseLeaseSystem: true
-
-#how often to check for expired leases in minutes
-LeaseCheckInterval: 10
-
-#permissions control
-EnablePermissions: true
-
-#iConomy control
-EnableIConomy: true
-
-#enable buying and selling of residences, IConomy must be enabled for this to work
-EnableBuySell: true
-
-#if you just want to use this like a regular protection plugin, and not allow players to
-#create residences and stuff, but make it OP/residence.admin only set this to true.
-AdminsOnly: false
-
-#these flags are applied whenever a player is outside a residence
-WorldFlags:
-    use: true
-    build: false
-    ignite: true
-    firespread: true
-    damage: true
-    creeper: true
-    tnt: true
-    pvp: true
-
-#these groups are the same as your permissions groups.  if you are not using permissions, everyone is in the "default" group.
+#These are Global Settings for Residence.
+Global:
+    # Wooden Axe is the default selection tool for Residence.
+    # You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values
+    SelectionToolId: 271
+    # The interval, in milliseconds, between movement checks.
+   # Reducing this will increase the load on the server.
+   # Increasing this will allow players to move further in movement restricted zones before they are teleported out.
+    MoveCheckInterval: 500
+    # The interval, in minutes, between residence saves.
+    SaveInterval: 10
+    # The default group to use if Permissions fails to attach or your not using Permissions.
+    DefaultGroup: default
+    # Enable / Disable the Lease System.
+    UseLeaseSystem: true
+    # The interval, in minutes, between residence lease checks (if leases are enabled).
+    LeaseCheckInterval: 10
+    # Whether or not to use the Permissions system in conjunction with this config.
+    EnablePermissions: true
+    # Enable / Disable Residence's Economy System.
+    EnableEconomy: true
+    # The economy system to use (currently only iConomy is supported).
+    EconomySystem: iConomy
+    # Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.
+    AdminOnlyCommands: false
+    # These flags are applied, by default, when the player is not within another residence.
+    # All flags default to true if not specified.
+    Flags:
+        use: true
+        build: false
+        ignite: true
+        firespread: true
+        damage: true
+        creeper: true
+        tnt: true
+        pvp: true
+# These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:
-    default:
-         CanCreate: true
-         MaxX: 16
-         MaxY: 256
-         MaxZ: 16
-         MoneyCost: 0.05
-         MaxRes: 3
-         AllowTeleport: true
-         SubzoneDepth: 3
-         CanSetMessages: true
-         DefaultEnterMessage: Welcome %player to %residence, owned by %owner.
-         DefaultLeaveMessage: Now leaving %residence.
-         MaxResidenceAreas: 2
-         Lease:
-              MaxDays: 16
-              RenewTime: 14
-              RenewCost: 0.02
-         Economy:
-              CanBuy: true
-              CanSell: false
-              BuyIgnoreLimits: false
-         FlagPermissions:
-              move: true
-              build: true
-              use: true
-         ResidenceDefaultFlags:
-              build: false
-              use: false
-         CreatorDefaultFlags:
-              move: true
-              build: true
-              use: true
-         GroupDefaultFlags:
-              #default:
-                   #build: true
-PlayerGroupAssigments:
+    Default:
+       # Information about the Residence zone that the player can define.
+       Residence:
+           # Determins if this group can create residences or not.
+           CanCreate: true
+           # The maximum number of Residences a player can have.
+           MaxResidences: 3
+           # The maximum number of physical areas a residence can have.
+           MaxAreasPerResidence: 2
+           # The maximum number of blocks a Residence can be, East to West (X).
+           MaxEastWest: 16
+           # The maximum number of blocks a Residence can be, North to South (Z).
+           MaxNorthSouth: 16
+           # The maximum number of blocks a Residence can be, High to Low (Y).
+           MaxUpDown: 256
+            # The maximum recursive depth that subzones can go.
+            # A subzone within a subzone within the Residence zone would be a depth of 2.
+            # Set to 0 to disable subzones.
+           SubzoneDepth: 3
+           # Whether or not to allow teleporting to Residences.
+           CanTeleport: true
+       # Options relating to enter and leave messages on the residence.
+       Messaging:
+           # Whether or not the player can change the Residence enter and/or leave message.
+           CanChange: true
+           # The default enter message to apply to new Residences created by players in this group.
+           # Leaving the message blank will disable it.
+           DefaultEnter: Welcome %player to %residence, owned by %owner.
+           # The default leave message to apply to new Residences created by players in this group.
+           # Leaving the message blank will disable it.
+           DefaultLeave: Now leaving %residence.
+       # Options relating to the leasing of zones.
+       Lease:
+          # The maximum number of days to allow leases.
+          MaxDays: 16
+          # The number of days to add to the lease following a '/res lease renew' command.
+          RenewIncrement: 14
+       # Options relating to the Residence Economy.
+       Economy:
+          # Whether or not players in this group can buy other Residences that are for sale.
+          CanBuy: true
+          # Whether or not players in this group can sell their Residences.
+          CanSell: false
+          # Whether or not to ignore the Residence size/count limits when buying a residence.
+          IgnoreLimits: false
+          # The cost, per block, of buying a Residence or adding a area to it.
+          BuyCost: 0.05
+          # The cost, per block, of renewing a Residence lease.
+          RenewCost: 0.02
+       # Flags are checked in the order:
+       # 1: Player (in-game only)
+       # 2: Group
+       # 3: Owner
+       # 4: Default
+       # 5: Otherwise, if all others are undefined, defaults to 'true'.
+       # Flag permissions default to false.
+       Flags:
+          # Specifys the flags that players of this group are allowed to change.
+          Permission:
+               move: true
+               build: true
+               use: true
+          # Specifys the flags that are applied at residence creation for players of this group.
+          Default:
+               build: false
+               use: false
+               tnt: false
+               creeper: false
+               firespread: false
+          # Specifys the flags that are applied at to the creator at residence creation.
+          CreatorDefault:
+               move: true
+               build: true
+               use: true
+          # Specifys the flags that are applied to other groups for this residence, at creation.
+          GroupDefault:
+               #default:
+                   #move: true
+# You can manually specify the group a player is in below, this overrides their permissions group.
+GroupAssigments:
      bekvon: default
+     player: default

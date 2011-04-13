@@ -7,6 +7,9 @@ commands:
   res:
     description: Manage Residences
     usage: §c/res ? for more info
+  residence:
+    description: Manage Residences
+    usage: §c/residence ? for more info
   resadmin:
     description: Residence admin functions.
     usage: §c/resadmin ? for more info

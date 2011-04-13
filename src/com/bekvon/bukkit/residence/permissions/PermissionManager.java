@@ -130,12 +130,12 @@ public class PermissionManager {
         {
             groups.put(defaultGroup, new PermissionGroup(defaultGroup));
         }
-        List<String> keys = config.getKeys("PlayerGroupAssigments");
+        List<String> keys = config.getKeys("GroupAssigments");
         if(keys!=null)
         {
             for(String key : keys)
             {
-                playersGroup.put(key.toLowerCase(), config.getString("PlayerGroupAssignments."+key, defaultGroup).toLowerCase());
+                playersGroup.put(key.toLowerCase(), config.getString("GroupAssignments."+key, defaultGroup).toLowerCase());
             }
         }
     }
