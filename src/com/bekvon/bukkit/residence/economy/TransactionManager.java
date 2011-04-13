@@ -11,8 +11,6 @@ import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.nijiko.coelho.iConomy.iConomy;
-import com.nijiko.coelho.iConomy.system.Account;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,26 +27,21 @@ public class TransactionManager {
     private Map<String,Integer> sellAmount;
     PermissionManager gm;
 
-    public static boolean chargeIConomyMoney(Player player, int amount, String reason)
+    public static boolean chargeEconomyMoney(Player player, int amount, String reason)
     {
-        if(Residence.getIConManager()==null)
+        EconomyInterface econ = Residence.getEconomyManager();
+        if(econ==null)
         {
-            player.sendMessage("§cError, iConomy not available.");
+            player.sendMessage("§cError, no economy interface is available.");
             return false;
         }
-        Account account = iConomy.getBank().getAccount(player.getName());
-        if(account==null)
-        {
-            player.sendMessage("§cError, unable to get your iConomy account.");
-            return false;
-        }
-        if(!account.hasEnough(amount))
+        if(!econ.canAfford(player.getName(), amount))
         {
             player.sendMessage("§cNot enough money, you need: " + amount);
             return false;
         }
-        account.subtract(amount);
-        player.sendMessage("§aCharged " + amount + " to your iConomy account for " + reason + ".");
+        econ.subtract(player.getName(), amount);
+        player.sendMessage("§aCharged " + amount + " to your " + econ.getName() + " account for " + reason + ".");
         return true;
     }
 
@@ -63,7 +56,7 @@ public class TransactionManager {
     {
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
-            if(!Residence.getConfig().buySellEnabled() || Residence.getIConManager()==null)
+            if(!Residence.getConfig().buySellEnabled() || Residence.getEconomyManager()==null)
             {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
@@ -107,7 +100,7 @@ public class TransactionManager {
         if(!resadmin)
         {
             
-            if(!Residence.getConfig().buySellEnabled() || Residence.getIConManager()==null)
+            if(!Residence.getConfig().buySellEnabled() || Residence.getEconomyManager()==null)
             {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
@@ -153,27 +146,30 @@ public class TransactionManager {
                     }
                 }
             }
-            if(Residence.getIConManager()==null)
+            EconomyInterface econ = Residence.getEconomyManager();
+            if(econ==null)
             {
-                player.sendMessage("§cError, iConomy not available.");
+                player.sendMessage("§cError, economy system not available.");
                 return;
             }
-            Account baccount = iConomy.getBank().getAccount(player.getName());
+            /*Account baccount = iConomy.getBank().getAccount(player.getName());
             Account saccount = iConomy.getBank().getAccount(res.getPermissions().getOwner());
             if(baccount == null || saccount == null)
             {
                 player.sendMessage("§cError, unable to get iConomy accounts.");
                 return;
-            }
-            if(baccount.hasEnough(amount))
+            }*/
+            String buyerName = player.getName();
+            String sellerName = res.getPermissions().getOwner();
+            if(econ.transfer(buyerName, sellerName, amount)/*baccount.hasEnough(amount)*/)
             {
-                baccount.subtract(amount);
-                saccount.add(amount);
+                /*baccount.subtract(amount);
+                saccount.add(amount);*/
                 res.getPermissions().setOwner(player.getName(),true);
                 this.removeFromSale(areaname);
                 player.sendMessage("§aCharged " + amount +" to your iConomy account.");
                 player.sendMessage("§aYou bought residence: " + areaname + "!");
-                Player seller = serv.getPlayer(saccount.getName());
+                Player seller = serv.getPlayer(sellerName);
                 if(seller!=null && seller.isOnline())
                 {
                     seller.sendMessage("§a"+ player.getName() + " has bought your residence " + areaname);
