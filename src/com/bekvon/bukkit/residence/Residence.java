@@ -71,7 +71,7 @@ public class Residence extends JavaPlugin {
         }
     };
     private boolean saveBroadcast;
-    private static boolean enableicon;
+    private static boolean enableecon;
     private static File ymlSaveLoc;
     private static int autosaveInt;
     private static int autosaveBukkitId;
@@ -99,7 +99,7 @@ public class Residence extends JavaPlugin {
         this.getConfiguration().load();
         cmanager = new ConfigManager(this.getConfiguration());
         gmanager = new PermissionManager(this.getConfiguration());
-        enableicon = this.getConfiguration().getBoolean("EnableIConomy", true);
+        enableecon = this.getConfiguration().getBoolean("EnableEconomy", true);
         ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
         if (firstenable) {
             if (!this.getDataFolder().isDirectory()) {
@@ -120,9 +120,9 @@ public class Residence extends JavaPlugin {
                 pmanager = new PermissionListManager();
             }
             smanager = new SelectionManager();
-            smanager.setSelectionId(this.getConfiguration().getInt("SelectionItemId", Material.WOOD_AXE.getId()));
+            smanager.setSelectionId(this.getConfiguration().getInt("SelectionToolId", Material.WOOD_AXE.getId()));
             blistener = new ResidenceBlockListener();
-            plistener = new ResidencePlayerListener(this.getConfiguration().getInt("MinMoveCheckInterval", 1000));
+            plistener = new ResidencePlayerListener(this.getConfiguration().getInt("MoveCheckInterval", 1000));
             elistener = new ResidenceEntityListener();
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Highest, this);
@@ -138,8 +138,7 @@ public class Residence extends JavaPlugin {
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Highest, this);
             firstenable = false;
         }
-        saveBroadcast = this.getConfiguration().getBoolean("BroadcastSaveMessage", true);
-        autosaveInt = this.getConfiguration().getInt("AutoSaveInterval", 10);
+        autosaveInt = this.getConfiguration().getInt("SaveInterval", 10);
         if (autosaveInt < 1) {
             autosaveInt = 1;
         }
@@ -189,7 +188,7 @@ public class Residence extends JavaPlugin {
     }
 
     private void checkIConomy() {
-        if (!enableicon) {
+        if (!enableecon) {
             iCon = null;
             return;
         }
@@ -205,7 +204,7 @@ public class Residence extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equals("res")) {
+        if (command.getName().equals("res") || command.getName().equals("residence")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 String pname = player.getName();
@@ -238,6 +237,7 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§aselect §6coords§3 - get selected coords.");
                         player.sendMessage("§aselect §6expand <size>§3 - expand selection the direction your looking.");
                         player.sendMessage("§aselect §6shift <distance>§3 - shift selection the direction your looking.");
+                        player.sendMessage("§aselect §6chunk§3 - select the current chunk your in.");
                         player.sendMessage("§9You can use a " + Material.getMaterial(smanager.getSelectionId()).name() + " tool to select.");
                         return true;
                     } else if (args.length == 2) {
@@ -268,6 +268,11 @@ public class Residence extends JavaPlugin {
                             if (playerLoc2 != null) {
                                 player.sendMessage("§aSecondary Selection:§b (" + playerLoc2.getBlockX() + ", " + playerLoc2.getBlockY() + ", " + playerLoc2.getBlockZ() + ")");
                             }
+                            return true;
+                        }
+                        else if(args[1].equals("chunk"))
+                        {
+                            smanager.selectChunk(player);
                             return true;
                         }
                     } else if (args.length == 3) {
