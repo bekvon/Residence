@@ -6,6 +6,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.coelho.iConomy.system.Account;
@@ -80,22 +81,23 @@ public class LeaseManager {
         int max = limits.getMaxLeaseTime();
         int add = limits.getLeaseGiveTime();
         int rem = daysRemaining(area);
-        if(Residence.getIConManager()!=null)
+        EconomyInterface econ = Residence.getEconomyManager();
+        if(econ!=null)
         {
             double cost = limits.getLeaseRenewCost();
             ClaimedResidence res = manager.getByName(area);
             int amount = (int) Math.ceil((double)res.getTotalSize() * cost);
             if(cost!=0D)
             {
-                Account account = iConomy.getBank().getAccount(player.getName());
-                if(account!=null && account.hasEnough(amount))
+                //Account account = iConomy.getBank().getAccount(player.getName());
+                if(econ.canAfford(player.getName(), amount)/*account.hasEnough(amount)*/)
                 {
-                    account.subtract(amount);
-                    player.sendMessage("§c" + amount+" has been subtracted from your iConomy account for residence renewal.");
+                    econ.subtract(player.getName(), amount);
+                    player.sendMessage("§c" + amount+" has been subtracted from your " + econ.getName() + " account for residence renewal.");
                 }
                 else
                 {
-                    player.sendMessage("§cNot enough money in your iConomy account.");
+                    player.sendMessage("§cNot enough money in your " + econ.getName() + " account.");
                     return;
                 }
             }

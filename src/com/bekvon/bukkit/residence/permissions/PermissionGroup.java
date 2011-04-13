@@ -236,7 +236,7 @@ public class PermissionGroup {
         player.sendMessage("§eMax Subzone Depth:§3 "+subzonedepth);
         player.sendMessage("§eCan Set Enter/Leave Messages:§3 "+messageperms);
         player.sendMessage("§eNumber of Residences you own:§3 " + Residence.getResidenceManger().getOwnedZoneCount(player.getName()));
-        if(Residence.getIConManager()!=null)
+        if(Residence.getEconomyManager()!=null)
             player.sendMessage("§eResidence Cost Per Block:§3 " + costperarea);
         StringBuilder flags = new StringBuilder();
         synchronized (flagPerms) {
