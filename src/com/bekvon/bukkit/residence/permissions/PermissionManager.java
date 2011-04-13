@@ -38,7 +38,7 @@ public class PermissionManager {
         {
         groups = Collections.synchronizedMap(new HashMap<String,PermissionGroup>());
         playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
-        boolean enable = config.getBoolean("EnablePermissions", true);
+        boolean enable = config.getBoolean("Global.EnablePermissions", true);
         this.readConfig(config);
         if(enable)
             this.checkPermissions();

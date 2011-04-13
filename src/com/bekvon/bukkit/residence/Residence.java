@@ -99,7 +99,7 @@ public class Residence extends JavaPlugin {
         this.getConfiguration().load();
         cmanager = new ConfigManager(this.getConfiguration());
         gmanager = new PermissionManager(this.getConfiguration());
-        enableecon = this.getConfiguration().getBoolean("EnableEconomy", true);
+        enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
         ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
         if (firstenable) {
             if (!this.getDataFolder().isDirectory()) {
@@ -120,9 +120,9 @@ public class Residence extends JavaPlugin {
                 pmanager = new PermissionListManager();
             }
             smanager = new SelectionManager();
-            smanager.setSelectionId(this.getConfiguration().getInt("SelectionToolId", Material.WOOD_AXE.getId()));
+            smanager.setSelectionId(this.getConfiguration().getInt("Global.SelectionToolId", Material.WOOD_AXE.getId()));
             blistener = new ResidenceBlockListener();
-            plistener = new ResidencePlayerListener(this.getConfiguration().getInt("MoveCheckInterval", 1000));
+            plistener = new ResidencePlayerListener(this.getConfiguration().getInt("Global.MoveCheckInterval", 1000));
             elistener = new ResidenceEntityListener();
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Highest, this);
