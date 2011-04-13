@@ -138,9 +138,9 @@ public class Residence extends JavaPlugin {
                 pmanager = new PermissionListManager();
             }
             smanager = new SelectionManager();
-            smanager.setSelectionId(this.getConfiguration().getInt("SelectionToolId", Material.WOOD_AXE.getId()));
+            smanager.setSelectionId(this.getConfiguration().getInt("Global.SelectionToolId", Material.WOOD_AXE.getId()));
             blistener = new ResidenceBlockListener();
-            plistener = new ResidencePlayerListener(this.getConfiguration().getInt("MoveCheckInterval", 1000));
+            plistener = new ResidencePlayerListener(this.getConfiguration().getInt("Global.MoveCheckInterval", 1000));
             elistener = new ResidenceEntityListener();
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Highest, this);
