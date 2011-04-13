@@ -125,16 +125,19 @@ public class PermissionListManager {
     public static PermissionListManager load(Map<String, Object> root) {
         
         PermissionListManager p = new PermissionListManager();
-        for (Entry<String, Object> players : root.entrySet()) {
-            try {
-                Map<String, Object> value = (Map<String, Object>) players.getValue();
-                Map<String, PermissionList> loadedMap = Collections.synchronizedMap(new HashMap<String, PermissionList>());
-                for (Entry<String, Object> list : value.entrySet()) {
-                    loadedMap.put(list.getKey(), PermissionList.load((Map<String, Object>) list.getValue()));
+        if(root != null)
+        {
+            for (Entry<String, Object> players : root.entrySet()) {
+                try {
+                    Map<String, Object> value = (Map<String, Object>) players.getValue();
+                    Map<String, PermissionList> loadedMap = Collections.synchronizedMap(new HashMap<String, PermissionList>());
+                    for (Entry<String, Object> list : value.entrySet()) {
+                        loadedMap.put(list.getKey(), PermissionList.load((Map<String, Object>) list.getValue()));
+                    }
+                    p.lists.put(players.getKey(), loadedMap);
+                } catch (Exception ex) {
+                    System.out.println("[Residence] - Failed to load permission lists for player: " + players.getKey());
                 }
-                p.lists.put(players.getKey(), loadedMap);
-            } catch (Exception ex) {
-                System.out.println("[Residence] - Failed to load permission lists for player: " + players.getKey());
             }
         }
         return p;

@@ -79,7 +79,7 @@ public class TransactionManager {
             player.sendMessage("§cInvalid residence.");
             return;
         }
-        if(!area.getPermissions().getOwner().equals(pname) && gm.hasAuthority(player, "residence.admin", player.isOp()))
+        if(!area.getPermissions().getOwner().equals(pname) && !Residence.getPermissionManager().isResidenceAdmin(player))
         {
             player.sendMessage("§cOnly the owner can sell a residence.");
             return;
@@ -167,18 +167,18 @@ public class TransactionManager {
                 saccount.add(amount);*/
                 res.getPermissions().setOwner(player.getName(),true);
                 this.removeFromSale(areaname);
-                player.sendMessage("§aCharged " + amount +" to your iConomy account.");
+                player.sendMessage("§aCharged " + amount +" to your " + econ.getName() + " account.");
                 player.sendMessage("§aYou bought residence: " + areaname + "!");
                 Player seller = serv.getPlayer(sellerName);
                 if(seller!=null && seller.isOnline())
                 {
                     seller.sendMessage("§a"+ player.getName() + " has bought your residence " + areaname);
-                    seller.sendMessage("§a" + amount + " has been credited to your iConomy account.");
+                    seller.sendMessage("§a" + amount + " has been credited to your " + econ.getName() + " account.");
                 }
             }
             else
             {
-                player.sendMessage("§cNot enough iConomy money.");
+                player.sendMessage("§cNot enough " + econ.getName() + " money.");
             }
         }
         else
