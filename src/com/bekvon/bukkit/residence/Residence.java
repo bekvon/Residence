@@ -8,6 +8,9 @@ import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
+import com.bekvon.bukkit.residence.economy.EconomyInterface;
+import com.bekvon.bukkit.residence.economy.IConomyAdapter;
+import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
@@ -17,6 +20,8 @@ import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.PermissionList;
 import com.nijiko.coelho.iConomy.iConomy;
+import com.spikensbror.bukkit.mineconomy.MineConomy;
+
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +64,7 @@ public class Residence extends JavaPlugin {
     private static LeaseManager leasemanager;
     private static Server server;
     private boolean firstenable = true;
-    private static iConomy iCon;
+    private static EconomyInterface economy;
     private final int saveVersion = 1;
     private int leaseBukkitId;
     private int leaseInterval;
@@ -72,6 +77,7 @@ public class Residence extends JavaPlugin {
     };
     private boolean saveBroadcast;
     private static boolean enableecon;
+    private static String econsys;
     private static File ymlSaveLoc;
     private static int autosaveInt;
     private static int autosaveBukkitId;
@@ -100,12 +106,27 @@ public class Residence extends JavaPlugin {
         cmanager = new ConfigManager(this.getConfiguration());
         gmanager = new PermissionManager(this.getConfiguration());
         enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
+<<<<<<< HEAD
+=======
+        econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
+>>>>>>> a256ec64a822ec14349f97893df0cffc743352fb
         ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
+        economy = null;
         if (firstenable) {
             if (!this.getDataFolder().isDirectory()) {
                 this.getDataFolder().mkdirs();
             }
-            this.checkIConomy();
+            if (enableecon && econsys != null)
+            {
+                if (econsys.toLowerCase().equals("iconomy"))
+                {
+                    this.loadIConomy();
+                }
+                else if (econsys.toLowerCase().equals("mineconomy"))
+                {
+                    this.loadMineConomy();
+                }
+            }
             this.loadYml();
             if (rmanager == null) {
                 rmanager = new ResidenceManager();
@@ -167,8 +188,8 @@ public class Residence extends JavaPlugin {
         return gmanager;
     }
 
-    public static iConomy getIConManager() {
-        return iCon;
+    public static EconomyInterface getEconomyManager() {
+        return economy;
     }
 
     public static Server getServ() {
@@ -187,18 +208,25 @@ public class Residence extends JavaPlugin {
         return tmanager;
     }
 
-    private void checkIConomy() {
-        if (!enableecon) {
-            iCon = null;
-            return;
-        }
+    private void loadIConomy() 
+    {
         Plugin p = getServer().getPluginManager().getPlugin("iConomy");
         if (p != null) {
-            iCon = ((iConomy) p);
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with iConomy.!");
+            economy = new IConomyAdapter((iConomy)p);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with iConomy!");
         } else {
-            iCon = null;
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy NOT found!");
+        }
+    }
+    
+    private void loadMineConomy()
+    {
+        Plugin p = getServer().getPluginManager().getPlugin("MineConomy");
+        if (p != null) {
+            economy = new MineConomyAdapter((MineConomy)p);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with MineConomy!");
+        } else {
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] MineConomy NOT found!");
         }
     }
 
