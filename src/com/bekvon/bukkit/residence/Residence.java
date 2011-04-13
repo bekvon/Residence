@@ -216,14 +216,6 @@ public class Residence extends JavaPlugin {
                 }
                 if(args.length==0)
                     return false;
-                if (args[0].equals("debug")) {
-                    if (args[1].equals("pitch")) {
-                        player.sendMessage("Pitch:" + player.getLocation().getPitch());
-                    }
-                    if (args[1].equals("yaw")) {
-                        player.sendMessage("Yaw:" + player.getLocation().getYaw());
-                    }
-                }
                 if (args.length == 0) {
                     args = new String[1];
                     args[0] = "?";
@@ -313,6 +305,12 @@ public class Residence extends JavaPlugin {
                     if (args.length != 2) {
                         return false;
                     }
+                    if(args.length==1 || (args.length == 2 && args[1].equals("?")))
+                    {
+                        player.sendMessage("§d----------Command Help:----------");
+                        player.sendMessage("§acreate §6<ResidenceName>§3");
+                        return true;
+                    }
                     if (smanager.hasPlacedBoth(pname)) {
                         rmanager.addResidence(player, args[1], smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname));
                         return true;
@@ -323,6 +321,12 @@ public class Residence extends JavaPlugin {
                 } else if (args[0].equals("subzone") || args[0].equals("sz")) {
                     if (args.length != 2 && args.length != 3) {
                         return false;
+                    }
+                    if(args.length==1 || (args.length == 2 && args[1].equals("?")))
+                    {
+                        player.sendMessage("§d----------Command Help:----------");
+                        player.sendMessage("§asubzone / sz §6<ParentZoneName> [SubZoneName]§3");
+                        return true;
                     }
                     String zname;
                     String parent;
@@ -341,10 +345,11 @@ public class Residence extends JavaPlugin {
                             return true;
                         }
                         res.addSubzone(player, smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname), zname);
+                        return true;
                     } else {
                         player.sendMessage("§cYou have not selected two points yet!");
+                        return true;
                     }
-                    return true;
                 } else if (args[0].equals("remove") || args[0].equals("delete")) {
                     if (args.length == 1) {
                         String area = rmanager.getNameByLoc(player.getLocation());
@@ -578,7 +583,8 @@ public class Residence extends JavaPlugin {
                     player.sendMessage("§amirror §6[source] [target]§3 - clone residence permissions.");
                     player.sendMessage("§amarket§3 - buy / sell residence /res market ? for details.");
                     player.sendMessage("§alease§3 - lease management /res lease ? for details.");
-                    player.sendMessage("§alists§3 - predefined permission lists /res lists ? for details."); 
+                    player.sendMessage("§alists§3 - predefined permission lists /res lists ? for details.");
+                    player.sendMessage("§arename / renamearea§3 - rename a residence or area.");
                     player.sendMessage("§aversion§3 - show version.");
                     return true;
                 }
@@ -587,6 +593,12 @@ public class Residence extends JavaPlugin {
                     if(args.length==3)
                     {
                         rmanager.renameResidence(player, args[1], args[2]);
+                        return true;
+                    }
+                    if(args.length==1 || (args.length == 2 && args[1].equals("?")))
+                    {
+                        player.sendMessage("§d----------Command Help:----------");
+                        player.sendMessage("§arename §6<FullOldName> <NewName>§3 - Renames a residence.");
                         return true;
                     }
                 }
@@ -601,6 +613,12 @@ public class Residence extends JavaPlugin {
                             return true;
                         }
                         res.renameArea(player, args[2], args[3]);
+                    }
+                    if(args.length==1 || (args.length == 2 && args[1].equals("?")))
+                    {
+                        player.sendMessage("§d----------Command Help:----------");
+                        player.sendMessage("§arenamearea §6<ResidenceName> <OldAreaName> <NewAreaName>§3 - renames a area in a residence.");
+                        return true;
                     }
                 }
                 else if (args[0].equals("unstuck")) {
@@ -621,6 +639,12 @@ public class Residence extends JavaPlugin {
                         return false;
                     }
                     rmanager.mirrorPerms(player, args[1], args[2]);
+                    if(args.length==1 || (args.length == 2 && args[1].equals("?")))
+                    {
+                        player.sendMessage("§d----------Command Help:----------");
+                        player.sendMessage("§amirror §6<SourceResidence> <TargetResidence>§3 - mirrors permissions.");
+                        return true;
+                    }
                     return true;
                 } else if (args[0].equals("listall")) {
                     rmanager.listAllResidences(player);
@@ -734,6 +758,16 @@ public class Residence extends JavaPlugin {
                     }
                     return false;
                 } else if (args[0].equals("message")) {
+                    if (args.length == 1 || (args.length == 2 && args[1].equals("?"))) {
+                        player.sendMessage("§d----------Command Help:----------");
+                        player.sendMessage("§amessage §6<ResidenceName> <enter/leave> <message>§3 - Set a enter or leave message.");
+                        player.sendMessage("§amessage §6<ResidenceName> <remove> <enter/leave>§3 - Remove a enter or leave message.");
+                        player.sendMessage("§cMessage Variables§3 - Variables you can use in a message.");
+                        player.sendMessage("§6 %player§3 - Name of the player who entered / left.");
+                        player.sendMessage("§6 %owner§3 - Residence owner.");
+                        player.sendMessage("§6 %residence§3 - Name of the residence.");
+                        return true;
+                    }
                     if (args.length < 3) {
                         player.sendMessage("§c/res message <residence> [enter/leave] [message]");
                         return true;
