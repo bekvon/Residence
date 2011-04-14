@@ -58,7 +58,7 @@ public class ClaimedResidence {
         }
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
-            if (!area.getWorld().getName().equals(perms.getWorld())) {
+            if (!area.getWorld().getName().toLowerCase().equals(perms.getWorld())) {
                 player.sendMessage("§cArea is in a different world from residence.");
                 return;
             }
@@ -83,7 +83,7 @@ public class ClaimedResidence {
                 player.sendMessage("§cYou've reached the max physical areas allowed for your residence.");
                 return;
             }
-            if(parent==null)
+            if(parent==null && Residence.getConfig().buySellEnabled())
             {
                 int chargeamount = (int) Math.ceil((double)area.getSize() * group.getCostPerBlock());
                 if(!TransactionManager.chargeEconomyMoney(player, chargeamount, "new residence area"))
