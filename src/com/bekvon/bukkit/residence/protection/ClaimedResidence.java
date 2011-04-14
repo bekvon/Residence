@@ -56,12 +56,12 @@ public class ClaimedResidence {
             player.sendMessage("§cArea name already exists.");
             return;
         }
+        if (!area.getWorld().getName().toLowerCase().equals(perms.getWorld())) {
+            player.sendMessage("§cArea is in a different world from residence.");
+            return;
+        }
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
-            if (!area.getWorld().getName().toLowerCase().equals(perms.getWorld())) {
-                player.sendMessage("§cArea is in a different world from residence.");
-                return;
-            }
             if (!this.perms.hasResidencePermission(player, true)) {
                 player.sendMessage("§cYou dont have permission to do this.");
                 return;
