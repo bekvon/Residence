@@ -23,8 +23,14 @@ import com.nijiko.coelho.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -102,6 +108,8 @@ public class Residence extends JavaPlugin {
 
     public void onEnable() {
         server = this.getServer();
+        if(!new File(this.getDataFolder(),"config.yml").isFile())
+            this.writeDefaultConfigFromJar();
         this.getConfiguration().load();
         cmanager = new ConfigManager(this.getConfiguration());
         gmanager = new PermissionManager(this.getConfiguration());
@@ -959,6 +967,45 @@ public class Residence extends JavaPlugin {
             System.out.print("[Residence] Loaded Residences...");
         } else {
             System.out.println("[Residence] Save File not found...");
+        }
+    }
+
+    private void writeDefaultConfigFromJar()
+    {
+        try {
+            File configLoc = new File(this.getDataFolder(),"config.yml");
+            File configBackup = new File(this.getDataFolder(),"config.bak");
+            File jarloc = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getCanonicalFile();
+            if(jarloc.isFile())
+            {
+                JarFile jar = new JarFile(jarloc);
+                JarEntry entry = jar.getJarEntry("config.yml");
+                if(entry!=null && !entry.isDirectory())
+                {
+                    InputStream in = jar.getInputStream(entry);
+                    if(configLoc.isFile())
+                    {
+                        if(configBackup.isFile())
+                            configBackup.delete();
+                        configLoc.renameTo(configBackup);
+                    }
+                    FileOutputStream out = new FileOutputStream(configLoc);
+                    byte[] tempbytes = new byte[512];
+                    int readbytes = in.read(tempbytes,0,512);
+                    while(readbytes>-1)
+                    {
+                        out.write(tempbytes,0,readbytes);
+                        readbytes = in.read(tempbytes,0,512);
+                    }
+                    out.close();
+                    in.close();
+                    System.out.println("[Residence] Wrote default config...");
+                    return;
+                }
+            }
+            System.out.println("[Residence] Unable to write default config file!");
+        } catch (Exception ex) {
+            System.out.println("[Residence] Failed to write default config file:" + ex);
         }
     }
 }
