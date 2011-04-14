@@ -55,6 +55,17 @@ public class ResidencePlayerListener extends PlayerListener {
         {
             Player player = event.getPlayer();
             Block block = event.getClickedBlock();
+            if (player.getItemInHand().getTypeId() == Residence.getSelectionManager().getSelectionId()) {
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                    Location loc = block.getLocation();
+                    Residence.getSelectionManager().placeLoc1(event.getPlayer().getName(), loc);
+                    player.sendMessage("§aPlaced Primary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    Location loc = block.getLocation();
+                    Residence.getSelectionManager().placeLoc2(player.getName(), loc);
+                    player.sendMessage("§aPlaced Secondary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                }
+            }
             Material mat = block.getType();
             if(!Residence.getPermissionManager().isResidenceAdmin(player))
             {
