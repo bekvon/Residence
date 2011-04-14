@@ -516,6 +516,7 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§amove§3 - globally allow everyone move rights");
                             player.sendMessage("§abuild§3 - globally allow everyone build rights");
                             player.sendMessage("§ause§3 - globally allow everyone use rights");
+                            player.sendMessage("§acontainer§3 - allows / disallows container access.");
                             player.sendMessage("§apvp§3 - allows or dissallows pvp.");
                             player.sendMessage("§aignite§3 - allows / disallows fire starting.");
                             player.sendMessage("§afirespread§3 - allows / disallows fire spread.");
@@ -555,6 +556,7 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§amove§3 - allows movement when area set to private.");
                             player.sendMessage("§abuild§3 - allows building / destroying blocks.");
                             player.sendMessage("§ause§3 - allows using lever, doors, chests.");
+                            player.sendMessage("§acontainer§3 - allows / disallows container access.");
                             player.sendMessage("§aadmin§3 - allows user to give / remove area flags.");
                             player.sendMessage("§atp§3 - allows / disallows player to tp to your residence.");
                             player.sendMessage("§9<residence> can be ommited, it will use the residence your in.");
@@ -584,7 +586,7 @@ public class Residence extends JavaPlugin {
                         if (args[1].equals("?") || args[1].equals("help")) {
                             player.sendMessage("§d----------Command Help:----------");
                             player.sendMessage("§bgset §6<residence> [group] [flag] [true/false/remove]");
-                            player.sendMessage("§9gset follows the same rules and flags as pset, except it works for permissions groups.  type /res pset ? for more info.");
+                            player.sendMessage("§9gset follows the same rules and flags as pset, except it works for groups.  type /res pset ? for more info.");
                             return true;
                         }
                     }
@@ -638,6 +640,7 @@ public class Residence extends JavaPlugin {
                             return true;
                         }
                         res.renameArea(player, args[2], args[3]);
+                        return true;
                     }
                     if(args.length==1 || (args.length == 2 && args[1].equals("?")))
                     {

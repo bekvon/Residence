@@ -105,11 +105,13 @@ Groups:
                tnt: false
                creeper: false
                firespread: false
+               container: false
           # Specifys the flags that are applied at to the creator at residence creation.
           CreatorDefault:
                move: true
                build: true
                use: true
+               container: true
           # Specifys the flags that are applied to other groups for this residence, at creation.
           GroupDefault:
                #default:

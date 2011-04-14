@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -50,32 +51,36 @@ public class ResidencePlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Block block = event.getClickedBlock();
         Player player = event.getPlayer();
-        if(player.getItemInHand().getTypeId() == Residence.getSelectionManager().getSelectionId())
+        Block block = event.getClickedBlock();
+        Material mat = block.getType();
+        if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
         {
-            if(event.getAction() == Action.LEFT_CLICK_BLOCK)
+            ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
+            if(res!=null)
             {
-                Location loc = block.getLocation();
-                Residence.getSelectionManager().placeLoc1(event.getPlayer().getName(), loc);
-                player.sendMessage("§aPlaced Primary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
-            }
-            else if(event.getAction() == Action.RIGHT_CLICK_BLOCK)
-            {
-                Location loc = block.getLocation();
-                Residence.getSelectionManager().placeLoc2(player.getName(), loc);
-                player.sendMessage("§aPlaced Secondary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                if(!res.getPermissions().has("container", true))
+                {
+                    event.setCancelled(true);
+                    player.sendMessage("§cYou dont have container access for this Residence.");
+                }
             }
         }
-        if (block != null) {
+        else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH)
+        {
             ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
-            if (res != null) {
-                if (!res.getPermissions().playerHas(player.getName(), "use", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            if(res!=null)
+            {
+                if(!res.getPermissions().has("use", true))
+                {
                     event.setCancelled(true);
-                    player.sendMessage("§cYou dont have permission to use this.");
+                    player.sendMessage("§cYou dont have use access for this Residence.");
                 }
-            } else {
-                if (!Residence.getConfig().worldUseEnabled() && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            }
+            else
+            {
+                if(!Residence.getConfig().worldUseEnabled())
+                {
                     event.setCancelled(true);
                     player.sendMessage("§cWorld use is disabled.");
                 }
