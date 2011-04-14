@@ -54,35 +54,38 @@ public class ResidencePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
         Material mat = block.getType();
-        if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
+        if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
-            ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
-            if(res!=null)
+            if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
             {
-                if(!res.getPermissions().has("container", true))
+                ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
+                if(res!=null)
                 {
-                    event.setCancelled(true);
-                    player.sendMessage("§cYou dont have container access for this Residence.");
+                    if(!res.getPermissions().has("container", true))
+                    {
+                        event.setCancelled(true);
+                        player.sendMessage("§cYou dont have container access for this Residence.");
+                    }
                 }
             }
-        }
-        else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH)
-        {
-            ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
-            if(res!=null)
+            else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH)
             {
-                if(!res.getPermissions().has("use", true))
+                ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
+                if(res!=null)
                 {
-                    event.setCancelled(true);
-                    player.sendMessage("§cYou dont have use access for this Residence.");
+                    if(!res.getPermissions().has("use", true))
+                    {
+                        event.setCancelled(true);
+                        player.sendMessage("§cYou dont have use access for this Residence.");
+                    }
                 }
-            }
-            else
-            {
-                if(!Residence.getConfig().worldUseEnabled())
+                else
                 {
-                    event.setCancelled(true);
-                    player.sendMessage("§cWorld use is disabled.");
+                    if(!Residence.getConfig().worldUseEnabled())
+                    {
+                        event.setCancelled(true);
+                        player.sendMessage("§cWorld use is disabled.");
+                    }
                 }
             }
         }
