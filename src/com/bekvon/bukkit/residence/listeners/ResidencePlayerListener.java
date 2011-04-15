@@ -15,10 +15,15 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInventoryEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 /**
  *
@@ -192,6 +197,41 @@ public class ResidencePlayerListener extends PlayerListener {
         message = message.replaceAll("%owner", res.getPermissions().getOwner());
         message = message.replaceAll("%residence", areaname);
         return message;
+    }
+
+    @Override
+    public void onItemHeldChange(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+        PlayerInventory items = player.getInventory();
+        Material heldItem = items.getItem(event.getNewSlot()).getType();
+        String world = player.getWorld().getName();
+        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
+        if(!Residence.getItemManager().isAllowed(heldItem, group, world))
+        {
+            ItemStack olditem = items.getItem(event.getPreviousSlot());
+            ItemStack newitem = items.getItem(event.getNewSlot());
+            items.remove(newitem);
+            items.setItem(event.getPreviousSlot(), newitem);
+            if(olditem!=null && olditem.getType()!=Material.AIR)
+                items.setItem(event.getNewSlot(), olditem);
+            player.sendMessage("§cYou are currently blacklisted from using that item.");
+        }
+        super.onItemHeldChange(event);
+    }
+
+    @Override
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+        Player player = event.getPlayer();
+        Material groundItem = event.getItem().getItemStack().getType();
+        String world = player.getWorld().getName();
+        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
+        if(!Residence.getItemManager().isAllowed(groundItem, group, world))
+        {
+            event.getItem().remove();
+            event.setCancelled(true);
+            player.sendMessage("§cYou are currently blacklisted from using that item.");
+        }
+        super.onPlayerPickupItem(event);
     }
 
 }

@@ -120,3 +120,11 @@ Groups:
 GroupAssigments:
      bekvon: default
      player: default
+
+ItemList:
+     ListName:
+        Type: blacklist
+        World: world
+        Group: default
+        Items:
+           - 'TNT'

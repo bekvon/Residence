@@ -36,7 +36,6 @@ public class ResidencePermissions extends PermissionList {
 
     public boolean playerHas(String player, String flag, boolean def)
     {
-        player = player;
         String group = Residence.getPermissionManager().getGroupNameByPlayer(player, world);
         if(playerFlags.containsKey(player))
         {
@@ -183,6 +182,7 @@ public class ResidencePermissions extends PermissionList {
     }
 
     public void setGroupFlag(Player player, String group, String flag, String flagstate) {
+        group = group.toLowerCase();
         FlagState state = PermissionList.stringToFlagState(flagstate);
         if (checkCanSetFlag(player, flag, state, false)) {
             if (Residence.getPermissionManager().hasGroup(group)) {
