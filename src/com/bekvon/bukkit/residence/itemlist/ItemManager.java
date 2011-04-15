@@ -34,12 +34,15 @@ public class ItemManager {
 
     public void readLists(Configuration config) {
         List<String> keys = config.getKeys("ItemList");
-        if(keys!=null)
-        {
+        if (keys != null) {
             for (String key : keys) {
-                ItemList list = ItemList.readList(config.getNode("ItemList." + key));
-                lists.add(list);
-                System.out.println("Debug: read list " + key + " world: " + list.getWorld() + " group: " + list.getGroup() + " itemcount:" + list.getListSize());
+                try {
+                    ItemList list = ItemList.readList(config.getNode("ItemList." + key));
+                    lists.add(list);
+                    //System.out.println("Debug: read list " + key + " world: " + list.getWorld() + " group: " + list.getGroup() + " itemcount:" + list.getListSize());
+                } catch (Exception ex) {
+                    System.out.println("Failed to load item list:" + key);
+                }
             }
         }
     }
