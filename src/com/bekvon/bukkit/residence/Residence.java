@@ -12,6 +12,7 @@ import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.IConomyAdapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.itemlist.ItemManager;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
@@ -25,12 +26,10 @@ import com.spikensbror.bukkit.mineconomy.MineConomy;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -68,6 +67,7 @@ public class Residence extends JavaPlugin {
     private static TransactionManager tmanager;
     private static PermissionListManager pmanager;
     private static LeaseManager leasemanager;
+    private static ItemManager imanager;
     private static Server server;
     private boolean firstenable = true;
     private static EconomyInterface economy;
@@ -113,6 +113,7 @@ public class Residence extends JavaPlugin {
         this.getConfiguration().load();
         cmanager = new ConfigManager(this.getConfiguration());
         gmanager = new PermissionManager(this.getConfiguration());
+        imanager = new ItemManager(this.getConfiguration());
         enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
         econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
         ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
@@ -162,6 +163,8 @@ public class Residence extends JavaPlugin {
             getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Highest, this);
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM_HELD, plistener, Priority.Highest, this);
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, plistener, Priority.Highest, this);
             firstenable = false;
         }
         autosaveInt = this.getConfiguration().getInt("SaveInterval", 10);
@@ -211,6 +214,11 @@ public class Residence extends JavaPlugin {
 
     public static TransactionManager getTransactionManager() {
         return tmanager;
+    }
+
+    public static ItemManager getItemManager()
+    {
+        return imanager;
     }
 
     private void loadIConomy() 

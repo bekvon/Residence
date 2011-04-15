@@ -81,6 +81,7 @@ public class ResidenceManager {
                 res = key.getValue();
                 if (res.containsLoc(loc)) {
                     name = key.getKey();
+                    break;
                 }
             }
         }
