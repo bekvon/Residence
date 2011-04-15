@@ -218,7 +218,6 @@ public class ResidenceManager {
 
     public int getOwnedZoneCount(String player)
     {
-        player = player;
         Collection<ClaimedResidence> set = residences.values();
         int count=0;
         synchronized(residences)

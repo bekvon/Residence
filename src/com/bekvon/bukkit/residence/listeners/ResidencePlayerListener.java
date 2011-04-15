@@ -79,7 +79,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
                     if(res!=null)
                     {
-                        if(!res.getPermissions().has("container", true))
+                        if(!res.getPermissions().playerHas(player.getName(),"container", true))
                         {
                             event.setCancelled(true);
                             player.sendMessage("§cYou dont have container access for this Residence.");
@@ -91,7 +91,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
                     if(res!=null)
                     {
-                        if(!res.getPermissions().has("use", true))
+                        if(!res.getPermissions().playerHas(player.getName(),"use", true))
                         {
                             event.setCancelled(true);
                             player.sendMessage("§cYou dont have use access for this Residence.");
