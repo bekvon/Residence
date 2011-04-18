@@ -34,14 +34,14 @@ public class ConfigManager {
     public void load(Configuration config) {
         defaultGroup = config.getString("Global.DefaultGroup", "default");
         adminsOnly = config.getBoolean("Global.AdminOnlyCommands", false);
-        worldbuild = config.getBoolean("Global.WorldFlags.build", true);
-        worldignite = config.getBoolean("Global.WorldFlags.ignite", true);
-        worldfirespread = config.getBoolean("Global.WorldFlags.firespread", true);
-        worlduse = config.getBoolean("Global.WorldFlags.use", true);
-        worlddamage = config.getBoolean("Global.WorldFlags.damage", true);
-        worldcreeper = config.getBoolean("Global.WorldFlags.creeper", true);
-        worldtnt = config.getBoolean("Global.WorldFlags.tnt", true);
-        worldpvp = config.getBoolean("Global.WorldFlags.pvp", true);
+        worldbuild = config.getBoolean("Global.Flags.build", true);
+        worldignite = config.getBoolean("Global.Flags.ignite", true);
+        worldfirespread = config.getBoolean("Global.Flags.firespread", true);
+        worlduse = config.getBoolean("Global.Flags.use", true);
+        worlddamage = config.getBoolean("Global.Flags.damage", true);
+        worldcreeper = config.getBoolean("Global.Flags.creeper", true);
+        worldtnt = config.getBoolean("Global.Flags.tnt", true);
+        worldpvp = config.getBoolean("Global.Flags.pvp", true);
         useLeases = config.getBoolean("Global.UseLeaseSystem", false);
         enableBuySell = config.getBoolean("Global.EnableEconomy", false);
         allowEmptyResidences = config.getBoolean("Global.AllowEmptyResidences", true);
