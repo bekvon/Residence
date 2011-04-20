@@ -938,6 +938,28 @@ public class Residence extends JavaPlugin {
                         }
                         return true;
                     }
+                    else if(args[0].equals("removeowner"))
+                    {
+                        ClaimedResidence area = rmanager.getByName(args[1]);
+                        if (area != null) {
+                            area.getPermissions().setOwner("Server Owned", false);
+                            player.sendMessage("§cOwner of §a" + args[1] + "§c set to §aServer Owned");
+                        } else {
+                            player.sendMessage("§cInvalid residence.");
+                        }
+                        return true;
+                    }
+                    else if(args[0].equals("clearflags"))
+                    {
+                        ClaimedResidence area = rmanager.getByName(args[1]);
+                        if (area != null) {
+                            area.getPermissions().clearFlags();
+                            player.sendMessage("§aFlags Cleared.");
+                        } else {
+                            player.sendMessage("§cInvalid residence.");
+                        }
+                        return true;
+                    }
                 }
             }
             return true;

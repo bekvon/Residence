@@ -60,6 +60,11 @@ public class ClaimedResidence {
             player.sendMessage("§cArea is in a different world from residence.");
             return;
         }
+        if(area.getSize()==0)
+        {
+            player.sendMessage("§cError, 0 sized area.");
+            return;
+        }
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
             if (!this.perms.hasResidencePermission(player, true)) {

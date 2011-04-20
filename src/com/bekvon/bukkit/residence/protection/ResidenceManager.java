@@ -125,7 +125,7 @@ public class ResidenceManager {
             }
         }
         ClaimedResidence newRes = new ClaimedResidence(player.getName(), loc1.getWorld().getName());
-        newRes.getPermissions().applyDefaultFlags();;
+        newRes.getPermissions().applyDefaultFlags();
         newRes.setEnterMessage(group.getDefaultEnterMessage());
         newRes.setLeaveMessage(group.getDefaultLeaveMessage());
         newRes.addArea(player, newArea, "main");
