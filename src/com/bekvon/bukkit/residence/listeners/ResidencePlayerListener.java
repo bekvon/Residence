@@ -25,6 +25,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.ResidenceManager;
+
 /**
  *
  * @author Administrator
@@ -51,7 +55,7 @@ public class ResidencePlayerListener extends PlayerListener {
         cache.remove(pname);
         lastUpdate.remove(pname);
         lastOutsideLoc.remove(pname);
-        super.onPlayerQuit(event);
+        //super.onPlayerQuit(event); // This just causes a nag to appear, the parent has no actions
     }
 
     @Override
