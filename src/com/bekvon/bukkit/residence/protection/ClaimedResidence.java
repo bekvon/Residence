@@ -4,9 +4,6 @@
  */
 package com.bekvon.bukkit.residence.protection;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.economy.TransactionManager;
-import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -605,14 +602,14 @@ public class ClaimedResidence {
         newName = newName.replace(".", "_");
         newName = newName.replace(":", "_");
         ClaimedResidence res = subzones.get(oldName);
-        if(!res.getPermissions().hasResidencePermission(player, true))
-        {
-            player.sendMessage("§cYou dont have permission...");
-            return;
-        }
         if(res==null)
         {
             player.sendMessage("§cInvalid Subzone...");
+        	return;
+        }
+        if(!res.getPermissions().hasResidencePermission(player, true))
+        {
+            player.sendMessage("§cYou dont have permission...");
             return;
         }
         if(subzones.containsKey(newName))

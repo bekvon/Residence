@@ -5,8 +5,6 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -16,6 +14,9 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 /**
  *
@@ -69,7 +70,7 @@ public class ResidenceBlockListener extends BlockListener {
                 event.setCancelled(true);
             }
         }
-        super.onBlockFromTo(event);
+        //super.onBlockFromTo(event);
     }
 
     @Override
