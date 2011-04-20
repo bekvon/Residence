@@ -134,7 +134,7 @@ public class PermissionManager {
         {
             for(String key : keys)
             {
-                playersGroup.put(key.toLowerCase(), config.getString("GroupAssignments."+key, defaultGroup).toLowerCase());
+                playersGroup.put(key, config.getString("GroupAssignments."+key, defaultGroup).toLowerCase());
             }
         }
     }

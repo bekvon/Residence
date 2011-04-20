@@ -131,7 +131,7 @@ public class ResidencePermissions extends PermissionList {
             return true;
         if(requireOwner)
             return(owner.equals(player.getName()));
-        return (playerHas(player.getName(), "admin",false) || owner.equals(player.getName().toLowerCase()));
+        return (playerHas(player.getName(), "admin",false) || owner.equals(player.getName()));
     }
 
     private boolean hasResidenceAdmin(Player player)
