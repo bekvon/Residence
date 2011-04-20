@@ -165,6 +165,7 @@ public class Residence extends JavaPlugin {
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM_HELD, plistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, plistener, Priority.Highest, this);
+            getServer().getPluginManager().registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Highest, this);
             firstenable = false;
         }
         autosaveInt = this.getConfiguration().getInt("SaveInterval", 10);
