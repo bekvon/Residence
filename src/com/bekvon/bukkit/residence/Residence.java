@@ -45,15 +45,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author Gary Smoak - bekvon
  *
- * TODO:
- * IMPORTANT: look at / adapt to CB updates!
- * Rewrite LimitsManager class
- * Move LimitsGroup out of LimitsManager
- * Make Leases capable of being added to sub zones
- * Finish Permission Lists
- * Breakup ResidenceManger a bit more... maybe
- * Add functionality to selection manager
- * Rename areas
  */
 public class Residence extends JavaPlugin {
 
@@ -517,11 +508,17 @@ public class Residence extends JavaPlugin {
                         if (area != null) {
                             rmanager.getByName(area).getPermissions().setFlag(player, args[1], args[2]);
                         } else {
-                            player.sendMessage("§cInvalid area.");
+                            player.sendMessage("§cInvalid Residence.");
                         }
                         return true;
                     } else if (args.length == 4) {
-                        rmanager.getByName(args[1]).getPermissions().setFlag(player, args[2], args[3]);
+                        ClaimedResidence area = rmanager.getByName(args[1]);
+                        if(area!=null)
+                        {
+                            area.getPermissions().setFlag(player, args[2], args[3]);
+                        }
+                        else
+                            player.sendMessage("§cInvalid Residence.");
                         return true;
                     }
                     if (args.length == 2) {
@@ -562,6 +559,8 @@ public class Residence extends JavaPlugin {
                         if (area != null) {
                             area.getPermissions().setPlayerFlag(player, args[2], args[3], args[4]);
                         }
+                        else
+                            player.sendMessage("§cInvalid residence.");
                         return true;
                     }
                     if (args.length == 2) {
@@ -597,6 +596,8 @@ public class Residence extends JavaPlugin {
                         if (area != null) {
                             area.getPermissions().setGroupFlag(player, args[2], args[3], args[4]);
                         }
+                        else
+                            player.sendMessage("§cInvalid residence.");
                         return true;
                     }
                     if (args.length == 2) {
