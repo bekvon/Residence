@@ -4,6 +4,9 @@
  */
 package com.bekvon.bukkit.residence.protection;
 
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
