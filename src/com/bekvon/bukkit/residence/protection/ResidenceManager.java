@@ -164,7 +164,6 @@ public class ResidenceManager {
 
     public void addPhysicalArea(Player player, String residenceName,String areaID, Location loc1, Location loc2)
     {
-        residenceName = residenceName.toLowerCase();
         ClaimedResidence res = getByName(residenceName);
         if(!res.getPermissions().hasResidencePermission(player, true))
         {

@@ -56,7 +56,7 @@ public class ClaimedResidence {
             player.sendMessage("§cArea name already exists.");
             return;
         }
-        if (!area.getWorld().getName().toLowerCase().equals(perms.getWorld())) {
+        if (!area.getWorld().getName().equalsIgnoreCase(perms.getWorld())) {
             player.sendMessage("§cArea is in a different world from residence.");
             return;
         }
