@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
  * @author Administrator
  */
 public class SelectionManager {
-    private int selectionItemId;
     private Map<String,Location> playerLoc1;
     private Map<String,Location> playerLoc2;
 
@@ -29,19 +28,8 @@ public class SelectionManager {
 
     public SelectionManager()
     {
-        selectionItemId = 271;
         playerLoc1 = Collections.synchronizedMap(new HashMap<String,Location>());
         playerLoc2 = Collections.synchronizedMap(new HashMap<String,Location>());
-    }
-
-    public int getSelectionId()
-    {
-        return selectionItemId;
-    }
-    
-    public void setSelectionId(int id)
-    {
-        selectionItemId = id;
     }
 
     public synchronized void placeLoc1(String player, Location loc)

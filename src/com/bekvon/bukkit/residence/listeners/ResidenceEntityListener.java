@@ -14,7 +14,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -67,12 +66,12 @@ public class ResidenceEntityListener extends EntityListener {
             Entity ent = event.getEntity();
             if(ent instanceof LivingEntity)
             {
-                if(!Residence.getConfig().worldCreeperEnabled())
+                if(!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("creeper", true))
                     event.setCancelled(true);
             }
             else
             {
-                if(!Residence.getConfig().worldTNTEnabled())
+                if(!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("tnt", true))
                     event.setCancelled(true);
             }
         }
@@ -83,11 +82,9 @@ public class ResidenceEntityListener extends EntityListener {
     public void onEntityDamage(EntityDamageEvent event) {
         Entity ent = event.getEntity();
         ClaimedResidence area = Residence.getResidenceManger().getByLoc(ent.getLocation());
-
         if (event.isCancelled()) {
             return;
         }
-
         /* Living Entities */
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
@@ -98,7 +95,7 @@ public class ResidenceEntityListener extends EntityListener {
                 /* Check for Player vs Player */
                 if (area == null) {
                     /* World PvP */
-                    if (!Residence.getConfig().worldPvpEnabled()) {
+                    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
                         ((Player) damager).sendMessage("§cWorld PVP is disabled.");
                         event.setCancelled(true);
                     }
@@ -112,9 +109,8 @@ public class ResidenceEntityListener extends EntityListener {
                 return;
             }
         }
-
         if (area == null) {
-            if (!Residence.getConfig().worldDamageEnabled()) {
+            if (!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("damage", true)) {
                 event.setCancelled(true);
             }
         } else {
@@ -122,7 +118,6 @@ public class ResidenceEntityListener extends EntityListener {
                 event.setCancelled(true);
             }
         }
-
         if (event.isCancelled()) {
             /* Put out a fire on a player */
             if ((ent instanceof Player)

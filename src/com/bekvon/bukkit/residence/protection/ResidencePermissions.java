@@ -52,14 +52,6 @@ public class ResidencePermissions extends PermissionList {
         return has(flag,def);
     }
 
-    public boolean has(String flag, boolean def)
-    {
-        if(cuboidFlags.containsKey(flag))
-            return cuboidFlags.get(flag);
-        else
-            return def;
-    }
-
     public void applyTemplate(Player player, PermissionList list)
     {
 

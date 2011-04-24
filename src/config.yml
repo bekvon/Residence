@@ -3,7 +3,10 @@ Global:
     # Wooden Axe is the default selection tool for Residence.
     # You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values
     SelectionToolId: 271
-    # The interval, in milliseconds, between movement checks.
+    # This determins which tool you can use to see info on residences, default is String.
+    # Simply equip this tool and hit a location inside the residence and it will display the info for it.
+    InfoToolId: 287
+   # The interval, in milliseconds, between movement checks.
    # Reducing this will increase the load on the server.
    # Increasing this will allow players to move further in movement restricted zones before they are teleported out.
     MoveCheckInterval: 500
@@ -26,14 +29,18 @@ Global:
     # These flags are applied, by default, when the player is not within another residence.
     # All flags default to true if not specified.
     Flags:
-        use: true
-        build: false
-        ignite: true
-        firespread: true
-        damage: true
-        creeper: true
-        tnt: true
-        pvp: true
+        Global: #these are default for all worlds unless specified below, they can be overridden per group
+            use: true
+            build: true
+            ignite: true
+            firespread: true
+            damage: true
+            creeper: true
+            tnt: true
+            pvp: true
+        WorldNameHere: #here you can set default flags for individual worlds, these override Global
+            #build: true
+
 # These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:
     Default:
@@ -114,17 +121,31 @@ Groups:
                container: true
           # Specifys the flags that are applied to other groups for this residence, at creation.
           GroupDefault:
-               #default:
-                   #move: true
+               #default: #group name
+                   #build: false
+          #these flags are applied to this group whenever they are outside a residence
+          #these flags will override the flags at the top, under the Global section.
+          World:
+                Global: #these flags will apply to all worlds
+                     #build: false
+                WorldNameHere: #or you can apply them by each individual world
+                     #build: false
+
 # You can manually specify the group a player is in below, this overrides their permissions group.
 GroupAssigments:
      bekvon: default
      player: default
 
-ItemList:
-     ListName:
+ItemList: #this is where you can create blacklists / whitelists
+     ListName: #list name is not important, as long as it is unique. Its good to use a descripive name. 
+        #type of the list, can be blacklist or whitelist
         Type: blacklist
+        #If you want, you can have this list only apply to one world, otherwise it applys to all worlds
         World: world
+        #You can also have the list apply only to one group, otherwise it applys for all groups
         Group: default
-        Items:
+        #this is the actual list of material names that this list allows or dissallows
+        #You can look up the material name by item ID in game by typing /res material <id>
+        #Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance
+        Items: 
            - 'TNT'

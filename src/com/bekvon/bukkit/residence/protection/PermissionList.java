@@ -8,10 +8,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.entity.Player;
+import org.bukkit.util.config.ConfigurationNode;
 
 /**
  *
@@ -22,6 +24,7 @@ public class PermissionList {
     protected Map<String, Map<String, Boolean>> playerFlags;
     protected Map<String, Map<String, Boolean>> groupFlags;
     protected Map<String, Boolean> cuboidFlags;
+    protected PermissionList parent;
 
     public PermissionList()
     {
@@ -98,8 +101,20 @@ public class PermissionList {
         }
     }
 
+    public boolean has(String flag, boolean def)
+    {
+        if(cuboidFlags.containsKey(flag))
+            return cuboidFlags.get(flag);
+        else
+        {
+            if(parent!=null)
+                return parent.has(flag, def);
+            return def;
+        }
+    }
+
     public boolean checkValidFlag(String flag, boolean globalflag) {
-        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container")) {
+        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone")) {
             return true;
         }
         if (globalflag) {
@@ -296,5 +311,15 @@ public class PermissionList {
         player.sendMessage("§eYour Flags: §a" + listPlayerFlags(player.getName()));
         player.sendMessage("§eGroup Flags:§c " + listGroupFlags());
         player.sendMessage("§eOthers Flags:§c " + listOtherPlayersFlags(player.getName()));
+    }
+
+    public void setParent(PermissionList p)
+    {
+        parent = p;
+    }
+
+    public PermissionList getParent()
+    {
+        return parent;
     }
 }
