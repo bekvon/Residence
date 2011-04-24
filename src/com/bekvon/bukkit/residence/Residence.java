@@ -4,6 +4,7 @@
  */
 package com.bekvon.bukkit.residence;
 
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
@@ -13,6 +14,7 @@ import com.bekvon.bukkit.residence.economy.IConomyAdapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.itemlist.ItemManager;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
@@ -20,6 +22,7 @@ import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.PermissionList;
+import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
 
@@ -59,6 +62,7 @@ public class Residence extends JavaPlugin {
     private static PermissionListManager pmanager;
     private static LeaseManager leasemanager;
     private static ItemManager imanager;
+    private static WorldFlagManager wmanager;
     private static Server server;
     private boolean firstenable = true;
     private static EconomyInterface economy;
@@ -105,6 +109,7 @@ public class Residence extends JavaPlugin {
         cmanager = new ConfigManager(this.getConfiguration());
         gmanager = new PermissionManager(this.getConfiguration());
         imanager = new ItemManager(this.getConfiguration());
+        wmanager = new WorldFlagManager(this.getConfiguration());
         enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
         econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
         ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
@@ -138,13 +143,11 @@ public class Residence extends JavaPlugin {
                 pmanager = new PermissionListManager();
             }
             smanager = new SelectionManager();
-            smanager.setSelectionId(this.getConfiguration().getInt("Global.SelectionToolId", Material.WOOD_AXE.getId()));
             blistener = new ResidenceBlockListener();
             plistener = new ResidencePlayerListener(this.getConfiguration().getInt("Global.MoveCheckInterval", 1000));
             elistener = new ResidenceEntityListener();
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGE, blistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Highest, this);
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Highest, this);
@@ -213,6 +216,11 @@ public class Residence extends JavaPlugin {
         return imanager;
     }
 
+    public static WorldFlagManager getWorldFlags()
+    {
+        return wmanager;
+    }
+
     private void loadIConomy() 
     {
         Plugin p = getServer().getPluginManager().getPlugin("iConomy");
@@ -240,6 +248,7 @@ public class Residence extends JavaPlugin {
         if (command.getName().equals("res") || command.getName().equals("residence")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                PermissionGroup group = Residence.getPermissionManager().getGroup(player);
                 String pname = player.getName();
                 if (cmanager.allowAdminsOnly()) {
                     if (!gmanager.hasAuthority(player, "residence.admin", player.isOp())) {
@@ -254,6 +263,11 @@ public class Residence extends JavaPlugin {
                     args[0] = "?";
                 }
                 if (args[0].equals("select")) {
+                    if(!group.canCreateResidences() && group.getMaxSubzoneDepth() <= 0 && !Residence.getPermissionManager().isResidenceAdmin(player))
+                    {
+                        player.sendMessage("§cYou can not create residences or subzones, so you dont have selection access.");
+                        return true;
+                    }
                     if (args.length == 1 || (args.length == 2 && args[1].equals("?"))) {
                         player.sendMessage("§d----------Command Help:----------");
                         player.sendMessage("§aselect §6[x] [y] [z]§3 - select in x,y,z radius");
@@ -263,7 +277,8 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§aselect §6expand <size>§3 - expand selection the direction your looking.");
                         player.sendMessage("§aselect §6shift <distance>§3 - shift selection the direction your looking.");
                         player.sendMessage("§aselect §6chunk§3 - select the current chunk your in.");
-                        player.sendMessage("§9You can use a " + Material.getMaterial(smanager.getSelectionId()).name() + " tool to select.");
+                        player.sendMessage("§aselect §6residence <ResidenceName> <AreaID>§3 - select existing area.");
+                        player.sendMessage("§9You can use a " + Material.getMaterial(cmanager.getSelectionTooldID()).name() + " tool to select.");
                         return true;
                     } else if (args.length == 2) {
                         if (args[1].equals("size")) {
@@ -327,12 +342,33 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§c/res select ? for more info.");
                         return true;
                     }
-                    try {
-                        smanager.selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-                        return true;
-                    } catch (Exception ex) {
-                        player.sendMessage("§cInvalid select command.");
-                        return true;
+                    if (args[1].equals("residence")) {
+                        ClaimedResidence res = rmanager.getByName(args[2]);
+                        if (res == null) {
+                            player.sendMessage("§cInvalid Residence...");
+                            return true;
+                        }
+                        CuboidArea area = res.getArea(args[3]);
+                        if(area!=null)
+                        {
+                            smanager.placeLoc1(pname, area.getHighLoc());
+                            smanager.placeLoc2(pname, area.getLowLoc());
+                            player.sendMessage("§aSelected area §6" + args[3] + "§a of residence §6" + args[2] + "§a.");
+                        }
+                        else
+                        {
+                            player.sendMessage("§cInvalid residence physical area ID.");
+                        }
+                    }
+                    else
+                    {
+                        try {
+                            smanager.selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                            return true;
+                        } catch (Exception ex) {
+                            player.sendMessage("§cInvalid select command.");
+                            return true;
+                        }
                     }
                 } else if (args[0].equals("create")) {
                     if (args.length != 2) {
@@ -702,7 +738,22 @@ public class Residence extends JavaPlugin {
                     player.sendMessage("§bVisit my thread on http://forums.bukkit.org/ for more info, and to see an easier to read and more informative list of commands.");
                     player.sendMessage("------------------------------------");
                     return true;
-                } else if (args[0].equals("tpset")) {
+                }
+                else if(args[0].equals("material"))
+                {
+                    if(args.length!=2)
+                        return false;
+                    try
+                    {
+                        player.sendMessage("§aThe Material Name for ID §6" + args[1] + "§a is §c" + Material.getMaterial(Integer.parseInt(args[1])).name());
+                    }
+                    catch (Exception ex)
+                    {
+                        player.sendMessage("§cInvalid ID...");
+                    }
+                    return true;
+                }
+                else if (args[0].equals("tpset")) {
                     ClaimedResidence res = rmanager.getByLoc(player.getLocation());
                     if (res != null) {
                         res.setTpLoc(player);

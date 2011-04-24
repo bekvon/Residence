@@ -111,11 +111,24 @@ public class ItemList {
         list.world = node.getString("World",null);
         list.group = node.getString("Group",null);
         List<String> items = node.getStringList("Items", null);
-        if(items!=null)
-        {
-            for(String item : items)
-            {
-                list.add(Material.valueOf(item.toUpperCase()));
+        if (items != null) {
+            for (String item : items) {
+                int parse = -1;
+                try {
+                    parse = Integer.parseInt(item);
+                } catch (Exception ex) {
+                }
+                if (parse == -1) {
+                    try {
+                        list.add(Material.valueOf(item.toUpperCase()));
+                    } catch (Exception ex) {
+                    }
+                } else {
+                    try {
+                        list.add(Material.getMaterial(parse));
+                    } catch (Exception ex) {
+                    }
+                }
             }
         }
         return list;

@@ -34,7 +34,7 @@ public class ResidenceBlockListener extends BlockListener {
                 player.sendMessage("§cYou dont have permission to build here.");
             }
         } else {
-            if (!Residence.getConfig().worldBuildEnabled() && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            if (!Residence.getWorldFlags().getPerms(player).has("build", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
                 event.setCancelled(true);
 
                 player.sendMessage("§cWorld build is disabled.");
@@ -53,9 +53,8 @@ public class ResidenceBlockListener extends BlockListener {
                 player.sendMessage("§cYou dont have permission to build here.");
             }
         } else {
-            if (!Residence.getConfig().worldBuildEnabled() && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            if (!Residence.getWorldFlags().getPerms(player).has("build", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
                 event.setCancelled(true);
-
                 player.sendMessage("§cWorld build is disabled.");
             }
         }
@@ -94,27 +93,19 @@ public class ResidenceBlockListener extends BlockListener {
         } else {
             if(event.getCause() == IgniteCause.SPREAD)
             {
-                if (!Residence.getConfig().worldFireSpreadEnabled()) {
+                if (!Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName()).has("firespread", true)) {
                     event.setCancelled(true);
                 }
             }
             else
             {
-                if(!Residence.getConfig().worldIgniteEnabled())
+                if(!Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName()).has("ignite", true))
                 {
                     event.setCancelled(true);
                 }
             }
         }
         super.onBlockIgnite(event);
-    }
-
-    @Override
-    public void onBlockDamage(BlockDamageEvent event) {
-        Player player = event.getPlayer();
-        if(player.getItemInHand().getTypeId() == Residence.getSelectionManager().getSelectionId())
-            Residence.getSelectionManager().placeLoc1(player.getName(), event.getBlock().getLocation());
-        super.onBlockDamage(event);
     }
 
     @Override

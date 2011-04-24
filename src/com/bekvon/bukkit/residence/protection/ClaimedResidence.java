@@ -112,8 +112,11 @@ public class ClaimedResidence {
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
             if (!this.perms.hasResidencePermission(player, true)) {
-                player.sendMessage("§cYou dont have permission to do this.");
-                return;
+                if(!this.perms.playerHas(name, "subzone", false))
+                {
+                    player.sendMessage("§cYou dont have permission to do this.");
+                    return;
+                }
             }
             if (!(this.containsLoc(loc1) && this.containsLoc(loc2))) {
                 player.sendMessage("§cBoth selection points must be inside the residence.");
@@ -645,5 +648,10 @@ public class ClaimedResidence {
             areas.remove(oldName);
             player.sendMessage("§aRenamed area " + oldName + " to " + newName);
         }
+    }
+
+    public CuboidArea getArea(String name)
+    {
+        return areas.get(name);
     }
 }

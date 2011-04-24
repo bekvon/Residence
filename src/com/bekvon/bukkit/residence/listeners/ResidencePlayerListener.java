@@ -6,6 +6,7 @@
 package com.bekvon.bukkit.residence.listeners;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.HashMap;
@@ -64,15 +65,29 @@ public class ResidencePlayerListener extends PlayerListener {
         {
             Player player = event.getPlayer();
             Block block = event.getClickedBlock();
-            if (player.getItemInHand().getTypeId() == Residence.getSelectionManager().getSelectionId()) {
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            if (player.getItemInHand().getTypeId() == Residence.getConfig().getSelectionTooldID()) {
+                PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+                if(group.getMaxSubzoneDepth() > 0 || group.canCreateResidences())
+                {
+                    if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                        Location loc = block.getLocation();
+                        Residence.getSelectionManager().placeLoc1(event.getPlayer().getName(), loc);
+                        player.sendMessage("§aPlaced Primary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                    } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                        Location loc = block.getLocation();
+                        Residence.getSelectionManager().placeLoc2(player.getName(), loc);
+                        player.sendMessage("§aPlaced Secondary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                    }
+                }
+            }
+            if(player.getItemInHand().getTypeId() == Residence.getConfig().getInfoToolID())
+            {
+                if(event.getAction() == Action.LEFT_CLICK_BLOCK)
+                {
                     Location loc = block.getLocation();
-                    Residence.getSelectionManager().placeLoc1(event.getPlayer().getName(), loc);
-                    player.sendMessage("§aPlaced Primary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
-                } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    Location loc = block.getLocation();
-                    Residence.getSelectionManager().placeLoc2(player.getName(), loc);
-                    player.sendMessage("§aPlaced Secondary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                    String res = Residence.getResidenceManger().getNameByLoc(loc);
+                    if(res!=null)
+                        Residence.getResidenceManger().printAreaInfo(res, player);
                 }
             }
             Material mat = block.getType();
@@ -103,7 +118,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     }
                     else
                     {
-                        if(!Residence.getConfig().worldUseEnabled())
+                        if(!Residence.getWorldFlags().getPerms(player).has("use", true))
                         {
                             event.setCancelled(true);
                             player.sendMessage("§cWorld use is disabled.");
