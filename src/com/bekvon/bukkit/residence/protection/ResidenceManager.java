@@ -223,7 +223,7 @@ public class ResidenceManager {
         {
             for(ClaimedResidence res : set)
             {
-                if(res.getPermissions().getOwner().equals(player))
+                if(res.getPermissions().getOwner().equalsIgnoreCase(player))
                 {
                     count++;
                 }
@@ -374,5 +374,47 @@ public class ResidenceManager {
         {
             player.sendMessage("You dont have permission...");
         }
+    }
+
+    public void giveResidence(Player reqPlayer, String targPlayer, String residence)
+    {
+        ClaimedResidence res = getByName(residence);
+        if(res==null)
+        {
+            reqPlayer.sendMessage("Invalid Residence...");
+            return;
+        }
+        if(!res.getPermissions().hasResidencePermission(reqPlayer, true))
+        {
+            reqPlayer.sendMessage("You dont have permission to give this residence.");
+            return;
+        }
+        boolean admin = Residence.getPermissionManager().isResidenceAdmin(reqPlayer);
+        Player giveplayer = Residence.getServ().getPlayer(targPlayer);
+        if (giveplayer == null || !giveplayer.isOnline()) {
+            reqPlayer.sendMessage("§cTarget player must be online.");
+            return;
+        }
+        CuboidArea[] areas = res.getAreaArray();
+        PermissionGroup g = Residence.getPermissionManager().getGroup(giveplayer);
+        if (areas.length > g.getMaxPhysicalPerResidence() && !admin) {
+            reqPlayer.sendMessage("Cannot give residence to target player, because it has more areas then allowed for the target players group.");
+            return;
+        }
+        if (getOwnedZoneCount(giveplayer.getName()) >= g.getMaxZones() && !admin) {
+            reqPlayer.sendMessage("Target player already owns the maximum number of residences allowed.");
+            return;
+        }
+        if(!admin)
+        {
+            for (CuboidArea area : areas) {
+                if (!g.inLimits(area)) {
+                    reqPlayer.sendMessage("Cannot give residence to target player, because a area is outside the target players limits.");
+                    return;
+                }
+            }
+        }
+        res.getPermissions().setOwner(giveplayer.getName(), true);
+        reqPlayer.sendMessage("You give residence " + residence + " to player " + giveplayer.getName() + ".");
     }
 }

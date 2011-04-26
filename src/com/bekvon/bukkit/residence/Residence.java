@@ -359,6 +359,7 @@ public class Residence extends JavaPlugin {
                         {
                             player.sendMessage("§cInvalid residence physical area ID.");
                         }
+                        return true;
                     }
                     else
                     {
@@ -938,6 +939,14 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§cInvalid Area.");
                     }
                     return true;
+                }
+                else if(args[0].equals("give"))
+                {
+                    if(args.length!=3)
+                    {
+                        player.sendMessage("§cUsage: /res give <residence> <player>");
+                        return true;
+                    }
                 }
                 player.sendMessage("§c/res ? for more info.");
             }
