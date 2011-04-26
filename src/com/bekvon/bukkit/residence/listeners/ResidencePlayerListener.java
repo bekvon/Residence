@@ -5,10 +5,7 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
-import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Location;
@@ -16,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -67,7 +63,7 @@ public class ResidencePlayerListener extends PlayerListener {
             Block block = event.getClickedBlock();
             if (player.getItemInHand().getTypeId() == Residence.getConfig().getSelectionTooldID()) {
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-                if(group.getMaxSubzoneDepth() > 0 || group.canCreateResidences())
+                if(group.getMaxSubzoneDepth() > 0 || group.canCreateResidences() || Residence.getPermissionManager().isResidenceAdmin(player))
                 {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
