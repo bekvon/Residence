@@ -90,8 +90,8 @@ public class SelectionManager {
     {
         if(hasPlacedBoth(player.getName()))
         {
-            playerLoc1.get(player.getName()).setY(128);
-            playerLoc2.get(player.getName()).setY(-127);
+            playerLoc1.get(player.getName()).setY(127);
+            playerLoc2.get(player.getName()).setY(0);
             player.sendMessage("§aSelection expanded from sky to bedrock!");
         }
         else
@@ -111,10 +111,10 @@ public class SelectionManager {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         int xcoord = chunk.getX() * 16;
         int zcoord = chunk.getZ() * 16;
-        int ycoord = -127;
+        int ycoord = 0;
         int xmax = xcoord + 16;
         int zmax = zcoord + 16;
-        int ymax = 128;
+        int ymax = 127;
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
         player.sendMessage("§aSelected current chunk...");
@@ -137,7 +137,7 @@ public class SelectionManager {
         {
             int oldy = area.getHighLoc().getBlockY();
             oldy = oldy + amount;
-            if(oldy>128)
+            if(oldy>127)
             {
                 player.sendMessage("§cError, attempted to go beyond the top of the map.");
             }
@@ -156,7 +156,7 @@ public class SelectionManager {
         {
             int oldy = area.getLowLoc().getBlockY();
             oldy = oldy - amount;
-            if(oldy<-127)
+            if(oldy<0)
             {
                 player.sendMessage("§cError, attempted to go beyond bottem of the map.");
                 return;

@@ -93,6 +93,11 @@ public class ClaimedResidence {
                 player.sendMessage("§cYou've reached the max physical areas allowed for your residence.");
                 return;
             }
+            if(!group.inLimits(area))
+            {
+                player.sendMessage("§cArea size is not within your allowed limits.");
+                return;
+            }
             if(parent==null && Residence.getConfig().buySellEnabled())
             {
                 int chargeamount = (int) Math.ceil((double)area.getSize() * group.getCostPerBlock());
