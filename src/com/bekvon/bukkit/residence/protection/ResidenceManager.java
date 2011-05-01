@@ -33,6 +33,8 @@ public class ResidenceManager {
     }
 
     public ClaimedResidence getByLoc(Location loc) {
+        if(loc==null)
+            return null;
         ClaimedResidence res = null;
         boolean found = false;
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
@@ -56,6 +58,8 @@ public class ResidenceManager {
     }
 
     public ClaimedResidence getByName(String name) {
+        if(name==null)
+            return null;
         String[] split = name.split("\\.");
         if (split.length == 1) {
             return residences.get(name);
@@ -73,6 +77,8 @@ public class ResidenceManager {
 
 
     public String getNameByLoc(Location loc) {
+        if(loc==null)
+            return null;
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         ClaimedResidence res = null;
         String name = null;

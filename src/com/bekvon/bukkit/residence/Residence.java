@@ -102,81 +102,84 @@ public class Residence extends JavaPlugin {
     }
 
     public void onEnable() {
-        server = this.getServer();
-        if(!new File(this.getDataFolder(),"config.yml").isFile())
-            this.writeDefaultConfigFromJar();
-        this.getConfiguration().load();
-        cmanager = new ConfigManager(this.getConfiguration());
-        gmanager = new PermissionManager(this.getConfiguration());
-        imanager = new ItemManager(this.getConfiguration());
-        wmanager = new WorldFlagManager(this.getConfiguration());
-        enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
-        econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
-        ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
-        economy = null;
-        if (firstenable) {
-            if (!this.getDataFolder().isDirectory()) {
-                this.getDataFolder().mkdirs();
+        try {
+            server = this.getServer();
+            if (!new File(this.getDataFolder(), "config.yml").isFile()) {
+                this.writeDefaultConfigFromJar();
             }
-            if (enableecon && econsys != null)
-            {
-                if (econsys.toLowerCase().equals("iconomy"))
-                {
-                    this.loadIConomy();
+            this.getConfiguration().load();
+            cmanager = new ConfigManager(this.getConfiguration());
+            gmanager = new PermissionManager(this.getConfiguration());
+            imanager = new ItemManager(this.getConfiguration());
+            wmanager = new WorldFlagManager(this.getConfiguration());
+            enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
+            econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
+            ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
+            economy = null;
+            if (firstenable) {
+                if (!this.getDataFolder().isDirectory()) {
+                    this.getDataFolder().mkdirs();
                 }
-                else if (econsys.toLowerCase().equals("mineconomy"))
-                {
-                    this.loadMineConomy();
+                if (enableecon && econsys != null) {
+                    if (econsys.toLowerCase().equals("iconomy")) {
+                        this.loadIConomy();
+                    } else if (econsys.toLowerCase().equals("mineconomy")) {
+                        this.loadMineConomy();
+                    }
                 }
+                this.loadYml();
+                if (rmanager == null) {
+                    rmanager = new ResidenceManager();
+                }
+                if (leasemanager == null) {
+                    leasemanager = new LeaseManager(rmanager);
+                }
+                if (tmanager == null) {
+                    tmanager = new TransactionManager(rmanager, gmanager);
+                }
+                if (pmanager == null) {
+                    pmanager = new PermissionListManager();
+                }
+                smanager = new SelectionManager();
+                blistener = new ResidenceBlockListener();
+                plistener = new ResidencePlayerListener(this.getConfiguration().getInt("Global.MoveCheckInterval", 1000));
+                elistener = new ResidenceEntityListener();
+                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM_HELD, plistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, plistener, Priority.Lowest, this);
+                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Lowest, this);
+                firstenable = false;
             }
-            this.loadYml();
-            if (rmanager == null) {
-                rmanager = new ResidenceManager();
+            autosaveInt = this.getConfiguration().getInt("SaveInterval", 10);
+            if (autosaveInt < 1) {
+                autosaveInt = 1;
             }
-            if (leasemanager == null) {
-                leasemanager = new LeaseManager(rmanager);
+            autosaveInt = (autosaveInt * 60) * 20;
+            autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
+            leaseInterval = this.getConfiguration().getInt("LeaseCheckInterval", 10);
+            if (leaseInterval < 1) {
+                leaseInterval = 1;
             }
-            if (tmanager == null) {
-                tmanager = new TransactionManager(rmanager, gmanager);
+            leaseInterval = (leaseInterval * 60) * 20;
+            if (cmanager.useLeases()) {
+                leaseBukkitId = server.getScheduler().scheduleAsyncRepeatingTask(this, leaseExpire, leaseInterval, leaseInterval);
             }
-            if (pmanager == null) {
-                pmanager = new PermissionListManager();
-            }
-            smanager = new SelectionManager();
-            blistener = new ResidenceBlockListener();
-            plistener = new ResidencePlayerListener(this.getConfiguration().getInt("Global.MoveCheckInterval", 1000));
-            elistener = new ResidenceEntityListener();
-            getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM_HELD, plistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, plistener, Priority.Highest, this);
-            getServer().getPluginManager().registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Highest, this);
-            firstenable = false;
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
+        } catch (Exception ex) {
+            System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
+            Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+            this.setEnabled(false);
         }
-        autosaveInt = this.getConfiguration().getInt("SaveInterval", 10);
-        if (autosaveInt < 1) {
-            autosaveInt = 1;
-        }
-        autosaveInt = (autosaveInt * 60) * 20;
-        autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
-        leaseInterval = this.getConfiguration().getInt("LeaseCheckInterval", 10);
-        if (leaseInterval < 1) {
-            leaseInterval = 1;
-        }
-        leaseInterval = (leaseInterval * 60) * 20;
-        if (cmanager.useLeases()) {
-            leaseBukkitId = server.getScheduler().scheduleAsyncRepeatingTask(this, leaseExpire, leaseInterval, leaseInterval);
-        }
-        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
     }
 
     public static ResidenceManager getResidenceManger() {
