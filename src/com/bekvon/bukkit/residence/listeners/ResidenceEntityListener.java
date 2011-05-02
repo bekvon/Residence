@@ -27,6 +27,8 @@ public class ResidenceEntityListener extends EntityListener {
 
     @Override
     public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if(event.isCancelled())
+            return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getLocation());
         if (res != null) {
             if (!res.getPermissions().has("monsters", true)) {
@@ -38,6 +40,8 @@ public class ResidenceEntityListener extends EntityListener {
 
     @Override
     public void onEntityCombust(EntityCombustEvent event) {
+        if(event.isCancelled())
+            return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getEntity().getLocation());
         if (res != null) {
             if (!res.getPermissions().has("ignite", true)) {
@@ -49,6 +53,8 @@ public class ResidenceEntityListener extends EntityListener {
 
     @Override
     public void onEntityExplode(EntityExplodeEvent event) {
+        if(event.isCancelled())
+            return;
         Entity ent = event.getEntity();
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getLocation());
         if(!explosionProximityCheck(event.getLocation(), ent instanceof LivingEntity))
@@ -83,11 +89,10 @@ public class ResidenceEntityListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
+        if(event.isCancelled())
+            return;
         Entity ent = event.getEntity();
         ClaimedResidence area = Residence.getResidenceManger().getByLoc(ent.getLocation());
-        if (event.isCancelled()) {
-            return;
-        }
         /* Living Entities */
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
@@ -136,9 +141,13 @@ public class ResidenceEntityListener extends EntityListener {
         ClaimedResidence res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
-                return res.getPermissions().has("creeper", true);
+                if (!res.getPermissions().has("creeper", true)) {
+                    return false;
+                }
             } else {
-                return res.getPermissions().has("tnt", true);
+                if (!res.getPermissions().has("tnt", true)) {
+                    return false;
+                }
             }
         }
 
@@ -146,9 +155,13 @@ public class ResidenceEntityListener extends EntityListener {
         res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
-                return res.getPermissions().has("creeper", true);
+                if (!res.getPermissions().has("creeper", true)) {
+                    return false;
+                }
             } else {
-                return res.getPermissions().has("tnt", true);
+                if (!res.getPermissions().has("tnt", true)) {
+                    return false;
+                }
             }
         }
         loc.setX(loc.getX() - 4);
@@ -157,9 +170,13 @@ public class ResidenceEntityListener extends EntityListener {
         res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
-                return res.getPermissions().has("creeper", true);
+                if (!res.getPermissions().has("creeper", true)) {
+                    return false;
+                }
             } else {
-                return res.getPermissions().has("tnt", true);
+                if (!res.getPermissions().has("tnt", true)) {
+                    return false;
+                }
             }
         }
         loc.setY(loc.getY() - 4);
@@ -168,9 +185,13 @@ public class ResidenceEntityListener extends EntityListener {
         res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
-                return res.getPermissions().has("creeper", true);
+                if (!res.getPermissions().has("creeper", true)) {
+                    return false;
+                }
             } else {
-                return res.getPermissions().has("tnt", true);
+                if (!res.getPermissions().has("tnt", true)) {
+                    return false;
+                }
             }
         }
         loc.setZ(loc.getZ() - 4);
@@ -179,9 +200,13 @@ public class ResidenceEntityListener extends EntityListener {
         res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
-                return res.getPermissions().has("creeper", true);
+                if (!res.getPermissions().has("creeper", true)) {
+                    return false;
+                }
             } else {
-                return res.getPermissions().has("tnt", true);
+                if (!res.getPermissions().has("tnt", true)) {
+                    return false;
+                }
             }
         }
         loc.setX(loc.getX() + 4);
@@ -190,9 +215,13 @@ public class ResidenceEntityListener extends EntityListener {
         res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
-                return res.getPermissions().has("creeper", true);
+                if (!res.getPermissions().has("creeper", true)) {
+                    return false;
+                }
             } else {
-                return res.getPermissions().has("tnt", true);
+                if (!res.getPermissions().has("tnt", true)) {
+                    return false;
+                }
             }
         }
         loc.setY(loc.getY() + 4);
@@ -201,9 +230,13 @@ public class ResidenceEntityListener extends EntityListener {
         res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
-                return res.getPermissions().has("creeper", true);
+                if (!res.getPermissions().has("creeper", true)) {
+                    return false;
+                }
             } else {
-                return res.getPermissions().has("tnt", true);
+                if (!res.getPermissions().has("tnt", true)) {
+                    return false;
+                }
             }
         }
         return true;

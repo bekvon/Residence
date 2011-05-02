@@ -24,6 +24,8 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+        if(event.isCancelled())
+            return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
         Player player = event.getPlayer();
         if (res != null) {
@@ -43,6 +45,8 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
+        if(event.isCancelled())
+            return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
         Player player = event.getPlayer();
         if (res != null) {
@@ -61,6 +65,8 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockFromTo(BlockFromToEvent event) {
+        if(event.isCancelled())
+            return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getToBlock().getLocation());
         if (res != null) {
             if (!res.getPermissions().has("flow", true)) {
@@ -72,6 +78,8 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockIgnite(BlockIgniteEvent event) {
+        if(event.isCancelled())
+            return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
         if (res != null) {
             if (event.getCause() == IgniteCause.FLINT_AND_STEEL) {
@@ -115,6 +123,8 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockPhysics(BlockPhysicsEvent event) {
+        if(event.isCancelled())
+            return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
         if (res != null) {
             if (!res.getPermissions().has("flow", true)) {

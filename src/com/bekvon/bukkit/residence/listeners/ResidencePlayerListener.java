@@ -52,6 +52,8 @@ public class ResidencePlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if(event.isCancelled())
+            return;
         Player player = event.getPlayer();
         Material heldItem = player.getItemInHand().getType();
         String world = player.getWorld().getName();
