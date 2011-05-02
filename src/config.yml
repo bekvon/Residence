@@ -64,6 +64,8 @@ Groups:
            SubzoneDepth: 3
            # Whether or not to allow teleporting to Residences.
            CanTeleport: true
+           # Allow or Disallow the use of /res unstuck, to get yourself out of a residence if stuck in one somehow
+           Unstuck: true
        # Options relating to enter and leave messages on the residence.
        Messaging:
            # Whether or not the player can change the Residence enter and/or leave message.
@@ -105,11 +107,19 @@ Groups:
                move: true
                build: true
                use: true
+               ignite: true
+               pvp: true
+               tp: true
+               firespread: true
+               creeper: true
+               tnt: true
+               container: true
           # Specifys the flags that are applied at residence creation for players of this group.
           Default:
                build: false
                use: false
                tnt: false
+               pvp: false
                creeper: false
                firespread: false
                container: false
@@ -149,3 +159,6 @@ ItemList: #this is where you can create blacklists / whitelists
         #Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance
         Items: 
            - 'TNT'
+
+# Used to determine which major revision of Residence this config is from, dont change this.
+ResidenceVersion: 2

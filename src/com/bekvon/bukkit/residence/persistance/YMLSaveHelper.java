@@ -35,4 +35,10 @@ public class YMLSaveHelper extends Configuration {
     {
         return root;
     }
+
+    public void setRoot(Map<String,Object> newroot)
+    {
+        if(newroot != null);
+            root = newroot;
+    }
 }

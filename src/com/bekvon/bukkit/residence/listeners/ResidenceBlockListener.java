@@ -83,9 +83,16 @@ public class ResidenceBlockListener extends BlockListener {
                     player.sendMessage("§cYou dont have permission to ignite here.");
                 }
             }
-            else
+            else if(event.getCause() == IgniteCause.SPREAD)
             {
                 if(!res.getPermissions().has("firespread", true))
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else
+            {
+                if(!res.getPermissions().has("ignite", true))
                 {
                     event.setCancelled(true);
                 }
