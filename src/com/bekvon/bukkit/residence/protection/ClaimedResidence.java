@@ -76,7 +76,7 @@ public class ClaimedResidence {
                     player.sendMessage("§cArea is not within parent area.");
                     return;
                 }
-                if(!parent.getPermissions().hasResidencePermission(player, false))
+                if(!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(),"subzone", true))
                 {
                     player.sendMessage("§cYou dont have permission to make changes to the parent area.");
                     return;
