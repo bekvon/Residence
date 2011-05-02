@@ -112,8 +112,14 @@ public class ResidenceManager {
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        if (!group.canCreateResidences() && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+        boolean resadmin = !Residence.getPermissionManager().isResidenceAdmin(player);
+        if (!group.canCreateResidences() && !resadmin) {
             player.sendMessage("§cYou dont have permission to create residences.");
+            return;
+        }
+        if (getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin)
+        {
+            player.sendMessage("§cYou reached your max number of residences.");
             return;
         }
         if (residences.containsKey(name)) {
@@ -353,7 +359,7 @@ public class ResidenceManager {
         ClaimedResidence res = this.getByName(oldName);
         if(res==null)
         {
-            player.sendMessage("Invalid Residence...");
+            player.sendMessage("§cInvalid Residence...");
             return;
         }
         if(res.getPermissions().hasResidencePermission(player, true))
@@ -362,12 +368,12 @@ public class ResidenceManager {
             {
                 if(residences.containsKey(newName))
                 {
-                    player.sendMessage("Another residence already has that name...");
+                    player.sendMessage("§cAnother residence already has that name...");
                     return;
                 }
                 residences.put(newName, res);
                 residences.remove(oldName);
-                player.sendMessage("Renamed " + oldName + " to " + newName + "...");
+                player.sendMessage("§aRenamed §e" + oldName + "§a to §e" + newName + "§a...");
             }
             else
             {
@@ -378,7 +384,7 @@ public class ResidenceManager {
         }
         else
         {
-            player.sendMessage("You dont have permission...");
+            player.sendMessage("§cYou dont have permission...");
         }
     }
 
@@ -387,12 +393,12 @@ public class ResidenceManager {
         ClaimedResidence res = getByName(residence);
         if(res==null)
         {
-            reqPlayer.sendMessage("Invalid Residence...");
+            reqPlayer.sendMessage("§cInvalid Residence...");
             return;
         }
         if(!res.getPermissions().hasResidencePermission(reqPlayer, true))
         {
-            reqPlayer.sendMessage("You dont have permission to give this residence.");
+            reqPlayer.sendMessage("§cYou dont have permission to give this residence.");
             return;
         }
         boolean admin = Residence.getPermissionManager().isResidenceAdmin(reqPlayer);
@@ -404,23 +410,24 @@ public class ResidenceManager {
         CuboidArea[] areas = res.getAreaArray();
         PermissionGroup g = Residence.getPermissionManager().getGroup(giveplayer);
         if (areas.length > g.getMaxPhysicalPerResidence() && !admin) {
-            reqPlayer.sendMessage("Cannot give residence to target player, because it has more areas then allowed for the target players group.");
+            reqPlayer.sendMessage("§cCannot give residence to target player, because it has more areas then allowed for the target players group.");
             return;
         }
         if (getOwnedZoneCount(giveplayer.getName()) >= g.getMaxZones() && !admin) {
-            reqPlayer.sendMessage("Target player already owns the maximum number of residences allowed.");
+            reqPlayer.sendMessage("§cTarget player already owns the maximum number of residences allowed.");
             return;
         }
         if(!admin)
         {
             for (CuboidArea area : areas) {
                 if (!g.inLimits(area)) {
-                    reqPlayer.sendMessage("Cannot give residence to target player, because a area is outside the target players limits.");
+                    reqPlayer.sendMessage("§cCannot give residence to target player, because a area is outside the target players limits.");
                     return;
                 }
             }
         }
         res.getPermissions().setOwner(giveplayer.getName(), true);
-        reqPlayer.sendMessage("You give residence " + residence + " to player " + giveplayer.getName() + ".");
+        reqPlayer.sendMessage("§aYou give residence §e" + residence + "§a to player §e" + giveplayer.getName() + "§a.");
+        giveplayer.sendMessage("§a" + reqPlayer.getName() + "§e has given Residence §a" + residence + "§e to you.");
     }
 }

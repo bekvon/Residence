@@ -16,6 +16,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import org.bukkit.Location;
 
 /**
  *
@@ -47,9 +49,11 @@ public class ResidenceEntityListener extends EntityListener {
 
     @Override
     public void onEntityExplode(EntityExplodeEvent event) {
+        Entity ent = event.getEntity();
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getLocation());
-        if (res != null) {
-            Entity ent = event.getEntity();
+        if(!explosionProximityCheck(event.getLocation(), ent instanceof LivingEntity))
+            event.setCancelled(true);
+        else if(res != null) {
             if (ent instanceof LivingEntity) {
                 if (!res.getPermissions().has("creeper", true)) {
                     event.setCancelled(true);
@@ -63,7 +67,6 @@ public class ResidenceEntityListener extends EntityListener {
         }
         else
         {
-            Entity ent = event.getEntity();
             if(ent instanceof LivingEntity)
             {
                 if(!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("creeper", true))
@@ -128,47 +131,82 @@ public class ResidenceEntityListener extends EntityListener {
         }
     }
     
-/*    @Override
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        if (event instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
-            Entity ent = attackevent.getEntity();
-            if (ent instanceof Player) {
-                ClaimedResidence area = Residence.getResidenceManger().getByLoc(ent.getLocation());
-                if (area != null) {
-                    Entity damager = attackevent.getDamager();
-                    if (!area.getPermissions().has("pvp",true) && damager instanceof Player) {
-                        event.setCancelled(true);
-                        Player attacker = (Player) damager;
-                        attacker.sendMessage("§cPlayer is in a No-PVP zone.");
-                    }
-                    else if(!(damager instanceof Player) && !area.getPermissions().has("damage",true)) {
-                        event.setCancelled(true);
-                    }
-                }
-                else
-                {
-                    Entity damager = attackevent.getDamager();
-                    if(damager instanceof Player)
-                    {
-                        if(!Residence.getConfig().worldPvpEnabled())
-                        {
-                            ((Player)damager).sendMessage("§cWorld PVP is disabled.");
-                            event.setCancelled(true);
-                        }
-                    }
-                    else
-                    {
-                        if(!Residence.getConfig().worldDamageEnabled())
-                            event.setCancelled(true);
-                    }
-                }
+    private boolean explosionProximityCheck(Location loc, boolean creeper) {
+        ResidenceManager manager = Residence.getResidenceManger();
+        ClaimedResidence res = manager.getByLoc(loc);
+        if (res != null) {
+            if (creeper) {
+                return res.getPermissions().has("creeper", true);
+            } else {
+                return res.getPermissions().has("tnt", true);
             }
         }
-        super.onEntityDamage(event);
-    } */
+
+        loc.setX(loc.getX() + 4);
+        res = manager.getByLoc(loc);
+        if (res != null) {
+            if (creeper) {
+                return res.getPermissions().has("creeper", true);
+            } else {
+                return res.getPermissions().has("tnt", true);
+            }
+        }
+        loc.setX(loc.getX() - 4);
+
+        loc.setY(loc.getY() + 4);
+        res = manager.getByLoc(loc);
+        if (res != null) {
+            if (creeper) {
+                return res.getPermissions().has("creeper", true);
+            } else {
+                return res.getPermissions().has("tnt", true);
+            }
+        }
+        loc.setY(loc.getY() - 4);
+
+        loc.setZ(loc.getZ() + 4);
+        res = manager.getByLoc(loc);
+        if (res != null) {
+            if (creeper) {
+                return res.getPermissions().has("creeper", true);
+            } else {
+                return res.getPermissions().has("tnt", true);
+            }
+        }
+        loc.setZ(loc.getZ() - 4);
+
+        loc.setX(loc.getX() - 4);
+        res = manager.getByLoc(loc);
+        if (res != null) {
+            if (creeper) {
+                return res.getPermissions().has("creeper", true);
+            } else {
+                return res.getPermissions().has("tnt", true);
+            }
+        }
+        loc.setX(loc.getX() + 4);
+
+        loc.setY(loc.getY() - 4);
+        res = manager.getByLoc(loc);
+        if (res != null) {
+            if (creeper) {
+                return res.getPermissions().has("creeper", true);
+            } else {
+                return res.getPermissions().has("tnt", true);
+            }
+        }
+        loc.setY(loc.getY() + 4);
+
+        loc.setZ(loc.getZ() - 4);
+        res = manager.getByLoc(loc);
+        if (res != null) {
+            if (creeper) {
+                return res.getPermissions().has("creeper", true);
+            } else {
+                return res.getPermissions().has("tnt", true);
+            }
+        }
+        return true;
+    }
 
 }
