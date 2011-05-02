@@ -45,6 +45,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -109,7 +110,7 @@ public class Residence extends JavaPlugin {
                 this.writeDefaultConfigFromJar();
             }
             this.getConfiguration().load();
-            if(this.getConfiguration().getInt("ConfigVersion", 0) == 0)
+            if(this.getConfiguration().getInt("ResidenceVersion", 0) == 0)
             {
                 this.writeDefaultConfigFromJar();
                 this.getConfiguration().load();
@@ -150,20 +151,18 @@ public class Residence extends JavaPlugin {
                 blistener = new ResidenceBlockListener();
                 plistener = new ResidencePlayerListener(this.getConfiguration().getInt("Global.MoveCheckInterval", 1000));
                 elistener = new ResidenceEntityListener();
-                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM_HELD, plistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PICKUP_ITEM, plistener, Priority.Lowest, this);
-                getServer().getPluginManager().registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Lowest, this);
+                PluginManager pm = getServer().getPluginManager();
+                pm.registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
                 firstenable = false;
             }
             autosaveInt = this.getConfiguration().getInt("SaveInterval", 10);
