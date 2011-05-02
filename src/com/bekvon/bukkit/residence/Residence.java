@@ -29,6 +29,9 @@ import com.spikensbror.bukkit.mineconomy.MineConomy;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -76,14 +79,12 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] - Lease Expirations checked!");
         }
     };
-    private boolean saveBroadcast;
     private static boolean enableecon;
     private static String econsys;
     private static File ymlSaveLoc;
     private static int autosaveInt;
     private static int autosaveBukkitId;
     private Runnable autoSave = new Runnable() {
-
         public void run() {
             saveYml();
         }
@@ -108,6 +109,11 @@ public class Residence extends JavaPlugin {
                 this.writeDefaultConfigFromJar();
             }
             this.getConfiguration().load();
+            if(this.getConfiguration().getInt("ConfigVersion", 0) == 0)
+            {
+                this.writeDefaultConfigFromJar();
+                this.getConfiguration().load();
+            }
             cmanager = new ConfigManager(this.getConfiguration());
             gmanager = new PermissionManager(this.getConfiguration());
             imanager = new ItemManager(this.getConfiguration());
@@ -669,6 +675,7 @@ public class Residence extends JavaPlugin {
                     player.sendMessage("§amarket§3 - buy / sell residence /res market ? for details.");
                     player.sendMessage("§alease§3 - lease management /res lease ? for details.");
                     player.sendMessage("§alists§3 - predefined permission lists /res lists ? for details.");
+                    player.sendMessage("§aarea§3 - Add/Remove physical areas to the residence.");
                     player.sendMessage("§arename / renamearea§3 - rename a residence or area.");
                     player.sendMessage("§aversion§3 - show version.");
                     return true;
@@ -711,7 +718,12 @@ public class Residence extends JavaPlugin {
                     if (args.length != 1) {
                         return false;
                     }
-
+                    group = gmanager.getGroup(player);
+                    if(!group.hasUnstuckAccess())
+                    {
+                        player.sendMessage("You don't have access to this command.");
+                        return true;
+                    }
                     ClaimedResidence res = rmanager.getByLoc(player.getLocation());
                     if (res == null) {
                         player.sendMessage("§cYou are not in a residence.");
@@ -950,6 +962,8 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§cUsage: /res give <residence> <player>");
                         return true;
                     }
+                    rmanager.giveResidence(player, args[2], args[1]);
+                    return true;
                 }
                 player.sendMessage("§c/res ? for more info.");
             }
@@ -1055,6 +1069,12 @@ public class Residence extends JavaPlugin {
         if (ymlSaveLoc.isFile()) {
             YMLSaveHelper yml = new YMLSaveHelper(ymlSaveLoc);
             yml.load();
+            int sv = yml.getInt("SaveVersion", 0);
+            if(sv==0)
+            {
+                ymlSaveLoc.renameTo(new File(ymlSaveLoc.getParentFile(),"pre-upgrade-res.yml"));
+                yml = upgradeSave(yml);
+            }
             rmanager = ResidenceManager.load(yml.getMap("Residences"));
             tmanager = TransactionManager.load(yml.getMap("Economy"), gmanager, rmanager);
             leasemanager = LeaseManager.load(yml.getMap("Leases"), rmanager);
@@ -1069,7 +1089,7 @@ public class Residence extends JavaPlugin {
     {
         try {
             File configLoc = new File(this.getDataFolder(),"config.yml");
-            File configBackup = new File(this.getDataFolder(),"config.bak");
+            File configBackup = new File(this.getDataFolder(),"old-config.yml");
             File jarloc = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getCanonicalFile();
             if(jarloc.isFile())
             {
@@ -1102,5 +1122,105 @@ public class Residence extends JavaPlugin {
         } catch (Exception ex) {
             System.out.println("[Residence] Failed to write default config file:" + ex);
         }
+    }
+
+    public YMLSaveHelper upgradeSave(YMLSaveHelper yml) {
+        try {
+            Map<String, Object> root = yml.getRoot();
+            Map<String, Object> resmap = (Map<String, Object>) root.get("residences");
+            Map<String, Object> newmap = new HashMap<String, Object>();
+            for (Entry<String, Object> entry : resmap.entrySet()) {
+                Map<String, Object> resvals = (Map<String, Object>) entry.getValue();
+                newmap.put(entry.getKey(), upgradeResidence(resvals));
+            }
+            Map<String,Object> newroot = new HashMap<String,Object>();
+            newroot.put("Residences", newmap);
+            newroot.put("Leases", root.get("leasetimes"));
+            newroot.put("Economy", root.get("forsale"));
+            newroot.put("PermissionLists", new HashMap<String,Object>());
+            newroot.put("SaveVersion", 1);
+            yml.setRoot(newroot);
+            yml.save();
+            System.out.print("[Residence] Upgraded Save File!");
+            return yml;
+        } catch (Exception ex) {
+            System.out.println("[Residence] FAILED to upgrade save file...");
+            Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+            return yml;
+        }
+    }
+
+    public Map<String,Object> upgradeResidence(Map<String, Object> resvals) {
+        Map<String,Object> newmap = new HashMap<String,Object>();
+        Map<String, Object> areas = new HashMap<String, Object>();
+        Map<String, Object> mainarea = new HashMap<String, Object>();
+        mainarea.put("X1", resvals.get("x1"));
+        mainarea.put("Y1", resvals.get("y1"));
+        mainarea.put("Z1", resvals.get("z1"));
+        mainarea.put("X2", resvals.get("x2"));
+        mainarea.put("Y2", resvals.get("y2"));
+        mainarea.put("Z2", resvals.get("z2"));
+        areas.put("main", mainarea);
+        newmap.put("Areas", areas);
+        Map<String,Object> oldperms = (Map<String, Object>) resvals.get("permissions");
+        Map<String,Object> perms = new HashMap<String,Object>();
+        perms.put("AreaFlags", upgradeFlags((Map<String, Object>) oldperms.get("areaflags")));
+        Map<String,Object> pflags = (Map<String, Object>) oldperms.get("playerflags");
+        Map<String,Object> newpflags = new HashMap<String,Object>();
+        for(Entry<String, Object> player : pflags.entrySet())
+        {
+            newpflags.put(player.getKey(), upgradeFlags((Map<String, Object>) player.getValue()));
+        }
+        perms.put("PlayerFlags", newpflags);
+        Map<String,Object> gflags = (Map<String, Object>) oldperms.get("groupflags");
+        Map<String,Object> newgflags = new HashMap<String,Object>();
+        for(Entry<String, Object> group : gflags.entrySet())
+        {
+            newpflags.put(group.getKey(), upgradeFlags((Map<String, Object>) group.getValue()));
+        }
+        perms.put("GroupFlags", newgflags);
+        perms.put("Owner", oldperms.get("owner"));
+        perms.put("World", resvals.get("world"));
+        newmap.put("Permissions", perms);
+        newmap.put("EnterMessage", resvals.get("entermessage"));
+        newmap.put("LeaveMessage", resvals.get("leavemessage"));
+        Map<String,Object> sz = (Map<String, Object>) resvals.get("subzones");
+        Map<String,Object> newsz = new HashMap<String,Object>();
+        for(Entry<String, Object> entry : sz.entrySet())
+        {
+            newsz.put(entry.getKey(),upgradeResidence((Map<String, Object>) entry.getValue()));
+        }
+        newmap.put("Subzones", newsz);
+        return newmap;
+    }
+
+    public Map<String,Object> upgradeFlags(Map<String,Object> inflags)
+    {
+        Map<String,Object> newmap = new HashMap<String,Object>();
+        for(Entry<String, Object> flag : inflags.entrySet())
+        {
+            String flagname = flag.getKey();
+            boolean flagval = (Boolean)flag.getValue();
+            if(flagname.equals("fire"))
+            {
+                newmap.put("ignite", flagval);
+                newmap.put("firespread", flagval);
+            }
+            else if(flagname.equals("explosions"))
+            {
+                newmap.put("creeper", flagval);
+                newmap.put("tnt", flagval);
+            }
+            else if(flagname.equals("use"))
+            {
+                 newmap.put("use", flagval);
+                 newmap.put("container", flagval);
+            }
+            else
+            {
+                newmap.put(flagname, flagval);
+            }
+        }
+        return newmap;
     }
 }

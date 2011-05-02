@@ -45,6 +45,7 @@ public class PermissionGroup {
         protected boolean cancreate;
         protected String groupname;
         protected int maxPhysical;
+        protected boolean unstuck;
 
         public PermissionGroup(String name)
         {
@@ -64,7 +65,7 @@ public class PermissionGroup {
     private void parseGroup(ConfigurationNode limits) {
         if(limits == null)
             return;
-        cancreate = limits.getBoolean("Residence.CanCreate", true);
+        cancreate = limits.getBoolean("Residence.CanCreate", false);
         resmax = limits.getInt("Residence.MaxResidences", 0);
         maxPhysical = limits.getInt("Residence.MaxAreasPerResidence",2);
         xmax = limits.getInt("Residence.MaxEastWest", 0);
@@ -82,6 +83,7 @@ public class PermissionGroup {
         canSell = limits.getBoolean("Economy.CanSell", false);
         buyIgnoreLimits = limits.getBoolean("Economy.IgnoreLimits", false);
         costperarea = limits.getDouble("Economy.BuyCost", 0);
+        unstuck = limits.getBoolean("Residence.Unstuck", false);
         List<String> flags = limits.getKeys("Flags.Permission");
         if(flags!=null)
         {
@@ -181,6 +183,10 @@ public class PermissionGroup {
     public boolean buyLandIgnoreLimits()
     {
         return buyIgnoreLimits;
+    }
+    public boolean hasUnstuckAccess()
+    {
+        return unstuck;
     }
     public int getMaxPhysicalPerResidence()
     {

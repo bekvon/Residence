@@ -117,7 +117,7 @@ public class ClaimedResidence {
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
             if (!this.perms.hasResidencePermission(player, true)) {
-                if(!this.perms.playerHas(name, "subzone", false))
+                if(!this.perms.playerHas(player.getName(), "subzone", false))
                 {
                     player.sendMessage("§cYou dont have permission to do this.");
                     return;

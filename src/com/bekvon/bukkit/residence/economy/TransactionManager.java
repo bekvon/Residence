@@ -154,6 +154,9 @@ public class TransactionManager {
             }
             String buyerName = player.getName();
             String sellerName = res.getPermissions().getOwner();
+            Player sellerNameFix = Residence.getServ().getPlayer(sellerName);
+            if(sellerNameFix!=null)
+                sellerName = sellerNameFix.getName();
             if(econ.canAfford(buyerName, amount))
             {
                 if (!econ.transfer(buyerName, sellerName, amount))

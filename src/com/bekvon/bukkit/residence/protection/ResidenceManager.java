@@ -338,8 +338,8 @@ public class ResidenceManager {
                 }
                 catch (Exception ex)
                 {
-                    System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage());
-                    //Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
+                    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
