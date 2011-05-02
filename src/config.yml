@@ -110,6 +110,7 @@ Groups:
                ignite: true
                pvp: true
                tp: true
+               flow: true
                firespread: true
                creeper: true
                tnt: true
