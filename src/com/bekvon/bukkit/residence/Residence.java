@@ -553,6 +553,19 @@ public class Residence extends JavaPlugin {
                         rmanager.printAreaInfo(args[1], player);
                         return true;
                     }
+                } else if (args[0].equals("current")) {
+                    if(args.length!=1)
+                        return false;
+                    String res = rmanager.getNameByLoc(player.getLocation());
+                    if(res==null)
+                    {
+                        player.sendMessage("§cYou are not in a residence.");
+                    }
+                    else
+                    {
+                        player.sendMessage("§aYou are standing in residence §e" + res + "§a.");
+                    }
+                    return true;
                 } else if (args[0].equals("set")) {
                     if (args.length == 3) {
                         String area = rmanager.getNameByLoc(player.getLocation());
