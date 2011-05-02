@@ -74,7 +74,6 @@ public class Residence extends JavaPlugin {
     private int leaseBukkitId;
     private int leaseInterval;
     private Runnable leaseExpire = new Runnable() {
-
         public void run() {
             leasemanager.doExpirations();
             System.out.println("[Residence] - Lease Expirations checked!");
@@ -92,6 +91,12 @@ public class Residence extends JavaPlugin {
     };
 
     public Residence() {
+    }
+
+    public void reloadPlugin()
+    {
+        this.setEnabled(false);
+        this.setEnabled(true);
     }
 
     public void onDisable() {
@@ -114,6 +119,7 @@ public class Residence extends JavaPlugin {
             {
                 this.writeDefaultConfigFromJar();
                 this.getConfiguration().load();
+                System.out.println("[Residence] Config Invalid, wrote default...");
             }
             cmanager = new ConfigManager(this.getConfiguration());
             gmanager = new PermissionManager(this.getConfiguration());
@@ -578,6 +584,7 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§acontainer§3 - allows / disallows container access.");
                             player.sendMessage("§apvp§3 - allows or dissallows pvp.");
                             player.sendMessage("§aignite§3 - allows / disallows fire starting.");
+                            player.sendMessage("§asubzone§3 - allows / disallows subzoning.");
                             player.sendMessage("§afirespread§3 - allows / disallows fire spread.");
                             player.sendMessage("§adamage§3 - allows / disallows damage while in zone.");
                             player.sendMessage("§aexplosions§3 - allows / disallows explosions.");
@@ -619,6 +626,7 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§ause§3 - allows using lever, doors, chests.");
                             player.sendMessage("§acontainer§3 - allows / disallows container access.");
                             player.sendMessage("§aadmin§3 - allows user to give / remove area flags.");
+                            player.sendMessage("§asubzone§3 - allows / disallows subzoning.");
                             player.sendMessage("§atp§3 - allows / disallows player to tp to your residence.");
                             player.sendMessage("§9<residence> can be ommited, it will use the residence your in.");
                             return true;

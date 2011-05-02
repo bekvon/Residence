@@ -32,6 +32,7 @@ public class PermissionList {
     }
 
     public void setPlayer(String player, String flag, FlagState state) {
+        player = player.toLowerCase();
         if (!playerFlags.containsKey(player)) {
             playerFlags.put(player, Collections.synchronizedMap(new HashMap<String, Boolean>()));
         }
@@ -143,7 +144,7 @@ public class PermissionList {
         return newperms;
     }
 
-        public String listFlags()
+    public String listFlags()
     {
         StringBuilder sbuild = new StringBuilder();
         Set<Entry<String, Boolean>> set = cuboidFlags.entrySet();
@@ -174,6 +175,7 @@ public class PermissionList {
 
     public String listPlayerFlags(String player)
     {
+        player = player.toLowerCase();
         if(playerFlags.containsKey(player))
         {
             StringBuilder sbuild = new StringBuilder();
@@ -214,6 +216,7 @@ public class PermissionList {
 
     public String listOtherPlayersFlags(String player)
     {
+        player = player.toLowerCase();
         StringBuilder sbuild = new StringBuilder();
         Set<String> set = playerFlags.keySet();
         synchronized(playerFlags)

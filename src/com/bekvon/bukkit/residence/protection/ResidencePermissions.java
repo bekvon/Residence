@@ -36,6 +36,7 @@ public class ResidencePermissions extends PermissionList {
 
     public boolean playerHas(String player, String flag, boolean def)
     {
+        player = player.toLowerCase();
         String group = Residence.getPermissionManager().getGroupNameByPlayer(player, world);
         if(playerFlags.containsKey(player))
         {
@@ -282,6 +283,20 @@ public class ResidencePermissions extends PermissionList {
         newperms.cuboidFlags = (Map) root.get("AreaFlags");
         if(newperms.owner==null||newperms.world==null||newperms.playerFlags==null||newperms.groupFlags==null||newperms.cuboidFlags==null)
             throw new Exception("Invalid Residence Permissions...");
+        newperms.fixNames();
         return newperms;
+    }
+
+    public void fixNames()
+    {
+        for(Entry<String, Map<String, Boolean>> pnames : playerFlags.entrySet())
+        {
+            String name = pnames.getKey();
+            if(!name.equals(name.toLowerCase()))
+            {
+                playerFlags.put(name.toLowerCase(), pnames.getValue());
+                playerFlags.remove(name);
+            }
+        }
     }
 }
