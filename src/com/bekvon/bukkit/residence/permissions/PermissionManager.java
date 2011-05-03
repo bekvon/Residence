@@ -74,7 +74,12 @@ public class PermissionManager {
 
     public String getGroupNameByPlayer(String player, String world) {
         if(playersGroup.containsKey(player))
-            return playersGroup.get(player);
+        {
+            String group = playersGroup.get(player);
+            if(group == null || !groups.containsKey(group))
+                return defaultGroup;
+            return group;
+        }
         if (authority == null) {
             return defaultGroup;
         } else {

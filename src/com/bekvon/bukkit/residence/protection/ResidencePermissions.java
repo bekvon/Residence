@@ -8,8 +8,10 @@ package com.bekvon.bukkit.residence.protection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -289,14 +291,21 @@ public class ResidencePermissions extends PermissionList {
 
     public void fixNames()
     {
-        for(Entry<String, Map<String, Boolean>> pnames : playerFlags.entrySet())
+        ArrayList<String> fixNames = new ArrayList<String>();
+        Iterator<Entry<String, Map<String, Boolean>>> it = playerFlags.entrySet().iterator();
+        while(it.hasNext())
         {
-            String name = pnames.getKey();
+            String name = it.next().getKey();
             if(!name.equals(name.toLowerCase()))
             {
-                playerFlags.put(name.toLowerCase(), pnames.getValue());
-                playerFlags.remove(name);
+                fixNames.add(name);
             }
+        }
+        for(String name : fixNames)
+        {
+            Map<String, Boolean> get = playerFlags.get(name);
+            playerFlags.remove(name);
+            playerFlags.put(name.toLowerCase(), get);
         }
     }
 }
