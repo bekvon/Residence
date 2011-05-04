@@ -102,7 +102,7 @@ public class PermissionManager {
 
     public boolean isResidenceAdmin(Player player)
     {
-        return this.hasAuthority(player, "residence.admin", player.isOp());
+        return (this.hasAuthority(player, "residence.admin", false) || (player.isOp() && Residence.getConfig().getOpsAreAdmins()));
     }
 
     private void checkPermissions() {

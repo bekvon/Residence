@@ -12,13 +12,14 @@ import org.bukkit.util.config.Configuration;
  * @author Administrator
  */
 public class ConfigManager {
-    private String defaultGroup;
-    private boolean useLeases;
-    private boolean enableBuySell;
-    private boolean adminsOnly;
-    private boolean allowEmptyResidences;
-    private int infoToolId;
-    private int selectionToolId;
+    protected String defaultGroup;
+    protected boolean useLeases;
+    protected boolean enableBuySell;
+    protected boolean adminsOnly;
+    protected boolean allowEmptyResidences;
+    protected int infoToolId;
+    protected int selectionToolId;
+    protected boolean adminOps;
 
     public ConfigManager(Configuration config)
     {
@@ -33,6 +34,7 @@ public class ConfigManager {
         allowEmptyResidences = config.getBoolean("Global.AllowEmptyResidences", true);
         infoToolId = config.getInt("Global.InfoToolId", Material.STRING.getId());
         selectionToolId = config.getInt("Global.SelectionToolId", Material.WOOD_AXE.getId());
+        adminOps = config.getBoolean("Global.AdminOPs", true);
     }
 
     public String getDefaultGroup() {
@@ -61,6 +63,11 @@ public class ConfigManager {
     public int getSelectionTooldID()
     {
         return selectionToolId;
+    }
+
+    public boolean getOpsAreAdmins()
+    {
+        return adminOps;
     }
 
 }
