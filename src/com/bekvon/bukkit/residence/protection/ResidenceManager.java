@@ -132,7 +132,7 @@ public class ResidenceManager {
             for (Entry<String, ClaimedResidence> resEntry : set) {
                 ClaimedResidence res = resEntry.getValue();
                 if (res.checkCollision(newArea)) {
-                    player.sendMessage("§cArea collides with residence: " + resEntry.getKey());
+                    player.sendMessage("§cArea collides with residence: §e" + resEntry.getKey());
                     return;
                 }
             }
@@ -195,7 +195,7 @@ public class ResidenceManager {
                     ClaimedResidence check = entry.getValue();
                     if(check.checkCollision(newarea))
                     {
-                        player.sendMessage("§cArea collides with residence: " + entry.getKey());
+                        player.sendMessage("§cArea collides with residence: §e" + entry.getKey());
                         return;
                     }
                 }
