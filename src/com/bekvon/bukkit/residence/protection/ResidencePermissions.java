@@ -33,7 +33,7 @@ public class ResidencePermissions extends PermissionList {
     public ResidencePermissions(String creator, String inworld)
     {
         owner = creator;
-        world = inworld.toLowerCase();
+        world = inworld;
     }
 
     public boolean playerHas(String player, String flag, boolean def)
