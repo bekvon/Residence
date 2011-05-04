@@ -23,7 +23,7 @@ import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.PermissionList;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
-import com.nijiko.coelho.iConomy.iConomy;
+import com.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
 
 import java.io.File;

@@ -139,11 +139,12 @@ public class ClaimedResidence {
             }
         }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
-        Collection<ClaimedResidence> set = subzones.values();
+        Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
         synchronized (subzones) {
-            for (ClaimedResidence key : set) {
-                if (key.checkCollision(newArea)) {
-                    player.sendMessage("§cSubzone collides with another subzone.");
+            for (Entry<String, ClaimedResidence> resEntry : set) {
+                ClaimedResidence res = resEntry.getValue();
+                if (res.checkCollision(newArea)) {
+                    player.sendMessage("§cSubzone collides with subzone: §e" + resEntry.getKey());
                     return;
                 }
             }
