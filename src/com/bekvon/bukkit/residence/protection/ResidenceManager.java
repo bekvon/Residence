@@ -127,11 +127,12 @@ public class ResidenceManager {
             return;
         }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
-        Collection<ClaimedResidence> set = residences.values();
+        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized (set) {
-            for (ClaimedResidence res : set) {
+            for (Entry<String, ClaimedResidence> resEntry : set) {
+                ClaimedResidence res = resEntry.getValue();
                 if (res.checkCollision(newArea)) {
-                    player.sendMessage("§cArea collides with another residence.");
+                    player.sendMessage("§cArea collides with residence: " + resEntry.getKey());
                     return;
                 }
             }
@@ -194,7 +195,7 @@ public class ResidenceManager {
                     ClaimedResidence check = entry.getValue();
                     if(check.checkCollision(newarea))
                     {
-                        player.sendMessage("§cArea collides with another residence.");
+                        player.sendMessage("§cArea collides with residence: " + entry.getKey());
                         return;
                     }
                 }

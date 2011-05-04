@@ -1,7 +1,7 @@
 package com.bekvon.bukkit.residence.economy;
 
-import com.nijiko.coelho.iConomy.iConomy;
-import com.nijiko.coelho.iConomy.system.Account;
+import com.iConomy.iConomy;
+import com.iConomy.system.Account;
 
 public class IConomyAdapter extends EconomyInterface
 {
@@ -14,8 +14,8 @@ public class IConomyAdapter extends EconomyInterface
 
     public double getBalance(String playerName)
     {
-        Account acc = plugin.getBank().getAccount(playerName);
-        return (acc == null) ? 0 : acc.getBalance();
+        Account acc = plugin.getAccount(playerName);
+        return (acc == null) ? 0 : acc.getHoldings().balance();
     }
 
     public boolean canAfford(String playerName, double amount)
@@ -24,16 +24,16 @@ public class IConomyAdapter extends EconomyInterface
         {
             return true;
         }
-        Account acc = plugin.getBank().getAccount(playerName);
-        return (acc == null) ? false : acc.hasEnough(amount);
+        Account acc = plugin.getAccount(playerName);
+        return (acc == null) ? false : acc.getHoldings().hasEnough(amount);
     }
 
     public boolean add(String playerName, double amount)
     {
-        Account acc = plugin.getBank().getAccount(playerName);
+        Account acc = plugin.getAccount(playerName);
         if (acc != null)
         {
-            acc.add(amount);
+            acc.getHoldings().add(amount);
             return true;
         }
         return false;
@@ -41,10 +41,10 @@ public class IConomyAdapter extends EconomyInterface
 
     public boolean subtract(String playerName, double amount)
     {
-        Account acc = plugin.getBank().getAccount(playerName);
+        Account acc = plugin.getAccount(playerName);
         if (acc != null)
         {
-            acc.subtract(amount);
+            acc.getHoldings().subtract(amount);
             return true;
         }
         return false;
@@ -52,12 +52,12 @@ public class IConomyAdapter extends EconomyInterface
 
     public boolean transfer(String playerFrom, String playerTo, double amount)
     {
-        Account accFrom = plugin.getBank().getAccount(playerFrom);
-        Account accTo = plugin.getBank().getAccount(playerTo);
+        Account accFrom = plugin.getAccount(playerFrom);
+        Account accTo = plugin.getAccount(playerTo);
         if (accFrom != null && accTo != null)
         {
-            accFrom.subtract(amount);
-            accTo.add(amount);
+            accFrom.getHoldings().subtract(amount);
+            accTo.getHoldings().add(amount);
             return true;
         }
         return false;
