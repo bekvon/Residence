@@ -112,7 +112,7 @@ public class ResidenceManager {
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        boolean resadmin = !Residence.getPermissionManager().isResidenceAdmin(player);
+        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if (!group.canCreateResidences() && !resadmin) {
             player.sendMessage("§cYou dont have permission to create residences.");
             return;

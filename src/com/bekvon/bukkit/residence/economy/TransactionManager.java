@@ -66,7 +66,7 @@ public class TransactionManager {
                 player.sendMessage("§cYou dont have permission to sell plots.");
                 return;
             }
-            if(amount<0)
+            if(amount<=0)
             {
                 player.sendMessage("§cInvalid money amount, must be larger then 0.");
                 return;
@@ -105,7 +105,7 @@ public class TransactionManager {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
             }
-            if(!group.canBuyLand() && !gm.hasAuthority(player, "residence.admin", player.isOp()))
+            if(!group.canBuyLand() && !resadmin)
             {
                 player.sendMessage("§cYou dont have permission to buy plots.");
                 return;
