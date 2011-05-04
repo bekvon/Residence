@@ -122,16 +122,11 @@ public class ResidencePermissions extends PermissionList {
 
     public boolean hasResidencePermission(Player player, boolean requireOwner)
     {
-        if(this.hasResidenceAdmin(player))
+        if(Residence.getPermissionManager().isResidenceAdmin(player))
             return true;
         if(requireOwner)
             return(owner.equalsIgnoreCase(player.getName()));
         return (playerHas(player.getName(), "admin",false) || owner.equalsIgnoreCase(player.getName()));
-    }
-
-    private boolean hasResidenceAdmin(Player player)
-    {
-        return Residence.getPermissionManager().hasAuthority(player, "residence.admin", player.isOp());
     }
 
     private boolean checkCanSetFlag(Player player, String flag, FlagState state, boolean globalflag)

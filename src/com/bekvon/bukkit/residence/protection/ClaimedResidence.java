@@ -336,13 +336,14 @@ public class ClaimedResidence {
         if(message!=null)
             if(message.equals(""))
                 message = null;
+        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         PermissionGroup group = Residence.getPermissionManager().getGroup(perms.getOwner(), perms.getWorld());
-        if(!group.canSetEnterLeaveMessages())
+        if(!group.canSetEnterLeaveMessages() && !resadmin)
         {
             player.sendMessage("§cOwner is not allowed to change enter / leave messages.");
             return;
         }
-        if(!perms.hasResidencePermission(player, false))
+        if(!perms.hasResidencePermission(player, false) && !resadmin)
         {
             player.sendMessage("§cYou dont have permission to do this.");
             return;

@@ -265,7 +265,7 @@ public class Residence extends JavaPlugin {
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
                 String pname = player.getName();
                 if (cmanager.allowAdminsOnly()) {
-                    if (!gmanager.hasAuthority(player, "residence.admin", player.isOp())) {
+                    if (!gmanager.isResidenceAdmin(player)) {
                         player.sendMessage("§cOnly admins have access to this command.");
                         return true;
                     }
