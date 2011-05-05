@@ -68,7 +68,7 @@ public class ItemList {
     {
         if(world!=null)
         {
-            if(!world.equals(inworld))
+            if(!world.equalsIgnoreCase(inworld))
             {
                 return true;
             }
