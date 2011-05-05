@@ -85,39 +85,47 @@ public class PermissionGroup {
         costperarea = limits.getDouble("Economy.BuyCost", 0);
         unstuck = limits.getBoolean("Residence.Unstuck", false);
         List<String> flags = limits.getKeys("Flags.Permission");
-        if(flags!=null)
-        {
-            if (limits != null) {
-                Iterator<String> flagit = flags.iterator();
-                while (flagit.hasNext()) {
-                    String flagname = flagit.next();
-                    boolean access = limits.getBoolean("Flags.Permission." + flagname, false);
-                    flagPerms.put(flagname, access);
-                }
+        if (flags != null) {
+            Iterator<String> flagit = flags.iterator();
+            while (flagit.hasNext()) {
+                String flagname = flagit.next();
+                boolean access = limits.getBoolean("Flags.Permission." + flagname, false);
+                flagPerms.put(flagname, access);
             }
         }
         flags = limits.getKeys("Flags.CreatorDefault");
-        if(flags!=null)
-        {
-            if (limits != null) {
-                Iterator<String> flagit = flags.iterator();
-                while (flagit.hasNext()) {
-                    String flagname = flagit.next();
-                    boolean access = limits.getBoolean("Flags.CreatorDefault." + flagname, false);
-                    creatorDefaultFlags.put(flagname, access);
-                }
+        if (flags != null) {
+            Iterator<String> flagit = flags.iterator();
+            while (flagit.hasNext()) {
+                String flagname = flagit.next();
+                boolean access = limits.getBoolean("Flags.CreatorDefault." + flagname, false);
+                creatorDefaultFlags.put(flagname, access);
             }
+
         }
         flags = limits.getKeys("Flags.Default");
-        if(flags!=null)
-        {
-            if (limits != null) {
+        if (flags != null) {
+            Iterator<String> flagit = flags.iterator();
+            while (flagit.hasNext()) {
+                String flagname = flagit.next();
+                boolean access = limits.getBoolean("Flags.Default." + flagname, false);
+                residenceDefaultFlags.put(flagname, access);
+            }
+        }
+        List<String> groupDef = limits.getKeys("Flags.GroupDefault");
+        if (groupDef != null) {
+            Iterator<String> groupit = groupDef.iterator();
+            while (groupit.hasNext()) {
+                String name = groupit.next();
+                Map<String, Boolean> gflags = new HashMap<String, Boolean>();
+                flags = limits.getKeys("Flags.GroupDefault." + name);
                 Iterator<String> flagit = flags.iterator();
                 while (flagit.hasNext()) {
                     String flagname = flagit.next();
-                    boolean access = limits.getBoolean("Flags.Default." + flagname, false);
-                    residenceDefaultFlags.put(flagname, access);
+                    boolean access = limits.getBoolean("Flags.GroupDefault." + name + "." + flagname, false);
+                    gflags.put(flagname, access);
                 }
+                groupDefaultFlags.put(name, gflags);
             }
         }
     }
