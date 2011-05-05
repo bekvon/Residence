@@ -238,11 +238,11 @@ public class Residence extends JavaPlugin {
     private void loadIConomy() 
     {
         Plugin p = getServer().getPluginManager().getPlugin("iConomy");
-        if (p != null) {
+        if (p != null && p.getDescription().getVersion().startsWith("5")) {
             economy = new IConomyAdapter((iConomy)p);
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with iConomy!");
         } else {
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy NOT found!");
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy 5+ NOT found!");
         }
     }
     
