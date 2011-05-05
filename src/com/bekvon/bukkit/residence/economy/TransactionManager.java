@@ -90,7 +90,7 @@ public class TransactionManager {
             return;
         }
         sellAmount.put(areaname, amount);
-        player.sendMessage("§aResidence is now for sale!");
+        player.sendMessage("§aResidence §e" + areaname + "§a is now for sale for §e" + amount + "§a!");
     }
 
     public void buyPlot(String areaname, Player player)
