@@ -31,42 +31,42 @@ public class SelectionManager {
 
     public SelectionManager()
     {
-        playerLoc1 = Collections.synchronizedMap(new HashMap<String,Location>());
-        playerLoc2 = Collections.synchronizedMap(new HashMap<String,Location>());
+        playerLoc1 = new HashMap<String,Location>();
+        playerLoc2 = new HashMap<String,Location>();
     }
 
-    public synchronized void placeLoc1(String player, Location loc)
+    public void placeLoc1(String player, Location loc)
     {
         if(loc!=null)
         playerLoc1.put(player, loc);
     }
 
-    public synchronized void placeLoc2(String player, Location loc)
+    public void placeLoc2(String player, Location loc)
     {
         if(loc!=null)
         playerLoc2.put(player, loc);
     }
 
-    public synchronized Location getPlayerLoc1(String player)
+    public Location getPlayerLoc1(String player)
     {
         if(playerLoc1.containsKey(player))
             return playerLoc1.get(player);
         return null;
     }
 
-    public synchronized Location getPlayerLoc2(String player)
+    public Location getPlayerLoc2(String player)
     {
         if(playerLoc2.containsKey(player))
             return playerLoc2.get(player);
         return null;
     }
 
-    public synchronized boolean hasPlacedBoth(String player)
+    public boolean hasPlacedBoth(String player)
     {
         return (playerLoc1.containsKey(player) && playerLoc2.containsKey(player));
     }
 
-    public synchronized void selectBySize(Player player, int x, int y, int z)
+    public void selectBySize(Player player, int x, int y, int z)
     {
         Location loc = player.getLocation();
         Location loc1 = new Location(loc.getWorld(), loc.getBlockX() + x, loc.getBlockY() + y, loc.getBlockZ() + z);
@@ -76,14 +76,14 @@ public class SelectionManager {
         player.sendMessage("§aSelection made!");
     }
 
-    public synchronized void displaySelectionSize(Player player) {
+    public void displaySelectionSize(Player player) {
         String pname = player.getName();
         if (this.hasPlacedBoth(pname)) {
             CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
             player.sendMessage("§eSelection Total Size:§3 " + cuboidArea.getSize());
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             if(Residence.getConfig().enableEconomy())
-                player.sendMessage("§eLand Cost:" + ((int)((double)cuboidArea.getSize()*group.getCostPerBlock())));
+                player.sendMessage("§eLand Cost:§3 " + ((int)((double)cuboidArea.getSize()*group.getCostPerBlock())));
             player.sendMessage("§eXSize:§3 " + cuboidArea.getXSize());
             player.sendMessage("§eYSize:§3 " + cuboidArea.getYSize());
             player.sendMessage("§eZSize:§3 " + cuboidArea.getZSize());
@@ -92,13 +92,14 @@ public class SelectionManager {
             player.sendMessage("§cPlace 2 points first!");
     }
 
-    public synchronized void vert(Player player)
+    public void vert(Player player)
     {
         if(hasPlacedBoth(player.getName()))
         {
-            playerLoc1.get(player.getName()).setY(127);
-            playerLoc2.get(player.getName()).setY(0);
-            player.sendMessage("§aSelection expanded from sky to bedrock!");
+            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+            playerLoc1.get(player.getName()).setY(group.getMaxHeight());
+            playerLoc2.get(player.getName()).setY(group.getMinHeight());
+            player.sendMessage("§aSelection expanded from your lowest allowed limit to you highest allowed limit!");
         }
         else
         {
@@ -106,13 +107,41 @@ public class SelectionManager {
         }
     }
 
-    public synchronized void clearSelection(Player player)
+    public void sky(Player player)
+    {
+        if(hasPlacedBoth(player.getName()))
+        {
+            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+            playerLoc1.get(player.getName()).setY(group.getMaxHeight());
+            player.sendMessage("§aSelection expanded to you highest allowed limit!");
+        }
+        else
+        {
+            player.sendMessage("§cPlace 2 points first!");
+        }
+    }
+
+    public void bedrock(Player player)
+    {
+        if(hasPlacedBoth(player.getName()))
+        {
+            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+            playerLoc2.get(player.getName()).setY(group.getMinHeight());
+            player.sendMessage("§aSelection expanded to you lowest allowed limit!");
+        }
+        else
+        {
+            player.sendMessage("§cPlace 2 points first!");
+        }
+    }
+
+    public void clearSelection(Player player)
     {
         playerLoc1.remove(player.getName());
         playerLoc2.remove(player.getName());
     }
 
-    public synchronized void selectChunk(Player player)
+    public void selectChunk(Player player)
     {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         int xcoord = chunk.getX() * 16;
@@ -126,7 +155,7 @@ public class SelectionManager {
         player.sendMessage("§aSelected current chunk...");
     }
 
-    public synchronized void modify(Player player, boolean shift, int amount)
+    public void modify(Player player, boolean shift, int amount)
     {
         if(!this.hasPlacedBoth(player.getName()))
         {
@@ -242,7 +271,7 @@ public class SelectionManager {
         playerLoc2.put(player.getName(), area.getLowLoc());
     }
 
-    private synchronized Direction getDirection(Player player)
+    private Direction getDirection(Player player)
     {
         float pitch = player.getLocation().getPitch();
         float yaw = player.getLocation().getYaw();

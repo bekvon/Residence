@@ -24,6 +24,8 @@ Global:
     EnableEconomy: true
     # The economy system to use (iConomy or MineConomy).
     EconomySystem: iConomy
+    # Enables or disables the Rent System (NOT FINISHED YET!)
+    EnableRentSystem: false
     # Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.
     AdminOnlyCommands: false
     # Setting this to true makes server OPs admins.
@@ -63,6 +65,10 @@ Groups:
            MaxNorthSouth: 16
            # The maximum number of blocks a Residence can be, High to Low (Y).
            MaxUpDown: 256
+           # The lowest point this group is allowed to protect.
+           MinHeight: 0
+           # The highest point this group is allowed to protect.
+           MaxHeight: 127
             # The maximum recursive depth that subzones can go.
             # A subzone within a subzone within the Residence zone would be a depth of 2.
             # Set to 0 to disable subzones.

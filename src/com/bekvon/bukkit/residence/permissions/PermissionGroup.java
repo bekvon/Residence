@@ -46,6 +46,8 @@ public class PermissionGroup {
         protected String groupname;
         protected int maxPhysical;
         protected boolean unstuck;
+        protected int minHeight;
+        protected int maxHeight;
 
         public PermissionGroup(String name)
         {
@@ -71,6 +73,8 @@ public class PermissionGroup {
         xmax = limits.getInt("Residence.MaxEastWest", 0);
         ymax = limits.getInt("Residence.MaxUpDown", 0);
         zmax = limits.getInt("Residence.MaxNorthSouth", 0);
+        minHeight = limits.getInt("Residence.MinHeight", 0);
+        maxHeight = limits.getInt("Residence.MaxHeight", 127);
         tpaccess = limits.getBoolean("Residence.CanTeleport", false);
         subzonedepth = limits.getInt("Residence.SubzoneDepth", 0);
         messageperms = limits.getBoolean("Messaging.CanChange", false);
@@ -141,6 +145,17 @@ public class PermissionGroup {
     public int getMaxZ() {
         return zmax;
     }
+
+    public int getMinHeight()
+    {
+        return minHeight;
+    }
+
+    public int getMaxHeight()
+    {
+        return maxHeight;
+    }
+
     public int getMaxZones() {
         return resmax;
     }
@@ -247,6 +262,7 @@ public class PermissionGroup {
         player.sendMessage("§eMax East/West Size:§3 "+xmax);
         player.sendMessage("§eMax North/South Size:§3 "+zmax);
         player.sendMessage("§eMax Up/Down Size:§3 "+ymax);
+        player.sendMessage("§eMin/Max Protection Height:§3 "+minHeight+ " to " + maxHeight);
         player.sendMessage("§eMax Subzone Depth:§3 "+subzonedepth);
         player.sendMessage("§eCan Set Enter/Leave Messages:§3 "+messageperms);
         player.sendMessage("§eNumber of Residences you own:§3 " + Residence.getResidenceManger().getOwnedZoneCount(player.getName()));

@@ -332,7 +332,9 @@ public class Residence extends JavaPlugin {
                     if (args.length == 1 || (args.length == 2 && args[1].equals("?"))) {
                         player.sendMessage("§d----------Command Help:----------");
                         player.sendMessage("§aselect §6[x] [y] [z]§3 - select in x,y,z radius");
-                        player.sendMessage("§aselect §6vert§3 - expands selection from sky to bedrock");
+                        player.sendMessage("§aselect §6vert§3 - expands selection from highest to lowest allowed");
+                        player.sendMessage("§aselect §6sky§3 - expands selection to highest allowed");
+                        player.sendMessage("§aselect §6bedrock§3 - expands selection to lowest allowed");
                         player.sendMessage("§aselect §6size§3 - get size of selection.");
                         player.sendMessage("§aselect §6coords§3 - get selected coords.");
                         player.sendMessage("§aselect §6expand <size>§3 - expand selection the direction your looking.");
@@ -353,13 +355,20 @@ public class Residence extends JavaPlugin {
                                 }
                             }
                         } else if (args[1].equals("vert")) {
-                            if (smanager.hasPlacedBoth(pname)) {
-                                smanager.vert(player);
-                            } else {
-                                player.sendMessage("§cSelect 2 points first!");
-                            }
+                            smanager.vert(player);
                             return true;
-                        } else if (args[1].equals("coords")) {
+                        }
+                        else if(args[1].equals("sky"))
+                        {
+                            smanager.sky(player);
+                            return true;
+                        }
+                        else if(args[1].equals("bedrock"))
+                        {
+                            smanager.bedrock(player);
+                            return true;
+                        }
+                        else if (args[1].equals("coords")) {
                             player.sendMessage("§aSelections:");
                             Location playerLoc1 = smanager.getPlayerLoc1(pname);
                             if (playerLoc1 != null) {
