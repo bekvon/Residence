@@ -75,7 +75,6 @@ public class ResidenceManager {
         return res;
     }
 
-
     public String getNameByLoc(Location loc) {
         if(loc==null)
             return null;
@@ -278,7 +277,6 @@ public class ResidenceManager {
             return;
         }
         ResidencePermissions perms = res.getPermissions();
-        player.sendMessage("§7---------------------------");
         player.sendMessage("§eResidence:§2 " + areaname);
         player.sendMessage("§eOwner:§c " + perms.getOwner());
         player.sendMessage("§eFlags:§9 " + perms.listFlags());
@@ -294,7 +292,6 @@ public class ResidenceManager {
         if (Residence.getConfig().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
             player.sendMessage("§eLeaseExpiration:§a " + Residence.getLeaseManager().getExpireTime(areaname));
         }
-        player.sendMessage("§7---------------------------");
     }
 
     public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea) {

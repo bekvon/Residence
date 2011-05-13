@@ -43,6 +43,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -128,6 +129,7 @@ public class Residence extends JavaPlugin {
             gmanager = new PermissionManager(this.getConfiguration());
             imanager = new ItemManager(this.getConfiguration());
             wmanager = new WorldFlagManager(this.getConfiguration());
+            rentmanager = new RentManager();
             enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
             econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
             ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
@@ -248,6 +250,11 @@ public class Residence extends JavaPlugin {
         return wmanager;
     }
 
+    public static RentManager getRentManager()
+    {
+        return rentmanager;
+    }
+
     private void loadIConomy() 
     {
         Plugin p = getServer().getPluginManager().getPlugin("iConomy");
@@ -279,6 +286,26 @@ public class Residence extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(command.getName().equals("resreload") && args.length==0)
+        {
+            if(sender instanceof Player)
+            {
+                Player player = (Player) sender;
+                if(gmanager.isResidenceAdmin(player))
+                {
+                    this.setEnabled(false);
+                    this.setEnabled(true);
+                    System.out.println("[Residence] Reloaded by "+player.getName()+".");
+                }
+            }
+            else if(sender instanceof ConsoleCommandSender)
+            {
+                this.setEnabled(false);
+                this.setEnabled(true);
+                System.out.println("[Residence] Reloaded by console.");
+            }
+            return true;
+        }
         if (command.getName().equals("res") || command.getName().equals("residence")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
@@ -1094,6 +1121,7 @@ public class Residence extends JavaPlugin {
         yml.addMap("Economy", tmanager.save());
         yml.addMap("Leases", leasemanager.save());
         yml.addMap("PermissionLists", pmanager.save());
+        yml.addMap("RentSystem", rentmanager.save());
         File backupFile = new File(ymlSaveLoc.getParentFile(), ymlSaveLoc.getName() + ".bak");
         if(ymlSaveLoc.isFile())
         {
@@ -1119,6 +1147,7 @@ public class Residence extends JavaPlugin {
             tmanager = TransactionManager.load(yml.getMap("Economy"), gmanager, rmanager);
             leasemanager = LeaseManager.load(yml.getMap("Leases"), rmanager);
             pmanager = PermissionListManager.load(yml.getMap("PermissionLists"));
+            rentmanager = RentManager.load(yml.getMap("RentSystem"));
             System.out.print("[Residence] Loaded Residences...");
         } else {
             System.out.println("[Residence] Save File not found...");

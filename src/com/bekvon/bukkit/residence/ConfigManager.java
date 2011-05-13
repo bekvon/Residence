@@ -21,6 +21,7 @@ public class ConfigManager {
     protected int selectionToolId;
     protected boolean adminOps;
     protected String multiworldPlugin;
+    protected boolean enableRentSystem;
 
     public ConfigManager(Configuration config)
     {
@@ -37,6 +38,7 @@ public class ConfigManager {
         selectionToolId = config.getInt("Global.SelectionToolId", Material.WOOD_AXE.getId());
         adminOps = config.getBoolean("Global.AdminOPs", true);
         multiworldPlugin = config.getString("Global.MultiWorldPlugin");
+        enableRentSystem = config.getBoolean("Global.EnableRentSystem", false);
     }
 
     public String getDefaultGroup() {
@@ -45,6 +47,11 @@ public class ConfigManager {
 
     public boolean enableEconomy() {
         return enableEconomy;
+    }
+
+    public boolean enabledRentSystem()
+    {
+        return enableRentSystem;
     }
 
     public boolean useLeases() {
