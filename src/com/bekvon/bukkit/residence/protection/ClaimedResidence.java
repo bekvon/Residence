@@ -40,7 +40,7 @@ public class ClaimedResidence {
 
     public ClaimedResidence(String creator, String creationWorld) {
         this();
-        perms = new ResidencePermissions(creator, creationWorld);
+        perms = new ResidencePermissions(this,creator, creationWorld);
     }
 
     public ClaimedResidence(String creator, String creationWorld, ClaimedResidence parentResidence) {
@@ -582,7 +582,7 @@ public class ClaimedResidence {
         res.enterMessage = (String) root.get("EnterMessage");
         res.leaveMessage = (String) root.get("LeaveMessage");
         Map<String,Object> areamap = (Map<String, Object>) root.get("Areas");
-        res.perms = ResidencePermissions.load((Map<String, Object>) root.get("Permissions"));
+        res.perms = ResidencePermissions.load(res,(Map<String, Object>) root.get("Permissions"));
         World world = Residence.getServ().getWorld(res.perms.getWorld());
         if(world==null)
             throw new Exception("Can't find world:" + res.perms.getWorld());

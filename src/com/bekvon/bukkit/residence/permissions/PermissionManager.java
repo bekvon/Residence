@@ -127,7 +127,14 @@ public class PermissionManager {
             for(Entry<String, ConfigurationNode> entry : entrys)
             {
                 String key = entry.getKey().toLowerCase();
-                groups.put(key, new PermissionGroup(key,entry.getValue()));
+                try
+                {
+                    groups.put(key, new PermissionGroup(key,entry.getValue()));
+                }
+                catch(Exception ex)
+                {
+                    System.out.println("[Residence] Error parsing group from config:" + key + " Exception:" + ex);
+                }
             }
         }
         if(!groups.containsKey(defaultGroup))

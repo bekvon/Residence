@@ -28,6 +28,9 @@ Global:
     AdminOnlyCommands: false
     # Setting this to true makes server OPs admins.
     AdminOPs: true
+    # This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.
+    # The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.
+    MultiWorldPlugin: Multiverse
     # These flags are applied, by default, when the player is not within another residence.
     # All flags default to true if not specified.
     Flags:
@@ -48,7 +51,7 @@ Groups:
     Default:
        # Information about the Residence zone that the player can define.
        Residence:
-           # Determins if this group can create residences or not.
+           # Determins if this group can create residences or not.  This option can be overriden with the permissions node 'residence.create'
            CanCreate: true
            # The maximum number of Residences a player can have.
            MaxResidences: 3

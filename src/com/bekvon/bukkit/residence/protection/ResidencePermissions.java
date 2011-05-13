@@ -24,14 +24,16 @@ import org.bukkit.entity.Player;
 public class ResidencePermissions extends PermissionList {
     protected String owner;
     protected String world;
+    protected ClaimedResidence residence;
 
-    private ResidencePermissions()
+    private ResidencePermissions(ClaimedResidence res)
     {
-        
+        residence = res;
     }
 
-    public ResidencePermissions(String creator, String inworld)
+    public ResidencePermissions(ClaimedResidence res, String creator, String inworld)
     {
+        this(res);
         owner = creator;
         world = inworld;
     }
@@ -271,8 +273,8 @@ public class ResidencePermissions extends PermissionList {
         return root;
     }
 
-    public static ResidencePermissions load(Map<String, Object> root) throws Exception {
-        ResidencePermissions newperms = new ResidencePermissions();
+    public static ResidencePermissions load(ClaimedResidence res, Map<String, Object> root) throws Exception {
+        ResidencePermissions newperms = new ResidencePermissions(res);
         newperms.owner = (String) root.get("Owner");
         newperms.world = (String) root.get("World");
         newperms.playerFlags = (Map) root.get("PlayerFlags");
