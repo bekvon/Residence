@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -96,6 +97,16 @@ public class ClaimedResidence {
             if(!group.inLimits(area))
             {
                 player.sendMessage("§cArea size is not within your allowed limits.");
+                return;
+            }
+            if(group.getMinHeight()>area.getLowLoc().getBlockY())
+            {
+                player.sendMessage("You are not allowed to protect this deep, minimum height:" + group.getMinHeight());
+                return;
+            }
+            if(group.getMaxHeight()<area.getHighLoc().getBlockY())
+            {
+                player.sendMessage("You are not allowed to protect this high up, maximum height:" + group.getMaxHeight());
                 return;
             }
             if(parent==null && Residence.getConfig().enableEconomy())
