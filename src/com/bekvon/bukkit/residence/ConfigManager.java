@@ -14,12 +14,13 @@ import org.bukkit.util.config.Configuration;
 public class ConfigManager {
     protected String defaultGroup;
     protected boolean useLeases;
-    protected boolean enableBuySell;
+    protected boolean enableEconomy;
     protected boolean adminsOnly;
     protected boolean allowEmptyResidences;
     protected int infoToolId;
     protected int selectionToolId;
     protected boolean adminOps;
+    protected String multiworldPlugin;
 
     public ConfigManager(Configuration config)
     {
@@ -30,19 +31,20 @@ public class ConfigManager {
         defaultGroup = config.getString("Global.DefaultGroup", "default");
         adminsOnly = config.getBoolean("Global.AdminOnlyCommands", false);
         useLeases = config.getBoolean("Global.UseLeaseSystem", false);
-        enableBuySell = config.getBoolean("Global.EnableEconomy", false);
+        enableEconomy = config.getBoolean("Global.EnableEconomy", false);
         allowEmptyResidences = config.getBoolean("Global.AllowEmptyResidences", true);
         infoToolId = config.getInt("Global.InfoToolId", Material.STRING.getId());
         selectionToolId = config.getInt("Global.SelectionToolId", Material.WOOD_AXE.getId());
         adminOps = config.getBoolean("Global.AdminOPs", true);
+        multiworldPlugin = config.getString("Global.MultiWorldPlugin");
     }
 
     public String getDefaultGroup() {
         return defaultGroup;
     }
 
-    public boolean buySellEnabled() {
-        return enableBuySell;
+    public boolean enableEconomy() {
+        return enableEconomy;
     }
 
     public boolean useLeases() {
@@ -68,6 +70,11 @@ public class ConfigManager {
     public boolean getOpsAreAdmins()
     {
         return adminOps;
+    }
+
+    public String getMultiworldPlugin()
+    {
+        return multiworldPlugin;
     }
 
 }

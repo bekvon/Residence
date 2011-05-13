@@ -83,7 +83,7 @@ public class ClaimedResidence {
                 }
             }
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            if(!group.canCreateResidences())
+            if(!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create", false))
             {
                 player.sendMessage("You dont have permission to create residences.");
                 return;
@@ -98,7 +98,7 @@ public class ClaimedResidence {
                 player.sendMessage("§cArea size is not within your allowed limits.");
                 return;
             }
-            if(parent==null && Residence.getConfig().buySellEnabled())
+            if(parent==null && Residence.getConfig().enableEconomy())
             {
                 int chargeamount = (int) Math.ceil((double)area.getSize() * group.getCostPerBlock());
                 if(!TransactionManager.chargeEconomyMoney(player, chargeamount, "new residence area"))
@@ -585,7 +585,7 @@ public class ClaimedResidence {
         res.perms = ResidencePermissions.load((Map<String, Object>) root.get("Permissions"));
         World world = Residence.getServ().getWorld(res.perms.getWorld());
         if(world==null)
-            throw new Exception("Invalid world...");
+            throw new Exception("Can't find world:" + res.perms.getWorld());
         for(Entry<String, Object> map : areamap.entrySet())
         {
             res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(),world));
@@ -595,7 +595,6 @@ public class ClaimedResidence {
         {
             res.subzones.put(map.getKey(), ClaimedResidence.load((Map<String, Object>) map.getValue(), res));
         }
-        
         res.parent = parent;
         Map<String,Object> tploc = (Map<String, Object>) root.get("TPLoc");
         if(tploc != null)

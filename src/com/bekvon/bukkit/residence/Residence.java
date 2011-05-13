@@ -13,6 +13,7 @@ import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
 import com.bekvon.bukkit.residence.economy.IConomyAdapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
+import com.bekvon.bukkit.residence.economy.RentManager;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.itemlist.ItemManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -68,6 +69,7 @@ public class Residence extends JavaPlugin {
     private static LeaseManager leasemanager;
     private static ItemManager imanager;
     private static WorldFlagManager wmanager;
+    private static RentManager rentmanager;
     private static Server server;
     private boolean firstenable = true;
     private static EconomyInterface economy;
@@ -139,6 +141,16 @@ public class Residence extends JavaPlugin {
                         this.loadIConomy();
                     } else if (econsys.toLowerCase().equals("mineconomy")) {
                         this.loadMineConomy();
+                    }
+                }
+                String multiworld = cmanager.getMultiworldPlugin();
+                if (multiworld != null) {
+                    Plugin plugin = server.getPluginManager().getPlugin(multiworld);
+                    if (plugin != null) {
+                        if (!plugin.isEnabled()) {
+                            server.getPluginManager().enablePlugin(plugin);
+                            System.out.println("[Residence] - Enabling multiworld plugin: " + multiworld);
+                        }
                     }
                 }
                 this.loadYml();
