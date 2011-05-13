@@ -118,11 +118,11 @@ public class ResidenceEntityListener extends EntityListener {
             }
         }
         if (area == null) {
-            if (!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("damage", true)) {
+            if (!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("damage", true) && ent instanceof Player) {
                 event.setCancelled(true);
             }
         } else {
-            if (!area.getPermissions().has("damage", true)) {
+            if (!area.getPermissions().has("damage", true) && ent instanceof Player) {
                 event.setCancelled(true);
             }
         }

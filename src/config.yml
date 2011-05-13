@@ -84,6 +84,12 @@ Groups:
           MaxDays: 16
           # The number of days to add to the lease following a '/res lease renew' command.
           RenewIncrement: 14
+       #options related to the rent system
+       Rent:
+           #determines if this group can rent residences FROM other players
+           CanRent: true
+           #determines if this group can rent residences TO other players
+           CanSetForRent: true
        # Options relating to the Residence Economy.
        Economy:
           # Whether or not players in this group can buy other Residences that are for sale.

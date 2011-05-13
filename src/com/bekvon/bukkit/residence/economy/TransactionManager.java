@@ -37,11 +37,33 @@ public class TransactionManager {
         }
         if(!econ.canAfford(player.getName(), amount))
         {
-            player.sendMessage("§cNot enough money, you need: " + amount);
+            player.sendMessage("§cNot enough money for " + reason + ", you need: " + amount);
             return false;
         }
         econ.subtract(player.getName(), amount);
         player.sendMessage("§aCharged " + amount + " to your " + econ.getName() + " account for " + reason + ".");
+        return true;
+    }
+
+    public static boolean chargeEconomyMoney(String playername, int amount, String reason)
+    {
+        EconomyInterface econ = Residence.getEconomyManager();
+        Player player = Residence.getServ().getPlayer(playername);
+        if(econ==null)
+        {
+            if(player!=null)
+                player.sendMessage("§cError, no economy interface is available.");
+            return false;
+        }
+        if(!econ.canAfford(playername, amount))
+        {
+            if(player!=null)
+                player.sendMessage("§cNot enough money for " + reason + ", you need: " + amount);
+            return false;
+        }
+        econ.subtract(playername, amount);
+        if(player!=null)
+            player.sendMessage("§aCharged " + amount + " to your " + econ.getName() + " account for " + reason + ".");
         return true;
     }
 
@@ -56,7 +78,7 @@ public class TransactionManager {
     {
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
-            if(!Residence.getConfig().buySellEnabled() || Residence.getEconomyManager()==null)
+            if(!Residence.getConfig().enableEconomy() || Residence.getEconomyManager()==null)
             {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
@@ -100,7 +122,7 @@ public class TransactionManager {
         if(!resadmin)
         {
             
-            if(!Residence.getConfig().buySellEnabled() || Residence.getEconomyManager()==null)
+            if(!Residence.getConfig().enableEconomy() || Residence.getEconomyManager()==null)
             {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
