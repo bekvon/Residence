@@ -7,6 +7,7 @@ package com.bekvon.bukkit.residence.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
@@ -77,23 +78,50 @@ public class ResidenceBlockListener extends BlockListener {
     }
 
     @Override
-    public void onBlockIgnite(BlockIgniteEvent event) {
+    public void onBlockBurn(BlockBurnEvent event) {
         if(event.isCancelled())
             return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
-        if (res != null) {
-            if (event.getCause() == IgniteCause.FLINT_AND_STEEL) {
-                Player player = event.getPlayer();
-                if (!res.getPermissions().playerHas(player.getName(), "ignite", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-                    event.setCancelled(true);
-                    player.sendMessage("§cYou dont have permission to ignite here.");
-                }
+        if(res!=null)
+        {
+            if(!res.getPermissions().has("firespread", true))
+            {
+                event.setCancelled(true);
+                System.out.println("Debug: canceled fire burn");
             }
-            else if(event.getCause() == IgniteCause.SPREAD)
+        }
+        else
+        {
+            if (!Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName()).has("firespread", true)) {
+                event.setCancelled(true);
+
+            }
+        }
+        //super.onBlockBurn(event);
+    }
+
+
+    @Override
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        System.out.println("Debug: IgniteEvent! Name:"+event.getCause().name()+" Cause:"+event.getCause());
+        if(event.isCancelled())
+            return;
+        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        IgniteCause cause = event.getCause();
+        if (res != null) {
+            if(cause == IgniteCause.SPREAD)
             {
                 if(!res.getPermissions().has("firespread", true))
                 {
                     event.setCancelled(true);
+                    System.out.println("Debug: canceled fire spread!");
+                }
+            }
+            else if(cause == IgniteCause.FLINT_AND_STEEL) {
+                Player player = event.getPlayer();
+                if (!res.getPermissions().playerHas(player.getName(), "ignite", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+                    event.setCancelled(true);
+                    player.sendMessage("§cYou dont have permission to ignite here.");
                 }
             }
             else
@@ -104,7 +132,7 @@ public class ResidenceBlockListener extends BlockListener {
                 }
             }
         } else {
-            if(event.getCause() == IgniteCause.SPREAD)
+            if(cause == IgniteCause.SPREAD)
             {
                 if (!Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName()).has("firespread", true)) {
                     event.setCancelled(true);
@@ -118,7 +146,7 @@ public class ResidenceBlockListener extends BlockListener {
                 }
             }
         }
-        super.onBlockIgnite(event);
+        //super.onBlockIgnite(event);
     }
 
     @Override
