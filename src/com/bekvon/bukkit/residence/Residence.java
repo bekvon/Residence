@@ -176,6 +176,7 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
