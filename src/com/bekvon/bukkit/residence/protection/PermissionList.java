@@ -112,8 +112,13 @@ public class PermissionList {
         }
     }
 
+    public boolean isSet(String flag)
+    {
+        return cuboidFlags.containsKey(flag);
+    }
+
     public boolean checkValidFlag(String flag, boolean globalflag) {
-        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone")) {
+        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone") || flag.equals("destroy") || flag.equals("place")) {
             return true;
         }
         if (globalflag) {

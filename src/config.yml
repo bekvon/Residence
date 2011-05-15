@@ -6,9 +6,9 @@ Global:
     # This determins which tool you can use to see info on residences, default is String.
     # Simply equip this tool and hit a location inside the residence and it will display the info for it.
     InfoToolId: 287
-   # The interval, in milliseconds, between movement checks.
-   # Reducing this will increase the load on the server.
-   # Increasing this will allow players to move further in movement restricted zones before they are teleported out.
+    # The interval, in milliseconds, between movement checks.
+    # Reducing this will increase the load on the server.
+    # Increasing this will allow players to move further in movement restricted zones before they are teleported out.
     MoveCheckInterval: 500
     # The interval, in minutes, between residence saves.
     SaveInterval: 10

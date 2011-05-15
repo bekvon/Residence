@@ -5,6 +5,8 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
+import com.bekvon.bukkit.residence.protection.PermissionList;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -27,17 +29,41 @@ public class ResidenceBlockListener extends BlockListener {
     public void onBlockBreak(BlockBreakEvent event) {
         if(event.isCancelled())
             return;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
         Player player = event.getPlayer();
+        if(Residence.getPermissionManager().isResidenceAdmin(player))
+            return;
+        ClaimedResidence res;
+        if(Residence.getConfig().enabledRentSystem())
+        {
+            String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
+            if(Residence.getRentManager().isRented(resname))
+            {
+                player.sendMessage("Cannot modify a rented residence!");
+                event.setCancelled(true);
+                return;
+            }
+            res = Residence.getResidenceManger().getByName(resname);
+        }
+        else
+        {
+            res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        }
+        String pname = player.getName();
         if (res != null) {
-            if (!res.getPermissions().playerHas(player.getName(), "build", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            ResidencePermissions perms = res.getPermissions();
+            boolean hasbuild = perms.playerHas(pname, "build", true);
+            boolean hasdestroy = perms.playerHas(pname, "destroy", hasbuild);
+            if ((!hasbuild && !hasdestroy) || !hasdestroy) {
                 event.setCancelled(true);
                 player.sendMessage("§cYou dont have permission to build here.");
             }
         } else {
-            if (!Residence.getWorldFlags().getPerms(player).has("build", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            PermissionList perms = Residence.getWorldFlags().getPerms(player);
+            boolean hasbuild = perms.has("build", true);
+            boolean hasdestroy = perms.has("destroy", hasbuild);
+            if((!hasbuild && !hasdestroy) || !hasdestroy)
+            {
                 event.setCancelled(true);
-
                 player.sendMessage("§cWorld build is disabled.");
             }
         }
@@ -48,20 +74,44 @@ public class ResidenceBlockListener extends BlockListener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if(event.isCancelled())
             return;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
         Player player = event.getPlayer();
+        if(Residence.getPermissionManager().isResidenceAdmin(player))
+            return;
+        ClaimedResidence res;
+        if(Residence.getConfig().enabledRentSystem())
+        {
+            String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
+            if(Residence.getRentManager().isRented(resname))
+            {
+                player.sendMessage("Cannot modify a rented residence!");
+                event.setCancelled(true);
+                return;
+            }
+            res = Residence.getResidenceManger().getByName(resname);
+        }
+        else
+        {
+            res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        }
+        String pname = player.getName();
         if (res != null) {
-            if (!res.getPermissions().playerHas(player.getName(), "build", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            ResidencePermissions perms = res.getPermissions();
+            boolean hasbuild = perms.playerHas(pname, "build", true);
+            boolean hasplace = perms.playerHas(pname, "place", hasbuild);
+            if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
                 player.sendMessage("§cYou dont have permission to build here.");
             }
         } else {
-            if (!Residence.getWorldFlags().getPerms(player).has("build", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+            PermissionList perms = Residence.getWorldFlags().getPerms(player);
+            boolean hasbuild = perms.has("build", true);
+            boolean hasplace = perms.has("place", hasbuild);
+            if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
                 player.sendMessage("§cWorld build is disabled.");
             }
         }
-        super.onBlockPlace(event);
+        //super.onBlockPlace(event);
     }
 
     @Override
@@ -87,14 +137,12 @@ public class ResidenceBlockListener extends BlockListener {
             if(!res.getPermissions().has("firespread", true))
             {
                 event.setCancelled(true);
-                System.out.println("Debug: canceled fire burn");
             }
         }
         else
         {
             if (!Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName()).has("firespread", true)) {
                 event.setCancelled(true);
-
             }
         }
         //super.onBlockBurn(event);
@@ -103,7 +151,6 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockIgnite(BlockIgniteEvent event) {
-        System.out.println("Debug: IgniteEvent! Name:"+event.getCause().name()+" Cause:"+event.getCause());
         if(event.isCancelled())
             return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
@@ -114,7 +161,6 @@ public class ResidenceBlockListener extends BlockListener {
                 if(!res.getPermissions().has("firespread", true))
                 {
                     event.setCancelled(true);
-                    System.out.println("Debug: canceled fire spread!");
                 }
             }
             else if(cause == IgniteCause.FLINT_AND_STEEL) {

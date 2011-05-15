@@ -111,25 +111,25 @@ public class CuboidArea {
 
     public long getSize()
     {
-        int xsize = highPoints.getBlockX() - lowPoints.getBlockX();
-        int ysize = highPoints.getBlockY() - lowPoints.getBlockY();
-        int zsize = highPoints.getBlockZ() - lowPoints.getBlockZ();
+        int xsize = (highPoints.getBlockX() - lowPoints.getBlockX())+1;
+        int ysize = (highPoints.getBlockY() - lowPoints.getBlockY())+1;
+        int zsize = (highPoints.getBlockZ() - lowPoints.getBlockZ())+1;
         return xsize * ysize * zsize;
     }
 
     public int getXSize()
     {
-        return highPoints.getBlockX() - lowPoints.getBlockX();
+        return (highPoints.getBlockX() - lowPoints.getBlockX())+1;
     }
 
     public int getYSize()
     {
-        return highPoints.getBlockY() - lowPoints.getBlockY();
+        return (highPoints.getBlockY() - lowPoints.getBlockY())+1;
     }
 
     public int getZSize()
     {
-        return highPoints.getBlockZ() - lowPoints.getBlockZ();
+        return (highPoints.getBlockZ() - lowPoints.getBlockZ())+1;
     }
 
     public Location getHighLoc()

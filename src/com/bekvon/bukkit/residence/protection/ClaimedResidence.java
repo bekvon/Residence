@@ -118,6 +118,12 @@ public class ClaimedResidence {
                 }
             }
         }
+        String collideResidence = Residence.getResidenceManger().checkAreaCollision(area, this);
+        if(collideResidence!=null)
+        {
+            player.sendMessage("§cArea collides with residence: §e" + collideResidence);
+            return;
+        }
         areas.put(name, area);
         player.sendMessage("§aArea created. ID:§e " + name);
     }

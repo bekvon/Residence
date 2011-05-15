@@ -41,20 +41,47 @@ public class ResidencePermissions extends PermissionList {
     public boolean playerHas(String player, String flag, boolean def)
     {
         player = player.toLowerCase();
-        String group = Residence.getPermissionManager().getGroupNameByPlayer(player, world);
         if(playerFlags.containsKey(player))
         {
             Map<String, Boolean> pmap = playerFlags.get(player);
             if(pmap.containsKey(flag))
                 return pmap.get(flag);
         }
+        return groupHas(Residence.getPermissionManager().getGroupNameByPlayer(player, world), flag, def);
+    }
+
+    public boolean groupHas(String group, String flag, boolean def)
+    {
         if(groupFlags.containsKey(group))
         {
             Map<String, Boolean> gmap = groupFlags.get(group);
             if(gmap.containsKey(flag))
                 return gmap.get(flag);
         }
-        return has(flag,def);
+        return has(flag, def);
+    }
+
+    public boolean isPlayerSet(String player, String flag)
+    {
+        player = player.toLowerCase();
+        Map<String, Boolean> flags = playerFlags.get(player);
+        if(flags==null)
+            return false;
+        return flags.containsKey(flag);
+    }
+
+    public boolean isGroupSet(String group, String flag)
+    {
+        group = group.toLowerCase();
+        Map<String, Boolean> flags = groupFlags.get(group);
+        if(flags==null)
+            return false;
+        return flags.containsKey(flag);
+    }
+
+    public boolean hasApplicableFlag(String player, String flag)
+    {
+        return isPlayerSet(player,flag) || isGroupSet(Residence.getPermissionManager().getGroupNameByPlayer(player,world),flag) || super.isSet(flag);
     }
 
     public void applyTemplate(Player player, PermissionList list)

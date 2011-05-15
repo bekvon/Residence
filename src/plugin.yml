@@ -13,3 +13,6 @@ commands:
   resadmin:
     description: Residence admin functions.
     usage: §c/resadmin ? for more info
+  resreload:
+    description: Reload residence config.
+    usage: §c/resreload

@@ -307,7 +307,7 @@ public class Residence extends JavaPlugin {
             }
             return true;
         }
-        if (command.getName().equals("res") || command.getName().equals("residence")) {
+        else if(command.getName().equals("res") || command.getName().equals("residence")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);

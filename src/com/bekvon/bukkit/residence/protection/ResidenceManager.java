@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -99,6 +100,17 @@ public class ResidenceManager {
         return name;
     }
 
+    public String getNameByRes(ClaimedResidence res)
+    {
+        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
+        for(Entry<String, ClaimedResidence> check : set)
+        {
+            if(check.getValue()==res)
+                return check.getKey();
+        }
+        return null;
+    }
+
     public void addResidence(Player player, String name, Location loc1, Location loc2)
     {
         name = name.replace(".", "_");
@@ -174,33 +186,27 @@ public class ResidenceManager {
         player.sendMessage(sbuilder.toString());
     }
 
-    public void addPhysicalArea(Player player, String residenceName,String areaID, Location loc1, Location loc2)
-    {
-        ClaimedResidence res = getByName(residenceName);
-        if(!res.getPermissions().hasResidencePermission(player, true))
-        {
-            player.sendMessage("§cYou dont have permission to do this.");
-            return;
+    public void addPhysicalArea(Player player, String residenceName, String areaID, Location loc1, Location loc2) {
+        CuboidArea newarea = new CuboidArea(Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager().getPlayerLoc2(player.getName()));
+        ClaimedResidence res = this.getByName(residenceName);
+        if (res != null) {
+            res.addArea(player, newarea, areaID);
         }
-        CuboidArea newarea = new CuboidArea(loc1,loc2);
-        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        synchronized(residences)
+        else
         {
-            for(Entry<String, ClaimedResidence> entry : set)
-            {
-                String name = entry.getKey();
-                if(!name.equals(residenceName))
-                {
-                    ClaimedResidence check = entry.getValue();
-                    if(check.checkCollision(newarea))
-                    {
-                        player.sendMessage("§cArea collides with residence: §e" + entry.getKey());
-                        return;
-                    }
-                }
+            player.sendMessage("§cInvalid Residence!");
+        }
+    }
+
+    public String checkAreaCollision(CuboidArea newarea, ClaimedResidence parentResidence) {
+        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
+        for (Entry<String, ClaimedResidence> entry : set) {
+            ClaimedResidence check = entry.getValue();
+            if (check!=parentResidence && check.checkCollision(newarea)) {
+                return entry.getKey();
             }
         }
-        res.addArea(player, newarea, areaID);
+        return null;
     }
 
     public void removeResidence(Player player, String name) {
