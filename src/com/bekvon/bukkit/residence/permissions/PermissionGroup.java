@@ -7,6 +7,8 @@ package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.protection.PermissionList;
+import com.bekvon.bukkit.residence.protection.PermissionList.FlagState;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +31,7 @@ public class PermissionGroup {
         protected double costperarea;
         protected boolean tpaccess;
         protected int subzonedepth;
-        protected Map<String,Boolean> flagPerms;
+        protected PermissionList flagPerms;
         protected Map<String,Boolean> creatorDefaultFlags;
         protected Map<String,Map<String,Boolean>> groupDefaultFlags;
         protected Map<String,Boolean> residenceDefaultFlags;
@@ -51,7 +53,7 @@ public class PermissionGroup {
 
         public PermissionGroup(String name)
         {
-            flagPerms = Collections.synchronizedMap(new HashMap<String,Boolean>());
+            flagPerms = new PermissionList();
             creatorDefaultFlags = Collections.synchronizedMap(new HashMap<String,Boolean>());
             residenceDefaultFlags = Collections.synchronizedMap(new HashMap<String,Boolean>());
             groupDefaultFlags = Collections.synchronizedMap(new HashMap<String,Map<String,Boolean>>());
@@ -62,6 +64,12 @@ public class PermissionGroup {
         {
             this(name);
             this.parseGroup(node);
+        }
+
+        public PermissionGroup(String name, ConfigurationNode node, PermissionList parentFlagPerms)
+        {
+            this(name,node);
+            flagPerms.setParent(parentFlagPerms);
         }
 
     private void parseGroup(ConfigurationNode limits) {
@@ -94,7 +102,7 @@ public class PermissionGroup {
             while (flagit.hasNext()) {
                 String flagname = flagit.next();
                 boolean access = limits.getBoolean("Flags.Permission." + flagname, false);
-                flagPerms.put(flagname, access);
+                flagPerms.set(flagname, access ? FlagState.TRUE : FlagState.FALSE);
             }
         }
         flags = limits.getKeys("Flags.CreatorDefault");
@@ -227,10 +235,6 @@ public class PermissionGroup {
     {
         return groupDefaultFlags.entrySet();
     }
-    public Set<Entry<String,Boolean>> getFlagPermissions()
-    {
-        return flagPerms.entrySet();
-    }
 
     public boolean canCreateResidences()
     {
@@ -238,9 +242,7 @@ public class PermissionGroup {
     }
     public boolean hasFlagAccess(String flag)
     {
-        if(flagPerms.containsKey(flag))
-            return flagPerms.get(flag);
-        return false;
+        return flagPerms.has(flag, false);
     }
 
     public boolean inLimits(CuboidArea area)
@@ -268,18 +270,7 @@ public class PermissionGroup {
         player.sendMessage("§eNumber of Residences you own:§3 " + Residence.getResidenceManger().getOwnedZoneCount(player.getName()));
         if(Residence.getEconomyManager()!=null)
             player.sendMessage("§eResidence Cost Per Block:§3 " + costperarea);
-        StringBuilder flags = new StringBuilder();
-        synchronized (flagPerms) {
-            Iterator<Entry<String, Boolean>> it = flagPerms.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry<String, Boolean> next = it.next();
-                if (next.getValue()) {
-                    flags.append(" +");
-                    flags.append(next.getKey());
-                }
-            }
-            player.sendMessage("§eFlag Permissions:§3 " + flags.toString());
-        }
+        player.sendMessage("§eFlag Permissions:§3 " + flagPerms.listFlags());
         if(Residence.getConfig().useLeases())
         {
             player.sendMessage("§eMax Lease Days:§3 " + maxLeaseTime);

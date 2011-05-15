@@ -8,12 +8,10 @@ package com.bekvon.bukkit.residence.selection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -83,7 +81,7 @@ public class SelectionManager {
             player.sendMessage("§eSelection Total Size:§3 " + cuboidArea.getSize());
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             if(Residence.getConfig().enableEconomy())
-                player.sendMessage("§eLand Cost:§3 " + ((int)((double)cuboidArea.getSize()*group.getCostPerBlock())));
+                player.sendMessage("§eLand Cost:§3 " + ((int)Math.ceil((double)cuboidArea.getSize()*group.getCostPerBlock())));
             player.sendMessage("§eXSize:§3 " + cuboidArea.getXSize());
             player.sendMessage("§eYSize:§3 " + cuboidArea.getYSize());
             player.sendMessage("§eZSize:§3 " + cuboidArea.getZSize());

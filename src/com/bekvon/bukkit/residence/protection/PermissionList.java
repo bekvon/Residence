@@ -8,10 +8,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.entity.Player;
+import org.bukkit.util.config.ConfigurationNode;
 
 /**
  *
@@ -23,6 +25,25 @@ public class PermissionList {
     protected Map<String, Map<String, Boolean>> groupFlags;
     protected Map<String, Boolean> cuboidFlags;
     protected PermissionList parent;
+
+    public static PermissionList parseFromConfigNode(String name, ConfigurationNode node)
+    {
+        PermissionList list = new PermissionList();
+        List<String> keys = node.getKeys(name);
+        if(keys!=null)
+        {
+            for(String key : keys)
+            {
+                boolean state = node.getBoolean(name + "." + key, false);
+                key = key.toLowerCase();
+                if(state)
+                    list.set(key, FlagState.TRUE);
+                else
+                    list.set(key, FlagState.FALSE);
+            }
+        }
+        return list;
+    }
 
     public PermissionList()
     {
