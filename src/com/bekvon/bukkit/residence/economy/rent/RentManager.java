@@ -3,9 +3,10 @@
  * and open the template in the editor.
  */
 
-package com.bekvon.bukkit.residence.economy;
+package com.bekvon.bukkit.residence.economy.rent;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.Date;
