@@ -138,6 +138,7 @@ public class ClaimedResidence {
                     if(res.checkCollision(area))
                     {
                         player.sendMessage("§cArea collides with subzone: §e" + sz);
+                        return;
                     }
                 }
             }
