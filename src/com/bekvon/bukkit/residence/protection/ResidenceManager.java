@@ -177,9 +177,9 @@ public class ResidenceManager {
                 Entry<String, ClaimedResidence> next = it.next();
                 if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(player.getName()))
                 {
+                    if(sbuilder.length()!=0)
+                        sbuilder.append(" ,");
                     sbuilder.append(next.getKey());
-                    if(it.hasNext())
-                        sbuilder.append(", ");
                 }
             }
         }

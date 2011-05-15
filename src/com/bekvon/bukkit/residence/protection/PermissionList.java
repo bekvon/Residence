@@ -4,6 +4,7 @@
  */
 package com.bekvon.bukkit.residence.protection;
 
+import com.bekvon.bukkit.residence.Residence;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -121,6 +122,29 @@ public class PermissionList {
         }
     }
 
+    public boolean playerHas(String player, String world, String flag, boolean def)
+    {
+        player = player.toLowerCase();
+        if(playerFlags.containsKey(player))
+        {
+            Map<String, Boolean> pmap = playerFlags.get(player);
+            if(pmap.containsKey(flag))
+                return pmap.get(flag);
+        }
+        return groupHas(Residence.getPermissionManager().getGroupNameByPlayer(player, world), flag, def);
+    }
+
+    public boolean groupHas(String group, String flag, boolean def)
+    {
+        if(groupFlags.containsKey(group))
+        {
+            Map<String, Boolean> gmap = groupFlags.get(group);
+            if(gmap.containsKey(flag))
+                return gmap.get(flag);
+        }
+        return has(flag, def);
+    }
+
     public boolean has(String flag, boolean def)
     {
         if(cuboidFlags.containsKey(flag))
@@ -131,6 +155,24 @@ public class PermissionList {
                 return parent.has(flag, def);
             return def;
         }
+    }
+
+    public boolean isPlayerSet(String player, String flag)
+    {
+        player = player.toLowerCase();
+        Map<String, Boolean> flags = playerFlags.get(player);
+        if(flags==null)
+            return false;
+        return flags.containsKey(flag);
+    }
+
+    public boolean isGroupSet(String group, String flag)
+    {
+        group = group.toLowerCase();
+        Map<String, Boolean> flags = groupFlags.get(group);
+        if(flags==null)
+            return false;
+        return flags.containsKey(flag);
     }
 
     public boolean isSet(String flag)

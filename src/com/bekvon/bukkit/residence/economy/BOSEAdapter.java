@@ -48,11 +48,11 @@ public class BOSEAdapter extends EconomyInterface {
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
         if (canAfford(playerFrom, amount)) {
-            if (!plugin.setPlayerMoney(playerFrom, plugin.getPlayerMoney(playerFrom) - ((int) amount), false)) {
+            if (!subtract(playerFrom, amount)) {
                 return false;
             }
-            if (!plugin.setPlayerMoney(playerTo, plugin.getPlayerMoney(playerTo) + ((int) amount), false)) {
-                plugin.setPlayerMoney(playerFrom, plugin.getPlayerMoney(playerFrom) + ((int) amount), false);
+            if (!add(playerTo,amount)) {
+                add(playerFrom,amount);
                 return false;
             }
             return true;
