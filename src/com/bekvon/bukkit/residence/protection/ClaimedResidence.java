@@ -118,11 +118,29 @@ public class ClaimedResidence {
                 }
             }
         }
-        String collideResidence = Residence.getResidenceManger().checkAreaCollision(area, this);
-        if(collideResidence!=null)
+        if(parent==null)
         {
-            player.sendMessage("§cArea collides with residence: §e" + collideResidence);
-            return;
+            String collideResidence = Residence.getResidenceManger().checkAreaCollision(area, this);
+            if(collideResidence!=null)
+            {
+                player.sendMessage("§cArea collides with residence: §e" + collideResidence);
+                return;
+            }
+        }
+        else
+        {
+            String[] subzones = parent.listSubzones();
+            for(String sz : subzones)
+            {
+                ClaimedResidence res = parent.getSubzone(sz);
+                if(res!=null)
+                {
+                    if(res.checkCollision(area))
+                    {
+                        player.sendMessage("§cArea collides with subzone: §e" + sz);
+                    }
+                }
+            }
         }
         areas.put(name, area);
         player.sendMessage("§aArea created. ID:§e " + name);
