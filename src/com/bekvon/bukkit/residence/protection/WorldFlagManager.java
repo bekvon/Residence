@@ -26,25 +26,6 @@ public class WorldFlagManager {
     protected Map<String,PermissionList> worldperms;
     protected PermissionList globaldefaults;
 
-    public static PermissionList parseFromConfigNode(String name, ConfigurationNode node)
-    {
-        PermissionList list = new PermissionList();
-        List<String> keys = node.getKeys(name);
-        if(keys!=null)
-        {
-            for(String key : keys)
-            {
-                boolean state = node.getBoolean(name + "." + key, false);
-                key = key.toLowerCase();
-                if(state)
-                    list.set(key, FlagState.TRUE);
-                else
-                    list.set(key, FlagState.FALSE);
-            }
-        }
-        return list;
-    }
-
     public WorldFlagManager()
     {
         globaldefaults = new PermissionList();
@@ -91,9 +72,9 @@ public class WorldFlagManager {
             for(String key : keys)
             {
                 if(key.equalsIgnoreCase("Global"))
-                    globaldefaults = parseFromConfigNode(key, config.getNode("Global.Flags"));
+                    globaldefaults = PermissionList.parseFromConfigNode(key, config.getNode("Global.Flags"));
                 else
-                    worldperms.put(key.toLowerCase(), parseFromConfigNode(key,config.getNode("Global.Flags")));
+                    worldperms.put(key.toLowerCase(), PermissionList.parseFromConfigNode(key,config.getNode("Global.Flags")));
             }
             for(Entry<String, PermissionList> entry : worldperms.entrySet())
             {
@@ -106,7 +87,7 @@ public class WorldFlagManager {
                     if (worldkeys != null) {
                         Map<String, PermissionList> perms = new HashMap<String, PermissionList>();
                         for (String wkey : worldkeys) {
-                            PermissionList list = parseFromConfigNode(wkey, config.getNode("Groups." + key + ".Flags.World"));
+                            PermissionList list = PermissionList.parseFromConfigNode(wkey, config.getNode("Groups." + key + ".Flags.World"));
                             perms.put(wkey.toLowerCase(), list);
                         }
                         for (Entry<String, PermissionList> entry : perms.entrySet()) {

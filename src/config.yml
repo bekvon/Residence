@@ -33,8 +33,7 @@ Global:
     # This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.
     # The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.
     MultiWorldPlugin: Multiverse
-    # These flags are applied, by default, when the player is not within another residence.
-    # All flags default to true if not specified.
+    # These flags are applied when the player is not within a residence.
     Flags:
         Global: #these are default for all worlds unless specified below, they can be overridden per group
             use: true
@@ -47,6 +46,21 @@ Global:
             pvp: true
         WorldNameHere: #here you can set default flags for individual worlds, these override Global
             #build: true
+        # This gives permissions for certain flags to all groups, unless specifically denied to the group.
+    FlagPermission:
+            move: true
+            build: true
+            use: true
+            ignite: true
+            pvp: true
+            tp: true
+            flow: true
+            firespread: true
+            creeper: true
+            tnt: true
+            container: true
+            place: true
+            destroy: true
 
 # These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:
@@ -121,17 +135,7 @@ Groups:
        Flags:
           # Specifys the flags that players of this group are allowed to change.
           Permission:
-               move: true
-               build: true
-               use: true
-               ignite: true
-               pvp: true
-               tp: true
-               flow: true
-               firespread: true
-               creeper: true
-               tnt: true
-               container: true
+               #build: true
           # Specifys the flags that are applied at residence creation for players of this group.
           Default:
                build: false
