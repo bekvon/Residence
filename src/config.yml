@@ -22,7 +22,7 @@ Global:
     EnablePermissions: true
     # Enable / Disable Residence's Economy System.
     EnableEconomy: true
-    # The economy system to use (iConomy or MineConomy).
+    # The economy system to use (iConomy, MineConomy, Essentials, and BOSEconomy supported).
     EconomySystem: iConomy
     # Enables or disables the Rent System (NOT FINISHED YET!)
     EnableRentSystem: false

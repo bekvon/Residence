@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.bekvon.bukkit.residence.economy;
+package com.bekvon.bukkit.residence.economy.rent;
 
 import java.util.HashMap;
 import java.util.Map;

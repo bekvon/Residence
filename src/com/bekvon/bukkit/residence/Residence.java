@@ -4,16 +4,18 @@
  */
 package com.bekvon.bukkit.residence;
 
+import com.bekvon.bukkit.residence.economy.BOSEAdapter;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
+import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
 import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
 import com.bekvon.bukkit.residence.economy.IConomyAdapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
-import com.bekvon.bukkit.residence.economy.RentManager;
+import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.itemlist.ItemManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -25,8 +27,11 @@ import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.PermissionList;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
+import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.api.Economy;
 import com.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
+import cosine.boseconomy.BOSEconomy;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -143,6 +148,12 @@ public class Residence extends JavaPlugin {
                         this.loadIConomy();
                     } else if (econsys.toLowerCase().equals("mineconomy")) {
                         this.loadMineConomy();
+                    } else if (econsys.toLowerCase().equals("boseconomy")) {
+                        this.loadBOSEconomy();
+                    } else if (econsys.toLowerCase().equals("essentials")) {
+                        this.loadEssentialsEconomy();
+                    } else {
+                        System.out.println("[Residence] Unknown economy system: " + econsys);
                     }
                 }
                 String multiworld = cmanager.getMultiworldPlugin();
@@ -282,6 +293,28 @@ public class Residence extends JavaPlugin {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with MineConomy!");
         } else {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] MineConomy NOT found!");
+        }
+    }
+
+    private void loadBOSEconomy()
+    {
+        Plugin p = getServer().getPluginManager().getPlugin("BOSEconomy");
+        if (p != null) {
+            economy = new BOSEAdapter((BOSEconomy)p);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with BOSEconomy!");
+        } else {
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] BOSEconomy NOT found!");
+        }
+    }
+
+    private void loadEssentialsEconomy()
+    {
+        Plugin p = getServer().getPluginManager().getPlugin("Essentials");
+        if (p != null) {
+            economy = new EssentialsEcoAdapter((Essentials)p);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with Essentials Economy!");
+        } else {
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Essentials Economy NOT found!");
         }
     }
 
