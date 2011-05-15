@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -129,8 +128,8 @@ public class ClaimedResidence {
         }
         else
         {
-            String[] subzones = parent.listSubzones();
-            for(String sz : subzones)
+            String[] szs = parent.listSubzones();
+            for(String sz : szs)
             {
                 ClaimedResidence res = parent.getSubzone(sz);
                 if(res!=null)

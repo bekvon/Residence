@@ -18,6 +18,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import org.bukkit.Location;
+import org.bukkit.entity.Creeper;
 
 /**
  *
@@ -115,6 +116,17 @@ public class ResidenceEntityListener extends EntityListener {
                     }
                 }
                 return;
+            }
+            else if ((ent instanceof Player) && (damager instanceof Creeper)) {
+                if (area == null) {
+                    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("creeper", true)) {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    if (!area.getPermissions().has("creeper", true)) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
         if (area == null) {
