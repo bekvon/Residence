@@ -229,4 +229,18 @@ public class RentManager {
         root.put("Rented", rented);
         return root;
     }
+
+    public void updateRentableName(String oldName, String newName)
+    {
+        if(rentableLand.containsKey(oldName))
+        {
+            rentableLand.put(newName, rentableLand.get(oldName));
+            rentableLand.remove(oldName);
+        }
+        if(rentedLand.containsKey(oldName))
+        {
+            rentedLand.put(newName, rentedLand.get(oldName));
+            rentedLand.remove(oldName);
+        }
+    }
 }

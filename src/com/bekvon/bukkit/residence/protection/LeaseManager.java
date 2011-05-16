@@ -112,9 +112,8 @@ public class LeaseManager {
         player.sendMessage("§aArea lease renewed until: " + getExpireTime(area));
     }
 
-    public int getRenewCost(String area)
+    public int getRenewCost(ClaimedResidence res)
     {
-        ClaimedResidence res = manager.getByName(area);
         PermissionGroup limits = Residence.getPermissionManager().getGroup(res.getPermissions().getOwner(), res.getPermissions().getWorld());
         double cost = limits.getLeaseRenewCost();
         int amount = (int) Math.ceil((double)res.getTotalSize() * cost);
@@ -148,8 +147,31 @@ public class LeaseManager {
                 Entry<String, Long> next = it.next();
                 if(next.getValue()<System.currentTimeMillis())
                 {
-                    manager.removeResidence(null,next.getKey());
-                    it.remove();
+                    boolean renewed = false;
+                    String resname = next.getKey();
+                    if(Residence.getConfig().enableEconomy() && Residence.getConfig().autoRenewLeases())
+                    {
+                        ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
+                        int cost = getRenewCost(res);
+                        String owner = res.getPermissions().getOwner();
+                        PermissionGroup limits = Residence.getPermissionManager().getGroup(owner,res.getPermissions().getWorld());
+                        if(res!=null && Residence.getEconomyManager().canAfford(owner, cost))
+                        {
+                            if(cost==0 || Residence.getEconomyManager().subtract(owner, cost))
+                            {
+                                next.setValue(next.getValue() + daysToMs(limits.getLeaseGiveTime()));
+                                renewed = true;
+                            }
+                        }
+                    }
+                    if(!renewed)
+                    {
+                        if(!Residence.getConfig().enabledRentSystem() || !Residence.getRentManager().isRented(resname))
+                        {
+                            manager.removeResidence(null,next.getKey());
+                            it.remove();
+                        }
+                    }
                 }
             }
         }
@@ -174,6 +196,15 @@ public class LeaseManager {
     public Map<String,Long> save()
     {
         return leaseExpireTime;
+    }
+
+    public void updateLeaseName(String oldName, String newName)
+    {
+        if(leaseExpireTime.containsKey(oldName))
+        {
+            leaseExpireTime.put(newName, leaseExpireTime.get(oldName));
+            leaseExpireTime.remove(oldName);
+        }
     }
 
     public static LeaseManager load(Map root,ResidenceManager m)

@@ -19,6 +19,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Creeper;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 /**
  *
@@ -53,22 +54,36 @@ public class ResidenceEntityListener extends EntityListener {
     }
 
     @Override
+    public void onExplosionPrime(ExplosionPrimeEvent event) {
+        if(event.isCancelled())
+            return;
+        if(this.checkExplosionCancel(event.getEntity(), event.getEntity().getLocation()));
+            event.setCancelled(true);
+    }
+
+
+    @Override
     public void onEntityExplode(EntityExplodeEvent event) {
         if(event.isCancelled())
             return;
-        Entity ent = event.getEntity();
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getLocation());
-        if(!explosionProximityCheck(event.getLocation(), ent instanceof LivingEntity))
+        if(this.checkExplosionCancel(event.getEntity(), event.getLocation()))
             event.setCancelled(true);
+    }
+
+    public boolean checkExplosionCancel(Entity ent, Location loc)
+    {
+        ClaimedResidence res = Residence.getResidenceManger().getByLoc(loc);
+        if(!explosionProximityCheck(loc, ent instanceof LivingEntity))
+            return true;
         else if(res != null) {
             if (ent instanceof LivingEntity) {
                 if (!res.getPermissions().has("creeper", true)) {
-                    event.setCancelled(true);
+                    return true;
                 }
             }
             else {
                 if (!res.getPermissions().has("tnt", true)) {
-                    event.setCancelled(true);
+                    return true;
                 }
             }
         }
@@ -77,15 +92,15 @@ public class ResidenceEntityListener extends EntityListener {
             if(ent instanceof LivingEntity)
             {
                 if(!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("creeper", true))
-                    event.setCancelled(true);
+                    return true;
             }
             else
             {
                 if(!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("tnt", true))
-                    event.setCancelled(true);
+                    return true;
             }
         }
-        super.onEntityExplode(event);
+        return false;
     }
 
     @Override

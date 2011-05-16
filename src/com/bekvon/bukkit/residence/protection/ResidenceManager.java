@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -107,6 +106,9 @@ public class ResidenceManager {
         {
             if(check.getValue()==res)
                 return check.getKey();
+            String n = check.getValue().getSubzoneNameByRes(res);
+            if(n!=null)
+                return check.getKey() + "." + n;
         }
         return null;
     }
@@ -171,14 +173,17 @@ public class ResidenceManager {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized(residences)
         {
+            boolean firstadd = true;
             Iterator<Entry<String, ClaimedResidence>> it = set.iterator();
             while(it.hasNext())
             {
                 Entry<String, ClaimedResidence> next = it.next();
                 if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(player.getName()))
                 {
-                    if(sbuilder.length()!=0)
+                    if(!firstadd)
                         sbuilder.append(" ,");
+                    else
+                        firstadd = false;
                     sbuilder.append(next.getKey());
                 }
             }
@@ -344,7 +349,7 @@ public class ResidenceManager {
             {
                 try
                 {
-                    resm.residences.put(res.getKey(), ClaimedResidence.load((Map<String, Object>) res.getValue(), null));
+                    resm.residences.put(res.getKey(), ClaimedResidence.load(res.getKey(),(Map<String, Object>) res.getValue(), null));
                 }
                 catch (Exception ex)
                 {
@@ -377,6 +382,12 @@ public class ResidenceManager {
                 }
                 residences.put(newName, res);
                 residences.remove(oldName);
+                if(Residence.getConfig().useLeases())
+                    Residence.getLeaseManager().updateLeaseName(oldName, newName);
+                if(Residence.getConfig().enabledRentSystem())
+                {
+                    Residence.getRentManager().updateRentableName(oldName, newName);
+                }
                 player.sendMessage("§aRenamed §e" + oldName + "§a to §e" + newName + "§a...");
             }
             else
@@ -433,5 +444,10 @@ public class ResidenceManager {
         res.getPermissions().setOwner(giveplayer.getName(), true);
         reqPlayer.sendMessage("§aYou give residence §e" + residence + "§a to player §e" + giveplayer.getName() + "§a.");
         giveplayer.sendMessage("§a" + reqPlayer.getName() + "§e has given Residence §a" + residence + "§e to you.");
+    }
+
+    public int getResidenceCount()
+    {
+        return residences.size();
     }
 }

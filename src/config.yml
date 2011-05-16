@@ -18,6 +18,8 @@ Global:
     UseLeaseSystem: true
     # The interval, in minutes, between residence lease checks (if leases are enabled).
     LeaseCheckInterval: 10
+    # Allows leases to automatically renew so long as the player has the money, if economy is disabled, this setting does nothing.
+    LeaseAutoRenew: true
     # Whether or not to use the Permissions system in conjunction with this config.
     EnablePermissions: true
     # Enable / Disable Residence's Economy System.
