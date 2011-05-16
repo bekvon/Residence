@@ -80,7 +80,14 @@ public class Residence extends JavaPlugin {
     private static EconomyInterface economy;
     private final int saveVersion = 1;
     private int leaseBukkitId;
-    private int leaseInterval;
+    private int rentBukkitId;
+    private Runnable rentExpire = new Runnable()
+    {
+        public void run() {
+            rentmanager.checkCurrentRents();
+            System.out.println("[Residence] - Rent Expirations checked!");
+        }
+    };
     private Runnable leaseExpire = new Runnable() {
         public void run() {
             leasemanager.doExpirations();
@@ -88,7 +95,6 @@ public class Residence extends JavaPlugin {
         }
     };
     private static File ymlSaveLoc;
-    private static int autosaveInt;
     private static int autosaveBukkitId;
     private Runnable autoSave = new Runnable() {
         public void run() {
@@ -109,6 +115,10 @@ public class Residence extends JavaPlugin {
         server.getScheduler().cancelTask(autosaveBukkitId);
         if (cmanager.useLeases()) {
             server.getScheduler().cancelTask(leaseBukkitId);
+        }
+        if(cmanager.enabledRentSystem())
+        {
+            server.getScheduler().cancelTask(rentBukkitId);
         }
         saveYml();
         Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Disabled!");
@@ -139,7 +149,7 @@ public class Residence extends JavaPlugin {
                     this.getDataFolder().mkdirs();
                 }
                 String econsys = cmanager.getEconomySystem();
-                if (cmanager.enableEconomy() && econsys != null) {
+                if (this.getConfiguration().getBoolean("Global.EnableEconomy", false) && econsys != null) {
                     if (econsys.toLowerCase().equals("iconomy")) {
                         this.loadIConomy();
                     } else if (econsys.toLowerCase().equals("mineconomy")) {
@@ -194,19 +204,27 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
                 firstenable = false;
             }
-            autosaveInt = this.getConfiguration().getInt("SaveInterval", 10);
+            int autosaveInt = cmanager.getAutoSaveInterval();
             if (autosaveInt < 1) {
                 autosaveInt = 1;
             }
             autosaveInt = (autosaveInt * 60) * 20;
             autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
-            leaseInterval = this.getConfiguration().getInt("LeaseCheckInterval", 10);
-            if (leaseInterval < 1) {
-                leaseInterval = 1;
-            }
-            leaseInterval = (leaseInterval * 60) * 20;
             if (cmanager.useLeases()) {
-                leaseBukkitId = server.getScheduler().scheduleAsyncRepeatingTask(this, leaseExpire, leaseInterval, leaseInterval);
+                int leaseInterval = cmanager.getLeaseCheckInterval();
+                if (leaseInterval < 1) {
+                    leaseInterval = 1;
+                }
+                leaseInterval = (leaseInterval * 60) * 20;
+                leaseBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, leaseExpire, leaseInterval, leaseInterval);
+            }
+            if(cmanager.enabledRentSystem())
+            {
+                int rentint = cmanager.getRentCheckInterval();
+                if(rentint < 1)
+                    rentint = 1;
+                rentint = (rentint * 60) * 20;
+                rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
             }
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
         } catch (Exception ex) {
@@ -971,8 +989,61 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§asell §6[residence] [amount]§3 - set residence for sale.");
                             player.sendMessage("§aunsell §6[residence]§3 - stop selling residence.");
                             player.sendMessage("§ainfo §6[residence]§3 - view market info for residence.");
+                            player.sendMessage("§arent §6[residence] <repeat:t/f>§3 - rent a residence.");
+                            player.sendMessage("§arentable §6[residence] [cost] [days] <repeat:t/f>§3 - make a residence you own for rent.");
+                            player.sendMessage("§arelease §6[residence]§3 - release a residence you've rented, or made rentable.");
                             return true;
                         }
+                    }
+                    if (args[1].equals("rentable")) {
+                        if (args.length < 5 || args.length > 6) {
+                            return false;
+                        }
+                        if (!cmanager.enabledRentSystem()) {
+                            player.sendMessage("Rent system is disabled.");
+                            return true;
+                        }
+                        int days;
+                        int cost;
+                        try {
+                            cost = Integer.parseInt(args[3]);
+                        } catch (Exception ex) {
+                            player.sendMessage("Invalid cost.");
+                            return true;
+                        }
+                        try {
+                            days = Integer.parseInt(args[4]);
+                        } catch (Exception ex) {
+                            player.sendMessage("Invalid cost.");
+                            return true;
+                        }
+                        boolean repeat = false;
+                        if (args.length == 6) {
+                            if (args[5].equalsIgnoreCase("t") || args[5].equalsIgnoreCase("true")) {
+                                repeat = true;
+                            } else if (!args[5].equalsIgnoreCase("f") && !args[5].equalsIgnoreCase("false")) {
+                                player.sendMessage("Invalid repeat value, must be true or false.");
+                                return true;
+                            }
+                        }
+                        rentmanager.setForRent(player, args[2], cost, days, repeat);
+                        return true;
+                    }
+                    else if(args[1].equals("rent"))
+                    {
+                        if(args.length<3 || args.length>4)
+                            return false;
+                        boolean repeat = false;
+                        if (args.length == 4) {
+                            if (args[3].equalsIgnoreCase("t") || args[3].equalsIgnoreCase("true")) {
+                                repeat = true;
+                            } else if (!args[3].equalsIgnoreCase("f") && !args[3].equalsIgnoreCase("false")) {
+                                player.sendMessage("Invalid repeat value, must be true or false.");
+                                return true;
+                            }
+                        }
+                        rentmanager.rent(player, args[2], repeat);
+                        return true;
                     }
                     if (args.length == 3) {
                         if (args[1].equals("buy")) {
@@ -980,6 +1051,10 @@ public class Residence extends JavaPlugin {
                             return true;
                         } else if (args[1].equals("info")) {
                             tmanager.viewSaleInfo(args[2], player);
+                            if(cmanager.enabledRentSystem() && rentmanager.isForRent(args[2]))
+                            {
+                                rentmanager.printRentInfo(player, args[2]);
+                            }
                             return true;
                         } else if (args[1].equals("unsell")) {
                             tmanager.removeFromSale(player, args[2]);

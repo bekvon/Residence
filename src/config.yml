@@ -28,6 +28,8 @@ Global:
     EconomySystem: iConomy
     # Enables or disables the Rent System (NOT FINISHED YET!)
     EnableRentSystem: false
+    # The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).
+    RentCheckInterval: 10
     # Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.
     AdminOnlyCommands: false
     # Setting this to true makes server OPs admins.

@@ -418,6 +418,24 @@ public class PermissionList {
         player.sendMessage("§eOthers Flags:§c " + listOtherPlayersFlags(player.getName()));
     }
 
+    public void copyUserPermissions(String fromUser, String toUser)
+    {
+        Map<String, Boolean> get = playerFlags.get(fromUser);
+        if(get!=null)
+        {
+            Map<String, Boolean> targ = playerFlags.get(toUser);
+            if(targ==null)
+            {
+                targ = new HashMap<String,Boolean>();
+                playerFlags.put(toUser, targ);
+            }
+            for(Entry<String, Boolean> entry : get.entrySet())
+            {
+                targ.put(entry.getKey(),entry.getValue());
+            }
+        }
+    }
+
     public void setParent(PermissionList p)
     {
         parent = p;

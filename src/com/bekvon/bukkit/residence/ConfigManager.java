@@ -24,6 +24,9 @@ public class ConfigManager {
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
     protected boolean leaseAutoRenew;
+    protected int rentCheckInterval;
+    protected int leaseCheckInterval;
+    protected int autoSaveInt;
 
     public ConfigManager(Configuration config)
     {
@@ -43,6 +46,9 @@ public class ConfigManager {
         adminOps = config.getBoolean("Global.AdminOPs", true);
         multiworldPlugin = config.getString("Global.MultiWorldPlugin");
         enableRentSystem = config.getBoolean("Global.EnableRentSystem", false);
+        rentCheckInterval = config.getInt("Global.RentCheckInterval", 10);
+        leaseCheckInterval = config.getInt("Global.LeaseCheckInterval", 10);
+        autoSaveInt = config.getInt("Global.SaveInterval", 10);
     }
 
     public String getDefaultGroup() {
@@ -55,7 +61,7 @@ public class ConfigManager {
 
     public boolean enabledRentSystem()
     {
-        return enableRentSystem;
+        return enableRentSystem && enableEconomy();
     }
 
     public boolean useLeases() {
@@ -96,5 +102,20 @@ public class ConfigManager {
     public String getEconomySystem()
     {
         return economySystem;
+    }
+
+    public int getRentCheckInterval()
+    {
+        return rentCheckInterval;
+    }
+
+    public int getLeaseCheckInterval()
+    {
+        return leaseCheckInterval;
+    }
+
+    public int getAutoSaveInterval()
+    {
+        return autoSaveInt;
     }
 }

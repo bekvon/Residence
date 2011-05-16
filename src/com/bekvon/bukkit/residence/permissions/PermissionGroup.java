@@ -50,6 +50,8 @@ public class PermissionGroup {
         protected boolean unstuck;
         protected int minHeight;
         protected int maxHeight;
+        protected boolean canRent;
+        protected boolean canMakeForRent;
 
         public PermissionGroup(String name)
         {
@@ -90,6 +92,8 @@ public class PermissionGroup {
         defaultLeaveMessage = limits.getString("Messaging.DefaultLeave", null);
         maxLeaseTime = limits.getInt("Lease.MaxDays", 16);
         leaseGiveTime = limits.getInt("Lease.RenewIncrement", 14);
+        canRent = limits.getBoolean("Rent.CanRent", false);
+        canMakeForRent = limits.getBoolean("Rent.CanSetForRent", false);
         renewcostperarea = limits.getDouble("Economy.RenewCost", 0.02D);
         canBuy = limits.getBoolean("Economy.CanBuy", false);
         canSell = limits.getBoolean("Economy.CanSell", false);
@@ -210,6 +214,14 @@ public class PermissionGroup {
     public boolean canSellLand()
     {
         return canSell;
+    }
+    public boolean canRentLand()
+    {
+        return canRent;
+    }
+    public boolean canMakeLandForRent()
+    {
+        return canMakeForRent;
     }
     public boolean buyLandIgnoreLimits()
     {

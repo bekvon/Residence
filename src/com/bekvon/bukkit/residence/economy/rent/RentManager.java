@@ -6,8 +6,7 @@
 package com.bekvon.bukkit.residence.economy.rent;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.economy.TransactionManager;
-import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,16 +31,27 @@ public class RentManager {
 
     public void setForRent(Player player, String landName, int amount, int days, boolean repeatable)
     {
+        if(!Residence.getConfig().enabledRentSystem())
+        {
+            player.sendMessage("§cRent system is disabled.");
+            return;
+        }
         ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(res == null)
         {
-            player.sendMessage(landName + " is not a valid residence.");
+            player.sendMessage("§e"+landName + "§c is not a valid residence.");
             return;
         }
         if(!res.getPermissions().hasResidencePermission(player, true) && !resadmin)
         {
-            player.sendMessage("You are not the owner of " + landName);
+            player.sendMessage("§cYou are not the owner of " + landName);
+            return;
+        }
+        PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+        if(!group.canMakeLandForRent())
+        {
+            player.sendMessage("§cYou don't have permission to make land for rent.");
             return;
         }
         if(!rentableLand.containsKey(landName))
@@ -51,12 +61,68 @@ public class RentManager {
             newrent.cost = amount;
             newrent.repeatable = repeatable;
             rentableLand.put(landName,newrent);
-            player.sendMessage(landName + " is now for rent for "+amount+" for "+days+" days.");
+            player.sendMessage("§e"+landName + "§a is now for rent for §e"+amount+"§a for §e"+days+"§a days.");
         }
         else
         {
-            player.sendMessage(landName + " is already for rent!");
+            player.sendMessage("§e"+landName + "§c is already for rent!");
         }
+    }
+
+    public void rent(Player player, String landName, boolean repeat)
+    {
+        if(!Residence.getConfig().enabledRentSystem())
+        {
+            player.sendMessage("§cRent system is disabled.");
+            return;
+        }
+        PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+        if(!group.canRentLand())
+        {
+            player.sendMessage("§cYou don't have permission to rent land.");
+            return;
+        }
+        if(!this.isForRent(landName))
+        {
+            player.sendMessage("§e"+landName + "§c is not for rent or doest not exist.");
+            return;
+        }
+        if(this.isRented(landName))
+        {
+            player.sendMessage("§e"+landName + "§c has already been rented to: §e" + this.getRentingPlayer(landName));
+            return;
+        }
+        RentableLand land = rentableLand.get(landName);
+        if(Residence.getEconomyManager().canAfford(player.getName(), land.cost))
+        {
+            RentedLand newrent = new RentedLand();
+            newrent.player = player.getName();
+            newrent.startTime = System.currentTimeMillis();
+            newrent.endTime = System.currentTimeMillis() + daysToMs(land.days);
+            newrent.autoRefresh = repeat;
+            rentedLand.put(landName, newrent);
+            ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+            if(res!=null)
+                res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
+            player.sendMessage("§aYou have rented land §e" + landName + "§a for §e" + land.days + "§a days.");
+        }
+        else
+        {
+            player.sendMessage("§cYou cannot afford to rent this residence.");
+        }
+
+
+
+    }
+
+    private long daysToMs(int days)
+    {
+        return (((long)days) * 24L * 60L * 60L * 1000L);
+    }
+
+    private int msToDays(long ms)
+    {
+        return (int) Math.ceil(((((double)ms/1000D)/60D)/60D)/24D);
     }
 
     public void removeFromRent(Player player, String landName)
@@ -65,17 +131,17 @@ public class RentManager {
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(res == null)
         {
-            player.sendMessage(landName + " is not a valid residence.");
+            player.sendMessage("§e"+landName + "§c is not a valid residence.");
             return;
         }
         if(!res.getPermissions().hasResidencePermission(player, true) && !resadmin)
         {
-            player.sendMessage("You are not the owner of " + landName);
+            player.sendMessage("§cYou are not the owner of §e" + landName);
             return;
         }
         if(rentedLand.containsKey(landName) && !resadmin)
         {
-            player.sendMessage(landName + " is currently rented out to: " + rentedLand.get(landName).player);
+            player.sendMessage("§e"+landName + "§c is currently rented out to: §e" + rentedLand.get(landName).player);
             return;
         }
         if(rentableLand.containsKey(landName))
@@ -83,11 +149,11 @@ public class RentManager {
             rentableLand.remove(landName);
             if(rentedLand.containsKey(landName))
                 rentedLand.remove(landName);
-            player.sendMessage(landName + " is not longer rentable."); 
+            player.sendMessage("§e"+landName + "§c is not longer rentable.");
         }
         else
         {
-            player.sendMessage(landName + " not for rent.");
+            player.sendMessage("§e"+landName + "§c not for rent.");
         }
     }
 
@@ -115,18 +181,43 @@ public class RentManager {
             RentedLand land = next.getValue();
             if(land.endTime<=System.currentTimeMillis())
             {
-                RentableLand rentable = rentableLand.get(next.getKey());
-                if(!rentable.repeatable)
-                    rentableLand.remove(next.getKey());
-                if(land.autoRefresh && rentable.repeatable)
+                ClaimedResidence res = Residence.getResidenceManger().getByName(next.getKey());
+                if(res!=null)
                 {
-                    if(!TransactionManager.chargeEconomyMoney(land.player, rentable.cost, "rent of land: " + next.getKey()))
+                    RentableLand rentable = rentableLand.get(next.getKey());
+                    if(!rentable.repeatable)
                     {
+                        rentableLand.remove(next.getKey());
+                        it.remove();
+                        res.getPermissions().applyDefaultFlags();
+                    }
+                    else if(land.autoRefresh)
+                    {
+                        if(!Residence.getEconomyManager().canAfford(land.player, rentable.cost))
+                        {
+                            it.remove();
+                            res.getPermissions().applyDefaultFlags();
+                        }
+                        else
+                        {
+                            if(!Residence.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost))
+                            {
+                                it.remove();
+                                res.getPermissions().applyDefaultFlags();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        res.getPermissions().applyDefaultFlags();
                         it.remove();
                     }
                 }
                 else
+                {
+                    rentableLand.remove(next.getKey());
                     it.remove();
+                }
             }
         }
     }
@@ -156,7 +247,7 @@ public class RentManager {
         if(land != null && (land.player.equals(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)))
         {
             rentedLand.remove(landName);
-            player.sendMessage(landName + " is no longer rented.");
+            player.sendMessage("§e"+landName + "§c is no longer rented.");
             RentableLand rentable = rentableLand.get(landName);
             if(!rentable.repeatable)
                 rentableLand.remove(landName);
@@ -169,27 +260,27 @@ public class RentManager {
         RentedLand rented = rentedLand.get(landName);
         if(rentable!=null)
         {
-            player.sendMessage("Land Name:" + landName);
-            player.sendMessage("Cost: " + rentable.cost + " per " + rentable.days + " days");
-            player.sendMessage("Rent Repeatable: " + rentable.repeatable);
+            player.sendMessage("§eLand Name:§3" + landName);
+            player.sendMessage("§eCost: §3" + rentable.cost + " per " + rentable.days + " days");
+            player.sendMessage("§eRent Repeatable: §3" + rentable.repeatable);
             if(rented!=null)
             {
-                player.sendMessage("Status: Currently rented by: " + rented.player);
-                player.sendMessage("Expire Time:" + new Date(rented.endTime));
+                player.sendMessage("§eStatus:§3 Currently rented by: " + rented.player);
+                player.sendMessage("§eExpire Time:§3" + new Date(rented.endTime));
                 if(player.getName().equalsIgnoreCase(rented.player))
                 {
                     if(rented.autoRefresh)
-                        player.sendMessage("You have chosen to automatically make payments so long as you have money to do so.");
+                        player.sendMessage("§aYou have chosen to automatically make payments so long as you have money to do so.");
                 }
             }
             else
             {
-                player.sendMessage("Status: Available");
+                player.sendMessage("§eStatus:§3 Available");
             }
         }
         else
         {
-            player.sendMessage(landName + " has no rent information.");
+            player.sendMessage("§e"+landName + "§c has no rent information.");
         }
     }
 

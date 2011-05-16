@@ -349,7 +349,7 @@ public class ResidenceManager {
             {
                 try
                 {
-                    resm.residences.put(res.getKey(), ClaimedResidence.load(res.getKey(),(Map<String, Object>) res.getValue(), null));
+                    resm.residences.put(res.getKey(), ClaimedResidence.load((Map<String, Object>) res.getValue(), null));
                 }
                 catch (Exception ex)
                 {
