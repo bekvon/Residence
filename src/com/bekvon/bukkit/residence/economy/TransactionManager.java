@@ -254,10 +254,6 @@ public class TransactionManager {
             }
             player.sendMessage("------------------------");
         }
-        else
-        {
-            player.sendMessage("§cInvalid residence, or not for sale.");
-        }
     }
 
     public void clearSales()

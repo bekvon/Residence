@@ -38,7 +38,7 @@ public class ResidenceBlockListener extends BlockListener {
             String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getRentManager().isRented(resname))
             {
-                player.sendMessage("Cannot modify a rented residence!");
+                player.sendMessage("§cCannot modify a rented residence!");
                 event.setCancelled(true);
                 return;
             }
@@ -83,7 +83,7 @@ public class ResidenceBlockListener extends BlockListener {
             String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getRentManager().isRented(resname))
             {
-                player.sendMessage("Cannot modify a rented residence!");
+                player.sendMessage("§cCannot modify a rented residence!");
                 event.setCancelled(true);
                 return;
             }

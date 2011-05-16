@@ -624,7 +624,7 @@ public class ClaimedResidence {
         return root;
     }
 
-    public static ClaimedResidence load(String name, Map<String,Object> root, ClaimedResidence parent) throws Exception {
+    public static ClaimedResidence load(Map<String,Object> root, ClaimedResidence parent) throws Exception {
         ClaimedResidence res = new ClaimedResidence();
         if(root == null)
             throw new Exception("Invalid residence...");
@@ -642,7 +642,7 @@ public class ClaimedResidence {
         Map<String,Object> subzonemap = (Map<String, Object>) root.get("Subzones");
         for(Entry<String, Object> map : subzonemap.entrySet())
         {
-            res.subzones.put(map.getKey(), ClaimedResidence.load(map.getKey(), (Map<String, Object>) map.getValue(), res));
+            res.subzones.put(map.getKey(), ClaimedResidence.load((Map<String, Object>) map.getValue(), res));
         }
         res.parent = parent;
         Map<String,Object> tploc = (Map<String, Object>) root.get("TPLoc");
