@@ -28,7 +28,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.PermissionList;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.api.Economy;
 import com.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
 import cosine.boseconomy.BOSEconomy;
@@ -88,8 +87,6 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] - Lease Expirations checked!");
         }
     };
-    private static boolean enableecon;
-    private static String econsys;
     private static File ymlSaveLoc;
     private static int autosaveInt;
     private static int autosaveBukkitId;
@@ -135,15 +132,14 @@ public class Residence extends JavaPlugin {
             imanager = new ItemManager(this.getConfiguration());
             wmanager = new WorldFlagManager(this.getConfiguration());
             rentmanager = new RentManager();
-            enableecon = this.getConfiguration().getBoolean("Global.EnableEconomy", true);
-            econsys = this.getConfiguration().getString("Global.EconomySystem", "iConomy");
             ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
             economy = null;
             if (firstenable) {
                 if (!this.getDataFolder().isDirectory()) {
                     this.getDataFolder().mkdirs();
                 }
-                if (enableecon && econsys != null) {
+                String econsys = cmanager.getEconomySystem();
+                if (cmanager.enableEconomy() && econsys != null) {
                     if (econsys.toLowerCase().equals("iconomy")) {
                         this.loadIConomy();
                     } else if (econsys.toLowerCase().equals("mineconomy")) {
@@ -643,7 +639,29 @@ public class Residence extends JavaPlugin {
                         rmanager.printAreaInfo(args[1], player);
                         return true;
                     }
-                } else if (args[0].equals("current")) {
+                }
+                else if(args[0].equals("check"))
+                {
+                    if(args.length == 3 || args.length == 4)
+                    {
+                        if(args.length == 4)
+                        {
+                            pname = args[3];
+                        }
+                        ClaimedResidence res = rmanager.getByName(args[1]);
+                        if(res==null)
+                        {
+                            player.sendMessage("§cInvalid Residence.");
+                            return true;
+                        }
+                        if(!res.getPermissions().hasApplicableFlag(pname, args[2]))
+                            player.sendMessage("§cNo flag of name §e" + args[2] + "§c applies to §e" + pname +"§c for residence §e"+args[1]+"§c.");
+                        else
+                            player.sendMessage("§eFlag §a"+args[2]+"§e applies to §a"+pname+"§e, value = " + (res.getPermissions().playerHas(pname, res.getPermissions().getWorld(), args[2], false) ? "§aTRUE" : "§cFALSE"));
+                        return true;
+                    }
+                }
+                else if (args[0].equals("current")) {
                     if(args.length!=1)
                         return false;
                     String res = rmanager.getNameByLoc(player.getLocation());
@@ -918,8 +936,9 @@ public class Residence extends JavaPlugin {
                             return true;
                         } else if (args[1].equals("cost")) {
                             if (args.length == 3) {
-                                if (leasemanager.leaseExpires(args[2])) {
-                                    int cost = leasemanager.getRenewCost(args[2]);
+                                ClaimedResidence res = Residence.getResidenceManger().getByName(args[2]);
+                                if (res == null || leasemanager.leaseExpires(args[2])) {
+                                    int cost = leasemanager.getRenewCost(res);
                                     player.sendMessage("§eRenewal cost for area " + args[2] + " is: §c" + cost);
                                 } else {
                                     player.sendMessage("§cInvalid area, or lease doesn't expire.");
@@ -927,12 +946,13 @@ public class Residence extends JavaPlugin {
                                 return true;
                             } else {
                                 String area = rmanager.getNameByLoc(player.getLocation());
-                                if (area == null) {
+                                ClaimedResidence res = rmanager.getByName(area);
+                                if (area == null || res == null) {
                                     player.sendMessage("§cInvalid Area.");
                                     return true;
                                 }
                                 if (leasemanager.leaseExpires(area)) {
-                                    int cost = leasemanager.getRenewCost(area);
+                                    int cost = leasemanager.getRenewCost(res);
                                     player.sendMessage("§eRenewal cost for area " + area + " is: §c" + cost);
                                 } else {
                                     player.sendMessage("§cInvalid area, or lease doesn't expire.");

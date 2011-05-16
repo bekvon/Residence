@@ -124,6 +124,17 @@ public class PermissionList {
 
     public boolean playerHas(String player, String world, String flag, boolean def)
     {
+        String group = Residence.getPermissionManager().getGroupNameByPlayer(player, world);
+        return this.playerCheck(player, flag, this.groupCheck(group, flag, this.has(flag, def)));
+    }
+
+    public boolean groupHas(String group, String flag, boolean def)
+    {
+        return this.groupCheck(group, flag, this.has(flag, def));
+    }
+
+    private boolean playerCheck(String player, String flag, boolean def)
+    {
         player = player.toLowerCase();
         if(playerFlags.containsKey(player))
         {
@@ -131,10 +142,13 @@ public class PermissionList {
             if(pmap.containsKey(flag))
                 return pmap.get(flag);
         }
-        return groupHas(Residence.getPermissionManager().getGroupNameByPlayer(player, world), flag, def);
+        
+        if(parent!=null)
+            return parent.playerCheck(player, flag, def);
+        return def;
     }
 
-    public boolean groupHas(String group, String flag, boolean def)
+    private boolean groupCheck(String group, String flag, boolean def)
     {
         if(groupFlags.containsKey(group))
         {
@@ -142,19 +156,18 @@ public class PermissionList {
             if(gmap.containsKey(flag))
                 return gmap.get(flag);
         }
-        return has(flag, def);
+        if(parent!=null)
+            return parent.groupCheck(group, flag, def);
+        return def;
     }
 
     public boolean has(String flag, boolean def)
     {
         if(cuboidFlags.containsKey(flag))
             return cuboidFlags.get(flag);
-        else
-        {
-            if(parent!=null)
-                return parent.has(flag, def);
-            return def;
-        }
+        if(parent!=null)
+            return parent.has(flag, def);
+        return def;
     }
 
     public boolean isPlayerSet(String player, String flag)
@@ -166,6 +179,15 @@ public class PermissionList {
         return flags.containsKey(flag);
     }
 
+    public boolean inheritanceIsPlayerSet(String player, String flag)
+    {
+        player = player.toLowerCase();
+        Map<String, Boolean> flags = playerFlags.get(player);
+        if(flags==null)
+            return parent==null ? false : parent.inheritanceIsPlayerSet(player, flag);
+        return flags.containsKey(flag) ? true : parent==null ? false : parent.inheritanceIsPlayerSet(player, flag);
+    }
+
     public boolean isGroupSet(String group, String flag)
     {
         group = group.toLowerCase();
@@ -175,9 +197,23 @@ public class PermissionList {
         return flags.containsKey(flag);
     }
 
+    public boolean inheritanceIsGroupSet(String group, String flag)
+    {
+        group = group.toLowerCase();
+        Map<String, Boolean> flags = groupFlags.get(group);
+        if(flags==null)
+            return parent==null ? false : parent.inheritanceIsGroupSet(group, flag);
+        return flags.containsKey(flag) ? true : parent==null ? false : parent.inheritanceIsGroupSet(group, flag);
+    }
+
     public boolean isSet(String flag)
     {
         return cuboidFlags.containsKey(flag);
+    }
+
+    public boolean inheritanceIsSet(String flag)
+    {
+        return cuboidFlags.containsKey(flag) ? true : parent == null ? false : parent.inheritanceIsSet(flag);
     }
 
     public boolean checkValidFlag(String flag, boolean globalflag) {

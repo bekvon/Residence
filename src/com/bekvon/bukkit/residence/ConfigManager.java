@@ -15,6 +15,7 @@ public class ConfigManager {
     protected String defaultGroup;
     protected boolean useLeases;
     protected boolean enableEconomy;
+    protected String economySystem;
     protected boolean adminsOnly;
     protected boolean allowEmptyResidences;
     protected int infoToolId;
@@ -22,6 +23,7 @@ public class ConfigManager {
     protected boolean adminOps;
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
+    protected boolean leaseAutoRenew;
 
     public ConfigManager(Configuration config)
     {
@@ -32,7 +34,9 @@ public class ConfigManager {
         defaultGroup = config.getString("Global.DefaultGroup", "default");
         adminsOnly = config.getBoolean("Global.AdminOnlyCommands", false);
         useLeases = config.getBoolean("Global.UseLeaseSystem", false);
+        useLeases = config.getBoolean("Global.LeaseAutoRenew", true);
         enableEconomy = config.getBoolean("Global.EnableEconomy", false);
+        economySystem = config.getString("Global.EconomySystem", "iConomy");
         allowEmptyResidences = config.getBoolean("Global.AllowEmptyResidences", true);
         infoToolId = config.getInt("Global.InfoToolId", Material.STRING.getId());
         selectionToolId = config.getInt("Global.SelectionToolId", Material.WOOD_AXE.getId());
@@ -46,7 +50,7 @@ public class ConfigManager {
     }
 
     public boolean enableEconomy() {
-        return enableEconomy;
+        return enableEconomy && Residence.getEconomyManager()!=null;
     }
 
     public boolean enabledRentSystem()
@@ -84,4 +88,13 @@ public class ConfigManager {
         return multiworldPlugin;
     }
 
+    public boolean autoRenewLeases()
+    {
+        return leaseAutoRenew;
+    }
+
+    public String getEconomySystem()
+    {
+        return economySystem;
+    }
 }

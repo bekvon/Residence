@@ -45,7 +45,7 @@ public class ResidencePermissions extends PermissionList {
 
     public boolean hasApplicableFlag(String player, String flag)
     {
-        return isPlayerSet(player,flag) || isGroupSet(Residence.getPermissionManager().getGroupNameByPlayer(player,world),flag) || super.isSet(flag);
+        return super.inheritanceIsPlayerSet(player,flag) || super.inheritanceIsGroupSet(Residence.getPermissionManager().getGroupNameByPlayer(player,world),flag) || super.inheritanceIsSet(flag);
     }
 
     public void applyTemplate(Player player, PermissionList list)
@@ -117,6 +117,20 @@ public class ResidencePermissions extends PermissionList {
     {
         if(Residence.getPermissionManager().isResidenceAdmin(player))
             return true;
+        if(Residence.getConfig().enabledRentSystem())
+        {
+            String resname = residence.getName();
+            if(Residence.getRentManager().isRented(resname))
+            {
+                if(requireOwner)
+                    return false;
+                String renter = Residence.getRentManager().getRentingPlayer(resname);
+                if(player.getName().equalsIgnoreCase(renter))
+                    return true;
+                else
+                    return (playerHas(player.getName(), "admin",false));
+            }
+        }
         if(requireOwner)
             return(owner.equalsIgnoreCase(player.getName()));
         return (playerHas(player.getName(), "admin",false) || owner.equalsIgnoreCase(player.getName()));
