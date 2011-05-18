@@ -55,7 +55,7 @@ public class ResidenceBlockListener extends BlockListener {
             boolean hasdestroy = perms.playerHas(pname, "destroy", hasbuild);
             if ((!hasbuild && !hasdestroy) || !hasdestroy) {
                 event.setCancelled(true);
-                player.sendMessage("§cYou dont have permission to build here.");
+                player.sendMessage("§cYou dont have permission to destroy here.");
             }
         } else {
             PermissionList perms = Residence.getWorldFlags().getPerms(player);
@@ -64,7 +64,7 @@ public class ResidenceBlockListener extends BlockListener {
             if((!hasbuild && !hasdestroy) || !hasdestroy)
             {
                 event.setCancelled(true);
-                player.sendMessage("§cWorld build is disabled.");
+                player.sendMessage("§cWorld destroy is disabled.");
             }
         }
         super.onBlockBreak(event);

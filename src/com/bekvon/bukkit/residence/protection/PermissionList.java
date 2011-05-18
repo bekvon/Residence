@@ -217,7 +217,7 @@ public class PermissionList {
     }
 
     public boolean checkValidFlag(String flag, boolean globalflag) {
-        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone") || flag.equals("destroy") || flag.equals("place")) {
+        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone") || flag.equals("destroy") || flag.equals("place") || flag.equals("bucket")) {
             return true;
         }
         if (globalflag) {

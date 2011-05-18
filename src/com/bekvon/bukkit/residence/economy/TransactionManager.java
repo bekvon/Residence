@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -76,6 +78,14 @@ public class TransactionManager {
 
     public void putForSale(String areaname, Player player, int amount)
     {
+        if(Residence.getConfig().enabledRentSystem())
+        {
+            if(Residence.getRentManager().isForRent(areaname))
+            {
+                player.sendMessage("§cCannot sell a Residence if it is for rent!");
+                return;
+            }
+        }
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
             if(!Residence.getConfig().enableEconomy() || Residence.getEconomyManager()==null)
@@ -254,6 +264,23 @@ public class TransactionManager {
             }
             player.sendMessage("------------------------");
         }
+    }
+
+    public void printForSaleResidences(Player player) {
+        Set<Entry<String, Integer>> set = sellAmount.entrySet();
+        player.sendMessage("§eFor Sale Land:");
+        StringBuilder sbuild = new StringBuilder();
+        sbuild.append("§a");
+        boolean firstadd = true;
+        for (Entry<String, Integer> land : set) {
+            if (!firstadd) {
+                sbuild.append(", ");
+            } else {
+                firstadd = true;
+            }
+            sbuild.append(land.getKey());
+        }
+        player.sendMessage(sbuild.toString());
     }
 
     public void clearSales()

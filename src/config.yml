@@ -113,10 +113,10 @@ Groups:
           RenewIncrement: 14
        #options related to the rent system
        Rent:
-           #determines if this group can rent residences FROM other players
-           CanRent: true
-           #determines if this group can rent residences TO other players
-           CanSetForRent: true
+           #determines how many residences can be rented by this group at once
+           MaxRents: 3
+           #determines how many residences can be set for rent by this group at once
+           MaxRentables: 3
        # Options relating to the Residence Economy.
        Economy:
           # Whether or not players in this group can buy other Residences that are for sale.

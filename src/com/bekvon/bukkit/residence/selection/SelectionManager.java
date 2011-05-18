@@ -8,6 +8,7 @@ package com.bekvon.bukkit.residence.selection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Chunk;
@@ -29,34 +30,30 @@ public class SelectionManager {
 
     public SelectionManager()
     {
-        playerLoc1 = new HashMap<String,Location>();
-        playerLoc2 = new HashMap<String,Location>();
+        playerLoc1 = Collections.synchronizedMap(new HashMap<String,Location>());
+        playerLoc2 = Collections.synchronizedMap(new HashMap<String,Location>());
     }
 
     public void placeLoc1(String player, Location loc)
     {
         if(loc!=null)
-        playerLoc1.put(player, loc);
+            playerLoc1.put(player, loc);
     }
 
     public void placeLoc2(String player, Location loc)
     {
         if(loc!=null)
-        playerLoc2.put(player, loc);
+            playerLoc2.put(player, loc);
     }
 
     public Location getPlayerLoc1(String player)
     {
-        if(playerLoc1.containsKey(player))
-            return playerLoc1.get(player);
-        return null;
+        return playerLoc1.get(player);
     }
 
     public Location getPlayerLoc2(String player)
     {
-        if(playerLoc2.containsKey(player))
-            return playerLoc2.get(player);
-        return null;
+        return playerLoc2.get(player);
     }
 
     public boolean hasPlacedBoth(String player)
