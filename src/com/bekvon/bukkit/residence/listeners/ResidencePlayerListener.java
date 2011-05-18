@@ -6,12 +6,15 @@
 package com.bekvon.bukkit.residence.listeners;
 
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -20,6 +23,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import org.bukkit.event.Event.Type;
 
 /**
  *
@@ -129,6 +133,76 @@ public class ResidencePlayerListener extends PlayerListener {
             }
         }
         super.onPlayerInteract(event);
+    }
+
+    @Override
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+        if(event.isCancelled())
+            return;
+        String resname = Residence.getResidenceManger().getNameByLoc(event.getBlockClicked().getLocation());
+        ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
+        Player player = event.getPlayer();
+        String pname = player.getName();
+        boolean hasbuild;
+        boolean hasbucket;
+        if(res!=null)
+        {
+            if (Residence.getConfig().enabledRentSystem()) {
+                if (Residence.getRentManager().isRented(resname)) {
+                    player.sendMessage("§cCannot modify a rented residence!");
+                    event.setCancelled(true);
+                    return;
+                }
+                res = Residence.getResidenceManger().getByName(resname);
+            }
+            ResidencePermissions perms = res.getPermissions();
+            hasbuild = perms.playerHas(pname,"build", true);
+            hasbucket = perms.playerHas(pname,"bucket", hasbuild);
+        }
+        else
+        {
+            hasbuild = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "build", true);
+            hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
+        }
+        if ((!hasbuild && !hasbucket) || !hasbucket) {
+            player.sendMessage("§cYou don't have permission to use buckets here here.");
+            event.setCancelled(true);
+        }
+    }
+
+    @Override
+    public void onPlayerBucketFill(PlayerBucketFillEvent event) {
+        if(event.isCancelled())
+            return;
+        String resname = Residence.getResidenceManger().getNameByLoc(event.getBlockClicked().getLocation());
+        ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
+        Player player = event.getPlayer();
+        String pname = player.getName();
+        boolean hasbuild;
+        boolean hasbucket;
+        if(res!=null)
+        {
+            if (Residence.getConfig().enabledRentSystem()) {
+                if (Residence.getRentManager().isRented(resname)) {
+                    player.sendMessage("§cCannot modify a rented residence!");
+                    event.setCancelled(true);
+                    return;
+                }
+                res = Residence.getResidenceManger().getByName(resname);
+            }
+            ResidencePermissions perms = res.getPermissions();
+            hasbuild = perms.playerHas(pname,"build", true);
+            hasbucket = perms.playerHas(pname,"bucket", hasbuild);
+        }
+        else
+        {
+            hasbuild = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "build", true);
+            hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
+        }
+        if ((!hasbuild && !hasbucket) || !hasbucket) {
+            player.sendMessage("§cYou don't have permission to use buckets here.");
+            event.setCancelled(true);
+        }
     }
 
     @Override

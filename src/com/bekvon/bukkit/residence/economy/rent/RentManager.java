@@ -8,11 +8,13 @@ package com.bekvon.bukkit.residence.economy.rent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import org.bukkit.entity.Player;
 
 /**
@@ -36,6 +38,11 @@ public class RentManager {
             player.sendMessage("§cRent system is disabled.");
             return;
         }
+        if(Residence.getTransactionManager().isForSale(landName))
+        {
+            player.sendMessage("§cCannot rent a residence while it is for sale!");
+            return;
+        }
         ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(res == null)
@@ -43,16 +50,19 @@ public class RentManager {
             player.sendMessage("§e"+landName + "§c is not a valid residence.");
             return;
         }
-        if(!res.getPermissions().hasResidencePermission(player, true) && !resadmin)
+        if(!resadmin)
         {
-            player.sendMessage("§cYou are not the owner of " + landName);
-            return;
-        }
-        PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        if(!group.canMakeLandForRent())
-        {
-            player.sendMessage("§cYou don't have permission to make land for rent.");
-            return;
+            if(!res.getPermissions().hasResidencePermission(player, true))
+            {
+                player.sendMessage("§cYou are not the owner of " + landName);
+                return;
+            }
+            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+            if(this.getRentableCount(player.getName()) >= group.getMaxRentables())
+            {
+                player.sendMessage("§cYou've reached the max residences your allowed to rent.");
+                return;
+            }
         }
         if(!rentableLand.containsKey(landName))
         {
@@ -77,9 +87,10 @@ public class RentManager {
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        if(!group.canRentLand())
+        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+        if(!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents())
         {
-            player.sendMessage("§cYou don't have permission to rent land.");
+            player.sendMessage("§cYou reached the maximum rents your allowed.");
             return;
         }
         if(!this.isForRent(landName))
@@ -110,9 +121,26 @@ public class RentManager {
         {
             player.sendMessage("§cYou cannot afford to rent this residence.");
         }
+    }
 
-
-
+    public void release(Player player, String landName)
+    {
+        RentedLand rent = rentedLand.get(landName);
+        if(rent == null)
+        {
+            player.sendMessage("§cLand not rented.");
+            return;
+        }
+        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+        if(resadmin || rent.player.equalsIgnoreCase(player.getName()))
+        {
+            rentedLand.remove(landName);
+            player.sendMessage("§e"+landName + "§a has been unrented.");
+        }
+        else
+        {
+            player.sendMessage("§cYou don't have permission to unrent this.");
+        }
     }
 
     private long daysToMs(int days)
@@ -333,5 +361,52 @@ public class RentManager {
             rentedLand.put(newName, rentedLand.get(oldName));
             rentedLand.remove(oldName);
         }
+    }
+
+    public void printRentableResidences(Player player)
+    {
+        Set<Entry<String, RentableLand>> set = rentableLand.entrySet();
+        player.sendMessage("§eRentable Land:");
+        StringBuilder sbuild = new StringBuilder();
+        sbuild.append("§a");
+        boolean firstadd = true;
+        for(Entry<String, RentableLand> land : set)
+        {
+            if(!this.isRented(land.getKey()))
+            {
+                if(!firstadd)
+                    sbuild.append(", ");
+                else
+                    firstadd = true;
+                sbuild.append(land.getKey());
+            }
+        }
+        player.sendMessage(sbuild.toString());
+    }
+
+    public int getRentCount(String player)
+    {
+        Set<Entry<String, RentedLand>> set = rentedLand.entrySet();
+        int count = 0;
+        for(Entry<String, RentedLand> land : set)
+        {
+            if(land.getValue().player.equalsIgnoreCase(player))
+                count++;
+        }
+        return count;
+    }
+
+    public int getRentableCount(String player)
+    {
+        Set<String> set = rentableLand.keySet();
+        int count = 0;
+        for(String land : set)
+        {
+            ClaimedResidence res = Residence.getResidenceManger().getByName(land);
+            if(res!=null)
+                if(res.getPermissions().getOwner().equalsIgnoreCase(player))
+                    count++;
+        }
+        return count;
     }
 }

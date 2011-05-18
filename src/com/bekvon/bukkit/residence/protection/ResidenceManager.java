@@ -102,13 +102,16 @@ public class ResidenceManager {
     public String getNameByRes(ClaimedResidence res)
     {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        for(Entry<String, ClaimedResidence> check : set)
+        synchronized(residences)
         {
-            if(check.getValue()==res)
-                return check.getKey();
-            String n = check.getValue().getSubzoneNameByRes(res);
-            if(n!=null)
-                return check.getKey() + "." + n;
+            for(Entry<String, ClaimedResidence> check : set)
+            {
+                if(check.getValue()==res)
+                    return check.getKey();
+                String n = check.getValue().getSubzoneNameByRes(res);
+                if(n!=null)
+                    return check.getKey() + "." + n;
+            }
         }
         return null;
     }
@@ -181,7 +184,7 @@ public class ResidenceManager {
                 if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(player.getName()))
                 {
                     if(!firstadd)
-                        sbuilder.append(" ,");
+                        sbuilder.append(", ");
                     else
                         firstadd = false;
                     sbuilder.append(next.getKey());
@@ -289,7 +292,10 @@ public class ResidenceManager {
         }
         ResidencePermissions perms = res.getPermissions();
         player.sendMessage("§eResidence:§2 " + areaname);
-        player.sendMessage("§eOwner:§c " + perms.getOwner());
+        if(Residence.getConfig().enabledRentSystem() && Residence.getRentManager().isRented(areaname))
+            player.sendMessage("§eOwner:§c " + perms.getOwner() + "§e Rented by: §c" + Residence.getRentManager().getRentingPlayer(areaname));
+        else
+            player.sendMessage("§eOwner:§c " + perms.getOwner());
         player.sendMessage("§eFlags:§9 " + perms.listFlags());
         player.sendMessage("§eYour Flags: §a" + perms.listPlayerFlags(player.getName()));
         player.sendMessage("§eGroup Flags:§c " + perms.listGroupFlags());

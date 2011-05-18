@@ -198,6 +198,8 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, plistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
@@ -279,6 +281,21 @@ public class Residence extends JavaPlugin {
     public static RentManager getRentManager()
     {
         return rentmanager;
+    }
+
+    public static ResidencePlayerListener getPlayerListener()
+    {
+        return plistener;
+    }
+
+    public static ResidenceBlockListener getBlockListener()
+    {
+        return blistener;
+    }
+
+    public static ResidenceEntityListener getEntityListener()
+    {
+        return elistener;
     }
 
     private void loadIConomy() 
@@ -986,6 +1003,7 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§d----------Command Help:----------");
                             player.sendMessage("§b/res market§3 - residence market commands.");
                             player.sendMessage("§abuy §6[residence]§3 - buy a residence");
+                            player.sendMessage("§alist §6[residence]§3 - list rentable and for sale residence.");
                             player.sendMessage("§asell §6[residence] [amount]§3 - set residence for sale.");
                             player.sendMessage("§aunsell §6[residence]§3 - stop selling residence.");
                             player.sendMessage("§ainfo §6[residence]§3 - view market info for residence.");
@@ -994,6 +1012,21 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§arelease §6[residence]§3 - release a residence you've rented, or made rentable.");
                             return true;
                         }
+                    }
+                    if(args[1].equals("list"))
+                    {
+                        if(!cmanager.enableEconomy())
+                        {
+                            player.sendMessage("§cMarket Disabled...");
+                            return true;
+                        }
+                        player.sendMessage("§9---Market List---");
+                        tmanager.printForSaleResidences(player);
+                        if(cmanager.enabledRentSystem())
+                        {
+                            rentmanager.printRentableResidences(player);
+                        }
+                        return true;
                     }
                     if (args[1].equals("rentable")) {
                         if (args.length < 5 || args.length > 6) {
@@ -1014,7 +1047,7 @@ public class Residence extends JavaPlugin {
                         try {
                             days = Integer.parseInt(args[4]);
                         } catch (Exception ex) {
-                            player.sendMessage("Invalid cost.");
+                            player.sendMessage("Invalid days.");
                             return true;
                         }
                         boolean repeat = false;
@@ -1043,6 +1076,20 @@ public class Residence extends JavaPlugin {
                             }
                         }
                         rentmanager.rent(player, args[2], repeat);
+                        return true;
+                    }
+                    else if(args[1].equals("release"))
+                    {
+                        if(args.length!=3)
+                            return false;
+                        if(rentmanager.isRented(args[2]))
+                        {
+                            rentmanager.release(player, args[2]);
+                        }
+                        else
+                        {
+                            rentmanager.removeFromRent(player, args[2]);
+                        }
                         return true;
                     }
                     if (args.length == 3) {
