@@ -93,7 +93,8 @@ public class TransactionManager {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
             }
-            if(!Residence.getPermissionManager().getGroup(player).canSellLand() && !Residence.getPermissionManager().isResidenceAdmin(player))
+            boolean cansell = Residence.getPermissionManager().getGroup(player).canSellLand() || Residence.getPermissionManager().hasAuthority(player, "residence.sell", false);
+            if(!cansell && !Residence.getPermissionManager().isResidenceAdmin(player))
             {
                 player.sendMessage("§cYou dont have permission to sell plots.");
                 return;
@@ -137,7 +138,8 @@ public class TransactionManager {
                 player.sendMessage("§cError, buying / selling disabled.");
                 return;
             }
-            if(!group.canBuyLand() && !resadmin)
+            boolean canbuy = group.canBuyLand() || Residence.getPermissionManager().hasAuthority(player, "residence.buy", false);
+            if(!canbuy && !resadmin)
             {
                 player.sendMessage("§cYou dont have permission to buy plots.");
                 return;
