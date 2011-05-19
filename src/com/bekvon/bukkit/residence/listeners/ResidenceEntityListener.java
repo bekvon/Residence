@@ -58,7 +58,7 @@ public class ResidenceEntityListener extends EntityListener {
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         if(event.isCancelled())
             return;
-        if(this.checkExplosionCancel(event.getEntity(), event.getEntity().getLocation()));
+        if(this.checkExplosionCancel(event.getEntity(), event.getEntity().getLocation()))
             event.setCancelled(true);
     }
 
