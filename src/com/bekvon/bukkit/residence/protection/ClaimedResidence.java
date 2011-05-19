@@ -88,7 +88,7 @@ public class ClaimedResidence {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             if(!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create", false))
             {
-                player.sendMessage("You dont have permission to create residences.");
+                player.sendMessage("You dont have permission to create residence areas.");
                 return;
             }
             if(areas.size()>=group.getMaxPhysicalPerResidence())
