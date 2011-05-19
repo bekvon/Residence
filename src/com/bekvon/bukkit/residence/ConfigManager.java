@@ -4,6 +4,7 @@
  */
 package com.bekvon.bukkit.residence;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.util.config.Configuration;
 
@@ -27,13 +28,17 @@ public class ConfigManager {
     protected int rentCheckInterval;
     protected int leaseCheckInterval;
     protected int autoSaveInt;
+    protected boolean flagsInherit;
+    protected ChatColor chatColor;
+    protected boolean chatEnable;
+    protected int minMoveUpdate;
 
     public ConfigManager(Configuration config)
     {
         this.load(config);
     }
 
-    public void load(Configuration config) {
+    private void load(Configuration config) {
         defaultGroup = config.getString("Global.DefaultGroup", "default");
         adminsOnly = config.getBoolean("Global.AdminOnlyCommands", false);
         useLeases = config.getBoolean("Global.UseLeaseSystem", false);
@@ -49,6 +54,14 @@ public class ConfigManager {
         rentCheckInterval = config.getInt("Global.RentCheckInterval", 10);
         leaseCheckInterval = config.getInt("Global.LeaseCheckInterval", 10);
         autoSaveInt = config.getInt("Global.SaveInterval", 10);
+        flagsInherit = config.getBoolean("Global.ResidenceFlagsInherit", false);
+        minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
+        chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
+        try {
+            chatColor = ChatColor.valueOf(config.getString("Global.ResidenceChatColor", "DARK_PURPLE"));
+        } catch (Exception ex) {
+            chatColor = ChatColor.DARK_PURPLE;
+        }
     }
 
     public String getDefaultGroup() {
@@ -117,5 +130,25 @@ public class ConfigManager {
     public int getAutoSaveInterval()
     {
         return autoSaveInt;
+    }
+
+    public boolean flagsInherit()
+    {
+        return flagsInherit;
+    }
+
+    public boolean chatEnabled()
+    {
+        return chatEnable;
+    }
+
+    public ChatColor getChatColor()
+    {
+        return chatColor;
+    }
+
+    public int getMinMoveUpdateInterval()
+    {
+        return minMoveUpdate;
     }
 }

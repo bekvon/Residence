@@ -291,7 +291,10 @@ public class ResidenceManager {
             return;
         }
         ResidencePermissions perms = res.getPermissions();
-        player.sendMessage("§eResidence:§2 " + areaname);
+        if(Residence.getConfig().enableEconomy())
+            player.sendMessage("§eResidence:§2 " + areaname + " §eBank: §6" + res.getBank().getStoredMoney());
+        else
+            player.sendMessage("§eResidence:§2 " + areaname);
         if(Residence.getConfig().enabledRentSystem() && Residence.getRentManager().isRented(areaname))
             player.sendMessage("§eOwner:§c " + perms.getOwner() + "§e Rented by: §c" + Residence.getRentManager().getRentingPlayer(areaname));
         else

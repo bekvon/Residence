@@ -30,6 +30,10 @@ Global:
     EnableRentSystem: false
     # The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).
     RentCheckInterval: 10
+    # Enable or disable residence chat channels.
+    ResidenceChatEnable: true
+    # Color of residence chat.
+    ResidenceChatColor: DARK_PURPLE
     # Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.
     AdminOnlyCommands: false
     # Setting this to true makes server OPs admins.
@@ -37,7 +41,9 @@ Global:
     # This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.
     # The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.
     MultiWorldPlugin: Multiverse
-    # These flags are applied when the player is not within a residence.
+    # Setting this to true causes subzones to inherit flags from their parent zones.
+    ResidenceFlagsInherit: true
+    # These are world flags that are applied when the player is NOT within a residence.
     Flags:
         Global: #these are default for all worlds unless specified below, they can be overridden per group
             use: true
@@ -50,21 +56,21 @@ Global:
             pvp: true
         WorldNameHere: #here you can set default flags for individual worlds, these override Global
             #build: true
-        # This gives permissions for certain flags to all groups, unless specifically denied to the group.
+    # This gives permissions for certain flags to all groups, unless specifically denied to the group.
     FlagPermission:
-            move: true
-            build: true
-            use: true
-            ignite: true
-            pvp: true
-            tp: true
-            flow: true
-            firespread: true
-            creeper: true
-            tnt: true
-            container: true
-            place: true
-            destroy: true
+        move: true
+        build: true
+        use: true
+        ignite: true
+        pvp: true
+        tp: true
+        flow: true
+        firespread: true
+        creeper: true
+        tnt: true
+        container: true
+        place: true
+        destroy: true
 
 # These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:

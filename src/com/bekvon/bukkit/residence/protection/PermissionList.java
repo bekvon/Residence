@@ -217,11 +217,11 @@ public class PermissionList {
     }
 
     public boolean checkValidFlag(String flag, boolean globalflag) {
-        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone") || flag.equals("destroy") || flag.equals("place") || flag.equals("bucket")) {
+        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone") || flag.equals("destroy") || flag.equals("place") || flag.equals("bucket") || flag.equals("bank")) {
             return true;
         }
         if (globalflag) {
-            if (flag.equals("pvp") || flag.equals("damage") || flag.equals("monsters") || flag.equals("firespread") || flag.equals("tnt") || flag.equals("creeper") || flag.equals("flow")) {
+            if (flag.equals("pvp") || flag.equals("damage") || flag.equals("monsters") || flag.equals("firespread") || flag.equals("tnt") || flag.equals("creeper") || flag.equals("flow") || flag.equals("healing")) {
                 return true;
             }
         } else {
