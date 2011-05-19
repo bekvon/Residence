@@ -4,6 +4,8 @@
  */
 package com.bekvon.bukkit.residence;
 
+import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
@@ -75,12 +77,21 @@ public class Residence extends JavaPlugin {
     private static ItemManager imanager;
     private static WorldFlagManager wmanager;
     private static RentManager rentmanager;
+    private static ChatManager chatmanager;
     private static Server server;
     private boolean firstenable = true;
     private static EconomyInterface economy;
     private final int saveVersion = 1;
-    private int leaseBukkitId;
-    private int rentBukkitId;
+    private static File ymlSaveLoc;
+    private int leaseBukkitId=-1;
+    private int rentBukkitId=-1;
+    private int healBukkitId=-1;
+    private static int autosaveBukkitId=-1;
+    private Runnable doHeals = new Runnable() {
+        public void run() {
+            plistener.doHeals();
+        }
+    };
     private Runnable rentExpire = new Runnable()
     {
         public void run() {
@@ -94,8 +105,6 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] - Lease Expirations checked!");
         }
     };
-    private static File ymlSaveLoc;
-    private static int autosaveBukkitId;
     private Runnable autoSave = new Runnable() {
         public void run() {
             saveYml();
@@ -113,6 +122,7 @@ public class Residence extends JavaPlugin {
 
     public void onDisable() {
         server.getScheduler().cancelTask(autosaveBukkitId);
+        server.getScheduler().cancelTask(healBukkitId);
         if (cmanager.useLeases()) {
             server.getScheduler().cancelTask(leaseBukkitId);
         }
@@ -141,53 +151,54 @@ public class Residence extends JavaPlugin {
             gmanager = new PermissionManager(this.getConfiguration());
             imanager = new ItemManager(this.getConfiguration());
             wmanager = new WorldFlagManager(this.getConfiguration());
+            chatmanager = new ChatManager();
             rentmanager = new RentManager();
             ymlSaveLoc = new File(this.getDataFolder(), "res.yml");
             economy = null;
+            if (!this.getDataFolder().isDirectory()) {
+                this.getDataFolder().mkdirs();
+            }
+            String econsys = cmanager.getEconomySystem();
+            if (this.getConfiguration().getBoolean("Global.EnableEconomy", false) && econsys != null) {
+                if (econsys.toLowerCase().equals("iconomy")) {
+                    this.loadIConomy();
+                } else if (econsys.toLowerCase().equals("mineconomy")) {
+                    this.loadMineConomy();
+                } else if (econsys.toLowerCase().equals("boseconomy")) {
+                    this.loadBOSEconomy();
+                } else if (econsys.toLowerCase().equals("essentials")) {
+                    this.loadEssentialsEconomy();
+                } else {
+                    System.out.println("[Residence] Unknown economy system: " + econsys);
+                }
+            }
+            String multiworld = cmanager.getMultiworldPlugin();
+            if (multiworld != null) {
+                Plugin plugin = server.getPluginManager().getPlugin(multiworld);
+                if (plugin != null) {
+                    if (!plugin.isEnabled()) {
+                        server.getPluginManager().enablePlugin(plugin);
+                        System.out.println("[Residence] - Enabling multiworld plugin: " + multiworld);
+                    }
+                }
+            }
+            this.loadYml();
+            if (rmanager == null) {
+                rmanager = new ResidenceManager();
+            }
+            if (leasemanager == null) {
+                leasemanager = new LeaseManager(rmanager);
+            }
+            if (tmanager == null) {
+                tmanager = new TransactionManager(rmanager, gmanager);
+            }
+            if (pmanager == null) {
+                pmanager = new PermissionListManager();
+            }
             if (firstenable) {
-                if (!this.getDataFolder().isDirectory()) {
-                    this.getDataFolder().mkdirs();
-                }
-                String econsys = cmanager.getEconomySystem();
-                if (this.getConfiguration().getBoolean("Global.EnableEconomy", false) && econsys != null) {
-                    if (econsys.toLowerCase().equals("iconomy")) {
-                        this.loadIConomy();
-                    } else if (econsys.toLowerCase().equals("mineconomy")) {
-                        this.loadMineConomy();
-                    } else if (econsys.toLowerCase().equals("boseconomy")) {
-                        this.loadBOSEconomy();
-                    } else if (econsys.toLowerCase().equals("essentials")) {
-                        this.loadEssentialsEconomy();
-                    } else {
-                        System.out.println("[Residence] Unknown economy system: " + econsys);
-                    }
-                }
-                String multiworld = cmanager.getMultiworldPlugin();
-                if (multiworld != null) {
-                    Plugin plugin = server.getPluginManager().getPlugin(multiworld);
-                    if (plugin != null) {
-                        if (!plugin.isEnabled()) {
-                            server.getPluginManager().enablePlugin(plugin);
-                            System.out.println("[Residence] - Enabling multiworld plugin: " + multiworld);
-                        }
-                    }
-                }
-                this.loadYml();
-                if (rmanager == null) {
-                    rmanager = new ResidenceManager();
-                }
-                if (leasemanager == null) {
-                    leasemanager = new LeaseManager(rmanager);
-                }
-                if (tmanager == null) {
-                    tmanager = new TransactionManager(rmanager, gmanager);
-                }
-                if (pmanager == null) {
-                    pmanager = new PermissionListManager();
-                }
                 smanager = new SelectionManager();
                 blistener = new ResidenceBlockListener();
-                plistener = new ResidencePlayerListener(this.getConfiguration().getInt("Global.MoveCheckInterval", 1000));
+                plistener = new ResidencePlayerListener();
                 elistener = new ResidenceEntityListener();
                 PluginManager pm = getServer().getPluginManager();
                 pm.registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Lowest, this);
@@ -200,11 +211,16 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, plistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.PLAYER_CHAT, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
                 firstenable = false;
+            }
+            else
+            {
+                plistener.reload();
             }
             int autosaveInt = cmanager.getAutoSaveInterval();
             if (autosaveInt < 1) {
@@ -212,6 +228,7 @@ public class Residence extends JavaPlugin {
             }
             autosaveInt = (autosaveInt * 60) * 20;
             autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
+            healBukkitId = server.getScheduler().scheduleAsyncRepeatingTask(this, doHeals, 20, 20);
             if (cmanager.useLeases()) {
                 int leaseInterval = cmanager.getLeaseCheckInterval();
                 if (leaseInterval < 1) {
@@ -298,6 +315,11 @@ public class Residence extends JavaPlugin {
         return elistener;
     }
 
+    public static ChatManager getChatManager()
+    {
+        return chatmanager;
+    }
+
     private void loadIConomy() 
     {
         Plugin p = getServer().getPluginManager().getPlugin("iConomy");
@@ -368,6 +390,48 @@ public class Residence extends JavaPlugin {
                 this.setEnabled(false);
                 this.setEnabled(true);
                 System.out.println("[Residence] Reloaded by console.");
+            }
+            return true;
+        }
+        else if(command.getName().equals("rc"))
+        {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                String pname = player.getName();
+                if(cmanager.chatEnabled())
+                {
+                    if(args.length==0)
+                    {
+                        plistener.tooglePlayerResidenceChat(player);
+                    }
+                    else
+                    {
+                        String area = plistener.getLastAreaName(pname);
+                        if(area!=null)
+                        {
+                            ChatChannel channel = chatmanager.getChannel(area);
+                            if(channel!=null)
+                            {
+                                String message="";
+                                for(String arg : args)
+                                {
+                                    message = message + " " + arg;
+                                }
+                                channel.chat(pname, message);
+                            }
+                            else
+                            {
+                                player.sendMessage("§cInvalid Channel.");
+                            }
+                        }
+                        else
+                        {
+                            player.sendMessage("§cNot in a residence.");
+                        }
+                    }
+                }
+                else
+                    player.sendMessage("§cResidence chat disabled...");
             }
             return true;
         }
@@ -997,6 +1061,36 @@ public class Residence extends JavaPlugin {
                         }
                     }
                     return false;
+                } else if(args[0].equals("bank")) {
+                    if(args.length!=3)
+                        return false;
+                    ClaimedResidence res = rmanager.getByName(plistener.getLastAreaName(pname));
+                    if(res==null)
+                    {
+                        player.sendMessage("§cYou are not in a residence.");
+                        return true;
+                    }
+                    int amount = 0;
+                    try
+                    {
+                        amount = Integer.parseInt(args[2]);
+                    }
+                    catch (Exception ex)
+                    {
+                        player.sendMessage("§cInvalid amount.");
+                        return true;
+                    }
+                    if(args[1].equals("deposit"))
+                    {
+                        res.getBank().deposit(player, amount);
+                    }
+                    else if(args[1].equals("withdraw"))
+                    {
+                        res.getBank().withdraw(player, amount);
+                    }
+                    else
+                        return false;
+                    return true;
                 } else if (args[0].equals("market")) {
                     if (args.length == 1 || args.length == 2) {
                         if (args.length == 1 || args[1].equals("?")) {
@@ -1299,7 +1393,6 @@ public class Residence extends JavaPlugin {
     }
 
     private void saveYml() {
-
         YMLSaveHelper yml = new YMLSaveHelper(ymlSaveLoc);
         yml.getRoot().put("SaveVersion", saveVersion);
         yml.addMap("Residences", rmanager.save());
@@ -1315,7 +1408,7 @@ public class Residence extends JavaPlugin {
             ymlSaveLoc.renameTo(backupFile);
         }
         yml.save();
-        System.out.println("[Residence] Saved Residences...");
+        System.out.println("[Residence] - Saved Residences...");
     }
 
     private void loadYml() {

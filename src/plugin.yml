@@ -16,3 +16,6 @@ commands:
   resreload:
     description: Reload residence config.
     usage: §c/resreload
+  rc:
+    description: §cChat in current residence channel.
+    useage: §c/rc to toggle, or /rc <message>

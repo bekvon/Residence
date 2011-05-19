@@ -5,6 +5,7 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
+import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -23,7 +25,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import org.bukkit.event.Event.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -34,16 +38,32 @@ public class ResidencePlayerListener extends PlayerListener {
     protected Map<String,String> cache;
     protected Map<String,Long> lastUpdate;
     protected Map<String,Location> lastOutsideLoc;
+    protected List<String> healing;
     protected int minUpdateTime;
+    protected boolean chatenabled;
+    protected List<String> playerToggleChat;
     
-    public ResidencePlayerListener(int updateTime)
+    public ResidencePlayerListener()
     {
         cache = new HashMap<String,String>();
         lastUpdate = new HashMap<String,Long>();
         lastOutsideLoc = new HashMap<String,Location>();
-        minUpdateTime = updateTime;
+        healing = Collections.synchronizedList(new ArrayList<String>());
+        playerToggleChat = new ArrayList<String>();
+        minUpdateTime = Residence.getConfig().getMinMoveUpdateInterval();
+        chatenabled = Residence.getConfig().chatEnabled();
     }
 
+    public void reload()
+    {
+        cache = new HashMap<String,String>();
+        lastUpdate = new HashMap<String,Long>();
+        lastOutsideLoc = new HashMap<String,Location>();
+        healing = Collections.synchronizedList(new ArrayList<String>());
+        playerToggleChat = new ArrayList<String>();
+        minUpdateTime = Residence.getConfig().getMinMoveUpdateInterval();
+        chatenabled = Residence.getConfig().chatEnabled();
+    }
 
     @Override
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -51,7 +71,8 @@ public class ResidencePlayerListener extends PlayerListener {
         cache.remove(pname);
         lastUpdate.remove(pname);
         lastOutsideLoc.remove(pname);
-        //super.onPlayerQuit(event); // This just causes a nag to appear, the parent has no actions
+        healing.remove(pname);
+        Residence.getChatManager().removeFromChannel(pname);
     }
 
     @Override
@@ -219,6 +240,7 @@ public class ResidencePlayerListener extends PlayerListener {
             ClaimedResidence res = null;
             Location ploc = event.getTo();
             boolean showenter = false;
+            boolean chatchange = false;
             String areaname = cache.get(pname);
             if (areaname != null) {
                 res = manager.getByName(areaname);
@@ -226,6 +248,16 @@ public class ResidencePlayerListener extends PlayerListener {
                     cache.remove(pname);
                     areaname = null;
                 } else {
+                    if(res.getPermissions().has("healing", false))
+                    {
+                        if(!healing.contains(pname))
+                            healing.add(pname);
+                    }
+                    else
+                    {
+                        if(healing.contains(pname))
+                            healing.remove(pname);
+                    }
                     if (!res.containsLoc(ploc)) {
                         String leave = res.getLeaveMessage();
                         if (leave != null && !leave.equals("")) {
@@ -238,9 +270,11 @@ public class ResidencePlayerListener extends PlayerListener {
                         if (res == null) {
                             cache.remove(pname);
                             areaname = null;
+                            Residence.getChatManager().removeFromChannel(pname);
                         } else {
                             areaname = Residence.getResidenceManger().getNameByLoc(ploc);
                             cache.put(pname, areaname);
+                            chatchange = true;
                         }
                     } else {
                         String subzone = res.getSubzoneNameByLoc(ploc);
@@ -249,6 +283,7 @@ public class ResidencePlayerListener extends PlayerListener {
                             cache.put(pname, areaname);
                             res = res.getSubzone(subzone);
                             showenter = true;
+                            chatchange = true;
                         }
                     }
                 }
@@ -256,9 +291,12 @@ public class ResidencePlayerListener extends PlayerListener {
             if(areaname == null)
             {
                 areaname = manager.getNameByLoc(ploc);
+                chatchange = true;
                 showenter = true;
             }
             if (areaname != null) {
+                if(chatchange && chatenabled)
+                    Residence.getChatManager().setChannel(pname, areaname);
                 res = manager.getByName(areaname);
                 if (res.getPermissions().playerHas(pname, "move", true) || Residence.getPermissionManager().isResidenceAdmin(player)) {
                     cache.put(pname, areaname);
@@ -291,5 +329,56 @@ public class ResidencePlayerListener extends PlayerListener {
         message = message.replaceAll("%owner", res.getPermissions().getOwner());
         message = message.replaceAll("%residence", areaname);
         return message;
+    }
+
+    public void doHeals() {
+        try {
+            Player[] p = Residence.getServ().getOnlinePlayers();
+            for (Player player : p) {
+                if (healing.contains(player.getName())) {
+                    int health = player.getHealth();
+                    if (health < 20) {
+                        player.setHealth(health++);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        }
+    }
+
+    @Override
+    public void onPlayerChat(PlayerChatEvent event) {
+        String pname = event.getPlayer().getName();
+        if(chatenabled && playerToggleChat.contains(pname))
+        {
+            String area = cache.get(pname);
+            if(area!=null)
+            {
+                ChatChannel channel = Residence.getChatManager().getChannel(area);
+                if(channel!=null)
+                    channel.chat(pname, event.getMessage());
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    public void tooglePlayerResidenceChat(Player player)
+    {
+        String pname = player.getName();
+        if(playerToggleChat.contains(pname))
+        {
+            playerToggleChat.remove(pname);
+            player.sendMessage("§eResidence chat toggled §cOFF§e!");
+        }
+        else
+        {
+            playerToggleChat.add(pname);
+            player.sendMessage("§eResidence chat toggled §aON§e!");
+        }
+    }
+
+    public String getLastAreaName(String player)
+    {
+        return cache.get(player);
     }
 }

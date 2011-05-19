@@ -5,6 +5,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ClaimedResidence {
     protected Map<String, CuboidArea> areas;
     protected Map<String, ClaimedResidence> subzones;
     protected ResidencePermissions perms;
+    protected ResidenceBank bank;
     protected Location tpLoc;
     protected String enterMessage;
     protected String leaveMessage;
@@ -36,6 +38,7 @@ public class ClaimedResidence {
     {
         subzones = Collections.synchronizedMap(new HashMap<String, ClaimedResidence>());
         areas = Collections.synchronizedMap(new HashMap<String, CuboidArea>());
+        bank = new ResidenceBank(this);
     }
 
     public ClaimedResidence(String creator, String creationWorld) {
@@ -192,6 +195,8 @@ public class ClaimedResidence {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             newres.setEnterMessage(group.getDefaultEnterMessage());
             newres.setLeaveMessage(group.getDefaultLeaveMessage());
+            if(Residence.getConfig().flagsInherit())
+                newres.getPermissions().setParent(perms);
             subzones.put(name, newres);
             player.sendMessage("§aCreated subzone: §e" + name);
         }
@@ -601,6 +606,7 @@ public class ClaimedResidence {
         Map<String,Object> areamap = new HashMap<String,Object>();
         root.put("EnterMessage", enterMessage);
         root.put("LeaveMessage", leaveMessage);
+        root.put("StoredMoney", bank.getStoredMoney());
         for(Entry<String, CuboidArea> entry : areas.entrySet())
         {
             areamap.put(entry.getKey(), entry.getValue().save());
@@ -630,6 +636,8 @@ public class ClaimedResidence {
             throw new Exception("Invalid residence...");
         res.enterMessage = (String) root.get("EnterMessage");
         res.leaveMessage = (String) root.get("LeaveMessage");
+        if(root.containsKey("StoredMoney"))
+            res.bank.setStoredMoney((Integer)root.get("StoredMoney"));
         Map<String,Object> areamap = (Map<String, Object>) root.get("Areas");
         res.perms = ResidencePermissions.load(res,(Map<String, Object>) root.get("Permissions"));
         World world = Residence.getServ().getWorld(res.perms.getWorld());
@@ -642,7 +650,10 @@ public class ClaimedResidence {
         Map<String,Object> subzonemap = (Map<String, Object>) root.get("Subzones");
         for(Entry<String, Object> map : subzonemap.entrySet())
         {
-            res.subzones.put(map.getKey(), ClaimedResidence.load((Map<String, Object>) map.getValue(), res));
+            ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res);
+            if(Residence.getConfig().flagsInherit())
+                subres.getPermissions().setParent(res.getPermissions());
+            res.subzones.put(map.getKey(), subres);
         }
         res.parent = parent;
         Map<String,Object> tploc = (Map<String, Object>) root.get("TPLoc");
@@ -713,5 +724,10 @@ public class ClaimedResidence {
     public String getName()
     {
         return Residence.getResidenceManger().getNameByRes(this);
+    }
+
+    public ResidenceBank getBank()
+    {
+        return bank;
     }
 }
