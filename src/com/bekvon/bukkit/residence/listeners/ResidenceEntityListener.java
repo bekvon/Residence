@@ -19,6 +19,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 /**
@@ -108,14 +109,14 @@ public class ResidenceEntityListener extends EntityListener {
         if(event.isCancelled())
             return;
         Entity ent = event.getEntity();
+        boolean tamedWolf = ent instanceof Wolf ? ((Wolf)ent).isTamed() : false;
         ClaimedResidence area = Residence.getResidenceManger().getByLoc(ent.getLocation());
         /* Living Entities */
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
             Entity damager = attackevent.getDamager();
             ent = attackevent.getEntity();
-
-            if ((ent instanceof Player) && (damager instanceof Player)) {
+            if ((ent instanceof Player || tamedWolf) && (damager instanceof Player)) {
                 /* Check for Player vs Player */
                 if (area == null) {
                     /* World PvP */
@@ -132,7 +133,7 @@ public class ResidenceEntityListener extends EntityListener {
                 }
                 return;
             }
-            else if ((ent instanceof Player) && (damager instanceof Creeper)) {
+            else if ((ent instanceof Player || tamedWolf) && (damager instanceof Creeper)) {
                 if (area == null) {
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("creeper", true)) {
                         event.setCancelled(true);
@@ -145,17 +146,17 @@ public class ResidenceEntityListener extends EntityListener {
             }
         }
         if (area == null) {
-            if (!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("damage", true) && ent instanceof Player) {
+            if (!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("damage", true) && (ent instanceof Player || tamedWolf)) {
                 event.setCancelled(true);
             }
         } else {
-            if (!area.getPermissions().has("damage", true) && ent instanceof Player) {
+            if (!area.getPermissions().has("damage", true) && (ent instanceof Player || tamedWolf)) {
                 event.setCancelled(true);
             }
         }
         if (event.isCancelled()) {
             /* Put out a fire on a player */
-            if ((ent instanceof Player)
+            if ((ent instanceof Player || tamedWolf)
                     && (event.getCause() == EntityDamageEvent.DamageCause.FIRE
                     || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)) {
                 ent.setFireTicks(0);
