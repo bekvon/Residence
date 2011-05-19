@@ -26,7 +26,7 @@ public class BOSEAdapter extends EconomyInterface {
     @Override
     public boolean canAfford(String playerName, double amount) {
         int balance = plugin.getPlayerMoney(playerName);
-        if (balance <= amount) {
+        if (balance >= amount) {
             return true;
         }
         return false;
