@@ -288,7 +288,7 @@ public class ResidencePermissions extends FlagPermissions {
         if(this.hasResidencePermission(player, true))
         {
             this.applyDefaultFlags();
-            player.sendMessage("Reset flags to default...");
+            player.sendMessage("§eReset flags to default...");
         }
         else
             player.sendMessage("§cYou dont have permisssion.");
@@ -301,7 +301,7 @@ public class ResidencePermissions extends FlagPermissions {
         Set<Entry<String, Boolean>> dflags = group.getDefaultResidenceFlags();
         Set<Entry<String, Boolean>> dcflags = group.getDefaultCreatorFlags();
         Set<Entry<String, Map<String, Boolean>>> dgflags = group.getDefaultGroupFlags();
-        this.clearFlags();
+        this.applyGlobalDefaults();
         for (Entry<String, Boolean> next : dflags) {
             if (this.checkValidFlag(next.getKey(), true)) {
                 if (next.getValue()) {
@@ -394,6 +394,38 @@ public class ResidencePermissions extends FlagPermissions {
             Map<String, Boolean> get = playerFlags.get(name);
             playerFlags.remove(name);
             playerFlags.put(name.toLowerCase(), get);
+        }
+    }
+
+    public void applyGlobalDefaults()
+    {
+        this.clearFlags();
+        FlagPermissions gRD = Residence.getConfig().getGlobalResidenceDefaultFlags();
+        FlagPermissions gCD = Residence.getConfig().getGlobalCreatorDefaultFlags();
+        Map<String, FlagPermissions> gGD = Residence.getConfig().getGlobalGroupDefaultFlags();
+        for(Entry<String, Boolean> entry : gRD.cuboidFlags.entrySet())
+        {
+            if(entry.getValue())
+                this.setFlag(entry.getKey(), FlagState.TRUE);
+            else
+                this.setFlag(entry.getKey(), FlagState.FALSE);
+        }
+        for(Entry<String, Boolean> entry : gCD.cuboidFlags.entrySet())
+        {
+            if(entry.getValue())
+                this.setPlayerFlag(owner, entry.getKey(), FlagState.TRUE);
+            else
+                this.setPlayerFlag(owner, entry.getKey(), FlagState.FALSE);
+        }
+        for(Entry<String, FlagPermissions> entry : gGD.entrySet())
+        {
+            for(Entry<String, Boolean> flag : entry.getValue().cuboidFlags.entrySet())
+            {
+                if(flag.getValue())
+                    this.setGroupFlag(entry.getKey(), flag.getKey(), FlagState.TRUE);
+                else
+                    this.setGroupFlag(entry.getKey(), flag.getKey(), FlagState.FALSE);
+            }
         }
     }
 }

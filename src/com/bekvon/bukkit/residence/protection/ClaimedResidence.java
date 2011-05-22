@@ -502,6 +502,18 @@ public class ClaimedResidence {
         return s.toString();
     }
 
+    public String[] getAreaList()
+    {
+        String arealist[] = new String[areas.size()];
+        int i = 0;
+        for(Entry<String, CuboidArea> entry : areas.entrySet())
+        {
+            arealist[i] = entry.getKey();
+            i++;
+        }
+        return arealist;
+    }
+
     public int getZoneDepth()
     {
         int count = 0;
@@ -729,5 +741,15 @@ public class ClaimedResidence {
     public ResidenceBank getBank()
     {
         return bank;
+    }
+
+    public String getWorld()
+    {
+        return perms.getWorld();
+    }
+
+    public String getOwner()
+    {
+        return perms.getOwner();
     }
 }

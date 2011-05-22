@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
 import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
 import com.bekvon.bukkit.residence.economy.IConomyAdapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
+import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
@@ -34,6 +35,8 @@ import com.earth2me.essentials.Essentials;
 import com.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
 import cosine.boseconomy.BOSEconomy;
+import fr.crafter.tickleman.RealShop.RealShop;
+import fr.crafter.tickleman.RealShop.RealShopPlugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -169,6 +172,8 @@ public class Residence extends JavaPlugin {
                     this.loadBOSEconomy();
                 } else if (econsys.toLowerCase().equals("essentials")) {
                     this.loadEssentialsEconomy();
+                } else if (econsys.toLowerCase().equals("realeconomy")) {
+                    this.loadRealEconomy();
                 } else {
                     System.out.println("[Residence] Unknown economy system: " + econsys);
                 }
@@ -382,6 +387,17 @@ public class Residence extends JavaPlugin {
         }
     }
 
+    private void loadRealEconomy()
+    {
+        Plugin p = getServer().getPluginManager().getPlugin("RealShop");
+        if (p != null) {
+            economy = new RealShopEconomy(((RealShopPlugin)p).realEconomy);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with RealShop Economy!");
+        } else {
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] RealShop Economy NOT found!");
+        }
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(),args);
@@ -455,8 +471,9 @@ public class Residence extends JavaPlugin {
                 Player player = (Player) sender;
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
                 String pname = player.getName();
+                boolean resadmin = gmanager.isResidenceAdmin(player);
                 if (cmanager.allowAdminsOnly()) {
-                    if (!gmanager.isResidenceAdmin(player)) {
+                    if (!resadmin) {
                         player.sendMessage("§cOnly admins have access to this command.");
                         return true;
                     }
@@ -468,7 +485,12 @@ public class Residence extends JavaPlugin {
                     args[0] = "?";
                 }
                 if (args[0].equals("select")) {
-                    if(!group.canCreateResidences() && group.getMaxSubzoneDepth() <= 0 && !Residence.getPermissionManager().isResidenceAdmin(player))
+                    if(!group.selectCommandAccess() && !resadmin)
+                    {
+                        player.sendMessage("§cYou don't have access to selection commands.");
+                        return true;
+                    }
+                    if(!group.canCreateResidences() && group.getMaxSubzoneDepth() <= 0 && !resadmin)
                     {
                         player.sendMessage("§cYou can not create residences or subzones, so you dont have selection access.");
                         return true;
