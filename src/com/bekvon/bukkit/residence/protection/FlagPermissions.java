@@ -471,6 +471,8 @@ public class FlagPermissions {
 
     public void copyUserPermissions(String fromUser, String toUser)
     {
+        fromUser = fromUser.toLowerCase();
+        toUser = toUser.toLowerCase();
         Map<String, Boolean> get = playerFlags.get(fromUser);
         if(get!=null)
         {
