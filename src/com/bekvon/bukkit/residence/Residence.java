@@ -19,6 +19,7 @@ import com.bekvon.bukkit.residence.economy.IConomyAdapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.itemlist.ItemManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
@@ -383,6 +384,10 @@ public class Residence extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(),args);
+        server.getPluginManager().callEvent(cevent);
+        if(cevent.isCancelled())
+            return true;
         if(command.getName().equals("resreload") && args.length==0)
         {
             if(sender instanceof Player)

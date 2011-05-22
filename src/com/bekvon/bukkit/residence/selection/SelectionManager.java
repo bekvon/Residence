@@ -91,10 +91,8 @@ public class SelectionManager {
     {
         if(hasPlacedBoth(player.getName()))
         {
-            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            playerLoc1.get(player.getName()).setY(group.getMaxHeight());
-            playerLoc2.get(player.getName()).setY(group.getMinHeight());
-            player.sendMessage("§aSelection expanded from your lowest allowed limit to you highest allowed limit!");
+            this.sky(player);
+            this.bedrock(player);
         }
         else
         {
@@ -107,7 +105,29 @@ public class SelectionManager {
         if(hasPlacedBoth(player.getName()))
         {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            playerLoc1.get(player.getName()).setY(group.getMaxHeight());
+            boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+            int y1 = playerLoc1.get(player.getName()).getBlockY();
+            int y2 = playerLoc2.get(player.getName()).getBlockY();
+            if(y1>y2)
+            {
+                int diff = group.getMaxHeight() - y2;
+                if(group.getMaxY()<diff && !resadmin)
+                    playerLoc1.get(player.getName()).setY(y2 + group.getMaxY());
+                else if(!resadmin)
+                    playerLoc1.get(player.getName()).setY(group.getMaxHeight());
+                else
+                    playerLoc1.get(player.getName()).setY(127);
+            }
+            else
+            {
+                int diff = group.getMaxHeight() - y1;
+                if(group.getMaxY()<diff && !resadmin)
+                    playerLoc2.get(player.getName()).setY(y1 + group.getMaxY());
+                else if(!resadmin)
+                    playerLoc2.get(player.getName()).setY(group.getMaxHeight());
+                else
+                    playerLoc2.get(player.getName()).setY(127);
+            }
             player.sendMessage("§aSelection expanded to you highest allowed limit!");
         }
         else
@@ -121,7 +141,29 @@ public class SelectionManager {
         if(hasPlacedBoth(player.getName()))
         {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            playerLoc2.get(player.getName()).setY(group.getMinHeight());
+            boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+            int y1 = playerLoc1.get(player.getName()).getBlockY();
+            int y2 = playerLoc2.get(player.getName()).getBlockY();
+            if(y1<y2)
+            {
+                int diff = y2 - group.getMinHeight();
+                if(group.getMaxY()<diff && !resadmin)
+                    playerLoc1.get(player.getName()).setY(y2 - group.getMaxY());
+                else if(!resadmin)
+                    playerLoc1.get(player.getName()).setY(group.getMinHeight());
+                else
+                    playerLoc1.get(player.getName()).setY(0);
+            }
+            else
+            {
+                int diff = y1 - group.getMinHeight();
+                if(group.getMaxY()<diff)
+                    playerLoc2.get(player.getName()).setY(y1 - group.getMaxY());
+                else if(!resadmin)
+                    playerLoc2.get(player.getName()).setY(group.getMinHeight());
+                else
+                    playerLoc2.get(player.getName()).setY(0);
+            }
             player.sendMessage("§aSelection expanded to you lowest allowed limit!");
         }
         else
