@@ -487,6 +487,12 @@ public class FlagPermissions {
         }
     }
 
+    public void clearPlayersFlags(String user)
+    {
+        if(playerFlags.containsKey(user))
+            playerFlags.remove(user);
+    }
+
     public void setParent(FlagPermissions p)
     {
         parent = p;

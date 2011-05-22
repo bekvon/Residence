@@ -4,9 +4,14 @@
  */
 package com.bekvon.bukkit.residence;
 
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 /**
  *
@@ -32,9 +37,15 @@ public class ConfigManager {
     protected ChatColor chatColor;
     protected boolean chatEnable;
     protected int minMoveUpdate;
+    protected FlagPermissions globalCreatorDefaults;
+    protected FlagPermissions globalResidenceDefaults;
+    protected Map<String,FlagPermissions> globalGroupDefaults;
 
     public ConfigManager(Configuration config)
     {
+        globalCreatorDefaults = new FlagPermissions();
+        globalResidenceDefaults = new FlagPermissions();
+        globalGroupDefaults = new HashMap<String,FlagPermissions>();
         this.load(config);
     }
 
@@ -57,6 +68,20 @@ public class ConfigManager {
         flagsInherit = config.getBoolean("Global.ResidenceFlagsInherit", false);
         minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
         chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
+        globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getNode("Global"));
+        globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getNode("Global"));
+        ConfigurationNode node = config.getNode("Global.GroupDefault");
+        if(node!=null)
+        {
+            List<String> keys = node.getKeys(defaultGroup);
+            if(keys!=null)
+            {
+                for(String key: keys)
+                {
+                    globalGroupDefaults.put(key, FlagPermissions.parseFromConfigNode(key, config.getNode("Global.GroupDefault")));
+                }
+            }
+        }
         try {
             chatColor = ChatColor.valueOf(config.getString("Global.ResidenceChatColor", "DARK_PURPLE"));
         } catch (Exception ex) {
@@ -150,5 +175,20 @@ public class ConfigManager {
     public int getMinMoveUpdateInterval()
     {
         return minMoveUpdate;
+    }
+
+    public FlagPermissions getGlobalCreatorDefaultFlags()
+    {
+        return globalCreatorDefaults;
+    }
+
+    public FlagPermissions getGlobalResidenceDefaultFlags()
+    {
+        return globalResidenceDefaults;
+    }
+
+    public Map<String,FlagPermissions> getGlobalGroupDefaultFlags()
+    {
+        return globalGroupDefaults;
     }
 }

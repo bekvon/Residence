@@ -8,6 +8,7 @@ package com.bekvon.bukkit.residence.economy.rent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -95,6 +96,11 @@ public class RentManager {
                 return;
             }
         }
+        else
+        {
+            player.sendMessage("Invalid Residence...");
+            return;
+        }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents())
@@ -123,8 +129,9 @@ public class RentManager {
                 newrent.endTime = System.currentTimeMillis() + daysToMs(land.days);
                 newrent.autoRefresh = repeat;
                 rentedLand.put(landName, newrent);
-                if(res!=null)
-                    res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
+                res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
+                res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
+                res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
                 player.sendMessage("§aYou have rented land §e" + landName + "§a for §e" + land.days + "§a days.");
             }
             else
@@ -150,6 +157,9 @@ public class RentManager {
         if(resadmin || rent.player.equalsIgnoreCase(player.getName()))
         {
             rentedLand.remove(landName);
+            ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+            if(res!=null)
+                res.getPermissions().applyDefaultFlags();
             player.sendMessage("§e"+landName + "§a has been unrented.");
         }
         else
@@ -191,8 +201,13 @@ public class RentManager {
         {
             rentableLand.remove(landName);
             if(rentedLand.containsKey(landName))
+            {
                 rentedLand.remove(landName);
+                if(res!=null)
+                    res.getPermissions().applyDefaultFlags();
+            }
             player.sendMessage("§e"+landName + "§c is not longer rentable.");
+
         }
         else
         {
@@ -291,19 +306,6 @@ public class RentManager {
                 player.sendMessage("§e"+landName + "§c will now automatically be re-rented upon expire.");
             else
                 player.sendMessage("§e"+landName + "§c will not automatically re-rent.");
-        }
-    }
-
-    public void removeRenter(Player player, String landName)
-    {
-        RentedLand land = rentedLand.get(landName);
-        if(land != null && (land.player.equals(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)))
-        {
-            rentedLand.remove(landName);
-            player.sendMessage("§e"+landName + "§c is no longer rented.");
-            RentableLand rentable = rentableLand.get(landName);
-            if(!rentable.repeatable)
-                rentableLand.remove(landName);
         }
     }
 

@@ -63,6 +63,7 @@ public class IConomy4Adapter extends EconomyInterface
         return false;
     }
 
+    @Override
     public String getName()
     {
         return "iConomy";
