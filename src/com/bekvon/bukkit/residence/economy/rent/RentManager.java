@@ -86,6 +86,15 @@ public class RentManager {
             player.sendMessage("§cRent system is disabled.");
             return;
         }
+        ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+        if(res!=null)
+        {
+            if(res.getPermissions().getOwner().equalsIgnoreCase(player.getName()))
+            {
+                player.sendMessage("§cCan't rent land you already own!");
+                return;
+            }
+        }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents())
@@ -106,16 +115,22 @@ public class RentManager {
         RentableLand land = rentableLand.get(landName);
         if(Residence.getEconomyManager().canAfford(player.getName(), land.cost))
         {
-            RentedLand newrent = new RentedLand();
-            newrent.player = player.getName();
-            newrent.startTime = System.currentTimeMillis();
-            newrent.endTime = System.currentTimeMillis() + daysToMs(land.days);
-            newrent.autoRefresh = repeat;
-            rentedLand.put(landName, newrent);
-            ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
-            if(res!=null)
-                res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
-            player.sendMessage("§aYou have rented land §e" + landName + "§a for §e" + land.days + "§a days.");
+            if(Residence.getEconomyManager().transfer(player.getName(), res.getPermissions().getOwner(), land.cost))
+            {
+                RentedLand newrent = new RentedLand();
+                newrent.player = player.getName();
+                newrent.startTime = System.currentTimeMillis();
+                newrent.endTime = System.currentTimeMillis() + daysToMs(land.days);
+                newrent.autoRefresh = repeat;
+                rentedLand.put(landName, newrent);
+                if(res!=null)
+                    res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
+                player.sendMessage("§aYou have rented land §e" + landName + "§a for §e" + land.days + "§a days.");
+            }
+            else
+            {
+                player.sendMessage("§cError, unable to transfer money...");
+            }
         }
         else
         {
@@ -257,15 +272,25 @@ public class RentManager {
         if(land!=null && res!=null && (res.getPermissions().getOwner().equalsIgnoreCase(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)))
         {
             land.repeatable = value;
+            if(!value && this.isRented(landName))
+                rentedLand.get(landName).autoRefresh = false;
+            if(value)
+                player.sendMessage("§e"+landName + "§c will now automatically renew rentable status upon expire.");
+            else
+                player.sendMessage("§e"+landName + "§c will not automatically renew.");
         }
     }
 
-    public void setRefreshAutoRepeat(Player player, String landName, boolean value)
+    public void setRentedRepeatable(Player player, String landName, boolean value)
     {
         RentedLand land = rentedLand.get(landName);
         if(land!=null && (land.player.equals(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)))
         {
             land.autoRefresh = value;
+            if(value)
+                player.sendMessage("§e"+landName + "§c will now automatically be re-rented upon expire.");
+            else
+                player.sendMessage("§e"+landName + "§c will not automatically re-rent.");
         }
     }
 
@@ -288,22 +313,18 @@ public class RentManager {
         RentedLand rented = rentedLand.get(landName);
         if(rentable!=null)
         {
-            player.sendMessage("§eLand Name:§3" + landName);
+            player.sendMessage("§6Land Name:§2" + landName);
             player.sendMessage("§eCost: §3" + rentable.cost + " per " + rentable.days + " days");
-            player.sendMessage("§eRent Repeatable: §3" + rentable.repeatable);
+            player.sendMessage("§aRentable Auto Renew:§3" + rentable.repeatable);
             if(rented!=null)
             {
-                player.sendMessage("§eStatus:§3 Currently rented by: " + rented.player);
-                player.sendMessage("§eExpire Time:§3" + new Date(rented.endTime));
-                if(player.getName().equalsIgnoreCase(rented.player))
-                {
-                    if(rented.autoRefresh)
-                        player.sendMessage("§aYou have chosen to automatically make payments so long as you have money to do so.");
-                }
+                player.sendMessage("§6Status:§c Currently rented by: §e" + rented.player);
+                player.sendMessage("§eExpire Time:§a" + new Date(rented.endTime));
+                player.sendMessage("§aRent Auto Renew:§3" + rented.autoRefresh);
             }
             else
             {
-                player.sendMessage("§eStatus:§3 Available");
+                player.sendMessage("§6Status:§a Available");
             }
         }
         else

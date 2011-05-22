@@ -5,6 +5,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,16 +21,63 @@ import org.bukkit.util.config.ConfigurationNode;
  *
  * @author Administrator
  */
-public class PermissionList {
+public class FlagPermissions {
+
+    protected static ArrayList<String> validFlags = new ArrayList<String>();
+    protected static ArrayList<String> validPlayerFlags = new ArrayList<String>();
+    protected static ArrayList<String> validAreaFlags = new ArrayList<String>();
+
+    public static void addFlag(String flag)
+    {
+        if(!validFlags.contains(flag))
+            validFlags.add(flag);
+    }
+    public static void addPlayerOrGroupOnlyFlag(String flag)
+    {
+        if(!validPlayerFlags.contains(flag))
+            validPlayerFlags.add(flag);
+    }
+    public static void addResidenceOnlyFlag(String flag)
+    {
+        if(!validAreaFlags.contains(flag))
+            validAreaFlags.add(flag);
+    }
+    public static void initValidFlags()
+    {
+        validAreaFlags.clear();
+        validPlayerFlags.clear();
+        validFlags.clear();
+        addFlag("use");
+        addFlag("move");
+        addFlag("build");
+        addFlag("tp");
+        addFlag("ignite");
+        addFlag("container");
+        addFlag("subzone");
+        addFlag("destroy");
+        addFlag("place");
+        addFlag("bucket");
+        addFlag("bank");
+        addResidenceOnlyFlag("pvp");
+        addResidenceOnlyFlag("damage");
+        addResidenceOnlyFlag("monsters");
+        addResidenceOnlyFlag("firespread");
+        addResidenceOnlyFlag("tnt");
+        addResidenceOnlyFlag("creeper");
+        addResidenceOnlyFlag("flow");
+        addResidenceOnlyFlag("healing");
+        addResidenceOnlyFlag("animals");
+        addPlayerOrGroupOnlyFlag("admin");
+    }
 
     protected Map<String, Map<String, Boolean>> playerFlags;
     protected Map<String, Map<String, Boolean>> groupFlags;
     protected Map<String, Boolean> cuboidFlags;
-    protected PermissionList parent;
+    protected FlagPermissions parent;
 
-    public static PermissionList parseFromConfigNode(String name, ConfigurationNode node)
+    public static FlagPermissions parseFromConfigNode(String name, ConfigurationNode node)
     {
-        PermissionList list = new PermissionList();
+        FlagPermissions list = new FlagPermissions();
         List<String> keys = node.getKeys(name);
         if(keys!=null)
         {
@@ -38,22 +86,22 @@ public class PermissionList {
                 boolean state = node.getBoolean(name + "." + key, false);
                 key = key.toLowerCase();
                 if(state)
-                    list.set(key, FlagState.TRUE);
+                    list.setFlag(key, FlagState.TRUE);
                 else
-                    list.set(key, FlagState.FALSE);
+                    list.setFlag(key, FlagState.FALSE);
             }
         }
         return list;
     }
 
-    public PermissionList()
+    public FlagPermissions()
     {
         cuboidFlags = Collections.synchronizedMap(new HashMap<String,Boolean>());
         playerFlags = Collections.synchronizedMap(new HashMap<String,Map<String,Boolean>>());
         groupFlags = Collections.synchronizedMap(new HashMap<String,Map<String,Boolean>>());
     }
 
-    public void setPlayer(String player, String flag, FlagState state) {
+    public boolean setPlayerFlag(String player, String flag, FlagState state) {
         player = player.toLowerCase();
         if (!playerFlags.containsKey(player)) {
             playerFlags.put(player, Collections.synchronizedMap(new HashMap<String, Boolean>()));
@@ -71,9 +119,10 @@ public class PermissionList {
         if (map.isEmpty()) {
             playerFlags.remove(player);
         }
+        return true;
     }
 
-    public void setGroup(String group, String flag, FlagState state) {
+    public boolean setGroupFlag(String group, String flag, FlagState state) {
         group = group.toLowerCase();
         if (!groupFlags.containsKey(group)) {
             groupFlags.put(group, Collections.synchronizedMap(new HashMap<String, Boolean>()));
@@ -91,9 +140,10 @@ public class PermissionList {
         if (map.isEmpty()) {
             groupFlags.remove(group);
         }
+        return true;
     }
 
-    public void set(String flag, FlagState state) {
+    public boolean setFlag(String flag, FlagState state) {
         if (state == FlagState.FALSE) {
             cuboidFlags.put(flag, false);
         } else if (state == FlagState.TRUE) {
@@ -103,6 +153,7 @@ public class PermissionList {
                 cuboidFlags.remove(flag);
             }
         }
+        return true;
     }
 
     public static enum FlagState {
@@ -217,15 +268,15 @@ public class PermissionList {
     }
 
     public boolean checkValidFlag(String flag, boolean globalflag) {
-        if (flag.equals("use") || flag.equals("move") || flag.equals("build") || flag.equals("tp") || flag.equals("ignite") || flag.equals("container") || flag.equals("subzone") || flag.equals("destroy") || flag.equals("place") || flag.equals("bucket") || flag.equals("bank")) {
+        if (validFlags.contains(flag)) {
             return true;
         }
         if (globalflag) {
-            if (flag.equals("pvp") || flag.equals("damage") || flag.equals("monsters") || flag.equals("firespread") || flag.equals("tnt") || flag.equals("creeper") || flag.equals("flow") || flag.equals("healing")) {
+            if (validAreaFlags.contains(flag)) {
                 return true;
             }
         } else {
-            if (flag.equals("admin")) {
+            if (validPlayerFlags.contains(flag)) {
                 return true;
             }
         }
@@ -240,8 +291,8 @@ public class PermissionList {
         return root;
     }
 
-    public static PermissionList load(Map<String, Object> root) throws Exception {
-        PermissionList newperms = new PermissionList();
+    public static FlagPermissions load(Map<String, Object> root) throws Exception {
+        FlagPermissions newperms = new FlagPermissions();
         newperms.playerFlags = (Map) root.get("PlayerFlags");
         newperms.groupFlags = (Map) root.get("GroupFlags");
         newperms.cuboidFlags = (Map) root.get("AreaFlags");
@@ -436,12 +487,12 @@ public class PermissionList {
         }
     }
 
-    public void setParent(PermissionList p)
+    public void setParent(FlagPermissions p)
     {
         parent = p;
     }
 
-    public PermissionList getParent()
+    public FlagPermissions getParent()
     {
         return parent;
     }

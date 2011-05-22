@@ -5,7 +5,7 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
-import com.bekvon.bukkit.residence.protection.PermissionList;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -58,7 +58,7 @@ public class ResidenceBlockListener extends BlockListener {
                 player.sendMessage("§cYou dont have permission to destroy here.");
             }
         } else {
-            PermissionList perms = Residence.getWorldFlags().getPerms(player);
+            FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
             boolean hasbuild = perms.has("build", true);
             boolean hasdestroy = perms.has("destroy", hasbuild);
             if((!hasbuild && !hasdestroy) || !hasdestroy)
@@ -103,7 +103,7 @@ public class ResidenceBlockListener extends BlockListener {
                 player.sendMessage("§cYou dont have permission to build here.");
             }
         } else {
-            PermissionList perms = Residence.getWorldFlags().getPerms(player);
+            FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
             boolean hasbuild = perms.has("build", true);
             boolean hasplace = perms.has("place", hasbuild);
             if ((!hasbuild && !hasplace) || !hasplace) {
