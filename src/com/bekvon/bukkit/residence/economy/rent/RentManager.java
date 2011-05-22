@@ -157,6 +157,10 @@ public class RentManager {
         if(resadmin || rent.player.equalsIgnoreCase(player.getName()))
         {
             rentedLand.remove(landName);
+            if(!rentableLand.get(landName).repeatable)
+            {
+                rentableLand.remove(landName);
+            }
             ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
             if(res!=null)
                 res.getPermissions().applyDefaultFlags();
