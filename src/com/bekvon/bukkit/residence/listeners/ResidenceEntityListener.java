@@ -75,7 +75,10 @@ public class ResidenceEntityListener extends EntityListener {
         if(event.isCancelled())
             return;
         if(this.checkExplosionCancel(event.getEntity(), event.getEntity().getLocation()))
+        {
             event.setCancelled(true);
+            event.getEntity().remove();
+        }
     }
 
 
@@ -84,7 +87,10 @@ public class ResidenceEntityListener extends EntityListener {
         if(event.isCancelled())
             return;
         if(this.checkExplosionCancel(event.getEntity(), event.getLocation()))
+        {
             event.setCancelled(true);
+            event.getEntity().remove();
+        }
     }
 
     public boolean checkExplosionCancel(Entity ent, Location loc)
