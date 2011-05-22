@@ -23,6 +23,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
+import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import java.util.ArrayList;
@@ -239,7 +241,7 @@ public class ResidencePlayerListener extends PlayerListener {
             ResidenceManager manager = Residence.getResidenceManger();
             ClaimedResidence res = null;
             Location ploc = event.getTo();
-            boolean showenter = false;
+            boolean enterArea = false;
             boolean chatchange = false;
             String areaname = cache.get(pname);
             if (areaname != null) {
@@ -248,18 +250,10 @@ public class ResidencePlayerListener extends PlayerListener {
                     cache.remove(pname);
                     areaname = null;
                 } else {
-                    if(res.getPermissions().has("healing", false))
-                    {
-                        if(!healing.contains(pname))
-                            healing.add(pname);
-                    }
-                    else
-                    {
-                        if(healing.contains(pname))
-                            healing.remove(pname);
-                    }
                     if (!res.containsLoc(ploc)) {
                         String leave = res.getLeaveMessage();
+                        ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(res,player);
+                        Residence.getServ().getPluginManager().callEvent(leaveevent);
                         if (leave != null && !leave.equals("")) {
                             player.sendMessage("§e" + this.insertMessages(player, areaname, res, leave));
                         }
@@ -282,7 +276,7 @@ public class ResidencePlayerListener extends PlayerListener {
                             areaname = areaname + "." + subzone;
                             cache.put(pname, areaname);
                             res = res.getSubzone(subzone);
-                            showenter = true;
+                            enterArea = true;
                             chatchange = true;
                         }
                     }
@@ -292,7 +286,7 @@ public class ResidencePlayerListener extends PlayerListener {
             {
                 areaname = manager.getNameByLoc(ploc);
                 chatchange = true;
-                showenter = true;
+                enterArea = true;
             }
             if (areaname != null) {
                 if(chatchange && chatenabled)
@@ -300,9 +294,12 @@ public class ResidencePlayerListener extends PlayerListener {
                 res = manager.getByName(areaname);
                 if (res.getPermissions().playerHas(pname, "move", true) || Residence.getPermissionManager().isResidenceAdmin(player)) {
                     cache.put(pname, areaname);
-                    String enter = res.getEnterMessage();
-                    if (enter != null && showenter) {
-                        player.sendMessage("§e" + this.insertMessages(player, areaname, res, enter));
+                    if (enterArea) {
+                        String enterMessage = res.getEnterMessage();
+                        ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
+                        Residence.getServ().getPluginManager().callEvent(enterevent);
+                        if(enterMessage!=null)
+                            player.sendMessage("§e" + this.insertMessages(player, areaname, res, enterMessage));
                     }
                 } else {
                     event.setCancelled(true);
@@ -314,10 +311,26 @@ public class ResidencePlayerListener extends PlayerListener {
                     }
                     player.sendMessage("§cYou dont have permission to move in residence: " + areaname);
                 }
+                int health = player.getHealth();
+                if(health<20)
+                {
+                    if(res.getPermissions().has("healing", false))
+                    {
+                        if(!healing.contains(pname))
+                            healing.add(pname);
+                    }
+                    else
+                    {
+                        if(healing.contains(pname))
+                            healing.remove(pname);
+                    }
+                }
             }
             else
             {
                 lastOutsideLoc.put(pname, ploc);
+                if(healing.contains(pname))
+                    healing.remove(pname);
             }
             lastUpdate.put(pname, System.currentTimeMillis());
         }
@@ -338,7 +351,8 @@ public class ResidencePlayerListener extends PlayerListener {
                 if (healing.contains(player.getName())) {
                     int health = player.getHealth();
                     if (health < 20) {
-                        player.setHealth(health++);
+                        player.setHealth(health + 1);
+                        //System.out.println("heal:" +player.getName() + " oldhealth = "+health+" newhealth = " + player.getHealth());
                     }
                 }
             }

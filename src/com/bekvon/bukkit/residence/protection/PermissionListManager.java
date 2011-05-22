@@ -7,7 +7,7 @@ package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.PermissionList;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -21,16 +21,16 @@ import org.bukkit.entity.Player;
  */
 public class PermissionListManager {
 
-    private Map<String,Map<String,PermissionList>> lists;
+    private Map<String,Map<String,FlagPermissions>> lists;
 
     public PermissionListManager()
     {
-        lists = Collections.synchronizedMap(new HashMap<String,Map<String,PermissionList>>());
+        lists = Collections.synchronizedMap(new HashMap<String,Map<String,FlagPermissions>>());
     }
     
-    public PermissionList getList(String player, String listname)
+    public FlagPermissions getList(String player, String listname)
     {
-        Map<String, PermissionList> get = lists.get(player);
+        Map<String, FlagPermissions> get = lists.get(player);
         if(get==null)
         {
             return null;
@@ -40,16 +40,16 @@ public class PermissionListManager {
     
     public void makeList(Player player, String listname)
     {
-        Map<String, PermissionList> get = lists.get(player.getName());
+        Map<String, FlagPermissions> get = lists.get(player.getName());
         if(get==null)
         {
-            get=new HashMap<String,PermissionList>();
+            get=new HashMap<String,FlagPermissions>();
             lists.put(player.getName(), get);
         }
-        PermissionList perms = get.get(listname);
+        FlagPermissions perms = get.get(listname);
         if(perms == null)
         {
-            perms = new PermissionList();
+            perms = new FlagPermissions();
             get.put(listname, perms);
             player.sendMessage("§aCreated list " + listname + ".");
         }
@@ -61,13 +61,13 @@ public class PermissionListManager {
 
     public void removeList(Player player, String listname)
     {
-        Map<String, PermissionList> get = lists.get(player.getName());
+        Map<String, FlagPermissions> get = lists.get(player.getName());
         if(get==null)
         {
             player.sendMessage("§cInvalid list.");
             return;
         }
-        PermissionList list = get.get(listname);
+        FlagPermissions list = get.get(listname);
         if(list==null)
         {
             player.sendMessage("§cInvalid list.");
@@ -79,7 +79,7 @@ public class PermissionListManager {
     
     public void applyListToResidence(Player player, String listname, String areaname)
     {
-        PermissionList list = this.getList(player.getName(), listname);
+        FlagPermissions list = this.getList(player.getName(), listname);
         if(list == null)
         {
              player.sendMessage("§cInvalid list...");
@@ -96,7 +96,7 @@ public class PermissionListManager {
 
     public void printList(Player player, String listname)
     {
-        PermissionList list = this.getList(player.getName(), listname);
+        FlagPermissions list = this.getList(player.getName(), listname);
         if(list==null)
         {
             player.sendMessage("Invalid list...");
@@ -110,11 +110,11 @@ public class PermissionListManager {
     public Map<String,Object> save()
     {
         Map root = new LinkedHashMap<String,Object>();
-        for(Entry<String, Map<String, PermissionList>> players : lists.entrySet())
+        for(Entry<String, Map<String, FlagPermissions>> players : lists.entrySet())
         {
             Map saveMap = new LinkedHashMap<String,Object>();
-            Map<String, PermissionList> map = players.getValue();
-            for(Entry<String, PermissionList> list : map.entrySet())
+            Map<String, FlagPermissions> map = players.getValue();
+            for(Entry<String, FlagPermissions> list : map.entrySet())
             {
                 saveMap.put(list.getKey(), list.getValue().save());
             }
@@ -130,9 +130,9 @@ public class PermissionListManager {
             for (Entry<String, Object> players : root.entrySet()) {
                 try {
                     Map<String, Object> value = (Map<String, Object>) players.getValue();
-                    Map<String, PermissionList> loadedMap = Collections.synchronizedMap(new HashMap<String, PermissionList>());
+                    Map<String, FlagPermissions> loadedMap = Collections.synchronizedMap(new HashMap<String, FlagPermissions>());
                     for (Entry<String, Object> list : value.entrySet()) {
-                        loadedMap.put(list.getKey(), PermissionList.load((Map<String, Object>) list.getValue()));
+                        loadedMap.put(list.getKey(), FlagPermissions.load((Map<String, Object>) list.getValue()));
                     }
                     p.lists.put(players.getKey(), loadedMap);
                 } catch (Exception ex) {
@@ -146,14 +146,14 @@ public class PermissionListManager {
     public void printLists(Player player)
     {
         StringBuilder sbuild = new StringBuilder();
-        Map<String, PermissionList> get = lists.get(player.getName());
+        Map<String, FlagPermissions> get = lists.get(player.getName());
         if(get==null)
         {
             player.sendMessage("§cYou don't have any predefined lists yet.");
             return;
         }
         sbuild.append("§ePermission Lists:§3 ");
-        for( Entry<String, PermissionList> thislist : get.entrySet())
+        for( Entry<String, FlagPermissions> thislist : get.entrySet())
         {
             sbuild.append(thislist.getKey()).append(" ");
         }

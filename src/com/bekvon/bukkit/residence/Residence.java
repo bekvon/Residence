@@ -27,7 +27,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.PermissionList;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.earth2me.essentials.Essentials;
 import com.iConomy.iConomy;
@@ -196,6 +196,7 @@ public class Residence extends JavaPlugin {
                 pmanager = new PermissionListManager();
             }
             if (firstenable) {
+                FlagPermissions.initValidFlags();
                 smanager = new SelectionManager();
                 blistener = new ResidenceBlockListener();
                 plistener = new ResidencePlayerListener();
@@ -318,6 +319,15 @@ public class Residence extends JavaPlugin {
     public static ChatManager getChatManager()
     {
         return chatmanager;
+    }
+
+    public static FlagPermissions getPermsByLoc(Location loc)
+    {
+        ClaimedResidence res = rmanager.getByLoc(loc);
+        if(res!=null)
+            return res.getPermissions();
+        else
+            return wmanager.getPerms(loc.getWorld().getName());
     }
 
     private void loadIConomy() 
@@ -682,7 +692,7 @@ public class Residence extends JavaPlugin {
                     {
                         if(args[1].equals("set"))
                         {
-                            pmanager.getList(pname, args[2]).set(args[3], PermissionList.stringToFlagState(args[4]));
+                            pmanager.getList(pname, args[2]).setFlag(args[3], FlagPermissions.stringToFlagState(args[4]));
                             player.sendMessage("§aSet...");
                             return true;
                         }
@@ -691,13 +701,13 @@ public class Residence extends JavaPlugin {
                     {
                         if(args[1].equals("gset"))
                         {
-                            pmanager.getList(pname, args[2]).setGroup(args[3], args[4], PermissionList.stringToFlagState(args[5]));
+                            pmanager.getList(pname, args[2]).setGroupFlag(args[3], args[4], FlagPermissions.stringToFlagState(args[5]));
                             player.sendMessage("§aSet...");
                             return true;
                         }
                         else if(args[1].equals("pset"))
                         {
-                            pmanager.getList(pname, args[2]).setPlayer(args[3], args[4], PermissionList.stringToFlagState(args[5]));
+                            pmanager.getList(pname, args[2]).setPlayerFlag(args[3], args[4], FlagPermissions.stringToFlagState(args[5]));
                             player.sendMessage("§aSet...");
                             return true;
                         }
@@ -1104,6 +1114,7 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§arent §6[residence] <repeat:t/f>§3 - rent a residence.");
                             player.sendMessage("§arentable §6[residence] [cost] [days] <repeat:t/f>§3 - make a residence you own for rent.");
                             player.sendMessage("§arelease §6[residence]§3 - release a residence you've rented, or made rentable.");
+                            player.sendMessage("§aautorenew §6[residence] [true(t)/false(f)]§3 - make a rent or rentable automatically renew at expiration.");
                             return true;
                         }
                     }
@@ -1122,7 +1133,38 @@ public class Residence extends JavaPlugin {
                         }
                         return true;
                     }
-                    if (args[1].equals("rentable")) {
+                    else if (args[1].equals("autorenew")) {
+                        if (!cmanager.enableEconomy()) {
+                            player.sendMessage("§cMarket Disabled...");
+                            return true;
+                        }
+                        if (args.length != 4) {
+                            return false;
+                        }
+                        boolean value;
+                        if (args[3].equalsIgnoreCase("true") || args[3].equalsIgnoreCase("t")) {
+                            value = true;
+                        } else if (args[3].equalsIgnoreCase("false") || args[3].equalsIgnoreCase("f")) {
+                            value = false;
+                        } else {
+                            player.sendMessage("§cInvalid value, must be true(t) or false(f).");
+                            return true;
+                        }
+                        if(rentmanager.isRented(args[2]) && rentmanager.getRentingPlayer(args[2]).equalsIgnoreCase(pname))
+                        {
+                            rentmanager.setRentedRepeatable(player, args[2], value);
+                        }
+                        else if(rentmanager.isForRent(args[2]))
+                        {
+                            rentmanager.setRentRepeatable(player, args[2], value);
+                        }
+                        else
+                        {
+                            player.sendMessage("§e" + args[2] + "§c is not rented or for rent.");
+                        }
+                        return true;
+                    }
+                    else if(args[1].equals("rentable")) {
                         if (args.length < 5 || args.length > 6) {
                             return false;
                         }
@@ -1186,7 +1228,19 @@ public class Residence extends JavaPlugin {
                         }
                         return true;
                     }
-                    if (args.length == 3) {
+                    else if(args.length == 2)
+                    {
+                        if (args[1].equals("info")) {
+                            String areaname = rmanager.getNameByLoc(player.getLocation());
+                            tmanager.viewSaleInfo(areaname, player);
+                            if(cmanager.enabledRentSystem() && rentmanager.isForRent(areaname))
+                            {
+                                rentmanager.printRentInfo(player, areaname);
+                            }
+                            return true;
+                        }
+                    }
+                    else if(args.length == 3) {
                         if (args[1].equals("buy")) {
                             tmanager.buyPlot(args[2], player);
                             return true;
@@ -1202,7 +1256,7 @@ public class Residence extends JavaPlugin {
                             return true;
                         }
                     }
-                    if (args.length == 4) {
+                    else if(args.length == 4) {
                         if (args[1].equals("sell")) {
                             int amount;
                             try {

@@ -40,7 +40,7 @@ Global:
     AdminOPs: true
     # This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.
     # The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.
-    MultiWorldPlugin: Multiverse
+    MultiWorldPlugin: MultiVerse
     # Setting this to true causes subzones to inherit flags from their parent zones.
     ResidenceFlagsInherit: true
     # These are world flags that are applied when the player is NOT within a residence.
@@ -54,7 +54,7 @@ Global:
             creeper: true
             tnt: true
             pvp: true
-        WorldNameHere: #here you can set default flags for individual worlds, these override Global
+        WorldNameHere: #here you can set flags for individual worlds, these override Global
             #build: true
     # This gives permissions for certain flags to all groups, unless specifically denied to the group.
     FlagPermission:
@@ -71,6 +71,11 @@ Global:
         container: true
         place: true
         destroy: true
+        bucket: true
+        monsters: true
+        animals: true
+        subzone: true
+        healing: true
 
 # These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:
@@ -89,9 +94,9 @@ Groups:
            MaxNorthSouth: 16
            # The maximum number of blocks a Residence can be, High to Low (Y).
            MaxUpDown: 256
-           # The lowest point this group is allowed to protect.
+           # The lowest altitude this group is allowed to protect.
            MinHeight: 0
-           # The highest point this group is allowed to protect.
+           # The highest altitude this group is allowed to protect.
            MaxHeight: 127
             # The maximum recursive depth that subzones can go.
             # A subzone within a subzone within the Residence zone would be a depth of 2.
@@ -111,7 +116,7 @@ Groups:
            # The default leave message to apply to new Residences created by players in this group.
            # Leaving the message blank will disable it.
            DefaultLeave: Now leaving %residence.
-       # Options relating to the leasing of zones.
+       # Options relating to the Lease system.
        Lease:
           # The maximum number of days to allow leases.
           MaxDays: 16
@@ -133,7 +138,7 @@ Groups:
           IgnoreLimits: false
           # The cost, per block, of buying a Residence or adding a area to it.
           BuyCost: 0.05
-          # The cost, per block, of renewing a Residence lease.
+          # The cost, per block, of renewing a Residence lease (if the lease system is enabled).
           RenewCost: 0.02
        # Flags are checked in the order:
        # 1: Player (in-game only)

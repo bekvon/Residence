@@ -7,8 +7,8 @@ package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.protection.PermissionList;
-import com.bekvon.bukkit.residence.protection.PermissionList.FlagState;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +31,7 @@ public class PermissionGroup {
         protected double costperarea;
         protected boolean tpaccess;
         protected int subzonedepth;
-        protected PermissionList flagPerms;
+        protected FlagPermissions flagPerms;
         protected Map<String,Boolean> creatorDefaultFlags;
         protected Map<String,Map<String,Boolean>> groupDefaultFlags;
         protected Map<String,Boolean> residenceDefaultFlags;
@@ -55,7 +55,7 @@ public class PermissionGroup {
 
         public PermissionGroup(String name)
         {
-            flagPerms = new PermissionList();
+            flagPerms = new FlagPermissions();
             creatorDefaultFlags = Collections.synchronizedMap(new HashMap<String,Boolean>());
             residenceDefaultFlags = Collections.synchronizedMap(new HashMap<String,Boolean>());
             groupDefaultFlags = Collections.synchronizedMap(new HashMap<String,Map<String,Boolean>>());
@@ -68,7 +68,7 @@ public class PermissionGroup {
             this.parseGroup(node);
         }
 
-        public PermissionGroup(String name, ConfigurationNode node, PermissionList parentFlagPerms)
+        public PermissionGroup(String name, ConfigurationNode node, FlagPermissions parentFlagPerms)
         {
             this(name,node);
             flagPerms.setParent(parentFlagPerms);
@@ -106,7 +106,7 @@ public class PermissionGroup {
             while (flagit.hasNext()) {
                 String flagname = flagit.next();
                 boolean access = limits.getBoolean("Flags.Permission." + flagname, false);
-                flagPerms.set(flagname, access ? FlagState.TRUE : FlagState.FALSE);
+                flagPerms.setFlag(flagname, access ? FlagState.TRUE : FlagState.FALSE);
             }
         }
         flags = limits.getKeys("Flags.CreatorDefault");

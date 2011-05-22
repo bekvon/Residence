@@ -6,7 +6,7 @@
 package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.PermissionList;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import java.util.Collections;
@@ -32,7 +32,7 @@ public class PermissionManager {
     protected static String defaultGroup;
     protected Map<String,PermissionGroup> groups;
     protected Map<String,String> playersGroup;
-    protected PermissionList globalFlagPerms;
+    protected FlagPermissions globalFlagPerms;
 
     public PermissionManager(Configuration config)
     {
@@ -40,7 +40,7 @@ public class PermissionManager {
         {
         groups = Collections.synchronizedMap(new HashMap<String,PermissionGroup>());
         playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
-        globalFlagPerms = new PermissionList();
+        globalFlagPerms = new FlagPermissions();
         boolean enable = config.getBoolean("Global.EnablePermissions", true);
         this.readConfig(config);
         if(enable)
@@ -131,7 +131,7 @@ public class PermissionManager {
     private void readConfig(Configuration config)
     {
         defaultGroup = config.getString("DefaultGroup","default").toLowerCase();
-        globalFlagPerms = PermissionList.parseFromConfigNode("FlagPermission", config.getNode("Global"));
+        globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getNode("Global"));
         Map<String, ConfigurationNode> nodes = config.getNodes("Groups");
         if(nodes!=null)
         {

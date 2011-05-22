@@ -5,6 +5,7 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -18,7 +19,10 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import org.bukkit.Location;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
@@ -32,10 +36,22 @@ public class ResidenceEntityListener extends EntityListener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if(event.isCancelled())
             return;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getLocation());
-        if (res != null) {
-            if (!res.getPermissions().has("monsters", true)) {
-                event.setCancelled(true);
+        FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
+        Entity ent = event.getEntity();
+        if(perms!=null)
+        {
+            if(ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf)
+            {
+                if(!perms.has("animals", true))
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else
+            {
+                if (!perms.has("monsters", true)) {
+                    event.setCancelled(true);
+                }
             }
         }
         super.onCreatureSpawn(event);
@@ -45,9 +61,9 @@ public class ResidenceEntityListener extends EntityListener {
     public void onEntityCombust(EntityCombustEvent event) {
         if(event.isCancelled())
             return;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getEntity().getLocation());
-        if (res != null) {
-            if (!res.getPermissions().has("ignite", true)) {
+        FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+        if (perms != null) {
+            if (!perms.has("ignite", true)) {
                 event.setCancelled(true);
             }
         }
