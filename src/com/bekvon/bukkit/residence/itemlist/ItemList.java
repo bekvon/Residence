@@ -17,7 +17,7 @@ import org.bukkit.util.config.ConfigurationNode;
  */
 public class ItemList {
 
-    protected ArrayList<String> list;
+    protected List<Material> list;
     protected ListType type;
     protected String world;
     protected String group;
@@ -30,7 +30,7 @@ public class ItemList {
     public ItemList(ListType listType)
     {
         type = listType;
-        list = new ArrayList<String>();
+        list = new ArrayList<Material>();
     }
 
     public ListType getType()
@@ -40,18 +40,18 @@ public class ItemList {
 
     public boolean contains(Material mat)
     {
-        return list.contains(mat.toString());
+        return list.contains(mat);
     }
 
     public void add(Material mat)
     {
-        if(!list.contains(mat.toString()))
-            list.add(mat.toString());
+        if(!list.contains(mat))
+            list.add(mat);
     }
 
     public void remove(Material mat)
     {
-        list.remove(mat.toString());
+        list.remove(mat);
     }
 
     public String getWorld()
@@ -82,7 +82,7 @@ public class ItemList {
         }
         if(type == ListType.BLACKLIST)
         {
-            if(list.contains(mat.toString()))
+            if(list.contains(mat))
             {
                 return false;
             }
@@ -90,7 +90,7 @@ public class ItemList {
         }
         else if(type == ListType.WHITELIST)
         {
-            if(list.contains(mat.toString()))
+            if(list.contains(mat))
             {
                 return true;
             }

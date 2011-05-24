@@ -18,6 +18,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import org.bukkit.Material;
 
 /**
  *
@@ -116,15 +117,25 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockFromTo(BlockFromToEvent event) {
-        if(event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getToBlock().getLocation());
         if (res != null) {
-            if (!res.getPermissions().has("flow", true)) {
+            boolean hasflow = res.getPermissions().has("flow", true);
+            Material mat = event.getBlock().getType();
+            if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+                if (!res.getPermissions().has("lavaflow", hasflow)) {
+                    event.setCancelled(true);
+                }
+            } else if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
+                if (!res.getPermissions().has("waterflow", hasflow)) {
+                    event.setCancelled(true);
+                }
+            } else if(!hasflow) {
                 event.setCancelled(true);
             }
         }
-        //super.onBlockFromTo(event);
     }
 
     @Override

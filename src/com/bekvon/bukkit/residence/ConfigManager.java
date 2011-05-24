@@ -56,7 +56,6 @@ public class ConfigManager {
         useLeases = config.getBoolean("Global.LeaseAutoRenew", true);
         enableEconomy = config.getBoolean("Global.EnableEconomy", false);
         economySystem = config.getString("Global.EconomySystem", "iConomy");
-        allowEmptyResidences = config.getBoolean("Global.AllowEmptyResidences", true);
         infoToolId = config.getInt("Global.InfoToolId", Material.STRING.getId());
         selectionToolId = config.getInt("Global.SelectionToolId", Material.WOOD_AXE.getId());
         adminOps = config.getBoolean("Global.AdminOPs", true);

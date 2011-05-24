@@ -35,7 +35,6 @@ import com.earth2me.essentials.Essentials;
 import com.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
 import cosine.boseconomy.BOSEconomy;
-import fr.crafter.tickleman.RealShop.RealShop;
 import fr.crafter.tickleman.RealShop.RealShopPlugin;
 
 import java.io.File;
@@ -678,15 +677,30 @@ public class Residence extends JavaPlugin {
                             return true;
                         } else if (args[1].equals("add")) {
                             if (smanager.hasPlacedBoth(pname)) {
-                                rmanager.addPhysicalArea(player, args[2], args[3],smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname));
+                                ClaimedResidence res = rmanager.getByName(args[2]);
+                                if(res != null)
+                                    res.addArea(player, new CuboidArea(smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname)),args[3]);
+                                else
+                                    player.sendMessage("§cInvalid Residence...");
                             } else {
-                                player.sendMessage("Select two points first!");
+                                player.sendMessage("§cSelect two points first!");
+                            }
+                            return true;
+                        } else if (args[1].equals("replace")) {
+                            if (smanager.hasPlacedBoth(pname)) {
+                                ClaimedResidence res = rmanager.getByName(args[2]);
+                                if(res != null)
+                                    res.replaceArea(player, new CuboidArea(smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname)),args[3]);
+                                else
+                                    player.sendMessage("§cInvalid Residence...");
+                            } else {
+                                player.sendMessage("§cSelect two points first!");
                             }
                             return true;
                         }
                     } else {
                         player.sendMessage("§d----------Command Help:----------");
-                        player.sendMessage("§barea §6<add/remove> <residence> <areaID>§3 - Allows physical areas to be added or removed from a residence.  Select an area first before adding.");
+                        player.sendMessage("§barea §6<add/remove/replace> <residence> <areaID>§3 - Allows physical areas to be added, removed, or replaced, on a residence.  You must select an area first.");
                         return true;
                     }
                 } else if (args[0].equals("lists")) {
@@ -1012,11 +1026,14 @@ public class Residence extends JavaPlugin {
                     rmanager.listAllResidences(player);
                     return true;
                 } else if (args[0].equals("version")) {
-                    player.sendMessage("------------------------------------");
-                    player.sendMessage("§cThis server running Residence version: " + this.getDescription().getVersion());
+                    player.sendMessage("§7------------------------------------");
+                    player.sendMessage("§cThis server running §6Residence§c version: §9" + this.getDescription().getVersion());
                     player.sendMessage("§aCreated by: §ebekvon");
-                    player.sendMessage("§bVisit my thread on http://forums.bukkit.org/ for more info, and to see an easier to read and more informative list of commands.");
-                    player.sendMessage("------------------------------------");
+                    player.sendMessage("§3For a command list, and help, see the wiki:");
+                    player.sendMessage("§ahttp://residencebukkitmod.wikispaces.com/");
+                    player.sendMessage("§bVisit the Residence thread at:");
+                    player.sendMessage("§9http://forums.bukkit.org/");
+                    player.sendMessage("§7------------------------------------");
                     return true;
                 }
                 else if(args[0].equals("material"))
