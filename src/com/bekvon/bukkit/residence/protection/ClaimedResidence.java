@@ -63,10 +63,30 @@ public class ClaimedResidence {
             player.sendMessage("§cArea is in a different world from residence.");
             return;
         }
-        if(area.getSize()==0)
+        if(parent==null)
         {
-            player.sendMessage("§cError, 0 sized area.");
-            return;
+            String collideResidence = Residence.getResidenceManger().checkAreaCollision(area, this);
+            if(collideResidence!=null)
+            {
+                player.sendMessage("§cArea collides with residence: §e" + collideResidence);
+                return;
+            }
+        }
+        else
+        {
+            String[] szs = parent.listSubzones();
+            for(String sz : szs)
+            {
+                ClaimedResidence res = parent.getSubzone(sz);
+                if(res!=null && res != this)
+                {
+                    if(res.checkCollision(area))
+                    {
+                        player.sendMessage("§cArea collides with subzone: §e" + sz);
+                        return;
+                    }
+                }
+            }
         }
         if(!Residence.getPermissionManager().isResidenceAdmin(player))
         {
@@ -88,7 +108,7 @@ public class ClaimedResidence {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             if(!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create", false))
             {
-                player.sendMessage("You dont have permission to create residence areas.");
+                player.sendMessage("§cYou dont have permission to create residence areas.");
                 return;
             }
             if(areas.size()>=group.getMaxPhysicalPerResidence())
@@ -103,12 +123,12 @@ public class ClaimedResidence {
             }
             if(group.getMinHeight()>area.getLowLoc().getBlockY())
             {
-                player.sendMessage("You are not allowed to protect this deep, minimum height:" + group.getMinHeight());
+                player.sendMessage("§cYou are not allowed to protect this deep, minimum height:" + group.getMinHeight());
                 return;
             }
             if(group.getMaxHeight()<area.getHighLoc().getBlockY())
             {
-                player.sendMessage("You are not allowed to protect this high up, maximum height:" + group.getMaxHeight());
+                player.sendMessage("§cYou are not allowed to protect this high up, maximum height:" + group.getMaxHeight());
                 return;
             }
             if(parent==null && Residence.getConfig().enableEconomy())
@@ -120,33 +140,83 @@ public class ClaimedResidence {
                 }
             }
         }
-        if(parent==null)
-        {
-            String collideResidence = Residence.getResidenceManger().checkAreaCollision(area, this);
-            if(collideResidence!=null)
-            {
+        areas.put(name, area);
+        player.sendMessage("§aResidence Area created. ID:§e " + name);
+    }
+
+    public void replaceArea(Player player, CuboidArea newarea, String name) {
+        if (!areas.containsKey(name)) {
+            player.sendMessage("§cNo such area exists.");
+            return;
+        }
+        CuboidArea oldarea = areas.get(name);
+        if (!newarea.getWorld().getName().equalsIgnoreCase(perms.getWorld())) {
+            player.sendMessage("§cArea is in a different world from residence.");
+            return;
+        }
+        if (parent == null) {
+            String collideResidence = Residence.getResidenceManger().checkAreaCollision(newarea, this);
+            if (collideResidence != null) {
                 player.sendMessage("§cArea collides with residence: §e" + collideResidence);
                 return;
             }
-        }
-        else
-        {
+        } else {
             String[] szs = parent.listSubzones();
-            for(String sz : szs)
-            {
+            for (String sz : szs) {
                 ClaimedResidence res = parent.getSubzone(sz);
-                if(res!=null)
-                {
-                    if(res.checkCollision(area))
-                    {
+                if (res != null && res != this) {
+                    if (res.checkCollision(newarea)) {
                         player.sendMessage("§cArea collides with subzone: §e" + sz);
                         return;
                     }
                 }
             }
         }
-        areas.put(name, area);
-        player.sendMessage("§aArea created. ID:§e " + name);
+        if (!Residence.getPermissionManager().isResidenceAdmin(player)) {
+            if (!this.perms.hasResidencePermission(player, true)) {
+                player.sendMessage("§cYou dont have permission to do this.");
+                return;
+            }
+            if (parent != null) {
+                if (!parent.containsLoc(newarea.getHighLoc()) || !parent.containsLoc(newarea.getLowLoc())) {
+                    player.sendMessage("§cArea is not within parent area.");
+                    return;
+                }
+                if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), "subzone", true)) {
+                    player.sendMessage("§cYou dont have permission to make changes to the parent area.");
+                    return;
+                }
+            }
+            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+            if (!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create", false)) {
+                player.sendMessage("§cYou dont have permission to create residence areas.");
+                return;
+            }
+            if (!group.inLimits(newarea)) {
+                player.sendMessage("§cArea size is not within your allowed limits.");
+                return;
+            }
+            if (group.getMinHeight() > newarea.getLowLoc().getBlockY()) {
+                player.sendMessage("§cYou are not allowed to protect this deep, minimum height:" + group.getMinHeight());
+                return;
+            }
+            if (group.getMaxHeight() < newarea.getHighLoc().getBlockY()) {
+                player.sendMessage("§cYou are not allowed to protect this high up, maximum height:" + group.getMaxHeight());
+                return;
+            }
+            if (parent == null && Residence.getConfig().enableEconomy()) {
+                int chargeamount = (int) Math.ceil((double) (newarea.getSize()-oldarea.getSize()) * group.getCostPerBlock());
+                if(chargeamount>0)
+                {
+                    if (!TransactionManager.chargeEconomyMoney(player, chargeamount, "re-sized residence area")) {
+                        return;
+                    }
+                }
+            }
+            areas.remove(name);
+            areas.put(name, newarea);
+            player.sendMessage("§aArea updated.");
+        }
     }
 
     public void addSubzone(Player player, Location loc1, Location loc2, String name) {

@@ -85,7 +85,8 @@ public class ResidencePlayerListener extends PlayerListener {
         Material heldItem = player.getItemInHand().getType();
         String world = player.getWorld().getName();
         String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
-        if(!Residence.getItemManager().isAllowed(heldItem, permgroup, world))
+        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+        if(!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world))
         {
             player.sendMessage("§cYou are currently blacklisted from using your equiped item.");
             event.setCancelled(true);
@@ -95,7 +96,7 @@ public class ResidencePlayerListener extends PlayerListener {
             Block block = event.getClickedBlock();
             if (player.getItemInHand().getTypeId() == Residence.getConfig().getSelectionTooldID()) {
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-                if(group.getMaxSubzoneDepth() > 0 || group.canCreateResidences() || Residence.getPermissionManager().isResidenceAdmin(player))
+                if(group.getMaxSubzoneDepth() > 0 || group.canCreateResidences() || resadmin)
                 {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
@@ -119,7 +120,7 @@ public class ResidencePlayerListener extends PlayerListener {
                 }
             }
             Material mat = block.getType();
-            if(!Residence.getPermissionManager().isResidenceAdmin(player))
+            if(!resadmin)
             {
                 if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
                 {

@@ -32,7 +32,7 @@ public class ItemManager {
         return true;
     }
 
-    public void readLists(Configuration config) {
+    private void readLists(Configuration config) {
         List<String> keys = config.getKeys("ItemList");
         if (keys != null) {
             for (String key : keys) {

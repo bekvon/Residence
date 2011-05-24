@@ -60,18 +60,20 @@ Global:
     FlagPermission:
         move: true
         build: true
-        use: true
-        ignite: true
-        pvp: true
-        tp: true
-        flow: true
-        firespread: true
-        creeper: true
-        tnt: true
-        container: true
         place: true
         destroy: true
+        use: true
+        container: true
+        pvp: true
+        tp: true
+        ignite: true
+        firespread: true
         bucket: true
+        flow: true
+        lavaflow: true
+        waterflow: true
+        creeper: true
+        tnt: true
         monsters: true
         animals: true
         subzone: true
@@ -79,12 +81,12 @@ Global:
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
-        move: false
         use: false
         container: false
         pvp: false
         tnt: false
         creeper: false
+        flow: false
     # These are default flags applied to the residence creator of any group.
     CreatorDefault:
         build: true
@@ -196,18 +198,20 @@ GroupAssigments:
      player: default
 
 ItemList: #this is where you can create blacklists / whitelists
-     ListName: #list name is not important, as long as it is unique. Its good to use a descripive name. 
+     DefaultList: #list name is not important, as long as it is unique. Its good to use a descripive name. 
         #type of the list, can be blacklist or whitelist
         Type: blacklist
         #If you want, you can have this list only apply to one world, otherwise it applys to all worlds
-        World: world
+        #World: world
         #You can also have the list apply only to one group, otherwise it applys for all groups
-        Group: default
+        #Group: default
         #this is the actual list of material names that this list allows or dissallows
         #You can look up the material name by item ID in game by typing /res material <id>
         #Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance
         Items: 
-           - 'TNT'
-
+           - 'BEDROCK'
+           - 'LAVA'
+           - 'WATER'
+           - 'MOB_SPAWNER'
 # Used to determine which major revision of Residence this config is from, dont change this.
 ResidenceVersion: 2

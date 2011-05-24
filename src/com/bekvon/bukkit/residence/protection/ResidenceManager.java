@@ -144,16 +144,6 @@ public class ResidenceManager {
             return;
         }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
-        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        synchronized (set) {
-            for (Entry<String, ClaimedResidence> resEntry : set) {
-                ClaimedResidence res = resEntry.getValue();
-                if (res.checkCollision(newArea)) {
-                    player.sendMessage("§cArea collides with residence: §e" + resEntry.getKey());
-                    return;
-                }
-            }
-        }
         ClaimedResidence newRes = new ClaimedResidence(player.getName(), loc1.getWorld().getName());
         newRes.getPermissions().applyDefaultFlags();
         newRes.setEnterMessage(group.getDefaultEnterMessage());
@@ -166,8 +156,6 @@ public class ResidenceManager {
             if(Residence.getConfig().useLeases())
                 Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
         }
-        else
-            player.sendMessage("§cError creating residence...");
     }
 
     public void listResidences(Player player)
@@ -193,18 +181,6 @@ public class ResidenceManager {
             }
         }
         player.sendMessage(sbuilder.toString());
-    }
-
-    public void addPhysicalArea(Player player, String residenceName, String areaID, Location loc1, Location loc2) {
-        CuboidArea newarea = new CuboidArea(Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager().getPlayerLoc2(player.getName()));
-        ClaimedResidence res = this.getByName(residenceName);
-        if (res != null) {
-            res.addArea(player, newarea, areaID);
-        }
-        else
-        {
-            player.sendMessage("§cInvalid Residence!");
-        }
     }
 
     public String checkAreaCollision(CuboidArea newarea, ClaimedResidence parentResidence) {
