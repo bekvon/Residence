@@ -212,6 +212,8 @@ ItemList: #this is where you can create blacklists / whitelists
            - 'BEDROCK'
            - 'LAVA'
            - 'WATER'
+           - 'STATIONARY_LAVA'
+           - 'STATIONARY_WATER'
            - 'MOB_SPAWNER'
 # Used to determine which major revision of Residence this config is from, dont change this.
 ResidenceVersion: 2
