@@ -7,6 +7,8 @@ package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.Collections;
 import java.util.Date;
@@ -168,8 +170,12 @@ public class LeaseManager {
                     {
                         if(!Residence.getConfig().enabledRentSystem() || !Residence.getRentManager().isRented(resname))
                         {
-                            manager.removeResidence(null,next.getKey());
-                            it.remove();
+                            ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, Residence.getResidenceManger().getByName(resname), DeleteCause.LEASE_EXPIRE);
+                            Residence.getServ().getPluginManager().callEvent(resevent);
+                            if (!resevent.isCancelled()) {
+                                manager.removeResidence(next.getKey());
+                                it.remove();
+                            }
                         }
                     }
                 }
