@@ -24,6 +24,11 @@ public class SQLManager {
     String pass;
     Connection con;
 
+    public static String getSQLiteConnectionString(String filename)
+    {
+        return "jdbc:sqlite:" + filename;
+    }
+
     boolean useUserPass;
 
     public SQLManager(String connection, String usr, String pw)

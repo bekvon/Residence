@@ -53,7 +53,7 @@ public class ConfigManager {
         defaultGroup = config.getString("Global.DefaultGroup", "default");
         adminsOnly = config.getBoolean("Global.AdminOnlyCommands", false);
         useLeases = config.getBoolean("Global.UseLeaseSystem", false);
-        useLeases = config.getBoolean("Global.LeaseAutoRenew", true);
+        leaseAutoRenew = config.getBoolean("Global.LeaseAutoRenew", true);
         enableEconomy = config.getBoolean("Global.EnableEconomy", false);
         economySystem = config.getString("Global.EconomySystem", "iConomy");
         infoToolId = config.getInt("Global.InfoToolId", Material.STRING.getId());

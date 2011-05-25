@@ -6,6 +6,9 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.Collection;
 import java.util.Collections;
@@ -139,15 +142,23 @@ public class ResidenceManager {
             player.sendMessage("§cYou reached your max number of residences.");
             return;
         }
-        if (residences.containsKey(name)) {
-            player.sendMessage("§cA residence by this name already exists.");
-            return;
-        }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
         ClaimedResidence newRes = new ClaimedResidence(player.getName(), loc1.getWorld().getName());
         newRes.getPermissions().applyDefaultFlags();
         newRes.setEnterMessage(group.getDefaultEnterMessage());
         newRes.setLeaveMessage(group.getDefaultLeaveMessage());
+
+        ResidenceCreationEvent resevent = new ResidenceCreationEvent(player,name, newRes, newArea);
+        Residence.getServ().getPluginManager().callEvent(resevent);
+        if(resevent.isCancelled())
+            return;
+        newArea = resevent.getPhysicalArea();
+        name = resevent.getResidenceName();
+        
+        if (residences.containsKey(name)) {
+            player.sendMessage("§cA residence named §e"+name+"§c already exists.");
+            return;
+        }
         newRes.addArea(player, newArea, "main");
         if(newRes.getAreaCount()!=0)
         {
@@ -194,6 +205,11 @@ public class ResidenceManager {
         return null;
     }
 
+    public void removeResidence(String name)
+    {
+        this.removeResidence(null, name);
+    }
+
     public void removeResidence(Player player, String name) {
         ClaimedResidence res = this.getByName(name);
         if (res != null) {
@@ -203,6 +219,10 @@ public class ResidenceManager {
                     return;
                 }
             }
+            ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player==null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
+            Residence.getServ().getPluginManager().callEvent(resevent);
+            if(resevent.isCancelled())
+                return;
             ClaimedResidence parent = res.getParent();
             if (parent != null) {
                 String[] split = name.split("\\.");
