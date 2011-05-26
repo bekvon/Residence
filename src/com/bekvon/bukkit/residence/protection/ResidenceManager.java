@@ -257,7 +257,17 @@ public class ResidenceManager {
 
     public String[] getResidenceList()
     {
-        return (String[]) residences.keySet().toArray();
+        String[] reslist = new String[residences.size()];
+        int i = 0;
+        synchronized(residences)
+        {
+            for(String res : residences.keySet())
+            {
+                reslist[i] = res;
+                i++;
+            }
+        }
+        return reslist;
     }
 
     public void listAllResidences(Player player)
