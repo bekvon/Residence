@@ -7,6 +7,8 @@ package com.bekvon.bukkit.residence.protection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.itemlist.ItemList;
+import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -28,6 +31,7 @@ public class ClaimedResidence {
     protected ClaimedResidence parent;
     protected Map<String, CuboidArea> areas;
     protected Map<String, ClaimedResidence> subzones;
+    protected Map<String,ItemList> itemLists;
     protected ResidencePermissions perms;
     protected ResidenceBank bank;
     protected Location tpLoc;
@@ -39,6 +43,7 @@ public class ClaimedResidence {
         subzones = Collections.synchronizedMap(new HashMap<String, ClaimedResidence>());
         areas = Collections.synchronizedMap(new HashMap<String, CuboidArea>());
         bank = new ResidenceBank(this);
+        itemLists = new HashMap<String,ItemList>();
     }
 
     public ClaimedResidence(String creator, String creationWorld) {
@@ -775,6 +780,7 @@ public class ClaimedResidence {
         subzones.remove(oldName);
         player.sendMessage("§aRenamed " + oldName + " to " + newName + "...");
     }
+
     public void renameArea(Player player, String oldName, String newName)
     {
         newName = newName.replace(".", "_");
@@ -822,4 +828,84 @@ public class ClaimedResidence {
     {
         return perms.getOwner();
     }
+
+    public boolean isBlockIgnored(Material mat)
+    {
+        for(ItemList list : itemLists.values())
+        {
+            if(list.isIgnored(mat))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBlockAllowed(Material mat)
+    {
+        for(ItemList list : itemLists.values())
+        {
+            if(!list.isAllowed(mat))
+                return false;
+        }
+        return true;
+    }
+
+    public ItemList getItemList(String name)
+    {
+        return itemLists.get(name);
+    }
+
+    public void deleteItemList(String name)
+    {
+        itemLists.remove(name);
+    }
+
+    public boolean itemListExists(String name)
+    {
+        return itemLists.containsKey(name);
+    }
+
+    public void createItemList(String name, ListType type)
+    {
+        if(!itemListExists(name))
+            itemLists.put(name, new ItemList(type));
+    }
+
+    public void createItemList(Player player, String name, ListType type)
+    {
+        if(this.perms.hasResidencePermission(player, true))
+        {
+            if(itemListExists(name))
+            {
+                player.sendMessage("List already exists.");
+                return;
+            }
+            createItemList(name,type);
+            player.sendMessage("Item list created.");
+        }
+        else
+        {
+            player.sendMessage("You don't have permission.");
+        }
+    }
+
+    public void deleteItemList(Player player, String name)
+    {
+        if(this.perms.hasResidencePermission(player, true))
+        {
+            if(!itemListExists(name))
+            {
+                player.sendMessage("List does not exist.");
+                return;
+            }
+            deleteItemList(name);
+            player.sendMessage("Item list removed.");
+        }
+        else
+        {
+            player.sendMessage("You don't have permission.");
+        }
+    }
+
 }

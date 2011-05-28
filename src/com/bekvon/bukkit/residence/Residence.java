@@ -21,7 +21,7 @@ import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
-import com.bekvon.bukkit.residence.itemlist.ItemManager;
+import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
@@ -40,6 +40,7 @@ import fr.crafter.tickleman.RealShop.RealShopPlugin;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -77,7 +78,7 @@ public class Residence extends JavaPlugin {
     private static TransactionManager tmanager;
     private static PermissionListManager pmanager;
     private static LeaseManager leasemanager;
-    private static ItemManager imanager;
+    private static WorldItemManager imanager;
     private static WorldFlagManager wmanager;
     private static RentManager rentmanager;
     private static ChatManager chatmanager;
@@ -152,7 +153,7 @@ public class Residence extends JavaPlugin {
             }
             cmanager = new ConfigManager(this.getConfiguration());
             gmanager = new PermissionManager(this.getConfiguration());
-            imanager = new ItemManager(this.getConfiguration());
+            imanager = new WorldItemManager(this.getConfiguration());
             wmanager = new WorldFlagManager(this.getConfiguration());
             chatmanager = new ChatManager();
             rentmanager = new RentManager();
@@ -291,7 +292,7 @@ public class Residence extends JavaPlugin {
         return tmanager;
     }
 
-    public static ItemManager getItemManager()
+    public static WorldItemManager getItemManager()
     {
         return imanager;
     }
@@ -483,7 +484,15 @@ public class Residence extends JavaPlugin {
                     args = new String[1];
                     args[0] = "?";
                 }
-                if (args[0].equals("select")) {
+                if(args[0].equals("debug") && resadmin)
+                {
+                    if(args[1].equals("time") && args.length == 2)
+                    {
+                        player.sendMessage("§eTime: " + new Date(System.currentTimeMillis()));
+                        return true;
+                    }
+                }
+                else if(args[0].equals("select")) {
                     if(!group.selectCommandAccess() && !resadmin)
                     {
                         player.sendMessage("§cYou don't have access to selection commands.");

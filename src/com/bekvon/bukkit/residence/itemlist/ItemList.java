@@ -10,7 +10,6 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.util.config.ConfigurationNode;
 
-
 /**
  *
  * @author Administrator
@@ -19,21 +18,24 @@ public class ItemList {
 
     protected List<Material> list;
     protected ListType type;
-    protected String world;
-    protected String group;
-
-    public static enum ListType
-    {
-        BLACKLIST,WHITELIST
-    }
 
     public ItemList(ListType listType)
     {
+        this();
         type = listType;
+    }
+
+    protected ItemList()
+    {
         list = new ArrayList<Material>();
     }
 
-    public ListType getType()
+    public static enum ListType
+    {
+        BLACKLIST,WHITELIST,IGNORELIST,OTHER
+    }
+
+     public ListType getType()
     {
         return type;
     }
@@ -54,32 +56,8 @@ public class ItemList {
         list.remove(mat);
     }
 
-    public String getWorld()
+    public boolean isAllowed(Material mat)
     {
-        return world;
-    }
-
-    public String getGroup()
-    {
-        return group;
-    }
-
-    public boolean isAllowed(Material mat, String inworld, String ingroup)
-    {
-        if(world!=null)
-        {
-            if(!world.equalsIgnoreCase(inworld))
-            {
-                return true;
-            }
-        }
-        if(group!=null)
-        {
-            if(!group.equals(ingroup))
-            {
-                return true;
-            }
-        }
         if(type == ListType.BLACKLIST)
         {
             if(list.contains(mat))
@@ -96,6 +74,18 @@ public class ItemList {
             }
             return false;
         }
+        return true;
+    }
+
+    public boolean isIgnored(Material mat)
+    {
+        if(type == ListType.IGNORELIST)
+        {
+            if(list.contains(mat))
+            {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -106,10 +96,13 @@ public class ItemList {
 
     public static ItemList readList(ConfigurationNode node)
     {
+        return ItemList.readList(node, new ItemList());
+    }
+
+    protected static ItemList readList(ConfigurationNode node, ItemList list)
+    {
         ListType type = ListType.valueOf(node.getString("Type","").toUpperCase());
-        ItemList list = new ItemList(type);
-        list.world = node.getString("World",null);
-        list.group = node.getString("Group",null);
+        list.type = type;
         List<String> items = node.getStringList("Items", null);
         if (items != null) {
             for (String item : items) {
