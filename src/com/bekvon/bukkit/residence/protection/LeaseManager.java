@@ -54,6 +54,11 @@ public class LeaseManager {
         leaseExpireTime.remove(area);
     }
 
+    public void setExpireTime(String area, int days)    
+    {
+        this.setExpireTime(null, area, days);
+    }
+
     public void setExpireTime(Player player, String area, int days)
     {
         area = area.replace(".", "_");
@@ -138,43 +143,39 @@ public class LeaseManager {
         return msToDays((int)(get-System.currentTimeMillis()));
     }
 
-    public void doExpirations()
-    {
+    public void doExpirations() {
         Set<Entry<String, Long>> set = leaseExpireTime.entrySet();
-        synchronized(leaseExpireTime)
-        {
+        synchronized (leaseExpireTime) {
             Iterator<Entry<String, Long>> it = set.iterator();
-            while(it.hasNext())
-            {
+            while (it.hasNext()) {
                 Entry<String, Long> next = it.next();
-                if(next.getValue()<System.currentTimeMillis())
-                {
+                if (next.getValue() < System.currentTimeMillis()) {
                     boolean renewed = false;
                     String resname = next.getKey();
-                    if(Residence.getConfig().enableEconomy() && Residence.getConfig().autoRenewLeases())
-                    {
-                        ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
-                        int cost = getRenewCost(res);
-                        String owner = res.getPermissions().getOwner();
-                        PermissionGroup limits = Residence.getPermissionManager().getGroup(owner,res.getPermissions().getWorld());
-                        if(res!=null && Residence.getEconomyManager().canAfford(owner, cost))
-                        {
-                            if(cost==0 || Residence.getEconomyManager().subtract(owner, cost))
-                            {
-                                next.setValue(next.getValue() + daysToMs(limits.getLeaseGiveTime()));
-                                renewed = true;
+                    ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
+                    if (res == null) {
+                        it.remove();
+                    } else {
+                        if (Residence.getConfig().enableEconomy() && Residence.getConfig().autoRenewLeases()) {
+
+                            int cost = getRenewCost(res);
+                            String owner = res.getPermissions().getOwner();
+                            PermissionGroup limits = Residence.getPermissionManager().getGroup(owner, res.getPermissions().getWorld());
+                            if (res != null && Residence.getEconomyManager().canAfford(owner, cost)) {
+                                if (cost == 0 || Residence.getEconomyManager().subtract(owner, cost)) {
+                                    next.setValue(next.getValue() + daysToMs(limits.getLeaseGiveTime()));
+                                    renewed = true;
+                                }
                             }
                         }
-                    }
-                    if(!renewed)
-                    {
-                        if(!Residence.getConfig().enabledRentSystem() || !Residence.getRentManager().isRented(resname))
-                        {
-                            ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, Residence.getResidenceManger().getByName(resname), DeleteCause.LEASE_EXPIRE);
-                            Residence.getServ().getPluginManager().callEvent(resevent);
-                            if (!resevent.isCancelled()) {
-                                manager.removeResidence(next.getKey());
-                                it.remove();
+                        if (!renewed) {
+                            if (!Residence.getConfig().enabledRentSystem() || !Residence.getRentManager().isRented(resname)) {
+                                ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, res, DeleteCause.LEASE_EXPIRE);
+                                Residence.getServ().getPluginManager().callEvent(resevent);
+                                if (!resevent.isCancelled()) {
+                                    manager.removeResidence(next.getKey());
+                                    it.remove();
+                                }
                             }
                         }
                     }
