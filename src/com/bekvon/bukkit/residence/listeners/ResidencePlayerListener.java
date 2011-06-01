@@ -90,8 +90,9 @@ public class ResidencePlayerListener extends PlayerListener {
         {
             player.sendMessage("§cYou are currently blacklisted from using your equiped item.");
             event.setCancelled(true);
+            return;
         }
-        if(!event.isCancelled() && (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK))
+        if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
             Block block = event.getClickedBlock();
             if (player.getItemInHand().getTypeId() == Residence.getConfig().getSelectionTooldID()) {
@@ -122,9 +123,9 @@ public class ResidencePlayerListener extends PlayerListener {
             Material mat = block.getType();
             if(!resadmin)
             {
+                ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
                 if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
                 {
-                    ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
                     if(res!=null)
                     {
                         if(!res.getPermissions().playerHas(player.getName(),"container", res.getPermissions().playerHas(player.getName(), "use", true)))
@@ -136,7 +137,6 @@ public class ResidencePlayerListener extends PlayerListener {
                 }
                 else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH)
                 {
-                    ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
                     if(res!=null)
                     {
                         if(!res.getPermissions().playerHas(player.getName(),"use", true))
@@ -156,7 +156,6 @@ public class ResidencePlayerListener extends PlayerListener {
                 }
             }
         }
-        super.onPlayerInteract(event);
     }
 
     @Override

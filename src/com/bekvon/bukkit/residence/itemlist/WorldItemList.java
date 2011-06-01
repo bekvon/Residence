@@ -50,6 +50,13 @@ public class WorldItemList extends ItemList {
         return super.isIgnored(mat);
     }
 
+    public boolean isListed(Material mat, String inworld, String ingroup)
+    {
+        if(!listApplicable(inworld,ingroup))
+            return false;
+        return super.isListed(mat);
+    }
+
     public boolean listApplicable(String inworld, String ingroup)
     {
         if (world != null) {

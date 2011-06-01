@@ -15,7 +15,7 @@ Global:
     # The default group to use if Permissions fails to attach or your not using Permissions.
     DefaultGroup: default
     # Enable / Disable the Lease System.
-    UseLeaseSystem: true
+    UseLeaseSystem: false
     # The interval, in minutes, between residence lease checks (if leases are enabled).
     LeaseCheckInterval: 10
     # Allows leases to automatically renew so long as the player has the money, if economy is disabled, this setting does nothing.
