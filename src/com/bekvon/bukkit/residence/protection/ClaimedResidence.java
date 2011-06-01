@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -31,19 +30,21 @@ public class ClaimedResidence {
     protected ClaimedResidence parent;
     protected Map<String, CuboidArea> areas;
     protected Map<String, ClaimedResidence> subzones;
-    protected Map<String,ItemList> itemLists;
     protected ResidencePermissions perms;
     protected ResidenceBank bank;
     protected Location tpLoc;
     protected String enterMessage;
     protected String leaveMessage;
+    protected ItemList ignorelist;
+    protected ItemList blacklist;
 
     private ClaimedResidence()
     {
         subzones = Collections.synchronizedMap(new HashMap<String, ClaimedResidence>());
         areas = Collections.synchronizedMap(new HashMap<String, CuboidArea>());
         bank = new ResidenceBank(this);
-        itemLists = new HashMap<String,ItemList>();
+        blacklist = new ItemList(ListType.BLACKLIST);
+        ignorelist = new ItemList(ListType.IGNORELIST);
     }
 
     public ClaimedResidence(String creator, String creationWorld) {
@@ -694,6 +695,8 @@ public class ClaimedResidence {
         root.put("EnterMessage", enterMessage);
         root.put("LeaveMessage", leaveMessage);
         root.put("StoredMoney", bank.getStoredMoney());
+        root.put("BlackList", blacklist.save());
+        root.put("IgnoreList", ignorelist.save());
         for(Entry<String, CuboidArea> entry : areas.entrySet())
         {
             areamap.put(entry.getKey(), entry.getValue().save());
@@ -725,6 +728,10 @@ public class ClaimedResidence {
         res.leaveMessage = (String) root.get("LeaveMessage");
         if(root.containsKey("StoredMoney"))
             res.bank.setStoredMoney((Integer)root.get("StoredMoney"));
+        if(root.containsKey("BlackList"))
+            res.blacklist = ItemList.load((Map<String, Object>) root.get("BlackList"));
+        if(root.containsKey("IgnoreList"))
+            res.ignorelist = ItemList.load((Map<String, Object>) root.get("IgnoreList"));
         Map<String,Object> areamap = (Map<String, Object>) root.get("Areas");
         res.perms = ResidencePermissions.load(res,(Map<String, Object>) root.get("Permissions"));
         World world = Residence.getServ().getWorld(res.perms.getWorld());
@@ -829,83 +836,13 @@ public class ClaimedResidence {
         return perms.getOwner();
     }
 
-    public boolean isBlockIgnored(Material mat)
+    public ItemList getItemBlacklist()
     {
-        for(ItemList list : itemLists.values())
-        {
-            if(list.isIgnored(mat))
-            {
-                return true;
-            }
-        }
-        return false;
+        return blacklist;
     }
 
-    public boolean isBlockAllowed(Material mat)
+    public ItemList getItemIgnoreList()
     {
-        for(ItemList list : itemLists.values())
-        {
-            if(!list.isAllowed(mat))
-                return false;
-        }
-        return true;
+        return ignorelist;
     }
-
-    public ItemList getItemList(String name)
-    {
-        return itemLists.get(name);
-    }
-
-    public void deleteItemList(String name)
-    {
-        itemLists.remove(name);
-    }
-
-    public boolean itemListExists(String name)
-    {
-        return itemLists.containsKey(name);
-    }
-
-    public void createItemList(String name, ListType type)
-    {
-        if(!itemListExists(name))
-            itemLists.put(name, new ItemList(type));
-    }
-
-    public void createItemList(Player player, String name, ListType type)
-    {
-        if(this.perms.hasResidencePermission(player, true))
-        {
-            if(itemListExists(name))
-            {
-                player.sendMessage("List already exists.");
-                return;
-            }
-            createItemList(name,type);
-            player.sendMessage("Item list created.");
-        }
-        else
-        {
-            player.sendMessage("You don't have permission.");
-        }
-    }
-
-    public void deleteItemList(Player player, String name)
-    {
-        if(this.perms.hasResidencePermission(player, true))
-        {
-            if(!itemListExists(name))
-            {
-                player.sendMessage("List does not exist.");
-                return;
-            }
-            deleteItemList(name);
-            player.sendMessage("Item list removed.");
-        }
-        else
-        {
-            player.sendMessage("You don't have permission.");
-        }
-    }
-
 }

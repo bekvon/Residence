@@ -6,8 +6,12 @@
 package com.bekvon.bukkit.residence.itemlist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 /**
@@ -89,6 +93,11 @@ public class ItemList {
         return false;
     }
 
+    public boolean isListed(Material mat)
+    {
+        return this.contains(mat);
+    }
+
     public int getListSize()
     {
         return list.size();
@@ -125,5 +134,61 @@ public class ItemList {
             }
         }
         return list;
+    }
+
+    public void printList(Player player)
+    {
+        StringBuilder builder = new StringBuilder();
+        boolean first = true;
+        for(Material mat : list)
+        {
+            if(!first)
+                builder.append(", ");
+            builder.append(mat);
+            first = false;
+        }
+        player.sendMessage(builder.toString());
+    }
+
+    public Material[] toArray()
+    {
+        Material mats[] = new Material[list.size()];
+        int i = 0;
+        for(Material mat : list)
+        {
+            mats[i] = mat;
+            i++;
+        }
+        return mats;
+    }
+
+    public Map<String,Object> save()
+    {
+        Map saveMap = new LinkedHashMap<String,Object>();
+        saveMap.put("Type", type.toString());
+        List<String> saveList = new ArrayList<String>();
+        for(Material mat : list)
+        {
+            saveList.add(mat.toString());
+        }
+        saveMap.put("ItemList", saveList);
+        return saveMap;
+    }
+
+    public static ItemList load(Map<String,Object> map)
+    {
+        ItemList newlist = new ItemList();
+        try
+        {
+            newlist.type = ListType.valueOf((String) map.get("Type"));
+            List<String> list = (List<String>) map.get("ItemList");
+            for(String item : list)
+            {
+                newlist.add(Material.valueOf(item));
+            }
+        }
+        catch (Exception ex)
+        {}
+        return newlist;
     }
 }

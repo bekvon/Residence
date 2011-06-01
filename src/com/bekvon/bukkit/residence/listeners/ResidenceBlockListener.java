@@ -33,6 +33,12 @@ public class ResidenceBlockListener extends BlockListener {
         Player player = event.getPlayer();
         if(Residence.getPermissionManager().isResidenceAdmin(player))
             return;
+        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
+        Material mat = event.getBlock().getType();
+        if(Residence.getItemManager().isIgnored(mat, group, event.getBlock().getWorld().getName()))
+        {
+            return;
+        }
         ClaimedResidence res;
         if(Residence.getConfig().enabledRentSystem())
         {
@@ -51,6 +57,9 @@ public class ResidenceBlockListener extends BlockListener {
         }
         String pname = player.getName();
         if (res != null) {
+            if (res.getItemIgnoreList().isListed(mat)) {
+                return;
+            }
             ResidencePermissions perms = res.getPermissions();
             boolean hasbuild = perms.playerHas(pname, "build", true);
             boolean hasdestroy = perms.playerHas(pname, "destroy", hasbuild);
@@ -76,7 +85,12 @@ public class ResidenceBlockListener extends BlockListener {
         if(event.isCancelled())
             return;
         Player player = event.getPlayer();
+        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
         if(Residence.getPermissionManager().isResidenceAdmin(player))
+            return;
+        Material mat = event.getBlock().getType();
+        String world = event.getBlock().getWorld().getName();
+        if(Residence.getItemManager().isIgnored(mat, group, world))
             return;
         ClaimedResidence res;
         if(Residence.getConfig().enabledRentSystem())
@@ -96,6 +110,11 @@ public class ResidenceBlockListener extends BlockListener {
         }
         String pname = player.getName();
         if (res != null) {
+            if (!res.getItemBlacklist().isAllowed(mat)) {
+                player.sendMessage("§cThat item is blacklisted for this residence.");
+                event.setCancelled(true);
+                return;
+            }
             ResidencePermissions perms = res.getPermissions();
             boolean hasbuild = perms.playerHas(pname, "build", true);
             boolean hasplace = perms.playerHas(pname, "place", hasbuild);
