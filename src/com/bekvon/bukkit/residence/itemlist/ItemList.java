@@ -55,6 +55,20 @@ public class ItemList {
             list.add(mat);
     }
 
+    public boolean toggle(Material mat)
+    {
+        if(list.contains(mat))
+        {
+            list.remove(mat);
+            return false;
+        }
+        else
+        {
+            list.add(mat);
+            return true;
+        }
+    }
+
     public void remove(Material mat)
     {
         list.remove(mat);
@@ -144,6 +158,8 @@ public class ItemList {
         {
             if(!first)
                 builder.append(", ");
+            else
+                builder.append("§e");
             builder.append(mat);
             first = false;
         }
@@ -178,6 +194,11 @@ public class ItemList {
     public static ItemList load(Map<String,Object> map)
     {
         ItemList newlist = new ItemList();
+        return load(map,newlist);
+    }
+
+    protected static ItemList load(Map<String,Object> map, ItemList newlist)
+    {
         try
         {
             newlist.type = ListType.valueOf((String) map.get("Type"));

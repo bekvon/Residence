@@ -8,6 +8,8 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Administrator
@@ -19,6 +21,9 @@ public class EssentialsEcoAdapter extends EconomyInterface {
     public EssentialsEcoAdapter(Essentials p)
     {
         plugin = p;
+        String serverland = "Server Land";
+        if(!Economy.playerExists(serverland))
+            Economy.createNPC(serverland);
     }
 
     @Override

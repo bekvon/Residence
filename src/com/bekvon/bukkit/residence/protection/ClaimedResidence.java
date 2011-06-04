@@ -9,6 +9,7 @@ import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.itemlist.ItemList;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
+import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,16 +36,16 @@ public class ClaimedResidence {
     protected Location tpLoc;
     protected String enterMessage;
     protected String leaveMessage;
-    protected ItemList ignorelist;
-    protected ItemList blacklist;
+    protected ResidenceItemList ignorelist;
+    protected ResidenceItemList blacklist;
 
     private ClaimedResidence()
     {
         subzones = Collections.synchronizedMap(new HashMap<String, ClaimedResidence>());
         areas = Collections.synchronizedMap(new HashMap<String, CuboidArea>());
         bank = new ResidenceBank(this);
-        blacklist = new ItemList(ListType.BLACKLIST);
-        ignorelist = new ItemList(ListType.IGNORELIST);
+        blacklist = new ResidenceItemList(this, ListType.BLACKLIST);
+        ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
     }
 
     public ClaimedResidence(String creator, String creationWorld) {
@@ -729,9 +730,9 @@ public class ClaimedResidence {
         if(root.containsKey("StoredMoney"))
             res.bank.setStoredMoney((Integer)root.get("StoredMoney"));
         if(root.containsKey("BlackList"))
-            res.blacklist = ItemList.load((Map<String, Object>) root.get("BlackList"));
+            res.blacklist = ResidenceItemList.load(res,(Map<String, Object>) root.get("BlackList"));
         if(root.containsKey("IgnoreList"))
-            res.ignorelist = ItemList.load((Map<String, Object>) root.get("IgnoreList"));
+            res.ignorelist = ResidenceItemList.load(res,(Map<String, Object>) root.get("IgnoreList"));
         Map<String,Object> areamap = (Map<String, Object>) root.get("Areas");
         res.perms = ResidencePermissions.load(res,(Map<String, Object>) root.get("Permissions"));
         World world = Residence.getServ().getWorld(res.perms.getWorld());
@@ -836,12 +837,12 @@ public class ClaimedResidence {
         return perms.getOwner();
     }
 
-    public ItemList getItemBlacklist()
+    public ResidenceItemList getItemBlacklist()
     {
         return blacklist;
     }
 
-    public ItemList getItemIgnoreList()
+    public ResidenceItemList getItemIgnoreList()
     {
         return ignorelist;
     }

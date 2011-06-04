@@ -53,6 +53,7 @@ public class PermissionGroup {
         protected int maxRents;
         protected int maxRentables;
         protected boolean selectCommandAccess;
+        protected boolean itemListAccess;
 
         public PermissionGroup(String name)
         {
@@ -102,6 +103,7 @@ public class PermissionGroup {
         costperarea = limits.getDouble("Economy.BuyCost", 0);
         unstuck = limits.getBoolean("Residence.Unstuck", false);
         selectCommandAccess = limits.getBoolean("Residence.SelectCommandAccess", true);
+        itemListAccess = limits.getBoolean("Residence.ItemListAccess", true);
         List<String> flags = limits.getKeys("Flags.Permission");
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
@@ -271,6 +273,11 @@ public class PermissionGroup {
     public boolean selectCommandAccess()
     {
         return selectCommandAccess;
+    }
+
+    public boolean itemListAccess()
+    {
+        return itemListAccess;
     }
 
     public void printLimits(Player player)
