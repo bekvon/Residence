@@ -943,7 +943,86 @@ public class Residence extends JavaPlugin {
                     }
                     player.sendMessage("§c/res pset ? for more info.");
                     return true;
-                } else if (args[0].equals("list")) {
+                }
+                else if(args[0].equals("lset"))
+                {
+                    ClaimedResidence res = null;
+                    Material mat = null;
+                    String listtype = null;
+                    boolean showinfo = false;
+                    if(args.length==1)
+                    {
+                        player.sendMessage("§eUsage: §3/res lset §6<residence> [blacklist/ignorelist] [material]");
+                        player.sendMessage("§eUsage: §3/res lset §6<residence> info");
+                        return true;
+                    }
+                    if (args.length == 2 && args[1].equals("info")) {
+                        res = rmanager.getByLoc(player.getLocation());
+                        showinfo = true;
+                    }
+                    else if(args.length == 3 && args[2].equals("info")) {
+                        res = rmanager.getByName(args[1]);
+                        showinfo = true;
+                    }
+                    if (showinfo) {
+                        if (res == null) {
+                            player.sendMessage("§cInvalid Residence...");
+                            return true;
+                        }
+                        player.sendMessage("§cBlacklist:");
+                        res.getItemBlacklist().printList(player);
+                        player.sendMessage("§aIgnorelist:");
+                        res.getItemIgnoreList().printList(player);
+                        return true;
+                    }
+                    else if(args.length == 4)
+                    {
+                        res = rmanager.getByName(args[1]);
+                        listtype = args[2];
+                        try
+                        {
+                            mat = Material.valueOf(args[3].toUpperCase());
+                        }
+                        catch (Exception ex)
+                        {
+                            player.sendMessage("§cInvalid material: " + args[3]);
+                            return true;
+                        }
+                    }
+                    else if(args.length==3)
+                    {
+                        res = rmanager.getByLoc(player.getLocation());
+                        listtype = args[1];
+                        try
+                        {
+                            mat = Material.valueOf(args[2].toUpperCase());
+                        }
+                        catch (Exception ex)
+                        {
+                            player.sendMessage("§cInvalid material: " + args[2]);
+                            return true;
+                        }
+                    }
+                    if(res!=null)
+                    {
+                        if(listtype.equalsIgnoreCase("blacklist"))
+                        {
+                            res.getItemBlacklist().playerListChange(player, mat);
+                        }
+                        else if(listtype.equalsIgnoreCase("ignorelist"))
+                        {
+                            res.getItemIgnoreList().playerListChange(player, mat);
+                        }
+                        else
+                        {
+                            player.sendMessage("§cUnknown list type, must be blacklist or ignorelist.");
+                        }
+                        return true;
+                    }
+                    else
+                        player.sendMessage("§cInvalid Residence...");
+                }
+                else if (args[0].equals("list")) {
                     rmanager.listResidences(player);
                     return true;
                 } else if (args[0].equals("?") || args[0].equals("help")) {
@@ -954,6 +1033,7 @@ public class Residence extends JavaPlugin {
                     player.sendMessage("§ainfo §6<residence>§3 - view info on residence.");
                     player.sendMessage("§aset / pset / gset§3 - sets flags, /res set ? for details");
                     player.sendMessage("§alist / listall §3- list your/all residences.");
+                    player.sendMessage("§lset §3- blacklist/ignorelist control, /res lset ? for details.");
                     player.sendMessage("§alimits §3- view global residence limits.");
                     player.sendMessage("§aunstuck §3- attempt to move out of the residence your in.");
                     player.sendMessage("§atp §6<residence> §3/ §atpset §3- tp to a residence / set tp loc.");
@@ -1433,6 +1513,7 @@ public class Residence extends JavaPlugin {
                     player.sendMessage("§b/resadmin§3 - additional admin residence commands.");
                     player.sendMessage("§alease set §6[residence] [#days/infinite]§3 - set a lease.");
                     player.sendMessage("§asetowner §6[residence] [player]§3 - change residence owner.");
+                    player.sendMessage("§aserver §6[residence]§3 - change residence owner to server owned.");
                     player.sendMessage("§3Admins also have access to all the normal /res commands for any residence, regardless of permissions.  Admins are also immune to deny flags.");
                     return true;
                 } else if (args.length == 4) {
@@ -1492,6 +1573,22 @@ public class Residence extends JavaPlugin {
                         }
                         return true;
                     }
+                }
+                else if(args[0].equals("server"))
+                {
+                    if(args.length==2)
+                    {
+                        ClaimedResidence res = rmanager.getByName(args[1]);
+                        if(res == null)
+                        {
+                            player.sendMessage("§cInvalid residence.");
+                            return true;
+                        }
+                        res.getPermissions().setOwner("Server Land", false);
+                        player.sendMessage("§aResidence§e " + args[1] + " §aset to server owned.");
+                    }
+                    else
+                        player.sendMessage("§cInvalid residence.");
                 }
             }
             return true;

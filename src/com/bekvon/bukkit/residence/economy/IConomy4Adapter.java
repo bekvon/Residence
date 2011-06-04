@@ -10,6 +10,9 @@ public class IConomy4Adapter extends EconomyInterface
     public IConomy4Adapter(iConomy p)
     {
         plugin = p;
+        String serverland = "Server Land";
+        if(!plugin.getBank().hasAccount(serverland))
+            plugin.getBank().addAccount(serverland, 0);
     }
 
     public double getBalance(String playerName)

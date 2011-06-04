@@ -129,6 +129,8 @@ Groups:
            Unstuck: true
            # Allow or Disallow the use of the /res select command, if disabled they can only use the selection tool.
            SelectCommandAccess: true
+           # Allow or Disallow the group to access the Blacklist/Ignorelist for residences they own.
+           ItemListAccess: true
        # Options relating to enter and leave messages on the residence.
        Messaging:
            # Whether or not the player can change the Residence enter and leave messages.
