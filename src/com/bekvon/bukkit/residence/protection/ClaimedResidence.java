@@ -7,6 +7,7 @@ package com.bekvon.bukkit.residence.protection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.event.ResidenceTPEvent;
 import com.bekvon.bukkit.residence.itemlist.ItemList;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
@@ -635,21 +636,28 @@ public class ClaimedResidence {
                 return;
             }
         }
-        if(tpLoc!=null)
-        {
-            targetPlayer.teleport(tpLoc);
-            targetPlayer.sendMessage("§aTeleported!");
-        }
-        else
-        {
-            CuboidArea area = areas.values().iterator().next();
-            if(area==null)
+        if (tpLoc != null) {
+            ResidenceTPEvent tpevent = new ResidenceTPEvent(this,tpLoc, targetPlayer, reqPlayer);
+            Residence.getServ().getPluginManager().callEvent(tpevent);
+            if(!tpevent.isCancelled())
             {
-                reqPlayer.sendMessage("Could not find area to teleport to...");
+                targetPlayer.teleport(tpLoc);
+                targetPlayer.sendMessage("§aTeleported!");
+            }
+        } else {
+            CuboidArea area = areas.values().iterator().next();
+            if (area == null) {
+                reqPlayer.sendMessage("§cCould not find area to teleport to...");
                 return;
             }
-            targetPlayer.teleport(this.getOutsideFreeLoc(area.getHighLoc()));
-            targetPlayer.sendMessage("§eTeleported to near residence.");
+            Location targloc = this.getOutsideFreeLoc(area.getHighLoc());
+            ResidenceTPEvent tpevent = new ResidenceTPEvent(this, targloc, targetPlayer, reqPlayer);
+            Residence.getServ().getPluginManager().callEvent(tpevent);
+            if(!tpevent.isCancelled())
+            {
+                targetPlayer.teleport(targloc);
+                targetPlayer.sendMessage("§eTeleported to near residence.");
+            }
         }
     }
 

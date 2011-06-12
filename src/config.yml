@@ -100,7 +100,7 @@ Global:
     
 # These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:
-    Default:
+    Default: #group name
        # Information about the Residence zone that the player can define.
        Residence:
            # Determins if this group can create residences or not.  This option can be overriden with the permissions node 'residence.create'
@@ -201,7 +201,7 @@ GroupAssigments:
 
 ItemList: #this is where you can create blacklists / whitelists
      DefaultList: #list name is not important, as long as it is unique. Its good to use a descripive name. 
-        #type of the list, can be blacklist or whitelist
+        #type of the list, can be blacklist, whitelist, or ignorelist
         Type: blacklist
         #If you want, you can have this list only apply to one world, otherwise it applys to all worlds
         #World: world
