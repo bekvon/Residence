@@ -867,7 +867,7 @@ public class Residence extends JavaPlugin {
                             player.sendMessage("§asubzone§3 - allows / disallows subzoning.");
                             player.sendMessage("§afirespread§3 - allows / disallows fire spread.");
                             player.sendMessage("§adamage§3 - allows / disallows damage while in zone.");
-                            player.sendMessage("§aexplosions§3 - allows / disallows explosions.");
+                            player.sendMessage("§atnt / creeper§3 - allows / disallows tnt or creeper explosions.");
                             player.sendMessage("§amonsters§3 - allows / disallows monster spawns.");
                             player.sendMessage("§aflow§3 - allows / disallows liquid movement in zone.");
                             player.sendMessage("§atp§3 - allows / disallows teleports to your residence.");
