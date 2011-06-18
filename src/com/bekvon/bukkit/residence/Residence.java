@@ -85,12 +85,13 @@ public class Residence extends JavaPlugin {
     private static Server server;
     private boolean firstenable = true;
     private static EconomyInterface economy;
-    private final int saveVersion = 1;
+    private final static int saveVersion = 1;
     private static File ymlSaveLoc;
-    private int leaseBukkitId=-1;
-    private int rentBukkitId=-1;
-    private int healBukkitId=-1;
+    private static int leaseBukkitId=-1;
+    private static int rentBukkitId=-1;
+    private static int healBukkitId=-1;
     private static int autosaveBukkitId=-1;
+    private static boolean initsuccess = false;
     private Runnable doHeals = new Runnable() {
         public void run() {
             plistener.doHeals();
@@ -134,12 +135,16 @@ public class Residence extends JavaPlugin {
         {
             server.getScheduler().cancelTask(rentBukkitId);
         }
-        saveYml();
-        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Disabled!");
+        if(initsuccess)
+        {
+            saveYml();
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Disabled!");
+        }
     }
 
     public void onEnable() {
         try {
+            initsuccess = false;
             server = this.getServer();
             if (!new File(this.getDataFolder(), "config.yml").isFile()) {
                 this.writeDefaultConfigFromJar();
@@ -253,10 +258,12 @@ public class Residence extends JavaPlugin {
                 rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
             }
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
+            initsuccess = true;
         } catch (Exception ex) {
-            System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
+            initsuccess = false;
+            getServer().getPluginManager().disablePlugin(this);
             Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-            this.setEnabled(false);
+            System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
         }
     }
 
@@ -400,7 +407,7 @@ public class Residence extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(),args);
+        ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(),args,sender);
         server.getPluginManager().callEvent(cevent);
         if(cevent.isCancelled())
             return true;
@@ -521,7 +528,7 @@ public class Residence extends JavaPlugin {
                         if (args[1].equals("size")) {
                             if (smanager.hasPlacedBoth(pname)) {
                                 try {
-                                    smanager.displaySelectionSize(player);
+                                    smanager.showSelectionInfo(player);
                                     return true;
                                 } catch (Exception ex) {
                                     Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
@@ -1595,6 +1602,13 @@ public class Residence extends JavaPlugin {
         }
         return super.onCommand(sender, command, label, args);
     }
+
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+    }
+
 
     private void saveYml() {
         YMLSaveHelper yml = new YMLSaveHelper(ymlSaveLoc);

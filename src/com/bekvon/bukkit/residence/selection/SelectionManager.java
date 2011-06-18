@@ -61,17 +61,7 @@ public class SelectionManager {
         return (playerLoc1.containsKey(player) && playerLoc2.containsKey(player));
     }
 
-    public void selectBySize(Player player, int x, int y, int z)
-    {
-        Location loc = player.getLocation();
-        Location loc1 = new Location(loc.getWorld(), loc.getBlockX() + x, loc.getBlockY() + y, loc.getBlockZ() + z);
-        Location loc2 = new Location(loc.getWorld(), loc.getBlockX() - x, loc.getBlockY() - y, loc.getBlockZ() - z);
-        playerLoc1.put(player.getName(), loc1);
-        playerLoc2.put(player.getName(), loc2);
-        player.sendMessage("§aSelection made!");
-    }
-
-    public void displaySelectionSize(Player player) {
+    public void showSelectionInfo(Player player) {
         String pname = player.getName();
         if (this.hasPlacedBoth(pname)) {
             CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
@@ -190,6 +180,16 @@ public class SelectionManager {
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
         player.sendMessage("§aSelected current chunk...");
+    }
+
+    public void selectBySize(Player player, int xsize, int ysize, int zsize) {
+        Location myloc = player.getLocation();
+        Location loc1 = new Location(myloc.getWorld(), myloc.getBlockX() + xsize, myloc.getBlockY() + ysize, myloc.getBlockZ() + zsize);
+        Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
+        placeLoc1(player.getName(), loc1);
+        placeLoc2(player.getName(), loc2);
+        player.sendMessage("Selection successful!");
+        showSelectionInfo(player);
     }
 
     public void modify(Player player, boolean shift, int amount)
@@ -326,6 +326,5 @@ public class SelectionManager {
             return Direction.PLUSZ;
         return null;
     }
-
 
 }
