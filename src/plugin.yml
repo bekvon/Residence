@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.Residence
-version: v2.2
+version: v2.2.1
 description: Cuboid Residence Plugin
 author: bekvon
 commands:
@@ -18,4 +18,4 @@ commands:
     usage: §c/resreload
   rc:
     description: §cChat in current residence channel.
-    useage: §c/rc to toggle, or /rc <message>
+    usage: §c/rc to toggle, or /rc <message>

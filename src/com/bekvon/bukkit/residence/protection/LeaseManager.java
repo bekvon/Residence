@@ -98,6 +98,7 @@ public class LeaseManager {
                 if(econ.canAfford(player.getName(), amount)/*account.hasEnough(amount)*/)
                 {
                     econ.subtract(player.getName(), amount);
+                    econ.add("Lease Money", amount);
                     player.sendMessage("§c" + amount+" has been subtracted from your " + econ.getName() + " account for residence renewal.");
                 }
                 else
@@ -163,6 +164,7 @@ public class LeaseManager {
                             PermissionGroup limits = Residence.getPermissionManager().getGroup(owner, res.getPermissions().getWorld());
                             if (res != null && Residence.getEconomyManager().canAfford(owner, cost)) {
                                 if (cost == 0 || Residence.getEconomyManager().subtract(owner, cost)) {
+                                    Residence.getEconomyManager().add("Lease Money", cost);
                                     next.setValue(next.getValue() + daysToMs(limits.getLeaseGiveTime()));
                                     renewed = true;
                                 }

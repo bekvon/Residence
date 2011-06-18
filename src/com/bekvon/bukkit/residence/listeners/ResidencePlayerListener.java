@@ -26,6 +26,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
 import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,13 +127,19 @@ public class ResidencePlayerListener extends PlayerListener {
                 ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
                 if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
                 {
-                    if(res!=null)
-                    {
-                        if(!res.getPermissions().playerHas(player.getName(),"container", res.getPermissions().playerHas(player.getName(), "use", true)))
-                        {
-                            event.setCancelled(true);
-                            player.sendMessage("§cYou dont have container access for this Residence.");
-                        }
+                    boolean hasuse;
+                    boolean hascontainer;
+                    if (res != null) {
+                        hasuse = res.getPermissions().playerHas(player.getName(), "use", true);
+                        hascontainer = res.getPermissions().playerHas(player.getName(), "container", hasuse);
+                    } else {
+                        FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
+                        hasuse = perms.playerHas(player.getName(), player.getWorld().getName(), "use", true);
+                        hascontainer = perms.playerHas(player.getName(), player.getWorld().getName(), "container", hasuse);
+                    }
+                    if ((!hasuse && !hascontainer) || !hascontainer) {
+                        event.setCancelled(true);
+                        player.sendMessage("§cYou dont have container access here.");
                     }
                 }
                 else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH)
