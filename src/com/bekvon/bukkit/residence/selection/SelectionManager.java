@@ -77,12 +77,12 @@ public class SelectionManager {
             player.sendMessage("§cPlace 2 points first!");
     }
 
-    public void vert(Player player)
+    public void vert(Player player, boolean resadmin)
     {
         if(hasPlacedBoth(player.getName()))
         {
-            this.sky(player);
-            this.bedrock(player);
+            this.sky(player, resadmin);
+            this.bedrock(player, resadmin);
         }
         else
         {
@@ -90,12 +90,11 @@ public class SelectionManager {
         }
     }
 
-    public void sky(Player player)
+    public void sky(Player player, boolean resadmin)
     {
         if(hasPlacedBoth(player.getName()))
         {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
             int y1 = playerLoc1.get(player.getName()).getBlockY();
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if(y1>y2)
@@ -126,12 +125,11 @@ public class SelectionManager {
         }
     }
 
-    public void bedrock(Player player)
+    public void bedrock(Player player, boolean resadmin)
     {
         if(hasPlacedBoth(player.getName()))
         {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
             int y1 = playerLoc1.get(player.getName()).getBlockY();
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if(y1<y2)

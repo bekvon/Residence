@@ -119,7 +119,36 @@ public class ResidenceManager {
         return null;
     }
 
-    public void addResidence(Player player, String name, Location loc1, Location loc2)
+    public void addResidence(String name, String owner, Location loc1, Location loc2)
+    {
+        name = name.replace(".", "_");
+        name = name.replace(":", "_");
+        if (loc1 == null || loc2 == null || !loc1.getWorld().getName().equals(loc2.getWorld().getName())) {
+            return;
+        }
+        PermissionGroup group = Residence.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
+        CuboidArea newArea = new CuboidArea(loc1, loc2);
+        ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName());
+        newRes.getPermissions().applyDefaultFlags();
+        newRes.setEnterMessage(group.getDefaultEnterMessage());
+        newRes.setLeaveMessage(group.getDefaultLeaveMessage());
+        ResidenceCreationEvent resevent = new ResidenceCreationEvent(null, name, newRes, newArea);
+        Residence.getServ().getPluginManager().callEvent(resevent);
+        if (resevent.isCancelled()) {
+            return;
+        }
+        newArea = resevent.getPhysicalArea();
+        name = resevent.getResidenceName();
+        if (residences.containsKey(name)) {
+            return;
+        }
+        newRes.addArea(newArea, "main");
+        if (newRes.getAreaCount() != 0) {
+            residences.put(name, newRes);
+        }
+    }
+
+    public void addResidence(Player player, String name, Location loc1, Location loc2, boolean resadmin)
     {
         name = name.replace(".", "_");
         name = name.replace(":", "_");
@@ -131,7 +160,6 @@ public class ResidenceManager {
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         boolean createpermission = group.canCreateResidences() || Residence.getPermissionManager().hasAuthority(player, "residence.create", false);
         if (!createpermission && !resadmin) {
             player.sendMessage("§cYou dont have permission to create residences.");
@@ -159,7 +187,7 @@ public class ResidenceManager {
             player.sendMessage("§cA residence named §e"+name+"§c already exists.");
             return;
         }
-        newRes.addArea(player, newArea, "main");
+        newRes.addArea(player, newArea, "main", resadmin);
         if(newRes.getAreaCount()!=0)
         {
             residences.put(name, newRes);
@@ -207,14 +235,14 @@ public class ResidenceManager {
 
     public void removeResidence(String name)
     {
-        this.removeResidence(null, name);
+        this.removeResidence(null, name, true);
     }
 
-    public void removeResidence(Player player, String name) {
+    public void removeResidence(Player player, String name, boolean resadmin) {
         ClaimedResidence res = this.getByName(name);
         if (res != null) {
-            if (player!=null && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-                if (!res.getPermissions().hasResidencePermission(player, true)) {
+            if (player!=null && !resadmin) {
+                if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
                     player.sendMessage("§cYou dont have permission to modify this residence.");
                     return;
                 }
@@ -321,21 +349,20 @@ public class ResidenceManager {
         }
     }
 
-    public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea) {
+    public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea, boolean resadmin) {
         ClaimedResidence reciever = this.getByName(targetArea);
         ClaimedResidence source = this.getByName(sourceArea);
         if (source == null || reciever == null) {
             reqPlayer.sendMessage("§cEither the target or source area was invalid.");
             return;
         }
-        if (!Residence.getPermissionManager().isResidenceAdmin(reqPlayer)) {
-
+        if (!resadmin) {
             if (!reciever.getPermissions().hasResidencePermission(reqPlayer, true) || !source.getPermissions().hasResidencePermission(reqPlayer, true)) {
                 reqPlayer.sendMessage("§cYou must be the owner of both residences to mirror permissions.");
                 return;
             }
         }
-        reciever.getPermissions().applyTemplate(reqPlayer, source.getPermissions());
+        reciever.getPermissions().applyTemplate(reqPlayer, source.getPermissions(), resadmin);
     }
 
     public Map<String,Object> save()
@@ -377,24 +404,31 @@ public class ResidenceManager {
         return resm;
     }
 
-    public void renameResidence(Player player, String oldName, String newName)
+    public boolean renameResidence(String oldName, String newName)
+    {
+        return this.renameResidence(null, oldName, newName, true);
+    }
+
+    public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin)
     {
         newName = newName.replace(".", "_");
         newName = newName.replace(":", "_");
         ClaimedResidence res = this.getByName(oldName);
         if(res==null)
         {
-            player.sendMessage("§cInvalid Residence...");
-            return;
+            if(player!=null)
+                player.sendMessage("§cInvalid Residence...");
+            return false;
         }
-        if(res.getPermissions().hasResidencePermission(player, true))
+        if(res.getPermissions().hasResidencePermission(player, true) || resadmin)
         {
             if(res.getParent()==null)
             {
                 if(residences.containsKey(newName))
                 {
-                    player.sendMessage("§cAnother residence already has that name...");
-                    return;
+                    if(player!=null)
+                        player.sendMessage("§cAnother residence already has that name...");
+                    return false;
                 }
                 residences.put(newName, res);
                 residences.remove(oldName);
@@ -404,22 +438,26 @@ public class ResidenceManager {
                 {
                     Residence.getRentManager().updateRentableName(oldName, newName);
                 }
-                player.sendMessage("§aRenamed §e" + oldName + "§a to §e" + newName + "§a...");
+                if(player!=null)
+                    player.sendMessage("§aRenamed §e" + oldName + "§a to §e" + newName + "§a...");
+                return true;
             }
             else
             {
                 String[] oldname = oldName.split("\\.");
                 ClaimedResidence parent = res.getParent();
-                parent.renameSubzone(player, oldname[oldname.length-1], newName);
+                return parent.renameSubzone(player, oldname[oldname.length-1], newName, resadmin);
             }
         }
         else
         {
-            player.sendMessage("§cYou dont have permission...");
+            if(player!=null)
+                player.sendMessage("§cYou dont have permission...");
+            return false;
         }
     }
 
-    public void giveResidence(Player reqPlayer, String targPlayer, String residence)
+    public void giveResidence(Player reqPlayer, String targPlayer, String residence, boolean resadmin)
     {
         ClaimedResidence res = getByName(residence);
         if(res==null)
@@ -427,12 +465,11 @@ public class ResidenceManager {
             reqPlayer.sendMessage("§cInvalid Residence...");
             return;
         }
-        if(!res.getPermissions().hasResidencePermission(reqPlayer, true))
+        if(!res.getPermissions().hasResidencePermission(reqPlayer, true) && !resadmin)
         {
             reqPlayer.sendMessage("§cYou dont have permission to give this residence.");
             return;
         }
-        boolean admin = Residence.getPermissionManager().isResidenceAdmin(reqPlayer);
         Player giveplayer = Residence.getServ().getPlayer(targPlayer);
         if (giveplayer == null || !giveplayer.isOnline()) {
             reqPlayer.sendMessage("§cTarget player must be online.");
@@ -440,15 +477,15 @@ public class ResidenceManager {
         }
         CuboidArea[] areas = res.getAreaArray();
         PermissionGroup g = Residence.getPermissionManager().getGroup(giveplayer);
-        if (areas.length > g.getMaxPhysicalPerResidence() && !admin) {
+        if (areas.length > g.getMaxPhysicalPerResidence() && !resadmin) {
             reqPlayer.sendMessage("§cCannot give residence to target player, because it has more areas then allowed for the target players group.");
             return;
         }
-        if (getOwnedZoneCount(giveplayer.getName()) >= g.getMaxZones() && !admin) {
+        if (getOwnedZoneCount(giveplayer.getName()) >= g.getMaxZones() && !resadmin) {
             reqPlayer.sendMessage("§cTarget player already owns the maximum number of residences allowed.");
             return;
         }
-        if(!admin)
+        if(!resadmin)
         {
             for (CuboidArea area : areas) {
                 if (!g.inLimits(area)) {

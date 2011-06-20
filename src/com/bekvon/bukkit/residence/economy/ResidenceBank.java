@@ -52,13 +52,12 @@ public class ResidenceBank {
             storedMoney = 0;
     }
 
-    public void withdraw(Player player, int amount)
+    public void withdraw(Player player, int amount, boolean resadmin)
     {
         if(!Residence.getConfig().enableEconomy())
         {
             player.sendMessage("§cEconomy is disabled...");
         }
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin && !res.getPermissions().playerHas(player.getName(), "bank", false))
         {
             player.sendMessage("§cYou don't have bank access.");
@@ -76,13 +75,12 @@ public class ResidenceBank {
         }
     }
 
-    public void deposit(Player player, int amount)
+    public void deposit(Player player, int amount, boolean resadmin)
     {
         if(!Residence.getConfig().enableEconomy())
         {
             player.sendMessage("§cEconomy is disabled...");
         }
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin && !res.getPermissions().playerHas(player.getName(), "bank", false))
         {
             player.sendMessage("§cYou don't have bank access.");
