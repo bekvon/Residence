@@ -12,7 +12,7 @@ commands:
     usage: §c/residence ? for more info
   resadmin:
     description: Residence admin functions.
-    usage: §c/resadmin ? for more info
+    usage: §c/res ? or /resadmin ? for more info
   resreload:
     description: Reload residence config.
     usage: §c/resreload

@@ -77,7 +77,7 @@ public class PermissionListManager {
         player.sendMessage("§cList removed...");
     }
     
-    public void applyListToResidence(Player player, String listname, String areaname)
+    public void applyListToResidence(Player player, String listname, String areaname, boolean resadmin)
     {
         FlagPermissions list = this.getList(player.getName(), listname);
         if(list == null)
@@ -91,7 +91,7 @@ public class PermissionListManager {
             player.sendMessage("§cInvalid Residence...");
             return;
         }
-        res.getPermissions().applyTemplate(player, list);
+        res.getPermissions().applyTemplate(player, list, resadmin);
     }
 
     public void printList(Player player, String listname)

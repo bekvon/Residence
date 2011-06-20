@@ -30,8 +30,7 @@ public class ResidenceItemList extends ItemList {
         
     }
 
-    public void playerListChange(Player player, Material mat) {
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+    public void playerListChange(Player player, Material mat, boolean resadmin) {
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
         if(resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess()))
         {

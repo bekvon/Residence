@@ -76,7 +76,7 @@ public class TransactionManager {
         sellAmount = Collections.synchronizedMap(new HashMap<String,Integer>());
     }
 
-    public void putForSale(String areaname, Player player, int amount)
+    public void putForSale(String areaname, Player player, int amount, boolean resadmin)
     {
         if(Residence.getConfig().enabledRentSystem())
         {
@@ -86,7 +86,7 @@ public class TransactionManager {
                 return;
             }
         }
-        if(!Residence.getPermissionManager().isResidenceAdmin(player))
+        if(!resadmin)
         {
             if(!Residence.getConfig().enableEconomy() || Residence.getEconomyManager()==null)
             {
@@ -94,7 +94,7 @@ public class TransactionManager {
                 return;
             }
             boolean cansell = Residence.getPermissionManager().getGroup(player).canSellLand() || Residence.getPermissionManager().hasAuthority(player, "residence.sell", false);
-            if(!cansell && !Residence.getPermissionManager().isResidenceAdmin(player))
+            if(!cansell && !resadmin)
             {
                 player.sendMessage("§cYou dont have permission to sell plots.");
                 return;
@@ -112,7 +112,7 @@ public class TransactionManager {
             player.sendMessage("§cInvalid residence.");
             return;
         }
-        if(!area.getPermissions().getOwner().equals(pname) && !Residence.getPermissionManager().isResidenceAdmin(player))
+        if(!area.getPermissions().getOwner().equals(pname) && !resadmin)
         {
             player.sendMessage("§cOnly the owner can sell a residence.");
             return;
@@ -126,10 +126,9 @@ public class TransactionManager {
         player.sendMessage("§aResidence §e" + areaname + "§a is now for sale for §e" + amount + "§a!");
     }
 
-    public void buyPlot(String areaname, Player player)
+    public void buyPlot(String areaname, Player player, boolean resadmin)
     {
         PermissionGroup group = gm.getGroup(player);
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin)
         {
             
@@ -220,7 +219,7 @@ public class TransactionManager {
         }
     }
 
-    public void removeFromSale(Player player, String areaname) {
+    public void removeFromSale(Player player, String areaname, boolean resadmin) {
         ClaimedResidence area = manager.getByName(areaname);
         if (area != null) {
             if(!isForSale(areaname))
@@ -228,7 +227,7 @@ public class TransactionManager {
                 player.sendMessage("§cResidence is not for sale.");
                 return;
             }
-            if (area.getPermissions().getOwner().equals(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)) {
+            if (area.getPermissions().getOwner().equals(player.getName()) || resadmin) {
                 removeFromSale(areaname);
                 player.sendMessage("§aNo longer selling.");
             }

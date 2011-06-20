@@ -9,7 +9,6 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +31,7 @@ public class RentManager {
         rentableLand = new HashMap<String,RentableLand>();
     }
 
-    public void setForRent(Player player, String landName, int amount, int days, boolean repeatable)
+    public void setForRent(Player player, String landName, int amount, int days, boolean repeatable, boolean resadmin)
     {
         if(!Residence.getConfig().enabledRentSystem())
         {
@@ -45,7 +44,6 @@ public class RentManager {
             return;
         }
         ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(res == null)
         {
             player.sendMessage("§e"+landName + "§c is not a valid residence.");
@@ -80,7 +78,7 @@ public class RentManager {
         }
     }
 
-    public void rent(Player player, String landName, boolean repeat)
+    public void rent(Player player, String landName, boolean repeat, boolean resadmin)
     {
         if(!Residence.getConfig().enabledRentSystem())
         {
@@ -102,7 +100,6 @@ public class RentManager {
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents())
         {
             player.sendMessage("§cYou reached the maximum rents your allowed.");
@@ -145,7 +142,7 @@ public class RentManager {
         }
     }
 
-    public void release(Player player, String landName)
+    public void release(Player player, String landName, boolean resadmin)
     {
         RentedLand rent = rentedLand.get(landName);
         if(rent == null)
@@ -153,7 +150,6 @@ public class RentManager {
             player.sendMessage("§cLand not rented.");
             return;
         }
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(resadmin || rent.player.equalsIgnoreCase(player.getName()))
         {
             rentedLand.remove(landName);
@@ -182,10 +178,9 @@ public class RentManager {
         return (int) Math.ceil(((((double)ms/1000D)/60D)/60D)/24D);
     }
 
-    public void removeFromRent(Player player, String landName)
+    public void removeFromRent(Player player, String landName, boolean resadmin)
     {
         ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(res == null)
         {
             player.sendMessage("§e"+landName + "§c is not a valid residence.");
@@ -284,11 +279,11 @@ public class RentManager {
         }
     }
 
-    public void setRentRepeatable(Player player, String landName, boolean value)
+    public void setRentRepeatable(Player player, String landName, boolean value, boolean resadmin)
     {
         RentableLand land = rentableLand.get(landName);
         ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
-        if(land!=null && res!=null && (res.getPermissions().getOwner().equalsIgnoreCase(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)))
+        if(land!=null && res!=null && (res.getPermissions().getOwner().equalsIgnoreCase(player.getName()) || resadmin))
         {
             land.repeatable = value;
             if(!value && this.isRented(landName))
@@ -300,10 +295,10 @@ public class RentManager {
         }
     }
 
-    public void setRentedRepeatable(Player player, String landName, boolean value)
+    public void setRentedRepeatable(Player player, String landName, boolean value, boolean resadmin)
     {
         RentedLand land = rentedLand.get(landName);
-        if(land!=null && (land.player.equals(player.getName()) || Residence.getPermissionManager().isResidenceAdmin(player)))
+        if(land!=null && (land.player.equals(player.getName()) || resadmin))
         {
             land.autoRefresh = value;
             if(value)
