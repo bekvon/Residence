@@ -46,6 +46,8 @@ Global:
     MultiWorldPlugin: MultiVerse
     # Setting this to true causes subzones to inherit flags from their parent zones.
     ResidenceFlagsInherit: true
+    # Setting this to false will allow rented residences to be modified by the renting player.
+    PreventRentModify: true
     # These are world flags that are applied when the player is NOT within a residence.
     Flags:
         Global: #these are default for all worlds unless specified below, they can be overridden per group

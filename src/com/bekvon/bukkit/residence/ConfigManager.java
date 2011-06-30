@@ -41,6 +41,7 @@ public class ConfigManager {
     protected FlagPermissions globalResidenceDefaults;
     protected Map<String,FlagPermissions> globalGroupDefaults;
     protected String language;
+    protected boolean preventBuildInRent;
 
     public ConfigManager(Configuration config)
     {
@@ -71,6 +72,7 @@ public class ConfigManager {
         language = config.getString("Global.Language","English");
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getNode("Global"));
         globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getNode("Global"));
+        preventBuildInRent = config.getBoolean("Global.PreventRentModify", true);
         ConfigurationNode node = config.getNode("Global.GroupDefault");
         if(node!=null)
         {
@@ -196,5 +198,10 @@ public class ConfigManager {
     public String getLanguage()
     {
         return language;
+    }
+
+    public boolean preventRentModify()
+    {
+        return preventBuildInRent;
     }
 }

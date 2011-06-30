@@ -43,7 +43,7 @@ public class ResidenceBlockListener extends BlockListener {
         if(Residence.getConfig().enabledRentSystem())
         {
             String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
-            if(Residence.getRentManager().isRented(resname))
+            if(Residence.getConfig().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
@@ -96,7 +96,7 @@ public class ResidenceBlockListener extends BlockListener {
         if(Residence.getConfig().enabledRentSystem())
         {
             String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
-            if(Residence.getRentManager().isRented(resname))
+            if(Residence.getConfig().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
