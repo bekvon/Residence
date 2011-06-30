@@ -49,7 +49,12 @@ public class WorldFlagManager {
         {
             list = get.get("global");
             if(list==null)
-                return globaldefaults;
+            {
+                if(globaldefaults == null)
+                    return new FlagPermissions();
+                else
+                    return globaldefaults;
+            }
         }
         return list;
     }

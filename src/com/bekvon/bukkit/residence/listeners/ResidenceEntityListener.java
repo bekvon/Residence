@@ -19,6 +19,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Pig;
@@ -95,6 +96,8 @@ public class ResidenceEntityListener extends EntityListener {
 
     public boolean checkExplosionCancel(Entity ent, Location loc)
     {
+        if(ent == null || loc == null)
+            return false;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(loc);
         if(!explosionProximityCheck(loc, ent instanceof LivingEntity))
             return true;
@@ -112,14 +115,17 @@ public class ResidenceEntityListener extends EntityListener {
         }
         else
         {
+            World world = ent.getWorld();
+            if(world == null)
+                return false;
             if(ent instanceof LivingEntity)
             {
-                if(!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("creeper", true))
+                if(!Residence.getWorldFlags().getPerms(world.getName()).has("creeper", true))
                     return true;
             }
             else
             {
-                if(!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("tnt", true))
+                if(!Residence.getWorldFlags().getPerms(world.getName()).has("tnt", true))
                     return true;
             }
         }
