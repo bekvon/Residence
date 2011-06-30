@@ -45,6 +45,8 @@ public class PermissionManager {
         this.readConfig(config);
         if(enable)
             this.checkPermissions();
+        else
+            authority = null;
         }
         catch(Exception ex)
         {
@@ -86,7 +88,10 @@ public class PermissionManager {
         if (authority == null) {
             return defaultGroup;
         } else {
-            String group = authority.getGroup(world, player).toLowerCase();
+            String []grouparray = authority.getGroups(world, player);
+            if(grouparray==null || grouparray.length==0)
+                return defaultGroup;
+            String group = grouparray[0];
             if (group == null || !groups.containsKey(group)) {
                 return defaultGroup;
             } else {

@@ -156,18 +156,18 @@ public class ResidenceManager {
             return;
         if(loc1==null || loc2==null || !loc1.getWorld().getName().equals(loc2.getWorld().getName()))
         {
-            player.sendMessage("§cInvalid selection points.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("SelectPoints"));
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
         boolean createpermission = group.canCreateResidences() || Residence.getPermissionManager().hasAuthority(player, "residence.create", false);
         if (!createpermission && !resadmin) {
-            player.sendMessage("§cYou dont have permission to create residences.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             return;
         }
         if (getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin)
         {
-            player.sendMessage("§cYou reached your max number of residences.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceTooMany"));
             return;
         }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
@@ -184,14 +184,14 @@ public class ResidenceManager {
         name = resevent.getResidenceName();
         
         if (residences.containsKey(name)) {
-            player.sendMessage("§cA residence named §e"+name+"§c already exists.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceAlreadyExists","§e"+name+"§c"));
             return;
         }
         newRes.addArea(player, newArea, "main", resadmin);
         if(newRes.getAreaCount()!=0)
         {
             residences.put(name, newRes);
-            player.sendMessage("§aYou have created residence: §e" + name + "§a!");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceCreate","§e" + name + "§a"));
             if(Residence.getConfig().useLeases())
                 Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
         }
@@ -200,7 +200,7 @@ public class ResidenceManager {
     public void listResidences(Player player)
     {
         StringBuilder sbuilder = new StringBuilder();
-        sbuilder.append("§eResidences:§3 ");
+        sbuilder.append("§e"+Residence.getLanguage().getPhrase("Residences")+":§3 ");
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized(residences)
         {
@@ -243,7 +243,7 @@ public class ResidenceManager {
         if (res != null) {
             if (player!=null && !resadmin) {
                 if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
-                    player.sendMessage("§cYou dont have permission to modify this residence.");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
                     return;
                 }
             }
@@ -259,10 +259,10 @@ public class ResidenceManager {
                 residences.remove(name);
             }
             if(player!=null)
-                player.sendMessage("§aResidence§e " + name + " §aremoved...");
+                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRemove","§e " + name + " §a"));
         } else {
             if(player!=null)
-                player.sendMessage("§cInvalid Residence.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
         }
     }
 
@@ -314,7 +314,7 @@ public class ResidenceManager {
                     sbuilder.append(", ");
             }
         }
-        player.sendMessage("§eResidences (Count="+residences.size()+"): " + sbuilder.toString());
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Residences")+" ("+Residence.getLanguage().getPhrase("Count")+"="+residences.size()+"): " + sbuilder.toString());
 
     }
 
@@ -322,30 +322,30 @@ public class ResidenceManager {
         ClaimedResidence res = this.getByName(areaname);
         if(res==null)
         {
-            player.sendMessage("§cInvalid Residence.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         ResidencePermissions perms = res.getPermissions();
         if(Residence.getConfig().enableEconomy())
-            player.sendMessage("§eResidence:§2 " + areaname + " §eBank: §6" + res.getBank().getStoredMoney());
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("Residence")+":§2 " + areaname + " §eBank: §6" + res.getBank().getStoredMoney());
         else
-            player.sendMessage("§eResidence:§2 " + areaname);
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("Residence")+":§2 " + areaname);
         if(Residence.getConfig().enabledRentSystem() && Residence.getRentManager().isRented(areaname))
-            player.sendMessage("§eOwner:§c " + perms.getOwner() + "§e Rented by: §c" + Residence.getRentManager().getRentingPlayer(areaname));
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("Owner")+":§c " + perms.getOwner() + "§e Rented by: §c" + Residence.getRentManager().getRentingPlayer(areaname));
         else
-            player.sendMessage("§eOwner:§c " + perms.getOwner());
-        player.sendMessage("§eFlags:§9 " + perms.listFlags());
-        player.sendMessage("§eYour Flags: §a" + perms.listPlayerFlags(player.getName()));
-        player.sendMessage("§eGroup Flags:§c " + perms.listGroupFlags());
-        player.sendMessage("§eOthers Flags:§c " + perms.listOtherPlayersFlags(player.getName()));
-        player.sendMessage("§ePhysical Areas: " + res.getFormattedAreaList());
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("Owner")+":§c " + perms.getOwner());
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Flags")+":§9 " + perms.listFlags());
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Your.Flags")+": §a" + perms.listPlayerFlags(player.getName()));
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Group.Flags")+":§c " + perms.listGroupFlags());
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Others.Flags")+":§c " + perms.listOtherPlayersFlags(player.getName()));
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("PhysicalAreas")+": " + res.getFormattedAreaList());
         String aid = res.getAreaIDbyLoc(player.getLocation());
         if(aid !=null)
-            player.sendMessage("§eCurrent Area ID: §6" + aid);
-        player.sendMessage("§eTotal Size:§d " + res.getTotalSize());
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("CurrentArea")+": §6" + aid);
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Total.Size")+":§d " + res.getTotalSize());
         player.sendMessage("§eSubZones:§6 " + res.CSVSubzoneList());
         if (Residence.getConfig().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
-            player.sendMessage("§eLeaseExpiration:§a " + Residence.getLeaseManager().getExpireTime(areaname));
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseExpire")+":§a " + Residence.getLeaseManager().getExpireTime(areaname));
         }
     }
 
@@ -353,12 +353,12 @@ public class ResidenceManager {
         ClaimedResidence reciever = this.getByName(targetArea);
         ClaimedResidence source = this.getByName(sourceArea);
         if (source == null || reciever == null) {
-            reqPlayer.sendMessage("§cEither the target or source area was invalid.");
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidArea"));
             return;
         }
         if (!resadmin) {
             if (!reciever.getPermissions().hasResidencePermission(reqPlayer, true) || !source.getPermissions().hasResidencePermission(reqPlayer, true)) {
-                reqPlayer.sendMessage("§cYou must be the owner of both residences to mirror permissions.");
+                reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
                 return;
             }
         }
@@ -417,7 +417,7 @@ public class ResidenceManager {
         if(res==null)
         {
             if(player!=null)
-                player.sendMessage("§cInvalid Residence...");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
             return false;
         }
         if(res.getPermissions().hasResidencePermission(player, true) || resadmin)
@@ -427,7 +427,7 @@ public class ResidenceManager {
                 if(residences.containsKey(newName))
                 {
                     if(player!=null)
-                        player.sendMessage("§cAnother residence already has that name...");
+                        player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceAlreadyExists","§e"+newName+"§c"));
                     return false;
                 }
                 residences.put(newName, res);
@@ -439,7 +439,7 @@ public class ResidenceManager {
                     Residence.getRentManager().updateRentableName(oldName, newName);
                 }
                 if(player!=null)
-                    player.sendMessage("§aRenamed §e" + oldName + "§a to §e" + newName + "§a...");
+                    player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRename","§e" + oldName + "§a.§e" + newName + "§a"));
                 return true;
             }
             else
@@ -452,7 +452,7 @@ public class ResidenceManager {
         else
         {
             if(player!=null)
-                player.sendMessage("§cYou dont have permission...");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             return false;
         }
     }
@@ -462,41 +462,41 @@ public class ResidenceManager {
         ClaimedResidence res = getByName(residence);
         if(res==null)
         {
-            reqPlayer.sendMessage("§cInvalid Residence...");
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         if(!res.getPermissions().hasResidencePermission(reqPlayer, true) && !resadmin)
         {
-            reqPlayer.sendMessage("§cYou dont have permission to give this residence.");
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             return;
         }
         Player giveplayer = Residence.getServ().getPlayer(targPlayer);
         if (giveplayer == null || !giveplayer.isOnline()) {
-            reqPlayer.sendMessage("§cTarget player must be online.");
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("NotOnline"));
             return;
         }
         CuboidArea[] areas = res.getAreaArray();
         PermissionGroup g = Residence.getPermissionManager().getGroup(giveplayer);
         if (areas.length > g.getMaxPhysicalPerResidence() && !resadmin) {
-            reqPlayer.sendMessage("§cCannot give residence to target player, because it has more areas then allowed for the target players group.");
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceGiveLimits"));
             return;
         }
         if (getOwnedZoneCount(giveplayer.getName()) >= g.getMaxZones() && !resadmin) {
-            reqPlayer.sendMessage("§cTarget player already owns the maximum number of residences allowed.");
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceGiveLimits"));
             return;
         }
         if(!resadmin)
         {
             for (CuboidArea area : areas) {
                 if (!g.inLimits(area)) {
-                    reqPlayer.sendMessage("§cCannot give residence to target player, because a area is outside the target players limits.");
+                    reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceGiveLimits"));
                     return;
                 }
             }
         }
         res.getPermissions().setOwner(giveplayer.getName(), true);
-        reqPlayer.sendMessage("§aYou give residence §e" + residence + "§a to player §e" + giveplayer.getName() + "§a.");
-        giveplayer.sendMessage("§a" + reqPlayer.getName() + "§e has given Residence §a" + residence + "§e to you.");
+        reqPlayer.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceGive","§e" + residence + "§a.§e" + giveplayer.getName() + "§a"));
+        giveplayer.sendMessage(Residence.getLanguage().getPhrase("ResidenceRecieve","§a" + reqPlayer.getName() + "§e.§a" + residence + "§e"));
     }
 
     public int getResidenceCount()

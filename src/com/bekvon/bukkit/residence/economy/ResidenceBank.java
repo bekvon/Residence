@@ -56,22 +56,22 @@ public class ResidenceBank {
     {
         if(!Residence.getConfig().enableEconomy())
         {
-            player.sendMessage("§cEconomy is disabled...");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
         }
         if(!resadmin && !res.getPermissions().playerHas(player.getName(), "bank", false))
         {
-            player.sendMessage("§cYou don't have bank access.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoBankAccess"));
             return;
         }
         if(!hasEnough(amount))
         {
-            player.sendMessage("§cNot enough money in bank.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("BankNoMoney"));
             return;
         }
         if(Residence.getEconomyManager().add(player.getName(), amount))
         {
             this.subtract(amount);
-            player.sendMessage("§aYou withdraw §e" + amount + "§a from the residence bank.");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("BankWithdraw","§e" + amount + "§a"));
         }
     }
 
@@ -79,22 +79,22 @@ public class ResidenceBank {
     {
         if(!Residence.getConfig().enableEconomy())
         {
-            player.sendMessage("§cEconomy is disabled...");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
         }
         if(!resadmin && !res.getPermissions().playerHas(player.getName(), "bank", false))
         {
-            player.sendMessage("§cYou don't have bank access.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoBankAccess"));
             return;
         }
         if(!Residence.getEconomyManager().canAfford(player.getName(), amount))
         {
-            player.sendMessage("§cYou don't have enough money.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NotEnoughMoney"));
             return;
         }
         if(Residence.getEconomyManager().subtract(player.getName(), amount))
         {
             this.add(amount);
-            player.sendMessage("§aYou deposit §e" + amount + "§a into the residence bank.");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("BankDeposit","§e" + amount + "§a"));
         }
     }
 }

@@ -1,5 +1,8 @@
 #These are Global Settings for Residence.
 Global:
+    # This loads the <language>.yml file in the Residence Language folder
+    # All Residence text comes from this file. (NOT DONE YET)
+    Language: English
     # Wooden Axe is the default selection tool for Residence.
     # You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values
     SelectionToolId: 271
@@ -161,7 +164,7 @@ Groups:
           CanSell: false
           # Whether or not to ignore the Residence size/count limits when buying a residence.
           IgnoreLimits: false
-          # The cost, per block, of buying a Residence or adding a area to it.
+          # The cost, per block, of making a new Residence or adding a area to it.
           BuyCost: 0.05
           # The cost, per block, of renewing a Residence lease (if the lease system is enabled).
           RenewCost: 0.02

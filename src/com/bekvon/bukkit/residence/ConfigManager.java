@@ -40,6 +40,7 @@ public class ConfigManager {
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalResidenceDefaults;
     protected Map<String,FlagPermissions> globalGroupDefaults;
+    protected String language;
 
     public ConfigManager(Configuration config)
     {
@@ -67,6 +68,7 @@ public class ConfigManager {
         flagsInherit = config.getBoolean("Global.ResidenceFlagsInherit", false);
         minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
         chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
+        language = config.getString("Global.Language","English");
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getNode("Global"));
         globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getNode("Global"));
         ConfigurationNode node = config.getNode("Global.GroupDefault");
@@ -189,5 +191,10 @@ public class ConfigManager {
     public Map<String,FlagPermissions> getGlobalGroupDefaultFlags()
     {
         return globalGroupDefaults;
+    }
+
+    public String getLanguage()
+    {
+        return language;
     }
 }
