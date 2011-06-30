@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 1
+Version: 2
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -110,7 +110,7 @@ Language:
     ResidenceAlreadyRented: 'Residence %1 has currently been rented to %2'
     ResidenceAlreadyExists: 'A residence named %1 already exists.'
     ResidenceCreate: 'You have created residence %1!'
-    ResidenceRename: Renamed Residence %1 to %2
+    ResidenceRename: 'Renamed Residence %1 to %2'
     ResidenceRemove: 'Residence %1 has been removed...'
     RentDisabled: Rent is disabled...
     RentDisableRenew: 'Residence %1 will now no longer re-rent upon expire.'
@@ -130,8 +130,8 @@ Language:
     RentedModifyDeny: Cannot modify a rented residence.
     WorldPVPDisabled: World PVP is disabled.
     NoPVPZone: Player is in a no PVP zone.
-    FlagDeny: You dont have %1 permission here.
-    FlagSetDeny: Owner does not have access to flag %1
+    FlagDeny: 'You dont have %1 permission here.'
+    FlagSetDeny: 'Owner does not have access to flag %1'
     SelectPoint: 'Placed %1 Selection Point'
     ResidenceChat: 'Residence chat toggled %1'
     ResidenceMoveDeny: 'You dont have movment permission for Residence %1'
@@ -201,6 +201,7 @@ Language:
 # Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
 # Add a page number after the ? mark to see that page.
 
+HelpLinesPerPage: 7
 CommandHelp: #this is just a holder node, that holds the entire help
     Description: Contains Help for Residence
     SubCommands: #this is the actual beginning of all commands
@@ -219,11 +220,95 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Description: Display selected coordinates
                             Info:
                                 - 'Usage: /res select coords'
+                        vert:
+                            Description: Expand Selection Vertically
+                            Info:
+                                - 'Usage: /res select vert'
+                                - 'Will expand selection as high and as low as allowed.'
+                        sky:
+                            Description: Expand Selection to Sky
+                            Info:
+                                - 'Usage: /res select sky'
+                                - 'Expands as high as your allowed to go.'
+                        bedrock:
+                            Description: Expand Selection to Bedrock
+                            Info:
+                                - 'Usage: /res select bedrock'
+                                - 'Expands as low as your allowed to go.'
+                        expand:
+                            Description: Expand selection in a direction.
+                            Info:
+                                - 'Usage: /res select expand <amount>'
+                                - 'Expands <amount> in the direction your looking.'
+                        shift:
+                            Description: Shift selection in a direction
+                            Info:
+                                - 'Usage: /res select shift <amount>'
+                                - 'Pushes your selection by <amount> in the direction your looking.'
                 create: #creation command
                     Description: Create Residences
                     Info:
                         - 'Usage: /res create <residence name>'
-                remove:
+                remove: #remove command
                     Description: Remove residences.
                     Info:
                         - 'Usage: /res remove <residence name>'
+                subzone:
+                    Description: Create subzones in residences.
+                    Info:
+                        - 'Usage: /res subzone <residence name> [subzone name]'
+                area:
+                    Description: Manage physical areas for a residence.
+                    Info:
+                        - 'Usage: /res area [add/remove/replace] [residence] [areaID]'
+                        - 'You must first select two points before using add or replace.'
+                        - 'Replacing a area will charge the difference in size if the new area is bigger.'
+                info:
+                    Description: Show info on a residence.
+                    Info:
+                        - 'Usage: /res info <residence>'
+                        - 'Leave off <residence> to display info for the residence your currently in.'
+                set:
+                    Description: Set general flags on a Residence
+                    Info:
+                        - 'Usage: /res set <residence> <flag> <true/false/remove>'
+                        - 'To see a list of flags, use /res flags ?'
+                        - 'These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)'
+                pset:
+                    Description: Set flags on a specific player for a Residence.
+                    Info:
+                        - 'Usage: /res pset <residence> <player> <flag> <true/false/remove>'
+                        - 'To see a list of flags, use /res flags ?'
+                gset:
+                    Description: Set flags on a specific group for a Residence.
+                    Info:
+                        - 'Usage: /res gset <residence> <group> <flag> <true/false/remove>'
+                        - 'To see a list of flags, use /res flags ?'
+                flags:
+                    Description: List of flags
+                    Info:
+                        - 'For flag values, usually true allows the action, and false denys the action.'
+                        - 'build - allows or denys building'
+                        - 'use - allows or denys use of doors, lever, buttons, etc...'
+                        - 'move - allows or denys movement in the residence.'
+                        - 'container - allows or denys use of furnaces, chests, dispensers, etc...'
+                        - 'place - allows or denys only placement of blocks, overrides the build flag.'
+                        - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
+                        - 'pvp - allow or deny pvp in the residence'
+                        - 'tp - allow or disallow teleporting to the residence.'
+                        - 'admin - gives a player permission to change flags on a residence.'
+                        - 'subzone - allow a player to make subzones in the residence.'
+                        - 'monsters - allows or denys monster spawns'
+                        - 'animals - allows or denys animal spawns.'
+                        - 'healing - setting to true makes the residence heal its occupants'
+                        - 'tnt - allow or deny tnt explosions'
+                        - 'creeper - allow or deny creeper explosions'
+                        - 'ignite - allows or denys fire ignition.'
+                        - 'firespread - allows or denys fire spread.'
+                        - 'bucket - allow or deny bucket use.'
+                        - 'flow - allows or denys liquid flow.'
+                        - 'lavaflow - allows or denys lava flow, overrides flow'
+                        - 'waterflow - allows or denys water flow, overrides flow'
+                        - 'damage - allows or denys all entity damage within the residence.'
+                        
+                        

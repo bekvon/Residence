@@ -21,7 +21,7 @@ public class HelpEntry {
     protected String desc;
     protected String[] lines;
     protected List<HelpEntry> subentrys;
-    protected static int linesPerPage = 6;
+    protected static int linesPerPage = 7;
 
     public HelpEntry(String entryname)
     {
@@ -52,6 +52,16 @@ public class HelpEntry {
         return desc;
     }
 
+    public int getLinesPerPage()
+    {
+        return linesPerPage;
+    }
+
+    public void setLinesPerPage(int lines)
+    {
+        linesPerPage = lines;
+    }
+
     public void printHelp(CommandSender sender, int page) {
         List<String> helplines = this.getHelpData();
         int pagecount = (int) Math.ceil((double)helplines.size() / (double)linesPerPage);
@@ -59,15 +69,26 @@ public class HelpEntry {
             sender.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidHelp"));
             return;
         }
-        sender.sendMessage("§a"+Residence.getLanguage().getPhrase("HelpPageHeader","§e" + name + "§a.§e" + page + "§a.§e" + pagecount + "§a"));
-        sender.sendMessage("§6"+Residence.getLanguage().getPhrase("Description")+" §c" + desc);
+        sender.sendMessage("§c"+Residence.getLanguage().getPhrase("HelpPageHeader","§e" + name + "§c.§e" + page + "§c.§e" + pagecount + "§c"));
+        sender.sendMessage("§3"+Residence.getLanguage().getPhrase("Description")+": §a" + desc);
         int start = linesPerPage * (page - 1);
         int end = start + linesPerPage;
+        boolean alternatecolor = false;
         for (int i = start; i < end; i++) {
             if (helplines.size() > i) {
-                sender.sendMessage("§9"+helplines.get(i));
+                if(alternatecolor)
+                {
+                    sender.sendMessage("§e"+helplines.get(i));
+                    alternatecolor = false;
+                }
+                else
+                {
+                    sender.sendMessage("§6"+helplines.get(i));
+                    alternatecolor = true;
+                }
             }
         }
+        sender.sendMessage("§7-----------------------");
     }
 
     public void printHelp(CommandSender sender, int page, String path)

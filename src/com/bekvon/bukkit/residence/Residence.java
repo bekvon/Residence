@@ -176,6 +176,7 @@ public class Residence extends JavaPlugin {
                     Configuration langconfig = new Configuration(langFile);
                     langconfig.load();
                     helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
+                    helppages.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
                     language = Language.parseText(langconfig, "Language");
                 }
                 else
