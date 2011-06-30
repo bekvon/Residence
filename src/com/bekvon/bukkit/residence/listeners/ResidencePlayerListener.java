@@ -89,7 +89,7 @@ public class ResidencePlayerListener extends PlayerListener {
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world))
         {
-            player.sendMessage("§cYou are currently blacklisted from using your equiped item.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ItemBlacklisted"));
             event.setCancelled(true);
             return;
         }
@@ -103,11 +103,11 @@ public class ResidencePlayerListener extends PlayerListener {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
                         Residence.getSelectionManager().placeLoc1(event.getPlayer().getName(), loc);
-                        player.sendMessage("§aPlaced Primary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                        player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Primary"))+"§c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
                     } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
                         Residence.getSelectionManager().placeLoc2(player.getName(), loc);
-                        player.sendMessage("§aPlaced Secondary Selection Point §c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                        player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Secondary"))+"§c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
                     }
                 }
             }
@@ -139,7 +139,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     }
                     if ((!hasuse && !hascontainer) || !hascontainer) {
                         event.setCancelled(true);
-                        player.sendMessage("§cYou dont have container access here.");
+                        player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","container"));
                     }
                 }
                 else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH)
@@ -149,7 +149,7 @@ public class ResidencePlayerListener extends PlayerListener {
                         if(!res.getPermissions().playerHas(player.getName(),"use", true))
                         {
                             event.setCancelled(true);
-                            player.sendMessage("§cYou dont have use access for this Residence.");
+                            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","use"));
                         }
                     }
                     else
@@ -157,7 +157,7 @@ public class ResidencePlayerListener extends PlayerListener {
                         if(!Residence.getWorldFlags().getPerms(player).has("use", true))
                         {
                             event.setCancelled(true);
-                            player.sendMessage("§cWorld use is disabled.");
+                            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","use"));
                         }
                     }
                 }
@@ -179,7 +179,7 @@ public class ResidencePlayerListener extends PlayerListener {
         {
             if (Residence.getConfig().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
-                    player.sendMessage("§cCannot modify a rented residence!");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
                     return;
                 }
@@ -195,7 +195,7 @@ public class ResidencePlayerListener extends PlayerListener {
             hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
         }
         if ((!hasbuild && !hasbucket) || !hasbucket) {
-            player.sendMessage("§cYou don't have permission to use buckets here here.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
             event.setCancelled(true);
         }
     }
@@ -214,7 +214,7 @@ public class ResidencePlayerListener extends PlayerListener {
         {
             if (Residence.getConfig().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
-                    player.sendMessage("§cCannot modify a rented residence!");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
                     return;
                 }
@@ -230,7 +230,7 @@ public class ResidencePlayerListener extends PlayerListener {
             hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
         }
         if ((!hasbuild && !hasbucket) || !hasbucket) {
-            player.sendMessage("§cYou don't have permission to use buckets here.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
             event.setCancelled(true);
         }
     }
@@ -316,7 +316,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     } else {
                         player.teleport(res.getOutsideFreeLoc(event.getTo()));
                     }
-                    player.sendMessage("§cYou dont have permission to move in residence: " + areaname);
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceMoveDeny",areaname));
                 }
                 int health = player.getHealth();
                 if(health<20)
@@ -389,12 +389,12 @@ public class ResidencePlayerListener extends PlayerListener {
         if(playerToggleChat.contains(pname))
         {
             playerToggleChat.remove(pname);
-            player.sendMessage("§eResidence chat toggled §cOFF§e!");
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("ResidenceChat","§cOFF§e!"));
         }
         else
         {
             playerToggleChat.add(pname);
-            player.sendMessage("§eResidence chat toggled §aON§e!");
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("ResidenceChat","§cON§e!"));
         }
     }
 

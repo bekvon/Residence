@@ -35,13 +35,13 @@ public class ResidenceItemList extends ItemList {
         if(resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess()))
         {
             if(super.toggle(mat))
-                player.sendMessage("§6" + mat + " §aadded§e to the residence §9"+type.toString().toLowerCase() + ".");
+                player.sendMessage("§e" + Residence.getLanguage().getPhrase("ListMaterialAdd","§a" + mat + "§e.§a" + type.toString().toLowerCase() + "§e"));
             else
-                player.sendMessage("§6" + mat + " §cremoved§e from the residence §9"+type.toString().toLowerCase() + ".");
+                player.sendMessage("§e" + Residence.getLanguage().getPhrase("ListMaterialRemove","§a" + mat + "§e.§a" + type.toString().toLowerCase() + "§e"));
         }
         else
         {
-            player.sendMessage("§cYou don't have permission.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
         }
     }
 

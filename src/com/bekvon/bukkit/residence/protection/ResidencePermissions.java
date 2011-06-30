@@ -86,7 +86,7 @@ public class ResidencePermissions extends FlagPermissions {
         {
             if(!player.getName().equals(owner) && !resadmin)
             {
-                player.sendMessage("§cOnly the residence owner can apply permission lists.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
                 return;
             }
         }
@@ -103,7 +103,7 @@ public class ResidencePermissions extends FlagPermissions {
             }
             else
             {
-                player.sendMessage("§cError, no permission to apply flag (" + flag.getKey() + ") to this residence.");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagSetDeny", "§e"+flag.getKey() + "§c"));
             }
         }
         for(Entry<String, Map<String, Boolean>> plists : list.playerFlags.entrySet())
@@ -118,7 +118,7 @@ public class ResidencePermissions extends FlagPermissions {
                 }
                 else
                 {
-                    player.sendMessage("§cError, no permission to apply flag (" + flag.getKey() + ") to this residence.");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagSetDeny", "§e"+flag.getKey() + "§c"));
                 }
             }
         }
@@ -134,12 +134,12 @@ public class ResidencePermissions extends FlagPermissions {
                 }
                 else
                 {
-                    player.sendMessage("§cError, no permission to apply flag (" + flag.getKey() + ") to this residence.");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagSetDeny", "§e"+flag.getKey() + "§c"));
                 }
             }
         }
         if(player!=null)
-            player.sendMessage("§cPermissions list applied to residence...");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("PermissionsApply"));
     }
 
     public boolean hasResidencePermission(Player player, boolean requireOwner)
@@ -167,24 +167,24 @@ public class ResidencePermissions extends FlagPermissions {
     {
         if(!checkValidFlag(flag,globalflag))
         {
-            player.sendMessage("§cInvalid flag.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidFlag"));
             return false;
         }
         if(state == FlagState.INVALID)
         {
-            player.sendMessage("§cInvalid flag state, must be true(t), false(f), or remove(r).");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidFlagState"));
             return false;
         }
         if(!resadmin)
         {
             if(!this.hasResidencePermission(player,false))
             {
-                player.sendMessage("§cYou dont have permission to do this.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
                 return false;
             }
             if(!hasFlagAccess(owner, flag))
             {
-                player.sendMessage("§cThe residence owner does not have access to this flag.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("OwnerNoPermission"));
                 return false;
             }
         }
@@ -206,7 +206,7 @@ public class ResidencePermissions extends FlagPermissions {
                 return false;
             if(super.setPlayerFlag(targetPlayer, flag, state))
             {
-                player.sendMessage("§aFlag Set.");
+                player.sendMessage("§a"+Residence.getLanguage().getPhrase("FlagSet"));
                 return true;
             }
         }
@@ -224,11 +224,11 @@ public class ResidencePermissions extends FlagPermissions {
                     return false;
                 if(super.setGroupFlag(group, flag, state))
                 {
-                    player.sendMessage("§aFlag Set.");
+                    player.sendMessage("§a"+Residence.getLanguage().getPhrase("FlagSet"));
                     return true;
                 }
             } else {
-                player.sendMessage("§cGroup does not exist.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidGroup"));
                 return false;
             }
         }
@@ -244,7 +244,7 @@ public class ResidencePermissions extends FlagPermissions {
                 return false;
             if(super.setFlag(flag, state))
             {
-                player.sendMessage("§aFlag Set.");
+                player.sendMessage("§a"+Residence.getLanguage().getPhrase("FlagSet"));
                 return true;
             }
         }
@@ -283,10 +283,10 @@ public class ResidencePermissions extends FlagPermissions {
         if(this.hasResidencePermission(player, true) || resadmin)
         {
             this.applyDefaultFlags();
-            player.sendMessage("§eReset flags to default...");
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("FlagsDefault")); 
         }
         else
-            player.sendMessage("§cYou dont have permisssion.");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("NoPermission"));
     }
 
     public void applyDefaultFlags()

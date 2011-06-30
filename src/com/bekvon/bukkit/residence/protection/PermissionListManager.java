@@ -6,8 +6,6 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,11 +49,11 @@ public class PermissionListManager {
         {
             perms = new FlagPermissions();
             get.put(listname, perms);
-            player.sendMessage("§aCreated list " + listname + ".");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("ListCreate", listname));
         }
         else
         {
-            player.sendMessage("§cList already exists.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ListExists"));
         }
     }
 
@@ -64,17 +62,17 @@ public class PermissionListManager {
         Map<String, FlagPermissions> get = lists.get(player.getName());
         if(get==null)
         {
-            player.sendMessage("§cInvalid list.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidList"));
             return;
         }
         FlagPermissions list = get.get(listname);
         if(list==null)
         {
-            player.sendMessage("§cInvalid list.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidList"));
             return;
         }
         get.remove(listname);
-        player.sendMessage("§cList removed...");
+        player.sendMessage("§c"+Residence.getLanguage().getPhrase("ListRemoved"));
     }
     
     public void applyListToResidence(Player player, String listname, String areaname, boolean resadmin)
@@ -82,13 +80,13 @@ public class PermissionListManager {
         FlagPermissions list = this.getList(player.getName(), listname);
         if(list == null)
         {
-             player.sendMessage("§cInvalid list...");
+             player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidList"));
              return;
         }
         ClaimedResidence res = Residence.getResidenceManger().getByName(areaname);
         if(res == null)
         {
-            player.sendMessage("§cInvalid Residence...");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         res.getPermissions().applyTemplate(player, list, resadmin);
@@ -99,11 +97,11 @@ public class PermissionListManager {
         FlagPermissions list = this.getList(player.getName(), listname);
         if(list==null)
         {
-            player.sendMessage("Invalid list...");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidList"));
             return;
         }
         player.sendMessage("§d------Permission Template------");
-        player.sendMessage("§eName: §a" + listname);
+        player.sendMessage("§"+Residence.getLanguage().getPhrase("Name")+": §a" + listname);
         list.printFlags(player);
     }
 
@@ -147,15 +145,13 @@ public class PermissionListManager {
     {
         StringBuilder sbuild = new StringBuilder();
         Map<String, FlagPermissions> get = lists.get(player.getName());
-        if(get==null)
+        sbuild.append("§e"+Residence.getLanguage().getPhrase("Lists")+":§3 ");
+        if(get!=null)
         {
-            player.sendMessage("§cYou don't have any predefined lists yet.");
-            return;
-        }
-        sbuild.append("§ePermission Lists:§3 ");
-        for( Entry<String, FlagPermissions> thislist : get.entrySet())
-        {
+            for( Entry<String, FlagPermissions> thislist : get.entrySet())
+            {
             sbuild.append(thislist.getKey()).append(" ");
+            }
         }
         player.sendMessage(sbuild.toString());
     }

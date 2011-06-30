@@ -66,12 +66,12 @@ public class LeaseManager {
         {
            leaseExpireTime.put(area, daysToMs(days) + System.currentTimeMillis());
            if(player!=null)
-                player.sendMessage("§aLease set to expire at: " + getExpireTime(area));
+                player.sendMessage("§a"+Residence.getLanguage().getPhrase("LeaseRenew", getExpireTime(area).toString()));
         }
         else
         {
             if(player!=null)
-                player.sendMessage("§cInvalid area.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidArea"));
         }
     }
 
@@ -79,7 +79,7 @@ public class LeaseManager {
     {
         if(!leaseExpires(area))
         {
-            player.sendMessage("§cInvalid residence, or residence does not expire.");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("LeaseNotExpire"));
             return;
         }
         PermissionGroup limits = Residence.getPermissionManager().getGroup(player);
@@ -99,25 +99,26 @@ public class LeaseManager {
                 {
                     econ.subtract(player.getName(), amount);
                     econ.add("Lease Money", amount);
-                    player.sendMessage("§c" + amount+" has been subtracted from your " + econ.getName() + " account for residence renewal.");
+                    player.sendMessage("§a"+Residence.getLanguage().getPhrase("MoneyCharged","§e" + amount+"§a.§e" + econ.getName() + "§a"));
                 }
                 else
                 {
-                    player.sendMessage("§cNot enough money in your " + econ.getName() + " account.");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("NotEnoughMoney"));
                     return;
                 }
             }
         }
         if(rem+add>max)
         {
-            player.sendMessage("§aArea renewed to maximum allowed value.");
             setExpireTime(player,area,max);
+            player.sendMessage("§6"+Residence.getLanguage().getPhrase("LeaseRenewMax"));
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseRenew","§a" + getExpireTime(area))+"§e");
             return;
         }
         Long get = leaseExpireTime.get(area);
         get = get + daysToMs(add);
         leaseExpireTime.put(area, get);
-        player.sendMessage("§aArea lease renewed until: " + getExpireTime(area));
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseRenew","§a" + getExpireTime(area)));
     }
 
     public int getRenewCost(ClaimedResidence res)

@@ -143,13 +143,13 @@ public class ResidenceEntityListener extends EntityListener {
                 if (area == null) {
                     /* World PvP */
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-                        ((Player) damager).sendMessage("§cWorld PVP is disabled.");
+                        ((Player) damager).sendMessage("§c"+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
                         event.setCancelled(true);
                     }
                 } else {
                     /* Normal PvP */
                     if (!area.getPermissions().has("pvp", true)) {
-                        ((Player) damager).sendMessage("§cPlayer is in a No-PVP zone.");
+                        ((Player) damager).sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
                         event.setCancelled(true);
                     }
                 }

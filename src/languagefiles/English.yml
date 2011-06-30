@@ -1,0 +1,229 @@
+# NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten.  Once you 
+# have a copy of this file, change the Language: option under the Residence config.yml
+# to whatever you named your copy.
+Version: 1
+Language:
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
+    #Version 1 Fields
+    InvalidResidence: Invalid Residence...
+    InvalidSubzone: Invalid Subzone...
+    InvalidDirection: Invalid Direction...
+    InvalidChannel: Invalid Channel...
+    InvalidAmount: Invalid Amount...
+    InvalidCost: Invalid Cost...
+    InvalidDays: Invalid number of days...
+    InvalidMaterial: Invalid Material...
+    InvalidBoolean: Invalid value, must be true(t) or false(f)
+    InvalidArea: Invalid Area...
+    InvalidGroup: Invalid Group...
+    InvalidMessageType: Message type must be enter or remove.
+    InvalidList: Invalid List...
+    InvalidFlag: Invalid Flag...
+    InvalidFlagState: Invalid flag state, must be true(t), false(f), or remove(r)
+    AreaExists: Area name already exists.
+    AreaCreate: 'Residence Area created, ID %1'
+    AreaDiffWorld: Area is in a different world from residence.
+    AreaCollision: 'Area collides with residence %1'
+    AreaSubzoneCollision: 'Area collides with subzone %1'
+    AreaNonExist: No such area exists.
+    AreaInvalidName: Invalid Area Name...
+    AreaRename: 'Renamed area %1 to %2'
+    AreaRemove: 'Removed area %1...'
+    AreaRemoveLast: Cannot remove the last area in a residence.
+    AreaNotWithinParent: Area is not within parent area.
+    AreaUpdate: Area Updated...
+    AreaMaxPhysical: You've reached the max physical areas allowed for your residence.
+    AreaSizeLimit: Area size is not within your allowed limits.
+    AreaHighLimit: 'You cannot protect this high up, your limit is %1'
+    AreaLowLimit: 'You cannot protect this deep, your limit is %1'
+    NotInResidence: You are not in a Residence.
+    InResidence: 'You are standing in Residence %1'
+    ResidenceOwnerChange: 'Residence %1 owner changed to %2'
+    NonAdmin: You are not a Residence admin.
+    AdminOnly: Only admins have access to this command.
+    ChatDisabled: Residence Chat Disabled...
+    SubzoneRename: 'Renamed subzone %1 to %2'
+    SubzoneRemove: 'Subzone %1 removed.'
+    SubzoneCreate: 'Created Subzone %1'
+    SubzoneCreateFail: 'Unable to create subzone %1'
+    SubzoneExists: 'Subzone %1 already exists.'
+    SubzoneCollide: 'Subzone collides with subzone %1'
+    SubzoneMaxDepth: You have reached the maximum allowed subzone depth.
+    SubzoneSelectInside: Both selection points must be inside the residence.
+    SelectPoints: Select two points first before using this command!
+    SelectionSuccess: Selection Successful!
+    SelectionFail: Invalid select command...
+    SelectionBedrock: Selection expanded to your lowest allowed limit.
+    SelectionSky: Selection expanded to your highest allowed limit.
+    SelectionArea: 'Selected area %1 of residence %2'
+    SelectDiabled: You don't have access to selections commands.
+    NoPermission: You dont have permission for this.
+    OwnerNoPermission: The owner does not have permission for this.
+    ParentNoPermission: You don't have permission to make changes to the parent zone.
+    MessageChange: Message Set...
+    FlagSet: Flag Set...
+    FlagCheckTrue: 'Flag %1 applys to player %2 for residence %3, value = %4'
+    FlagCheckFalse: 'Flag %1 does not apply to player %2 for residence.'
+    FlagsCleared: Flags Cleared.
+    FlagsDefault: Flags set to default.
+    Usage: Command Usage
+    InvalidHelp: Invalid Help Page...
+    SubCommands: Sub Commands
+    InvalidList: Unknown list type, must be blacklist or ignorelist.
+    MaterialGet: 'The material name for ID %1 is %2'
+    MarketDisabled: Economy Disabled!
+    MarketList: Market List
+    SelectionTool: Selection Tool
+    InfoTool: Info Tool
+    NoBankAccess: You dont have bank access.
+    NotEnoughMoney: You dont have enough money.
+    BankNoMoney: Not enough money in the bank.
+    BankDeposit: 'You deposit %1 into the residence bank.'
+    BankWithdraw: 'You withdraw %1 from the residence bank.'
+    MoneyCharged: 'Charged %1 to your %2 account.'
+    MoneyCredit: 'Credited %1 to your %2 account.'
+    RentDisabled: Rent system is disabled.
+    RentReleaseInvalid: 'Residence %1 is not rented or for rent.'
+    RentSellFail: Cannot sell a Residence if it is for rent.
+    SellRentFail: Cannot rent a Residence if it is for sale.
+    OwnerBuyFail: Cannot buy your own land!
+    OwnerRentFail: Cannot rent your own land!
+    AlreadySellFail: Residence already for sale!
+    ResidenceBought: 'You bought residence %1'
+    ResidenceBuy: 'Residence %1 has bought residence %2 from you.'
+    ResidenceBuyTooBig: This residence has areas bigger then your allowed max.
+    ResidenceNotForSale: Residence is not for sale.
+    ResidenceForSale: 'Residence %1 is now for sale for %2'
+    ResidenceStopSelling: Residence is no longer for sale.
+    ResidenceTooMany: You already own the max number of residences your allowed to.
+    ResidenceMaxRent: You already are renting the maximum number of residences your allowed to.
+    ResidenceAlreadyRent: Residence is already for rent...
+    ResidenceNotForRent: Residence not for rent...
+    ResidenceNotRented: Residence not rented.
+    ResidenceUnrent: 'Residence %1 has been unrented.'
+    ResidenceRemoveRentable: 'Residence %1 is no longer rentable.'
+    ResidenceForRentSuccess: 'Residence %1 is now for rent for %2 every %3 days.'
+    ResidenceRentSuccess: 'You have rented Residence %1 for %2 days.'
+    ResidenceAlreadyRented: 'Residence %1 has currently been rented to %2'
+    ResidenceAlreadyExists: 'A residence named %1 already exists.'
+    ResidenceCreate: 'You have created residence %1!'
+    ResidenceRename: Renamed Residence %1 to %2
+    ResidenceRemove: 'Residence %1 has been removed...'
+    RentDisabled: Rent is disabled...
+    RentDisableRenew: 'Residence %1 will now no longer re-rent upon expire.'
+    RentEnableRenew: 'Residence %1 will now automatically re-rent upon expire.'
+    RentableDisableRenew: '%1 will no longer renew rentable status upon expire.'
+    RentableEnableRenew: '%1 will now automatically renew rentable status upon expire.'
+    LandForSale: Land For Sale
+    SellAmount: Sell Amount
+    LeaseExpire: Lease Expire Time
+    RentExpire: Rent Expire Time
+    RentableAutoRenew: Rentable Auto Renew
+    RentAutoRenew: Rent Auto Renew
+    RentableLand: Rentable Land
+    ListMaterialAdd: '%1 added to the residence %2'
+    ListMaterialRemove: '%1 removed from the residence %2'
+    ItemBlacklisted: You are blacklisted from using this item here.
+    RentedModifyDeny: Cannot modify a rented residence.
+    WorldPVPDisabled: World PVP is disabled.
+    NoPVPZone: Player is in a no PVP zone.
+    FlagDeny: You dont have %1 permission here.
+    FlagSetDeny: Owner does not have access to flag %1
+    SelectPoint: 'Placed %1 Selection Point'
+    ResidenceChat: 'Residence chat toggled %1'
+    ResidenceMoveDeny: 'You dont have movment permission for Residence %1'
+    TeleportDeny: You dont have teleport access.
+    TeleportSuccess: 'Teleported!'
+    TeleportNear: Teleported to near residence.
+    TeleportNoFlag: You dont have teleport access for that residence.
+    SetTeleportLocation: Teleport Location Set...
+    HelpPageHeader: 'Help Pages - %1 - Page <%2 of %3>'
+    ListExists: List already exists...
+    ListRemoved: List removed...
+    ListCreate: 'Created list %1'
+    LeaseRenew: 'Lease valid until %1'
+    LeaseRenewMax: Lease renewed to maximum allowed
+    LeaseNotExpire: No such lease, or lease does not expire.
+    LeaseRenewalCost: 'Renewal cost for area %1 is %2'
+    LeaseInfinite: Lease time set to infinite...
+    PermissionsApply: Permissions applied to residence.
+    PhysicalAreas: Physical Areas
+    CurrentArea: Current Area
+    LeaseExpire: Lease Expiration
+    NotOnline: Target player must be online.
+    ResidenceGiveLimits: Cannot give residence to target player, because it is outside the target players limits.
+    ResidenceGive: 'You give residence %1 to player %2'
+    ResidenceRecieve: 'You have recieved residence %1 from player %2'
+    
+    #The below lines are mostly a word bank for various uses.
+    #Version 1 Fields
+    Description: Description
+    Land: Land
+    Cost: Cost
+    Selection: Selection
+    Total: Total
+    Size: Size
+    Expanding: Expanding
+    Shifting: Shifting
+    Up: Up
+    Down: Down
+    Error: Error
+    Flags: Flags
+    Your: Your
+    Group: Group
+    Others: Others
+    Primary: Primary
+    Secondary: Secondary
+    Selection: Selection
+    Moved: Moved
+    Status: Status
+    Available: Available
+    On: On
+    Off: Off
+    Name: Name
+    Lists: Lists
+    Residences: Residences
+    Residence: Residence
+    Count: Count
+    Owner: Owner
+    
+# This is the help / usage messages for each command.
+# It follows this format:
+# <Command>
+#     Description: <general description of command, one line of text>
+#     Info: <extra info lines to describe the command, list of text>
+#     SubCommands:
+#           <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
+# Add a page number after the ? mark to see that page.
+
+CommandHelp: #this is just a holder node, that holds the entire help
+    Description: Contains Help for Residence
+    SubCommands: #this is the actual beginning of all commands
+        res: #main residence command
+            Description: Main Residence Command
+            Info:
+                - 'This is the main residence command.'
+            SubCommands:
+                select: #selection commands
+                    Description: Selection Commands
+                    Info:
+                        - 'This command selects areas for usage with residence.'
+                        - '/res select [x] [y] [z] - selects a radius of blocks, with you in the middle.'
+                    SubCommands:
+                        coords:
+                            Description: Display selected coordinates
+                            Info:
+                                - 'Usage: /res select coords'
+                create: #creation command
+                    Description: Create Residences
+                    Info:
+                        - 'Usage: /res create <residence name>'
+                remove:
+                    Description: Remove residences.
+                    Info:
+                        - 'Usage: /res remove <residence name>'

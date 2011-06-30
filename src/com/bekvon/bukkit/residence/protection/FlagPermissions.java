@@ -465,10 +465,10 @@ public class FlagPermissions {
 
     public void printFlags(Player player)
     {
-        player.sendMessage("§eFlags:§9 " + listFlags());
-        player.sendMessage("§eYour Flags: §a" + listPlayerFlags(player.getName()));
-        player.sendMessage("§eGroup Flags:§c " + listGroupFlags());
-        player.sendMessage("§eOthers Flags:§c " + listOtherPlayersFlags(player.getName()));
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Flags")+":§9 " + listFlags());
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Your.Flags")+":§a " + listPlayerFlags(player.getName()));
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Group.Flags")+":§c " + listGroupFlags());
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Others.Flags")+":§c " + listOtherPlayersFlags(player.getName()));
     }
 
     public void copyUserPermissions(String fromUser, String toUser)

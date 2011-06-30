@@ -45,7 +45,7 @@ public class ResidenceBlockListener extends BlockListener {
             String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getRentManager().isRented(resname))
             {
-                player.sendMessage("§cCannot modify a rented residence!");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
                 return;
             }
@@ -65,7 +65,7 @@ public class ResidenceBlockListener extends BlockListener {
             boolean hasdestroy = perms.playerHas(pname, "destroy", hasbuild);
             if ((!hasbuild && !hasdestroy) || !hasdestroy) {
                 event.setCancelled(true);
-                player.sendMessage("§cYou dont have permission to destroy here.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             }
         } else {
             FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
@@ -74,7 +74,7 @@ public class ResidenceBlockListener extends BlockListener {
             if((!hasbuild && !hasdestroy) || !hasdestroy)
             {
                 event.setCancelled(true);
-                player.sendMessage("§cWorld destroy is disabled.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             }
         }
         super.onBlockBreak(event);
@@ -98,7 +98,7 @@ public class ResidenceBlockListener extends BlockListener {
             String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getRentManager().isRented(resname))
             {
-                player.sendMessage("§cCannot modify a rented residence!");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
                 return;
             }
@@ -111,7 +111,7 @@ public class ResidenceBlockListener extends BlockListener {
         String pname = player.getName();
         if (res != null) {
             if (!res.getItemBlacklist().isAllowed(mat)) {
-                player.sendMessage("§cThat item is blacklisted for this residence.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ItemBlacklisted"));
                 event.setCancelled(true);
                 return;
             }
@@ -120,7 +120,7 @@ public class ResidenceBlockListener extends BlockListener {
             boolean hasplace = perms.playerHas(pname, "place", hasbuild);
             if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
-                player.sendMessage("§cYou dont have permission to build here.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             }
         } else {
             FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
@@ -128,7 +128,7 @@ public class ResidenceBlockListener extends BlockListener {
             boolean hasplace = perms.has("place", hasbuild);
             if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
-                player.sendMessage("§cWorld build is disabled.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             }
         }
         //super.onBlockPlace(event);
@@ -197,7 +197,7 @@ public class ResidenceBlockListener extends BlockListener {
                 Player player = event.getPlayer();
                 if (!res.getPermissions().playerHas(player.getName(), "ignite", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
                     event.setCancelled(true);
-                    player.sendMessage("§cYou dont have permission to ignite here.");
+                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
                 }
             }
             else

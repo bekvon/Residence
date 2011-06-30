@@ -65,16 +65,16 @@ public class SelectionManager {
         String pname = player.getName();
         if (this.hasPlacedBoth(pname)) {
             CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
-            player.sendMessage("§eSelection Total Size:§3 " + cuboidArea.getSize());
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("Selection.Total.Size")+":§3 " + cuboidArea.getSize());
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             if(Residence.getConfig().enableEconomy())
-                player.sendMessage("§eLand Cost:§3 " + ((int)Math.ceil((double)cuboidArea.getSize()*group.getCostPerBlock())));
-            player.sendMessage("§eXSize:§3 " + cuboidArea.getXSize());
-            player.sendMessage("§eYSize:§3 " + cuboidArea.getYSize());
-            player.sendMessage("§eZSize:§3 " + cuboidArea.getZSize());
+            player.sendMessage("§e"+Residence.getLanguage().getPhrase("Land.Cost")+":§3 " + ((int)Math.ceil((double)cuboidArea.getSize()*group.getCostPerBlock())));
+            player.sendMessage("§eX"+Residence.getLanguage().getPhrase("Size")+":§3 " + cuboidArea.getXSize());
+            player.sendMessage("§eY"+Residence.getLanguage().getPhrase("Size")+":§3 " + cuboidArea.getYSize());
+            player.sendMessage("§eZ"+Residence.getLanguage().getPhrase("Size")+":§3 " + cuboidArea.getZSize());
         }
         else
-            player.sendMessage("§cPlace 2 points first!");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("SelectPoints"));
     }
 
     public void vert(Player player, boolean resadmin)
@@ -86,7 +86,7 @@ public class SelectionManager {
         }
         else
         {
-            player.sendMessage("§cPlace 2 points first!");
+            player.sendMessage("§c" + Residence.getLanguage().getPhrase("SelectPoints"));
         }
     }
 
@@ -117,11 +117,11 @@ public class SelectionManager {
                 else
                     playerLoc2.get(player.getName()).setY(127);
             }
-            player.sendMessage("§aSelection expanded to you highest allowed limit!");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionSky"));
         }
         else
         {
-            player.sendMessage("§cPlace 2 points first!");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("SelectPoints"));
         }
     }
 
@@ -152,11 +152,11 @@ public class SelectionManager {
                 else
                     playerLoc2.get(player.getName()).setY(0);
             }
-            player.sendMessage("§aSelection expanded to you lowest allowed limit!");
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionBedrock"));
         }
         else
         {
-            player.sendMessage("§cPlace 2 points first!");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("SelectPoints"));
         }
     }
 
@@ -177,7 +177,7 @@ public class SelectionManager {
         int ymax = 127;
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
-        player.sendMessage("§aSelected current chunk...");
+        player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionSuccess"));
     }
 
     public void selectBySize(Player player, int xsize, int ysize, int zsize) {
@@ -186,7 +186,7 @@ public class SelectionManager {
         Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
         placeLoc1(player.getName(), loc1);
         placeLoc2(player.getName(), loc2);
-        player.sendMessage("Selection successful!");
+        player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionSuccess"));
         showSelectionInfo(player);
     }
 
@@ -194,13 +194,13 @@ public class SelectionManager {
     {
         if(!this.hasPlacedBoth(player.getName()))
         {
-            player.sendMessage("§cPlace 2 points first!");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("SelectPoints"));
             return;
         }
         Direction d = this.getDirection(player);
         if(d==null)
         {
-            player.sendMessage("§cInvalid Direction...");
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidDirection"));
         }
         CuboidArea area = new CuboidArea (playerLoc1.get(player.getName()),playerLoc2.get(player.getName()));
         if(d == Direction.UP)
@@ -217,10 +217,10 @@ public class SelectionManager {
                 int oldy2 = area.getLowLoc().getBlockY();
                 oldy2 = oldy2 + amount;
                 area.getLowLoc().setY(oldy2);
-                player.sendMessage("§aShifting Up...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting.Up")+"...");
             }
             else
-                player.sendMessage("§aExpanding Up...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding.Up")+"...");
         }
         if(d == Direction.DOWN)
         {
@@ -237,10 +237,10 @@ public class SelectionManager {
                 int oldy2 = area.getHighLoc().getBlockY();
                 oldy2 = oldy2 - amount;
                 area.getHighLoc().setY(oldy2);
-                player.sendMessage("§aShifting Down...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting.Down")+"...");
             }
             else
-                player.sendMessage("§aExpanding Down...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding.Down")+"...");
         }
         if(d == Direction.MINUSX)
         {
@@ -252,10 +252,10 @@ public class SelectionManager {
                 int oldx2 = area.getHighLoc().getBlockX();
                 oldx2 = oldx2 - amount;
                 area.getHighLoc().setX(oldx2);
-                player.sendMessage("§aShifting -X...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" -X...");
             }
             else
-                player.sendMessage("§aExpanding -X...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding")+" -X...");
         }
         if(d == Direction.PLUSX)
         {
@@ -267,10 +267,10 @@ public class SelectionManager {
                 int oldx2 = area.getLowLoc().getBlockX();
                 oldx2 = oldx2 + amount;
                 area.getLowLoc().setX(oldx2);
-                player.sendMessage("§aShifting +X...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" +X...");
             }
             else
-                player.sendMessage("§aExpanding +X...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding")+" +X...");
         }
         if(d == Direction.MINUSZ)
         {
@@ -282,10 +282,10 @@ public class SelectionManager {
                 int oldz2 = area.getHighLoc().getBlockZ();
                 oldz2 = oldz2 - amount;
                 area.getHighLoc().setZ(oldz2);
-                player.sendMessage("§aShifting -Z...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" -Z...");
             }
             else
-                player.sendMessage("§aExpanding -Z...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding")+" -Z...");
         }
         if(d == Direction.PLUSZ)
         {
@@ -297,10 +297,10 @@ public class SelectionManager {
                 int oldz2 = area.getLowLoc().getBlockZ();
                 oldz2 = oldz2 + amount;
                 area.getLowLoc().setZ(oldz2);
-                player.sendMessage("§aShifting +Z...");
+                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" +Z...");
             }
             else
-                player.sendMessage("§aExpanding +Z...");
+                player.sendMessage("§a"+Residence.getLanguage().getPhrase("Expanding")+" +Z...");
         }
         playerLoc1.put(player.getName(), area.getHighLoc());
         playerLoc2.put(player.getName(), area.getLowLoc());
