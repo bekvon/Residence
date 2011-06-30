@@ -14,8 +14,11 @@ commands:
     description: Residence admin functions.
     usage: §c/res ? or /resadmin ? for more info
   resreload:
-    description: Reload residence config.
+    description: Reload the entire residence plugin.
     usage: §c/resreload
+  resload:
+    description: Load the save file again after you have made modifications.
+    usage: §c/resload
   rc:
     description: §cChat in current residence channel.
     usage: §c/rc to toggle, or /rc <message>

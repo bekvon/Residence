@@ -465,6 +465,21 @@ public class Residence extends JavaPlugin {
             }
             return true;
         }
+        if(command.getName().equals("resload"))
+        {
+            if(sender instanceof ConsoleCommandSender || (sender instanceof Player && gmanager.isResidenceAdmin((Player) sender)))
+            {
+                try {
+                    this.loadYml();
+                    sender.sendMessage("§a[Residence] Reloaded save file...");
+                } catch (Exception ex) {
+                    sender.sendMessage("§c[Residence] Unable to reload the save file, exception occured!");
+                    sender.sendMessage("§c"+ex.getMessage());
+                    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            return true;
+        }
         else if(command.getName().equals("rc"))
         {
             if (sender instanceof Player) {
