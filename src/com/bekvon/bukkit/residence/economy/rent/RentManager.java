@@ -214,6 +214,17 @@ public class RentManager {
         }
     }
 
+    public void removeFromRent(String landName)
+    {
+        rentedLand.remove(landName);
+    }
+
+    public void removeRentable(String landName)
+    {
+        removeFromRent(landName);
+        rentableLand.remove(landName);
+    }
+
     public boolean isForRent(String landName)
     {
         return rentableLand.containsKey(landName);

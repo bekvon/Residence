@@ -258,6 +258,8 @@ public class ResidenceManager {
             } else {
                 residences.remove(name);
             }
+            Residence.getLeaseManager().removeExpireTime(name);
+            Residence.getRentManager().removeRentable(name);
             if(player!=null)
                 player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRemove","§e " + name + " §a"));
         } else {
