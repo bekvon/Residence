@@ -116,8 +116,13 @@ public class LeaseManager {
             return;
         }
         Long get = leaseExpireTime.get(area);
-        get = get + daysToMs(add);
-        leaseExpireTime.put(area, get);
+        if(get!=null)
+        {
+            get = get + daysToMs(add);
+            leaseExpireTime.put(area, get);
+        }
+        else
+            leaseExpireTime.put(area, daysToMs(add));
         player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseRenew","§a" + getExpireTime(area)));
     }
 
@@ -221,7 +226,16 @@ public class LeaseManager {
     {
         LeaseManager l = new LeaseManager(m);
         if(root!=null)
+        {
+            for(Object val : root.values())
+            {
+                if(!(val instanceof Long))
+                {
+                    root.remove(val);
+                }
+            }
             l.leaseExpireTime = Collections.synchronizedMap(root);
+        }
         return l;
     }
 }

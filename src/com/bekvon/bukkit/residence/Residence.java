@@ -470,7 +470,7 @@ public class Residence extends JavaPlugin {
             if(sender instanceof ConsoleCommandSender || (sender instanceof Player && gmanager.isResidenceAdmin((Player) sender)))
             {
                 try {
-                    this.loadYml();
+                    this.loadYMLSave(ymlSaveLoc);
                     sender.sendMessage("§a[Residence] Reloaded save file...");
                 } catch (Exception ex) {
                     sender.sendMessage("§c[Residence] Unable to reload the save file, exception occured!");
