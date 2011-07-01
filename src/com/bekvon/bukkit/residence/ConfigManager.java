@@ -52,7 +52,7 @@ public class ConfigManager {
     }
 
     private void load(Configuration config) {
-        defaultGroup = config.getString("Global.DefaultGroup", "default");
+        defaultGroup = config.getString("Global.DefaultGroup", "default").toLowerCase();
         adminsOnly = config.getBoolean("Global.AdminOnlyCommands", false);
         useLeases = config.getBoolean("Global.UseLeaseSystem", false);
         leaseAutoRenew = config.getBoolean("Global.LeaseAutoRenew", true);
