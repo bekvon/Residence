@@ -77,7 +77,7 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(String player, String world) {
-        String defaultGroup=Residence.getConfig().getDefaultGroup();
+        String defaultGroup = Residence.getConfig().getDefaultGroup();
         if(playersGroup.containsKey(player))
         {
             String group = playersGroup.get(player);
@@ -88,10 +88,19 @@ public class PermissionManager {
         if (authority == null) {
             return defaultGroup;
         } else {
-            String []grouparray = authority.getGroups(world, player);
+            String[] grouparray = authority.getGroups(world, player);
             if(grouparray==null || grouparray.length==0)
                 return defaultGroup;
-            String group = grouparray[0];
+            String group = null;
+            for(String g : grouparray)
+            {
+                g = g.toLowerCase();
+                if(groups.containsKey(g))
+                {
+                    group = g;
+                    break;
+                }
+            }
             if (group == null || !groups.containsKey(group)) {
                 return defaultGroup;
             } else {
@@ -106,14 +115,6 @@ public class PermissionManager {
         } else {
             return authority.has(player, permission);
         }
-    }
-
-    public boolean hasAuthority(String player, String world, String permission, boolean def)
-    {
-        if(authority==null)
-            return def;
-        else
-            return authority.getPermissionBoolean(world, player, permission);
     }
 
     public boolean isResidenceAdmin(Player player)
