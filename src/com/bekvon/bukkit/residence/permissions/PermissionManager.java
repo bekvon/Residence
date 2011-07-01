@@ -29,7 +29,6 @@ import org.bukkit.util.config.ConfigurationNode;
  */
 public class PermissionManager {
     protected static PermissionHandler authority;
-    protected static String defaultGroup;
     protected Map<String,PermissionGroup> groups;
     protected Map<String,String> playersGroup;
     protected FlagPermissions globalFlagPerms;
@@ -68,7 +67,7 @@ public class PermissionManager {
     {
         group = group.toLowerCase();
         if(!groups.containsKey(group))
-            return groups.get(defaultGroup);
+            return groups.get(Residence.getConfig().getDefaultGroup());
         return groups.get(group);
     }
 
@@ -78,6 +77,7 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(String player, String world) {
+        String defaultGroup=Residence.getConfig().getDefaultGroup();
         if(playersGroup.containsKey(player))
         {
             String group = playersGroup.get(player);
@@ -135,7 +135,7 @@ public class PermissionManager {
 
     private void readConfig(Configuration config)
     {
-        defaultGroup = config.getString("DefaultGroup","default").toLowerCase();
+        String defaultGroup = Residence.getConfig().getDefaultGroup();
         globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getNode("Global"));
         Map<String, ConfigurationNode> nodes = config.getNodes("Groups");
         if(nodes!=null)

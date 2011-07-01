@@ -229,6 +229,16 @@ public class RentManager {
         return rentedLand.containsKey(landName) ? rentedLand.get(landName).player : null;
     }
 
+    public int getCostOfRent(String landName)
+    {
+        return rentableLand.containsKey(landName) ? rentableLand.get(landName).cost : 0;
+    }
+
+    public int getRentDays(String landName)
+    {
+        return rentableLand.containsKey(landName) ? rentableLand.get(landName).days : 0;
+    }
+
     public void checkCurrentRents()
     {
         Iterator<Entry<String, RentedLand>> it = rentedLand.entrySet().iterator();
