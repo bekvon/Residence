@@ -1203,7 +1203,17 @@ public class Residence extends JavaPlugin {
                     }
                     return true;
                 } else if (args[0].equals("listall")) {
-                    rmanager.listAllResidences(player);
+                    if (args.length == 1) {
+                        rmanager.listAllResidences(player, 1);
+                    } else if (args.length == 2) {
+                        try {
+                            int page = Integer.parseInt(args[1]);
+                            rmanager.listAllResidences(player, page);
+                        } catch (Exception ex) {
+                        }
+                    } else {
+                        return false;
+                    }
                     return true;
                 } else if (args[0].equals("version")) {
                     player.sendMessage("§7------------------------------------");

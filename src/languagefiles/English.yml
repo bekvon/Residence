@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 3
+Version: 4
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -157,6 +157,11 @@ Language:
     ResidenceGiveLimits: Cannot give residence to target player, because it is outside the target players limits.
     ResidenceGive: 'You give residence %1 to player %2'
     ResidenceRecieve: 'You have recieved residence %1 from player %2'
+    #Version 4 New Fields
+    ResidenceListAll: 'Residences - <Page %1 of %2>'
+    ResidenceListAllEmpty: No Residences exists on the server...
+    InvalidPage: Invalid Page...
+    NextPage: Next Page
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -189,6 +194,8 @@ Language:
     Residence: Residence
     Count: Count
     Owner: Owner
+    #Version 4 Fields
+    World: World
     
 # This is the help / usage messages for each command.
 # It follows this format:
@@ -259,6 +266,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: Create subzones in residences.
                     Info:
                         - 'Usage: /res subzone <residence name> [subzone name]'
+                        - 'If residence name is left off, will attempt to use residence your standing in.'
                 area:
                     Description: Manage physical areas for a residence.
                     Info:
@@ -270,6 +278,31 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Usage: /res info <residence>'
                         - 'Leave off <residence> to display info for the residence your currently in.'
+                lease:
+                    Description: Manage residence leases
+                    Info:
+                        - 'Usage: /res lease [renew/cost] [residence]'
+                        - '/res lease cost will show the cost of renewing a residence lease.'
+                        - '/res lease renew will renew the residence provided you have enough money.'
+                    SubCommands:
+                        set:
+                            Description: Set the lease time (admin only)
+                            Info:
+                                - 'Usage: /resadmin lease set [residence] [#days/infinite]'
+                                - 'Sets the lease time to a specified number of days, or infinite.'
+                tp:
+                    Description: Teleport to a residence
+                    Info:
+                        - 'Usage: /res tp [residence]'
+                        - 'Teleports you to a residence, you must have +tp flag access or be the owner.'
+                        - 'Your permission group must also be allowed to teleport by the server admin.'
+                tpset:
+                    Description: Set the teleport location of a Residence
+                    Info:
+                        - 'Usage: /res tpset'
+                        - 'This will set the teleport location for a residence to where your standing.'
+                        - 'You must be standing in the residence to use this command.'
+                        - 'You must also be the owner or have the +admin flag for the residence.'
                 set:
                     Description: Set general flags on a Residence
                     Info:
@@ -286,6 +319,13 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Usage: /res gset <residence> <group> <flag> <true/false/remove>'
                         - 'To see a list of flags, use /res flags ?'
+                lset:
+                    Description: Change blacklist and ignorelist options
+                    Info:
+                        - 'Usage: /res lset <residence> [blacklist/ignorelist] [material]'
+                        - 'Usage: /res lset <residence> info'
+                        - 'Blacklisting a material prevents it from being placed in the residence.'
+                        - 'Ignorelist causes a specific material to not be protected by Residence.'
                 flags:
                     Description: List of flags
                     Info:
@@ -320,6 +360,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 listall:
                     Description: List All Residence
                     Info:
+                        - 'Usage: /res listall <page>'
                         - 'Lists all residences on the server.'
                 default:
                     Description: Reset residence to default flags.
@@ -382,3 +423,22 @@ CommandHelp: #this is just a holder node, that holds the entire help
                                 - 'Usage: /res market release [residence]'
                                 - 'If you are the renter, this command releases the rent on the house for you.'
                                 - 'If you are the owner, this command makes the residence not for rent anymore.'
+                server:
+                    Description: Make land server owned (admin only).
+                    Info:
+                        - 'Usage: /resadmin server [residence]'
+                        - 'Make a residence server owned.'
+                setowner:
+                    Description: Change owner of a residence (admin only).
+                    Info:
+                        - 'Usage: /resadmin setowner [residence] [player]'
+                resreload:
+                    Description: Reload residence (admin only).
+                    Info:
+                        - 'Usage: /resreload'
+                resload:
+                    Description: Load residence save file (UNSAFE, admin only).
+                    Info:
+                        - 'Usage: /resload'
+                        - 'UNSAFE command, does not save residences first.'
+                        - 'Loads the residence save file after you have made changes.'
