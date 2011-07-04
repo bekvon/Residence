@@ -78,17 +78,20 @@ public class HelpEntry {
             if (helplines.size() > i) {
                 if(alternatecolor)
                 {
-                    sender.sendMessage("§e"+helplines.get(i));
+                    sender.sendMessage("§e-"+helplines.get(i));
                     alternatecolor = false;
                 }
                 else
                 {
-                    sender.sendMessage("§6"+helplines.get(i));
+                    sender.sendMessage("§6-"+helplines.get(i));
                     alternatecolor = true;
                 }
             }
         }
-        sender.sendMessage("§7-----------------------");
+        if(page<pagecount)
+            sender.sendMessage("§7---<"+Residence.getLanguage().getPhrase("NextPage")+">---");
+        else
+            sender.sendMessage("§7-----------------------");
     }
 
     public void printHelp(CommandSender sender, int page, String path)
