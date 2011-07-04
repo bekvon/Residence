@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 2
+Version: 3
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -209,6 +209,8 @@ CommandHelp: #this is just a holder node, that holds the entire help
             Description: Main Residence Command
             Info:
                 - 'This is the main residence command.'
+                - 'See the residence wiki for more help.'
+                - 'Wiki: residencebukkitmod.wikispaces.com'
             SubCommands:
                 select: #selection commands
                     Description: Selection Commands
@@ -310,5 +312,73 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'lavaflow - allows or denys lava flow, overrides flow'
                         - 'waterflow - allows or denys water flow, overrides flow'
                         - 'damage - allows or denys all entity damage within the residence.'
-                        
-                        
+                list:
+                    Description: List Residences
+                    Info:
+                        - 'Lists all the residences you own.'
+                        - 'To list everyones residences, use /res listall.'
+                listall:
+                    Description: List All Residence
+                    Info:
+                        - 'Lists all residences on the server.'
+                default:
+                    Description: Reset residence to default flags.
+                    Info:
+                        - 'Usage: /res default <residence>'
+                        - 'Resets the flags on a residence to their default.  You must be the owner or an admin to do this.'
+                rename:
+                    Description: Renames a residence.
+                    Info:
+                        - 'Usage: /res rename [OldName] [NewName]'
+                        - 'You must be the owner or an admin to do this.'
+                        - 'The name must not already be taken by another residence.'
+                mirror:
+                    Description: Mirrors Flags
+                    Info:
+                        - 'Usage: /res mirror [Source Residence] [Target Residence]'
+                        - 'Mirrors flags from one residence to another.  You must be owner of both or a admin to do this.'
+                market:
+                    Description: Buy, Sell, or Rent Residences
+                    Info:
+                        - 'Usage: /res market ? for more info'
+                    SubCommands:
+                        info:
+                            Description: Get economy info on residence
+                            Info:
+                                - 'Usage: /res market info [residence]'
+                                - 'Shows if the Residence is for sale or for rent, and the cost.'
+                        list:
+                            Description: Lists rentable and for sale residences.
+                            Info:
+                                - 'Usage: /res market list'
+                        sell:
+                            Description: Sell a residence
+                            Info:
+                                - 'Usage: /res sell [residence] [amount]'
+                                - 'Puts a residence for sale for [amount] of money.'
+                                - 'Another player can buy the residence with /res market buy'
+                        buy:
+                            Description: Buy a residence
+                            Info:
+                                - 'Usage: /res buy [residence]'
+                                - 'Buys a Residence if its for sale.'
+                        unsell:
+                            Description: Stops selling a residence
+                            Info:
+                                - 'Usage: /res unsell [residence]'
+                        rent:
+                            Description: Rent a residence
+                            Info:
+                                - 'Usage: /res market rent [residence] <autorenew>'
+                                - 'Rents a residence.  Autorenew can be either true or false.  If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.'
+                        rentable:
+                            Description: Make a residence rentable.
+                            Info:
+                                - 'Usage: /res market rentable [residence] [cost] [days] <repeat>'
+                                - 'Makes a residence rentable for [cost] money for every [days] number of days.  If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.'
+                        release:
+                            Description: Remove a residence from rent or rentable.
+                            Info:
+                                - 'Usage: /res market release [residence]'
+                                - 'If you are the renter, this command releases the rent on the house for you.'
+                                - 'If you are the owner, this command makes the residence not for rent anymore.'

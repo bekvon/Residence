@@ -99,23 +99,27 @@ public class SelectionManager {
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if(y1>y2)
             {
-                int diff = group.getMaxHeight() - y2;
-                if(group.getMaxY()<diff && !resadmin)
-                    playerLoc1.get(player.getName()).setY(y2 + group.getMaxY());
-                else if(!resadmin)
-                    playerLoc1.get(player.getName()).setY(group.getMaxHeight());
-                else
-                    playerLoc1.get(player.getName()).setY(127);
+                int newy = 127;
+                if(!resadmin)
+                {
+                    if(group.getMaxHeight()<newy)
+                        newy = group.getMaxHeight();
+                    if(newy - y2 > group.getMaxY())
+                        newy = y2 + group.getMaxY();
+                }
+                playerLoc1.get(player.getName()).setY(newy);
             }
             else
             {
-                int diff = group.getMaxHeight() - y1;
-                if(group.getMaxY()<diff && !resadmin)
-                    playerLoc2.get(player.getName()).setY(y1 + group.getMaxY());
-                else if(!resadmin)
-                    playerLoc2.get(player.getName()).setY(group.getMaxHeight());
-                else
-                    playerLoc2.get(player.getName()).setY(127);
+                int newy = 127;
+                if(!resadmin)
+                {
+                    if(group.getMaxHeight()<newy)
+                        newy = group.getMaxHeight();
+                    if(newy - y1 > group.getMaxY())
+                        newy = y1 + group.getMaxY();
+                }
+                playerLoc2.get(player.getName()).setY(newy);
             }
             player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionSky"));
         }
@@ -134,23 +138,27 @@ public class SelectionManager {
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if(y1<y2)
             {
-                int diff = y2 - group.getMinHeight();
-                if(group.getMaxY()<diff && !resadmin)
-                    playerLoc1.get(player.getName()).setY(y2 - group.getMaxY());
-                else if(!resadmin)
-                    playerLoc1.get(player.getName()).setY(group.getMinHeight());
-                else
-                    playerLoc1.get(player.getName()).setY(0);
+                int newy = 0;
+                if(!resadmin)
+                {
+                    if(newy<group.getMinHeight())
+                        newy = group.getMinHeight();
+                    if(y2 - newy > group.getMaxY())
+                        newy = y2 - group.getMaxY();
+                }
+                playerLoc1.get(player.getName()).setY(newy);
             }
             else
             {
-                int diff = y1 - group.getMinHeight();
-                if(group.getMaxY()<diff)
-                    playerLoc2.get(player.getName()).setY(y1 - group.getMaxY());
-                else if(!resadmin)
-                    playerLoc2.get(player.getName()).setY(group.getMinHeight());
-                else
-                    playerLoc2.get(player.getName()).setY(0);
+                int newy = 0;
+                if(!resadmin)
+                {
+                    if(newy<group.getMinHeight())
+                        newy = group.getMinHeight();
+                    if(y1 - newy > group.getMaxY())
+                        newy = y1 - group.getMaxY();
+                }
+                playerLoc2.get(player.getName()).setY(newy);
             }
             player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionBedrock"));
         }
