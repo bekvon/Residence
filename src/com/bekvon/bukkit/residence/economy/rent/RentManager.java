@@ -6,6 +6,8 @@
 package com.bekvon.bukkit.residence.economy.rent;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
@@ -65,6 +67,10 @@ public class RentManager {
         }
         if(!rentableLand.containsKey(landName))
         {
+            ResidenceRentEvent revent = new ResidenceRentEvent(res,player,RentEventType.RENTABLE);
+            Residence.getServ().getPluginManager().callEvent(revent);
+            if(revent.isCancelled())
+                return;
             RentableLand newrent = new RentableLand();
             newrent.days = days;
             newrent.cost = amount;
@@ -118,6 +124,10 @@ public class RentManager {
         RentableLand land = rentableLand.get(landName);
         if(Residence.getEconomyManager().canAfford(player.getName(), land.cost))
         {
+            ResidenceRentEvent revent = new ResidenceRentEvent(res,player,RentEventType.RENT);
+            Residence.getServ().getPluginManager().callEvent(revent);
+            if(revent.isCancelled())
+                return;
             if(Residence.getEconomyManager().transfer(player.getName(), res.getPermissions().getOwner(), land.cost))
             {
                 RentedLand newrent = new RentedLand();
@@ -142,7 +152,7 @@ public class RentManager {
         }
     }
 
-    public void release(Player player, String landName, boolean resadmin)
+    public void removeFromForRent(Player player, String landName, boolean resadmin)
     {
         RentedLand rent = rentedLand.get(landName);
         if(rent == null)
@@ -152,6 +162,10 @@ public class RentManager {
         }
         if(resadmin || rent.player.equalsIgnoreCase(player.getName()))
         {
+            ResidenceRentEvent revent = new ResidenceRentEvent(Residence.getResidenceManger().getByName(landName),player,RentEventType.UNRENTABLE);
+            Residence.getServ().getPluginManager().callEvent(revent);
+            if(revent.isCancelled())
+                return;
             rentedLand.remove(landName);
             if(!rentableLand.get(landName).repeatable)
             {
@@ -178,7 +192,7 @@ public class RentManager {
         return (int) Math.ceil(((((double)ms/1000D)/60D)/60D)/24D);
     }
 
-    public void removeFromRent(Player player, String landName, boolean resadmin)
+    public void unrent(Player player, String landName, boolean resadmin)
     {
         ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
         if(res == null)
@@ -198,6 +212,10 @@ public class RentManager {
         }
         if(rentableLand.containsKey(landName))
         {
+            ResidenceRentEvent revent = new ResidenceRentEvent(res,player,RentEventType.UNRENT);
+            Residence.getServ().getPluginManager().callEvent(revent);
+            if(revent.isCancelled())
+                return;
             rentableLand.remove(landName);
             if(rentedLand.containsKey(landName))
             {
@@ -260,35 +278,29 @@ public class RentManager {
             if(land.endTime<=System.currentTimeMillis())
             {
                 ClaimedResidence res = Residence.getResidenceManger().getByName(next.getKey());
-                if(res!=null)
-                {
-                    RentableLand rentable = rentableLand.get(next.getKey());
-                    if(!rentable.repeatable)
-                    {
-                        rentableLand.remove(next.getKey());
-                        it.remove();
-                        res.getPermissions().applyDefaultFlags();
-                    }
-                    else if(land.autoRefresh)
-                    {
-                        if(!Residence.getEconomyManager().canAfford(land.player, rentable.cost))
-                        {
+                if (res != null) {
+                    ResidenceRentEvent revent = new ResidenceRentEvent(res, null, RentEventType.RENT_EXPIRE);
+                    Residence.getServ().getPluginManager().callEvent(revent);
+                    if (!revent.isCancelled()) {
+                        RentableLand rentable = rentableLand.get(next.getKey());
+                        if (!rentable.repeatable) {
+                            rentableLand.remove(next.getKey());
                             it.remove();
                             res.getPermissions().applyDefaultFlags();
-                        }
-                        else
-                        {
-                            if(!Residence.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost))
-                            {
+                        } else if (land.autoRefresh) {
+                            if (!Residence.getEconomyManager().canAfford(land.player, rentable.cost)) {
                                 it.remove();
                                 res.getPermissions().applyDefaultFlags();
+                            } else {
+                                if (!Residence.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost)) {
+                                    it.remove();
+                                    res.getPermissions().applyDefaultFlags();
+                                }
                             }
+                        } else {
+                            res.getPermissions().applyDefaultFlags();
+                            it.remove();
                         }
-                    }
-                    else
-                    {
-                        res.getPermissions().applyDefaultFlags();
-                        it.remove();
                     }
                 }
                 else
