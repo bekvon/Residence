@@ -1480,11 +1480,11 @@ public class Residence extends JavaPlugin {
                             return false;
                         if(rentmanager.isRented(args[2]))
                         {
-                            rentmanager.release(player, args[2], resadmin);
+                            rentmanager.removeFromForRent(player, args[2], resadmin);
                         }
                         else
                         {
-                            rentmanager.removeFromRent(player, args[2], resadmin);
+                            rentmanager.unrent(player, args[2], resadmin);
                         }
                         return true;
                     }
