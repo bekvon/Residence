@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 4
+Version: 5
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -215,9 +215,9 @@ CommandHelp: #this is just a holder node, that holds the entire help
         res: #main residence command
             Description: Main Residence Command
             Info:
-                - 'This is the main residence command.'
                 - 'See the residence wiki for more help.'
                 - 'Wiki: residencebukkitmod.wikispaces.com'
+                - 'Use /[command] ? <page> to view more help information.'
             SubCommands:
                 select: #selection commands
                     Description: Selection Commands
@@ -229,6 +229,14 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Description: Display selected coordinates
                             Info:
                                 - 'Usage: /res select coords'
+                        size:
+                            Description: Display selected size
+                            Info:
+                                - 'Usage: /res select size'
+                        cost:
+                            Description: Display selection cost
+                            Info:
+                                - 'Usage: /res select cost'
                         vert:
                             Description: Expand Selection Vertically
                             Info:
@@ -278,6 +286,18 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Usage: /res info <residence>'
                         - 'Leave off <residence> to display info for the residence your currently in.'
+                limits:
+                    Description: Show your limits.
+                    Info:
+                        - 'Usage: /res limits'
+                        - 'Shows the limitations you have on creating and managing residences.'
+                message:
+                    Description: Manage residence enter / leave messages
+                    Info:
+                        - 'Usage: /res message <residence> [enter/leave] [message]'
+                        - 'Set the enter or leave message of a residence.'
+                        - 'Usage: /res message <residence> remove [enter/leave]'
+                        - 'Removes a enter or leave message.'
                 lease:
                     Description: Manage residence leases
                     Info:
@@ -423,6 +443,39 @@ CommandHelp: #this is just a holder node, that holds the entire help
                                 - 'Usage: /res market release [residence]'
                                 - 'If you are the renter, this command releases the rent on the house for you.'
                                 - 'If you are the owner, this command makes the residence not for rent anymore.'
+                lists:
+                    Description: Predefined permission lists
+                    Info:
+                        - 'Predefined permissions that can be applied to a residence.'
+                    SubCommands:
+                        add:
+                            Description: Add a list
+                            Info:
+                                - 'Usage: /res lists add <listname>'
+                        remove:
+                            Description: Remove a list
+                            Info:
+                                - 'Usage: /res lists remove <listname>'
+                        apply:
+                            Description: Apply a list to a residence
+                            Info:
+                                - 'Usage: /res lists apply <listname> <residence>'
+                        set:
+                            Description: Set a flag
+                            Info:
+                                - 'Usage: /res lists set <listname> <flag> <value>'
+                        pset:
+                            Description: Set a player flag
+                            Info:
+                                - 'Usage: /res lists pset <listname> <player> <flag> <value>'
+                        gset:
+                            Description: Set a group flag
+                            Info:
+                                - 'Usage: /res lists gset <listname> <group> <flag> <value>'
+                        view:
+                            Description: View a list.
+                            Info:
+                                - 'Usage: /res lists view <listname>'
                 server:
                     Description: Make land server owned (admin only).
                     Info:
@@ -442,3 +495,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'Usage: /resload'
                         - 'UNSAFE command, does not save residences first.'
                         - 'Loads the residence save file after you have made changes.'
+                version:
+                    Description: Show residence version
+                    Info:
+                        - 'Usage: /res version'

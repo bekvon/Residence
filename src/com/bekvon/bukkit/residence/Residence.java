@@ -598,7 +598,7 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§9You can use a " + Material.getMaterial(cmanager.getSelectionTooldID()).name() + " tool to select.");
                         return true;
                     } else if (args.length == 2) {
-                        if (args[1].equals("size")) {
+                        if (args[1].equals("size") || args[1].equals("cost")) {
                             if (smanager.hasPlacedBoth(pname)) {
                                 try {
                                     smanager.showSelectionInfo(player);
