@@ -231,7 +231,7 @@ public class ResidenceBlockListener extends BlockListener {
             return;
         ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
         if (res != null) {
-            if (!res.getPermissions().has("flow", true)) {
+            if (!res.getPermissions().has("physics", true)) {
                 event.setCancelled(true);
             }
         }
