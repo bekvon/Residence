@@ -69,6 +69,7 @@ public class FlagPermissions {
         addResidenceOnlyFlag("animals");
         addResidenceOnlyFlag("lavaflow");
         addResidenceOnlyFlag("waterflow");
+        addResidenceOnlyFlag("physics");
         addPlayerOrGroupOnlyFlag("admin");
     }
 
