@@ -225,10 +225,10 @@ public class SelectionManager {
                 int oldy2 = area.getLowLoc().getBlockY();
                 oldy2 = oldy2 + amount;
                 area.getLowLoc().setY(oldy2);
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting.Up")+"...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Shifting.Up")+"...");
             }
             else
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding.Up")+"...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Expanding.Up")+"...");
         }
         if(d == Direction.DOWN)
         {
@@ -245,10 +245,10 @@ public class SelectionManager {
                 int oldy2 = area.getHighLoc().getBlockY();
                 oldy2 = oldy2 - amount;
                 area.getHighLoc().setY(oldy2);
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting.Down")+"...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Shifting.Down")+"...");
             }
             else
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding.Down")+"...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Expanding.Down")+"...");
         }
         if(d == Direction.MINUSX)
         {
@@ -260,10 +260,10 @@ public class SelectionManager {
                 int oldx2 = area.getHighLoc().getBlockX();
                 oldx2 = oldx2 - amount;
                 area.getHighLoc().setX(oldx2);
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" -X...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Shifting")+" -X...");
             }
             else
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding")+" -X...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Expanding")+" -X...");
         }
         if(d == Direction.PLUSX)
         {
@@ -275,10 +275,10 @@ public class SelectionManager {
                 int oldx2 = area.getLowLoc().getBlockX();
                 oldx2 = oldx2 + amount;
                 area.getLowLoc().setX(oldx2);
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" +X...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Shifting")+" +X...");
             }
             else
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding")+" +X...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Expanding")+" +X...");
         }
         if(d == Direction.MINUSZ)
         {
@@ -290,10 +290,10 @@ public class SelectionManager {
                 int oldz2 = area.getHighLoc().getBlockZ();
                 oldz2 = oldz2 - amount;
                 area.getHighLoc().setZ(oldz2);
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" -Z...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Shifting")+" -Z...");
             }
             else
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Expanding")+" -Z...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Expanding")+" -Z...");
         }
         if(d == Direction.PLUSZ)
         {
@@ -305,7 +305,7 @@ public class SelectionManager {
                 int oldz2 = area.getLowLoc().getBlockZ();
                 oldz2 = oldz2 + amount;
                 area.getLowLoc().setZ(oldz2);
-                player.sendMessage("§"+Residence.getLanguage().getPhrase("Shifting")+" +Z...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Shifting")+" +Z...");
             }
             else
                 player.sendMessage("§a"+Residence.getLanguage().getPhrase("Expanding")+" +Z...");

@@ -615,6 +615,26 @@ public class ClaimedResidence {
         return s.toString();
     }
 
+    public void printAreaList(Player player)
+    {
+        StringBuilder sbuilder = new StringBuilder();
+        for(String area : areas.keySet())
+        {
+            if(sbuilder.length()>0)
+                sbuilder.append(", ").append(area);
+            else
+                sbuilder.append("§a").append(area);
+        }
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("PhysicalAreas")+":");
+        player.sendMessage(sbuilder.toString());
+    }
+
+    public void printAdvancedAreaList(Player player)
+    {
+        player.sendMessage("§e"+Residence.getLanguage().getPhrase("PhysicalAreas")+":");
+        player.sendMessage(this.getFormattedAreaList());
+    }
+
     public String[] getAreaList()
     {
         String arealist[] = new String[areas.size()];

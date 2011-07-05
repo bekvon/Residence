@@ -786,7 +786,28 @@ public class Residence extends JavaPlugin {
                             }
                             return true;
                         }
-                    } else {
+                    }
+                    else if (args.length == 3 && args[1].equals("list")) {
+                        ClaimedResidence res = rmanager.getByName(args[2]);
+                        if (res != null) {
+                            res.printAreaList(player);
+                        } else {
+                            player.sendMessage("§c" + language.getPhrase("InvalidResidence"));
+                        }
+                        return true;
+                    }
+                    else if(args.length == 3 && args[1].equals("listall"))
+                    {
+                        ClaimedResidence res = rmanager.getByName(args[2]);
+                        if (res != null) {
+                            res.printAdvancedAreaList(player);
+                        } else {
+                            player.sendMessage("§c" + language.getPhrase("InvalidResidence"));
+                        }
+                        return true;
+                    }
+                    else
+                    {
                         player.sendMessage("§d----------Command Help:----------");
                         player.sendMessage("§barea §6<add/remove/replace> <residence> <areaID>§3 - Allows physical areas to be added, removed, or replaced, on a residence.  You must select an area first.");
                         return true;
