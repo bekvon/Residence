@@ -262,7 +262,7 @@ public class ResidenceManager {
             Residence.getLeaseManager().removeExpireTime(name);
             Residence.getRentManager().removeRentable(name);
             if(player!=null)
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRemove","§e " + name + " §a"));
+                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRemove","§e" + name + "§a"));
         } else {
             if(player!=null)
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
@@ -356,7 +356,6 @@ public class ResidenceManager {
         player.sendMessage("§e"+Residence.getLanguage().getPhrase("Your.Flags")+": §a" + perms.listPlayerFlags(player.getName()));
         player.sendMessage("§e"+Residence.getLanguage().getPhrase("Group.Flags")+":§c " + perms.listGroupFlags());
         player.sendMessage("§e"+Residence.getLanguage().getPhrase("Others.Flags")+":§c " + perms.listOtherPlayersFlags(player.getName()));
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("PhysicalAreas")+": " + res.getFormattedAreaList());
         String aid = res.getAreaIDbyLoc(player.getLocation());
         if(aid !=null)
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("CurrentArea")+": §6" + aid);

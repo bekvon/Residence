@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 5
+Version: 7
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -277,10 +277,30 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'If residence name is left off, will attempt to use residence your standing in.'
                 area:
                     Description: Manage physical areas for a residence.
-                    Info:
-                        - 'Usage: /res area [add/remove/replace] [residence] [areaID]'
-                        - 'You must first select two points before using add or replace.'
-                        - 'Replacing a area will charge the difference in size if the new area is bigger.'
+                    SubCommands:
+                        list:
+                            Description: List physical areas in a residence
+                            Info:
+                                - 'Usage: /res area list [residence]'
+                        listall:
+                            Description: List coordinates and other info for areas
+                            Info:
+                                - 'Usage: /res area listall [residence]'
+                        add:
+                            Description: Add physical areas to a residence
+                            Info:
+                                - 'Usage: /res area add [residence] [areaID]'
+                                - 'You must first select two points first.'
+                        remove:
+                            Description: Remove physical areas from a residence
+                            Info:
+                                - 'Usage: /res area remove [residence] [areaID]'
+                        replace:
+                            Description: Replace physical areas in a residence
+                            Info:
+                                - 'Usage: /res area replace [residence] [areaID]'
+                                - 'You must first select two points first.'
+                                - 'Replacing a area will charge the difference in size if the new area is bigger.'
                 info:
                     Description: Show info on a residence.
                     Info:
