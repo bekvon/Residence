@@ -78,12 +78,12 @@ public class HelpEntry {
             if (helplines.size() > i) {
                 if(alternatecolor)
                 {
-                    sender.sendMessage("§e-"+helplines.get(i));
+                    sender.sendMessage("§e"+helplines.get(i));
                     alternatecolor = false;
                 }
                 else
                 {
-                    sender.sendMessage("§6-"+helplines.get(i));
+                    sender.sendMessage("§6"+helplines.get(i));
                     alternatecolor = true;
                 }
             }
@@ -185,7 +185,7 @@ public class HelpEntry {
                     entry.lines = new String[stringList.size()];
                     for(int i = 0; i < stringList.size(); i++)
                     {
-                        entry.lines[i] = stringList.get(i);
+                        entry.lines[i] = "- " + stringList.get(i);
                     }
                 }
             }
