@@ -104,8 +104,8 @@ public class SelectionManager {
                 {
                     if(group.getMaxHeight()<newy)
                         newy = group.getMaxHeight();
-                    if(newy - y2 > group.getMaxY())
-                        newy = y2 + group.getMaxY();
+                    if(newy - y2 > (group.getMaxY()-1))
+                        newy = y2 + (group.getMaxY()-1);
                 }
                 playerLoc1.get(player.getName()).setY(newy);
             }
@@ -116,8 +116,8 @@ public class SelectionManager {
                 {
                     if(group.getMaxHeight()<newy)
                         newy = group.getMaxHeight();
-                    if(newy - y1 > group.getMaxY())
-                        newy = y1 + group.getMaxY();
+                    if(newy - y1 > (group.getMaxY()-1))
+                        newy = y1 + (group.getMaxY()-1);
                 }
                 playerLoc2.get(player.getName()).setY(newy);
             }
@@ -143,8 +143,8 @@ public class SelectionManager {
                 {
                     if(newy<group.getMinHeight())
                         newy = group.getMinHeight();
-                    if(y2 - newy > group.getMaxY())
-                        newy = y2 - group.getMaxY();
+                    if(y2 - newy > (group.getMaxY()-1))
+                        newy = y2 - (group.getMaxY()-1);
                 }
                 playerLoc1.get(player.getName()).setY(newy);
             }
@@ -155,8 +155,8 @@ public class SelectionManager {
                 {
                     if(newy<group.getMinHeight())
                         newy = group.getMinHeight();
-                    if(y1 - newy > group.getMaxY())
-                        newy = y1 - group.getMaxY();
+                    if(y1 - newy > (group.getMaxY()-1))
+                        newy = y1 - (group.getMaxY()-1);
                 }
                 playerLoc2.get(player.getName()).setY(newy);
             }
