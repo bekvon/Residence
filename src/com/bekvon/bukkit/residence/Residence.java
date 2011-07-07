@@ -267,7 +267,7 @@ public class Residence extends JavaPlugin {
             }
             autosaveInt = (autosaveInt * 60) * 20;
             autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
-            healBukkitId = server.getScheduler().scheduleAsyncRepeatingTask(this, doHeals, 20, 20);
+            healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, 20);
             if (cmanager.useLeases()) {
                 int leaseInterval = cmanager.getLeaseCheckInterval();
                 if (leaseInterval < 1) {
