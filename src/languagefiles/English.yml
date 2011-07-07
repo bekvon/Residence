@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 7
+Version: 8
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -262,6 +262,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Info:
                                 - 'Usage: /res select shift <amount>'
                                 - 'Pushes your selection by <amount> in the direction your looking.'
+                        chunk:
+                            Description: Select the chunk your currently in.
+                            Info:
+                                - 'Usage: /res select chunk'
+                                - 'Selects the chunk your currently standing in.'
                 create: #creation command
                     Description: Create Residences
                     Info:
