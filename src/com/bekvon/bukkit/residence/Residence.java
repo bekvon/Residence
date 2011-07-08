@@ -930,7 +930,7 @@ public class Residence extends JavaPlugin {
                     }
                     else
                     {
-                        player.sendMessage("§a"+language.getPhrase("InResidence")+"§e" + res + "§a");
+                        player.sendMessage("§a"+language.getPhrase("InResidence","§e" + res + "§a"));
                     }
                     return true;
                 } else if (args[0].equals("set")) {

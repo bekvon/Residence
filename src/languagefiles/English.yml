@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 8
+Version: 9
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -468,6 +468,10 @@ CommandHelp: #this is just a holder node, that holds the entire help
                                 - 'Usage: /res market release [residence]'
                                 - 'If you are the renter, this command releases the rent on the house for you.'
                                 - 'If you are the owner, this command makes the residence not for rent anymore.'
+                current:
+                    Description: Show residence your currently in.
+                    Info:
+                        - 'Usage: /res current'
                 lists:
                     Description: Predefined permission lists
                     Info:
