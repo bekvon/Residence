@@ -10,6 +10,7 @@ import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.text.help.InformationPager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -200,27 +201,36 @@ public class ResidenceManager {
 
     public void listResidences(Player player)
     {
-        StringBuilder sbuilder = new StringBuilder();
-        sbuilder.append("§e"+Residence.getLanguage().getPhrase("Residences")+":§3 ");
+        this.listResidences(player, player.getName(), 1);
+    }
+    
+    public void listResidences(Player player, int page)
+    {
+        this.listResidences(player, player.getName(), page);
+    }
+    
+    public void listResidences(Player player, String targetplayer)
+    {
+        this.listResidences(player, targetplayer, 1);
+    }
+
+    public void listResidences(Player player, String targetplayer, int page)
+    {
+        ArrayList<String> temp = new ArrayList<String>();
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized(residences)
         {
-            boolean firstadd = true;
             Iterator<Entry<String, ClaimedResidence>> it = set.iterator();
             while(it.hasNext())
             {
                 Entry<String, ClaimedResidence> next = it.next();
-                if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(player.getName()))
+                if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(targetplayer))
                 {
-                    if(!firstadd)
-                        sbuilder.append(", ");
-                    else
-                        firstadd = false;
-                    sbuilder.append(next.getKey());
+                    temp.add(next.getKey());
                 }
             }
         }
-        player.sendMessage(sbuilder.toString());
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, temp, page);
     }
 
     public String checkAreaCollision(CuboidArea newarea, ClaimedResidence parentResidence) {
@@ -269,6 +279,23 @@ public class ResidenceManager {
         }
     }
 
+    public void removeAllByOwner(String owner)
+    {
+        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
+        synchronized(residences)
+        {
+            Iterator<ClaimedResidence> it = residences.values().iterator();
+            while(it.hasNext())
+            {
+                ClaimedResidence res = it.next();
+                if(res.getOwner().equalsIgnoreCase(owner))
+                {
+                    it.remove();
+                }
+            }
+        }
+    }
+
     public int getOwnedZoneCount(String player)
     {
         Collection<ClaimedResidence> set = residences.values();
@@ -303,20 +330,6 @@ public class ResidenceManager {
 
     public void listAllResidences(Player player, int page)
     {
-        if(residences.size()==0)
-        {
-            player.sendMessage("§e"+Residence.getLanguage().getPhrase("ResidenceListAll","§a0§e.§a0§e")+":");
-            return;
-        }
-        int perPage = 6;
-        int start = (page-1) * perPage;
-        int end = start + perPage;
-        int pagecount = (int) Math.ceil((double)residences.size()/(double)perPage);
-        if(page>pagecount)
-        {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidPage"));
-            return;
-        }
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         ArrayList<String> temp = new ArrayList<String>();
         synchronized(residences)
@@ -328,12 +341,7 @@ public class ResidenceManager {
                 temp.add("§a" +next.getKey() + "§e - "+Residence.getLanguage().getPhrase("Owner") + ": " + next.getValue().getOwner() + " - " + Residence.getLanguage().getPhrase("World")+": " + next.getValue().getWorld());
             }
         }
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("ResidenceListAll","§a"+page+"§e.§a"+pagecount+"§e")+":");
-        for(int i = start; i < end; i ++)
-        {
-            if(temp.size()>i)
-                player.sendMessage(temp.get(i));
-        }
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences"), temp, page);
     }
 
     public void printAreaInfo(String areaname, Player player) {

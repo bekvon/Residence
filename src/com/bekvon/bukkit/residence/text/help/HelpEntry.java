@@ -52,12 +52,12 @@ public class HelpEntry {
         return desc;
     }
 
-    public int getLinesPerPage()
+    public static int getLinesPerPage()
     {
         return linesPerPage;
     }
 
-    public void setLinesPerPage(int lines)
+    public static void setLinesPerPage(int lines)
     {
         linesPerPage = lines;
     }
