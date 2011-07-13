@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 9
+Version: 10
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -158,10 +158,13 @@ Language:
     ResidenceGive: 'You give residence %1 to player %2'
     ResidenceRecieve: 'You have recieved residence %1 from player %2'
     #Version 4 New Fields
-    ResidenceListAll: 'Residences - <Page %1 of %2>'
+    #ResidenceListAll: 'Residences - <Page %1 of %2>' - removed, use GenericPage now
     ResidenceListAllEmpty: No Residences exists on the server...
     InvalidPage: Invalid Page...
     NextPage: Next Page
+    #Version 10 New Fields
+    RemovePlayersResidences: 'Removed all residences belonging to player %1'
+    GenericPage: 'Page %1 of %2'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -275,6 +278,12 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: Remove residences.
                     Info:
                         - 'Usage: /res remove <residence name>'
+                removeall:
+                    Description: Remove all residences owned by a player.
+                    Info:
+                        - 'Usage: /res removeall [owner]'
+                        - 'Removes all residences owned by a specific player.'
+                        - 'Requires /resadmin if you use it on anyone besides yourself.'
                 subzone:
                     Description: Create subzones in residences.
                     Info:
@@ -286,11 +295,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         list:
                             Description: List physical areas in a residence
                             Info:
-                                - 'Usage: /res area list [residence]'
+                                - 'Usage: /res area list [residence] <page>'
                         listall:
                             Description: List coordinates and other info for areas
                             Info:
-                                - 'Usage: /res area listall [residence]'
+                                - 'Usage: /res area listall [residence] <page>'
                         add:
                             Description: Add physical areas to a residence
                             Info:
@@ -335,6 +344,12 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Info:
                                 - 'Usage: /resadmin lease set [residence] [#days/infinite]'
                                 - 'Sets the lease time to a specified number of days, or infinite.'
+                bank:
+                    Description: Manage money in a Residence
+                    Info:
+                        - 'Usage: /res bank [deposit/withdraw] [amount]'
+                        - 'You must be standing in a Residence'
+                        - 'You must have the +bank flag.'
                 tp:
                     Description: Teleport to a residence
                     Info:
@@ -400,6 +415,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 list:
                     Description: List Residences
                     Info:
+                        - 'Usage: /res list <player> <page>'
                         - 'Lists all the residences you own.'
                         - 'To list everyones residences, use /res listall.'
                 listall:

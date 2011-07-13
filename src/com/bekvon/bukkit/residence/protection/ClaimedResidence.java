@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.event.ResidenceTPEvent;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.text.help.InformationPager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -602,37 +603,27 @@ public class ClaimedResidence {
         return list;
     }
 
-    public String getFormattedAreaList()
+    public void printAreaList(Player player, int page)
     {
-        StringBuilder s = new StringBuilder();
+        ArrayList<String> temp = new ArrayList<String>();
+        for(String area : areas.keySet())
+        {
+            temp.add(area);
+        }
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("PhysicalAreas"), temp, page);
+    }
+
+    public void printAdvancedAreaList(Player player, int page)
+    {
+        ArrayList<String> temp = new ArrayList<String>();
         for(Entry<String, CuboidArea> entry : areas.entrySet())
         {
             CuboidArea a = entry.getValue();
             Location h = a.getHighLoc();
             Location l = a.getLowLoc();
-            s.append("§a{§eID:§c").append(entry.getKey()).append(" §eP1:§c(").append(h.getBlockX()).append(",").append(h.getBlockY()).append(",").append(h.getBlockZ()).append(") §eP2:§c(").append(l.getBlockX()).append(",").append(l.getBlockY()).append(",").append(l.getBlockZ()+") §e(Size:§c" + a.getSize() + "§e)§a} ");
+            temp.add("§a{§eID:§c"+entry.getKey()+" §eP1:§c("+h.getBlockX()+","+h.getBlockY()+","+h.getBlockZ()+") §eP2:§c("+l.getBlockX()+","+l.getBlockY()+","+l.getBlockZ()+") §e(Size:§c" + a.getSize() + "§e)§a} ");
         }
-        return s.toString();
-    }
-
-    public void printAreaList(Player player)
-    {
-        StringBuilder sbuilder = new StringBuilder();
-        for(String area : areas.keySet())
-        {
-            if(sbuilder.length()>0)
-                sbuilder.append(", ").append(area);
-            else
-                sbuilder.append("§a").append(area);
-        }
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("PhysicalAreas")+":");
-        player.sendMessage(sbuilder.toString());
-    }
-
-    public void printAdvancedAreaList(Player player)
-    {
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("PhysicalAreas")+":");
-        player.sendMessage(this.getFormattedAreaList());
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("PhysicalAreas"), temp, page);
     }
 
     public String[] getAreaList()
