@@ -550,7 +550,8 @@ public class Residence extends JavaPlugin {
             }
             int page = 1;
             try{
-                page = Integer.parseInt(args[args.length-1]);
+                if(args.length>0)
+                    page = Integer.parseInt(args[args.length-1]);
             }catch(Exception ex){}
             if (sender instanceof Player) {
                 Player player = (Player) sender;

@@ -39,23 +39,25 @@ public class WorldFlagManager {
 
     public FlagPermissions getPerms(Player player)
     {
-        Map<String, FlagPermissions> groupworldperms = groupperms.get(Residence.getPermissionManager().getGroupNameByPlayer(player).toLowerCase());
-        String wname = player.getWorld().getName().toLowerCase();
-        if(groupworldperms==null)
-        {
-            return this.getPerms(wname);
+        return this.getPerms(player.getWorld().getName(), Residence.getPermissionManager().getGroupNameByPlayer(player));
+    }
+
+    public FlagPermissions getPerms(String world, String group)
+    {
+        world = world.toLowerCase();
+        group = group.toLowerCase();
+        Map<String, FlagPermissions> groupworldperms = groupperms.get(group);
+        if (groupworldperms == null) {
+            return this.getPerms(world);
         }
-        FlagPermissions list = groupworldperms.get(wname);
-        if(list==null)
-        {
-            list = groupworldperms.get("global."+wname);
-            if(list==null)
-            {
+        FlagPermissions list = groupworldperms.get(world);
+        if (list == null) {
+            list = groupworldperms.get("global." + world);
+            if (list == null) {
                 list = groupworldperms.get("global");
             }
-            if(list==null)
-            {
-                return this.getPerms(wname);
+            if (list == null) {
+                return this.getPerms(world);
             }
         }
         return list;
