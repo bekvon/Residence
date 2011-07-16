@@ -143,8 +143,18 @@ public class ResidenceEntityListener extends EntityListener {
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
             Entity damager = attackevent.getDamager();
+            ClaimedResidence srcarea = Residence.getResidenceManger().getByLoc(damager.getLocation());
+            boolean srcpvp = true;
+            if(srcarea !=null)
+                srcpvp = srcarea.getPermissions().has("pvp", true);
             ent = attackevent.getEntity();
             if ((ent instanceof Player || tamedWolf) && (damager instanceof Player)) {
+                if(!srcpvp)
+                {
+                    ((Player) damager).sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
+                    event.setCancelled(true);
+                    return;
+                }
                 /* Check for Player vs Player */
                 if (area == null) {
                     /* World PvP */
