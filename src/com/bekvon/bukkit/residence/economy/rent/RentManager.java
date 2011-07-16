@@ -352,7 +352,7 @@ public class RentManager {
             player.sendMessage("§a"+Residence.getLanguage().getPhrase("RentableAutoRenew")+":§3" + rentable.repeatable);
             if(rented!=null)
             {
-                player.sendMessage("§6"+Residence.getLanguage().getPhrase("Status")+":§c "+Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+landName+"§c.§e" + rented.player+"§c"));
+                player.sendMessage("§6"+Residence.getLanguage().getPhrase("Status")+":§e "+Residence.getLanguage().getPhrase("ResidenceRentedBy","§c" + rented.player+"§e"));
                 player.sendMessage("§e"+Residence.getLanguage().getPhrase("RentExpire")+":§a" + new Date(rented.endTime));
                 player.sendMessage("§a"+Residence.getLanguage().getPhrase("RentAutoRenew")+":§3" + rented.autoRefresh);
             }

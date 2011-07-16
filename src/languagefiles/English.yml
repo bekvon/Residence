@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 10
+Version: 11
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -165,6 +165,8 @@ Language:
     #Version 10 New Fields
     RemovePlayersResidences: 'Removed all residences belonging to player %1'
     GenericPage: 'Page %1 of %2'
+    #Version 11 New Fields
+    ResidenceRentedBy: 'Rented by %1'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
