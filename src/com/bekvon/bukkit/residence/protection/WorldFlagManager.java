@@ -39,21 +39,23 @@ public class WorldFlagManager {
 
     public FlagPermissions getPerms(Player player)
     {
-        Map<String, FlagPermissions> get = groupperms.get(Residence.getPermissionManager().getGroupNameByPlayer(player).toLowerCase());
-        if(get==null)
+        Map<String, FlagPermissions> groupworldperms = groupperms.get(Residence.getPermissionManager().getGroupNameByPlayer(player).toLowerCase());
+        String wname = player.getWorld().getName().toLowerCase();
+        if(groupworldperms==null)
         {
-            get = worldperms;
+            return this.getPerms(wname);
         }
-        FlagPermissions list = get.get(player.getWorld().getName().toLowerCase());
+        FlagPermissions list = groupworldperms.get(wname);
         if(list==null)
         {
-            list = get.get("global");
+            list = groupworldperms.get("global."+wname);
             if(list==null)
             {
-                if(globaldefaults == null)
-                    return new FlagPermissions();
-                else
-                    return globaldefaults;
+                list = groupworldperms.get("global");
+            }
+            if(list==null)
+            {
+                return this.getPerms(wname);
             }
         }
         return list;
@@ -63,8 +65,12 @@ public class WorldFlagManager {
     {
         world = world.toLowerCase();
         FlagPermissions list = worldperms.get(world);
-        if(list==null)
-            return globaldefaults;
+        if (list == null) {
+            if (globaldefaults == null)
+                return new FlagPermissions();
+            else
+                return globaldefaults;
+        }
         return list;
     }
 
@@ -91,17 +97,27 @@ public class WorldFlagManager {
                         Map<String, FlagPermissions> perms = new HashMap<String, FlagPermissions>();
                         for (String wkey : worldkeys) {
                             FlagPermissions list = FlagPermissions.parseFromConfigNode(wkey, config.getNode("Groups." + key + ".Flags.World"));
-                            perms.put(wkey.toLowerCase(), list);
+                            if(wkey.equalsIgnoreCase("global"))
+                            {
+                                list.setParent(globaldefaults);
+                                perms.put(wkey.toLowerCase(), list);
+                                for(Entry<String, FlagPermissions> worldperm : worldperms.entrySet())
+                                {
+                                    list = FlagPermissions.parseFromConfigNode(wkey, config.getNode("Groups." + key + ".Flags.World"));
+                                    list.setParent(worldperm.getValue());
+                                    perms.put("global."+worldperm.getKey().toLowerCase(), list);
+                                }
+                            }
+                            else
+                            {
+                                perms.put(wkey.toLowerCase(), list);
+                            }
                         }
                         for (Entry<String, FlagPermissions> entry : perms.entrySet()) {
                             String wkey = entry.getKey();
                             FlagPermissions list = entry.getValue();
-                            if (wkey.equals("global")) {
-                                list.setParent(worldperms.get(wkey));
-                                if(list.getParent()==null)
-                                    list.setParent(globaldefaults);
-                            } else {
-                                list.setParent(perms.get("global"));
+                            if (!wkey.startsWith("global.")) {
+                                list.setParent(perms.get("global."+wkey));
                                 if (list.getParent() == null) {
                                     list.setParent(worldperms.get(wkey));
                                 }
