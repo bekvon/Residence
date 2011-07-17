@@ -720,7 +720,22 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§c"+language.getPhrase("SelectPoints"));
                         return true;
                     }
-                } else if (args[0].equals("remove") || args[0].equals("delete")) {
+                } else if (args[0].equals("sublist")) {
+                    if(args.length==1 || args.length == 2 || args.length == 3)
+                    {
+                        ClaimedResidence res;
+                        if(args.length==1)
+                            res = rmanager.getByLoc(player.getLocation());
+                        else
+                            res = rmanager.getByName(args[1]);
+                        if(res!=null)
+                            res.printSubzoneList(player, page);
+                        else
+                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        return true;
+                    }
+                }
+                else if (args[0].equals("remove") || args[0].equals("delete")) {
                     if (args.length == 1) {
                         String area = rmanager.getNameByLoc(player.getLocation());
                         if (area != null) {

@@ -572,22 +572,6 @@ public class ClaimedResidence {
         return null;
     }
 
-    public String CSVSubzoneList()
-    {
-        String list = "";
-        synchronized(subzones)
-        {
-            for(String res : subzones.keySet())
-            {
-                if(list.equals(""))
-                    list = res;
-                else
-                    list = list + ", " + res;
-            }
-        }
-        return list;
-    }
-
     public String[] listSubzones()
     {
         String list[] = new String[subzones.size()];
@@ -601,6 +585,16 @@ public class ClaimedResidence {
             }
         }
         return list;
+    }
+
+    public void printSubzoneList(Player player, int page)
+    {
+        ArrayList<String> temp = new ArrayList<String>();
+        for(Entry<String, ClaimedResidence> sz : subzones.entrySet())
+        {
+            temp.add("§a"+sz.getKey() + "§e - " +Residence.getLanguage().getPhrase("Owner")+": " + sz.getValue().getOwner());
+        }
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Subzones"), temp, page);
     }
 
     public void printAreaList(Player player, int page)
