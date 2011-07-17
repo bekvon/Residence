@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 11
+Version: 12
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -201,6 +201,8 @@ Language:
     Owner: Owner
     #Version 4 Fields
     World: World
+    #Version 12 Fields
+    Subzones: Subzones
     
 # This is the help / usage messages for each command.
 # It follows this format:
@@ -425,6 +427,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Usage: /res listall <page>'
                         - 'Lists all residences on the server.'
+                sublist:
+                    Description: List Residence Subzones
+                    Info:
+                        - 'Usage: /res sublist <residence> <page>'
+                        - 'List subzones within a residence.'
                 default:
                     Description: Reset residence to default flags.
                     Info:

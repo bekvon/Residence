@@ -226,7 +226,7 @@ public class ResidenceManager {
                 Entry<String, ClaimedResidence> next = it.next();
                 if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(targetplayer))
                 {
-                    temp.add(next.getKey());
+                    temp.add("§a"+next.getKey()+"§e - "+Residence.getLanguage().getPhrase("World") + ": " + next.getValue().getWorld());
                 }
             }
         }
@@ -368,7 +368,6 @@ public class ResidenceManager {
         if(aid !=null)
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("CurrentArea")+": §6" + aid);
         player.sendMessage("§e"+Residence.getLanguage().getPhrase("Total.Size")+":§d " + res.getTotalSize());
-        player.sendMessage("§eSubZones:§6 " + res.CSVSubzoneList());
         if (Residence.getConfig().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseExpire")+":§a " + Residence.getLeaseManager().getExpireTime(areaname));
         }

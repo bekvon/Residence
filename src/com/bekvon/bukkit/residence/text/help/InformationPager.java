@@ -30,7 +30,6 @@ public class InformationPager {
 
     public static void printInfo(CommandSender sender, String title, String[] lines, int page)
     {
-
         InformationPager.printInfo(sender, title, Arrays.asList(lines), page);
     }
 
@@ -39,6 +38,8 @@ public class InformationPager {
         int start = (page-1) * perPage;
         int end = start + perPage;
         int pagecount = (int) Math.ceil((double)lines.size()/(double)perPage);
+        if(pagecount == 0)
+            pagecount = 1;
         if(page>pagecount)
         {
             sender.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidPage"));
