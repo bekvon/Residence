@@ -42,6 +42,7 @@ public class ConfigManager {
     protected Map<String,FlagPermissions> globalGroupDefaults;
     protected String language;
     protected boolean preventBuildInRent;
+    protected boolean stopOnSaveError;
 
     public ConfigManager(Configuration config)
     {
@@ -73,6 +74,7 @@ public class ConfigManager {
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getNode("Global"));
         globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getNode("Global"));
         preventBuildInRent = config.getBoolean("Global.PreventRentModify", true);
+        stopOnSaveError = config.getBoolean("Global.StopOnSaveFault",true);
         ConfigurationNode node = config.getNode("Global.GroupDefault");
         if(node!=null)
         {
@@ -203,5 +205,9 @@ public class ConfigManager {
     public boolean preventRentModify()
     {
         return preventBuildInRent;
+    }
+    public boolean stopOnSaveError()
+    {
+        return stopOnSaveError;
     }
 }

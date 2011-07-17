@@ -296,6 +296,10 @@ public class FlagPermissions {
 
     public static FlagPermissions load(Map<String, Object> root) throws Exception {
         FlagPermissions newperms = new FlagPermissions();
+        return FlagPermissions.load(root, newperms);
+    }
+
+    protected static FlagPermissions load(Map<String, Object> root, FlagPermissions newperms) throws Exception {
         newperms.playerFlags = (Map) root.get("PlayerFlags");
         newperms.groupFlags = (Map) root.get("GroupFlags");
         newperms.cuboidFlags = (Map) root.get("AreaFlags");
