@@ -291,8 +291,8 @@ public class Residence extends JavaPlugin {
         } catch (Exception ex) {
             initsuccess = false;
             getServer().getPluginManager().disablePlugin(this);
-            Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
+            Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1584,6 +1584,9 @@ public class Residence extends JavaPlugin {
         {
             try {
                 System.out.println("[Residence] - Main Save Corrupt, Loading Backup...");
+                File erroredfile = new File(ymlSaveLoc.getParent(),ymlSaveLoc.getName()+"-ERRORED.yml");
+                if(!erroredfile.isFile())
+                    ymlSaveLoc.renameTo(erroredfile);
                 this.loadYMLSave(new File(ymlSaveLoc.getParentFile(), ymlSaveLoc.getName() + ".bak"));
             } catch (Exception ex1) {
                 Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex1);

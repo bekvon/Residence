@@ -408,7 +408,7 @@ public class ResidenceManager {
         return resmap;
     }
 
-    public static ResidenceManager load(Map<String,Object> root)
+    public static ResidenceManager load(Map<String,Object> root) throws Exception
     {
         ResidenceManager resm = new ResidenceManager();
         if(root != null)
@@ -423,6 +423,10 @@ public class ResidenceManager {
                 {
                     System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
                     Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
+                    if(Residence.getConfig().stopOnSaveError())
+                    {
+                        throw(ex);
+                    }
                 }
             }
         }

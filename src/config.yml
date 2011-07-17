@@ -48,6 +48,8 @@ Global:
     ResidenceFlagsInherit: true
     # Setting this to false will allow rented residences to be modified by the renting player.
     PreventRentModify: true
+    # Setting this to false will cause residence to continue to load even if a error is detected in the save file.
+    StopOnSaveFault: true
     # These are world flags that are applied when the player is NOT within a residence.
     Flags:
         Global: #these are default for all worlds unless specified below, they can be overridden per group

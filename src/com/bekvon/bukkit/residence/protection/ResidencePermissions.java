@@ -363,9 +363,7 @@ public class ResidencePermissions extends FlagPermissions {
         ResidencePermissions newperms = new ResidencePermissions(res);
         newperms.owner = (String) root.get("Owner");
         newperms.world = (String) root.get("World");
-        newperms.playerFlags = (Map) root.get("PlayerFlags");
-        newperms.groupFlags = (Map) root.get("GroupFlags");
-        newperms.cuboidFlags = (Map) root.get("AreaFlags");
+        FlagPermissions.load(root, newperms);
         if(newperms.owner==null||newperms.world==null||newperms.playerFlags==null||newperms.groupFlags==null||newperms.cuboidFlags==null)
             throw new Exception("Invalid Residence Permissions...");
         newperms.fixNames();
