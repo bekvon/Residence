@@ -94,11 +94,15 @@ Global:
         tnt: false
         creeper: false
         flow: false
+        piston: false
+        ignite: false
+        firespread: false
     # These are default flags applied to the residence creator of any group.
     CreatorDefault:
         build: true
         move: true
         use: true
+        ignite: true
         container: true
      # These are default group flags applied to a residence made by a user of any group.
     GroupDefault:

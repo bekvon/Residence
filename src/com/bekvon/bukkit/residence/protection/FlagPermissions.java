@@ -70,6 +70,7 @@ public class FlagPermissions {
         addResidenceOnlyFlag("lavaflow");
         addResidenceOnlyFlag("waterflow");
         addResidenceOnlyFlag("physics");
+        addResidenceOnlyFlag("piston");
         addPlayerOrGroupOnlyFlag("admin");
     }
 
