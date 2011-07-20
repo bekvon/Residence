@@ -143,7 +143,9 @@ public class ResidenceEntityListener extends EntityListener {
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
             Entity damager = attackevent.getDamager();
-            ClaimedResidence srcarea = Residence.getResidenceManger().getByLoc(damager.getLocation());
+            ClaimedResidence srcarea = null;
+            if(damager!=null)
+                srcarea = Residence.getResidenceManger().getByLoc(damager.getLocation());
             boolean srcpvp = true;
             if(srcarea !=null)
                 srcpvp = srcarea.getPermissions().has("pvp", true);

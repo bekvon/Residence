@@ -579,14 +579,12 @@ public class Residence extends JavaPlugin {
                     args = new String[1];
                     args[0] = "?";
                 }
-                if(args[0].equals("select")) {
-                    if(!group.selectCommandAccess() && !resadmin)
-                    {
+                if (args[0].equals("select")) {
+                    if (!group.selectCommandAccess() && !resadmin) {
                         player.sendMessage("§c" + language.getPhrase("SelectDiabled"));
                         return true;
                     }
-                    if(!group.canCreateResidences() && group.getMaxSubzoneDepth() <= 0 && !resadmin)
-                    {
+                    if (!group.canCreateResidences() && group.getMaxSubzoneDepth() <= 0 && !resadmin) {
                         player.sendMessage("§c" + language.getPhrase("SelectDiabled"));
                         return true;
                     }
@@ -604,30 +602,23 @@ public class Residence extends JavaPlugin {
                         } else if (args[1].equals("vert")) {
                             smanager.vert(player, resadmin);
                             return true;
-                        }
-                        else if(args[1].equals("sky"))
-                        {
+                        } else if (args[1].equals("sky")) {
                             smanager.sky(player, resadmin);
                             return true;
-                        }
-                        else if(args[1].equals("bedrock"))
-                        {
+                        } else if (args[1].equals("bedrock")) {
                             smanager.bedrock(player, resadmin);
                             return true;
-                        }
-                        else if (args[1].equals("coords")) {
+                        } else if (args[1].equals("coords")) {
                             Location playerLoc1 = smanager.getPlayerLoc1(pname);
                             if (playerLoc1 != null) {
-                                player.sendMessage("§a"+language.getPhrase("Primary.Selection")+":§b (" + playerLoc1.getBlockX() + ", " + playerLoc1.getBlockY() + ", " + playerLoc1.getBlockZ() + ")");
+                                player.sendMessage("§a" + language.getPhrase("Primary.Selection") + ":§b (" + playerLoc1.getBlockX() + ", " + playerLoc1.getBlockY() + ", " + playerLoc1.getBlockZ() + ")");
                             }
                             Location playerLoc2 = smanager.getPlayerLoc2(pname);
                             if (playerLoc2 != null) {
-                                player.sendMessage("§a"+language.getPhrase("Secondary.Selection")+":§b (" + playerLoc2.getBlockX() + ", " + playerLoc2.getBlockY() + ", " + playerLoc2.getBlockZ() + ")");
+                                player.sendMessage("§a" + language.getPhrase("Secondary.Selection") + ":§b (" + playerLoc2.getBlockX() + ", " + playerLoc2.getBlockY() + ", " + playerLoc2.getBlockZ() + ")");
                             }
                             return true;
-                        }
-                        else if(args[1].equals("chunk"))
-                        {
+                        } else if (args[1].equals("chunk")) {
                             smanager.selectChunk(player);
                             return true;
                         }
@@ -647,39 +638,34 @@ public class Residence extends JavaPlugin {
                             try {
                                 amount = Integer.parseInt(args[2]);
                             } catch (Exception ex) {
-                                player.sendMessage("§c"+language.getPhrase("InvalidAmount"));
+                                player.sendMessage("§c" + language.getPhrase("InvalidAmount"));
                                 return true;
                             }
                             smanager.modify(player, true, amount);
                             return true;
                         }
                     }
-                    if (args[1].equals("residence")) {
+                    if(args.length>1 && args[1].equals("residence")) {
                         ClaimedResidence res = rmanager.getByName(args[2]);
                         if (res == null) {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage("§c" + language.getPhrase("InvalidResidence"));
                             return true;
                         }
                         CuboidArea area = res.getArea(args[3]);
-                        if(area!=null)
-                        {
+                        if (area != null) {
                             smanager.placeLoc1(pname, area.getHighLoc());
                             smanager.placeLoc2(pname, area.getLowLoc());
-                            player.sendMessage("§a"+language.getPhrase("SelectionArea","§6" + args[3] + "§a.§6" + args[2]+"§a"));
-                        }
-                        else
-                        {
-                            player.sendMessage("§c"+language.getPhrase("AreaNonExist"));
+                            player.sendMessage("§a" + language.getPhrase("SelectionArea", "§6" + args[3] + "§a.§6" + args[2] + "§a"));
+                        } else {
+                            player.sendMessage("§c" + language.getPhrase("AreaNonExist"));
                         }
                         return true;
-                    }
-                    else
-                    {
+                    } else {
                         try {
                             smanager.selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                             return true;
                         } catch (Exception ex) {
-                            player.sendMessage("§c"+language.getPhrase("SelectionFail"));
+                            player.sendMessage("§c" + language.getPhrase("SelectionFail"));
                             return true;
                         }
                     }
