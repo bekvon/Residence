@@ -147,6 +147,22 @@ public class ResidenceBlockListener extends BlockListener {
     }
 
     @Override
+    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        if(res!=null)
+            if(!res.getPermissions().has("piston", true))
+                event.setCancelled(true);
+    }
+
+    @Override
+    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        if(res!=null)
+            if(!res.getPermissions().has("piston", true))
+                event.setCancelled(true);
+    }
+
+    @Override
     public void onBlockFromTo(BlockFromToEvent event) {
         if (event.isCancelled()) {
             return;
