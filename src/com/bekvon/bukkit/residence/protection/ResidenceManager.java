@@ -184,7 +184,6 @@ public class ResidenceManager {
             return;
         newArea = resevent.getPhysicalArea();
         name = resevent.getResidenceName();
-        
         if (residences.containsKey(name)) {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceAlreadyExists","§e"+name+"§c"));
             return;
@@ -193,6 +192,7 @@ public class ResidenceManager {
         if(newRes.getAreaCount()!=0)
         {
             residences.put(name, newRes);
+            Residence.getLeaseManager().removeExpireTime(name);
             player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceCreate","§e" + name + "§a"));
             if(Residence.getConfig().useLeases())
                 Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
@@ -269,7 +269,7 @@ public class ResidenceManager {
             } else {
                 residences.remove(name);
             }
-            Residence.getLeaseManager().removeExpireTime(name);
+            //Residence.getLeaseManager().removeExpireTime(name); - causing concurrent modification exception in lease manager... worked around for now
             Residence.getRentManager().removeRentable(name);
             if(player!=null)
                 player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRemove","§e" + name + "§a"));
