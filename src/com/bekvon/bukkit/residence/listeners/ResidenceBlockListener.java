@@ -15,10 +15,14 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.event.block.BlockSpreadEvent;
 
 /**
  *
@@ -132,6 +136,14 @@ public class ResidenceBlockListener extends BlockListener {
             }
         }
         //super.onBlockPlace(event);
+    }
+
+    @Override
+    public void onBlockSpread(BlockSpreadEvent event) {
+        Location loc = event.getBlock().getLocation();
+        FlagPermissions perms = Residence.getPermsByLoc(loc);
+        if(!perms.has("firespread", true))
+            event.setCancelled(true);
     }
 
     @Override
