@@ -268,6 +268,11 @@ public class TransactionManager {
         System.out.println("[Residence] - ReInit land selling.");
     }
 
+    public int getSaleAmount(String name)
+    {
+        return sellAmount.get(name);
+    }
+
     public Map<String,Integer> save()
     {
         return sellAmount;
