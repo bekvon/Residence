@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.Residence
-version: 2.3.6
+version: 2.3.7
 description: Cuboid Residence Plugin
 author: bekvon
 commands:

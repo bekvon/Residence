@@ -43,6 +43,7 @@ public class ConfigManager {
     protected String language;
     protected boolean preventBuildInRent;
     protected boolean stopOnSaveError;
+    protected boolean legacyperms;
 
     public ConfigManager(Configuration config)
     {
@@ -75,6 +76,7 @@ public class ConfigManager {
         globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getNode("Global"));
         preventBuildInRent = config.getBoolean("Global.PreventRentModify", true);
         stopOnSaveError = config.getBoolean("Global.StopOnSaveFault",true);
+        legacyperms = config.getBoolean("Global.LegacyPermissions",false);
         ConfigurationNode node = config.getNode("Global.GroupDefault");
         if(node!=null)
         {
@@ -92,6 +94,11 @@ public class ConfigManager {
         } catch (Exception ex) {
             chatColor = ChatColor.DARK_PURPLE;
         }
+    }
+
+    public boolean useLegacyPermissions()
+    {
+        return legacyperms;
     }
 
     public String getDefaultGroup() {
