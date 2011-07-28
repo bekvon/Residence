@@ -32,7 +32,7 @@ public class PermissionManager {
     protected Map<String,PermissionGroup> groups;
     protected Map<String,String> playersGroup;
     protected FlagPermissions globalFlagPerms;
-    protected boolean perm2;
+    protected boolean legacyPerm;
 
     public PermissionManager(Configuration config)
     {
@@ -41,11 +41,10 @@ public class PermissionManager {
         groups = Collections.synchronizedMap(new HashMap<String,PermissionGroup>());
         playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
         globalFlagPerms = new FlagPermissions();
-        Plugin p = Residence.getServ().getPluginManager().getPlugin("Permissions");
-        if(p!=null && p.getDescription().getVersion().startsWith("2"))
+        if(Residence.getConfig().useLegacyPermissions())
         {
-            perm2 = true;
-            System.out.println("[Residence] - Setting Permissions 2.X compatability mode...");
+            legacyPerm = true;
+            System.out.println("[Residence] - Setting permissions compatability mode...");
         }
         boolean enable = config.getBoolean("Global.EnablePermissions", true);
         this.readConfig(config);
@@ -96,7 +95,7 @@ public class PermissionManager {
             return defaultGroup;
         } else {
             String group;
-            if(!perm2)
+            if(!legacyPerm)
                 group = authority.getPrimaryGroup(world, player).toLowerCase();
             else
                 group = authority.getGroup(world, player).toLowerCase();
@@ -109,6 +108,8 @@ public class PermissionManager {
     }
 
     public boolean hasAuthority(Player player, String permission, boolean def) {
+        if(player.hasPermission(permission))
+            return true;
         if (authority == null) {
             return def;
         } else {
