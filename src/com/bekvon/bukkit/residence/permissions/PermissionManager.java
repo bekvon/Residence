@@ -9,6 +9,8 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
+import com.platymuus.bukkit.permissions.Group;
+import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ import org.bukkit.util.config.ConfigurationNode;
  */
 public class PermissionManager {
     protected static PermissionHandler authority;
+    protected static PermissionsPlugin newperms;
     protected Map<String,PermissionGroup> groups;
     protected Map<String,String> playersGroup;
     protected FlagPermissions globalFlagPerms;
@@ -40,6 +43,11 @@ public class PermissionManager {
         groups = Collections.synchronizedMap(new HashMap<String,PermissionGroup>());
         playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
         globalFlagPerms = new FlagPermissions();
+        Plugin p = Residence.getServ().getPluginManager().getPlugin("PermissionsBukkit");
+        if(p!=null && p instanceof PermissionsPlugin)
+        {
+            newperms = (PermissionsPlugin) p;
+        }
         boolean enable = config.getBoolean("Global.EnablePermissions", true);
         this.readConfig(config);
         if(enable)
@@ -81,18 +89,36 @@ public class PermissionManager {
         if(playersGroup.containsKey(player))
         {
             String group = playersGroup.get(player);
-            if(group == null || !groups.containsKey(group))
-                return defaultGroup;
-            return group;
+            if(group!=null)
+            {
+                group = group.toLowerCase();
+                if(group != null && groups.containsKey(group))
+                    return group;
+            }
         }
-        if (authority == null) {
+        if (authority == null && newperms == null) {
             return defaultGroup;
         } else {
-            String group = authority.getGroup(world, player);
+            String group = null;
+            if(authority != null && Residence.getConfig().useLegacyPermissions())
+                group = authority.getGroup(world, player);
+            else if(newperms!=null)
+            {
+                List<Group> newgroups = newperms.getGroups(player);
+                for(Group newgroup : newgroups)
+                {
+                    group = newgroup.getName().toLowerCase();
+                    break;
+                }
+            }
+            else
+                group = authority.getPrimaryGroup(world, player);
+            if(group!=null)
+                group = group.toLowerCase();
             if (group == null || !groups.containsKey(group)) {
                 return defaultGroup;
             } else {
-                return group.toLowerCase();
+                return group;
             }
         }
     }

@@ -25,6 +25,8 @@ Global:
     LeaseAutoRenew: true
     # Whether or not to use the Permissions system in conjunction with this config.
     EnablePermissions: true
+    # Set to true if NOT using Permissions or PermissionsBukkit, or using a really old version of Permissions
+    LegacyPermissions: false
     # Enable / Disable Residence's Economy System.
     EnableEconomy: true
     # The economy system to use (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).
