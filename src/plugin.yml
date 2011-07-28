@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.Residence
-version: 2.3.5
+version: 2.3.6
 description: Cuboid Residence Plugin
 author: bekvon
 commands:
@@ -22,3 +22,16 @@ commands:
   rc:
     description: §cChat in current residence channel.
     usage: §c/rc to toggle, or /rc <message>
+    
+permissions:
+    residence.*:
+        description: Gives access to all residence commands
+        children:
+            doorman.admin: false
+            doorman.create: true
+    residence.admin:
+        description: Gives you access to /resadmin
+        default: op
+    residence.create:
+        description: Allows you to create residences
+        default: op
