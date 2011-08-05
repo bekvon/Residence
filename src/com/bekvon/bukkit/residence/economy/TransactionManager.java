@@ -176,6 +176,7 @@ public class TransactionManager {
                     return;
                 }
                 res.getPermissions().setOwner(player.getName(),true);
+                res.getPermissions().applyDefaultFlags();
                 this.removeFromSale(areaname);
                 player.sendMessage("§a"+Residence.getLanguage().getPhrase("MoneyCharged","§e"+amount + "§a.§e" +econ.getName() +"§a"));
                 player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceBought","§a" + areaname + "§e"));
