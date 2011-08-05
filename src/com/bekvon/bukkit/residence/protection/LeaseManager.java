@@ -164,7 +164,6 @@ public class LeaseManager {
                         it.remove();
                     } else {
                         if (Residence.getConfig().enableEconomy() && Residence.getConfig().autoRenewLeases()) {
-
                             int cost = getRenewCost(res);
                             String owner = res.getPermissions().getOwner();
                             PermissionGroup limits = Residence.getPermissionManager().getGroup(owner, res.getPermissions().getWorld());
@@ -174,6 +173,11 @@ public class LeaseManager {
                                     next.setValue(next.getValue() + daysToMs(limits.getLeaseGiveTime()));
                                     renewed = true;
                                 }
+                            }
+                            if(res != null && !renewed && res.getBank().hasEnough(cost))
+                            {
+                                res.getBank().subtract(cost);
+                                renewed = true;
                             }
                         }
                         if (!renewed) {
