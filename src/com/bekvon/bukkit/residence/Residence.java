@@ -1261,6 +1261,8 @@ public class Residence extends JavaPlugin {
                         return false;
                     return true;
                 } else if (args[0].equals("market")) {
+                    if(args.length == 1)
+                        return false;
                     if(args[1].equals("list"))
                     {
                         if(!cmanager.enableEconomy())
