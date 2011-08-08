@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -142,7 +143,7 @@ public class ResidencePlayerListener extends PlayerListener {
                         player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","container"));
                     }
                 }
-                else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH)
+                else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH || mat == Material.TRAP_DOOR || mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE)
                 {
                     if(res!=null)
                     {
