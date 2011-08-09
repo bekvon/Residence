@@ -1584,18 +1584,36 @@ public class Residence extends JavaPlugin {
     private void loadYml() throws Exception {
         try
         {
-            this.loadYMLSave(ymlSaveLoc);
+            if(ymlSaveLoc.isFile())
+                this.loadYMLSave(ymlSaveLoc);
+            else
+            {
+                File bakfile = new File(ymlSaveLoc.getParentFile(), ymlSaveLoc.getName() + ".bak");
+                if(bakfile.isFile())
+                    this.loadYMLSave(bakfile);
+                else
+                    System.out.println("[Residence] No save file found...");
+            }
         }
         catch (Exception ex)
         {
+            File erroredfile = new File(ymlSaveLoc.getParent(), ymlSaveLoc.getName() + "-ERRORED.yml");
+            if (!erroredfile.isFile()) {
+                ymlSaveLoc.renameTo(erroredfile);
+            }
+            if(cmanager.stopOnSaveError())
+            {
+                this.setEnabled(false);
+                System.out.print("[Residence] - Save corrupted, disabling Residence!");
+                return;
+            }
             try {
                 System.out.println("[Residence] - Main Save Corrupt, Loading Backup...");
-                File erroredfile = new File(ymlSaveLoc.getParent(),ymlSaveLoc.getName()+"-ERRORED.yml");
-                if(!erroredfile.isFile())
-                    ymlSaveLoc.renameTo(erroredfile);
                 this.loadYMLSave(new File(ymlSaveLoc.getParentFile(), ymlSaveLoc.getName() + ".bak"));
             } catch (Exception ex1) {
                 Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex1);
+                System.out.println("[Residence] Failed to load backup file! Disabling...");
+                this.setEnabled(false);
                 throw ex1;
             }
         }
