@@ -47,10 +47,11 @@ public class PermissionManager {
         if(p!=null && p instanceof PermissionsPlugin)
         {
             newperms = (PermissionsPlugin) p;
+            System.out.println("[Residence] Found Permissions Bukkit version "+p.getDescription().getVersion() + "!");
         }
         boolean enable = config.getBoolean("Global.EnablePermissions", true);
         this.readConfig(config);
-        if(enable)
+        if(enable && newperms == null)
             this.checkPermissions();
         else
             authority = null;
