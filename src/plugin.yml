@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.Residence
-version: 2.3.7
+version: 2.3.8
 description: Cuboid Residence Plugin
 author: bekvon
 commands:
@@ -27,8 +27,8 @@ permissions:
     residence.*:
         description: Gives access to all residence commands
         children:
-            doorman.admin: false
-            doorman.create: true
+            residence.admin: false
+            residence.create: true
     residence.admin:
         description: Gives you access to /resadmin
         default: op

@@ -236,6 +236,8 @@ public class Residence extends JavaPlugin {
                 pmanager = new PermissionListManager();
             }
             if (firstenable) {
+                if(!this.isEnabled())
+                    return;
                 FlagPermissions.initValidFlags();
                 smanager = new SelectionManager();
                 blistener = new ResidenceBlockListener();
@@ -1597,24 +1599,29 @@ public class Residence extends JavaPlugin {
         }
         catch (Exception ex)
         {
-            File erroredfile = new File(ymlSaveLoc.getParent(), ymlSaveLoc.getName() + "-ERRORED.yml");
-            if (!erroredfile.isFile()) {
-                ymlSaveLoc.renameTo(erroredfile);
-            }
-            if(cmanager.stopOnSaveError())
+            File erroredfile;
+            if(ymlSaveLoc.isFile())
+                erroredfile = new File(ymlSaveLoc.getParent(), ymlSaveLoc.getName() + "-ERRORED.yml");
+            else
             {
-                this.setEnabled(false);
-                System.out.print("[Residence] - Save corrupted, disabling Residence!");
-                return;
+                File bakfile = new File(ymlSaveLoc.getParentFile(), ymlSaveLoc.getName() + ".bak");
+                erroredfile = new File(bakfile.getParent(), bakfile.getName() + "-ERRORED.yml");
             }
+            if(erroredfile.isFile())
+                erroredfile.delete();
+            ymlSaveLoc.renameTo(erroredfile);
             try {
                 System.out.println("[Residence] - Main Save Corrupt, Loading Backup...");
                 this.loadYMLSave(new File(ymlSaveLoc.getParentFile(), ymlSaveLoc.getName() + ".bak"));
+                this.saveYml();
             } catch (Exception ex1) {
                 Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex1);
-                System.out.println("[Residence] Failed to load backup file! Disabling...");
-                this.setEnabled(false);
-                throw ex1;
+                if(cmanager.stopOnSaveError())
+                {
+                    this.setEnabled(false);
+                    System.out.print("[Residence] - Save corrupted, disabling Residence!");
+                    throw ex1;
+                }
             }
         }
     }
