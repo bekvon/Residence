@@ -80,7 +80,7 @@ public class ClaimedResidence {
         }
         if(parent==null)
         {
-            String collideResidence = Residence.getResidenceManger().checkAreaCollision(area, this);
+            String collideResidence = Residence.getResidenceManager().checkAreaCollision(area, this);
             if(collideResidence!=null)
             {
                 if(player!=null)
@@ -181,7 +181,7 @@ public class ClaimedResidence {
             return false;
         }
         if (parent == null) {
-            String collideResidence = Residence.getResidenceManger().checkAreaCollision(newarea, this);
+            String collideResidence = Residence.getResidenceManager().checkAreaCollision(newarea, this);
             if (collideResidence != null) {
                 if(player!=null)
                     player.sendMessage("§c"+Residence.getLanguage().getPhrase("AreaCollision","§e" + collideResidence));
@@ -892,7 +892,7 @@ public class ClaimedResidence {
 
     public String getName()
     {
-        return Residence.getResidenceManger().getNameByRes(this);
+        return Residence.getResidenceManager().getNameByRes(this);
     }
 
     public void remove()
@@ -900,7 +900,7 @@ public class ClaimedResidence {
         String name = getName();
         if(name!=null)
         {
-            Residence.getResidenceManger().removeResidence(name);
+            Residence.getResidenceManager().removeResidence(name);
         }
     }
 

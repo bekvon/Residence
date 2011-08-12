@@ -301,7 +301,13 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    public static ResidenceManager getResidenceManger() {
+    public static ResidenceManager getResidenceManager() {
+        return rmanager;
+    }
+
+    @Deprecated
+    public static ResidenceManager getResidenceManger()
+    {
         return rmanager;
     }
 
@@ -1180,7 +1186,7 @@ public class Residence extends JavaPlugin {
                             return true;
                         } else if (args[1].equals("cost")) {
                             if (args.length == 3) {
-                                ClaimedResidence res = Residence.getResidenceManger().getByName(args[2]);
+                                ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
                                 if (res == null || leasemanager.leaseExpires(args[2])) {
                                     int cost = leasemanager.getRenewCost(res);
                                     player.sendMessage("§e"+language.getPhrase("LeaseRenewalCost","§c" + args[2] + "§e.§c" + cost + "§e"));

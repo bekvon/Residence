@@ -45,7 +45,7 @@ public class RentManager {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("SellRentFail"));
             return;
         }
-        ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+        ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(res == null)
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
@@ -91,7 +91,7 @@ public class RentManager {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentDisabled"));
             return;
         }
-        ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+        ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(res!=null)
         {
             if(res.getPermissions().getOwner().equalsIgnoreCase(player.getName()))
@@ -162,7 +162,7 @@ public class RentManager {
         }
         if(resadmin || rent.player.equalsIgnoreCase(player.getName()))
         {
-            ResidenceRentEvent revent = new ResidenceRentEvent(Residence.getResidenceManger().getByName(landName),player,RentEventType.UNRENTABLE);
+            ResidenceRentEvent revent = new ResidenceRentEvent(Residence.getResidenceManager().getByName(landName),player,RentEventType.UNRENTABLE);
             Residence.getServ().getPluginManager().callEvent(revent);
             if(revent.isCancelled())
                 return;
@@ -171,7 +171,7 @@ public class RentManager {
             {
                 rentableLand.remove(landName);
             }
-            ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+            ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
             if(res!=null)
                 res.getPermissions().applyDefaultFlags();
             player.sendMessage(Residence.getLanguage().getPhrase("ResidenceUnrent","§e"+landName + "§a"));
@@ -194,7 +194,7 @@ public class RentManager {
 
     public void unrent(Player player, String landName, boolean resadmin)
     {
-        ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+        ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(res == null)
         {
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("InvalidResidence"));
@@ -277,7 +277,7 @@ public class RentManager {
             RentedLand land = next.getValue();
             if(land.endTime<=System.currentTimeMillis())
             {
-                ClaimedResidence res = Residence.getResidenceManger().getByName(next.getKey());
+                ClaimedResidence res = Residence.getResidenceManager().getByName(next.getKey());
                 if (res != null) {
                     ResidenceRentEvent revent = new ResidenceRentEvent(res, null, RentEventType.RENT_EXPIRE);
                     Residence.getServ().getPluginManager().callEvent(revent);
@@ -315,7 +315,7 @@ public class RentManager {
     public void setRentRepeatable(Player player, String landName, boolean value, boolean resadmin)
     {
         RentableLand land = rentableLand.get(landName);
-        ClaimedResidence res = Residence.getResidenceManger().getByName(landName);
+        ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(land!=null && res!=null && (res.getPermissions().getOwner().equalsIgnoreCase(player.getName()) || resadmin))
         {
             land.repeatable = value;
@@ -457,7 +457,7 @@ public class RentManager {
         int count = 0;
         for(String land : set)
         {
-            ClaimedResidence res = Residence.getResidenceManger().getByName(land);
+            ClaimedResidence res = Residence.getResidenceManager().getByName(land);
             if(res!=null)
                 if(res.getPermissions().getOwner().equalsIgnoreCase(player))
                     count++;
