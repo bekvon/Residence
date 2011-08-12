@@ -83,7 +83,7 @@ public class PermissionListManager {
              player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidList"));
              return;
         }
-        ClaimedResidence res = Residence.getResidenceManger().getByName(areaname);
+        ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
         if(res == null)
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));

@@ -117,15 +117,15 @@ public class ResidencePlayerListener extends PlayerListener {
                 if(event.getAction() == Action.LEFT_CLICK_BLOCK)
                 {
                     Location loc = block.getLocation();
-                    String res = Residence.getResidenceManger().getNameByLoc(loc);
+                    String res = Residence.getResidenceManager().getNameByLoc(loc);
                     if(res!=null)
-                        Residence.getResidenceManger().printAreaInfo(res, player);
+                        Residence.getResidenceManager().printAreaInfo(res, player);
                 }
             }
             Material mat = block.getType();
             if(!resadmin)
             {
-                ClaimedResidence res = Residence.getResidenceManger().getByLoc(block.getLocation());
+                ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
                 if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
                 {
                     boolean hasuse;
@@ -170,8 +170,8 @@ public class ResidencePlayerListener extends PlayerListener {
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         if(event.isCancelled())
             return;
-        String resname = Residence.getResidenceManger().getNameByLoc(event.getBlockClicked().getLocation());
-        ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
+        String resname = Residence.getResidenceManager().getNameByLoc(event.getBlockClicked().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
         Player player = event.getPlayer();
         String pname = player.getName();
         boolean hasbuild;
@@ -184,7 +184,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     event.setCancelled(true);
                     return;
                 }
-                res = Residence.getResidenceManger().getByName(resname);
+                res = Residence.getResidenceManager().getByName(resname);
             }
             ResidencePermissions perms = res.getPermissions();
             hasbuild = perms.playerHas(pname,"build", true);
@@ -205,8 +205,8 @@ public class ResidencePlayerListener extends PlayerListener {
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
         if(event.isCancelled())
             return;
-        String resname = Residence.getResidenceManger().getNameByLoc(event.getBlockClicked().getLocation());
-        ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
+        String resname = Residence.getResidenceManager().getNameByLoc(event.getBlockClicked().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
         Player player = event.getPlayer();
         String pname = player.getName();
         boolean hasbuild;
@@ -219,7 +219,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     event.setCancelled(true);
                     return;
                 }
-                res = Residence.getResidenceManger().getByName(resname);
+                res = Residence.getResidenceManager().getByName(resname);
             }
             ResidencePermissions perms = res.getPermissions();
             hasbuild = perms.playerHas(pname,"build", true);
@@ -246,7 +246,7 @@ public class ResidencePlayerListener extends PlayerListener {
         }
         long now = System.currentTimeMillis();
         if (now - lastCheck > minUpdateTime) {
-            ResidenceManager manager = Residence.getResidenceManger();
+            ResidenceManager manager = Residence.getResidenceManager();
             ClaimedResidence res = null;
             Location ploc = event.getTo();
             boolean enterArea = false;
@@ -274,7 +274,7 @@ public class ResidencePlayerListener extends PlayerListener {
                             areaname = null;
                             Residence.getChatManager().removeFromChannel(pname);
                         } else {
-                            areaname = Residence.getResidenceManger().getNameByLoc(ploc);
+                            areaname = Residence.getResidenceManager().getNameByLoc(ploc);
                             cache.put(pname, areaname);
                             chatchange = true;
                         }

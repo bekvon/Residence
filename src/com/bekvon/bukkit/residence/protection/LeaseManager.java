@@ -159,7 +159,7 @@ public class LeaseManager {
                 if (next.getValue() < System.currentTimeMillis()) {
                     boolean renewed = false;
                     String resname = next.getKey();
-                    ClaimedResidence res = Residence.getResidenceManger().getByName(resname);
+                    ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
                     if (res == null) {
                         it.remove();
                     } else {
@@ -204,7 +204,7 @@ public class LeaseManager {
         {
             if(list[i]!=null)
             {
-                ClaimedResidence res = Residence.getResidenceManger().getByName(list[i]);
+                ClaimedResidence res = Residence.getResidenceManager().getByName(list[i]);
                 PermissionGroup group = Residence.getPermissionManager().getGroup(res.getPermissions().getOwner(),res.getPermissions().getWorld());
                 this.setExpireTime(null,list[i], group.getLeaseGiveTime());
             }

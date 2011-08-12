@@ -46,18 +46,18 @@ public class ResidenceBlockListener extends BlockListener {
         ClaimedResidence res;
         if(Residence.getConfig().enabledRentSystem())
         {
-            String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
+            String resname = Residence.getResidenceManager().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getConfig().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
                 return;
             }
-            res = Residence.getResidenceManger().getByName(resname);
+            res = Residence.getResidenceManager().getByName(resname);
         }
         else
         {
-            res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+            res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         }
         String pname = player.getName();
         if (res != null) {
@@ -99,18 +99,18 @@ public class ResidenceBlockListener extends BlockListener {
         ClaimedResidence res;
         if(Residence.getConfig().enabledRentSystem())
         {
-            String resname = Residence.getResidenceManger().getNameByLoc(event.getBlock().getLocation());
+            String resname = Residence.getResidenceManager().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getConfig().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
                 return;
             }
-            res = Residence.getResidenceManger().getByName(resname);
+            res = Residence.getResidenceManager().getByName(resname);
         }
         else
         {
-            res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+            res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         }
         String pname = player.getName();
         if (res != null) {
@@ -148,7 +148,7 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(res!=null)
             if(!res.getPermissions().has("piston", true))
                 event.setCancelled(true);
@@ -156,7 +156,7 @@ public class ResidenceBlockListener extends BlockListener {
 
     @Override
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(res!=null)
             if(!res.getPermissions().has("piston", true))
                 event.setCancelled(true);
@@ -167,7 +167,7 @@ public class ResidenceBlockListener extends BlockListener {
         if (event.isCancelled()) {
             return;
         }
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getToBlock().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getToBlock().getLocation());
         if (res != null) {
             boolean hasflow = res.getPermissions().has("flow", true);
             Material mat = event.getBlock().getType();
@@ -189,7 +189,7 @@ public class ResidenceBlockListener extends BlockListener {
     public void onBlockBurn(BlockBurnEvent event) {
         if(event.isCancelled())
             return;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(res!=null)
         {
             if(!res.getPermissions().has("firespread", true))
@@ -211,7 +211,7 @@ public class ResidenceBlockListener extends BlockListener {
     public void onBlockIgnite(BlockIgniteEvent event) {
         if(event.isCancelled())
             return;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         IgniteCause cause = event.getCause();
         if (res != null) {
             if(cause == IgniteCause.SPREAD)
@@ -257,7 +257,7 @@ public class ResidenceBlockListener extends BlockListener {
     public void onBlockPhysics(BlockPhysicsEvent event) {
         if(event.isCancelled())
             return;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(event.getBlock().getLocation());
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if (res != null) {
             if (!res.getPermissions().has("physics", true)) {
                 event.setCancelled(true);

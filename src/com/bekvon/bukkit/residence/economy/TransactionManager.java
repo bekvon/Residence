@@ -136,7 +136,7 @@ public class TransactionManager {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("OwnerBuyFail"));
                 return;
             }
-            if (Residence.getResidenceManger().getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin) {
+            if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin) {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceTooMany"));
                 return;
             }

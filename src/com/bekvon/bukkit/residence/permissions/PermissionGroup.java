@@ -293,7 +293,7 @@ public class PermissionGroup {
         player.sendMessage("§eMin/Max Protection Height:§3 "+minHeight+ " to " + maxHeight);
         player.sendMessage("§eMax Subzone Depth:§3 "+subzonedepth);
         player.sendMessage("§eCan Set Enter/Leave Messages:§3 "+messageperms);
-        player.sendMessage("§eNumber of Residences you own:§3 " + Residence.getResidenceManger().getOwnedZoneCount(player.getName()));
+        player.sendMessage("§eNumber of Residences you own:§3 " + Residence.getResidenceManager().getOwnedZoneCount(player.getName()));
         if(Residence.getEconomyManager()!=null)
             player.sendMessage("§eResidence Cost Per Block:§3 " + costperarea);
         player.sendMessage("§eFlag Permissions:§3 " + flagPerms.listFlags());

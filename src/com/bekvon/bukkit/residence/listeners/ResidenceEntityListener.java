@@ -98,7 +98,7 @@ public class ResidenceEntityListener extends EntityListener {
     {
         if(ent == null || loc == null)
             return false;
-        ClaimedResidence res = Residence.getResidenceManger().getByLoc(loc);
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
         if(!explosionProximityCheck(loc, ent instanceof LivingEntity))
             return true;
         else if(res != null) {
@@ -138,14 +138,14 @@ public class ResidenceEntityListener extends EntityListener {
             return;
         Entity ent = event.getEntity();
         boolean tamedWolf = ent instanceof Wolf ? ((Wolf)ent).isTamed() : false;
-        ClaimedResidence area = Residence.getResidenceManger().getByLoc(ent.getLocation());
+        ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
         /* Living Entities */
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
             Entity damager = attackevent.getDamager();
             ClaimedResidence srcarea = null;
             if(damager!=null)
-                srcarea = Residence.getResidenceManger().getByLoc(damager.getLocation());
+                srcarea = Residence.getResidenceManager().getByLoc(damager.getLocation());
             boolean srcpvp = true;
             if(srcarea !=null)
                 srcpvp = srcarea.getPermissions().has("pvp", true);
@@ -205,7 +205,7 @@ public class ResidenceEntityListener extends EntityListener {
     }
     
     private boolean explosionProximityCheck(Location loc, boolean creeper) {
-        ResidenceManager manager = Residence.getResidenceManger();
+        ResidenceManager manager = Residence.getResidenceManager();
         ClaimedResidence res = manager.getByLoc(loc);
         if (res != null) {
             if (creeper) {
