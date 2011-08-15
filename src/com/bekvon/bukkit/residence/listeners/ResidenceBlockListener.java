@@ -154,6 +154,24 @@ public class ResidenceBlockListener extends BlockListener {
         if(res!=null)
             if(!res.getPermissions().has("piston", true))
                 event.setCancelled(true);
+        if(event.isSticky())
+        {
+            Location location = event.getBlock().getLocation().add((event.getDirection().getModX()*2), (event.getDirection().getModY()*2), (event.getDirection().getModZ()*2));
+            ClaimedResidence checkRes = Residence.getResidenceManager().getByLoc(location);
+            if(checkRes!=null)
+            {
+                if(!checkRes.getPermissions().has("piston", true))
+                    event.setCancelled(true);
+            }
+            else
+            {
+                FlagPermissions worldPerms = Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName());
+                if(!worldPerms.has("piston", true))
+                {
+                    event.setCancelled(true);
+                }
+            }
+        }
     }
 
     @Override
