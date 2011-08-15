@@ -183,6 +183,23 @@ public class ResidenceBlockListener extends BlockListener {
                 event.setCancelled(true);
             }
         }
+        else
+        {
+            FlagPermissions perms = Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName());
+            boolean hasflow = perms.has("flow", true);
+            Material mat = event.getBlock().getType();
+            if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+                if (!perms.has("lavaflow", hasflow)) {
+                    event.setCancelled(true);
+                }
+            } else if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
+                if (!perms.has("waterflow", hasflow)) {
+                    event.setCancelled(true);
+                }
+            } else if(!hasflow) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @Override
