@@ -8,6 +8,7 @@ package com.bekvon.bukkit.residence.listeners;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import org.bukkit.entity.Player;
+import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -20,6 +21,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import java.util.Iterator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.block.BlockSpreadEvent;
@@ -152,6 +154,24 @@ public class ResidenceBlockListener extends BlockListener {
         if(res!=null)
             if(!res.getPermissions().has("piston", true))
                 event.setCancelled(true);
+        if(event.isSticky())
+        {
+            Location location = event.getBlock().getLocation().add((event.getDirection().getModX()*2), (event.getDirection().getModY()*2), (event.getDirection().getModZ()*2));
+            ClaimedResidence checkRes = Residence.getResidenceManager().getByLoc(location);
+            if(checkRes!=null)
+            {
+                if(!checkRes.getPermissions().has("piston", true))
+                    event.setCancelled(true);
+            }
+            else
+            {
+                FlagPermissions worldPerms = Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName());
+                if(!worldPerms.has("piston", true))
+                {
+                    event.setCancelled(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -160,6 +180,28 @@ public class ResidenceBlockListener extends BlockListener {
         if(res!=null)
             if(!res.getPermissions().has("piston", true))
                 event.setCancelled(true);
+        for (Iterator<Block> iter = event.getBlocks().iterator(); iter.hasNext(); ) {
+            Block block = iter.next();
+            ClaimedResidence checkRes = Residence.getResidenceManager().getByLoc(block.getLocation().add(event.getDirection().getModX(),event.getDirection().getModY(),event.getDirection().getModZ()));
+            if(checkRes!=null)
+            {
+                if(!checkRes.getPermissions().has("piston", true))
+                {
+                    event.setCancelled(true);
+                    return;
+                }
+                    
+            }
+            else
+            {
+                FlagPermissions worldPerms = Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName());
+                if(!worldPerms.has("piston", true))
+                {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
     }
 
     @Override
@@ -177,6 +219,23 @@ public class ResidenceBlockListener extends BlockListener {
                 }
             } else if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
                 if (!res.getPermissions().has("waterflow", hasflow)) {
+                    event.setCancelled(true);
+                }
+            } else if(!hasflow) {
+                event.setCancelled(true);
+            }
+        }
+        else
+        {
+            FlagPermissions perms = Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName());
+            boolean hasflow = perms.has("flow", true);
+            Material mat = event.getBlock().getType();
+            if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+                if (!perms.has("lavaflow", hasflow)) {
+                    event.setCancelled(true);
+                }
+            } else if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
+                if (!perms.has("waterflow", hasflow)) {
                     event.setCancelled(true);
                 }
             } else if(!hasflow) {
