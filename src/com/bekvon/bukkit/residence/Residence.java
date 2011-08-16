@@ -470,7 +470,7 @@ public class Residence extends JavaPlugin {
                     System.out.println("[Residence] Reloaded by "+player.getName()+".");
                 }
             }
-            else if(sender instanceof ConsoleCommandSender)
+            else
             {
                 this.setEnabled(false);
                 this.setEnabled(true);
@@ -480,7 +480,7 @@ public class Residence extends JavaPlugin {
         }
         if(command.getName().equals("resload"))
         {
-            if(sender instanceof ConsoleCommandSender || (sender instanceof Player && gmanager.isResidenceAdmin((Player) sender)))
+            if(!(sender instanceof Player) || (sender instanceof Player && gmanager.isResidenceAdmin((Player) sender)))
             {
                 try {
                     this.loadYMLSave(ymlSaveLoc);
