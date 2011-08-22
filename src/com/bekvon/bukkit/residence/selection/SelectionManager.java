@@ -308,7 +308,7 @@ public class SelectionManager {
                 player.sendMessage("§e"+Residence.getLanguage().getPhrase("Shifting")+" +Z...");
             }
             else
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("Expanding")+" +Z...");
+                player.sendMessage("§e"+Residence.getLanguage().getPhrase("Expanding")+" +Z...");
         }
         playerLoc1.put(player.getName(), area.getHighLoc());
         playerLoc2.put(player.getName(), area.getLowLoc());

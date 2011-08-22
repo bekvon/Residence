@@ -6,6 +6,7 @@
 package com.bekvon.bukkit.residence.listeners;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,7 +26,11 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.painting.PaintingBreakEvent;
+import org.bukkit.event.painting.PaintingPlaceEvent;
 
 /**
  *
@@ -56,6 +61,41 @@ public class ResidenceEntityListener extends EntityListener {
             }
         }
         super.onCreatureSpawn(event);
+    }
+
+    @Override
+    public void onPaintingPlace(PaintingPlaceEvent event) {
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+        if(res!=null)
+        {
+            Player player = event.getPlayer();
+            ResidencePermissions perms = res.getPermissions();
+            String pname = player.getName();
+            boolean hasbuild = perms.playerHas(pname, "build", true);
+            boolean hasplace = perms.playerHas(pname, "place", hasbuild);
+            if ((!hasbuild && !hasplace) || !hasplace) {
+                event.setCancelled(true);
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+            }
+        }
+    }
+
+    @Override
+    public void onPaintingBreak(PaintingBreakEvent event) {
+        /* Currently no way to get the player thats breaking it :(
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+        if(res!=null)
+        {
+            Player player = event.getPlayer();
+            ResidencePermissions perms = res.getPermissions();
+            String pname = player.getName();
+            boolean hasbuild = perms.playerHas(pname, "build", true);
+            boolean hasplace = perms.playerHas(pname, "destroy", hasbuild);
+            if ((!hasbuild && !hasplace) || !hasplace) {
+                event.setCancelled(true);
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+            }
+        }*/
     }
 
     @Override

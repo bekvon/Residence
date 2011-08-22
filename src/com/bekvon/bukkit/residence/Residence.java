@@ -754,7 +754,7 @@ public class Residence extends JavaPlugin {
                     if(resadmin || args[1].endsWith(pname))
                     {
                         rmanager.removeAllByOwner(args[1]);
-                        player.sendMessage("§a"+language.getPhrase("RemovePlayersResidences","§e"+pname+"§a"));
+                        player.sendMessage("§a"+language.getPhrase("RemovePlayersResidences","§e"+args[1]+"§a"));
                     }
                     else
                     {

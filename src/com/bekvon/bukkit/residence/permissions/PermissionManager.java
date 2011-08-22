@@ -86,17 +86,32 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(String player, String world) {
-        String defaultGroup = Residence.getConfig().getDefaultGroup();
-        if(playersGroup.containsKey(player))
-        {
+        String defaultGroup = Residence.getConfig().getDefaultGroup().toLowerCase();
+        if (playersGroup.containsKey(player)) {
             String group = playersGroup.get(player);
-            if(group!=null)
-            {
+            if (group != null) {
                 group = group.toLowerCase();
-                if(group != null && groups.containsKey(group))
+                if (group != null && groups.containsKey(group)) {
                     return group;
+                }
             }
         }
+        String group = this.getPermissionsGroup(player,world);
+        if (group == null || !groups.containsKey(group)) {
+            return defaultGroup;
+        } else {
+            return group;
+        }
+    }
+
+    public String getPermissionsGroup(Player player)
+    {
+        return this.getPermissionsGroup(player.getName(), player.getWorld().getName());
+    }
+
+    public String getPermissionsGroup(String player, String world)
+    {
+        String defaultGroup = Residence.getConfig().getDefaultGroup().toLowerCase();
         if (authority == null && newperms == null) {
             return defaultGroup;
         } else {
@@ -115,12 +130,8 @@ public class PermissionManager {
             else
                 group = authority.getPrimaryGroup(world, player);
             if(group!=null)
-                group = group.toLowerCase();
-            if (group == null || !groups.containsKey(group)) {
-                return defaultGroup;
-            } else {
-                return group;
-            }
+                return group = group.toLowerCase();
+            return defaultGroup;
         }
     }
 
