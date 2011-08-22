@@ -53,6 +53,7 @@ Global:
     # Setting this to false will cause residence to continue to load even if a error is detected in the save file.
     StopOnSaveFault: true
     # These are world flags that are applied when the player is NOT within a residence.
+    ResidenceNameRegex: '[^a-zA-Z0-9\\-\\_]'
     Flags:
         Global: #these are default for all worlds unless specified below, they can be overridden per group
             use: true

@@ -65,8 +65,7 @@ public class ClaimedResidence {
     }
 
     public boolean addArea(Player player, CuboidArea area, String name, boolean resadmin) {
-        name = name.replace(".", "_");
-        name = name.replace(":", "_");
+        name = ResidenceManager.nameFilter(name);
         if(areas.containsKey(name))
         {
             if(player!=null)
@@ -819,8 +818,7 @@ public class ClaimedResidence {
 
     public boolean renameSubzone(Player player, String oldName, String newName, boolean resadmin)
     {
-        newName = newName.replace(".", "_");
-        newName = newName.replace(":", "_");
+        newName = ResidenceManager.nameFilter(newName);
         ClaimedResidence res = subzones.get(oldName);
         if(res==null)
         {
@@ -854,8 +852,7 @@ public class ClaimedResidence {
 
     public boolean renameArea(Player player, String oldName, String newName, boolean resadmin)
     {
-        newName = newName.replace(".", "_");
-        newName = newName.replace(":", "_");
+        newName = ResidenceManager.nameFilter(newName);
         if(player==null || perms.hasResidencePermission(player, true) || resadmin)
         {
             if(areas.containsKey(newName))
