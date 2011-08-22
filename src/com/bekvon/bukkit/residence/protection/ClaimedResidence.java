@@ -492,11 +492,11 @@ public class ClaimedResidence {
     }
 
     public void setEnterMessage(String message) {
-        enterMessage = message;
+        enterMessage = message.replaceAll("[^a-zA-Z0-9\\ \\%\\-\\_]", "");
     }
 
     public void setLeaveMessage(String message) {
-        leaveMessage = message;
+        leaveMessage = message.replaceAll("[^a-zA-Z0-9\\ \\%\\-\\_]", "");
     }
 
     public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin)
