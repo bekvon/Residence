@@ -283,7 +283,8 @@ public class PermissionGroup {
     public void printLimits(Player player)
     {
         player.sendMessage("§7---------------------------");
-        player.sendMessage("§eGroup:§3 "+groupname);
+        player.sendMessage("§ePermissions Group:§3 "+Residence.getPermissionManager().getPermissionsGroup(player));
+        player.sendMessage("§eResidence Group:§3 "+groupname);
         player.sendMessage("§eResidence Admin:§3 " + Residence.getPermissionManager().isResidenceAdmin(player));
         player.sendMessage("§eCan Create Residences:§3 "+cancreate);
         player.sendMessage("§eMax Residences:§3 "+resmax);
