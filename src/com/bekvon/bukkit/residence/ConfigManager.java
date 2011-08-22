@@ -44,6 +44,7 @@ public class ConfigManager {
     protected boolean preventBuildInRent;
     protected boolean stopOnSaveError;
     protected boolean legacyperms;
+    protected String namefix;
 
     public ConfigManager(Configuration config)
     {
@@ -77,6 +78,7 @@ public class ConfigManager {
         preventBuildInRent = config.getBoolean("Global.PreventRentModify", true);
         stopOnSaveError = config.getBoolean("Global.StopOnSaveFault",true);
         legacyperms = config.getBoolean("Global.LegacyPermissions",false);
+        namefix = config.getString("Global.ResidenceNameRegex","[^a-zA-Z0-9\\-\\_]");
         ConfigurationNode node = config.getNode("Global.GroupDefault");
         if(node!=null)
         {
@@ -103,6 +105,11 @@ public class ConfigManager {
 
     public String getDefaultGroup() {
         return defaultGroup;
+    }
+
+    public String getResidenceNameRegex()
+    {
+        return namefix;
     }
 
     public boolean enableEconomy() {

@@ -123,8 +123,7 @@ public class ResidenceManager {
 
     public void addResidence(String name, String owner, Location loc1, Location loc2)
     {
-        name = name.replace(".", "_");
-        name = name.replace(":", "_");
+        name = ResidenceManager.nameFilter(name);
         if (loc1 == null || loc2 == null || !loc1.getWorld().getName().equals(loc2.getWorld().getName())) {
             return;
         }
@@ -152,8 +151,7 @@ public class ResidenceManager {
 
     public void addResidence(Player player, String name, Location loc1, Location loc2, boolean resadmin)
     {
-        name = name.replace(".", "_");
-        name = name.replace(":", "_");
+        name = ResidenceManager.nameFilter(name);
         if(player == null)
             return;
         if(loc1==null || loc2==null || !loc1.getWorld().getName().equals(loc2.getWorld().getName()))
@@ -439,8 +437,7 @@ public class ResidenceManager {
 
     public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin)
     {
-        newName = newName.replace(".", "_");
-        newName = newName.replace(":", "_");
+        newName = this.nameFilter(newName);
         ClaimedResidence res = this.getByName(oldName);
         if(res==null)
         {
@@ -530,5 +527,17 @@ public class ResidenceManager {
     public int getResidenceCount()
     {
         return residences.size();
+    }
+
+    public static String nameFilter(String name)
+    {
+        name = name.replace(".", "_");
+        name = name.replace(":", "_");
+        String regex = Residence.getConfig().getResidenceNameRegex();
+        name = name.replaceAll(regex, "");
+        if(name.equals(""))
+            return "_";
+        else
+            return name;
     }
 }
