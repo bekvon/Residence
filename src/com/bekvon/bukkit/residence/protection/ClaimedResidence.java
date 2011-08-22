@@ -773,7 +773,11 @@ public class ClaimedResidence {
         if(root == null)
             throw new Exception("Invalid residence...");
         res.enterMessage = (String) root.get("EnterMessage");
+        if(res.enterMessage != null)
+            res.setEnterMessage(res.enterMessage); // character filter...
         res.leaveMessage = (String) root.get("LeaveMessage");
+        if(res.leaveMessage != null)
+            res.setLeaveMessage(res.leaveMessage); // character filter...
         if(root.containsKey("StoredMoney"))
             res.bank.setStoredMoney((Integer)root.get("StoredMoney"));
         if(root.containsKey("BlackList"))
