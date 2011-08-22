@@ -21,6 +21,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Pig;
@@ -190,10 +191,15 @@ public class ResidenceEntityListener extends EntityListener {
             if(srcarea !=null)
                 srcpvp = srcarea.getPermissions().has("pvp", true);
             ent = attackevent.getEntity();
-            if ((ent instanceof Player || tamedWolf) && (damager instanceof Player)) {
+            if ((ent instanceof Player || tamedWolf) && (damager instanceof Player || (damager instanceof Arrow && (((Arrow)damager).getShooter() instanceof Player)))) {
+                Player attacker = null;
+                if(damager instanceof Player)
+                    attacker = (Player) damager;
+                else if(damager instanceof Arrow)
+                    attacker = (Player)((Arrow)damager).getShooter();
                 if(!srcpvp)
                 {
-                    ((Player) damager).sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
+                    attacker.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
                     event.setCancelled(true);
                     return;
                 }
@@ -201,13 +207,13 @@ public class ResidenceEntityListener extends EntityListener {
                 if (area == null) {
                     /* World PvP */
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-                        ((Player) damager).sendMessage("§c"+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
+                        attacker.sendMessage("§c"+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
                         event.setCancelled(true);
                     }
                 } else {
                     /* Normal PvP */
                     if (!area.getPermissions().has("pvp", true)) {
-                        ((Player) damager).sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
+                        attacker.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
                         event.setCancelled(true);
                     }
                 }
