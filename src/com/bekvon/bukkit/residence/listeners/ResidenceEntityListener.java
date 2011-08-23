@@ -23,13 +23,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Squid;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
 
@@ -47,7 +47,7 @@ public class ResidenceEntityListener extends EntityListener {
         Entity ent = event.getEntity();
         if(perms!=null)
         {
-            if(ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf)
+            if(ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid)
             {
                 if(!perms.has("animals", true))
                 {

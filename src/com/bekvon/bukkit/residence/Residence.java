@@ -43,6 +43,7 @@ import fr.crafter.tickleman.RealShop.RealShopPlugin;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,6 +51,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.minecraft.server.FontAllowedCharacters;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -298,6 +300,27 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
             Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static boolean validName(String name)
+    {
+        if(name.contains(":") || name.contains("."))
+            return false;
+        if(name.matches(cmanager.getResidenceNameRegex()))
+            return false;
+        return Residence.validString(name);
+    }
+
+    public static boolean validString(String string)
+    {
+        for(int i = 0; i < string.length(); i++)
+        {
+            if(FontAllowedCharacters.allowedCharacters.indexOf(string.charAt(i)) < 0)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static ResidenceManager getResidenceManager() {
@@ -1604,6 +1627,7 @@ public class Residence extends JavaPlugin {
         }
         catch (Exception ex)
         {
+            Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
             File erroredfile;
             if(ymlSaveLoc.isFile())
                 erroredfile = new File(ymlSaveLoc.getParent(), ymlSaveLoc.getName() + "-ERRORED.yml");

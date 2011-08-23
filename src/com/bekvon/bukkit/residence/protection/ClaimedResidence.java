@@ -65,7 +65,11 @@ public class ClaimedResidence {
     }
 
     public boolean addArea(Player player, CuboidArea area, String name, boolean resadmin) {
-        name = ResidenceManager.nameFilter(name);
+        if(!Residence.validName(name))
+        {
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            return false;
+        }
         if(areas.containsKey(name))
         {
             if(player!=null)
@@ -492,15 +496,20 @@ public class ClaimedResidence {
     }
 
     public void setEnterMessage(String message) {
-        enterMessage = message.replaceAll("[^a-zA-Z0-9\\ \\%\\-\\_]", "");
+        enterMessage = message;
     }
 
     public void setLeaveMessage(String message) {
-        leaveMessage = message.replaceAll("[^a-zA-Z0-9\\ \\%\\-\\_]", "");
+        leaveMessage = message;
     }
 
     public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin)
     {
+        if(!Residence.validString(message))
+        {
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidCharacters"));
+            return;
+        }
         if(message!=null)
             if(message.equals(""))
                 message = null;
@@ -771,13 +780,13 @@ public class ClaimedResidence {
     public static ClaimedResidence load(Map<String,Object> root, ClaimedResidence parent) throws Exception {
         ClaimedResidence res = new ClaimedResidence();
         if(root == null)
-            throw new Exception("Invalid residence...");
+            throw new Exception("Null residence!");
         res.enterMessage = (String) root.get("EnterMessage");
-        if(res.enterMessage != null)
-            res.setEnterMessage(res.enterMessage); // character filter...
+        if(res.enterMessage!=null && !Residence.validString(res.enterMessage))
+            res.enterMessage = null;
         res.leaveMessage = (String) root.get("LeaveMessage");
-        if(res.leaveMessage != null)
-            res.setLeaveMessage(res.leaveMessage); // character filter...
+        if(res.leaveMessage!=null && !Residence.validString(res.leaveMessage))
+            res.leaveMessage = null;
         if(root.containsKey("StoredMoney"))
             res.bank.setStoredMoney((Integer)root.get("StoredMoney"));
         if(root.containsKey("BlackList"))
@@ -822,7 +831,11 @@ public class ClaimedResidence {
 
     public boolean renameSubzone(Player player, String oldName, String newName, boolean resadmin)
     {
-        newName = ResidenceManager.nameFilter(newName);
+        if(!Residence.validName(newName))
+        {
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            return false;
+        }
         ClaimedResidence res = subzones.get(oldName);
         if(res==null)
         {
@@ -856,7 +869,11 @@ public class ClaimedResidence {
 
     public boolean renameArea(Player player, String oldName, String newName, boolean resadmin)
     {
-        newName = ResidenceManager.nameFilter(newName);
+        if(!Residence.validName(newName))
+        {
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            return false;
+        }
         if(player==null || perms.hasResidencePermission(player, true) || resadmin)
         {
             if(areas.containsKey(newName))
