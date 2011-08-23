@@ -121,11 +121,12 @@ public class ResidenceManager {
         return null;
     }
 
-    public void addResidence(String name, String owner, Location loc1, Location loc2)
+    public boolean addResidence(String name, String owner, Location loc1, Location loc2)
     {
-        name = ResidenceManager.nameFilter(name);
+        if(!Residence.validName(name))
+            return false;
         if (loc1 == null || loc2 == null || !loc1.getWorld().getName().equals(loc2.getWorld().getName())) {
-            return;
+            return false;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
         CuboidArea newArea = new CuboidArea(loc1, loc2);
@@ -136,22 +137,27 @@ public class ResidenceManager {
         ResidenceCreationEvent resevent = new ResidenceCreationEvent(null, name, newRes, newArea);
         Residence.getServ().getPluginManager().callEvent(resevent);
         if (resevent.isCancelled()) {
-            return;
+            return false;
         }
         newArea = resevent.getPhysicalArea();
         name = resevent.getResidenceName();
         if (residences.containsKey(name)) {
-            return;
+            return false;
         }
         newRes.addArea(newArea, "main");
         if (newRes.getAreaCount() != 0) {
             residences.put(name, newRes);
         }
+        return true;
     }
 
     public void addResidence(Player player, String name, Location loc1, Location loc2, boolean resadmin)
     {
-        name = ResidenceManager.nameFilter(name);
+        if(!Residence.validName(name))
+        {
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            return;
+        }
         if(player == null)
             return;
         if(loc1==null || loc2==null || !loc1.getWorld().getName().equals(loc2.getWorld().getName()))
@@ -437,7 +443,11 @@ public class ResidenceManager {
 
     public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin)
     {
-        newName = this.nameFilter(newName);
+        if(!Residence.validName(newName))
+        {
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            return false;
+        }
         ClaimedResidence res = this.getByName(oldName);
         if(res==null)
         {
@@ -527,17 +537,5 @@ public class ResidenceManager {
     public int getResidenceCount()
     {
         return residences.size();
-    }
-
-    public static String nameFilter(String name)
-    {
-        name = name.replace(".", "_");
-        name = name.replace(":", "_");
-        String regex = Residence.getConfig().getResidenceNameRegex();
-        name = name.replaceAll(regex, "");
-        if(name.equals(""))
-            return "_";
-        else
-            return name;
     }
 }
