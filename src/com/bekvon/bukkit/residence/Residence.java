@@ -306,7 +306,8 @@ public class Residence extends JavaPlugin {
     {
         if(name.contains(":") || name.contains("."))
             return false;
-        if(name.matches(cmanager.getResidenceNameRegex()))
+        String namecheck = name.replaceAll(cmanager.getResidenceNameRegex(), "");
+        if(!name.equals(namecheck))
             return false;
         return Residence.validString(name);
     }
