@@ -14,7 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -178,7 +177,7 @@ public class ResidencePlayerListener extends PlayerListener {
         boolean hasbucket;
         if(res!=null)
         {
-            if (Residence.getConfig().enabledRentSystem()) {
+            if (Residence.getConfig().preventRentModify() && Residence.getConfig().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
                     player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
@@ -213,7 +212,7 @@ public class ResidencePlayerListener extends PlayerListener {
         boolean hasbucket;
         if(res!=null)
         {
-            if (Residence.getConfig().enabledRentSystem()) {
+            if (Residence.getConfig().preventRentModify() && Residence.getConfig().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
                     player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
