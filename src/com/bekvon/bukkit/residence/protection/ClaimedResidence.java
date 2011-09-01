@@ -298,7 +298,7 @@ public class ClaimedResidence {
                 }
             }
         }
-        ClaimedResidence newres = new ClaimedResidence(perms.getOwner(), perms.getWorld(), this);
+        ClaimedResidence newres = new ClaimedResidence(player.getName(), perms.getWorld(), this);
         newres.addArea(player, newArea, name, resadmin);
         if(newres.getAreaCount()!=0)
         {
@@ -457,7 +457,7 @@ public class ClaimedResidence {
         }
         subzones.remove(name);
         if(player!=null)
-            player.sendMessage("§a"+Residence.getLanguage().getPhrase("SubzoneRemoved",name));
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("SubzoneRemoved","§e"+name+"§a"));
         return true;
     }
 

@@ -88,6 +88,7 @@ Global:
         animals: true
         subzone: true
         healing: true
+        piston: true
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
@@ -100,6 +101,7 @@ Global:
         piston: false
         ignite: false
         firespread: false
+        piston: false
     # These are default flags applied to the residence creator of any group.
     CreatorDefault:
         build: true

@@ -44,6 +44,8 @@ public class PermissionManager {
         playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
         globalFlagPerms = new FlagPermissions();
         Plugin p = Residence.getServ().getPluginManager().getPlugin("PermissionsBukkit");
+        if(Residence.getConfig().useLegacyPermissions())
+            System.out.println("[Residence] Legacy Permissions - TRUE");
         if(p!=null && p instanceof PermissionsPlugin)
         {
             newperms = (PermissionsPlugin) p;
