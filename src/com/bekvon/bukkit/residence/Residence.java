@@ -164,6 +164,16 @@ public class Residence extends JavaPlugin {
                 System.out.println("[Residence] Config Invalid, wrote default...");
             }
             cmanager = new ConfigManager(this.getConfiguration());
+            String multiworld = cmanager.getMultiworldPlugin();
+            if (multiworld != null) {
+                Plugin plugin = server.getPluginManager().getPlugin(multiworld);
+                if (plugin != null) {
+                    if (!plugin.isEnabled()) {
+                        server.getPluginManager().enablePlugin(plugin);
+                        System.out.println("[Residence] - Enabling multiworld plugin: " + multiworld);
+                    }
+                }
+            }
             gmanager = new PermissionManager(this.getConfiguration());
             imanager = new WorldItemManager(this.getConfiguration());
             wmanager = new WorldFlagManager(this.getConfiguration());
@@ -212,16 +222,6 @@ public class Residence extends JavaPlugin {
                     this.loadRealEconomy();
                 } else {
                     System.out.println("[Residence] Unknown economy system: " + econsys);
-                }
-            }
-            String multiworld = cmanager.getMultiworldPlugin();
-            if (multiworld != null) {
-                Plugin plugin = server.getPluginManager().getPlugin(multiworld);
-                if (plugin != null) {
-                    if (!plugin.isEnabled()) {
-                        server.getPluginManager().enablePlugin(plugin);
-                        System.out.println("[Residence] - Enabling multiworld plugin: " + multiworld);
-                    }
                 }
             }
             this.loadYml();
