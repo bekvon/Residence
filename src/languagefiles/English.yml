@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 14
+Version: 15
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -378,18 +378,19 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 set:
                     Description: Set general flags on a Residence
                     Info:
-                        - 'Usage: /res set <residence> <flag> <true/false/remove>'
+                        - 'Usage: /res set <residence> [flag] [true/false/remove]'
                         - 'To see a list of flags, use /res flags ?'
                         - 'These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)'
                 pset:
                     Description: Set flags on a specific player for a Residence.
                     Info:
-                        - 'Usage: /res pset <residence> <player> <flag> <true/false/remove>'
+                        - 'Usage: /res pset <residence> [player] [flag] [true/false/remove]'
+                        - 'Usage: /res pset <residence> [player] removeall'
                         - 'To see a list of flags, use /res flags ?'
                 gset:
                     Description: Set flags on a specific group for a Residence.
                     Info:
-                        - 'Usage: /res gset <residence> <group> <flag> <true/false/remove>'
+                        - 'Usage: /res gset <residence> [group] [flag] [true/false/remove]'
                         - 'To see a list of flags, use /res flags ?'
                 lset:
                     Description: Change blacklist and ignorelist options
