@@ -259,6 +259,7 @@ public class ResidencePermissions extends FlagPermissions {
                 return false;
             }
             super.removeAllPlayerFlags(targetPlayer);
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("FlagSet"));
             return true;
         }
         return false;
