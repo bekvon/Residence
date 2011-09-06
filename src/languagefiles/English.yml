@@ -170,6 +170,8 @@ Language:
     #Version 14 New Fields
     InvalidCharacters: Invalid characters detected...
     InvalidNameCharacters: Name contained unallowed characters...
+    #Version 15 New Fields
+    DeleteConfirm: 'Are you sure you want to delete residence %1, use "/res confirm" to confirm.'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -296,6 +298,9 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'Usage: /res removeall [owner]'
                         - 'Removes all residences owned by a specific player.'
                         - 'Requires /resadmin if you use it on anyone besides yourself.'
+                confirm:
+                    - 'Usage: /res confirm'
+                    - 'Confirms removal of a residence.'
                 subzone:
                     Description: Create subzones in residences.
                     Info:
