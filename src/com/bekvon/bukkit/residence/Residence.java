@@ -43,7 +43,6 @@ import fr.crafter.tickleman.RealShop.RealShopPlugin;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -966,7 +965,26 @@ public class Residence extends JavaPlugin {
                         return true;
                     }
                 } else if (args[0].equals("pset")) {
-                    if (args.length == 4) {
+                    if (args.length == 3 && args[2].equalsIgnoreCase("removeall"))
+                    {
+                        ClaimedResidence area = rmanager.getByLoc(player.getLocation());
+                        if(area!=null)
+                            area.getPermissions().removeAllPlayerFlags(player, args[1], resadmin);
+                        else
+                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        return true;
+                    }
+                    else if(args.length == 4 && args[3].equalsIgnoreCase("removeall"))
+                    {
+                        ClaimedResidence area = rmanager.getByName(args[1]);
+                        if (area != null) {
+                            area.getPermissions().removeAllPlayerFlags(player, args[2], resadmin);
+                        }
+                        else
+                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        return true;
+                    }
+                    else if(args.length == 4) {
                         ClaimedResidence area = rmanager.getByLoc(player.getLocation());
                         if (area != null) {
                             area.getPermissions().setPlayerFlag(player, args[1], args[2], args[3], resadmin);

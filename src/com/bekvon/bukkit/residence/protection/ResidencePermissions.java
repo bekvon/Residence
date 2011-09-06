@@ -250,6 +250,20 @@ public class ResidencePermissions extends FlagPermissions {
         }
         return false;
     }
+    
+    public boolean removeAllPlayerFlags(Player player, String targetPlayer, boolean resadmin) {
+        if (this.hasResidencePermission(player, false)) {
+            ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, player, "ALL", ResidenceFlagChangeEvent.FlagType.RESIDENCE, FlagState.NEITHER, null);
+            Residence.getServ().getPluginManager().callEvent(fc);
+            if (fc.isCancelled()) {
+                return false;
+            }
+            super.removeAllPlayerFlags(targetPlayer);
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public boolean setFlag(String flag, FlagState state) {
