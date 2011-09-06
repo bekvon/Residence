@@ -7,9 +7,7 @@ package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
-import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,8 +28,7 @@ import org.bukkit.util.config.ConfigurationNode;
  * @author Administrator
  */
 public class PermissionManager {
-    protected static PermissionHandler authority;
-    protected static PermissionsPlugin newperms;
+    protected static PermissionsInterface perms;
     protected Map<String,PermissionGroup> groups;
     protected Map<String,String> playersGroup;
     protected FlagPermissions globalFlagPerms;
@@ -40,23 +37,13 @@ public class PermissionManager {
     {
         try
         {
-        groups = Collections.synchronizedMap(new HashMap<String,PermissionGroup>());
-        playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
-        globalFlagPerms = new FlagPermissions();
-        Plugin p = Residence.getServ().getPluginManager().getPlugin("PermissionsBukkit");
-        if(Residence.getConfig().useLegacyPermissions())
-            System.out.println("[Residence] Legacy Permissions - TRUE");
-        if(p!=null && p instanceof PermissionsPlugin)
-        {
-            newperms = (PermissionsPlugin) p;
-            System.out.println("[Residence] Found Permissions Bukkit version "+p.getDescription().getVersion() + "!");
-        }
-        boolean enable = config.getBoolean("Global.EnablePermissions", true);
-        this.readConfig(config);
-        if(enable && newperms == null)
-            this.checkPermissions();
-        else
-            authority = null;
+            groups = Collections.synchronizedMap(new HashMap<String,PermissionGroup>());
+            playersGroup = Collections.synchronizedMap(new HashMap<String,String>());
+            globalFlagPerms = new FlagPermissions();
+            this.readConfig(config);
+            boolean enable = config.getBoolean("Global.EnablePermissions", true);
+            if(enable)
+                this.checkPermissions();
         }
         catch(Exception ex)
         {
@@ -113,38 +100,15 @@ public class PermissionManager {
 
     public String getPermissionsGroup(String player, String world)
     {
-        String defaultGroup = Residence.getConfig().getDefaultGroup().toLowerCase();
-        if (authority == null && newperms == null) {
-            return defaultGroup;
-        } else {
-            String group = null;
-            if(authority != null && Residence.getConfig().useLegacyPermissions())
-                group = authority.getGroup(world, player);
-            else if(newperms!=null)
-            {
-                List<Group> newgroups = newperms.getGroups(player);
-                for(Group newgroup : newgroups)
-                {
-                    group = newgroup.getName().toLowerCase();
-                    break;
-                }
-            }
-            else
-                group = authority.getPrimaryGroup(world, player);
-            if(group!=null)
-                return group = group.toLowerCase();
-            return defaultGroup;
-        }
+        if(perms == null)
+            return Residence.getConfig().getDefaultGroup();
+        return perms.getPlayerGroup(player, world);
     }
 
     public boolean hasAuthority(Player player, String permission, boolean def) {
-        if(player.hasPermission(permission))
-            return true;
-        if (authority == null) {
+        if(perms==null)
             return def;
-        } else {
-            return authority.has(player, permission);
-        }
+        return perms.hasPermission(player, permission);
     }
 
     public boolean isResidenceAdmin(Player player)
@@ -154,14 +118,36 @@ public class PermissionManager {
 
     private void checkPermissions() {
         Server server = Residence.getServ();
-        Plugin p = server.getPluginManager().getPlugin("Permissions");
+        Plugin p = server.getPluginManager().getPlugin("bPermissions");
         if (p != null) {
-            authority = ((Permissions) p).getHandler();
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
-        } else {
-            authority = null;
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions Plugin NOT Found!");
+            perms = new BPermissionsAdapter((de.bananaco.permissions.Permissions)p);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found bPermissions Plugin!");
+            return;
         }
+       p = server.getPluginManager().getPlugin("PermissionsBukkit");
+       if(p!=null)
+       {
+           perms = new PermissionsBukkitAdapter((PermissionsPlugin) p);
+           Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found PermissionsBukkit Plugin!");
+           return;
+       }
+       p = server.getPluginManager().getPlugin("Permissions");
+       if(p!=null)
+       {
+           if(Residence.getConfig().useLegacyPermissions())
+           {
+                perms = new LegacyPermissions(((Permissions) p).getHandler());
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions running in Legacy mode!");
+           }
+           else
+           {
+               perms = new OrigionalPermissions(((Permissions) p).getHandler());
+               Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
+           }
+           return;
+       }
+       Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions plugin NOT FOUND!");
     }
 
     private void readConfig(Configuration config)

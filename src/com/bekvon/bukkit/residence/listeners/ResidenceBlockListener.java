@@ -180,8 +180,7 @@ public class ResidenceBlockListener extends BlockListener {
         if(res!=null)
             if(!res.getPermissions().has("piston", true))
                 event.setCancelled(true);
-        for (Iterator<Block> iter = event.getBlocks().iterator(); iter.hasNext(); ) {
-            Block block = iter.next();
+        for (Block block : event.getBlocks()) {
             ClaimedResidence checkRes = Residence.getResidenceManager().getByLoc(block.getLocation().add(event.getDirection().getModX(),event.getDirection().getModY(),event.getDirection().getModZ()));
             if(checkRes!=null)
             {
@@ -190,7 +189,6 @@ public class ResidenceBlockListener extends BlockListener {
                     event.setCancelled(true);
                     return;
                 }
-                    
             }
             else
             {
