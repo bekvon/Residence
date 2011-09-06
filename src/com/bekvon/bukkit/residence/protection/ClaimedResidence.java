@@ -263,6 +263,7 @@ public class ClaimedResidence {
         {
             if(player!=null)
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            return false;
         }
         if (!(this.containsLoc(loc1) && this.containsLoc(loc2))) {
             if(player!=null)
