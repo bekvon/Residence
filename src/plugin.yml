@@ -22,7 +22,9 @@ commands:
   rc:
     description: §cChat in current residence channel.
     usage: §c/rc to toggle, or /rc <message>
-    
+  resworld:
+    description: §cRemoves every residence in a world.
+    usage: §c/resworld remove [world]
 permissions:
     residence.*:
         description: Gives access to all residence commands

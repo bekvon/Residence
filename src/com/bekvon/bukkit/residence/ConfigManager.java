@@ -45,6 +45,7 @@ public class ConfigManager {
     protected boolean stopOnSaveError;
     protected boolean legacyperms;
     protected String namefix;
+    protected boolean showIntervalMessages;
 
     public ConfigManager(Configuration config)
     {
@@ -79,6 +80,7 @@ public class ConfigManager {
         stopOnSaveError = config.getBoolean("Global.StopOnSaveFault",true);
         legacyperms = config.getBoolean("Global.LegacyPermissions",false);
         namefix = config.getString("Global.ResidenceNameRegex","[^a-zA-Z0-9\\-\\_]");
+        showIntervalMessages = config.getBoolean("Global.ShowIntervalMessages", false);
         ConfigurationNode node = config.getNode("Global.GroupDefault");
         if(node!=null)
         {
@@ -223,5 +225,9 @@ public class ConfigManager {
     public boolean stopOnSaveError()
     {
         return stopOnSaveError;
+    }
+    public boolean showIntervalMessages()
+    {
+        return showIntervalMessages;
     }
 }

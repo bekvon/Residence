@@ -56,6 +56,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -107,13 +108,15 @@ public class Residence extends JavaPlugin {
     {
         public void run() {
             rentmanager.checkCurrentRents();
-            System.out.println("[Residence] - Rent Expirations checked!");
+            if(cmanager.showIntervalMessages())
+                System.out.println("[Residence] - Rent Expirations checked!");
         }
     };
     private Runnable leaseExpire = new Runnable() {
         public void run() {
             leasemanager.doExpirations();
-            System.out.println("[Residence] - Lease Expirations checked!");
+            if(cmanager.showIntervalMessages())
+                System.out.println("[Residence] - Lease Expirations checked!");
         }
     };
     private Runnable autoSave = new Runnable() {
@@ -516,6 +519,18 @@ public class Residence extends JavaPlugin {
                 }
             }
             return true;
+        }
+        else if(command.getName().equals("/resworld"))
+        {
+            if(args.length == 2 && args[0].equalsIgnoreCase("remove"))
+            {
+                if(sender instanceof ConsoleCommandSender)
+                {
+                    rmanager.removeAllFromWorld(sender, args[1]);
+                    return true;
+                }
+            }
+            return false;
         }
         else if(command.getName().equals("rc"))
         {

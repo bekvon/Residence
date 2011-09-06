@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -532,6 +533,25 @@ public class ResidenceManager {
         res.getPermissions().setOwner(giveplayer.getName(), true);
         reqPlayer.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceGive","§e" + residence + "§a.§e" + giveplayer.getName() + "§a"));
         giveplayer.sendMessage(Residence.getLanguage().getPhrase("ResidenceRecieve","§a" + reqPlayer.getName() + "§e.§a" + residence + "§e"));
+    }
+
+    public void removeAllFromWorld(CommandSender sender, String world)
+    {
+        int count=0;
+        Iterator<ClaimedResidence> it = residences.values().iterator();
+        while(it.hasNext())
+        {
+            ClaimedResidence next = it.next();
+            if(next.getWorld().equals(world))
+            {
+                it.remove();
+                count++;
+            }
+        }
+        if(count==0)
+            sender.sendMessage("§cNo residences found in world: §e" + world);
+        else
+            sender.sendMessage("§cRemoved §e"+count+"§c residences in world: §e" + world);
     }
 
     public int getResidenceCount()

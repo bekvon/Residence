@@ -52,8 +52,11 @@ Global:
     PreventRentModify: true
     # Setting this to false will cause residence to continue to load even if a error is detected in the save file.
     StopOnSaveFault: true
-    # These are world flags that are applied when the player is NOT within a residence.
+    # This is the residence name filter, that filters out invalid characters.  Google "Java RegEx" or "Java Regular Expressions" for more info on how they work.
     ResidenceNameRegex: '[^a-zA-Z0-9\\-\\_]'
+    # Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.
+    ShowIntervalMessages: false
+    # These are world flags that are applied when the player is NOT within a residence.
     Flags:
         Global: #these are default for all worlds unless specified below, they can be overridden per group
             use: true
