@@ -76,7 +76,9 @@ public class RentManager {
             newrent.cost = amount;
             newrent.repeatable = repeatable;
             rentableLand.put(landName,newrent);
-            player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceForRentSuccess","§e"+landName + "§a.§e"+amount+"§a.§e"+days+"§a"));
+            String[] split = landName.split(".");
+            if(split.length!=0)
+                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceForRentSuccess","§e"+split[split.length-1] + "§a.§e"+amount+"§a.§e"+days+"§a"));
         }
         else
         {
@@ -118,7 +120,9 @@ public class RentManager {
         }
         if(this.isRented(landName))
         {
-            player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+landName + "§c.§e" + this.getRentingPlayer(landName)));
+            String[] split = landName.split(".");
+            if(split.length!=0)
+                player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+split[split.length-1] + "§c.§e" + this.getRentingPlayer(landName)));
             return;
         }
         RentableLand land = rentableLand.get(landName);
@@ -139,7 +143,9 @@ public class RentManager {
                 res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
                 res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
                 res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRentSuccess","§e" + landName + "§a.§e" + land.days + "§a"));
+                String[] split = landName.split(".");
+                if(split.length!=0)
+                    player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRentSuccess","§e" + split[split.length-1] + "§a.§e" + land.days + "§a"));
             }
             else
             {
@@ -194,6 +200,7 @@ public class RentManager {
 
     public void unrent(Player player, String landName, boolean resadmin)
     {
+        String[] split = landName.split(".");
         ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(res == null)
         {
@@ -207,7 +214,8 @@ public class RentManager {
         }
         if(rentedLand.containsKey(landName) && !resadmin)
         {
-            player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+landName + "§c.§e" + rentedLand.get(landName).player)+"§e");
+            if(split.length!=0)
+                player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+split[split.length-1] + "§c.§e" + rentedLand.get(landName).player)+"§e");
             return;
         }
         if(rentableLand.containsKey(landName))
@@ -223,7 +231,8 @@ public class RentManager {
                 if(res!=null)
                     res.getPermissions().applyDefaultFlags();
             }
-            player.sendMessage(Residence.getLanguage().getPhrase("ResidenceRemoveRentable","§e"+landName + "§c"));
+            if(split.length!=0)
+                player.sendMessage(Residence.getLanguage().getPhrase("ResidenceRemoveRentable","§e"+split[split.length-1] + "§c"));
 
         }
         else
@@ -314,6 +323,7 @@ public class RentManager {
 
     public void setRentRepeatable(Player player, String landName, boolean value, boolean resadmin)
     {
+        String[] split = landName.split(".");
         RentableLand land = rentableLand.get(landName);
         ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(land!=null && res!=null && (res.getPermissions().getOwner().equalsIgnoreCase(player.getName()) || resadmin))
@@ -321,23 +331,24 @@ public class RentManager {
             land.repeatable = value;
             if(!value && this.isRented(landName))
                 rentedLand.get(landName).autoRefresh = false;
-            if(value)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentableEnableRenew","§e"+landName + "§c"));
-            else
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentableDisableRenew","§e"+landName + "§c"));
+            if(value && split.length!=0)
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentableEnableRenew","§e"+split[split.length-1] + "§c"));
+            else if(split.length!=0)
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentableDisableRenew","§e"+split[split.length-1] + "§c"));
         }
     }
 
     public void setRentedRepeatable(Player player, String landName, boolean value, boolean resadmin)
     {
+        String[] split = landName.split(".");
         RentedLand land = rentedLand.get(landName);
         if(land!=null && (land.player.equals(player.getName()) || resadmin))
         {
             land.autoRefresh = value;
-            if(value)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentEnableRenew","§e"+landName + "§c"));
-            else
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentDisableRenew","§e"+landName + "§c"));
+            if(value && split.length!=0)
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentEnableRenew","§e"+split[split.length-1] + "§c"));
+            else if(split.length!=0)
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentDisableRenew","§e"+split[split.length-1] + "§c"));
         }
     }
 
