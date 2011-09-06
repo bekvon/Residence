@@ -67,7 +67,8 @@ public class ClaimedResidence {
     public boolean addArea(Player player, CuboidArea area, String name, boolean resadmin) {
         if(!Residence.validName(name))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            if(player!=null)
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
             return false;
         }
         if(areas.containsKey(name))
@@ -258,8 +259,11 @@ public class ClaimedResidence {
     }
 
     public boolean addSubzone(Player player, Location loc1, Location loc2, String name, boolean resadmin) {
-        name = name.replace(".", "_");
-        name = name.replace(":", "_");
+        if(!Residence.validName(name))
+        {
+            if(player!=null)
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+        }
         if (!(this.containsLoc(loc1) && this.containsLoc(loc2))) {
             if(player!=null)
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("SubzoneSelectInside"));
