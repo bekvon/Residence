@@ -41,7 +41,7 @@ public class BPermissionsAdapter implements PermissionsInterface {
     }
 
     public boolean hasPermission(Player player, String permission) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return player.hasPermission(permission);
     }
 
 }
