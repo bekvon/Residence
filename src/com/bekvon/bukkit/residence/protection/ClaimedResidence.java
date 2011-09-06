@@ -510,7 +510,7 @@ public class ClaimedResidence {
 
     public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin)
     {
-        if(!Residence.validString(message))
+        if(message!=null && !Residence.validString(message))
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidCharacters"));
             return;
