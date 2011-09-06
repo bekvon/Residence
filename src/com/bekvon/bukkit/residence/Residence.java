@@ -15,7 +15,8 @@ import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
 import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
-import com.bekvon.bukkit.residence.economy.IConomyAdapter;
+import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
+import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
@@ -421,13 +422,24 @@ public class Residence extends JavaPlugin {
     {
         Plugin p = getServer().getPluginManager().getPlugin("iConomy");
         if (p != null) {
-            if(p.getDescription().getVersion().startsWith("5"))
+            if(p.getDescription().getVersion().startsWith("6"))
             {
-                economy = new IConomyAdapter((iConomy)p);
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy 6 NOT SUPPORTED YET!");
+                //economy = new IConomy6Adapter((com.iCo6.iConomy)p);
+                return;
+            }
+            else if(p.getDescription().getVersion().startsWith("5"))
+            {
+                economy = new IConomy5Adapter((iConomy)p);
+            }
+            else if(p.getDescription().getVersion().startsWith("4"))
+            {
+                economy = new IConomy4Adapter((com.nijiko.coelho.iConomy.iConomy)p);
             }
             else
             {
-                economy = new IConomy4Adapter((com.nijiko.coelho.iConomy.iConomy)p);
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] UNKNOWN iConomy version!");
+                return;
             }
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with iConomy!");
         } else {
@@ -1678,7 +1690,8 @@ public class Residence extends JavaPlugin {
             ymlSaveLoc.renameTo(backupFile);
         }
         yml.save();
-        System.out.println("[Residence] - Saved Residences...");
+        if(cmanager.showIntervalMessages())
+            System.out.println("[Residence] - Saved Residences...");
     }
 
     private void loadYml() throws Exception {
