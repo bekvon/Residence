@@ -189,7 +189,7 @@ public class PermissionManager {
         {
             groups.put(defaultGroup, new PermissionGroup(defaultGroup));
         }
-        List<String> keys = config.getKeys("GroupAssigments");
+        List<String> keys = config.getKeys("GroupAssignments");
         if(keys!=null)
         {
             for(String key : keys)

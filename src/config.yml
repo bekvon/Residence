@@ -214,7 +214,7 @@ Groups:
                      #build: false
 
 # You can manually specify the group a player is in below, this overrides their permissions group.
-GroupAssigments:
+GroupAssignments:
      bekvon: default
      player: default
 
