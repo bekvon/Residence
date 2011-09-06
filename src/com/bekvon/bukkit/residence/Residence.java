@@ -520,7 +520,7 @@ public class Residence extends JavaPlugin {
             }
             return true;
         }
-        else if(command.getName().equals("/resworld"))
+        else if(command.getName().equals("resworld"))
         {
             if(args.length == 2 && args[0].equalsIgnoreCase("remove"))
             {
@@ -529,6 +529,8 @@ public class Residence extends JavaPlugin {
                     rmanager.removeAllFromWorld(sender, args[1]);
                     return true;
                 }
+                else
+                    sender.sendMessage("§cMUST be run from console.");
             }
             return false;
         }
