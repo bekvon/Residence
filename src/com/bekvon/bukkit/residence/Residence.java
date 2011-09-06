@@ -97,6 +97,7 @@ public class Residence extends JavaPlugin {
     private static int healBukkitId=-1;
     private static int autosaveBukkitId=-1;
     private static boolean initsuccess = false;
+    private Map<String,String> deleteConfirm;
     private Runnable doHeals = new Runnable() {
         public void run() {
             plistener.doHeals();
@@ -150,6 +151,7 @@ public class Residence extends JavaPlugin {
     public void onEnable() {
         try {
             initsuccess = false;
+            deleteConfirm = new HashMap<String, String>();
             server = this.getServer();
             if (!new File(this.getDataFolder(), "config.yml").isFile()) {
                 this.writeDefaultConfigFromJar();
@@ -412,7 +414,7 @@ public class Residence extends JavaPlugin {
             return wmanager.getPerms(loc.getWorld().getName());
     }
 
-    private void loadIConomy() 
+    private void loadIConomy()
     {
         Plugin p = getServer().getPluginManager().getPlugin("iConomy");
         if (p != null) {
@@ -429,7 +431,7 @@ public class Residence extends JavaPlugin {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy NOT found!");
         }
     }
-    
+
     private void loadMineConomy()
     {
         Plugin p = getServer().getPluginManager().getPlugin("MineConomy");
@@ -758,7 +760,12 @@ public class Residence extends JavaPlugin {
                     if (args.length == 1) {
                         String area = rmanager.getNameByLoc(player.getLocation());
                         if (area != null) {
-                            rmanager.removeResidence(player, area, resadmin);
+                            if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
+                                player.sendMessage("§c" + language.getPhrase("DeleteConfirm", "§e" + area + "§c"));
+                                deleteConfirm.put(player.getName(), area);
+                            } else {
+                                rmanager.removeResidence(player, area, resadmin);
+                            }
                             return true;
                         }
                         return false;
@@ -766,9 +773,31 @@ public class Residence extends JavaPlugin {
                     if (args.length != 2) {
                         return false;
                     }
-                    rmanager.removeResidence(player, args[1], resadmin);
+                    if (!deleteConfirm.containsKey(player.getName()) || !args[1].equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
+                        player.sendMessage("§c" + language.getPhrase("DeleteConfirm", "§e" + args[1] + "§c"));
+                        deleteConfirm.put(player.getName(), args[1]);
+                    } else {
+                        rmanager.removeResidence(player, args[1], resadmin);
+                    }
                     return true;
-                } 
+                }
+                else if(args[0].equalsIgnoreCase("confirm"))
+                {
+                    if(args.length == 1)
+                    {
+                        String area = deleteConfirm.get(player.getName());
+                        if(area==null)
+                        {
+                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        }
+                        else
+                        {
+                            rmanager.removeResidence(player, area, resadmin);
+                            deleteConfirm.remove(player.getName());
+                        }
+                    }
+                    return true;
+                }
                 else if (args[0].equalsIgnoreCase("removeall"))
                 {
                     if(args.length!=2)
