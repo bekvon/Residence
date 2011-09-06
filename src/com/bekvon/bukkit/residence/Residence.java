@@ -1514,6 +1514,8 @@ public class Residence extends JavaPlugin {
                     ClaimedResidence res = null;
                     int start = 0;
                     boolean enter = false;
+                    if(args.length<2)
+                        return false;
                     if (args[1].equals("enter")) {
                         enter = true;
                         res = rmanager.getByLoc(player.getLocation());
@@ -1521,14 +1523,14 @@ public class Residence extends JavaPlugin {
                     } else if (args[1].equals("leave")) {
                         res = rmanager.getByLoc(player.getLocation());
                         start = 2;
-                    } else if (args[2].equals("enter")) {
+                    } else if (args.length>2 && args[2].equals("enter")) {
                         enter = true;
                         res = rmanager.getByName(args[1]);
                         start = 3;
-                    } else if (args[2].equals("leave")) {
+                    } else if (args.length>2 && args[2].equals("leave")) {
                         res = rmanager.getByName(args[1]);
                         start = 3;
-                    } else if (args[1].equals("remove")) {
+                    } else if (args.length>2 && args[1].equals("remove")) {
                         if (args[2].equals("enter")) {
                             res = rmanager.getByLoc(player.getLocation());
                             if (res != null) {
@@ -1548,7 +1550,7 @@ public class Residence extends JavaPlugin {
                         }
                         player.sendMessage("§c"+language.getPhrase("InvalidMessageType"));
                         return true;
-                    } else if (args[2].equals("remove")) {
+                    } else if (args.length>2 && args[2].equals("remove")) {
                         res = rmanager.getByName(args[1]);
                         if (args.length != 4) {
                             return false;
@@ -1570,6 +1572,8 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§c"+language.getPhrase("InvalidMessageType"));
                         return true;
                     }
+                    if(start == 0)
+                        return false;
                     String message = "";
                     for (int i = start; i < args.length; i++) {
                         message = message + args[i] + " ";
