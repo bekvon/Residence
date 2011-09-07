@@ -120,7 +120,7 @@ public class RentManager {
         }
         if(this.isRented(landName))
         {
-            String[] split = landName.split(".");
+            String[] split = landName.split("\\.");
             if(split.length!=0)
                 player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+split[split.length-1] + "§c.§e" + this.getRentingPlayer(landName)));
             return;
@@ -143,7 +143,7 @@ public class RentManager {
                 res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
                 res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
                 res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
-                String[] split = landName.split(".");
+                String[] split = landName.split("\\.");
                 if(split.length!=0)
                     player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRentSuccess","§e" + split[split.length-1] + "§a.§e" + land.days + "§a"));
             }
@@ -200,7 +200,7 @@ public class RentManager {
 
     public void unrent(Player player, String landName, boolean resadmin)
     {
-        String[] split = landName.split(".");
+        String[] split = landName.split("\\.");
         ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(res == null)
         {
@@ -323,7 +323,7 @@ public class RentManager {
 
     public void setRentRepeatable(Player player, String landName, boolean value, boolean resadmin)
     {
-        String[] split = landName.split(".");
+        String[] split = landName.split("\\.");
         RentableLand land = rentableLand.get(landName);
         ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(land!=null && res!=null && (res.getPermissions().getOwner().equalsIgnoreCase(player.getName()) || resadmin))
@@ -340,7 +340,7 @@ public class RentManager {
 
     public void setRentedRepeatable(Player player, String landName, boolean value, boolean resadmin)
     {
-        String[] split = landName.split(".");
+        String[] split = landName.split("\\.");
         RentedLand land = rentedLand.get(landName);
         if(land!=null && (land.player.equals(player.getName()) || resadmin))
         {
