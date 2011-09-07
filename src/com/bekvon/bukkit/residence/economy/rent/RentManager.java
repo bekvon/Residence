@@ -215,7 +215,7 @@ public class RentManager {
         if(rentedLand.containsKey(landName) && !resadmin)
         {
             if(split.length!=0)
-                player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+split[split.length-1] + "§c.§e" + rentedLand.get(landName).player)+"§e");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+split[split.length-1] + "§c.§e" + rentedLand.get(landName).player)+"§e");
             return;
         }
         if(rentableLand.containsKey(landName))
@@ -232,12 +232,12 @@ public class RentManager {
                     res.getPermissions().applyDefaultFlags();
             }
             if(split.length!=0)
-                player.sendMessage(Residence.getLanguage().getPhrase("ResidenceRemoveRentable","§e"+split[split.length-1] + "§c"));
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceRemoveRentable","§e"+split[split.length-1] + "§c"));
 
         }
         else
         {
-            player.sendMessage(Residence.getLanguage().getPhrase("ResidenceNotForRent"));
+            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceNotForRent"));
         }
     }
 
