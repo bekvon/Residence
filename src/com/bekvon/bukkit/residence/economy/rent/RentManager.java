@@ -76,7 +76,7 @@ public class RentManager {
             newrent.cost = amount;
             newrent.repeatable = repeatable;
             rentableLand.put(landName,newrent);
-            String[] split = landName.split(".");
+            String[] split = landName.split("\\.");
             if(split.length!=0)
                 player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceForRentSuccess","§e"+split[split.length-1] + "§a.§e"+amount+"§a.§e"+days+"§a"));
         }
@@ -180,7 +180,7 @@ public class RentManager {
             ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
             if(res!=null)
                 res.getPermissions().applyDefaultFlags();
-            player.sendMessage(Residence.getLanguage().getPhrase("ResidenceUnrent","§e"+landName + "§a"));
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceUnrent","§e"+landName + "§a"));
         }
         else
         {
