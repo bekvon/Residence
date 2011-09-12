@@ -189,7 +189,7 @@ public class LeaseManager {
                             }
                         }
                     } else {
-                        if (Residence.getConfig().enableLeaseMoneyAccount()) {
+                        if (Residence.getConfig().enableEconomy() && Residence.getConfig().enableLeaseMoneyAccount()) {
                             Residence.getEconomyManager().add("Lease Money", cost);
                         }
                         next.setValue(System.currentTimeMillis() + daysToMs(limits.getLeaseGiveTime()));
