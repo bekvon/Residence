@@ -951,4 +951,18 @@ public class ClaimedResidence {
     {
         return ignorelist;
     }
+
+    public ArrayList<Player> getPlayersInResidence()
+    {
+        ArrayList<Player> within = new ArrayList<Player>();
+        Player[] players = Residence.getServ().getOnlinePlayers();
+        for(Player player : players)
+        {
+            if(this.containsLoc(player.getLocation()))
+            {
+                within.add(player);
+            }
+        }
+        return within;
+    }
 }

@@ -131,6 +131,11 @@ public class FlagPermissions {
         playerFlags.remove(player);
     }
 
+    public void removeAllGroupFlags(String group)
+    {
+        groupFlags.remove(group);
+    }
+
     public boolean setGroupFlag(String group, String flag, FlagState state) {
         group = group.toLowerCase();
         if (!groupFlags.containsKey(group)) {

@@ -32,6 +32,8 @@ import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
+import com.bekvon.bukkit.residence.spout.ResidenceSpout;
+import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
@@ -65,6 +67,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
+import org.getspout.spoutapi.SpoutManager;
 
 /**
  *
@@ -80,6 +83,7 @@ public class Residence extends JavaPlugin {
     private static ResidenceBlockListener blistener;
     private static ResidencePlayerListener plistener;
     private static ResidenceEntityListener elistener;
+    private static ResidenceSpoutListener slistener;
     private static TransactionManager tmanager;
     private static PermissionListManager pmanager;
     private static LeaseManager leasemanager;
@@ -268,6 +272,11 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.BLOCK_SPREAD, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blistener, Priority.Lowest, this);
+                if(cmanager.enableSpout())
+                {
+                    slistener = new ResidenceSpoutListener();
+                    pm.registerEvent(Event.Type.CUSTOM_EVENT, slistener, Priority.Lowest, this);
+                }
                 firstenable = false;
             }
             else
@@ -770,7 +779,18 @@ public class Residence extends JavaPlugin {
                         player.sendMessage("§c"+language.getPhrase("SelectPoints"));
                         return true;
                     }
-                } else if (args[0].equals("sublist")) {
+                } else if(args[0].equals("gui"))
+                {
+                    if(slistener!=null)
+                    {
+                        if(args.length==1)
+                            ResidenceSpout.showResidenceFlagGUI(SpoutManager.getPlayer(player), this, rmanager.getNameByLoc(player.getLocation()), resadmin);
+                        else if(args.length==2)
+                            ResidenceSpout.showResidenceFlagGUI(SpoutManager.getPlayer(player), this, args[1], resadmin);
+                    }
+                    return true;
+                }
+                else if (args[0].equals("sublist")) {
                     if(args.length==1 || args.length == 2 || args.length == 3)
                     {
                         ClaimedResidence res;
