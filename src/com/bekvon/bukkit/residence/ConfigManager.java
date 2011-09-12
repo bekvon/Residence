@@ -46,6 +46,8 @@ public class ConfigManager {
     protected boolean legacyperms;
     protected String namefix;
     protected boolean showIntervalMessages;
+    protected boolean spoutEnable;
+    protected boolean enableLeaseMoneyAccount;
 
     public ConfigManager(Configuration config)
     {
@@ -81,6 +83,8 @@ public class ConfigManager {
         legacyperms = config.getBoolean("Global.LegacyPermissions",false);
         namefix = config.getString("Global.ResidenceNameRegex","[^a-zA-Z0-9\\-\\_]");
         showIntervalMessages = config.getBoolean("Global.ShowIntervalMessages", false);
+        spoutEnable = config.getBoolean("Global.EnableSpout", false);
+        enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);
         ConfigurationNode node = config.getNode("Global.GroupDefault");
         if(node!=null)
         {
@@ -229,5 +233,13 @@ public class ConfigManager {
     public boolean showIntervalMessages()
     {
         return showIntervalMessages;
+    }
+    public boolean enableSpout()
+    {
+        return spoutEnable;
+    }
+    public boolean enableLeaseMoneyAccount()
+    {
+        return enableLeaseMoneyAccount;
     }
 }

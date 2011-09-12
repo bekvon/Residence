@@ -265,6 +265,20 @@ public class ResidencePermissions extends FlagPermissions {
         return false;
     }
 
+    public boolean removeAllGroupFlags(Player player, String group, boolean resadmin) {
+        if (this.hasResidencePermission(player, false)) {
+            ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, player, "ALL", ResidenceFlagChangeEvent.FlagType.GROUP, FlagState.NEITHER, null);
+            Residence.getServ().getPluginManager().callEvent(fc);
+            if (fc.isCancelled()) {
+                return false;
+            }
+            super.removeAllGroupFlags(group);
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("FlagSet"));
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public boolean setFlag(String flag, FlagState state) {
