@@ -147,49 +147,52 @@ public class LeaseManager {
     private int daysRemaining(String area)
     {
         Long get = leaseExpireTime.get(area);
+        if(get<=System.currentTimeMillis())
+            return 0;
         return msToDays((int)(get-System.currentTimeMillis()));
     }
 
     public void doExpirations() {
         Set<Entry<String, Long>> set = leaseExpireTime.entrySet();
-        synchronized (leaseExpireTime) {
-            Iterator<Entry<String, Long>> it = set.iterator();
-            while (it.hasNext()) {
-                Entry<String, Long> next = it.next();
-                if (next.getValue() < System.currentTimeMillis()) {
+        Iterator<Entry<String, Long>> it = set.iterator();
+        while (it.hasNext()) {
+            Entry<String, Long> next = it.next();
+            if (next.getValue() <= System.currentTimeMillis()) {
+                String resname = next.getKey();
+                ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
+                if (res == null) {
+                    it.remove();
+                } else {
                     boolean renewed = false;
-                    String resname = next.getKey();
-                    ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
-                    if (res == null) {
-                        it.remove();
-                    } else {
-                        if (Residence.getConfig().enableEconomy() && Residence.getConfig().autoRenewLeases()) {
-                            int cost = getRenewCost(res);
-                            String owner = res.getPermissions().getOwner();
-                            PermissionGroup limits = Residence.getPermissionManager().getGroup(owner, res.getPermissions().getWorld());
-                            if (res != null && Residence.getEconomyManager().canAfford(owner, cost)) {
-                                if (cost == 0 || Residence.getEconomyManager().subtract(owner, cost)) {
-                                    Residence.getEconomyManager().add("Lease Money", cost);
-                                    next.setValue(next.getValue() + daysToMs(limits.getLeaseGiveTime()));
-                                    renewed = true;
-                                }
-                            }
-                            if(res != null && !renewed && res.getBank().hasEnough(cost))
-                            {
-                                res.getBank().subtract(cost);
+                    String owner = res.getPermissions().getOwner();
+                    PermissionGroup limits = Residence.getPermissionManager().getGroup(owner, res.getPermissions().getWorld());
+                    int cost = this.getRenewCost(res);
+                    if (Residence.getConfig().enableEconomy() && Residence.getConfig().autoRenewLeases()) {
+                        if (cost == 0) {
+                            renewed = true;
+                        } else if (Residence.getEconomyManager().canAfford(owner, cost)) {
+                            if (Residence.getEconomyManager().subtract(owner, cost)) {
                                 renewed = true;
                             }
+                        } else if (res.getBank().hasEnough(cost)) {
+                            res.getBank().subtract(cost);
+                            renewed = true;
                         }
-                        if (!renewed) {
-                            if (!Residence.getConfig().enabledRentSystem() || !Residence.getRentManager().isRented(resname)) {
-                                ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, res, DeleteCause.LEASE_EXPIRE);
-                                Residence.getServ().getPluginManager().callEvent(resevent);
-                                if (!resevent.isCancelled()) {
-                                    manager.removeResidence(next.getKey());
-                                    it.remove();
-                                }
+                    }
+                    if (!renewed) {
+                        if (!Residence.getConfig().enabledRentSystem() || !Residence.getRentManager().isRented(resname)) {
+                            ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, res, DeleteCause.LEASE_EXPIRE);
+                            Residence.getServ().getPluginManager().callEvent(resevent);
+                            if (!resevent.isCancelled()) {
+                                manager.removeResidence(next.getKey());
+                                it.remove();
                             }
                         }
+                    } else {
+                        if (Residence.getConfig().enableLeaseMoneyAccount()) {
+                            Residence.getEconomyManager().add("Lease Money", cost);
+                        }
+                        next.setValue(System.currentTimeMillis() + daysToMs(limits.getLeaseGiveTime()));
                     }
                 }
             }
