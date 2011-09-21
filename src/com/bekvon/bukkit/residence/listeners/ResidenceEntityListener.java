@@ -68,9 +68,9 @@ public class ResidenceEntityListener extends EntityListener {
     @Override
     public void onPaintingPlace(PaintingPlaceEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+        Player player = event.getPlayer();
         if(res!=null)
         {
-            Player player = event.getPlayer();
             ResidencePermissions perms = res.getPermissions();
             String pname = player.getName();
             boolean hasbuild = perms.playerHas(pname, "build", true);

@@ -170,13 +170,17 @@ public class LeaseManager {
                     if (Residence.getConfig().enableEconomy() && Residence.getConfig().autoRenewLeases()) {
                         if (cost == 0) {
                             renewed = true;
-                        } else if (Residence.getEconomyManager().canAfford(owner, cost)) {
-                            if (Residence.getEconomyManager().subtract(owner, cost)) {
-                                renewed = true;
-                            }
                         } else if (res.getBank().hasEnough(cost)) {
                             res.getBank().subtract(cost);
                             renewed = true;
+                            if(Residence.getConfig().debugEnabled())
+                                System.out.println("Lease Renewed From Residence Bank: "+resname);
+                        } else if (Residence.getEconomyManager().canAfford(owner, cost)) {
+                            if (Residence.getEconomyManager().subtract(owner, cost)) {
+                                renewed = true;
+                                if(Residence.getConfig().debugEnabled())
+                                    System.out.println("Lease Renewed From Economy: "+resname);
+                            }
                         }
                     }
                     if (!renewed) {
@@ -186,13 +190,19 @@ public class LeaseManager {
                             if (!resevent.isCancelled()) {
                                 manager.removeResidence(next.getKey());
                                 it.remove();
+                                if(Residence.getConfig().debugEnabled())
+                                    System.out.println("Lease NOT removed, Removing: "+resname);
                             }
                         }
                     } else {
                         if (Residence.getConfig().enableEconomy() && Residence.getConfig().enableLeaseMoneyAccount()) {
                             Residence.getEconomyManager().add("Lease Money", cost);
                         }
+                        if(Residence.getConfig().debugEnabled())
+                            System.out.println("Lease Renew Old: "+next.getValue());
                         next.setValue(System.currentTimeMillis() + daysToMs(limits.getLeaseGiveTime()));
+                        if(Residence.getConfig().debugEnabled())
+                            System.out.println("Lease Renew New: " + next.getValue());
                     }
                 }
             }

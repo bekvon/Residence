@@ -287,6 +287,8 @@ public class RentManager {
             if(land.endTime<=System.currentTimeMillis())
             {
                 ClaimedResidence res = Residence.getResidenceManager().getByName(next.getKey());
+                if(Residence.getConfig().debugEnabled())
+                    System.out.println("Rent Check: "+next.getKey());
                 if (res != null) {
                     ResidenceRentEvent revent = new ResidenceRentEvent(res, null, RentEventType.RENT_EXPIRE);
                     Residence.getServ().getPluginManager().callEvent(revent);
@@ -304,6 +306,10 @@ public class RentManager {
                                 if (!Residence.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost)) {
                                     it.remove();
                                     res.getPermissions().applyDefaultFlags();
+                                }
+                                else
+                                {
+                                    land.endTime = System.currentTimeMillis() + this.daysToMs(rentable.days);
                                 }
                             }
                         } else {

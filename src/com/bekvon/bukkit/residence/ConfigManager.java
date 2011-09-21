@@ -48,6 +48,7 @@ public class ConfigManager {
     protected boolean showIntervalMessages;
     protected boolean spoutEnable;
     protected boolean enableLeaseMoneyAccount;
+    protected boolean enableDebug;
 
     public ConfigManager(Configuration config)
     {
@@ -85,6 +86,7 @@ public class ConfigManager {
         showIntervalMessages = config.getBoolean("Global.ShowIntervalMessages", false);
         spoutEnable = config.getBoolean("Global.EnableSpout", false);
         enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);
+        enableDebug = config.getBoolean("Global.EnableDebug", false);
         ConfigurationNode node = config.getNode("Global.GroupDefault");
         if(node!=null)
         {
@@ -241,5 +243,9 @@ public class ConfigManager {
     public boolean enableLeaseMoneyAccount()
     {
         return enableLeaseMoneyAccount;
+    }
+    public boolean debugEnabled()
+    {
+        return enableDebug;
     }
 }
