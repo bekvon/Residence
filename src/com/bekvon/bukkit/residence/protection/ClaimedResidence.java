@@ -802,7 +802,7 @@ public class ClaimedResidence {
         res.perms = ResidencePermissions.load(res,(Map<String, Object>) root.get("Permissions"));
         World world = Residence.getServ().getWorld(res.perms.getWorld());
         if(world==null)
-            throw new Exception("Can't find world:" + res.perms.getWorld());
+            throw new Exception("Cant Find World: " + res.perms.getWorld());
         for(Entry<String, Object> map : areamap.entrySet())
         {
             res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(),world));
