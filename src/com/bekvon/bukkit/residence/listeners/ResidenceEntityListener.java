@@ -11,6 +11,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EndermanPickupEvent;
+import org.bukkit.event.entity.EndermanPlaceEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -39,6 +41,38 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
  * @author Administrator
  */
 public class ResidenceEntityListener extends EntityListener {
+
+    @Override
+    public void onEndermanPickup(EndermanPickupEvent event) {
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+        if (res != null) {
+            ResidencePermissions perms = res.getPermissions();
+            if (!perms.has("build", true)) {
+                event.setCancelled(true);
+            }
+        } else {
+            FlagPermissions perms = Residence.getWorldFlags().getPerms(event.getBlock().getLocation().getWorld().getName());
+            if (!perms.has("build", true)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @Override
+    public void onEndermanPlace(EndermanPlaceEvent event) {
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getLocation());
+        if (res != null) {
+            ResidencePermissions perms = res.getPermissions();
+            if (!perms.has("build", true)) {
+                event.setCancelled(true);
+            }
+        } else {
+            FlagPermissions perms = Residence.getWorldFlags().getPerms(event.getLocation().getWorld().getName());
+            if (!perms.has("build", true)) {
+                event.setCancelled(true);
+            }
+        }
+    }
 
     @Override
     public void onCreatureSpawn(CreatureSpawnEvent event) {

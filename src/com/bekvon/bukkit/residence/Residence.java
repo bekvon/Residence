@@ -16,7 +16,6 @@ import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
 import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
 import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
-import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
@@ -269,11 +268,13 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
-				pm.registerEvent(Event.Type.PAINTING_PLACE, elistener, Priority.Lowest, this);
-				pm.registerEvent(Event.Type.PAINTING_BREAK, elistener, Priority.Lowest, this);
+		pm.registerEvent(Event.Type.PAINTING_PLACE, elistener, Priority.Lowest, this);
+		pm.registerEvent(Event.Type.PAINTING_BREAK, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_SPREAD, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.ENDERMAN_PICKUP, elistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.ENDERMAN_PLACE, elistener, Priority.Lowest, this);
                 if(cmanager.enableSpout())
                 {
                     slistener = new ResidenceSpoutListener();
