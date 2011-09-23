@@ -16,6 +16,7 @@ import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
 import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
 import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
+import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
 import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
@@ -436,9 +437,7 @@ public class Residence extends JavaPlugin {
         if (p != null) {
             if(p.getDescription().getVersion().startsWith("6"))
             {
-                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy 6 NOT SUPPORTED YET!");
-                //economy = new IConomy6Adapter((com.iCo6.iConomy)p);
-                return;
+                economy = new IConomy6Adapter((com.iCo6.iConomy)p);
             }
             else if(p.getDescription().getVersion().startsWith("5"))
             {
