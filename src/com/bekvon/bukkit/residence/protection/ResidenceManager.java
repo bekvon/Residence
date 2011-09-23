@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -396,25 +397,59 @@ public class ResidenceManager {
 
     public Map<String,Object> save()
     {
-        Map<String,Object> resmap = new LinkedHashMap<String,Object>();
-        for(Entry<String, ClaimedResidence> res : residences.entrySet())
+        Map<String,Object> worldmap = new LinkedHashMap<String,Object>();
+        for(World world : Residence.getServ().getWorlds())
         {
-            try
+            Map<String,Object> resmap = new LinkedHashMap<String,Object>();
+            for(Entry<String, ClaimedResidence> res : residences.entrySet())
             {
-                resmap.put(res.getKey(), res.getValue().save());
+                if(res.getValue().getWorld().equals(world.getName()))
+                {
+                    try
+                    {
+                        resmap.put(res.getKey(), res.getValue().save());
+                    }
+                    catch (Exception ex)
+                    {
+                        System.out.println("[Residence] Failed to save residence (" + res.getKey() + ")!");
+                        Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                System.out.println("[Residence] Failed to save residence (" + res.getKey() + ")!");
-                Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            worldmap.put(world.getName(), resmap);
         }
-        return resmap;
+        return worldmap;
     }
 
     public static ResidenceManager load(Map<String,Object> root) throws Exception
     {
         ResidenceManager resm = new ResidenceManager();
+        if(root==null)
+        {
+            return resm;
+        }
+        for(World world : Residence.getServ().getWorlds())
+        {
+            Map<String,Object> reslist = (Map<String, Object>) root.get(world.getName());
+            if(reslist!=null)
+            {
+                try
+                {
+                    loadMap(reslist,resm);
+                }
+                catch (Exception ex)
+                {
+                    System.out.println("Error in loading save file for world: " + world.getName());
+                    if(Residence.getConfig().stopOnSaveError())
+                        throw(ex);
+                }
+            }
+        }
+        return resm;
+    }
+
+    public static ResidenceManager loadMap(Map<String,Object> root, ResidenceManager resm) throws Exception
+    {
         if(root != null)
         {
             for(Entry<String, Object> res : root.entrySet())
