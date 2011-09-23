@@ -45,7 +45,7 @@ Global:
     AdminOPs: true
     # This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.
     # The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.
-    MultiWorldPlugin: MultiVerse-Core
+    MultiWorldPlugin: Multiverse-Core
     # Setting this to true causes subzones to inherit flags from their parent zones.
     ResidenceFlagsInherit: true
     # Setting this to false will allow rented residences to be modified by the renting player.
