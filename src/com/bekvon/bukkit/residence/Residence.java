@@ -180,8 +180,8 @@ public class Residence extends JavaPlugin {
                 Plugin plugin = server.getPluginManager().getPlugin(multiworld);
                 if (plugin != null) {
                     if (!plugin.isEnabled()) {
-                        server.getPluginManager().enablePlugin(plugin);
                         System.out.println("[Residence] - Enabling multiworld plugin: " + multiworld);
+                        server.getPluginManager().enablePlugin(plugin);
                     }
                 }
             }
