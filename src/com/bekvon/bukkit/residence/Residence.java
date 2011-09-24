@@ -1763,8 +1763,13 @@ public class Residence extends JavaPlugin {
                     if (loadFile.isFile()) {
                         yml = new YMLSaveHelper(loadFile);
                         yml.load();
-                        Long seed = (Long)yml.getRoot().get("Seed");
-                        if(seed == world.getSeed())
+                        Object obj = yml.getRoot().get("Seed");
+                        Long seed = 0L;
+                        if(obj instanceof Long)
+                            seed = (Long) obj;
+                        else if(obj instanceof Integer)
+                            seed = ((Integer) obj).longValue();
+                        if(seed==0 || seed == world.getSeed())
                             worlds.put(world.getName(), yml.getRoot().get("Residences"));
                         else
                             loadFile.delete();
