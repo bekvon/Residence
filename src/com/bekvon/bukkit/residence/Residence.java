@@ -261,6 +261,9 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.BLOCK_SPREAD, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blistener, Priority.Lowest, this);
+                pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
@@ -273,9 +276,6 @@ public class Residence extends JavaPlugin {
                 pm.registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PAINTING_PLACE, elistener, Priority.Lowest, this);
 		pm.registerEvent(Event.Type.PAINTING_BREAK, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_SPREAD, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENDERMAN_PICKUP, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENDERMAN_PLACE, elistener, Priority.Lowest, this);
                 if(cmanager.enableSpout())
