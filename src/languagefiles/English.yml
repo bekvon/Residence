@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 15
+Version: 16
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -430,6 +430,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'lavaflow - allows or denys lava flow, overrides flow'
                         - 'waterflow - allows or denys water flow, overrides flow'
                         - 'damage - allows or denys all entity damage within the residence.'
+                        - 'piston - allow or deny pistons from pushing or pulling blocks in the residence.'
                 list:
                     Description: List Residences
                     Info:
