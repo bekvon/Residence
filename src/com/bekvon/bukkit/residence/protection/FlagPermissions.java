@@ -71,6 +71,7 @@ public class FlagPermissions {
         addResidenceOnlyFlag("waterflow");
         addResidenceOnlyFlag("physics");
         addResidenceOnlyFlag("piston");
+        addResidenceOnlyFlag("spread");
         addPlayerOrGroupOnlyFlag("admin");
     }
 

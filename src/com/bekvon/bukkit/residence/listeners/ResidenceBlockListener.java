@@ -144,7 +144,7 @@ public class ResidenceBlockListener extends BlockListener {
     public void onBlockSpread(BlockSpreadEvent event) {
         Location loc = event.getBlock().getLocation();
         FlagPermissions perms = Residence.getPermsByLoc(loc);
-        if(!perms.has("firespread", true))
+        if(!perms.has("spread", true))
             event.setCancelled(true);
     }
 
