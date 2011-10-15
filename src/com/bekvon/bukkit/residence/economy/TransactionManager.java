@@ -256,7 +256,7 @@ public class TransactionManager {
             if (!firstadd) {
                 sbuild.append(", ");
             } else {
-                firstadd = true;
+                firstadd = false;
             }
             sbuild.append(land.getKey());
         }
