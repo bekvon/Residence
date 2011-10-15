@@ -180,8 +180,8 @@ public class SelectionManager {
         int xcoord = chunk.getX() * 16;
         int zcoord = chunk.getZ() * 16;
         int ycoord = 0;
-        int xmax = xcoord + 16;
-        int zmax = zcoord + 16;
+        int xmax = xcoord + 15;
+        int zmax = zcoord + 15;
         int ymax = 127;
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
