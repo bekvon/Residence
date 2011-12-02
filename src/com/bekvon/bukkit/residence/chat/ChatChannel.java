@@ -30,7 +30,7 @@ public class ChatChannel {
     public void chat(String sourcePlayer, String message)
     {
         Server serv = Residence.getServ();
-        ChatColor color = Residence.getConfig().getChatColor();
+        ChatColor color = Residence.getConfigManager().getChatColor();
         for(String member : members)
         {
             Player player = serv.getPlayer(member);

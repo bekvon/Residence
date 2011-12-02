@@ -35,7 +35,7 @@ public class RentManager {
 
     public void setForRent(Player player, String landName, int amount, int days, boolean repeatable, boolean resadmin)
     {
-        if(!Residence.getConfig().enabledRentSystem())
+        if(!Residence.getConfigManager().enabledRentSystem())
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
             return;
@@ -88,7 +88,7 @@ public class RentManager {
 
     public void rent(Player player, String landName, boolean repeat, boolean resadmin)
     {
-        if(!Residence.getConfig().enabledRentSystem())
+        if(!Residence.getConfigManager().enabledRentSystem())
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentDisabled"));
             return;
@@ -287,7 +287,7 @@ public class RentManager {
             if(land.endTime<=System.currentTimeMillis())
             {
                 ClaimedResidence res = Residence.getResidenceManager().getByName(next.getKey());
-                if(Residence.getConfig().debugEnabled())
+                if(Residence.getConfigManager().debugEnabled())
                     System.out.println("Rent Check: "+next.getKey());
                 if (res != null) {
                     ResidenceRentEvent revent = new ResidenceRentEvent(res, null, RentEventType.RENT_EXPIRE);
