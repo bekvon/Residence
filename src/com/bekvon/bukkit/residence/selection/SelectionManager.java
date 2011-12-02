@@ -67,7 +67,7 @@ public class SelectionManager {
             CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Selection.Total.Size")+":§3 " + cuboidArea.getSize());
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            if(Residence.getConfig().enableEconomy())
+            if(Residence.getConfigManager().enableEconomy())
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Land.Cost")+":§3 " + ((int)Math.ceil((double)cuboidArea.getSize()*group.getCostPerBlock())));
             player.sendMessage("§eX"+Residence.getLanguage().getPhrase("Size")+":§3 " + cuboidArea.getXSize());
             player.sendMessage("§eY"+Residence.getLanguage().getPhrase("Size")+":§3 " + cuboidArea.getYSize());

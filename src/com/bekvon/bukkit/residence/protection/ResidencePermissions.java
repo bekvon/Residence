@@ -144,7 +144,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     public boolean hasResidencePermission(Player player, boolean requireOwner)
     {
-        if(Residence.getConfig().enabledRentSystem())
+        if(Residence.getConfigManager().enabledRentSystem())
         {
             String resname = residence.getName();
             if(Residence.getRentManager().isRented(resname))
@@ -422,9 +422,9 @@ public class ResidencePermissions extends FlagPermissions {
     public void applyGlobalDefaults()
     {
         this.clearFlags();
-        FlagPermissions gRD = Residence.getConfig().getGlobalResidenceDefaultFlags();
-        FlagPermissions gCD = Residence.getConfig().getGlobalCreatorDefaultFlags();
-        Map<String, FlagPermissions> gGD = Residence.getConfig().getGlobalGroupDefaultFlags();
+        FlagPermissions gRD = Residence.getConfigManager().getGlobalResidenceDefaultFlags();
+        FlagPermissions gCD = Residence.getConfigManager().getGlobalCreatorDefaultFlags();
+        Map<String, FlagPermissions> gGD = Residence.getConfigManager().getGlobalGroupDefaultFlags();
         for(Entry<String, Boolean> entry : gRD.cuboidFlags.entrySet())
         {
             if(entry.getValue())

@@ -53,7 +53,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.minecraft.server.FontAllowedCharacters;
+//import net.minecraft.server.FontAllowedCharacters;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -334,13 +334,15 @@ public class Residence extends JavaPlugin {
 
     public static boolean validString(String string)
     {
-        for(int i = 0; i < string.length(); i++)
-        {
-            if(FontAllowedCharacters.allowedCharacters.indexOf(string.charAt(i)) < 0)
-            {
-                return false;
-            }
-        }
+        //Broken since mincraft seems to have lost its FontAllowedCharacters class :(
+        
+        //for(int i = 0; i < string.length(); i++)
+        //{
+        //    if(FontAllowedCharacters.allowedCharacters.indexOf(string.charAt(i)) < 0)
+        //    {
+        //        return false;
+        //    }
+        //}
         return true;
     }
 
@@ -379,7 +381,7 @@ public class Residence extends JavaPlugin {
         return leasemanager;
     }
 
-    public static ConfigManager getConfig() {
+    public static ConfigManager getConfigManager() {
         return cmanager;
     }
 

@@ -65,7 +65,7 @@ public class PermissionManager {
     {
         group = group.toLowerCase();
         if(!groups.containsKey(group))
-            return groups.get(Residence.getConfig().getDefaultGroup());
+            return groups.get(Residence.getConfigManager().getDefaultGroup());
         return groups.get(group);
     }
 
@@ -75,7 +75,7 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(String player, String world) {
-        String defaultGroup = Residence.getConfig().getDefaultGroup().toLowerCase();
+        String defaultGroup = Residence.getConfigManager().getDefaultGroup().toLowerCase();
         if (playersGroup.containsKey(player)) {
             String group = playersGroup.get(player);
             if (group != null) {
@@ -101,7 +101,7 @@ public class PermissionManager {
     public String getPermissionsGroup(String player, String world)
     {
         if(perms == null)
-            return Residence.getConfig().getDefaultGroup();
+            return Residence.getConfigManager().getDefaultGroup();
         return perms.getPlayerGroup(player, world);
     }
 
@@ -113,7 +113,7 @@ public class PermissionManager {
 
     public boolean isResidenceAdmin(Player player)
     {
-        return (this.hasAuthority(player, "residence.admin", false) || (player.isOp() && Residence.getConfig().getOpsAreAdmins()));
+        return (this.hasAuthority(player, "residence.admin", false) || (player.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
     }
 
     private void checkPermissions() {
@@ -134,7 +134,7 @@ public class PermissionManager {
        p = server.getPluginManager().getPlugin("Permissions");
        if(p!=null)
        {
-           if(Residence.getConfig().useLegacyPermissions())
+           if(Residence.getConfigManager().useLegacyPermissions())
            {
                 perms = new LegacyPermissions(((Permissions) p).getHandler());
                 Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
@@ -152,7 +152,7 @@ public class PermissionManager {
 
     private void readConfig(Configuration config)
     {
-        String defaultGroup = Residence.getConfig().getDefaultGroup();
+        String defaultGroup = Residence.getConfigManager().getDefaultGroup();
         globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getNode("Global"));
         Map<String, ConfigurationNode> nodes = config.getNodes("Groups");
         if(nodes!=null)

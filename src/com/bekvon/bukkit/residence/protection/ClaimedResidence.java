@@ -152,7 +152,7 @@ public class ClaimedResidence {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("AreaHighLimit","§e" + group.getMaxHeight()));
                 return false;
             }
-            if(parent==null && Residence.getConfig().enableEconomy())
+            if(parent==null && Residence.getConfigManager().enableEconomy())
             {
                 int chargeamount = (int) Math.ceil((double)area.getSize() * group.getCostPerBlock());
                 if(!TransactionManager.chargeEconomyMoney(player, chargeamount))
@@ -236,7 +236,7 @@ public class ClaimedResidence {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("AreaHighLimit","§e" + group.getMaxHeight()));
                 return false;
             }
-            if (parent == null && Residence.getConfig().enableEconomy()) {
+            if (parent == null && Residence.getConfigManager().enableEconomy()) {
                 int chargeamount = (int) Math.ceil((double) (newarea.getSize()-oldarea.getSize()) * group.getCostPerBlock());
                 if(chargeamount>0)
                 {
@@ -311,7 +311,7 @@ public class ClaimedResidence {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             newres.setEnterMessage(group.getDefaultEnterMessage());
             newres.setLeaveMessage(group.getDefaultLeaveMessage());
-            if(Residence.getConfig().flagsInherit())
+            if(Residence.getConfigManager().flagsInherit())
                 newres.getPermissions().setParent(perms);
             subzones.put(name, newres);
             if(player!=null)
@@ -739,7 +739,7 @@ public class ClaimedResidence {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("AreaNonExist"));
                 return;
             }
-            if(areas.size()==1 && !Residence.getConfig().allowEmptyResidences())
+            if(areas.size()==1 && !Residence.getConfigManager().allowEmptyResidences())
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("AreaRemoveLast"));
                 return;
@@ -811,7 +811,7 @@ public class ClaimedResidence {
         for(Entry<String, Object> map : subzonemap.entrySet())
         {
             ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res);
-            if(Residence.getConfig().flagsInherit())
+            if(Residence.getConfigManager().flagsInherit())
                 subres.getPermissions().setParent(res.getPermissions());
             res.subzones.put(map.getKey(), subres);
         }
