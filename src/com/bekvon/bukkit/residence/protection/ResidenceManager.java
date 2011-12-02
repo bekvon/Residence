@@ -200,7 +200,7 @@ public class ResidenceManager {
             residences.put(name, newRes);
             Residence.getLeaseManager().removeExpireTime(name);
             player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceCreate","§e" + name + "§a"));
-            if(Residence.getConfig().useLeases())
+            if(Residence.getConfigManager().useLeases())
                 Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
         }
     }
@@ -358,11 +358,11 @@ public class ResidenceManager {
             return;
         }
         ResidencePermissions perms = res.getPermissions();
-        if(Residence.getConfig().enableEconomy())
+        if(Residence.getConfigManager().enableEconomy())
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Residence")+":§2 " + areaname + " §eBank: §6" + res.getBank().getStoredMoney());
         else
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Residence")+":§2 " + areaname);
-        if(Residence.getConfig().enabledRentSystem() && Residence.getRentManager().isRented(areaname))
+        if(Residence.getConfigManager().enabledRentSystem() && Residence.getRentManager().isRented(areaname))
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Owner")+":§c " + perms.getOwner() + "§e Rented by: §c" + Residence.getRentManager().getRentingPlayer(areaname));
         else
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Owner")+":§c " + perms.getOwner() + "§e - " + Residence.getLanguage().getPhrase("World")+": §c"+ perms.getWorld());
@@ -374,7 +374,7 @@ public class ResidenceManager {
         if(aid !=null)
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("CurrentArea")+": §6" + aid);
         player.sendMessage("§e"+Residence.getLanguage().getPhrase("Total.Size")+":§d " + res.getTotalSize());
-        if (Residence.getConfig().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
+        if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseExpire")+":§a " + Residence.getLeaseManager().getExpireTime(areaname));
         }
     }
@@ -440,7 +440,7 @@ public class ResidenceManager {
                 catch (Exception ex)
                 {
                     System.out.println("Error in loading save file for world: " + world.getName());
-                    if(Residence.getConfig().stopOnSaveError())
+                    if(Residence.getConfigManager().stopOnSaveError())
                         throw(ex);
                 }
             }
@@ -462,7 +462,7 @@ public class ResidenceManager {
                 {
                     System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
                     Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
-                    if(Residence.getConfig().stopOnSaveError())
+                    if(Residence.getConfigManager().stopOnSaveError())
                     {
                         throw(ex);
                     }
@@ -503,9 +503,9 @@ public class ResidenceManager {
                 }
                 residences.put(newName, res);
                 residences.remove(oldName);
-                if(Residence.getConfig().useLeases())
+                if(Residence.getConfigManager().useLeases())
                     Residence.getLeaseManager().updateLeaseName(oldName, newName);
-                if(Residence.getConfig().enabledRentSystem())
+                if(Residence.getConfigManager().enabledRentSystem())
                 {
                     Residence.getRentManager().updateRentableName(oldName, newName);
                 }

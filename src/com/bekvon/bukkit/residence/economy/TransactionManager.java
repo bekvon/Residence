@@ -56,7 +56,7 @@ public class TransactionManager {
 
     public void putForSale(String areaname, Player player, int amount, boolean resadmin)
     {
-        if(Residence.getConfig().enabledRentSystem())
+        if(Residence.getConfigManager().enabledRentSystem())
         {
             if(Residence.getRentManager().isForRent(areaname))
             {
@@ -66,7 +66,7 @@ public class TransactionManager {
         }
         if(!resadmin)
         {
-            if(!Residence.getConfig().enableEconomy() || Residence.getEconomyManager()==null)
+            if(!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager()==null)
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
                 return;
@@ -110,7 +110,7 @@ public class TransactionManager {
         if(!resadmin)
         {
             
-            if(!Residence.getConfig().enableEconomy() || Residence.getEconomyManager()==null)
+            if(!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager()==null)
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
                 return;
@@ -236,7 +236,7 @@ public class TransactionManager {
             player.sendMessage("------------------------");
             player.sendMessage("§eName:§2 " + areaname);
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("SellAmount")+":§c " + sellAmount.get(areaname));
-            if(Residence.getConfig().useLeases())
+            if(Residence.getConfigManager().useLeases())
             {
                 Date etime = Residence.getLeaseManager().getExpireTime(areaname);
                 if(etime!=null)

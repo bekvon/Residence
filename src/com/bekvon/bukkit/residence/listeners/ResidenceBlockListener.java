@@ -46,10 +46,10 @@ public class ResidenceBlockListener extends BlockListener {
             return;
         }
         ClaimedResidence res;
-        if(Residence.getConfig().enabledRentSystem())
+        if(Residence.getConfigManager().enabledRentSystem())
         {
             String resname = Residence.getResidenceManager().getNameByLoc(event.getBlock().getLocation());
-            if(Residence.getConfig().preventRentModify() && Residence.getRentManager().isRented(resname))
+            if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
@@ -99,10 +99,10 @@ public class ResidenceBlockListener extends BlockListener {
         if(Residence.getItemManager().isIgnored(mat, group, world))
             return;
         ClaimedResidence res;
-        if(Residence.getConfig().enabledRentSystem())
+        if(Residence.getConfigManager().enabledRentSystem())
         {
             String resname = Residence.getResidenceManager().getNameByLoc(event.getBlock().getLocation());
-            if(Residence.getConfig().preventRentModify() && Residence.getRentManager().isRented(resname))
+            if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);

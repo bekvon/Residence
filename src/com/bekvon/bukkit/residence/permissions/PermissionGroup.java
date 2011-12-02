@@ -298,7 +298,7 @@ public class PermissionGroup {
         if(Residence.getEconomyManager()!=null)
             player.sendMessage("§eResidence Cost Per Block:§3 " + costperarea);
         player.sendMessage("§eFlag Permissions:§3 " + flagPerms.listFlags());
-        if(Residence.getConfig().useLeases())
+        if(Residence.getConfigManager().useLeases())
         {
             player.sendMessage("§eMax Lease Days:§3 " + maxLeaseTime);
             player.sendMessage("§eLease Time Given on Renew:§3 " + leaseGiveTime);

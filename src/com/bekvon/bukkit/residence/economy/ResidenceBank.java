@@ -54,7 +54,7 @@ public class ResidenceBank {
 
     public void withdraw(Player player, int amount, boolean resadmin)
     {
-        if(!Residence.getConfig().enableEconomy())
+        if(!Residence.getConfigManager().enableEconomy())
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
         }
@@ -77,7 +77,7 @@ public class ResidenceBank {
 
     public void deposit(Player player, int amount, boolean resadmin)
     {
-        if(!Residence.getConfig().enableEconomy())
+        if(!Residence.getConfigManager().enableEconomy())
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
         }
