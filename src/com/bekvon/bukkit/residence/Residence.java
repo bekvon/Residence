@@ -54,6 +54,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import net.minecraft.server.FontAllowedCharacters;
+import net.minecraft.server.SharedConstants;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -335,15 +336,13 @@ public class Residence extends JavaPlugin {
 
     public static boolean validString(String string)
     {
-        //Broken since mincraft seems to have lost its FontAllowedCharacters class :(
-        
-        //for(int i = 0; i < string.length(); i++)
-        //{
-        //    if(FontAllowedCharacters.allowedCharacters.indexOf(string.charAt(i)) < 0)
-        //    {
-        //        return false;
-        //    }
-        //}
+        for(int i = 0; i < string.length(); i++)
+        {
+            if(SharedConstants.allowedCharacters.indexOf(string.charAt(i)) < 0)
+            {
+                return false;
+            }
+        }
         return true;
     }
 
