@@ -72,6 +72,7 @@ public class FlagPermissions {
         addResidenceOnlyFlag("physics");
         addResidenceOnlyFlag("piston");
         addResidenceOnlyFlag("spread");
+        addResidenceOnlyFlag("hidden");
         addPlayerOrGroupOnlyFlag("admin");
     }
 

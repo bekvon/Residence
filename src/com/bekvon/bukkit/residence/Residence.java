@@ -1203,6 +1203,32 @@ public class Residence extends JavaPlugin {
                         return true;
                     }
                 }
+                else if (args[0].equals("listhidden")) {
+                    if(!resadmin)
+                    {
+                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        return true;
+                    }
+                    if(args.length == 1)
+                    {
+                        rmanager.listResidences(player,1,true);
+                        return true;
+                    }
+                    else if (args.length == 2) {
+                        try {
+                            Integer.parseInt(args[1]);
+                            rmanager.listResidences(player, page, true);
+                        } catch (Exception ex) {
+                            rmanager.listResidences(player, args[1],1, true);
+                        }
+                        return true;
+                    }
+                    else if(args.length == 3)
+                    {
+                        rmanager.listResidences(player, args[1], page, true);
+                        return true;
+                    }
+                }
                 else if(args[0].equals("rename"))
                 {
                     if(args.length==3)
@@ -1255,6 +1281,24 @@ public class Residence extends JavaPlugin {
                     } else if (args.length == 2) {
                         try {
                             rmanager.listAllResidences(player, page);
+                        } catch (Exception ex) {
+                        }
+                    } else {
+                        return false;
+                    }
+                    return true;
+                } else if(args[0].equals("listallhidden"))
+                {
+                    if(!resadmin)
+                    {
+                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        return true;
+                    }
+                    if (args.length == 1) {
+                        rmanager.listAllResidences(player, 1, true);
+                    } else if (args.length == 2) {
+                        try {
+                            rmanager.listAllResidences(player, page, true);
                         } catch (Exception ex) {
                         }
                     } else {
