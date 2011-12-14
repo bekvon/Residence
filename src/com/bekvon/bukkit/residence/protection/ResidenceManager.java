@@ -222,6 +222,16 @@ public class ResidenceManager {
 
     public void listResidences(Player player, String targetplayer, int page)
     {
+        this.listResidences(player, targetplayer, page, false);
+    }
+
+    public void listResidences(Player player, int page, boolean showhidden)
+    {
+        this.listResidences(player, player.getName(), page, showhidden);
+    }
+
+    public void listResidences(Player player, String targetplayer, int page, boolean showhidden)
+    {
         ArrayList<String> temp = new ArrayList<String>();
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized(residences)
@@ -230,9 +240,14 @@ public class ResidenceManager {
             while(it.hasNext())
             {
                 Entry<String, ClaimedResidence> next = it.next();
-                if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(targetplayer))
+                ClaimedResidence res = next.getValue();
+                boolean hidden = res.getPermissions().has("hidden", false);
+                if( (showhidden && hidden) || (!showhidden && !hidden) || (res.getPermissions().getOwner().equals(player.getName()) && targetplayer.equals(player.getName()) && (!showhidden && hidden)))
                 {
-                    temp.add("§a"+next.getKey()+"§e - "+Residence.getLanguage().getPhrase("World") + ": " + next.getValue().getWorld());
+                    if(res.getPermissions().getOwner().equalsIgnoreCase(targetplayer))
+                    {
+                        temp.add("§a"+next.getKey()+"§e - "+Residence.getLanguage().getPhrase("World") + ": " + res.getWorld());
+                    }
                 }
             }
         }
@@ -336,6 +351,11 @@ public class ResidenceManager {
 
     public void listAllResidences(Player player, int page)
     {
+        this.listAllResidences(player, page, false);
+    }
+
+    public void listAllResidences(Player player, int page, boolean showhidden)
+    {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         ArrayList<String> temp = new ArrayList<String>();
         synchronized(residences)
@@ -344,7 +364,10 @@ public class ResidenceManager {
             while(it.hasNext())
             {
                 Entry<String, ClaimedResidence> next = it.next();
-                temp.add("§a" +next.getKey() + "§e - "+Residence.getLanguage().getPhrase("Owner") + ": " + next.getValue().getOwner() + " - " + Residence.getLanguage().getPhrase("World")+": " + next.getValue().getWorld());
+                ClaimedResidence res = next.getValue();
+                boolean hidden = res.getPermissions().has("hidden", false);
+                if( (showhidden && hidden) || (!showhidden && !hidden) || player.getName().equals(res.getOwner()))
+                    temp.add("§a" +next.getKey() + "§e - "+Residence.getLanguage().getPhrase("Owner") + ": " + res.getOwner() + " - " + Residence.getLanguage().getPhrase("World")+": " + res.getWorld());
             }
         }
         InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences"), temp, page);
