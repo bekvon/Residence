@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 16
+Version: 17
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -431,17 +431,29 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'waterflow - allows or denys water flow, overrides flow'
                         - 'damage - allows or denys all entity damage within the residence.'
                         - 'piston - allow or deny pistons from pushing or pulling blocks in the residence.'
+                        - 'hidden - hides residence from list or listall commands.'
                 list:
                     Description: List Residences
                     Info:
                         - 'Usage: /res list <player> <page>'
-                        - 'Lists all the residences you own.'
+                        - 'Lists all the residences a player owns (except hidden ones).'
+                        - 'If listing your own residences, shows hidden ones as well.'
                         - 'To list everyones residences, use /res listall.'
+                listhidden:
+                    Description: List Hidden Residences (ADMIN ONLY)
+                    Info:
+                        - 'Usage: /res listhidden <player> <page>'
+                        - 'Lists hidden residences for a player.'
                 listall:
-                    Description: List All Residence
+                    Description: List All Residences
                     Info:
                         - 'Usage: /res listall <page>'
-                        - 'Lists all residences on the server.'
+                        - 'Lists all residences on the server. (except hidden ones that you dont own)'
+                listallhidden:
+                    Description: List All Hidden Residences (ADMIN ONLY)
+                    Info:
+                        - 'Usage: /res listhidden <page>'
+                        - 'Lists all hidden residences on the server.'
                 sublist:
                     Description: List Residence Subzones
                     Info:
