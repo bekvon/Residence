@@ -279,7 +279,7 @@ public class Residence extends JavaPlugin {
 		pm.registerEvent(Event.Type.PAINTING_BREAK, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENDERMAN_PICKUP, elistener, Priority.Lowest, this);
                 pm.registerEvent(Event.Type.ENDERMAN_PLACE, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.WORLD_LOAD, elistener, Priority.Lowest, this);
+                //pm.registerEvent(Event.Type.WORLD_LOAD, wlistener, Priority.Lowest, this);
                 if(cmanager.enableSpout())
                 {
                     slistener = new ResidenceSpoutListener();
