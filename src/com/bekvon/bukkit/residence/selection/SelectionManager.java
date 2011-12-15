@@ -23,6 +23,8 @@ public class SelectionManager {
     private Map<String,Location> playerLoc1;
     private Map<String,Location> playerLoc2;
 
+    public static final int MAX_HEIGHT = 127,MIN_HEIGHT = 0;
+
     public enum Direction
     {
         UP,DOWN,PLUSX,PLUSZ,MINUSX,MINUSZ
@@ -99,7 +101,7 @@ public class SelectionManager {
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if(y1>y2)
             {
-                int newy = 127;
+                int newy = MAX_HEIGHT;
                 if(!resadmin)
                 {
                     if(group.getMaxHeight()<newy)
@@ -111,7 +113,7 @@ public class SelectionManager {
             }
             else
             {
-                int newy = 127;
+                int newy = MAX_HEIGHT;
                 if(!resadmin)
                 {
                     if(group.getMaxHeight()<newy)
@@ -138,7 +140,7 @@ public class SelectionManager {
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if(y1<y2)
             {
-                int newy = 0;
+                int newy = MIN_HEIGHT;
                 if(!resadmin)
                 {
                     if(newy<group.getMinHeight())
@@ -150,7 +152,7 @@ public class SelectionManager {
             }
             else
             {
-                int newy = 0;
+                int newy = MIN_HEIGHT;
                 if(!resadmin)
                 {
                     if(newy<group.getMinHeight())
@@ -179,10 +181,10 @@ public class SelectionManager {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         int xcoord = chunk.getX() * 16;
         int zcoord = chunk.getZ() * 16;
-        int ycoord = 0;
+        int ycoord = MIN_HEIGHT;
         int xmax = xcoord + 15;
         int zmax = zcoord + 15;
-        int ymax = 127;
+        int ymax = MAX_HEIGHT;
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
         player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionSuccess"));
@@ -215,9 +217,10 @@ public class SelectionManager {
         {
             int oldy = area.getHighLoc().getBlockY();
             oldy = oldy + amount;
-            if(oldy>127)
+            if(oldy>MAX_HEIGHT)
             {
-                player.sendMessage("§cError, attempted to go beyond the top of the map.");
+                player.sendMessage("§c"+Residence.getLanguage().getPhrase("SelectTooHigh"));
+                oldy = MAX_HEIGHT;
             }
             area.getHighLoc().setY(oldy);
             if(shift)
@@ -234,10 +237,10 @@ public class SelectionManager {
         {
             int oldy = area.getLowLoc().getBlockY();
             oldy = oldy - amount;
-            if(oldy<0)
+            if(oldy<MIN_HEIGHT)
             {
-                player.sendMessage("§cError, attempted to go beyond bottem of the map.");
-                return;
+                player.sendMessage("§c" + Residence.getLanguage().getPhrase("SelectTooLow"));
+                oldy = MIN_HEIGHT;
             }
             area.getLowLoc().setY(oldy);
             if(shift)
