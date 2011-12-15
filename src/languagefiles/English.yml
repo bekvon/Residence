@@ -58,8 +58,6 @@ Language:
     SelectionFail: Invalid select command...
     SelectionBedrock: Selection expanded to your lowest allowed limit.
     SelectionSky: Selection expanded to your highest allowed limit.
-    SelectTooHigh: Warning, selection went above top of map, limiting.
-    SelectTooLow: Warning, selection went below bottom of map, limiting.
     SelectionArea: 'Selected area %1 of residence %2'
     SelectDiabled: You don't have access to selections commands.
     NoPermission: You dont have permission for this.
@@ -174,6 +172,9 @@ Language:
     InvalidNameCharacters: Name contained unallowed characters...
     #Version 15 New Fields
     DeleteConfirm: 'Are you sure you want to delete residence %1, use "/res confirm" to confirm.'
+    #Version 18 New Fields
+    SelectTooHigh: Warning, selection went above top of map, limiting.
+    SelectTooLow: Warning, selection went below bottom of map, limiting.
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
