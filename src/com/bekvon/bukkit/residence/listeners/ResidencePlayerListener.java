@@ -345,9 +345,15 @@ public class ResidencePlayerListener extends PlayerListener {
     }
 
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
-        message = message.replaceAll("%player", player.getName());
-        message = message.replaceAll("%owner", res.getPermissions().getOwner());
-        message = message.replaceAll("%residence", areaname);
+        try
+        {
+            message = message.replaceAll("%player", player.getName());
+            message = message.replaceAll("%owner", res.getPermissions().getOwner());
+            message = message.replaceAll("%residence", areaname);
+        } catch(Exception ex)
+        {
+            return "";
+        }
         return message;
     }
 
