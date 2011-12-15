@@ -80,15 +80,16 @@ public class WorldFlagManager {
         try {
             
             List<String> keys = config.getKeys("Global.Flags");
-            for(String key : keys)
-            {
-                if(key.equalsIgnoreCase("Global"))
-                    globaldefaults = FlagPermissions.parseFromConfigNode(key, config.getNode("Global.Flags"));
-                else
-                    worldperms.put(key.toLowerCase(), FlagPermissions.parseFromConfigNode(key,config.getNode("Global.Flags")));
+            if (keys != null) {
+                for (String key : keys) {
+                    if (key.equalsIgnoreCase("Global")) {
+                        globaldefaults = FlagPermissions.parseFromConfigNode(key, config.getNode("Global.Flags"));
+                    } else {
+                        worldperms.put(key.toLowerCase(), FlagPermissions.parseFromConfigNode(key, config.getNode("Global.Flags")));
+                    }
+                }
             }
-            for(Entry<String, FlagPermissions> entry : worldperms.entrySet())
-            {
+            for (Entry<String, FlagPermissions> entry : worldperms.entrySet()) {
                 entry.getValue().setParent(globaldefaults);
             }
             keys = config.getKeys("Groups");
