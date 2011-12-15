@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 17
+Version: 18
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -58,6 +58,8 @@ Language:
     SelectionFail: Invalid select command...
     SelectionBedrock: Selection expanded to your lowest allowed limit.
     SelectionSky: Selection expanded to your highest allowed limit.
+    SelectTooHigh: Warning, selection went above top of map, limiting.
+    SelectTooLow: Warning, selection went below bottom of map, limiting.
     SelectionArea: 'Selected area %1 of residence %2'
     SelectDiabled: You don't have access to selections commands.
     NoPermission: You dont have permission for this.
