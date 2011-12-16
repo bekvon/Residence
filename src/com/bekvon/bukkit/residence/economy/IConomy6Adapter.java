@@ -12,7 +12,7 @@ import com.iCo6.system.Accounts;
  * @author Administrator
  */
 
-public class IConomy6Adapter extends EconomyInterface {
+public class IConomy6Adapter implements EconomyInterface {
 
     iConomy icon;
 
@@ -74,6 +74,10 @@ public class IConomy6Adapter extends EconomyInterface {
         Accounts acc = new Accounts();
         if(!acc.exists(playerName))
             acc.create(playerName);
+    }
+
+    public String getName() {
+        return "iConomy";
     }
 
 }
