@@ -7,6 +7,7 @@ package com.bekvon.bukkit.residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
+import com.bekvon.bukkit.residence.permissions.PermissionsInterface;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
@@ -37,6 +38,7 @@ import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
 import com.iConomy.iConomy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
@@ -55,7 +57,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 //import net.minecraft.server.FontAllowedCharacters;
 import net.minecraft.server.SharedConstants;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -165,6 +166,9 @@ public class Residence extends JavaPlugin {
             deleteConfirm = new HashMap<String, String>();
             server = this.getServer();
             dataFolder = this.getDataFolder();
+            if (!dataFolder.isDirectory()) {
+                dataFolder.mkdirs();
+            }
             if (!new File(dataFolder, "config.yml").isFile()) {
                 this.writeDefaultConfigFromJar();
             }
@@ -216,24 +220,31 @@ public class Residence extends JavaPlugin {
                 language = new Language();
             }
             economy = null;
-            if (!dataFolder.isDirectory()) {
-                dataFolder.mkdirs();
-            }
-            String econsys = cmanager.getEconomySystem();
-            if (this.getConfiguration().getBoolean("Global.EnableEconomy", false) && econsys != null) {
-                if (econsys.toLowerCase().equals("iconomy")) {
-                    this.loadIConomy();
-                } else if (econsys.toLowerCase().equals("mineconomy")) {
-                    this.loadMineConomy();
-                } else if (econsys.toLowerCase().equals("boseconomy")) {
-                    this.loadBOSEconomy();
-                } else if (econsys.toLowerCase().equals("essentials")) {
-                    this.loadEssentialsEconomy();
-                } else if (econsys.toLowerCase().equals("realeconomy")) {
-                    this.loadRealEconomy();
-                } else {
-                    System.out.println("[Residence] Unknown economy system: " + econsys);
-                }
+            if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
+                    System.out.println("[Residence] Scanning for economy systems...");
+                    if(gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter)
+                    {
+                        ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
+                        if(vault.economyOK())
+                        {
+                            economy = vault;
+                            System.out.println("[Residence] Found Vault using economy system: " + vault.getEconomyName());
+                        }
+                    }
+                    if(economy == null)
+                        this.loadVaultEconomy();
+                    if(economy == null)
+                        this.loadMineConomy();
+                    if(economy == null)
+                        this.loadBOSEconomy();
+                    if(economy == null)
+                        this.loadEssentialsEconomy();
+                    if(economy == null)
+                        this.loadRealEconomy();
+                    if(economy == null)
+                        this.loadIConomy();
+                    if(economy == null)
+                        System.out.println("[Residence] Unable to find an economy system...");
             }
             this.loadYml();
             if (rmanager == null) {
@@ -508,6 +519,27 @@ public class Residence extends JavaPlugin {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with RealShop Economy!");
         } else {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] RealShop Economy NOT found!");
+        }
+    }
+
+    private void loadVaultEconomy()
+    {
+        Plugin p = getServer().getPluginManager().getPlugin("Vault");
+        if(p!=null)
+        {
+            ResidenceVaultAdapter vault = new ResidenceVaultAdapter(getServer());
+            if(vault.economyOK())
+            {
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault using economy: " + vault.getEconomyName());
+                economy = vault;
+            }
+            else
+            {
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault, but Vault reported no usable economy system...");
+            }
+        } else
+        {
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Vault NOT found!");
         }
     }
 

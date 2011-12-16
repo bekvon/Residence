@@ -1,7 +1,7 @@
 package com.bekvon.bukkit.residence.economy;
 import com.spikensbror.bukkit.mineconomy.MineConomy;
 
-public class MineConomyAdapter extends EconomyInterface
+public class MineConomyAdapter implements EconomyInterface
 {
     private MineConomy plugin;
     

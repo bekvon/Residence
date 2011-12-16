@@ -27,10 +27,8 @@ Global:
     EnablePermissions: true
     # Set to true if NOT using Permissions or PermissionsBukkit, or using a really old version of Permissions
     LegacyPermissions: false
-    # Enable / Disable Residence's Economy System.
+    # Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).
     EnableEconomy: true
-    # The economy system to use (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).
-    EconomySystem: iConomy
     # Enables or disables the Rent System
     EnableRentSystem: false
     # The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).
