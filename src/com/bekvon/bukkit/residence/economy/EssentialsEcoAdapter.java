@@ -8,13 +8,11 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author Administrator
  */
-public class EssentialsEcoAdapter extends EconomyInterface {
+public class EssentialsEcoAdapter implements EconomyInterface {
 
     Essentials plugin;
 

@@ -7,6 +7,7 @@ package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import java.util.Collections;
@@ -118,36 +119,44 @@ public class PermissionManager {
 
     private void checkPermissions() {
         Server server = Residence.getServ();
-        Plugin p = server.getPluginManager().getPlugin("bPermissions");
+        Plugin p = server.getPluginManager().getPlugin("Vault");
+        if(p != null)
+        {
+            ResidenceVaultAdapter vault = new ResidenceVaultAdapter(server);
+            if(vault.permissionsOK())
+            {
+                perms = vault;
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault using permissions plugin:" + vault.getPermissionsName());
+                return;
+            }
+            else
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault, but Vault reported no usable permissions system...");
+        }
+        p = server.getPluginManager().getPlugin("PermissionsBukkit");
         if (p != null) {
-            perms = new BPermissionsAdapter((de.bananaco.permissions.Permissions)p);
+            perms = new PermissionsBukkitAdapter((PermissionsPlugin) p);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found PermissionsBukkit Plugin!");
+            return;
+        }
+        p = server.getPluginManager().getPlugin("bPermissions");
+        if (p != null) {
+            perms = new BPermissionsAdapter((de.bananaco.permissions.Permissions) p);
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found bPermissions Plugin!");
             return;
         }
-       p = server.getPluginManager().getPlugin("PermissionsBukkit");
-       if(p!=null)
-       {
-           perms = new PermissionsBukkitAdapter((PermissionsPlugin) p);
-           Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found PermissionsBukkit Plugin!");
-           return;
-       }
-       p = server.getPluginManager().getPlugin("Permissions");
-       if(p!=null)
-       {
-           if(Residence.getConfigManager().useLegacyPermissions())
-           {
+        p = server.getPluginManager().getPlugin("Permissions");
+        if (p != null) {
+            if (Residence.getConfigManager().useLegacyPermissions()) {
                 perms = new LegacyPermissions(((Permissions) p).getHandler());
                 Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
                 Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions running in Legacy mode!");
-           }
-           else
-           {
-               perms = new OrigionalPermissions(((Permissions) p).getHandler());
-               Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
-           }
-           return;
-       }
-       Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions plugin NOT FOUND!");
+            } else {
+                perms = new OrigionalPermissions(((Permissions) p).getHandler());
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
+            }
+            return;
+        }
+        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions plugin NOT FOUND!");
     }
 
     private void readConfig(Configuration config)
@@ -189,5 +198,10 @@ public class PermissionManager {
     {
         group = group.toLowerCase();
         return groups.containsKey(group); 
+    }
+
+    public PermissionsInterface getPermissionsPlugin()
+    {
+        return perms;
     }
 }

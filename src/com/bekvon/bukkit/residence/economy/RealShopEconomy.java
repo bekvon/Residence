@@ -11,7 +11,7 @@ import fr.crafter.tickleman.RealEconomy.RealEconomy;
  *
  * @author Administrator
  */
-public class RealShopEconomy extends EconomyInterface {
+public class RealShopEconomy implements EconomyInterface {
 
     RealEconomy plugin;
 
