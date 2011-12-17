@@ -98,7 +98,7 @@ public class ResidencePlayerListener extends PlayerListener {
             Block block = event.getClickedBlock();
             if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-                if(group.getMaxSubzoneDepth() > 0 || group.canCreateResidences() || resadmin)
+                if(group.canCreateResidences() || resadmin)
                 {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
