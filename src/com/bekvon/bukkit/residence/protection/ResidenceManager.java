@@ -406,7 +406,7 @@ public class ResidenceManager {
         ClaimedResidence reciever = this.getByName(targetArea);
         ClaimedResidence source = this.getByName(sourceArea);
         if (source == null || reciever == null) {
-            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidArea"));
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         if (!resadmin) {
