@@ -167,10 +167,9 @@ public class PermissionManager {
             Set<String> entrys = nodes.getKeys(false);
             for(String key : entrys)
             {
-                key = key.toLowerCase();
                 try
                 {
-                    groups.put(key, new PermissionGroup(key,nodes.getConfigurationSection(key),globalFlagPerms));
+                    groups.put(key.toLowerCase(), new PermissionGroup(key.toLowerCase(),nodes.getConfigurationSection(key),globalFlagPerms));
                 }
                 catch(Exception ex)
                 {
