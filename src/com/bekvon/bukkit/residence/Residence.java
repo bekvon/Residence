@@ -1854,7 +1854,32 @@ public class Residence extends JavaPlugin {
                         if(seed==0 || seed == world.getSeed())
                             worlds.put(world.getName(), yml.getRoot().get("Residences"));
                         else
-                            loadFile.delete();
+                        {
+                            if(seed != 0)
+                            {
+                                File tempfile = new File(worldFolder,"res_worldseed_"+seed+".yml");
+                                int i = 0;
+                                while(tempfile == null || tempfile.isFile())
+                                {
+                                    tempfile = new File(worldFolder,"res_worldseed_"+seed+"_"+i+".yml");
+                                    i++;
+                                }
+                                System.out.println("[Residence] Save Error: World Seed mis-match! world:" + world.getName() + " seed: " + world.getSeed() + " expected: " + seed + ".  Renaming to " + tempfile.getName());
+                                loadFile.renameTo(tempfile);
+                            }
+                            else
+                            {
+                                File tempfile = new File(worldFolder,"res_unknown.yml");
+                                int i = 0;
+                                while(tempfile == null || tempfile.isFile())
+                                {
+                                    tempfile = new File(worldFolder,"res_unknown_"+i+".yml");
+                                    i++;
+                                }
+                                System.out.println("[Residence] Save Error: World Seed missing! world: " + world.getName() + ". Renaming to " + tempfile.getName());
+                                loadFile.renameTo(tempfile);
+                            }
+                        }
                     }
                 }
                 rmanager = ResidenceManager.load(worlds);
