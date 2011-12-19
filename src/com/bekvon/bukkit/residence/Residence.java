@@ -136,7 +136,7 @@ public class Residence extends JavaPlugin {
             try {
                 saveYml();
             } catch (Exception ex) {
-                Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVER SAVE ERROR", ex);
+                Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
             }
         }
     };
@@ -165,7 +165,7 @@ public class Residence extends JavaPlugin {
             try {
                 saveYml();
             } catch (Exception ex) {
-                Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVER SAVE ERROR", ex);
+                Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
             }
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Disabled!");
         }

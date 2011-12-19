@@ -105,7 +105,10 @@ public class PermissionGroup {
         unstuck = limits.getBoolean("Residence.Unstuck", false);
         selectCommandAccess = limits.getBoolean("Residence.SelectCommandAccess", true);
         itemListAccess = limits.getBoolean("Residence.ItemListAccess", true);
-        Set<String> flags = limits.getConfigurationSection("Flags.Permission").getKeys(false);
+        ConfigurationSection node = limits.getConfigurationSection("Flags.Permission");
+        Set<String> flags = null;
+        if(node!=null)
+            flags = node.getKeys(false);
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -114,7 +117,9 @@ public class PermissionGroup {
                 flagPerms.setFlag(flagname, access ? FlagState.TRUE : FlagState.FALSE);
             }
         }
-        flags = limits.getConfigurationSection("Flags.CreatorDefault").getKeys(false);
+        node = limits.getConfigurationSection("Flags.CreatorDefault");
+        if(node!=null)
+            flags = node.getKeys(false);
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -124,7 +129,9 @@ public class PermissionGroup {
             }
 
         }
-        flags = limits.getConfigurationSection("Flags.Default").getKeys(false);
+        node = limits.getConfigurationSection("Flags.Default");
+        if(node!=null)
+            flags = node.getKeys(false);
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -133,7 +140,10 @@ public class PermissionGroup {
                 residenceDefaultFlags.put(flagname, access);
             }
         }
-        Set<String> groupDef = limits.getConfigurationSection("Flags.GroupDefault").getKeys(false);
+        node = limits.getConfigurationSection("Flags.GroupDefault");
+        Set<String> groupDef = null;
+        if(node!=null)
+            groupDef = node.getKeys(false);
         if (groupDef != null) {
             Iterator<String> groupit = groupDef.iterator();
             while (groupit.hasNext()) {
