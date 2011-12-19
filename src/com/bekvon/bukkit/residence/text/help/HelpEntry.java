@@ -9,8 +9,10 @@ import com.bekvon.bukkit.residence.Residence;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import org.bukkit.command.CommandSender;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
@@ -169,17 +171,20 @@ public class HelpEntry {
         return subentrys.size();
     }
 
-    public static HelpEntry parseHelp(Configuration node, String key)
+    public static HelpEntry parseHelp(FileConfiguration node, String key)
     {
         String split[] = key.split("\\.");
         String thisname = split[split.length-1];
         HelpEntry entry = new HelpEntry(thisname);
-        List<String> keys = node.getKeys(key);
+        ConfigurationSection keysnode = node.getConfigurationSection(key);
+        Set<String> keys = null;
+        if(keysnode!=null)
+            keys = keysnode.getKeys(false);
         if(keys!=null)
         {
             if(keys.contains("Info"))
             {
-                List<String> stringList = node.getStringList(key + ".Info", null);
+                List<String> stringList = node.getStringList(key + ".Info");
                 if(stringList != null)
                 {
                     entry.lines = new String[stringList.size()];
@@ -195,7 +200,7 @@ public class HelpEntry {
             }
             if(keys.contains("SubCommands"))
             {
-                List<String> subcommandkeys = node.getKeys(key + ".SubCommands");
+                Set<String> subcommandkeys = node.getConfigurationSection(key + ".SubCommands").getKeys(false);
                 for(String subkey : subcommandkeys)
                 {
                     entry.subentrys.add(HelpEntry.parseHelp(node, key+".SubCommands."+subkey));

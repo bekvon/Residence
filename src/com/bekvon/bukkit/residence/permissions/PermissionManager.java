@@ -12,17 +12,15 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Server;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 /**
  *
@@ -34,7 +32,7 @@ public class PermissionManager {
     protected Map<String,String> playersGroup;
     protected FlagPermissions globalFlagPerms;
 
-    public PermissionManager(Configuration config)
+    public PermissionManager(FileConfiguration config)
     {
         try
         {
@@ -159,20 +157,20 @@ public class PermissionManager {
         Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions plugin NOT FOUND!");
     }
 
-    private void readConfig(Configuration config)
+    private void readConfig(FileConfiguration config)
     {
         String defaultGroup = Residence.getConfigManager().getDefaultGroup();
-        globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getNode("Global"));
-        Map<String, ConfigurationNode> nodes = config.getNodes("Groups");
+        globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getConfigurationSection("Global"));
+        ConfigurationSection nodes = config.getConfigurationSection("Groups");
         if(nodes!=null)
         {
-            Set<Entry<String, ConfigurationNode>> entrys = nodes.entrySet();
-            for(Entry<String, ConfigurationNode> entry : entrys)
+            Set<String> entrys = nodes.getKeys(false);
+            for(String key : entrys)
             {
-                String key = entry.getKey().toLowerCase();
+                key = key.toLowerCase();
                 try
                 {
-                    groups.put(key, new PermissionGroup(key,entry.getValue(),globalFlagPerms));
+                    groups.put(key, new PermissionGroup(key,nodes.getConfigurationSection(key),globalFlagPerms));
                 }
                 catch(Exception ex)
                 {
@@ -184,7 +182,7 @@ public class PermissionManager {
         {
             groups.put(defaultGroup, new PermissionGroup(defaultGroup));
         }
-        List<String> keys = config.getKeys("GroupAssignments");
+        Set<String> keys = config.getConfigurationSection("GroupAssignments").getKeys(false);
         if(keys!=null)
         {
             for(String key : keys)

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -81,10 +82,10 @@ public class FlagPermissions {
     protected Map<String, Boolean> cuboidFlags;
     protected FlagPermissions parent;
 
-    public static FlagPermissions parseFromConfigNode(String name, ConfigurationNode node)
+    public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node)
     {
         FlagPermissions list = new FlagPermissions();
-        List<String> keys = node.getKeys(name);
+        Set<String> keys = node.getConfigurationSection(name).getKeys(false);
         if(keys!=null)
         {
             for(String key : keys)

@@ -7,7 +7,6 @@ package com.bekvon.bukkit.residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
-import com.bekvon.bukkit.residence.permissions.PermissionsInterface;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
@@ -46,7 +45,9 @@ import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.RealShop.RealShopPlugin;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,13 +65,15 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 import org.getspout.spoutapi.SpoutManager;
 
 /**
@@ -100,7 +103,7 @@ public class Residence extends JavaPlugin {
     private static Language language;
     private boolean firstenable = true;
     private static EconomyInterface economy;
-    private final static int saveVersion = 1;
+    public final static int saveVersion = 1;
     private static File dataFolder;
     private static int leaseBukkitId=-1;
     private static int rentBukkitId=-1;
@@ -130,7 +133,11 @@ public class Residence extends JavaPlugin {
     };
     private Runnable autoSave = new Runnable() {
         public void run() {
-            saveYml();
+            try {
+                saveYml();
+            } catch (Exception ex) {
+                Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVER SAVE ERROR", ex);
+            }
         }
     };
 
@@ -155,7 +162,11 @@ public class Residence extends JavaPlugin {
         }
         if(initsuccess)
         {
-            saveYml();
+            try {
+                saveYml();
+            } catch (Exception ex) {
+                Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVER SAVE ERROR", ex);
+            }
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Disabled!");
         }
     }
@@ -172,14 +183,13 @@ public class Residence extends JavaPlugin {
             if (!new File(dataFolder, "config.yml").isFile()) {
                 this.writeDefaultConfigFromJar();
             }
-            this.getConfiguration().load();
-            if(this.getConfiguration().getInt("ResidenceVersion", 0) == 0)
+            if(this.getConfig().getInt("ResidenceVersion", 0) == 0)
             {
                 this.writeDefaultConfigFromJar();
-                this.getConfiguration().load();
+                this.getConfig().load("config.yml");
                 System.out.println("[Residence] Config Invalid, wrote default...");
             }
-            cmanager = new ConfigManager(this.getConfiguration());
+            cmanager = new ConfigManager(this.getConfig());
             String multiworld = cmanager.getMultiworldPlugin();
             if (multiworld != null) {
                 Plugin plugin = server.getPluginManager().getPlugin(multiworld);
@@ -190,9 +200,9 @@ public class Residence extends JavaPlugin {
                     }
                 }
             }
-            gmanager = new PermissionManager(this.getConfiguration());
-            imanager = new WorldItemManager(this.getConfiguration());
-            wmanager = new WorldFlagManager(this.getConfiguration());
+            gmanager = new PermissionManager(this.getConfig());
+            imanager = new WorldItemManager(this.getConfig());
+            wmanager = new WorldFlagManager(this.getConfig());
             chatmanager = new ChatManager();
             rentmanager = new RentManager();
             try
@@ -202,8 +212,8 @@ public class Residence extends JavaPlugin {
                     this.writeDefaultLanguageFile();
                 if(langFile.isFile())
                 {
-                    Configuration langconfig = new Configuration(langFile);
-                    langconfig.load();
+                    FileConfiguration langconfig = new YamlConfiguration();
+                    langconfig.load(langFile);
                     helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
                     HelpEntry.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
                     InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
@@ -1781,7 +1791,7 @@ public class Residence extends JavaPlugin {
         super.setEnabled(enabled);
     }
 
-    private void saveYml() {
+    private void saveYml() throws IOException {
         File saveFolder = new File(dataFolder, "Save");
         File worldFolder = new File(saveFolder, "Worlds");
         worldFolder.mkdirs();
@@ -1790,22 +1800,27 @@ public class Residence extends JavaPlugin {
         for(Entry<String, Object> entry : save.entrySet())
         {
             yml = new YMLSaveHelper(new File(worldFolder, "res_"+entry.getKey()+".yml"));
+            yml.getRoot().put("Version", saveVersion);
             yml.getRoot().put("Seed", server.getWorld(entry.getKey()).getSeed());
-            yml.addMap("Residences", (Map) entry.getValue());
+            yml.getRoot().put("Residences", (Map) entry.getValue());
             yml.save();
         }
         yml = new YMLSaveHelper(new File(saveFolder,"forsale.yml"));
         yml.save();
-        yml.addMap("Economy", tmanager.save());
+        yml.getRoot().put("Version", saveVersion);
+        yml.getRoot().put("Economy", tmanager.save());
         yml.save();
         yml = new YMLSaveHelper(new File(saveFolder,"leases.yml"));
-        yml.addMap("Leases", leasemanager.save());
+        yml.getRoot().put("Version", saveVersion);
+        yml.getRoot().put("Leases", leasemanager.save());
         yml.save();
         yml = new YMLSaveHelper(new File(saveFolder,"permlists.yml"));
-        yml.addMap("PermissionLists", pmanager.save());
+        yml.getRoot().put("Version", saveVersion);
+        yml.getRoot().put("PermissionLists", pmanager.save());
         yml.save();
         yml = new YMLSaveHelper(new File(saveFolder,"rent.yml"));
-        yml.addMap("RentSystem", rentmanager.save());
+        yml.getRoot().put("Version", saveVersion);
+        yml.getRoot().put("RentSystem", rentmanager.save());
         yml.save();
         if(cmanager.showIntervalMessages())
             System.out.println("[Residence] - Saved Residences...");
@@ -1864,7 +1879,7 @@ public class Residence extends JavaPlugin {
                                     tempfile = new File(worldFolder,"res_worldseed_"+seed+"_"+i+".yml");
                                     i++;
                                 }
-                                System.out.println("[Residence] Save Error: World Seed mis-match! world:" + world.getName() + " seed: " + world.getSeed() + " expected: " + seed + ".  Renaming to " + tempfile.getName());
+                                System.out.println("[Residence] Save Error: World Seed mis-match! world: " + world.getName() + " seed: " + world.getSeed() + " expected: " + seed + ".  Renaming to " + tempfile.getName());
                                 loadFile.renameTo(tempfile);
                             }
                             else
@@ -1888,28 +1903,28 @@ public class Residence extends JavaPlugin {
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    tmanager = TransactionManager.load(yml.getMap("Economy"), gmanager, rmanager);
+                    tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
                 }
                 loadFile = new File(saveFolder, "leases.yml");
                 if(loadFile.isFile())
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    leasemanager = LeaseManager.load(yml.getMap("Leases"), rmanager);
+                    leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
                 }
                 loadFile = new File(saveFolder, "permlists.yml");
                 if(loadFile.isFile())
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    pmanager = PermissionListManager.load(yml.getMap("PermissionLists"));
+                    pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
                 }
                 loadFile = new File(saveFolder, "rent.yml");
                 if(loadFile.isFile())
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    rentmanager = RentManager.load(yml.getMap("RentSystem"));
+                    rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
                 }
                 System.out.print("[Residence] Loaded...");
             }
@@ -1924,11 +1939,11 @@ public class Residence extends JavaPlugin {
         if (saveLoc.isFile()) {
             YMLSaveHelper yml = new YMLSaveHelper(saveLoc);
             yml.load();
-            rmanager = ResidenceManager.loadMap(yml.getMap("Residences"), new ResidenceManager());
-            tmanager = TransactionManager.load(yml.getMap("Economy"), gmanager, rmanager);
-            leasemanager = LeaseManager.load(yml.getMap("Leases"), rmanager);
-            pmanager = PermissionListManager.load(yml.getMap("PermissionLists"));
-            rentmanager = RentManager.load(yml.getMap("RentSystem"));
+            rmanager = ResidenceManager.loadMap((Map) yml.getRoot().get("Residences"), new ResidenceManager());
+            tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
+            leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
+            pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
+            rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
             System.out.print("[Residence] Loaded Residences...");
             return true;
         } else {
@@ -1954,20 +1969,20 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    private boolean checkNewLanguageVersion()
+    private boolean checkNewLanguageVersion() throws IOException, FileNotFoundException, InvalidConfigurationException
     {
         String lang = cmanager.getLanguage();
         File outFile = new File(new File(this.getDataFolder(),"Language"), lang+".yml");
         File checkFile = new File(new File(this.getDataFolder(),"Language"), "temp-"+lang+".yml");
         if(outFile.isFile())
         {
-            Configuration testconfig = new Configuration(outFile);
-            testconfig.load();
+            FileConfiguration testconfig = new YamlConfiguration();
+            testconfig.load(outFile);
             int oldversion = testconfig.getInt("Version", 0);
             if(!this.writeDefaultFileFromJar(checkFile, "languagefiles/"+lang+".yml", false))
                 return false;
-            Configuration testconfig2 = new Configuration(checkFile);
-            testconfig2.load();
+            FileConfiguration testconfig2 = new YamlConfiguration();
+            testconfig2.load(checkFile);
             int newversion = testconfig2.getInt("Version", oldversion);
             if(checkFile.isFile())
                 checkFile.delete();
