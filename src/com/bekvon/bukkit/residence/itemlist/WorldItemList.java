@@ -6,6 +6,7 @@
 package com.bekvon.bukkit.residence.itemlist;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.config.ConfigurationNode;
 
 /**
@@ -72,7 +73,7 @@ public class WorldItemList extends ItemList {
         return true;
     }
 
-    public static WorldItemList readList(ConfigurationNode node)
+    public static WorldItemList readList(ConfigurationSection node)
     {
         WorldItemList list = new WorldItemList();
         ItemList.readList(node, list);

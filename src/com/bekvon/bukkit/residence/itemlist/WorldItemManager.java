@@ -7,8 +7,9 @@ package com.bekvon.bukkit.residence.itemlist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.bukkit.Material;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
@@ -17,7 +18,7 @@ import org.bukkit.util.config.Configuration;
 public class WorldItemManager {
     protected List<WorldItemList> lists;
 
-    public WorldItemManager(Configuration config)
+    public WorldItemManager(FileConfiguration config)
     {
         lists = new ArrayList<WorldItemList>();
         this.readLists(config);
@@ -42,12 +43,12 @@ public class WorldItemManager {
         return false;
     }
 
-    private void readLists(Configuration config) {
-        List<String> keys = config.getKeys("ItemList");
+    private void readLists(FileConfiguration config) {
+        Set<String> keys = config.getConfigurationSection("ItemList").getKeys(false);
         if (keys != null) {
             for (String key : keys) {
                 try {
-                    WorldItemList list = WorldItemList.readList(config.getNode("ItemList." + key));
+                    WorldItemList list = WorldItemList.readList(config.getConfigurationSection("ItemList." + key));
                     lists.add(list);
                     //System.out.println("Debug: read list " + key + " world: " + list.getWorld() + " group: " + list.getGroup() + " itemcount:" + list.getListSize());
                 } catch (Exception ex) {
