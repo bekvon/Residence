@@ -1741,7 +1741,8 @@ public class Residence extends JavaPlugin {
                             return true;
                         }
                         res.getPermissions().setOwner("Server Land", false);
-                        player.sendMessage("§a"+language.getPhrase("ResidenceOwnerChange","§e " + args[1] + " §a.§eServer Land§a"));
+                        player.sendMessage("§a"+language.getPhrase("ResidenceOwnerChange","§e" + args[1] + "§a.§eServer Land§a"));
+                        return true;
                     }
                     else
                         player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
