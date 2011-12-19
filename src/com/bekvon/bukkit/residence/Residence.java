@@ -1305,7 +1305,7 @@ public class Residence extends JavaPlugin {
                     if (args.length != 3) {
                         return false;
                     }
-                    rmanager.mirrorPerms(player, args[1], args[2], resadmin);
+                    rmanager.mirrorPerms(player, args[2], args[1], resadmin);
                     return true;
                 } else if (args[0].equals("listall")) {
                     if (args.length == 1) {
