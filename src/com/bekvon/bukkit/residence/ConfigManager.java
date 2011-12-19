@@ -6,12 +6,12 @@ package com.bekvon.bukkit.residence;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
@@ -50,7 +50,7 @@ public class ConfigManager {
     protected boolean enableLeaseMoneyAccount;
     protected boolean enableDebug;
 
-    public ConfigManager(Configuration config)
+    public ConfigManager(FileConfiguration config)
     {
         globalCreatorDefaults = new FlagPermissions();
         globalResidenceDefaults = new FlagPermissions();
@@ -58,7 +58,7 @@ public class ConfigManager {
         this.load(config);
     }
 
-    private void load(Configuration config) {
+    private void load(FileConfiguration config) {
         defaultGroup = config.getString("Global.DefaultGroup", "default").toLowerCase();
         adminsOnly = config.getBoolean("Global.AdminOnlyCommands", false);
         useLeases = config.getBoolean("Global.UseLeaseSystem", false);
@@ -77,8 +77,8 @@ public class ConfigManager {
         minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
         chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
         language = config.getString("Global.Language","English");
-        globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getNode("Global"));
-        globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getNode("Global"));
+        globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getConfigurationSection("Global"));
+        globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getConfigurationSection("Global"));
         preventBuildInRent = config.getBoolean("Global.PreventRentModify", true);
         stopOnSaveError = config.getBoolean("Global.StopOnSaveFault",true);
         legacyperms = config.getBoolean("Global.LegacyPermissions",false);
@@ -87,15 +87,15 @@ public class ConfigManager {
         spoutEnable = config.getBoolean("Global.EnableSpout", false);
         enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);
         enableDebug = config.getBoolean("Global.EnableDebug", false);
-        ConfigurationNode node = config.getNode("Global.GroupDefault");
+        ConfigurationSection node = config.getConfigurationSection("Global.GroupDefault");
         if(node!=null)
         {
-            List<String> keys = node.getKeys(defaultGroup);
+            Set<String> keys = node.getConfigurationSection(defaultGroup).getKeys(false);
             if(keys!=null)
             {
                 for(String key: keys)
                 {
-                    globalGroupDefaults.put(key, FlagPermissions.parseFromConfigNode(key, config.getNode("Global.GroupDefault")));
+                    globalGroupDefaults.put(key, FlagPermissions.parseFromConfigNode(key, config.getConfigurationSection("Global.GroupDefault")));
                 }
             }
         }

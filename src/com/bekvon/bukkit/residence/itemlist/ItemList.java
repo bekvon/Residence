@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -116,16 +117,16 @@ public class ItemList {
         return list.size();
     }
 
-    public static ItemList readList(ConfigurationNode node)
+    public static ItemList readList(ConfigurationSection node)
     {
         return ItemList.readList(node, new ItemList());
     }
 
-    protected static ItemList readList(ConfigurationNode node, ItemList list)
+    protected static ItemList readList(ConfigurationSection node, ItemList list)
     {
         ListType type = ListType.valueOf(node.getString("Type","").toUpperCase());
         list.type = type;
-        List<String> items = node.getStringList("Items", null);
+        List<String> items = node.getStringList("Items");
         if (items != null) {
             for (String item : items) {
                 int parse = -1;
