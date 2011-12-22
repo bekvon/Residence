@@ -71,7 +71,7 @@ public class TransactionManager {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
                 return;
             }
-            boolean cansell = Residence.getPermissionManager().getGroup(player).canSellLand() || Residence.getPermissionManager().hasAuthority(player, "residence.sell", false);
+            boolean cansell = Residence.getPermissionManager().getGroup(player).canSellLand() || Residence.getPermissionManager().hasAuthority(player, "residence.sell");
             if(!cansell && !resadmin)
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
@@ -115,7 +115,7 @@ public class TransactionManager {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
                 return;
             }
-            boolean canbuy = group.canBuyLand() || Residence.getPermissionManager().hasAuthority(player, "residence.buy", false);
+            boolean canbuy = group.canBuyLand() || Residence.getPermissionManager().hasAuthority(player, "residence.buy");
             if(!canbuy && !resadmin)
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));

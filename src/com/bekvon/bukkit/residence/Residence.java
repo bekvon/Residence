@@ -1926,7 +1926,7 @@ public class Residence extends JavaPlugin {
                     yml.load();
                     rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
                 }
-                System.out.print("[Residence] Loaded...");
+                //System.out.print("[Residence] Loaded...");
             }
             return true;
         } catch (Exception ex) {

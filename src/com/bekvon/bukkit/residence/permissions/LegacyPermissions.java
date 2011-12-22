@@ -33,6 +33,8 @@ public class LegacyPermissions implements PermissionsInterface {
     }
 
     public boolean hasPermission(Player player, String permission) {
+        if(player.hasPermission(permission))
+            return true;
         return authority.has(player, permission);
     }
 

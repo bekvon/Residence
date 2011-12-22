@@ -8,6 +8,7 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
+
 /**
  *
  * @author Administrator

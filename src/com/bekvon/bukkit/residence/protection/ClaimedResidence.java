@@ -127,7 +127,7 @@ public class ClaimedResidence {
                 }
             }
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            if(!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create", false))
+            if(!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create"))
             {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
                 return false;
@@ -220,7 +220,7 @@ public class ClaimedResidence {
                 }
             }
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            if (!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create", false)) {
+            if (!group.canCreateResidences() && !Residence.getPermissionManager().hasAuthority(player, "residence.create")) {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
                 return false;
             }
