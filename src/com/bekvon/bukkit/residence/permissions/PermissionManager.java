@@ -104,15 +104,15 @@ public class PermissionManager {
         return perms.getPlayerGroup(player, world);
     }
 
-    public boolean hasAuthority(Player player, String permission, boolean def) {
-        if(perms==null)
-            return def;
-        return perms.hasPermission(player, permission);
+    public boolean hasAuthority(Player player, String permission) {
+        if(perms!=null)
+            return perms.hasPermission(player, permission);
+        return player.hasPermission(permission);
     }
 
     public boolean isResidenceAdmin(Player player)
     {
-        return (this.hasAuthority(player, "residence.admin", false) || (player.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
+        return (this.hasAuthority(player, "residence.admin") || (player.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
     }
 
     private void checkPermissions() {

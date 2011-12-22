@@ -168,7 +168,7 @@ public class ResidenceManager {
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        boolean createpermission = group.canCreateResidences() || Residence.getPermissionManager().hasAuthority(player, "residence.create", false);
+        boolean createpermission = group.canCreateResidences() || Residence.getPermissionManager().hasAuthority(player, "residence.create");
         if (!createpermission && !resadmin) {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             return;
