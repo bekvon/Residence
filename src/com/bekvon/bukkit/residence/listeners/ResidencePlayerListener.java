@@ -53,8 +53,8 @@ public class ResidencePlayerListener extends PlayerListener {
         lastOutsideLoc = new HashMap<String,Location>();
         healing = Collections.synchronizedList(new ArrayList<String>());
         playerToggleChat = new ArrayList<String>();
-        minUpdateTime = Residence.getConfig().getMinMoveUpdateInterval();
-        chatenabled = Residence.getConfig().chatEnabled();
+        minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
+        chatenabled = Residence.getConfigManager().chatEnabled();
     }
 
     public void reload()
@@ -64,8 +64,8 @@ public class ResidencePlayerListener extends PlayerListener {
         lastOutsideLoc = new HashMap<String,Location>();
         healing = Collections.synchronizedList(new ArrayList<String>());
         playerToggleChat = new ArrayList<String>();
-        minUpdateTime = Residence.getConfig().getMinMoveUpdateInterval();
-        chatenabled = Residence.getConfig().chatEnabled();
+        minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
+        chatenabled = Residence.getConfigManager().chatEnabled();
     }
 
     @Override
@@ -96,9 +96,9 @@ public class ResidencePlayerListener extends PlayerListener {
         if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
             Block block = event.getClickedBlock();
-            if (player.getItemInHand().getTypeId() == Residence.getConfig().getSelectionTooldID()) {
+            if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-                if(group.getMaxSubzoneDepth() > 0 || group.canCreateResidences() || resadmin)
+                if(player.hasPermission("residence.create") || group.canCreateResidences() || resadmin)
                 {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
@@ -111,7 +111,7 @@ public class ResidencePlayerListener extends PlayerListener {
                     }
                 }
             }
-            if(player.getItemInHand().getTypeId() == Residence.getConfig().getInfoToolID())
+            if(player.getItemInHand().getTypeId() == Residence.getConfigManager().getInfoToolID())
             {
                 if(event.getAction() == Action.LEFT_CLICK_BLOCK)
                 {
@@ -177,7 +177,7 @@ public class ResidencePlayerListener extends PlayerListener {
         boolean hasbucket;
         if(res!=null)
         {
-            if (Residence.getConfig().preventRentModify() && Residence.getConfig().enabledRentSystem()) {
+            if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
                     player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
@@ -212,7 +212,7 @@ public class ResidencePlayerListener extends PlayerListener {
         boolean hasbucket;
         if(res!=null)
         {
-            if (Residence.getConfig().preventRentModify() && Residence.getConfig().enabledRentSystem()) {
+            if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
                     player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
@@ -345,9 +345,15 @@ public class ResidencePlayerListener extends PlayerListener {
     }
 
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
-        message = message.replaceAll("%player", player.getName());
-        message = message.replaceAll("%owner", res.getPermissions().getOwner());
-        message = message.replaceAll("%residence", areaname);
+        try
+        {
+            message = message.replaceAll("%player", player.getName());
+            message = message.replaceAll("%owner", res.getPermissions().getOwner());
+            message = message.replaceAll("%residence", areaname);
+        } catch(Exception ex)
+        {
+            return "";
+        }
         return message;
     }
 

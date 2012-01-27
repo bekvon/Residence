@@ -168,7 +168,7 @@ public class ResidenceManager {
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        boolean createpermission = group.canCreateResidences() || Residence.getPermissionManager().hasAuthority(player, "residence.create", false);
+        boolean createpermission = group.canCreateResidences() || Residence.getPermissionManager().hasAuthority(player, "residence.create");
         if (!createpermission && !resadmin) {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             return;
@@ -200,7 +200,7 @@ public class ResidenceManager {
             residences.put(name, newRes);
             Residence.getLeaseManager().removeExpireTime(name);
             player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceCreate","§e" + name + "§a"));
-            if(Residence.getConfig().useLeases())
+            if(Residence.getConfigManager().useLeases())
                 Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
         }
     }
@@ -222,6 +222,16 @@ public class ResidenceManager {
 
     public void listResidences(Player player, String targetplayer, int page)
     {
+        this.listResidences(player, targetplayer, page, false);
+    }
+
+    public void listResidences(Player player, int page, boolean showhidden)
+    {
+        this.listResidences(player, player.getName(), page, showhidden);
+    }
+
+    public void listResidences(Player player, String targetplayer, int page, boolean showhidden)
+    {
         ArrayList<String> temp = new ArrayList<String>();
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized(residences)
@@ -230,9 +240,14 @@ public class ResidenceManager {
             while(it.hasNext())
             {
                 Entry<String, ClaimedResidence> next = it.next();
-                if(next.getValue().getPermissions().getOwner().equalsIgnoreCase(targetplayer))
+                ClaimedResidence res = next.getValue();
+                boolean hidden = res.getPermissions().has("hidden", false);
+                if( (showhidden && hidden) || (!showhidden && !hidden) || (res.getPermissions().getOwner().equals(player.getName()) && targetplayer.equals(player.getName()) && (!showhidden && hidden)))
                 {
-                    temp.add("§a"+next.getKey()+"§e - "+Residence.getLanguage().getPhrase("World") + ": " + next.getValue().getWorld());
+                    if(res.getPermissions().getOwner().equalsIgnoreCase(targetplayer))
+                    {
+                        temp.add("§a"+next.getKey()+"§e - "+Residence.getLanguage().getPhrase("World") + ": " + res.getWorld());
+                    }
                 }
             }
         }
@@ -336,6 +351,11 @@ public class ResidenceManager {
 
     public void listAllResidences(Player player, int page)
     {
+        this.listAllResidences(player, page, false);
+    }
+
+    public void listAllResidences(Player player, int page, boolean showhidden)
+    {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         ArrayList<String> temp = new ArrayList<String>();
         synchronized(residences)
@@ -344,7 +364,10 @@ public class ResidenceManager {
             while(it.hasNext())
             {
                 Entry<String, ClaimedResidence> next = it.next();
-                temp.add("§a" +next.getKey() + "§e - "+Residence.getLanguage().getPhrase("Owner") + ": " + next.getValue().getOwner() + " - " + Residence.getLanguage().getPhrase("World")+": " + next.getValue().getWorld());
+                ClaimedResidence res = next.getValue();
+                boolean hidden = res.getPermissions().has("hidden", false);
+                if( (showhidden && hidden) || (!showhidden && !hidden) || player.getName().equals(res.getOwner()))
+                    temp.add("§a" +next.getKey() + "§e - "+Residence.getLanguage().getPhrase("Owner") + ": " + res.getOwner() + " - " + Residence.getLanguage().getPhrase("World")+": " + res.getWorld());
             }
         }
         InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences"), temp, page);
@@ -358,11 +381,11 @@ public class ResidenceManager {
             return;
         }
         ResidencePermissions perms = res.getPermissions();
-        if(Residence.getConfig().enableEconomy())
+        if(Residence.getConfigManager().enableEconomy())
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Residence")+":§2 " + areaname + " §eBank: §6" + res.getBank().getStoredMoney());
         else
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Residence")+":§2 " + areaname);
-        if(Residence.getConfig().enabledRentSystem() && Residence.getRentManager().isRented(areaname))
+        if(Residence.getConfigManager().enabledRentSystem() && Residence.getRentManager().isRented(areaname))
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Owner")+":§c " + perms.getOwner() + "§e Rented by: §c" + Residence.getRentManager().getRentingPlayer(areaname));
         else
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("Owner")+":§c " + perms.getOwner() + "§e - " + Residence.getLanguage().getPhrase("World")+": §c"+ perms.getWorld());
@@ -374,7 +397,7 @@ public class ResidenceManager {
         if(aid !=null)
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("CurrentArea")+": §6" + aid);
         player.sendMessage("§e"+Residence.getLanguage().getPhrase("Total.Size")+":§d " + res.getTotalSize());
-        if (Residence.getConfig().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
+        if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
             player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseExpire")+":§a " + Residence.getLeaseManager().getExpireTime(areaname));
         }
     }
@@ -383,7 +406,7 @@ public class ResidenceManager {
         ClaimedResidence reciever = this.getByName(targetArea);
         ClaimedResidence source = this.getByName(sourceArea);
         if (source == null || reciever == null) {
-            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidArea"));
+            reqPlayer.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         if (!resadmin) {
@@ -440,7 +463,7 @@ public class ResidenceManager {
                 catch (Exception ex)
                 {
                     System.out.println("Error in loading save file for world: " + world.getName());
-                    if(Residence.getConfig().stopOnSaveError())
+                    if(Residence.getConfigManager().stopOnSaveError())
                         throw(ex);
                 }
             }
@@ -462,7 +485,7 @@ public class ResidenceManager {
                 {
                     System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
                     Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
-                    if(Residence.getConfig().stopOnSaveError())
+                    if(Residence.getConfigManager().stopOnSaveError())
                     {
                         throw(ex);
                     }
@@ -503,9 +526,9 @@ public class ResidenceManager {
                 }
                 residences.put(newName, res);
                 residences.remove(oldName);
-                if(Residence.getConfig().useLeases())
+                if(Residence.getConfigManager().useLeases())
                     Residence.getLeaseManager().updateLeaseName(oldName, newName);
-                if(Residence.getConfig().enabledRentSystem())
+                if(Residence.getConfigManager().enabledRentSystem())
                 {
                     Residence.getRentManager().updateRentableName(oldName, newName);
                 }

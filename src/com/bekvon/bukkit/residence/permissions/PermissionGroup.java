@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -64,19 +65,19 @@ public class PermissionGroup {
             groupname = name;
         }
         
-        public PermissionGroup(String name, ConfigurationNode node)
+        public PermissionGroup(String name, ConfigurationSection node)
         {
             this(name);
             this.parseGroup(node);
         }
 
-        public PermissionGroup(String name, ConfigurationNode node, FlagPermissions parentFlagPerms)
+        public PermissionGroup(String name, ConfigurationSection node, FlagPermissions parentFlagPerms)
         {
             this(name,node);
             flagPerms.setParent(parentFlagPerms);
         }
 
-    private void parseGroup(ConfigurationNode limits) {
+    private void parseGroup(ConfigurationSection limits) {
         if(limits == null)
             return;
         cancreate = limits.getBoolean("Residence.CanCreate", false);
@@ -104,7 +105,10 @@ public class PermissionGroup {
         unstuck = limits.getBoolean("Residence.Unstuck", false);
         selectCommandAccess = limits.getBoolean("Residence.SelectCommandAccess", true);
         itemListAccess = limits.getBoolean("Residence.ItemListAccess", true);
-        List<String> flags = limits.getKeys("Flags.Permission");
+        ConfigurationSection node = limits.getConfigurationSection("Flags.Permission");
+        Set<String> flags = null;
+        if(node!=null)
+            flags = node.getKeys(false);
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -113,7 +117,9 @@ public class PermissionGroup {
                 flagPerms.setFlag(flagname, access ? FlagState.TRUE : FlagState.FALSE);
             }
         }
-        flags = limits.getKeys("Flags.CreatorDefault");
+        node = limits.getConfigurationSection("Flags.CreatorDefault");
+        if(node!=null)
+            flags = node.getKeys(false);
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -123,7 +129,9 @@ public class PermissionGroup {
             }
 
         }
-        flags = limits.getKeys("Flags.Default");
+        node = limits.getConfigurationSection("Flags.Default");
+        if(node!=null)
+            flags = node.getKeys(false);
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -132,13 +140,16 @@ public class PermissionGroup {
                 residenceDefaultFlags.put(flagname, access);
             }
         }
-        List<String> groupDef = limits.getKeys("Flags.GroupDefault");
+        node = limits.getConfigurationSection("Flags.GroupDefault");
+        Set<String> groupDef = null;
+        if(node!=null)
+            groupDef = node.getKeys(false);
         if (groupDef != null) {
             Iterator<String> groupit = groupDef.iterator();
             while (groupit.hasNext()) {
                 String name = groupit.next();
                 Map<String, Boolean> gflags = new HashMap<String, Boolean>();
-                flags = limits.getKeys("Flags.GroupDefault." + name);
+                flags = limits.getConfigurationSection("Flags.GroupDefault." + name).getKeys(false);
                 Iterator<String> flagit = flags.iterator();
                 while (flagit.hasNext()) {
                     String flagname = flagit.next();
@@ -298,7 +309,7 @@ public class PermissionGroup {
         if(Residence.getEconomyManager()!=null)
             player.sendMessage("§eResidence Cost Per Block:§3 " + costperarea);
         player.sendMessage("§eFlag Permissions:§3 " + flagPerms.listFlags());
-        if(Residence.getConfig().useLeases())
+        if(Residence.getConfigManager().useLeases())
         {
             player.sendMessage("§eMax Lease Days:§3 " + maxLeaseTime);
             player.sendMessage("§eLease Time Given on Renew:§3 " + leaseGiveTime);

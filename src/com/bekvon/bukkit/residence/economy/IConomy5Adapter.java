@@ -3,7 +3,7 @@ package com.bekvon.bukkit.residence.economy;
 import com.iConomy.iConomy;
 import com.iConomy.system.Account;
 
-public class IConomy5Adapter extends EconomyInterface
+public class IConomy5Adapter implements EconomyInterface
 {
     private iConomy plugin;
 

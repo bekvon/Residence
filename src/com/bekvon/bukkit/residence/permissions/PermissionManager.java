@@ -7,21 +7,20 @@ package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Server;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 /**
  *
@@ -33,7 +32,7 @@ public class PermissionManager {
     protected Map<String,String> playersGroup;
     protected FlagPermissions globalFlagPerms;
 
-    public PermissionManager(Configuration config)
+    public PermissionManager(FileConfiguration config)
     {
         try
         {
@@ -65,7 +64,7 @@ public class PermissionManager {
     {
         group = group.toLowerCase();
         if(!groups.containsKey(group))
-            return groups.get(Residence.getConfig().getDefaultGroup());
+            return groups.get(Residence.getConfigManager().getDefaultGroup());
         return groups.get(group);
     }
 
@@ -75,7 +74,8 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(String player, String world) {
-        String defaultGroup = Residence.getConfig().getDefaultGroup().toLowerCase();
+        String defaultGroup = Residence.getConfigManager().getDefaultGroup().toLowerCase();
+        player = player.toLowerCase();
         if (playersGroup.containsKey(player)) {
             String group = playersGroup.get(player);
             if (group != null) {
@@ -101,69 +101,76 @@ public class PermissionManager {
     public String getPermissionsGroup(String player, String world)
     {
         if(perms == null)
-            return Residence.getConfig().getDefaultGroup();
+            return Residence.getConfigManager().getDefaultGroup();
         return perms.getPlayerGroup(player, world);
     }
 
-    public boolean hasAuthority(Player player, String permission, boolean def) {
-        if(perms==null)
-            return def;
-        return perms.hasPermission(player, permission);
+    public boolean hasAuthority(Player player, String permission) {
+        if(perms!=null)
+            return perms.hasPermission(player, permission);
+        return player.hasPermission(permission);
     }
 
     public boolean isResidenceAdmin(Player player)
     {
-        return (this.hasAuthority(player, "residence.admin", false) || (player.isOp() && Residence.getConfig().getOpsAreAdmins()));
+        return (this.hasAuthority(player, "residence.admin") || (player.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
     }
 
     private void checkPermissions() {
         Server server = Residence.getServ();
-        Plugin p = server.getPluginManager().getPlugin("bPermissions");
+        Plugin p = server.getPluginManager().getPlugin("Vault");
+        if(p != null)
+        {
+            ResidenceVaultAdapter vault = new ResidenceVaultAdapter(server);
+            if(vault.permissionsOK())
+            {
+                perms = vault;
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault using permissions plugin:" + vault.getPermissionsName());
+                return;
+            }
+            else
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault, but Vault reported no usable permissions system...");
+        }
+        p = server.getPluginManager().getPlugin("PermissionsBukkit");
         if (p != null) {
-            perms = new BPermissionsAdapter((de.bananaco.permissions.Permissions)p);
+            perms = new PermissionsBukkitAdapter((PermissionsPlugin) p);
+            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found PermissionsBukkit Plugin!");
+            return;
+        }
+        p = server.getPluginManager().getPlugin("bPermissions");
+        if (p != null) {
+            perms = new BPermissionsAdapter((de.bananaco.permissions.Permissions) p);
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found bPermissions Plugin!");
             return;
         }
-       p = server.getPluginManager().getPlugin("PermissionsBukkit");
-       if(p!=null)
-       {
-           perms = new PermissionsBukkitAdapter((PermissionsPlugin) p);
-           Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found PermissionsBukkit Plugin!");
-           return;
-       }
-       p = server.getPluginManager().getPlugin("Permissions");
-       if(p!=null)
-       {
-           if(Residence.getConfig().useLegacyPermissions())
-           {
+        p = server.getPluginManager().getPlugin("Permissions");
+        if (p != null) {
+            if (Residence.getConfigManager().useLegacyPermissions()) {
                 perms = new LegacyPermissions(((Permissions) p).getHandler());
                 Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
                 Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions running in Legacy mode!");
-           }
-           else
-           {
-               perms = new OrigionalPermissions(((Permissions) p).getHandler());
-               Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
-           }
-           return;
-       }
-       Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions plugin NOT FOUND!");
+            } else {
+                perms = new OrigionalPermissions(((Permissions) p).getHandler());
+                Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Permissions Plugin!");
+            }
+            return;
+        }
+        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions plugin NOT FOUND!");
     }
 
-    private void readConfig(Configuration config)
+    private void readConfig(FileConfiguration config)
     {
-        String defaultGroup = Residence.getConfig().getDefaultGroup();
-        globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getNode("Global"));
-        Map<String, ConfigurationNode> nodes = config.getNodes("Groups");
+        String defaultGroup = Residence.getConfigManager().getDefaultGroup();
+        globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getConfigurationSection("Global"));
+        ConfigurationSection nodes = config.getConfigurationSection("Groups");
         if(nodes!=null)
         {
-            Set<Entry<String, ConfigurationNode>> entrys = nodes.entrySet();
-            for(Entry<String, ConfigurationNode> entry : entrys)
+            Set<String> entrys = nodes.getKeys(false);
+            for(String key : entrys)
             {
-                String key = entry.getKey().toLowerCase();
                 try
                 {
-                    groups.put(key, new PermissionGroup(key,entry.getValue(),globalFlagPerms));
+                    groups.put(key.toLowerCase(), new PermissionGroup(key.toLowerCase(),nodes.getConfigurationSection(key),globalFlagPerms));
                 }
                 catch(Exception ex)
                 {
@@ -175,12 +182,12 @@ public class PermissionManager {
         {
             groups.put(defaultGroup, new PermissionGroup(defaultGroup));
         }
-        List<String> keys = config.getKeys("GroupAssignments");
+        Set<String> keys = config.getConfigurationSection("GroupAssignments").getKeys(false);
         if(keys!=null)
         {
             for(String key : keys)
             {
-                playersGroup.put(key, config.getString("GroupAssignments."+key, defaultGroup).toLowerCase());
+                playersGroup.put(key.toLowerCase(), config.getString("GroupAssignments."+key, defaultGroup).toLowerCase());
             }
         }
     }
@@ -189,5 +196,10 @@ public class PermissionManager {
     {
         group = group.toLowerCase();
         return groups.containsKey(group); 
+    }
+
+    public PermissionsInterface getPermissionsPlugin()
+    {
+        return perms;
     }
 }

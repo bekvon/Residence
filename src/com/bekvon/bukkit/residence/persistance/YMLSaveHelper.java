@@ -6,39 +6,56 @@
 package com.bekvon.bukkit.residence.persistance;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.bukkit.util.config.Configuration;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  *
  * @author Administrator
  */
-public class YMLSaveHelper extends Configuration {
+public class YMLSaveHelper {
 
-    public YMLSaveHelper(File infile) {
-        super(infile);
+    File f;
+    Yaml yml;
+    Map<String,Object> root;
+
+    public YMLSaveHelper(File ymlfile) throws IOException
+    {
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(FlowStyle.BLOCK);
+        yml = new Yaml(options);
+        
         root = new LinkedHashMap<String,Object>();
+        if(ymlfile == null)
+            throw new IOException("YMLSaveHelper: null file...");
+        f = ymlfile;
     }
 
-    public void addMap(String name, Map map)
+    public void save() throws IOException
     {
-        root.put(name, map);
+        if(f.isFile())
+            f.delete();
+        FileWriter fout = new FileWriter(f);
+        yml.dump(root, fout);
+        fout.close();
     }
 
-    public Map getMap(String name)
+    public void load() throws IOException
     {
-        return (Map) root.get(name);
+        FileInputStream fis = new FileInputStream(f);
+        root = (Map<String, Object>) yml.load(fis);
+        fis.close();
     }
 
-    public Map getRoot()
+    public Map<String,Object> getRoot()
     {
         return root;
     }
 
-    public void setRoot(Map<String,Object> newroot)
-    {
-        if(newroot != null);
-            root = newroot;
-    }
 }

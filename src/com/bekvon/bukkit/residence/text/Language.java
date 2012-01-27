@@ -6,9 +6,9 @@
 package com.bekvon.bukkit.residence.text;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.bukkit.util.config.Configuration;
+import java.util.Set;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
@@ -82,14 +82,14 @@ public class Language {
         return sentence;
     }
 
-    public static Language parseText(Configuration node, String topkey)
+    public static Language parseText(FileConfiguration node, String topkey)
     {
         Language newholder = new Language();
-        List<String> keys = node.getKeys(topkey);
+        Set<String> keys = node.getConfigurationSection(topkey).getKeys(false);
         //Temporary fix for somthing wierd in the underlying snakeyml
         //Somehow a boolean is geting into the String list....
-        keys.remove(true);
-        keys.remove(false);
+        //keys.remove(true);
+        //keys.remove(false);
         for(String key : keys)
         {
             newholder.text.put(key, node.getString(topkey+"."+key));
