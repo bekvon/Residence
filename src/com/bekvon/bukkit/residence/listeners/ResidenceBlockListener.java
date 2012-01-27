@@ -14,7 +14,9 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
@@ -30,9 +32,11 @@ import org.bukkit.event.block.BlockSpreadEvent;
  *
  * @author Administrator
  */
-public class ResidenceBlockListener extends BlockListener {
+public class ResidenceBlockListener implements Listener {
 
-    @Override
+	
+	
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
         if(event.isCancelled())
             return;
@@ -83,10 +87,10 @@ public class ResidenceBlockListener extends BlockListener {
                 player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
             }
         }
-        super.onBlockBreak(event);
+       // super.onBlockBreak(event);
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         if(event.isCancelled())
             return;
@@ -140,7 +144,7 @@ public class ResidenceBlockListener extends BlockListener {
         //super.onBlockPlace(event);
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockSpread(BlockSpreadEvent event) {
         Location loc = event.getBlock().getLocation();
         FlagPermissions perms = Residence.getPermsByLoc(loc);
@@ -148,7 +152,7 @@ public class ResidenceBlockListener extends BlockListener {
             event.setCancelled(true);
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(res!=null)
@@ -174,7 +178,7 @@ public class ResidenceBlockListener extends BlockListener {
         }
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(res!=null)
@@ -202,7 +206,7 @@ public class ResidenceBlockListener extends BlockListener {
         }
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockFromTo(BlockFromToEvent event) {
         if (event.isCancelled()) {
             return;
@@ -242,7 +246,7 @@ public class ResidenceBlockListener extends BlockListener {
         }
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBurn(BlockBurnEvent event) {
         if(event.isCancelled())
             return;
@@ -264,7 +268,7 @@ public class ResidenceBlockListener extends BlockListener {
     }
 
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockIgnite(BlockIgniteEvent event) {
         if(event.isCancelled())
             return;
@@ -310,7 +314,7 @@ public class ResidenceBlockListener extends BlockListener {
         //super.onBlockIgnite(event);
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPhysics(BlockPhysicsEvent event) {
         if(event.isCancelled())
             return;
@@ -320,6 +324,6 @@ public class ResidenceBlockListener extends BlockListener {
                 event.setCancelled(true);
             }
         }
-        super.onBlockPhysics(event);
+        //super.onBlockPhysics(event);
     }
 }

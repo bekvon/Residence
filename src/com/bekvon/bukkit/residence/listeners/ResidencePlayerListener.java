@@ -18,7 +18,9 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -36,7 +38,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class ResidencePlayerListener extends PlayerListener {
+public class ResidencePlayerListener implements Listener {
 
     protected Map<String,String> cache;
     protected Map<String,Long> lastUpdate;
@@ -68,7 +70,7 @@ public class ResidencePlayerListener extends PlayerListener {
         chatenabled = Residence.getConfigManager().chatEnabled();
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         String pname = event.getPlayer().getName();
         cache.remove(pname);
@@ -78,7 +80,7 @@ public class ResidencePlayerListener extends PlayerListener {
         Residence.getChatManager().removeFromChannel(pname);
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if(event.isCancelled())
             return;
@@ -165,7 +167,7 @@ public class ResidencePlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         if(event.isCancelled())
             return;
@@ -200,7 +202,7 @@ public class ResidencePlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
         if(event.isCancelled())
             return;
@@ -235,7 +237,7 @@ public class ResidencePlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         String pname = player.getName();
@@ -341,7 +343,7 @@ public class ResidencePlayerListener extends PlayerListener {
             }
             lastUpdate.put(pname, System.currentTimeMillis());
         }
-        super.onPlayerMove(event);
+        //super.onPlayerMove(event);
     }
 
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
@@ -373,7 +375,7 @@ public class ResidencePlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(PlayerChatEvent event) {
         String pname = event.getPlayer().getName();
         if(chatenabled && playerToggleChat.contains(pname))

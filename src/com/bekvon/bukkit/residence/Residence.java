@@ -17,8 +17,8 @@ import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
 import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
 import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
 import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
-import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
-import com.bekvon.bukkit.residence.economy.RealShopEconomy;
+//import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
+//import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
@@ -40,9 +40,9 @@ import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
 import com.iConomy.iConomy;
-import com.spikensbror.bukkit.mineconomy.MineConomy;
+//import me.mjolnir.mineconomy.MineConomy;
 import cosine.boseconomy.BOSEconomy;
-import fr.crafter.tickleman.RealShop.RealShopPlugin;
+//import fr.crafter.tickleman.realshop2.RealShop2Plugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,8 +69,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
+//import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -243,14 +242,14 @@ public class Residence extends JavaPlugin {
                     }
                     if(economy == null)
                         this.loadVaultEconomy();
-                    if(economy == null)
-                        this.loadMineConomy();
+                    //if(economy == null)
+                      //  this.loadMineConomy();
                     if(economy == null)
                         this.loadBOSEconomy();
                     if(economy == null)
                         this.loadEssentialsEconomy();
-                    if(economy == null)
-                        this.loadRealEconomy();
+                    //if(economy == null)
+                    ///    this.loadRealEconomy();
                     if(economy == null)
                         this.loadIConomy();
                     if(economy == null)
@@ -278,33 +277,14 @@ public class Residence extends JavaPlugin {
                 plistener = new ResidencePlayerListener();
                 elistener = new ResidenceEntityListener();
                 PluginManager pm = getServer().getPluginManager();
-                pm.registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_SPREAD, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_CHAT, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PAINTING_PLACE, elistener, Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PAINTING_BREAK, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENDERMAN_PICKUP, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENDERMAN_PLACE, elistener, Priority.Lowest, this);
-                //pm.registerEvent(Event.Type.WORLD_LOAD, wlistener, Priority.Lowest, this);
+                pm.registerEvents(blistener, this);
+                pm.registerEvents(plistener, this);
+                pm.registerEvents(elistener, this);
+                //pm.registerEvents(wlistener, this);
                 if(cmanager.enableSpout())
                 {
                     slistener = new ResidenceSpoutListener();
-                    pm.registerEvent(Event.Type.CUSTOM_EVENT, slistener, Priority.Lowest, this);
+                    pm.registerEvents(slistener, this);
                 }
                 firstenable = false;
             }
@@ -488,16 +468,16 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    private void loadMineConomy()
-    {
-        Plugin p = getServer().getPluginManager().getPlugin("MineConomy");
-        if (p != null) {
-            economy = new MineConomyAdapter((MineConomy)p);
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with MineConomy!");
-        } else {
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] MineConomy NOT found!");
-        }
-    }
+  //  private void loadMineConomy()
+   // {
+      //  Plugin p = getServer().getPluginManager().getPlugin("MineConomy");
+      //  if (p != null) {
+       //     economy = new MineConomyAdapter((MineConomy)p);
+      //      Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with MineConomy!");
+       // } else {
+      //      Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] MineConomy NOT found!");
+      //  }
+   // }
 
     private void loadBOSEconomy()
     {
@@ -521,16 +501,16 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    private void loadRealEconomy()
-    {
-        Plugin p = getServer().getPluginManager().getPlugin("RealShop");
-        if (p != null) {
-            economy = new RealShopEconomy(((RealShopPlugin)p).realEconomy);
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with RealShop Economy!");
-        } else {
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] RealShop Economy NOT found!");
-        }
-    }
+  //  private void loadRealEconomy()
+    //{
+        //Plugin p = getServer().getPluginManager().getPlugin("RealShop");
+        //if (p != null) {
+        //    economy = new RealShopEconomy(((RealShopPlugin)p).realEconomy);
+        //    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with RealShop Economy!");
+        //} else {
+        //    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] RealShop Economy NOT found!");
+       // }
+    //}
 
     private void loadVaultEconomy()
     {
@@ -1935,7 +1915,7 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    private boolean oldLoadYMLSave(File saveLoc) throws Exception {
+	private boolean oldLoadYMLSave(File saveLoc) throws Exception {
         if (saveLoc.isFile()) {
             YMLSaveHelper yml = new YMLSaveHelper(saveLoc);
             yml.load();

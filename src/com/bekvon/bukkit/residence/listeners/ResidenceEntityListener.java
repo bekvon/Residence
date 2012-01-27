@@ -17,7 +17,9 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.EventHandler;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
@@ -40,9 +42,9 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
  *
  * @author Administrator
  */
-public class ResidenceEntityListener extends EntityListener {
+public class ResidenceEntityListener implements Listener {
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onEndermanPickup(EndermanPickupEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if (res != null) {
@@ -58,7 +60,7 @@ public class ResidenceEntityListener extends EntityListener {
         }
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onEndermanPlace(EndermanPlaceEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getLocation());
         if (res != null) {
@@ -74,7 +76,7 @@ public class ResidenceEntityListener extends EntityListener {
         }
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if(event.isCancelled())
             return;
@@ -96,10 +98,10 @@ public class ResidenceEntityListener extends EntityListener {
                 }
             }
         }
-        super.onCreatureSpawn(event);
+        //super.onCreatureSpawn(event);
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onPaintingPlace(PaintingPlaceEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         Player player = event.getPlayer();
@@ -124,7 +126,7 @@ public class ResidenceEntityListener extends EntityListener {
         }
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onPaintingBreak(PaintingBreakEvent event) {
 		if(event instanceof PaintingBreakByEntityEvent)
 		{
@@ -155,7 +157,7 @@ public class ResidenceEntityListener extends EntityListener {
 		}
 	}
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onEntityCombust(EntityCombustEvent event) {
         if(event.isCancelled())
             return;
@@ -165,10 +167,10 @@ public class ResidenceEntityListener extends EntityListener {
                 event.setCancelled(true);
             }
         }
-        super.onEntityCombust(event);
+        //super.onEntityCombust(event);
     }
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         if(event.isCancelled())
             return;
@@ -180,7 +182,7 @@ public class ResidenceEntityListener extends EntityListener {
     }
 
 
-    @Override
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onEntityExplode(EntityExplodeEvent event) {
         if(event.isCancelled())
             return;
@@ -229,7 +231,7 @@ public class ResidenceEntityListener extends EntityListener {
         return false;
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.isCancelled())
             return;
