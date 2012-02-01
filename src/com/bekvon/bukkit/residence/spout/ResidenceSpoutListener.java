@@ -10,8 +10,10 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.spout.ResidencePopup.PopupType;
 import java.util.HashMap;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
-import org.getspout.spoutapi.event.screen.ScreenListener;
 import org.getspout.spoutapi.gui.Button;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -20,11 +22,11 @@ import org.getspout.spoutapi.gui.GenericTextField;
  *
  * @author Administrator
  */
-public class ResidenceSpoutListener extends ScreenListener {
+public class ResidenceSpoutListener implements Listener {
 
     protected HashMap<Player,GenericPopup> popups;
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onButtonClick(ButtonClickEvent event) {
         Player p = event.getPlayer();
         if (event.getScreen() instanceof ResidencePopup) {
