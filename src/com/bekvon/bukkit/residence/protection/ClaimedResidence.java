@@ -462,7 +462,7 @@ public class ClaimedResidence {
         }
         subzones.remove(name);
         if(player!=null)
-            player.sendMessage("§a"+Residence.getLanguage().getPhrase("SubzoneRemoved","§e"+name+"§a"));
+            player.sendMessage("§a"+Residence.getLanguage().getPhrase("SubzoneRemove","§e"+name+"§a"));
         return true;
     }
 
