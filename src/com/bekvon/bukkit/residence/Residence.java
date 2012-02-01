@@ -278,33 +278,15 @@ public class Residence extends JavaPlugin {
                 plistener = new ResidencePlayerListener();
                 elistener = new ResidenceEntityListener();
                 PluginManager pm = getServer().getPluginManager();
-                pm.registerEvent(Event.Type.BLOCK_BREAK, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PLACE, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_IGNITE, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_BURN, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_FROMTO, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_SPREAD, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_QUIT, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.PLAYER_CHAT, plistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.CREATURE_SPAWN, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENTITY_EXPLODE, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.EXPLOSION_PRIME, elistener, Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PAINTING_PLACE, elistener, Priority.Lowest, this);
-		pm.registerEvent(Event.Type.PAINTING_BREAK, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENDERMAN_PICKUP, elistener, Priority.Lowest, this);
-                pm.registerEvent(Event.Type.ENDERMAN_PLACE, elistener, Priority.Lowest, this);
+                pm.registerEvents(blistener, this);
+                pm.registerEvents(plistener, this);
+                pm.registerEvents(elistener, this);
+
                 //pm.registerEvent(Event.Type.WORLD_LOAD, wlistener, Priority.Lowest, this);
                 if(cmanager.enableSpout())
                 {
                     slistener = new ResidenceSpoutListener();
-                    pm.registerEvent(Event.Type.CUSTOM_EVENT, slistener, Priority.Lowest, this);
+                    pm.registerEvents(slistener, this);
                 }
                 firstenable = false;
             }
