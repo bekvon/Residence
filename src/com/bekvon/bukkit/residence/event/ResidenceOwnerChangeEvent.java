@@ -6,12 +6,23 @@
 package com.bekvon.bukkit.residence.event;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import org.bukkit.event.HandlerList;
 
 /**
  *
  * @author Administrator
  */
 public class ResidenceOwnerChangeEvent extends ResidenceEvent {
+
+    private static final HandlerList handlers = new HandlerList();
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     protected String newowner;
 

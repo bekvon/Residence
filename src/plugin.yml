@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.Residence
-version: 2.5
+version: 2.5.1
 description: Cuboid Residence Plugin
 author: bekvon
 softdepend: [Vault]
@@ -27,14 +27,9 @@ commands:
     description: §cRemoves every residence in a world.
     usage: §c/resworld remove [world]
 permissions:
-    residence.*:
-        description: Gives access to all residence commands
-        children:
-            residence.admin: false
-            residence.create: true
-    residence.admin:
-        description: Gives you access to /resadmin
-        default: op
-    residence.create:
-        description: Allows you to create residences
-        default: op
+  residence.admin:
+    description: Gives you access to /resadmin
+    default: op
+  residence.create:
+    description: Allows you to create residences
+    default: op
