@@ -69,8 +69,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -150,6 +148,7 @@ public class Residence extends JavaPlugin {
         this.setEnabled(true);
     }
 
+    @Override
     public void onDisable() {
         server.getScheduler().cancelTask(autosaveBukkitId);
         server.getScheduler().cancelTask(healBukkitId);
@@ -171,6 +170,7 @@ public class Residence extends JavaPlugin {
         }
     }
 
+    @Override
     public void onEnable() {
         try {
             initsuccess = false;
