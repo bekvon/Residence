@@ -11,8 +11,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EndermanPickupEvent;
-import org.bukkit.event.entity.EndermanPlaceEvent;
+//import org.bukkit.event.entity.EndermanPickupEvent;
+//import org.bukkit.event.entity.EndermanPlaceEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -44,6 +44,7 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
  */
 public class ResidenceEntityListener implements Listener {
 
+    /*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEndermanPickup(EndermanPickupEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
@@ -75,7 +76,7 @@ public class ResidenceEntityListener implements Listener {
             }
         }
     }
-
+*/
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if(event.isCancelled())
