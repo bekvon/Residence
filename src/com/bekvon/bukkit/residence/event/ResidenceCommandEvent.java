@@ -33,7 +33,7 @@ public class ResidenceCommandEvent extends Event implements Cancellable {
 
     public ResidenceCommandEvent(String command, String args[], CommandSender sender)
     {
-        super("RESIDENCE_COMMAND");
+        super();
         cancelled = false;
         arglist = args;
         cmd = command;

@@ -7,6 +7,7 @@ package com.bekvon.bukkit.residence.event;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  *
@@ -18,12 +19,17 @@ public class ResidenceEvent extends Event {
 
     public ResidenceEvent(String eventName, ClaimedResidence resref)
     {
-        super(eventName);
+        super();
         res = resref;
     }
 
     public ClaimedResidence getResidence()
     {
         return res;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

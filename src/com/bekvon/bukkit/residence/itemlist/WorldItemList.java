@@ -7,7 +7,6 @@ package com.bekvon.bukkit.residence.itemlist;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.util.config.ConfigurationNode;
 
 /**
  *
