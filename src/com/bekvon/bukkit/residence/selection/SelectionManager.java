@@ -23,7 +23,7 @@ public class SelectionManager {
     private Map<String,Location> playerLoc1;
     private Map<String,Location> playerLoc2;
 
-    public static final int MAX_HEIGHT = 127,MIN_HEIGHT = 0;
+    public static final int MAX_HEIGHT = 255,MIN_HEIGHT = 0;
 
     public enum Direction
     {
