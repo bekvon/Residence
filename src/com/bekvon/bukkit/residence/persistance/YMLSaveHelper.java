@@ -7,8 +7,11 @@ package com.bekvon.bukkit.residence.persistance;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.yaml.snakeyaml.DumperOptions;
@@ -29,6 +32,7 @@ public class YMLSaveHelper {
     {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(FlowStyle.BLOCK);
+        options.setAllowUnicode(true);
         yml = new Yaml(options);
         
         root = new LinkedHashMap<String,Object>();
@@ -41,16 +45,18 @@ public class YMLSaveHelper {
     {
         if(f.isFile())
             f.delete();
-        FileWriter fout = new FileWriter(f);
-        yml.dump(root, fout);
-        fout.close();
+        FileOutputStream fout = new FileOutputStream(f);
+        OutputStreamWriter osw = new OutputStreamWriter(fout, "UTF8");
+        yml.dump(root, osw);
+        osw.close();
     }
 
     public void load() throws IOException
     {
         FileInputStream fis = new FileInputStream(f);
-        root = (Map<String, Object>) yml.load(fis);
-        fis.close();
+        InputStreamReader isr = new InputStreamReader(fis, "UTF8");
+        root = (Map<String, Object>) yml.load(isr);
+        isr.close();
     }
 
     public Map<String,Object> getRoot()

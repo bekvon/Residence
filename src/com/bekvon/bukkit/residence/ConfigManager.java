@@ -82,7 +82,7 @@ public class ConfigManager {
         preventBuildInRent = config.getBoolean("Global.PreventRentModify", true);
         stopOnSaveError = config.getBoolean("Global.StopOnSaveFault",true);
         legacyperms = config.getBoolean("Global.LegacyPermissions",false);
-        namefix = config.getString("Global.ResidenceNameRegex","[^a-zA-Z0-9\\-\\_]");
+        namefix = config.getString("Global.ResidenceNameRegex",null);//"[^a-zA-Z0-9\\-\\_]"
         showIntervalMessages = config.getBoolean("Global.ShowIntervalMessages", false);
         spoutEnable = config.getBoolean("Global.EnableSpout", false);
         enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);

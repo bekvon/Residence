@@ -6,9 +6,10 @@
 package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
-import java.util.List;
 import org.bukkit.entity.Player;
-import de.bananaco.permissions.Permissions;
+
+import de.bananaco.bpermissions.api.ApiLayer;
+import de.bananaco.bpermissions.api.util.CalculableType;
 
 /**
  *
@@ -16,11 +17,8 @@ import de.bananaco.permissions.Permissions;
  */
 public class BPermissionsAdapter implements PermissionsInterface {
 
-    Permissions bperms;
-
-    public BPermissionsAdapter(Permissions p)
+    public BPermissionsAdapter()
     {
-        bperms = p;
     }
 
     public String getPlayerGroup(Player player) {
@@ -28,15 +26,15 @@ public class BPermissionsAdapter implements PermissionsInterface {
     }
 
     public String getPlayerGroup(String player, String world) {
-        List<String> groups = Permissions.getWorldPermissionsManager().getPermissionSet(world).getGroups(player);
+        String[] groups = ApiLayer.getGroups(world, CalculableType.USER, player);
         PermissionManager pmanager = Residence.getPermissionManager();
         for(String group : groups)
         {
             if(pmanager.hasGroup(group))
                 return group.toLowerCase();
         }
-        if(groups.size()>0)
-            return groups.get(0).toLowerCase();
+        if(groups.length>0)
+            return groups[0].toLowerCase();
         return null;
     }
 

@@ -26,7 +26,7 @@ public class LegacyPermissions implements PermissionsInterface {
     }
 
     public String getPlayerGroup(String player, String world) {
-        String group = authority.getGroup(world, player);
+        String group = authority.getPrimaryGroup(world, player);
         if(group!=null)
             return group.toLowerCase();
         return null;

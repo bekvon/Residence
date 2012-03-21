@@ -139,7 +139,7 @@ public class PermissionManager {
         }
         p = server.getPluginManager().getPlugin("bPermissions");
         if (p != null) {
-            perms = new BPermissionsAdapter((de.bananaco.permissions.Permissions) p);
+            perms = new BPermissionsAdapter();
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found bPermissions Plugin!");
             return;
         }
