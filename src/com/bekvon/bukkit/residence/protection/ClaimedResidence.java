@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 /**
  *
  * @author Administrator
+ * 
  */
 public class ClaimedResidence {
 
@@ -510,7 +511,7 @@ public class ClaimedResidence {
 
     public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin)
     {
-        if(message!=null && !Residence.validString(message))
+        if(message!=null && Residence.getConfigManager().getResidenceNameRegex() != null && !Residence.validString(message))
         {
             player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidCharacters"));
             return;
@@ -551,8 +552,8 @@ public class ClaimedResidence {
             Location lowLoc;
             newLoc.setX(newLoc.getBlockX() + 1);
             newLoc.setZ(newLoc.getBlockZ() + 1);
-            lowLoc = new Location(newLoc.getWorld(), newLoc.getBlockX(), 126, newLoc.getBlockZ());
-            newLoc.setY(127);
+            lowLoc = new Location(newLoc.getWorld(), newLoc.getBlockX(), 254, newLoc.getBlockZ());
+            newLoc.setY(255);
             while ((newLoc.getBlock().getTypeId() != 0 || lowLoc.getBlock().getTypeId() == 0) && lowLoc.getBlockY() > -126) {
                 newLoc.setY(newLoc.getY() - 1);
                 lowLoc.setY(lowLoc.getY() - 1);
