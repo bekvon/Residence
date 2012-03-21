@@ -74,12 +74,23 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
     }
 
     public String getPlayerGroup(Player player) {
-        return permissions.getPrimaryGroup(player);
+    	String group = permissions.getPrimaryGroup(player).toLowerCase();
+        if(group == null)
+        {
+        	return group;
+        }else{
+        	return group.toLowerCase();
+        }
     }
 
     public String getPlayerGroup(String player, String world) {
-        
-        return permissions.getPrimaryGroup(world, player);
+        String group = permissions.getPrimaryGroup(world, player);
+        if(group == null)
+        {
+        	return group;
+        }else{
+        	return group.toLowerCase();
+        }
     }
 
     public boolean hasPermission(Player player, String permission) {
