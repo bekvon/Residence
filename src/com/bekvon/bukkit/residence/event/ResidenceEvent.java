@@ -15,21 +15,31 @@ import org.bukkit.event.HandlerList;
  */
 public class ResidenceEvent extends Event {
 
+	private static final HandlerList handlers = new HandlerList();
+    private String message;
+	 
+	public HandlerList getHandlers() {
+	    return handlers;
+	}
+	 
+	public static HandlerList getHandlerList() {
+	    return handlers;
+	}
+
     ClaimedResidence res;
 
     public ResidenceEvent(String eventName, ClaimedResidence resref)
     {
-        super();
+    	message = eventName;
         res = resref;
+    }
+ 
+    public String getMessage() {
+        return message;
     }
 
     public ClaimedResidence getResidence()
     {
         return res;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
