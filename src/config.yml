@@ -131,11 +131,11 @@ Groups:
            # The maximum number of blocks a Residence can be, North to South (Z).
            MaxNorthSouth: 16
            # The maximum number of blocks a Residence can be, High to Low (Y).
-           MaxUpDown: 128
+           MaxUpDown: 256
            # The lowest altitude this group is allowed to protect.
            MinHeight: 0
            # The highest altitude this group is allowed to protect.
-           MaxHeight: 127
+           MaxHeight: 255
             # The maximum recursive depth that subzones can go.
             # A subzone within a subzone within the Residence zone would be a depth of 2.
             # Set to 0 to disable subzones.
