@@ -11,8 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-//import org.bukkit.event.entity.EndermanPickupEvent;
-//import org.bukkit.event.entity.EndermanPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -26,6 +25,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Squid;
@@ -44,9 +44,12 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
  */
 public class ResidenceEntityListener implements Listener {
 
-    /*
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onEndermanPickup(EndermanPickupEvent event) {
+    public void onEndermanChangeBlock(EntityChangeBlockEvent  event) {
+    	if(event.getEntityType() != EntityType.ENDERMAN)
+    	{
+    		return;
+    	}
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if (res != null) {
             ResidencePermissions perms = res.getPermissions();
@@ -60,7 +63,7 @@ public class ResidenceEntityListener implements Listener {
             }
         }
     }
-
+/*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEndermanPlace(EndermanPlaceEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getLocation());
