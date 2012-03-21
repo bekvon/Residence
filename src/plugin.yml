@@ -1,9 +1,9 @@
 name: Residence
 main: com.bekvon.bukkit.residence.Residence
-version: 2.5.2
+version: 2.5.5
 description: Cuboid Residence Plugin
 author: bekvon
-softdepend: [Vault]
+softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions]
 commands:
   res:
     description: Manage Residences
