@@ -10,10 +10,13 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang.time.StopWatch;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -27,12 +30,15 @@ import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import com.inori.utils.ILog;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.InventoryHolder;
 
 /**
  *
@@ -80,12 +86,46 @@ public class ResidencePlayerListener implements Listener {
         Residence.getChatManager().removeFromChannel(pname);
     }
 
+	private boolean isContainer(Material mat) {
+		return mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER;
+	}
+
+	private boolean isCanUseEntity_BothClick(Material mat) {
+		return mat == Material.LEVER || mat == Material.STONE_BUTTON || 
+			   mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || 
+			   mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE;
+	}
+	
+	private boolean isCanUseEntity_RClickOnly(Material mat) {
+		return mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND;
+	}
+
+	private boolean isCanUseEntity(Material mat) {
+		return isCanUseEntity_BothClick(mat) || isCanUseEntity_RClickOnly(mat);
+	}
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if(event.isCancelled())
             return;
+
         Player player = event.getPlayer();
         Material heldItem = player.getItemInHand().getType();
+        Block block = event.getClickedBlock();
+        Material mat = block.getType();
+        ILog.sendToPlayer(player, mat.toString());
+        if(!(((isContainer(mat) || isCanUseEntity_RClickOnly(mat)) && event.getAction() == Action.RIGHT_CLICK_BLOCK) || 
+        		isCanUseEntity_BothClick(mat)))
+        {            
+        	int typeId = player.getItemInHand().getTypeId();
+        	if(typeId != Residence.getConfigManager().getSelectionTooldID() &&
+        	   typeId != Residence.getConfigManager().getInfoToolID())
+        	{
+        		return;
+        	}
+        }
+        ILog.sendToPlayer(player, "onPlayerInteract Fired");
+        
         String world = player.getWorld().getName();
         String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
@@ -97,7 +137,6 @@ public class ResidencePlayerListener implements Listener {
         }
         if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
-            Block block = event.getClickedBlock();
             if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
                 if(player.hasPermission("residence.create") || group.canCreateResidences() || resadmin)
@@ -123,11 +162,10 @@ public class ResidencePlayerListener implements Listener {
                         Residence.getResidenceManager().printAreaInfo(res, player);
                 }
             }
-            Material mat = block.getType();
             if(!resadmin)
             {
                 ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-                if(mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER)
+                if(isContainer(mat))
                 {
                     boolean hasuse;
                     boolean hascontainer;
@@ -144,7 +182,7 @@ public class ResidencePlayerListener implements Listener {
                         player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","container"));
                     }
                 }
-                else if(mat == Material.BED || mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOODEN_DOOR || mat == Material.WORKBENCH || mat == Material.TRAP_DOOR || mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE)
+                else if(isCanUseEntity(mat))
                 {
                     if(res!=null)
                     {
@@ -239,7 +277,13 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove(PlayerMoveEvent event) {
+    	if(event.getFrom().distance(event.getTo()) == 0)
+    	{
+    		return;
+    	}
+    	
         Player player = event.getPlayer();
+        ILog.sendToPlayer(player, "onPlayerMove("+event.getFrom().distance(event.getTo())+") Fired");
         String pname = player.getName();
         long lastCheck = 0;
         if (lastUpdate.containsKey(pname)) {
