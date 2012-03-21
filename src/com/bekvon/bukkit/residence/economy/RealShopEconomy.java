@@ -5,7 +5,7 @@
 
 package com.bekvon.bukkit.residence.economy;
 
-import fr.crafter.tickleman.RealEconomy.RealEconomy;
+import fr.crafter.tickleman.realeconomy.RealEconomy;
 
 /**
  *
@@ -34,14 +34,16 @@ public class RealShopEconomy implements EconomyInterface {
 
     @Override
     public boolean add(String playerName, double amount) {
-        return plugin.setBalance(playerName, plugin.getBalance(playerName)+amount);
+        plugin.setBalance(playerName, plugin.getBalance(playerName)+amount);
+        return true;
     }
 
     @Override
     public boolean subtract(String playerName, double amount) {
         if(!canAfford(playerName,amount))
             return false;
-        return plugin.setBalance(playerName, plugin.getBalance(playerName)-amount);
+        plugin.setBalance(playerName, plugin.getBalance(playerName)-amount);
+        return true;
     }
 
     @Override
