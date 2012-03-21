@@ -26,7 +26,7 @@ public class OrigionalPermissions implements PermissionsInterface {
     }
 
     public String getPlayerGroup(String player, String world) {
-        String group = authority.getPrimaryGroup(world, player);
+        String group = authority.getGroup(world, player);
         if(group!=null)
             return group.toLowerCase();
         return null;

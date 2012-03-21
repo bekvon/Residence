@@ -14,10 +14,8 @@ import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
-import com.bekvon.bukkit.residence.economy.IConomy4Adapter;
 import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
 import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
-import com.bekvon.bukkit.residence.economy.MineConomyAdapter;
 import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
@@ -39,16 +37,18 @@ import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
-import com.iConomy.iConomy;
-import com.spikensbror.bukkit.mineconomy.MineConomy;
 import cosine.boseconomy.BOSEconomy;
-import fr.crafter.tickleman.RealShop.RealShopPlugin;
+import fr.crafter.tickleman.realeconomy.RealEconomy;
+import fr.crafter.tickleman.realplugin.RealPlugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.CharsetEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -180,6 +180,7 @@ public class Residence extends JavaPlugin {
             if (!dataFolder.isDirectory()) {
                 dataFolder.mkdirs();
             }
+
             if (!new File(dataFolder, "config.yml").isFile()) {
                 this.writeDefaultConfigFromJar();
             }
@@ -243,8 +244,6 @@ public class Residence extends JavaPlugin {
                     }
                     if(economy == null)
                         this.loadVaultEconomy();
-                    if(economy == null)
-                        this.loadMineConomy();
                     if(economy == null)
                         this.loadBOSEconomy();
                     if(economy == null)
@@ -331,10 +330,15 @@ public class Residence extends JavaPlugin {
     {
         if(name.contains(":") || name.contains("."))
             return false;
-        String namecheck = name.replaceAll(cmanager.getResidenceNameRegex(), "");
-        if(!name.equals(namecheck))
-            return false;
-        return Residence.validString(name);
+        if(cmanager.getResidenceNameRegex() == null)
+        {
+        	return true;
+        }else{
+	        String namecheck = name.replaceAll(cmanager.getResidenceNameRegex(), "");
+	        if(!name.equals(namecheck))
+	            return false;
+	        return Residence.validString(name);
+        }
     }
 
     public static boolean validString(String string)
@@ -453,11 +457,7 @@ public class Residence extends JavaPlugin {
             }
             else if(p.getDescription().getVersion().startsWith("5"))
             {
-                economy = new IConomy5Adapter((iConomy)p);
-            }
-            else if(p.getDescription().getVersion().startsWith("4"))
-            {
-                economy = new IConomy4Adapter((com.nijiko.coelho.iConomy.iConomy)p);
+                economy = new IConomy5Adapter();
             }
             else
             {
@@ -467,17 +467,6 @@ public class Residence extends JavaPlugin {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with iConomy! Version: " + p.getDescription().getVersion());
         } else {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy NOT found!");
-        }
-    }
-
-    private void loadMineConomy()
-    {
-        Plugin p = getServer().getPluginManager().getPlugin("MineConomy");
-        if (p != null) {
-            economy = new MineConomyAdapter((MineConomy)p);
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with MineConomy!");
-        } else {
-            Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] MineConomy NOT found!");
         }
     }
 
@@ -505,9 +494,9 @@ public class Residence extends JavaPlugin {
 
     private void loadRealEconomy()
     {
-        Plugin p = getServer().getPluginManager().getPlugin("RealShop");
+        Plugin p = getServer().getPluginManager().getPlugin("RealPlugin");
         if (p != null) {
-            economy = new RealShopEconomy(((RealShopPlugin)p).realEconomy);
+            economy = new RealShopEconomy(new RealEconomy((RealPlugin)p));
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with RealShop Economy!");
         } else {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] RealShop Economy NOT found!");
@@ -1987,6 +1976,7 @@ public class Residence extends JavaPlugin {
                 if(entry!=null && !entry.isDirectory())
                 {
                     InputStream in = jar.getInputStream(entry);
+                    InputStreamReader isr = new InputStreamReader(in, "UTF8");
                     if(writeName.isFile())
                     {
                         if(backupOld)
@@ -1999,15 +1989,16 @@ public class Residence extends JavaPlugin {
                             writeName.delete();
                     }
                     FileOutputStream out = new FileOutputStream(writeName);
-                    byte[] tempbytes = new byte[512];
-                    int readbytes = in.read(tempbytes,0,512);
+                    OutputStreamWriter osw = new OutputStreamWriter(out, "UTF8");
+                    char[] tempbytes = new char[512];
+                    int readbytes = isr.read(tempbytes,0,512);
                     while(readbytes>-1)
                     {
-                        out.write(tempbytes,0,readbytes);
-                        readbytes = in.read(tempbytes,0,512);
+                    	osw.write(tempbytes,0,readbytes);
+                        readbytes = isr.read(tempbytes,0,512);
                     }
-                    out.close();
-                    in.close();
+                    osw.close();
+                    isr.close();
                     return true;
                 }
             }

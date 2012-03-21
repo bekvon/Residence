@@ -21,6 +21,9 @@ import org.bukkit.entity.Player;
 /**
  *
  * @author Administrator
+ * 
+ * changed by inori 03/17/2012
+ * line 91:limits MaxHeight changed to 255
  */
 public class PermissionGroup {
         protected int xmax;
@@ -85,7 +88,7 @@ public class PermissionGroup {
         ymax = limits.getInt("Residence.MaxUpDown", 0);
         zmax = limits.getInt("Residence.MaxNorthSouth", 0);
         minHeight = limits.getInt("Residence.MinHeight", 0);
-        maxHeight = limits.getInt("Residence.MaxHeight", 127);
+        maxHeight = limits.getInt("Residence.MaxHeight", 255);
         tpaccess = limits.getBoolean("Residence.CanTeleport", false);
         subzonedepth = limits.getInt("Residence.SubzoneDepth", 0);
         messageperms = limits.getBoolean("Messaging.CanChange", false);
