@@ -272,6 +272,16 @@ public class RentManager {
         return rentableLand.containsKey(landName) ? rentableLand.get(landName).cost : 0;
     }
 
+    public boolean getRentableRepeatable(String landName)
+    {
+        return rentableLand.containsKey(landName) ? rentableLand.get(landName).repeatable : false;
+    }
+
+    public boolean getRentedAutoRepeats(String landName)
+    {
+        return getRentableRepeatable(landName) ? rentedLand.get(landName).autoRefresh : false;
+    }
+
     public int getRentDays(String landName)
     {
         return rentableLand.containsKey(landName) ? rentableLand.get(landName).days : 0;
