@@ -312,7 +312,7 @@ public class ResidenceBlockListener implements Listener {
         }
         //super.onBlockIgnite(event);
     }
-
+/*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPhysics(BlockPhysicsEvent event) {
         if(event.isCancelled())
@@ -324,5 +324,5 @@ public class ResidenceBlockListener implements Listener {
                 event.setCancelled(true);
             }
         }
-    }
+    }*/
 }
