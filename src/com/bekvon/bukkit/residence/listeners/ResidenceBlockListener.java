@@ -320,6 +320,7 @@ public class ResidenceBlockListener implements Listener {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if (res != null) {
             if (!res.getPermissions().has("physics", true)) {
+                event.getBlock().breakNaturally();
                 event.setCancelled(true);
             }
         }
