@@ -35,7 +35,7 @@ import org.bukkit.event.block.BlockSpreadEvent;
  */
 public class ResidenceBlockListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
         if(event.isCancelled())
             return;
@@ -89,7 +89,7 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         if(event.isCancelled())
             return;
@@ -144,7 +144,7 @@ public class ResidenceBlockListener implements Listener {
         //super.onBlockPlace(event);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockSpread(BlockSpreadEvent event) {
         Location loc = event.getBlock().getLocation();
         FlagPermissions perms = Residence.getPermsByLoc(loc);
@@ -152,7 +152,7 @@ public class ResidenceBlockListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(res!=null)
@@ -178,7 +178,7 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(res!=null)
@@ -206,7 +206,7 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFromTo(BlockFromToEvent event) {
         if (event.isCancelled()) {
             return;
@@ -246,7 +246,7 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBurn(BlockBurnEvent event) {
         if(event.isCancelled())
             return;
@@ -267,7 +267,7 @@ public class ResidenceBlockListener implements Listener {
         //super.onBlockBurn(event);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockIgnite(BlockIgniteEvent event) {
         if(event.isCancelled())
             return;
@@ -313,7 +313,7 @@ public class ResidenceBlockListener implements Listener {
         //super.onBlockIgnite(event);
     }
 /*
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPhysics(BlockPhysicsEvent event) {
         if(event.isCancelled())
             return;
