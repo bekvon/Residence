@@ -76,7 +76,7 @@ public class ResidencePlayerListener implements Listener {
         chatenabled = Residence.getConfigManager().chatEnabled();
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
         String pname = event.getPlayer().getName();
         cache.remove(pname);
@@ -104,7 +104,7 @@ public class ResidencePlayerListener implements Listener {
 		return isCanUseEntity_BothClick(mat) || isCanUseEntity_RClickOnly(mat);
 	}
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if(event.isCancelled())
             return;
@@ -205,7 +205,7 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         if(event.isCancelled())
             return;
@@ -240,7 +240,7 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
         if(event.isCancelled())
             return;
@@ -275,7 +275,7 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
     	if(event.getFrom().distance(event.getTo()) == 0)
     	{
@@ -418,7 +418,7 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChat(PlayerChatEvent event) {
         String pname = event.getPlayer().getName();
         if(chatenabled && playerToggleChat.contains(pname))
