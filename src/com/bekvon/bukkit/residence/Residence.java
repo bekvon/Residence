@@ -537,15 +537,13 @@ public class Residence extends JavaPlugin {
                 Player player = (Player) sender;
                 if(gmanager.isResidenceAdmin(player))
                 {
-                    this.setEnabled(false);
-                    this.setEnabled(true);
+                    this.reloadPlugin();
                     System.out.println("[Residence] Reloaded by "+player.getName()+".");
                 }
             }
             else
             {
-                this.setEnabled(false);
-                this.setEnabled(true);
+                this.reloadPlugin();
                 System.out.println("[Residence] Reloaded by console.");
             }
             return true;
