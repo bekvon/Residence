@@ -26,7 +26,7 @@ public class ResidenceSpoutListener implements Listener {
 
     protected HashMap<Player,GenericPopup> popups;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onButtonClick(ButtonClickEvent event) {
         Player p = event.getPlayer();
         if (event.getScreen() instanceof ResidencePopup) {

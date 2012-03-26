@@ -281,7 +281,7 @@ public class Residence extends JavaPlugin {
                 pm.registerEvents(plistener, this);
                 pm.registerEvents(elistener, this);
 
-                //pm.registerEvent(Event.Type.WORLD_LOAD, wlistener, Priority.Lowest, this);
+                //pm.registerEvent(Event.Type.WORLD_LOAD, wlistener, Priority.NORMAL, this);
                 if(cmanager.enableSpout())
                 {
                     slistener = new ResidenceSpoutListener();
