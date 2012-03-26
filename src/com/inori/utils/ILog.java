@@ -18,7 +18,7 @@ public class ILog {
 	
 	private static Logger logger;
 	private static String PREFIX = "[Residence] ";
-	private static Boolean enable = true;
+	private static Boolean enable = false;
 	
 	static {
 		logger = Residence.getServ().getLogger();
