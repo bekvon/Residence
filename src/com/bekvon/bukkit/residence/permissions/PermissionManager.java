@@ -74,7 +74,6 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(String player, String world) {
-        String defaultGroup = Residence.getConfigManager().getDefaultGroup().toLowerCase();
         player = player.toLowerCase();
         if (playersGroup.containsKey(player)) {
             String group = playersGroup.get(player);
@@ -87,7 +86,7 @@ public class PermissionManager {
         }
         String group = this.getPermissionsGroup(player,world);
         if (group == null || !groups.containsKey(group)) {
-            return defaultGroup;
+            return Residence.getConfigManager().getDefaultGroup().toLowerCase();
         } else {
             return group;
         }
