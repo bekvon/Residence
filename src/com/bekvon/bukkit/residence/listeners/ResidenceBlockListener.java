@@ -43,9 +43,10 @@ public class ResidenceBlockListener implements Listener {
         ILog.sendToPlayer(player, "onBlockBreak Fired");
         if(Residence.getPermissionManager().isResidenceAdmin(player))
             return;
-        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
         Material mat = event.getBlock().getType();
-        if(Residence.getItemManager().isIgnored(mat, group, event.getBlock().getWorld().getName()))
+        String world = event.getBlock().getWorld().getName();
+        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
+        if(Residence.getItemManager().isIgnored(mat, group, world))
         {
             return;
         }
@@ -95,11 +96,11 @@ public class ResidenceBlockListener implements Listener {
             return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockPlace Fired");
-        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
         if(Residence.getPermissionManager().isResidenceAdmin(player))
             return;
         Material mat = event.getBlock().getType();
         String world = event.getBlock().getWorld().getName();
+        String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
         if(Residence.getItemManager().isIgnored(mat, group, world))
             return;
         ClaimedResidence res;
