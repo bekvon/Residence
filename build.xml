@@ -27,7 +27,7 @@
   <!-- Download libraries -->
   <target name="class">
   <!-- Download from jenkins -->
-  <get src="http://whiskeycraft.net:8080/view/Bukkit/job/Craftbukkit/lastSuccessfulBuild/artifact/target/craftbukkit-1.2.4-R0.1-SNAPSHOT.jar" dest="lib/CraftBukkit.jar"/>
+  <get src="http://whiskeycraft.net:8080/view/Bukkit/job/Craftbukkit/lastSuccessfulBuild/artifact/target/craftbukkit-1.2.4-R1.0.jar" dest="lib/CraftBukkit.jar"/>
   <get src="http://whiskeycraft.net:8080/view/Lib/job/Spout%20Plugin%20API/lastSuccessfulBuild/artifact/target/spoutpluginapi-dev-SNAPSHOT.jar" dest="lib/SpoutpluginAPI.jar"/>
   <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
   <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
