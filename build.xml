@@ -1,75 +1,74 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See commented blocks below for -->
-<!-- some examples of how to customize the build. -->
-<!-- (If you delete it and reopen the project it will be recreated.) -->
-<!-- By default, only the Clean and Build commands use this build script. -->
-<!-- Commands such as Run, Debug, and Test only use this build script if -->
-<!-- the Compile on Save feature is turned off for the project. -->
-<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
-<!-- in the project's Project Properties dialog box.-->
-<project name="Residence" default="default" basedir=".">
-    <description>Builds, tests, and runs the project Residence.</description>
-    <import file="nbproject/build-impl.xml"/>
-    <import file="nbproject/profiler-build-impl.xml"/>
-    <!--
+<project name="Residence" default="main" basedir=".">
+  <!-- env variables -->
+  <property name="target" location="target/"/>
+  <path id="classpath"><fileset dir="lib" includes="**/*.jar"/></path>
+  <target name="main" depends="clean, init, class, compile, jar" description="Main target">
+      <echo>Building the .jar file.</echo>
+  </target>
+  
+  <!-- Cleanup workspace -->
+  <target name="clean" description="Cleans project">
+      <echo>Cleaning</echo>
+      <delete failonerror="false">
+<fileset dir="build" includes="**/*" />
+</delete>
+<delete file="dist/Residence.jar" />
+  </target>
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
+  <!-- Initial setup -->
+  <target name="init">
+      <tstamp/>
+  <!-- Create folders -->
+      <mkdir dir="dist"/>
+      <mkdir dir="build"/>
+      <mkdir dir="lib"/>
+  </target>
+  
+  <!-- Download libraries -->
+  <target name="class">
+  <!-- Download from jenkins -->
+  <get src="http://whiskeycraft.net:8080/view/Lib/job/Spout%20Plugin%20API/lastSuccessfulBuild/artifact/target/spoutpluginapi-dev-SNAPSHOT.jar" dest="lib/SpoutpluginAPI.jar"/>
+  <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
+  <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
+  <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
+  <!-- Download from whiskey repo -->
+  <get src="http://whiskeycraft.net/repo/org/bukkit/craftbukkit/lastsuccessful/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
+  <get src="http://www.whiskeycraft.net/repo/com/iConomy/4.0/iCo4.jar" dest="lib/iConomy4.jar"/>
+  <get src="http://www.whiskeycraft.net/repo/com/palmergames/iConomy/5.01/iConomy.jar" dest="lib/iConomy5.jar"/>
+  <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
+  <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
+  <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
+  <get src="http://www.whiskeycraft.net/repo/net/milkbowl/vault/Vault/1.2.14-SNAPSHOT/Vault-1.2.14-SNAPSHOT.jar" dest="lib/Vault.jar"/>
+  <!-- Download from BukkitDev -->
+  <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
+  <get src="http://dev.bukkit.org/media/files/563/415/MineConomy.jar" dest="lib/MineConomy.jar"/>
+  <get src="http://dev.bukkit.org/media/files/582/606/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
+  <get src="http://dev.bukkit.org/media/files/578/833/bpermissions.jar" dest="lib/bPermissions.jar"/>
+  <unzip src="lib/BOSEconomy.zip" dest="lib/"></unzip>
+  <delete file="lib/BOSEconomy.zip"/>
+  </target>
+  <path id="classpath">
+      <fileset dir="lib" includes="**/*.jar"/>
+  </path>
 
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -post-clean:               called after cleaning build products
-
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="Residence-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
-    -->
+  <!-- compile -->
+  <target name="compile">
+      <echo>Compiling</echo>
+      <javac srcdir="src/com/" destdir="build" debug="true" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false"/>
+      <copy file="src/plugin.yml" tofile="build/plugin.yml"/>
+      <copy file="src/config.yml" tofile="build/config.yml"/>
+<copy file="src/languagefiles/English.yml" tofile="build/languagefiles/English.yml"/>
+  </target>
+  
+  <!-- jar -->
+  <target name="jar">
+<echo>Making jar</echo>
+        <jar jarfile="dist/Residence.jar" basedir="build">
+<manifest>
+<attribute name="Built-By" value="${user.name}" />
+</manifest>
+        </jar>
+     <delete dir="build"/>
+        <delete dir="lib"/>
+  </target>
 </project>
