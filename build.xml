@@ -27,12 +27,12 @@
   <!-- Download libraries -->
   <target name="class">
   <!-- Download from jenkins -->
-  <get src="http://whiskeycraft.net:8080/view/Bukkit/job/Craftbukkit/lastSuccessfulBuild/artifact/target/craftbukkit-1.2.4-R1.0.jar" dest="lib/CraftBukkit.jar"/>
   <get src="http://whiskeycraft.net:8080/view/Lib/job/Spout%20Plugin%20API/lastSuccessfulBuild/artifact/target/spoutpluginapi-dev-SNAPSHOT.jar" dest="lib/SpoutpluginAPI.jar"/>
   <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
   <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
   <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
   <!-- Download from whiskey repo -->
+  <get src="http://whiskeycraft.net/repo/org/bukkit/craftbukkit/lastsuccessful/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
   <get src="http://www.whiskeycraft.net/repo/com/iConomy/4.0/iCo4.jar" dest="lib/iConomy4.jar"/>
   <get src="http://www.whiskeycraft.net/repo/com/palmergames/iConomy/5.01/iConomy.jar" dest="lib/iConomy5.jar"/>
   <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
