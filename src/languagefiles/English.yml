@@ -175,6 +175,7 @@ Language:
     #Version 18 New Fields
     SelectTooHigh: Warning, selection went above top of map, limiting.
     SelectTooLow: Warning, selection went below bottom of map, limiting.
+    WorldEditNotFound: WorldEdit was not detected.
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -287,6 +288,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Info:
                                 - 'Usage /res select <Residence> <AreaID>'
                                 - 'Selects a existing area in a residence.'
+                        worldedit:
+                            Description: Set selection using the current WorldEdit selection.
+                            Info:
+                                - 'Usage /res select worldedit'
+                                - 'Sets selection area using the current WorldEdit selection.'
                 create: #creation command
                     Description: Create Residences
                     Info:
