@@ -272,7 +272,7 @@ public class Residence extends JavaPlugin {
                 if(!this.isEnabled())
                     return;
                 FlagPermissions.initValidFlags();
-                smanager = new SelectionManager();
+                smanager = new SelectionManager(server);
                 blistener = new ResidenceBlockListener();
                 plistener = new ResidencePlayerListener();
                 elistener = new ResidenceEntityListener();
@@ -716,6 +716,9 @@ public class Residence extends JavaPlugin {
                         } else if (args[1].equals("chunk")) {
                             smanager.selectChunk(player);
                             return true;
+                        } else if (args[1].equals("worldedit")) {
+                        	smanager.worldEdit(player);
+                        	return true;
                         }
                     } else if (args.length == 3) {
                         if (args[1].equals("expand")) {

@@ -8,12 +8,20 @@ package com.bekvon.bukkit.residence.selection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 /**
  *
@@ -22,18 +30,29 @@ import org.bukkit.entity.Player;
 public class SelectionManager {
     private Map<String,Location> playerLoc1;
     private Map<String,Location> playerLoc2;
+    private boolean worldEditEnabled = false;
+    private Server server;
 
     public static final int MAX_HEIGHT = 255,MIN_HEIGHT = 0;
-
+    
     public enum Direction
     {
         UP,DOWN,PLUSX,PLUSZ,MINUSX,MINUSZ
     }
 
-    public SelectionManager()
+    public SelectionManager(Server server)
     {
+    	this.server = server;
         playerLoc1 = Collections.synchronizedMap(new HashMap<String,Location>());
         playerLoc2 = Collections.synchronizedMap(new HashMap<String,Location>());
+        Plugin p = server.getPluginManager().getPlugin("WorldEdit");
+        if(p!=null){
+        	worldEditEnabled = true;
+        	Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldEdit");
+        } else {
+        	worldEditEnabled = false;
+        	Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldEdit NOT found!");
+        }
     }
 
     public void placeLoc1(String player, Location loc)
@@ -189,6 +208,20 @@ public class SelectionManager {
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
         player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionSuccess"));
     }
+
+	public void worldEdit(Player player) {
+		// TODO Auto-generated method stub
+		if (worldEditEnabled){
+		WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+		Selection sel = wep.getSelection(player);
+		this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
+		this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
+		player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectionSuccess"));
+		}
+		else {
+			player.sendMessage("§c"+Residence.getLanguage().getPhrase("WorldEditNotFound"));
+		}
+	}
 
     public void selectBySize(Player player, int xsize, int ysize, int zsize) {
         Location myloc = player.getLocation();
