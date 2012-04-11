@@ -210,7 +210,6 @@ public class SelectionManager {
     }
 
 	public void worldEdit(Player player) {
-		// TODO Auto-generated method stub
 		if (worldEditEnabled){
 		WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
 		Selection sel = wep.getSelection(player);
