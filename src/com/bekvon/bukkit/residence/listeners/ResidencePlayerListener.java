@@ -97,7 +97,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 	
 	private boolean isCanUseEntity_RClickOnly(Material mat) {
-		return mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND;
+		return mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE;
 	}
 
 	private boolean isCanUseEntity(Material mat) {
