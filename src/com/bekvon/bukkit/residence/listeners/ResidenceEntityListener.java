@@ -5,6 +5,8 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
+import java.util.Iterator;
+
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import org.bukkit.entity.Entity;
@@ -16,6 +18,8 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
@@ -26,6 +30,7 @@ import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Squid;
@@ -234,6 +239,27 @@ public class ResidenceEntityListener implements Listener {
         return false;
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onSplashPotion(PotionSplashEvent event) {
+    	if(event.isCancelled())
+    		return;
+    	Entity ent = event.getEntity();
+    	ClaimedResidence srcarea = null;
+    	boolean srcpvp = true;
+    	srcarea = Residence.getResidenceManager().getByLoc(ent.getLocation());
+    	if(srcarea != null)
+    		srcpvp = srcarea.getPermissions().has("pvp", true);
+    	Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
+    	while(it.hasNext()){
+    		LivingEntity target = it.next();
+    		if(target instanceof HumanEntity){
+    			if(!srcpvp){
+    				event.setIntensity(target, 0);
+    			}
+    		}
+    	}
+    }
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.isCancelled())

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/craftbukkit-1.2.5-R1.0.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/iConomy501.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/iConomy609b.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/BOSEconomy0731a.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/bpermissions291.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/SpoutPlugin1093.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/Vault1214.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/Essentials291.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/vPerms32.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/PermissionsBukkit-1.6.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/RealPlugin113.jar"/>
+	<classpathentry kind="lib" path="/home/sbarbour/workspace-mc/shared/worldedit-5.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
