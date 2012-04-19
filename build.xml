@@ -39,6 +39,7 @@
   <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
   <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
   <get src="http://www.whiskeycraft.net/repo/net/milkbowl/vault/Vault/1.2.14-SNAPSHOT/Vault-1.2.14-SNAPSHOT.jar" dest="lib/Vault.jar"/>
+  <get src="http://whiskeycraft.net/repo/com/sk89q/worldedit/lastsuccessful/WorldEdit.jar" dest="lib/WorldEdit.jar"/>
   <!-- Download from BukkitDev -->
   <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
   <get src="http://dev.bukkit.org/media/files/563/415/MineConomy.jar" dest="lib/MineConomy.jar"/>
