@@ -1,54 +1,42 @@
 <project name="Residence" default="main" basedir=".">
   <!-- env variables -->
   <property name="target" location="target/"/>
+  <property name="Ver" value="2.5.8"/>
   <path id="classpath"><fileset dir="lib" includes="**/*.jar"/></path>
-  <target name="main" depends="clean, init, class, compile, jar" description="Main target">
+  <target name="main" depends="prep, class, compile, jar" description="Main target">
       <echo>Building the .jar file.</echo>
   </target>
   
-  <!-- Cleanup workspace -->
-  <target name="clean" description="Cleans project">
-      <echo>Cleaning</echo>
-      <delete failonerror="false">
-<fileset dir="build" includes="**/*" />
-</delete>
-<delete file="dist/Residence.jar" />
-  </target>
-
-  <!-- Initial setup -->
-  <target name="init">
-      <tstamp/>
-  <!-- Create folders -->
-      <mkdir dir="dist"/>
-      <mkdir dir="build"/>
-      <mkdir dir="lib"/>
+  <!-- Prep -->
+  <target name="prep" description="Cleans project">
+    <echo>Cleaning</echo>
+    <delete failonerror="false"><fileset dir="build" includes="**/*"/></delete>
+    <delete file="dist/Residence.jar" />
+    <tstamp/>
+    <mkdir dir="dist"/>
+    <mkdir dir="build"/>
+    <mkdir dir="lib"/>
   </target>
   
   <!-- Download libraries -->
   <target name="class">
-  <!-- Download from jenkins -->
-  <get src="http://whiskeycraft.net:8080/view/Lib/job/Spout%20Plugin%20API/lastSuccessfulBuild/artifact/target/spoutpluginapi-dev-SNAPSHOT.jar" dest="lib/SpoutpluginAPI.jar"/>
-  <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
-  <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
-  <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
-  <!-- Download from whiskey repo -->
-  <get src="http://whiskeycraft.net/repo/org/bukkit/craftbukkit/lastsuccessful/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
-  <get src="http://www.whiskeycraft.net/repo/com/palmergames/iConomy/5.01/iConomy.jar" dest="lib/iConomy5.jar"/>
-  <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
-  <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
-  <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
-  <get src="http://www.whiskeycraft.net/repo/net/milkbowl/vault/Vault/1.2.14-SNAPSHOT/Vault-1.2.14-SNAPSHOT.jar" dest="lib/Vault.jar"/>
-  <get src="http://whiskeycraft.net/repo/com/sk89q/worldedit/lastsuccessful/WorldEdit.jar" dest="lib/WorldEdit.jar"/>
-  <!-- Download from BukkitDev -->
-  <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
-  <get src="http://dev.bukkit.org/media/files/582/606/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
-  <get src="http://dev.bukkit.org/media/files/578/833/bpermissions.jar" dest="lib/bPermissions.jar"/>
-  <unzip src="lib/BOSEconomy.zip" dest="lib/"></unzip>
-  <delete file="lib/BOSEconomy.zip"/>
+    <get src="http://whiskeycraft.net:8080/view/Lib/job/Spout%20Plugin%20API/lastSuccessfulBuild/artifact/target/spoutpluginapi-dev-SNAPSHOT.jar" dest="lib/SpoutpluginAPI.jar"/>
+    <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
+    <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
+    <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
+    <get src="http://www.whiskeycraft.net/repo/org/bukkit/craftbukkit/lastsuccessful/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
+    <get src="http://www.whiskeycraft.net/repo/com/palmergames/iConomy/5.01/iConomy.jar" dest="lib/iConomy5.jar"/>
+    <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
+    <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
+    <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
+    <get src="http://www.whiskeycraft.net/repo/net/milkbowl/vault/Vault/1.2.14-SNAPSHOT/Vault-1.2.14-SNAPSHOT.jar" dest="lib/Vault.jar"/>
+    <get src="http://whiskeycraft.net/repo/com/sk89q/worldedit/lastsuccessful/WorldEdit.jar" dest="lib/WorldEdit.jar"/>
+    <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
+    <get src="http://dev.bukkit.org/media/files/582/606/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
+    <get src="http://dev.bukkit.org/media/files/578/833/bpermissions.jar" dest="lib/bPermissions.jar"/>
+    <unzip src="lib/BOSEconomy.zip" dest="lib/"></unzip>
+    <delete file="lib/BOSEconomy.zip"/>
   </target>
-  <path id="classpath">
-      <fileset dir="lib" includes="**/*.jar"/>
-  </path>
 
   <!-- compile -->
   <target name="compile">
@@ -56,18 +44,19 @@
       <javac srcdir="src/com/" destdir="build" debug="true" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false"/>
       <copy file="src/plugin.yml" tofile="build/plugin.yml"/>
       <copy file="src/config.yml" tofile="build/config.yml"/>
-<copy file="src/languagefiles/English.yml" tofile="build/languagefiles/English.yml"/>
+      <copy file="src/languagefiles/English.yml" tofile="build/languagefiles/English.yml"/>
   </target>
   
   <!-- jar -->
   <target name="jar">
-<echo>Making jar</echo>
-        <jar jarfile="dist/Residence.jar" basedir="build">
-<manifest>
-<attribute name="Built-By" value="${user.name}" />
-</manifest>
-        </jar>
-     <delete dir="build"/>
-        <delete dir="lib"/>
+      <jar jarfile="dist/Residence.jar" basedir="build">
+    <manifest>
+      <attribute name="Residence" value="by Bekvon"/>
+      <attribute name="Version" value="${Ver}"/>
+      <attribute name="Built-By" value="${user.name}"/>
+    </manifest>
+      </jar>
+    <delete dir="build"/>
+    <delete dir="lib"/>
   </target>
 </project>
