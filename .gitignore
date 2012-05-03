@@ -1,0 +1,13 @@
+#Eclipse and netbeans
+/.classpath
+/.project
+/.settings
+/nbproject
+
+#build
+/pom.xml
+/dist
+/build
+/bin
+/lib
+/manifest.mf
