@@ -1,7 +1,7 @@
 #Eclipse and netbeans
-/.classpath
-/.project
-/.settings
+.classpath
+.project
+.settings
 /nbproject
 
 #build
@@ -11,3 +11,7 @@
 /bin
 /lib
 /manifest.mf
+
+#Repo
+README
+LICENSE.txt
