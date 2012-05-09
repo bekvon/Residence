@@ -23,15 +23,12 @@ To help us better assist you, please follow these simple guidelines when asking 
 
 1)Use a service such as http://pastebin.com when sharing errors or configurations.
 
-2)Include the following version information: Craftbukkit, Residence, Vault. If you are unsure, 
-type in the Minecraft console: "/version [plugin]" left blank will default to Craftbukkit.
+2)Include the following version information: Craftbukkit, Residence, Vault. If you are unsure, type in the Minecraft console: "/version [plugin]" left blank will default to Craftbukkit.
 
-3)Include a paste of your current config.yml from Residence and your permissions.yml from your 
-respective permissions plugin.
+3)Include a paste of your current config.yml from Residence and your permissions.yml from your respective permissions plugin.
 
 4)Be as detailed as possible when describing your problem. How can we reproduce your problem?
 
 
-If no one is available on the IRC channel, please make a post on the Residence BukkitDev page 
-with the above information.
+If no one is available on the IRC channel, please make a post on the Residence BukkitDev page with the above information.
 
