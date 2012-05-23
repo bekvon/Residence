@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.listeners;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -131,7 +132,7 @@ public class ResidencePlayerListener implements Listener {
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ItemBlacklisted"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ItemBlacklisted"));
             event.setCancelled(true);
             return;
         }
@@ -144,11 +145,11 @@ public class ResidencePlayerListener implements Listener {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
                         Residence.getSelectionManager().placeLoc1(event.getPlayer().getName(), loc);
-                        player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Primary"))+"§c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                        player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Primary"))+ChatColor.RED+"(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")"+ChatColor.GREEN+"!");
                     } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
                         Residence.getSelectionManager().placeLoc2(player.getName(), loc);
-                        player.sendMessage("§a"+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Secondary"))+"§c(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")§a!");
+                        player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Secondary"))+ChatColor.RED+"(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")"+ChatColor.GREEN+"!");
                     }
                 }
             }
@@ -183,7 +184,7 @@ public class ResidencePlayerListener implements Listener {
                     }
                     if ((!hasuse && !hascontainer) || !hascontainer) {
                         event.setCancelled(true);
-                        player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","container"));
+                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","container"));
                     }
                 }
                 else if(isCanUseEntity(mat))
@@ -193,7 +194,7 @@ public class ResidencePlayerListener implements Listener {
                         if(!res.getPermissions().playerHas(player.getName(),"use", true))
                         {
                             event.setCancelled(true);
-                            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","use"));
+                            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
                         }
                     }
                     else
@@ -201,7 +202,7 @@ public class ResidencePlayerListener implements Listener {
                         if(!Residence.getWorldFlags().getPerms(player).has("use", true))
                         {
                             event.setCancelled(true);
-                            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","use"));
+                            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
                         }
                     }
                 }
@@ -223,7 +224,7 @@ public class ResidencePlayerListener implements Listener {
         {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
-                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
+                    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
                     return;
                 }
@@ -239,7 +240,7 @@ public class ResidencePlayerListener implements Listener {
             hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
         }
         if ((!hasbuild && !hasbucket) || !hasbucket) {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
             event.setCancelled(true);
         }
     }
@@ -258,7 +259,7 @@ public class ResidencePlayerListener implements Listener {
         {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(resname)) {
-                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
+                    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                     event.setCancelled(true);
                     return;
                 }
@@ -274,7 +275,7 @@ public class ResidencePlayerListener implements Listener {
             hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
         }
         if ((!hasbuild && !hasbucket) || !hasbucket) {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
             event.setCancelled(true);
         }
     }
@@ -312,7 +313,7 @@ public class ResidencePlayerListener implements Listener {
                         ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(res,player);
                         Residence.getServ().getPluginManager().callEvent(leaveevent);
                         if (leave != null && !leave.equals("")) {
-                            player.sendMessage("§e" + this.insertMessages(player, areaname, res, leave));
+                            player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, leave));
                         }
                         res = res.getParent();
                         while (res != null && !res.containsLoc(ploc)) {
@@ -356,7 +357,7 @@ public class ResidencePlayerListener implements Listener {
                         ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
                         Residence.getServ().getPluginManager().callEvent(enterevent);
                         if(enterMessage!=null)
-                            player.sendMessage("§e" + this.insertMessages(player, areaname, res, enterMessage));
+                            player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
                     }
                 } else {
                     event.setCancelled(true);
@@ -366,7 +367,7 @@ public class ResidencePlayerListener implements Listener {
                     } else {
                         player.teleport(res.getOutsideFreeLoc(event.getTo()));
                     }
-                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceMoveDeny",areaname));
+                    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceMoveDeny",areaname));
                 }
                 int health = player.getHealth();
                 if(health<20)
@@ -444,12 +445,12 @@ public class ResidencePlayerListener implements Listener {
         if(playerToggleChat.contains(pname))
         {
             playerToggleChat.remove(pname);
-            player.sendMessage("§e"+Residence.getLanguage().getPhrase("ResidenceChat","§cOFF§e!"));
+            player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("ResidenceChat",ChatColor.RED+"OFF"+ChatColor.YELLOW+"!"));
         }
         else
         {
             playerToggleChat.add(pname);
-            player.sendMessage("§e"+Residence.getLanguage().getPhrase("ResidenceChat","§cON§e!"));
+            player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("ResidenceChat",ChatColor.RED+"ON"+ChatColor.YELLOW+"!"));
         }
     }
 

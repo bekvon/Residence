@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.itemlist;
+import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -158,7 +159,7 @@ public class ItemList {
             if(!first)
                 builder.append(", ");
             else
-                builder.append("§e");
+                builder.append(ChatColor.YELLOW);
             builder.append(mat);
             first = false;
         }

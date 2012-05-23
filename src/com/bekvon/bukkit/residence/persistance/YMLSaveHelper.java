@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.persistance;
+import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.io.FileInputStream;

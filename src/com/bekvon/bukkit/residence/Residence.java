@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.chat.ChatManager;
@@ -554,10 +555,10 @@ public class Residence extends JavaPlugin {
             {
                 try {
                     this.loadYml();
-                    sender.sendMessage("§a[Residence] Reloaded save file...");
+                    sender.sendMessage(ChatColor.GREEN+"[Residence] Reloaded save file...");
                 } catch (Exception ex) {
-                    sender.sendMessage("§c[Residence] Unable to reload the save file, exception occured!");
-                    sender.sendMessage("§c"+ex.getMessage());
+                    sender.sendMessage(ChatColor.RED+"[Residence] Unable to reload the save file, exception occured!");
+                    sender.sendMessage(ChatColor.RED+ex.getMessage());
                     Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -573,7 +574,7 @@ public class Residence extends JavaPlugin {
                     return true;
                 }
                 else
-                    sender.sendMessage("§cMUST be run from console.");
+                    sender.sendMessage(ChatColor.RED+"MUST be run from console.");
             }
             return false;
         }
@@ -605,17 +606,17 @@ public class Residence extends JavaPlugin {
                             }
                             else
                             {
-                                player.sendMessage("§c"+language.getPhrase("InvalidChannel"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("InvalidChannel"));
                             }
                         }
                         else
                         {
-                            player.sendMessage("§c" + language.getPhrase("NotInResidence"));
+                            player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
                         }
                     }
                 }
                 else
-                    player.sendMessage("§c" + language.getPhrase("ChatDisabled"));
+                    player.sendMessage(ChatColor.RED + language.getPhrase("ChatDisabled"));
             }
             return true;
         }
@@ -634,7 +635,7 @@ public class Residence extends JavaPlugin {
                         try {
                             page = Integer.parseInt(args[args.length - 1]);
                         } catch (Exception ex) {
-                            sender.sendMessage("§c"+language.getPhrase("InvalidHelp"));
+                            sender.sendMessage(ChatColor.RED+language.getPhrase("InvalidHelp"));
                         }
                     }
                     if (helppages.containesEntry(helppath)) {
@@ -658,13 +659,13 @@ public class Residence extends JavaPlugin {
                     resadmin = gmanager.isResidenceAdmin(player);
                     if(!resadmin)
                     {
-                        player.sendMessage("§c" + language.getPhrase("NonAdmin"));
+                        player.sendMessage(ChatColor.RED + language.getPhrase("NonAdmin"));
                         return true;
                     }
                 }
                 if (cmanager.allowAdminsOnly()) {
                     if (!resadmin) {
-                        player.sendMessage("§c"+language.getPhrase("AdminOnly"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("AdminOnly"));
                         return true;
                     }
                 }
@@ -676,11 +677,11 @@ public class Residence extends JavaPlugin {
                 }
                 if (args[0].equals("select")) {
                     if (!group.selectCommandAccess() && !resadmin) {
-                        player.sendMessage("§c" + language.getPhrase("SelectDiabled"));
+                        player.sendMessage(ChatColor.RED + language.getPhrase("SelectDiabled"));
                         return true;
                     }
                     if (!group.canCreateResidences() && group.getMaxSubzoneDepth() <= 0 && !resadmin) {
-                        player.sendMessage("§c" + language.getPhrase("SelectDiabled"));
+                        player.sendMessage(ChatColor.RED + language.getPhrase("SelectDiabled"));
                         return true;
                     }
                     if (args.length == 2) {
@@ -706,11 +707,11 @@ public class Residence extends JavaPlugin {
                         } else if (args[1].equals("coords")) {
                             Location playerLoc1 = smanager.getPlayerLoc1(pname);
                             if (playerLoc1 != null) {
-                                player.sendMessage("§a" + language.getPhrase("Primary.Selection") + ":§b (" + playerLoc1.getBlockX() + ", " + playerLoc1.getBlockY() + ", " + playerLoc1.getBlockZ() + ")");
+                                player.sendMessage(ChatColor.GREEN + language.getPhrase("Primary.Selection") + ":"+ChatColor.AQUA+" (" + playerLoc1.getBlockX() + ", " + playerLoc1.getBlockY() + ", " + playerLoc1.getBlockZ() + ")");
                             }
                             Location playerLoc2 = smanager.getPlayerLoc2(pname);
                             if (playerLoc2 != null) {
-                                player.sendMessage("§a" + language.getPhrase("Secondary.Selection") + ":§b (" + playerLoc2.getBlockX() + ", " + playerLoc2.getBlockY() + ", " + playerLoc2.getBlockZ() + ")");
+                                player.sendMessage(ChatColor.GREEN + language.getPhrase("Secondary.Selection") + ":"+ChatColor.AQUA+" (" + playerLoc2.getBlockX() + ", " + playerLoc2.getBlockY() + ", " + playerLoc2.getBlockZ() + ")");
                             }
                             return true;
                         } else if (args[1].equals("chunk")) {
@@ -726,7 +727,7 @@ public class Residence extends JavaPlugin {
                             try {
                                 amount = Integer.parseInt(args[2]);
                             } catch (Exception ex) {
-                                player.sendMessage("§c" + language.getPhrase("InvalidAmount"));
+                                player.sendMessage(ChatColor.RED + language.getPhrase("InvalidAmount"));
                                 return true;
                             }
                             smanager.modify(player, false, amount);
@@ -736,7 +737,7 @@ public class Residence extends JavaPlugin {
                             try {
                                 amount = Integer.parseInt(args[2]);
                             } catch (Exception ex) {
-                                player.sendMessage("§c" + language.getPhrase("InvalidAmount"));
+                                player.sendMessage(ChatColor.RED + language.getPhrase("InvalidAmount"));
                                 return true;
                             }
                             smanager.modify(player, true, amount);
@@ -746,16 +747,16 @@ public class Residence extends JavaPlugin {
                     if(args.length>1 && args[1].equals("residence")) {
                         ClaimedResidence res = rmanager.getByName(args[2]);
                         if (res == null) {
-                            player.sendMessage("§c" + language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
                             return true;
                         }
                         CuboidArea area = res.getArea(args[3]);
                         if (area != null) {
                             smanager.placeLoc1(pname, area.getHighLoc());
                             smanager.placeLoc2(pname, area.getLowLoc());
-                            player.sendMessage("§a" + language.getPhrase("SelectionArea", "§6" + args[3] + "§a.§6" + args[2] + "§a"));
+                            player.sendMessage(ChatColor.GREEN + language.getPhrase("SelectionArea", ChatColor.GOLD + args[3] + ChatColor.GREEN+"."+ChatColor.GOLD + args[2] + ChatColor.GREEN));
                         } else {
-                            player.sendMessage("§c" + language.getPhrase("AreaNonExist"));
+                            player.sendMessage(ChatColor.RED + language.getPhrase("AreaNonExist"));
                         }
                         return true;
                     } else {
@@ -763,7 +764,7 @@ public class Residence extends JavaPlugin {
                             smanager.selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                             return true;
                         } catch (Exception ex) {
-                            player.sendMessage("§c" + language.getPhrase("SelectionFail"));
+                            player.sendMessage(ChatColor.RED + language.getPhrase("SelectionFail"));
                             return true;
                         }
                     }
@@ -775,7 +776,7 @@ public class Residence extends JavaPlugin {
                         rmanager.addResidence(player, args[1], smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname), resadmin);
                         return true;
                     } else {
-                        player.sendMessage("§c" + language.getPhrase("SelectPoints"));
+                        player.sendMessage(ChatColor.RED + language.getPhrase("SelectPoints"));
                         return true;
                     }
                 } else if (args[0].equals("subzone") || args[0].equals("sz")) {
@@ -795,13 +796,13 @@ public class Residence extends JavaPlugin {
                         ClaimedResidence res = rmanager.getByName(parent);
                         if(res==null)
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             return true;
                         }
                         res.addSubzone(player, smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname), zname, resadmin);
                         return true;
                     } else {
-                        player.sendMessage("§c"+language.getPhrase("SelectPoints"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("SelectPoints"));
                         return true;
                     }
                 } else if(args[0].equals("gui"))
@@ -826,7 +827,7 @@ public class Residence extends JavaPlugin {
                         if(res!=null)
                             res.printSubzoneList(player, page);
                         else
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         return true;
                     }
                 }
@@ -835,7 +836,7 @@ public class Residence extends JavaPlugin {
                         String area = rmanager.getNameByLoc(player.getLocation());
                         if (area != null) {
                             if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
-                                player.sendMessage("§c" + language.getPhrase("DeleteConfirm", "§e" + area + "§c"));
+                                player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", ChatColor.YELLOW + area + ChatColor.RED));
                                 deleteConfirm.put(player.getName(), area);
                             } else {
                                 rmanager.removeResidence(player, area, resadmin);
@@ -848,7 +849,7 @@ public class Residence extends JavaPlugin {
                         return false;
                     }
                     if (!deleteConfirm.containsKey(player.getName()) || !args[1].equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
-                        player.sendMessage("§c" + language.getPhrase("DeleteConfirm", "§e" + args[1] + "§c"));
+                        player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", ChatColor.YELLOW + args[1] + ChatColor.RED));
                         deleteConfirm.put(player.getName(), args[1]);
                     } else {
                         rmanager.removeResidence(player, args[1], resadmin);
@@ -862,7 +863,7 @@ public class Residence extends JavaPlugin {
                         String area = deleteConfirm.get(player.getName());
                         if(area==null)
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         }
                         else
                         {
@@ -879,11 +880,11 @@ public class Residence extends JavaPlugin {
                     if(resadmin || args[1].endsWith(pname))
                     {
                         rmanager.removeAllByOwner(args[1]);
-                        player.sendMessage("§a"+language.getPhrase("RemovePlayersResidences","§e"+args[1]+"§a"));
+                        player.sendMessage(ChatColor.GREEN+language.getPhrase("RemovePlayersResidences",ChatColor.YELLOW+args[1]+ChatColor.GREEN));
                     }
                     else
                     {
-                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
                     }
                     return true;
                 }
@@ -894,7 +895,7 @@ public class Residence extends JavaPlugin {
                             if(res!=null)
                                 res.removeArea(player, args[3], resadmin);
                             else
-                                player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             return true;
                         } else if (args[1].equals("add")) {
                             if (smanager.hasPlacedBoth(pname)) {
@@ -902,9 +903,9 @@ public class Residence extends JavaPlugin {
                                 if(res != null)
                                     res.addArea(player, new CuboidArea(smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname)),args[3], resadmin);
                                 else
-                                    player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                                    player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             } else {
-                                player.sendMessage("§c"+language.getPhrase("SelectPoints"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("SelectPoints"));
                             }
                             return true;
                         } else if (args[1].equals("replace")) {
@@ -913,9 +914,9 @@ public class Residence extends JavaPlugin {
                                 if(res != null)
                                     res.replaceArea(player, new CuboidArea(smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname)),args[3], resadmin);
                                 else
-                                    player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                                    player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             } else {
-                                player.sendMessage("§c"+language.getPhrase("SelectPoints"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("SelectPoints"));
                             }
                             return true;
                         }
@@ -925,7 +926,7 @@ public class Residence extends JavaPlugin {
                         if (res != null) {
                             res.printAreaList(player, page);
                         } else {
-                            player.sendMessage("§c" + language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
                         }
                         return true;
                     }
@@ -935,7 +936,7 @@ public class Residence extends JavaPlugin {
                         if (res != null) {
                             res.printAdvancedAreaList(player, page);
                         } else {
-                            player.sendMessage("§c" + language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
                         }
                         return true;
                     }
@@ -970,7 +971,7 @@ public class Residence extends JavaPlugin {
                         if(args[1].equals("set"))
                         {
                             pmanager.getList(pname, args[2]).setFlag(args[3], FlagPermissions.stringToFlagState(args[4]));
-                            player.sendMessage("§a"+language.getPhrase("FlagSet"));
+                            player.sendMessage(ChatColor.GREEN+language.getPhrase("FlagSet"));
                             return true;
                         }
                     }
@@ -979,13 +980,13 @@ public class Residence extends JavaPlugin {
                         if(args[1].equals("gset"))
                         {
                             pmanager.getList(pname, args[2]).setGroupFlag(args[3], args[4], FlagPermissions.stringToFlagState(args[5]));
-                            player.sendMessage("§a"+language.getPhrase("FlagSet"));
+                            player.sendMessage(ChatColor.GREEN+language.getPhrase("FlagSet"));
                             return true;
                         }
                         else if(args[1].equals("pset"))
                         {
                             pmanager.getList(pname, args[2]).setPlayerFlag(args[3], args[4], FlagPermissions.stringToFlagState(args[5]));
-                            player.sendMessage("§a"+language.getPhrase("FlagSet"));
+                            player.sendMessage(ChatColor.GREEN+language.getPhrase("FlagSet"));
                             return true;
                         }
                     }
@@ -1006,7 +1007,7 @@ public class Residence extends JavaPlugin {
                         if (area != null) {
                             rmanager.printAreaInfo(area, player);
                         } else {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         }
                         return true;
                     } else if (args.length == 2) {
@@ -1025,13 +1026,13 @@ public class Residence extends JavaPlugin {
                         ClaimedResidence res = rmanager.getByName(args[1]);
                         if(res==null)
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             return true;
                         }
                         if(!res.getPermissions().hasApplicableFlag(pname, args[2]))
-                            player.sendMessage(language.getPhrase("FlagCheckFalse","§e" + args[2] + "§c.§e" + pname +"§c.§e"+args[1]+"§c"));
+                            player.sendMessage(language.getPhrase("FlagCheckFalse",ChatColor.YELLOW + args[2] + ChatColor.RED+"."+ChatColor.YELLOW + pname +ChatColor.RED+"."+ChatColor.YELLOW+args[1]+ChatColor.RED));
                         else
-                            player.sendMessage(language.getPhrase("FlagCheckTrue","§a"+args[2]+"§e.§a"+pname+"§e.§e"+args[1]+"§c."+(res.getPermissions().playerHas(pname, res.getPermissions().getWorld(), args[2], false) ? "§aTRUE" : "§cFALSE")));
+                            player.sendMessage(language.getPhrase("FlagCheckTrue",ChatColor.GREEN+args[2]+ChatColor.YELLOW+"."+ChatColor.GREEN+pname+ChatColor.YELLOW+"."+ChatColor.YELLOW+args[1]+ChatColor.RED+"."+(res.getPermissions().playerHas(pname, res.getPermissions().getWorld(), args[2], false) ? ChatColor.GREEN+"TRUE" : ChatColor.RED+"FALSE")));
                         return true;
                     }
                 }
@@ -1041,11 +1042,11 @@ public class Residence extends JavaPlugin {
                     String res = rmanager.getNameByLoc(player.getLocation());
                     if(res==null)
                     {
-                        player.sendMessage("§c"+language.getPhrase("NotInResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
                     }
                     else
                     {
-                        player.sendMessage("§a"+language.getPhrase("InResidence","§e" + res + "§a"));
+                        player.sendMessage(ChatColor.GREEN+language.getPhrase("InResidence",ChatColor.YELLOW + res + ChatColor.GREEN));
                     }
                     return true;
                 } else if (args[0].equals("set")) {
@@ -1054,7 +1055,7 @@ public class Residence extends JavaPlugin {
                         if (area != null) {
                             rmanager.getByName(area).getPermissions().setFlag(player, args[1], args[2], resadmin);
                         } else {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         }
                         return true;
                     } else if (args.length == 4) {
@@ -1064,7 +1065,7 @@ public class Residence extends JavaPlugin {
                             area.getPermissions().setFlag(player, args[2], args[3], resadmin);
                         }
                         else
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         return true;
                     }
                 } else if (args[0].equals("pset")) {
@@ -1074,7 +1075,7 @@ public class Residence extends JavaPlugin {
                         if(area!=null)
                             area.getPermissions().removeAllPlayerFlags(player, args[1], resadmin);
                         else
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         return true;
                     }
                     else if(args.length == 4 && args[3].equalsIgnoreCase("removeall"))
@@ -1084,7 +1085,7 @@ public class Residence extends JavaPlugin {
                             area.getPermissions().removeAllPlayerFlags(player, args[2], resadmin);
                         }
                         else
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         return true;
                     }
                     else if(args.length == 4) {
@@ -1092,7 +1093,7 @@ public class Residence extends JavaPlugin {
                         if (area != null) {
                             area.getPermissions().setPlayerFlag(player, args[1], args[2], args[3], resadmin);
                         } else {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         }
                         return true;
                     } else if (args.length == 5) {
@@ -1101,7 +1102,7 @@ public class Residence extends JavaPlugin {
                             area.getPermissions().setPlayerFlag(player, args[2], args[3], args[4], resadmin);
                         }
                         else
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         return true;
                     }
                 } else if (args[0].equals("gset")) {
@@ -1111,7 +1112,7 @@ public class Residence extends JavaPlugin {
                             area.getPermissions().setGroupFlag(player, args[1], args[2], args[3], resadmin);
 
                         } else {
-                            player.sendMessage("§c"+language.getPhrase("InvalidArea"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidArea"));
                         }
                         return true;
                     } else if (args.length == 5) {
@@ -1120,7 +1121,7 @@ public class Residence extends JavaPlugin {
                             area.getPermissions().setGroupFlag(player, args[2], args[3], args[4], resadmin);
                         }
                         else
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         return true;
                     }
                 }
@@ -1140,12 +1141,12 @@ public class Residence extends JavaPlugin {
                     }
                     if (showinfo) {
                         if (res == null) {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             return true;
                         }
-                        player.sendMessage("§cBlacklist:");
+                        player.sendMessage(ChatColor.RED+"Blacklist:");
                         res.getItemBlacklist().printList(player);
-                        player.sendMessage("§aIgnorelist:");
+                        player.sendMessage(ChatColor.GREEN+"Ignorelist:");
                         res.getItemIgnoreList().printList(player);
                         return true;
                     }
@@ -1159,7 +1160,7 @@ public class Residence extends JavaPlugin {
                         }
                         catch (Exception ex)
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidMaterial"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMaterial"));
                             return true;
                         }
                     }
@@ -1173,7 +1174,7 @@ public class Residence extends JavaPlugin {
                         }
                         catch (Exception ex)
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidMaterial"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMaterial"));
                             return true;
                         }
                     }
@@ -1189,12 +1190,12 @@ public class Residence extends JavaPlugin {
                         }
                         else
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidList"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidList"));
                         }
                         return true;
                     }
                     else
-                        player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                 }
                 else if (args[0].equals("list")) {
                     if(args.length == 1)
@@ -1220,7 +1221,7 @@ public class Residence extends JavaPlugin {
                 else if (args[0].equals("listhidden")) {
                     if(!resadmin)
                     {
-                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
                         return true;
                     }
                     if(args.length == 1)
@@ -1258,7 +1259,7 @@ public class Residence extends JavaPlugin {
                         ClaimedResidence res = rmanager.getByName(args[1]);
                         if(res==null)
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             return true;
                         }
                         res.renameArea(player, args[2], args[3], resadmin);
@@ -1272,14 +1273,14 @@ public class Residence extends JavaPlugin {
                     group = gmanager.getGroup(player);
                     if(!group.hasUnstuckAccess())
                     {
-                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
                         return true;
                     }
                     ClaimedResidence res = rmanager.getByLoc(player.getLocation());
                     if (res == null) {
-                        player.sendMessage("§c"+language.getPhrase("NotInResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
                     } else {
-                        player.sendMessage("§e"+language.getPhrase("Moved")+"...");
+                        player.sendMessage(ChatColor.YELLOW+language.getPhrase("Moved")+"...");
                         player.teleport(res.getOutsideFreeLoc(player.getLocation()));
                     }
                     return true;
@@ -1305,7 +1306,7 @@ public class Residence extends JavaPlugin {
                 {
                     if(!resadmin)
                     {
-                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
                         return true;
                     }
                     if (args.length == 1) {
@@ -1320,14 +1321,14 @@ public class Residence extends JavaPlugin {
                     }
                     return true;
                 } else if (args[0].equals("version")) {
-                    player.sendMessage("§7------------------------------------");
-                    player.sendMessage("§cThis server running §6Residence§c version: §9" + this.getDescription().getVersion());
-                    player.sendMessage("§aCreated by: §ebekvon");
-                    player.sendMessage("§3For a command list, and help, see the wiki:");
-                    player.sendMessage("§ahttp://residencebukkitmod.wikispaces.com/");
-                    player.sendMessage("§bVisit the Residence thread at:");
-                    player.sendMessage("§9http://forums.bukkit.org/");
-                    player.sendMessage("§7------------------------------------");
+                    player.sendMessage(ChatColor.GRAY+"------------------------------------");
+                    player.sendMessage(ChatColor.RED+"This server running "+ChatColor.GOLD+"Residence"+ChatColor.RED+" version: "+ChatColor.BLUE + this.getDescription().getVersion());
+                    player.sendMessage(ChatColor.GREEN+"Created by: "+ChatColor.YELLOW+"bekvon");
+                    player.sendMessage(ChatColor.DARK_AQUA+"For a command list, and help, see the wiki:");
+                    player.sendMessage(ChatColor.GREEN+"http://residencebukkitmod.wikispaces.com/");
+                    player.sendMessage(ChatColor.AQUA+"Visit the Residence thread at:");
+                    player.sendMessage(ChatColor.BLUE+"http://forums.bukkit.org/");
+                    player.sendMessage(ChatColor.GRAY+"------------------------------------");
                     return true;
                 }
                 else if(args[0].equals("material"))
@@ -1336,11 +1337,11 @@ public class Residence extends JavaPlugin {
                         return false;
                     try
                     {
-                        player.sendMessage("§a"+language.getPhrase("GetMaterial","§6" + args[1] + "§a.§c" + Material.getMaterial(Integer.parseInt(args[1])).name()+"§a"));
+                        player.sendMessage(ChatColor.GREEN+language.getPhrase("GetMaterial",ChatColor.GOLD + args[1] + ChatColor.GREEN+"."+ChatColor.RED + Material.getMaterial(Integer.parseInt(args[1])).name()+ChatColor.GREEN));
                     }
                     catch (Exception ex)
                     {
-                        player.sendMessage("§c"+language.getPhrase("InvalidMaterial"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMaterial"));
                     }
                     return true;
                 }
@@ -1349,7 +1350,7 @@ public class Residence extends JavaPlugin {
                     if (res != null) {
                         res.setTpLoc(player, resadmin);
                     } else {
-                        player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                     }
                     return true;
                 } else if (args[0].equals("tp")) {
@@ -1358,7 +1359,7 @@ public class Residence extends JavaPlugin {
                     }
                     ClaimedResidence res = rmanager.getByName(args[1]);
                     if (res == null) {
-                        player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                         return true;
                     }
                     res.tpToResidence(player, player, resadmin);
@@ -1377,23 +1378,23 @@ public class Residence extends JavaPlugin {
                                 ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
                                 if (res == null || leasemanager.leaseExpires(args[2])) {
                                     int cost = leasemanager.getRenewCost(res);
-                                    player.sendMessage("§e"+language.getPhrase("LeaseRenewalCost","§c" + args[2] + "§e.§c" + cost + "§e"));
+                                    player.sendMessage(ChatColor.YELLOW+language.getPhrase("LeaseRenewalCost",ChatColor.RED + args[2] + ChatColor.YELLOW+"."+ChatColor.RED + cost + ChatColor.YELLOW));
                                 } else {
-                                    player.sendMessage("§c"+language.getPhrase("LeaseNotExpire"));
+                                    player.sendMessage(ChatColor.RED+language.getPhrase("LeaseNotExpire"));
                                 }
                                 return true;
                             } else {
                                 String area = rmanager.getNameByLoc(player.getLocation());
                                 ClaimedResidence res = rmanager.getByName(area);
                                 if (area == null || res == null) {
-                                    player.sendMessage("§c"+language.getPhrase("InvalidArea"));
+                                    player.sendMessage(ChatColor.RED+language.getPhrase("InvalidArea"));
                                     return true;
                                 }
                                 if (leasemanager.leaseExpires(area)) {
                                     int cost = leasemanager.getRenewCost(res);
-                                    player.sendMessage("§e"+language.getPhrase("LeaseRenewalCost","§c" + area + "§e.§c" + cost + "§e"));
+                                    player.sendMessage(ChatColor.YELLOW+language.getPhrase("LeaseRenewalCost",ChatColor.RED + area + ChatColor.YELLOW+"."+ChatColor.RED + cost + ChatColor.YELLOW));
                                 } else {
-                                    player.sendMessage("§c"+language.getPhrase("LeaseNotExpire"));
+                                    player.sendMessage(ChatColor.RED+language.getPhrase("LeaseNotExpire"));
                                 }
                                 return true;
                             }
@@ -1401,15 +1402,15 @@ public class Residence extends JavaPlugin {
                     } else if (args.length == 4) {
                         if (args[1].equals("set")) {
                             if (!resadmin) {
-                                player.sendMessage("§c" + language.getPhrase("NoPermission"));
+                                player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
                                 return true;
                             }
                             if (args[3].equals("infinite")) {
                                 if (leasemanager.leaseExpires(args[2])) {
                                     leasemanager.removeExpireTime(args[2]);
-                                    player.sendMessage("§a" + language.getPhrase("LeaseInfinite"));
+                                    player.sendMessage(ChatColor.GREEN + language.getPhrase("LeaseInfinite"));
                                 } else {
-                                    player.sendMessage("§c" + language.getPhrase("LeaseNotExpire"));
+                                    player.sendMessage(ChatColor.RED + language.getPhrase("LeaseNotExpire"));
                                 }
                                 return true;
                             } else {
@@ -1417,7 +1418,7 @@ public class Residence extends JavaPlugin {
                                 try {
                                     days = Integer.parseInt(args[3]);
                                 } catch (Exception ex) {
-                                    player.sendMessage("§c" + language.getPhrase("InvalidDays"));
+                                    player.sendMessage(ChatColor.RED + language.getPhrase("InvalidDays"));
                                     return true;
                                 }
                                 leasemanager.setExpireTime(player, args[2], days);
@@ -1432,7 +1433,7 @@ public class Residence extends JavaPlugin {
                     ClaimedResidence res = rmanager.getByName(plistener.getLastAreaName(pname));
                     if(res==null)
                     {
-                        player.sendMessage("§c"+language.getPhrase("NotInResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
                         return true;
                     }
                     int amount = 0;
@@ -1442,7 +1443,7 @@ public class Residence extends JavaPlugin {
                     }
                     catch (Exception ex)
                     {
-                        player.sendMessage("§c"+language.getPhrase("InvalidAmount"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidAmount"));
                         return true;
                     }
                     if(args[1].equals("deposit"))
@@ -1463,10 +1464,10 @@ public class Residence extends JavaPlugin {
                     {
                         if(!cmanager.enableEconomy())
                         {
-                            player.sendMessage("§c"+language.getPhrase("MarketDisabled"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("MarketDisabled"));
                             return true;
                         }
-                        player.sendMessage("§9---"+language.getPhrase("MarketList")+"---");
+                        player.sendMessage(ChatColor.BLUE+"---"+language.getPhrase("MarketList")+"---");
                         tmanager.printForSaleResidences(player);
                         if(cmanager.enabledRentSystem())
                         {
@@ -1476,7 +1477,7 @@ public class Residence extends JavaPlugin {
                     }
                     else if (args[1].equals("autorenew")) {
                         if (!cmanager.enableEconomy()) {
-                            player.sendMessage("§c"+language.getPhrase("MarketDisabled"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("MarketDisabled"));
                             return true;
                         }
                         if (args.length != 4) {
@@ -1488,7 +1489,7 @@ public class Residence extends JavaPlugin {
                         } else if (args[3].equalsIgnoreCase("false") || args[3].equalsIgnoreCase("f")) {
                             value = false;
                         } else {
-                            player.sendMessage("§c"+language.getPhrase("InvalidBoolean"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidBoolean"));
                             return true;
                         }
                         if(rentmanager.isRented(args[2]) && rentmanager.getRentingPlayer(args[2]).equalsIgnoreCase(pname))
@@ -1501,7 +1502,7 @@ public class Residence extends JavaPlugin {
                         }
                         else
                         {
-                            player.sendMessage("§c"+language.getPhrase("RentReleaseInvalid","§e" + args[2] + "§c"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("RentReleaseInvalid",ChatColor.YELLOW + args[2] + ChatColor.RED));
                         }
                         return true;
                     }
@@ -1510,7 +1511,7 @@ public class Residence extends JavaPlugin {
                             return false;
                         }
                         if (!cmanager.enabledRentSystem()) {
-                            player.sendMessage("§c" + language.getPhrase("RentDisabled"));
+                            player.sendMessage(ChatColor.RED + language.getPhrase("RentDisabled"));
                             return true;
                         }
                         int days;
@@ -1518,13 +1519,13 @@ public class Residence extends JavaPlugin {
                         try {
                             cost = Integer.parseInt(args[3]);
                         } catch (Exception ex) {
-                            player.sendMessage("§c"+language.getPhrase("InvalidCost"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidCost"));
                             return true;
                         }
                         try {
                             days = Integer.parseInt(args[4]);
                         } catch (Exception ex) {
-                            player.sendMessage("§c"+language.getPhrase("InvalidDays"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidDays"));
                             return true;
                         }
                         boolean repeat = false;
@@ -1532,7 +1533,7 @@ public class Residence extends JavaPlugin {
                             if (args[5].equalsIgnoreCase("t") || args[5].equalsIgnoreCase("true")) {
                                 repeat = true;
                             } else if (!args[5].equalsIgnoreCase("f") && !args[5].equalsIgnoreCase("false")) {
-                                player.sendMessage("§c"+language.getPhrase("InvalidBoolean"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("InvalidBoolean"));
                                 return true;
                             }
                         }
@@ -1548,7 +1549,7 @@ public class Residence extends JavaPlugin {
                             if (args[3].equalsIgnoreCase("t") || args[3].equalsIgnoreCase("true")) {
                                 repeat = true;
                             } else if (!args[3].equalsIgnoreCase("f") && !args[3].equalsIgnoreCase("false")) {
-                                player.sendMessage("§c"+language.getPhrase("InvalidBoolean"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("InvalidBoolean"));
                                 return true;
                             }
                         }
@@ -1603,7 +1604,7 @@ public class Residence extends JavaPlugin {
                             try {
                                 amount = Integer.parseInt(args[3]);
                             } catch (Exception ex) {
-                                player.sendMessage("§c"+language.getPhrase("InvalidAmount"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("InvalidAmount"));
                                 return true;
                             }
                             tmanager.putForSale(args[2], player, amount, resadmin);
@@ -1630,7 +1631,7 @@ public class Residence extends JavaPlugin {
                             if (res != null) {
                                 res.setEnterLeaveMessage(player, null, true, resadmin);
                             } else {
-                                player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             }
                             return true;
                         } else if (args.length>2 && args[2].equals("leave")) {
@@ -1638,11 +1639,11 @@ public class Residence extends JavaPlugin {
                             if (res != null) {
                                 res.setEnterLeaveMessage(player, null, false, resadmin);
                             } else {
-                                player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                                player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             }
                             return true;
                         }
-                        player.sendMessage("§c"+language.getPhrase("InvalidMessageType"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMessageType"));
                         return true;
                     } else if (args.length>2 && args[2].equals("enter")) {
                         enter = true;
@@ -1668,10 +1669,10 @@ public class Residence extends JavaPlugin {
                             }
                             return true;
                         }
-                        player.sendMessage("§c"+language.getPhrase("InvalidMessageType"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMessageType"));
                         return true;
                     } else {
-                        player.sendMessage("§c"+language.getPhrase("InvalidMessageType"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMessageType"));
                         return true;
                     }
                     if(start == 0)
@@ -1683,7 +1684,7 @@ public class Residence extends JavaPlugin {
                     if (res != null) {
                         res.setEnterLeaveMessage(player, message, enter, resadmin);
                     } else {
-                        player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                     }
                     return true;
                 }
@@ -1695,15 +1696,15 @@ public class Residence extends JavaPlugin {
                 else if (args[0].equals("setowner")) {
                     if(!resadmin)
                     {
-                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
                         return true;
                     }
                     ClaimedResidence area = rmanager.getByName(args[1]);
                     if (area != null) {
                         area.getPermissions().setOwner(args[2], true);
-                        player.sendMessage("§a"+language.getPhrase("ResidenceOwnerChange","§e " + args[1] + " §a.§e"+args[2]+"§a"));
+                        player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW+" " + args[1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
                     } else {
-                        player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                     }
                     return true;
                 }
@@ -1711,7 +1712,7 @@ public class Residence extends JavaPlugin {
                 {
                     if(!resadmin)
                     {
-                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
                         return true;
                     }
                     if(args.length==2)
@@ -1719,36 +1720,36 @@ public class Residence extends JavaPlugin {
                         ClaimedResidence res = rmanager.getByName(args[1]);
                         if(res == null)
                         {
-                            player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                            player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             return true;
                         }
                         res.getPermissions().setOwner("Server Land", false);
-                        player.sendMessage("§a"+language.getPhrase("ResidenceOwnerChange","§e" + args[1] + "§a.§eServer Land§a"));
+                        player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW + args[1] + ChatColor.GREEN+"."+ChatColor.YELLOW+"Server Land"+ChatColor.GREEN));
                         return true;
                     }
                     else
-                        player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                 }
                 else if(args[0].equals("clearflags"))
                 {
                     if(!resadmin)
                     {
-                        player.sendMessage("§c"+language.getPhrase("NoPermission"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
                         return true;
                     }
                     ClaimedResidence area = rmanager.getByName(args[1]);
                     if (area != null) {
                         area.getPermissions().clearFlags();
-                        player.sendMessage("§a"+language.getPhrase("FlagsCleared"));
+                        player.sendMessage(ChatColor.GREEN+language.getPhrase("FlagsCleared"));
                     } else {
-                        player.sendMessage("§c"+language.getPhrase("InvalidResidence"));
+                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                     }
                     return true;
                 }
                 else if(args[0].equals("tool"))
                 {
-                    player.sendMessage("§e"+language.getPhrase("SelectionTool")+":§a" + Material.getMaterial(cmanager.getSelectionTooldID()));
-                    player.sendMessage("§e"+language.getPhrase("InfoTool")+": §a" + Material.getMaterial(cmanager.getInfoToolID()));
+                    player.sendMessage(ChatColor.YELLOW+language.getPhrase("SelectionTool")+":"+ChatColor.GREEN + Material.getMaterial(cmanager.getSelectionTooldID()));
+                    player.sendMessage(ChatColor.YELLOW+language.getPhrase("InfoTool")+": "+ChatColor.GREEN + Material.getMaterial(cmanager.getInfoToolID()));
                     return true;
                 }
             }

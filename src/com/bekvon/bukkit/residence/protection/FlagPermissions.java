@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence.protection;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import java.util.ArrayList;
@@ -404,7 +405,7 @@ public class FlagPermissions {
                     String perms = listPlayerFlags(next);
                     if(!perms.equals("none"))
                     {
-                        sbuild.append(next).append("[§3").append(perms).append("§c] ");
+                        sbuild.append(next).append("["+ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED+"] ");
                     }
                 }
             }
@@ -425,7 +426,7 @@ public class FlagPermissions {
                 String perms = listGroupFlags(next);
                 if(!perms.equals("none"))
                 {
-                    sbuild.append(next).append("[§3").append(perms).append("§c] ");
+                    sbuild.append(next).append("["+ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED+"] ");
                 }
             }
         }
@@ -482,10 +483,10 @@ public class FlagPermissions {
 
     public void printFlags(Player player)
     {
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Flags")+":§9 " + listFlags());
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Your.Flags")+":§a " + listPlayerFlags(player.getName()));
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Group.Flags")+":§c " + listGroupFlags());
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("Others.Flags")+":§c " + listOtherPlayersFlags(player.getName()));
+        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("Flags")+":"+ChatColor.BLUE+" " + listFlags());
+        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("Your.Flags")+":"+ChatColor.GREEN+" " + listPlayerFlags(player.getName()));
+        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("Group.Flags")+":"+ChatColor.RED+" " + listGroupFlags());
+        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("Others.Flags")+":"+ChatColor.RED+" " + listOtherPlayersFlags(player.getName()));
     }
 
     public void copyUserPermissions(String fromUser, String toUser)
