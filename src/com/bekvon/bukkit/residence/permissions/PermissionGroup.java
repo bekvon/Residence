@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.permissions;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
@@ -294,29 +295,29 @@ public class PermissionGroup {
 
     public void printLimits(Player player)
     {
-        player.sendMessage("§7---------------------------");
-        player.sendMessage("§ePermissions Group:§3 "+Residence.getPermissionManager().getPermissionsGroup(player));
-        player.sendMessage("§eResidence Group:§3 "+groupname);
-        player.sendMessage("§eResidence Admin:§3 " + Residence.getPermissionManager().isResidenceAdmin(player));
-        player.sendMessage("§eCan Create Residences:§3 "+cancreate);
-        player.sendMessage("§eMax Residences:§3 "+resmax);
-        player.sendMessage("§eMax East/West Size:§3 "+xmax);
-        player.sendMessage("§eMax North/South Size:§3 "+zmax);
-        player.sendMessage("§eMax Up/Down Size:§3 "+ymax);
-        player.sendMessage("§eMin/Max Protection Height:§3 "+minHeight+ " to " + maxHeight);
-        player.sendMessage("§eMax Subzone Depth:§3 "+subzonedepth);
-        player.sendMessage("§eCan Set Enter/Leave Messages:§3 "+messageperms);
-        player.sendMessage("§eNumber of Residences you own:§3 " + Residence.getResidenceManager().getOwnedZoneCount(player.getName()));
+        player.sendMessage(ChatColor.GRAY+"---------------------------");
+        player.sendMessage(ChatColor.YELLOW+"Permissions Group:"+ChatColor.DARK_AQUA+" "+Residence.getPermissionManager().getPermissionsGroup(player));
+        player.sendMessage(ChatColor.YELLOW+"Residence Group:"+ChatColor.DARK_AQUA+" "+groupname);
+        player.sendMessage(ChatColor.YELLOW+"Residence Admin:"+ChatColor.DARK_AQUA+" " + Residence.getPermissionManager().isResidenceAdmin(player));
+        player.sendMessage(ChatColor.YELLOW+"Can Create Residences:"+ChatColor.DARK_AQUA+" "+cancreate);
+        player.sendMessage(ChatColor.YELLOW+"Max Residences:"+ChatColor.DARK_AQUA+" "+resmax);
+        player.sendMessage(ChatColor.YELLOW+"Max East/West Size:"+ChatColor.DARK_AQUA+" "+xmax);
+        player.sendMessage(ChatColor.YELLOW+"Max North/South Size:"+ChatColor.DARK_AQUA+" "+zmax);
+        player.sendMessage(ChatColor.YELLOW+"Max Up/Down Size:"+ChatColor.DARK_AQUA+" "+ymax);
+        player.sendMessage(ChatColor.YELLOW+"Min/Max Protection Height:"+ChatColor.DARK_AQUA+" "+minHeight+ " to " + maxHeight);
+        player.sendMessage(ChatColor.YELLOW+"Max Subzone Depth:"+ChatColor.DARK_AQUA+" "+subzonedepth);
+        player.sendMessage(ChatColor.YELLOW+"Can Set Enter/Leave Messages:"+ChatColor.DARK_AQUA+" "+messageperms);
+        player.sendMessage(ChatColor.YELLOW+"Number of Residences you own:"+ChatColor.DARK_AQUA+" " + Residence.getResidenceManager().getOwnedZoneCount(player.getName()));
         if(Residence.getEconomyManager()!=null)
-            player.sendMessage("§eResidence Cost Per Block:§3 " + costperarea);
-        player.sendMessage("§eFlag Permissions:§3 " + flagPerms.listFlags());
+            player.sendMessage(ChatColor.YELLOW+"Residence Cost Per Block:"+ChatColor.DARK_AQUA+" " + costperarea);
+        player.sendMessage(ChatColor.YELLOW+"Flag Permissions:"+ChatColor.DARK_AQUA+" " + flagPerms.listFlags());
         if(Residence.getConfigManager().useLeases())
         {
-            player.sendMessage("§eMax Lease Days:§3 " + maxLeaseTime);
-            player.sendMessage("§eLease Time Given on Renew:§3 " + leaseGiveTime);
-            player.sendMessage("§eRenew Cost Per Block:§3 " + renewcostperarea);
+            player.sendMessage(ChatColor.YELLOW+"Max Lease Days:"+ChatColor.DARK_AQUA+" " + maxLeaseTime);
+            player.sendMessage(ChatColor.YELLOW+"Lease Time Given on Renew:"+ChatColor.DARK_AQUA+" " + leaseGiveTime);
+            player.sendMessage(ChatColor.YELLOW+"Renew Cost Per Block:"+ChatColor.DARK_AQUA+" " + renewcostperarea);
         }
-        player.sendMessage("§7---------------------------");
+        player.sendMessage(ChatColor.GRAY+"---------------------------");
     }
 
 }

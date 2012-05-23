@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.economy;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -56,22 +57,22 @@ public class ResidenceBank {
     {
         if(!Residence.getConfigManager().enableEconomy())
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("MarketDisabled"));
         }
         if(!resadmin && !res.getPermissions().playerHas(player.getName(), "bank", false))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoBankAccess"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoBankAccess"));
             return;
         }
         if(!hasEnough(amount))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("BankNoMoney"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("BankNoMoney"));
             return;
         }
         if(Residence.getEconomyManager().add(player.getName(), amount))
         {
             this.subtract(amount);
-            player.sendMessage("§a"+Residence.getLanguage().getPhrase("BankWithdraw","§e" + amount + "§a"));
+            player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("BankWithdraw",ChatColor.YELLOW + String.format("%d",amount) + ChatColor.GREEN));
         }
     }
 
@@ -79,22 +80,22 @@ public class ResidenceBank {
     {
         if(!Residence.getConfigManager().enableEconomy())
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("MarketDisabled"));
         }
         if(!resadmin && !res.getPermissions().playerHas(player.getName(), "bank", false))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoBankAccess"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoBankAccess"));
             return;
         }
         if(!Residence.getEconomyManager().canAfford(player.getName(), amount))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NotEnoughMoney"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NotEnoughMoney"));
             return;
         }
         if(Residence.getEconomyManager().subtract(player.getName(), amount))
         {
             this.add(amount);
-            player.sendMessage("§a"+Residence.getLanguage().getPhrase("BankDeposit","§e" + amount + "§a"));
+            player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("BankDeposit",ChatColor.YELLOW + String.format("%d",amount) + ChatColor.GREEN));
         }
     }
 }

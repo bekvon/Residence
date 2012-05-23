@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.text.help;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import java.util.Arrays;
@@ -42,19 +43,19 @@ public class InformationPager {
             pagecount = 1;
         if(page>pagecount)
         {
-            sender.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidPage"));
+            sender.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidPage"));
             return;
         }
-        sender.sendMessage("§e---<§a"+title+"§e>---");
-        sender.sendMessage("§e---<"+Residence.getLanguage().getPhrase("GenericPage","§a"+page+"§e.§a"+pagecount+"§e")+">---");
+        sender.sendMessage(ChatColor.YELLOW+"---<"+ChatColor.GREEN+title+ChatColor.YELLOW+">---");
+        sender.sendMessage(ChatColor.YELLOW+"---<"+Residence.getLanguage().getPhrase("GenericPage",ChatColor.GREEN+String.format("%d",page)+ChatColor.YELLOW+"."+ChatColor.GREEN+pagecount+ChatColor.YELLOW)+">---");
         for(int i = start; i < end; i ++)
         {
             if(lines.size()>i)
-                sender.sendMessage("§a"+lines.get(i));
+                sender.sendMessage(ChatColor.GREEN+lines.get(i));
         }
         if(pagecount>page)
-            sender.sendMessage("§7---<"+Residence.getLanguage().getPhrase("NextPage")+">---");
+            sender.sendMessage(ChatColor.GRAY+"---<"+Residence.getLanguage().getPhrase("NextPage")+">---");
         else
-            sender.sendMessage("§7-----------------------");
+            sender.sendMessage(ChatColor.GRAY+"-----------------------");
     }
 }

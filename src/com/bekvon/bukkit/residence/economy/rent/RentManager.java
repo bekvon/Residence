@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.economy.rent;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
@@ -37,31 +38,31 @@ public class RentManager {
     {
         if(!Residence.getConfigManager().enabledRentSystem())
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("MarketDisabled"));
             return;
         }
         if(Residence.getTransactionManager().isForSale(landName))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("SellRentFail"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("SellRentFail"));
             return;
         }
         ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(res == null)
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         if(!resadmin)
         {
             if(!res.getPermissions().hasResidencePermission(player, true))
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
                 return;
             }
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
             if(this.getRentableCount(player.getName()) >= group.getMaxRentables())
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceMaxRent"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceMaxRent"));
                 return;
             }
         }
@@ -78,11 +79,11 @@ public class RentManager {
             rentableLand.put(landName,newrent);
             String[] split = landName.split("\\.");
             if(split.length!=0)
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceForRentSuccess","§e"+split[split.length-1] + "§a.§e"+amount+"§a.§e"+days+"§a"));
+                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceForRentSuccess",ChatColor.YELLOW+split[split.length-1] + ChatColor.GREEN+"."+ChatColor.YELLOW+amount+ChatColor.GREEN+"."+ChatColor.YELLOW+days+ChatColor.GREEN));
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceAlreadyRent"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceAlreadyRent"));
         }
     }
 
@@ -90,7 +91,7 @@ public class RentManager {
     {
         if(!Residence.getConfigManager().enabledRentSystem())
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentDisabled"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentDisabled"));
             return;
         }
         ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
@@ -98,31 +99,31 @@ public class RentManager {
         {
             if(res.getPermissions().getOwner().equalsIgnoreCase(player.getName()))
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("OwnerRentFail"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("OwnerRentFail"));
                 return;
             }
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
         if(!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents())
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceMaxRent"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceMaxRent"));
             return;
         }
         if(!this.isForRent(landName))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceNotForRent"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceNotForRent"));
             return;
         }
         if(this.isRented(landName))
         {
             String[] split = landName.split("\\.");
             if(split.length!=0)
-                player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+split[split.length-1] + "§c.§e" + this.getRentingPlayer(landName)));
+                player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented",ChatColor.YELLOW+split[split.length-1] + ChatColor.RED+"."+ChatColor.YELLOW + this.getRentingPlayer(landName)));
             return;
         }
         RentableLand land = rentableLand.get(landName);
@@ -145,16 +146,16 @@ public class RentManager {
                 res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
                 String[] split = landName.split("\\.");
                 if(split.length!=0)
-                    player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceRentSuccess","§e" + split[split.length-1] + "§a.§e" + land.days + "§a"));
+                    player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceRentSuccess",ChatColor.YELLOW + split[split.length-1] + ChatColor.GREEN+"."+ChatColor.YELLOW + land.days + ChatColor.GREEN));
             }
             else
             {
-                player.sendMessage("§cError, unable to transfer money...");
+                player.sendMessage(ChatColor.RED+"Error, unable to transfer money...");
             }
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NotEnoughMoney"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NotEnoughMoney"));
         }
     }
 
@@ -163,7 +164,7 @@ public class RentManager {
         RentedLand rent = rentedLand.get(landName);
         if(rent == null)
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceNotRented"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceNotRented"));
             return;
         }
         if(resadmin || rent.player.equalsIgnoreCase(player.getName()))
@@ -180,11 +181,11 @@ public class RentManager {
             ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
             if(res!=null)
                 res.getPermissions().applyDefaultFlags();
-            player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceUnrent","§e"+landName + "§a"));
+            player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceUnrent",ChatColor.YELLOW+landName + ChatColor.GREEN));
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
         }
     }
 
@@ -204,18 +205,18 @@ public class RentManager {
         ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
         if(res == null)
         {
-            player.sendMessage("§e"+Residence.getLanguage().getPhrase("InvalidResidence"));
+            player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         if(!res.getPermissions().hasResidencePermission(player, true) && !resadmin)
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             return;
         }
         if(rentedLand.containsKey(landName) && !resadmin)
         {
             if(split.length!=0)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceAlreadyRented","§e"+split[split.length-1] + "§c.§e" + rentedLand.get(landName).player)+"§e");
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceAlreadyRented",ChatColor.YELLOW+split[split.length-1] + ChatColor.RED+"."+ChatColor.YELLOW + rentedLand.get(landName).player)+ChatColor.YELLOW);
             return;
         }
         if(rentableLand.containsKey(landName))
@@ -232,12 +233,12 @@ public class RentManager {
                     res.getPermissions().applyDefaultFlags();
             }
             if(split.length!=0)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceRemoveRentable","§e"+split[split.length-1] + "§c"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceRemoveRentable",ChatColor.YELLOW+split[split.length-1] + ChatColor.RED));
 
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceNotForRent"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceNotForRent"));
         }
     }
 
@@ -348,9 +349,9 @@ public class RentManager {
             if(!value && this.isRented(landName))
                 rentedLand.get(landName).autoRefresh = false;
             if(value && split.length!=0)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentableEnableRenew","§e"+split[split.length-1] + "§c"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentableEnableRenew",ChatColor.YELLOW+split[split.length-1] + ChatColor.RED));
             else if(split.length!=0)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentableDisableRenew","§e"+split[split.length-1] + "§c"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentableDisableRenew",ChatColor.YELLOW+split[split.length-1] + ChatColor.RED));
         }
     }
 
@@ -362,9 +363,9 @@ public class RentManager {
         {
             land.autoRefresh = value;
             if(value && split.length!=0)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentEnableRenew","§e"+split[split.length-1] + "§c"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentEnableRenew",ChatColor.YELLOW+split[split.length-1] + ChatColor.RED));
             else if(split.length!=0)
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentDisableRenew","§e"+split[split.length-1] + "§c"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentDisableRenew",ChatColor.YELLOW+split[split.length-1] + ChatColor.RED));
         }
     }
 
@@ -374,23 +375,23 @@ public class RentManager {
         RentedLand rented = rentedLand.get(landName);
         if(rentable!=null)
         {
-            player.sendMessage("§6"+Residence.getLanguage().getPhrase("Land")+":§2" + landName);
-            player.sendMessage("§e"+Residence.getLanguage().getPhrase("Cost")+": §3" + rentable.cost + " per " + rentable.days + " days");
-            player.sendMessage("§a"+Residence.getLanguage().getPhrase("RentableAutoRenew")+":§3" + rentable.repeatable);
+            player.sendMessage(ChatColor.GOLD+Residence.getLanguage().getPhrase("Land")+":"+ChatColor.DARK_GREEN + landName);
+            player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("Cost")+": "+ChatColor.DARK_AQUA + rentable.cost + " per " + rentable.days + " days");
+            player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("RentableAutoRenew")+":"+ChatColor.DARK_AQUA + rentable.repeatable);
             if(rented!=null)
             {
-                player.sendMessage("§6"+Residence.getLanguage().getPhrase("Status")+":§e "+Residence.getLanguage().getPhrase("ResidenceRentedBy","§c" + rented.player+"§e"));
-                player.sendMessage("§e"+Residence.getLanguage().getPhrase("RentExpire")+":§a" + new Date(rented.endTime));
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("RentAutoRenew")+":§3" + rented.autoRefresh);
+                player.sendMessage(ChatColor.GOLD+Residence.getLanguage().getPhrase("Status")+":"+ChatColor.YELLOW+" "+Residence.getLanguage().getPhrase("ResidenceRentedBy",ChatColor.RED + rented.player+ChatColor.YELLOW));
+                player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("RentExpire")+":"+ChatColor.GREEN + new Date(rented.endTime));
+                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("RentAutoRenew")+":"+ChatColor.DARK_AQUA + rented.autoRefresh);
             }
             else
             {
-                player.sendMessage("§6"+Residence.getLanguage().getPhrase("Status")+":§a "+Residence.getLanguage().getPhrase("Available"));
+                player.sendMessage(ChatColor.GOLD+Residence.getLanguage().getPhrase("Status")+":"+ChatColor.GREEN+" "+Residence.getLanguage().getPhrase("Available"));
             }
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceNotForRent"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceNotForRent"));
         }
     }
 
@@ -448,9 +449,9 @@ public class RentManager {
     public void printRentableResidences(Player player)
     {
         Set<Entry<String, RentableLand>> set = rentableLand.entrySet();
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("RentableLand")+":");
+        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("RentableLand")+":");
         StringBuilder sbuild = new StringBuilder();
-        sbuild.append("§a");
+        sbuild.append(ChatColor.GREEN);
         boolean firstadd = true;
         for(Entry<String, RentableLand> land : set)
         {

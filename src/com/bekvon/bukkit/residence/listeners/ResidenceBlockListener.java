@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.listeners;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
@@ -56,7 +57,7 @@ public class ResidenceBlockListener implements Listener {
             String resname = Residence.getResidenceManager().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
                 return;
             }
@@ -76,7 +77,7 @@ public class ResidenceBlockListener implements Listener {
             boolean hasdestroy = perms.playerHas(pname, "destroy", hasbuild);
             if ((!hasbuild && !hasdestroy) || !hasdestroy) {
                 event.setCancelled(true);
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             }
         } else {
             FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
@@ -85,7 +86,7 @@ public class ResidenceBlockListener implements Listener {
             if((!hasbuild && !hasdestroy) || !hasdestroy)
             {
                 event.setCancelled(true);
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             }
         }
     }
@@ -109,7 +110,7 @@ public class ResidenceBlockListener implements Listener {
             String resname = Residence.getResidenceManager().getNameByLoc(event.getBlock().getLocation());
             if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentedModifyDeny"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
                 event.setCancelled(true);
                 return;
             }
@@ -122,7 +123,7 @@ public class ResidenceBlockListener implements Listener {
         String pname = player.getName();
         if (res != null) {
             if (!res.getItemBlacklist().isAllowed(mat)) {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ItemBlacklisted"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ItemBlacklisted"));
                 event.setCancelled(true);
                 return;
             }
@@ -131,7 +132,7 @@ public class ResidenceBlockListener implements Listener {
             boolean hasplace = perms.playerHas(pname, "place", hasbuild);
             if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             }
         } else {
             FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
@@ -139,7 +140,7 @@ public class ResidenceBlockListener implements Listener {
             boolean hasplace = perms.has("place", hasbuild);
             if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             }
         }
         //super.onBlockPlace(event);
@@ -286,7 +287,7 @@ public class ResidenceBlockListener implements Listener {
                 Player player = event.getPlayer();
                 if (!res.getPermissions().playerHas(player.getName(), "ignite", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
                     event.setCancelled(true);
-                    player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
                 }
             }
             else

@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import java.util.HashMap;

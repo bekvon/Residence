@@ -1,4 +1,5 @@
 package com.bekvon.bukkit.residence.economy;
+import org.bukkit.ChatColor;
 
 public interface EconomyInterface
 {

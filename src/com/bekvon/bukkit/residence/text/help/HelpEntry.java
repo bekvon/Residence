@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.text.help;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import java.util.ArrayList;
@@ -68,11 +69,11 @@ public class HelpEntry {
         List<String> helplines = this.getHelpData();
         int pagecount = (int) Math.ceil((double)helplines.size() / (double)linesPerPage);
         if (page > pagecount || page < 1) {
-            sender.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidHelp"));
+            sender.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidHelp"));
             return;
         }
-        sender.sendMessage("§c"+Residence.getLanguage().getPhrase("HelpPageHeader","§e" + name + "§c.§e" + page + "§c.§e" + pagecount + "§c"));
-        sender.sendMessage("§3"+Residence.getLanguage().getPhrase("Description")+": §a" + desc);
+        sender.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("HelpPageHeader",ChatColor.YELLOW + name + ChatColor.RED+"."+ChatColor.YELLOW + page + ChatColor.RED+"."+ChatColor.YELLOW + pagecount + ChatColor.RED));
+        sender.sendMessage(ChatColor.DARK_AQUA+Residence.getLanguage().getPhrase("Description")+": "+ChatColor.GREEN + desc);
         int start = linesPerPage * (page - 1);
         int end = start + linesPerPage;
         boolean alternatecolor = false;
@@ -80,20 +81,20 @@ public class HelpEntry {
             if (helplines.size() > i) {
                 if(alternatecolor)
                 {
-                    sender.sendMessage("§e"+helplines.get(i));
+                    sender.sendMessage(ChatColor.YELLOW+helplines.get(i));
                     alternatecolor = false;
                 }
                 else
                 {
-                    sender.sendMessage("§6"+helplines.get(i));
+                    sender.sendMessage(ChatColor.GOLD+helplines.get(i));
                     alternatecolor = true;
                 }
             }
         }
         if(page<pagecount)
-            sender.sendMessage("§7---<"+Residence.getLanguage().getPhrase("NextPage")+">---");
+            sender.sendMessage(ChatColor.GRAY+"---<"+Residence.getLanguage().getPhrase("NextPage")+">---");
         else
-            sender.sendMessage("§7-----------------------");
+            sender.sendMessage(ChatColor.GRAY+"-----------------------");
     }
 
     public void printHelp(CommandSender sender, int page, String path)
@@ -105,7 +106,7 @@ public class HelpEntry {
         }
         else
         {
-            sender.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidHelp"));
+            sender.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidHelp"));
         }
     }
 
@@ -114,10 +115,10 @@ public class HelpEntry {
         List<String> helplines = new ArrayList<String>();
         helplines.addAll(Arrays.asList(lines));
         if(subentrys.size()>0)
-            helplines.add("§d---"+Residence.getLanguage().getPhrase("SubCommands")+"---");
+            helplines.add(ChatColor.LIGHT_PURPLE+"---"+Residence.getLanguage().getPhrase("SubCommands")+"---");
         for(HelpEntry entry : subentrys)
         {
-            helplines.add("§a"+entry.getName() + "§e - " + entry.getDescription());
+            helplines.add(ChatColor.GREEN+entry.getName() + ChatColor.YELLOW+" - " + entry.getDescription());
         }
         return helplines;
     }
