@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.permissions;
+import org.bukkit.ChatColor;
 
 import org.bukkit.entity.Player;
 

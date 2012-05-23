@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.spout;
+import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

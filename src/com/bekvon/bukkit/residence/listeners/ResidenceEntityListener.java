@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.listeners;
+import org.bukkit.ChatColor;
 
 import java.util.Iterator;
 
@@ -122,7 +123,7 @@ public class ResidenceEntityListener implements Listener {
             boolean hasplace = perms.playerHas(pname, "place", hasbuild);
             if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             }
         } else {
             FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
@@ -130,7 +131,7 @@ public class ResidenceEntityListener implements Listener {
             boolean hasplace = perms.has("destroy", hasbuild);
             if ((!hasbuild && !hasplace) || !hasplace) {
                 event.setCancelled(true);
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             }
         }
     }
@@ -151,7 +152,7 @@ public class ResidenceEntityListener implements Listener {
 					boolean hasplace = perms.playerHas(pname, "place", hasbuild);
 					if ((!hasbuild && !hasplace) || !hasplace) {
 						event.setCancelled(true);
-						player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+						player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
 					}
 				} else {
 					FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
@@ -159,7 +160,7 @@ public class ResidenceEntityListener implements Listener {
 					boolean hasplace = perms.has("place", hasbuild);
 					if ((!hasbuild && !hasplace) || !hasplace) {
 						event.setCancelled(true);
-						player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+						player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
 					}
 				}
 			}
@@ -286,7 +287,7 @@ public class ResidenceEntityListener implements Listener {
                     attacker = (Player)((Arrow)damager).getShooter();
                 if(!srcpvp)
                 {
-                    attacker.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
+                    attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPVPZone"));
                     event.setCancelled(true);
                     return;
                 }
@@ -294,13 +295,13 @@ public class ResidenceEntityListener implements Listener {
                 if (area == null) {
                     /* World PvP */
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-                        attacker.sendMessage("§c"+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
+                        attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
                         event.setCancelled(true);
                     }
                 } else {
                     /* Normal PvP */
                     if (!area.getPermissions().has("pvp", true)) {
-                        attacker.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPVPZone"));
+                        attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPVPZone"));
                         event.setCancelled(true);
                     }
                 }
