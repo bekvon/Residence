@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.economy;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
@@ -34,16 +35,16 @@ public class TransactionManager {
         EconomyInterface econ = Residence.getEconomyManager();
         if(econ==null)
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("MarketDisabled"));
             return false;
         }
         if(!econ.canAfford(player.getName(), amount))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NotEnoughMoney"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NotEnoughMoney"));
             return false;
         }
         econ.subtract(player.getName(), amount);
-        player.sendMessage("§a"+Residence.getLanguage().getPhrase("MoneyCharged","§e"+amount + "§a.§e" +econ.getName() +"§a"));
+        player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("MoneyCharged",ChatColor.YELLOW+String.format("%d",amount) + ChatColor.GREEN+"."+ChatColor.YELLOW +econ.getName() +ChatColor.GREEN));
         return true;
     }
 
@@ -60,7 +61,7 @@ public class TransactionManager {
         {
             if(Residence.getRentManager().isForRent(areaname))
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("RentSellFail"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentSellFail"));
                 return;
             }
         }
@@ -68,18 +69,18 @@ public class TransactionManager {
         {
             if(!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager()==null)
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("MarketDisabled"));
                 return;
             }
             boolean cansell = Residence.getPermissionManager().getGroup(player).canSellLand() || Residence.getPermissionManager().hasAuthority(player, "residence.sell");
             if(!cansell && !resadmin)
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
                 return;
             }
             if(amount<=0)
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidAmount"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidAmount"));
                 return;
             }
         }
@@ -87,21 +88,21 @@ public class TransactionManager {
         ClaimedResidence area = manager.getByName(areaname);
         if(area==null)
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidResidence"));
             return;
         }
         if(!area.getPermissions().getOwner().equals(pname) && !resadmin)
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             return;
         }
         if(sellAmount.containsKey(areaname))
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("AlreadySellFail"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("AlreadySellFail"));
             return;
         }
         sellAmount.put(areaname, amount);
-        player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceForSale","§e" + areaname + "§a.§e" + amount + "§a"));
+        player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceForSale",ChatColor.YELLOW + areaname + ChatColor.GREEN+"."+ChatColor.YELLOW + amount + ChatColor.GREEN));
     }
 
     public void buyPlot(String areaname, Player player, boolean resadmin)
@@ -112,13 +113,13 @@ public class TransactionManager {
             
             if(!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager()==null)
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("MarketDisabled"));
                 return;
             }
             boolean canbuy = group.canBuyLand() || Residence.getPermissionManager().hasAuthority(player, "residence.buy");
             if(!canbuy && !resadmin)
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
                 return;
             }
         }
@@ -127,17 +128,17 @@ public class TransactionManager {
             ClaimedResidence res = manager.getByName(areaname);
             if(res == null)
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidArea"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidArea"));
                 sellAmount.remove(areaname);
                 return;
             }
             if(res.getPermissions().getOwner().equals(player.getName()))
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("OwnerBuyFail"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("OwnerBuyFail"));
                 return;
             }
             if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin) {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceTooMany"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceTooMany"));
                 return;
             }
             Server serv = Residence.getServ();
@@ -151,7 +152,7 @@ public class TransactionManager {
                     {
                         if(!group.inLimits(thisarea))
                         {
-                            player.sendMessage("§c" + Residence.getLanguage().getPhrase("ResidenceBuyTooBig"));
+                            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceBuyTooBig"));
                             return;
                         }
                     }
@@ -160,7 +161,7 @@ public class TransactionManager {
             EconomyInterface econ = Residence.getEconomyManager();
             if(econ==null)
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("MarketDisabled"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("MarketDisabled"));
                 return;
             }
             String buyerName = player.getName();
@@ -172,29 +173,29 @@ public class TransactionManager {
             {
                 if (!econ.transfer(buyerName, sellerName, amount))
                 {
-                    player.sendMessage("§cError, could not transfer " + amount + " from " + buyerName + " to " + sellerName);
+                    player.sendMessage(ChatColor.RED+"Error, could not transfer " + amount + " from " + buyerName + " to " + sellerName);
                     return;
                 }
                 res.getPermissions().setOwner(player.getName(),true);
                 res.getPermissions().applyDefaultFlags();
                 this.removeFromSale(areaname);
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("MoneyCharged","§e"+amount + "§a.§e" +econ.getName() +"§a"));
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceBought","§a" + areaname + "§e"));
+                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("MoneyCharged",ChatColor.YELLOW+String.format("%d",amount) + ChatColor.GREEN+"."+ChatColor.YELLOW +econ.getName() +ChatColor.GREEN));
+                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceBought",ChatColor.GREEN + areaname + ChatColor.YELLOW));
                 Player seller = serv.getPlayer(sellerName);
                 if(seller!=null && seller.isOnline())
                 {
-                    seller.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceBuy","§e"+ player.getName() + "§a.§e" + areaname+"§a"));
-                    seller.sendMessage("§a"+Residence.getLanguage().getPhrase("MoneyCredit","§e"+amount + "§a.§e" +econ.getName() +"§a"));
+                    seller.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceBuy",ChatColor.YELLOW+ player.getName() + ChatColor.GREEN+"."+ChatColor.YELLOW + areaname+ChatColor.GREEN));
+                    seller.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("MoneyCredit",ChatColor.YELLOW+String.format("%d",amount) + ChatColor.GREEN+"."+ChatColor.YELLOW +econ.getName() +ChatColor.GREEN));
                 }
             }
             else
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NotEnoughMoney"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NotEnoughMoney"));
             }
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidResidence"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidResidence"));
         }
     }
 
@@ -203,19 +204,19 @@ public class TransactionManager {
         if (area != null) {
             if(!isForSale(areaname))
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("ResidenceNotForSale"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceNotForSale"));
                 return;
             }
             if (area.getPermissions().getOwner().equals(player.getName()) || resadmin) {
                 removeFromSale(areaname);
-                player.sendMessage("§a"+Residence.getLanguage().getPhrase("ResidenceStopSelling"));
+                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceStopSelling"));
             }
             else
             {
-                player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             }
         } else {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("InvalidArea"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidArea"));
         }
     }
 
@@ -234,13 +235,13 @@ public class TransactionManager {
         if(sellAmount.containsKey(areaname))
         {
             player.sendMessage("------------------------");
-            player.sendMessage("§eName:§2 " + areaname);
-            player.sendMessage("§e"+Residence.getLanguage().getPhrase("SellAmount")+":§c " + sellAmount.get(areaname));
+            player.sendMessage(ChatColor.YELLOW+"Name:"+ChatColor.DARK_GREEN+" " + areaname);
+            player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("SellAmount")+":"+ChatColor.RED+" " + sellAmount.get(areaname));
             if(Residence.getConfigManager().useLeases())
             {
                 Date etime = Residence.getLeaseManager().getExpireTime(areaname);
                 if(etime!=null)
-                    player.sendMessage("§e"+Residence.getLanguage().getPhrase("LeaseExpire")+":§a " + etime.toString());
+                    player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("LeaseExpire")+":"+ChatColor.GREEN+" " + etime.toString());
             }
             player.sendMessage("------------------------");
         }
@@ -248,9 +249,9 @@ public class TransactionManager {
 
     public void printForSaleResidences(Player player) {
         Set<Entry<String, Integer>> set = sellAmount.entrySet();
-        player.sendMessage("§e"+Residence.getLanguage().getPhrase("LandForSale")+":");
+        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("LandForSale")+":");
         StringBuilder sbuild = new StringBuilder();
-        sbuild.append("§a");
+        sbuild.append(ChatColor.GREEN);
         boolean firstadd = true;
         for (Entry<String, Integer> land : set) {
             if (!firstadd) {

@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.itemlist;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -35,13 +36,13 @@ public class ResidenceItemList extends ItemList {
         if(resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess()))
         {
             if(super.toggle(mat))
-                player.sendMessage("§e" + Residence.getLanguage().getPhrase("ListMaterialAdd","§a" + mat + "§e.§a" + type.toString().toLowerCase() + "§e"));
+                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialAdd",ChatColor.GREEN + String.format("%d",mat) + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
             else
-                player.sendMessage("§e" + Residence.getLanguage().getPhrase("ListMaterialRemove","§a" + mat + "§e.§a" + type.toString().toLowerCase() + "§e"));
+                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialRemove",ChatColor.GREEN + String.format("%d",mat) + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
         }
         else
         {
-            player.sendMessage("§c"+Residence.getLanguage().getPhrase("NoPermission"));
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
         }
     }
 
