@@ -45,6 +45,7 @@
       <copy file="src/plugin.yml" tofile="build/plugin.yml"/>
       <copy file="src/config.yml" tofile="build/config.yml"/>
       <copy file="src/languagefiles/English.yml" tofile="build/languagefiles/English.yml"/>
+      <copy file="src/languagefiles/French.yml" tofile="build/languagefiles/French.yml"/>
   </target>
   
   <!-- jar -->
