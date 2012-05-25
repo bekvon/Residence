@@ -7,7 +7,7 @@ IRC: irc://irc.esper.net/Residence
 BukkitDev: http://dev.bukkit.org/server-mods/residence/
 
 Downloads:
-Latest Development Snapshot: https://github.com/bekvon/Residence/raw/master/dist/Residence.jar
+Latest Development Snapshot: https://github.com/bekvon/Residence/raw/dist/dist/Residence.jar
 Latest Config.yml: https://github.com/bekvon/Residence/raw/master/src/config.yml
 
 To build the source yourself, simply download the source:
