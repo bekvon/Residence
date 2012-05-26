@@ -294,11 +294,12 @@ public class ResidenceManager {
                 }
             } else {
                 residences.remove(name);
+                 if(player!=null)
+                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceRemove",ChatColor.YELLOW + name + ChatColor.GREEN));
             }
             //Residence.getLeaseManager().removeExpireTime(name); - causing concurrent modification exception in lease manager... worked around for now
             Residence.getRentManager().removeRentable(name);
-            if(player!=null)
-                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceRemove",ChatColor.YELLOW + name + ChatColor.GREEN));
+           
         } else {
             if(player!=null)
                 player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidResidence"));
