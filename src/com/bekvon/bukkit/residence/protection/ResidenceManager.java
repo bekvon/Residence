@@ -287,7 +287,11 @@ public class ResidenceManager {
             ClaimedResidence parent = res.getParent();
             if (parent != null) {
                 String[] split = name.split("\\.");
-                parent.removeSubzone(split[split.length - 1]);
+                if(player!=null){
+                    parent.removeSubzone(player, split[split.length - 1]), true);
+                } else{
+                    parent.removeSubzone(split[split.length - 1]);
+                }
             } else {
                 residences.remove(name);
             }
