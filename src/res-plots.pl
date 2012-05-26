@@ -96,7 +96,7 @@ for (my $currentX = 0; $currentX < $plotsX; $currentX++ ) {
 		print OUT "          build: true\n";
 		print OUT "          move: true\n";
 		print OUT "      GroupFlags: {}\n";
-		print OUT "      AreaFlag:\n";
+		print OUT "      AreaFlags:\n";
 		print OUT "        pvp: false\n";
 		print OUT "        firespread: false\n";
 		print OUT "        container: false\n";
