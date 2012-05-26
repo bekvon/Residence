@@ -172,6 +172,7 @@ Language:
     InvalidNameCharacters: Name contained unallowed characters...
     #Version 15 New Fields
     DeleteConfirm: 'Are you sure you want to delete residence %1, use "/res confirm" to confirm.'
+    DeleteSubzoneConfirm: 'Are you sure you want to delete subzone %1, use "/res confirm" to confirm.'
     #Version 18 New Fields
     SelectTooHigh: Warning, selection went above top of map, limiting.
     SelectTooLow: Warning, selection went below bottom of map, limiting.
