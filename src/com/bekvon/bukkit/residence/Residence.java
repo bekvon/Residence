@@ -839,7 +839,7 @@ public class Residence extends JavaPlugin {
                             if (res.getParent() != null ){
                             	String words = area.split("//.")[(area.split("//.").length-1)];         	
                                 if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
-                                    player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", (ChatColor.YELLOW + words + ChatColor.RED)));
+                                    player.sendMessage(ChatColor.RED + language.getPhrase("DeleteSubzoneConfirm", (ChatColor.YELLOW + words + ChatColor.RED)));
                                     deleteConfirm.put(player.getName(), area);
                                 } else {
                                     rmanager.removeResidence(player, area, resadmin);
