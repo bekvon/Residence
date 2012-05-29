@@ -285,16 +285,22 @@ public class ResidenceManager {
             if(resevent.isCancelled())
                 return;
             ClaimedResidence parent = res.getParent();
-            if (parent != null) {
-                String[] split = name.split("\\.");
-                parent.removeSubzone(split[split.length - 1]);
-            } else {
+            if (parent == null) {
                 residences.remove(name);
+                if(player!=null){
+                    player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceRemove",ChatColor.YELLOW + name + ChatColor.GREEN));
+                }
+            } else {
+                String[] split = name.split("\\.");
+                if(player!=null){
+                    parent.removeSubzone(player, split[split.length - 1], true);
+                } else{
+                    parent.removeSubzone(split[split.length - 1]);
+                }               
             }
             //Residence.getLeaseManager().removeExpireTime(name); - causing concurrent modification exception in lease manager... worked around for now
             Residence.getRentManager().removeRentable(name);
-            if(player!=null)
-                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceRemove",ChatColor.YELLOW + name + ChatColor.GREEN));
+           
         } else {
             if(player!=null)
                 player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidResidence"));
