@@ -425,7 +425,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChat(PlayerChatEvent event) {
-        if(event.isCancelled()){return;}        
+        if(event.isCancelled()){return;}       
         String pname = event.getPlayer().getName();
         if(chatenabled && playerToggleChat.contains(pname))
         {
