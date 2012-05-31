@@ -54,6 +54,10 @@ Global:
     ResidenceNameRegex: '[^a-zA-Z0-9\\-\\_]'
     # Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.
     ShowIntervalMessages: false
+    # Experimental - The following settings are lists of block IDs to be used as part of the checks for the "container" and "use" flags when using mods.
+    CustomContainers: []
+    CustomBothClick: []
+    CustomRightClick: []
     # These are world flags that are applied when the player is NOT within a residence.
     Flags:
         Global: #these are default for all worlds unless specified below, they can be overridden per group

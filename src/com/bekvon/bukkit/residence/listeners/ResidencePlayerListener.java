@@ -25,6 +25,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
 import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
@@ -87,22 +89,24 @@ public class ResidencePlayerListener implements Listener {
         Residence.getChatManager().removeFromChannel(pname);
     }
 
-	private boolean isContainer(Material mat) {
-		return mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER;
+	private boolean isContainer(Material mat, Block block) {
+		return mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
 	}
 
-	private boolean isCanUseEntity_BothClick(Material mat) {
+	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
 		return mat == Material.LEVER || mat == Material.STONE_BUTTON || 
 			   mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || 
-			   mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE;
+			   mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE ||
+			   Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 	
-	private boolean isCanUseEntity_RClickOnly(Material mat) {
-		return mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE;
+	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
+		return mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
+			   Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
-	private boolean isCanUseEntity(Material mat) {
-		return isCanUseEntity_BothClick(mat) || isCanUseEntity_RClickOnly(mat);
+	private boolean isCanUseEntity(Material mat, Block block) {
+		return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
 	}
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -115,8 +119,8 @@ public class ResidencePlayerListener implements Listener {
         Block block = event.getClickedBlock();
         Material mat = block.getType();
         ILog.sendToPlayer(player, mat.toString());
-        if(!(((isContainer(mat) || isCanUseEntity_RClickOnly(mat)) && event.getAction() == Action.RIGHT_CLICK_BLOCK) || 
-        		isCanUseEntity_BothClick(mat)))
+        if(!(((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK) || 
+        		isCanUseEntity_BothClick(mat, block)))
         {            
         	int typeId = player.getItemInHand().getTypeId();
         	if(typeId != Residence.getConfigManager().getSelectionTooldID() &&
@@ -170,7 +174,7 @@ public class ResidencePlayerListener implements Listener {
             if(!resadmin)
             {
                 ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-                if(isContainer(mat))
+                if(isContainer(mat, block))
                 {
                     boolean hasuse;
                     boolean hascontainer;
@@ -187,7 +191,7 @@ public class ResidencePlayerListener implements Listener {
                         player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","container"));
                     }
                 }
-                else if(isCanUseEntity(mat))
+                else if(isCanUseEntity(mat, block))
                 {
                     if(res!=null)
                     {
