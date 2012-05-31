@@ -854,14 +854,14 @@ public class Residence extends JavaPlugin {
                                 }
                                 return true;
                             }
-                        }                   
+                        }
                         return false;
                     }
                     if (args.length != 2) {
                         return false;
                     }
                     if (!deleteConfirm.containsKey(player.getName()) || !args[1].equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
-                    	String words = args[1].split("//.")[(args[1].split("//.").length-1)]; 
+                       	String words = args[1].split("//.")[(args[1].split("//.").length-1)]; 
                     	if(words==null){
                             player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", (ChatColor.YELLOW + args[1] + ChatColor.RED)));
                     	}else{

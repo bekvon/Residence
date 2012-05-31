@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.ChatColor;
@@ -50,6 +51,9 @@ public class ConfigManager {
     protected boolean spoutEnable;
     protected boolean enableLeaseMoneyAccount;
     protected boolean enableDebug;
+    protected List<Integer> customContainers;
+    protected List<Integer> customBothClick;
+    protected List<Integer> customRightClick;
 
     public ConfigManager(FileConfiguration config)
     {
@@ -88,6 +92,9 @@ public class ConfigManager {
         spoutEnable = config.getBoolean("Global.EnableSpout", false);
         enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);
         enableDebug = config.getBoolean("Global.EnableDebug", false);
+        customContainers = config.getIntegerList("Global.CustomContainers");
+        customBothClick = config.getIntegerList("Global.CustomBothClick");
+        customRightClick = config.getIntegerList("Global.CustomRightClick");
         ConfigurationSection node = config.getConfigurationSection("Global.GroupDefault");
         if(node!=null)
         {
@@ -248,5 +255,20 @@ public class ConfigManager {
     public boolean debugEnabled()
     {
         return enableDebug;
+    }
+    
+    public List<Integer> getCustomContainers()
+    {
+    	return customContainers;
+    }
+    
+    public List<Integer> getCustomBothClick()
+    {
+    	return customBothClick;
+    }
+    
+    public List<Integer> getCustomRightClick()
+    {
+    	return customRightClick;
     }
 }
