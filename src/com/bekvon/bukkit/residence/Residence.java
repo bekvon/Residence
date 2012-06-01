@@ -745,16 +745,31 @@ public class Residence extends JavaPlugin {
                         }
                     }
                     if(args.length>1 && args[1].equals("residence")) {
-                        ClaimedResidence res = rmanager.getByName(args[2]);
+                    	String resName;
+                    	String areaName;
+                    	ClaimedResidence res = null;
+                    	if(args.length > 2) {
+                    		res = rmanager.getByName(args[2]);
+                    	} else {
+                    		res = rmanager.getByLoc(player.getLocation());
+                    	}
                         if (res == null) {
                             player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
                             return true;
                         }
-                        CuboidArea area = res.getArea(args[3]);
+                		resName = res.getName();
+                        CuboidArea area = null;
+                        if(args.length > 3) {
+                        	area = res.getArea(args[3]);
+                        	areaName = args[3];
+                        } else {
+                        	areaName = res.getAreaIDbyLoc(player.getLocation());
+                        	area = res.getArea(areaName);
+                        }
                         if (area != null) {
-                            smanager.placeLoc1(pname, area.getHighLoc());
-                            smanager.placeLoc2(pname, area.getLowLoc());
-                            player.sendMessage(ChatColor.GREEN + language.getPhrase("SelectionArea", ChatColor.GOLD + args[3] + ChatColor.GREEN+"."+ChatColor.GOLD + args[2] + ChatColor.GREEN));
+                            smanager.placeLoc1(player, area.getHighLoc());
+                            smanager.placeLoc2(player, area.getLowLoc());
+                            player.sendMessage(ChatColor.GREEN + language.getPhrase("SelectionArea", ChatColor.GOLD + areaName + ChatColor.GREEN + "." + ChatColor.GOLD + resName + ChatColor.GREEN));
                         } else {
                             player.sendMessage(ChatColor.RED + language.getPhrase("AreaNonExist"));
                         }

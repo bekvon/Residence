@@ -9,7 +9,9 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.sk89q.worldedit.bukkit.WorldEditAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
 import java.util.Collections;
@@ -21,6 +23,7 @@ import java.util.logging.Logger;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -56,16 +59,22 @@ public class SelectionManager {
         }
     }
 
-    public void placeLoc1(String player, Location loc)
+    public void placeLoc1(Player player, Location loc)
     {
         if(loc!=null)
-            playerLoc1.put(player, loc);
+        {
+            playerLoc1.put(player.getName(), loc);
+            afterSelectionUpdate(player);
+        }
     }
 
-    public void placeLoc2(String player, Location loc)
+    public void placeLoc2(Player player, Location loc)
     {
         if(loc!=null)
-            playerLoc2.put(player, loc);
+        {
+            playerLoc2.put(player.getName(), loc);
+            afterSelectionUpdate(player);
+        }
     }
 
     public Location getPlayerLoc1(String player)
@@ -144,6 +153,7 @@ public class SelectionManager {
                 playerLoc2.get(player.getName()).setY(newy);
             }
             player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSky"));
+            afterSelectionUpdate(player);
         }
         else
         {
@@ -183,6 +193,7 @@ public class SelectionManager {
                 playerLoc2.get(player.getName()).setY(newy);
             }
             player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionBedrock"));
+            afterSelectionUpdate(player);
         }
         else
         {
@@ -208,27 +219,28 @@ public class SelectionManager {
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
         player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
+        afterSelectionUpdate(player);
     }
 
-	public void worldEdit(Player player) {
-		if (worldEditEnabled){
-		WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
-		Selection sel = wep.getSelection(player);
-		this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
-		this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
-		player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
-		}
-		else {
-			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("WorldEditNotFound"));
-		}
-	}
+    public void worldEdit(Player player) {
+    	if (worldEditEnabled){
+    		WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+    		Selection sel = wep.getSelection(player);
+    		this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
+    		this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
+    		player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
+    	}
+    	else {
+    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("WorldEditNotFound"));
+    	}
+    }
 
     public void selectBySize(Player player, int xsize, int ysize, int zsize) {
         Location myloc = player.getLocation();
         Location loc1 = new Location(myloc.getWorld(), myloc.getBlockX() + xsize, myloc.getBlockY() + ysize, myloc.getBlockZ() + zsize);
         Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
-        placeLoc1(player.getName(), loc1);
-        placeLoc2(player.getName(), loc2);
+        placeLoc1(player, loc1);
+        placeLoc2(player, loc2);
         player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
         showSelectionInfo(player);
     }
@@ -348,6 +360,7 @@ public class SelectionManager {
         }
         playerLoc1.put(player.getName(), area.getHighLoc());
         playerLoc2.put(player.getName(), area.getLowLoc());
+        afterSelectionUpdate(player);
     }
 
     private Direction getDirection(Player player)
@@ -367,6 +380,17 @@ public class SelectionManager {
         if((yaw<45 || yaw>315) || (yaw>-45 && yaw<-315))
             return Direction.PLUSZ;
         return null;
+    }
+    
+    private void afterSelectionUpdate(Player player)
+    {
+    	if (worldEditEnabled && hasPlacedBoth(player.getName()))
+    	{
+    		WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+    		World world = playerLoc1.get(player.getName()).getWorld();
+    		Selection selection = new CuboidSelection(world, playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
+    		wep.setSelection(player, selection);
+    	}
     }
 
 }
