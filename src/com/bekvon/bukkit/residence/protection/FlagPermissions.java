@@ -3,17 +3,10 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence.protection;
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.Residence;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.*;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -32,24 +25,31 @@ public class FlagPermissions {
         flag = flag.toLowerCase();
         if(!validFlags.contains(flag))
             validFlags.add(flag);
+        if(ResidencePermissions.validFlagGroups.containsKey(flag))
+            ResidencePermissions.validFlagGroups.remove(flag);
     }
     public static void addPlayerOrGroupOnlyFlag(String flag)
     {
         flag = flag.toLowerCase();
         if(!validPlayerFlags.contains(flag))
             validPlayerFlags.add(flag);
+        if(ResidencePermissions.validFlagGroups.containsKey(flag))
+            ResidencePermissions.validFlagGroups.remove(flag);
     }
     public static void addResidenceOnlyFlag(String flag)
     {
         flag = flag.toLowerCase();
         if(!validAreaFlags.contains(flag))
             validAreaFlags.add(flag);
+        if(ResidencePermissions.validFlagGroups.containsKey(flag))
+            ResidencePermissions.validFlagGroups.remove(flag);
     }
     public static void initValidFlags()
     {
         validAreaFlags.clear();
         validPlayerFlags.clear();
         validFlags.clear();
+        ResidencePermissions.validFlagGroups.clear();
         addFlag("use");
         addFlag("move");
         addFlag("build");
@@ -77,6 +77,13 @@ public class FlagPermissions {
         addResidenceOnlyFlag("spread");
         addResidenceOnlyFlag("hidden");
         addPlayerOrGroupOnlyFlag("admin");
+        ResidencePermissions.addFlagToFlagGroup("trusted", "use");
+        ResidencePermissions.addFlagToFlagGroup("trusted", "move");
+        ResidencePermissions.addFlagToFlagGroup("trusted", "tp");
+        ResidencePermissions.addFlagToFlagGroup("trusted", "build");
+        ResidencePermissions.addFlagToFlagGroup("trusted", "container");
+        ResidencePermissions.addFlagToFlagGroup("fire", "ignite");
+        ResidencePermissions.addFlagToFlagGroup("fire", "firespread");
     }
 
     protected Map<String, Map<String, Boolean>> playerFlags;
