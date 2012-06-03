@@ -29,16 +29,19 @@ public class FlagPermissions {
 
     public static void addFlag(String flag)
     {
+        flag = flag.toLowerCase();
         if(!validFlags.contains(flag))
             validFlags.add(flag);
     }
     public static void addPlayerOrGroupOnlyFlag(String flag)
     {
+        flag = flag.toLowerCase();
         if(!validPlayerFlags.contains(flag))
             validPlayerFlags.add(flag);
     }
     public static void addResidenceOnlyFlag(String flag)
     {
+        flag = flag.toLowerCase();
         if(!validAreaFlags.contains(flag))
             validAreaFlags.add(flag);
     }
@@ -171,7 +174,7 @@ public class FlagPermissions {
         }
         return true;
     }
-
+    
     public static enum FlagState {
 
         TRUE, FALSE, NEITHER, INVALID
