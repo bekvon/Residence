@@ -3,7 +3,7 @@ main: com.bekvon.bukkit.residence.Residence
 version: 2.6.1
 description: Cuboid Residence Plugin
 authors: [bekvon,inorixu,lemon42,smbarbour]
-softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit]
+softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,My Worlds]
 commands:
   res:
     description: Manage Residences
