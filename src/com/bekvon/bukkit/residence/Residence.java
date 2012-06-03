@@ -146,8 +146,8 @@ public class Residence extends JavaPlugin {
 
     public void reloadPlugin()
     {
-        this.setEnabled(false);
-        this.setEnabled(true);
+        server.getPluginManager().enablePlugin(this);
+        server.getPluginManager().disablePlugin(this);
     }
 
     @Override
