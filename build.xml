@@ -1,7 +1,7 @@
 <project name="Residence" default="main" basedir=".">
   <!-- env variables -->
   <property name="target" location="target/"/>
-  <property name="Ver" value="2.6.0"/>
+  <property name="Ver" value="2.6.1"/>
   <path id="classpath"><fileset dir="lib" includes="**/*.jar"/></path>
   <target name="main" depends="prep, class, compile, jar" description="Main target">
       <echo>Building the .jar file.</echo>
@@ -48,6 +48,8 @@
       <copy file="src/config.yml" tofile="build/config.yml"/>
       <copy file="src/languagefiles/English.yml" tofile="build/languagefiles/English.yml"/>
       <copy file="src/languagefiles/French.yml" tofile="build/languagefiles/French.yml"/>
+      <copy file="src/languagefiles/Spanish.yml" tofile="build/languagefiles/Spanish.yml"/>
+      <copy todir="build/utils"><fileset dir="utils"/></copy>      
   </target>
   
   <!-- jar -->
