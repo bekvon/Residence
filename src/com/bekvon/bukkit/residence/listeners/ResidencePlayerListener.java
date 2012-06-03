@@ -284,10 +284,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
-    	if(event.getFrom().distance(event.getTo()) == 0)
-    	{
+    	if(event.getFrom().getWorld() == event.getTo().getWorld())
+            if(event.getFrom().distance(event.getTo()) == 0)
     		return;
-    	}
     	
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onPlayerMove("+event.getFrom().distance(event.getTo())+") Fired");
