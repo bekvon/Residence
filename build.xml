@@ -24,12 +24,12 @@
     <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
     <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
     <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
-    <get src="http://www.whiskeycraft.net/repo/org/bukkit/craftbukkit/lastsuccessful/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
+    <get src="http://dl.bukkit.org/latest-rb/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/palmergames/iConomy/5.01/iConomy.jar" dest="lib/iConomy5.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
-    <get src="http://www.whiskeycraft.net/repo/net/milkbowl/vault/Vault/1.2.14-SNAPSHOT/Vault-1.2.14-SNAPSHOT.jar" dest="lib/Vault.jar"/>
+    <get src="http://dev.bukkit.org/media/files/592/826/Vault.jar" dest="lib/Vault.jar"/>
     <get src="http://whiskeycraft.net/repo/com/sk89q/worldedit/lastsuccessful/WorldEdit.jar" dest="lib/WorldEdit.jar"/>
     <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
     <get src="http://dev.bukkit.org/media/files/582/606/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
