@@ -49,6 +49,7 @@
       <copy file="src/languagefiles/English.yml" tofile="build/languagefiles/English.yml"/>
       <copy file="src/languagefiles/French.yml" tofile="build/languagefiles/French.yml"/>
       <copy file="src/languagefiles/Spanish.yml" tofile="build/languagefiles/Spanish.yml"/>
+      <copy file="src/languagefiles/Chinese.yml" tofile="build/languagefiles/Chinese.yml"/>
       <copy todir="build/utils"><fileset dir="utils"/></copy>      
   </target>
   
