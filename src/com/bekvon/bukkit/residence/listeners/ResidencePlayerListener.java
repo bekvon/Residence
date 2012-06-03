@@ -284,12 +284,14 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
-    	if(event.getFrom().getWorld() == event.getTo().getWorld())
+    	Player player = event.getPlayer();
+        if(event.getFrom().getWorld() == event.getTo().getWorld())
+        {
+            ILog.sendToPlayer(player, "onPlayerMove("+event.getFrom().distance(event.getTo())+") Fired");
             if(event.getFrom().distance(event.getTo()) == 0)
     		return;
-    	
-        Player player = event.getPlayer();
-        ILog.sendToPlayer(player, "onPlayerMove("+event.getFrom().distance(event.getTo())+") Fired");
+        }
+
         String pname = player.getName();
         long lastCheck = 0;
         if (lastUpdate.containsKey(pname)) {
