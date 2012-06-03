@@ -123,7 +123,7 @@ Global:
 Groups:
     Default: #group name
        # Information about the Residence zone that the player can define.
-       #Uncomment the below to mirror this config to other groups
+       #Uncomment the lines below to mirror this config to other groups.
        #Mirror:
          #- 'group1'
          #- 'group2'
