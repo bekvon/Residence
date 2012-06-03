@@ -11,10 +11,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Server;
@@ -171,6 +168,11 @@ public class PermissionManager {
                 try
                 {
                     groups.put(key.toLowerCase(), new PermissionGroup(key.toLowerCase(),nodes.getConfigurationSection(key),globalFlagPerms));
+                    List<String> mirrors = nodes.getConfigurationSection(key).getStringList("Mirror");
+                    for(String group : mirrors)
+                    {
+                        groups.put(group.toLowerCase(), new PermissionGroup(key.toLowerCase(),nodes.getConfigurationSection(key),globalFlagPerms));
+                    }
                 }
                 catch(Exception ex)
                 {
