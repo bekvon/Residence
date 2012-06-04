@@ -727,7 +727,8 @@ public class Residence extends JavaPlugin {
                             smanager.selectChunk(player);
                             return true;
                         } else if (args[1].equals("worldedit")) {
-                        	smanager.worldEdit(player);
+                        	if(smanager.worldEdit(player))
+                                    player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
                         	return true;
                         }
                     } else if (args.length == 3) {

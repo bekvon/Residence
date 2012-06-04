@@ -204,8 +204,9 @@ public class SelectionManager {
         player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
     }
 
-    public void worldEdit(Player player) {
+    public boolean worldEdit(Player player) {
         player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("WorldEditNotFound"));
+        return false;
     }
 
     public void selectBySize(Player player, int xsize, int ysize, int zsize) {
