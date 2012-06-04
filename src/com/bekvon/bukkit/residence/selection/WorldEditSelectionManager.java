@@ -29,9 +29,12 @@ public class WorldEditSelectionManager extends SelectionManager {
     public void worldEdit(Player player) {
         WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
         Selection sel = wep.getSelection(player);
-        this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
-        this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
-        player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
+        if(sel!=null)
+        {
+            this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
+            this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
+            player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
+        }
     }
     
     private void afterSelectionUpdate(Player player)
