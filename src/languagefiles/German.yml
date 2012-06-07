@@ -1,0 +1,592 @@
+# German translation by LMGH
+# NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten.  Once you 
+# have a copy of this file, change the Language: option under the Residence config.yml
+# to whatever you named your copy.
+Version: 18
+Language:
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
+    #Version 1 Fields
+    InvalidResidence: Ungueltige Residenz...
+    InvalidSubzone: Ungueltige Sub Zone...
+    InvalidDirection: Ungueltige Richtung...
+    InvalidChannel: Ungueltiger Channel...
+    InvalidAmount: Ungueltige Anzahl...
+    InvalidCost: Ungueltige Kosten...
+    InvalidDays: Ungueltige Anzahl von Tagen...
+    InvalidMaterial: Ungueltiges Material...
+    InvalidBoolean: Ungueltiger Wert, gueltige Werte sind true(t) oder false(f) (richtig und falsch)
+    InvalidArea: Ungueltige Zone...
+    InvalidGroup: Ungueltige Gruppe...
+    InvalidMessageType: Ungueltige Nachrichtenart, gueltige Werte sind enter oder remove.
+    InvalidList: Ungueltige Liste...
+    InvalidFlag: Ungueltige Flag...
+    InvalidFlagState: Ungueltiger Wert fuer die Flag, gueltige Werte sind true(t), false(f), oder remove(r) (richtig, falsch oder entfernen)
+    AreaExists: Zone existiert bereits.
+    AreaCreate: 'Zone mit der ID %1 erstellt'
+    AreaDiffWorld: Die Zone ist in einer anderen Welt.
+    AreaCollision: 'Die Zone Kollidiert mit einer anderen, welche folgende ID hat: %1'
+    AreaSubzoneCollision: 'Die Zone kollidiert mit einer Sub Zone, welche folgende ID hat: %1'
+    AreaNonExist: Zone nicht gefunden.
+    AreaInvalidName: Ungueltiger Name fuer die Zone...
+    AreaRename: 'Zone von %1 in %2 umbenannt'
+    AreaRemove: 'Zone %1 entfernt...'
+    AreaRemoveLast: Letzte Zone in der Zone konnte nicht entfernt werden.
+    AreaNotWithinParent: Zone liegt nicht in einer uebergeordneten Zone.
+    AreaUpdate: Zone wurde aktualisiert...
+    AreaMaxPhysical: Du hast die Maximale Anzahl von Zonen in deiner Zone erreicht.
+    AreaSizeLimit: Die Region ueberschreitet die vorgegebenen Limits.
+    AreaHighLimit: 'Deine Zone ueberschreitet die maximale Hoehe von %1'
+    AreaLowLimit: 'Deine Zone ueberschreitet die maximale Tiefe von %1'
+    NotInResidence: Du bist nicht in einer Residenz.
+    InResidence: 'Du stehst in der Residenz %1'
+    ResidenceOwnerChange: 'Die Residenz %1 hat einen neuen Besitzer: %2'
+    NonAdmin: Du bist kein Admin.
+    AdminOnly: Nur Admins haben Zugriff auf diesen Befehl.
+    ChatDisabled: Zonenchat deaktiviert...
+    SubzoneRename: 'Sub Zone wurde von %1 in %2 umbenannt'
+    SubzoneRemove: 'Sub Zone %1 wurde entfernt.'
+    SubzoneCreate: 'Sub Zone %1 wurde erstellt'
+    SubzoneCreateFail: 'Sub Zone %1 konnte nicht erstellt werden'
+    SubzoneExists: 'Sub Zone %1 existiert bereits.'
+    SubzoneCollide: 'Sub Zone kollidiert mit Sub Zone %1'
+    SubzoneMaxDepth: Du hast du maximale Tiefe von Sub Zonen erreicht.
+    SubzoneSelectInside: Beide der ausgewaehlten Punkte muessen innerhalb der Zone sein.
+    SelectPoints: Du musst zwei Punkte auswaehlen, bevor du diesen Befehl benutzten kannst!
+    SelectionSuccess: Die Auswahl war erfolgreich!
+    SelectionFail: Ungueltiger Befehl, gib /res select ? ein um mehr ueber diesen Befehl zu erfahren...
+    SelectionBedrock: Auswahl bis zum niedrigsten zulaessigen Grenzwert erweitert.
+    SelectionSky: Auswahl bis zum hoechsten zulaessigen Grenzwert erweitert.
+    SelectionArea: 'Zone %1 in Residenz %2 ausgewaehlt'
+    SelectDiabled: Du hast keinen Zugriff auf den Befehl zur Auswahl von.
+    NoPermission: Du hast keine Rechte um dies zu tun!
+    OwnerNoPermission: Der Besitzer hat keine rechte um dies zu tun!
+    ParentNoPermission: Du hast nicht genuegend Rechte, um aenderungen an der uebergeordneten Zone vorzunehmen.
+    MessageChange: Nachricht geaendert...
+    FlagSet: Flag gesetzt...
+    FlagCheckTrue: 'Flag %1 gilt fuer den Spieler %2 in der Residenz %3, Wert = %4'
+    FlagCheckFalse: 'Flag %1 gilt nicht fuer den Spieler %2.'
+    FlagsCleared: Flags geloescht.
+    FlagsDefault: Flags wurden auf die Standartwerte zurueckgesetzt.
+    Usage: Verwendung des Befehls
+    InvalidHelp: Ungueltige Hilfeseite...
+    SubCommands: Sub-Befehle
+    InvalidList: Unbekannter Listen-Typ, gueltige Typen sind blacklist und ignorelist.
+    MaterialGet: 'Der Materialname fuer ID %1 ist %2'
+    MarketDisabled: Economy deaktiviert!
+    MarketList: Marktliste
+    SelectionTool: Auswahlwerkzeug
+    InfoTool: Infowerkzeug
+    NoBankAccess: Du hast keinen Zugriff auf die Bank.
+    NotEnoughMoney: Du hast nicht genug Geld.
+    BankNoMoney: Du hast nicht genug Geld in der Bank.
+    BankDeposit: 'Du hast %1 in der Residenz Bank deponiert.'
+    BankWithdraw: 'Du hast %1 der Bank entnommen.'
+    MoneyCharged: 'Dir wurden %1 auf deinen %2 Account berechnet.'
+    MoneyCredit: 'Dir wurden %1 auf deinen %2 Account gutgeschrieben.'
+    RentDisabled: Das Mietsystem ist deaktiviert.
+    RentReleaseInvalid: 'Residenz %1 wird nicht Vermietet und steht auch nicht zur Vermietung'
+    RentSellFail: Du kannst keine Residenz verkaufen, wenn sie zu vermieten ist.
+    SellRentFail: Du kannst keine Residenz vermieten, wenn sie zum Verkauf steht.
+    OwnerBuyFail: Du kannst nicht dein eigenes Land kaufen!
+    OwnerRentFail: Du kannst nicht dein eigenes Land mieten!
+    AlreadySellFail: Residenz steht bereits zum Verkauf!
+    ResidenceBought: 'Du hast die Residenz %1 gekauft'
+    ResidenceBuy: Residenz %1 hat Residenz %2 von dir Gekauft.
+    ResidenceBuyTooBig: Diese Residenz ist groesser, als fuer dich erlaubt ist.
+    ResidenceNotForSale: Diese Residenz ist nicht zu verkaufen.
+    ResidenceForSale: 'Residenz %1 steht jetzt zum Verkauf fuer %2'
+    ResidenceStopSelling: Residenz ist nicht mehr zu verkaufen.
+    ResidenceTooMany: Du besitzt bereits die maximale Anzahl an Residenzen, welche fuer dich erlaubt ist.
+    ResidenceMaxRent: Du mietest bereits die maximale Anzahl an Residenzen, die fuer dich erlaubt ist.
+    ResidenceAlreadyRent: Residenz ist bereits zu vermieten...
+    ResidenceNotForRent: Residenz ist nicht zu verkaufen...
+    ResidenceNotRented: Residenz wird zurzeit nicht vermietet.
+    ResidenceUnrent: 'Residenz %1 wird nun nicht mehr gemietet.'
+    ResidenceRemoveRentable: 'Residenz %1 ist nichtmehr viermietbar.'
+    ResidenceForRentSuccess: 'Residence %1 ist jetzt fuer %2 fuer %3 Tage zu vermieten.'
+    ResidenceRentSuccess: 'Du hast die Residenz %1 fuer %2 Tage gemietet.'
+    ResidenceAlreadyRented: 'Residenz %1 wird zurzeit an %2 vermietet'
+    ResidenceAlreadyExists: 'Eine Residenz mit dem Namen %1 existiert bereits.'
+    ResidenceCreate: 'Du hast Residenz %1 erstellt!'
+    ResidenceRename: 'Du hast die Residenz von %1 in %2 umbenannt'
+    ResidenceRemove: 'Residenz %1 wurde entfernt...'
+    RentDisabled: Vermietung deaktiviert...
+    RentDisableRenew: 'Residenz %1 wird nach Ablauf der aktuellen Miete nicht neuvermietet werden.'
+    RentEnableRenew: 'Residenz %1 wird nach Ablauf der aktuellen Miete automatisch  weiter vermietet werden.'
+    RentableDisableRenew: '%1 wird nach Ablauf des Vertrags nun nicht mehr den Mietbar-Status nicht automatisch erneuern.'
+    RentableEnableRenew: '%1 wird nach Ablauf des Vertrags den Mietbar-Status automatisch erneuern..'
+    LandForSale: Land zu verkaufen
+    SellAmount: Verkaufs Betrag
+    LeaseExpire: Ablaufdatum des Leasings
+    RentExpire: Ablaufs Datum der Miete
+    RentableAutoRenew: Mietvertragsverlaengerung 
+    RentAutoRenew: Automatische Mietvertragsverlaengerung
+    RentableLand: Mietbares Land
+    ListMaterialAdd: '%1 wurde der Residenz %2 hinzugefuegt'
+    ListMaterialRemove: '%1 wurde von der Residenz %2 entfernt'
+    ItemBlacklisted: Du darfst diesen Gegenstand hier nicht benutzen.
+    RentedModifyDeny: Du kannst eine Gemietete Residenz nicht veraendern.
+    WorldPVPDisabled: PvP ist auf dieser Welt deaktiviert.
+    NoPVPZone: Keine PvP Zone.
+    FlagDeny: 'Du hast hier keine %1 rechte .'
+    FlagSetDeny: 'Besitzer haben keinen Zugriff auf die Flag %1'
+    SelectPoint: 'Punkt Nr. %1 ausgewaehlt'
+    ResidenceChat: 'Residenz-Chat auf %1 umgeschaltet'
+    ResidenceMoveDeny: 'Du hast keine Erlaubnis um dich auf dieser Residenz zu bewegen'
+    TeleportDeny: Du hast keine Teleportrechte.
+    TeleportSuccess: 'Teleportiert!'
+    TeleportNear: Zur naechsten Residenz teleportiert.
+    TeleportNoFlag: Du hast keine Teleportreichte fuer diese Residenz.
+    SetTeleportLocation: Teleportziel gesetzt...
+    HelpPageHeader: 'Hilfe Seite - %1 - Seite <%2 von %3>'
+    ListExists: Liste existiert bereits...
+    ListRemoved: Liste wurde entfernt...
+    ListCreate: 'Liste %1 wurde erstellt'
+    LeaseRenew: 'Leasing gueltig bist %1'
+    LeaseRenewMax: Leasing wurde auf das maximal zulaessige erneuert
+    LeaseNotExpire: Kein Leasingvertrag, oder der Leasingvertrag laeuft nicht ab.
+    LeaseRenewalCost: 'Die Kosten fuer die Erneuerung des Leasings fuer die Zone %1 sind %2'
+    LeaseInfinite: Lease Zeitraum wurde auf unendlich gesetzt...
+    PermissionsApply: Berechtigungen wurden auf die Residenz angewendet
+    PhysicalAreas: Physikale Zonen
+    CurrentArea: Aktuelle Zone
+    LeaseExpire: Leasing abgelaufen 
+    NotOnline: Der Spieler muss online sein.
+    ResidenceGiveLimits: Du konntest deine Residenz dem Spieler nicht uebertragen, da sie seine Limits uebersteigt.
+    ResidenceGive: 'Du hast Residenz %1 an den Spieler %2 uebertragen'
+    ResidenceRecieve: 'Du hast Residenz %1 von %2 erhalten'
+    #Version 4 New Fields
+    #ResidenceListAll: 'Residences - <Seite %1 von %2>' - removed, use GenericPage now
+    ResidenceListAllEmpty: Auf diesem Server befinden sich keine Residenzen...
+    InvalidPage: Ungueltige Seite...
+    NextPage: Naechste Seite
+    #Version 10 New Fields
+    RemovePlayersResidences: 'Alle Residenzen von Spieler %1 wurden geloescht'
+    GenericPage: 'Seite %1 von %2'
+    #Version 11 New Fields
+    ResidenceRentedBy: 'Gemietet von %1'
+    #Version 14 New Fields
+    InvalidCharacters: Ungueltige Zeichen entdeckt...
+    InvalidNameCharacters: Name enthaelt ungueltigen Buchstaben...
+    #Version 15 New Fields
+    DeleteConfirm: 'Bist du dir sicher, dass du Residenz %1 loeschen willst? Benutze "/res confirm" um es zu bestaetigen!'
+    #Version 18 New Fields
+    SelectTooHigh: Achtung, deine Auswahl uebersteigt das vorgegebene Grenze!
+    SelectTooLow: Achtung, deine Auswahl ist niedriger als die vorgegebene Grenze!
+    WorldEditNotFound: WorldEdit wurde nicht gefunden.
+    
+    #The below lines are mostly a word bank for various uses.
+    #Version 1 Fields
+    Description: Beschreibung
+    Land: Land
+    Cost: Kosten
+    Selection: Punkt
+    Total: Total
+    Size: Groesse
+    Expanding: erweitern
+    Shifting: Verschiebung
+    Up: nach oben
+    Down: nach unten
+    Error: Error
+    Flags: Flags
+    Your: Dein
+    Group: Gruppe
+    Others: Andere
+    Primary: 1.
+    Secondary: 2.
+    Selection: Auswahl
+    Moved: verschoben
+    Status: Status
+    Available: verfuegbar
+    On: An 
+    Off: Aus
+    Name: Name
+    Lists: Liste
+    Residences: Residenzen
+    Residence: Residenz
+    Count: Anzahl
+    Owner: Besitzer
+    #Version 4 Fields
+    World: Welt
+    #Version 12 Fields
+    Subzones: Sub Zonen
+    
+# This is the help / usage messages for each command.
+# It follows this format:
+# <Command>
+#     Description: <general description of command, one line of text>
+#     Info: <extra info lines to describe the command, list of text>
+#     SubCommands:
+#           <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
+# Add a page number after the ? mark to see that page.
+
+HelpLinesPerPage: 7
+CommandHelp: #this is just a holder node, that holds the entire help
+    Description: Enthaelt Hilfe fuer Residence
+    SubCommands: #this is the actual beginning of all commands
+        res: #main residence command
+            Description: Enthaelt Hilfe fuer das Plugin Residence
+            Info:
+                - 'Besuche das Residence Wiki um mehr Hilfe zu erhalten.'
+                - 'Wiki: residencebukkitmod.wikispaces.com'
+                - 'Benutzung /[Befehl] ? <Seite> um mehr Informationen anzuzeigen.'
+            SubCommands:
+                select: #selection commands
+                    Description: Auswahlbefehle
+                    Info:
+                        - 'Mit diesem Befehl waehlt man einen Bereich zur Benutzung mit Residence aus.'
+                        - '/res select [x] [y] [z] - Waehlt einen Radius (du bist das Zentrum) aus.'
+                    SubCommands:
+                        coords:
+                            Description: Zeigt die Koordinaten deiner ausgewaehlten Punkte an
+                            Info:
+                                - 'Benutzung: /res select coords'
+                        size:
+                            Description: Zeigt die Groesse der von dir markierten Flaeche an
+                            Info:
+                                - 'Benutzung: /res select size'
+                        cost:
+                            Description: Zeigt die Kosten fuer den ausgewaehlten Bereich an
+                            Info:
+                                - 'Benutzung: /res select cost'
+                        vert:
+                            Description: Erweitert die Auswahl vertikal
+                            Info:
+                                - 'Benutzung: /res select vert'
+                                - 'Erweitert die Auswahl vom niedrigstem erlaubten Punkt bis zum hoechsten.'
+                        sky:
+                            Description: Erweitert die Auswahl nach oben
+                            Info:
+                                - 'Benutzung: /res select sky'
+                                - 'Erweitert die Auswahl bis zum hoechsten erlaubten Punkt.'
+                        bedrock:
+                            Description: Erweitert die Auswahl nach unten
+                            Info:
+                                - 'Benutzung: /res select bedrock'
+                                - 'Erweitert die Auswahl bis zum niedrigsten erlaubten Punkt.'
+                        expand:
+                            Description: Erweitert die Auswahl in eine Richtung.
+                            Info:
+                                - 'Benutzung: /res select expand <Menge>'
+                                - 'Erweitert die Auswahl in die Richtung, in welche man schaut, um eine selbst angegebene <Menge> an Bloecken.'
+                        shift:
+                            Description: Verschiebt die Auswahl in eine Richtung
+                            Info:
+                                - 'Benutzung: /res select shift <Menge>'
+                                - 'Erweitert die Auswahl in die Richtung, in welche man schaut, um eine selbst angegebene <Menge> an Bloecken.'
+                        chunk:
+                            Description: Waehlt das aktuelle Chunk aus.
+                            Info:
+                                - 'Benutzung: /res select chunk'
+                                - 'Waehlt das Chunk, in welchem man sich befindet aus.'
+                        residence:
+                            Description: Waehlt eine existierende Flaeche in einer Residenz aus.
+                            Info:
+                                - 'Benutzung /res select <Residenz> <ID der Flaeche>'
+                                - 'Waehlt eine existierende Flaeche in einer Residenz aus.'
+                        worldedit:
+                            Description: Setzt den Auswahlbereich mithilfe der aktuellen WorldEdit Auswahl.
+                            Info:
+                                - 'Benutzung /res select worldedit'
+                                - 'Setzt den Auswahlbereich mithilfe der aktuellen WorldEdit Auswahl.'
+                create: #creation command
+                    Description: Erstellt eine Residenz
+                    Info:
+                        - 'Benutzung: /res create <Residenzname>'
+                remove: #remove command
+                    Description: Entfernt eine Residenz.
+                    Info:
+                        - 'Benutzung: /res remove <Residenzname>'
+                removeall:
+                    Description: Entfernt alle Residenzen welche ein Spieler Besitzt.
+                    Info:
+                        - 'Benutzung: /res removeall [Besitzer]'
+                        - 'Entfernt alle Residenzen welche ein Spieler Besitzt.'
+                        - 'Benoetigt /resadmin wenn es jemand anderes aus man selber ist.'
+                confirm:
+                    - 'Benutzung: /res confirm'
+                    - 'Bestaetigt die Loeschung einer Residenz.'
+                subzone:
+                    Description: Erstellt Sub Zonen in einer Residenz.
+                    Info:
+                        - 'Benutzung: /res subzone <Residenzname> [Subzonenname]'
+                        - 'Wenn der Residenzname ausgelassen wird, wird der Residenzname der Residenz, in welcher man steht benutzt.'
+                area:
+                    Description: Verwaltet die physischen Zonen einer Residenz.
+                    SubCommands:
+                        list:
+                            Description: Listet die physischen Zonen einer Residenz auf
+                            Info:
+                                - 'Benutzung: /res area list [Residenz] <Seite>'
+                        listall:
+                            Description: Listet die Koordinaten und andere Informationen zu Zonen
+                            Info:
+                                - 'Benutzung: /res area listall [Residenz] <page>'
+                        add:
+                            Description: Fuegt physische Zonen zu einer Residenz hinzu
+                            Info:
+                                - 'Benutzung: /res area add [Residenz] [areaID]'
+                                - 'Du musst zuerst zwei Punkte auswaehlen.'
+                        remove:
+                            Description: Entfernt physische Zonen einer Residenz
+                            Info:
+                                - 'Benutzung: /res area remove [Residenz] [areaID]'
+                        replace:
+                            Description: Ersetzt physische Zonen einer Residenz
+                            Info:
+                                - 'Benutzung: /res area replace [Residenz] [areaID]'
+                                - 'Du musst zuerst zwei Punkte auswaehlen.'
+                                - 'Wenn man eine Zone ersetzt wird der Groessenunterschied verrechnet, falls die neue Zone groesser ist.'
+                info:
+                    Description: Zeigt Infos zu einer Residenz an.
+                    Info:
+                        - 'Benutzung: /res info <Residenz>'
+                        - 'Wenn man <Residenz> leer laesst werden Infos zur Residenz, in welcher man zurzeit steht angezeigt.'
+                limits:
+                    Description: Zeigt deine Limits an.
+                    Info:
+                        - 'Benutzung: /res limits'
+                        - 'Zeigt deine Limits zur Erstellung und Verwaltung von Residenzen an.'
+                message:
+                    Description: Verwaltet die Nachrichten fuer das Betreten und Verlassen einer Residenz
+                    Info:
+                        - 'Benutzung: /res message <Residenz> [enter/leave] [Nachricht]'
+                        - 'erstellt und aendert die Nachrichten fuer das Betreten und Verlassen einer Residenz.'
+                        - 'Benutzung: /res message <Residenz> remove [enter/leave]'
+                        - 'Loescht die Nachrichten fuer das Betreten und Verlassen einer Residenz.'
+                lease:
+                    Description: Verwaltet das Leasen von einer Residenz
+                    Info:
+                        - 'Benutzung: /res lease [renew/cost] [Residenz]'
+                        - '/res lease cost zeigt die Kosten fuer das Verlaengern eines Leasings einer Residenz.'
+                        - '/res lease renew verlaengert das Leasing einer Residenz, falls du genug Geld hast.'
+                    SubCommands:
+                        set:
+                            Description: Setzt die Laenge eines Leasings (Adminbefehl)
+                            Info:
+                                - 'Benutzung: /resadmin lease set [Residenz] [#Tage/infinite(unendlich)]'
+                                - 'Setzt die Laenge eines Leasings zu einer bestimmten Anzahl von Tagen oder auf unendlich.'
+                bank:
+                    Description: Verwaltet das Geld einer Residenz
+                    Info:
+                        - 'Benutzung: /res bank [deposit/withdraw(deponieren/entnehmen)] [Menge]'
+                        - 'Du musst in einer Residenz stehen'
+                        - 'Die +bank Flag muss aktiviert sein.'
+                tp:
+                    Description: Teleportiert dich zu einer Residenz
+                    Info:
+                        - 'Benutzung: /res tp [Residenz]'
+                        - 'Teleportiert dich zu einer Residenz, auf welcher die +tp Flag gesetzt ist oder du der Besitzer bist.'
+                        - 'Deine Gruppe muss die Rechte haben um sich zu Residenzen zu teleportieren.'
+                tpset:
+                    Description: Setzt das Teleportziel einer Residenz
+                    Info:
+                        - 'Benutzung: /res tpset'
+                        - 'Setzt das Teleportziel einer Residenz an den Ort, wo du stehst.'
+                        - 'Du musst in einer Residenz stehen um diesen Befehl zu benutzten.'
+                        - 'Du musst Besitzer seine oder die +admin Flag in einer Residenz haben.'
+                set:
+                    Description: Setzt generelle Flags einer Residenz
+                    Info:
+                        - 'Benutzung: /res set <Residenz> [Flag] [true/false/remove(richtig/falsch/entfernen)]'
+                        - 'Um eine List der Flags zu sehen musst du /res Flags ? benutzten'
+                        - 'Diese Flags gelten fuer alle Spieler, solange sie nicht von einer speziell fuer sie geltenden Flag ausser kraftgesetzt werden. (siehe /res pset ?)'
+                pset:
+                    Description: Setzt Flags fuer einzelne Spieler in einer Residenz.
+                    Info:
+                        - 'Benutzung: /res pset <Residenz> [Spieler] [Flag] [true/false/remove(richtig/falsch/entfernen)]'
+                        - 'Benutzung: /res pset <Residenz> [Spieler] removeall(alle entfernen)'
+                        - 'Um eine Liste von Flags zu sehen musst du /res Flags ? benutzen'
+                gset:
+                    Description: Setzt Flags fuer eine Bestimmte Gruppe zur Residenz
+                    Info:
+                        - 'Benutzung: /res gset <Residenz> [Gruppe] [Flag] [true/false/remove(richtig/falsch/entfernen)]'
+                        - 'Um eine Liste von Flags zu sehen musst du /res Flags ? benutzen'
+                lset:
+                    Description: aendert Optionen der Schwarzen- und Ignorier liste
+                    Info:
+                        - 'Benutzung: /res lset <Residenz> [blacklist/ignorelist] [Material]'
+                        - 'Benutzung: /res lset <Residenz> info'
+                        - 'Die Schwarze Liste(blacklist) sorgt dafuer, dass bestimmte(selbst definierbar) Materialien auf der Residenz nicht gesetzt werden kann.'
+                        - 'Die ignorier Liste(ignorelist) sorgt dafuer, dass bestimmte(selbst definierbar) Materialien auf der Residenz nicht geschuetzt werden.'
+                Flags:
+                    Description: List of Flags
+                    Info:
+                        - 'Werte fuer Flags sind true(erlabt normalerweise die Aktion) und false(verweigert normalerweise die Aktion).'
+                        - 'build - erlaubt oder verweigert die Bauen'
+                        - 'use - erlaubt oder verweigert die Benutzung von Tueren, Hebeln, Knoepfen usw...'
+                        - 'move - erlaubt oder verweigert das Betreten einer Residenz.'
+                        - 'container - erlaubt oder verweigert die Benutzung von oefen, Kisten, Spender usw...'
+                        - 'place - erlaubt oder verweigert das Platzieren von Bloecken und ueberschreibt die build-Flag.'
+                        - 'destroy - erlaubt oder verweigert das Zerstoeren von Bloecken und ueberschreibt die build-Flag.'
+                        - 'pvp - erlaubt oder verweigert PvP in einer Residenz'
+                        - 'tp - erlaubt oder verweigert das Teleportieren zu einer Residenz.'
+                        - 'admin - gibt einem Spieler die Rechte Flags auf einer Residenz zu aendern.'
+                        - 'subzone - erlaubt einem Spieler Sub Zonen in einer Residenz zu erstellen.'
+                        - 'monsters - erlaubt oder verweigert, dass Monster spawnen'
+                        - 'animals - erlaubt oder verweigert, dass Tiere spawnen.'
+                        - 'healing - erlaubt das Spieler in einer Residenz geheilt werden'
+                        - 'tnt - erlaubt oder verweigert TnT Explosionen'
+                        - 'creeper - erlaubt oder verweigert Creeper Explosionen'
+                        - 'ignite - erlaubt oder verweigert das Setzten von Feuer.'
+                        - 'firespread - erlaubt oder verweigert die Ausbreitung von Feuer.'
+                        - 'bucket - erlaubt oder verweigert die Benutzung von Eimern.'
+                        - 'flow - erlaubt oder verweigert, dass Fluessigkeiten fliessen.'
+                        - 'lavaflow - erlaubt oder verweigert, dass Lava fliesst und ueberschreibt die flow-Flag'
+                        - 'waterflow - erlaubt oder verweigert, dass Wasser fliesst und ueberschreibt die flow-Flag'
+                        - 'damage - erlaubt oder verweigert das Spieler innerhalb der Residenz Schaden nehmen'
+                        - 'piston - erlaubt oder verweigert das Pistons Bloecke innerhalb der Residenz schieben.'
+                        - 'hidden - versteckt Residenz auf list und listall Befehlen.'
+                list:
+                    Description: Listet Residenzen
+                    Info:
+                        - 'Benutzung: /res list <Spieler> <Seite>'
+                        - 'Listet alle Residenzen, welche ein Spieler besitzt (ausser die versteckten).'
+                        - 'Wenn eigene Residenzen angezeigt werden, werden auch die versteckten angezeigt.'
+                        - 'Listet alle Residenzen, wenn man /res listall benutzt.'
+                listhidden:
+                    Description: Listet versteckte Residenzen (Adminbefehl)
+                    Info:
+                        - 'Benutzung: /res listhidden <Spieler> <Seite>'
+                        - 'Listet versteckte Residenzen eines Spielers.'
+                listall:
+                    Description: Listet alle Residenzen
+                    Info:
+                        - 'Benutzung: /res listall <Seite>'
+                        - 'Listet alle Residenzen des Servers. (ausser die versteckten, welche man nicht besitzt)'
+                listallhidden:
+                    Description: Listet alle versteckten Residenzen (Adminbefehl)
+                    Info:
+                        - 'Benutzung: /res listhidden <Seite>'
+                        - 'Listet alle versteckten Residenzen des Servers.'
+                sublist:
+                    Description: Listet alle Sub Zonen einer Residenz
+                    Info:
+                        - 'Benutzung: /res sublist <Residenz> <Seite>'
+                        - 'Listet alle Sub Zonen einer Residenz.'
+                default:
+                    Description: Setzt die Flags der Residenz auf den Standard zurueck.
+                    Info:
+                        - 'Benutzung: /res default <Residenz>'
+                        - 'Setzt die Flags der Residenz auf den Standard zurueck. Du musst Besitzer der Residenz sein oder Besitzer.'
+                rename:
+                    Description: Bennent du Residenz um.
+                    Info:
+                        - 'Benutzung: /res rename [Alter Name] [Neuer Name]'
+                        - 'Du musst Besitzer der Residenz oder Admin sein.'
+                        - 'Der Name darf nicht bereits von einer anderen Residenz verwendet werden.'
+                mirror:
+                    Description: Spiegelt Flags
+                    Info:
+                        - 'Benutzung: /res mirror [Source Residenz] [Target Residenz]'
+                        - 'Spiegelt die Flags einer Residenz in eine andere Residenz. Du musst Besitzer von beiden sein oder Admin'
+                market:
+                    Description: Verkauf, Ankauf und Vermietung von Residenzen
+                    Info:
+                        - 'Benutzung: /res market ? fuer mehr Informationen'
+                    SubCommands:
+                        info:
+                            Description: Zeigt oekonomische Infos zu einer Residenz an
+                            Info:
+                                - 'Benutzung: /res market info [Residenz]'
+                                - 'Zeigt ob eine Residenz zum Verkauf steht oder zu vermieten ist und wie viel sie kostet.'
+                        list:
+                            Description: Listet zu vermietende und zu verkaufende Residenzen auf
+                            Info:
+                                - 'Benutzung: /res market list'
+                        sell:
+                            Description: Bietet Residenz zum Verkauf an
+                            Info:
+                                - 'Benutzung: /res sell [Residenz] [Menge]'
+                                - 'Bietet eine Residenz zum Verkauf, fuer eine selbst definierbare [Menge] an Geld, an.'
+                                - 'Ein anderer Spieler kann die Residenz mit /res market buy kaufen'
+                        buy:
+                            Description: Kaufen einer Residenz
+                            Info:
+                                - 'Benutzung: /res buy [Residenz]'
+                                - 'Mit diesem Befehl kauf man eine zum Verkauf stehende Residenz.'
+                        unsell:
+                            Description: Stoppt den Verkauf einer Residenz
+                            Info:
+                                - 'Benutzung: /res unsell [Residenz]'
+                        rent:
+                            Description: Mieten einer Residenz
+                            Info:
+                                - 'Benutzung: /res market rent [Residenz] <Autoerneuerung>'
+                                - 'Mit diesem Befehl mietet man eine Residenz. Autoerneuerung kann true oder false(richtig oder falsch) sein. Wenn man Autoerneuerung auf true(richtig) setzt wird die Miete nach Ablauf automatisch erneuert, solange der Vermieter es erlaubt.'
+                        rentable:
+                            Description: Bietet eine Residenz zur Vermietung an.
+                            Info:
+                                - 'Benutzung: /res market rentable [Residenz] [Menge] [Tage] <Wiederhohlen>'
+                                - 'Bietet eine Residenz fuer eine [Menge] and Geld fuer eine Anzahl an [Tagen] zur Vermietung an. Falls <Wiederhohlen> auf true(richtig) gesetzt ist, ist es moeglich die Residenz nach Ablauf der Miete erneut zu Mieten.'
+                        release:
+                            Description: Stoppt die Vermietung einer Residenz.
+                            Info:
+                                - 'Benutzung: /res market release [Residenz]'
+                                - 'Wenn du der Mieter bist, gibt dieser Befehl die Miete wieder frei.'
+                                - 'Wenn du der Besitzer bist, ist die Residenz nun nicht mehr zu vermieten.'
+                current:
+                    Description: Zeigt die Residenz an, in welcher man sich gerade befindet.
+                    Info:
+                        - 'Benutzung: /res current'
+                lists:
+                    Description: Vordefinierte Berechtigungslisten
+                    Info:
+                        - 'Vordefinierte Berechtigungslisten, welche auf eine Residenz angewendet werden koennen.'
+                    SubCommands:
+                        add:
+                            Description: Hinzufuegen einer Liste
+                            Info:
+                                - 'Benutzung: /res lists add <Listenname>'
+                        remove:
+                            Description: Entfernen einer Liste
+                            Info:
+                                - 'Benutzung: /res lists remove <Listenname>'
+                        apply:
+                            Description: Anwenden einer Liste in einer Residenz
+                            Info:
+                                - 'Benutzung: /res lists apply <Listenname> <Residenz>'
+                        set:
+                            Description: Setzt eine Flag
+                            Info:
+                                - 'Benutzung: /res lists set <Listenname> <Flag> <Wert>'
+                        pset:
+                            Description: Setzt eine Flag fuer eine Gruppe
+                            Info:
+                                - 'Benutzung: /res lists pset <Listenname> <Spieler> <Flag> <Wert>'
+                        gset:
+                            Description: Setzt eine Flag fuer eine Gruppe
+                            Info:
+                                - 'Benutzung: /res lists gset <Listenname> <Gruppe> <Flag> <Wert>'
+                        view:
+                            Description: Zeigt eine Liste.
+                            Info:
+                                - 'Benutzung: /res lists view <Listenname>'
+                server:
+                    Description: Macht eine Residenz zum Eigentum des Servers (Adminbefehl).
+                    Info:
+                        - 'Benutzung: /resadmin server [Residenz]'
+                        - 'aendert den Besitzer einer Residenz in den Server.'
+                setowner:
+                    Description: aendert den Owner einer Residenz (Adminbefehl).
+                    Info:
+                        - 'Benutzung: /resadmin setowner [Residenz] [Spieler]'
+                resreload:
+                    Description: Laedt Residenz neu (Adminbefehl).
+                    Info:
+                        - 'Benutzung: /resreload'
+                resload:
+                    Description: Laedt die Residence Speicherdatei(Unsicher, Adminbefehl).
+                    Info:
+                        - 'Benutzung: /resload'
+                        - 'Unsicherer Befehl, speichert die Dateien von Residenz nicht zuerst.'
+                        - 'Laedt die Residenz Speicherdatei nachdem aenderungen vorgenommen wurden.'
+                Version:
+                    Description: Zeigt die Version von Residenz an
+                    Info:
+                        - 'Benutzung: /res version'
