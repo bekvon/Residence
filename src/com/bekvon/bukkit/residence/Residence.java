@@ -862,7 +862,8 @@ public class Residence extends JavaPlugin {
                         if (area != null) {                       	
                             ClaimedResidence res = rmanager.getByName(area);
                             if (res.getParent() != null ){
-                            	String words = area.split("//.")[(area.split("//.").length-1)];         	
+                            	String[] split = area.split("//.");
+                            	String words = split[split.length-1];         	
                                 if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
                                     player.sendMessage(ChatColor.RED + language.getPhrase("DeleteSubzoneConfirm", (ChatColor.YELLOW + words + ChatColor.RED)));
                                     deleteConfirm.put(player.getName(), area);
@@ -886,13 +887,21 @@ public class Residence extends JavaPlugin {
                         return false;
                     }
                     if (!deleteConfirm.containsKey(player.getName()) || !args[1].equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
-                       	String words = args[1].split("//.")[(args[1].split("//.").length-1)]; 
-                    	if(words==null){
-                            player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", (ChatColor.YELLOW + args[1] + ChatColor.RED)));
-                    	}else{
-                    		player.sendMessage(ChatColor.RED + language.getPhrase("DeleteSubzoneConfirm", (ChatColor.YELLOW + words + ChatColor.RED)));
+                    	String words = "";
+                    	if (rmanager.getByName(args[1])!=null){
+                    	    ClaimedResidence res = rmanager.getByName(args[1]);    
+                    	    if (res.getparent()!=null){
+                    	    	String[] split = args[1].split("//.");
+                       	        words = split[split.length-1]; 
+                    	    }
                     	}
+                    	if(words==""){
+                            player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", (ChatColor.YELLOW + args[1] + ChatColor.RED)));
+                        }else{
+                            player.sendMessage(ChatColor.RED + language.getPhrase("DeleteSubzoneConfirm", (ChatColor.YELLOW + words + ChatColor.RED)));
+                        }
                         deleteConfirm.put(player.getName(), args[1]);
+                    	
                     } else {
                         rmanager.removeResidence(player, args[1], resadmin);
                     }
