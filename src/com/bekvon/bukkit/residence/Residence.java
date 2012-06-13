@@ -890,7 +890,7 @@ public class Residence extends JavaPlugin {
                     	String words = "";
                     	if (rmanager.getByName(args[1])!=null){
                     	    ClaimedResidence res = rmanager.getByName(args[1]);    
-                    	    if (res.getparent()!=null){
+                    	    if (res.getParent()!=null){
                     	    	String[] split = args[1].split("//.");
                        	        words = split[split.length-1]; 
                     	    }
