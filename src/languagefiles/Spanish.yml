@@ -4,7 +4,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 18
+Version: 19
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -114,10 +114,10 @@ Language:
     ResidenceRename: 'Residencia renombrada de %1 a %2'
     ResidenceRemove: 'La residencia %1 ha sido eliminada...'
     RentDisabled: Alquiler desactivado...
-    RentDisableRenew: 'La residencia %1 no volverá a realquilarse cuando expire.'
+    RentDisableRenew: 'La residencia %1 no volverï¿½ a realquilarse cuando expire.'
     RentEnableRenew: 'La residencia %1 automaticamente volvera a alquilarse cuando expire.'
     RentableDisableRenew: '%1 ya no renovara su estado cuando expire.'
-    RentableEnableRenew: '%1 Automaticamente renovará su estado cuando expire.'
+    RentableEnableRenew: '%1 Automaticamente renovarï¿½ su estado cuando expire.'
     LandForSale: Tierra a la venta
     SellAmount: Cantidad de venta
     LeaseExpire: Tiempo de caducidad de arrendamiento
@@ -176,6 +176,8 @@ Language:
     #Version 18 New Fields
     SelectTooHigh: Advertencia la seleccion esta por encima de la parte superior de los limites del mapa.
     SelectTooLow: Advertencia la seleccion esta por debajo de la parte inferior de los limites del mapa.
+    #Version 19 New Fields
+    DeleteSubzoneConfirm: 'Si estas seguro de que desea eliminar la subzona %1 , usa "/res confirm" para confirmarlo.'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
