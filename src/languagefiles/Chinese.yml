@@ -3,211 +3,216 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 15
+Version: 16
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
     #Version 1 Fields
-    InvalidResidence: ÎŞĞ§µÄÁìµØ¡£¡£¡£
-    InvalidSubzone: ÎŞĞ§µÄ¸½ÊôÁìµØ¡£¡£¡£
-    InvalidDirection: ÎŞĞ§·½Ïò¡£¡£¡£
-    InvalidChannel: ÎŞĞ§ÆµµÀ¡£¡£¡£
-    InvalidAmount: ÎŞĞ§ÊıÁ¿¡£¡£¡£
-    InvalidCost: ÎŞĞ§»¨·Ñ¡£¡£¡£
-    InvalidDays: ÎŞĞ§µÄÌìÊı¡£¡£¡£
-    InvalidMaterial: ÎŞĞ§µÄ²ÄÁÏ¡£¡£¡£
-    InvalidBoolean: ÎŞĞ§Öµ£¬±ØĞëÊÇ true(t) »òÕß false(f)
-    InvalidArea: ÎŞĞ§µÄÇøÓò¡£¡£¡£
-    InvalidGroup: ÎŞĞ§µÄÈ¨ÏŞ×é¡£¡£¡£
-    InvalidMessageType: ÏûÏ¢ÀàĞÍ±ØĞëenter£¨ÊäÈë£©»ò£¨ÒÆ³ı£©remove¡£
-    InvalidList: ÎŞĞ§µÄÇåµ¥¡£¡£¡£
-    InvalidFlag: È¨ÏŞÎŞĞ§¡£¡£¡£
-    InvalidFlagState: ÎŞĞ§µÄÈ¨ÏŞ×´Ì¬, ±ØĞëÊÇ true(t)¿ªÆô, false(f)¹Ø±Õ, »òÕß remove(r)ÒÆ³ı
-    AreaExists: ÇøÓòÃû×ÖÒÑ¾­´æÔÚ.
-    AreaCreate: 'ÁìµØID %1 ´´½¨³É¹¦'
-    AreaDiffWorld: ÇøÓòÓëÁìµØÊÇÔÚÒ»¸ö²»Í¬µÄÊÀ½ç.
-    AreaCollision: 'ÇøÓòÓëÁìµØ %1 ³åÍ»'
-    AreaSubzoneCollision: 'ÇøÓòºÍ¸½ÊôÁìµØ %1 ³åÍ»'
-    AreaNonExist: ÇøÓò²»´æÔÚ.
-    AreaInvalidName: ÇøÓòÃûÎŞĞ§...
-    AreaRename: 'ÇøÓòÃû´Ó %1 ¸ü¸Äµ½ %2'
-    AreaRemove: 'ÒÆ³ıÇøÓò %1...'
-    AreaRemoveLast: ²»ÄÜ°Ñ×îºóÒ»¸öÇøÓò´ÓÁìµØÖĞÒÆ³ı.
-    AreaNotWithinParent: Õâ¸öÇøÓò²»ÔÚ¸¸ÇøÓòÖ®ÄÚ.
-    AreaUpdate: ÇøÓòÒÑ¸üĞÂ...
-    AreaMaxPhysical: ÄãÒÑ¾­´ïµ½ÄãµÄÁìµØËùÔÊĞíµÄ×î´óÇøÓò.
-    AreaSizeLimit: ÇøÓòµÄ´óĞ¡³¬³öÄãÔÊĞíµÄ·¶Î§ÉÏÏŞ.
-    AreaHighLimit: 'Äã²»ÄÜ±£»¤ÕâÑù¸ßµÄÁìµØ,ÄãµÄÉÏÏŞÊÇ %1'
-    AreaLowLimit: 'Äã²»ÄÜ±£»¤ÕâÑùÉîµÄÁìµØ,ÄãµÄÉÏÏŞÊÇ %1'
-    NotInResidence: Äã²»ÔÚÒ»¸öÁìµØÀï.
-    InResidence: 'ÄãÕıÕ¾ÔÚÁìµØ %1Àï'
-    ResidenceOwnerChange: 'ÁìµØµÄÓµÓĞÕß´ÓÍæ¼Ò %1 ¸ÄÎªÍæ¼Ò %2'
-    NonAdmin: Äã²»ÊÇÁìµØµÄ¹ÜÀíÔ±.
-    AdminOnly: Ö»ÓĞ¹ÜÀíÔ±²ÅÄÜÊ¹ÓÃÕâ¸öÈ¨ÏŞ.
-    ChatDisabled: ÁìµØÁÄÌìÒÑ¹Ø±Õ...
-    SubzoneRename: '¸½ÊôÁìµØ%1 ÒÑÖØÃüÃûÎª %2'
-    SubzoneRemove: '¸½ÊôÁìµØ %1 ÒÑÒÆ³ı.'
-    SubzoneCreate: '´´½¨¸½ÊôÁìµØ %1'
-    SubzoneCreateFail: '²»ÄÜ´´½¨¸½ÊôÁìµØ %1'
-    SubzoneExists: '¸½ÊôÁìµØ %1 ÒÑ¾­´æÔÚ.'
-    SubzoneCollide: '¸½ÊôÁìµØÓëÁíÒ»¸ö¸½ÊôÁìµØ %1 ³åÍ»'
-    SubzoneMaxDepth: ÄúÒÑ´ïµ½ÁËÏµÍ³ÔÊĞíµÄ×î´ó·ÖÇøÉî¶È.
-    SubzoneSelectInside: Á½¸öÑ¡Ôñµã±ØĞëÔÚÁìµØÄÚ
-    SelectPoints: ÔÚÓÃÕâ¸öÃüÁîÖ®Ç°£¬ÇëÏÈÓÃÑ¡Ôñ¹¤¾ßÑ¡È¡Á½¸öµã!
-    SelectionSuccess: Ñ¡Ôñ³É¹¦!
-    SelectionFail: ÎŞĞ§µÄÑ¡ÔñÃüÁî...
-    SelectionBedrock: À©´óµ½ÔÊĞíµÄ×îµÍ¸ß¶È.
-    SelectionSky: À©´óµ½ÔÊĞíµÄ×î¸ß¸ß¶È.
-    SelectionArea: 'ÔÚÁìµØ %2 ÖĞÑ¡ÔñÇøÓò %1'
-    SelectDiabled: Äã²»ÄÜÊ¹ÓÃÈ¦µØÈ¨ÏŞ.
-    NoPermission: ÄãÃ»ÓĞ´ËÃüÁîµÄÈ¨ÏŞ.
-    OwnerNoPermission: ËùÓĞÕßÎŞ´ËÃüÁîµÄÈ¨ÏŞ.
-    ParentNoPermission: ÄãÃ»ÓĞ¸Ä±ä¸¸ÇøÓòµÄÈ¨ÏŞ.
-    MessageChange: ÏûÏ¢ÒÑÉèÖÃ...
-    FlagSet: È¨ÏŞÒÑÉèÖÃ...
-    FlagCheckTrue: 'È¨ÏŞ %1 ÎªÍæ¼Ò %2 ÔÚÁìµØ %3 ÉèÖÃ,ÖµÎª=%4'
-    FlagCheckFalse: 'È¨ÏŞ %1 Î´ÎªÍæ¼Ò %2 ÔÚÁìµØÖĞÉèÖÃ.'
-    FlagsCleared: È¨ÏŞÒÑÇå³ı.
-    FlagsDefault: È¨ÏŞÒÑÉèÖÃÎªÄ¬ÈÏ.
-    Usage: ÃüÁîÓÃ·¨
-    InvalidHelp: ÎŞĞ§µÄ°ïÖúÒ³...
-    SubCommands: ×ÓÃüÁî
-    InvalidList: Î´ÖªÁĞ±íµÄÀàĞÍ,±ØĞëÊÇºÚÃûµ¥ÖĞµÄÀàĞÍ.
-    MaterialGet: '²ÄÁÏÃû³ÆÎªID %1 ÊÇ %2'
-    MarketDisabled: ÊĞ³¡±»½ûÓÃ!
-    MarketList: ÊĞ³¡ÁĞ±í
-    SelectionTool: Ñ¡Ôñ¹¤¾ß
-    InfoTool: ĞÅÏ¢¹¤¾ß
-    NoBankAccess: ÄãÃ»ÓĞÒøĞĞÈ¨ÏŞ..
-    NotEnoughMoney: ÄãÃ»ÓĞ×ã¹»µÄÈ¨ÏŞ.
-    BankNoMoney: ÔÚÒøĞĞÀïÃ»ÓĞ×ã¹»µÄÇ®.
-    BankDeposit: 'Äã´æ %1 Ôªµ½ÁìµØÒøĞĞ¡£'
-    BankWithdraw: 'ÄãÈ¡³ö %1 Ôª´ÓÁìµØÒøĞĞ.'
-    MoneyCharged: 'Ö§³ö %1 Ôª´Ó %2 ÕÊ»§.'
-    MoneyCredit: 'ÊÕÈë %1 Ôª´Ó %2 ÕÊ»§.'
-    RentDisabled: ×âÆ¾ÏµÍ³ÒÑ¹Ø±Õ.
-    RentReleaseInvalid: 'ÁìµØ %1 Ã»ÓĞ±»×âÓÃ»òÕß±»³ö×â.'
-    RentSellFail: ²»ÄÜ³öÊÛÒ»¸ö±»×â³öÈ¥µÄÁìµØ.
-    SellRentFail: µ±Ç°ÁìµØÔÚ³öÊÛ²»ÄÜ³ö×âÁìµØ.
-    OwnerBuyFail: ÎŞ·¨¹ºÂò×Ô¼ºµÄÍÁµØ!
-    OwnerRentFail: ²»ÄÜ×âÄã×Ô¼ºµÄÍÁµØ!
-    AlreadySellFail: ÁìµØÒÑ¾­³öÊÛ!
-    ResidenceBought: 'ÄãÒÑ¾­ÂòÏÂÁËÁìµØ %1'
-    ResidenceBuy: 'Íæ¼Ò %1 ´ÓÄãÄÇÂòÏÂÁËÁìµØ %2.'
-    ResidenceBuyTooBig: ´ËÁìµØÒÑ³¬¹ıÏµÍ³ÔÊĞíµÄ×î´óÁìÓò.
-    ResidenceNotForSale: ÁìµØÃ»ÓĞÓÃÓÚ³öÊÛ.
-    ResidenceForSale: 'ÏÖÔÚÒÔ %2 ÏúÊÛÁìµØ %1 '
-    ResidenceStopSelling: ÁìµØ²»ÔÙÏúÊÛ.
-    ResidenceTooMany: ÒÑ´ïµ½ÏµÍ³ÔÊĞíÁìµØµÄ×î´óÉÏÏŞ.
-    ResidenceMaxRent: ÒÑ´ïµ½ÏµÍ³ÔÊĞíÄã×âÓÃÁìµØµÄ×î´óÉÏÏŞ.
-    ResidenceAlreadyRent: ÁìµØÒÑ¾­±»×âÓÃ...
-    ResidenceNotForRent: ÁìµØ²»ÓÃÓÚ³ö×â...
-    ResidenceNotRented: ÁìµØÃ»ÓĞ±»×âÓÃ.
-    ResidenceUnrent: 'ÁìµØ%1ÒÑ²»ÔÙ³ö×â¡£'
-    ResidenceRemoveRentable: 'ÁìµØ %1 ²»ÔÙ³ö×â.'
-    ResidenceForRentSuccess: 'ÁìµØ%1 ÏÖÔÚ×â½ğÎª%2,Ã¿´Î %3Ìì.'
-    ResidenceRentSuccess: 'ÄãÒÑ¾­×âÓÃÁìµØ %1 %2Ìì..'
-    ResidenceAlreadyRented: 'ÁìµØ %1,Ä¿Ç°ÒÑ³ö×â¸ø %2'
-    ResidenceAlreadyExists: 'ÁìµØ %1ÒÑ´æÔÚ.'
-    ResidenceCreate: 'Äã´´½¨ÁËÁìµØ %1!'
-    ResidenceRename: 'ÁìµØ %1 ÒÑ¸ÄÃûÎª %2'
-    ResidenceRemove: 'ÁìµØ %1 ÒÑ¾­±»ÒÆ³ı...'
-    RentDisabled: ³ö×â±»½ûÓÃ...
-    RentDisableRenew: '%1 ×Ô¶¯µ½ÆÚĞøÔ¼ÒÑ¹Ø±Õ'
-    RentEnableRenew: '%1 ×Ô¶¯µ½ÆÚĞøÔ¼ÒÑ¿ªÆô.'
-    RentableDisableRenew: '%1 ¸üĞÂ¿É×âÓÃ×´Ì¬¹Ø±Õ.'
-    RentableEnableRenew: '%1 ¸üĞÂ¿É×âÓÃ×´Ì¬¿ªÆô.'
-    LandForSale: ³öÊÛÍÁµØ
-    SellAmount: ÏúÊÛ½ğ¶î
-    LeaseExpire: ×âÁŞµ½ÆÚÊ±¼ä
-    RentExpire: ×â½ğµ½ÆÚÊ±¼ä
-    RentableAutoRenew: ×Ô¶¯¸üĞÂ¿É³ö×âµÄÍÁµØ
-    RentAutoRenew: ×â½è×Ô¶¯¸üĞÂ
-    RentableLand: ¿É¹©³ö×âÍÁµØ
-    ListMaterialAdd: '%1 Ìí¼Óµ½ÁìµØ %2'
-    ListMaterialRemove: '%1 ÒÑ´ÓÁìµØ %2ÒÆ³ı'
-    ItemBlacklisted: Äã²»ÄÜÔÚÕâÊ¹ÓÃ±»½ûÖ¹µÄÎïÆ·.
-    RentedModifyDeny: ²»ÄÜĞŞ¸ÄÒ»¸ö×âÀ´µÄÁìµØ.
-    WorldPVPDisabled: µ±Ç°ÊÀ½çµÄPvP±»½ûÖ¹.
-    NoPVPZone: Ã»ÓĞPVPµÄÇøÓò.
-    FlagDeny: 'ÄãÃ»ÓĞÓµÓĞÁìµØ %1 µÄÈ¨ÏŞ.'
-    FlagSetDeny: 'ËùÓĞÕß²»ÄÜÊ¹ÓÃÕâ¸öÈ¨ÏŞ %1'
-    SelectPoint: 'Ñ¡ÔñÁË %1µÄÑ¡Ôñµã'
-    ResidenceChat: 'ÁìµØÁÄÌìÇĞ»»µ½ %1'
-    ResidenceMoveDeny: 'ÄãÃ»ÓĞÁìµØ %1 µÄÒÆ¶¯È¨ÏŞ'
-    TeleportDeny: ÄãÃ»ÓĞ´«ËÍÈ¨ÏŞ.
-    TeleportSuccess: 'ÒÑ´«ËÍ!'
-    TeleportNear: ´«ËÍµ½ÁìµØµÄ¸½½ü.
-    TeleportNoFlag: ¶Ô²»Æğ£¬ÄãÃ»ÓĞ´«ËÍÈ¨ÏŞÈ¥Ä¿±êÁìµØ¡£
-    SetTeleportLocation: ´«ËÍµãÒÑÉèÖÃ...
-    HelpPageHeader: '°ïÖúÒ³ - %1 - µÚ %2Ò³ ¹² %3Ò³'
-    ListExists: ÁĞ±íÒÑ¾­´æÔÚ...
-    ListRemoved: ÁĞ±í±»ÒÆ³ı...
-    ListCreate: 'ÒÑ´´½¨ÁĞ±í %1'
-    LeaseRenew: '×âÁŞÓĞĞ§ÆÚÖÁ %1µ½ÆÚ'
-    LeaseRenewMax: ×âÁŞ×î´óµÄÔÊĞíÖµ
-    LeaseNotExpire: Ã»ÓĞÕâÑùµÄ×âÁŞ»òÕß×âÁŞÎ´µ½ÆÚ.
-    LeaseRenewalCost: '¸üĞÂÇøÓò %1 µÄ»¨·ÑÊÇ %2'
-    LeaseInfinite: ×âÁŞÊ±¼äÒÑÉèÖÃÎªÎŞÏŞ...
-    PermissionsApply: È¨ÏŞÒÑÓ¦ÓÃµ½ÁìµØ.
-    PhysicalAreas: ÎïÀíÇøÓò
-    CurrentArea: µ±Ç°ÇøÓò
-    LeaseExpire: ×âÔ¼ÆÚÂú
-    NotOnline: Ä¿±êÍæ¼Ò±ØĞëÔÚÏß.
-    ResidenceGiveLimits: ÎŞ·¨¸øÓèÄ¿±êÍæ¼Ò£¬ÒòÎªÕâ³¬¹ıÁËÄ¿±êÍæ¼ÒµÄÉÏÏß
-    ResidenceGive: 'Äã°ÑÁìµØ %1 ¸øÁËÍæ¼Ò %2'
-    ResidenceRecieve: 'Äã´ÓÍæ¼Ò %2 ÄÇÀï½ÓÊÕµ½ÁË %1 ÁìµØ'
+    InvalidResidence: æ— æ•ˆçš„é¢†åœ°...
+    InvalidSubzone: æ— æ•ˆçš„é™„å±é¢†åœ°...
+    InvalidDirection: æ— æ•ˆæ–¹å‘...
+    InvalidChannel: æ— æ•ˆé¢‘é“...
+    InvalidAmount: æ— æ•ˆæ•°é‡...
+    InvalidCost: æ— æ•ˆèŠ±è´¹...
+    InvalidDays: æ— æ•ˆçš„å¤©æ•°...
+    InvalidMaterial: æ— æ•ˆçš„ææ–™...
+    InvalidBoolean: æ— æ•ˆå€¼ï¼Œå¿…é¡»æ˜¯ true(t) æˆ–è€… false(f)
+    InvalidArea: æ— æ•ˆçš„åŒºåŸŸ...
+    InvalidGroup: æ— æ•ˆçš„æƒé™ç»„...
+    InvalidMessageType: æ¶ˆæ¯ç±»å‹å¿…é¡»enterï¼ˆè¾“å…¥ï¼‰æˆ–ï¼ˆç§»é™¤ï¼‰remove.
+    InvalidList: æ— æ•ˆçš„æ¸…å•...
+    InvalidFlag: æƒé™æ— æ•ˆ...
+    InvalidFlagState: æ— æ•ˆçš„æƒé™çŠ¶æ€, å¿…é¡»æ˜¯ true(t)å¼€å¯, false(f)å…³é—­, æˆ–è€… remove(r)ç§»é™¤
+    AreaExists: åŒºåŸŸåå­—å·²ç»å­˜åœ¨.
+    AreaCreate: 'é¢†åœ°ID %1 åˆ›å»ºæˆåŠŸ'
+    AreaDiffWorld: åŒºåŸŸä¸é¢†åœ°æ˜¯åœ¨ä¸€ä¸ªä¸åŒçš„ä¸–ç•Œ.
+    AreaCollision: 'åŒºåŸŸä¸é¢†åœ° %1 å†²çª'
+    AreaSubzoneCollision: 'åŒºåŸŸå’Œé™„å±é¢†åœ° %1 å†²çª'
+    AreaNonExist: åŒºåŸŸä¸å­˜åœ¨.
+    AreaInvalidName: åŒºåŸŸåæ— æ•ˆ...
+    AreaRename: 'åŒºåŸŸåä» %1 æ›´æ”¹åˆ° %2'
+    AreaRemove: 'ç§»é™¤åŒºåŸŸ %1...'
+    AreaRemoveLast: ä¸èƒ½æŠŠæœ€åä¸€ä¸ªåŒºåŸŸä»é¢†åœ°ä¸­ç§»é™¤.
+    AreaNotWithinParent: è¿™ä¸ªåŒºåŸŸä¸åœ¨çˆ¶åŒºåŸŸä¹‹å†….
+    AreaUpdate: åŒºåŸŸå·²æ›´æ–°...
+    AreaMaxPhysical: ä½ å·²ç»è¾¾åˆ°ä½ çš„é¢†åœ°æ‰€å…è®¸çš„æœ€å¤§åŒºåŸŸ.
+    AreaSizeLimit: åŒºåŸŸçš„å¤§å°è¶…å‡ºä½ å…è®¸çš„èŒƒå›´ä¸Šé™.
+    AreaHighLimit: 'ä½ ä¸èƒ½ä¿æŠ¤è¿™æ ·é«˜çš„é¢†åœ°,ä½ çš„ä¸Šé™æ˜¯ %1'
+    AreaLowLimit: 'ä½ ä¸èƒ½ä¿æŠ¤è¿™æ ·æ·±çš„é¢†åœ°,ä½ çš„ä¸Šé™æ˜¯ %1'
+    NotInResidence: ä½ ä¸åœ¨ä¸€ä¸ªé¢†åœ°é‡Œ.
+    InResidence: 'ä½ æ­£ç«™åœ¨é¢†åœ° %1é‡Œ'
+    ResidenceOwnerChange: 'é¢†åœ°çš„æ‹¥æœ‰è€…ä»ç©å®¶ %1 æ”¹ä¸ºç©å®¶ %2'
+    NonAdmin: ä½ ä¸æ˜¯é¢†åœ°çš„ç®¡ç†å‘˜.
+    AdminOnly: åªæœ‰ç®¡ç†å‘˜æ‰èƒ½ä½¿ç”¨è¿™ä¸ªæƒé™.
+    ChatDisabled: é¢†åœ°èŠå¤©å·²å…³é—­...
+    SubzoneRename: 'é™„å±é¢†åœ°%1 å·²é‡å‘½åä¸º %2'
+    SubzoneRemove: 'é™„å±é¢†åœ° %1 å·²ç§»é™¤.'
+    SubzoneCreate: 'åˆ›å»ºé™„å±é¢†åœ° %1'
+    SubzoneCreateFail: 'ä¸èƒ½åˆ›å»ºé™„å±é¢†åœ° %1'
+    SubzoneExists: 'é™„å±é¢†åœ° %1 å·²ç»å­˜åœ¨.'
+    SubzoneCollide: 'é™„å±é¢†åœ°ä¸å¦ä¸€ä¸ªé™„å±é¢†åœ° %1 å†²çª'
+    SubzoneMaxDepth: æ‚¨å·²è¾¾åˆ°äº†ç³»ç»Ÿå…è®¸çš„æœ€å¤§åˆ†åŒºæ·±åº¦.
+    SubzoneSelectInside: ä¸¤ä¸ªé€‰æ‹©ç‚¹å¿…é¡»åœ¨é¢†åœ°å†…
+    SelectPoints: åœ¨ç”¨è¿™ä¸ªå‘½ä»¤ä¹‹å‰ï¼Œè¯·å…ˆç”¨é€‰æ‹©å·¥å…·é€‰å–ä¸¤ä¸ªç‚¹!
+    SelectionSuccess: é€‰æ‹©æˆåŠŸ!
+    SelectionFail: æ— æ•ˆçš„é€‰æ‹©å‘½ä»¤...
+    SelectionBedrock: æ‰©å¤§åˆ°å…è®¸çš„æœ€ä½é«˜åº¦.
+    SelectionSky: æ‰©å¤§åˆ°å…è®¸çš„æœ€é«˜é«˜åº¦.
+    SelectionArea: 'åœ¨é¢†åœ° %2 ä¸­é€‰æ‹©åŒºåŸŸ %1'
+    SelectDiabled: ä½ ä¸èƒ½ä½¿ç”¨åœˆåœ°æƒé™.
+    NoPermission: ä½ æ²¡æœ‰æ­¤å‘½ä»¤çš„æƒé™.
+    OwnerNoPermission: æ‰€æœ‰è€…æ— æ­¤å‘½ä»¤çš„æƒé™.
+    ParentNoPermission: ä½ æ²¡æœ‰æ”¹å˜çˆ¶åŒºåŸŸçš„æƒé™.
+    MessageChange: æ¶ˆæ¯å·²è®¾ç½®...
+    FlagSet: æƒé™å·²è®¾ç½®...
+    FlagCheckTrue: 'æƒé™ %1 ä¸ºç©å®¶ %2 åœ¨é¢†åœ° %3 è®¾ç½®,å€¼ä¸º=%4'
+    FlagCheckFalse: 'æƒé™ %1 æœªä¸ºç©å®¶ %2 åœ¨é¢†åœ°ä¸­è®¾ç½®.'
+    FlagsCleared: æƒé™å·²æ¸…é™¤.
+    FlagsDefault: æƒé™å·²è®¾ç½®ä¸ºé»˜è®¤.
+    Usage: å‘½ä»¤ç”¨æ³•
+    InvalidHelp: æ— æ•ˆçš„å¸®åŠ©é¡µ...
+    SubCommands: å­å‘½ä»¤
+    InvalidList: æœªçŸ¥åˆ—è¡¨çš„ç±»å‹,å¿…é¡»æ˜¯é»‘åå•ä¸­çš„ç±»å‹.
+    MaterialGet: 'ææ–™åç§°ä¸ºID %1 æ˜¯ %2'
+    MarketDisabled: å¸‚åœºè¢«ç¦ç”¨!
+    MarketList: å¸‚åœºåˆ—è¡¨
+    SelectionTool: é€‰æ‹©å·¥å…·
+    InfoTool: ä¿¡æ¯å·¥å…·
+    NoBankAccess: ä½ æ²¡æœ‰é“¶è¡Œæƒé™..
+    NotEnoughMoney: ä½ æ²¡æœ‰è¶³å¤Ÿçš„æƒé™.
+    BankNoMoney: åœ¨é“¶è¡Œé‡Œæ²¡æœ‰è¶³å¤Ÿçš„é’±.
+    BankDeposit: 'ä½ å­˜ %1 å…ƒåˆ°é¢†åœ°é“¶è¡Œ.'
+    BankWithdraw: 'ä½ å–å‡º %1 å…ƒä»é¢†åœ°é“¶è¡Œ.'
+    MoneyCharged: 'æ”¯å‡º %1 å…ƒä» %2 å¸æˆ·.'
+    MoneyCredit: 'æ”¶å…¥ %1 å…ƒä» %2 å¸æˆ·.'
+    RentDisabled: ç§Ÿå‡­ç³»ç»Ÿå·²å…³é—­.
+    RentReleaseInvalid: 'é¢†åœ° %1 æ²¡æœ‰è¢«ç§Ÿç”¨æˆ–è€…è¢«å‡ºç§Ÿ.'
+    RentSellFail: ä¸èƒ½å‡ºå”®ä¸€ä¸ªè¢«ç§Ÿå‡ºå»çš„é¢†åœ°.
+    SellRentFail: å½“å‰é¢†åœ°åœ¨å‡ºå”®ä¸èƒ½å‡ºç§Ÿé¢†åœ°.
+    OwnerBuyFail: æ— æ³•è´­ä¹°è‡ªå·±çš„åœŸåœ°!
+    OwnerRentFail: ä¸èƒ½ç§Ÿä½ è‡ªå·±çš„åœŸåœ°!
+    AlreadySellFail: é¢†åœ°å·²ç»å‡ºå”®!
+    ResidenceBought: 'ä½ å·²ç»ä¹°ä¸‹äº†é¢†åœ° %1'
+    ResidenceBuy: 'ç©å®¶ %1 ä»ä½ é‚£ä¹°ä¸‹äº†é¢†åœ° %2.'
+    ResidenceBuyTooBig: æ­¤é¢†åœ°å·²è¶…è¿‡ç³»ç»Ÿå…è®¸çš„æœ€å¤§é¢†åŸŸ.
+    ResidenceNotForSale: é¢†åœ°æ²¡æœ‰ç”¨äºå‡ºå”®.
+    ResidenceForSale: 'ç°åœ¨ä»¥ %2 é”€å”®é¢†åœ° %1 '
+    ResidenceStopSelling: é¢†åœ°ä¸å†é”€å”®.
+    ResidenceTooMany: å·²è¾¾åˆ°ç³»ç»Ÿå…è®¸é¢†åœ°çš„æœ€å¤§ä¸Šé™.
+    ResidenceMaxRent: å·²è¾¾åˆ°ç³»ç»Ÿå…è®¸ä½ ç§Ÿç”¨é¢†åœ°çš„æœ€å¤§ä¸Šé™.
+    ResidenceAlreadyRent: é¢†åœ°å·²ç»è¢«ç§Ÿç”¨...
+    ResidenceNotForRent: é¢†åœ°ä¸ç”¨äºå‡ºç§Ÿ...
+    ResidenceNotRented: é¢†åœ°æ²¡æœ‰è¢«ç§Ÿç”¨.
+    ResidenceUnrent: 'é¢†åœ°%1å·²ä¸å†å‡ºç§Ÿ.'
+    ResidenceRemoveRentable: 'é¢†åœ° %1 ä¸å†å‡ºç§Ÿ.'
+    ResidenceForRentSuccess: 'é¢†åœ°%1 ç°åœ¨ç§Ÿé‡‘ä¸º%2,æ¯æ¬¡ %3å¤©.'
+    ResidenceRentSuccess: 'ä½ å·²ç»ç§Ÿç”¨é¢†åœ° %1 %2å¤©..'
+    ResidenceAlreadyRented: 'é¢†åœ° %1,ç›®å‰å·²å‡ºç§Ÿç»™ %2'
+    ResidenceAlreadyExists: 'é¢†åœ° %1å·²å­˜åœ¨.'
+    ResidenceCreate: 'ä½ åˆ›å»ºäº†é¢†åœ° %1!'
+    ResidenceRename: 'é¢†åœ° %1 å·²æ”¹åä¸º %2'
+    ResidenceRemove: 'é¢†åœ° %1 å·²ç»è¢«ç§»é™¤...'
+    RentDisabled: å‡ºç§Ÿè¢«ç¦ç”¨...
+    RentDisableRenew: '%1 è‡ªåŠ¨åˆ°æœŸç»­çº¦å·²å…³é—­'
+    RentEnableRenew: '%1 è‡ªåŠ¨åˆ°æœŸç»­çº¦å·²å¼€å¯.'
+    RentableDisableRenew: '%1 æ›´æ–°å¯ç§Ÿç”¨çŠ¶æ€å…³é—­.'
+    RentableEnableRenew: '%1 æ›´æ–°å¯ç§Ÿç”¨çŠ¶æ€å¼€å¯.'
+    LandForSale: å‡ºå”®åœŸåœ°
+    SellAmount: é”€å”®é‡‘é¢
+    LeaseExpire: ç§Ÿèµåˆ°æœŸæ—¶é—´
+    RentExpire: ç§Ÿé‡‘åˆ°æœŸæ—¶é—´
+    RentableAutoRenew: è‡ªåŠ¨æ›´æ–°å¯å‡ºç§Ÿçš„åœŸåœ°
+    RentAutoRenew: ç§Ÿå€Ÿè‡ªåŠ¨æ›´æ–°
+    RentableLand: å¯ä¾›å‡ºç§ŸåœŸåœ°
+    ListMaterialAdd: '%1 æ·»åŠ åˆ°é¢†åœ° %2'
+    ListMaterialRemove: '%1 å·²ä»é¢†åœ° %2ç§»é™¤'
+    ItemBlacklisted: ä½ ä¸èƒ½åœ¨è¿™ä½¿ç”¨è¢«ç¦æ­¢çš„ç‰©å“.
+    RentedModifyDeny: ä¸èƒ½ä¿®æ”¹ä¸€ä¸ªç§Ÿæ¥çš„é¢†åœ°.
+    WorldPVPDisabled: å½“å‰ä¸–ç•Œçš„PvPè¢«ç¦æ­¢.
+    NoPVPZone: æ²¡æœ‰PVPçš„åŒºåŸŸ.
+    FlagDeny: 'ä½ æ²¡æœ‰æ‹¥æœ‰é¢†åœ° %1 çš„æƒé™.'
+    FlagSetDeny: 'æ‰€æœ‰è€…ä¸èƒ½ä½¿ç”¨è¿™ä¸ªæƒé™ %1'
+    SelectPoint: 'é€‰æ‹©äº† %1çš„é€‰æ‹©ç‚¹'
+    ResidenceChat: 'é¢†åœ°èŠå¤©åˆ‡æ¢åˆ° %1'
+    ResidenceMoveDeny: 'ä½ æ²¡æœ‰é¢†åœ° %1 çš„ç§»åŠ¨æƒé™'
+    TeleportDeny: ä½ æ²¡æœ‰ä¼ é€æƒé™.
+    TeleportSuccess: 'å·²ä¼ é€!'
+    TeleportNear: ä¼ é€åˆ°é¢†åœ°çš„é™„è¿‘.
+    TeleportNoFlag: å¯¹ä¸èµ·ï¼Œä½ æ²¡æœ‰ä¼ é€æƒé™å»ç›®æ ‡é¢†åœ°.
+    SetTeleportLocation: ä¼ é€ç‚¹å·²è®¾ç½®...
+    HelpPageHeader: 'å¸®åŠ©é¡µ - %1 - ç¬¬ %2é¡µ å…± %3é¡µ'
+    ListExists: åˆ—è¡¨å·²ç»å­˜åœ¨...
+    ListRemoved: åˆ—è¡¨è¢«ç§»é™¤...
+    ListCreate: 'å·²åˆ›å»ºåˆ—è¡¨ %1'
+    LeaseRenew: 'ç§Ÿèµæœ‰æ•ˆæœŸè‡³ %1åˆ°æœŸ'
+    LeaseRenewMax: ç§Ÿèµæœ€å¤§çš„å…è®¸å€¼
+    LeaseNotExpire: æ²¡æœ‰è¿™æ ·çš„ç§Ÿèµæˆ–è€…ç§Ÿèµæœªåˆ°æœŸ.
+    LeaseRenewalCost: 'æ›´æ–°åŒºåŸŸ %1 çš„èŠ±è´¹æ˜¯ %2'
+    LeaseInfinite: ç§Ÿèµæ—¶é—´å·²è®¾ç½®ä¸ºæ— é™...
+    PermissionsApply: æƒé™å·²åº”ç”¨åˆ°é¢†åœ°.
+    PhysicalAreas: ç‰©ç†åŒºåŸŸ
+    CurrentArea: å½“å‰åŒºåŸŸ
+    LeaseExpire: ç§Ÿçº¦æœŸæ»¡
+    NotOnline: ç›®æ ‡ç©å®¶å¿…é¡»åœ¨çº¿.
+    ResidenceGiveLimits: æ— æ³•ç»™äºˆç›®æ ‡ç©å®¶ï¼Œå› ä¸ºè¿™è¶…è¿‡äº†ç›®æ ‡ç©å®¶çš„ä¸Šçº¿
+    ResidenceGive: 'ä½ æŠŠé¢†åœ° %1 ç»™äº†ç©å®¶ %2'
+    ResidenceRecieve: 'ä½ ä»ç©å®¶ %2 é‚£é‡Œæ¥æ”¶åˆ°äº† %1 é¢†åœ°'
     #Version 4 New Fields
     #ResidenceListAll: 'Residences - <Page %1 of %2>' - removed, use GenericPage now
-    ResidenceListAllEmpty: ÔÚÕâ¸ö·şÎñÆ÷ÉÏÃ»ÓĞÈÎºÎµÄÁìµØ...
-    InvalidPage: ÎŞĞ§Ò³Êı...
-    NextPage: ÏÂÒ»Ò³
+    ResidenceListAllEmpty: åœ¨è¿™ä¸ªæœåŠ¡å™¨ä¸Šæ²¡æœ‰ä»»ä½•çš„é¢†åœ°...
+    InvalidPage: æ— æ•ˆé¡µæ•°...
+    NextPage: ä¸‹ä¸€é¡µ
     #Version 10 New Fields
-    RemovePlayersResidences: 'É¾³ıÁËËùÓĞÕâ¸öÍæ¼ÒµÄÁìµØ %1'
-    GenericPage: 'Ò³Êı %1 of %2'
+    RemovePlayersResidences: 'åˆ é™¤äº†æ‰€æœ‰è¿™ä¸ªç©å®¶çš„é¢†åœ° %1'
+    GenericPage: 'é¡µæ•° %1 of %2'
     #Version 11 New Fields
-    ResidenceRentedBy: '±» %1 ×âÓÃ'
+    ResidenceRentedBy: 'è¢« %1 ç§Ÿç”¨'
     #Version 14 New Fields
-    InvalidCharacters: Õì²âµ½ÎŞĞ§Ãû×Ö...
-    InvalidNameCharacters: Ãû×ÖÀï°üº¬·Ç·¨×Ö·û...
+    InvalidCharacters: ä¾¦æµ‹åˆ°æ— æ•ˆåå­—...
+    InvalidNameCharacters: åå­—é‡ŒåŒ…å«éæ³•å­—ç¬¦...
     #Version 15 New Fields
-    DeleteConfirm: 'ÄãÈ·¶¨ÒªÉ¾³ıÕâ¸öÁìµØ %1 Âğ£¿, ÇëÓÃÃüÁî"/res confirm" .À´È·¶¨¡£'
+    DeleteConfirm: 'ä½ ç¡®å®šè¦åˆ é™¤è¿™ä¸ªé¢†åœ° %1 å—ï¼Ÿ, è¯·ç”¨å‘½ä»¤"/res confirm" .æ¥ç¡®å®š.'
+    DeleteSubzoneConfirm: 'ä½ ç¡®å®šè¦åˆ é™¤è¿™ä¸ªé™„å±é¢†åœ° %1å—ï¼Ÿ, è¯·ç”¨å‘½ä»¤"/res confirm" .æ¥ç¡®å®š.'
+    #Version 18 New Fields
+    SelectTooHigh: è­¦å‘Šï¼Œé€‰æ‹©ç‚¹è¶…å‡ºåœ°å›¾é¡¶éƒ¨é™åˆ¶.
+    SelectTooLow: è­¦å‘Šï¼Œé€‰æ‹©ç‚¹è¶…å‡ºåœ°å›¾åº•éƒ¨é™åˆ¶.
+    WorldEditNotFound: æ²¡æœ‰å‘ç°WorldEditæ’ä»¶.
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
-    Description: ÃèÊö
-    Land: ÍÁµØ
-    Cost: »¨·Ñ
-    Selection: Ñ¡Ôñ
-    Total: ×Ü¼Æ
-    Size: ³ß´ç
-    Expanding: À©ÕÅ
-    Shifting: ÒÆ
-    Up: ÉÏ
-    Down: ÏÂ
-    Error: ´íÎó
-    Flags: È¨ÏŞ
-    Your: ÄãµÄ
-    Group: ×é
-    Others: ÆäËûÈË
-    Primary: µÚÒ»¸ö
-    Secondary: µÚ¶ş¸ö
-    Selection: Ñ¡Ôñ
-    Moved: ÒÆ¶¯
-    Status: ×´Ì¬
-    Available: ¿ÉÓÃ
-    On: ¿ªÆô
-    Off: ¹Ø±Õ
-    Name: Ãû×Ö
-    Lists: ÁĞ±í
-    Residences: ÁìµØ
-    Residence: ÁìµØ
-    Count: Í³¼Æ
-    Owner: ËùÓĞÕß
+    Description: æè¿°
+    Land: åœŸåœ°
+    Cost: èŠ±è´¹
+    Selection: é€‰æ‹©
+    Total: æ€»è®¡
+    Size: å°ºå¯¸
+    Expanding: æ‰©å¼ 
+    Shifting: ç§»
+    Up: ä¸Š
+    Down: ä¸‹
+    Error: é”™è¯¯
+    Flags: æƒé™
+    Your: ä½ çš„
+    Group: ç»„
+    Others: å…¶ä»–äºº
+    Primary: ç¬¬ä¸€ä¸ª
+    Secondary: ç¬¬äºŒä¸ª
+    Selection: é€‰æ‹©
+    Moved: ç§»åŠ¨
+    Status: çŠ¶æ€
+    Available: å¯ç”¨
+    On: å¼€å¯
+    Off: å…³é—­
+    Name: åå­—
+    Lists: åˆ—è¡¨
+    Residences: é¢†åœ°
+    Residence: é¢†åœ°
+    Count: ç»Ÿè®¡
+    Owner: æ‰€æœ‰è€…
     #Version 4 Fields
-    World: ÊÀ½ç
+    World: ä¸–ç•Œ
     #Version 12 Fields
-    Subzones: ¸½ÊôÁìµØ
+    Subzones: é™„å±é¢†åœ°
     
 # This is the help / usage messages for each command.
 # It follows this format:
@@ -222,348 +227,366 @@ Language:
 
 HelpLinesPerPage: 7
 CommandHelp: #this is just a holder node, that holds the entire help
-    Description: Contains Help for ÁìµØ²å¼ş
+    Description: é¢†åœ°åŒ…å«çš„å¸®åŠ©
     SubCommands: #this is the actual beginning of all commands
-        res: #main residence command
-            Description: Main ÁìµØ Command
+        res: #main é¢†åœ° command
+            Description: ä¸»è¦é¢†åœ°å‘½ä»¤
             Info:
-                - 'See the ÁìµØ wiki for more help.'
+                - 'æŸ¥é˜…residence wiki æ¥è·å¾—æ›´å¤šå¸®åŠ©.'
                 - 'Wiki: residencebukkitmod.wikispaces.com'
-                - 'Use /[command] ? <page> to view more help information.'
+                - 'ä½¿ç”¨ /[å‘½ä»¤] ? <é¡µç > æ¥æŸ¥çœ‹æ›´å¤šå¸®åŠ©ä¿¡æ¯.'
             SubCommands:
                 select: #selection commands
-                    Description: Selection Commands
+                    Description: é€‰æ‹©å‘½ä»¤
                     Info:
-                        - 'This command selects areas for usage with ÁìµØ.'
-                        - '/res select [x] [y] [z] - selects a radius of blocks, with you in the middle.'
+                        - 'è¯¥å‘½ä»¤é€‰æ‹©é¢†åœ°è¦ä½¿ç”¨çš„èŒƒå›´.'
+                        - '/res select [x] [y] [z] - é€‰æ‹©æ–¹å—èŒƒå›´, ä»¥ä½ æ‰€å¤„ä½ç½®ä¸ºä¸­å¿ƒ.'
                     SubCommands:
                         coords:
-                            Description: Display selected coordinates
+                            Description: æ˜¾ç¤ºé€‰æ‹©çš„åæ ‡
                             Info:
-                                - 'Usage: /res select coords'
+                                - 'ä½¿ç”¨: /res select coords'
                         size:
-                            Description: Display selected size
+                            Description: æ˜¾ç¤ºé€‰æ‹©ä½“ç§¯
                             Info:
-                                - 'Usage: /res select size'
+                                - 'ä½¿ç”¨: /res select size'
                         cost:
-                            Description: Display selection cost
+                            Description: æ˜¾ç¤ºé€‰æ‹©å¯¹è±¡çš„ä»·æ ¼
                             Info:
-                                - 'Usage: /res select cost'
+                                - 'ä½¿ç”¨: /res select cost'
                         vert:
-                            Description: Expand Selection Vertically
+                            Description: çºµå‘æ‰©å¼ é€‰æ‹©åŒºåŸŸ
                             Info:
-                                - 'Usage: /res select vert'
-                                - 'Will expand selection as high and as low as allowed.'
+                                - 'ä½¿ç”¨: /res select vert'
+                                - 'å°†æŠŠé€‰æ‹©åŒºåŸŸæ‰©å¼ åˆ°å…è®¸çš„æœ€é«˜ç‚¹å’Œæœ€ä½ç‚¹.'
                         sky:
-                            Description: Expand Selection to Sky
+                            Description: æ‰©å¼ é€‰æ‹©åŒºåŸŸåˆ°å¤©ç©º
                             Info:
-                                - 'Usage: /res select sky'
-                                - 'Expands as high as your allowed to go.'
+                                - 'ä½¿ç”¨: /res select sky'
+                                - 'å°†æŠŠé€‰æ‹©åŒºåŸŸæ‰©å¼ åˆ°å…è®¸çš„æœ€é«˜ç‚¹.'
                         bedrock:
-                            Description: Expand Selection to Bedrock
+                            Description: æ‰©å¼ é€‰æ‹©åŒºåŸŸåˆ°åœ°å£³
                             Info:
-                                - 'Usage: /res select bedrock'
-                                - 'Expands as low as your allowed to go.'
+                                - 'ä½¿ç”¨: /res select bedrock'
+                                - 'å°†æŠŠé€‰æ‹©åŒºåŸŸæ‰©å¼ åˆ°å…è®¸çš„æœ€ä½ç‚¹.'
                         expand:
-                            Description: Expand selection in a direction.
+                            Description: å‘ä¸€ä¸ªæ–¹å‘æ‰©å¼ é€‰æ‹©åŒºåŸŸ.
                             Info:
-                                - 'Usage: /res select expand <amount>'
-                                - 'Expands <amount> in the direction your looking.'
+                                - 'ä½¿ç”¨: /res select expand <æ•°é‡>'
+                                - 'æ‰©å¼  <æ•°é‡> ä¸ªæ–¹å—ï¼Œå‘ä½ é¢å¯¹çš„æ–¹å‘.'
                         shift:
-                            Description: Shift selection in a direction
+                            Description: å‘ä¸€ä¸ªæ–¹å‘å¹³ç§»é€‰æ‹©åŒºåŸŸ
                             Info:
-                                - 'Usage: /res select shift <amount>'
-                                - 'Pushes your selection by <amount> in the direction your looking.'
+                                - 'ä½¿ç”¨: /res select shift <æ•°é‡>'
+                                - 'å°†é€‰æ‹©åŒºåŸŸå‘ä½ é¢å¯¹çš„æ–¹å‘æ¨è¿› <æ•°é‡> ä¸ªæ–¹å—.'
                         chunk:
-                            Description: Select the chunk your currently in.
+                            Description: é€‰æ‹©ä½ ç›®å‰æ‰€åœ¨çš„åŒºåŸŸå—.
                             Info:
-                                - 'Usage: /res select chunk'
-                                - 'Selects the chunk your currently standing in.'
-                        ÁìµØ:
-                            Description: Select a existing area in a ÁìµØ.
+                                - 'ä½¿ç”¨: /res select chunk'
+                                - 'é€‰æ‹©ä½ ç›®å‰æ‰€åœ¨çš„åŒºåŸŸå—.'
+                        residence:
+                            Description: é€‰æ‹©é¢†åœ°ä¸­ä¸€ä¸ªå·²å­˜åœ¨èŒƒå›´.
                             Info:
-                                - 'Usage /res select <ÁìµØ> <AreaID>'
-                                - 'Selects a existing area in a ÁìµØ.'
+                                - 'ä½¿ç”¨ /res select <é¢†åœ°å> <èŒƒå›´ID>'
+                                - 'é€‰æ‹©é¢†åœ°ä¸­ä¸€ä¸ªå·²å­˜åœ¨èŒƒå›´.'
+                        worldedit:
+                            Description: è®¾ç½®é€‰å–ä½¿ç”¨å½“å‰WorldEdité€‰æ‹©.
+                            Info:
+                                - 'ä½¿ç”¨ /res select worldedit'
+                                - 'è®¾ç½®é€‰å–åŒºåŸŸä½¿ç”¨å½“å‰WorldEditçš„é€‰æ‹©.'
                 create: #creation command
-                    Description: Create ÁìµØ
+                    Description: åˆ›å»ºé¢†åœ°
                     Info:
-                        - 'Usage: /res create <ÁìµØÃû×Ö>'
+                        - 'ä½¿ç”¨: /res create <é¢†åœ°å>'
                 remove: #remove command
-                    Description: Remove residences.
+                    Description: åˆ é™¤é¢†åœ°.
                     Info:
-                        - 'Usage: /res remove <ÁìµØÃû×Ö>'
+                        - 'ä½¿ç”¨: /res remove <é¢†åœ°å>'
                 removeall:
-                    Description: Remove all ÁìµØ owned by a player.
+                    Description: åˆ é™¤æŸä¸ªç©å®¶çš„æ‰€æœ‰é¢†åœ°.
                     Info:
-                        - 'Usage: /res removeall [owner]'
-                        - 'Removes all residences owned by a specific player.'
-                        - 'Requires /resadmin if you use it on anyone besides yourself.'
+                        - 'ä½¿ç”¨: /res removeall [ç©å®¶]'
+                        - 'åˆ é™¤æ‰€é€‰ç©å®¶çš„æ‰€æœ‰é¢†åœ°.'
+                        - 'éœ€è¦ /resadmin å¦‚æœä½ ä½¿ç”¨åœ¨å…¶ä»–ç©å®¶èº«ä¸Š.'
                 confirm:
-                    - 'Usage: /res confirm'
-                    - 'Confirms removal of a ÁìµØ.'
+                    - 'ä½¿ç”¨: /res confirm'
+                    - 'ç¡®è®¤é¢†åœ°åˆ é™¤.'
                 subzone:
-                    Description: Create subzones in residences.
+                    Description: åœ¨é¢†åœ°ä¸­åˆ›å»ºé™„å±é¢†åœ°.
                     Info:
-                        - 'Usage: /res subzone <residence name> [subzone name]'
-                        - 'If residence name is left off, will attempt to use residence your standing in.'
+                        - 'ä½¿ç”¨: /res subzone <é¢†åœ°å> [é¢†åœ°é™„å±é¢†åœ°å]'
+                        - 'å¦‚æœé¢†åœ°åç©ºç€ï¼Œå°†å°è¯•ä½¿ç”¨ä½ èº«å¤„çš„é¢†åœ°.'
                 area:
-                    Description: Manage physical areas for a residence.
+                    Description: ç®¡ç†é¢†åœ°çš„ç‰©ç†èŒƒå›´.
                     SubCommands:
                         list:
-                            Description: List physical areas in a residence
+                            Description: åˆ—å‡ºé¢†åœ°çš„æ‰€æœ‰ç‰©ç†èŒƒå›´
                             Info:
-                                - 'Usage: /res area list [residence] <page>'
+                                - 'ä½¿ç”¨: /res area list [é¢†åœ°] <é¡µç >'
                         listall:
-                            Description: List coordinates and other info for areas
+                            Description: åˆ—å‡ºåŒºåŸŸçš„åæ ‡å’Œå…¶ä»–ä¿¡æ¯
                             Info:
-                                - 'Usage: /res area listall [residence] <page>'
+                                - 'ä½¿ç”¨: /res area listall [é¢†åœ°] <é¡µç >'
                         add:
-                            Description: Add physical areas to a residence
+                            Description: ä¸ºé¢†åœ°æ·»åŠ ç‰©ç†èŒƒå›´
                             Info:
-                                - 'Usage: /res area add [residence] [areaID]'
-                                - 'You must first select two points first.'
+                                - 'ä½¿ç”¨: /res area add [é¢†åœ°å] [èŒƒå›´ID]'
+                                - 'ä½ å¿…é¡»é¦–å…ˆé€‰æ‹©ä¸¤ä¸ªç‚¹.'
                         remove:
-                            Description: Remove physical areas from a residence
+                            Description: ä»é¢†åœ°ä¸­åˆ é™¤ç‰©ç†èŒƒå›´
                             Info:
-                                - 'Usage: /res area remove [residence] [areaID]'
+                                - 'ä½¿ç”¨: /res area remove [é¢†åœ°å] [èŒƒå›´ID]'
                         replace:
-                            Description: Replace physical areas in a residence
+                            Description: æ›¿æ¢é¢†åœ°ä¸­ç‰©ç†èŒƒå›´
                             Info:
-                                - 'Usage: /res area replace [residence] [areaID]'
-                                - 'You must first select two points first.'
-                                - 'Replacing a area will charge the difference in size if the new area is bigger.'
+                                - 'ä½¿ç”¨: /res area replace [é¢†åœ°å] [èŒƒå›´ID]'
+                                - 'ä½ å¿…é¡»é¦–å…ˆé€‰æ‹©ä¸¤ä¸ªç‚¹.'
+                                - 'æ›¿æ¢èŒƒå›´å°†æ‰£é™¤ä½“ç§¯å˜åŠ¨å¸¦æ¥çš„å·®ä»·.'
                 info:
-                    Description: Show info on a residence.
+                    Description: æ˜¾ç¤ºé¢†åœ°çš„ä¿¡æ¯.
                     Info:
-                        - 'Usage: /res info <residence>'
-                        - 'Leave off <residence> to display info for the residence your currently in.'
+                        - 'ä½¿ç”¨: /res info <é¢†åœ°å>'
+                        - 'ä¸å¡«å†™ <é¢†åœ°å> å°†æ˜¾ç¤ºä½ ç›®å‰æ‰€å¤„é¢†åœ°çš„ä¿¡æ¯.'
                 limits:
-                    Description: Show your limits.
+                    Description: æ˜¾ç¤ºä½ çš„é™åˆ¶ä¿¡æ¯.
                     Info:
-                        - 'Usage: /res limits'
-                        - 'Shows the limitations you have on creating and managing residences.'
+                        - 'ä½¿ç”¨: /res limits'
+                        - 'æ˜¾ç¤ºä½ åˆ›å»ºå’Œç®¡ç†é¢†åœ°çš„é™åˆ¶ä¿¡æ¯.'
                 message:
-                    Description: Manage residence enter / leave messages
+                    Description: ç®¡ç†é¢†åœ°è¿›å…¥/ç¦»å¼€æ¬¢è¿ä¿¡æ¯
                     Info:
-                        - 'Usage: /res message <residence> [enter/leave] [message]'
-                        - 'Set the enter or leave message of a residence.'
-                        - 'Usage: /res message <residence> remove [enter/leave]'
-                        - 'Removes a enter or leave message.'
+                        - 'ä½¿ç”¨: /res message <é¢†åœ°å> [enter/leave] [ä¿¡æ¯]'
+                        - 'è®¾ç½®é¢†åœ°çš„è¿›å…¥/ç¦»å¼€ä¿¡æ¯.'
+                        - 'ä½¿ç”¨: /res message <é¢†åœ°> remove [enter/leave]'
+                        - 'åˆ é™¤é¢†åœ°çš„è¿›å…¥/ç¦»å¼€ä¿¡æ¯.'
                 lease:
-                    Description: Manage residence leases
+                    Description: ç®¡ç†é¢†åœ°å¥‘çº¦
                     Info:
-                        - 'Usage: /res lease [renew/cost] [residence]'
-                        - '/res lease cost will show the cost of renewing a residence lease.'
-                        - '/res lease renew will renew the residence provided you have enough money.'
+                        - 'ä½¿ç”¨: /res lease [renew/cost] [é¢†åœ°]'
+                        - '/res lease cost å°†æ˜¾ç¤ºé¢†åœ°å¥‘çº¦ç»­è´¹çš„ä¿¡æ¯.'
+                        - '/res lease renew å°†ä¸ºé¢†åœ°ç»­è´¹é¢†åœ°ï¼Œå¦‚æœä½ æ‹¥æœ‰è¶³å¤Ÿçš„é‡‘é’±.'
                     SubCommands:
                         set:
-                            Description: Set the lease time (admin only)
+                            Description: è®¾ç½®å¥‘çº¦æ—¶é—´ (ç®¡ç†å‘˜æƒé™)
                             Info:
-                                - 'Usage: /resadmin lease set [residence] [#days/infinite]'
-                                - 'Sets the lease time to a specified number of days, or infinite.'
+                                - 'ä½¿ç”¨: /resadmin lease set [é¢†åœ°] [#days/infinite]'
+                                - 'è®¾ç½®å¥‘çº¦æ—¶é—´ä¸ºæŒ‡å®šçš„å¤©æ•°, æˆ–æ— é™æœŸ.'
                 bank:
-                    Description: Manage money in a Residence
+                    Description: ç®¡ç†é¢†åœ°é‡‘é’±
                     Info:
-                        - 'Usage: /res bank [deposit/withdraw] [amount]'
-                        - 'You must be standing in a Residence'
-                        - 'You must have the +bank flag.'
+                        - 'ä½¿ç”¨: /res bank [deposit/withdraw] [æ•°é‡]'
+                        - 'ä½ å¿…é¡»ç«™åœ¨ä¸€ä¸ªé¢†åœ°ä¸­'
+                        - 'ä½ å¿…é¡»æ‹¥æœ‰ +bank æƒé™.'
                 tp:
-                    Description: Teleport to a residence
+                    Description: ä¼ é€åˆ°æŸä¸ªé¢†åœ°
                     Info:
-                        - 'Usage: /res tp [residence]'
-                        - 'Teleports you to a residence, you must have +tp flag access or be the owner.'
-                        - 'Your permission group must also be allowed to teleport by the server admin.'
+                        - 'ä½¿ç”¨: /res tp [é¢†åœ°å]'
+                        - 'å°†ä½ ä¼ é€åˆ°æŸä¸ªé¢†åœ°, ä½ å¿…é¡»æœ‰ +tp æƒé™æˆ–ä¸ºç›®æ ‡é¢†åœ°ä¸»äºº.'
+                        - 'ä½ çš„æƒé™ç»„åŒæ—¶å¿…é¡»æ‹¥æœ‰ä¼ é€çš„æƒé™.'
                 tpset:
-                    Description: Set the teleport location of a Residence
+                    Description: è®¾ç½®é¢†åœ°çš„ä¼ é€ç‚¹
                     Info:
-                        - 'Usage: /res tpset'
-                        - 'This will set the teleport location for a residence to where your standing.'
-                        - 'You must be standing in the residence to use this command.'
-                        - 'You must also be the owner or have the +admin flag for the residence.'
+                        - 'ä½¿ç”¨: /res tpset'
+                        - 'å°†æŠŠä½ ç«™ç«‹çš„åœ°ç‚¹è®¾ç½®ä¸ºé¢†åœ°çš„ä¼ é€ç‚¹.'
+                        - 'ä½ å¿…é¡»ç«™åœ¨é¢†åœ°ä¸­æ¥ä½¿ç”¨è¯¥å‘½ä»¤.'
+                        - 'ä½ å¿…é¡»åŒæ—¶ä¸ºé¢†åœ°ä¸»äººæˆ–æ‹¥æœ‰è¯¥é¢†åœ°çš„ +admin æƒé™.'
                 set:
-                    Description: Set general flags on a Residence
+                    Description: è®¾ç½®é¢†åœ°çš„ä¸»è¦æƒé™
                     Info:
-                        - 'Usage: /res set <residence> [flag] [true/false/remove]'
-                        - 'To see a list of flags, use /res flags ?'
-                        - 'These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)'
+                        - 'ä½¿ç”¨: /res set <é¢†åœ°> [æƒé™] [true/false/remove]'
+                        - 'æŸ¥çœ‹æƒé™åˆ—è¡¨, ä½¿ç”¨ /res flags ?'
+                        - 'è¿™äº›æƒé™åº”ç”¨ç»™ä»»ä½•æ²¡æœ‰ç‰¹å®šæƒé™çš„ç©å®¶. (æŸ¥çœ‹ /res pset ?)'
                 pset:
-                    Description: Set flags on a specific player for a Residence.
+                    Description: ä¸ºæŸä¸ªç©å®¶è®¾ç½®æŸä¸ªé¢†åœ°çš„ç‰¹å®šæƒé™.
                     Info:
-                        - 'Usage: /res pset <residence> [player] [flag] [true/false/remove]'
-                        - 'Usage: /res pset <residence> [player] removeall'
-                        - 'To see a list of flags, use /res flags ?'
+                        - 'ä½¿ç”¨: /res pset <é¢†åœ°> [ç©å®¶] [æƒé™] [true/false/remove]'
+                        - 'ä½¿ç”¨: /res pset <é¢†åœ°> [ç©å®¶] removeall'
+                        - 'æŸ¥çœ‹æƒé™åˆ—è¡¨ä½¿ç”¨ /res flags ?'
                 gset:
-                    Description: Set flags on a specific group for a Residence.
+                    Description: ä¸ºç‰¹å®šç¾¤ç»„è®¾ç½®æŸä¸ªé¢†åœ°çš„æƒé™.
                     Info:
-                        - 'Usage: /res gset <residence> [group] [flag] [true/false/remove]'
-                        - 'To see a list of flags, use /res flags ?'
+                        - 'ä½¿ç”¨: /res gset <é¢†åœ°> [ç¾¤ç»„] [æƒé™] [true/false/remove]'
+                        - 'æŸ¥çœ‹æƒé™åˆ—è¡¨ä½¿ç”¨ /res flags ?'
                 lset:
-                    Description: Change blacklist and ignorelist options
+                    Description: æ”¹å˜ç‰©å“çš„é»‘åå•ä¸å¿½è§†åå•é€‰é¡¹
                     Info:
-                        - 'Usage: /res lset <residence> [blacklist/ignorelist] [material]'
-                        - 'Usage: /res lset <residence> info'
-                        - 'Blacklisting a material prevents it from being placed in the residence.'
-                        - 'Ignorelist causes a specific material to not be protected by Residence.'
+                        - 'ä½¿ç”¨: /res lset <é¢†åœ°> [blacklist/ignorelist] [ç‰©å“]'
+                        - 'ä½¿ç”¨: /res lset <é¢†åœ°> info'
+                        - 'å°†æŸç‰©å“åŠ å…¥é¢†åœ°çš„é»‘åå•ï¼Œä»¥é˜²æ­¢è¯¥ç‰©å“è¢«æ”¾ç½®åœ¨è¯¥é¢†åœ°ä¸­.'
+                        - 'å¿½è§†åå•ä½¿æŸç‰©å“ä¸å—é¢†åœ°ä¿æŠ¤.'
                 flags:
-                    Description: List of flags
+                    Description: æƒé™åˆ—è¡¨
                     Info:
-                        - 'For flag values, usually true allows the action, and false denys the action.'
-                        - 'build - allows or denys building'
-                        - 'use - allows or denys use of doors, lever, buttons, etc...'
-                        - 'move - allows or denys movement in the residence.'
-                        - 'container - allows or denys use of furnaces, chests, dispensers, etc...'
-                        - 'place - allows or denys only placement of blocks, overrides the build flag.'
-                        - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
-                        - 'pvp - allow or deny pvp in the residence'
-                        - 'tp - allow or disallow teleporting to the residence.'
-                        - 'admin - gives a player permission to change flags on a residence.'
-                        - 'subzone - allow a player to make subzones in the residence.'
-                        - 'monsters - allows or denys monster spawns'
-                        - 'animals - allows or denys animal spawns.'
-                        - 'healing - setting to true makes the residence heal its occupants'
-                        - 'tnt - allow or deny tnt explosions'
-                        - 'creeper - allow or deny creeper explosions'
-                        - 'ignite - allows or denys fire ignition.'
-                        - 'firespread - allows or denys fire spread.'
-                        - 'bucket - allow or deny bucket use.'
-                        - 'flow - allows or denys liquid flow.'
-                        - 'lavaflow - allows or denys lava flow, overrides flow'
-                        - 'waterflow - allows or denys water flow, overrides flow'
-                        - 'damage - allows or denys all entity damage within the residence.'
+                        - 'æƒé™çš„å€¼ï¼š true=å…è®¸è¯¥è¡Œä¸º, false =ç¦æ­¢.'
+                        - 'build - å…è®¸æˆ–ç¦æ­¢å»ºè®¾'
+                        - 'use - å…è®¸æˆ–ç¦æ­¢é—¨ï¼Œæ“çºµæ†ï¼ŒæŒ‰é’®ç­‰çš„ä½¿ç”¨...'
+                        - 'move - å…è®¸æˆ–ç¦æ­¢åœ¨é¢†åœ°ä¸­è¡ŒåŠ¨.'
+                        - 'container - å…è®¸æˆ–ç¦æ­¢ä½¿ç”¨ç†”ç‚‰ï¼Œç®±å­ï¼Œç‚¼è¯å°, etc...'
+                        - 'place - å…è®¸æˆ–ç¦æ­¢æ–¹å—çš„æ”¾ç½®ï¼Œå°†è¦†ç›– build æƒé™.'
+                        - 'destroy - å…è®¸æˆ–ç¦æ­¢æ–¹å—çš„ç ´åï¼Œå°†è¦†ç›– build æƒé™.'
+                        - 'pvp - å…è®¸æˆ–ç¦æ­¢é¢†åœ°å†… PVP'
+                        - 'tp - å…è®¸æˆ–ç¦æ­¢é¢†åœ°å†…çš„ä¼ é€.'
+                        - 'admin - ç»™äºˆæŸç©å®¶æ”¹å˜æŸé¢†åœ°æƒé™çš„æƒé™.'
+                        - 'subzone - å…è®¸ç©å®¶åˆ›å»ºé¢†åœ°é™„å±é¢†åœ°.'
+                        - 'monsters - å…è®¸æˆ–ç¦æ­¢æ€ªç‰©å‡ºç”Ÿ'
+                        - 'animals - å…è®¸æˆ–ç¦æ­¢åŠ¨ç‰©å‡ºç”Ÿ.'
+                        - 'healing - è®¾ç½®ä¸ºtrueä½¿é¢†åœ°å¯ä»¥æ²»ç–—å±…ä½è€…'
+                        - 'tnt - å…è®¸æˆ–ç¦æ­¢TNTçˆ†ç‚¸'
+                        - 'creeper - å…è®¸æˆ–ç¦æ­¢è‹¦åŠ›æ€•çˆ†ç‚¸'
+                        - 'ignite - å…è®¸æˆ–ç¦æ­¢ç«ç„°ç‚¹ç‡ƒ.'
+                        - 'firespread - å…è®¸æˆ–ç¦æ­¢ç«ç„°è”“å»¶.'
+                        - 'bucket - å…è®¸æˆ–ç¦æ­¢æ¡¶çš„ä½¿ç”¨.'
+                        - 'flow - å…è®¸æˆ–ç¦æ­¢æ¶²ä½“æµåŠ¨.'
+                        - 'lavaflow - å…è®¸æˆ–ç¦æ­¢å²©æµ†æµåŠ¨, è¦†ç›–æƒé™ flow'
+                        - 'waterflow - å…è®¸æˆ–ç¦æ­¢æ°´æµåŠ¨,è¦†ç›–æƒé™ flow'
+                        - 'damage - å…è®¸æˆ–ç¦æ­¢é¢†åœ°ä¸­çš„æ‰€æœ‰å®ä½“ä¼¤å®³.'
+                        - 'piston - å…è®¸æˆ–ç¦æ­¢é¢†åœ°ä¸­ä½¿ç”¨æ´»å¡.'
+                        - 'hidden - å°†é¢†åœ°ä» list æˆ– listall å‘½ä»¤åˆ—è¡¨ä¸­éšè—.'
                 list:
-                    Description: List Residences
+                    Description: é¢†åœ°åˆ—è¡¨
                     Info:
-                        - 'Usage: /res list <player> <page>'
-                        - 'Lists all the residences you own.'
-                        - 'To list everyones residences, use /res listall.'
+                        - 'ä½¿ç”¨: /res list <ç©å®¶> <é¡µç >'
+                        - 'åˆ—å‡ºæŸç©å®¶æ‹¥æœ‰çš„æ‰€æœ‰é¢†åœ°(é™¤äº†éšè—çš„).'
+                        - 'å¦‚æœæ˜¯ä½ è‡ªå·±çš„é¢†åœ°, å°†æ˜¾ç¤ºéšè—çš„.'
+                        - 'åˆ—å‡ºæ‰€æœ‰äººçš„æ‰€æœ‰é¢†åœ°, ä½¿ç”¨ /res listall.'
+                listhidden:
+                    Description: åˆ—å‡ºéšè—é¢†åœ°(ç®¡ç†å‘˜æƒé™)
+                    Info:
+                        - 'ä½¿ç”¨: /res listhidden <ç©å®¶> <é¡µç >'
+                        - 'åˆ—å‡ºæŸç©å®¶çš„æ‰€æœ‰éšè—é¢†åœ°.'
                 listall:
-                    Description: List All Residence
+                    Description: åˆ—å‡ºæ‰€æœ‰é¢†åœ°
                     Info:
-                        - 'Usage: /res listall <page>'
-                        - 'Lists all residences on the server.'
+                        - 'ä½¿ç”¨: /res listall <é¡µç >'
+                        - 'åˆ—å‡ºæœåŠ¡å™¨çš„æ‰€æœ‰é¢†åœ°. (å‡ºå»éä½ æ‹¥æœ‰çš„éšè—é¢†åœ°)'
+                listallhidden:
+                    Description: åˆ—å‡ºæ‰€æœ‰éšè—é¢†åœ°(ç®¡ç†å‘˜æƒé™)
+                    Info:
+                        - 'ä½¿ç”¨: /res listhidden <é¡µç >'
+                        - 'åˆ—å‡ºæœåŠ¡å™¨çš„æ‰€æœ‰éšè—é¢†åœ°.'
                 sublist:
-                    Description: List Residence Subzones
+                    Description: åˆ—å‡ºé¢†åœ°é™„å±é¢†åœ°
                     Info:
-                        - 'Usage: /res sublist <residence> <page>'
-                        - 'List subzones within a residence.'
+                        - 'ä½¿ç”¨: /res sublist <é¢†åœ°> <é¡µç >'
+                        - 'åˆ—å‡ºæŸé¢†åœ°æ‰€æœ‰é™„å±é¢†åœ°.'
                 default:
-                    Description: Reset residence to default flags.
+                    Description: é‡ç½®é¢†åœ°çš„æƒé™ä¸ºé»˜è®¤å€¼.
                     Info:
-                        - 'Usage: /res default <residence>'
-                        - 'Resets the flags on a residence to their default.  You must be the owner or an admin to do this.'
+                        - 'ä½¿ç”¨: /res default <é¢†åœ°>'
+                        - 'é‡ç½®é¢†åœ°çš„æƒé™ä¸ºé»˜è®¤å€¼. ä½ å¿…é¡»æ˜¯é¢†åœ°ä¸»äººæˆ–ç®¡ç†å‘˜.'
                 rename:
-                    Description: Renames a residence.
+                    Description: é‡å‘½åé¢†åœ°.
                     Info:
-                        - 'Usage: /res rename [OldName] [NewName]'
-                        - 'You must be the owner or an admin to do this.'
-                        - 'The name must not already be taken by another residence.'
+                        - 'ä½¿ç”¨: /res rename [æ—§åç§°] [æ–°åç§°]'
+                        - 'ä½ å¿…é¡»æ˜¯é¢†åœ°ä¸»äººæˆ–ç®¡ç†å‘˜.'
+                        - 'æ–°åç§°å¿…é¡»æ²¡æœ‰è¢«å…¶ä»–é¢†åœ°ä½¿ç”¨.'
                 mirror:
-                    Description: Mirrors Flags
+                    Description: é•œåƒæƒé™
                     Info:
-                        - 'Usage: /res mirror [Source Residence] [Target Residence]'
-                        - 'Mirrors flags from one residence to another.  You must be owner of both or a admin to do this.'
+                        - 'ä½¿ç”¨: /res mirror [æºé¢†åœ°] [ç›®æ ‡é¢†åœ°]'
+                        - 'å°†æºé¢†åœ°é¢†åœ°æƒé™é•œåƒç»™ç›®æ ‡é¢†åœ°.  ä½ ä½ å¿…é¡»æ˜¯é¢†åœ°ä¸»äººæˆ–ç®¡ç†å‘˜.'
                 market:
-                    Description: Buy, Sell, or Rent Residences
+                    Description: é¢†åœ°çš„ä¹°å–å’Œç§Ÿèµ
                     Info:
-                        - 'Usage: /res market ? for more info'
+                        - 'ä½¿ç”¨: /res market ? è·å¾—æ›´å¤šä¿¡æ¯'
                     SubCommands:
                         info:
-                            Description: Get economy info on residence
+                            Description: è·å¾—é¢†åœ°çš„ç»æµä¿¡æ¯
                             Info:
-                                - 'Usage: /res market info [residence]'
-                                - 'Shows if the Residence is for sale or for rent, and the cost.'
+                                - 'ä½¿ç”¨: /res market info [é¢†åœ°]'
+                                - 'æ˜¾ç¤ºé¢†åœ°æ˜¯å¦å‡ºå”®æˆ–å‡ºç§Ÿ, å·²ç»å‡ºä»·.'
                         list:
-                            Description: Lists rentable and for sale residences.
+                            Description: åˆ—å‡ºå¯ç§Ÿå€Ÿé¢†åœ°å’Œå¯è´­ä¹°é¢†åœ°.
                             Info:
-                                - 'Usage: /res market list'
+                                - 'ä½¿ç”¨: /res market list'
                         sell:
-                            Description: Sell a residence
+                            Description: å‡ºå”®é¢†åœ°
                             Info:
-                                - 'Usage: /res sell [residence] [amount]'
-                                - 'Puts a residence for sale for [amount] of money.'
-                                - 'Another player can buy the residence with /res market buy'
+                                - 'ä½¿ç”¨: /res sell [é¢†åœ°] [ä»·æ ¼]'
+                                - 'ä»¥[ä»·æ ¼]å‡ºå”®é¢†åœ°.'
+                                - 'å¦ä¸€ä¸ªç©å®¶å¯ä»¥è´­ä¹°é¢†åœ°é€šè¿‡ /res market buy'
                         buy:
-                            Description: Buy a residence
+                            Description: è´­ä¹°é¢†åœ°
                             Info:
-                                - 'Usage: /res buy [residence]'
-                                - 'Buys a Residence if its for sale.'
+                                - 'ä½¿ç”¨: /res buy [é¢†åœ°]'
+                                - 'è´­ä¹°æ­£åœ¨å‡ºå”®çš„é¢†åœ°.'
                         unsell:
-                            Description: Stops selling a residence
+                            Description: åœæ­¢å‡ºå”®é¢†åœ°
                             Info:
-                                - 'Usage: /res unsell [residence]'
+                                - 'ä½¿ç”¨: /res unsell [é¢†åœ°]'
                         rent:
-                            Description: Rent a residence
+                            Description: ç§Ÿç”¨é¢†åœ°
                             Info:
-                                - 'Usage: /res market rent [residence] <autorenew>'
-                                - 'Rents a residence.  Autorenew can be either true or false.  If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.'
+                                - 'ä½¿ç”¨: /res market rent [é¢†åœ°] <autorenew>'
+                                - 'ç§Ÿç”¨é¢†åœ°ï¼Œ Autorenew å¯ä»¥æ˜¯ true æˆ– false. å¦‚æœä¸ºtrueï¼Œé¢†åœ°ç§Ÿç”¨åˆ°æœŸå°†è‡ªåŠ¨ç»­è´¹.'
                         rentable:
-                            Description: Make a residence rentable.
+                            Description: å°†é¢†åœ°è®¾ä¸ºå¯å‡ºç§Ÿ.
                             Info:
-                                - 'Usage: /res market rentable [residence] [cost] [days] <repeat>'
-                                - 'Makes a residence rentable for [cost] money for every [days] number of days.  If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.'
+                                - 'ä½¿ç”¨: /res market rentable [é¢†åœ°] [ä»·æ ¼] [å¤©æ•°] <repeat>'
+                                - 'å°†é¢†åœ°è®¾ä¸ºå¯å‡ºç§Ÿ.  å¦‚æœ <repeat> ä¸º true, è¯¥é¢†åœ°å‡ºç§Ÿåˆ°æœŸå°†è‡ªåŠ¨å˜ä¸ºå¯å‡ºç§Ÿ.'
                         release:
-                            Description: Remove a residence from rent or rentable.
+                            Description: ä»å‡ºç§Ÿæˆ–å¯å‡ºç§Ÿä¸­åˆ é™¤ä¸€ä¸ªé¢†åœ°.
                             Info:
-                                - 'Usage: /res market release [residence]'
-                                - 'If you are the renter, this command releases the rent on the house for you.'
-                                - 'If you are the owner, this command makes the residence not for rent anymore.'
+                                - 'ä½¿ç”¨: /res market release [é¢†åœ°]'
+                                - 'å¦‚æœä½ æ˜¯ç§Ÿæˆ·ï¼Œè¯¥å‘½ä»¤è§£é™¤è¿™ä¸ªé¢†åœ°çš„ç§Ÿç”¨.'
+                                - 'å¦‚æœä½ æ˜¯é¢†åœ°ä¸»ï¼Œè¯¥å‘½ä»¤åœæ­¢è¯¥é¢†åœ°å‡ºç§Ÿ.'
                 current:
-                    Description: Show residence your currently in.
+                    Description: æ˜¾ç¤ºä½ ç›®å‰æ‰€åœ¨é¢†åœ°.
                     Info:
-                        - 'Usage: /res current'
+                        - 'ä½¿ç”¨: /res current'
                 lists:
-                    Description: Predefined permission lists
+                    Description: é¢„å®šä¹‰æƒé™åˆ—è¡¨
                     Info:
-                        - 'Predefined permissions that can be applied to a residence.'
+                        - 'é¢„å®šä¹‰å¯åº”ç”¨åˆ°æŸé¢†åœ°çš„æƒé™åˆ—è¡¨.'
                     SubCommands:
                         add:
-                            Description: Add a list
+                            Description: æ·»åŠ åˆ—è¡¨
                             Info:
-                                - 'Usage: /res lists add <listname>'
+                                - 'ä½¿ç”¨: /res lists add <åˆ—è¡¨å>'
                         remove:
-                            Description: Remove a list
+                            Description: åˆ é™¤åˆ—è¡¨
                             Info:
-                                - 'Usage: /res lists remove <listname>'
+                                - 'ä½¿ç”¨: /res lists remove <åˆ—è¡¨å>'
                         apply:
-                            Description: Apply a list to a residence
+                            Description: åº”ç”¨æŸåˆ—è¡¨åˆ°æŸé¢†åœ°
                             Info:
-                                - 'Usage: /res lists apply <listname> <residence>'
+                                - 'ä½¿ç”¨: /res lists apply <åˆ—è¡¨å> <é¢†åœ°>'
                         set:
-                            Description: Set a flag
+                            Description: è®¾ç½®é¢†åœ°æƒé™
                             Info:
-                                - 'Usage: /res lists set <listname> <flag> <value>'
+                                - 'ä½¿ç”¨: /res lists set <åˆ—è¡¨å> <æƒé™> <æƒé™å€¼>'
                         pset:
-                            Description: Set a player flag
+                            Description: è®¾ç½®ç©å®¶æƒé™
                             Info:
-                                - 'Usage: /res lists pset <listname> <player> <flag> <value>'
+                                - 'ä½¿ç”¨: /res lists pset <åˆ—è¡¨å> <ç©å®¶> <æƒé™> <æƒé™å€¼>'
                         gset:
-                            Description: Set a group flag
+                            Description: è®¾ç½®ç¾¤ç»„æƒé™
                             Info:
-                                - 'Usage: /res lists gset <listname> <group> <flag> <value>'
+                                - 'ä½¿ç”¨: /res lists gset <æƒé™å> <ç¾¤ç»„å> <æƒé™> <æƒé™å€¼>'
                         view:
-                            Description: View a list.
+                            Description: æŸ¥çœ‹åˆ—è¡¨.
                             Info:
-                                - 'Usage: /res lists view <listname>'
+                                - 'ä½¿ç”¨: /res lists view <æƒé™å>'
                 server:
-                    Description: Make land server owned (admin only).
+                    Description: å°†é¢†åœ°è®¾ä¸ºæœåŠ¡å™¨æ‰€æœ‰(ä»…ç®¡ç†å‘˜).
                     Info:
-                        - 'Usage: /resadmin server [residence]'
-                        - 'Make a residence server owned.'
+                        - 'ä½¿ç”¨: /resadmin server [é¢†åœ°]'
+                        - 'å°†é¢†åœ°è®¾ä¸ºæœåŠ¡å™¨æ‰€æœ‰.'
                 setowner:
-                    Description: Change owner of a residence (admin only).
+                    Description: æ”¹å˜é¢†åœ°æ‰€æœ‰æƒ (ç®¡ç†å‘˜æƒé™).
                     Info:
-                        - 'Usage: /resadmin setowner [residence] [player]'
+                        - 'ä½¿ç”¨: /resadmin setowner [é¢†åœ°] [ç©å®¶]'
                 resreload:
-                    Description: Reload residence (admin only).
+                    Description: é‡æ–°è¯»å–é¢†åœ° (ç®¡ç†å‘˜æƒé™).
                     Info:
-                        - 'Usage: /resreload'
+                        - 'ä½¿ç”¨: /resreload'
                 resload:
-                    Description: Load residence save file (UNSAFE, admin only).
+                    Description: è¯»å–é¢†åœ° save file (ä¸å®‰å…¨, ä»…ç®¡ç†å‘˜).
                     Info:
-                        - 'Usage: /resload'
-                        - 'UNSAFE command, does not save residences first.'
-                        - 'Loads the residence save file after you have made changes.'
+                        - 'ä½¿ç”¨: /resload'
+                        - 'ä¸å®‰å…¨å‘½ä»¤, å°†ä¸ä¼šé¦–å…ˆä¿å­˜é¢†åœ°.'
+                        - 'è¯»å–é¢†åœ° save file åœ¨ä½ è¿›è¡Œå˜æ›´ä¹‹å.'
                 version:
-                    Description: Show residence version
+                    Description: æ˜¾ç¤ºResidenceç‰ˆæœ¬
                     Info:
-                        - 'Usage: /res version'
+                        - 'ä½¿ç”¨: /res version'
