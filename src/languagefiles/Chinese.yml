@@ -1,27 +1,27 @@
 # NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
 # of this file and modify that instead. This file will be updated automatically by Residence
-# when a newer version is detected, and your changes will be overwritten.  Once you 
+# when a newer version is detected, and your changes will be overwritten. Once you
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 16
+Version: 17
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
     #Version 1 Fields
-    InvalidResidence: 无效的领地...
-    InvalidSubzone: 无效的附属领地...
-    InvalidDirection: 无效方向...
-    InvalidChannel: 无效频道...
-    InvalidAmount: 无效数量...
-    InvalidCost: 无效花费...
-    InvalidDays: 无效的天数...
-    InvalidMaterial: 无效的材料...
+    InvalidResidence: 无效的领地。。。
+    InvalidSubzone: 无效的附属领地。。。
+    InvalidDirection: 无效方向。。。
+    InvalidChannel: 无效频道。。。
+    InvalidAmount: 无效数量。。。
+    InvalidCost: 无效花费。。。
+    InvalidDays: 无效的天数。。。
+    InvalidMaterial: 无效的材料。。。
     InvalidBoolean: 无效值，必须是 true(t) 或者 false(f)
-    InvalidArea: 无效的区域...
-    InvalidGroup: 无效的权限组...
-    InvalidMessageType: 消息类型必须enter（输入）或（移除）remove.
-    InvalidList: 无效的清单...
-    InvalidFlag: 权限无效...
+    InvalidArea: 无效的区域。。。
+    InvalidGroup: 无效的权限组。。。
+    InvalidMessageType: 消息类型必须enter（输入）或（移除）remove。
+    InvalidList: 无效的清单。。。
+    InvalidFlag: 权限无效。。。
     InvalidFlagState: 无效的权限状态, 必须是 true(t)开启, false(f)关闭, 或者 remove(r)移除
     AreaExists: 区域名字已经存在.
     AreaCreate: '领地ID %1 创建成功'
@@ -81,7 +81,7 @@ Language:
     NoBankAccess: 你没有银行权限..
     NotEnoughMoney: 你没有足够的权限.
     BankNoMoney: 在银行里没有足够的钱.
-    BankDeposit: '你存 %1 元到领地银行.'
+    BankDeposit: '你存 %1 元到领地银行。'
     BankWithdraw: '你取出 %1 元从领地银行.'
     MoneyCharged: '支出 %1 元从 %2 帐户.'
     MoneyCredit: '收入 %1 元从 %2 帐户.'
@@ -103,7 +103,7 @@ Language:
     ResidenceAlreadyRent: 领地已经被租用...
     ResidenceNotForRent: 领地不用于出租...
     ResidenceNotRented: 领地没有被租用.
-    ResidenceUnrent: '领地%1已不再出租.'
+    ResidenceUnrent: '领地%1已不再出租。'
     ResidenceRemoveRentable: '领地 %1 不再出租.'
     ResidenceForRentSuccess: '领地%1 现在租金为%2,每次 %3天.'
     ResidenceRentSuccess: '你已经租用领地 %1 %2天..'
@@ -138,7 +138,7 @@ Language:
     TeleportDeny: 你没有传送权限.
     TeleportSuccess: '已传送!'
     TeleportNear: 传送到领地的附近.
-    TeleportNoFlag: 对不起，你没有传送权限去目标领地.
+    TeleportNoFlag: 对不起，你没有传送权限去目标领地。
     SetTeleportLocation: 传送点已设置...
     HelpPageHeader: '帮助页 - %1 - 第 %2页 共 %3页'
     ListExists: 列表已经存在...
@@ -171,12 +171,7 @@ Language:
     InvalidCharacters: 侦测到无效名字...
     InvalidNameCharacters: 名字里包含非法字符...
     #Version 15 New Fields
-    DeleteConfirm: '你确定要删除这个领地 %1 吗？, 请用命令"/res confirm" .来确定.'
-    DeleteSubzoneConfirm: '你确定要删除这个附属领地 %1吗？, 请用命令"/res confirm" .来确定.'
-    #Version 18 New Fields
-    SelectTooHigh: 警告，选择点超出地图顶部限制.
-    SelectTooLow: 警告，选择点超出地图底部限制.
-    WorldEditNotFound: 没有发现WorldEdit插件.
+    DeleteConfirm: '你确定要删除这个领地 %1 吗？, 请用命令"/res confirm" .来确定。'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -217,376 +212,358 @@ Language:
 # This is the help / usage messages for each command.
 # It follows this format:
 # <Command>
-#     Description: <general description of command, one line of text>
-#     Info: <extra info lines to describe the command, list of text>
-#     SubCommands:
-#           <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# Description: <general description of command, one line of text>
+# Info: <extra info lines to describe the command, list of text>
+# SubCommands:
+# <SubCommands> - these follow the same format, and each sub command can have its own subcommands
 # When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
 # Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
 # Add a page number after the ? mark to see that page.
 
 HelpLinesPerPage: 7
 CommandHelp: #this is just a holder node, that holds the entire help
-    Description: 领地包含的帮助
+    Description: Contains Help for 领地插件
     SubCommands: #this is the actual beginning of all commands
-        res: #main 领地 command
-            Description: 主要领地命令
+        res: #main residence command
+            Description: Main 领地 Command
             Info:
-                - '查阅residence wiki 来获得更多帮助.'
+                - 'See the 领地 wiki for more help.'
                 - 'Wiki: residencebukkitmod.wikispaces.com'
-                - '使用 /[命令] ? <页码> 来查看更多帮助信息.'
+                - 'Use /[command] ? <page> to view more help information.'
             SubCommands:
                 select: #selection commands
-                    Description: 选择命令
+                    Description: Selection Commands
                     Info:
-                        - '该命令选择领地要使用的范围.'
-                        - '/res select [x] [y] [z] - 选择方块范围, 以你所处位置为中心.'
+                        - 'This command selects areas for usage with 领地.'
+                        - '/res select [x] [y] [z] - selects a radius of blocks, with you in the middle.'
                     SubCommands:
                         coords:
-                            Description: 显示选择的坐标
+                            Description: Display selected coordinates
                             Info:
-                                - '使用: /res select coords'
+                                - 'Usage: /res select coords'
                         size:
-                            Description: 显示选择体积
+                            Description: Display selected size
                             Info:
-                                - '使用: /res select size'
+                                - 'Usage: /res select size'
                         cost:
-                            Description: 显示选择对象的价格
+                            Description: Display selection cost
                             Info:
-                                - '使用: /res select cost'
+                                - 'Usage: /res select cost'
                         vert:
-                            Description: 纵向扩张选择区域
+                            Description: Expand Selection Vertically
                             Info:
-                                - '使用: /res select vert'
-                                - '将把选择区域扩张到允许的最高点和最低点.'
+                                - 'Usage: /res select vert'
+                                - 'Will expand selection as high and as low as allowed.'
                         sky:
-                            Description: 扩张选择区域到天空
+                            Description: Expand Selection to Sky
                             Info:
-                                - '使用: /res select sky'
-                                - '将把选择区域扩张到允许的最高点.'
+                                - 'Usage: /res select sky'
+                                - 'Expands as high as your allowed to go.'
                         bedrock:
-                            Description: 扩张选择区域到地壳
+                            Description: Expand Selection to Bedrock
                             Info:
-                                - '使用: /res select bedrock'
-                                - '将把选择区域扩张到允许的最低点.'
+                                - 'Usage: /res select bedrock'
+                                - 'Expands as low as your allowed to go.'
                         expand:
-                            Description: 向一个方向扩张选择区域.
+                            Description: Expand selection in a direction.
                             Info:
-                                - '使用: /res select expand <数量>'
-                                - '扩张 <数量> 个方块，向你面对的方向.'
+                                - 'Usage: /res select expand <amount>'
+                                - 'Expands <amount> in the direction your looking.'
                         shift:
-                            Description: 向一个方向平移选择区域
+                            Description: Shift selection in a direction
                             Info:
-                                - '使用: /res select shift <数量>'
-                                - '将选择区域向你面对的方向推进 <数量> 个方块.'
+                                - 'Usage: /res select shift <amount>'
+                                - 'Pushes your selection by <amount> in the direction your looking.'
                         chunk:
-                            Description: 选择你目前所在的区域块.
+                            Description: Select the chunk your currently in.
                             Info:
-                                - '使用: /res select chunk'
-                                - '选择你目前所在的区域块.'
-                        residence:
-                            Description: 选择领地中一个已存在范围.
+                                - 'Usage: /res select chunk'
+                                - 'Selects the chunk your currently standing in.'
+                        领地:
+                            Description: Select a existing area in a 领地.
                             Info:
-                                - '使用 /res select <领地名> <范围ID>'
-                                - '选择领地中一个已存在范围.'
-                        worldedit:
-                            Description: 设置选取使用当前WorldEdit选择.
-                            Info:
-                                - '使用 /res select worldedit'
-                                - '设置选取区域使用当前WorldEdit的选择.'
+                                - 'Usage /res select <领地> <AreaID>'
+                                - 'Selects a existing area in a 领地.'
                 create: #creation command
-                    Description: 创建领地
+                    Description: Create 领地
                     Info:
-                        - '使用: /res create <领地名>'
+                        - 'Usage: /res create <领地名字>'
                 remove: #remove command
-                    Description: 删除领地.
+                    Description: Remove residences.
                     Info:
-                        - '使用: /res remove <领地名>'
+                        - 'Usage: /res remove <领地名字>'
                 removeall:
-                    Description: 删除某个玩家的所有领地.
+                    Description: Remove all 领地 owned by a player.
                     Info:
-                        - '使用: /res removeall [玩家]'
-                        - '删除所选玩家的所有领地.'
-                        - '需要 /resadmin 如果你使用在其他玩家身上.'
+                        - 'Usage: /res removeall [owner]'
+                        - 'Removes all residences owned by a specific player.'
+                        - 'Requires /resadmin if you use it on anyone besides yourself.'
                 confirm:
-                    - '使用: /res confirm'
-                    - '确认领地删除.'
+                    - 'Usage: /res confirm'
+                    - 'Confirms removal of a 领地.'
                 subzone:
-                    Description: 在领地中创建附属领地.
+                    Description: Create subzones in residences.
                     Info:
-                        - '使用: /res subzone <领地名> [领地附属领地名]'
-                        - '如果领地名空着，将尝试使用你身处的领地.'
+                        - 'Usage: /res subzone <residence name> [subzone name]'
+                        - 'If residence name is left off, will attempt to use residence your standing in.'
                 area:
-                    Description: 管理领地的物理范围.
+                    Description: Manage physical areas for a residence.
                     SubCommands:
                         list:
-                            Description: 列出领地的所有物理范围
+                            Description: List physical areas in a residence
                             Info:
-                                - '使用: /res area list [领地] <页码>'
+                                - 'Usage: /res area list [residence] <page>'
                         listall:
-                            Description: 列出区域的坐标和其他信息
+                            Description: List coordinates and other info for areas
                             Info:
-                                - '使用: /res area listall [领地] <页码>'
+                                - 'Usage: /res area listall [residence] <page>'
                         add:
-                            Description: 为领地添加物理范围
+                            Description: Add physical areas to a residence
                             Info:
-                                - '使用: /res area add [领地名] [范围ID]'
-                                - '你必须首先选择两个点.'
+                                - 'Usage: /res area add [residence] [areaID]'
+                                - 'You must first select two points first.'
                         remove:
-                            Description: 从领地中删除物理范围
+                            Description: Remove physical areas from a residence
                             Info:
-                                - '使用: /res area remove [领地名] [范围ID]'
+                                - 'Usage: /res area remove [residence] [areaID]'
                         replace:
-                            Description: 替换领地中物理范围
+                            Description: Replace physical areas in a residence
                             Info:
-                                - '使用: /res area replace [领地名] [范围ID]'
-                                - '你必须首先选择两个点.'
-                                - '替换范围将扣除体积变动带来的差价.'
+                                - 'Usage: /res area replace [residence] [areaID]'
+                                - 'You must first select two points first.'
+                                - 'Replacing a area will charge the difference in size if the new area is bigger.'
                 info:
-                    Description: 显示领地的信息.
+                    Description: Show info on a residence.
                     Info:
-                        - '使用: /res info <领地名>'
-                        - '不填写 <领地名> 将显示你目前所处领地的信息.'
+                        - 'Usage: /res info <residence>'
+                        - 'Leave off <residence> to display info for the residence your currently in.'
                 limits:
-                    Description: 显示你的限制信息.
+                    Description: Show your limits.
                     Info:
-                        - '使用: /res limits'
-                        - '显示你创建和管理领地的限制信息.'
+                        - 'Usage: /res limits'
+                        - 'Shows the limitations you have on creating and managing residences.'
                 message:
-                    Description: 管理领地进入/离开欢迎信息
+                    Description: Manage residence enter / leave messages
                     Info:
-                        - '使用: /res message <领地名> [enter/leave] [信息]'
-                        - '设置领地的进入/离开信息.'
-                        - '使用: /res message <领地> remove [enter/leave]'
-                        - '删除领地的进入/离开信息.'
+                        - 'Usage: /res message <residence> [enter/leave] [message]'
+                        - 'Set the enter or leave message of a residence.'
+                        - 'Usage: /res message <residence> remove [enter/leave]'
+                        - 'Removes a enter or leave message.'
                 lease:
-                    Description: 管理领地契约
+                    Description: Manage residence leases
                     Info:
-                        - '使用: /res lease [renew/cost] [领地]'
-                        - '/res lease cost 将显示领地契约续费的信息.'
-                        - '/res lease renew 将为领地续费领地，如果你拥有足够的金钱.'
+                        - 'Usage: /res lease [renew/cost] [residence]'
+                        - '/res lease cost will show the cost of renewing a residence lease.'
+                        - '/res lease renew will renew the residence provided you have enough money.'
                     SubCommands:
                         set:
-                            Description: 设置契约时间 (管理员权限)
+                            Description: Set the lease time (admin only)
                             Info:
-                                - '使用: /resadmin lease set [领地] [#days/infinite]'
-                                - '设置契约时间为指定的天数, 或无限期.'
+                                - 'Usage: /resadmin lease set [residence] [#days/infinite]'
+                                - 'Sets the lease time to a specified number of days, or infinite.'
                 bank:
-                    Description: 管理领地金钱
+                    Description: Manage money in a Residence
                     Info:
-                        - '使用: /res bank [deposit/withdraw] [数量]'
-                        - '你必须站在一个领地中'
-                        - '你必须拥有 +bank 权限.'
+                        - 'Usage: /res bank [deposit/withdraw] [amount]'
+                        - 'You must be standing in a Residence'
+                        - 'You must have the +bank flag.'
                 tp:
-                    Description: 传送到某个领地
+                    Description: Teleport to a residence
                     Info:
-                        - '使用: /res tp [领地名]'
-                        - '将你传送到某个领地, 你必须有 +tp 权限或为目标领地主人.'
-                        - '你的权限组同时必须拥有传送的权限.'
+                        - 'Usage: /res tp [residence]'
+                        - 'Teleports you to a residence, you must have +tp flag access or be the owner.'
+                        - 'Your permission group must also be allowed to teleport by the server admin.'
                 tpset:
-                    Description: 设置领地的传送点
+                    Description: Set the teleport location of a Residence
                     Info:
-                        - '使用: /res tpset'
-                        - '将把你站立的地点设置为领地的传送点.'
-                        - '你必须站在领地中来使用该命令.'
-                        - '你必须同时为领地主人或拥有该领地的 +admin 权限.'
+                        - 'Usage: /res tpset'
+                        - 'This will set the teleport location for a residence to where your standing.'
+                        - 'You must be standing in the residence to use this command.'
+                        - 'You must also be the owner or have the +admin flag for the residence.'
                 set:
-                    Description: 设置领地的主要权限
+                    Description: Set general flags on a Residence
                     Info:
-                        - '使用: /res set <领地> [权限] [true/false/remove]'
-                        - '查看权限列表, 使用 /res flags ?'
-                        - '这些权限应用给任何没有特定权限的玩家. (查看 /res pset ?)'
+                        - 'Usage: /res set <residence> [flag] [true/false/remove]'
+                        - 'To see a list of flags, use /res flags ?'
+                        - 'These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)'
                 pset:
-                    Description: 为某个玩家设置某个领地的特定权限.
+                    Description: Set flags on a specific player for a Residence.
                     Info:
-                        - '使用: /res pset <领地> [玩家] [权限] [true/false/remove]'
-                        - '使用: /res pset <领地> [玩家] removeall'
-                        - '查看权限列表使用 /res flags ?'
+                        - 'Usage: /res pset <residence> [player] [flag] [true/false/remove]'
+                        - 'Usage: /res pset <residence> [player] removeall'
+                        - 'To see a list of flags, use /res flags ?'
                 gset:
-                    Description: 为特定群组设置某个领地的权限.
+                    Description: Set flags on a specific group for a Residence.
                     Info:
-                        - '使用: /res gset <领地> [群组] [权限] [true/false/remove]'
-                        - '查看权限列表使用 /res flags ?'
+                        - 'Usage: /res gset <residence> [group] [flag] [true/false/remove]'
+                        - 'To see a list of flags, use /res flags ?'
                 lset:
-                    Description: 改变物品的黑名单与忽视名单选项
+                    Description: Change blacklist and ignorelist options
                     Info:
-                        - '使用: /res lset <领地> [blacklist/ignorelist] [物品]'
-                        - '使用: /res lset <领地> info'
-                        - '将某物品加入领地的黑名单，以防止该物品被放置在该领地中.'
-                        - '忽视名单使某物品不受领地保护.'
+                        - 'Usage: /res lset <residence> [blacklist/ignorelist] [material]'
+                        - 'Usage: /res lset <residence> info'
+                        - 'Blacklisting a material prevents it from being placed in the residence.'
+                        - 'Ignorelist causes a specific material to not be protected by Residence.'
                 flags:
-                    Description: 权限列表
+                    Description: List of flags
                     Info:
-                        - '权限的值： true=允许该行为, false =禁止.'
-                        - 'build - 允许或禁止建设'
-                        - 'use - 允许或禁止门，操纵杆，按钮等的使用...'
-                        - 'move - 允许或禁止在领地中行动.'
-                        - 'container - 允许或禁止使用熔炉，箱子，炼药台, etc...'
-                        - 'place - 允许或禁止方块的放置，将覆盖 build 权限.'
-                        - 'destroy - 允许或禁止方块的破坏，将覆盖 build 权限.'
-                        - 'pvp - 允许或禁止领地内 PVP'
-                        - 'tp - 允许或禁止领地内的传送.'
-                        - 'admin - 给予某玩家改变某领地权限的权限.'
-                        - 'subzone - 允许玩家创建领地附属领地.'
-                        - 'monsters - 允许或禁止怪物出生'
-                        - 'animals - 允许或禁止动物出生.'
-                        - 'healing - 设置为true使领地可以治疗居住者'
-                        - 'tnt - 允许或禁止TNT爆炸'
-                        - 'creeper - 允许或禁止苦力怕爆炸'
-                        - 'ignite - 允许或禁止火焰点燃.'
-                        - 'firespread - 允许或禁止火焰蔓延.'
-                        - 'bucket - 允许或禁止桶的使用.'
-                        - 'flow - 允许或禁止液体流动.'
-                        - 'lavaflow - 允许或禁止岩浆流动, 覆盖权限 flow'
-                        - 'waterflow - 允许或禁止水流动,覆盖权限 flow'
-                        - 'damage - 允许或禁止领地中的所有实体伤害.'
-                        - 'piston - 允许或禁止领地中使用活塞.'
-                        - 'hidden - 将领地从 list 或 listall 命令列表中隐藏.'
+                        - 'For flag values, usually true allows the action, and false denys the action.'
+                        - 'build - allows or denys building'
+                        - 'use - allows or denys use of doors, lever, buttons, etc...'
+                        - 'move - allows or denys movement in the residence.'
+                        - 'container - allows or denys use of furnaces, chests, dispensers, etc...'
+                        - 'place - allows or denys only placement of blocks, overrides the build flag.'
+                        - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
+                        - 'pvp - allow or deny pvp in the residence'
+                        - 'tp - allow or disallow teleporting to the residence.'
+                        - 'admin - gives a player permission to change flags on a residence.'
+                        - 'subzone - allow a player to make subzones in the residence.'
+                        - 'monsters - allows or denys monster spawns'
+                        - 'animals - allows or denys animal spawns.'
+                        - 'healing - setting to true makes the residence heal its occupants'
+                        - 'tnt - allow or deny tnt explosions'
+                        - 'creeper - allow or deny creeper explosions'
+                        - 'ignite - allows or denys fire ignition.'
+                        - 'firespread - allows or denys fire spread.'
+                        - 'bucket - allow or deny bucket use.'
+                        - 'flow - allows or denys liquid flow.'
+                        - 'lavaflow - allows or denys lava flow, overrides flow'
+                        - 'waterflow - allows or denys water flow, overrides flow'
+                        - 'damage - allows or denys all entity damage within the residence.'
                 list:
-                    Description: 领地列表
+                    Description: List Residences
                     Info:
-                        - '使用: /res list <玩家> <页码>'
-                        - '列出某玩家拥有的所有领地(除了隐藏的).'
-                        - '如果是你自己的领地, 将显示隐藏的.'
-                        - '列出所有人的所有领地, 使用 /res listall.'
-                listhidden:
-                    Description: 列出隐藏领地(管理员权限)
-                    Info:
-                        - '使用: /res listhidden <玩家> <页码>'
-                        - '列出某玩家的所有隐藏领地.'
+                        - 'Usage: /res list <player> <page>'
+                        - 'Lists all the residences you own.'
+                        - 'To list everyones residences, use /res listall.'
                 listall:
-                    Description: 列出所有领地
+                    Description: List All Residence
                     Info:
-                        - '使用: /res listall <页码>'
-                        - '列出服务器的所有领地. (出去非你拥有的隐藏领地)'
-                listallhidden:
-                    Description: 列出所有隐藏领地(管理员权限)
-                    Info:
-                        - '使用: /res listhidden <页码>'
-                        - '列出服务器的所有隐藏领地.'
+                        - 'Usage: /res listall <page>'
+                        - 'Lists all residences on the server.'
                 sublist:
-                    Description: 列出领地附属领地
+                    Description: List Residence Subzones
                     Info:
-                        - '使用: /res sublist <领地> <页码>'
-                        - '列出某领地所有附属领地.'
+                        - 'Usage: /res sublist <residence> <page>'
+                        - 'List subzones within a residence.'
                 default:
-                    Description: 重置领地的权限为默认值.
+                    Description: Reset residence to default flags.
                     Info:
-                        - '使用: /res default <领地>'
-                        - '重置领地的权限为默认值. 你必须是领地主人或管理员.'
+                        - 'Usage: /res default <residence>'
+                        - 'Resets the flags on a residence to their default. You must be the owner or an admin to do this.'
                 rename:
-                    Description: 重命名领地.
+                    Description: Renames a residence.
                     Info:
-                        - '使用: /res rename [旧名称] [新名称]'
-                        - '你必须是领地主人或管理员.'
-                        - '新名称必须没有被其他领地使用.'
+                        - 'Usage: /res rename [OldName] [NewName]'
+                        - 'You must be the owner or an admin to do this.'
+                        - 'The name must not already be taken by another residence.'
                 mirror:
-                    Description: 镜像权限
+                    Description: Mirrors Flags
                     Info:
-                        - '使用: /res mirror [源领地] [目标领地]'
-                        - '将源领地领地权限镜像给目标领地.  你你必须是领地主人或管理员.'
+                        - 'Usage: /res mirror [Source Residence] [Target Residence]'
+                        - 'Mirrors flags from one residence to another. You must be owner of both or a admin to do this.'
                 market:
-                    Description: 领地的买卖和租赁
+                    Description: Buy, Sell, or Rent Residences
                     Info:
-                        - '使用: /res market ? 获得更多信息'
+                        - 'Usage: /res market ? for more info'
                     SubCommands:
                         info:
-                            Description: 获得领地的经济信息
+                            Description: Get economy info on residence
                             Info:
-                                - '使用: /res market info [领地]'
-                                - '显示领地是否出售或出租, 已经出价.'
+                                - 'Usage: /res market info [residence]'
+                                - 'Shows if the Residence is for sale or for rent, and the cost.'
                         list:
-                            Description: 列出可租借领地和可购买领地.
+                            Description: Lists rentable and for sale residences.
                             Info:
-                                - '使用: /res market list'
+                                - 'Usage: /res market list'
                         sell:
-                            Description: 出售领地
+                            Description: Sell a residence
                             Info:
-                                - '使用: /res sell [领地] [价格]'
-                                - '以[价格]出售领地.'
-                                - '另一个玩家可以购买领地通过 /res market buy'
+                                - 'Usage: /res sell [residence] [amount]'
+                                - 'Puts a residence for sale for [amount] of money.'
+                                - 'Another player can buy the residence with /res market buy'
                         buy:
-                            Description: 购买领地
+                            Description: Buy a residence
                             Info:
-                                - '使用: /res buy [领地]'
-                                - '购买正在出售的领地.'
+                                - 'Usage: /res buy [residence]'
+                                - 'Buys a Residence if its for sale.'
                         unsell:
-                            Description: 停止出售领地
+                            Description: Stops selling a residence
                             Info:
-                                - '使用: /res unsell [领地]'
+                                - 'Usage: /res unsell [residence]'
                         rent:
-                            Description: 租用领地
+                            Description: Rent a residence
                             Info:
-                                - '使用: /res market rent [领地] <autorenew>'
-                                - '租用领地， Autorenew 可以是 true 或 false. 如果为true，领地租用到期将自动续费.'
+                                - 'Usage: /res market rent [residence] <autorenew>'
+                                - 'Rents a residence. Autorenew can be either true or false. If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.'
                         rentable:
-                            Description: 将领地设为可出租.
+                            Description: Make a residence rentable.
                             Info:
-                                - '使用: /res market rentable [领地] [价格] [天数] <repeat>'
-                                - '将领地设为可出租.  如果 <repeat> 为 true, 该领地出租到期将自动变为可出租.'
+                                - 'Usage: /res market rentable [residence] [cost] [days] <repeat>'
+                                - 'Makes a residence rentable for [cost] money for every [days] number of days. If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.'
                         release:
-                            Description: 从出租或可出租中删除一个领地.
+                            Description: Remove a residence from rent or rentable.
                             Info:
-                                - '使用: /res market release [领地]'
-                                - '如果你是租户，该命令解除这个领地的租用.'
-                                - '如果你是领地主，该命令停止该领地出租.'
+                                - 'Usage: /res market release [residence]'
+                                - 'If you are the renter, this command releases the rent on the house for you.'
+                                - 'If you are the owner, this command makes the residence not for rent anymore.'
                 current:
-                    Description: 显示你目前所在领地.
+                    Description: Show residence your currently in.
                     Info:
-                        - '使用: /res current'
+                        - 'Usage: /res current'
                 lists:
-                    Description: 预定义权限列表
+                    Description: Predefined permission lists
                     Info:
-                        - '预定义可应用到某领地的权限列表.'
+                        - 'Predefined permissions that can be applied to a residence.'
                     SubCommands:
                         add:
-                            Description: 添加列表
+                            Description: Add a list
                             Info:
-                                - '使用: /res lists add <列表名>'
+                                - 'Usage: /res lists add <listname>'
                         remove:
-                            Description: 删除列表
+                            Description: Remove a list
                             Info:
-                                - '使用: /res lists remove <列表名>'
+                                - 'Usage: /res lists remove <listname>'
                         apply:
-                            Description: 应用某列表到某领地
+                            Description: Apply a list to a residence
                             Info:
-                                - '使用: /res lists apply <列表名> <领地>'
+                                - 'Usage: /res lists apply <listname> <residence>'
                         set:
-                            Description: 设置领地权限
+                            Description: Set a flag
                             Info:
-                                - '使用: /res lists set <列表名> <权限> <权限值>'
+                                - 'Usage: /res lists set <listname> <flag> <value>'
                         pset:
-                            Description: 设置玩家权限
+                            Description: Set a player flag
                             Info:
-                                - '使用: /res lists pset <列表名> <玩家> <权限> <权限值>'
+                                - 'Usage: /res lists pset <listname> <player> <flag> <value>'
                         gset:
-                            Description: 设置群组权限
+                            Description: Set a group flag
                             Info:
-                                - '使用: /res lists gset <权限名> <群组名> <权限> <权限值>'
+                                - 'Usage: /res lists gset <listname> <group> <flag> <value>'
                         view:
-                            Description: 查看列表.
+                            Description: View a list.
                             Info:
-                                - '使用: /res lists view <权限名>'
+                                - 'Usage: /res lists view <listname>'
                 server:
-                    Description: 将领地设为服务器所有(仅管理员).
+                    Description: Make land server owned (admin only).
                     Info:
-                        - '使用: /resadmin server [领地]'
-                        - '将领地设为服务器所有.'
+                        - 'Usage: /resadmin server [residence]'
+                        - 'Make a residence server owned.'
                 setowner:
-                    Description: 改变领地所有权 (管理员权限).
+                    Description: Change owner of a residence (admin only).
                     Info:
-                        - '使用: /resadmin setowner [领地] [玩家]'
+                        - 'Usage: /resadmin setowner [residence] [player]'
                 resreload:
-                    Description: 重新读取领地 (管理员权限).
+                    Description: Reload residence (admin only).
                     Info:
-                        - '使用: /resreload'
+                        - 'Usage: /resreload'
                 resload:
-                    Description: 读取领地 save file (不安全, 仅管理员).
+                    Description: Load residence save file (UNSAFE, admin only).
                     Info:
-                        - '使用: /resload'
-                        - '不安全命令, 将不会首先保存领地.'
-                        - '读取领地 save file 在你进行变更之后.'
+                        - 'Usage: /resload'
+                        - 'UNSAFE command, does not save residences first.'
+                        - 'Loads the residence save file after you have made changes.'
                 version:
-                    Description: 显示Residence版本
+                    Description: Show residence version
                     Info:
-                        - '使用: /res version'
+                        - 'Usage: /res version'
