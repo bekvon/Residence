@@ -35,7 +35,7 @@ Language:
     AreaRemove: 'Zone %1 supprimée...'
     AreaRemoveLast: Impossible de supprimer la dernière zone de la résidence
     AreaNotWithinParent: La zone n'est pas dans la zone parent
-    AreaUpdate: Zone mis à jour...
+    AreaUpdate: Zone mise à jour...
     AreaMaxPhysical: Vous avez atteint le maximum de zones physiques autorisé de cette résidence
     AreaSizeLimit: La taille de la zone dépasse vos limites autorisées
     AreaHighLimit: 'Vous ne pouvez pas protéger à cette hauteur, votre limite est %1'
@@ -120,8 +120,8 @@ Language:
     RentableEnableRenew: 'La résidence %1 sera remise à louer automatiquement'
     LandForSale: Terrains à vendre
     SellAmount: Prix de vente
-    LeaseExpire: Lease expire time
-    RentExpire: Rent expire time
+    LeaseExpire: Temps d'expiration de location
+    RentExpire: Temps d'expiration du loyer
     RentableAutoRenew: Mise en location automatique
     RentAutoRenew: Relocation automatique
     RentableLand: Terrains à louer
@@ -496,18 +496,18 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         sell:
                             Description: Vend une résidence
                             Info:
-                                - 'Utilisation: /res sell [résidence] [prix]'
+                                - 'Utilisation: /res market sell [résidence] [prix]'
                                 - 'Met une résidence à vendre'
                                 - 'Un autre joueur peut acheter la résidence avec "/res market buy"'
                         buy:
                             Description: Achète une résidence
                             Info:
-                                - 'Utilisation: /res buy [résidence]'
+                                - 'Utilisation: /res market buy [résidence]'
                                 - 'Achète la résidence [résidence] si elle est à vendre'
                         unsell:
                             Description: Stoppe la vente d'une résidence
                             Info:
-                                - 'Utilisation: /res unsell [résidence]'
+                                - 'Utilisation: /res market unsell [résidence]'
                         rent:
                             Description: Loue une résidence
                             Info:
