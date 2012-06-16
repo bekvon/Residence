@@ -502,18 +502,18 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         sell:
                             Description: Bietet Residenz zum Verkauf an
                             Info:
-                                - 'Benutzung: /res sell [Residenz] [Menge]'
+                                - 'Benutzung: /res market sell [Residenz] [Menge]'
                                 - 'Bietet eine Residenz zum Verkauf, fuer eine selbst definierbare [Menge] an Geld, an.'
                                 - 'Ein anderer Spieler kann die Residenz mit /res market buy kaufen'
                         buy:
                             Description: Kaufen einer Residenz
                             Info:
-                                - 'Benutzung: /res buy [Residenz]'
+                                - 'Benutzung: /res market buy [Residenz]'
                                 - 'Mit diesem Befehl kauf man eine zum Verkauf stehende Residenz.'
                         unsell:
                             Description: Stoppt den Verkauf einer Residenz
                             Info:
-                                - 'Benutzung: /res unsell [Residenz]'
+                                - 'Benutzung: /res market unsell [Residenz]'
                         rent:
                             Description: Mieten einer Residenz
                             Info:
