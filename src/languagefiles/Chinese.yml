@@ -479,18 +479,18 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         sell:
                             Description: Sell a residence
                             Info:
-                                - 'Usage: /res sell [residence] [amount]'
+                                - 'Usage: /res market sell [residence] [amount]'
                                 - 'Puts a residence for sale for [amount] of money.'
                                 - 'Another player can buy the residence with /res market buy'
                         buy:
                             Description: Buy a residence
                             Info:
-                                - 'Usage: /res buy [residence]'
+                                - 'Usage: /res market buy [residence]'
                                 - 'Buys a Residence if its for sale.'
                         unsell:
                             Description: Stops selling a residence
                             Info:
-                                - 'Usage: /res unsell [residence]'
+                                - 'Usage: /res market unsell [residence]'
                         rent:
                             Description: Rent a residence
                             Info:
