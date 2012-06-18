@@ -1753,7 +1753,13 @@ public class Residence extends JavaPlugin {
                     ClaimedResidence area = rmanager.getByName(args[1]);
                     if (area != null) {
                         area.getPermissions().setOwner(args[2], true);
-                        player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW+" " + args[1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
+                        if(area.getparent()==null){
+                            player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW+" " + args[1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
+                        } else {
+                            player.sendMessage(ChatColor.GREEN+language.getPhrase("SubzoneOwnerChange",ChatColor.YELLOW+" " + args[1].split("\\.")[split.length - 1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
+                        }
+                    
+                    
                     } else {
                         player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                     }
