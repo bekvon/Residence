@@ -176,7 +176,9 @@ Language:
     #Version 18 New Fields
     SelectTooHigh: La selección está por encima de la parte superior de los límites del mapa.
     SelectTooLow: La selección está por debajo de la parte inferior de los límites del mapa.
+    WorldEditNotFound: WorldEdit no fue detectado.
     #Version 19 New Fields
+    NoResHere: No hay residencia en allí.
     DeleteSubzoneConfirm: 'Si estás seguro que deseas eliminar la subzona %1, usa "/res confirm" para confirmarlo.'
     
     #The below lines are mostly a word bank for various uses.

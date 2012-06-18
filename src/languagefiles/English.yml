@@ -176,8 +176,8 @@ Language:
     SelectTooHigh: Warning, selection went above top of map, limiting.
     SelectTooLow: Warning, selection went below bottom of map, limiting.
     WorldEditNotFound: WorldEdit was not detected.
-    NoResHere: There is no residence in there.
     #Version 19 New Fields
+    NoResHere: There is no residence in there.
     DeleteSubzoneConfirm: 'Are you sure you want to delete subzone %1, use "/res confirm" to confirm.'
     
     #The below lines are mostly a word bank for various uses.
