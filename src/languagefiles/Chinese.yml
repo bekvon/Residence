@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten. Once you
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 17
+Version: 19
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -171,7 +171,14 @@ Language:
     InvalidCharacters: 侦测到无效名字...
     InvalidNameCharacters: 名字里包含非法字符...
     #Version 15 New Fields
-    DeleteConfirm: '你确定要删除这个领地 %1 吗？, 请用命令"/res confirm" .来确定。'
+    DeleteConfirm: '你确定要删除这个领地 %1 吗？, 请用命令"/res confirm" .来确定.'
+    #Version 18 New Fields
+    SelectTooHigh: 上述警告，选择了地图上方，限制.
+    SelectTooLow: 警告，选择了以下地图的底部，限制.
+    WorldEditNotFound: 未检出 WorldEdit.
+    #Version 19 New Fields
+    NoResHere: 有没有在那里居住.
+    DeleteSubzoneConfirm: '你确定你要删除的分区%1，使用“/res confirm”确.'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
