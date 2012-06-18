@@ -173,11 +173,13 @@ Language:
     InvalidNameCharacters: Ce nom contient des caractères interdits...
     #Version 15 New Fields
     DeleteConfirm: 'Voulez-vous vraiment supprimer la résidence %1, utilisez "/res confirm" pour confirmer'
-    DeleteSubzoneConfirm: 'Voulez-vous vraiment supprimer la sous-zone %1, utilisez "/res confirm" pour confirmer'
     #Version 18 New Fields
     SelectTooHigh: Attention, la sélection est trop haute
     SelectTooLow: Attention, la sélection est trop basse
     WorldEditNotFound: WorldEdit n'est pas détecté
+    #Version 19 New Fields
+    DeleteSubzoneConfirm: 'Voulez-vous vraiment supprimer la sous-zone %1, utilisez "/res confirm" pour confirmer'
+    NoResHere: Il n'y a pas de résidence là-dedans.
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
