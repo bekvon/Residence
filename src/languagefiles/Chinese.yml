@@ -3,7 +3,7 @@
 # when a newer version is detected, and your changes will be overwritten. Once you
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 19
+Version: 20
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -179,6 +179,8 @@ Language:
     #Version 19 New Fields
     NoResHere: 有没有在那里居住.
     DeleteSubzoneConfirm: '你确定你要删除的分区%1，使用“/res confirm”确.'
+    #Version 20 New Fields
+    SubzoneOwnerChange: '分区 %1 所有者改为 %2'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -241,11 +243,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 select: #selection commands
                     Description: Selection Commands
                     Info:
-                        - 'This command selects areas for usage with 领地.'
-                        - '/res select [x] [y] [z] - selects a radius of blocks, with you in the middle.'
+                        - '选择此命令的使用范围 领地.'
+                        - '/res select [x] [y] [z] - 选择一个区块在中间, 你的半径.'
                     SubCommands:
                         coords:
-                            Description: Display selected coordinates
+                            Description: 显示选定的坐标
                             Info:
                                 - 'Usage: /res select coords'
                         size:
