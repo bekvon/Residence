@@ -1756,7 +1756,7 @@ public class Residence extends JavaPlugin {
                         if(area.getparent()==null){
                             player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW+" " + args[1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
                         } else {
-                            player.sendMessage(ChatColor.GREEN+language.getPhrase("SubzoneOwnerChange",ChatColor.YELLOW+" " + args[1].split("\\.")[split.length - 1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
+                            player.sendMessage(ChatColor.GREEN+language.getPhrase("SubzoneOwnerChange",ChatColor.YELLOW+" " + args[1].split("\\.")[(args[1].split("\\.").length - 1)] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
                         }
                     
                     
