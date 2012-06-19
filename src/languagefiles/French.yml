@@ -4,7 +4,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 19
+Version: 20
 Language:
     # The below lines represent various messages residence sends to the joueurs.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -178,8 +178,10 @@ Language:
     SelectTooLow: Attention, la sélection est trop basse
     WorldEditNotFound: WorldEdit n'est pas détecté
     #Version 19 New Fields
-    DeleteSubzoneConfirm: 'Voulez-vous vraiment supprimer la sous-zone %1, utilisez "/res confirm" pour confirmer'
     NoResHere: Il n'y a pas de résidence là-dedans.
+    DeleteSubzoneConfirm: 'Voulez-vous vraiment supprimer la sous-zone %1, utilisez "/res confirm" pour confirmer'
+    #Version 20 New Fields
+    SubzoneOwnerChange: 'Le propriétaire de la sous-zone %1 est remplacé par %2'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
