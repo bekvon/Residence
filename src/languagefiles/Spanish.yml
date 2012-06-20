@@ -178,7 +178,7 @@ Language:
     SelectTooLow: La selección está por debajo de la parte inferior de los límites del mapa.
     WorldEditNotFound: WorldEdit no fue detectado.
     #Version 19 New Fields
-    NoResHere: No hay residencia en allí.
+    NoResHere: No hay ninguna residencia aquí.
     DeleteSubzoneConfirm: 'Si estás seguro que deseas eliminar la subzona %1, usa "/res confirm" para confirmarlo.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'La subzona propiedad de %1 ahora es del jugador %2'
