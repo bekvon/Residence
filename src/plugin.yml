@@ -2,7 +2,7 @@ name: Residence
 main: com.bekvon.bukkit.residence.Residence
 version: 2.6.3
 description: Cuboid Residence Plugin
-authors: [bekvon,inorixu,lemon42,nate302,smbarbour,Shayana,TOOTHPlCK1]
+authors: [bekvon,inorixu,lemon42,nate302,smbarbour,Shayana,t00thpick1]
 softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,My Worlds]
 commands:
   res:
