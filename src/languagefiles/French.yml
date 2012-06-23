@@ -183,6 +183,8 @@ Language:
     DeleteSubzoneConfirm: 'Voulez-vous vraiment supprimer la sous-zone %1, utilisez "/res confirm" pour confirmer'
     #Version 20 New Fields
     SubzoneOwnerChange: 'Le propriétaire de la sous-zone %1 est remplacé par %2'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -219,6 +221,9 @@ Language:
     World: Monde
     #Version 12 Fields
     Subzones: Sous-zones
+    #Version 20 Fields
+    CoordsT: haut coordonnées
+    CoordsB: bas coordonnées
     
 # This is the help / Utilisation messages for each command.
 # It follows this format:
