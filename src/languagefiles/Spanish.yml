@@ -183,6 +183,8 @@ Language:
     DeleteSubzoneConfirm: 'Si estás seguro que deseas eliminar la subzona %1, usa "/res confirm" para confirmarlo.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'La subzona propiedad de %1 ahora es del jugador %2'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -218,6 +220,9 @@ Language:
     World: Mundo
     #Version 12 Fields
     Subzones: Subzonas
+    #Version 20 Fields
+    CoordsT: coordenadas superiores
+    CoordsB: menores coordenadas
     
 # This is the help / usage messages for each command.
 # It follows this format:

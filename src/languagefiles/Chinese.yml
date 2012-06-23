@@ -182,6 +182,9 @@ Language:
     DeleteSubzoneConfirm: '你确定你要删除的分区%1，使用“/res confirm”确.'
     #Version 20 New Fields
     SubzoneOwnerChange: '分区 %1 所有者改为 %2'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
+
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -218,6 +221,9 @@ Language:
     World: 世界
     #Version 12 Fields
     Subzones: 附属领地
+    #Version 20 Fields
+    CoordsT: 顶坐标
+    CoordsB: 底部的坐标
     
 # This is the help / usage messages for each command.
 # It follows this format:

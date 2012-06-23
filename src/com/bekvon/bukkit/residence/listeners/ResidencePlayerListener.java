@@ -164,9 +164,10 @@ public class ResidencePlayerListener implements Listener {
                     if(res!=null)
                         Residence.getResidenceManager().printAreaInfo(res, player);
                         event.setCancelled(true);
-                    if(res==null)
+                    if(res==null){
                         event.setCancelled(true);
                         player.sendMessage(Residence.getLanguage().getPhrase("NoResHere"));
+                    }
                 }
             }
             if(!resadmin)
