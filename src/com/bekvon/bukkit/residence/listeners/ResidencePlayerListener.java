@@ -99,7 +99,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 	
 	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
-		return mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
+		return mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.CAKE_BLOCK || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
 			   Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
@@ -227,6 +227,10 @@ public class ResidencePlayerListener implements Listener {
                         	if(!perms.playerHas(player.getName(),"brew", false)&& mat == Material.BREWING_STAND){
                         		event.setCancelled(true);
                         		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","brew"));
+                        	}
+                        	if(mat==Material.CAKE_BLOCK){
+                        		event.setCancelled(true);
+                        		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
                         	}
                     	} else {
                             if(!perms.playerHas(player.getName(),"diode", true) && (mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON)){
