@@ -862,7 +862,7 @@ public class Residence extends JavaPlugin {
                         if (area != null) {                       	
                             ClaimedResidence res = rmanager.getByName(area);
                             if (res.getParent() != null ){
-                            	String[] split = area.split("//.");
+                            	String[] split = area.split("\\.");
                             	String words = split[split.length-1];         	
                                 if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
                                     player.sendMessage(ChatColor.RED + language.getPhrase("DeleteSubzoneConfirm", (ChatColor.YELLOW + words + ChatColor.RED)));
@@ -891,7 +891,7 @@ public class Residence extends JavaPlugin {
                     	if (rmanager.getByName(args[1])!=null){
                     	    ClaimedResidence res = rmanager.getByName(args[1]);    
                     	    if (res.getParent()!=null){
-                    	    	String[] split = args[1].split("//.");
+                    	    	String[] split = args[1].split("\\.");
                        	        words = split[split.length-1]; 
                     	    }
                     	}
