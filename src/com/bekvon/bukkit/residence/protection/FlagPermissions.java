@@ -50,6 +50,14 @@ public class FlagPermissions {
         validPlayerFlags.clear();
         validFlags.clear();
         ResidencePermissions.validFlagGroups.clear();
+        addFlag("lever");
+        addFlag("door");
+        addFlag("button");
+        addFlag("table");
+        addFlag("brew");
+        addFlag("bed");
+        addFlag("enchant");
+        addFlag("diode");
         addFlag("use");
         addFlag("move");
         addFlag("build");
@@ -77,6 +85,12 @@ public class FlagPermissions {
         addResidenceOnlyFlag("spread");
         addResidenceOnlyFlag("hidden");
         addPlayerOrGroupOnlyFlag("admin");
+        ResidencePermissions.addFlagToFlagGroup("redstone", "lever");
+        ResidencePermissions.addFlagToFlagGroup("craft", "brew");
+        ResidencePermissions.addFlagToFlagGroup("craft", "table");
+        ResidencePermissions.addFlagToFlagGroup("redstone", "button");
+        ResidencePermissions.addFlagToFlagGroup("craft", "enchant");
+        ResidencePermissions.addFlagToFlagGroup("redstone", "diode");
         ResidencePermissions.addFlagToFlagGroup("trusted", "use");
         ResidencePermissions.addFlagToFlagGroup("trusted", "move");
         ResidencePermissions.addFlagToFlagGroup("trusted", "tp");
