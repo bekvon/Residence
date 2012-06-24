@@ -94,6 +94,14 @@ Global:
         subzone: true
         healing: true
         piston: true
+        diode: true
+        lever: true
+        button: true
+        door: true
+        table: true
+        enchant: true
+        brew: true
+        bed: true
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
