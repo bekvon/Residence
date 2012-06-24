@@ -99,7 +99,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 	
 	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
-		return mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
+		return mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
 			   Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
@@ -223,6 +223,7 @@ public class ResidencePlayerListener implements Listener {
         String pname = player.getName();
         boolean hasbuild;
         boolean hasbucket;
+        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(res!=null)
         {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
@@ -242,7 +243,7 @@ public class ResidencePlayerListener implements Listener {
             hasbuild = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "build", true);
             hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
         }
-        if ((!hasbuild && !hasbucket) || !hasbucket) {
+        if ((!hasbuild && !hasbucket && !resadmin) || !hasbucket && !resadmin) {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
             event.setCancelled(true);
         }
@@ -258,6 +259,7 @@ public class ResidencePlayerListener implements Listener {
         String pname = player.getName();
         boolean hasbuild;
         boolean hasbucket;
+        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
         if(res!=null)
         {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
@@ -277,7 +279,7 @@ public class ResidencePlayerListener implements Listener {
             hasbuild = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "build", true);
             hasbucket = Residence.getWorldFlags().getPerms(player).playerHas(pname, player.getWorld().getName(), "bucket", hasbuild);
         }
-        if ((!hasbuild && !hasbucket) || !hasbucket) {
+        if ((!hasbuild && !hasbucket && !resadmin) || !hasbucket && !resadmin) {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
             event.setCancelled(true);
         }
