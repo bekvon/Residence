@@ -428,6 +428,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'use - allows or denys use of doors, lever, buttons, etc...'
                         - 'move - allows or denys movement in the residence.'
                         - 'container - allows or denys use of furnaces, chests, dispensers, etc...'
+                        - 'trusted - Gives buildd, use, move, container and tp flags'
                         - 'place - allows or denys only placement of blocks, overrides the build flag.'
                         - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
                         - 'pvp - allow or deny pvp in the residence'
@@ -446,6 +447,20 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'lavaflow - allows or denys lava flow, overrides flow'
                         - 'waterflow - allows or denys water flow, overrides flow'
                         - 'damage - allows or denys all entity damage within the residence.'
+                        - 'piston - allow or deny pistons from pushing or pulling blocks in the residence.'
+                        - 'hidden - hides residence from list or listall commands.'
+                        - 'cake - allows or denys players to eat cake'
+                        - 'lever - allows or denys players to use levers'
+                        - 'button - allows or denys players to use buttons'
+                        - 'diode - allows or denys players to use redstone repeaters'
+                        - 'door - allows or denys players to use doors and trapdoors'
+                        - 'table - allows or denys players to use workbenches'
+                        - 'enchant - allows or denys players to use enchanting tables'
+                        - 'brew - allows or denys players to use brewing stands'
+                        - 'bed - allows or denys players to use beds'
+                        - 'button - allows or denys players to use buttons'
+                        - 'redstone - Gives lever, diode, button flags'
+                        - 'craft - Gives table, enchant, brew flags'
                 list:
                     Description: List Residences
                     Info:
