@@ -433,6 +433,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'use - erlaubt oder verweigert die Benutzung von Tueren, Hebeln, Knoepfen usw...'
                         - 'move - erlaubt oder verweigert das Betreten einer Residenz.'
                         - 'container - erlaubt oder verweigert die Benutzung von oefen, Kisten, Spender usw...'
+                        - 'trusted - Gives buildd, use, move, container and tp flags'
                         - 'place - erlaubt oder verweigert das Platzieren von Bloecken und ueberschreibt die build-Flag.'
                         - 'destroy - erlaubt oder verweigert das Zerstoeren von Bloecken und ueberschreibt die build-Flag.'
                         - 'pvp - erlaubt oder verweigert PvP in einer Residenz'
@@ -453,6 +454,18 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'damage - erlaubt oder verweigert das Spieler innerhalb der Residenz Schaden nehmen'
                         - 'piston - erlaubt oder verweigert das Pistons Bloecke innerhalb der Residenz schieben.'
                         - 'hidden - versteckt Residenz auf list und listall Befehlen.'
+                        - 'cake - allows or denys players to eat cake'
+                        - 'lever - allows or denys players to use levers'
+                        - 'button - allows or denys players to use buttons'
+                        - 'diode - allows or denys players to use redstone repeaters'
+                        - 'door - allows or denys players to use doors and trapdoors'
+                        - 'table - allows or denys players to use workbenches'
+                        - 'enchant - allows or denys players to use enchanting tables'
+                        - 'brew - allows or denys players to use brewing stands'
+                        - 'bed - allows or denys players to use beds'
+                        - 'button - allows or denys players to use buttons'
+                        - 'redstone - Gives lever, diode, button flags'
+                        - 'craft - Gives table, enchant, brew flags'
                 list:
                     Description: Listet Residenzen
                     Info:
