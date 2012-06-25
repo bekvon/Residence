@@ -50,6 +50,7 @@ public class FlagPermissions {
         validPlayerFlags.clear();
         validFlags.clear();
         ResidencePermissions.validFlagGroups.clear();
+        addFlag("cake");
         addFlag("lever");
         addFlag("door");
         addFlag("button");
