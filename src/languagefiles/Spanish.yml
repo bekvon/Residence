@@ -428,6 +428,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'use - autoriza o denega el uso de puertas, botones, palancas, etc.'
                         - 'move - autoriza o denega movimiento'
                         - 'container - autoriza o denega el uso de cofres, hornos, dispensadores, etc.'
+                        - 'trusted - Gives build, use, move, container and tp flags'
                         - 'place - autoriza o denega plazamiento de bloques, anula el flag build'
                         - 'destroy - autoriza o denega destrucción de bloques, anula el flag build'
                         - 'pvp - autoriza o denega PvP (combate jugador contra jugador)'
@@ -448,6 +449,18 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'damage - autoriza o denega el daño de entidades'
                         - 'piston - autoriza o denega empujamiento y retracción de bloques por pistones'
                         - 'hidden - oculta la residencia de listas'
+                        - 'cake - allows or denys players to eat cake'
+                        - 'lever - allows or denys players to use levers'
+                        - 'button - allows or denys players to use buttons'
+                        - 'diode - allows or denys players to use redstone repeaters'
+                        - 'door - allows or denys players to use doors and trapdoors'
+                        - 'table - allows or denys players to use workbenches'
+                        - 'enchant - allows or denys players to use enchanting tables'
+                        - 'brew - allows or denys players to use brewing stands'
+                        - 'bed - allows or denys players to use beds'
+                        - 'button - allows or denys players to use buttons'
+                        - 'redstone - Gives lever, diode, button flags'
+                        - 'craft - Gives table, enchant, brew flags'
                 list:
                     Description: Listear residencias
                     Info:
