@@ -50,6 +50,7 @@ public class FlagPermissions {
         validPlayerFlags.clear();
         validFlags.clear();
         ResidencePermissions.validFlagGroups.clear();
+        addFlag("note");
         addFlag("pressure");
         addFlag("cake");
         addFlag("lever");
@@ -88,6 +89,7 @@ public class FlagPermissions {
         addResidenceOnlyFlag("spread");
         addResidenceOnlyFlag("hidden");
         addPlayerOrGroupOnlyFlag("admin");
+        ResidencePermissions.addFlagToFlagGroup("redstone", "note");
         ResidencePermissions.addFlagToFlagGroup("redstone", "pressure");
         ResidencePermissions.addFlagToFlagGroup("redstone", "lever");
         ResidencePermissions.addFlagToFlagGroup("redstone", "button");
