@@ -50,6 +50,7 @@ public class FlagPermissions {
         validPlayerFlags.clear();
         validFlags.clear();
         ResidencePermissions.validFlagGroups.clear();
+        addFlag("pressure");
         addFlag("cake");
         addFlag("lever");
         addFlag("door");
@@ -70,6 +71,7 @@ public class FlagPermissions {
         addFlag("place");
         addFlag("bucket");
         addFlag("bank");
+        addResidenceOnlyFlag("trample");
         addResidenceOnlyFlag("pvp");
         addResidenceOnlyFlag("damage");
         addResidenceOnlyFlag("monsters");
@@ -86,12 +88,13 @@ public class FlagPermissions {
         addResidenceOnlyFlag("spread");
         addResidenceOnlyFlag("hidden");
         addPlayerOrGroupOnlyFlag("admin");
+        ResidencePermissions.addFlagToFlagGroup("redstone", "pressure");
         ResidencePermissions.addFlagToFlagGroup("redstone", "lever");
+        ResidencePermissions.addFlagToFlagGroup("redstone", "button");
+        ResidencePermissions.addFlagToFlagGroup("redstone", "diode");
         ResidencePermissions.addFlagToFlagGroup("craft", "brew");
         ResidencePermissions.addFlagToFlagGroup("craft", "table");
-        ResidencePermissions.addFlagToFlagGroup("redstone", "button");
         ResidencePermissions.addFlagToFlagGroup("craft", "enchant");
-        ResidencePermissions.addFlagToFlagGroup("redstone", "diode");
         ResidencePermissions.addFlagToFlagGroup("trusted", "use");
         ResidencePermissions.addFlagToFlagGroup("trusted", "move");
         ResidencePermissions.addFlagToFlagGroup("trusted", "tp");
