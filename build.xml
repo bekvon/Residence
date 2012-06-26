@@ -1,7 +1,7 @@
 <project name="Residence" default="main" basedir=".">
   <!-- env variables -->
   <property name="target" location="target/"/>
-  <property name="Ver" value="2.6.1"/>
+  <property name="Ver" value="2.6.3"/>
   <property name="Authors" value="bekvon,inorixu,lemon42,nate302,smbarbour,Shayana,t00thpick1"/>
   <path id="classpath"><fileset dir="lib" includes="**/*.jar"/></path>
   <target name="main" depends="prep, class, compile, jar" description="Main target">
@@ -22,9 +22,9 @@
   <!-- Download libraries -->
   <target name="class">
     <get src="http://whiskeycraft.net:8080/view/Lib/job/Spout%20Plugin%20API/lastSuccessfulBuild/artifact/target/spoutpluginapi-dev-SNAPSHOT.jar" dest="lib/SpoutpluginAPI.jar"/>
-    <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
-    <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
-    <get src="http://whiskeycraft.net:8080/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
+    <get src="http://whiskeycraft.net/repo/com/earth2me/essentials/2.9/Essentials-2.9.jar" dest="lib/Essentials.jar"/>
+    <get src="http://whiskeycraft.net/repo/com/earth2me/EssentialsGroupBridge/2.9/EssentialsGroupBridge-2.9.jar" dest="lib/EssentialsGroupBridge.jar"/>
+    <get src="http://whiskeycraft.net/repo/com/earth2me/EssentialsGroupManager/2.9/EssentialsGroupManager-2.9.jar" dest="lib/EssentialsGroupManager.jar"/>
     <get src="http://dl.bukkit.org/latest-rb/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/palmergames/iConomy/5.01/iConomy.jar" dest="lib/iConomy5.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
