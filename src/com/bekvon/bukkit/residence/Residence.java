@@ -1744,7 +1744,7 @@ public class Residence extends JavaPlugin {
                     rmanager.giveResidence(player, args[2], args[1], resadmin);
                     return true;
                 }
-                else if (args[0].equals("setowner")) {
+                else if (args[0].equals("setowner") && args.length==3) {
                     if(!resadmin)
                     {
                         player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
