@@ -1377,8 +1377,8 @@ public class Residence extends JavaPlugin {
                     player.sendMessage(ChatColor.GREEN+"Created by: "+ChatColor.YELLOW+"bekvon");
                     player.sendMessage(ChatColor.DARK_AQUA+"For a command list, and help, see the wiki:");
                     player.sendMessage(ChatColor.GREEN+"http://residencebukkitmod.wikispaces.com/");
-                    player.sendMessage(ChatColor.AQUA+"Visit the Residence thread at:");
-                    player.sendMessage(ChatColor.BLUE+"http://forums.bukkit.org/");
+                    player.sendMessage(ChatColor.AQUA+"Visit the BukkitDev page at:");
+                    player.sendMessage(ChatColor.BLUE+"http://dev.bukkit.org/server-mods/Residence");
                     player.sendMessage(ChatColor.GRAY+"------------------------------------");
                     return true;
                 }
