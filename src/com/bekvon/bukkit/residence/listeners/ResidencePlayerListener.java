@@ -88,7 +88,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
 	private boolean isContainer(Material mat, Block block) {
-		return mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
+		return mat == Material.JUKEBOX || mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
 	}
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
@@ -99,7 +99,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 	
 	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
-		return mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.CAKE_BLOCK || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
+		return mat == Material.NOTE_BLOCK || mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.CAKE_BLOCK || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
 			   Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
@@ -259,6 +259,10 @@ public class ResidencePlayerListener implements Listener {
                         if(!perms.playerHas(player.getName(),"cake", use) && mat==Material.CAKE_BLOCK){
                         	event.setCancelled(true);
                         	player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","cake"));
+                        }
+                        if(!perms.playerHas(player.getName(),"note", use) && mat==Material.NOTE_BLOCK){
+                        	event.setCancelled(true);
+                        	player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","note"));
                         }
                     }
                     else
