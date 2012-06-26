@@ -463,7 +463,9 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'brew - allows or denys players to use brewing stands'
                         - 'bed - allows or denys players to use beds'
                         - 'button - allows or denys players to use buttons'
-                        - 'redstone - Gives lever, diode, button flags'
+                        - 'pressure - allows or denys players to use pressure plates'
+                        - 'note - allows or denys players to use note blocks'
+                        - 'redstone - Gives lever, diode, button, pressure, note flags'
                         - 'craft - Gives table, enchant, brew flags'
                 list:
                     Description: List Residences
