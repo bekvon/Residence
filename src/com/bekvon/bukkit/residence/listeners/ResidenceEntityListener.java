@@ -70,6 +70,26 @@ public class ResidenceEntityListener implements Listener {
             }
         }
     }
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onEntityInteract(EntityInteractEvent event){
+    	Block block = event.getBlock();
+    	Material mat = block.getType();
+    	Entity entity = event.getEntity();    	
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+	boolean hastrample = true;
+	boolean hasbuild = true;
+        if (res != null) {
+            hasbuild = res.getPermissions().has("hasbuild", true);
+            hastrample = res.getPermissions().has("trample", hasbuild);
+        } else {
+            FlagPermissions perms = Residence.getWorldFlags().getPerms(entity.getWorld().getName());
+            hasbuild =  perms.has("build", true);
+            hastrample =  perms.has("trample", hasbuild);
+        }        			
+	if(!hastrample && !(entity.getType() == EntityType.FALLING_BLOCK) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
+	    event.setCancelled(true);
+	}
+    }
 /*
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEndermanPlace(EndermanPlaceEvent event) {
