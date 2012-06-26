@@ -103,6 +103,8 @@ Global:
         brew: true
         bed: true
         cake: true
+        note: true
+        trample: false
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
