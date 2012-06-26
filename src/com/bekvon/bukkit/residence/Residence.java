@@ -1739,7 +1739,7 @@ public class Residence extends JavaPlugin {
                     }
                     return true;
                 }
-                else if(args[0].equals("give"))
+                else if(args[0].equals("give") && args.length==3)
                 {
                     rmanager.giveResidence(player, args[2], args[1], resadmin);
                     return true;
