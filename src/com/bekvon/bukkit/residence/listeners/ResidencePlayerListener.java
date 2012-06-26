@@ -132,6 +132,34 @@ public class ResidencePlayerListener implements Listener {
         String world = player.getWorld().getName();
         String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
         boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+                if(event.getAction() == Action.PHYSICAL){
+        	if(!resadmin){        		
+        		ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+        		boolean hasuse = true;
+        		boolean hastrample = true;
+        		boolean haspressure = true;
+        		boolean hasbuild = true;
+                if (res != null) {
+                    hasuse = res.getPermissions().playerHas(player.getName(), "use", true);
+                    hasbuild = res.getPermissions().playerHas(player.getName(), "build", true);
+                    haspressure = res.getPermissions().playerHas(player.getName(), "pressure", hasuse);
+                    hastrample = res.getPermissions().playerHas(player.getName(), "trample", hasbuild);
+                } else {
+                    FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
+                    hasuse = perms.playerHas(player.getName(), player.getWorld().getName(), "use", true);
+                    hasbuild = perms.playerHas(player.getName(), player.getWorld().getName(), "build", true);
+                    haspressure = perms.playerHas(player.getName(), player.getWorld().getName(), "pressure", hasuse);
+                    hastrample =  perms.playerHas(player.getName(), player.getWorld().getName(), "trample", hasbuild);
+                }        			
+        		if(((!hasuse && !haspressure) || !haspressure)&&(mat==Material.STONE_PLATE || mat == Material.WOOD_PLATE)){
+        			event.setCancelled(true);
+        			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","pressure"));
+        	    }
+        	    if(((!hasbuild && !hastrample) || !hastrample) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
+        	    	event.setCancelled(true);
+        	    }
+        	}
+        }
         if(!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world))
         {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ItemBlacklisted"));
