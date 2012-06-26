@@ -153,7 +153,11 @@ public class ResidencePlayerListener implements Listener {
                 }        			
         		if(((!hasuse && !haspressure) || !haspressure)&&(mat==Material.STONE_PLATE || mat == Material.WOOD_PLATE)){
         			event.setCancelled(true);
-        			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","pressure"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","pressure"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			} 
         	    }
         	    if(((!hasbuild && !hastrample) || !hastrample) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
         	    	event.setCancelled(true);
@@ -223,46 +227,86 @@ public class ResidencePlayerListener implements Listener {
                     if(res!=null)
                     {
                     	ResidencePermissions perms = res.getPermissions(); 
-                    	boolean use = perms.playerHas(player.getName(), "use", true);
-                    	if(!perms.playerHas(player.getName(),"diode", use) && (mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON)){
+                    	boolean hasuse = perms.playerHas(player.getName(), "use", true);
+                    	if(!perms.playerHas(player.getName(),"diode", hasuse) && (mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON)){
                     		event.setCancelled(true);
-                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","diode"));
+                    		if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","diode"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                     	}
-                    	if(!perms.playerHas(player.getName(),"table", use) && mat == Material.WORKBENCH){
+                    	if(!perms.playerHas(player.getName(),"table", hasuse) && mat == Material.WORKBENCH){
                     		event.setCancelled(true);
-                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","table"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","table"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                     	}
-                    	if(!perms.playerHas(player.getName(),"door", use) && (mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR)){
+                    	if(!perms.playerHas(player.getName(),"door", hasuse) && (mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR)){
                     		event.setCancelled(true);
-                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","door"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","door"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}
                     	}
-                    	if(!perms.playerHas(player.getName(),"enchant", use)&& mat == Material.ENCHANTMENT_TABLE){
+                    	if(!perms.playerHas(player.getName(),"enchant", hasuse)&& mat == Material.ENCHANTMENT_TABLE){
                     		event.setCancelled(true);
-                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","enchant"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","enchant"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}
                     	}
-                    	if(!perms.playerHas(player.getName(),"button", use)&& mat == Material.STONE_BUTTON){
+                    	if(!perms.playerHas(player.getName(),"button", hasuse)&& mat == Material.STONE_BUTTON){
                     		event.setCancelled(true);
-                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","button"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","button"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                     	}
-                    	if(!perms.playerHas(player.getName(),"lever", use)&& mat == Material.LEVER){
+                    	if(!perms.playerHas(player.getName(),"lever", hasuse)&& mat == Material.LEVER){
                     		event.setCancelled(true);
-                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","lever"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","lever"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                     	}
-                    	if(!perms.playerHas(player.getName(),"bed", use)&& mat == Material.BED_BLOCK){
+                    	if(!perms.playerHas(player.getName(),"bed", hasuse)&& mat == Material.BED_BLOCK){
                     		event.setCancelled(true);
-                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bed"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bed"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                         }
-                        if(!perms.playerHas(player.getName(),"brew", use)&& mat == Material.BREWING_STAND){
+                        if(!perms.playerHas(player.getName(),"brew", hasuse)&& mat == Material.BREWING_STAND){
                         	event.setCancelled(true);
-                        	player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","brew"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","brew"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                         }
-                        if(!perms.playerHas(player.getName(),"cake", use) && mat==Material.CAKE_BLOCK){
+                        if(!perms.playerHas(player.getName(),"cake", hasuse) && mat==Material.CAKE_BLOCK){
                         	event.setCancelled(true);
-                        	player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","cake"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","cake"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                         }
-                        if(!perms.playerHas(player.getName(),"note", use) && mat==Material.NOTE_BLOCK){
+                        if(!perms.playerHas(player.getName(),"note", hasuse) && mat==Material.NOTE_BLOCK){
                         	event.setCancelled(true);
-                        	player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","note"));
+        			if(hasuse){
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","note"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+        			}   
                         }
                     }
                     else
