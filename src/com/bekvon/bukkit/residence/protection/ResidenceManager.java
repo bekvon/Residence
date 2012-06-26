@@ -601,7 +601,7 @@ public class ResidenceManager {
         }
         res.getPermissions().setOwner(giveplayer.getName(), true);
         reqPlayer.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceGive",ChatColor.YELLOW + residence + ChatColor.GREEN+"."+ChatColor.YELLOW + giveplayer.getName() + ChatColor.GREEN));
-        giveplayer.sendMessage(Residence.getLanguage().getPhrase("ResidenceRecieve",ChatColor.GREEN + reqPlayer.getName() + ChatColor.YELLOW+"."+ChatColor.GREEN + residence + ChatColor.YELLOW));
+        giveplayer.sendMessage(Residence.getLanguage().getPhrase("ResidenceRecieve",ChatColor.GREEN + residence + ChatColor.YELLOW+"."+ChatColor.GREEN + reqPlayer.getName() + ChatColor.YELLOW));
     }
 
     public void removeAllFromWorld(CommandSender sender, String world)
