@@ -211,8 +211,18 @@ public class Residence extends JavaPlugin {
             try
             {
                 File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
-                if(this.checkNewLanguageVersion())
-                    this.writeDefaultLanguageFile();
+                if(this.checkNewLanguageVersion("English"))
+                    this.writeDefaultEnglishLanguageFile();
+                if(this.checkNewLanguageVersion("Spanish"))
+                    this.writeDefaultSpanishLanguageFile();
+                if(this.checkNewLanguageVersion("French"))
+                    this.writeDefaultFrenchLanguageFile();
+                if(this.checkNewLanguageVersion("German"))
+                    this.writeDefaultGermanLanguageFile();
+                if(this.checkNewLanguageVersion("Hungarian"))
+                    this.writeDefaultHungarianLanguageFile();               
+                if(this.checkNewLanguageVersion("Chinese"))
+                    this.writeDefaultChineseLanguageFile();
                 if(langFile.isFile())
                 {
                     FileConfiguration langconfig = new YamlConfiguration();
@@ -1998,10 +2008,63 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] Wrote default Language file...");
         }
     }
-
-    private boolean checkNewLanguageVersion() throws IOException, FileNotFoundException, InvalidConfigurationException
+    private void writeDefaultHungarianLanguageFile()
     {
-        String lang = cmanager.getLanguage();
+        File outFile = new File(new File(this.getDataFolder(),"Language"), "Hungarian.yml");
+        outFile.getParentFile().mkdirs();
+        if(this.writeDefaultFileFromJar(outFile, "languagefiles/Hungarian.yml", true))
+        {
+            System.out.println("[Residence] Wrote default Hungarian Language file...");
+        }
+    }
+    private void writeDefaultEnglishLanguageFile()
+    {
+        File outFile = new File(new File(this.getDataFolder(),"Language"), "English.yml");
+        outFile.getParentFile().mkdirs();
+        if(this.writeDefaultFileFromJar(outFile, "languagefiles/English.yml", true))
+        {
+            System.out.println("[Residence] Wrote default English Language file...");
+        }
+    }
+    private void writeDefaultSpanishLanguageFile()
+    {
+        File outFile = new File(new File(this.getDataFolder(),"Language"), "Spanish.yml");
+        outFile.getParentFile().mkdirs();
+        if(this.writeDefaultFileFromJar(outFile, "languagefiles/Spanish.yml", true))
+        {
+            System.out.println("[Residence] Wrote default Spanish Language file...");
+        }
+    }
+    private void writeDefaultFrenchLanguageFile()
+    {
+        File outFile = new File(new File(this.getDataFolder(),"Language"), "French.yml");
+        outFile.getParentFile().mkdirs();
+        if(this.writeDefaultFileFromJar(outFile, "languagefiles/French.yml", true))
+        {
+            System.out.println("[Residence] Wrote default French Language file...");
+        }
+    }
+    private void writeDefaultChineseLanguageFile()
+    {
+        File outFile = new File(new File(this.getDataFolder(),"Language"), "Chinese.yml");
+        outFile.getParentFile().mkdirs();
+        if(this.writeDefaultFileFromJar(outFile, "languagefiles/Chinese.yml", true))
+        {
+            System.out.println("[Residence] Wrote default Chinese Language file...");
+        }
+    }
+    private void writeDefaultGermanLanguageFile()
+    {
+        File outFile = new File(new File(this.getDataFolder(),"Language"), "German.yml");
+        outFile.getParentFile().mkdirs();
+        if(this.writeDefaultFileFromJar(outFile, "languagefiles/German.yml", true))
+        {
+            System.out.println("[Residence] Wrote default German Language file...");
+        }
+    }
+
+    private boolean checkNewLanguageVersion(String lang) throws IOException, FileNotFoundException, InvalidConfigurationException
+    {
         File outFile = new File(new File(this.getDataFolder(),"Language"), lang+".yml");
         File checkFile = new File(new File(this.getDataFolder(),"Language"), "temp-"+lang+".yml");
         if(outFile.isFile())
