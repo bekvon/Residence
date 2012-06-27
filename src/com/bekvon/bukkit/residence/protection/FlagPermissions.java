@@ -102,6 +102,7 @@ public class FlagPermissions {
         ResidencePermissions.addFlagToFlagGroup("trusted", "tp");
         ResidencePermissions.addFlagToFlagGroup("trusted", "build");
         ResidencePermissions.addFlagToFlagGroup("trusted", "container");
+        ResidencePermissions.addFlagToFlagGroup("trusted", "bucket");
         ResidencePermissions.addFlagToFlagGroup("fire", "ignite");
         ResidencePermissions.addFlagToFlagGroup("fire", "firespread");
     }
