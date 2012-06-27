@@ -393,7 +393,22 @@ public class ResidencePlayerListener implements Listener {
             event.setCancelled(true);
         }
     }
-
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerTeleport(PlayerTeleportEvent event){
+    	Location loc = event.getTo();
+    	Player player = event.getPlayer();
+    	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+    	boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);   	
+	if(event.getCause()==TeleportCause.ENDER_PEARL){
+	    if(res!=null){
+	        String areaname = Residence.getResidenceManager().getNameByLoc(loc);
+		if(!res.getPermissions().playerHas(player.getName(), "move", true)&&!resadmin){
+		    event.setCancelled(true);
+		    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceMoveDeny",areaname));
+		}
+	    } 
+    	}
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
     	Player player = event.getPlayer();
