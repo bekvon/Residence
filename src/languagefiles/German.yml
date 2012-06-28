@@ -4,7 +4,7 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 00
+Version: 02
 Fieldsversion: 20
 Language:
     # The below lines represent various messages residence sends to the players.
