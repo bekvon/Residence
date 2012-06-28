@@ -313,9 +313,9 @@ public class ResidencePlayerListener implements Listener {
                         if(!perms.playerHas(player.getName(),"egg", hasuse) && mat==Material.DRAGON_EGG){
                         	event.setCancelled(true);
         			if(hasuse){
-        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","note"));
-        			} else {
         			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","egg"));
+        			} else {
+        			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
         			}   
                         }
                     }
