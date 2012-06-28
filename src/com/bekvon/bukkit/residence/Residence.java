@@ -208,21 +208,63 @@ public class Residence extends JavaPlugin {
             wmanager = new WorldFlagManager(this.getConfig());
             chatmanager = new ChatManager();
             rentmanager = new RentManager();
+            try{
+                if(this.checkNewLanguageVersion("English"))
+                    this.writeDefaultEnglishLanguageFile();
+            } catch (Exception ex){
+                System.out.println("[Residence] Failed to update language file: English.yml, Error: " + ex.getMessage());
+                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                helppages = new HelpEntry("");
+                language = new Language();
+            }
+            try{
+            	if(this.checkNewLanguageVersion("Spanish"))
+            		this.writeDefaultSpanishLanguageFile();
+            } catch (Exception ex){
+            	System.out.println("[Residence] Failed to update language file: Spanish.yml, Error: " + ex.getMessage());
+            	Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+            	helppages = new HelpEntry("");
+            	language = new Language();
+            }
+            try{
+            	if(this.checkNewLanguageVersion("French"))
+            		this.writeDefaultFrenchLanguageFile();
+            } catch (Exception ex){
+                System.out.println("[Residence] Failed to update language file: French.yml, Error: " + ex.getMessage());
+                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                helppages = new HelpEntry("");
+                language = new Language();
+            }
+            try{
+            	if(this.checkNewLanguageVersion("German"))
+            		this.writeDefaultGermanLanguageFile();
+            } catch (Exception ex){
+                System.out.println("[Residence] Failed to update language file: German.yml, Error: " + ex.getMessage());
+                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                helppages = new HelpEntry("");
+                language = new Language();
+            }
+            try{
+            	if(this.checkNewLanguageVersion("Hungarian"))
+            		this.writeDefaultHungarianLanguageFile();     
+            } catch (Exception ex){
+                System.out.println("[Residence] Failed to update language file: Hungarian.yml, Error: " + ex.getMessage());
+                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                helppages = new HelpEntry("");
+                language = new Language();
+            }
+            try{
+            	if(this.checkNewLanguageVersion("Chinese"))
+            		this.writeDefaultChineseLanguageFile();
+            } catch (Exception ex){
+                System.out.println("[Residence] Failed to update language file: Chinese.yml, Error: " + ex.getMessage());
+                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                helppages = new HelpEntry("");
+                language = new Language();
+            }
             try
             {
                 File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
-                if(this.checkNewLanguageVersion("English"))
-                    this.writeDefaultEnglishLanguageFile();
-                if(this.checkNewLanguageVersion("Spanish"))
-                    this.writeDefaultSpanishLanguageFile();
-                if(this.checkNewLanguageVersion("French"))
-                    this.writeDefaultFrenchLanguageFile();
-                if(this.checkNewLanguageVersion("German"))
-                    this.writeDefaultGermanLanguageFile();
-                if(this.checkNewLanguageVersion("Hungarian"))
-                    this.writeDefaultHungarianLanguageFile();               
-                if(this.checkNewLanguageVersion("Chinese"))
-                    this.writeDefaultChineseLanguageFile();
                 if(langFile.isFile())
                 {
                     FileConfiguration langconfig = new YamlConfiguration();
