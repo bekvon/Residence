@@ -3,8 +3,8 @@
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 20
-FieldsVersion: 20
+Version: 21
+FieldsVersion: 21
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -184,6 +184,8 @@ Language:
     SubzoneOwnerChange: 'Subzone %1 owner changed to %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
     CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatic resadmin toggle turned %1'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -223,6 +225,9 @@ Language:
     #Version 20 Fields
     CoordsT: Top Coords
     CoordsB: Bottom Coords
+    #Version 21 Fields
+    On: on
+    Off: off
     
 # This is the help / usage messages for each command.
 # It follows this format:

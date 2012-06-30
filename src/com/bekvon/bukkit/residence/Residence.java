@@ -3,34 +3,20 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence;
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.chat.ChatManager;
-import com.bekvon.bukkit.residence.economy.BOSEAdapter;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.protection.LeaseManager;
-import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
-import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
-import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
-import com.bekvon.bukkit.residence.economy.EconomyInterface;
-import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
-import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
-import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
-import com.bekvon.bukkit.residence.economy.RealShopEconomy;
+import com.bekvon.bukkit.residence.economy.*;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
-import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
+import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
+import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.PermissionListManager;
-import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.protection.WorldFlagManager;
+import com.bekvon.bukkit.residence.protection.*;
+import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
@@ -42,28 +28,18 @@ import com.earth2me.essentials.Essentials;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.CharsetEncoder;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//import net.minecraft.server.FontAllowedCharacters;
 import net.minecraft.server.SharedConstants;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -111,6 +87,7 @@ public class Residence extends JavaPlugin {
     private static int autosaveBukkitId=-1;
     private static boolean initsuccess = false;
     private Map<String,String> deleteConfirm;
+    private List<String> resadminToggle;
     private Runnable doHeals = new Runnable() {
         public void run() {
             plistener.doHeals();
@@ -177,6 +154,7 @@ public class Residence extends JavaPlugin {
         try {
             initsuccess = false;
             deleteConfirm = new HashMap<String, String>();
+            resadminToggle = new ArrayList<String>();
             server = this.getServer();
             dataFolder = this.getDataFolder();
             if (!dataFolder.isDirectory()) {
@@ -723,6 +701,24 @@ public class Residence extends JavaPlugin {
                         player.sendMessage(ChatColor.RED + language.getPhrase("NonAdmin"));
                         return true;
                     }
+                    if(args.length == 1 && args[0].equals("on"))
+                    {
+                        resadminToggle.add(player.getName());
+                        player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggle", ChatColor.GREEN + language.getPhrase("on")));
+                        return true;
+                    }
+                    else if(args.length == 1 && args[0].equals("off"))
+                    {
+                        resadminToggle.remove(player.getName());
+                        player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggle", ChatColor.RED + language.getPhrase("off")));
+                        return true;
+                    }
+                }
+                if(!resadmin && resadminToggle.contains(player.getName()))
+                {
+                    resadmin = gmanager.isResidenceAdmin(player);
+                    if(!resadmin)
+                        resadminToggle.remove(player.getName());
                 }
                 if (cmanager.allowAdminsOnly()) {
                     if (!resadmin) {
