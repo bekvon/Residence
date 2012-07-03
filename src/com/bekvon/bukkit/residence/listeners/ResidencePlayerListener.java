@@ -133,7 +133,7 @@ public class ResidencePlayerListener implements Listener {
         
         String world = player.getWorld().getName();
         String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+        boolean resadmin = Residence.isResAdminOn(player);
                 if(event.getAction() == Action.PHYSICAL){
         	if(!resadmin){        		
         		ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
@@ -342,7 +342,7 @@ public class ResidencePlayerListener implements Listener {
         String pname = player.getName();
         boolean hasbuild;
         boolean hasbucket;
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+        boolean resadmin = Residence.isResAdminOn(player);
         if(res!=null)
         {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
@@ -378,7 +378,7 @@ public class ResidencePlayerListener implements Listener {
         String pname = player.getName();
         boolean hasbuild;
         boolean hasbucket;
-        boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);
+        boolean resadmin = Residence.isResAdminOn(player);
         if(res!=null)
         {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
@@ -408,7 +408,7 @@ public class ResidencePlayerListener implements Listener {
     	Location loc = event.getTo();
     	Player player = event.getPlayer();
     	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-    	boolean resadmin = Residence.getPermissionManager().isResidenceAdmin(player);   	
+    	boolean resadmin = Residence.isResAdminOn(player);	
 	if(event.getCause()==TeleportCause.ENDER_PEARL){
 	    if(res!=null){
 	        String areaname = Residence.getResidenceManager().getNameByLoc(loc);
@@ -490,7 +490,7 @@ public class ResidencePlayerListener implements Listener {
                 if(chatchange && chatenabled)
                     Residence.getChatManager().setChannel(pname, areaname);
                 res = manager.getByName(areaname);
-                if (res.getPermissions().playerHas(pname, "move", true) || Residence.getPermissionManager().isResidenceAdmin(player)) {
+                if (res.getPermissions().playerHas(pname, "move", true) || boolean resadmin = Residence.isResAdminOn(player);) {
                     cache.put(pname, areaname);
                     if (enterArea) {
                         String enterMessage = res.getEnterMessage();
