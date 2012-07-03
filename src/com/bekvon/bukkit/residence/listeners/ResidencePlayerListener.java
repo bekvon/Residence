@@ -490,7 +490,7 @@ public class ResidencePlayerListener implements Listener {
                 if(chatchange && chatenabled)
                     Residence.getChatManager().setChannel(pname, areaname);
                 res = manager.getByName(areaname);
-                if (res.getPermissions().playerHas(pname, "move", true) || boolean resadmin = Residence.isResAdminOn(player);) {
+                if (res.getPermissions().playerHas(pname, "move", true) || Residence.isResAdminOn(player);) {
                     cache.put(pname, areaname);
                     if (enterArea) {
                         String enterMessage = res.getEnterMessage();
