@@ -42,7 +42,7 @@ public class ResidenceBlockListener implements Listener {
             return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockBreak Fired");
-        if(Residence.isResAdminOn(player);)
+        if(Residence.isResAdminOn(player))
             return;
         Material mat = event.getBlock().getType();
         String world = event.getBlock().getWorld().getName();
@@ -97,7 +97,7 @@ public class ResidenceBlockListener implements Listener {
             return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockPlace Fired");
-        if(Residence.isResAdminOn(player);)
+        if(Residence.isResAdminOn(player))
             return;
         Material mat = event.getBlock().getType();
         String world = event.getBlock().getWorld().getName();
