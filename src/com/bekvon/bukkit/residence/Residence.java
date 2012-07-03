@@ -87,7 +87,7 @@ public class Residence extends JavaPlugin {
     private static int autosaveBukkitId=-1;
     private static boolean initsuccess = false;
     private Map<String,String> deleteConfirm;
-    private List<String> resadminToggle;
+    private static List<String> resadminToggle;
     private Runnable doHeals = new Runnable() {
         public void run() {
             plistener.doHeals();
@@ -1862,7 +1862,12 @@ public class Residence extends JavaPlugin {
         }
         return super.onCommand(sender, command, label, args);
     }
-
+    public static boolean isResAdminOn(Player player){
+    	if(resadminToggle.contains(player.getName())){
+    		return true;
+    	}
+    	return false;
+    }
 
     @Override
     public void setEnabled(boolean enabled) {
