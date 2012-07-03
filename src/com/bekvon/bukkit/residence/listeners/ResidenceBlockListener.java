@@ -42,7 +42,7 @@ public class ResidenceBlockListener implements Listener {
             return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockBreak Fired");
-        if(Residence.getPermissionManager().isResidenceAdmin(player))
+        if(Residence.isResAdminOn(player);)
             return;
         Material mat = event.getBlock().getType();
         String world = event.getBlock().getWorld().getName();
@@ -97,7 +97,7 @@ public class ResidenceBlockListener implements Listener {
             return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockPlace Fired");
-        if(Residence.getPermissionManager().isResidenceAdmin(player))
+        if(Residence.isResAdminOn(player);)
             return;
         Material mat = event.getBlock().getType();
         String world = event.getBlock().getWorld().getName();
@@ -285,7 +285,7 @@ public class ResidenceBlockListener implements Listener {
             }
             else if(cause == IgniteCause.FLINT_AND_STEEL) {
                 Player player = event.getPlayer();
-                if (!res.getPermissions().playerHas(player.getName(), "ignite", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+                if (!res.getPermissions().playerHas(player.getName(), "ignite", true) && !Residence.isResAdminOn(player);) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
                 }
