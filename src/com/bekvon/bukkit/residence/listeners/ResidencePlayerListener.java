@@ -88,7 +88,13 @@ public class ResidencePlayerListener implements Listener {
         healing.remove(pname);
         Residence.getChatManager().removeFromChannel(pname);
     }
-
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if(Residence.getPermissionManager().isResidenceAdmin(player)){
+        	Residence.turnResAdminOn(player);
+        }
+    }
 	private boolean isContainer(Material mat, Block block) {
 		return mat == Material.JUKEBOX || mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER || mat == Material.CAKE_BLOCK || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
 	}
