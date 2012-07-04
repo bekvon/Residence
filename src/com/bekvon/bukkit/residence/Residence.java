@@ -1868,7 +1868,9 @@ public class Residence extends JavaPlugin {
     	}
     	return false;
     }
-
+    public static void turnResAdminOn(Player player){
+    	resadminToggle.add(player.getName());
+    }
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
