@@ -1436,7 +1436,7 @@ public class Residence extends JavaPlugin {
                         return false;
                     try
                     {
-                        player.sendMessage(ChatColor.GREEN+language.getPhrase("GetMaterial",ChatColor.GOLD + args[1] + ChatColor.GREEN+"."+ChatColor.RED + Material.getMaterial(Integer.parseInt(args[1])).name()+ChatColor.GREEN));
+                        player.sendMessage(ChatColor.GREEN+language.getPhrase("MaterialGet",ChatColor.GOLD + args[1] + ChatColor.GREEN+"."+ChatColor.RED + Material.getMaterial(Integer.parseInt(args[1])).name()+ChatColor.GREEN));
                     }
                     catch (Exception ex)
                     {
