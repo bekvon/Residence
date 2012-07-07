@@ -139,6 +139,9 @@ public class ResidenceEntityListener implements Listener {
     public void onPaintingPlace(PaintingPlaceEvent event) {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         Player player = event.getPlayer();
+        if(Residence.isResAdminOn(player)){
+            return;
+        }
         if(res!=null)
         {
             ResidencePermissions perms = res.getPermissions();
@@ -168,6 +171,9 @@ public class ResidenceEntityListener implements Listener {
 			if(evt.getRemover() instanceof Player)
 			{
 				Player player = (Player) evt.getRemover();
+				if(Residence.isResAdminOn(player)){
+                   		    return;
+               			}
 				String pname = player.getName();
 				ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getPainting().getLocation());
 				if (res != null) {
