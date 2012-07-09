@@ -111,7 +111,10 @@ public class Residence extends JavaPlugin {
     private Runnable autoSave = new Runnable() {
         public void run() {
             try {
-                saveYml();
+                if(initsuccess)
+                {
+                    saveYml();
+                }
             } catch (Exception ex) {
                 Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
             }
