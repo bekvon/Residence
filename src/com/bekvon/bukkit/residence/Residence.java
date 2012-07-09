@@ -1945,7 +1945,7 @@ public class Residence extends JavaPlugin {
                     if (loadFile.isFile()) {
                         yml = new YMLSaveHelper(loadFile);
                         yml.load();
-                        Object obj = yml.getRoot().get("Seed");
+                        /*Object obj = yml.getRoot().get("Seed");
                         Long seed = 0L;
                         if (obj != null) {
                             if (obj instanceof Long) {
@@ -1954,9 +1954,9 @@ public class Residence extends JavaPlugin {
                                 seed = ((Integer) obj).longValue();
                             }
                         }
-                        if(seed==0 || seed == world.getSeed())
-                            worlds.put(world.getName(), yml.getRoot().get("Residences"));
-                        else
+                        if(seed==0 || seed == world.getSeed())*/
+                        worlds.put(world.getName(), yml.getRoot().get("Residences"));
+                        /*else
                         {
                             if(seed != 0)
                             {
@@ -1982,7 +1982,7 @@ public class Residence extends JavaPlugin {
                                 System.out.println("[Residence] Save Error: World Seed missing! world: " + world.getName() + ". Renaming to " + tempfile.getName());
                                 loadFile.renameTo(tempfile);
                             }
-                        }
+                        }*/
                     }
                 }
                 rmanager = ResidenceManager.load(worlds);
