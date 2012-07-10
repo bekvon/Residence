@@ -102,7 +102,7 @@ public class ResidencePlayerListener implements Listener {
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
 		return mat == Material.LEVER || mat == Material.STONE_BUTTON || 
-			   mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || mat == Material.FENCE_GATE|| 
+			   mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || mat == Material.FENCE_GATE|| mat == Material.NETHER_FENCE || 
 			   mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE || mat==Material.DRAGON_EGG || 
 			   Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
 	}
@@ -253,7 +253,7 @@ public class ResidencePlayerListener implements Listener {
         			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
         			}   
                     	}
-                    	if(!perms.playerHas(player.getName(),"door", hasuse) && (mat == Material.WOODEN_DOOR || mat == Material.FENCE_GATE|| mat == Material.TRAP_DOOR)){
+                    	if(!perms.playerHas(player.getName(),"door", hasuse) && (mat == Material.WOODEN_DOOR || mat == Material.FENCE_GATE|| mat == Material.NETHER_FENCE || mat == Material.TRAP_DOOR)){
                     		event.setCancelled(true);
         			if(hasuse){
         			    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","door"));
