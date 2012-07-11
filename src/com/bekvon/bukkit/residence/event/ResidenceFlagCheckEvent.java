@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.event;
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.event.HandlerList;
@@ -24,8 +23,8 @@ private static final HandlerList handlers = new HandlerList();
         return handlers;
     }
 
-    public boolean override;
-    public boolean overridevalue;
+    private boolean override;
+    private boolean overridevalue;
     boolean defaultvalue;
 
     public ResidenceFlagCheckEvent(ClaimedResidence resref, String flag, FlagType type, String target, boolean defaultValue)
@@ -43,6 +42,7 @@ private static final HandlerList handlers = new HandlerList();
     public void overrideCheck(boolean flagval)
     {
         overridevalue = flagval;
+        override=true;
     }
 
     public boolean getOverrideValue()
