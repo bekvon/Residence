@@ -53,7 +53,6 @@ public class ResidencePlayerListener implements Listener {
     protected Map<String,String> cache;
     protected Map<String,Long> lastUpdate;
     protected Map<String,Location> lastOutsideLoc;
-    protected List<String> healing;
     protected int minUpdateTime;
     protected boolean chatenabled;
     protected List<String> playerToggleChat;
@@ -63,7 +62,6 @@ public class ResidencePlayerListener implements Listener {
         cache = new HashMap<String,String>();
         lastUpdate = new HashMap<String,Long>();
         lastOutsideLoc = new HashMap<String,Location>();
-        healing = Collections.synchronizedList(new ArrayList<String>());
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
@@ -74,7 +72,6 @@ public class ResidencePlayerListener implements Listener {
         cache = new HashMap<String,String>();
         lastUpdate = new HashMap<String,Long>();
         lastOutsideLoc = new HashMap<String,Location>();
-        healing = Collections.synchronizedList(new ArrayList<String>());
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
@@ -86,7 +83,6 @@ public class ResidencePlayerListener implements Listener {
         cache.remove(pname);
         lastUpdate.remove(pname);
         lastOutsideLoc.remove(pname);
-        healing.remove(pname);
         Residence.getChatManager().removeFromChannel(pname);
     }
     @EventHandler(priority = EventPriority.NORMAL)
@@ -516,26 +512,10 @@ public class ResidencePlayerListener implements Listener {
                     }
                     player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceMoveDeny",areaname));
                 }
-                int health = player.getHealth();
-                if(health<20)
-                {
-                    if(res.getPermissions().has("healing", false))
-                    {
-                        if(!healing.contains(pname))
-                            healing.add(pname);
-                    }
-                    else
-                    {
-                        if(healing.contains(pname))
-                            healing.remove(pname);
-                    }
-                }
             }
             else
             {
                 lastOutsideLoc.put(pname, ploc);
-                if(healing.contains(pname))
-                    healing.remove(pname);
             }
             lastUpdate.put(pname, System.currentTimeMillis());
         }
@@ -558,7 +538,7 @@ public class ResidencePlayerListener implements Listener {
         try {
             Player[] p = Residence.getServ().getOnlinePlayers();
             for (Player player : p) {
-                if (healing.contains(player.getName())) {
+                if (Residence.getResidenceManager().getByLoc(player.getLocation()).getPermissions().has("healing", false)) {
                     int health = player.getHealth();
                     if (health < 20) {
                         player.setHealth(health + 1);
