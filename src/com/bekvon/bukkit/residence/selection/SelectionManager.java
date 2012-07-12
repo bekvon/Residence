@@ -343,7 +343,7 @@ public class SelectionManager {
             return Direction.MINUSX;
         if((yaw>135 && yaw<225) || (yaw<-135 && yaw>-225))
             return Direction.MINUSZ;
-        if((yaw<45 || yaw>315) || (yaw>-45 && yaw<-315))
+        if((yaw<45 || yaw>315) || (yaw>-45 || yaw<-315))
             return Direction.PLUSZ;
         return null;
     }
