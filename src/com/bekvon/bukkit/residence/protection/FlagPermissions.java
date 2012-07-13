@@ -78,6 +78,7 @@ public class FlagPermissions {
         addResidenceOnlyFlag("damage");
         addResidenceOnlyFlag("monsters");
         addResidenceOnlyFlag("firespread");
+        addResidenceOnlyFlag("burn");
         addResidenceOnlyFlag("tnt");
         addResidenceOnlyFlag("creeper");
         addResidenceOnlyFlag("flow");
