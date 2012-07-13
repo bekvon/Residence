@@ -206,7 +206,7 @@ public class ResidenceEntityListener implements Listener {
             return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
         if (perms != null) {
-            if (!perms.has("ignite", true)) {
+            if (!perms.has("burn", true)) {
                 event.setCancelled(true);
             }
         }
