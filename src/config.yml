@@ -105,6 +105,7 @@ Global:
         cake: true
         note: true
         trample: false
+        burn: true
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
