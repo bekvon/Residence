@@ -44,7 +44,7 @@ public class WorldEditSelectionManager extends SelectionManager {
     	{
             WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
             World world = playerLoc1.get(player.getName()).getWorld();
-            Selection selection = new CuboidSelection(world, playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
+            Selection selection = new CuboidSelection(world, this.playerLoc1.get(player.getName()), this.playerLoc2.get(player.getName()));
             wep.setSelection(player, selection);
     	}
     }
