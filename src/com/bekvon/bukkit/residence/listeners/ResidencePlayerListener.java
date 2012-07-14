@@ -61,6 +61,9 @@ public class ResidencePlayerListener implements Listener {
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
+        for (Player player : Residence.getServ().getOnlinePlayers()) {
+        	lastUpdate.put(player.getName(), System.currentTimeMillis());
+    	}
     }
 
     public void reload()
@@ -71,6 +74,9 @@ public class ResidencePlayerListener implements Listener {
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
+        for (Player player : Residence.getServ().getOnlinePlayers()) {
+        	lastUpdate.put(player.getName(), System.currentTimeMillis());
+    	}
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
