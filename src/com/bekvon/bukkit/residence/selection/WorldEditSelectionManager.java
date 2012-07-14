@@ -31,8 +31,8 @@ public class WorldEditSelectionManager extends SelectionManager {
         Selection sel = wep.getSelection(player);
         if(sel!=null)
         {
-            this.mins.put(player.getName(), sel.getMinimumPoint());
-            this.maxs.put(player.getName(), sel.getMaximumPoint());
+            this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
+            this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
             return true;
         }
         return false;
@@ -43,8 +43,8 @@ public class WorldEditSelectionManager extends SelectionManager {
     	if (hasPlacedBoth(player.getName()))
     	{
             WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
-            World world = mins.get(player.getName()).getWorld();
-            Selection selection = new CuboidSelection(world, mins.get(player.getName()), maxs.get(player.getName()));
+            World world = playerLoc1.get(player.getName()).getWorld();
+            Selection selection = new CuboidSelection(world, playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
             wep.setSelection(player, selection);
     	}
     }
