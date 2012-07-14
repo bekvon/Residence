@@ -23,6 +23,8 @@ import org.bukkit.entity.Player;
 public class SelectionManager {
     protected Map<String,Location> mins;
     protected Map<String,Location> maxs;
+    protected Map<String,Location> orig1;
+    protected Map<String,Location> orig2;
     protected Server server;
 
     public static final int MAX_HEIGHT = 255,MIN_HEIGHT = 0;
@@ -37,44 +39,39 @@ public class SelectionManager {
     	this.server = server;
         mins = Collections.synchronizedMap(new HashMap<String,Location>());
         maxs = Collections.synchronizedMap(new HashMap<String,Location>());
+        orig1 = Collections.synchronizedMap(new HashMap<String,Location>());
+        orig2 = Collections.synchronizedMap(new HashMap<String,Location>());
     }
 
-    @Deprecated
     public void placeLoc1(Player player, Location loc)
     {
+        orig1.put(player.getName(), loc);
         this.placeLoc(player, loc);
     }
 
-    @Deprecated
     public void placeLoc2(Player player, Location loc)
     {
+        orig2.put(player.getName(), loc);
         this.placeLoc(player, loc);
     }
     
-    public void placeLoc(Player player, Location loc)
+    private void placeLoc(Player player, Location loc)
     {
-        if(loc==null||player==null)
-            return;
-        Location min = mins.get(player.getName());
-        if(min!=null)
+        Location o1 = orig1.get(player.getName());
+        if(o1==null)
         {
-            CuboidArea area = new CuboidArea(min,loc);
-            mins.put(player.getName(), area.getLowLoc());
+            orig1.put(player.getName(), loc);
+            o1 = loc;
         }
-        else
+        Location o2 = orig2.get(player.getName());
+        if(o2==null)
         {
-            mins.put(player.getName(), loc);
+            orig2.put(player.getName(), loc);
+            o2 = loc;
         }
-        Location max = maxs.get(player.getName());
-        if(max!=null)
-        {
-            CuboidArea area = new CuboidArea(max,loc);
-            maxs.put(player.getName(), area.getHighLoc());
-        }
-        else
-        {
-            maxs.put(player.getName(), loc);
-        }
+        CuboidArea area = new CuboidArea (o1,o2);
+        mins.put(player.getName(), area.getLowLoc());
+        maxs.put(player.getName(), area.getHighLoc());
     }
     
     @Deprecated
