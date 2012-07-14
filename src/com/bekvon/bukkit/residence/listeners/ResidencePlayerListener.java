@@ -224,13 +224,18 @@ public class ResidencePlayerListener implements Listener {
             if(!resadmin)
             {
                 ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-                if(event.getItem().getType().toString().equals("INK_SACK")){
-                	if(event.getItem().getData().getData()==15){
-                		if(!res.getPermissions().playerHas(player.getName(), "build", true)) {
-                			event.setCancelled(true);
+                try{
+                	if(heldItem!=null){
+                		if(event.getItem().getType().toString().equals("INK_SACK")){
+                			if(event.getItem().getData().getData()==15){
+                				if(!res.getPermissions().playerHas(player.getName(), "build", true)) {
+                					event.setCancelled(true);
+                				}
+                			}
                 		}
                 	}
-                }
+                } catch(Exception e){       	
+                } 
                 if(isContainer(mat, block))
                 {
                     boolean hasuse;
