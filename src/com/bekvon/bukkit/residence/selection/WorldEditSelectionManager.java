@@ -54,14 +54,14 @@ public class WorldEditSelectionManager extends SelectionManager {
 
     @Override
     public void placeLoc1(Player player, Location loc) {
-        this.worldEdit(player);
+        //this.worldEdit(player);
         super.placeLoc1(player, loc);
         this.afterSelectionUpdate(player);
     }
 
     @Override
     public void placeLoc2(Player player, Location loc) {
-        this.worldEdit(player);
+        //this.worldEdit(player);
         super.placeLoc2(player, loc);
         this.afterSelectionUpdate(player);
     }
