@@ -5,6 +5,7 @@
 package com.bekvon.bukkit.residence.selection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
@@ -33,6 +34,7 @@ public class WorldEditSelectionManager extends SelectionManager {
         {
             this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
             this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
+            wep.setSelection(player, null);
             return true;
         }
         return false;
@@ -44,7 +46,8 @@ public class WorldEditSelectionManager extends SelectionManager {
     	{
             WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
             World world = playerLoc1.get(player.getName()).getWorld();
-            Selection selection = new CuboidSelection(world, playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
+            CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
+            Selection selection = new CuboidSelection(world, area.getLowLoc(), area.getHighLoc());
             wep.setSelection(player, selection);
     	}
     }
