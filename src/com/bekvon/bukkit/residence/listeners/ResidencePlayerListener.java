@@ -536,7 +536,8 @@ public class ResidencePlayerListener implements Listener {
         try {
             Player[] p = Residence.getServ().getOnlinePlayers();
             for (Player player : p) {
-                if (Residence.getResidenceManager().getByLoc(player.getLocation()).getPermissions().has("healing", false)) {
+                ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+                if (res != null && res.getPermissions().has("healing", false)) {
                     int health = player.getHealth();
                     if (health < 20) {
                         player.setHealth(health + 1);
