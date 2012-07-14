@@ -130,12 +130,12 @@ public class ResidencePlayerListener implements Listener {
         Block block = event.getClickedBlock();
         Material mat = block.getType();
         ILog.sendToPlayer(player, mat.toString());
-        if(!(((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK) || 
-        		isCanUseEntity_BothClick(mat, block)))
+	if(!(((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK) || 
+        		isCanUseEntity_BothClick(mat, block))||event.getAction() == Action.PHYSICAL)
         {            
         	int typeId = player.getItemInHand().getTypeId();
         	if(typeId != Residence.getConfigManager().getSelectionTooldID() &&
-        	   typeId != Residence.getConfigManager().getInfoToolID())
+        	   typeId != Residence.getConfigManager().getInfoToolID()&&typeID!=351)
         	{
         		return;
         	}
@@ -218,6 +218,13 @@ public class ResidencePlayerListener implements Listener {
             if(!resadmin)
             {
                 ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+                if(event.getItem().getType().toString().equals("INK_SACK")){
+                	if(event.getItem().getData().getData()==15){
+                		if(!res.getPermissions().playerHas(player.getName(), "build", true)) {
+                			event.setCancelled(true);
+                		}
+                	}
+                }
                 if(isContainer(mat, block))
                 {
                     boolean hasuse;
