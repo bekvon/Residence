@@ -437,7 +437,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'use - allows or denys use of doors, lever, buttons, etc...'
                         - 'move - allows or denys movement in the residence.'
                         - 'container - allows or denys use of furnaces, chests, dispensers, etc...'
-                        - 'trusted - Gives buildd, use, move, container and tp flags'
+                        - 'trusted - Gives build, use, move, container and tp flags'
                         - 'place - allows or denys only placement of blocks, overrides the build flag.'
                         - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
                         - 'pvp - allow or deny pvp in the residence'
@@ -472,6 +472,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'note - allows or denys players to use note blocks'
                         - 'redstone - Gives lever, diode, button, pressure, note flags'
                         - 'craft - Gives table, enchant, brew flags'
+                        - 'burn - allows or denys Mob combustion in residences'
                 list:
                     Description: List Residences
                     Info:
