@@ -434,8 +434,10 @@ public class ResidencePlayerListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
     	Player player = event.getPlayer();
         long last = lastUpdate.get(player.getName());
-        if(System.currentTimeMillis() - last < Residence.getConfigManager().getMinMoveUpdateInterval())
+        long now = System.currentTimeMillis();
+        if(now - last < Residence.getConfigManager().getMinMoveUpdateInterval())
             return;
+        lastUpdate.put(player.getName(), now);
         if(event.getFrom().getWorld() == event.getTo().getWorld())
         {
             ILog.sendToPlayer(player, "onPlayerMove("+event.getFrom().distance(event.getTo())+") Fired");
