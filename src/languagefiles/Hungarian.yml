@@ -184,6 +184,8 @@ Language:
     SubzoneOwnerChange: 'alosztalyt %1 tulajdonosa megváltozott %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
     CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatic resadmin toggle turned %1'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -221,8 +223,11 @@ Language:
     #Version 12 Fields
     Subzones: Alosztalyok
     #Version 20 Fields
-    CoordsT: felső koordinátái
-    CoordsB: alsó koordinátái
+    CoordsT: Top Coords
+    CoordsB: Bottom Coords
+    #Version 21 Fields
+    On: on
+    Off: off
     
 # This is the help / usage messages for each command.
 # It follows this format:
@@ -432,7 +437,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'use - engedi vagy tiltja az ajtok, kapcsolok, gombok, stb... hasznalatat'
                         - 'move - engedi vagy tiltja a mozgast a lakhelyen.'
                         - 'container - engedi vagy tiltja a kemencek, ladak, adagolok, stb... hasznalatat'
-                        - 'trusted - Gives buildd, use, move, container and tp flags'
+                        - 'trusted - Gives build, use, move, container and tp flags'
                         - 'place - engedi / tiltja csak a blokkok lerakasat, felulirja az epites engedelyt'
                         - 'destroy -engedi / tiltja csak a blokkok kiuteset felulirja az epites engedelyt.'
                         - 'pvp - engedi vagy tiltja pvp-t a lakhelyen.'
