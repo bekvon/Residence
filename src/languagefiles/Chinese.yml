@@ -232,9 +232,9 @@ Language:
 # Info: <extra info lines to describe the command, list of text>
 # SubCommands:
 # <SubCommands> - these follow the same format, and each sub command can have its own subcommands
-# When a user gets help for a command (adds a  mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
 # Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
-# Add a page number after the  mark to see that page.
+# Add a page number after the ? mark to see that page.
 
 HelpLinesPerPage: 7
 CommandHelp: #this is just a holder node, that holds the entire help
@@ -245,7 +245,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
             Info:
                 - 'See the 领地 wiki for more help.'
                 - 'Wiki: residencebukkitmod.wikispaces.com'
-                - 'Use /[command]  <page> to view more help information.'
+                - 'Use /[command] ? <page> to view more help information.'
             SubCommands:
                 select: #selection commands
                     Description: Selection Commands
@@ -400,19 +400,19 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: Set general flags on a Residence
                     Info:
                         - 'Usage: /res set <residence> [flag] [true/false/remove]'
-                        - 'To see a list of flags, use /res flags '
-                        - 'These flags apply to any players who do not have the flag applied specifically to them. (see /res pset )'
+                        - 'To see a list of flags, use /res flags ?'
+                        - 'These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)'
                 pset:
                     Description: Set flags on a specific player for a Residence.
                     Info:
                         - 'Usage: /res pset <residence> [player] [flag] [true/false/remove]'
                         - 'Usage: /res pset <residence> [player] removeall'
-                        - 'To see a list of flags, use /res flags '
+                        - 'To see a list of flags, use /res flags ?'
                 gset:
                     Description: Set flags on a specific group for a Residence.
                     Info:
                         - 'Usage: /res gset <residence> [group] [flag] [true/false/remove]'
-                        - 'To see a list of flags, use /res flags '
+                        - 'To see a list of flags, use /res flags ?'
                 lset:
                     Description: Change blacklist and ignorelist options
                     Info:
@@ -498,7 +498,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 market:
                     Description: Buy, Sell, or Rent Residences
                     Info:
-                        - 'Usage: /res market  for more info'
+                        - 'Usage: /res market ? for more info'
                     SubCommands:
                         info:
                             Description: Get economy info on residence
