@@ -46,7 +46,7 @@ import org.bukkit.event.Listener;
  */
 public class ResidencePlayerListener implements Listener {
 
-    protected Map<String,String> cache;
+    protected Map<String,String> currentRes;
     protected Map<String,Long> lastUpdate;
     protected Map<String,Location> lastOutsideLoc;
     protected int minUpdateTime;
@@ -55,7 +55,7 @@ public class ResidencePlayerListener implements Listener {
     
     public ResidencePlayerListener()
     {
-        cache = new HashMap<String,String>();
+        currentRes = new HashMap<String,String>();
         lastUpdate = new HashMap<String,Long>();
         lastOutsideLoc = new HashMap<String,Location>();
         playerToggleChat = new ArrayList<String>();
@@ -65,7 +65,7 @@ public class ResidencePlayerListener implements Listener {
 
     public void reload()
     {
-        cache = new HashMap<String,String>();
+        currentRes = new HashMap<String,String>();
         lastUpdate = new HashMap<String,Long>();
         lastOutsideLoc = new HashMap<String,Location>();
         playerToggleChat = new ArrayList<String>();
@@ -76,7 +76,7 @@ public class ResidencePlayerListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
         String pname = event.getPlayer().getName();
-        cache.remove(pname);
+        currentRes.remove(pname);
         lastUpdate.remove(pname);
         lastOutsideLoc.remove(pname);
         Residence.getChatManager().removeFromChannel(pname);
@@ -97,7 +97,7 @@ public class ResidencePlayerListener implements Listener {
         		res = res.getSubzoneByLoc(player.getLocation());
         	    areaname = areaname + "." + subzone;
     		}
-    		cache.put(player.getName(), areaname);
+    		currentRes.put(player.getName(), areaname);
         }
     }
 	private boolean isContainer(Material mat, Block block) {
@@ -459,22 +459,22 @@ public class ResidencePlayerListener implements Listener {
     		}
     	}
         ClaimedResidence ResOld = null;
-		if(cache.containsKey(pname)){
-    		ResOld = Residence.getResidenceManager().getByName(cache.get(pname));
+		if(currentRes.containsKey(pname)){
+    		ResOld = Residence.getResidenceManager().getByName(currentRes.get(pname));
 		}
     	if(res==null){
     		if(lastOutsideLoc.containsKey(pname)){
     			lastOutsideLoc.remove(pname);
     		}
     		lastOutsideLoc.put(pname, loc);
-    		if(cache.containsKey(pname)){
+    		if(currentRes.containsKey(pname)){
                 	String leave = ResOld.getLeaveMessage();
                 	ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld,player);
                 	Residence.getServ().getPluginManager().callEvent(leaveevent);
                		if (leave != null && !leave.equals("")) {
                 		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 	}
-    			cache.remove(pname);
+    			currentRes.remove(pname);
     			Residence.getChatManager().removeFromChannel(pname);
     		}
     		return;
@@ -494,11 +494,11 @@ public class ResidencePlayerListener implements Listener {
 			lastOutsideLoc.remove(pname);
 		}
 		lastOutsideLoc.put(pname, loc);
-        if(!cache.containsKey(pname)||ResOld!=res){
-        	if(cache.containsKey(pname)){
-        		cache.remove(pname);
+        if(!currentRes.containsKey(pname)||ResOld!=res){
+        	if(currentRes.containsKey(pname)){
+        		currentRes.remove(pname);
         	}
-        	cache.put(pname, areaname);
+        	currentRes.put(pname, areaname);
         	if(subzone==null){
         		chatchange = true;
         	}
@@ -557,7 +557,7 @@ public class ResidencePlayerListener implements Listener {
         String pname = event.getPlayer().getName();
         if(chatenabled && playerToggleChat.contains(pname))
         {
-            String area = cache.get(pname);
+            String area = currentRes.get(pname);
             if(area!=null)
             {
                 ChatChannel channel = Residence.getChatManager().getChannel(area);
@@ -585,6 +585,6 @@ public class ResidencePlayerListener implements Listener {
 
     public String getLastAreaName(String player)
     {
-        return cache.get(player);
+        return currentRes.get(player);
     }
 }
