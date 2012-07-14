@@ -63,11 +63,19 @@ public class SelectionManager {
             CuboidArea area = new CuboidArea(min,loc);
             mins.put(player.getName(), area.getLowLoc());
         }
+        else
+        {
+            mins.put(player.getName(), loc);
+        }
         Location max = mins.get(player.getName());
         if(max!=null)
         {
             CuboidArea area = new CuboidArea(max,loc);
             maxs.put(player.getName(), area.getHighLoc());
+        }
+        else
+        {
+            maxs.put(player.getName(), loc);
         }
     }
     
