@@ -135,7 +135,7 @@ public class ResidencePlayerListener implements Listener {
         {            
         	int typeId = player.getItemInHand().getTypeId();
         	if(typeId != Residence.getConfigManager().getSelectionTooldID() &&
-        	   typeId != Residence.getConfigManager().getInfoToolID()&&typeID!=351)
+        	   typeId != Residence.getConfigManager().getInfoToolID()&&typeId!=351)
         	{
         		return;
         	}
