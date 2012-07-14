@@ -633,7 +633,7 @@ public class Residence extends JavaPlugin {
                     }
                     else
                     {
-                        String area = plistener.getLastAreaName(pname);
+                        String area = plistener.getCurrentResidenceName(pname);
                         if(area!=null)
                         {
                             ChatChannel channel = chatmanager.getChannel(area);
@@ -1532,7 +1532,7 @@ public class Residence extends JavaPlugin {
                 } else if(args[0].equals("bank")) {
                     if(args.length!=3)
                         return false;
-                    ClaimedResidence res = rmanager.getByName(plistener.getLastAreaName(pname));
+                    ClaimedResidence res = rmanager.getByName(plistener.getCurrentResidenceName(pname));
                     if(res==null)
                     {
                         player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
