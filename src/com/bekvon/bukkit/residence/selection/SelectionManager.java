@@ -39,24 +39,22 @@ public class SelectionManager {
         maxs = Collections.synchronizedMap(new HashMap<String,Location>());
     }
 
+    @Deprecated
     public void placeLoc1(Player player, Location loc)
     {
-        if(loc!=null)
-        {
-            this.placeLoc(player, loc);
-        }
+        this.placeLoc(player, loc);
     }
 
+    @Deprecated
     public void placeLoc2(Player player, Location loc)
     {
-        if(loc!=null)
-        {
-            this.placeLoc(player, loc);
-        }
+        this.placeLoc(player, loc);
     }
     
-    private void placeLoc(Player player, Location loc)
+    public void placeLoc(Player player, Location loc)
     {
+        if(loc==null||player==null)
+            return;
         Location min = mins.get(player.getName());
         if(min!=null)
         {
