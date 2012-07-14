@@ -2119,12 +2119,12 @@ public class Residence extends JavaPlugin {
         {
             FileConfiguration testconfig = new YamlConfiguration();
             testconfig.load(outFile);
-            int oldversion = testconfig.getInt("Version", 0);
+            int oldversion = testconfig.getInt("FieldsVersion", 0);
             if(!this.writeDefaultFileFromJar(checkFile, "languagefiles/"+lang+".yml", false))
                 return false;
             FileConfiguration testconfig2 = new YamlConfiguration();
             testconfig2.load(checkFile);
-            int newversion = testconfig2.getInt("Version", oldversion);
+            int newversion = testconfig2.getInt("FieldsVersion", oldversion);
             if(checkFile.isFile())
                 checkFile.delete();
             if(newversion>oldversion)
