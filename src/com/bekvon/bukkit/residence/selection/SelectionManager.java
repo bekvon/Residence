@@ -21,8 +21,8 @@ import org.bukkit.entity.Player;
  * @author Administrator
  */
 public class SelectionManager {
-    protected Map<String,Location> playerLoc1;
-    protected Map<String,Location> playerLoc2;
+    protected Map<String,Location> mins;
+    protected Map<String,Location> maxs;
     protected Server server;
 
     public static final int MAX_HEIGHT = 255,MIN_HEIGHT = 0;
@@ -35,15 +35,15 @@ public class SelectionManager {
     public SelectionManager(Server server)
     {
     	this.server = server;
-        playerLoc1 = Collections.synchronizedMap(new HashMap<String,Location>());
-        playerLoc2 = Collections.synchronizedMap(new HashMap<String,Location>());
+        mins = Collections.synchronizedMap(new HashMap<String,Location>());
+        maxs = Collections.synchronizedMap(new HashMap<String,Location>());
     }
 
     public void placeLoc1(Player player, Location loc)
     {
         if(loc!=null)
         {
-            playerLoc1.put(player.getName(), loc);
+            this.placeLoc(player, loc);
         }
     }
 
@@ -51,23 +51,51 @@ public class SelectionManager {
     {
         if(loc!=null)
         {
-            playerLoc2.put(player.getName(), loc);
+            this.placeLoc(player, loc);
         }
     }
-
+    
+    private void placeLoc(Player player, Location loc)
+    {
+        Location min = mins.get(player.getName());
+        if(min!=null)
+        {
+            CuboidArea area = new CuboidArea(min,loc);
+            mins.put(player.getName(), area.getLowLoc());
+        }
+        Location max = mins.get(player.getName());
+        if(max!=null)
+        {
+            CuboidArea area = new CuboidArea(max,loc);
+            maxs.put(player.getName(), area.getHighLoc());
+        }
+    }
+    
+    @Deprecated
     public Location getPlayerLoc1(String player)
     {
-        return playerLoc1.get(player);
+        return mins.get(player);
     }
 
+    @Deprecated
     public Location getPlayerLoc2(String player)
     {
-        return playerLoc2.get(player);
+        return maxs.get(player);
+    }
+    
+    public Location getMinimumLocation(String player)
+    {
+        return mins.get(player);
+    }
+
+    public Location getMaximumLocation(String player)
+    {
+        return maxs.get(player);
     }
 
     public boolean hasPlacedBoth(String player)
     {
-        return (playerLoc1.containsKey(player) && playerLoc2.containsKey(player));
+        return (mins.containsKey(player) && maxs.containsKey(player));
     }
 
     public void showSelectionInfo(Player player) {
@@ -104,32 +132,16 @@ public class SelectionManager {
         if(hasPlacedBoth(player.getName()))
         {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            int y1 = playerLoc1.get(player.getName()).getBlockY();
-            int y2 = playerLoc2.get(player.getName()).getBlockY();
-            if(y1>y2)
+            int min = mins.get(player.getName()).getBlockY();
+            int newy = MAX_HEIGHT;
+            if(!resadmin)
             {
-                int newy = MAX_HEIGHT;
-                if(!resadmin)
-                {
-                    if(group.getMaxHeight()<newy)
-                        newy = group.getMaxHeight();
-                    if(newy - y2 > (group.getMaxY()-1))
-                        newy = y2 + (group.getMaxY()-1);
-                }
-                playerLoc1.get(player.getName()).setY(newy);
+                if(group.getMaxHeight()<newy)
+                    newy = group.getMaxHeight();
+                if(newy - min > (group.getMaxY()-1))
+                    newy = min + (group.getMaxY()-1);
             }
-            else
-            {
-                int newy = MAX_HEIGHT;
-                if(!resadmin)
-                {
-                    if(group.getMaxHeight()<newy)
-                        newy = group.getMaxHeight();
-                    if(newy - y1 > (group.getMaxY()-1))
-                        newy = y1 + (group.getMaxY()-1);
-                }
-                playerLoc2.get(player.getName()).setY(newy);
-            }
+            maxs.get(player.getName()).setY(newy);
             player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSky"));
         }
         else
@@ -143,32 +155,16 @@ public class SelectionManager {
         if(hasPlacedBoth(player.getName()))
         {
             PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            int y1 = playerLoc1.get(player.getName()).getBlockY();
-            int y2 = playerLoc2.get(player.getName()).getBlockY();
-            if(y1<y2)
+            int max = maxs.get(player.getName()).getBlockY();
+            int newy = MIN_HEIGHT;
+            if(!resadmin)
             {
-                int newy = MIN_HEIGHT;
-                if(!resadmin)
-                {
-                    if(newy<group.getMinHeight())
-                        newy = group.getMinHeight();
-                    if(y2 - newy > (group.getMaxY()-1))
-                        newy = y2 - (group.getMaxY()-1);
-                }
-                playerLoc1.get(player.getName()).setY(newy);
+                if(newy<group.getMinHeight())
+                    newy = group.getMinHeight();
+                if(max - newy > (group.getMaxY()-1))
+                    newy = max - (group.getMaxY()-1);
             }
-            else
-            {
-                int newy = MIN_HEIGHT;
-                if(!resadmin)
-                {
-                    if(newy<group.getMinHeight())
-                        newy = group.getMinHeight();
-                    if(y1 - newy > (group.getMaxY()-1))
-                        newy = y1 - (group.getMaxY()-1);
-                }
-                playerLoc2.get(player.getName()).setY(newy);
-            }
+            mins.get(player.getName()).setY(newy);
             player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionBedrock"));
         }
         else
@@ -179,8 +175,8 @@ public class SelectionManager {
 
     public void clearSelection(Player player)
     {
-        playerLoc1.remove(player.getName());
-        playerLoc2.remove(player.getName());
+        mins.remove(player.getName());
+        maxs.remove(player.getName());
     }
 
     public void selectChunk(Player player)
@@ -192,8 +188,8 @@ public class SelectionManager {
         int xmax = xcoord + 15;
         int zmax = zcoord + 15;
         int ymax = MAX_HEIGHT;
-        this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
-        this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
+        this.mins.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
+        this.maxs.put(player.getName(), new Location(player.getWorld(), xmax,ymax,zmax));
         player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
     }
 
@@ -204,8 +200,8 @@ public class SelectionManager {
 
     public void selectBySize(Player player, int xsize, int ysize, int zsize) {
         Location myloc = player.getLocation();
-        Location loc1 = new Location(myloc.getWorld(), myloc.getBlockX() + xsize, myloc.getBlockY() + ysize, myloc.getBlockZ() + zsize);
-        Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
+        Location loc1 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
+        Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() + xsize, myloc.getBlockY() + ysize, myloc.getBlockZ() + zsize);
         placeLoc1(player, loc1);
         placeLoc2(player, loc2);
         player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectionSuccess"));
@@ -224,7 +220,7 @@ public class SelectionManager {
         {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidDirection"));
         }
-        CuboidArea area = new CuboidArea (playerLoc1.get(player.getName()),playerLoc2.get(player.getName()));
+        CuboidArea area = new CuboidArea (mins.get(player.getName()),maxs.get(player.getName()));
         if(d == Direction.UP)
         {
             int oldy = area.getHighLoc().getBlockY();
@@ -325,8 +321,8 @@ public class SelectionManager {
             else
                 player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("Expanding")+" +Z...");
         }
-        playerLoc1.put(player.getName(), area.getHighLoc());
-        playerLoc2.put(player.getName(), area.getLowLoc());
+        maxs.put(player.getName(), area.getHighLoc());
+        mins.put(player.getName(), area.getLowLoc());
     }
 
     private Direction getDirection(Player player)
