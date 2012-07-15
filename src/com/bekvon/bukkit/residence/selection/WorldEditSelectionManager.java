@@ -68,28 +68,28 @@ public class WorldEditSelectionManager extends SelectionManager {
 
     @Override
     public void sky(Player player, boolean resadmin) {
-        this.worldEdit(player);
+        //this.worldEdit(player);
         super.sky(player, resadmin);
         afterSelectionUpdate(player);
     }
 
     @Override
     public void bedrock(Player player, boolean resadmin) {
-        this.worldEdit(player);
+        //this.worldEdit(player);
         super.bedrock(player, resadmin);
         afterSelectionUpdate(player);
     }
 
     @Override
     public void modify(Player player, boolean shift, int amount) {
-        this.worldEdit(player);
+        //this.worldEdit(player);
         super.modify(player, shift, amount);
         afterSelectionUpdate(player);
     }
 
     @Override
     public void selectChunk(Player player) {
-        this.worldEdit(player);
+        //this.worldEdit(player);
         super.selectChunk(player);
         afterSelectionUpdate(player);
     }
