@@ -226,8 +226,8 @@ public class ResidencePlayerListener implements Listener {
                 ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
                 try{
                 	if(heldItem!=null){
-                		if(event.getItem().getType().toString().equals("INK_SACK")){
-                			if(event.getItem().getData().getData()==15){
+                		if(event.getItem().getType().toString().equals("INK_SACK")&&event.getAction()==Action.RIGHT_CLICK_BLOCK&&block.getType()==Material.GRASS){
+                			if(event.getItem().getData()==MaterialData.boneMeal){
                 				if(!res.getPermissions().playerHas(player.getName(), "build", true)) {
                 					event.setCancelled(true);
                 				}
