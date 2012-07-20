@@ -507,7 +507,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 market:
                     Description: Achète, vend, ou loue une résidence
                     Info:
-                        - 'Utilisation: /res market ? pour plus d''info'
+                        - 'Utilisation: /res market ? pour plus dinfo'
                     SubCommands:
                         info:
                             Description: Affiche des informations sur une résidence
