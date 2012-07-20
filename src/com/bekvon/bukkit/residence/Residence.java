@@ -88,6 +88,7 @@ public class Residence extends JavaPlugin {
     private static boolean initsuccess = false;
     private Map<String,String> deleteConfirm;
     private static List<String> resadminToggle;
+    private final String[] validLanguages = { "English","German","French","Hungarian","Spanish","Chinese" };
     private Runnable doHeals = new Runnable() {
         public void run() {
             plistener.doHeals();
@@ -189,59 +190,17 @@ public class Residence extends JavaPlugin {
             wmanager = new WorldFlagManager(this.getConfig());
             chatmanager = new ChatManager();
             rentmanager = new RentManager();
-            try{
-                if(this.checkNewLanguageVersion("English"))
-                    this.writeDefaultEnglishLanguageFile();
-            } catch (Exception ex){
-                System.out.println("[Residence] Failed to update language file: English.yml, Error: " + ex.getMessage());
-                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-                helppages = new HelpEntry("");
-                language = new Language();
-            }
-            try{
-            	if(this.checkNewLanguageVersion("Spanish"))
-            		this.writeDefaultSpanishLanguageFile();
-            } catch (Exception ex){
-            	System.out.println("[Residence] Failed to update language file: Spanish.yml, Error: " + ex.getMessage());
-            	Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-            	helppages = new HelpEntry("");
-            	language = new Language();
-            }
-            try{
-            	if(this.checkNewLanguageVersion("French"))
-            		this.writeDefaultFrenchLanguageFile();
-            } catch (Exception ex){
-                System.out.println("[Residence] Failed to update language file: French.yml, Error: " + ex.getMessage());
-                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-                helppages = new HelpEntry("");
-                language = new Language();
-            }
-            try{
-            	if(this.checkNewLanguageVersion("German"))
-            		this.writeDefaultGermanLanguageFile();
-            } catch (Exception ex){
-                System.out.println("[Residence] Failed to update language file: German.yml, Error: " + ex.getMessage());
-                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-                helppages = new HelpEntry("");
-                language = new Language();
-            }
-            try{
-            	if(this.checkNewLanguageVersion("Hungarian"))
-            		this.writeDefaultHungarianLanguageFile();     
-            } catch (Exception ex){
-                System.out.println("[Residence] Failed to update language file: Hungarian.yml, Error: " + ex.getMessage());
-                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-                helppages = new HelpEntry("");
-                language = new Language();
-            }
-            try{
-            	if(this.checkNewLanguageVersion("Chinese"))
-            		this.writeDefaultChineseLanguageFile();
-            } catch (Exception ex){
-                System.out.println("[Residence] Failed to update language file: Chinese.yml, Error: " + ex.getMessage());
-                Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-                helppages = new HelpEntry("");
-                language = new Language();
+            for(String lang : validLanguages)
+            {
+                try{
+                    if(this.checkNewLanguageVersion(lang))
+                        this.writeDefaultLanguageFile(lang);
+                } catch (Exception ex){
+                    System.out.println("[Residence] Failed to update language file: "+lang+".yml, Error: " + ex.getMessage());
+                    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                    helppages = new HelpEntry("");
+                    language = new Language();
+                }
             }
             try
             {
@@ -2046,68 +2005,13 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] Wrote default config...");
     }
 
-    private void writeDefaultLanguageFile()
+    private void writeDefaultLanguageFile(String lang)
     {
-        String lang = cmanager.getLanguage();
         File outFile = new File(new File(this.getDataFolder(),"Language"), lang+".yml");
         outFile.getParentFile().mkdirs();
         if(this.writeDefaultFileFromJar(outFile, "languagefiles/"+lang+".yml", true))
         {
-            System.out.println("[Residence] Wrote default Language file...");
-        }
-    }
-    private void writeDefaultHungarianLanguageFile()
-    {
-        File outFile = new File(new File(this.getDataFolder(),"Language"), "Hungarian.yml");
-        outFile.getParentFile().mkdirs();
-        if(this.writeDefaultFileFromJar(outFile, "languagefiles/Hungarian.yml", true))
-        {
-            System.out.println("[Residence] Wrote default Hungarian Language file...");
-        }
-    }
-    private void writeDefaultEnglishLanguageFile()
-    {
-        File outFile = new File(new File(this.getDataFolder(),"Language"), "English.yml");
-        outFile.getParentFile().mkdirs();
-        if(this.writeDefaultFileFromJar(outFile, "languagefiles/English.yml", true))
-        {
-            System.out.println("[Residence] Wrote default English Language file...");
-        }
-    }
-    private void writeDefaultSpanishLanguageFile()
-    {
-        File outFile = new File(new File(this.getDataFolder(),"Language"), "Spanish.yml");
-        outFile.getParentFile().mkdirs();
-        if(this.writeDefaultFileFromJar(outFile, "languagefiles/Spanish.yml", true))
-        {
-            System.out.println("[Residence] Wrote default Spanish Language file...");
-        }
-    }
-    private void writeDefaultFrenchLanguageFile()
-    {
-        File outFile = new File(new File(this.getDataFolder(),"Language"), "French.yml");
-        outFile.getParentFile().mkdirs();
-        if(this.writeDefaultFileFromJar(outFile, "languagefiles/French.yml", true))
-        {
-            System.out.println("[Residence] Wrote default French Language file...");
-        }
-    }
-    private void writeDefaultChineseLanguageFile()
-    {
-        File outFile = new File(new File(this.getDataFolder(),"Language"), "Chinese.yml");
-        outFile.getParentFile().mkdirs();
-        if(this.writeDefaultFileFromJar(outFile, "languagefiles/Chinese.yml", true))
-        {
-            System.out.println("[Residence] Wrote default Chinese Language file...");
-        }
-    }
-    private void writeDefaultGermanLanguageFile()
-    {
-        File outFile = new File(new File(this.getDataFolder(),"Language"), "German.yml");
-        outFile.getParentFile().mkdirs();
-        if(this.writeDefaultFileFromJar(outFile, "languagefiles/German.yml", true))
-        {
-            System.out.println("[Residence] Wrote default German Language file...");
+            System.out.println("[Residence] Wrote default "+lang+" Language file...");
         }
     }
 
