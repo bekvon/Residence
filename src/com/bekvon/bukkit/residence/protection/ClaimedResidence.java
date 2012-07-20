@@ -300,7 +300,7 @@ public class ClaimedResidence {
                 ClaimedResidence res = resEntry.getValue();
                 if (res.checkCollision(newArea)) {
                     if(player!=null)
-                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("SubzoneCollide",ChatColor.YELLOW + name));
+                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("SubzoneCollide",ChatColor.YELLOW + resEntry.getKey()));
                     return false;
                 }
             }
