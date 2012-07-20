@@ -34,7 +34,6 @@ public class WorldEditSelectionManager extends SelectionManager {
         {
             this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
             this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
-            wep.setSelection(player, null);
             return true;
         }
         return false;
