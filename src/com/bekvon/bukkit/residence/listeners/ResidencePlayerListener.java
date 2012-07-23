@@ -477,15 +477,15 @@ public class ResidencePlayerListener implements Listener {
     		}
     	}
         ClaimedResidence ResOld = null;
-		if(currentRes.containsKey(pname)){
+	if(currentRes.containsKey(pname)){
     		ResOld = Residence.getResidenceManager().getByName(currentRes.get(pname));
-		}
+	}
     	if(res==null){
     		if(lastOutsideLoc.containsKey(pname)){
     			lastOutsideLoc.remove(pname);
     		}
     		lastOutsideLoc.put(pname, loc);
-    		if(currentRes.containsKey(pname)){
+    		if(ResOld!=null){
                 	String leave = ResOld.getLeaveMessage();
                 	ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld,player);
                 	Residence.getServ().getPluginManager().callEvent(leaveevent);
@@ -508,10 +508,10 @@ public class ResidencePlayerListener implements Listener {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceMoveDeny", res.getName().split("\\.")[(res.getName().split("\\.").length)-1]));
             return;
         }
-		if(lastOutsideLoc.containsKey(pname)){
-			lastOutsideLoc.remove(pname);
-		}
-		lastOutsideLoc.put(pname, loc);
+	if(lastOutsideLoc.containsKey(pname)){
+		lastOutsideLoc.remove(pname);
+	}
+	lastOutsideLoc.put(pname, loc);
         if(!currentRes.containsKey(pname)||ResOld!=res){
         	if(currentRes.containsKey(pname)){
         		currentRes.remove(pname);
@@ -521,22 +521,22 @@ public class ResidencePlayerListener implements Listener {
         		chatchange = true;
         	}
         	if(ResOld!=res&&ResOld!=null){
-                String leave = ResOld.getLeaveMessage();
-                ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld,player);
-                Residence.getServ().getPluginManager().callEvent(leaveevent);
-                if (leave != null && !leave.equals("")) {
-                    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
-                }
+                	String leave = ResOld.getLeaveMessage();
+                	ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld,player);
+                	Residence.getServ().getPluginManager().callEvent(leaveevent);
+                	if (leave != null && !leave.equals("")) {
+                   		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	}
         	}
         	String enterMessage = res.getEnterMessage();
-            ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
-            Residence.getServ().getPluginManager().callEvent(enterevent);
-            if(enterMessage!=null){
-                player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
-            }
+		ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
+		Residence.getServ().getPluginManager().callEvent(enterevent);
+		if(enterMessage!=null){
+                	player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+        	}
         }
         if(chatchange && chatenabled){
-            Residence.getChatManager().setChannel(pname, areaname);
+	        Residence.getChatManager().setChannel(pname, areaname);
         }
     }
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
