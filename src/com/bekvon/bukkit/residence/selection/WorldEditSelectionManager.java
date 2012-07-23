@@ -4,12 +4,12 @@
  */
 package com.bekvon.bukkit.residence.selection;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import org.bukkit.ChatColor;
+import com.sk89q.worldedit.regions.CuboidRegion;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
