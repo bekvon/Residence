@@ -32,8 +32,16 @@ public class WorldEditSelectionManager extends SelectionManager {
         Selection sel = wep.getSelection(player);
         if(sel!=null)
         {
-            this.playerLoc1.put(player.getName(), sel.getMinimumPoint());
-            this.playerLoc2.put(player.getName(), sel.getMaximumPoint());
+            Location pos1 = sel.getMinimumPoint();
+            Location pos2 = sel.getMaximumPoint();    
+            try{
+    			CuboidRegion region = (CuboidRegion) sel.getRegionSelector().getRegion();
+    			pos1 = new Location(player.getWorld(), region.getPos1().getX(), region.getPos1().getY(), region.getPos1().getZ());
+    			pos2 = new Location(player.getWorld(), region.getPos2().getX(), region.getPos2().getY(), region.getPos2().getZ());
+            }catch(IncompleteRegionException e){
+            }
+            this.playerLoc1.put(player.getName(), pos1);
+            this.playerLoc2.put(player.getName(), pos2);
             return true;
         }
         return false;
@@ -45,50 +53,50 @@ public class WorldEditSelectionManager extends SelectionManager {
     	{
             WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
             World world = playerLoc1.get(player.getName()).getWorld();
-            CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
-            Selection selection = new CuboidSelection(world, area.getLowLoc(), area.getHighLoc());
+            player.sendMessage("Sending 1: "+playerLoc1.get(player.getName()).getX()+" "+playerLoc1.get(player.getName()).getY()+" "+playerLoc1.get(player.getName()).getZ()+ "  2: "+playerLoc2.get(player.getName()).getX()+" "+playerLoc2.get(player.getName()).getY()+" "+playerLoc2.get(player.getName()).getZ());
+            Selection selection = new CuboidSelection(world, playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
             wep.setSelection(player, selection);
     	}
     }
 
     @Override
     public void placeLoc1(Player player, Location loc) {
-        //this.worldEdit(player);
+        this.worldEdit(player);
         super.placeLoc1(player, loc);
         this.afterSelectionUpdate(player);
     }
 
     @Override
     public void placeLoc2(Player player, Location loc) {
-        //this.worldEdit(player);
+        this.worldEdit(player);
         super.placeLoc2(player, loc);
         this.afterSelectionUpdate(player);
     }
 
     @Override
     public void sky(Player player, boolean resadmin) {
-        //this.worldEdit(player);
+        this.worldEdit(player);
         super.sky(player, resadmin);
         afterSelectionUpdate(player);
     }
 
     @Override
     public void bedrock(Player player, boolean resadmin) {
-        //this.worldEdit(player);
+        this.worldEdit(player);
         super.bedrock(player, resadmin);
         afterSelectionUpdate(player);
     }
 
     @Override
     public void modify(Player player, boolean shift, int amount) {
-        //this.worldEdit(player);
+        this.worldEdit(player);
         super.modify(player, shift, amount);
         afterSelectionUpdate(player);
     }
 
     @Override
     public void selectChunk(Player player) {
-        //this.worldEdit(player);
+        this.worldEdit(player);
         super.selectChunk(player);
         afterSelectionUpdate(player);
     }
