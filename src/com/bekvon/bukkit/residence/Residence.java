@@ -266,14 +266,14 @@ public class Residence extends JavaPlugin {
                 if(!this.isEnabled())
                     return;
                 FlagPermissions.initValidFlags();
-                //Plugin p = server.getPluginManager().getPlugin("WorldEdit");
-                //if(p!=null){
-                //        smanager = new WorldEditSelectionManager(server);
-                //        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldEdit");
-                //} else {
+                Plugin p = server.getPluginManager().getPlugin("WorldEdit");
+                if(p!=null){
+                        smanager = new WorldEditSelectionManager(server);
+                        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldEdit");
+                } else {
                         smanager = new SelectionManager(server);
-                //        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldEdit NOT found!");
-                //}
+                        Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldEdit NOT found!");
+                }
                 
                 blistener = new ResidenceBlockListener();
                 plistener = new ResidencePlayerListener();
