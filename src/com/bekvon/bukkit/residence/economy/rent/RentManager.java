@@ -280,7 +280,7 @@ public class RentManager {
 
     public boolean getRentedAutoRepeats(String landName)
     {
-        return getRentableRepeatable(landName) ? rentedLand.get(landName).autoRefresh : false;
+        return getRentableRepeatable(landName) ? (rentedLand.containsKey(landName) ? rentedLand.get(landName).autoRefresh : false) : false;
     }
 
     public int getRentDays(String landName)
