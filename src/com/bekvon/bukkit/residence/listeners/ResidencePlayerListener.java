@@ -479,6 +479,9 @@ public class ResidencePlayerListener implements Listener {
         ClaimedResidence ResOld = null;
 	if(currentRes.containsKey(pname)){
     		ResOld = Residence.getResidenceManager().getByName(currentRes.get(pname));
+    		if(ResOld==null){
+    			currentRes.remove(pname);
+    		}
 	}
     	if(res==null){
     		if(lastOutsideLoc.containsKey(pname)){
