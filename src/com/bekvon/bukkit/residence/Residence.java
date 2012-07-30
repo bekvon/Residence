@@ -196,8 +196,8 @@ public class Residence extends JavaPlugin {
                     if(this.checkNewLanguageVersion(lang))
                         this.writeDefaultLanguageFile(lang);
                 } catch (Exception ex){
-                    System.out.println("[Residence] Failed to update language file: "+lang+".yml, Error: " + ex.getMessage());
-                    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("[Residence] Failed to update language file: "+lang+".yml");
+                    //Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
                     helppages = new HelpEntry("");
                     language = new Language();
                 }
