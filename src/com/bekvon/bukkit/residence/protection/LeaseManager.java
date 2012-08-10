@@ -113,7 +113,7 @@ public class LeaseManager {
         {
             setExpireTime(player,area,max);
             player.sendMessage(ChatColor.GOLD+Residence.getLanguage().getPhrase("LeaseRenewMax"));
-            player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("LeaseRenew",ChatColor.GREEN + String.format("%d",getExpireTime(area)))+ChatColor.YELLOW);
+            player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("LeaseRenew",ChatColor.GREEN + getExpireTime(area))+ChatColor.YELLOW);
             return;
         }
         Long get = leaseExpireTime.get(area);
@@ -124,7 +124,7 @@ public class LeaseManager {
         }
         else
             leaseExpireTime.put(area, daysToMs(add));
-        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("LeaseRenew",ChatColor.GREEN + String.format("%d",getExpireTime(area))));
+        player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("LeaseRenew",ChatColor.GREEN + getExpireTime(area)));
     }
 
     public int getRenewCost(ClaimedResidence res)
