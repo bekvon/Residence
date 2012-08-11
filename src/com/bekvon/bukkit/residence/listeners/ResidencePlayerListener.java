@@ -224,7 +224,7 @@ public class ResidencePlayerListener implements Listener {
             if(!resadmin)
             {
                 ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-                if(player.getItemInHand()!=null){
+                if(player.getItemInHand()!=null&&res!=null){
                 	if(event.getAction()==Action.RIGHT_CLICK_BLOCK){
                 		if(player.getItemInHand().getTypeId()==351&&block.getType()==Material.GRASS){
                 			if(player.getItemInHand().getData().getData()==15){
