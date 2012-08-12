@@ -1418,7 +1418,6 @@ public class Residence extends JavaPlugin {
                     if (args.length != 2) {
                         return false;
                     }
-                    System.out.println( "PERM: " + Residence.getPermissionManager().hasAuthority(player, "residence.teleport") );
                     if ( Residence.getPermissionManager().hasAuthority(player, "residence.teleport") ) {
                     	ClaimedResidence res = rmanager.getByName(args[1]);
                     	if (res == null) {
