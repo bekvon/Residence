@@ -676,12 +676,6 @@ public class Residence extends JavaPlugin {
                         return true;
                     }
                 }
-                if(!resadmin && resadminToggle.contains(player.getName()))
-                {
-                    resadmin = gmanager.isResidenceAdmin(player);
-                    if(!resadmin)
-                        resadminToggle.remove(player.getName());
-                }
                 if (cmanager.allowAdminsOnly()) {
                     if (!resadmin) {
                         player.sendMessage(ChatColor.RED+language.getPhrase("AdminOnly"));
