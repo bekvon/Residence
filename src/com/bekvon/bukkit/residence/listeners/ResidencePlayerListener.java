@@ -433,6 +433,8 @@ public class ResidencePlayerListener implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event){
+    	if(event.isCancelled())
+            return;
     	Location loc = event.getTo();
     	Player player = event.getPlayer();
     	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
@@ -449,6 +451,8 @@ public class ResidencePlayerListener implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
+        if(event.isCancelled())
+            return;
     	Player player = event.getPlayer();
         long last = lastUpdate.get(player.getName());
         long now = System.currentTimeMillis();
