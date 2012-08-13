@@ -504,7 +504,6 @@ public class ResidencePlayerListener implements Listener {
     		return;
     	}
         if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player)) {
-            event.setCancelled(true);
             Location lastLoc = lastOutsideLoc.get(pname);
             if (lastLoc != null) {
                 player.teleport(lastLoc);
