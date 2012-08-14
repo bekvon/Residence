@@ -6,12 +6,20 @@
 package com.bekvon.bukkit.residence.listeners;
 import org.bukkit.ChatColor;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Jukebox;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -26,8 +34,7 @@ import org.bukkit.event.entity.PotionSplashEvent;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import org.bukkit.Location;
+
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -51,6 +58,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -216,63 +224,123 @@ public class ResidenceEntityListener implements Listener {
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         if(event.isCancelled())
             return;
-        if(this.checkExplosionCancel(event.getEntity(), event.getEntity().getLocation()))
-        {
-            event.setCancelled(true);
-            event.getEntity().remove();
+        EntityType entity = event.getEntityType();
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getEntity().getLocation());
+        if(res != null) {
+            if (entity == EntityType.CREEPER) {
+                if (!res.getPermissions().has("creeper", true)) {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+            if (entity == EntityType.PRIMED_TNT) {
+                if (!res.getPermissions().has("tnt", true)) {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
         }
     }
-
-
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         if(event.isCancelled())
             return;
-        if(this.checkExplosionCancel(event.getEntity(), event.getLocation()))
-        {
-            event.setCancelled(true);
-            event.getEntity().remove();
-        }
-    }
-
-    public boolean checkExplosionCancel(Entity ent, Location loc)
-    {
-        if(ent == null || loc == null)
-            return false;
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-        if(!explosionProximityCheck(loc, ent instanceof LivingEntity))
-            return true;
-        else if(res != null) {
-            if (ent instanceof LivingEntity) {
+        Boolean cancel = false;
+        EntityType entity = event.getEntityType();
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getLocation());
+        if(res != null) {
+            if (entity == EntityType.CREEPER) {
                 if (!res.getPermissions().has("creeper", true)) {
-                    return true;
+                    cancel = true;
                 }
             }
-            else {
+            if (entity == EntityType.PRIMED_TNT) {
                 if (!res.getPermissions().has("tnt", true)) {
-                    return true;
+                    cancel = true;
                 }
             }
-        }
-        else
-        {
-            World world = ent.getWorld();
+        } else {
+            World world = event.getEntity().getWorld();
             if(world == null)
-                return false;
-            if(ent instanceof LivingEntity)
-            {
+                return;
+            if(entity == EntityType.CREEPER)            {
                 if(!Residence.getWorldFlags().getPerms(world.getName()).has("creeper", true))
-                    return true;
-            }
-            else
-            {
+                    cancel = true;
+            } 
+            if(entity == EntityType.PRIMED_TNT){
                 if(!Residence.getWorldFlags().getPerms(world.getName()).has("tnt", true))
-                    return true;
+                    cancel = true;
             }
         }
-        return false;
+        for(Block block: event.blockList()){
+        	ClaimedResidence blockres = Residence.getResidenceManager().getByLoc(block.getLocation());
+        	if(blockres!=null){
+        		if((!blockres.getPermissions().has("tnt", true)&&(event.getEntityType()==EntityType.PRIMED_TNT))||(!blockres.getPermissions().has("creeper", true)&&(event.getEntityType()==EntityType.CREEPER))){
+	        		if(block!=null){
+	        			ItemStack[] inventory = null;
+	        			BlockState save = block.getState();
+	        			if(block.getType()==Material.CHEST){
+	        				Chest chest = (Chest)save;
+	        				inventory = chest.getInventory().getContents();
+	        				chest.getInventory().clear();
+	        			}
+	        			if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE){
+	        				Furnace furnace = (Furnace)save;
+	        				inventory = furnace.getInventory().getContents();
+	        				furnace.getInventory().clear();
+	        			}
+	        			if(block.getType()==Material.BREWING_STAND){
+	        				BrewingStand brew = (BrewingStand)save;
+	        				inventory = brew.getInventory().getContents();
+	        				brew.getInventory().clear();
+	        			}
+	        			if(block.getType()==Material.DISPENSER){
+	        				Dispenser dispenser = (Dispenser)save;
+	        				inventory = dispenser.getInventory().getContents();
+	        				dispenser.getInventory().clear();
+	        			}
+	        			if(block.getType()==Material.JUKEBOX){
+	        				Jukebox jukebox = (Jukebox)save;
+	        				if(jukebox.isPlaying()){
+	        					inventory = new ItemStack[1];
+	        					inventory[0] = new ItemStack(jukebox.getPlaying());
+	        					jukebox.setPlaying(null);
+	        				}
+	        			}
+	        			ExplodeRestore.put(save, inventory);
+	        			block.setType(Material.AIR);
+	        		}
+	        	}
+        	}
+        }
+        if(cancel){
+        	event.setCancelled(true);
+        	event.getEntity().remove();
+        } else {
+        	Residence.getServ().getScheduler().scheduleSyncDelayedTask(Residence.getServ().getPluginManager().getPlugin("Residence"), new Runnable() {
+        		   public void run() {
+        		       for(BlockState block: ExplodeRestore.keySet().toArray(new BlockState[0])){
+        		    	   ItemStack[] inventory = ExplodeRestore.get(block);
+        		    	   block.update(true);
+        		    	   if(inventory!=null){
+        		    		   if(block.getType()==Material.CHEST)
+        		    			   ((Chest)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+        		    		   if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE)
+        		    			   ((Furnace)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+		    	       			if(block.getType()==Material.BREWING_STAND)
+		    	       				((BrewingStand)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+		    	       			if(block.getType()==Material.DISPENSER)
+		    	       				((Dispenser)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+		    	        		if(block.getType()==Material.JUKEBOX)
+		    	        			((Jukebox)block.getLocation().getBlock().getState()).setPlaying(inventory[0].getType());
+        		    	   }
+        		       }
+        		       ExplodeRestore.clear();
+        		   }
+        		}, 1L);
+        }
     }
-
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSplashPotion(PotionSplashEvent event) {
     	if(event.isCancelled())
@@ -370,111 +438,4 @@ public class ResidenceEntityListener implements Listener {
             }
         }
     }
-    
-    private boolean explosionProximityCheck(Location loc, boolean creeper) {
-        ResidenceManager manager = Residence.getResidenceManager();
-        ClaimedResidence res = manager.getByLoc(loc);
-        if (res != null) {
-            if (creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    return false;
-                }
-            } else {
-                if (!res.getPermissions().has("tnt", true)) {
-                    return false;
-                }
-            }
-        }
-
-        loc.setX(loc.getX() + 4);
-        res = manager.getByLoc(loc);
-        if (res != null) {
-            if (creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    return false;
-                }
-            } else {
-                if (!res.getPermissions().has("tnt", true)) {
-                    return false;
-                }
-            }
-        }
-        loc.setX(loc.getX() - 4);
-
-        loc.setY(loc.getY() + 4);
-        res = manager.getByLoc(loc);
-        if (res != null) {
-            if (creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    return false;
-                }
-            } else {
-                if (!res.getPermissions().has("tnt", true)) {
-                    return false;
-                }
-            }
-        }
-        loc.setY(loc.getY() - 4);
-
-        loc.setZ(loc.getZ() + 4);
-        res = manager.getByLoc(loc);
-        if (res != null) {
-            if (creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    return false;
-                }
-            } else {
-                if (!res.getPermissions().has("tnt", true)) {
-                    return false;
-                }
-            }
-        }
-        loc.setZ(loc.getZ() - 4);
-
-        loc.setX(loc.getX() - 4);
-        res = manager.getByLoc(loc);
-        if (res != null) {
-            if (creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    return false;
-                }
-            } else {
-                if (!res.getPermissions().has("tnt", true)) {
-                    return false;
-                }
-            }
-        }
-        loc.setX(loc.getX() + 4);
-
-        loc.setY(loc.getY() - 4);
-        res = manager.getByLoc(loc);
-        if (res != null) {
-            if (creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    return false;
-                }
-            } else {
-                if (!res.getPermissions().has("tnt", true)) {
-                    return false;
-                }
-            }
-        }
-        loc.setY(loc.getY() + 4);
-
-        loc.setZ(loc.getZ() - 4);
-        res = manager.getByLoc(loc);
-        if (res != null) {
-            if (creeper) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    return false;
-                }
-            } else {
-                if (!res.getPermissions().has("tnt", true)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 }
