@@ -66,6 +66,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ResidenceEntityListener implements Listener {
 
+    protected Map<BlockState, ItemStack[]> ExplodeRestore = new HashMap<BlockState,ItemStack[]>();
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEndermanChangeBlock(EntityChangeBlockEvent  event) {
     	if(event.getEntityType() != EntityType.ENDERMAN)
