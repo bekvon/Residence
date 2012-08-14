@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -36,13 +35,11 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
@@ -67,44 +64,28 @@ import org.bukkit.inventory.ItemStack;
 public class ResidenceEntityListener implements Listener {
 
     protected Map<BlockState, ItemStack[]> ExplodeRestore = new HashMap<BlockState,ItemStack[]>();
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEndermanChangeBlock(EntityChangeBlockEvent  event) {
-    	if(event.getEntityType() != EntityType.ENDERMAN)
-    	{
+    	if(event.getEntityType() != EntityType.ENDERMAN){
     		return;
     	}
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
-        if (res != null) {
-            ResidencePermissions perms = res.getPermissions();
-            if (!perms.has("build", true)) {
-                event.setCancelled(true);
-            }
-        } else {
-            FlagPermissions perms = Residence.getWorldFlags().getPerms(event.getBlock().getLocation().getWorld().getName());
-            if (!perms.has("build", true)) {
-                event.setCancelled(true);
-            }
+        FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+        if (!perms.has("build", true)) {
+            event.setCancelled(true);
         }
     }
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityInteract(EntityInteractEvent event){
     	Block block = event.getBlock();
     	Material mat = block.getType();
     	Entity entity = event.getEntity();    	
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-	boolean hastrample = true;
-	boolean hasbuild = true;
-        if (res != null) {
-            hasbuild = res.getPermissions().has("hasbuild", true);
-            hastrample = res.getPermissions().has("trample", hasbuild);
-        } else {
-            FlagPermissions perms = Residence.getWorldFlags().getPerms(entity.getWorld().getName());
-            hasbuild =  perms.has("build", true);
-            hastrample =  perms.has("trample", hasbuild);
-        }        			
-	if(!hastrample && !(entity.getType() == EntityType.FALLING_BLOCK) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
-	    event.setCancelled(true);
-	}
+    	FlagPermissions perms = Residence.getPermsByLoc(block.getLocation());
+    	boolean hastrample = perms.has("trample", perms.has("hasbuild", true));     			
+    	if(!hastrample && !(entity.getType() == EntityType.FALLING_BLOCK) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
+    		event.setCancelled(true);
+    	}
     }
 /*
     @EventHandler(priority = EventPriority.NORMAL)
@@ -129,95 +110,61 @@ public class ResidenceEntityListener implements Listener {
             return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
-        if(perms!=null)
-        {
-            if(ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager)
-            {
-                if(!perms.has("animals", true))
-                {
-                    event.setCancelled(true);
-                }
-            }
-            else
-            {
-                if (!perms.has("monsters", true)) {
-                    event.setCancelled(true);
-                }
-            }
+        if(ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
+        	if(!perms.has("animals", true)){
+        		event.setCancelled(true);
+        	}
+        } else {
+        	if (!perms.has("monsters", true)) {
+        		event.setCancelled(true);
+        	}
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPaintingPlace(PaintingPlaceEvent event) {
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         Player player = event.getPlayer();
         if(Residence.isResAdminOn(player)){
             return;
         }
-        if(res!=null)
-        {
-            ResidencePermissions perms = res.getPermissions();
-            String pname = player.getName();
-            boolean hasbuild = perms.playerHas(pname, "build", true);
-            boolean hasplace = perms.playerHas(pname, "place", hasbuild);
-            if ((!hasbuild && !hasplace) || !hasplace) {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
-            }
-        } else {
-            FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
-            boolean hasbuild = perms.has("build", true);
-            boolean hasplace = perms.has("destroy", hasbuild);
-            if ((!hasbuild && !hasplace) || !hasplace) {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
-            }
+        FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+        String pname = player.getName();
+        String world = event.getBlock().getWorld().getName();
+        boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
+        if (!hasplace) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPaintingBreak(PaintingBreakEvent event) {
-		if(event instanceof PaintingBreakByEntityEvent)
-		{
-			PaintingBreakByEntityEvent evt = (PaintingBreakByEntityEvent) event;
-			if(evt.getRemover() instanceof Player)
-			{
-				Player player = (Player) evt.getRemover();
-				if(Residence.isResAdminOn(player)){
-                   		    return;
-               			}
-				String pname = player.getName();
-				ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getPainting().getLocation());
-				if (res != null) {
-					ResidencePermissions perms = res.getPermissions();
-					boolean hasbuild = perms.playerHas(pname, "build", true);
-					boolean hasplace = perms.playerHas(pname, "place", hasbuild);
-					if ((!hasbuild && !hasplace) || !hasplace) {
-						event.setCancelled(true);
-						player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
-					}
-				} else {
-					FlagPermissions perms = Residence.getWorldFlags().getPerms(player);
-					boolean hasbuild = perms.has("build", true);
-					boolean hasplace = perms.has("place", hasbuild);
-					if ((!hasbuild && !hasplace) || !hasplace) {
-						event.setCancelled(true);
-						player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
-					}
-				}
+	if(event instanceof PaintingBreakByEntityEvent){
+		PaintingBreakByEntityEvent evt = (PaintingBreakByEntityEvent) event;
+		if(evt.getRemover() instanceof Player){
+			Player player = (Player) evt.getRemover();
+			if(Residence.isResAdminOn(player)){
+                    		return;
+               		}
+			String pname = player.getName();
+		        FlagPermissions perms = Residence.getPermsByLoc(event.getPainting().getLocation());
+		        String world = event.getPainting().getWorld().getName();
+			boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
+			if (!hasplace){
+				event.setCancelled(true);
+				player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
 			}
 		}
 	}
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityCombust(EntityCombustEvent event) {
         if(event.isCancelled())
             return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
-        if (perms != null) {
-            if (!perms.has("burn", true)) {
-                event.setCancelled(true);
-            }
+        if (!perms.has("burn", true)) {
+            event.setCancelled(true);
         }
     }
 
@@ -226,20 +173,18 @@ public class ResidenceEntityListener implements Listener {
         if(event.isCancelled())
             return;
         EntityType entity = event.getEntityType();
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getEntity().getLocation());
-        if(res != null) {
-            if (entity == EntityType.CREEPER) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    event.setCancelled(true);
-                    event.getEntity().remove();
-                }
+        FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+        if (entity == EntityType.CREEPER) {
+            if (!perms.has("creeper", true)) {
+            	event.setCancelled(true);
+            	event.getEntity().remove();
             }
-            if (entity == EntityType.PRIMED_TNT) {
-                if (!res.getPermissions().has("tnt", true)) {
-                    event.setCancelled(true);
-                    event.getEntity().remove();
-                }
-            }
+        }
+        if (entity == EntityType.PRIMED_TNT) {
+        	if (!perms.has("tnt", true)) {
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
         }
     }
     
@@ -249,35 +194,24 @@ public class ResidenceEntityListener implements Listener {
             return;
         Boolean cancel = false;
         EntityType entity = event.getEntityType();
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getLocation());
-        if(res != null) {
-            if (entity == EntityType.CREEPER) {
-                if (!res.getPermissions().has("creeper", true)) {
-                    cancel = true;
-                }
-            }
-            if (entity == EntityType.PRIMED_TNT) {
-                if (!res.getPermissions().has("tnt", true)) {
-                    cancel = true;
-                }
-            }
-        } else {
-            World world = event.getEntity().getWorld();
-            if(world == null)
-                return;
-            if(entity == EntityType.CREEPER)            {
-                if(!Residence.getWorldFlags().getPerms(world.getName()).has("creeper", true))
-                    cancel = true;
-            } 
-            if(entity == EntityType.PRIMED_TNT){
-                if(!Residence.getWorldFlags().getPerms(world.getName()).has("tnt", true))
-                    cancel = true;
+        FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+        if (entity == EntityType.CREEPER) {
+            if (!perms.has("creeper", true)) {
+            	cancel = true;
             }
         }
-        for(Block block: event.blockList()){
-        	ClaimedResidence blockres = Residence.getResidenceManager().getByLoc(block.getLocation());
-        	if(blockres!=null){
-        		if((!blockres.getPermissions().has("tnt", true)&&(event.getEntityType()==EntityType.PRIMED_TNT))||(!blockres.getPermissions().has("creeper", true)&&(event.getEntityType()==EntityType.CREEPER))){
+        if (entity == EntityType.PRIMED_TNT) {
+        	if (!perms.has("tnt", true)) {
+        		cancel = true;
+        	}
+        }
+        if(cancel){
+        	event.setCancelled(true);
+        	event.getEntity().remove();
+        } else {
+	        for(Block block: event.blockList()){
+	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
+	        	if((!blockperms.has("tnt", true)&&(event.getEntityType()==EntityType.PRIMED_TNT))||(!blockperms.has("creeper", true)&&(event.getEntityType()==EntityType.CREEPER))){
 	        		if(block!=null){
 	        			ItemStack[] inventory = null;
 	        			BlockState save = block.getState();
@@ -313,12 +247,7 @@ public class ResidenceEntityListener implements Listener {
 	        			block.setType(Material.AIR);
 	        		}
 	        	}
-        	}
-        }
-        if(cancel){
-        	event.setCancelled(true);
-        	event.getEntity().remove();
-        } else {
+	        }
         	Residence.getServ().getScheduler().scheduleSyncDelayedTask(Residence.getServ().getPluginManager().getPlugin("Residence"), new Runnable() {
         		   public void run() {
         		       for(BlockState block: ExplodeRestore.keySet().toArray(new BlockState[0])){
@@ -329,34 +258,32 @@ public class ResidenceEntityListener implements Listener {
         		    			   ((Chest)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
         		    		   if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE)
         		    			   ((Furnace)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-		    	       			if(block.getType()==Material.BREWING_STAND)
-		    	       				((BrewingStand)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-		    	       			if(block.getType()==Material.DISPENSER)
-		    	       				((Dispenser)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-		    	        		if(block.getType()==Material.JUKEBOX)
-		    	        			((Jukebox)block.getLocation().getBlock().getState()).setPlaying(inventory[0].getType());
+        		    		   if(block.getType()==Material.BREWING_STAND)
+        		    			   ((BrewingStand)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+        		    		   if(block.getType()==Material.DISPENSER)
+        		    			   ((Dispenser)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+        		    		   if(block.getType()==Material.JUKEBOX)
+        		    			   ((Jukebox)block.getLocation().getBlock().getState()).setPlaying(inventory[0].getType());
         		    	   }
         		       }
         		       ExplodeRestore.clear();
         		   }
-        		}, 1L);
+        	}, 1L);
         }
     }
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSplashPotion(PotionSplashEvent event) {
     	if(event.isCancelled())
     		return;
     	Entity ent = event.getEntity();
-    	ClaimedResidence srcarea = null;
-    	boolean srcpvp = true;
-    	srcarea = Residence.getResidenceManager().getByLoc(ent.getLocation());
-    	if(srcarea != null)
-    		srcpvp = srcarea.getPermissions().has("pvp", true);
+    	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has("pvp", true);
     	Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
     	while(it.hasNext()){
     		LivingEntity target = it.next();
-    		if(target instanceof HumanEntity){
-    			if(!srcpvp){
+    		if(target.getType()==EntityType.PLAYER){
+    			Boolean tgtpvp = Residence.getPermsByLoc(target.getLocation()).has("pvp", true);
+    			if(!srcpvp||!tgtpvp){
     				event.setIntensity(target, 0);
     			}
     		}
