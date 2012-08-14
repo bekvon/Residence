@@ -1412,13 +1412,19 @@ public class Residence extends JavaPlugin {
                     if (args.length != 2) {
                         return false;
                     }
-                    ClaimedResidence res = rmanager.getByName(args[1]);
-                    if (res == null) {
-                        player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
+                    if ( Residence.getPermissionManager().hasAuthority(player, "residence.teleport") ) {
+                    	ClaimedResidence res = rmanager.getByName(args[1]);
+                    	if (res == null) {
+                    		player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
+                    		return true;
+                    	}
+                        res.tpToResidence(player, player, resadmin);
                         return true;
                     }
-                    res.tpToResidence(player, player, resadmin);
-                    return true;
+                    else {
+                		player.sendMessage(ChatColor.RED+language.getPhrase("TeleportDeny"));
+                		return true;
+                    }
                 } else if (args[0].equals("lease")) {
                     if (args.length == 2 || args.length == 3) {
                         if (args[1].equals("renew")) {
