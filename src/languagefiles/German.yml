@@ -5,7 +5,7 @@
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
 Version: 02
-Fieldsversion: 20
+Fieldsversion: 22
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -185,6 +185,10 @@ Language:
     SubzoneOwnerChange: 'Die Subzone %1 gehört nun %2.'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
     CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatic resadmin toggle turned %1'
+    #Version 22 New Fields
+    NoSpawn: 'You do not have move permissions at your spawn point. Relocating'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
