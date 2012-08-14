@@ -439,8 +439,7 @@ public class ResidencePlayerListener implements Listener {
         }
     	String pname = player.getName();
     	Location loc = event.getTo();
-    	ResidenceManager Manager = Residence.getResidenceManager();
-    	ClaimedResidence res = Manager.getByLoc(loc);
+    	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
     	String areaname = Residence.getResidenceManager().getNameByLoc(loc);
     	boolean chatchange = false;
     	String subzone = null;
