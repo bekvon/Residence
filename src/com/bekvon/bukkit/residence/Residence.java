@@ -364,12 +364,6 @@ public class Residence extends JavaPlugin {
         return rmanager;
     }
 
-    @Deprecated
-    public static ResidenceManager getResidenceManger()
-    {
-        return rmanager;
-    }
-
     public static SelectionManager getSelectionManager() {
         return smanager;
     }
