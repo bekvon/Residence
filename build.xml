@@ -1,7 +1,7 @@
 <project name="Residence" default="main" basedir=".">
   <!-- env variables -->
   <property name="target" location="target/"/>
-  <property name="Ver" value="2.6.6"/>
+  <property name="Ver" value="2.6.5.1"/>
   <property name="Authors" value="bekvon,inorixu,lemon42,nate302,smbarbour,Shayana,t00thpick1"/>
   <path id="classpath"><fileset dir="lib" includes="**/*.jar"/></path>
   <target name="main" depends="prep, class, compile, jar" description="Main target">
