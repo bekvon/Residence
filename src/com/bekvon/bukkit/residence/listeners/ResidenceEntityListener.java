@@ -190,7 +190,7 @@ public class ResidenceEntityListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if(event.isCancelled())
+        if(event.isCancelled()||event.getEntity()==null)
             return;
         Boolean cancel = false;
         EntityType entity = event.getEntityType();
