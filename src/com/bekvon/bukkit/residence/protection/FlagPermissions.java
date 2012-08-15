@@ -75,6 +75,8 @@ public class FlagPermissions {
         addFlag("bank");
         addResidenceOnlyFlag("trample");
         addResidenceOnlyFlag("pvp");
+        addResidenceOnlyFlag("fireball");
+        addResidenceOnlyFlag("explode");
         addResidenceOnlyFlag("damage");
         addResidenceOnlyFlag("monsters");
         addResidenceOnlyFlag("firespread");
