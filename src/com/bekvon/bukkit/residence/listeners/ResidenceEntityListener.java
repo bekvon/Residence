@@ -175,19 +175,25 @@ public class ResidenceEntityListener implements Listener {
         EntityType entity = event.getEntityType();
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
         if (entity == EntityType.CREEPER) {
-            if (!perms.has("creeper", true)) {
+            if (!perms.has("creeper", perms.has("explode", true))) {
             	event.setCancelled(true);
             	event.getEntity().remove();
             }
         }
         if (entity == EntityType.PRIMED_TNT) {
-        	if (!perms.has("tnt", true)) {
+        	if (!perms.has("tnt", perms.has("explode", true))) {
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
         		event.setCancelled(true);
         		event.getEntity().remove();
         	}
         }
     }
-    
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         if(event.isCancelled()||event.getEntity()==null)
@@ -196,13 +202,19 @@ public class ResidenceEntityListener implements Listener {
         EntityType entity = event.getEntityType();
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
         if (entity == EntityType.CREEPER) {
-            if (!perms.has("creeper", true)) {
+            if (!perms.has("creeper", perms.has("explode", true))) {
             	cancel = true;
             }
         }
         if (entity == EntityType.PRIMED_TNT) {
-        	if (!perms.has("tnt", true)) {
+        	if (!perms.has("tnt", perms.has("explode", true))) {
         		cancel = true;
+        	}
+        }
+        if (entity == EntityType.FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
         	}
         }
         if(cancel){
@@ -211,7 +223,7 @@ public class ResidenceEntityListener implements Listener {
         } else {
 	        for(Block block: event.blockList()){
 	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	        	if((!blockperms.has("tnt", true)&&(event.getEntityType()==EntityType.PRIMED_TNT))||(!blockperms.has("creeper", true)&&(event.getEntityType()==EntityType.CREEPER))){
+	        	if((!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.FIREBALL)||(!blockperms.has("tnt", perms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", perms.has("explode", true))&&entity==EntityType.CREEPER)){
 	        		if(block!=null){
 	        			ItemStack[] inventory = null;
 	        			BlockState save = block.getState();
