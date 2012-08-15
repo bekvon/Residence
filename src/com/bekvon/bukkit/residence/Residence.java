@@ -25,6 +25,7 @@ import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
@@ -795,6 +796,12 @@ public class Residence extends JavaPlugin {
                     if (args.length != 2) {
                         return false;
                     }
+                    WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+                    if(wep!=null){
+                    	if(wep.getConfig().getInt("wand-item")==Residence.getConfigManager().selectionToolId){
+                    		smanager.worldEdit(player);
+                    	}
+                    }
                     if (smanager.hasPlacedBoth(pname)) {
                         rmanager.addResidence(player, args[1], smanager.getPlayerLoc1(pname), smanager.getPlayerLoc2(pname), resadmin);
                         return true;
@@ -814,6 +821,12 @@ public class Residence extends JavaPlugin {
                     } else {
                         parent = args[1];
                         zname = args[2];
+                    }
+                    WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+                    if(wep!=null){
+                    	if(wep.getConfig().getInt("wand-item")==Residence.getConfigManager().selectionToolId){
+                    		smanager.worldEdit(player);
+                    	}
                     }
                     if (smanager.hasPlacedBoth(pname)) {
                         ClaimedResidence res = rmanager.getByName(parent);
@@ -947,6 +960,12 @@ public class Residence extends JavaPlugin {
                                 player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
                             return true;
                         } else if (args[1].equals("add")) {
+                       	    WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+                    	    if(wep!=null){
+                    		if(wep.getConfig().getInt("wand-item")==Residence.getConfigManager().selectionToolId){
+                    		    smanager.worldEdit(player);
+                    		}
+                    	    }
                             if (smanager.hasPlacedBoth(pname)) {
                                 ClaimedResidence res = rmanager.getByName(args[2]);
                                 if(res != null)
@@ -958,6 +977,12 @@ public class Residence extends JavaPlugin {
                             }
                             return true;
                         } else if (args[1].equals("replace")) {
+                      	    WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+                    	    if(wep!=null){
+                    		if(wep.getConfig().getInt("wand-item")==Residence.getConfigManager().selectionToolId){
+                   	 		smanager.worldEdit(player);
+                   	 	}
+                   	    }
                             if (smanager.hasPlacedBoth(pname)) {
                                 ClaimedResidence res = rmanager.getByName(args[2]);
                                 if(res != null)
