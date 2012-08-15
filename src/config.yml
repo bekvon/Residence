@@ -106,6 +106,8 @@ Global:
         note: true
         trample: false
         burn: true
+        explode: false
+        fireball: true
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
