@@ -661,13 +661,13 @@ public class Residence extends JavaPlugin {
                     if(args.length == 1 && args[0].equals("on"))
                     {
                         resadminToggle.add(player.getName());
-                        player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggleOn"));
+                        player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggle","On"));
                         return true;
                     }
                     else if(args.length == 1 && args[0].equals("off"))
                     {
                         resadminToggle.remove(player.getName());
-                        player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggleOff"));
+                        player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggle","Off"));
                         return true;
                     }
                 }
