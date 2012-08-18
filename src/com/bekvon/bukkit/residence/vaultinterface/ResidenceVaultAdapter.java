@@ -27,7 +27,10 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 
     public boolean permissionsOK()
     {
-        return permissions!=null;
+        if(permissions!=null&&permissions.getName()!="SuperPerms"){
+    		return true;
+    	}
+    	return false;
     }
 
     public boolean economyOK()
