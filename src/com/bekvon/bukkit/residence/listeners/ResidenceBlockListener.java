@@ -36,10 +36,8 @@ import org.bukkit.event.block.BlockSpreadEvent;
  */
 public class ResidenceBlockListener implements Listener {
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockBreak Fired");
         if(Residence.isResAdminOn(player))
@@ -78,10 +76,8 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockPlace Fired");
         if(Residence.isResAdminOn(player))
@@ -163,11 +159,8 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockFromTo(BlockFromToEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
         boolean hasflow = perms.has("flow", true);
         Material mat = event.getBlock().getType();
@@ -184,20 +177,16 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
-        if(event.isCancelled())
-            return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
         if(!perms.has("firespread", true)){
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if(event.isCancelled())
-            return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
         IgniteCause cause = event.getCause();
 	switch (cause) {

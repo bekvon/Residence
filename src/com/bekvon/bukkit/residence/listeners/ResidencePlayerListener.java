@@ -152,11 +152,8 @@ public class ResidencePlayerListener implements Listener {
 		return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
 	}
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if(event.isCancelled())
-            return;
-
         Player player = event.getPlayer();
         Material heldItem = player.getItemInHand().getType();
         Block block = event.getClickedBlock();
@@ -313,10 +310,8 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if(event.isCancelled())
-            return;
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
         Player player = event.getPlayer();
         String pname = player.getName();
@@ -340,10 +335,8 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        if(event.isCancelled())
-            return;
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
         Player player = event.getPlayer();
         String pname = player.getName();
@@ -383,10 +376,8 @@ public class ResidencePlayerListener implements Listener {
 		} 
 	}
     }
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if(event.isCancelled())
-            return;
     	Player player = event.getPlayer();
         long last = lastUpdate.get(player.getName());
         long now = System.currentTimeMillis();
@@ -510,9 +501,8 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if(event.isCancelled()){return;}
         String pname = event.getPlayer().getName();
         if(chatenabled && playerToggleChat.contains(pname))
         {
