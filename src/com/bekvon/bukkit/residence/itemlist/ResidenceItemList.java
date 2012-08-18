@@ -36,9 +36,9 @@ public class ResidenceItemList extends ItemList {
         if(resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess()))
         {
             if(super.toggle(mat))
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialAdd",ChatColor.GREEN + String.format("%d",mat) + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
+                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialAdd",ChatColor.GREEN + mat.toString() + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
             else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialRemove",ChatColor.GREEN + String.format("%d",mat) + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
+                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialRemove",ChatColor.GREEN + mat.toString() + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
         }
         else
         {
