@@ -42,7 +42,7 @@
   <!-- compile -->
   <target name="compile">
       <echo>Compiling</echo>
-      <javac target="1.6" source="1.6" srcdir="src/com/" destdir="build" debug="true" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false">
+      <javac target="1.6" source="1.6" srcdir="src" destdir="build" debug="true" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false">
       <compilerarg value="-Xbootclasspath/p:${toString:classpath}"/>
       </javac>
       <copy file="src/plugin.yml" tofile="build/plugin.yml"/>
