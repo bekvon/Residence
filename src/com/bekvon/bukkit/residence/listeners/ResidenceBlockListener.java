@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -199,20 +200,34 @@ public class ResidenceBlockListener implements Listener {
             return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
         IgniteCause cause = event.getCause();
-        if(cause == IgniteCause.SPREAD){
-            if(!perms.has("firespread", true)){
+	switch (cause) {
+	case SPREAD:
+		if(!perms.has("firespread", true)){
         		event.setCancelled(true);
         	}
-        } else if (cause == IgniteCause.FLINT_AND_STEEL) {
+		break;
+	case FLINT_AND_STEEL:
         	Player player = event.getPlayer();
-        	if (!perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
-        		event.setCancelled(true);
-        		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+		Block block = event.getBlock();
+
+		if (!Residence.isResAdminOn(player)) {
+			boolean lightingObsidian = block.getRelative(BlockFace.DOWN).getType() == Material.OBSIDIAN;
+			if (lightingObsidian && !perms.playerHas(player.getName(), player.getWorld().getName(), "igniteportal", true)) {
+        			event.setCancelled(true);
+        			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+			} else {
+        			if (!perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true)) {
+        				event.setCancelled(true);
+        				player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+				}
+			}
         	}
-        } else {
+		break;
+	default:
         	if(!perms.has("ignite", true)){
         		event.setCancelled(true);
         	}
+		break;
         }
     }
 /*
