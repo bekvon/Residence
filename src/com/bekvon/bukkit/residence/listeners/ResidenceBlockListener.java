@@ -53,12 +53,14 @@ public class ResidenceBlockListener implements Listener {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(Residence.getConfigManager().enabledRentSystem())
         {
-            String resname = res.getName();
-            if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
-            {
-                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
-                event.setCancelled(true);
-                return;
+            if(res!=null){
+                String resname = res.getName();
+                if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
+                {   
+                   player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
@@ -91,12 +93,14 @@ public class ResidenceBlockListener implements Listener {
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if(Residence.getConfigManager().enabledRentSystem())
         {
-            String resname = res.getName();
-            if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
-            {
-                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
-                event.setCancelled(true);
-                return;
+            if(res!=null){
+                String resname = res.getName();
+                if(Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname))
+                {
+                   player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
+                   event.setCancelled(true);
+                   return;
+                }
             }
         }
         String pname = player.getName();
