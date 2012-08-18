@@ -194,11 +194,6 @@ public class RentManager {
         return (((long)days) * 24L * 60L * 60L * 1000L);
     }
 
-    private int msToDays(long ms)
-    {
-        return (int) Math.ceil(((((double)ms/1000D)/60D)/60D)/24D);
-    }
-
     public void unrent(Player player, String landName, boolean resadmin)
     {
         String[] split = landName.split("\\.");

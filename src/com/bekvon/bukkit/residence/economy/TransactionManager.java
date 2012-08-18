@@ -280,7 +280,7 @@ public class TransactionManager {
         return sellAmount;
     }
 
-    public static TransactionManager load(Map root, PermissionManager p, ResidenceManager r) {
+    public static TransactionManager load(Map<String,Integer> root, PermissionManager p, ResidenceManager r) {
         TransactionManager tman = new TransactionManager(r,p);
         if(root!=null)
             tman.sellAmount = Collections.synchronizedMap(root);

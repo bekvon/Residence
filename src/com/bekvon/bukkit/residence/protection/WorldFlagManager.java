@@ -4,8 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.protection;
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.Residence;
 import java.util.HashMap;
 import java.util.Map;

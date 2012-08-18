@@ -4,6 +4,7 @@
  */
 package com.bekvon.bukkit.residence.protection;
 import com.bekvon.bukkit.residence.Residence;
+
 import java.util.Map.Entry;
 import java.util.*;
 import org.bukkit.ChatColor;
@@ -349,9 +350,9 @@ public class FlagPermissions {
     }
 
     protected static FlagPermissions load(Map<String, Object> root, FlagPermissions newperms) throws Exception {
-        newperms.playerFlags = (Map) root.get("PlayerFlags");
-        newperms.groupFlags = (Map) root.get("GroupFlags");
-        newperms.cuboidFlags = (Map) root.get("AreaFlags");
+        newperms.playerFlags = (Map<String, Map<String,Boolean>>) root.get("PlayerFlags");
+        newperms.groupFlags = (Map<String, Map<String,Boolean>>) root.get("GroupFlags");
+        newperms.cuboidFlags = (Map<String, Boolean>) root.get("AreaFlags");
         return newperms;
     }
 

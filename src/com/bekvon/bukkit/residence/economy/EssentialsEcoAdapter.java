@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.economy;
-import org.bukkit.ChatColor;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;

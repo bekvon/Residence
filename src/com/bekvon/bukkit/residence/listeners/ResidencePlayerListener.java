@@ -11,7 +11,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

@@ -240,7 +240,7 @@ public class LeaseManager {
         }
     }
 
-    public static LeaseManager load(Map root,ResidenceManager m)
+    public static LeaseManager load(Map<String,Long> root,ResidenceManager m)
     {
         LeaseManager l = new LeaseManager(m);
         if(root!=null)

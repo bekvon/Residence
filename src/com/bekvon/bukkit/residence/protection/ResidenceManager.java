@@ -309,7 +309,6 @@ public class ResidenceManager {
 
     public void removeAllByOwner(String owner)
     {
-        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized(residences)
         {
             Iterator<ClaimedResidence> it = residences.values().iterator();

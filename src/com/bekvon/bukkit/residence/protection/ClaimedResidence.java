@@ -402,7 +402,7 @@ public class ClaimedResidence {
     }
 
     public String[] getSubzoneList() {
-        ArrayList zones = new ArrayList<String>();
+        ArrayList<String> zones = new ArrayList<String>();
         Set<String> set = subzones.keySet();
         synchronized (subzones) {
             for (String key : set) {

@@ -4,8 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.vaultinterface;
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.permissions.PermissionsInterface;
 import net.milkbowl.vault.chat.Chat;

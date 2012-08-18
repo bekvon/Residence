@@ -4,8 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.text;
-import org.bukkit.ChatColor;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

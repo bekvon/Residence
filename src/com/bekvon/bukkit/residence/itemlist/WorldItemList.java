@@ -4,8 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.itemlist;
-import org.bukkit.ChatColor;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 

@@ -4,8 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.permissions;
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
