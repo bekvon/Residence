@@ -21,7 +21,6 @@ import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
-
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
@@ -120,8 +119,8 @@ public class Residence extends JavaPlugin {
 
     public void reloadPlugin()
     {
-        server.getPluginManager().enablePlugin(this);
         server.getPluginManager().disablePlugin(this);
+        server.getPluginManager().enablePlugin(this);
     }
 
     @Override
