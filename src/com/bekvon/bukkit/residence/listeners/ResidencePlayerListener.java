@@ -53,31 +53,31 @@ public class ResidencePlayerListener implements Listener {
     protected boolean chatenabled;
     protected List<String> playerToggleChat;
     
-    public ResidencePlayerListener()
-    {
-        currentRes = new HashMap<String,String>();
-        lastUpdate = new HashMap<String,Long>();
-        lastOutsideLoc = new HashMap<String,Location>();
-        playerToggleChat = new ArrayList<String>();
-        minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
-        chatenabled = Residence.getConfigManager().chatEnabled();
-        for (Player player : Residence.getServ().getOnlinePlayers()) {
-        	lastUpdate.put(player.getName(), System.currentTimeMillis());
-    	}
-    }
+	public ResidencePlayerListener() {
+		currentRes = new HashMap<String,String>();
+		lastUpdate = new HashMap<String,Long>();
+		lastOutsideLoc = new HashMap<String,Location>();
+		playerToggleChat = new ArrayList<String>();
+		minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
+		chatenabled = Residence.getConfigManager().chatEnabled();
+		Player[] players = Residence.getServ().getOnlinePlayers();
+		for (Player player : players) {
+			lastUpdate.put(player.getName(), System.currentTimeMillis());
+		}
+	}
 
-    public void reload()
-    {
-        currentRes = new HashMap<String,String>();
-        lastUpdate = new HashMap<String,Long>();
-        lastOutsideLoc = new HashMap<String,Location>();
-        playerToggleChat = new ArrayList<String>();
-        minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
-        chatenabled = Residence.getConfigManager().chatEnabled();
-        for (Player player : Residence.getServ().getOnlinePlayers()) {
-        	lastUpdate.put(player.getName(), System.currentTimeMillis());
-    	}
-    }
+	public void reload() {
+		currentRes = new HashMap<String,String>();
+		lastUpdate = new HashMap<String,Long>();
+		lastOutsideLoc = new HashMap<String,Location>();
+		playerToggleChat = new ArrayList<String>();
+		minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
+		chatenabled = Residence.getConfigManager().chatEnabled();
+		Player[] players = Residence.getServ().getOnlinePlayers();
+		for (Player player : players) {
+			lastUpdate.put(player.getName(), System.currentTimeMillis());
+		}
+	}
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
