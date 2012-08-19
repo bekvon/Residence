@@ -188,6 +188,8 @@ Language:
     AdminToggle: 'Automatic resadmin toggle turned %1'
     #Version 22 New Fields
     NoSpawn: 'You do not have move permissions at your spawn point.  Relocating'
+    CompassTargetReset: 'Your compass has been reset'
+    CompassTargetSet: 'Your compass now points to %1'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
