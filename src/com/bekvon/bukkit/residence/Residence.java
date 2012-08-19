@@ -1419,6 +1419,25 @@ public class Residence extends JavaPlugin {
                     }
                     return true;
                 }
+                else if (args[0].equalsIgnoreCase("compass"))
+                {
+                    if(args.length!=2){
+                    	player.setCompassTarget(player.getWorld().getSpawnLocation());
+                    	player.sendMessage(ChatColor.GREEN+language.getPhrase("CompassTargetReset"));
+                        return false;
+                    }
+                    if(rmanager.getByName(args[1])!=null)
+                    {
+                    	if(rmanager.getByName(args[1]).getWorld().equalsIgnoreCase(player.getWorld().getName())){
+                    		Location low = rmanager.getByName(args[1]).getArea("main").getLowLoc();
+                    		Location high = rmanager.getByName(args[1]).getArea("main").getHighLoc();
+                        	Location mid = new Location(low.getWorld(), ((low.getBlockX()+high.getBlockX())/2), ((low.getBlockY()+high.getBlockY())/2), ((low.getBlockZ()+high.getBlockZ())/2));
+                        	player.setCompassTarget(mid);
+                        	player.sendMessage(ChatColor.GREEN+language.getPhrase("CompassTargetSet",ChatColor.YELLOW+args[1]+ChatColor.GREEN));
+                    	}
+                    }
+                    return true;
+                }
                 else if (args[0].equals("tpset")) {
                     ClaimedResidence res = rmanager.getByLoc(player.getLocation());
                     if (res != null) {
