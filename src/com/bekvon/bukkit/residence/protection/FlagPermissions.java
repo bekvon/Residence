@@ -67,6 +67,7 @@ public class FlagPermissions {
         addFlag("build");
         addFlag("tp");
         addFlag("ignite");
+        addFlag("igniteportal");
         addFlag("container");
         addFlag("subzone");
         addFlag("destroy");

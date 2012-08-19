@@ -496,18 +496,24 @@ public class ResidencePlayerListener implements Listener {
         	if(subzone==null){
         		chatchange = true;
         	}
-        	if(ResOld!=res&&ResOld!=null){
-                	String leave = ResOld.getLeaveMessage();
+		if (res != ResOld && ResOld != null) {
                 	ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld,player);
                 	Residence.getServ().getPluginManager().callEvent(leaveevent);
-                	if (leave != null && !leave.equals("")) {
+
+			// Handle leave message for old residence
+                	String leave = ResOld.getLeaveMessage();
+			boolean leaving = !isSubzoneOf(res, ResOld);
+                	if (leaving && leave != null && !leave.equals("")) {
                    		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 	}
         	}
-        	String enterMessage = res.getEnterMessage();
 		ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
 		Residence.getServ().getPluginManager().callEvent(enterevent);
-		if(enterMessage!=null){
+
+		// Handle enter message for new residence
+        	String enterMessage = res.getEnterMessage();
+		boolean entering = !isSubzoneOf(ResOld, res);
+		if(entering && enterMessage!=null && !enterMessage.equals("")){
                 	player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
         	}
         }
@@ -589,5 +595,15 @@ public class ResidencePlayerListener implements Listener {
     public String getCurrentResidenceName(String player)
     {
         return currentRes.get(player);
+    }
+
+    private static boolean isSubzoneOf(ClaimedResidence sub, ClaimedResidence res) {
+	boolean result = false;
+	for (ClaimedResidence cursor = sub; cursor != null; cursor = cursor.getParent()) {
+		if (cursor == res) {
+			result = true; break;
+		}
+	}
+	return result;
     }
 }
