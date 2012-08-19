@@ -306,6 +306,12 @@ public class Residence extends JavaPlugin {
 				firstenable = false;
 			} else {
 				plistener.reload();
+				Player[] players = getServer().getOnlinePlayers();
+				for(Player player: players){
+					if(Residence.getPermissionManager().isResidenceAdmin(player)){
+						turnResAdminOn(player);
+					}
+				}
 			}
 			int autosaveInt = cmanager.getAutoSaveInterval();
 			if (autosaveInt < 1) {
