@@ -30,7 +30,7 @@ public class ResidenceCommandListener extends Residence {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(),args,sender);
-        Residence.getServ().getPluginManager().callEvent(cevent);
+        server.getPluginManager().callEvent(cevent);
         if(cevent.isCancelled())
             return true;
         if(command.getName().equals("resreload") && args.length==0)
