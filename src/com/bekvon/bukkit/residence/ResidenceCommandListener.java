@@ -122,385 +122,393 @@ public class ResidenceCommandListener extends Residence {
 				page = Integer.parseInt(args[args.length-1]);
 			}
 		}catch(Exception ex){}
+		Player player = null;
+		PermissionGroup group = null;
+		String pname = null;
 		if (sender instanceof Player) {
-			Player player = (Player) sender;
-			PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-			String pname = player.getName();
-			if(command.getName().equals("resadmin")) {
-				if(args.length == 1 && args[0].equals("on")) {
-					resadminToggle.add(player.getName());
-					player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggleOn"));
-					return true;
-				} else if(args.length == 1 && args[0].equals("off")) {
-					resadminToggle.remove(player.getName());
-					player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggleOff"));
-					return true;
-				}
+			player = (Player) sender;
+			group = Residence.getPermissionManager().getGroup(player);
+			pname = player.getName();
+		} else {
+			resadmin = true;
+		}
+		if (cmanager.allowAdminsOnly()) {
+			if (!resadmin) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("AdminOnly"));
+				return true;
 			}
-			if(!resadmin && resadminToggle.contains(player.getName())) {
-				resadmin = gmanager.isResidenceAdmin(player);
-				if(!resadmin) {
-					resadminToggle.remove(player.getName());
-				}
+		}
+		if(args.length==0) {
+			return false;
+		}
+		if (args.length == 0) {
+			args = new String[1];
+			args[0] = "?";
+		}
+		String cmd = args[0].toLowerCase();
+		if(cmd.equals("remove")||cmd.equals("delete")) {
+			return commandResRemove(args, resadmin, sender, page);
+		}
+		if(cmd.equals("confirm")) {
+			return commandResConfirm(args, resadmin, sender, page);
+		}
+		if (cmd.equals("version")) {
+			sender.sendMessage(ChatColor.GRAY+"------------------------------------");
+			sender.sendMessage(ChatColor.RED+"This server running "+ChatColor.GOLD+"Residence"+ChatColor.RED+" version: "+ChatColor.BLUE + this.getDescription().getVersion());
+			sender.sendMessage(ChatColor.GREEN+"Created by: "+ChatColor.YELLOW+"bekvon");
+			sender.sendMessage(ChatColor.DARK_AQUA+"For a command list, and help, see the wiki:");
+			sender.sendMessage(ChatColor.GREEN+"http://residencebukkitmod.wikispaces.com/");
+			sender.sendMessage(ChatColor.AQUA+"Visit the BukkitDev page at:");
+			sender.sendMessage(ChatColor.BLUE+"http://dev.bukkit.org/server-mods/Residence");
+			sender.sendMessage(ChatColor.GRAY+"------------------------------------");
+			return true;
+		}
+		if (cmd.equals("setowner") && args.length==3) {
+			if(!resadmin) {
+				sender.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
+				return true;
 			}
-			if (cmanager.allowAdminsOnly()) {
-				if (!resadmin) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("AdminOnly"));
-					return true;
-				}
-			}
-			if(args.length==0) {
-				return false;
-			}
-			if (args.length == 0) {
-				args = new String[1];
-				args[0] = "?";
-			}
-			String cmd = args[0].toLowerCase();
-			if(cmd.equals("select")) {
-				return commandResSelect(args, resadmin, player, page);
-			}
-			if(cmd.equals("create")) {
-				return commandResCreate(args, resadmin, player, page);
-			}
-			if(cmd.equals("subzone")||cmd.equals("sz")) {
-				return commandResSubzone(args, resadmin, player, page);
-			}
-			if(cmd.equals("gui")) {
-				return commandResGui(args, resadmin, player, page);
-			}
-			if(cmd.equals("sublist")) {
-				return commandResSublist(args, resadmin, player, page);
-			}
-			if(cmd.equals("remove")||cmd.equals("delete")) {
-				return commandResRemove(args, resadmin, sender, page);
-			}
-			if(cmd.equals("confirm")) {
-				return commandResConfirm(args, resadmin, sender, page);
-			}
-			if(cmd.equals("removeall")){
-				if(args.length!=2) {
-					return false;
-				}
-				if(resadmin || args[1].endsWith(pname)) {
-					rmanager.removeAllByOwner(args[1]);
-					player.sendMessage(ChatColor.GREEN+language.getPhrase("RemovePlayersResidences",ChatColor.YELLOW+args[1]+ChatColor.GREEN));
+			ClaimedResidence area = rmanager.getByName(args[1]);
+			if (area != null) {
+				area.getPermissions().setOwner(args[2], true);
+				if(area.getParent()==null){
+					sender.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW+" " + args[1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
 				} else {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
+					sender.sendMessage(ChatColor.GREEN+language.getPhrase("SubzoneOwnerChange",ChatColor.YELLOW+" " + args[1].split("\\.")[args[1].split("\\.").length - 1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
 				}
+			} else {
+				sender.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
+			}
+			return true;
+		}
+		if(player==null){
+			return true;
+		}
+		if(command.getName().equals("resadmin")) {
+			if(args.length == 1 && args[0].equals("on")) {
+				resadminToggle.add(player.getName());
+				player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggle",language.getPhrase("TurnOn")));
+				return true;
+			} else if(args.length == 1 && args[0].equals("off")) {
+				resadminToggle.remove(player.getName());
+				player.sendMessage(ChatColor.YELLOW + language.getPhrase("AdminToggle",language.getPhrase("TurnOff")));
 				return true;
 			}
-			if(cmd.equals("compass")) {
-				return commandResCompass(args, resadmin, player, page);
+		}
+		if(!resadmin && resadminToggle.contains(player.getName())) {
+			resadmin = gmanager.isResidenceAdmin(player);
+			if(!resadmin) {
+				resadminToggle.remove(player.getName());
 			}
-			if(cmd.equals("area")) {
-				return commandResArea(args, resadmin, player, page);
-			}
-			if(cmd.equals("lists")) {
-				return commandResList(args, resadmin, player, page);
-			}
-			if(cmd.equals("default")){
-				if (args.length == 2) {
-					ClaimedResidence res = rmanager.getByName(args[1]);
-					res.getPermissions().applyDefaultFlags(player, resadmin);
-					return true;
-				}
+		}
+		if(cmd.equals("select")) {
+			return commandResSelect(args, resadmin, player, page);
+		}
+		if(cmd.equals("create")) {
+			return commandResCreate(args, resadmin, player, page);
+		}
+		if(cmd.equals("subzone")||cmd.equals("sz")) {
+			return commandResSubzone(args, resadmin, player, page);
+		}
+		if(cmd.equals("gui")) {
+			return commandResGui(args, resadmin, player, page);
+		}
+		if(cmd.equals("sublist")) {
+			return commandResSublist(args, resadmin, player, page);
+		}
+		if(cmd.equals("removeall")){
+			if(args.length!=2) {
 				return false;
 			}
-			if(cmd.equals("limits")){
-				if (args.length == 1) {
-					gmanager.getGroup(player).printLimits(player);
-					return true;
-				}
-				return false;
+			if(resadmin || args[1].endsWith(pname)) {
+				rmanager.removeAllByOwner(args[1]);
+				player.sendMessage(ChatColor.GREEN+language.getPhrase("RemovePlayersResidences",ChatColor.YELLOW+args[1]+ChatColor.GREEN));
+			} else {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
 			}
-			if(cmd.equals("info")){
-				if (args.length == 1) {
-					String area = rmanager.getNameByLoc(player.getLocation());
-					if (area != null) {
-						rmanager.printAreaInfo(area, player);
-					} else {
-						player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
-					}
-					return true;
-				} else if (args.length == 2) {
-					rmanager.printAreaInfo(args[1], player);
-					return true;
-				}
-				return false;
-			}
-			if(cmd.equals("check")){
-				if(args.length == 3 || args.length == 4) {
-					if(args.length == 4) {
-						pname = args[3];
-					}
-					ClaimedResidence res = rmanager.getByName(args[1]);
-					if(res==null) {
-						player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
-						return true;
-					}
-					if(!res.getPermissions().hasApplicableFlag(pname, args[2])) {
-						player.sendMessage(language.getPhrase("FlagCheckFalse",ChatColor.YELLOW + args[2] + ChatColor.RED+"."+ChatColor.YELLOW + pname +ChatColor.RED+"."+ChatColor.YELLOW+args[1]+ChatColor.RED));
-					} else {
-						player.sendMessage(language.getPhrase("FlagCheckTrue",ChatColor.GREEN+args[2]+ChatColor.YELLOW+"."+ChatColor.GREEN+pname+ChatColor.YELLOW+"."+ChatColor.YELLOW+args[1]+ChatColor.RED+"."+(res.getPermissions().playerHas(pname, res.getPermissions().getWorld(), args[2], false) ? ChatColor.GREEN+"TRUE" : ChatColor.RED+"FALSE")));
-					}
-					return true;
-				}
-				return false;
-			}
-			if(cmd.equals("current")){
-				if(args.length!=1) {
-					return false;
-				}
-				String res = rmanager.getNameByLoc(player.getLocation());
-				if(res==null) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
-				} else {
-					player.sendMessage(ChatColor.GREEN+language.getPhrase("InResidence",ChatColor.YELLOW + res + ChatColor.GREEN));
-				}
+			return true;
+		}
+		if(cmd.equals("compass")) {
+			return commandResCompass(args, resadmin, player, page);
+		}
+		if(cmd.equals("area")) {
+			return commandResArea(args, resadmin, player, page);
+		}
+		if(cmd.equals("lists")) {
+			return commandResList(args, resadmin, player, page);
+		}
+		if(cmd.equals("default")){
+			if (args.length == 2) {
+				ClaimedResidence res = rmanager.getByName(args[1]);
+				res.getPermissions().applyDefaultFlags(player, resadmin);
 				return true;
 			}
-			if(cmd.equals("set")) {
-				return commandResSet(args, resadmin, player, page);
-			}
-			if(cmd.equals("pset")) {
-				return commandResPset(args, resadmin, player, page);
-			}
-			if(cmd.equals("gset")) {
-				return commandResGset(args, resadmin, player, page);
-			}
-			if(cmd.equals("lset")) {
-				return commandResLset(args, resadmin, player, page);
-			}
-			if (cmd.equals("list")) {
-				if(args.length == 1) {
-					rmanager.listResidences(player);
-					return true;
-				} else if (args.length == 2) {
-					try {
-						Integer.parseInt(args[1]);
-						rmanager.listResidences(player, page);
-					} catch (Exception ex) {
-						rmanager.listResidences(player, args[1]);
-					}
-					return true;
-				} else if(args.length == 3) {
-					rmanager.listResidences(player, args[1], page);
-					return true;
-				}
-				return false;
-			}
-			if (cmd.equals("listhidden")) {
-				if(!resadmin) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
-					return true;
-				}
-				if(args.length == 1) {
-					rmanager.listResidences(player,1,true);
-					return true;
-				} else if (args.length == 2) {
-					try {
-						Integer.parseInt(args[1]);
-						rmanager.listResidences(player, page, true);
-					} catch (Exception ex) {
-						rmanager.listResidences(player, args[1],1, true);
-					}
-					return true;
-				} else if(args.length == 3) {
-					rmanager.listResidences(player, args[1], page, true);
-					return true;
-				}
-				return false;
-			}
-			if(cmd.equals("rename")) {
-				if(args.length==3) {
-					rmanager.renameResidence(player, args[1], args[2], resadmin);
-					return true;
-				}
-				return false;
-			}
-			if(cmd.equals("renamearea")) {
-				if(args.length==4) {
-					ClaimedResidence res = rmanager.getByName(args[1]);
-					if(res==null) {
-						player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
-						return true;
-					}
-					res.renameArea(player, args[2], args[3], resadmin);
-					return true;
-				}
-				return false;
-			}
-			if (cmd.equals("unstuck")) {
-				if (args.length != 1) {
-					return false;
-				}
-				group = gmanager.getGroup(player);
-				if(!group.hasUnstuckAccess()) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
-					return true;
-				}
-				ClaimedResidence res = rmanager.getByLoc(player.getLocation());
-				if (res == null) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
-				} else {
-					player.sendMessage(ChatColor.YELLOW+language.getPhrase("Moved")+"...");
-					player.teleport(res.getOutsideFreeLoc(player.getLocation()));
-				}
+			return false;
+		}
+		if(cmd.equals("limits")){
+			if (args.length == 1) {
+				gmanager.getGroup(player).printLimits(player);
 				return true;
 			}
-			if (cmd.equals("mirror")) {
-				if (args.length != 3) {
-					return false;
-				}
-				rmanager.mirrorPerms(player, args[2], args[1], resadmin);
-				return true;
-			}
-			if (cmd.equals("listall")) {
-				if (args.length == 1) {
-					rmanager.listAllResidences(player, 1);
-				} else if (args.length == 2) {
-					try {
-						rmanager.listAllResidences(player, page);
-					} catch (Exception ex) {
-					}
-				} else {
-					return false;
-				}
-				return true;
-			}
-			if(cmd.equals("listallhidden")) {
-				if(!resadmin) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
-					return true;
-				}
-				if (args.length == 1) {
-					rmanager.listAllResidences(player, 1, true);
-				} else if (args.length == 2) {
-					try {
-						rmanager.listAllResidences(player, page, true);
-					} catch (Exception ex) {
-					}
-				} else {
-					return false;
-				}
-				return true;
-			}
-			if (cmd.equals("version")) {
-				player.sendMessage(ChatColor.GRAY+"------------------------------------");
-				player.sendMessage(ChatColor.RED+"This server running "+ChatColor.GOLD+"Residence"+ChatColor.RED+" version: "+ChatColor.BLUE + this.getDescription().getVersion());
-				player.sendMessage(ChatColor.GREEN+"Created by: "+ChatColor.YELLOW+"bekvon");
-				player.sendMessage(ChatColor.DARK_AQUA+"For a command list, and help, see the wiki:");
-				player.sendMessage(ChatColor.GREEN+"http://residencebukkitmod.wikispaces.com/");
-				player.sendMessage(ChatColor.AQUA+"Visit the BukkitDev page at:");
-				player.sendMessage(ChatColor.BLUE+"http://dev.bukkit.org/server-mods/Residence");
-				player.sendMessage(ChatColor.GRAY+"------------------------------------");
-				return true;
-			}
-			if(cmd.equals("material")) {
-				if(args.length!=2) {
-					return false;
-				}
-				try {
-					player.sendMessage(ChatColor.GREEN+language.getPhrase("MaterialGet",ChatColor.GOLD + args[1] + ChatColor.GREEN+"."+ChatColor.RED + Material.getMaterial(Integer.parseInt(args[1])).name()+ChatColor.GREEN));
-				} catch (Exception ex) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMaterial"));
-				}
-				return true;
-			}
-			if (cmd.equals("tpset")) {
-				ClaimedResidence res = rmanager.getByLoc(player.getLocation());
-				if (res != null) {
-					res.setTpLoc(player, resadmin);
+			return false;
+		}
+		if(cmd.equals("info")){
+			if (args.length == 1) {
+				String area = rmanager.getNameByLoc(player.getLocation());
+				if (area != null) {
+					rmanager.printAreaInfo(area, player);
 				} else {
 					player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
 				}
 				return true;
+			} else if (args.length == 2) {
+				rmanager.printAreaInfo(args[1], player);
+				return true;
 			}
-			if (cmd.equals("tp")) {
-				if (args.length != 2) {
-					return false;
+			return false;
+		}
+		if(cmd.equals("check")){
+			if(args.length == 3 || args.length == 4) {
+				if(args.length == 4) {
+					pname = args[3];
 				}
 				ClaimedResidence res = rmanager.getByName(args[1]);
-				if (res == null) {
+				if(res==null) {
 					player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
 					return true;
 				}
-				res.tpToResidence(player, player, resadmin);
-				return true;
-			}
-			if (cmd.equals("lease")) {
-				return commandResLease(args, resadmin, player, page);
-			}
-			if(cmd.equals("bank")) {
-				return commandResBank(args, resadmin, player, page);
-			}
-			if (cmd.equals("market")) {
-				return commandResMarket(args, resadmin, player, page);
-			}
-			if (cmd.equals("message")) {
-				return commandResMessage(args, resadmin, player, page);
-			}
-			if(cmd.equals("give") && args.length==3) {
-				rmanager.giveResidence(player, args[2], args[1], resadmin);
-				return true;
-			}
-			if (cmd.equals("setowner") && args.length==3) {
-				if(!resadmin) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
-					return true;
-				}
-				ClaimedResidence area = rmanager.getByName(args[1]);
-				if (area != null) {
-					area.getPermissions().setOwner(args[2], true);
-					if(area.getParent()==null){
-						player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW+" " + args[1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
-					} else {
-						player.sendMessage(ChatColor.GREEN+language.getPhrase("SubzoneOwnerChange",ChatColor.YELLOW+" " + args[1].split("\\.")[args[1].split("\\.").length - 1] + " "+ChatColor.GREEN+"."+ChatColor.YELLOW+args[2]+ChatColor.GREEN));
-					}
+				if(!res.getPermissions().hasApplicableFlag(pname, args[2])) {
+					player.sendMessage(language.getPhrase("FlagCheckFalse",ChatColor.YELLOW + args[2] + ChatColor.RED+"."+ChatColor.YELLOW + pname +ChatColor.RED+"."+ChatColor.YELLOW+args[1]+ChatColor.RED));
 				} else {
-					player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
+					player.sendMessage(language.getPhrase("FlagCheckTrue",ChatColor.GREEN+args[2]+ChatColor.YELLOW+"."+ChatColor.GREEN+pname+ChatColor.YELLOW+"."+ChatColor.YELLOW+args[1]+ChatColor.RED+"."+(res.getPermissions().playerHas(pname, res.getPermissions().getWorld(), args[2], false) ? ChatColor.GREEN+"TRUE" : ChatColor.RED+"FALSE")));
 				}
 				return true;
 			}
-			if(cmd.equals("server")) {
-				if(!resadmin) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
-					return true;
+			return false;
+		}
+		if(cmd.equals("current")){
+			if(args.length!=1) {
+				return false;
+			}
+			String res = rmanager.getNameByLoc(player.getLocation());
+			if(res==null) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
+			} else {
+				player.sendMessage(ChatColor.GREEN+language.getPhrase("InResidence",ChatColor.YELLOW + res + ChatColor.GREEN));
+			}
+			return true;
+		}
+		if(cmd.equals("set")) {
+			return commandResSet(args, resadmin, player, page);
+		}
+		if(cmd.equals("pset")) {
+			return commandResPset(args, resadmin, player, page);
+		}
+		if(cmd.equals("gset")) {
+			return commandResGset(args, resadmin, player, page);
+		}
+		if(cmd.equals("lset")) {
+			return commandResLset(args, resadmin, player, page);
+		}
+		if (cmd.equals("list")) {
+			if(args.length == 1) {
+				rmanager.listResidences(player);
+				return true;
+			} else if (args.length == 2) {
+				try {
+					Integer.parseInt(args[1]);
+					rmanager.listResidences(player, page);
+				} catch (Exception ex) {
+					rmanager.listResidences(player, args[1]);
 				}
-				if(args.length==2) {
-					ClaimedResidence res = rmanager.getByName(args[1]);
-					if(res == null) {
-						player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
-						return true;
-					}
-					res.getPermissions().setOwner("Server Land", false);
-					player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW + args[1] + ChatColor.GREEN+"."+ChatColor.YELLOW+"Server Land"+ChatColor.GREEN));
-					return true;
-				} else {
+				return true;
+			} else if(args.length == 3) {
+				rmanager.listResidences(player, args[1], page);
+				return true;
+			}
+			return false;
+		}
+		if (cmd.equals("listhidden")) {
+			if(!resadmin) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
+				return true;
+			}
+			if(args.length == 1) {
+				rmanager.listResidences(player,1,true);
+				return true;
+			} else if (args.length == 2) {
+				try {
+					Integer.parseInt(args[1]);
+					rmanager.listResidences(player, page, true);
+				} catch (Exception ex) {
+					rmanager.listResidences(player, args[1],1, true);
+				}
+				return true;
+			} else if(args.length == 3) {
+				rmanager.listResidences(player, args[1], page, true);
+				return true;
+			}
+			return false;
+		}
+		if(cmd.equals("rename")) {
+			if(args.length==3) {
+				rmanager.renameResidence(player, args[1], args[2], resadmin);
+				return true;
+			}
+			return false;
+		}
+		if(cmd.equals("renamearea")) {
+			if(args.length==4) {
+				ClaimedResidence res = rmanager.getByName(args[1]);
+				if(res==null) {
 					player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
 					return true;
 				}
+				res.renameArea(player, args[2], args[3], resadmin);
+				return true;
 			}
-			if(cmd.equals("clearflags")) {
-				if(!resadmin) {
-					player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
+			return false;
+		}
+		if (cmd.equals("unstuck")) {
+			if (args.length != 1) {
+				return false;
+			}
+			group = gmanager.getGroup(player);
+			if(!group.hasUnstuckAccess()) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
+				return true;
+			}
+			ClaimedResidence res = rmanager.getByLoc(player.getLocation());
+			if (res == null) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NotInResidence"));
+			} else {
+				player.sendMessage(ChatColor.YELLOW+language.getPhrase("Moved")+"...");
+				player.teleport(res.getOutsideFreeLoc(player.getLocation()));
+			}
+			return true;
+		}
+		if (cmd.equals("mirror")) {
+			if (args.length != 3) {
+				return false;
+			}
+			rmanager.mirrorPerms(player, args[2], args[1], resadmin);
+			return true;
+		}
+		if (cmd.equals("listall")) {
+			if (args.length == 1) {
+				rmanager.listAllResidences(player, 1);
+			} else if (args.length == 2) {
+				try {
+					rmanager.listAllResidences(player, page);
+				} catch (Exception ex) {
+				}
+			} else {
+				return false;
+			}
+			return true;
+		}
+		if(cmd.equals("listallhidden")) {
+			if(!resadmin) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
+				return true;
+			}
+			if (args.length == 1) {
+				rmanager.listAllResidences(player, 1, true);
+			} else if (args.length == 2) {
+				try {
+					rmanager.listAllResidences(player, page, true);
+				} catch (Exception ex) {
+				}
+			} else {
+				return false;
+			}
+			return true;
+		}
+		if(cmd.equals("material")) {
+			if(args.length!=2) {
+				return false;
+			}
+			try {
+				player.sendMessage(ChatColor.GREEN+language.getPhrase("MaterialGet",ChatColor.GOLD + args[1] + ChatColor.GREEN+"."+ChatColor.RED + Material.getMaterial(Integer.parseInt(args[1])).name()+ChatColor.GREEN));
+			} catch (Exception ex) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("InvalidMaterial"));
+			}
+			return true;
+		}
+		if (cmd.equals("tpset")) {
+			ClaimedResidence res = rmanager.getByLoc(player.getLocation());
+			if (res != null) {
+				res.setTpLoc(player, resadmin);
+			} else {
+				player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
+			}
+			return true;
+		}
+		if (cmd.equals("tp")) {
+			if (args.length != 2) {
+				return false;
+			}
+			ClaimedResidence res = rmanager.getByName(args[1]);
+			if (res == null) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
+				return true;
+			}
+			res.tpToResidence(player, player, resadmin);
+			return true;
+		}
+		if (cmd.equals("lease")) {
+			return commandResLease(args, resadmin, player, page);
+		}
+		if(cmd.equals("bank")) {
+			return commandResBank(args, resadmin, player, page);
+		}
+		if (cmd.equals("market")) {
+			return commandResMarket(args, resadmin, player, page);
+		}
+		if (cmd.equals("message")) {
+			return commandResMessage(args, resadmin, player, page);
+		}
+		if(cmd.equals("give") && args.length==3) {
+			rmanager.giveResidence(player, args[2], args[1], resadmin);
+			return true;
+		}
+		if(cmd.equals("server")) {
+			if(!resadmin) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
+				return true;
+			}
+			if(args.length==2) {
+				ClaimedResidence res = rmanager.getByName(args[1]);
+				if(res == null) {
+					player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
 					return true;
 				}
-				ClaimedResidence area = rmanager.getByName(args[1]);
-				if (area != null) {
-					area.getPermissions().clearFlags();
-					player.sendMessage(ChatColor.GREEN+language.getPhrase("FlagsCleared"));
-				} else {
-					player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
-				}
+				res.getPermissions().setOwner("Server Land", false);
+				player.sendMessage(ChatColor.GREEN+language.getPhrase("ResidenceOwnerChange",ChatColor.YELLOW + args[1] + ChatColor.GREEN+"."+ChatColor.YELLOW+"Server Land"+ChatColor.GREEN));
+				return true;
+			} else {
+				player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
 				return true;
 			}
-			if(cmd.equals("tool")) {
-				player.sendMessage(ChatColor.YELLOW+language.getPhrase("SelectionTool")+":"+ChatColor.GREEN + Material.getMaterial(cmanager.getSelectionTooldID()));
-				player.sendMessage(ChatColor.YELLOW+language.getPhrase("InfoTool")+": "+ChatColor.GREEN + Material.getMaterial(cmanager.getInfoToolID()));
+		}
+		if(cmd.equals("clearflags")) {
+			if(!resadmin) {
+				player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
 				return true;
 			}
+			ClaimedResidence area = rmanager.getByName(args[1]);
+			if (area != null) {
+				area.getPermissions().clearFlags();
+				player.sendMessage(ChatColor.GREEN+language.getPhrase("FlagsCleared"));
+			} else {
+				player.sendMessage(ChatColor.RED+language.getPhrase("InvalidResidence"));
+			}
+			return true;
+		}
+		if(cmd.equals("tool")) {
+			player.sendMessage(ChatColor.YELLOW+language.getPhrase("SelectionTool")+":"+ChatColor.GREEN + Material.getMaterial(cmanager.getSelectionTooldID()));
+			player.sendMessage(ChatColor.YELLOW+language.getPhrase("InfoTool")+": "+ChatColor.GREEN + Material.getMaterial(cmanager.getInfoToolID()));
+			return true;
 		}
 		return false;
 	}
@@ -866,6 +874,9 @@ public class ResidenceCommandListener extends Residence {
 			} else {
 				rmanager.removeResidence(player, area, resadmin);
 				deleteConfirm.remove(name);
+				if(player == null){
+					sender.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceRemove",ChatColor.YELLOW + name + ChatColor.GREEN));
+				}
 			}
 		}
 		return true;
@@ -1434,5 +1445,5 @@ public class ResidenceCommandListener extends Residence {
 			}
 		}
 		return false;
-	} 
+	}
 }
