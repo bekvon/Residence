@@ -21,6 +21,7 @@ import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
+
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
@@ -274,6 +275,13 @@ public class Residence extends JavaPlugin {
                 pm.registerEvents(blistener, this);
                 pm.registerEvents(plistener, this);
                 pm.registerEvents(elistener, this);
+                getCommand("res").setExecutor(new ResidenceCommandListener());
+                getCommand("resadmin").setExecutor(new ResidenceCommandListener());
+                getCommand("resreload").setExecutor(new ResidenceCommandListener());
+                getCommand("resload").setExecutor(new ResidenceCommandListener());
+                getCommand("rc").setExecutor(new ResidenceCommandListener());
+                getCommand("resworld").setExecutor(new ResidenceCommandListener());
+                getCommand("residence").setExecutor(new ResidenceCommandListener());
 
                 //pm.registerEvent(Event.Type.WORLD_LOAD, wlistener, Priority.NORMAL, this);
                 if(cmanager.enableSpout())
