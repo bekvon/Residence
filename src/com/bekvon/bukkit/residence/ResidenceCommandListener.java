@@ -26,7 +26,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-public class ResidenceCommandExecutor extends Residence implements CommandExecutor{
+public class ResidenceCommandListener extends Residence implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
