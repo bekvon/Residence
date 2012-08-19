@@ -4,8 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.permissions;
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;

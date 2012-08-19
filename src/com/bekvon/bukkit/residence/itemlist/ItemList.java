@@ -180,7 +180,7 @@ public class ItemList {
 
     public Map<String,Object> save()
     {
-        Map saveMap = new LinkedHashMap<String,Object>();
+        Map<String, Object> saveMap = new LinkedHashMap<String,Object>();
         saveMap.put("Type", type.toString());
         List<String> saveList = new ArrayList<String>();
         for(Material mat : list)

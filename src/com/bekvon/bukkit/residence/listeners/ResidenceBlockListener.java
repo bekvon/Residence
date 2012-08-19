@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -35,10 +36,8 @@ import org.bukkit.event.block.BlockSpreadEvent;
  */
 public class ResidenceBlockListener implements Listener {
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockBreak Fired");
         if(Residence.isResAdminOn(player))
@@ -77,10 +76,8 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if(event.isCancelled())
-            return;
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockPlace Fired");
         if(Residence.isResAdminOn(player))
@@ -162,11 +159,8 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockFromTo(BlockFromToEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
         boolean hasflow = perms.has("flow", true);
         Material mat = event.getBlock().getType();
@@ -183,36 +177,46 @@ public class ResidenceBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
-        if(event.isCancelled())
-            return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
         if(!perms.has("firespread", true)){
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if(event.isCancelled())
-            return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
         IgniteCause cause = event.getCause();
-        if(cause == IgniteCause.SPREAD){
-            if(!perms.has("firespread", true)){
+	switch (cause) {
+	case SPREAD:
+		if(!perms.has("firespread", true)){
         		event.setCancelled(true);
         	}
-        } else if (cause == IgniteCause.FLINT_AND_STEEL) {
+		break;
+	case FLINT_AND_STEEL:
         	Player player = event.getPlayer();
-        	if (!perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
-        		event.setCancelled(true);
-        		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+		Block block = event.getBlock();
+
+		if (!Residence.isResAdminOn(player)) {
+			boolean lightingObsidian = block.getRelative(BlockFace.DOWN).getType() == Material.OBSIDIAN;
+			if (lightingObsidian && !perms.playerHas(player.getName(), player.getWorld().getName(), "igniteportal", true)) {
+        			event.setCancelled(true);
+        			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+			} else {
+        			if (!perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true)) {
+        				event.setCancelled(true);
+        				player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+				}
+			}
         	}
-        } else {
+		break;
+	default:
         	if(!perms.has("ignite", true)){
         		event.setCancelled(true);
         	}
+		break;
         }
     }
 /*

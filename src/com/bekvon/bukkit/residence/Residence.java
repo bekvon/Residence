@@ -537,7 +537,7 @@ public class Residence extends JavaPlugin {
             yml = new YMLSaveHelper(new File(worldFolder, "res_"+entry.getKey()+".yml"));
             yml.getRoot().put("Version", saveVersion);
             yml.getRoot().put("Seed", server.getWorld(entry.getKey()).getSeed());
-            yml.getRoot().put("Residences", (Map) entry.getValue());
+            yml.getRoot().put("Residences", entry.getValue());
             yml.save();
         }
         yml = new YMLSaveHelper(new File(saveFolder,"forsale.yml"));
@@ -638,28 +638,28 @@ public class Residence extends JavaPlugin {
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
+                    tmanager = TransactionManager.load((Map<String, Integer>) yml.getRoot().get("Economy"), gmanager, rmanager);
                 }
                 loadFile = new File(saveFolder, "leases.yml");
                 if(loadFile.isFile())
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
+                    leasemanager = LeaseManager.load((Map<String, Long>) yml.getRoot().get("Leases"), rmanager);
                 }
                 loadFile = new File(saveFolder, "permlists.yml");
                 if(loadFile.isFile())
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
+                    pmanager = PermissionListManager.load((Map<String, Object>) yml.getRoot().get("PermissionLists"));
                 }
                 loadFile = new File(saveFolder, "rent.yml");
                 if(loadFile.isFile())
                 {
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
-                    rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
+                    rentmanager = RentManager.load((Map<String, Object>) yml.getRoot().get("RentSystem"));
                 }
                 //System.out.print("[Residence] Loaded...");
             }
@@ -674,11 +674,11 @@ public class Residence extends JavaPlugin {
         if (saveLoc.isFile()) {
             YMLSaveHelper yml = new YMLSaveHelper(saveLoc);
             yml.load();
-            rmanager = ResidenceManager.loadMap((Map) yml.getRoot().get("Residences"), new ResidenceManager());
-            tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
-            leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
-            pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
-            rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
+            rmanager = ResidenceManager.loadMap((Map<String, Object>) yml.getRoot().get("Residences"), new ResidenceManager());
+            tmanager = TransactionManager.load((Map<String, Integer>) yml.getRoot().get("Economy"), gmanager, rmanager);
+            leasemanager = LeaseManager.load((Map<String, Long>) yml.getRoot().get("Leases"), rmanager);
+            pmanager = PermissionListManager.load((Map<String, Object>) yml.getRoot().get("PermissionLists"));
+            rentmanager = RentManager.load((Map<String, Object>) yml.getRoot().get("RentSystem"));
             System.out.print("[Residence] Loaded Residences...");
             return true;
         } else {

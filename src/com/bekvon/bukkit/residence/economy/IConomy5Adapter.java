@@ -1,6 +1,4 @@
 package com.bekvon.bukkit.residence.economy;
-import org.bukkit.ChatColor;
-
 import com.iConomy.iConomy;
 import com.iConomy.system.Account;
 

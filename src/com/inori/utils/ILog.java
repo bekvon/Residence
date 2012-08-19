@@ -1,6 +1,4 @@
 package com.inori.utils;
-import org.bukkit.ChatColor;
-
 import java.util.HashMap;
 import java.util.logging.Logger;
 

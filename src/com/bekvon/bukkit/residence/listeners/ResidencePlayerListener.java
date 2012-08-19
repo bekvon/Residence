@@ -11,7 +11,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -153,11 +152,8 @@ public class ResidencePlayerListener implements Listener {
 		return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
 	}
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if(event.isCancelled())
-            return;
-
         Player player = event.getPlayer();
         Material heldItem = player.getItemInHand().getType();
         Block block = event.getClickedBlock();
@@ -258,103 +254,64 @@ public class ResidencePlayerListener implements Listener {
                     }
                 } else if (isCanUseEntity(mat, block)) {
                 	boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
-                	if(!perms.playerHas(player.getName(), world, "diode", hasuse) && (mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON)){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","diode"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
+                	String relevantFlag = null;
+                	switch (mat) {
+                	case DIODE_BLOCK_OFF:
+                	case DIODE_BLOCK_ON:
+                	case DIODE:
+                		relevantFlag = "diode";
+                		break;
+                	case WORKBENCH:
+                    		relevantFlag = "table";
+                		break;
+                	case WOODEN_DOOR:
+                	case FENCE_GATE:
+                	case NETHER_FENCE:
+                	case TRAP_DOOR:
+                		relevantFlag = "door";
+                		break;
+                	case ENCHANTMENT_TABLE:
+                		relevantFlag = "enchant";
+                		break;
+                	case STONE_BUTTON:
+                		relevantFlag = "button";
+                		break;
+                	case LEVER:
+                		relevantFlag = "lever";
+                		break;
+                	case BED_BLOCK:
+                		relevantFlag = "bed";
+                		break;
+                	case BREWING_STAND:
+                		relevantFlag = "brew";
+                		break;
+                	case CAKE_BLOCK:
+                		relevantFlag = "cake";
+                		break;
+                	case NOTE_BLOCK:
+                		relevantFlag = "note";
+                		break;
+                	case DRAGON_EGG:
+                		relevantFlag = "egg";
+                		break;
+                	default:
+                		break;
                 	}
-                	if(!perms.playerHas(player.getName(), world, "table", hasuse) && mat == Material.WORKBENCH){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","table"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "door", hasuse) && (mat == Material.WOODEN_DOOR || mat == Material.FENCE_GATE|| mat == Material.NETHER_FENCE || mat == Material.TRAP_DOOR)){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","door"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}
-                	}
-                	if(!perms.playerHas(player.getName(), world, "enchant", hasuse)&& mat == Material.ENCHANTMENT_TABLE){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","enchant"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}
-                	}
-                	if(!perms.playerHas(player.getName(), world, "button", hasuse)&& mat == Material.STONE_BUTTON){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","button"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "lever", hasuse)&& mat == Material.LEVER){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","lever"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "bed", hasuse)&& mat == Material.BED_BLOCK){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bed"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "brew", hasuse)&& mat == Material.BREWING_STAND){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","brew"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "cake", hasuse) && mat==Material.CAKE_BLOCK){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","cake"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "note", hasuse) && mat==Material.NOTE_BLOCK){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","note"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}                      
-                	if(!perms.playerHas(player.getName(), world, "egg", hasuse) && mat==Material.DRAGON_EGG){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","egg"));
-                		} else {
-	        			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-	        		}   
+                	
+                	if (relevantFlag != null) {
+                		if(!perms.playerHas(player.getName(), world, relevantFlag, hasuse)){
+                    		String reason = hasuse ? relevantFlag : "use";
+                    		event.setCancelled(true);
+                    		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny",reason));
+                    	}
                 	}
                 }
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if(event.isCancelled())
-            return;
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
         Player player = event.getPlayer();
         String pname = player.getName();
@@ -378,10 +335,8 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        if(event.isCancelled())
-            return;
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
         Player player = event.getPlayer();
         String pname = player.getName();
@@ -421,10 +376,8 @@ public class ResidencePlayerListener implements Listener {
 		} 
 	}
     }
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if(event.isCancelled())
-            return;
     	Player player = event.getPlayer();
         long last = lastUpdate.get(player.getName());
         long now = System.currentTimeMillis();
@@ -548,9 +501,8 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if(event.isCancelled()){return;}
         String pname = event.getPlayer().getName();
         if(chatenabled && playerToggleChat.contains(pname))
         {

@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
