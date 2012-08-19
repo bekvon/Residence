@@ -156,15 +156,13 @@ public class ResidenceCommandListener extends Residence {
             	return commandResSelect(args, resadmin, player, page);
             if(cmd.equals("create"))
             	return commandResCreate(args, resadmin, player, page);  
-            if(cmd.equals("subzone"))
-            if(cmd.equals("sz"))
+            if(cmd.equals("subzone")||cmd.equals("sz"))
             	return commandResSubzone(args, resadmin, player, page);
             if(cmd.equals("gui"))
             	return commandResGui(args, resadmin, player, page);
             if(cmd.equals("sublist"))
             	return commandResSublist(args, resadmin, player, page);
-            if(cmd.equals("remove"))
-            if(cmd.equals("delete"))
+            if(cmd.equals("remove")||cmd.equals("delete"))
             	return commandResRemove(args, resadmin, sender, page);
             if(cmd.equals("confirm"))
             	return commandResConfirm(args, resadmin, sender, page);
