@@ -230,9 +230,9 @@ Language:
     #Version 20 Fields
     CoordsT: Nejvyssi souradnice
     CoordsB: Nejnizzsi souradnice
-    #Version 21 Fields
-    On: Zap
-    Off: Vyp
+    #Version 22 Fields
+    TurnOn: 'zap'
+    TurnOff: 'vyp'
     
 # This is the help / usage messages for each command.
 # It follows this format:
