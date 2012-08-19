@@ -110,7 +110,7 @@ public class ResidenceCommandListener extends Residence {
     }
 	
 	
-	private boolean commandRes(String[] args, boolean resadmin, Command command, CommandSender sender){
+    private boolean commandRes(String[] args, boolean resadmin, Command command, CommandSender sender){
         if ((args.length > 0 && args[args.length - 1].equalsIgnoreCase("?")) || (args.length > 1 && args[args.length - 2].equals("?"))) {
         	return commandHelp(args, resadmin, sender);
         }
@@ -628,7 +628,7 @@ public class ResidenceCommandListener extends Residence {
                 return true;
             }
         }
-	}
+    }
 	
 	private boolean commandResCreate(String[] args, boolean resadmin, Player player, int page) {
         if (args.length != 2) {
