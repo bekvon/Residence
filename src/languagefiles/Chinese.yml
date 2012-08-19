@@ -230,6 +230,9 @@ Language:
     #Version 20 Fields
     CoordsT: '顶坐标'
     CoordsB: '底部的坐标'
+    #Version 22 Fields
+    TurnOn: 'on'
+    TurnOff: 'off'
     
 # This is the help / usage messages for each command.
 # It follows this format:
