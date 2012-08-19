@@ -1,5 +1,5 @@
 name: Residence
-main: com.bekvon.bukkit.residence.Residence
+main: com.bekvon.bukkit.residence.ResidenceCommandListener
 version: 2.6.5.1
 description: Cuboid Residence Plugin
 authors: [bekvon,inorixu,lemon42,nate302,smbarbour,Shayana,t00thpick1]
