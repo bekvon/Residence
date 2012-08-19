@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-public class ResidenceCommandListener extends Residence {
+public class ResidenceCommandExecutor extends Residence implements CommandExecutor (
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
