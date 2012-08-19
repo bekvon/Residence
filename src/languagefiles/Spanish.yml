@@ -229,6 +229,9 @@ Language:
     #Version 20 Fields
     CoordsT: coordenadas superiores
     CoordsB: menores coordenadas
+    #Version 22 Fields
+    TurnOn: 'on'
+    TurnOff: 'off'
     
 # This is the help / usage messages for each command.
 # It follows this format:
