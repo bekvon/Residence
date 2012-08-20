@@ -30,11 +30,11 @@
     <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
-    <get src="http://dev.bukkit.org/media/files/592/826/Vault.jar" dest="lib/Vault.jar"/>
+    <get src="http://dev.bukkit.org/media/files/610/285/Vault.jar" dest="lib/Vault.jar"/>
     <get src="http://whiskeycraft.net/repo/com/sk89q/worldedit/lastsuccessful/WorldEdit.jar" dest="lib/WorldEdit.jar"/>
     <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
-    <get src="http://dev.bukkit.org/media/files/582/606/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
-    <get src="http://dev.bukkit.org/media/files/578/833/bpermissions.jar" dest="lib/bPermissions.jar"/>
+    <get src="http://dev.bukkit.org/media/files/611/707/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
+    <get src="http://dev.bukkit.org/media/files/610/407/bpermissions.jar" dest="lib/bPermissions.jar"/>
     <unzip src="lib/BOSEconomy.zip" dest="lib/"></unzip>
     <delete file="lib/BOSEconomy.zip"/>
   </target>
