@@ -500,14 +500,14 @@ public class ResidencePlayerListener implements Listener {
                 	String leave = ResOld.getLeaveMessage();
                 	ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld,player);
                 	Residence.getServ().getPluginManager().callEvent(leaveevent);
-                	if (leave != null && !leave.equals("")&&ResOld.getParent()!=res) {
+                	if (leave != null && !leave.equals("")&&ResOld!=res.getParent()) {
                    		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 	}
         	}
         	String enterMessage = res.getEnterMessage();
 		ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
 		Residence.getServ().getPluginManager().callEvent(enterevent);
-		if(enterMessage!=null&&!enterMessage.equals("")&&!(res.getParent()==ResOld&&ResOld!=null)){
+		if(enterMessage!=null&&!enterMessage.equals("")&&!(res==ResOld.getParent()&&ResOld!=null)){
                 	player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
         	}
         }
