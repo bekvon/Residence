@@ -307,6 +307,9 @@ public class ResidenceEntityListener implements Listener {
         if(event.isCancelled())
             return;
         Entity ent = event.getEntity();
+	if(ent.hasMetadata("NPC")) {
+		return;
+	}
         boolean tamedWolf = ent instanceof Wolf ? ((Wolf)ent).isTamed() : false;
         ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
         /* Living Entities */
