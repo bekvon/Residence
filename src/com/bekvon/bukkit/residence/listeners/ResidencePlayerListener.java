@@ -198,18 +198,15 @@ public class ResidencePlayerListener implements Listener {
         	   	}
         	}
         }
-        if(!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world))
-        {
+        if(!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ItemBlacklisted"));
             event.setCancelled(true);
             return;
         }
-        if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-        {
+        if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-                if(player.hasPermission("residence.create") || group.canCreateResidences() || resadmin)
-                {
+                if(player.hasPermission("residence.create") || (group.canCreateResidences()&&!player.isPermissionSet("residence.create")) || resadmin) {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                         Location loc = block.getLocation();
                         Residence.getSelectionManager().placeLoc1(player, loc);
@@ -221,15 +218,14 @@ public class ResidencePlayerListener implements Listener {
                     }
                 }
             }
-            if(player.getItemInHand().getTypeId() == Residence.getConfigManager().getInfoToolID())
-            {
-                if(event.getAction() == Action.LEFT_CLICK_BLOCK)
-                {
+            if(player.getItemInHand().getTypeId() == Residence.getConfigManager().getInfoToolID()) {
+                if(event.getAction() == Action.LEFT_CLICK_BLOCK) {
                     Location loc = block.getLocation();
                     String res = Residence.getResidenceManager().getNameByLoc(loc);
-                    if(res!=null)
+                    if(res!=null) {
                         Residence.getResidenceManager().printAreaInfo(res, player);
                         event.setCancelled(true);
+                    }
                     if(res==null){
                         event.setCancelled(true);
                         player.sendMessage(Residence.getLanguage().getPhrase("NoResHere"));
