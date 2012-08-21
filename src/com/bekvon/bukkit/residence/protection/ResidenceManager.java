@@ -4,14 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.protection;
-import org.bukkit.ChatColor;
-
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
-import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
-import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
-import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.text.help.InformationPager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,10 +15,20 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
+import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.text.help.InformationPager;
 
 /**
  *
@@ -535,6 +537,8 @@ public class ResidenceManager {
                         player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceAlreadyExists",ChatColor.YELLOW+newName+ChatColor.RED));
                     return false;
                 }
+    			ResidenceRenameEvent resevent = new ResidenceRenameEvent(res, newName, oldName);
+				Residence.getServ().getPluginManager().callEvent(resevent);
                 residences.put(newName, res);
                 residences.remove(oldName);
                 if(Residence.getConfigManager().useLeases())
