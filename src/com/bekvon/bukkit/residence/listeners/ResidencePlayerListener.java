@@ -133,7 +133,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	private boolean isContainer(Material mat, Block block) {
-		return FlagPermissions.getMaterialToUseList().containsKey(mat) && FlagPermissions.getMaterialToUseList().get(mat).equals("container") || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
+		return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals("container") || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
 	}
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
@@ -243,7 +243,7 @@ public class ResidencePlayerListener implements Listener {
 				}
 				if (isContainer(mat,block) || isCanUseEntity(mat, block)) {
 					boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
-					for(Entry<Material, String> checkMat : FlagPermissions.getMaterialToUseList().entrySet()) {
+					for(Entry<Material, String> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 						if(mat == checkMat.getKey()) {
 							if(!perms.playerHas(player.getName(), world, checkMat.getValue(), hasuse)) {
 								if(hasuse) {

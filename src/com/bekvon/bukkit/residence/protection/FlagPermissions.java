@@ -41,7 +41,7 @@ public class FlagPermissions {
 	public static void removeMaterialFromUseFlag(Material mat) {
 		matUseFlagList.remove(mat);
 	}
-	public static EnumMap<Material,String> getMaterialToUseList(){
+	public static EnumMap<Material,String> getMaterialUseFlagList(){
 		return (EnumMap<Material, String>) matUseFlagList;
 	}
 	public static void addFlag(String flag) {
