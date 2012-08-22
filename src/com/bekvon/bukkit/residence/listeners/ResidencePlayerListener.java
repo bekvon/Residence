@@ -74,12 +74,10 @@ public class ResidencePlayerListener implements Listener {
             put(Material.EGG, "egg");
         }
     };
-    public void addMaterialToUseFlag(Material mat, String flag)
-    {
+    public void addMaterialToUseFlag(Material mat, String flag) {
         matUseFlagList.put(mat, flag);
     }
-    public void remoteMaterialFromUseFlag(Material mat)
-    {
+    public void removeMaterialFromUseFlag(Material mat) {
         matUseFlagList.remove(mat);
     }
                             
