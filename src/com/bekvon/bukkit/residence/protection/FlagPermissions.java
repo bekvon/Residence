@@ -45,8 +45,8 @@ public class FlagPermissions {
 		if(!validFlags.contains(flag)) {
 			validFlags.add(flag);
 		}
-		if(ResidencePermissions.validFlagGroups.containsKey(flag)) {
-			ResidencePermissions.validFlagGroups.remove(flag);
+		if(validFlagGroups.containsKey(flag)) {
+			validFlagGroups.remove(flag);
 		}
 	}
 	public static void addPlayerOrGroupOnlyFlag(String flag) {
@@ -54,8 +54,8 @@ public class FlagPermissions {
 		if(!validPlayerFlags.contains(flag)) {
 			validPlayerFlags.add(flag);
 		}
-		if(ResidencePermissions.validFlagGroups.containsKey(flag)) {
-			ResidencePermissions.validFlagGroups.remove(flag);
+		if(validFlagGroups.containsKey(flag)) {
+			validFlagGroups.remove(flag);
 		}
 	}
 	public static void addResidenceOnlyFlag(String flag) {
@@ -63,27 +63,27 @@ public class FlagPermissions {
 		if(!validAreaFlags.contains(flag)) {
 			validAreaFlags.add(flag);
 		}
-		if(ResidencePermissions.validFlagGroups.containsKey(flag)) {
-			ResidencePermissions.validFlagGroups.remove(flag);
+		if(validFlagGroups.containsKey(flag)) {
+			validFlagGroups.remove(flag);
 		}
 	}
         protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<String, ArrayList<String>>();
         public static void addFlagToFlagGroup(String group, String flag) {
             if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {
-                if (!ResidencePermissions.validFlagGroups.containsKey(group)) {
-                    ResidencePermissions.validFlagGroups.put(group, new ArrayList<String>());
+                if (!validFlagGroups.containsKey(group)) {
+                    validFlagGroups.put(group, new ArrayList<String>());
                 }
-                ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(group);
+                ArrayList<String> flags = validFlagGroups.get(group);
                 flags.add(flag);
             }
         }
 
         public static void removeFlagFromFlagGroup(String group, String flag) {
-            if (ResidencePermissions.validFlagGroups.containsKey(group)) {
-                ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(group);
+            if (validFlagGroups.containsKey(group)) {
+                ArrayList<String> flags = validFlagGroups.get(group);
                 flags.remove(flag);
                 if (flags.isEmpty()) {
-                    ResidencePermissions.validFlagGroups.remove(group);
+                    validFlagGroups.remove(group);
                 }
             }
         }
@@ -95,7 +95,7 @@ public class FlagPermissions {
 		validAreaFlags.clear();
 		validPlayerFlags.clear();
 		validFlags.clear();
-		ResidencePermissions.validFlagGroups.clear();
+		validFlagGroups.clear();
 		addFlag("egg");
 		addFlag("note");
 		addFlag("pressure");
