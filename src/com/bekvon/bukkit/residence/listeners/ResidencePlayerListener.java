@@ -199,14 +199,17 @@ public class ResidencePlayerListener implements Listener {
 			return;
 		}
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if(player.getItemInHand()!=null){
-				if(event.getAction()==Action.RIGHT_CLICK_BLOCK){
-					if(player.getItemInHand().getTypeId()==351){
-						if(player.getItemInHand().getData().getData()==15&&block.getType()==Material.GRASS||player.getItemInHand().getData().getData()==3&&block.getTypeId()==17&&(block.getData()==3||block.getData()==7||block.getData()==11||block.getData()==15)){
-							if(!perms.playerHas(player.getName(), world, "build", true)) {
-								event.setCancelled(true);
-							}
-						}
+			if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
+				PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+				if(player.hasPermission("residence.create") || group.canCreateResidences()&&!player.isPermissionSet("residence.create") || resadmin) {
+					if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+						Location loc = block.getLocation();
+						Residence.getSelectionManager().placeLoc1(player, loc);
+						player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Primary"))+ChatColor.RED+"(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")"+ChatColor.GREEN+"!");
+					} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+						Location loc = block.getLocation();
+						Residence.getSelectionManager().placeLoc2(player, loc);
+						player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Secondary"))+ChatColor.RED+"(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")"+ChatColor.GREEN+"!");
 					}
 				}
 			}
@@ -228,8 +231,8 @@ public class ResidencePlayerListener implements Listener {
 				FlagPermissions perms = Residence.getPermsByLoc(event.getClickedBlock().getLocation());
 				if(player.getItemInHand()!=null){
 					if(event.getAction()==Action.RIGHT_CLICK_BLOCK){
-						if(player.getItemInHand().getTypeId()==351&&block.getType()==Material.GRASS){
-							if(player.getItemInHand().getData().getData()==15){
+						if(player.getItemInHand().getTypeId()==351){
+							if(player.getItemInHand().getData().getData()==15&&block.getType()==Material.GRASS||player.getItemInHand().getData().getData()==3&&block.getTypeId()==17&&(block.getData()==3||block.getData()==7||block.getData()==11||block.getData()==15)){
 								if(!perms.playerHas(player.getName(), world, "build", true)) {
 									event.setCancelled(true);
 								}
