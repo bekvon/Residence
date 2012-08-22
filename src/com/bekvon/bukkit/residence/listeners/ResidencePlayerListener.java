@@ -34,8 +34,8 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.inori.utils.ILog;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -52,7 +52,37 @@ public class ResidencePlayerListener implements Listener {
     protected int minUpdateTime;
     protected boolean chatenabled;
     protected List<String> playerToggleChat;
-    
+    final Map<Material,String> matUseFlagList = new EnumMap<Material,String>(Material.class) 
+    { 
+        {
+            put(Material.DIODE,"diode");
+            put(Material.DIODE_BLOCK_OFF, "diode");
+            put(Material.DIODE_BLOCK_ON, "diode");
+            put(Material.WORKBENCH, "table");
+            put(Material.WOODEN_DOOR,"door");
+            put(Material.FENCE_GATE, "door");
+            put(Material.NETHER_FENCE, "door");
+            put(Material.TRAP_DOOR, "door");
+            put(Material.ENCHANTMENT_TABLE, "enchant");
+            put(Material.STONE_BUTTON, "button");
+            put(Material.LEVER, "lever");
+            put(Material.BED_BLOCK, "bed");
+            put(Material.BREWING_STAND, "brew");
+            put(Material.CAKE, "cake");
+            put(Material.NOTE_BLOCK, "note");
+            put(Material.DRAGON_EGG, "egg");
+            put(Material.EGG, "egg");
+        }
+    };
+    public void addMaterialToUseFlag(Material mat, String flag)
+    {
+        matUseFlagList.put(mat, flag);
+    }
+    public void remoteMaterialFromUseFlag(Material mat)
+    {
+        matUseFlagList.remove(mat);
+    }
+                            
 	public ResidencePlayerListener() {
 		currentRes = new HashMap<String,String>();
 		lastUpdate = new HashMap<String,Long>();
@@ -254,94 +284,15 @@ public class ResidencePlayerListener implements Listener {
                     }
                 } else if (isCanUseEntity(mat, block)) {
                 	boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
-                	if(!perms.playerHas(player.getName(), world, "diode", hasuse) && (mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON)){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","diode"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "table", hasuse) && mat == Material.WORKBENCH){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","table"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "door", hasuse) && (mat == Material.WOODEN_DOOR || mat == Material.FENCE_GATE|| mat == Material.NETHER_FENCE || mat == Material.TRAP_DOOR)){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","door"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}
-                	}
-                	if(!perms.playerHas(player.getName(), world, "enchant", hasuse)&& mat == Material.ENCHANTMENT_TABLE){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","enchant"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}
-                	}
-                	if(!perms.playerHas(player.getName(), world, "button", hasuse)&& mat == Material.STONE_BUTTON){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","button"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "lever", hasuse)&& mat == Material.LEVER){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","lever"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "bed", hasuse)&& mat == Material.BED_BLOCK){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bed"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "brew", hasuse)&& mat == Material.BREWING_STAND){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","brew"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "cake", hasuse) && mat==Material.CAKE_BLOCK){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","cake"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}
-                	if(!perms.playerHas(player.getName(), world, "note", hasuse) && mat==Material.NOTE_BLOCK){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","note"));
-                		} else {
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-                		}   
-                	}                      
-                	if(!perms.playerHas(player.getName(), world, "egg", hasuse) && mat==Material.DRAGON_EGG){
-                		event.setCancelled(true);
-                		if(hasuse){
-                			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","egg"));
-                		} else {
-	        			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-	        		}   
-                	}
+                        for(Entry<Material, String> checkMat : matUseFlagList.entrySet())
+                        {
+                            if(mat == checkMat.getKey())
+                                if(!perms.playerHas(player.getName(), world, checkMat.getValue(), hasuse))
+                                    if(hasuse)
+                                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny",checkMat.getValue()));
+                                    else
+                                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
+                        }
                 }
             }
         }
