@@ -279,14 +279,7 @@ public class ResidencePlayerListener implements Listener {
                 		}
 	              	}
                 }
-                if(isContainer(mat, block))
-                {
-                    boolean hascontainer = perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true));
-                    if (!hascontainer) {
-                        event.setCancelled(true);
-                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","container"));
-                    }
-                } else if (isCanUseEntity(mat, block)) {
+                if (isContainer(mat,block) || isCanUseEntity(mat, block)) {
                 	boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
                         for(Entry<Material, String> checkMat : matUseFlagList.entrySet())
                         {
