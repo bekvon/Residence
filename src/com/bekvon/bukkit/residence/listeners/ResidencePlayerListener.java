@@ -163,7 +163,7 @@ public class ResidencePlayerListener implements Listener {
 		Block block = event.getClickedBlock();
 		Material mat = block.getType();
 		ILog.sendToPlayer(player, mat.toString());
-		if(!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block))||event.getAction() == Action.PHYSICAL) {
+		if(!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)||mat==) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block)||event.getAction() == Action.PHYSICAL)) {
 			int typeId = player.getItemInHand().getTypeId();
 			if(typeId != Residence.getConfigManager().getSelectionTooldID() && typeId != Residence.getConfigManager().getInfoToolID()&&typeId!=351) {
 				return;
@@ -178,8 +178,7 @@ public class ResidencePlayerListener implements Listener {
 			if(!resadmin){
 				FlagPermissions perms = Residence.getPermsByLoc(block.getLocation());
 				boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
-				boolean hasbuild = perms.playerHas(player.getName(), world, "build", true);
-				boolean hastrample = perms.playerHas(player.getName(), world, "trample", hasbuild);
+				boolean hastrample = perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true));
 				boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
 				if((!hasuse && !haspressure || !haspressure)&&(mat==Material.STONE_PLATE || mat == Material.WOOD_PLATE)){
 					event.setCancelled(true);
@@ -189,7 +188,7 @@ public class ResidencePlayerListener implements Listener {
 						player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
 					}
 				}
-				if((!hasbuild && !hastrample || !hastrample) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
+				if(!hastrample && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
 					event.setCancelled(true);
 				}
 			}
@@ -200,17 +199,14 @@ public class ResidencePlayerListener implements Listener {
 			return;
 		}
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
-				PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-				if(player.hasPermission("residence.create") || group.canCreateResidences()&&!player.isPermissionSet("residence.create") || resadmin) {
-					if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-						Location loc = block.getLocation();
-						Residence.getSelectionManager().placeLoc1(player, loc);
-						player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Primary"))+ChatColor.RED+"(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")"+ChatColor.GREEN+"!");
-					} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-						Location loc = block.getLocation();
-						Residence.getSelectionManager().placeLoc2(player, loc);
-						player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("SelectPoint",Residence.getLanguage().getPhrase("Secondary"))+ChatColor.RED+"(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")"+ChatColor.GREEN+"!");
+			if(player.getItemInHand()!=null){
+				if(event.getAction()==Action.RIGHT_CLICK_BLOCK){
+					if(player.getItemInHand().getTypeId()==351){
+						if(player.getItemInHand().getData().getData()==15&&block.getType()==Material.GRASS||player.getItemInHand().getData().getData()==3&&block.getTypeId()==17&&(block.getData()==3||block.getData()==7||block.getData()==11||block.getData()==15)){
+							if(!perms.playerHas(player.getName(), world, "build", true)) {
+								event.setCancelled(true);
+							}
+						}
 					}
 				}
 			}
