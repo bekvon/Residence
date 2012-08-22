@@ -163,7 +163,7 @@ public class ResidencePlayerListener implements Listener {
 		Block block = event.getClickedBlock();
 		Material mat = block.getType();
 		ILog.sendToPlayer(player, mat.toString());
-		if(!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)||mat==) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block)||event.getAction() == Action.PHYSICAL)) {
+		if(!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block)||event.getAction() == Action.PHYSICAL)) {
 			int typeId = player.getItemInHand().getTypeId();
 			if(typeId != Residence.getConfigManager().getSelectionTooldID() && typeId != Residence.getConfigManager().getInfoToolID()&&typeId!=351) {
 				return;
