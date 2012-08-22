@@ -455,9 +455,6 @@ public class ResidencePlayerListener implements Listener {
     		}
 	}
     	if(res==null){
-    		if(lastOutsideLoc.containsKey(pname)){
-    			lastOutsideLoc.remove(pname);
-    		}
     		lastOutsideLoc.put(pname, loc);
     		if(ResOld!=null){
                 	String leave = ResOld.getLeaveMessage();
