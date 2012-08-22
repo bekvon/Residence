@@ -503,7 +503,7 @@ public class ResidencePlayerListener implements Listener {
         	String enterMessage = res.getEnterMessage();
 		ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
 		Residence.getServ().getPluginManager().callEvent(enterevent);
-		if(enterMessage!=null&&!enterMessage.equals("")&&!(res==ResOld.getParent()&&ResOld!=null)){
+		if(enterMessage!=null&&!enterMessage.equals("")&&!(ResOld!=null&&res==ResOld.getParent())){
                 	player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
         	}
         }
