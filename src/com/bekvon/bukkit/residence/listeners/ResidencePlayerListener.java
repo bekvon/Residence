@@ -72,6 +72,12 @@ public class ResidencePlayerListener implements Listener {
             put(Material.NOTE_BLOCK, "note");
             put(Material.DRAGON_EGG, "egg");
             put(Material.EGG, "egg");
+            put(Material.JUKEBOX, "container");
+            put(Material.CHEST, "container");
+            put(Material.FURNACE, "container");
+            put(Material.BURNING_FURNACE, "container");
+            put(Material.DISPENSER, "container");
+            put(Material.CAKE_BLOCK, "container");                                      
         }
     };
     public void addMaterialToUseFlag(Material mat, String flag)
@@ -164,7 +170,7 @@ public class ResidencePlayerListener implements Listener {
     }
     
 	private boolean isContainer(Material mat, Block block) {
-		return mat == Material.JUKEBOX || mat == Material.CHEST || mat == Material.FURNACE || mat == Material.BURNING_FURNACE || mat == Material.DISPENSER || mat == Material.CAKE_BLOCK || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
+		return (matUseFlagList.containsKey(mat) && matUseFlagList.get(mat).equals("container")) || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
 	}
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
