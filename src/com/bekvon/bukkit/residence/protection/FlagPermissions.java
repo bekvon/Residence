@@ -29,38 +29,12 @@ public class FlagPermissions {
     protected static ArrayList<String> validFlags = new ArrayList<String>();
 	protected static ArrayList<String> validPlayerFlags = new ArrayList<String>();
 	protected static ArrayList<String> validAreaFlags = new ArrayList<String>();
-	final static Map<Material,String> matUseFlagList = new EnumMap<Material,String>(Material.class) {
-		{
-			put(Material.DIODE,"diode");
-			put(Material.DIODE_BLOCK_OFF, "diode");
-			put(Material.DIODE_BLOCK_ON, "diode");
-			put(Material.WORKBENCH, "table");
-			put(Material.WOODEN_DOOR,"door");
-			put(Material.FENCE_GATE, "door");
-			put(Material.NETHER_FENCE, "door");
-			put(Material.TRAP_DOOR, "door");
-			put(Material.ENCHANTMENT_TABLE, "enchant");
-			put(Material.STONE_BUTTON, "button");
-			put(Material.LEVER, "lever");
-			put(Material.BED_BLOCK, "bed");
-			put(Material.BREWING_STAND, "brew");
-			put(Material.CAKE, "cake");
-			put(Material.NOTE_BLOCK, "note");
-			put(Material.DRAGON_EGG, "egg");
-			put(Material.EGG, "egg");
-			put(Material.JUKEBOX, "container");
-			put(Material.CHEST, "container");
-			put(Material.FURNACE, "container");
-			put(Material.BURNING_FURNACE, "container");
-			put(Material.DISPENSER, "container");
-			put(Material.CAKE_BLOCK, "container");
-		}
-	};
+	final static Map<Material,String> matUseFlagList = new EnumMap<Material,String>(Material.class);
 
-	public void addMaterialToUseFlag(Material mat, String flag) {
+	public static void addMaterialToUseFlag(Material mat, String flag) {
 		matUseFlagList.put(mat, flag);
 	}
-	public void removeMaterialFromUseFlag(Material mat) {
+	public static void removeMaterialFromUseFlag(Material mat) {
 		matUseFlagList.remove(mat);
 	}
 	public static EnumMap<Material,String> getMaterialToUseList(){
@@ -157,6 +131,29 @@ public class FlagPermissions {
 		ResidencePermissions.addFlagToFlagGroup("trusted", "bucket");
 		ResidencePermissions.addFlagToFlagGroup("fire", "ignite");
 		ResidencePermissions.addFlagToFlagGroup("fire", "firespread");
+                addMaterialToUseFlag(Material.DIODE,"diode");
+                addMaterialToUseFlag(Material.DIODE_BLOCK_OFF, "diode");
+                addMaterialToUseFlag(Material.DIODE_BLOCK_ON, "diode");
+                addMaterialToUseFlag(Material.WORKBENCH, "table");
+                addMaterialToUseFlag(Material.WOODEN_DOOR,"door");
+                addMaterialToUseFlag(Material.FENCE_GATE, "door");
+                addMaterialToUseFlag(Material.NETHER_FENCE, "door");
+                addMaterialToUseFlag(Material.TRAP_DOOR, "door");
+                addMaterialToUseFlag(Material.ENCHANTMENT_TABLE, "enchant");
+                addMaterialToUseFlag(Material.STONE_BUTTON, "button");
+                addMaterialToUseFlag(Material.LEVER, "lever");
+                addMaterialToUseFlag(Material.BED_BLOCK, "bed");
+                addMaterialToUseFlag(Material.BREWING_STAND, "brew");
+                addMaterialToUseFlag(Material.CAKE, "cake");
+                addMaterialToUseFlag(Material.NOTE_BLOCK, "note");
+                addMaterialToUseFlag(Material.DRAGON_EGG, "egg");
+                addMaterialToUseFlag(Material.EGG, "egg");
+                addMaterialToUseFlag(Material.JUKEBOX, "container");
+                addMaterialToUseFlag(Material.CHEST, "container");
+                addMaterialToUseFlag(Material.FURNACE, "container");
+                addMaterialToUseFlag(Material.BURNING_FURNACE, "container");
+                addMaterialToUseFlag(Material.DISPENSER, "container");
+                addMaterialToUseFlag(Material.CAKE_BLOCK, "container");
 	}
 
 	protected Map<String, Map<String, Boolean>> playerFlags;
