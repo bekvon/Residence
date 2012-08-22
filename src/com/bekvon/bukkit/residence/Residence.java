@@ -103,7 +103,7 @@ public class Residence extends JavaPlugin {
 	protected static boolean initsuccess = false;
 	protected Map<String,String> deleteConfirm;
 	protected static List<String> resadminToggle;
-	private final String[] validLanguages = { "English","German","French","Hungarian","Spanish","Chinese" };
+	private final String[] validLanguages = { "English","German","French","Hungarian","Spanish","Chinese","Czech" };
 	private Runnable doHeals = new Runnable() {
 		public void run() {
 			plistener.doHeals();
