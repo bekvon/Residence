@@ -478,14 +478,8 @@ public class ResidencePlayerListener implements Listener {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceMoveDeny", res.getName().split("\\.")[(res.getName().split("\\.").length)-1]));
             return;
         }
-	if(lastOutsideLoc.containsKey(pname)){
-		lastOutsideLoc.remove(pname);
-	}
 	lastOutsideLoc.put(pname, loc);
         if(!currentRes.containsKey(pname)||ResOld!=res){
-        	if(currentRes.containsKey(pname)){
-        		currentRes.remove(pname);
-        	}
         	currentRes.put(pname, areaname);
         	if(subzone==null){
         		chatchange = true;
