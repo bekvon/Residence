@@ -27,31 +27,7 @@ import org.bukkit.entity.Player;
  * @author Administrator
  */
 public class ResidencePermissions extends FlagPermissions {
-    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<String, ArrayList<String>>();
 
-    public static void addFlagToFlagGroup(String group, String flag) {
-        if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {
-            if (!ResidencePermissions.validFlagGroups.containsKey(group)) {
-                ResidencePermissions.validFlagGroups.put(group, new ArrayList<String>());
-            }
-            ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(group);
-            flags.add(flag);
-        }
-    }
-
-    public static void removeFlagFromFlagGroup(String group, String flag) {
-        if (ResidencePermissions.validFlagGroups.containsKey(group)) {
-            ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(group);
-            flags.remove(flag);
-            if (flags.isEmpty()) {
-                ResidencePermissions.validFlagGroups.remove(group);
-            }
-        }
-    }
-
-    public static boolean flagGroupExists(String group) {
-        return validFlagGroups.containsKey(group);
-    }
     protected String owner;
     protected String world;
     protected ClaimedResidence residence;

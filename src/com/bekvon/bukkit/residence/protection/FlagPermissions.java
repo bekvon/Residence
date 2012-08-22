@@ -67,6 +67,30 @@ public class FlagPermissions {
 			ResidencePermissions.validFlagGroups.remove(flag);
 		}
 	}
+        protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<String, ArrayList<String>>();
+        public static void addFlagToFlagGroup(String group, String flag) {
+            if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {
+                if (!ResidencePermissions.validFlagGroups.containsKey(group)) {
+                    ResidencePermissions.validFlagGroups.put(group, new ArrayList<String>());
+                }
+                ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(group);
+                flags.add(flag);
+            }
+        }
+
+        public static void removeFlagFromFlagGroup(String group, String flag) {
+            if (ResidencePermissions.validFlagGroups.containsKey(group)) {
+                ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(group);
+                flags.remove(flag);
+                if (flags.isEmpty()) {
+                    ResidencePermissions.validFlagGroups.remove(group);
+                }
+            }
+        }
+
+        public static boolean flagGroupExists(String group) {
+            return validFlagGroups.containsKey(group);
+        }
 	public static void initValidFlags() {
 		validAreaFlags.clear();
 		validPlayerFlags.clear();
@@ -115,22 +139,22 @@ public class FlagPermissions {
 		addResidenceOnlyFlag("spread");
 		addResidenceOnlyFlag("hidden");
 		addPlayerOrGroupOnlyFlag("admin");
-		ResidencePermissions.addFlagToFlagGroup("redstone", "note");
-		ResidencePermissions.addFlagToFlagGroup("redstone", "pressure");
-		ResidencePermissions.addFlagToFlagGroup("redstone", "lever");
-		ResidencePermissions.addFlagToFlagGroup("redstone", "button");
-		ResidencePermissions.addFlagToFlagGroup("redstone", "diode");
-		ResidencePermissions.addFlagToFlagGroup("craft", "brew");
-		ResidencePermissions.addFlagToFlagGroup("craft", "table");
-		ResidencePermissions.addFlagToFlagGroup("craft", "enchant");
-		ResidencePermissions.addFlagToFlagGroup("trusted", "use");
-		ResidencePermissions.addFlagToFlagGroup("trusted", "move");
-		ResidencePermissions.addFlagToFlagGroup("trusted", "tp");
-		ResidencePermissions.addFlagToFlagGroup("trusted", "build");
-		ResidencePermissions.addFlagToFlagGroup("trusted", "container");
-		ResidencePermissions.addFlagToFlagGroup("trusted", "bucket");
-		ResidencePermissions.addFlagToFlagGroup("fire", "ignite");
-		ResidencePermissions.addFlagToFlagGroup("fire", "firespread");
+		addFlagToFlagGroup("redstone", "note");
+		addFlagToFlagGroup("redstone", "pressure");
+		addFlagToFlagGroup("redstone", "lever");
+		addFlagToFlagGroup("redstone", "button");
+		addFlagToFlagGroup("redstone", "diode");
+		addFlagToFlagGroup("craft", "brew");
+		addFlagToFlagGroup("craft", "table");
+		addFlagToFlagGroup("craft", "enchant");
+		addFlagToFlagGroup("trusted", "use");
+		addFlagToFlagGroup("trusted", "move");
+		addFlagToFlagGroup("trusted", "tp");
+		addFlagToFlagGroup("trusted", "build");
+		addFlagToFlagGroup("trusted", "container");
+		addFlagToFlagGroup("trusted", "bucket");
+		addFlagToFlagGroup("fire", "ignite");
+		addFlagToFlagGroup("fire", "firespread");
                 addMaterialToUseFlag(Material.DIODE,"diode");
                 addMaterialToUseFlag(Material.DIODE_BLOCK_OFF, "diode");
                 addMaterialToUseFlag(Material.DIODE_BLOCK_ON, "diode");
