@@ -30,7 +30,11 @@ public class FlagPermissions {
 	protected static ArrayList<String> validPlayerFlags = new ArrayList<String>();
 	protected static ArrayList<String> validAreaFlags = new ArrayList<String>();
 	final static Map<Material,String> matUseFlagList = new EnumMap<Material,String>(Material.class);
-
+	protected Map<String, Map<String, Boolean>> playerFlags;
+	protected Map<String, Map<String, Boolean>> groupFlags;
+	protected Map<String, Boolean> cuboidFlags;
+	protected FlagPermissions parent;
+        
 	public static void addMaterialToUseFlag(Material mat, String flag) {
 		matUseFlagList.put(mat, flag);
 	}
@@ -179,11 +183,6 @@ public class FlagPermissions {
                 addMaterialToUseFlag(Material.DISPENSER, "container");
                 addMaterialToUseFlag(Material.CAKE_BLOCK, "container");
 	}
-
-	protected Map<String, Map<String, Boolean>> playerFlags;
-	protected Map<String, Map<String, Boolean>> groupFlags;
-	protected Map<String, Boolean> cuboidFlags;
-	protected FlagPermissions parent;
 
 	public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node) {
 		FlagPermissions list = new FlagPermissions();
