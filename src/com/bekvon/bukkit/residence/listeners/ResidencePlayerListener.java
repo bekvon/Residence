@@ -245,9 +245,11 @@ public class ResidencePlayerListener implements Listener {
 					for(Entry<Material, String> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 						if(mat == checkMat.getKey()) {
 							if(!perms.playerHas(player.getName(), world, checkMat.getValue(), hasuse)) {
-								if(hasuse) {
+								if(hasuse||checkMat.getValue()=="container") {
+									event.setCancelled(true);
 									player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny",checkMat.getValue()));
 								} else {
+									event.setCancelled(true);
 									player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
 								}
 							}
