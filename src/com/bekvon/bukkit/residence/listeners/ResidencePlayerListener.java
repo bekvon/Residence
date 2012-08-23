@@ -481,11 +481,6 @@ public class ResidencePlayerListener implements Listener {
 		}
 	}
 
-	@Deprecated
-	public String getLastAreaName(String player) {
-		return currentRes.get(player);
-	}
-
 	public String getCurrentResidenceName(String player) {
 		return currentRes.get(player);
 	}
