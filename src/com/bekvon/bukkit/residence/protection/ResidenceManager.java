@@ -162,11 +162,13 @@ public class ResidenceManager {
                 player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
             return false;
         }
-        if (getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin)
+        if(player!=null)
         {
-            if(player!=null)
+            if (getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin)
+            {
                 player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceTooMany"));
-            return false;
+                return false;
+            }
         }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
         ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName());
