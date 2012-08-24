@@ -248,6 +248,11 @@ public class ResidenceManager {
         InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, this.getResidenceList(targetplayer, showhidden, showsubzones), page);
     }
     
+    public String[] getResidenceList()
+    {
+        return this.getResidenceList(true, true).toArray(new String[0]);
+    }
+    
     public ArrayList<String> getResidenceList(boolean showhidden, boolean showsubzones)
     {
         return this.getResidenceList(null, showhidden, showsubzones);
@@ -371,11 +376,6 @@ public class ResidenceManager {
             }
         }
         return count;
-    }
-
-    public String[] getResidenceList()
-    {
-        return this.getResidenceList(true, true).toArray(new String[0]);
     }
 
     public void listAllResidences(Player player, int page)
