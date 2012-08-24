@@ -28,18 +28,25 @@ import org.bukkit.plugin.PluginManager;
 public class PerformanceTester {
 
     private static Thread t;
-    public static void runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest()
+    public static void runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest(boolean async)
     {
-        if(t==null)
+        if(async)
         {
-            Runnable r = new Runnable() {
-                public void run() {
-                    PerformanceTester.doTest();
-                    t = null;
-                }
-            };
-            t = new Thread(r);
-            t.start();
+            if(t==null)
+            {
+                Runnable r = new Runnable() {
+                    public void run() {
+                        try { PerformanceTester.doTest(); } catch(Exception ex){};
+                        t = null;
+                    }
+                };
+                t = new Thread(r);
+                t.start();
+            }
+        }
+        else if(t==null)
+        {
+            PerformanceTester.doTest();
         }
     }
     
