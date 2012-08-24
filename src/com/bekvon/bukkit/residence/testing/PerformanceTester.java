@@ -80,7 +80,7 @@ public class PerformanceTester {
             }
         }
         System.out.println("Done..." + (System.currentTimeMillis() - start) + "ms");
-        System.out.println("Running 10000 location checks...");
+        System.out.println("Running 10000 location checks using getByLoc()...");
         start = System.currentTimeMillis();
         int found = 0;
         for(int i = 0; i < 10000; i++)
@@ -90,8 +90,18 @@ public class PerformanceTester {
         }
         System.out.println("Hit " + found + " residences...");
         System.out.println("Done..." + (System.currentTimeMillis() - start) + "ms");
+        System.out.println("Running 10000 location checks using getNameByLoc()...");
+        start = System.currentTimeMillis();
         found = 0;
-        System.out.println("Performing name lookup on every possible subzone (90000 total)...");
+        for(int i = 0; i < 10000; i++)
+        {
+            if(res.getNameByLoc(new Location(w,r.nextInt(),r.nextInt(200),r.nextInt()))!=null)
+                found++;
+        }
+        System.out.println("Hit " + found + " residences...");
+        System.out.println("Done..." + (System.currentTimeMillis() - start) + "ms");
+        found = 0;
+        System.out.println("Performing name lookup on every possible subzone (90000 total) using getByName()...");
         start = System.currentTimeMillis();
         for(int i = 0; i < 10000; i++)
         {
