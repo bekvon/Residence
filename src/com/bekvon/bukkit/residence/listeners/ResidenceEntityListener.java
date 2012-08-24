@@ -239,7 +239,7 @@ public class ResidenceEntityListener implements Listener {
 	        			BlockState save = block.getState();
 	        			if(block.getType()==Material.CHEST){
 	        				Chest chest = (Chest)save;
-	        				inventory = chest.getInventory().getContents();
+	        				inventory = chest.getBlockInventory().getContents();
 	        				chest.getInventory().clear();
 	        			}
 	        			if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE){
