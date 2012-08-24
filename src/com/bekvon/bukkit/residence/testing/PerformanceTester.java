@@ -80,10 +80,10 @@ public class PerformanceTester {
             }
         }
         System.out.println("Done..." + (System.currentTimeMillis() - start) + "ms");
-        System.out.println("Running 90000 location checks...");
+        System.out.println("Running 10000 location checks...");
         start = System.currentTimeMillis();
         int found = 0;
-        for(int i = 0; i < 90000; i++)
+        for(int i = 0; i < 10000; i++)
         {
             if(res.getByLoc(new Location(w,r.nextInt(),r.nextInt(200),r.nextInt()))!=null)
                 found++;
