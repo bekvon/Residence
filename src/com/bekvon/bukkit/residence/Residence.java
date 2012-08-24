@@ -450,6 +450,16 @@ public class Residence extends JavaPlugin {
 			return wmanager.getPerms(loc.getWorld().getName());
 		}
 	}
+        
+        public static FlagPermissions getPermsByLoc(Player player)
+        {
+		ClaimedResidence res = rmanager.getByLoc(player.getLocation());
+		if(res!=null) {
+			return res.getPermissions();
+		} else {
+			return wmanager.getPerms(player);
+		}
+        }
 
 	private void loadIConomy() {
 		Plugin p = getServer().getPluginManager().getPlugin("iConomy");
