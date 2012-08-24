@@ -197,7 +197,7 @@ public class ResidenceBlockListener implements Listener {
     public void onBlockIgnite(BlockIgniteEvent event) {
         if(event.isCancelled())
             return;
-        FlagPermissions perms = Residence.getPermsByPlayer(event.getBlock().getLocation(), event.getPlayer());
+        FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(), event.getPlayer());
         IgniteCause cause = event.getCause();
         if(cause == IgniteCause.SPREAD){
             if(!perms.has("firespread", true)){
