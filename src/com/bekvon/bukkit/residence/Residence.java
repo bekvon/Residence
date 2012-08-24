@@ -457,7 +457,10 @@ public class Residence extends JavaPlugin {
 		if(res!=null) {
 			return res.getPermissions();
 		} else {
+                    if(player!=null)
 			return wmanager.getPerms(player);
+                    else
+                        return wmanager.getPerms(loc.getWorld().getName());
 		}
         }
 
