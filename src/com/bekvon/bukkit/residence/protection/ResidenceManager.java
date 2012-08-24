@@ -235,26 +235,6 @@ public class ResidenceManager {
 
     public void listResidences(Player player, String targetplayer, int page, boolean showhidden)
     {
-        /*ArrayList<String> temp = new ArrayList<String>();
-        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        synchronized(residences)
-        {
-            Iterator<Entry<String, ClaimedResidence>> it = set.iterator();
-            while(it.hasNext())
-            {
-                Entry<String, ClaimedResidence> next = it.next();
-                ClaimedResidence res = next.getValue();
-                boolean hidden = res.getPermissions().has("hidden", false);
-                if( (showhidden && hidden) || (!showhidden && !hidden) || (res.getPermissions().getOwner().equals(player.getName()) && targetplayer.equals(player.getName()) && (!showhidden && hidden)))
-                {
-                    if(res.getPermissions().getOwner().equalsIgnoreCase(targetplayer))
-                    {
-                        temp.add(ChatColor.GREEN+next.getKey()+ChatColor.YELLOW+" - "+Residence.getLanguage().getPhrase("World") + ": " + res.getWorld());
-                    }
-                }
-            }
-        }
-        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, temp, page);*/
         this.listResidences(player, targetplayer, page, showhidden, true);
     }
     
@@ -350,17 +330,22 @@ public class ResidenceManager {
 
     public void removeAllByOwner(String owner)
     {
-        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        synchronized(residences)
+        this.removeAllByOwner(owner, residences);
+    }
+    
+    private void removeAllByOwner(String owner, Map<String, ClaimedResidence> resholder)
+    {
+        Iterator<ClaimedResidence> it = resholder.values().iterator();
+        while(it.hasNext())
         {
-            Iterator<ClaimedResidence> it = residences.values().iterator();
-            while(it.hasNext())
+            ClaimedResidence res = it.next();
+            if(res.getOwner().equalsIgnoreCase(owner))
             {
-                ClaimedResidence res = it.next();
-                if(res.getOwner().equalsIgnoreCase(owner))
-                {
-                    it.remove();
-                }
+                it.remove();
+            }
+            else
+            {
+                this.removeAllByOwner(owner, res.subzones);
             }
         }
     }
