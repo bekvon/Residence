@@ -326,9 +326,12 @@ public class ClaimedResidence {
         if(newres.getAreaCount()!=0)
         {
             newres.getPermissions().applyDefaultFlags();
-            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            newres.setEnterMessage(group.getDefaultEnterMessage());
-            newres.setLeaveMessage(group.getDefaultLeaveMessage());
+            if(player!=null)
+            {
+                PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+                newres.setEnterMessage(group.getDefaultEnterMessage());
+                newres.setLeaveMessage(group.getDefaultLeaveMessage());
+            }
             if(Residence.getConfigManager().flagsInherit())
                 newres.getPermissions().setParent(perms);
             subzones.put(name, newres);
