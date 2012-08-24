@@ -197,7 +197,7 @@ public class ResidenceBlockListener implements Listener {
     public void onBlockIgnite(BlockIgniteEvent event) {
         if(event.isCancelled())
             return;
-        FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+        FlagPermissions perms = Residence.getPermsByPlayer(event.getBlock().getLocation(), event.getPlayer());
         IgniteCause cause = event.getCause();
         if(cause == IgniteCause.SPREAD){
             if(!perms.has("firespread", true)){
@@ -205,7 +205,6 @@ public class ResidenceBlockListener implements Listener {
         	}
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
         	Player player = event.getPlayer();
-                perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(),player);
         	if (!perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
         		event.setCancelled(true);
         		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
