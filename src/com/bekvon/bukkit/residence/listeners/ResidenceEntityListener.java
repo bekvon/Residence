@@ -267,7 +267,7 @@ public class ResidenceEntityListener implements Listener {
         		    	   block.update(true);
         		    	   if(inventory!=null){
         		    		   if(block.getType()==Material.CHEST)
-        		    			   ((Chest)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+        		    			   ((Chest)block.getLocation().getBlock().getState()).getBlockInventory().setContents(inventory);
         		    		   if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE)
         		    			   ((Furnace)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
         		    		   if(block.getType()==Material.BREWING_STAND)
