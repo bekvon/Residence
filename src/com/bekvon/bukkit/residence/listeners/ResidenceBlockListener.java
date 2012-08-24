@@ -63,7 +63,7 @@ public class ResidenceBlockListener implements Listener {
                 }
             }
         }
-    	FlagPermissions perms = Residence.getPermsByPlayer(player);
+    	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(),player);
         String pname = player.getName();
         if (res != null) {
             if (res.getItemIgnoreList().isListed(mat)) {
@@ -111,7 +111,7 @@ public class ResidenceBlockListener implements Listener {
                 return;
             }
         }
-    	FlagPermissions perms = Residence.getPermsByPlayer(player);
+    	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(),player);
         boolean hasplace = perms.playerHas(pname, player.getWorld().getName(), "place", perms.playerHas(pname, player.getWorld().getName(), "build", true));
         if (!hasplace) {
             event.setCancelled(true);
@@ -205,7 +205,7 @@ public class ResidenceBlockListener implements Listener {
         	}
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
         	Player player = event.getPlayer();
-                perms = Residence.getPermsByPlayer(player);
+                perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(),player);
         	if (!perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
         		event.setCancelled(true);
         		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));

@@ -127,7 +127,7 @@ public class ResidenceEntityListener implements Listener {
         if(Residence.isResAdminOn(player)){
             return;
         }
-	FlagPermissions perms = Residence.getPermsByPlayer(player);
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
         String pname = player.getName();
         String world = event.getBlock().getWorld().getName();
         boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
@@ -147,7 +147,7 @@ public class ResidenceEntityListener implements Listener {
                     		return;
                		}
 			String pname = player.getName();
-			FlagPermissions perms = Residence.getPermsByPlayer(player);
+			FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
 		        String world = event.getPainting().getWorld().getName();
 			boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
 			if (!hasplace){
