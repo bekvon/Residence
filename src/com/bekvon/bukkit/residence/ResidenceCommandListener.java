@@ -182,6 +182,15 @@ public class ResidenceCommandListener extends Residence {
 			}
 			return true;
 		}
+                if(cmd.equals("donotrunmeonliveserver"))
+                {
+                    if(sender instanceof ConsoleCommandSender)
+                    {
+                        System.out.println("Started...");
+                        PerformanceTester.runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest();
+                        return true;
+                    }
+                }
 		if(player==null){
 			return true;
 		}
@@ -511,15 +520,6 @@ public class ResidenceCommandListener extends Residence {
 			player.sendMessage(ChatColor.YELLOW+language.getPhrase("InfoTool")+": "+ChatColor.GREEN + Material.getMaterial(cmanager.getInfoToolID()));
 			return true;
 		}
-                if(cmd.equals("donotrunmeonliveserver"))
-                {
-                    if(sender instanceof ConsoleCommandSender)
-                    {
-                        System.out.println("Started...");
-                        PerformanceTester.runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest();
-                        return true;
-                    }
-                }
 		return false;
 	}
 	private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender){

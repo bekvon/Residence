@@ -30,7 +30,17 @@ public class PerformanceTester {
     private static Thread t;
     public static void runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest()
     {
-        PerformanceTester.doTest();
+        if(t==null)
+        {
+            Runnable r = new Runnable() {
+                public void run() {
+                    PerformanceTester.doTest();
+                    t = null;
+                }
+            };
+            t = new Thread(r);
+            t.start();
+        }
     }
     
     private static void doTest()
