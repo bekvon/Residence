@@ -133,61 +133,43 @@ public class ResidenceManager {
     
     public boolean addResidence(String name, String owner, Location loc1, Location loc2)
     {
-        if(!Residence.validName(name))
-            return false;
-        if (loc1 == null || loc2 == null || !loc1.getWorld().getName().equals(loc2.getWorld().getName())) {
-            return false;
-        }
-        PermissionGroup group = Residence.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
-        CuboidArea newArea = new CuboidArea(loc1, loc2);
-        ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName());
-        newRes.getPermissions().applyDefaultFlags();
-        newRes.setEnterMessage(group.getDefaultEnterMessage());
-        newRes.setLeaveMessage(group.getDefaultLeaveMessage());
-        ResidenceCreationEvent resevent = new ResidenceCreationEvent(null, name, newRes, newArea);
-        Residence.getServ().getPluginManager().callEvent(resevent);
-        if (resevent.isCancelled()) {
-            return false;
-        }
-        newArea = resevent.getPhysicalArea();
-        name = resevent.getResidenceName();
-        if (residences.containsKey(name)) {
-            return false;
-        }
-        newRes.addArea(newArea, "main");
-        if (newRes.getAreaCount() != 0) {
-            residences.put(name, newRes);
-        }
-        return true;
+        return this.addResidence(null, owner, name, loc1, loc2, true);
     }
 
-    public void addResidence(Player player, String name, Location loc1, Location loc2, boolean resadmin)
+    public boolean addResidence(Player player, String name, Location loc1, Location loc2, boolean resadmin)
+    {
+        return this.addResidence(player, player.getName(), name, loc1, loc2, resadmin);
+    }
+    
+    public boolean addResidence(Player player, String owner, String name, Location loc1, Location loc2, boolean resadmin)
     {
         if(!Residence.validName(name))
         {
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
-            return;
+            if(player!=null)
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+            return false;
         }
-        if(player == null)
-            return;
         if(loc1==null || loc2==null || !loc1.getWorld().getName().equals(loc2.getWorld().getName()))
         {
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("SelectPoints"));
-            return;
+            if(player!=null)
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("SelectPoints"));
+            return false;
         }
-        PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        boolean createpermission = group.canCreateResidences() || Residence.getPermissionManager().hasAuthority(player, "residence.create");
+        PermissionGroup group = Residence.getPermissionManager().getGroup(owner,loc1.getWorld().getName());
+        boolean createpermission = group.canCreateResidences() || (player==null ? true : Residence.getPermissionManager().hasAuthority(player, "residence.create"));
         if (!createpermission && !resadmin) {
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
-            return;
+            if(player!=null)
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+            return false;
         }
         if (getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin)
         {
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceTooMany"));
-            return;
+            if(player!=null)
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceTooMany"));
+            return false;
         }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
-        ClaimedResidence newRes = new ClaimedResidence(player.getName(), loc1.getWorld().getName());
+        ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName());
         newRes.getPermissions().applyDefaultFlags();
         newRes.setEnterMessage(group.getDefaultEnterMessage());
         newRes.setLeaveMessage(group.getDefaultLeaveMessage());
@@ -195,22 +177,34 @@ public class ResidenceManager {
         ResidenceCreationEvent resevent = new ResidenceCreationEvent(player,name, newRes, newArea);
         Residence.getServ().getPluginManager().callEvent(resevent);
         if(resevent.isCancelled())
-            return;
+            return false;
         newArea = resevent.getPhysicalArea();
         name = resevent.getResidenceName();
         if (residences.containsKey(name)) {
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceAlreadyExists",ChatColor.YELLOW+name+ChatColor.RED));
-            return;
+            if(player!=null)
+                player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ResidenceAlreadyExists",ChatColor.YELLOW+name+ChatColor.RED));
+            return false;
         }
-        newRes.addArea(player, newArea, "main", resadmin);
+        if(player!=null)
+            newRes.addArea(player, newArea, "main", resadmin);
+        else
+            newRes.addArea(newArea, "main");
         if(newRes.getAreaCount()!=0)
         {
             residences.put(name, newRes);
             Residence.getLeaseManager().removeExpireTime(name);
-            player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceCreate",ChatColor.YELLOW + name + ChatColor.GREEN));
+            if(player!=null)
+                player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("ResidenceCreate",ChatColor.YELLOW + name + ChatColor.GREEN));
             if(Residence.getConfigManager().useLeases())
-                Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
+            {
+                if(player!=null)
+                    Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
+                else
+                    Residence.getLeaseManager().setExpireTime(name, group.getLeaseGiveTime());
+            }
+            return true;
         }
+        return false;
     }
 
     public void listResidences(Player player)

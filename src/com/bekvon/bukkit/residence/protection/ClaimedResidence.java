@@ -51,6 +51,11 @@ public class ClaimedResidence {
         ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
     }
 
+    public ClaimedResidence(String creationWorld)
+    {
+        this("Server Land",creationWorld);
+    }
+    
     public ClaimedResidence(String creator, String creationWorld) {
         this();
         perms = new ResidencePermissions(this,creator, creationWorld);
