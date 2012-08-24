@@ -127,7 +127,12 @@ public class ResidenceEntityListener implements Listener {
         if(Residence.isResAdminOn(player)){
             return;
         }
-        FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms;
+	if(Residence.getResidenceManager().getByLoc(event.getPainting().getLocation())!=null){
+		perms = Residence.getPermsByLoc(event.getPainting().getLocation());
+	} else {
+		perms = Residence.getWorldFlags().getPerms(player);
+	}
         String pname = player.getName();
         String world = event.getBlock().getWorld().getName();
         boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
@@ -147,7 +152,12 @@ public class ResidenceEntityListener implements Listener {
                     		return;
                		}
 			String pname = player.getName();
-		        FlagPermissions perms = Residence.getPermsByLoc(event.getPainting().getLocation());
+			FlagPermissions perms;
+			if(Residence.getResidenceManager().getByLoc(event.getPainting().getLocation())!=null){
+				perms = Residence.getPermsByLoc(event.getPainting().getLocation());
+			} else {
+				perms = Residence.getWorldFlags().getPerms(player);
+			}
 		        String world = event.getPainting().getWorld().getName();
 			boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
 			if (!hasplace){
@@ -229,7 +239,7 @@ public class ResidenceEntityListener implements Listener {
 	        			BlockState save = block.getState();
 	        			if(block.getType()==Material.CHEST){
 	        				Chest chest = (Chest)save;
-	        				inventory = chest.getInventory().getContents();
+	        				inventory = chest.getBlockInventory().getContents();
 	        				chest.getInventory().clear();
 	        			}
 	        			if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE){

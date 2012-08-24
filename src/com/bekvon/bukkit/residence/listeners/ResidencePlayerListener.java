@@ -170,13 +170,17 @@ public class ResidencePlayerListener implements Listener {
 			}
 		}
 		ILog.sendToPlayer(player, "onPlayerInteract Fired");
-
+		FlagPermissions perms;
+		if(Residence.getResidenceManager().getByLoc(block.getLocation())!=null){
+			perms = Residence.getPermsByLoc(block.getLocation());
+		} else {
+			perms = Residence.getWorldFlags().getPerms(player);
+		}
 		String world = player.getWorld().getName();
 		String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
 		boolean resadmin = Residence.isResAdminOn(player);
 		if(event.getAction() == Action.PHYSICAL){
 			if(!resadmin){
-				FlagPermissions perms = Residence.getPermsByLoc(block.getLocation());
 				boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
 				boolean hastrample = perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true));
 				boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
@@ -228,7 +232,6 @@ public class ResidencePlayerListener implements Listener {
 				}
 			}
 			if(!resadmin) {
-				FlagPermissions perms = Residence.getPermsByLoc(event.getClickedBlock().getLocation());
 				if(player.getItemInHand()!=null){
 					if(event.getAction()==Action.RIGHT_CLICK_BLOCK){
 						if(player.getItemInHand().getTypeId()==351){
@@ -280,7 +283,12 @@ public class ResidencePlayerListener implements Listener {
 				}
 			}
 		}
-		FlagPermissions perms = Residence.getPermsByLoc(event.getBlockClicked().getLocation());
+		FlagPermissions perms;
+		if(res!=null){
+			perms = Residence.getPermsByLoc(event.getBlockClicked().getLocation());
+		} else {
+			perms = Residence.getWorldFlags().getPerms(player);
+		}
 		boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
 		if (!hasbucket && !resadmin) {
 			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
@@ -309,7 +317,12 @@ public class ResidencePlayerListener implements Listener {
 				}
 			}
 		}
-		FlagPermissions perms = Residence.getPermsByLoc(event.getBlockClicked().getLocation());
+		FlagPermissions perms;
+		if(res!=null){
+			perms = Residence.getPermsByLoc(event.getBlockClicked().getLocation());
+		} else {
+			perms = Residence.getWorldFlags().getPerms(player);
+		}
 		boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
 		if (!hasbucket && !resadmin) {
 			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
