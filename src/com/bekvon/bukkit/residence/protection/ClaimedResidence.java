@@ -261,6 +261,13 @@ public class ClaimedResidence {
     }
 
     public boolean addSubzone(Player player, Location loc1, Location loc2, String name, boolean resadmin) {
+        if(player==null)
+            return this.addSubzone(null, "Server Land", loc1, loc2, name, resadmin);
+        else
+            return this.addSubzone(player, player.getName(), loc1, loc2, name, resadmin);
+    }
+    
+    public boolean addSubzone(Player player, String owner, Location loc1, Location loc2, String name, boolean resadmin) {
         if(!Residence.validName(name))
         {
             if(player!=null)
@@ -308,12 +315,12 @@ public class ClaimedResidence {
         ClaimedResidence newres;
         if(player!=null)
         {
-            newres = new ClaimedResidence(player.getName(), perms.getWorld(), this);
+            newres = new ClaimedResidence(owner, perms.getWorld(), this);
             newres.addArea(player, newArea, name, resadmin);
         }
         else
         {
-            newres = new ClaimedResidence("Server Land", perms.getWorld(), this);
+            newres = new ClaimedResidence(owner, perms.getWorld(), this);
             newres.addArea(newArea, name);
         }
         if(newres.getAreaCount()!=0)

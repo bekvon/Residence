@@ -126,6 +126,11 @@ public class ResidenceManager {
         return null;
     }
 
+    public boolean addResidence(String name, Location loc1, Location loc2)
+    {
+        return this.addResidence(name, "Server Land", loc1, loc2);
+    }
+    
     public boolean addResidence(String name, String owner, Location loc1, Location loc2)
     {
         if(!Residence.validName(name))
