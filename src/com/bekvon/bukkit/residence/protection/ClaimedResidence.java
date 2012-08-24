@@ -305,8 +305,17 @@ public class ClaimedResidence {
                 }
             }
         }
-        ClaimedResidence newres = new ClaimedResidence(player.getName(), perms.getWorld(), this);
-        newres.addArea(player, newArea, name, resadmin);
+        ClaimedResidence newres;
+        if(player!=null)
+        {
+            newres = new ClaimedResidence(player.getName(), perms.getWorld(), this);
+            newres.addArea(player, newArea, name, resadmin);
+        }
+        else
+        {
+            newres = new ClaimedResidence("Server Land", perms.getWorld(), this);
+            newres.addArea(newArea, name);
+        }
         if(newres.getAreaCount()!=0)
         {
             newres.getPermissions().applyDefaultFlags();
