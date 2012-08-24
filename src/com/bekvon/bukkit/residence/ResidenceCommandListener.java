@@ -515,8 +515,8 @@ public class ResidenceCommandListener extends Residence {
                 {
                     if(sender instanceof ConsoleCommandSender)
                     {
-                        PerformanceTester.runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest();
                         System.out.println("Started...");
+                        PerformanceTester.runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest();
                         return true;
                     }
                 }
