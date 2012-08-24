@@ -235,7 +235,7 @@ public class ResidenceManager {
 
     public void listResidences(Player player, String targetplayer, int page, boolean showhidden)
     {
-        this.listResidences(player, targetplayer, page, showhidden, true);
+        this.listResidences(player, targetplayer, page, showhidden, false);
     }
     
     public void listResidences(Player player, String targetplayer, int page, boolean showhidden, boolean showsubzones)
