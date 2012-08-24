@@ -235,7 +235,7 @@ public class ResidenceManager {
 
     public void listResidences(Player player, String targetplayer, int page, boolean showhidden)
     {
-        ArrayList<String> temp = new ArrayList<String>();
+        /*ArrayList<String> temp = new ArrayList<String>();
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         synchronized(residences)
         {
@@ -254,7 +254,8 @@ public class ResidenceManager {
                 }
             }
         }
-        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, temp, page);
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, temp, page);*/
+        this.listResidences(player, targetplayer, page, showhidden, true);
     }
     
     public void listResidences(Player player, String targetplayer, int page, boolean showhidden, boolean showsubzones)
