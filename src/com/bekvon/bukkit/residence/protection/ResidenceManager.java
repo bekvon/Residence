@@ -248,6 +248,25 @@ public class ResidenceManager {
         InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, this.getResidenceList(targetplayer, showhidden, showsubzones), page);
     }
     
+    public void listAllResidences(Player player, int page)
+    {
+        this.listAllResidences(player, page, false);
+    }
+
+    public void listAllResidences(Player player, int page, boolean showhidden)
+    {
+        this.listAllResidences(player, page, showhidden, false);
+    }
+    
+    public void listAllResidences(Player player, int page, boolean showhidden, boolean showsubzones)
+    {
+        if(showhidden&&!Residence.isResAdminOn(player))
+        {
+            showhidden = false;
+        }
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences"), this.getResidenceList(null, showhidden, showsubzones), page);
+    }
+    
     public String[] getResidenceList()
     {
         return this.getResidenceList(true, true).toArray(new String[0]);
@@ -376,25 +395,6 @@ public class ResidenceManager {
             }
         }
         return count;
-    }
-
-    public void listAllResidences(Player player, int page)
-    {
-        this.listAllResidences(player, page, false);
-    }
-
-    public void listAllResidences(Player player, int page, boolean showhidden)
-    {
-        this.listAllResidences(player, page, showhidden, false);
-    }
-    
-    public void listAllResidences(Player player, int page, boolean showhidden, boolean showsubzones)
-    {
-        if(showhidden&&!Residence.isResAdminOn(player))
-        {
-            showhidden = false;
-        }
-        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences"), this.getResidenceList(null, showhidden, showsubzones), page);
     }
 
     public void printAreaInfo(String areaname, Player player) {
