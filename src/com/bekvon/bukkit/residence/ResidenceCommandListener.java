@@ -23,6 +23,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
+import com.bekvon.bukkit.residence.testing.PerformanceTester;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class ResidenceCommandListener extends Residence {
@@ -510,6 +511,13 @@ public class ResidenceCommandListener extends Residence {
 			player.sendMessage(ChatColor.YELLOW+language.getPhrase("InfoTool")+": "+ChatColor.GREEN + Material.getMaterial(cmanager.getInfoToolID()));
 			return true;
 		}
+                if(cmd.equals("donotrunmeonliveserver"))
+                {
+                    if(sender instanceof ConsoleCommandSender)
+                    {
+                        PerformanceTester.runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest();
+                    }
+                }
 		return false;
 	}
 	private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender){
