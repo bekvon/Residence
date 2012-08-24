@@ -375,8 +375,7 @@ public class ResidenceManager {
 
     public String[] getResidenceList()
     {
-        ArrayList<String> list = this.getResidenceList(true, true);
-        return list.toArray(new String[list.size()]);
+        return this.getResidenceList(true, true).toArray(new String[0]);
     }
 
     public void listAllResidences(Player player, int page)
