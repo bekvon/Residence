@@ -51,16 +51,19 @@ public class PerformanceTester {
         long start;
         System.out.println("Creating 10000 random residences...");
         start = System.currentTimeMillis();
+        long callcount=0;
         for(int i = 0; i < 10000; i++)
         {
             while(res.getByName("res"+i) == null)
             {
                 int basex = r.nextInt();
-                int basey = r.nextInt(100);
+                int basey = r.nextInt(200);
                 int basez = r.nextInt();
-                res.addResidence("res"+i, "Test", new Location(w,basex,basey,basez), new Location(w,basex+1000,basey+100,basez+1000));
+                res.addResidence("res"+i, "Test", new Location(w,basex,basey,basez), new Location(w,basex+1000,basey+10,basez+1000));
+                callcount++;
             }
         }
+        System.out.println("Collisions:"+(callcount-10000));
         System.out.println("Done..." + (System.currentTimeMillis() - start) + "ms");
         System.out.println("Creating 0-9 subzones per residence...");
         start = System.currentTimeMillis();
