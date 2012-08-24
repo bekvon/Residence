@@ -451,7 +451,7 @@ public class Residence extends JavaPlugin {
 		}
 	}
         
-        public static FlagPermissions getPermsByLoc(Player player)
+        public static FlagPermissions getPermsByPlayer(Player player)
         {
 		ClaimedResidence res = rmanager.getByLoc(player.getLocation());
 		if(res!=null) {
