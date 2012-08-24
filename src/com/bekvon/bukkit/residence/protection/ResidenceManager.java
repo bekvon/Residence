@@ -289,7 +289,7 @@ public class ResidenceManager {
             {
                 for(Entry<String, ClaimedResidence> sz : res.subzones.entrySet())
                 {
-                    this.getAllOwnedZones(targetplayer, showhidden, showsubzones, resname+".", sz.getKey(), sz.getValue(), list);
+                    this.getAllOwnedZones(targetplayer, showhidden, showsubzones, parentzone+resname+".", sz.getKey(), sz.getValue(), list);
                 }
             }
         }
