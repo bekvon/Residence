@@ -175,7 +175,7 @@ public class ResidenceManager {
         newRes.getPermissions().applyDefaultFlags();
         newRes.setEnterMessage(group.getDefaultEnterMessage());
         newRes.setLeaveMessage(group.getDefaultLeaveMessage());
-
+        
         ResidenceCreationEvent resevent = new ResidenceCreationEvent(player,name, newRes, newArea);
         Residence.getServ().getPluginManager().callEvent(resevent);
         if(resevent.isCancelled())
@@ -246,6 +246,11 @@ public class ResidenceManager {
             showhidden = false;
         }
         InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, this.getResidenceList(targetplayer, showhidden, showsubzones), page);
+    }
+    
+    public ArrayList<String> getResidenceList(boolean showhidden, boolean showsubzones)
+    {
+        return this.getResidenceList(null, showhidden, showsubzones);
     }
     
     public ArrayList<String> getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones)
@@ -370,17 +375,8 @@ public class ResidenceManager {
 
     public String[] getResidenceList()
     {
-        String[] reslist = new String[residences.size()];
-        int i = 0;
-        synchronized(residences)
-        {
-            for(String res : residences.keySet())
-            {
-                reslist[i] = res;
-                i++;
-            }
-        }
-        return reslist;
+        ArrayList<String> list = this.getResidenceList(true, true);
+        return list.toArray(new String[list.size()]);
     }
 
     public void listAllResidences(Player player, int page)
