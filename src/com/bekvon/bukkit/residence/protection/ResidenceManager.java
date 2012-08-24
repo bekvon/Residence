@@ -256,6 +256,44 @@ public class ResidenceManager {
         }
         InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, temp, page);
     }
+    
+    public void listResidences(Player player, String targetplayer, int page, boolean showhidden, boolean showsubzones)
+    {
+        if(showhidden && !Residence.isResAdminOn(player) && !player.getName().equals(targetplayer))
+        {
+            showhidden = false;
+        }
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, this.getAllOwnedZones(targetplayer, showhidden, showsubzones), page);
+    }
+    
+    public ArrayList<String> getAllOwnedZones(String player, boolean showhidden, boolean showsubzones)
+    {
+        ArrayList<String> list = new ArrayList<String>();
+        for(Entry<String, ClaimedResidence> res : residences.entrySet())
+        {
+            this.getAllOwnedZones(player,showhidden,showsubzones,"",res.getKey(),res.getValue(),list);
+        }
+        return list;
+    }
+    
+    private void getAllOwnedZones(String targetplayer, boolean showhidden, boolean showsubzones, String parentzone, String resname, ClaimedResidence res, ArrayList<String> list)
+    {
+        boolean hidden = res.getPermissions().has("hidden", false);
+        if((showhidden && hidden) || (!showhidden && !hidden))
+        {
+            if(res.getPermissions().getOwner().equalsIgnoreCase(targetplayer))
+            {
+                list.add(ChatColor.GREEN+parentzone+resname+ChatColor.YELLOW+" - "+Residence.getLanguage().getPhrase("World") + ": " + res.getWorld());
+            }
+            if(showsubzones)
+            {
+                for(Entry<String, ClaimedResidence> sz : res.subzones.entrySet())
+                {
+                    this.getAllOwnedZones(targetplayer, showhidden, showsubzones, resname+".", sz.getKey(), sz.getValue(), list);
+                }
+            }
+        }
+    }
 
     public String checkAreaCollision(CuboidArea newarea, ClaimedResidence parentResidence) {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
