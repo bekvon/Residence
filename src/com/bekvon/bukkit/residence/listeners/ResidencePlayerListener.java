@@ -231,9 +231,12 @@ public class ResidencePlayerListener implements Listener {
 					if(event.getAction()==Action.RIGHT_CLICK_BLOCK){
 						if(player.getItemInHand().getTypeId()==351){
 							if(player.getItemInHand().getData().getData()==15&&block.getType()==Material.GRASS||player.getItemInHand().getData().getData()==3&&block.getTypeId()==17&&(block.getData()==3||block.getData()==7||block.getData()==11||block.getData()==15)){
+								perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 								if(!perms.playerHas(player.getName(), world, "build", true)) {
 									event.setCancelled(true);
+									return;
 								}
+								return;
 							}
 						}
 					}
