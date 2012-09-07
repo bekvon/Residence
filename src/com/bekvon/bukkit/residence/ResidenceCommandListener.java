@@ -25,6 +25,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.bekvon.bukkit.residence.testing.PerformanceTester;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import java.util.List;
 
 public class ResidenceCommandListener extends Residence {
 
@@ -157,6 +158,16 @@ public class ResidenceCommandListener extends Residence {
 			sender.sendMessage(ChatColor.GRAY+"------------------------------------");
 			sender.sendMessage(ChatColor.RED+"This server running "+ChatColor.GOLD+"Residence"+ChatColor.RED+" version: "+ChatColor.BLUE + this.getDescription().getVersion());
 			sender.sendMessage(ChatColor.GREEN+"Created by: "+ChatColor.YELLOW+"bekvon");
+                        String names = null;
+                        List<String> authlist = this.getDescription().getAuthors();
+                        for(String auth : authlist)
+                        {
+                            if(names == null)
+                                names = auth;
+                            else
+                                names = names + ", " + auth;
+                        }
+                        sender.sendMessage(ChatColor.GREEN+"Authors: " + ChatColor.YELLOW + names);
 			sender.sendMessage(ChatColor.DARK_AQUA+"For a command list, and help, see the wiki:");
 			sender.sendMessage(ChatColor.GREEN+"http://residencebukkitmod.wikispaces.com/");
 			sender.sendMessage(ChatColor.AQUA+"Visit the BukkitDev page at:");

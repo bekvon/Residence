@@ -2,7 +2,8 @@ name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
 version: 2.6.6
 description: Cuboid Residence Plugin
-authors: [bekvon,lemon42,nate302,smbarbour,t00thpick1]
+authors: [bekvon,nate302,t00thpick1]
+contributors: [lemon42,smbarbour,inorixu,Shayana_fr]
 softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,My Worlds]
 commands:
   res:
