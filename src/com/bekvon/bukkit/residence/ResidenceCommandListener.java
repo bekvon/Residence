@@ -101,12 +101,16 @@ public class ResidenceCommandListener extends Residence {
 			return true;
 		} else if(command.getName().equals("res") || command.getName().equals("residence") || command.getName().equals("resadmin")) {
 			boolean resadmin = false;
-			if(command.getName().equals("resadmin")&&gmanager.isResidenceAdmin((Player)sender)){
+			if (sender instanceof Player) {
+				if(command.getName().equals("resadmin")&&gmanager.isResidenceAdmin((Player)sender)){
+					resadmin = true;
+				}
+				if(command.getName().equals("resadmin")&&!gmanager.isResidenceAdmin((Player)sender)){
+					((Player)sender).sendMessage(ChatColor.RED + language.getPhrase("NonAdmin"));
+					return true;
+				}
+			} else {
 				resadmin = true;
-			}
-			if(command.getName().equals("resadmin")&&!gmanager.isResidenceAdmin((Player)sender)){
-				((Player)sender).sendMessage(ChatColor.RED + language.getPhrase("NonAdmin"));
-				return true;
 			}
 			return commandRes(args, resadmin, command, sender);
 		}
