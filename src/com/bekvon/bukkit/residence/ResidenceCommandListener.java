@@ -23,7 +23,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
-import com.bekvon.bukkit.residence.testing.PerformanceTester;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import java.util.List;
 
