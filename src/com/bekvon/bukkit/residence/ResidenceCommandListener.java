@@ -197,15 +197,6 @@ public class ResidenceCommandListener extends Residence {
 			}
 			return true;
 		}
-                if(cmd.equals("donotrunmeonliveserver"))
-                {
-                    if(sender instanceof ConsoleCommandSender)
-                    {
-                        System.out.println("Started...");
-                        PerformanceTester.runHIGHLYDESTRUCTIVEToLiveServerPerformanceTest(false);
-                        return true;
-                    }
-                }
 		if(player==null){
 			return true;
 		}
