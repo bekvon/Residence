@@ -129,7 +129,6 @@ public class ResidencePlayerListener implements Listener {
 		}
 		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoSpawn"));
 		event.setRespawnLocation(loc);
-		loc.getChunk().load();
 	}
 
 	private boolean isContainer(Material mat, Block block) {
