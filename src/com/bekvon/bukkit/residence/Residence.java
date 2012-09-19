@@ -555,7 +555,9 @@ public class Residence extends JavaPlugin {
 		for(Entry<String, Object> entry : save.entrySet()) {
 			yml = new YMLSaveHelper(new File(worldFolder, "res_"+entry.getKey()+".yml"));
 			yml.getRoot().put("Version", saveVersion);
-			yml.getRoot().put("Seed", server.getWorld(entry.getKey()).getSeed());
+                        World world = server.getWorld(entry.getKey());
+                        if(world!=null)
+                            yml.getRoot().put("Seed", world.getSeed());
 			yml.getRoot().put("Residences", (Map) entry.getValue());
 			yml.save();
 		}
