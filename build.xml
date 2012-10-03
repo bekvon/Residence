@@ -1,8 +1,9 @@
 <project name="Residence" default="main" basedir=".">
   <!-- env variables -->
   <property name="target" location="target/"/>
-  <property name="Ver" value="2.6.5.1"/>
-  <property name="Authors" value="bekvon,inorixu,lemon42,nate302,smbarbour,Shayana,t00thpick1"/>
+  <property name="Ver" value="2.6.5.2"/>
+  <property name="Authors" value="bekvon,nate302,t00thpick1"/>
+  <property name="Former Authors" value="inorixu,lemon42,smbarbour"/>
   <path id="classpath"><fileset dir="lib" includes="**/*.jar"/></path>
   <target name="main" depends="prep, class, compile, jar" description="Main target">
       <echo>Building the .jar file.</echo>
@@ -55,7 +56,7 @@
   <target name="jar">
       <jar jarfile="dist/Residence.jar" basedir="build">
     <manifest>
-      <attribute name="Residence" value="Dev Team: ${Authors}"/>
+      <attribute name="Residence" value="Dev Team: ${Authors} Former Dev Team: ${Former Authors}"/>
       <attribute name="Version" value="${Ver}"/>
       <attribute name="Built-By" value="${user.name}"/>
     </manifest>
