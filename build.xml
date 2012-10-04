@@ -48,8 +48,7 @@
       </javac>
       <copy file="src/plugin.yml" tofile="build/plugin.yml"/>
       <copy file="src/config.yml" tofile="build/config.yml"/>
-      <copy todir="build/languagefiles"><fileset dir="src/languagefiles"/></copy>
-      <copy todir="build/utils"><fileset dir="utils"/></copy>      
+      <copy todir="build/languagefiles"><fileset dir="src/languagefiles"/></copy>  
   </target>
   
   <!-- jar -->
