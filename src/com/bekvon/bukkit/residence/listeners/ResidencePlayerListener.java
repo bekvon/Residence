@@ -37,7 +37,6 @@ import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.protection.WorldPermissions;
 import com.inori.utils.ILog;
 
 /**
@@ -133,7 +132,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	private boolean isContainer(Material mat, Block block) {
-		return FlagPermissions.getMaterialToUseList().containsKey(mat) && FlagPermissions.getMaterialToUseList().get(mat).equals("container") || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
+		return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals("container") || Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()));
 	}
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
@@ -157,40 +156,28 @@ public class ResidencePlayerListener implements Listener {
 		if(event.isCancelled()) {
 			return;
 		}
+
 		Player player = event.getPlayer();
 		Material heldItem = player.getItemInHand().getType();
 		Block block = event.getClickedBlock();
 		Material mat = block.getType();
 		ILog.sendToPlayer(player, mat.toString());
-		if(!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block))||event.getAction() == Action.PHYSICAL) {
-			int typeId = player.getItemInHand().getTypeId();
-			if(typeId != Residence.getConfigManager().getSelectionTooldID() && typeId != Residence.getConfigManager().getInfoToolID()&&typeId!=351) {
-				return;
-			}
-		}
-		ILog.sendToPlayer(player, "onPlayerInteract Fired");
-
-		String world = player.getWorld().getName();
-		String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
-		boolean resadmin = Residence.isResAdminOn(player);
-		FlagPermissions perms;
-		ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-		if(res!=null){
-			perms = res.getPermissions();
-		} else {
-			perms = new WorldPermissions(block.getLocation().getWorld().getName());
-		}
 		if(!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block)||event.getAction() == Action.PHYSICAL)) {
 			int typeId = player.getItemInHand().getTypeId();
 			if(typeId != Residence.getConfigManager().getSelectionTooldID() && typeId != Residence.getConfigManager().getInfoToolID()&&typeId!=351) {
 				return;
 			}
 		}
+		ILog.sendToPlayer(player, "onPlayerInteract Fired");
+		FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(),player);
+		String world = player.getWorld().getName();
+		String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
+		boolean resadmin = Residence.isResAdminOn(player);
 		if(event.getAction() == Action.PHYSICAL){
 			if(!resadmin){
-				boolean hasuse = perms.playerHas(player.getName(), "use", true);
-				boolean hastrample = perms.playerHas(player.getName(), "trample", perms.playerHas(player.getName(), "build", true));
-				boolean haspressure = perms.playerHas(player.getName(), "pressure", hasuse);
+				boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
+				boolean hastrample = perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true));
+				boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
 				if((!hasuse && !haspressure || !haspressure)&&(mat==Material.STONE_PLATE || mat == Material.WOOD_PLATE)){
 					event.setCancelled(true);
 					if(hasuse){
@@ -227,12 +214,12 @@ public class ResidencePlayerListener implements Listener {
 			if(player.getItemInHand().getTypeId() == Residence.getConfigManager().getInfoToolID()) {
 				if(event.getAction() == Action.LEFT_CLICK_BLOCK) {
 					Location loc = block.getLocation();
-					String resname = Residence.getResidenceManager().getNameByLoc(loc);
-					if(resname!=null) {
-						Residence.getResidenceManager().printAreaInfo(resname, player);
+					String res = Residence.getResidenceManager().getNameByLoc(loc);
+					if(res!=null) {
+						Residence.getResidenceManager().printAreaInfo(res, player);
 						event.setCancelled(true);
 					}
-					if(resname==null){
+					if(res==null){
 						event.setCancelled(true);
 						player.sendMessage(Residence.getLanguage().getPhrase("NoResHere"));
 					}
@@ -244,22 +231,25 @@ public class ResidencePlayerListener implements Listener {
 						if(player.getItemInHand().getTypeId()==351){
 							if(player.getItemInHand().getData().getData()==15&&block.getType()==Material.GRASS||player.getItemInHand().getData().getData()==3&&block.getTypeId()==17&&(block.getData()==3||block.getData()==7||block.getData()==11||block.getData()==15)){
 								perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
-								if(!perms.playerHas(player.getName(), "build", true)) {
+								if(!perms.playerHas(player.getName(), world, "build", true)) {
 									event.setCancelled(true);
 									return;
 								}
+								return;
 							}
 						}
 					}
 				}
 				if (isContainer(mat,block) || isCanUseEntity(mat, block)) {
-					boolean hasuse = perms.playerHas(player.getName(), "use", true);
-					for(Entry<Material, String> checkMat : FlagPermissions.getMaterialToUseList().entrySet()) {
+					boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
+					for(Entry<Material, String> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 						if(mat == checkMat.getKey()) {
-							if(!perms.playerHas(player.getName(), checkMat.getValue(), hasuse)) {
-								if(hasuse) {
+							if(!perms.playerHas(player.getName(), world, checkMat.getValue(), hasuse)) {
+								if(hasuse||checkMat.getValue().equals("container")) {
+									event.setCancelled(true);
 									player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny",checkMat.getValue()));
 								} else {
+									event.setCancelled(true);
 									player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
 								}
 							}
@@ -280,7 +270,8 @@ public class ResidencePlayerListener implements Listener {
 		String pname = player.getName();
 
 		boolean resadmin = Residence.isResAdminOn(player);
-		if(res!=null) {
+		if(res!=null)
+		{
 			if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
 				if (Residence.getRentManager().isRented(res.getName())) {
 					player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("RentedModifyDeny"));
@@ -289,13 +280,8 @@ public class ResidencePlayerListener implements Listener {
 				}
 			}
 		}
-		FlagPermissions perms;
-		if(res!=null){
-			perms = res.getPermissions();
-		} else {
-			perms = new WorldPermissions(event.getBlockClicked().getLocation().getWorld().getName());
-		}
-		boolean hasbucket = perms.playerHas(pname, "bucket", perms.playerHas(pname, "build", true));
+		FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(),player);
+		boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
 		if (!hasbucket && !resadmin) {
 			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
 			event.setCancelled(true);
@@ -323,13 +309,8 @@ public class ResidencePlayerListener implements Listener {
 				}
 			}
 		}
-		FlagPermissions perms;
-		if(res!=null){
-			perms = res.getPermissions();
-		} else {
-			perms = new WorldPermissions(event.getBlockClicked().getLocation().getWorld().getName());
-		}
-		boolean hasbucket = perms.playerHas(pname, "bucket", perms.playerHas(pname, "build", true));
+		FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(),player);
+		boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
 		if (!hasbucket && !resadmin) {
 			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","bucket"));
 			event.setCancelled(true);
@@ -342,15 +323,6 @@ public class ResidencePlayerListener implements Listener {
 		Player player = event.getPlayer();
 		ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
 		boolean resadmin = Residence.isResAdminOn(player);
-		if(event.getCause()==TeleportCause.PLUGIN||event.getCause()==TeleportCause.COMMAND){
-			if(res!=null){
-				String areaname = Residence.getResidenceManager().getNameByLoc(loc);
-				if(!res.getPermissions().playerHas(player.getName(), "tp", true)&&!resadmin){
-					event.setCancelled(true);
-					player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("TeleportNoFlag",areaname));
-				}
-			}
-		}
 		if(event.getCause()==TeleportCause.ENDER_PEARL){
 			if(res!=null){
 				String areaname = Residence.getResidenceManager().getNameByLoc(loc);
@@ -507,11 +479,6 @@ public class ResidencePlayerListener implements Listener {
 			playerToggleChat.add(pname);
 			player.sendMessage(ChatColor.YELLOW+Residence.getLanguage().getPhrase("ResidenceChat",ChatColor.RED+"ON"+ChatColor.YELLOW+"!"));
 		}
-	}
-
-	@Deprecated
-	public String getLastAreaName(String player) {
-		return currentRes.get(player);
 	}
 
 	public String getCurrentResidenceName(String player) {

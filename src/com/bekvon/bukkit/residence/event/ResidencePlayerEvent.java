@@ -4,11 +4,11 @@
  */
 
 package com.bekvon.bukkit.residence.event;
-
-import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -16,25 +16,30 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
  */
 public class ResidencePlayerEvent extends ResidenceEvent implements ResidencePlayerEventInterface {
 
-	Player p;
+    Player p;
 
-	public ResidencePlayerEvent(String eventName, ClaimedResidence resref, Player player) {
-		super(eventName, resref);
-		res = resref;
-		p = player;
-	}
+    public ResidencePlayerEvent(String eventName, ClaimedResidence resref, Player player)
+    {
+        super(eventName, resref);
+        res = resref;
+        p = player;
+    }
 
-	public boolean isPlayer() {
-		return p!=null;
-	}
+    public boolean isPlayer()
+    {
+        return p!=null;
+    }
 
-	public boolean isAdmin() {
-		if(isPlayer()) {
-			return Residence.getPermissionManager().isResidenceAdmin(p);
-		}
-		return true;
-	}
-	public Player getPlayer() {
-		return p;
-	}
+    public boolean isAdmin()
+    {
+        if(isPlayer())
+        {
+            return Residence.getPermissionManager().isResidenceAdmin(p);
+        }
+        return true;
+    }
+    public Player getPlayer()
+    {
+        return p;
+    }
 }

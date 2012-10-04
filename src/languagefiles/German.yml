@@ -1,11 +1,11 @@
-# German translation by webnews2
 # NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
 # of this file and modify that instead. This file will be updated automatically by Residence
-# when a newer version is detected, and your changes will be overwritten. Once you
+# when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
 # to whatever you named your copy.
-Version: 02
-Fieldsversion: 21
+# German translation by webnews2
+Version: 03
+Fieldsversion: 22
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -64,7 +64,7 @@ Language:
     SelectDiabled: Du kannst keine Auswahl-Kommandos benutzen!
     NoPermission: Du hast dafür keine Berechtigung!
     OwnerNoPermission: Der Besitzer hat keine Berechtigung dafür!
-    ParentNoPermission: Du hast keine Berechtigung dafür, ÁEderungen an der Hauptzone vorzunehmen!
+    ParentNoPermission: Du hast keine Berechtigung dafür, Änderungen an der Hauptzone vorzunehmen!
     MessageChange: Nachricht geändert...
     FlagSet: Flag gesetzt...
     FlagCheckTrue: 'Die Flag %1 gehört zum Spieler %2 vom Grundstück %3, Wert = %4!'
@@ -185,6 +185,12 @@ Language:
     SubzoneOwnerChange: 'Die Subzone %1 gehört nun %2.'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
     CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatisches /resadmin getoggelt: %1'
+    #Version 22 New Fields
+    NoSpawn: 'Du hast keine Berechtigung um dich an deinem Spawn-Punkt zu bewegen. Neu lokalisieren...'
+    CompassTargetReset: 'Dein Kompass wurde zurückgesetzt'
+    CompassTargetSet: 'Dein Kompass hat nun Punkte zu %1'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -224,14 +230,17 @@ Language:
     #Version 20 Fields
     CoordsT: obere Koordinaten
     CoordsB: untere Koordinaten
+    #Version 22 Fields
+    TurnOn: 'an'
+    TurnOff: 'aus'
     
 # This is the help / usage messages for each command.
 # It follows this format:
 # <Command>
-# Description: <general description of command, one line of text>
-# Info: <extra info lines to describe the command, list of text>
-# SubCommands:
-# <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+#     Description: <general description of command, one line of text>
+#     Info: <extra info lines to describe the command, list of text>
+#     SubCommands:
+#           <SubCommands> - these follow the same format, and each sub command can have its own subcommands
 # When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
 # Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
 # Add a page number after the ? mark to see that page.
@@ -326,7 +335,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: erstellt Subzonen auf einem Grundstück
                     Info:
                         - 'Verwendung: /res subzone <Grundstücksname> [Subzonenname]'
-                        - 'Wenn der Grundstücksname ausgelassen wurde, wird der Names des Grundstücks verwendet, in dem du dich befindest.'
+                        - 'Wenn der Grundstücksname ausgelassen wurde, wird der Name des Grundstücks verwendet, in dem du dich befindest.'
                 area:
                     Description: verwaltet die physikalischen Gebiete eines Grundstücks
                     SubCommands:
@@ -367,7 +376,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: verwaltet die enter / leave Nachrichten eines Grundstücks
                     Info:
                         - 'Verwendung: /res message <Grundstücksname> [enter/leave] [Nachricht]'
-                        - 'ÁEdert die Betreten-(enter) oder Verlassennachricht(leave) eines Grundstücks.'
+                        - 'Ändert die Betreten-(enter) oder Verlassennachricht(leave) eines Grundstücks.'
                         - 'Verwendung: /res message <Grundstücksname> remove [enter/leave]'
                         - 'Entfernt die Betreten-(enter) oder Verlssennachricht(leave) eines Grundstücks.'
                 lease:
@@ -471,6 +480,9 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'note - erlaubt / verbietet das nutzen von Noten-Blöcken'
                         - 'redstone - gibt einem Spieler Lever-, Diode-, Button-, Pressure- und Note-Flags'
                         - 'craft - gibt einem Spieler Table-, Enchant- und Brew-Flags'
+                        - 'burn - erlaubt / verbietet das Mobs auf Grundstücken brennen'
+                        - 'trample - erlaubt / verbietet das zertampeln von Feldern auf Grundstücken'
+                        - 'fire - fügt die Ignite- und Firespread-Flag zum Grundstück hinzu'
                 list:
                     Description: listet Grundstücke
                     Info:
@@ -547,7 +559,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Description: mietet ein Grundstück
                             Info:
                                 - 'Verwendung: /res market rent [Grundstücksname] <autorenew>'
-                                - 'Mietet ein Grundstück. Autorenew(automatisch erneuern) kann dabei true(ja) oder false(nein) sein.'
+                                - 'Mietet ein Grundstück.  Autorenew(automatisch erneuern) kann dabei true(ja) oder false(nein) sein.'
                                 - 'Wenn autorenew auf true ist, wird das Grundstück kurz vor Ablauf des Mietvertrags erneut gemietet.'
                         rentable:
                             Description: macht ein Grundstück mietbar
@@ -616,7 +628,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Verwendung: /resload'
                         - 'UNSICHERES Kommando, weil es die Grundstücke vorher nicht abspeichert.'
-                        - 'Lädt die Grundstück-Speicher-Dateien nach ÁEderungen neu.'
+                        - 'Lädt die Grundstück-Speicher-Dateien nach Änderungen neu.'
                 version:
                     Description: zeigt die Residence-Version an
                     Info:

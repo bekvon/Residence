@@ -3,8 +3,6 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence.economy;
-import org.bukkit.ChatColor;
-
 import cosine.boseconomy.BOSEconomy;
 
 /**

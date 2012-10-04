@@ -4,7 +4,7 @@
 # have a copy of this file, change the Language: 'option under the Residence config.yml
 # to whatever you named your copy.
 Version: 21
-FieldsVersion: 21
+FieldsVersion: 22
 Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
@@ -184,6 +184,12 @@ Language:
     SubzoneOwnerChange: '分区 %1 所有者改为 %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
     CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatic resadmin toggle turned %1'
+    #Version 22 New Fields
+    NoSpawn: 'You do not have move permissions at your spawn point. Relocating'
+    CompassTargetReset: 'Your compass has been reset'
+    CompassTargetSet: 'Your compass now points to %1'
 
     
     #The below lines are mostly a word bank for various uses.
@@ -224,6 +230,9 @@ Language:
     #Version 20 Fields
     CoordsT: '顶坐标'
     CoordsB: '底部的坐标'
+    #Version 22 Fields
+    TurnOn: 'on'
+    TurnOff: 'off'
     
 # This is the help / usage messages for each command.
 # It follows this format:

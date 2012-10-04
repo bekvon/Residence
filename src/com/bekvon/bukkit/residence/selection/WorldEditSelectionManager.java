@@ -32,17 +32,13 @@ public class WorldEditSelectionManager extends SelectionManager {
         Selection sel = wep.getSelection(player);
         if(sel!=null)
         {
-            if(sel.getRegionSelector().getTypeName()!="cuboid"){
-            	player.sendMessage("Non-cuboid regions cannot be imported from worldedit");
-            	return false;
-            }
             Location pos1 = sel.getMinimumPoint();
-            Location pos2 = sel.getMaximumPoint();	
+            Location pos2 = sel.getMaximumPoint();    
             try{
     			CuboidRegion region = (CuboidRegion) sel.getRegionSelector().getRegion();
     			pos1 = new Location(player.getWorld(), region.getPos1().getX(), region.getPos1().getY(), region.getPos1().getZ());
     			pos2 = new Location(player.getWorld(), region.getPos2().getX(), region.getPos2().getY(), region.getPos2().getZ());
-            }catch(IncompleteRegionException e){
+            }catch(Exception e){
             }
             this.playerLoc1.put(player.getName(), pos1);
             this.playerLoc2.put(player.getName(), pos2);

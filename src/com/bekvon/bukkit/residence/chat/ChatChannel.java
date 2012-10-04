@@ -7,8 +7,10 @@ package com.bekvon.bukkit.residence.chat;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.event.ResidenceChatEvent;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -31,13 +33,17 @@ public class ChatChannel {
     {
         Server serv = Residence.getServ();
         ChatColor color = Residence.getConfigManager().getChatColor();
+        ResidenceChatEvent cevent = new ResidenceChatEvent(Residence.getResidenceManager().getByName(name),serv.getPlayer(sourcePlayer),message,color);
+        Residence.getServ().getPluginManager().callEvent(cevent);
+        if(cevent.isCancelled())
+            return;
         for(String member : members)
         {
             Player player = serv.getPlayer(member);
             if(player!=null)
-                player.sendMessage(color + sourcePlayer + ": " + message);
+                player.sendMessage(cevent.getColor() + sourcePlayer + ": " + cevent.getChatMessage());
         }
-        System.out.println("ResidentialChat[" + name + "] - " + sourcePlayer + ": " + message);
+        System.out.println("ResidentialChat[" + name + "] - " + sourcePlayer + ": " + cevent.getChatMessage());
     }
     
     public void join(String player)

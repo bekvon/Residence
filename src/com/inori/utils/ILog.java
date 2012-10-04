@@ -1,4 +1,5 @@
 package com.inori.utils;
+import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -15,11 +16,11 @@ import com.bekvon.bukkit.residence.Residence;
  *
  */
 public class ILog {
-
+	
 	private static Logger logger;
 	private static String PREFIX = "[Residence] ";
 	private static Boolean enable = false;
-
+	
 	static {
 		logger = Residence.getServ().getLogger();
 		//logger.setLevel(Level.INFO);
@@ -27,29 +28,34 @@ public class ILog {
 
 	private static HashMap<PlayerMoveEvent, Integer> counter = new HashMap<PlayerMoveEvent, Integer>();
 	public static void repeatCallEvent(PlayerMoveEvent event) {
-		if(counter.containsKey(event)) {
-			Integer i = counter.get(event);
-			i++;
-			if(i < 100){
-				counter.put(event, i);
-				Residence.getServ().getPluginManager().callEvent(event);
-			} else {
-				return;
-			}
-		} else {
+		if(counter.containsKey(event))
+    	{
+    		Integer i = counter.get(event);
+    		i++;
+    		if(i < 100){
+    			counter.put(event, i);
+                Residence.getServ().getPluginManager().callEvent(event);    			
+    		}
+    		else
+    			return;
+    	}else{
 			counter.put(event, 0);
-			Residence.getServ().getPluginManager().callEvent(event);
-		}
+            Residence.getServ().getPluginManager().callEvent(event);  
+    	}
 	}
-
-	public static void log(String msg) {
-		if(enable) {
+    
+	public static void log(String msg)
+	{
+		if(enable)
+		{
 			logger.info(PREFIX + msg);
-		}
+		}		
 	}
-
-	public static void sendToPlayer(Player p, String msg) {
-		if(enable) {
+	
+	public static void sendToPlayer(Player p, String msg)
+	{
+		if(enable)
+		{
 			p.sendMessage(PREFIX + msg);
 		}
 	}

@@ -1,8 +1,9 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 3.0
+version: 2.6.6-sql
 description: Cuboid Residence Plugin
-authors: [t00thpick1,bekvon,nate302]
+authors: [bekvon,nate302,t00thpick1]
+contributors: [lemon42,smbarbour,inorixu,Shayana_fr]
 softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,My Worlds]
 commands:
   res:
@@ -17,6 +18,9 @@ commands:
   resreload:
     description: Reload the entire residence plugin.
     usage: §c/resreload
+  resload:
+    description: Load the save file again after you have made modifications.
+    usage: §c/resload
   rc:
     description: §cChat in current residence channel.
     usage: §c/rc to toggle, or /rc <message>
@@ -29,31 +33,4 @@ permissions:
     default: op
   residence.create:
     description: Allows you to create residences
-    default: op
-  residence.select.tool:
-    description: Gives you access to select with res tool
-    default: op
-  residence.select.command:
-    description: Allows you to select with residence select commands
-    default: op
-  residence.teleport:
-    description: Gives you access to res tp
-    default: op
-  residence.messages:
-    description: Allows you to edit your res enter/leave messages
-    default: op
-  residence.unstuck:
-    description: Gives you access to /res unstuck
-    default: op
-  residence.itemlists:
-    description: Allows you to create and edit blacklist/ignorelists for your res's
-    default: op
-  residence.canbuy:
-    description: Allows you to buy residences
-    default: op
-  residence.cansell:
-    description: Allows you to sell residences
-    default: op
-  residence.ignorelimits:
-    description: Allows you to ignore max res limits when buying residences
     default: op

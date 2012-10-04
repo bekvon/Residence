@@ -4,12 +4,12 @@
  */
 
 package com.bekvon.bukkit.residence.event;
+import org.bukkit.ChatColor;
 
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 /**
  *
@@ -17,29 +17,32 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
  */
 public class ResidenceTPEvent extends CancellableResidencePlayerEvent {
 
-	private static final HandlerList handlers = new HandlerList();
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    private static final HandlerList handlers = new HandlerList();
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-	Player reqPlayer;
-	Location loc;
-	public ResidenceTPEvent(ClaimedResidence resref, Location teleloc, Player player, Player reqplayer) {
-		super("RESIDENCE_TP",resref,player);
-		reqPlayer = reqplayer;
-		loc = teleloc;
-	}
+    Player reqPlayer;
+    Location loc;
+    public ResidenceTPEvent(ClaimedResidence resref, Location teleloc, Player player, Player reqplayer)
+    {
+        super("RESIDENCE_TP",resref,player);
+        reqPlayer = reqplayer;
+        loc = teleloc;
+    }
 
-	public Player getRequestingPlayer() {
-		return reqPlayer;
-	}
+    public Player getRequestingPlayer()
+    {
+        return reqPlayer;
+    }
 
-	public Location getTeleportLocation() {
-		return loc;
-	}
+    public Location getTeleportLocation()
+    {
+        return loc;
+    }
 }
