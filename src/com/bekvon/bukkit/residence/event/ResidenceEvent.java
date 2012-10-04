@@ -4,11 +4,11 @@
  */
 
 package com.bekvon.bukkit.residence.event;
-import org.bukkit.ChatColor;
 
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 /**
  *
@@ -17,30 +17,28 @@ import org.bukkit.event.HandlerList;
 public class ResidenceEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
-    private String message;
-	 
+	private String message;
+
 	public HandlerList getHandlers() {
-	    return handlers;
+		return handlers;
 	}
-	 
+
 	public static HandlerList getHandlerList() {
-	    return handlers;
+		return handlers;
 	}
 
-    ClaimedResidence res;
+	ClaimedResidence res;
 
-    public ResidenceEvent(String eventName, ClaimedResidence resref)
-    {
-    	message = eventName;
-        res = resref;
-    }
- 
-    public String getMessage() {
-        return message;
-    }
+	public ResidenceEvent(String eventName, ClaimedResidence resref) {
+		message = eventName;
+		res = resref;
+	}
 
-    public ClaimedResidence getResidence()
-    {
-        return res;
-    }
+	public String getMessage() {
+		return message;
+	}
+
+	public ClaimedResidence getResidence() {
+		return res;
+	}
 }

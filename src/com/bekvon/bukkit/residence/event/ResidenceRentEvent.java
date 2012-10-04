@@ -4,11 +4,11 @@
  */
 
 package com.bekvon.bukkit.residence.event;
-import org.bukkit.ChatColor;
 
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 /**
  *
@@ -16,32 +16,29 @@ import org.bukkit.event.HandlerList;
  */
 public class ResidenceRentEvent extends CancellableResidencePlayerEvent {
 
-    private static final HandlerList handlers = new HandlerList();
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	private static final HandlerList handlers = new HandlerList();
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    RentEventType eventtype;
+	RentEventType eventtype;
 
-    public enum RentEventType
-    {
-        RENT, UNRENT, RENTABLE, UNRENTABLE, RENT_EXPIRE
-    }
+	public enum RentEventType {
+		RENT, UNRENT, RENTABLE, UNRENTABLE, RENT_EXPIRE
+	}
 
-    public ResidenceRentEvent(ClaimedResidence resref, Player player, RentEventType type)
-    {
-        super("RESIDENCE_RENT_EVENT", resref, player);
-        eventtype = type;
-    }
+	public ResidenceRentEvent(ClaimedResidence resref, Player player, RentEventType type) {
+		super("RESIDENCE_RENT_EVENT", resref, player);
+		eventtype = type;
+	}
 
-    public RentEventType getCause()
-    {
-        return eventtype;
-    }
+	public RentEventType getCause() {
+		return eventtype;
+	}
 
 }

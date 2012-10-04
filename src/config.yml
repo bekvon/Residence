@@ -13,8 +13,6 @@ Global:
     # Reducing this will increase the load on the server.
     # Increasing this will allow players to move further in movement restricted zones before they are teleported out.
     MoveCheckInterval: 500
-    # The interval, in minutes, between residence saves.
-    SaveInterval: 10
     # The default group to use if Permissions fails to attach or your not using Permissions.
     DefaultGroup: default
     # Enable / Disable the Lease System.
@@ -46,10 +44,6 @@ Global:
     MultiWorldPlugin: Multiverse-Core
     # Setting this to true causes subzones to inherit flags from their parent zones.
     ResidenceFlagsInherit: true
-    # Setting this to false will allow rented residences to be modified by the renting player.
-    PreventRentModify: true
-    # Setting this to false will cause residence to continue to load even if a error is detected in the save file.
-    StopOnSaveFault: true
     # This is the residence name filter, that filters out invalid characters.  Google "Java RegEx" or "Java Regular Expressions" for more info on how they work.
     ResidenceNameRegex: '[^a-zA-Z0-9\\-\\_]'
     # Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.
@@ -58,56 +52,6 @@ Global:
     CustomContainers: []
     CustomBothClick: []
     CustomRightClick: []
-    # These are world flags that are applied when the player is NOT within a residence.
-    Flags:
-        Global: #these are default for all worlds unless specified below, they can be overridden per group
-            use: true
-            build: true
-            ignite: true
-            firespread: true
-            damage: true
-            creeper: true
-            tnt: true
-            pvp: true
-        WorldNameHere: #here you can set flags for individual worlds, these override Global
-            #build: true
-    # This gives permission to change certain flags to all groups, unless specifically denied to the group.
-    FlagPermission:
-        move: true
-        build: true
-        place: true
-        destroy: true
-        use: true
-        container: true
-        pvp: true
-        tp: true
-        ignite: true
-        firespread: true
-        bucket: true
-        flow: true
-        lavaflow: true
-        waterflow: true
-        creeper: true
-        tnt: true
-        monsters: true
-        animals: true
-        subzone: true
-        healing: true
-        piston: true
-        diode: true
-        lever: true
-        button: true
-        door: true
-        table: true
-        enchant: true
-        brew: true
-        bed: true
-        cake: true
-        note: true
-        trample: false
-        burn: true
-        explode: false
-        fireball: true
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
@@ -120,18 +64,14 @@ Global:
         piston: false
         ignite: false
         firespread: false
+        piston: false
     # These are default flags applied to the residence creator of any group.
     CreatorDefault:
         build: true
         move: true
         use: true
         ignite: true
-        container: true
-     # These are default group flags applied to a residence made by a user of any group.
-    GroupDefault:
-        #default: #group name
-            #build: true
-    
+        container: true   
 # These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:
     Default: #group name
@@ -141,8 +81,6 @@ Groups:
          #- 'group1'
          #- 'group2'
        Residence:
-           # Determins if this group can create residences or not.  This option can be overriden with the permissions node 'residence.create'
-           CanCreate: true
            # The maximum number of Residences a player can have.
            MaxResidences: 3
            # The maximum number of physical areas a residence can have.
@@ -161,14 +99,6 @@ Groups:
             # A subzone within a subzone within the Residence zone would be a depth of 2.
             # Set to 0 to disable subzones.
            SubzoneDepth: 3
-           # Whether or not to allow teleporting to Residences.
-           CanTeleport: true
-           # Allow or Disallow the use of /res unstuck, to get yourself out of a residence if stuck in one somehow
-           Unstuck: true
-           # Allow or Disallow the use of the /res select command, if disabled they can only use the selection tool.
-           SelectCommandAccess: true
-           # Allow or Disallow the group to access the Blacklist/Ignorelist for residences they own.
-           ItemListAccess: true
        # Options relating to enter and leave messages on the residence.
        Messaging:
            # Whether or not the player can change the Residence enter and leave messages.
@@ -193,12 +123,6 @@ Groups:
            MaxRentables: 3
        # Options relating to the Residence Economy.
        Economy:
-          # Whether or not players in this group can buy other Residences that are for sale.
-          CanBuy: true
-          # Whether or not players in this group can sell their Residences.
-          CanSell: false
-          # Whether or not to ignore the Residence size/count limits when buying a residence.
-          IgnoreLimits: false
           # The cost, per block, of making a new Residence or adding a area to it.
           BuyCost: 0.05
           # The cost, per block, of renewing a Residence lease (if the lease system is enabled).
@@ -211,9 +135,6 @@ Groups:
        # Flag permissions default to false.
        # These flags settings override the globals.
        Flags:
-          # Specifically allow or deny this group from changing certain flags.
-          Permission:
-               #build: true
           # Specifys the flags that are applied at residence creation for players of this group.
           Default:
               #build: true
@@ -224,13 +145,6 @@ Groups:
           GroupDefault:
                #default: #group name
                    #build: false
-          #these flags are applied specifically to this group whenever they are outside a residence
-          #these flags will override the flags at the top, under the Global section.
-          World:
-                Global: #these flags will apply to all worlds
-                     #build: false
-                WorldNameHere: #or you can apply them by each individual world
-                     #build: false
 
 # You can manually specify the group a player is in below, this overrides their permissions group.
 GroupAssignments:
@@ -256,4 +170,4 @@ ItemList: #this is where you can create blacklists / whitelists
            - 'STATIONARY_WATER'
            - 'MOB_SPAWNER'
 # Used to determine which major revision of Residence this config is from, dont change this.
-ResidenceVersion: 2
+ResidenceVersion: 3

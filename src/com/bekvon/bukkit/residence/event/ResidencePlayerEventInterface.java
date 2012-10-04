@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.event;
-import org.bukkit.ChatColor;
 
 import org.bukkit.entity.Player;
 
@@ -13,7 +12,7 @@ import org.bukkit.entity.Player;
  * @author Administrator
  */
 public interface ResidencePlayerEventInterface {
-    public boolean isAdmin();
-    public boolean isPlayer();
-    public Player getPlayer();
+	public boolean isAdmin();
+	public boolean isPlayer();
+	public Player getPlayer();
 }
