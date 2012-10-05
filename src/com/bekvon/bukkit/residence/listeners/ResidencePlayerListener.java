@@ -180,14 +180,11 @@ public class ResidencePlayerListener implements Listener {
 				boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
 				if((!hasuse && !haspressure || !haspressure)&&(mat==Material.STONE_PLATE || mat == Material.WOOD_PLATE)){
 					event.setCancelled(true);
-					if(hasuse){
-						player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","pressure"));
-					} else {
-						player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagDeny","use"));
-					}
+					return;
 				}
 				if(!hastrample && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
 					event.setCancelled(true);
+					return;
 				}
 			}
 		}
