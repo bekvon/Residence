@@ -245,7 +245,7 @@ public class ResidenceManager {
         {
             showhidden = false;
         }
-        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, this.getResidenceList(targetplayer, showhidden, showsubzones), page);
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, this.getResidenceList(targetplayer, showhidden, showsubzones, true), page);
     }
     
     public void listAllResidences(Player player, int page)
@@ -264,7 +264,7 @@ public class ResidenceManager {
         {
             showhidden = false;
         }
-        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences"), this.getResidenceList(null, showhidden, showsubzones), page);
+        InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences"), this.getResidenceList(null, showhidden, showsubzones, true), page);
     }
     
     public String[] getResidenceList()
@@ -274,33 +274,41 @@ public class ResidenceManager {
     
     public ArrayList<String> getResidenceList(boolean showhidden, boolean showsubzones)
     {
-        return this.getResidenceList(null, showhidden, showsubzones);
+        return this.getResidenceList(null, showhidden, showsubzones, false);
     }
     
     public ArrayList<String> getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones)
     {
+        return this.getResidenceList(targetplayer, showhidden, showsubzones, false);
+    }
+    
+    public ArrayList<String> getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, boolean formattedOutput)
+    {
         ArrayList<String> list = new ArrayList<String>();
         for(Entry<String, ClaimedResidence> res : residences.entrySet())
         {
-            this.getResidenceList(targetplayer,showhidden,showsubzones,"",res.getKey(),res.getValue(),list);
+            this.getResidenceList(targetplayer,showhidden,showsubzones,"",res.getKey(),res.getValue(),list, formattedOutput);
         }
         return list;
     }
     
-    private void getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, String parentzone, String resname, ClaimedResidence res, ArrayList<String> list)
+    private void getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, String parentzone, String resname, ClaimedResidence res, ArrayList<String> list, boolean formattedOutput)
     {
         boolean hidden = res.getPermissions().has("hidden", false);
         if((showhidden && hidden) || (!showhidden && !hidden))
         {
             if(targetplayer==null||res.getPermissions().getOwner().equalsIgnoreCase(targetplayer))
             {
-                list.add(ChatColor.GREEN+parentzone+resname+ChatColor.YELLOW+" - "+Residence.getLanguage().getPhrase("World") + ": " + res.getWorld());
+                if(formattedOutput)
+                    list.add(ChatColor.GREEN+parentzone+resname+ChatColor.YELLOW+" - "+Residence.getLanguage().getPhrase("World") + ": " + res.getWorld());
+                else
+                    list.add(parentzone+resname);
             }
             if(showsubzones)
             {
                 for(Entry<String, ClaimedResidence> sz : res.subzones.entrySet())
                 {
-                    this.getResidenceList(targetplayer, showhidden, showsubzones, parentzone+resname+".", sz.getKey(), sz.getValue(), list);
+                    this.getResidenceList(targetplayer, showhidden, showsubzones, parentzone+resname+".", sz.getKey(), sz.getValue(), list, formattedOutput);
                 }
             }
         }
