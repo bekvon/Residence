@@ -295,7 +295,7 @@ public class ResidenceManager {
     private void getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, String parentzone, String resname, ClaimedResidence res, ArrayList<String> list, boolean formattedOutput)
     {
         boolean hidden = res.getPermissions().has("hidden", false);
-        if((showhidden && hidden) || (!showhidden && !hidden))
+        if((showhidden) || (!showhidden && !hidden))
         {
             if(targetplayer==null||res.getPermissions().getOwner().equalsIgnoreCase(targetplayer))
             {
