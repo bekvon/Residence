@@ -187,6 +187,7 @@ public class ResidencePlayerListener implements Listener {
 					return;
 				}
 			}
+			return;
 		}
 		if(!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
 			player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("ItemBlacklisted"));
