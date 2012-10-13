@@ -181,7 +181,7 @@ public class FlagPermissions {
                 addMaterialToUseFlag(Material.FURNACE, "container");
                 addMaterialToUseFlag(Material.BURNING_FURNACE, "container");
                 addMaterialToUseFlag(Material.DISPENSER, "container");
-                addMaterialToUseFlag(Material.CAKE_BLOCK, "container");
+                addMaterialToUseFlag(Material.CAKE_BLOCK, "cake");
 	}
 
 	public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node) {
