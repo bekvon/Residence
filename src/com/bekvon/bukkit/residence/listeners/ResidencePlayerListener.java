@@ -176,16 +176,15 @@ public class ResidencePlayerListener implements Listener {
 		if(event.getAction() == Action.PHYSICAL){
 			if(!resadmin){
 				boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
-				boolean hastrample = perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true));
 				boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
 				if((!hasuse && !haspressure || !haspressure)&&(mat==Material.STONE_PLATE || mat == Material.WOOD_PLATE)){
 					event.setCancelled(true);
 					return;
 				}
-				if(!hastrample && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
-					event.setCancelled(true);
-					return;
-				}
+			}
+			if(!perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true)); && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
+				event.setCancelled(true);
+				return;
 			}
 			return;
 		}
