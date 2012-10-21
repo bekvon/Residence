@@ -260,7 +260,7 @@ public class ResidencePermissions extends FlagPermissions {
     }
     
     public boolean removeAllPlayerFlags(Player player, String targetPlayer, boolean resadmin) {
-        if (this.hasResidencePermission(player, false)) {
+        if (this.hasResidencePermission(player, false) || resadmin) {
             ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, player, "ALL", ResidenceFlagChangeEvent.FlagType.RESIDENCE, FlagState.NEITHER, null);
             Residence.getServ().getPluginManager().callEvent(fc);
             if (fc.isCancelled()) {
@@ -274,7 +274,7 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean removeAllGroupFlags(Player player, String group, boolean resadmin) {
-        if (this.hasResidencePermission(player, false)) {
+        if (this.hasResidencePermission(player, false) || resadmin) {
             ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, player, "ALL", ResidenceFlagChangeEvent.FlagType.GROUP, FlagState.NEITHER, null);
             Residence.getServ().getPluginManager().callEvent(fc);
             if (fc.isCancelled()) {
