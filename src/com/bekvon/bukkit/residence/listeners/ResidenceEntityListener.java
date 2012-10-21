@@ -169,6 +169,32 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
+    public void onExplosionPrime(ExplosionPrimeEvent event) {
+        if(event.isCancelled())
+            return;
+        EntityType entity = event.getEntityType();
+        FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+        if (entity == EntityType.CREEPER) {
+            if (!perms.has("creeper", perms.has("explode", true))) {
+            	event.setCancelled(true);
+            	event.getEntity().remove();
+            }
+        }
+        if (entity == EntityType.PRIMED_TNT) {
+        	if (!perms.has("tnt", perms.has("explode", true))) {
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         if(event.isCancelled()||event.getEntity()==null)
             return;
