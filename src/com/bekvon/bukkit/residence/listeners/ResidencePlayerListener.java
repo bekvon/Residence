@@ -182,7 +182,7 @@ public class ResidencePlayerListener implements Listener {
 					return;
 				}
 			}
-			if(!perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true)); && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
+			if(!perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true)) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
 				event.setCancelled(true);
 				return;
 			}
