@@ -336,6 +336,9 @@ public class ResidencePlayerListener implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
+		if(player == null) {
+			return;
+		}
 		long last = lastUpdate.get(player.getName());
 		long now = System.currentTimeMillis();
 		if(now - last < Residence.getConfigManager().getMinMoveUpdateInterval()) {
