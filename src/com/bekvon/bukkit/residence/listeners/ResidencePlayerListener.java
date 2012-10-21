@@ -137,7 +137,7 @@ public class ResidencePlayerListener implements Listener {
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
 		return mat == Material.LEVER || mat == Material.STONE_BUTTON ||
-				mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || mat == Material.FENCE_GATE|| mat == Material.NETHER_FENCE ||
+				mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || mat == Material.FENCE_GATE||
 				mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE || mat==Material.DRAGON_EGG ||
 				Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
 	}
