@@ -143,7 +143,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
-		return mat == Material.NOTE_BLOCK || mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
+		return mat == Material.CAKE_BLOCK || mat == Material.NOTE_BLOCK || mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
 				Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
