@@ -211,8 +211,7 @@ public class ResidenceCommandListener extends Residence {
 			}
 		}
 		if(!resadmin && resadminToggle.contains(player.getName())) {
-			resadmin = gmanager.isResidenceAdmin(player);
-			if(!resadmin) {
+			if(!gmanager.isResidenceAdmin(player)) {
 				resadminToggle.remove(player.getName());
 			}
 		}
