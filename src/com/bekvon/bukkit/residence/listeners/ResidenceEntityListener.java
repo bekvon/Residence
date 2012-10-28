@@ -186,7 +186,19 @@ public class ResidenceEntityListener implements Listener {
         		event.getEntity().remove();
         	}
         }
-        if (entity == EntityType.FIREBALL) {
+        if (entity == EntityType.LARGE_FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.SMALL_FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.WITHER_SKULL) {
         	if(!perms.has("fireball", perms.has("explode", true))){
         		event.setCancelled(true);
         		event.getEntity().remove();
@@ -211,7 +223,19 @@ public class ResidenceEntityListener implements Listener {
         		cancel = true;
         	}
         }
-        if (entity == EntityType.FIREBALL) {
+        if (entity == EntityType.LARGE_FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.SMALL_FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.WITHER_SKULL) {
         	if(!perms.has("fireball", perms.has("explode", true))){
         		event.setCancelled(true);
         		event.getEntity().remove();
@@ -223,7 +247,11 @@ public class ResidenceEntityListener implements Listener {
         } else {
 	        for(Block block: event.blockList()){
 	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	        	if((!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.FIREBALL)||(!blockperms.has("tnt", perms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", perms.has("explode", true))&&entity==EntityType.CREEPER)){
+	        	if((!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.LARGE_FIREBALL)||
+	        	   (!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.SMALL_FIREBALL)||
+	        	   (!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.WITHER_SKULL)||
+	        	   (!blockperms.has("tnt", perms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||
+	        	   (!blockperms.has("creeper", perms.has("explode", true))&&entity==EntityType.CREEPER)){
 	        		if(block!=null){
 	        			ItemStack[] inventory = null;
 	        			BlockState save = block.getState();
