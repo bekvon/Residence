@@ -133,6 +133,7 @@ public class FlagPermissions {
 		addResidenceOnlyFlag("burn");
 		addResidenceOnlyFlag("tnt");
 		addResidenceOnlyFlag("creeper");
+		addResidenceOnlyFlag("wither");
 		addResidenceOnlyFlag("flow");
 		addResidenceOnlyFlag("healing");
 		addResidenceOnlyFlag("animals");
