@@ -72,11 +72,10 @@ public class ResidenceEntityListener implements Listener {
     		return;
     	}
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-        if (!perms.has("build", true)) {
-                event.setCancelled(true);
-        }
-        if (event.getEntityType() == EntityType.WITHER && !perms.has("wither", true)){
+        if (event.getEntityType() == EntityType.WITHER && !perms.has("wither", perms.has("explode", true)){
         	event.setCancelled(true);
+        } else if (!perms.has("build", true)) {
+                event.setCancelled(true);
         }
     }
     
