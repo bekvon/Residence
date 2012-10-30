@@ -114,7 +114,7 @@ public class ResidenceEntityListener implements Listener {
             return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
-        if(ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
+        if(ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
         	if(!perms.has("animals", true)){
         		event.setCancelled(true);
         	}
