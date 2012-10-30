@@ -190,7 +190,7 @@ public class ResidenceEntityListener implements Listener {
         		event.getEntity().remove();
         	}
         }
-        if (entity == EntityType.LARGE_FIREBALL) {
+        if (entity == EntityType.FIREBALL) {
         	if(!perms.has("fireball", perms.has("explode", true))){
         		event.setCancelled(true);
         		event.getEntity().remove();
@@ -227,7 +227,7 @@ public class ResidenceEntityListener implements Listener {
         		cancel = true;
         	}
         }
-        if (entity == EntityType.LARGE_FIREBALL) {
+        if (entity == EntityType.FIREBALL) {
         	if(!perms.has("fireball", perms.has("explode", true))){
         		cancel = true;
         	}
@@ -248,7 +248,7 @@ public class ResidenceEntityListener implements Listener {
         } else {
 	        for(Block block: event.blockList()){
 	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	        	if((!blockperms.has("wither", blockperms.has("explode", true)) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.LARGE_FIREBALL || entity == EntityType.SMALL_FIREBALL))||(!blockperms.has("tnt", blockperms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", blockperms.has("explode", true))&&entity==EntityType.CREEPER)){
+	        	if((!blockperms.has("wither", blockperms.has("explode", true)) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.FIREBALL || entity == EntityType.SMALL_FIREBALL))||(!blockperms.has("tnt", blockperms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", blockperms.has("explode", true))&&entity==EntityType.CREEPER)){
 	        		if(block!=null){
 	        			ItemStack[] inventory = null;
 	        			BlockState save = block.getState();
