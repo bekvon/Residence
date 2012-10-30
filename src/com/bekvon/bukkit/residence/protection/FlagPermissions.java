@@ -176,6 +176,7 @@ public class FlagPermissions {
                 addMaterialToUseFlag(Material.NOTE_BLOCK, "note");
                 addMaterialToUseFlag(Material.DRAGON_EGG, "egg");
                 addMaterialToUseFlag(Material.EGG, "egg");
+                addMaterialToUseFlag(Material.BEACON, "container");
                 addMaterialToUseFlag(Material.JUKEBOX, "container");
                 addMaterialToUseFlag(Material.CHEST, "container");
                 addMaterialToUseFlag(Material.FURNACE, "container");
