@@ -223,7 +223,7 @@ public class ResidenceEntityListener implements Listener {
         } else {
 	        for(Block block: event.blockList()){
 	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	        	if((!blockperms.has("fireball", blockperms.has("explode", true))&&entity==EntityType.FIREBALL)||(!blockperms.has("tnt", blockperms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", blockperms.has("explode", true))&&entity==EntityType.CREEPER)){
+	        	if((!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.FIREBALL)||(!blockperms.has("tnt", perms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", perms.has("explode", true))&&entity==EntityType.CREEPER)){
 	        		if(block!=null){
 	        			ItemStack[] inventory = null;
 	        			BlockState save = block.getState();
