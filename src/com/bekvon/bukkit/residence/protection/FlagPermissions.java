@@ -126,6 +126,7 @@ public class FlagPermissions {
 		addFlag("place");
 		addFlag("bucket");
 		addFlag("bank");
+		addFlag("beacon");
 		addResidenceOnlyFlag("trample");
 		addResidenceOnlyFlag("pvp");
 		addResidenceOnlyFlag("fireball");
@@ -183,7 +184,7 @@ public class FlagPermissions {
                 addMaterialToUseFlag(Material.WOOD_BUTTON, "button");
                 addMaterialToUseFlag(Material.ANVIL, "anvil");
                 addMaterialToUseFlag(Material.FLOWER_POT, "flowerpot");
-                addMaterialToUseFlag(Material.BEACON, "container");
+                addMaterialToUseFlag(Material.BEACON, "beacon");
                 addMaterialToUseFlag(Material.JUKEBOX, "container");
                 addMaterialToUseFlag(Material.CHEST, "container");
                 addMaterialToUseFlag(Material.FURNACE, "container");
