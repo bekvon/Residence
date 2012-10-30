@@ -48,6 +48,7 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -67,12 +68,15 @@ public class ResidenceEntityListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEndermanChangeBlock(EntityChangeBlockEvent  event) {
-    	if(event.getEntityType() != EntityType.ENDERMAN){
+    	if(event.getEntityType() != EntityType.ENDERMAN && event.getEntityType() != EntityType.WITHER){
     		return;
     	}
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
         if (!perms.has("build", true)) {
-            event.setCancelled(true);
+                event.setCancelled(true);
+        }
+        if (event.getEntityType() == EntityType.WITHER && !perms.has("wither", true)){
+        	event.setCancelled(true);
         }
     }
     
@@ -186,8 +190,20 @@ public class ResidenceEntityListener implements Listener {
         		event.getEntity().remove();
         	}
         }
-        if (entity == EntityType.FIREBALL) {
+        if (entity == EntityType.LARGE_FIREBALL) {
         	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.SMALL_FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.WITHER_SKULL) {
+        	if(!perms.has("wither", perms.has("explode", true))){
         		event.setCancelled(true);
         		event.getEntity().remove();
         	}
@@ -211,11 +227,20 @@ public class ResidenceEntityListener implements Listener {
         		cancel = true;
         	}
         }
-        if (entity == EntityType.FIREBALL) {
+        if (entity == EntityType.LARGE_FIREBALL) {
         	if(!perms.has("fireball", perms.has("explode", true))){
-        		event.setCancelled(true);
-        		event.getEntity().remove();
+        		cancel = true;
         	}
+        }
+        if (entity == EntityType.SMALL_FIREBALL) {
+	        if(!perms.has("fireball", perms.has("explode", true))){
+         		cancel = true;
+         	}
+        }
+        if (entity == EntityType.WITHER_SKULL || entity == EntityType.WITHER) {
+         	if(!perms.has("wither", perms.has("explode", true))){
+         		cancel = true;
+         	}
         }
         if(cancel){
         	event.setCancelled(true);
@@ -223,7 +248,7 @@ public class ResidenceEntityListener implements Listener {
         } else {
 	        for(Block block: event.blockList()){
 	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	        	if((!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.FIREBALL)||(!blockperms.has("tnt", perms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", perms.has("explode", true))&&entity==EntityType.CREEPER)){
+	        	if((!blockperms.has("wither", blockperms.has("explode", true)) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.LARGE_FIREBALL || entity == EntityType.SMALL_FIREBALL))||(!blockperms.has("tnt", blockperms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", blockperms.has("explode", true))&&entity==EntityType.CREEPER)){
 	        		if(block!=null){
 	        			ItemStack[] inventory = null;
 	        			BlockState save = block.getState();
