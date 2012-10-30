@@ -110,6 +110,9 @@ public class FlagPermissions {
 		addFlag("table");
 		addFlag("brew");
 		addFlag("bed");
+		addFlag("commandblock");
+		addFlag("anvil");
+		addFlag("flowerpot");
 		addFlag("enchant");
 		addFlag("diode");
 		addFlag("use");
@@ -176,7 +179,10 @@ public class FlagPermissions {
                 addMaterialToUseFlag(Material.CAKE, "cake");
                 addMaterialToUseFlag(Material.NOTE_BLOCK, "note");
                 addMaterialToUseFlag(Material.DRAGON_EGG, "egg");
-                addMaterialToUseFlag(Material.EGG, "egg");
+                addMaterialToUseFlag(Material.COMMAND, "commandblock");
+                addMaterialToUseFlag(Material.WOOD_BUTTON, "button");
+                addMaterialToUseFlag(Material.ANVIL, "anvil");
+                addMaterialToUseFlag(Material.FLOWER_POT, "flowerpot");
                 addMaterialToUseFlag(Material.BEACON, "container");
                 addMaterialToUseFlag(Material.JUKEBOX, "container");
                 addMaterialToUseFlag(Material.CHEST, "container");
