@@ -48,13 +48,14 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.painting.PaintingBreakEvent;
-import org.bukkit.event.painting.PaintingPlaceEvent;
-import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -67,12 +68,16 @@ public class ResidenceEntityListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEndermanChangeBlock(EntityChangeBlockEvent  event) {
-    	if(event.getEntityType() != EntityType.ENDERMAN){
+    	if(event.getEntityType() != EntityType.ENDERMAN && event.getEntityType() != EntityType.WITHER){
     		return;
     	}
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-        if (!perms.has("build", true)) {
-            event.setCancelled(true);
+        if (event.getEntityType() == EntityType.WITHER){ 	
+        	if(!perms.has("wither", perms.has("explode", true)){
+        		event.setCancelled(true);
+        	}
+        } else if (!perms.has("build", true)) {
+                event.setCancelled(true);
         }
     }
     
@@ -110,7 +115,7 @@ public class ResidenceEntityListener implements Listener {
             return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
-        if(ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
+        if(ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
         	if(!perms.has("animals", true)){
         		event.setCancelled(true);
         	}
@@ -122,12 +127,12 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPaintingPlace(PaintingPlaceEvent event) {
+    public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
         if(Residence.isResAdminOn(player)){
             return;
         }
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(),player);
         String pname = player.getName();
         String world = event.getBlock().getWorld().getName();
         boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
@@ -138,16 +143,16 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPaintingBreak(PaintingBreakEvent event) {
-	if(event instanceof PaintingBreakByEntityEvent){
-		PaintingBreakByEntityEvent evt = (PaintingBreakByEntityEvent) event;
+    public void onHangingBreak(HangingBreakEvent event) {
+	if(event instanceof HangingBreakByEntityEvent){
+		HangingBreakByEntityEvent evt = (HangingBreakByEntityEvent) event;
 		if(evt.getRemover() instanceof Player){
 			Player player = (Player) evt.getRemover();
 			if(Residence.isResAdminOn(player)){
                     		return;
                		}
 			String pname = player.getName();
-			FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
+			FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(),player);
 		        String world = event.getPainting().getWorld().getName();
 			boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
 			if (!hasplace){
@@ -192,6 +197,18 @@ public class ResidenceEntityListener implements Listener {
         		event.getEntity().remove();
         	}
         }
+        if (entity == EntityType.SMALL_FIREBALL) {
+        	if(!perms.has("fireball", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
+        if (entity == EntityType.WITHER_SKULL) {
+        	if(!perms.has("wither", perms.has("explode", true))){
+        		event.setCancelled(true);
+        		event.getEntity().remove();
+        	}
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -213,9 +230,18 @@ public class ResidenceEntityListener implements Listener {
         }
         if (entity == EntityType.FIREBALL) {
         	if(!perms.has("fireball", perms.has("explode", true))){
-        		event.setCancelled(true);
-        		event.getEntity().remove();
+        		cancel = true;
         	}
+        }
+        if (entity == EntityType.SMALL_FIREBALL) {
+	        if(!perms.has("fireball", perms.has("explode", true))){
+         		cancel = true;
+         	}
+        }
+        if (entity == EntityType.WITHER_SKULL || entity == EntityType.WITHER) {
+         	if(!perms.has("wither", perms.has("explode", true))){
+         		cancel = true;
+         	}
         }
         if(cancel){
         	event.setCancelled(true);
@@ -223,7 +249,7 @@ public class ResidenceEntityListener implements Listener {
         } else {
 	        for(Block block: event.blockList()){
 	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	        	if((!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.FIREBALL)||(!blockperms.has("tnt", perms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", perms.has("explode", true))&&entity==EntityType.CREEPER)){
+	        	if((!blockperms.has("wither", blockperms.has("explode", true)) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.FIREBALL || entity == EntityType.SMALL_FIREBALL))||(!blockperms.has("tnt", blockperms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", blockperms.has("explode", true))&&entity==EntityType.CREEPER)){
 	        		if(block!=null){
 	        			ItemStack[] inventory = null;
 	        			BlockState save = block.getState();

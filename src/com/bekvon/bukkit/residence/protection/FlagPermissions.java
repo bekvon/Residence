@@ -110,6 +110,9 @@ public class FlagPermissions {
 		addFlag("table");
 		addFlag("brew");
 		addFlag("bed");
+		addFlag("commandblock");
+		addFlag("anvil");
+		addFlag("flowerpot");
 		addFlag("enchant");
 		addFlag("diode");
 		addFlag("use");
@@ -123,6 +126,7 @@ public class FlagPermissions {
 		addFlag("place");
 		addFlag("bucket");
 		addFlag("bank");
+		addFlag("beacon");
 		addResidenceOnlyFlag("trample");
 		addResidenceOnlyFlag("pvp");
 		addResidenceOnlyFlag("fireball");
@@ -133,6 +137,7 @@ public class FlagPermissions {
 		addResidenceOnlyFlag("burn");
 		addResidenceOnlyFlag("tnt");
 		addResidenceOnlyFlag("creeper");
+		addResidenceOnlyFlag("wither");
 		addResidenceOnlyFlag("flow");
 		addResidenceOnlyFlag("healing");
 		addResidenceOnlyFlag("animals");
@@ -175,7 +180,11 @@ public class FlagPermissions {
                 addMaterialToUseFlag(Material.CAKE, "cake");
                 addMaterialToUseFlag(Material.NOTE_BLOCK, "note");
                 addMaterialToUseFlag(Material.DRAGON_EGG, "egg");
-                addMaterialToUseFlag(Material.EGG, "egg");
+                addMaterialToUseFlag(Material.COMMAND, "commandblock");
+                addMaterialToUseFlag(Material.WOOD_BUTTON, "button");
+                addMaterialToUseFlag(Material.ANVIL, "anvil");
+                addMaterialToUseFlag(Material.FLOWER_POT, "flowerpot");
+                addMaterialToUseFlag(Material.BEACON, "beacon");
                 addMaterialToUseFlag(Material.JUKEBOX, "container");
                 addMaterialToUseFlag(Material.CHEST, "container");
                 addMaterialToUseFlag(Material.FURNACE, "container");

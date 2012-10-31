@@ -136,14 +136,14 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
-		return mat == Material.LEVER || mat == Material.STONE_BUTTON ||
+		return mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOOD_BUTTON ||
 				mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || mat == Material.FENCE_GATE||
 				mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE || mat==Material.DRAGON_EGG ||
 				Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
 	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
-		return mat == Material.CAKE_BLOCK || mat == Material.NOTE_BLOCK || mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
+		return mat == Material.BEACON || mat == Material.FLOWER_POT || mat == Material.COMMAND || mat == Material.ANVIL || mat == Material.CAKE_BLOCK || mat == Material.NOTE_BLOCK || mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
 				Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
