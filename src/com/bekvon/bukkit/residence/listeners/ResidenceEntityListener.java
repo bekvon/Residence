@@ -53,9 +53,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.painting.PaintingBreakEvent;
-import org.bukkit.event.painting.PaintingPlaceEvent;
-import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -127,12 +127,12 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPaintingPlace(PaintingPlaceEvent event) {
+    public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
         if(Residence.isResAdminOn(player)){
             return;
         }
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(),player);
         String pname = player.getName();
         String world = event.getBlock().getWorld().getName();
         boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
@@ -143,16 +143,16 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPaintingBreak(PaintingBreakEvent event) {
-	if(event instanceof PaintingBreakByEntityEvent){
-		PaintingBreakByEntityEvent evt = (PaintingBreakByEntityEvent) event;
+    public void onHangingBreak(HangingBreakEvent event) {
+	if(event instanceof HangingBreakByEntityEvent){
+		HangingBreakByEntityEvent evt = (HangingBreakByEntityEvent) event;
 		if(evt.getRemover() instanceof Player){
 			Player player = (Player) evt.getRemover();
 			if(Residence.isResAdminOn(player)){
                     		return;
                		}
 			String pname = player.getName();
-			FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
+			FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(),player);
 		        String world = event.getPainting().getWorld().getName();
 			boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
 			if (!hasplace){
