@@ -235,7 +235,7 @@ public class ResidenceCommandListener extends Residence {
 				return false;
 			}
 			if(resadmin || args[1].endsWith(pname)) {
-				rmanager.removeAllByOwner(args[1]);
+				rmanager.removeAllByOwner(player, args[1]);
 				player.sendMessage(ChatColor.GREEN+language.getPhrase("RemovePlayersResidences",ChatColor.YELLOW+args[1]+ChatColor.GREEN));
 			} else {
 				player.sendMessage(ChatColor.RED+language.getPhrase("NoPermission"));
