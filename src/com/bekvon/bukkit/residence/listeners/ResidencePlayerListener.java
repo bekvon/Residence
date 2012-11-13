@@ -14,6 +14,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +25,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -136,15 +140,15 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	private boolean isCanUseEntity_BothClick(Material mat, Block block) {
-		return mat == Material.LEVER || mat == Material.STONE_BUTTON ||
-				mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || mat == Material.FENCE_GATE||
-				mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE || mat==Material.DRAGON_EGG ||
-				Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
-	}
+        	return mat == Material.LEVER || mat == Material.STONE_BUTTON || mat == Material.WOOD_BUTTON ||
+                	mat == Material.WOODEN_DOOR || mat == Material.TRAP_DOOR || mat == Material.FENCE_GATE ||
+                	mat == Material.PISTON_BASE || mat == Material.PISTON_STICKY_BASE || mat == Material.DRAGON_EGG ||
+                	Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
+    	}
 
-	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
-		return mat == Material.CAKE_BLOCK || mat == Material.NOTE_BLOCK || mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
-				Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
+ 	private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
+  	        return mat == Material.ITEM_FRAME || mat == Material.BEACON || mat == Material.FLOWER_POT || mat == Material.COMMAND || mat == Material.ANVIL || mat == Material.CAKE_BLOCK || mat == Material.NOTE_BLOCK || mat == Material.DIODE || mat == Material.DIODE_BLOCK_OFF || mat == Material.DIODE_BLOCK_ON || mat == Material.BED_BLOCK || mat == Material.WORKBENCH || mat == Material.BREWING_STAND || mat == Material.ENCHANTMENT_TABLE ||
+ 	               Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
 
 	private boolean isCanUseEntity(Material mat, Block block) {
@@ -256,6 +260,41 @@ public class ResidencePlayerListener implements Listener {
 			}
 		}
 	}
+ 	@EventHandler(priority = EventPriority.NORMAL)
+    	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        	if (event.isCancelled()) {
+            		return;
+        	}
+
+        	Player player = event.getPlayer();
+        	Entity ent = event.getRightClicked();
+        	Material mat = Material.ITEM_FRAME;
+        	Material heldItem = player.getItemInHand().getType();
+        	ILog.sendToPlayer(player, mat.toString());
+        	if (!(ent instanceof Hanging)) {
+            		return;
+        	}
+        	Hanging hanging = (Hanging) ent;
+        	if (hanging.getType() != EntityType.ITEM_FRAME) {
+            		return;
+        	}
+        	ILog.sendToPlayer(player, "onPlayerInteractEntity Fired");
+        	FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
+        	String world = player.getWorld().getName();
+        	String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
+        	boolean resadmin = Residence.isResAdminOn(player);
+        	if (!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
+            		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ItemBlacklisted"));
+            		event.setCancelled(true);
+            		return;
+        	}
+        	if (!resadmin) {
+            		if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
+                		event.setCancelled(true);
+                		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
+            		}
+        	}
+    }
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
