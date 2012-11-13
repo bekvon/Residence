@@ -36,6 +36,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
@@ -52,9 +53,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.painting.PaintingBreakEvent;
-import org.bukkit.event.painting.PaintingPlaceEvent;
-import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -66,12 +67,17 @@ public class ResidenceEntityListener implements Listener {
     protected Map<BlockState, ItemStack[]> ExplodeRestore = new HashMap<BlockState,ItemStack[]>();
     
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onEndermanChangeBlock(EntityChangeBlockEvent  event) {
-    	if(event.getEntityType() != EntityType.ENDERMAN){
-    		return;
-    	}
+    public void onEndermanChangeBlock(EntityChangeBlockEvent event) {
+        if (event.getEntityType() != EntityType.ENDERMAN && event.getEntityType() != EntityType.WITHER) {
+            return;
+        }
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-        if (!perms.has("build", true)) {
+        FlagPermissions world = Residence.getWorldFlags().getPerms(event.getBlock().getWorld().getName());
+        if (event.getEntityType() == EntityType.WITHER) {
+            if (!perms.has("wither", perms.has("explode", world.has("wither", world.has("explode", true))))) {
+                event.setCancelled(true);
+            }
+        } else if (!perms.has("build", true)) {
             event.setCancelled(true);
         }
     }
@@ -110,7 +116,7 @@ public class ResidenceEntityListener implements Listener {
             return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
-        if(ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
+        if(ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
         	if(!perms.has("animals", true)){
         		event.setCancelled(true);
         	}
@@ -122,40 +128,40 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPaintingPlace(PaintingPlaceEvent event) {
+    public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
-        if(Residence.isResAdminOn(player)){
+        if (Residence.isResAdminOn(player)) {
             return;
         }
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
+        FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(), player);
         String pname = player.getName();
         String world = event.getBlock().getWorld().getName();
         boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
         if (!hasplace) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPaintingBreak(PaintingBreakEvent event) {
-	if(event instanceof PaintingBreakByEntityEvent){
-		PaintingBreakByEntityEvent evt = (PaintingBreakByEntityEvent) event;
-		if(evt.getRemover() instanceof Player){
-			Player player = (Player) evt.getRemover();
-			if(Residence.isResAdminOn(player)){
-                    		return;
-               		}
-			String pname = player.getName();
-			FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getPainting().getLocation(),player);
-		        String world = event.getPainting().getWorld().getName();
-			boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
-			if (!hasplace){
-				event.setCancelled(true);
-				player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
-			}
-		}
-	}
+    public void onHangingBreak(HangingBreakEvent event) {
+        if (event instanceof HangingBreakByEntityEvent) {
+            HangingBreakByEntityEvent evt = (HangingBreakByEntityEvent) event;
+            if (evt.getRemover() instanceof Player) {
+                Player player = (Player) evt.getRemover();
+                if (Residence.isResAdminOn(player)) {
+                    return;
+                }
+                String pname = player.getName();
+                FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(), player);
+                String world = event.getEntity().getWorld().getName();
+                boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
+                if (!hasplace) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -170,117 +176,139 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
-        if(event.isCancelled())
+        if (event.isCancelled())
             return;
         EntityType entity = event.getEntityType();
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
         if (entity == EntityType.CREEPER) {
             if (!perms.has("creeper", perms.has("explode", true))) {
-            	event.setCancelled(true);
-            	event.getEntity().remove();
+                event.setCancelled(true);
+                event.getEntity().remove();
             }
         }
         if (entity == EntityType.PRIMED_TNT) {
-        	if (!perms.has("tnt", perms.has("explode", true))) {
-        		event.setCancelled(true);
-        		event.getEntity().remove();
-        	}
+            if (!perms.has("tnt", perms.has("explode", true))) {
+                event.setCancelled(true);
+                event.getEntity().remove();
+            }
         }
         if (entity == EntityType.FIREBALL) {
-        	if(!perms.has("fireball", perms.has("explode", true))){
-        		event.setCancelled(true);
-        		event.getEntity().remove();
-        	}
+            if (!perms.has("fireball", perms.has("explode", true))) {
+                event.setCancelled(true);
+                event.getEntity().remove();
+            }
+        }
+        if (entity == EntityType.SMALL_FIREBALL) {
+            if (!perms.has("fireball", perms.has("explode", true))) {
+                event.setCancelled(true);
+                event.getEntity().remove();
+            }
+        }
+        if (entity == EntityType.WITHER_SKULL) {
+            if (!perms.has("witherdamage", perms.has("damage", true))) {
+                event.setCancelled(true);
+                event.getEntity().remove();
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if(event.isCancelled()||event.getEntity()==null)
+        if (event.isCancelled() || event.getEntity() == null)
             return;
         Boolean cancel = false;
         EntityType entity = event.getEntityType();
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+        FlagPermissions world = Residence.getWorldFlags().getPerms(event.getEntity().getWorld().getName());
         if (entity == EntityType.CREEPER) {
             if (!perms.has("creeper", perms.has("explode", true))) {
-            	cancel = true;
+                cancel = true;
             }
         }
         if (entity == EntityType.PRIMED_TNT) {
-        	if (!perms.has("tnt", perms.has("explode", true))) {
-        		cancel = true;
-        	}
+            if (!perms.has("tnt", perms.has("explode", true))) {
+                cancel = true;
+            }
         }
         if (entity == EntityType.FIREBALL) {
-        	if(!perms.has("fireball", perms.has("explode", true))){
-        		event.setCancelled(true);
-        		event.getEntity().remove();
-        	}
+            if (!perms.has("fireball", perms.has("explode", true))) {
+                cancel = true;
+            }
         }
-        if(cancel){
-        	event.setCancelled(true);
-        	event.getEntity().remove();
+        if (entity == EntityType.SMALL_FIREBALL) {
+            if (!perms.has("fireball", perms.has("explode", true))) {
+                cancel = true;
+            }
+        }
+        if (entity == EntityType.WITHER_SKULL || entity == EntityType.WITHER) {
+            if (!perms.has("wither", perms.has("explode", world.has("wither", world.has("explode", true))))) {
+                cancel = true;
+            }
+        }
+        if (cancel) {
+            event.setCancelled(true);
+            event.getEntity().remove();
         } else {
-	        for(Block block: event.blockList()){
-	        	FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	        	if((!blockperms.has("fireball", perms.has("explode", true))&&entity==EntityType.FIREBALL)||(!blockperms.has("tnt", perms.has("explode", true))&&entity==EntityType.PRIMED_TNT)||(!blockperms.has("creeper", perms.has("explode", true))&&entity==EntityType.CREEPER)){
-	        		if(block!=null){
-	        			ItemStack[] inventory = null;
-	        			BlockState save = block.getState();
-	        			if(block.getType()==Material.CHEST){
-	        				Chest chest = (Chest)save;
-	        				inventory = chest.getBlockInventory().getContents();
-	        				chest.getBlockInventory().clear();
-	        			}
-	        			if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE){
-	        				Furnace furnace = (Furnace)save;
-	        				inventory = furnace.getInventory().getContents();
-	        				furnace.getInventory().clear();
-	        			}
-	        			if(block.getType()==Material.BREWING_STAND){
-	        				BrewingStand brew = (BrewingStand)save;
-	        				inventory = brew.getInventory().getContents();
-	        				brew.getInventory().clear();
-	        			}
-	        			if(block.getType()==Material.DISPENSER){
-	        				Dispenser dispenser = (Dispenser)save;
-	        				inventory = dispenser.getInventory().getContents();
-	        				dispenser.getInventory().clear();
-	        			}
-	        			if(block.getType()==Material.JUKEBOX){
-	        				Jukebox jukebox = (Jukebox)save;
-	        				if(jukebox.isPlaying()){
-	        					inventory = new ItemStack[1];
-	        					inventory[0] = new ItemStack(jukebox.getPlaying());
-	        					jukebox.setPlaying(null);
-	        				}
-	        			}
-	        			ExplodeRestore.put(save, inventory);
-	        			block.setType(Material.AIR);
-	        		}
-	        	}
-	        }
-        	Residence.getServ().getScheduler().scheduleSyncDelayedTask(Residence.getServ().getPluginManager().getPlugin("Residence"), new Runnable() {
-        		   public void run() {
-        		       for(BlockState block: ExplodeRestore.keySet().toArray(new BlockState[0])){
-        		    	   ItemStack[] inventory = ExplodeRestore.get(block);
-        		    	   block.update(true);
-        		    	   if(inventory!=null){
-        		    		   if(block.getType()==Material.CHEST)
-        		    			   ((Chest)block.getLocation().getBlock().getState()).getBlockInventory().setContents(inventory);
-        		    		   if(block.getType()==Material.FURNACE||block.getType()==Material.BURNING_FURNACE)
-        		    			   ((Furnace)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-        		    		   if(block.getType()==Material.BREWING_STAND)
-        		    			   ((BrewingStand)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-        		    		   if(block.getType()==Material.DISPENSER)
-        		    			   ((Dispenser)block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-        		    		   if(block.getType()==Material.JUKEBOX)
-        		    			   ((Jukebox)block.getLocation().getBlock().getState()).setPlaying(inventory[0].getType());
-        		    	   }
-        		       }
-        		       ExplodeRestore.clear();
-        		   }
-        	}, 1L);
+            for (Block block : event.blockList()) {
+                FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
+                if ((!blockperms.has("wither", blockperms.has("explode", world.has("wither", world.has("explode", true)))) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.FIREBALL || entity == EntityType.SMALL_FIREBALL)) || (!blockperms.has("tnt", blockperms.has("explode", true)) && entity == EntityType.PRIMED_TNT) || (!blockperms.has("creeper", blockperms.has("explode", true)) && entity == EntityType.CREEPER))) {
+                    if (block != null) {
+                        ItemStack[] inventory = null;
+                        BlockState save = block.getState();
+                        if (block.getType() == Material.CHEST) {
+                            Chest chest = (Chest) save;
+                            inventory = chest.getBlockInventory().getContents();
+                            chest.getBlockInventory().clear();
+                        }
+                        if (block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE) {
+                            Furnace furnace = (Furnace) save;
+                            inventory = furnace.getInventory().getContents();
+                            furnace.getInventory().clear();
+                        }
+                        if (block.getType() == Material.BREWING_STAND) {
+                            BrewingStand brew = (BrewingStand) save;
+                            inventory = brew.getInventory().getContents();
+                            brew.getInventory().clear();
+                        }
+                        if (block.getType() == Material.DISPENSER) {
+                            Dispenser dispenser = (Dispenser) save;
+                            inventory = dispenser.getInventory().getContents();
+                            dispenser.getInventory().clear();
+                        }
+                        if (block.getType() == Material.JUKEBOX) {
+                            Jukebox jukebox = (Jukebox) save;
+                            if (jukebox.isPlaying()) {
+                                inventory = new ItemStack[1];
+                                inventory[0] = new ItemStack(jukebox.getPlaying());
+                                jukebox.setPlaying(null);
+                            }
+                        }
+                        ExplodeRestore.put(save, inventory);
+                        block.setType(Material.AIR);
+                    }
+                }
+            }
+            Residence.getServ().getScheduler().scheduleSyncDelayedTask(Residence.getServ().getPluginManager().getPlugin("Residence"), new Runnable() {
+                public void run() {
+                    for (BlockState block : ExplodeRestore.keySet().toArray(new BlockState[0])) {
+                        ItemStack[] inventory = ExplodeRestore.get(block);
+                        block.update(true);
+                        if (inventory != null) {
+                            if (block.getType() == Material.CHEST)
+                                ((Chest) block.getLocation().getBlock().getState()).getBlockInventory().setContents(inventory);
+                            if (block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE)
+                                ((Furnace) block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+                            if (block.getType() == Material.BREWING_STAND)
+                                ((BrewingStand) block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+                            if (block.getType() == Material.DISPENSER)
+                                ((Dispenser) block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
+                            if (block.getType() == Material.JUKEBOX)
+                                ((Jukebox) block.getLocation().getBlock().getState()).setPlaying(inventory[0].getType());
+                        }
+                    }
+                    ExplodeRestore.clear();
+                }
+            }, 1L);
         }
     }
     
