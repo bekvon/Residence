@@ -66,7 +66,7 @@ public class ResidenceEntityListener implements Listener {
 
     protected Map<BlockState, ItemStack[]> ExplodeRestore = new HashMap<BlockState,ItemStack[]>();
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEndermanChangeBlock(EntityChangeBlockEvent event) {
         if (event.getEntityType() != EntityType.ENDERMAN && event.getEntityType() != EntityType.WITHER) {
             return;
@@ -82,7 +82,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityInteract(EntityInteractEvent event){
     	Block block = event.getBlock();
     	Material mat = block.getType();
@@ -110,7 +110,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 */
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if(event.isCancelled())
             return;
@@ -127,7 +127,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
         if (Residence.isResAdminOn(player)) {
@@ -143,7 +143,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onHangingBreak(HangingBreakEvent event) {
         if (event instanceof HangingBreakByEntityEvent) {
             HangingBreakByEntityEvent evt = (HangingBreakByEntityEvent) event;
@@ -164,7 +164,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityCombust(EntityCombustEvent event) {
         if(event.isCancelled())
             return;
@@ -174,7 +174,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         if (event.isCancelled())
             return;
@@ -212,7 +212,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.isCancelled() || event.getEntity() == null)
             return;
@@ -312,7 +312,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onSplashPotion(PotionSplashEvent event) {
     	if(event.isCancelled())
     		return;
@@ -330,7 +330,7 @@ public class ResidenceEntityListener implements Listener {
     	}
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.isCancelled())
             return;

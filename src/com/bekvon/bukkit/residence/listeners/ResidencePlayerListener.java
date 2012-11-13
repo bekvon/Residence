@@ -110,7 +110,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerSpawn(PlayerRespawnEvent event){
 		Location loc = event.getRespawnLocation();
 		Boolean bed = event.isBedSpawn();
@@ -155,7 +155,7 @@ public class ResidencePlayerListener implements Listener {
 		return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if(event.isCancelled()) {
 			return;
@@ -260,7 +260,7 @@ public class ResidencePlayerListener implements Listener {
 			}
 		}
 	}
- 	@EventHandler(priority = EventPriority.NORMAL)
+ 	@EventHandler(priority = EventPriority.LOWEST)
     	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         	if (event.isCancelled()) {
             		return;
@@ -296,7 +296,7 @@ public class ResidencePlayerListener implements Listener {
         	}
     }
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 		if(event.isCancelled()) {
 			return;
@@ -324,7 +324,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
 		if(event.isCancelled()) {
 			return;
@@ -353,7 +353,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerTeleport(PlayerTeleportEvent event){
 		Location loc = event.getTo();
 		Player player = event.getPlayer();
@@ -369,7 +369,7 @@ public class ResidencePlayerListener implements Listener {
 			}
 		}
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if(event.isCancelled()) {
 			return;
@@ -493,7 +493,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		if(event.isCancelled()){return;}
 		String pname = event.getPlayer().getName();
