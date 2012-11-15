@@ -26,7 +26,7 @@
     <get src="http://build.whiskeycraft.net/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
     <get src="http://build.whiskeycraft.net/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
     <get src="http://build.whiskeycraft.net/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
-    <get src="http://dl.bukkit.org/latest-rb/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
+    <get src="http://dl.bukkit.org/latest-dev/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/palmergames/iConomy/5.01/iConomy.jar" dest="lib/iConomy5.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
