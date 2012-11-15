@@ -541,10 +541,6 @@ public class Residence extends JavaPlugin {
 		}
 		return false;
 	}
-	@Override
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-	}
 
 	private void saveYml() throws IOException {
 		File saveFolder = new File(dataFolder, "Save");
