@@ -368,10 +368,15 @@ public class ResidenceManager {
 
     public void removeAllByOwner(String owner)
     {
-        this.removeAllByOwner(owner, residences);
+        this.removeAllByOwner(null, owner, residences);
     }
     
-    private void removeAllByOwner(String owner, Map<String, ClaimedResidence> resholder)
+    public void removeAllByOwner(Player player, String owner)
+    {
+        this.removeAllByOwner(player, owner, residences);
+    }
+    
+    private void removeAllByOwner(Player player, String owner, Map<String, ClaimedResidence> resholder)
     {
         Iterator<ClaimedResidence> it = resholder.values().iterator();
         while(it.hasNext())
@@ -379,11 +384,15 @@ public class ResidenceManager {
             ClaimedResidence res = it.next();
             if(res.getOwner().equalsIgnoreCase(owner))
             {
-                it.remove();
+            	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player==null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
+                Residence.getServ().getPluginManager().callEvent(resevent);
+                if(resevent.isCancelled())
+                    return;
+            	it.remove();
             }
             else
             {
-                this.removeAllByOwner(owner, res.subzones);
+                this.removeAllByOwner(player, owner, res.subzones);
             }
         }
     }
