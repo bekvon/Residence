@@ -131,7 +131,7 @@ Language:
     RentedModifyDeny: Cannot modify a rented residence.
     WorldPVPDisabled: World PVP is disabled.
     NoPVPZone: No PVP zone.
-    FlagDeny: 'You dont have %1 permission here.'
+    FlagDeny: 'You dont have %1 permission<s> here.'
     FlagSetDeny: 'Owner does not have access to flag %1'
     SelectPoint: 'Placed %1 Selection Point'
     ResidenceChat: 'Residence chat toggled %1'
