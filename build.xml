@@ -39,6 +39,7 @@
     <delete file="lib/BOSEconomy.zip"/>
     <unzip src="lib\Essentials.zip" dest="lib\Essentials.jar"><patternset><include name="Essentials.jar"/></patternset></unzip>
     <unzip src="lib\GroupManager.zip" dest="lib\"><patternset><include name="*.jar"/></patternset></unzip>
+    <unzip src="lib\WorldEdit.zip" dest="lib\"><patternset><include name="*.jar"/></patternset></unzip>
   </target>
 
   <!-- compile -->
