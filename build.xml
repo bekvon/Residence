@@ -23,21 +23,22 @@
   <!-- Download libraries -->
   <target name="class">
     <get src="http://build.whiskeycraft.net/view/Whole%20collection/job/Spout%20Plugin%20API/lastSuccessfulBuild/artifact/target/spoutpluginapi-dev-SNAPSHOT.jar" dest="lib/SpoutpluginAPI.jar"/>
-    <get src="http://build.whiskeycraft.net/view/Whole%20collection/job/Essentials/lastSuccessfulBuild/artifact/jars/Essentials.jar" dest="lib/Essentials.jar"/>
-    <get src="http://build.whiskeycraft.net/view/Whole%20collection/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupBridge.jar" dest="lib/EssentialsGroupBridge.jar"/>
-    <get src="http://build.whiskeycraft.net/view/Whole%20collection/job/Essentials/lastSuccessfulBuild/artifact/jars/EssentialsGroupManager.jar" dest="lib/EssentialsGroupManager.jar"/>
-    <get src="http://dl.bukkit.org/latest-dev/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
+    <get src="http://dev.bukkit.org/media/files/649/638/Essentials.zip" dest="lib/Essentials.zip"/> <!--essentials core -->
+    <get src="http://tiny.cc/EssentialsGMZip" dest="lib/GroupManager.zip"/> <!-- essentials group manager and bridge-->
+    <get src="http://dl.bukkit.org/latest-beta/craftbukkit.jar" dest="lib/CraftBukkit.jar"/>
     <get src="http://palmergames.com/downloads/iCo501/iConomy.jar" dest="lib/iConomy5.jar"/>
-    <get src="http://www.whiskeycraft.net/repo/com/iCo6/6.0.8b/iCo6-6.0.8b.jar" dest="lib/iConomy6.jar"/>
+    <get src="http://dev.bukkit.org/media/files/575/485/iConomy.jar" dest="lib/iConomy6.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
     <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
     <get src="http://dev.bukkit.org/media/files/610/285/Vault.jar" dest="lib/Vault.jar"/>
-    <get src="http://whiskeycraft.net/repo/com/sk89q/worldedit/lastsuccessful/WorldEdit.jar" dest="lib/WorldEdit.jar"/>
+    <get src="http://dev.bukkit.org/media/files/644/439/worldedit-5.4.5.zip" dest="lib/WorldEdit.zip"/>
     <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
     <get src="http://dev.bukkit.org/media/files/611/707/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
     <get src="http://dev.bukkit.org/media/files/610/407/bpermissions.jar" dest="lib/bPermissions.jar"/>
     <unzip src="lib/BOSEconomy.zip" dest="lib/"></unzip>
     <delete file="lib/BOSEconomy.zip"/>
+    <unzip src="lib\Essentials.zip"dest="lib\Essentials.jar"><patternset><include name="Essentials.jar"/></patternset></unzip>
+    <unzip src="lib\GroupManager.zip"dest="lib\"><patternset><include name="*.jar"/></patternset></unzip>
   </target>
 
   <!-- compile -->
