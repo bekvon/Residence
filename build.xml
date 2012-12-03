@@ -37,8 +37,8 @@
     <get src="http://dev.bukkit.org/media/files/610/407/bpermissions.jar" dest="lib/bPermissions.jar"/>
     <unzip src="lib/BOSEconomy.zip" dest="lib/"></unzip>
     <delete file="lib/BOSEconomy.zip"/>
-    <unzip src="lib\Essentials.zip"dest="lib\Essentials.jar"><patternset><include name="Essentials.jar"/></patternset></unzip>
-    <unzip src="lib\GroupManager.zip"dest="lib\"><patternset><include name="*.jar"/></patternset></unzip>
+    <unzip src="lib\Essentials.zip" dest="lib\Essentials.jar"><patternset><include name="Essentials.jar"/></patternset></unzip>
+    <unzip src="lib\GroupManager.zip" dest="lib\"><patternset><include name="*.jar"/></patternset></unzip>
   </target>
 
   <!-- compile -->
