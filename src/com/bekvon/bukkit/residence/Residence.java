@@ -20,8 +20,6 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.minecraft.server.SharedConstants;
-
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -358,17 +356,8 @@ public class Residence extends JavaPlugin {
 			if(!name.equals(namecheck)) {
 				return false;
 			}
-			return Residence.validString(name);
+			return true;
 		}
-	}
-
-	public static boolean validString(String string) {
-		for(int i = 0; i < string.length(); i++) {
-			if(SharedConstants.allowedCharacters.indexOf(string.charAt(i)) < 0) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	public static File getDataLocation() {
