@@ -261,7 +261,12 @@ public class Residence extends JavaPlugin {
 					System.out.println("[Residence] Unable to find an economy system...");
 				}
 			}
-			this.loadYml();
+			try {
+			    this.loadYml();
+			} catch (Exception e) {
+			    this.getLogger().log(Level.SEVERE, "Unable to load save file", e);
+			    throw e;
+			}
 			if (rmanager == null) {
 				rmanager = new ResidenceManager();
 			}
