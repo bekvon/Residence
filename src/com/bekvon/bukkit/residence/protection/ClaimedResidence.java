@@ -536,7 +536,7 @@ public class ClaimedResidence {
 
     public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin)
     {
-        if(message!=null && Residence.getConfigManager().getResidenceNameRegex() != null && !Residence.validString(message))
+        if(message!=null && Residence.getConfigManager().getResidenceNameRegex() != null)
         {
             player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidCharacters"));
             return;
@@ -813,11 +813,7 @@ public class ClaimedResidence {
         if(root == null)
             throw new Exception("Null residence!");
         res.enterMessage = (String) root.get("EnterMessage");
-        if(res.enterMessage!=null && !Residence.validString(res.enterMessage))
-            res.enterMessage = null;
         res.leaveMessage = (String) root.get("LeaveMessage");
-        if(res.leaveMessage!=null && !Residence.validString(res.leaveMessage))
-            res.leaveMessage = null;
         if(root.containsKey("StoredMoney"))
             res.bank.setStoredMoney((Integer)root.get("StoredMoney"));
         if(root.containsKey("BlackList"))
