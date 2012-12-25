@@ -534,13 +534,12 @@ public class ClaimedResidence {
         leaveMessage = message;
     }
 
-    public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin)
-    {
-        if(message!=null && Residence.getConfigManager().getResidenceNameRegex() != null)
-        {
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidCharacters"));
-            return;
-        }
+    public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin) {
+        //if(message!=null && Residence.getConfigManager().getResidenceNameRegex() != null) {
+            //Removed pending further action
+            //player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("InvalidCharacters"));
+            //return;
+        //}
         if(message!=null)
             if(message.equals(""))
                 message = null;
