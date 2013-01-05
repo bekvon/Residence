@@ -135,7 +135,7 @@ Language:
     FlagSetDeny: 'Owner does not have access to flag %1'
     SelectPoint: 'Placed %1 Selection Point'
     ResidenceChat: 'Residence chat toggled %1'
-    ResidenceMoveDeny: 'You dont have movment permission for Residence %1'
+    ResidenceMoveDeny: 'You dont have movement permission for Residence %1'
     TeleportDeny: You dont have teleport access.
     TeleportSuccess: 'Teleported!'
     TeleportNear: Teleported to near residence.
