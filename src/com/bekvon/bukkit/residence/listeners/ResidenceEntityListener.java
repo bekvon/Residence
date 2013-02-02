@@ -6,19 +6,13 @@
 package com.bekvon.bukkit.residence.listeners;
 import org.bukkit.ChatColor;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Furnace;
-import org.bukkit.block.Jukebox;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -56,17 +50,14 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  *
  * @author Administrator
  */
 public class ResidenceEntityListener implements Listener {
-
-    protected Map<BlockState, ItemStack[]> ExplodeRestore = new HashMap<BlockState,ItemStack[]>();
     
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEndermanChangeBlock(EntityChangeBlockEvent event) {
         if (event.getEntityType() != EntityType.ENDERMAN && event.getEntityType() != EntityType.WITHER) {
             return;
@@ -110,10 +101,8 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if(event.isCancelled())
-            return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
         if(ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
@@ -127,7 +116,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
         if (Residence.isResAdminOn(player)) {
@@ -143,7 +132,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakEvent event) {
         if (event instanceof HangingBreakByEntityEvent) {
             HangingBreakByEntityEvent evt = (HangingBreakByEntityEvent) event;
@@ -164,20 +153,16 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityCombust(EntityCombustEvent event) {
-        if(event.isCancelled())
-            return;
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
         if (!perms.has("burn", true)) {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
-        if (event.isCancelled())
-            return;
         EntityType entity = event.getEntityType();
         FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
         if (entity == EntityType.CREEPER) {
@@ -212,7 +197,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.isCancelled() || event.getEntity() == null)
             return;
@@ -249,70 +234,22 @@ public class ResidenceEntityListener implements Listener {
             event.setCancelled(true);
             event.getEntity().remove();
         } else {
+            List<Block> preserve = new ArrayList<Block>();
             for (Block block : event.blockList()) {
                 FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
                 if ((!blockperms.has("wither", blockperms.has("explode", world.has("wither", world.has("explode", true)))) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.FIREBALL || entity == EntityType.SMALL_FIREBALL)) || (!blockperms.has("tnt", blockperms.has("explode", true)) && entity == EntityType.PRIMED_TNT) || (!blockperms.has("creeper", blockperms.has("explode", true)) && entity == EntityType.CREEPER))) {
                     if (block != null) {
-                        ItemStack[] inventory = null;
-                        BlockState save = block.getState();
-                        if (block.getType() == Material.CHEST) {
-                            Chest chest = (Chest) save;
-                            inventory = chest.getBlockInventory().getContents();
-                            chest.getBlockInventory().clear();
-                        }
-                        if (block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE) {
-                            Furnace furnace = (Furnace) save;
-                            inventory = furnace.getInventory().getContents();
-                            furnace.getInventory().clear();
-                        }
-                        if (block.getType() == Material.BREWING_STAND) {
-                            BrewingStand brew = (BrewingStand) save;
-                            inventory = brew.getInventory().getContents();
-                            brew.getInventory().clear();
-                        }
-                        if (block.getType() == Material.DISPENSER) {
-                            Dispenser dispenser = (Dispenser) save;
-                            inventory = dispenser.getInventory().getContents();
-                            dispenser.getInventory().clear();
-                        }
-                        if (block.getType() == Material.JUKEBOX) {
-                            Jukebox jukebox = (Jukebox) save;
-                            if (jukebox.isPlaying()) {
-                                inventory = new ItemStack[1];
-                                inventory[0] = new ItemStack(jukebox.getPlaying());
-                                jukebox.setPlaying(null);
-                            }
-                        }
-                        ExplodeRestore.put(save, inventory);
-                        block.setType(Material.AIR);
+                        preserve.add(block);
                     }
                 }
             }
-            Residence.getServ().getScheduler().scheduleSyncDelayedTask(Residence.getServ().getPluginManager().getPlugin("Residence"), new Runnable() {
-                public void run() {
-                    for (BlockState block : ExplodeRestore.keySet().toArray(new BlockState[0])) {
-                        ItemStack[] inventory = ExplodeRestore.get(block);
-                        block.update(true);
-                        if (inventory != null) {
-                            if (block.getType() == Material.CHEST)
-                                ((Chest) block.getLocation().getBlock().getState()).getBlockInventory().setContents(inventory);
-                            if (block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE)
-                                ((Furnace) block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-                            if (block.getType() == Material.BREWING_STAND)
-                                ((BrewingStand) block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-                            if (block.getType() == Material.DISPENSER)
-                                ((Dispenser) block.getLocation().getBlock().getState()).getInventory().setContents(inventory);
-                            if (block.getType() == Material.JUKEBOX)
-                                ((Jukebox) block.getLocation().getBlock().getState()).setPlaying(inventory[0].getType());
-                        }
-                    }
-                    ExplodeRestore.clear();
-                }
-            }, 1L);
+            for (Block block : preserve) {
+                event.blockList().remove(block);
+            }
         }
     }
     
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSplashPotion(PotionSplashEvent event) {
     	if(event.isCancelled())
     		return;
@@ -330,7 +267,7 @@ public class ResidenceEntityListener implements Listener {
     	}
     }
     
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.isCancelled())
             return;
