@@ -157,12 +157,8 @@ public class ResidencePlayerListener implements Listener {
         return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Player player = event.getPlayer();
         Material heldItem = player.getItemInHand().getType();
         Block block = event.getClickedBlock();
@@ -251,10 +247,35 @@ public class ResidencePlayerListener implements Listener {
                                 if (hasuse || checkMat.getValue().equals("container")) {
                                     event.setCancelled(true);
                                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", checkMat.getValue()));
+                                    return;
                                 } else {
                                     event.setCancelled(true);
                                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "use"));
+                                    return;
                                 }
+                            }
+                        }
+                    }
+                    if (Residence.getConfigManager().getCustomContainers().contains(Integer.valueOf(block.getTypeId()))) {
+                        if (!perms.playerHas(player.getName(), world, "container", hasuse)) {
+                            event.setCancelled(true);
+                            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
+                            return;
+                        }
+                    }
+                    if (Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()))) {
+                        if (!hasuse) {
+                            event.setCancelled(true);
+                            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "use"));
+                            return;
+                        }
+                    }
+                    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                        if (Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()))) {
+                            if (!hasuse) {
+                                event.setCancelled(true);
+                                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "use"));
+                                return;
                             }
                         }
                     }
