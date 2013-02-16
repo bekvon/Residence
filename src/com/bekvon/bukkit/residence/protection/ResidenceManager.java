@@ -41,8 +41,8 @@ public class ResidenceManager {
     protected Map<String, Map<String, List<String>>> chunkResidences;
 
     public ResidenceManager() {
-        residences = Collections.synchronizedMap(new HashMap<String, ClaimedResidence>());
-        chunkResidences = Collections.synchronizedMap(new HashMap<String, Map<String, List<String>>>());
+        residences = new HashMap<String, ClaimedResidence>();
+        chunkResidences = new HashMap<String, Map<String, List<String>>>();
     }
 
     public ClaimedResidence getByLoc(Location loc) {
@@ -52,12 +52,16 @@ public class ResidenceManager {
         boolean found = false;
         String world = loc.getWorld().getName();
         String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
-        for (String key : chunkResidences.get(world).get(chunk)) {
-            ClaimedResidence entry = residences.get(key);
-            if (entry.containsLoc(loc)) {
-                res = entry;
-                found = true;
-                break;
+        if (chunkResidences.get(world) != null) {
+            if (chunkResidences.get(world).get(chunk) != null) {
+                for (String key : chunkResidences.get(world).get(chunk)) {
+                    ClaimedResidence entry = residences.get(key);
+                    if (entry.containsLoc(loc)) {
+                        res = entry;
+                        found = true;
+                        break;
+                    }
+                }
             }
         }
         if (!found) {
@@ -96,12 +100,16 @@ public class ResidenceManager {
         boolean found = false;
         String world = loc.getWorld().getName();
         String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
-        for (String key : chunkResidences.get(world).get(chunk)) {
-            ClaimedResidence entry = residences.get(key);
-            if (entry.containsLoc(loc)) {
-                res = entry;
-                found = true;
-                break;
+        if (chunkResidences.get(world) != null) {
+            if (chunkResidences.get(world).get(chunk) != null) {
+                for (String key : chunkResidences.get(world).get(chunk)) {
+                    ClaimedResidence entry = residences.get(key);
+                    if (entry.containsLoc(loc)) {
+                        res = entry;
+                        found = true;
+                        break;
+                    }
+                }
             }
         }
         if (!found) {
@@ -117,18 +125,15 @@ public class ResidenceManager {
         return name;
     }
 
-    public String getNameByRes(ClaimedResidence res)
-    {
+    public String getNameByRes(ClaimedResidence res) {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        synchronized (residences)
-        {
-            for (Entry<String, ClaimedResidence> check : set)
-            {
-                if (check.getValue() == res)
-                    return check.getKey();
-                String n = check.getValue().getSubzoneNameByRes(res);
-                if (n != null)
-                    return check.getKey() + "." + n;
+        for (Entry<String, ClaimedResidence> check : set) {
+            if (check.getValue() == res) {
+                return check.getKey();
+            }
+            String n = check.getValue().getSubzoneNameByRes(res);
+            if (n != null) {
+                return check.getKey() + "." + n;
             }
         }
         return null;
@@ -403,14 +408,9 @@ public class ResidenceManager {
     public int getOwnedZoneCount(String player) {
         Collection<ClaimedResidence> set = residences.values();
         int count = 0;
-        synchronized (residences)
-        {
-            for (ClaimedResidence res : set)
-            {
-                if (res.getPermissions().getOwner().equalsIgnoreCase(player))
-                {
-                    count++;
-                }
+        for (ClaimedResidence res : set) {
+            if (res.getPermissions().getOwner().equalsIgnoreCase(player)) {
+                count++;
             }
         }
         return count;
