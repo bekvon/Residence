@@ -4,13 +4,14 @@
  */
 
 package com.bekvon.bukkit.residence.protection;
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -199,5 +200,21 @@ public class CuboidArea {
         newArea.highPoints = new Location(world,x1,y1,z1);
         newArea.lowPoints = new Location(world,x2,y2,z2);
         return newArea;
+    }
+
+    public List<String> getChunks() {
+        List<String> chunks = new ArrayList<String>();
+        Location high = this.highPoints;
+        Location low = this.lowPoints;
+        int highX = high.getChunk().getX();
+        int lowX = low.getChunk().getX();
+        int highZ = high.getChunk().getZ();
+        int lowZ = low.getChunk().getZ();
+        for (int x = lowX; x <= highX; x++) {
+            for (int z = lowZ; z <= highZ; z++) {
+                chunks.add(x+":"+z);
+            }
+        }
+        return chunks;
     }
 }
