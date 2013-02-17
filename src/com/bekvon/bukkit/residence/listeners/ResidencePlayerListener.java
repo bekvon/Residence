@@ -83,7 +83,7 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         String pname = event.getPlayer().getName();
         currentRes.remove(pname);
@@ -92,7 +92,7 @@ public class ResidencePlayerListener implements Listener {
         Residence.getChatManager().removeFromChannel(pname);
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         lastUpdate.put(player.getName(), 0L);
@@ -112,7 +112,7 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerSpawn(PlayerRespawnEvent event) {
         Location loc = event.getRespawnLocation();
         Boolean bed = event.isBedSpawn();
@@ -284,13 +284,12 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.isCancelled()) {
+        Player player = event.getPlayer();
+        if (Residence.isResAdminOn(player)) {
             return;
         }
-
-        Player player = event.getPlayer();
         Entity ent = event.getRightClicked();
         Material mat = Material.ITEM_FRAME;
         Material heldItem = player.getItemInHand().getType();
@@ -306,32 +305,26 @@ public class ResidencePlayerListener implements Listener {
         FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
         String world = player.getWorld().getName();
         String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
-        boolean resadmin = Residence.isResAdminOn(player);
-        if (!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
+        if (!Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ItemBlacklisted"));
             event.setCancelled(true);
             return;
         }
-        if (!resadmin) {
-            if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
-            }
+        if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if (event.isCancelled()) {
+        Player player = event.getPlayer();
+        if (Residence.isResAdminOn(player)) {
             return;
         }
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
-        Player player = event.getPlayer();
         String pname = player.getName();
-
-        boolean resadmin = Residence.isResAdminOn(player);
-        if (res != null)
-        {
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
+        if (res != null) {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(res.getName())) {
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("RentedModifyDeny"));
@@ -341,23 +334,18 @@ public class ResidencePlayerListener implements Listener {
             }
         }
         FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
-        boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
-        if (!hasbucket && !resadmin) {
+        if (!perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true))) {
             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "bucket"));
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
         Player player = event.getPlayer();
         String pname = player.getName();
-        boolean resadmin = Residence.isResAdminOn(player);
-        if (resadmin) {
+        if (Residence.isResAdminOn(player)) {
             return;
         }
         if (res != null) {
@@ -377,16 +365,27 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Location loc = event.getTo();
         Player player = event.getPlayer();
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-        boolean resadmin = Residence.isResAdminOn(player);
+        if (Residence.isResAdminOn(player)) {
+            return;
+        }
         if (event.getCause() == TeleportCause.ENDER_PEARL) {
             if (res != null) {
                 String areaname = Residence.getResidenceManager().getNameByLoc(loc);
-                if (!res.getPermissions().playerHas(player.getName(), "move", true) && !resadmin) {
+                if (!res.getPermissions().playerHas(player.getName(), "move", true)) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", areaname));
+                }
+            }
+        }
+        if (event.getCause() == TeleportCause.PLUGIN) {
+            if (res != null) {
+                String areaname = Residence.getResidenceManager().getNameByLoc(loc);
+                if (!res.getPermissions().playerHas(player.getName(), "tp", true)) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", areaname));
                 }
@@ -394,11 +393,8 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (player == null) {
             return;
@@ -409,8 +405,7 @@ public class ResidencePlayerListener implements Listener {
             return;
         }
         lastUpdate.put(player.getName(), now);
-        if (event.getFrom().getWorld() == event.getTo().getWorld())
-        {
+        if (event.getFrom().getWorld() == event.getTo().getWorld()) {
             ILog.sendToPlayer(player, "onPlayerMove(" + event.getFrom().distance(event.getTo()) + ") Fired");
             if (event.getFrom().distance(event.getTo()) == 0) {
                 return;
@@ -511,9 +506,6 @@ public class ResidencePlayerListener implements Listener {
                     int health = player.getHealth();
                     if (health < 20 && !player.isDead()) {
                         player.setHealth(health + 1);
-                        // System.out.println("heal:" +player.getName() +
-                        // " oldhealth = "+health+" newhealth = " +
-                        // player.getHealth());
                     }
                 }
             }
@@ -521,11 +513,8 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         String pname = event.getPlayer().getName();
         if (chatenabled && playerToggleChat.contains(pname)) {
             String area = currentRes.get(pname);

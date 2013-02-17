@@ -39,8 +39,9 @@ public class ResidenceBlockListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockBreak Fired");
-        if (Residence.isResAdminOn(player))
+        if (Residence.isResAdminOn(player)) {
             return;
+        }
         Material mat = event.getBlock().getType();
         String world = event.getBlock().getWorld().getName();
         String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
@@ -78,13 +79,15 @@ public class ResidenceBlockListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         ILog.sendToPlayer(player, "onBlockPlace Fired");
-        if (Residence.isResAdminOn(player))
+        if (Residence.isResAdminOn(player)) {
             return;
+        }
         Material mat = event.getBlock().getType();
         String world = event.getBlock().getWorld().getName();
         String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
-        if (Residence.getItemManager().isIgnored(mat, group, world))
+        if (Residence.getItemManager().isIgnored(mat, group, world)) {
             return;
+        }
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if (Residence.getConfigManager().enabledRentSystem()) {
             if (res != null) {
@@ -117,21 +120,22 @@ public class ResidenceBlockListener implements Listener {
     public void onBlockSpread(BlockSpreadEvent event) {
         Location loc = event.getBlock().getLocation();
         FlagPermissions perms = Residence.getPermsByLoc(loc);
-        if(!perms.has("spread", true))
+        if (!perms.has("spread", true)) {
             event.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-        if(!perms.has("piston", true)){
+        if (!perms.has("piston", true)){
             event.setCancelled(true);
         	return;
     	}
-        if(event.isSticky()){
+        if (event.isSticky()){
             Location location = event.getRetractLocation();
             FlagPermissions blockperms = Residence.getPermsByLoc(location);
-            if(!blockperms.has("piston", true)) {
+            if (!blockperms.has("piston", true)) {
             	event.setCancelled(true);
             }
         }
@@ -140,8 +144,9 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-        if(!perms.has("piston", true))
+        if (!perms.has("piston", true)) {
             event.setCancelled(true);
+        }
         for (Block block : event.getBlocks()) {
         	FlagPermissions blockpermsfrom = Residence.getPermsByLoc(block.getLocation());
         	Location blockto = block.getLocation();
@@ -149,7 +154,7 @@ public class ResidenceBlockListener implements Listener {
         	blockto.setY(blockto.getY()+event.getDirection().getModY());
         	blockto.setZ(blockto.getZ()+event.getDirection().getModZ());
         	FlagPermissions blockpermsto = Residence.getPermsByLoc(blockto);
-            if(!blockpermsfrom.has("piston", true)||!blockpermsto.has("piston", true)) {
+            if (!blockpermsfrom.has("piston", true) || !blockpermsto.has("piston", true)) {
             	event.setCancelled(true);
             	return;
             }
@@ -161,7 +166,7 @@ public class ResidenceBlockListener implements Listener {
         FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
         boolean hasflow = perms.has("flow", true);
         Material mat = event.getBlock().getType();
-        if(!hasflow) {
+        if (!hasflow) {
             event.setCancelled(true);
             return;
         }
@@ -182,7 +187,7 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-        if(!perms.has("firespread", true)){
+        if (!perms.has("firespread", true)) {
             event.setCancelled(true);
         }
     }
@@ -191,8 +196,8 @@ public class ResidenceBlockListener implements Listener {
     public void onBlockIgnite(BlockIgniteEvent event) {
         FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(), event.getPlayer());
         IgniteCause cause = event.getCause();
-        if(cause == IgniteCause.SPREAD){
-            if(!perms.has("firespread", true)){
+        if (cause == IgniteCause.SPREAD) {
+            if (!perms.has("firespread", true)) {
         		event.setCancelled(true);
         	}
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
@@ -207,15 +212,4 @@ public class ResidenceBlockListener implements Listener {
         	}
         }
     }
-/*
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
-        if (res != null) {
-            if (!res.getPermissions().has("physics", true)) {
-                event.getBlock().breakNaturally();
-                event.setCancelled(true);
-            }
-        }
-    }*/
 }

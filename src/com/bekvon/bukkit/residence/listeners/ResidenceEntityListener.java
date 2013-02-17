@@ -84,23 +84,7 @@ public class ResidenceEntityListener implements Listener {
     		event.setCancelled(true);
     	}
     }
-/*
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onEndermanPlace(EndermanPlaceEvent event) {
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getLocation());
-        if (res != null) {
-            ResidencePermissions perms = res.getPermissions();
-            if (!perms.has("build", true)) {
-                event.setCancelled(true);
-            }
-        } else {
-            FlagPermissions perms = Residence.getWorldFlags().getPerms(event.getLocation().getWorld().getName());
-            if (!perms.has("build", true)) {
-                event.setCancelled(true);
-            }
-        }
-    }
-*/
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
@@ -124,9 +108,8 @@ public class ResidenceEntityListener implements Listener {
         }
         FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(), player);
         String pname = player.getName();
-        String world = event.getBlock().getWorld().getName();
-        boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
-        if (!hasplace) {
+        String world = player.getWorld().getName();
+        if (!perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true))) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
         }
@@ -144,8 +127,7 @@ public class ResidenceEntityListener implements Listener {
                 String pname = player.getName();
                 FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getEntity().getLocation(), player);
                 String world = event.getEntity().getWorld().getName();
-                boolean hasplace = perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true));
-                if (!hasplace) {
+                if (!perms.playerHas(pname, world, "destroy", perms.playerHas(pname, world, "build", true))) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
                 }
@@ -260,7 +242,7 @@ public class ResidenceEntityListener implements Listener {
     		LivingEntity target = it.next();
     		if(target.getType()==EntityType.PLAYER){
     			Boolean tgtpvp = Residence.getPermsByLoc(target.getLocation()).has("pvp", true);
-    			if(!srcpvp||!tgtpvp){
+    			if(!srcpvp || !tgtpvp){
     				event.setIntensity(target, 0);
     			}
     		}
@@ -269,12 +251,10 @@ public class ResidenceEntityListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
-        if(event.isCancelled())
-            return;
         Entity ent = event.getEntity();
-	if(ent.hasMetadata("NPC")) {
-		return;
-	}
+        if(ent.hasMetadata("NPC")) {
+            return;
+        }
         boolean tamedWolf = ent instanceof Wolf ? ((Wolf)ent).isTamed() : false;
         ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
         /* Living Entities */
@@ -282,20 +262,22 @@ public class ResidenceEntityListener implements Listener {
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
             Entity damager = attackevent.getDamager();
             ClaimedResidence srcarea = null;
-            if(damager!=null)
+            if (damager != null) {
                 srcarea = Residence.getResidenceManager().getByLoc(damager.getLocation());
+            }
             boolean srcpvp = true;
-            if(srcarea !=null)
+            if (srcarea != null) {
                 srcpvp = srcarea.getPermissions().has("pvp", true);
+            }
             ent = attackevent.getEntity();
             if ((ent instanceof Player || tamedWolf) && (damager instanceof Player || (damager instanceof Arrow && (((Arrow)damager).getShooter() instanceof Player)))) {
                 Player attacker = null;
-                if(damager instanceof Player)
+                if (damager instanceof Player) {
                     attacker = (Player) damager;
-                else if(damager instanceof Arrow)
+                } else if (damager instanceof Arrow) {
                     attacker = (Player)((Arrow)damager).getShooter();
-                if(!srcpvp)
-                {
+                }
+                if(!srcpvp) {
                     attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPVPZone"));
                     event.setCancelled(true);
                     return;
@@ -315,8 +297,7 @@ public class ResidenceEntityListener implements Listener {
                     }
                 }
                 return;
-            }
-            else if ((ent instanceof Player || tamedWolf) && (damager instanceof Creeper)) {
+            } else if ((ent instanceof Player || tamedWolf) && (damager instanceof Creeper)) {
                 if (area == null) {
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("creeper", true)) {
                         event.setCancelled(true);
