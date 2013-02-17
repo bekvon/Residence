@@ -44,8 +44,8 @@ public class ClaimedResidence {
 
     private ClaimedResidence()
     {
-        subzones = Collections.synchronizedMap(new HashMap<String, ClaimedResidence>());
-        areas = Collections.synchronizedMap(new HashMap<String, CuboidArea>());
+        subzones = new HashMap<String, ClaimedResidence>();
+        areas = new HashMap<String, CuboidArea>();
         bank = new ResidenceBank(this);
         blacklist = new ResidenceItemList(this, ListType.BLACKLIST);
         ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
@@ -307,29 +307,23 @@ public class ClaimedResidence {
         }
         CuboidArea newArea = new CuboidArea(loc1, loc2);
         Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
-        synchronized (subzones) {
-            for (Entry<String, ClaimedResidence> resEntry : set) {
-                ClaimedResidence res = resEntry.getValue();
-                if (res.checkCollision(newArea)) {
-                    if(player!=null)
-                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("SubzoneCollide",ChatColor.YELLOW + resEntry.getKey()));
-                    return false;
-                }
+        for (Entry<String, ClaimedResidence> resEntry : set) {
+            ClaimedResidence res = resEntry.getValue();
+            if (res.checkCollision(newArea)) {
+                if(player!=null)
+                    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("SubzoneCollide",ChatColor.YELLOW + resEntry.getKey()));
+                return false;
             }
         }
         ClaimedResidence newres;
-        if(player!=null)
-        {
+        if(player!=null) {
             newres = new ClaimedResidence(owner, perms.getWorld(), this);
             newres.addArea(player, newArea, name, resadmin);
-        }
-        else
-        {
+        } else {
             newres = new ClaimedResidence(owner, perms.getWorld(), this);
             newres.addArea(newArea, name);
         }
-        if(newres.getAreaCount()!=0)
-        {
+        if(newres.getAreaCount()!=0) {
             newres.getPermissions().applyDefaultFlags();
             if(player!=null)
             {
@@ -377,13 +371,11 @@ public class ClaimedResidence {
         Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
         boolean found = false;
         ClaimedResidence res = null;
-        synchronized (subzones) {
-            for (Entry<String, ClaimedResidence> entry : set) {
-                res = entry.getValue();
-                if (res.containsLoc(loc)) {
-                    found = true;
-                    break;
-                }
+        for (Entry<String, ClaimedResidence> entry : set) {
+            res = entry.getValue();
+            if (res.containsLoc(loc)) {
+                found = true;
+                break;
             }
         }
         if (!found) {
@@ -428,11 +420,9 @@ public class ClaimedResidence {
     public String[] getSubzoneList() {
         ArrayList zones = new ArrayList<String>();
         Set<String> set = subzones.keySet();
-        synchronized (subzones) {
-            for (String key : set) {
-                if (key != null) {
-                    zones.add(key);
-                }
+        for (String key : set) {
+            if (key != null) {
+                zones.add(key);
             }
         }
         return (String[]) zones.toArray();
@@ -495,10 +485,8 @@ public class ClaimedResidence {
     public long getTotalSize() {
         Collection<CuboidArea> set = areas.values();
         long size = 0;
-        synchronized (areas) {
-            for (CuboidArea entry : set) {
-                size = size + entry.getSize();
-            }
+        for (CuboidArea entry : set) {
+            size = size + entry.getSize();
         }
         return size;
     }
@@ -586,10 +574,9 @@ public class ClaimedResidence {
                 found = true;
             }
         }
-        if(found)
+        if(found) {
             return newLoc;
-        else
-        {
+        } else {
             World world = Residence.getServ().getWorld(perms.getWorld());
             if(world!=null)
                 return world.getSpawnLocation();
@@ -597,30 +584,20 @@ public class ClaimedResidence {
         }
     }
 
-    protected CuboidArea getAreaByLoc(Location loc)
-    {
-        synchronized(areas)
-        {
-            for(CuboidArea thisarea : areas.values())
-            {
-                if(thisarea.containsLoc(loc))
-                    return thisarea;
-            }
+    protected CuboidArea getAreaByLoc(Location loc) {
+        for(CuboidArea thisarea : areas.values()) {
+            if(thisarea.containsLoc(loc))
+                return thisarea;
         }
         return null;
     }
 
-    public String[] listSubzones()
-    {
+    public String[] listSubzones() {
         String list[] = new String[subzones.size()];
         int i = 0;
-        synchronized(subzones)
-        {
-            for(String res : subzones.keySet())
-            {
-                list[i] = res;
-                i++;
-            }
+        for(String res : subzones.keySet()) {
+            list[i] = res;
+            i++;
         }
         return list;
     }

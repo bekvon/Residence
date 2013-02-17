@@ -646,114 +646,55 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    protected boolean loadYml() throws Exception
-    {
+    protected boolean loadYml() throws Exception {
         File saveFolder = new File(dataFolder, "Save");
         try {
-            File oldFile = new File(dataFolder, "res.yml");
-            if (oldFile.isFile() && !saveFolder.isDirectory()) {
-                System.out.println("[Residence] Upgrading to new save system...");
-                this.oldLoadYMLSave(oldFile);
-                this.saveYml();
-                oldFile.delete();
-                oldFile = new File(dataFolder, "res.yml.bak");
-                if (oldFile.isFile()) {
-                    oldFile.delete();
-                }
-            } else {
-                File worldFolder = new File(saveFolder, "Worlds");
-                if (!saveFolder.isDirectory())
-                {
-                    System.out.println("[Residence] Save directory does not exist...");
-                    return true;
-                }
-                YMLSaveHelper yml;
-                File loadFile;
-                HashMap<String, Object> worlds = new HashMap<String, Object>();
-                for (World world : server.getWorlds()) {
-                    loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
-                    if (loadFile.isFile()) {
-                        yml = new YMLSaveHelper(loadFile);
-                        yml.load();
-                        /*
-                         * Object obj = yml.getRoot().get("Seed"); Long seed =
-                         * 0L; if (obj != null) { if (obj instanceof Long) {
-                         * seed = (Long) obj; } else if (obj instanceof Integer)
-                         * { seed = ((Integer) obj).longValue(); } } if(seed==0
-                         * || seed == world.getSeed())
-                         */
-                        worlds.put(world.getName(), yml.getRoot().get("Residences"));
-                        /*
-                         * else { if(seed != 0) { File tempfile = new
-                         * File(worldFolder,"res_worldseed_"+seed+".yml"); int i
-                         * = 0; while(tempfile == null || tempfile.isFile()) {
-                         * tempfile = new
-                         * File(worldFolder,"res_worldseed_"+seed+"_"+i+".yml");
-                         * i++; } System.out.println(
-                         * "[Residence] Save Error: World Seed mis-match! world: "
-                         * + world.getName() + " seed: " + world.getSeed() +
-                         * " expected: " + seed + ". Renaming to " +
-                         * tempfile.getName()); loadFile.renameTo(tempfile); }
-                         * else { File tempfile = new
-                         * File(worldFolder,"res_unknown.yml"); int i = 0;
-                         * while(tempfile == null || tempfile.isFile()) {
-                         * tempfile = new
-                         * File(worldFolder,"res_unknown_"+i+".yml"); i++; }
-                         * System.out.println(
-                         * "[Residence] Save Error: World Seed missing! world: "
-                         * + world.getName() + ". Renaming to " +
-                         * tempfile.getName()); loadFile.renameTo(tempfile); } }
-                         */
-                    }
-                }
-                rmanager = ResidenceManager.load(worlds);
-                loadFile = new File(saveFolder, "forsale.yml");
-                if (loadFile.isFile()) {
-                    yml = new YMLSaveHelper(loadFile);
-                    yml.load();
-                    tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
-                }
-                loadFile = new File(saveFolder, "leases.yml");
-                if (loadFile.isFile()) {
-                    yml = new YMLSaveHelper(loadFile);
-                    yml.load();
-                    leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
-                }
-                loadFile = new File(saveFolder, "permlists.yml");
-                if (loadFile.isFile()) {
-                    yml = new YMLSaveHelper(loadFile);
-                    yml.load();
-                    pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
-                }
-                loadFile = new File(saveFolder, "rent.yml");
-                if (loadFile.isFile()) {
-                    yml = new YMLSaveHelper(loadFile);
-                    yml.load();
-                    rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
-                }
-                // System.out.print("[Residence] Loaded...");
+            File worldFolder = new File(saveFolder, "Worlds");
+            if (!saveFolder.isDirectory()) {
+                System.out.println("[Residence] Save directory does not exist...");
+                return true;
             }
+            YMLSaveHelper yml;
+            File loadFile;
+            HashMap<String, Object> worlds = new HashMap<String, Object>();
+            for (World world : server.getWorlds()) {
+                loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
+                if (loadFile.isFile()) {
+                    yml = new YMLSaveHelper(loadFile);
+                    yml.load();
+                    worlds.put(world.getName(), yml.getRoot().get("Residences"));
+                }
+            }
+            rmanager = ResidenceManager.load(worlds);
+            loadFile = new File(saveFolder, "forsale.yml");
+            if (loadFile.isFile()) {
+                yml = new YMLSaveHelper(loadFile);
+                yml.load();
+                tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
+            }
+            loadFile = new File(saveFolder, "leases.yml");
+            if (loadFile.isFile()) {
+                yml = new YMLSaveHelper(loadFile);
+                yml.load();
+                leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
+            }
+            loadFile = new File(saveFolder, "permlists.yml");
+            if (loadFile.isFile()) {
+                yml = new YMLSaveHelper(loadFile);
+                yml.load();
+                pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
+            }
+            loadFile = new File(saveFolder, "rent.yml");
+            if (loadFile.isFile()) {
+                yml = new YMLSaveHelper(loadFile);
+                yml.load();
+                rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
+            }
+            // System.out.print("[Residence] Loaded...");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }
-    }
-
-    private boolean oldLoadYMLSave(File saveLoc) throws Exception {
-        if (saveLoc.isFile()) {
-            YMLSaveHelper yml = new YMLSaveHelper(saveLoc);
-            yml.load();
-            rmanager = ResidenceManager.loadMap((Map) yml.getRoot().get("Residences"), new ResidenceManager());
-            tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
-            leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
-            pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
-            rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
-            System.out.print("[Residence] Loaded Residences...");
-            return true;
-        } else {
-            System.out.println("[Residence] Save File not found...");
-            return false;
         }
     }
 

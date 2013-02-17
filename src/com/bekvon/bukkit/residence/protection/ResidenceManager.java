@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,11 +38,11 @@ import com.bekvon.bukkit.residence.text.help.InformationPager;
  */
 public class ResidenceManager {
     protected Map<String, ClaimedResidence> residences;
-    protected Map<ClaimedResidence, Long> cache;
+    protected Map<String, Map<String, List<String>>> chunkResidences;
 
     public ResidenceManager() {
-        residences = Collections.synchronizedMap(new HashMap<String, ClaimedResidence>());
-        cache = Collections.synchronizedMap(new HashMap<ClaimedResidence, Long>());
+        residences = new HashMap<String, ClaimedResidence>();
+        chunkResidences = new HashMap<String, Map<String, List<String>>>();
     }
 
     public ClaimedResidence getByLoc(Location loc) {
@@ -50,32 +50,14 @@ public class ResidenceManager {
             return null;
         ClaimedResidence res = null;
         boolean found = false;
-        Map<ClaimedResidence, Long> cacheSet = cache;
-        synchronized (cache) {
-            Set<ClaimedResidence> remove = new HashSet<ClaimedResidence>();
-            for (ClaimedResidence entry : cacheSet.keySet()) {
-                if (entry.containsLoc(loc)) {
-                    found = true;
-                    break;
-                } else {
-                    if (System.currentTimeMillis() - cacheSet.get(entry) > 10000) {
-                        remove.add(entry);
-                    }
-                }
-            }
-            for (ClaimedResidence rem : remove) {
-                cache.remove(rem);
-            }
-            if (found) {
-                cache.put(res, System.currentTimeMillis());
-            }
-        }
-        if (!found) {
-            Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-            synchronized (residences) {
-                for (Entry<String, ClaimedResidence> key : set) {
-                    res = key.getValue();
-                    if (res.containsLoc(loc)) {
+        String world = loc.getWorld().getName();
+        String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
+        if (chunkResidences.get(world) != null) {
+            if (chunkResidences.get(world).get(chunk) != null) {
+                for (String key : chunkResidences.get(world).get(chunk)) {
+                    ClaimedResidence entry = residences.get(key);
+                    if (entry.containsLoc(loc)) {
+                        res = entry;
                         found = true;
                         break;
                     }
@@ -113,34 +95,15 @@ public class ResidenceManager {
     public String getNameByLoc(Location loc) {
         if (loc == null)
             return null;
-        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         ClaimedResidence res = null;
         String name = null;
         boolean found = false;
-        Map<ClaimedResidence, Long> cacheSet = cache;
-        synchronized (cache) {
-            Set<ClaimedResidence> remove = new HashSet<ClaimedResidence>();
-            for (ClaimedResidence entry : cacheSet.keySet()) {
-                if (entry.containsLoc(loc)) {
-                    found = true;
-                    break;
-                } else {
-                    if (System.currentTimeMillis() - cacheSet.get(entry) > 10000) {
-                        remove.add(entry);
-                    }
-                }
-            }
-            for (ClaimedResidence rem : remove) {
-                cache.remove(rem);
-            }
-            if (found) {
-                cache.put(res, System.currentTimeMillis());
-            }
-        }
-        if(!found) {
-            synchronized (residences) {
-                for (Entry<String, ClaimedResidence> key : set) {
-                    ClaimedResidence entry = key.getValue();
+        String world = loc.getWorld().getName();
+        String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
+        if (chunkResidences.get(world) != null) {
+            if (chunkResidences.get(world).get(chunk) != null) {
+                for (String key : chunkResidences.get(world).get(chunk)) {
+                    ClaimedResidence entry = residences.get(key);
                     if (entry.containsLoc(loc)) {
                         res = entry;
                         found = true;
@@ -149,12 +112,12 @@ public class ResidenceManager {
                 }
             }
         }
-        if(!found) {
+        if (!found) {
             return null;
         }
         name = res.getName();
         if (name == null)
-            return null;       
+            return null;
         String szname = res.getSubzoneNameByLoc(loc);
         if (szname != null) {
             return name + "." + szname;
@@ -162,18 +125,15 @@ public class ResidenceManager {
         return name;
     }
 
-    public String getNameByRes(ClaimedResidence res)
-    {
+    public String getNameByRes(ClaimedResidence res) {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        synchronized (residences)
-        {
-            for (Entry<String, ClaimedResidence> check : set)
-            {
-                if (check.getValue() == res)
-                    return check.getKey();
-                String n = check.getValue().getSubzoneNameByRes(res);
-                if (n != null)
-                    return check.getKey() + "." + n;
+        for (Entry<String, ClaimedResidence> check : set) {
+            if (check.getValue() == res) {
+                return check.getKey();
+            }
+            String n = check.getValue().getSubzoneNameByRes(res);
+            if (n != null) {
+                return check.getKey() + "." + n;
             }
         }
         return null;
@@ -424,21 +384,21 @@ public class ResidenceManager {
     public void removeAllByOwner(String owner) {
         this.removeAllByOwner(null, owner, residences);
     }
-    
+
     public void removeAllByOwner(Player player, String owner) {
         this.removeAllByOwner(player, owner, residences);
     }
-    
+
     private void removeAllByOwner(Player player, String owner, Map<String, ClaimedResidence> resholder) {
         Iterator<ClaimedResidence> it = resholder.values().iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             ClaimedResidence res = it.next();
-            if(res.getOwner().equalsIgnoreCase(owner)) {
-             ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player==null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
+            if (res.getOwner().equalsIgnoreCase(owner)) {
+                ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
                 Residence.getServ().getPluginManager().callEvent(resevent);
-                if(resevent.isCancelled())
+                if (resevent.isCancelled())
                     return;
-             it.remove();
+                it.remove();
             } else {
                 this.removeAllByOwner(player, owner, res.subzones);
             }
@@ -448,14 +408,9 @@ public class ResidenceManager {
     public int getOwnedZoneCount(String player) {
         Collection<ClaimedResidence> set = residences.values();
         int count = 0;
-        synchronized (residences)
-        {
-            for (ClaimedResidence res : set)
-            {
-                if (res.getPermissions().getOwner().equalsIgnoreCase(player))
-                {
-                    count++;
-                }
+        for (ClaimedResidence res : set) {
+            if (res.getPermissions().getOwner().equalsIgnoreCase(player)) {
+                count++;
             }
         }
         return count;
@@ -535,23 +490,17 @@ public class ResidenceManager {
         return worldmap;
     }
 
-    public static ResidenceManager load(Map<String, Object> root) throws Exception
-    {
+    public static ResidenceManager load(Map<String, Object> root) throws Exception {
         ResidenceManager resm = new ResidenceManager();
-        if (root == null)
-        {
+        if (root == null) {
             return resm;
         }
-        for (World world : Residence.getServ().getWorlds())
-        {
+        for (World world : Residence.getServ().getWorlds()) {
             Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
-            if (reslist != null)
-            {
-                try
-                {
-                    loadMap(reslist, resm);
-                } catch (Exception ex)
-                {
+            if (reslist != null) {
+                try {
+                    resm.chunkResidences.put(world.getName(), loadMap(reslist, resm));
+                } catch (Exception ex) {
                     System.out.println("Error in loading save file for world: " + world.getName());
                     if (Residence.getConfigManager().stopOnSaveError())
                         throw (ex);
@@ -561,54 +510,59 @@ public class ResidenceManager {
         return resm;
     }
 
-    public static ResidenceManager loadMap(Map<String, Object> root, ResidenceManager resm) throws Exception
-    {
-        if (root != null)
-        {
-            for (Entry<String, Object> res : root.entrySet())
-            {
-                try
-                {
-                    resm.residences.put(res.getKey(), ClaimedResidence.load((Map<String, Object>) res.getValue(), null));
-                } catch (Exception ex)
-                {
+    public static Map<String, List<String>> loadMap(Map<String, Object> root, ResidenceManager resm) throws Exception {
+        Map<String, List<String>> retRes = new HashMap<String, List<String>>();
+        if (root != null) {
+            for (Entry<String, Object> res : root.entrySet()) {
+                try {
+                    ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null);
+                    for (String chunk : getChunks(residence)) {
+                        List<String> ress = new ArrayList<String>();
+                        if (retRes.containsKey(chunk)) {
+                            ress.addAll(retRes.get(chunk));
+                        }
+                        ress.add(res.getKey());
+                        retRes.put(chunk, ress);
+                    }
+                    resm.residences.put(res.getKey(), residence);
+                } catch (Exception ex) {
                     System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
                     Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
-                    if (Residence.getConfigManager().stopOnSaveError())
-                    {
+                    if (Residence.getConfigManager().stopOnSaveError()) {
                         throw (ex);
                     }
                 }
             }
         }
-        return resm;
+        return retRes;
     }
 
-    public boolean renameResidence(String oldName, String newName)
-    {
+    private static List<String> getChunks(ClaimedResidence res) {
+        List<String> chunks = new ArrayList<String>();
+        for (CuboidArea area : res.getAreaArray()) {
+            chunks.addAll(area.getChunks());
+        }
+        return chunks;
+    }
+
+    public boolean renameResidence(String oldName, String newName) {
         return this.renameResidence(null, oldName, newName, true);
     }
 
-    public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin)
-    {
-        if (!Residence.validName(newName))
-        {
+    public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin) {
+        if (!Residence.validName(newName)) {
             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
             return false;
         }
         ClaimedResidence res = this.getByName(oldName);
-        if (res == null)
-        {
+        if (res == null) {
             if (player != null)
                 player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidResidence"));
             return false;
         }
-        if (res.getPermissions().hasResidencePermission(player, true) || resadmin)
-        {
-            if (res.getParent() == null)
-            {
-                if (residences.containsKey(newName))
-                {
+        if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
+            if (res.getParent() == null) {
+                if (residences.containsKey(newName)) {
                     if (player != null)
                         player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + newName + ChatColor.RED));
                     return false;
