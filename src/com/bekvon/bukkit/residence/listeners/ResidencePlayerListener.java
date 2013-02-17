@@ -387,7 +387,7 @@ public class ResidencePlayerListener implements Listener {
                 String areaname = Residence.getResidenceManager().getNameByLoc(loc);
                 if (!res.getPermissions().playerHas(player.getName(), "tp", true)) {
                     event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", areaname));
+                    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportDeny", areaname));
                 }
             }
         }
