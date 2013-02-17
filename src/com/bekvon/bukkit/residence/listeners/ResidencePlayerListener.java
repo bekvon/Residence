@@ -359,7 +359,7 @@ public class ResidencePlayerListener implements Listener {
         }
         FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
         boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
-        if (!hasbucket && !resadmin) {
+        if (!hasbucket) {
             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "bucket"));
             event.setCancelled(true);
         }
