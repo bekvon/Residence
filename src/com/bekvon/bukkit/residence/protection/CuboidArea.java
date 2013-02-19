@@ -18,16 +18,14 @@ import org.bukkit.Server;
 import org.bukkit.World;
 
 /**
- *
+ * 
  * @author Administrator
  */
 public class CuboidArea {
     protected Location highPoints;
     protected Location lowPoints;
-    
-    protected CuboidArea()
-    {
-        
+
+    protected CuboidArea() {
     }
 
     public CuboidArea(Location startLoc, Location endLoc) {
@@ -53,27 +51,24 @@ public class CuboidArea {
             highz = endLoc.getBlockZ();
             lowz = startLoc.getBlockZ();
         }
-        highPoints = new Location(startLoc.getWorld(),highx,highy,highz);
-        lowPoints = new Location(startLoc.getWorld(),lowx,lowy,lowz);
+        highPoints = new Location(startLoc.getWorld(), highx, highy, highz);
+        lowPoints = new Location(startLoc.getWorld(), lowx, lowy, lowz);
     }
 
-    public boolean isAreaWithinArea(CuboidArea area)
-    {
+    public boolean isAreaWithinArea(CuboidArea area) {
         return (this.containsLoc(area.highPoints) && this.containsLoc(area.lowPoints));
     }
 
-    public boolean containsLoc(Location loc)
-    {
-        if(loc==null)
+    public boolean containsLoc(Location loc) {
+        if (loc == null) {
             return false;
-        if(!loc.getWorld().equals(highPoints.getWorld()))
+        }
+        if (!loc.getWorld().equals(highPoints.getWorld())) {
             return false;
-        if(lowPoints.getBlockX() <= loc.getBlockX() && highPoints.getBlockX() >= loc.getBlockX())
-        {
-            if(lowPoints.getBlockZ() <= loc.getBlockZ() && highPoints.getBlockZ() >= loc.getBlockZ())
-            {
-                if(lowPoints.getBlockY() <= loc.getBlockY() && highPoints.getBlockY() >= loc.getBlockY())
-                {
+        }
+        if (lowPoints.getBlockX() <= loc.getBlockX() && highPoints.getBlockX() >= loc.getBlockX()) {
+            if (lowPoints.getBlockZ() <= loc.getBlockZ() && highPoints.getBlockZ() >= loc.getBlockZ()) {
+                if (lowPoints.getBlockY() <= loc.getBlockY() && highPoints.getBlockY() >= loc.getBlockY()) {
                     return true;
                 }
             }
@@ -81,17 +76,17 @@ public class CuboidArea {
         return false;
     }
 
-    public boolean checkCollision(CuboidArea area)
-    {
-        if(!area.getWorld().equals(this.getWorld()))
+    public boolean checkCollision(CuboidArea area) {
+        if (!area.getWorld().equals(this.getWorld())) {
             return false;
-        if(area.containsLoc(lowPoints) || area.containsLoc(highPoints) || this.containsLoc(area.highPoints) || this.containsLoc(area.lowPoints))
+        }
+        if (area.containsLoc(lowPoints) || area.containsLoc(highPoints) || this.containsLoc(area.highPoints) || this.containsLoc(area.lowPoints)) {
             return true;
-        return advCuboidCheckCollision(highPoints, lowPoints,area.highPoints,area.lowPoints);
+        }
+        return advCuboidCheckCollision(highPoints, lowPoints, area.highPoints, area.lowPoints);
     }
 
-    private boolean advCuboidCheckCollision(Location A1High, Location A1Low, Location A2High, Location A2Low)
-    {
+    private boolean advCuboidCheckCollision(Location A1High, Location A1Low, Location A2High, Location A2Low) {
         int A1HX = A1High.getBlockX();
         int A1LX = A1Low.getBlockX();
         int A1HY = A1High.getBlockY();
@@ -104,53 +99,48 @@ public class CuboidArea {
         int A2LY = A2Low.getBlockY();
         int A2HZ = A2High.getBlockZ();
         int A2LZ = A2Low.getBlockZ();
-        if((A1HX>=A2LX&&A1HX<=A2HX)||(A1LX>=A2LX&&A1LX<=A2HX)||(A2HX>=A1LX&&A2HX<=A1HX)||(A2LX>=A1LX&&A2LX<=A1HX))
-            if((A1HY>=A2LY&&A1HY<=A2HY)||(A1LY>=A2LY&&A1LY<=A2HY)||(A2HY>=A1LY&&A2HY<=A1HY)||(A2LY>=A1LY&&A2LY<=A1HY))
-                if((A1HZ>=A2LZ&&A1HZ<=A2HZ)||(A1LZ>=A2LZ&&A1LZ<=A2HZ)||(A2HZ>=A1LZ&&A2HZ<=A1HZ)||(A2LZ>=A1LZ&&A2LZ<=A1HZ))
+        if ((A1HX >= A2LX && A1HX <= A2HX) || (A1LX >= A2LX && A1LX <= A2HX) || (A2HX >= A1LX && A2HX <= A1HX) || (A2LX >= A1LX && A2LX <= A1HX)) {
+            if ((A1HY >= A2LY && A1HY <= A2HY) || (A1LY >= A2LY && A1LY <= A2HY) || (A2HY >= A1LY && A2HY <= A1HY) || (A2LY >= A1LY && A2LY <= A1HY)) {
+                if ((A1HZ >= A2LZ && A1HZ <= A2HZ) || (A1LZ >= A2LZ && A1LZ <= A2HZ) || (A2HZ >= A1LZ && A2HZ <= A1HZ) || (A2LZ >= A1LZ && A2LZ <= A1HZ)) {
                     return true;
+                }
+            }
+        }
         return false;
     }
 
-    public long getSize()
-    {
-        int xsize = (highPoints.getBlockX() - lowPoints.getBlockX())+1;
-        int ysize = (highPoints.getBlockY() - lowPoints.getBlockY())+1;
-        int zsize = (highPoints.getBlockZ() - lowPoints.getBlockZ())+1;
+    public long getSize() {
+        int xsize = (highPoints.getBlockX() - lowPoints.getBlockX()) + 1;
+        int ysize = (highPoints.getBlockY() - lowPoints.getBlockY()) + 1;
+        int zsize = (highPoints.getBlockZ() - lowPoints.getBlockZ()) + 1;
         return xsize * ysize * zsize;
     }
 
-    public int getXSize()
-    {
-        return (highPoints.getBlockX() - lowPoints.getBlockX())+1;
+    public int getXSize() {
+        return (highPoints.getBlockX() - lowPoints.getBlockX()) + 1;
     }
 
-    public int getYSize()
-    {
-        return (highPoints.getBlockY() - lowPoints.getBlockY())+1;
+    public int getYSize() {
+        return (highPoints.getBlockY() - lowPoints.getBlockY()) + 1;
     }
 
-    public int getZSize()
-    {
-        return (highPoints.getBlockZ() - lowPoints.getBlockZ())+1;
+    public int getZSize() {
+        return (highPoints.getBlockZ() - lowPoints.getBlockZ()) + 1;
     }
 
-    public Location getHighLoc()
-    {
+    public Location getHighLoc() {
         return highPoints;
     }
 
-    public Location getLowLoc()
-    {
+    public Location getLowLoc() {
         return lowPoints;
     }
 
-    public World getWorld()
-    {
+    public World getWorld() {
         return highPoints.getWorld();
     }
 
-    public void save(DataOutputStream out, int version) throws IOException
-    {
+    public void save(DataOutputStream out, int version) throws IOException {
         out.writeUTF(highPoints.getWorld().getName());
         out.writeInt(highPoints.getBlockX());
         out.writeInt(highPoints.getBlockY());
@@ -175,8 +165,7 @@ public class CuboidArea {
         return newArea;
     }
 
-    public Map<String,Object> save()
-    {
+    public Map<String, Object> save() {
         Map<String, Object> root = new LinkedHashMap<String, Object>();
         root.put("X1", this.highPoints.getBlockX());
         root.put("Y1", this.highPoints.getBlockY());
@@ -186,10 +175,11 @@ public class CuboidArea {
         root.put("Z2", this.lowPoints.getBlockZ());
         return root;
     }
-    public static CuboidArea load(Map<String,Object> root, World world) throws Exception
-    {
-        if(root == null)
+
+    public static CuboidArea load(Map<String, Object> root, World world) throws Exception {
+        if (root == null) {
             throw new Exception("Invalid residence physical location...");
+        }
         CuboidArea newArea = new CuboidArea();
         int x1 = (Integer) root.get("X1");
         int y1 = (Integer) root.get("Y1");
@@ -197,8 +187,8 @@ public class CuboidArea {
         int x2 = (Integer) root.get("X2");
         int y2 = (Integer) root.get("Y2");
         int z2 = (Integer) root.get("Z2");
-        newArea.highPoints = new Location(world,x1,y1,z1);
-        newArea.lowPoints = new Location(world,x2,y2,z2);
+        newArea.highPoints = new Location(world, x1, y1, z1);
+        newArea.lowPoints = new Location(world, x2, y2, z2);
         return newArea;
     }
 
@@ -212,7 +202,7 @@ public class CuboidArea {
         int lowZ = low.getChunk().getZ();
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
-                chunks.add(x+":"+z);
+                chunks.add(x + ":" + z);
             }
         }
         return chunks;
