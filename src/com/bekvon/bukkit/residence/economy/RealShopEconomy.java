@@ -4,20 +4,18 @@
  */
 
 package com.bekvon.bukkit.residence.economy;
-import org.bukkit.ChatColor;
 
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 
 /**
- *
+ * 
  * @author Administrator
  */
 public class RealShopEconomy implements EconomyInterface {
 
     RealEconomy plugin;
 
-    public RealShopEconomy(RealEconomy e)
-    {
+    public RealShopEconomy(RealEconomy e) {
         plugin = e;
     }
 
@@ -28,33 +26,34 @@ public class RealShopEconomy implements EconomyInterface {
 
     @Override
     public boolean canAfford(String playerName, double amount) {
-        if(plugin.getBalance(playerName)>=amount)
+        if (plugin.getBalance(playerName) >= amount) {
             return true;
+        }
         return false;
     }
 
     @Override
     public boolean add(String playerName, double amount) {
-        plugin.setBalance(playerName, plugin.getBalance(playerName)+amount);
+        plugin.setBalance(playerName, plugin.getBalance(playerName) + amount);
         return true;
     }
 
     @Override
     public boolean subtract(String playerName, double amount) {
-        if(!canAfford(playerName,amount))
+        if (!canAfford(playerName, amount)) {
             return false;
-        plugin.setBalance(playerName, plugin.getBalance(playerName)-amount);
+        }
+        plugin.setBalance(playerName, plugin.getBalance(playerName) - amount);
         return true;
     }
 
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
-        if(!canAfford(playerFrom,amount))
+        if (!canAfford(playerFrom, amount)) {
             return false;
-        if(subtract(playerFrom,amount))
-        {
-            if(!add(playerTo,amount))
-            {
+        }
+        if (subtract(playerFrom, amount)) {
+            if (!add(playerTo, amount)) {
                 add(playerFrom, amount);
                 return false;
             }
