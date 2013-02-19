@@ -4,11 +4,13 @@
  */
 
 package com.bekvon.bukkit.residence.economy;
+
 import com.iCo6.iConomy;
 import com.iCo6.system.Account;
 import com.iCo6.system.Accounts;
+
 /**
- *
+ * 
  * @author Administrator
  */
 
@@ -16,8 +18,7 @@ public class IConomy6Adapter implements EconomyInterface {
 
     iConomy icon;
 
-    public IConomy6Adapter(iConomy iconomy)
-    {
+    public IConomy6Adapter(iConomy iconomy) {
         icon = iconomy;
     }
 
@@ -31,8 +32,9 @@ public class IConomy6Adapter implements EconomyInterface {
     public boolean canAfford(String playerName, double amount) {
         this.checkExist(playerName);
         double holdings = this.getBalance(playerName);
-        if(holdings>=amount)
+        if (holdings >= amount) {
             return true;
+        }
         return false;
     }
 
@@ -46,8 +48,7 @@ public class IConomy6Adapter implements EconomyInterface {
     @Override
     public boolean subtract(String playerName, double amount) {
         this.checkExist(playerName);
-        if(this.canAfford(playerName, amount))
-        {
+        if (this.canAfford(playerName, amount)) {
             new Accounts().get(playerName).getHoldings().subtract(amount);
             return true;
         }
@@ -58,8 +59,7 @@ public class IConomy6Adapter implements EconomyInterface {
     public boolean transfer(String playerFrom, String playerTo, double amount) {
         this.checkExist(playerTo);
         this.checkExist(playerFrom);
-        if(this.canAfford(playerFrom, amount))
-        {
+        if (this.canAfford(playerFrom, amount)) {
             Account p1 = new Accounts().get(playerFrom);
             Account p2 = new Accounts().get(playerTo);
             p1.getHoldings().subtract(amount);
@@ -69,11 +69,11 @@ public class IConomy6Adapter implements EconomyInterface {
         return false;
     }
 
-    private void checkExist(String playerName)
-    {
+    private void checkExist(String playerName) {
         Accounts acc = new Accounts();
-        if(!acc.exists(playerName))
+        if (!acc.exists(playerName)) {
             acc.create(playerName);
+        }
     }
 
     public String getName() {
