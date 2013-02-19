@@ -42,7 +42,6 @@ import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.inori.utils.ILog;
 
 /**
  * 
@@ -163,14 +162,12 @@ public class ResidencePlayerListener implements Listener {
         Material heldItem = player.getItemInHand().getType();
         Block block = event.getClickedBlock();
         Material mat = block.getType();
-        ILog.sendToPlayer(player, mat.toString());
         if (!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block) || event.getAction() == Action.PHYSICAL)) {
             int typeId = player.getItemInHand().getTypeId();
             if (typeId != Residence.getConfigManager().getSelectionTooldID() && typeId != Residence.getConfigManager().getInfoToolID() && typeId != 351) {
                 return;
             }
         }
-        ILog.sendToPlayer(player, "onPlayerInteract Fired");
         FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
         String world = player.getWorld().getName();
         String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
@@ -291,9 +288,7 @@ public class ResidencePlayerListener implements Listener {
             return;
         }
         Entity ent = event.getRightClicked();
-        Material mat = Material.ITEM_FRAME;
         Material heldItem = player.getItemInHand().getType();
-        ILog.sendToPlayer(player, mat.toString());
         if (!(ent instanceof Hanging)) {
             return;
         }
@@ -301,7 +296,6 @@ public class ResidencePlayerListener implements Listener {
         if (hanging.getType() != EntityType.ITEM_FRAME) {
             return;
         }
-        ILog.sendToPlayer(player, "onPlayerInteractEntity Fired");
         FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
         String world = player.getWorld().getName();
         String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
@@ -406,7 +400,6 @@ public class ResidencePlayerListener implements Listener {
         }
         lastUpdate.put(player.getName(), now);
         if (event.getFrom().getWorld() == event.getTo().getWorld()) {
-            ILog.sendToPlayer(player, "onPlayerMove(" + event.getFrom().distance(event.getTo()) + ") Fired");
             if (event.getFrom().distance(event.getTo()) == 0) {
                 return;
             }
