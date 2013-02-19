@@ -640,14 +640,16 @@ public class ResidenceManager {
 
     public void removeChunkList(String name) {
         ClaimedResidence res = residences.get(name);
-        String world = res.getWorld();
-        for (String chunk : getChunks(res)) {
-            List<String> ress = new ArrayList<String>();
-            if (chunkResidences.get(world).containsKey(chunk)) {
-                ress.addAll(chunkResidences.get(world).get(chunk));
+        if (res != null) {
+            String world = res.getWorld();
+            for (String chunk : getChunks(res)) {
+                List<String> ress = new ArrayList<String>();
+                if (chunkResidences.get(world).containsKey(chunk)) {
+                    ress.addAll(chunkResidences.get(world).get(chunk));
+                }
+                ress.remove(name);
+                chunkResidences.get(world).put(chunk, ress);
             }
-            ress.remove(name);
-            chunkResidences.get(world).put(chunk, ress);
         }
     }
 
@@ -662,6 +664,6 @@ public class ResidenceManager {
             ress.add(name);
             chunkResidences.get(world).put(chunk, ress);
         }
-        
+
     }
 }
