@@ -4,13 +4,13 @@
  */
 
 package com.bekvon.bukkit.residence.permissions;
+
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,71 +20,68 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * 
  * @author Administrator
  * 
- * changed by inori 03/17/2012
- * line 91:limits MaxHeight changed to 255
+ *         changed by inori 03/17/2012 line 91:limits MaxHeight changed to 255
  */
 public class PermissionGroup {
-        protected int xmax;
-        protected int ymax;
-        protected int zmax;
-        protected int resmax;
-        protected double costperarea;
-        protected boolean tpaccess;
-        protected int subzonedepth;
-        protected FlagPermissions flagPerms;
-        protected Map<String,Boolean> creatorDefaultFlags;
-        protected Map<String,Map<String,Boolean>> groupDefaultFlags;
-        protected Map<String,Boolean> residenceDefaultFlags;
-        protected boolean messageperms;
-        protected String defaultEnterMessage;
-        protected String defaultLeaveMessage;
-        protected int maxLeaseTime;
-        protected int leaseGiveTime;
-        protected double renewcostperarea;
-        protected boolean canBuy;
-        protected boolean canSell;
-        protected boolean buyIgnoreLimits;
-        protected boolean cancreate;
-        protected String groupname;
-        protected int maxPhysical;
-        protected boolean unstuck;
-        protected int minHeight;
-        protected int maxHeight;
-        protected int maxRents;
-        protected int maxRentables;
-        protected boolean selectCommandAccess;
-        protected boolean itemListAccess;
+    protected int xmax;
+    protected int ymax;
+    protected int zmax;
+    protected int resmax;
+    protected double costperarea;
+    protected boolean tpaccess;
+    protected int subzonedepth;
+    protected FlagPermissions flagPerms;
+    protected Map<String, Boolean> creatorDefaultFlags;
+    protected Map<String, Map<String, Boolean>> groupDefaultFlags;
+    protected Map<String, Boolean> residenceDefaultFlags;
+    protected boolean messageperms;
+    protected String defaultEnterMessage;
+    protected String defaultLeaveMessage;
+    protected int maxLeaseTime;
+    protected int leaseGiveTime;
+    protected double renewcostperarea;
+    protected boolean canBuy;
+    protected boolean canSell;
+    protected boolean buyIgnoreLimits;
+    protected boolean cancreate;
+    protected String groupname;
+    protected int maxPhysical;
+    protected boolean unstuck;
+    protected int minHeight;
+    protected int maxHeight;
+    protected int maxRents;
+    protected int maxRentables;
+    protected boolean selectCommandAccess;
+    protected boolean itemListAccess;
 
-        public PermissionGroup(String name)
-        {
-            flagPerms = new FlagPermissions();
-            creatorDefaultFlags = Collections.synchronizedMap(new HashMap<String,Boolean>());
-            residenceDefaultFlags = Collections.synchronizedMap(new HashMap<String,Boolean>());
-            groupDefaultFlags = Collections.synchronizedMap(new HashMap<String,Map<String,Boolean>>());
-            groupname = name;
-        }
-        
-        public PermissionGroup(String name, ConfigurationSection node)
-        {
-            this(name);
-            this.parseGroup(node);
-        }
+    public PermissionGroup(String name) {
+        flagPerms = new FlagPermissions();
+        creatorDefaultFlags = new HashMap<String, Boolean>();
+        residenceDefaultFlags = new HashMap<String, Boolean>();
+        groupDefaultFlags = new HashMap<String, Map<String, Boolean>>();
+        groupname = name;
+    }
 
-        public PermissionGroup(String name, ConfigurationSection node, FlagPermissions parentFlagPerms)
-        {
-            this(name,node);
-            flagPerms.setParent(parentFlagPerms);
-        }
+    public PermissionGroup(String name, ConfigurationSection node) {
+        this(name);
+        this.parseGroup(node);
+    }
+
+    public PermissionGroup(String name, ConfigurationSection node, FlagPermissions parentFlagPerms) {
+        this(name, node);
+        flagPerms.setParent(parentFlagPerms);
+    }
 
     private void parseGroup(ConfigurationSection limits) {
-        if(limits == null)
+        if (limits == null) {
             return;
+        }
         cancreate = limits.getBoolean("Residence.CanCreate", false);
         resmax = limits.getInt("Residence.MaxResidences", 0);
-        maxPhysical = limits.getInt("Residence.MaxAreasPerResidence",2);
+        maxPhysical = limits.getInt("Residence.MaxAreasPerResidence", 2);
         xmax = limits.getInt("Residence.MaxEastWest", 0);
         ymax = limits.getInt("Residence.MaxUpDown", 0);
         zmax = limits.getInt("Residence.MaxNorthSouth", 0);
@@ -109,8 +106,9 @@ public class PermissionGroup {
         itemListAccess = limits.getBoolean("Residence.ItemListAccess", true);
         ConfigurationSection node = limits.getConfigurationSection("Flags.Permission");
         Set<String> flags = null;
-        if(node!=null)
+        if (node != null) {
             flags = node.getKeys(false);
+        }
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -120,8 +118,9 @@ public class PermissionGroup {
             }
         }
         node = limits.getConfigurationSection("Flags.CreatorDefault");
-        if(node!=null)
+        if (node != null) {
             flags = node.getKeys(false);
+        }
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -132,8 +131,9 @@ public class PermissionGroup {
 
         }
         node = limits.getConfigurationSection("Flags.Default");
-        if(node!=null)
+        if (node != null) {
             flags = node.getKeys(false);
+        }
         if (flags != null) {
             Iterator<String> flagit = flags.iterator();
             while (flagit.hasNext()) {
@@ -144,8 +144,9 @@ public class PermissionGroup {
         }
         node = limits.getConfigurationSection("Flags.GroupDefault");
         Set<String> groupDef = null;
-        if(node!=null)
+        if (node != null) {
             groupDef = node.getKeys(false);
+        }
         if (groupDef != null) {
             Iterator<String> groupit = groupDef.iterator();
             while (groupit.hasNext()) {
@@ -175,149 +176,141 @@ public class PermissionGroup {
         return zmax;
     }
 
-    public int getMinHeight()
-    {
+    public int getMinHeight() {
         return minHeight;
     }
 
-    public int getMaxHeight()
-    {
+    public int getMaxHeight() {
         return maxHeight;
     }
 
     public int getMaxZones() {
         return resmax;
     }
-    public double getCostPerBlock()
-    {
+
+    public double getCostPerBlock() {
         return costperarea;
     }
-    public boolean hasTpAccess()
-    {
+
+    public boolean hasTpAccess() {
         return tpaccess;
     }
-    public int getMaxSubzoneDepth()
-    {
+
+    public int getMaxSubzoneDepth() {
         return subzonedepth;
     }
-    public boolean canSetEnterLeaveMessages()
-    {
+
+    public boolean canSetEnterLeaveMessages() {
         return messageperms;
     }
-    public String getDefaultEnterMessage()
-    {
+
+    public String getDefaultEnterMessage() {
         return defaultEnterMessage;
     }
-    public String getDefaultLeaveMessage()
-    {
+
+    public String getDefaultLeaveMessage() {
         return defaultLeaveMessage;
     }
-    public int getMaxLeaseTime()
-    {
+
+    public int getMaxLeaseTime() {
         return maxLeaseTime;
     }
-    public int getLeaseGiveTime()
-    {
+
+    public int getLeaseGiveTime() {
         return leaseGiveTime;
     }
-    public double getLeaseRenewCost()
-    {
+
+    public double getLeaseRenewCost() {
         return renewcostperarea;
     }
-    public boolean canBuyLand()
-    {
+
+    public boolean canBuyLand() {
         return canBuy;
     }
-    public boolean canSellLand()
-    {
+
+    public boolean canSellLand() {
         return canSell;
     }
-    public int getMaxRents()
-    {
+
+    public int getMaxRents() {
         return maxRents;
     }
-    public int getMaxRentables()
-    {
+
+    public int getMaxRentables() {
         return maxRentables;
     }
-    public boolean buyLandIgnoreLimits()
-    {
+
+    public boolean buyLandIgnoreLimits() {
         return buyIgnoreLimits;
     }
-    public boolean hasUnstuckAccess()
-    {
+
+    public boolean hasUnstuckAccess() {
         return unstuck;
     }
-    public int getMaxPhysicalPerResidence()
-    {
+
+    public int getMaxPhysicalPerResidence() {
         return maxPhysical;
     }
-    public Set<Entry<String,Boolean>> getDefaultResidenceFlags()
-    {
+
+    public Set<Entry<String, Boolean>> getDefaultResidenceFlags() {
         return residenceDefaultFlags.entrySet();
     }
-    public Set<Entry<String,Boolean>> getDefaultCreatorFlags()
-    {
+
+    public Set<Entry<String, Boolean>> getDefaultCreatorFlags() {
         return creatorDefaultFlags.entrySet();
     }
-    public Set<Entry<String,Map<String,Boolean>>> getDefaultGroupFlags()
-    {
+
+    public Set<Entry<String, Map<String, Boolean>>> getDefaultGroupFlags() {
         return groupDefaultFlags.entrySet();
     }
 
-    public boolean canCreateResidences()
-    {
+    public boolean canCreateResidences() {
         return cancreate;
     }
-    public boolean hasFlagAccess(String flag)
-    {
+
+    public boolean hasFlagAccess(String flag) {
         return flagPerms.has(flag, false);
     }
 
-    public boolean inLimits(CuboidArea area)
-    {
-        if(area.getXSize() > xmax || area.getYSize() > ymax || area.getZSize() > zmax)
-        {
+    public boolean inLimits(CuboidArea area) {
+        if (area.getXSize() > xmax || area.getYSize() > ymax || area.getZSize() > zmax) {
             return false;
         }
         return true;
     }
 
-    public boolean selectCommandAccess()
-    {
+    public boolean selectCommandAccess() {
         return selectCommandAccess;
     }
 
-    public boolean itemListAccess()
-    {
+    public boolean itemListAccess() {
         return itemListAccess;
     }
 
-    public void printLimits(Player player)
-    {
-        player.sendMessage(ChatColor.GRAY+"---------------------------");
-        player.sendMessage(ChatColor.YELLOW+"Permissions Group:"+ChatColor.DARK_AQUA+" "+Residence.getPermissionManager().getPermissionsGroup(player));
-        player.sendMessage(ChatColor.YELLOW+"Residence Group:"+ChatColor.DARK_AQUA+" "+groupname);
-        player.sendMessage(ChatColor.YELLOW+"Residence Admin:"+ChatColor.DARK_AQUA+" " + Residence.getPermissionManager().isResidenceAdmin(player));
-        player.sendMessage(ChatColor.YELLOW+"Can Create Residences:"+ChatColor.DARK_AQUA+" "+cancreate);
-        player.sendMessage(ChatColor.YELLOW+"Max Residences:"+ChatColor.DARK_AQUA+" "+resmax);
-        player.sendMessage(ChatColor.YELLOW+"Max East/West Size:"+ChatColor.DARK_AQUA+" "+xmax);
-        player.sendMessage(ChatColor.YELLOW+"Max North/South Size:"+ChatColor.DARK_AQUA+" "+zmax);
-        player.sendMessage(ChatColor.YELLOW+"Max Up/Down Size:"+ChatColor.DARK_AQUA+" "+ymax);
-        player.sendMessage(ChatColor.YELLOW+"Min/Max Protection Height:"+ChatColor.DARK_AQUA+" "+minHeight+ " to " + maxHeight);
-        player.sendMessage(ChatColor.YELLOW+"Max Subzone Depth:"+ChatColor.DARK_AQUA+" "+subzonedepth);
-        player.sendMessage(ChatColor.YELLOW+"Can Set Enter/Leave Messages:"+ChatColor.DARK_AQUA+" "+messageperms);
-        player.sendMessage(ChatColor.YELLOW+"Number of Residences you own:"+ChatColor.DARK_AQUA+" " + Residence.getResidenceManager().getOwnedZoneCount(player.getName()));
-        if(Residence.getEconomyManager()!=null)
-            player.sendMessage(ChatColor.YELLOW+"Residence Cost Per Block:"+ChatColor.DARK_AQUA+" " + costperarea);
-        player.sendMessage(ChatColor.YELLOW+"Flag Permissions:"+ChatColor.DARK_AQUA+" " + flagPerms.listFlags());
-        if(Residence.getConfigManager().useLeases())
-        {
-            player.sendMessage(ChatColor.YELLOW+"Max Lease Days:"+ChatColor.DARK_AQUA+" " + maxLeaseTime);
-            player.sendMessage(ChatColor.YELLOW+"Lease Time Given on Renew:"+ChatColor.DARK_AQUA+" " + leaseGiveTime);
-            player.sendMessage(ChatColor.YELLOW+"Renew Cost Per Block:"+ChatColor.DARK_AQUA+" " + renewcostperarea);
+    public void printLimits(Player player) {
+        player.sendMessage(ChatColor.GRAY + "---------------------------");
+        player.sendMessage(ChatColor.YELLOW + "Permissions Group:" + ChatColor.DARK_AQUA + " " + Residence.getPermissionManager().getPermissionsGroup(player));
+        player.sendMessage(ChatColor.YELLOW + "Residence Group:" + ChatColor.DARK_AQUA + " " + groupname);
+        player.sendMessage(ChatColor.YELLOW + "Residence Admin:" + ChatColor.DARK_AQUA + " " + Residence.getPermissionManager().isResidenceAdmin(player));
+        player.sendMessage(ChatColor.YELLOW + "Can Create Residences:" + ChatColor.DARK_AQUA + " " + cancreate);
+        player.sendMessage(ChatColor.YELLOW + "Max Residences:" + ChatColor.DARK_AQUA + " " + resmax);
+        player.sendMessage(ChatColor.YELLOW + "Max East/West Size:" + ChatColor.DARK_AQUA + " " + xmax);
+        player.sendMessage(ChatColor.YELLOW + "Max North/South Size:" + ChatColor.DARK_AQUA + " " + zmax);
+        player.sendMessage(ChatColor.YELLOW + "Max Up/Down Size:" + ChatColor.DARK_AQUA + " " + ymax);
+        player.sendMessage(ChatColor.YELLOW + "Min/Max Protection Height:" + ChatColor.DARK_AQUA + " " + minHeight + " to " + maxHeight);
+        player.sendMessage(ChatColor.YELLOW + "Max Subzone Depth:" + ChatColor.DARK_AQUA + " " + subzonedepth);
+        player.sendMessage(ChatColor.YELLOW + "Can Set Enter/Leave Messages:" + ChatColor.DARK_AQUA + " " + messageperms);
+        player.sendMessage(ChatColor.YELLOW + "Number of Residences you own:" + ChatColor.DARK_AQUA + " " + Residence.getResidenceManager().getOwnedZoneCount(player.getName()));
+        if (Residence.getEconomyManager() != null) {
+            player.sendMessage(ChatColor.YELLOW + "Residence Cost Per Block:" + ChatColor.DARK_AQUA + " " + costperarea);
         }
-        player.sendMessage(ChatColor.GRAY+"---------------------------");
+        player.sendMessage(ChatColor.YELLOW + "Flag Permissions:" + ChatColor.DARK_AQUA + " " + flagPerms.listFlags());
+        if (Residence.getConfigManager().useLeases()) {
+            player.sendMessage(ChatColor.YELLOW + "Max Lease Days:" + ChatColor.DARK_AQUA + " " + maxLeaseTime);
+            player.sendMessage(ChatColor.YELLOW + "Lease Time Given on Renew:" + ChatColor.DARK_AQUA + " " + leaseGiveTime);
+            player.sendMessage(ChatColor.YELLOW + "Renew Cost Per Block:" + ChatColor.DARK_AQUA + " " + renewcostperarea);
+        }
+        player.sendMessage(ChatColor.GRAY + "---------------------------");
     }
 
 }

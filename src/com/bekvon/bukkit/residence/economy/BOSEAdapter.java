@@ -3,10 +3,11 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence.economy;
+
 import cosine.boseconomy.BOSEconomy;
 
 /**
- *
+ * 
  * @author Administrator
  */
 public class BOSEAdapter implements EconomyInterface {
@@ -16,18 +17,19 @@ public class BOSEAdapter implements EconomyInterface {
     public BOSEAdapter(BOSEconomy p) {
         plugin = p;
         String serverland = "Server Land";
-        if(!plugin.playerRegistered(serverland, false))
+        if (!plugin.playerRegistered(serverland, false)) {
             plugin.registerPlayer(serverland);
+        }
     }
 
     @Override
     public double getBalance(String playerName) {
-        return plugin.getPlayerMoney(playerName);
+        return plugin.getPlayerMoneyDouble(playerName);
     }
 
     @Override
     public boolean canAfford(String playerName, double amount) {
-        int balance = plugin.getPlayerMoney(playerName);
+        double balance = plugin.getPlayerMoneyDouble(playerName);
         if (balance >= amount) {
             return true;
         }
@@ -36,13 +38,13 @@ public class BOSEAdapter implements EconomyInterface {
 
     @Override
     public boolean add(String playerName, double amount) {
-        return plugin.setPlayerMoney(playerName, plugin.getPlayerMoney(playerName) + ((int) amount), false);
+        return plugin.setPlayerMoney(playerName, plugin.getPlayerMoneyDouble(playerName) + amount, false);
     }
 
     @Override
     public boolean subtract(String playerName, double amount) {
         if (canAfford(playerName, amount)) {
-            return plugin.setPlayerMoney(playerName, plugin.getPlayerMoney(playerName) - ((int) amount), false);
+            return plugin.setPlayerMoney(playerName, plugin.getPlayerMoneyDouble(playerName) - amount, false);
         }
         return false;
     }
@@ -53,8 +55,8 @@ public class BOSEAdapter implements EconomyInterface {
             if (!subtract(playerFrom, amount)) {
                 return false;
             }
-            if (!add(playerTo,amount)) {
-                add(playerFrom,amount);
+            if (!add(playerTo, amount)) {
+                add(playerFrom, amount);
                 return false;
             }
             return true;

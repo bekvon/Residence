@@ -4,21 +4,19 @@
  */
 
 package com.bekvon.bukkit.residence.permissions;
-import org.bukkit.ChatColor;
 
 import com.nijiko.permissions.PermissionHandler;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * 
  * @author Administrator
  */
-public class OrigionalPermissions implements PermissionsInterface {
-    
+public class OriginalPermissions implements PermissionsInterface {
+
     PermissionHandler authority;
 
-    public OrigionalPermissions(PermissionHandler perms)
-    {
+    public OriginalPermissions(PermissionHandler perms) {
         authority = perms;
     }
 
@@ -27,16 +25,11 @@ public class OrigionalPermissions implements PermissionsInterface {
     }
 
     public String getPlayerGroup(String player, String world) {
-        String group = authority.getGroup(world, player);
-        if(group!=null)
+        String group = authority.getPrimaryGroup(world, player);
+        if (group != null) {
             return group.toLowerCase();
+        }
         return null;
-    }
-
-    public boolean hasPermission(Player player, String permission) {
-        if(player.hasPermission(permission))
-            return true;
-        return authority.has(player, permission);
     }
 
 }

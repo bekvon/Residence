@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.permissions;
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.platymuus.bukkit.permissions.Group;
@@ -13,15 +12,14 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * 
  * @author Administrator
  */
 public class PermissionsBukkitAdapter implements PermissionsInterface {
 
     PermissionsPlugin newperms;
 
-    public PermissionsBukkitAdapter(PermissionsPlugin p)
-    {
+    public PermissionsBukkitAdapter(PermissionsPlugin p) {
         newperms = p;
     }
 
@@ -32,21 +30,16 @@ public class PermissionsBukkitAdapter implements PermissionsInterface {
     public String getPlayerGroup(String player, String world) {
         PermissionManager pmanager = Residence.getPermissionManager();
         List<Group> groups = newperms.getGroups(player);
-        for(Group group : groups)
-        {
+        for (Group group : groups) {
             String name = group.getName().toLowerCase();
-            if(pmanager.hasGroup(name))
-            {
+            if (pmanager.hasGroup(name)) {
                 return name;
             }
         }
-        if(groups.size()>0)
+        if (groups.size() > 0) {
             return groups.get(0).getName().toLowerCase();
+        }
         return null;
-    }
-
-    public boolean hasPermission(Player player, String permission) {
-        return player.hasPermission(permission);
     }
 
 }

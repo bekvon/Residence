@@ -20,7 +20,6 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.inori.utils.ILog;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,7 +37,6 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        ILog.sendToPlayer(player, "onBlockBreak Fired");
         if (Residence.isResAdminOn(player)) {
             return;
         }
@@ -78,7 +76,6 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        ILog.sendToPlayer(player, "onBlockPlace Fired");
         if (Residence.isResAdminOn(player)) {
             return;
         }
