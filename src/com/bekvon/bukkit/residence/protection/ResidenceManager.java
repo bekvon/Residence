@@ -610,6 +610,7 @@ public class ResidenceManager {
             }
         }
         res.getPermissions().setOwner(giveplayer.getName(), true);
+        // Fix phrases here
         reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceGive", ChatColor.YELLOW + residence + ChatColor.GREEN + "." + ChatColor.YELLOW + giveplayer.getName() + ChatColor.GREEN));
         giveplayer.sendMessage(Residence.getLanguage().getPhrase("ResidenceRecieve", ChatColor.GREEN + residence + ChatColor.YELLOW + "." + ChatColor.GREEN + reqPlayer.getName() + ChatColor.YELLOW));
     }
@@ -633,8 +634,7 @@ public class ResidenceManager {
         }
     }
 
-    public int getResidenceCount()
-    {
+    public int getResidenceCount() {
         return residences.size();
     }
 
@@ -642,28 +642,33 @@ public class ResidenceManager {
         ClaimedResidence res = residences.get(name);
         if (res != null) {
             String world = res.getWorld();
-            for (String chunk : getChunks(res)) {
-                List<String> ress = new ArrayList<String>();
-                if (chunkResidences.get(world).containsKey(chunk)) {
-                    ress.addAll(chunkResidences.get(world).get(chunk));
+            if (chunkResidences.get(world) != null) {
+                for (String chunk : getChunks(res)) {
+                    List<String> ress = new ArrayList<String>();
+                    if (chunkResidences.get(world).containsKey(chunk)) {
+                        ress.addAll(chunkResidences.get(world).get(chunk));
+                    }
+                    ress.remove(name);
+                    chunkResidences.get(world).put(chunk, ress);
                 }
-                ress.remove(name);
-                chunkResidences.get(world).put(chunk, ress);
             }
         }
     }
 
     public void calculateChunks(String name) {
         ClaimedResidence res = residences.get(name);
-        String world = res.getWorld();
-        for (String chunk : getChunks(res)) {
-            List<String> ress = new ArrayList<String>();
-            if (chunkResidences.get(world).containsKey(chunk)) {
-                ress.addAll(chunkResidences.get(world).get(chunk));
+        if (res != null) {
+            String world = res.getWorld();
+            if (chunkResidences.get(world) != null) {
+                for (String chunk : getChunks(res)) {
+                    List<String> ress = new ArrayList<String>();
+                    if (chunkResidences.get(world).containsKey(chunk)) {
+                        ress.addAll(chunkResidences.get(world).get(chunk));
+                    }
+                    ress.add(name);
+                    chunkResidences.get(world).put(chunk, ress);
+                }
             }
-            ress.add(name);
-            chunkResidences.get(world).put(chunk, ress);
         }
-
     }
 }
