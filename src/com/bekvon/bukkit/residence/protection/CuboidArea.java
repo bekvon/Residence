@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -194,12 +196,12 @@ public class CuboidArea {
 
     public List<String> getChunks() {
         List<String> chunks = new ArrayList<String>();
-        Location high = this.highPoints;
-        Location low = this.lowPoints;
-        int highX = high.getChunk().getX();
-        int lowX = low.getChunk().getX();
-        int highZ = high.getChunk().getZ();
-        int lowZ = low.getChunk().getZ();
+        Chunk high = this.highPoints.getChunk();
+        Chunk low = this.lowPoints.getChunk();
+        int highX = high.getX();
+        int lowX = low.getX();
+        int highZ = high.getZ();
+        int lowZ = low.getZ();
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
                 chunks.add(x + ":" + z);
