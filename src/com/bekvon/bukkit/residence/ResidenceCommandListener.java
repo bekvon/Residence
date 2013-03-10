@@ -960,7 +960,6 @@ public class ResidenceCommandListener extends Residence {
             ClaimedResidence area = rmanager.getByLoc(player.getLocation());
             if (area != null) {
                 area.getPermissions().setGroupFlag(player, args[1], args[2], args[3], resadmin);
-
             } else {
                 player.sendMessage(ChatColor.RED + language.getPhrase("InvalidArea"));
             }
