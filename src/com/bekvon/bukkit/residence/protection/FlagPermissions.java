@@ -197,6 +197,9 @@ public class FlagPermissions {
         addMaterialToUseFlag(Material.BEACON, "beacon");
         addMaterialToUseFlag(Material.JUKEBOX, "container");
         addMaterialToUseFlag(Material.CHEST, "container");
+        addMaterialToUseFlag(Material.TRAPPED_CHEST, "container");
+        addMaterialToUseFlag(Material.HOPPER, "container");
+        addMaterialToUseFlag(Material.DROPPER, "container");
         addMaterialToUseFlag(Material.FURNACE, "container");
         addMaterialToUseFlag(Material.BURNING_FURNACE, "container");
         addMaterialToUseFlag(Material.DISPENSER, "container");

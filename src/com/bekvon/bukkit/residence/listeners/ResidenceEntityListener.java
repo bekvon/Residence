@@ -153,7 +153,7 @@ public class ResidenceEntityListener implements Listener {
                 event.getEntity().remove();
             }
         }
-        if (entity == EntityType.PRIMED_TNT) {
+        if (entity == EntityType.PRIMED_TNT || entity == EntityType.MINECART_TNT) {
             if (!perms.has("tnt", perms.has("explode", true))) {
                 event.setCancelled(true);
                 event.getEntity().remove();
@@ -192,7 +192,7 @@ public class ResidenceEntityListener implements Listener {
                 cancel = true;
             }
         }
-        if (entity == EntityType.PRIMED_TNT) {
+        if (entity == EntityType.PRIMED_TNT || entity == EntityType.MINECART_TNT) {
             if (!perms.has("tnt", perms.has("explode", true))) {
                 cancel = true;
             }
@@ -219,7 +219,7 @@ public class ResidenceEntityListener implements Listener {
             List<Block> preserve = new ArrayList<Block>();
             for (Block block : event.blockList()) {
                 FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-                if ((!blockperms.has("wither", blockperms.has("explode", world.has("wither", world.has("explode", true)))) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.FIREBALL || entity == EntityType.SMALL_FIREBALL)) || (!blockperms.has("tnt", blockperms.has("explode", true)) && entity == EntityType.PRIMED_TNT) || (!blockperms.has("creeper", blockperms.has("explode", true)) && entity == EntityType.CREEPER))) {
+                if ((!blockperms.has("wither", blockperms.has("explode", world.has("wither", world.has("explode", true)))) && (entity == EntityType.WITHER || entity == EntityType.WITHER_SKULL) || (!blockperms.has("fireball", blockperms.has("explode", true)) && (entity == EntityType.FIREBALL || entity == EntityType.SMALL_FIREBALL)) || (!blockperms.has("tnt", blockperms.has("explode", true)) && (entity == EntityType.PRIMED_TNT || entity == EntityType.MINECART_TNT)) || (!blockperms.has("creeper", blockperms.has("explode", true)) && entity == EntityType.CREEPER))) {
                     if (block != null) {
                         preserve.add(block);
                     }

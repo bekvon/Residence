@@ -658,7 +658,8 @@ public class Residence extends JavaPlugin {
         try {
             File worldFolder = new File(saveFolder, "Worlds");
             if (!saveFolder.isDirectory()) {
-                System.out.println("[Residence] Save directory does not exist...");
+                this.getLogger().warning("Save directory does not exist...");
+                this.getLogger().warning("Please restart server");
                 return true;
             }
             YMLSaveHelper yml;
