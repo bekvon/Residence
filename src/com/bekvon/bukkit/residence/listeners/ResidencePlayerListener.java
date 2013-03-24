@@ -336,12 +336,12 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
         Player player = event.getPlayer();
         String pname = player.getName();
         if (Residence.isResAdminOn(player)) {
             return;
         }
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
         if (res != null) {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(res.getName())) {
@@ -363,10 +363,10 @@ public class ResidencePlayerListener implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Location loc = event.getTo();
         Player player = event.getPlayer();
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
         if (Residence.isResAdminOn(player)) {
             return;
         }
+        ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
         if (event.getCause() == TeleportCause.ENDER_PEARL) {
             if (res != null) {
                 String areaname = Residence.getResidenceManager().getNameByLoc(loc);
@@ -379,7 +379,7 @@ public class ResidencePlayerListener implements Listener {
         if (event.getCause() == TeleportCause.PLUGIN) {
             if (res != null) {
                 String areaname = Residence.getResidenceManager().getNameByLoc(loc);
-                if (!res.getPermissions().playerHas(player.getName(), "tp", true)) {
+                if (!res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportDeny", areaname));
                 }

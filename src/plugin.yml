@@ -31,6 +31,9 @@ permissions:
   residence.admin:
     description: Gives you access to /resadmin
     default: op
+  residence.admin.tp:
+    description: Allows to override tp flag
+    default: op
   residence.create:
     description: Allows you to create residences
     default: op
