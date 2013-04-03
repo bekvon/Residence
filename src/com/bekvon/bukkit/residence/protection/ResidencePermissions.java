@@ -144,25 +144,25 @@ public class ResidencePermissions extends FlagPermissions {
             player.sendMessage(ChatColor.GREEN+Residence.getLanguage().getPhrase("PermissionsApply"));
     }
 
-    public boolean hasResidencePermission(Player player, boolean requireOwner)
-    {
-        if(Residence.getConfigManager().enabledRentSystem())
-        {
+    public boolean hasResidencePermission(Player player, boolean requireOwner) {
+        if (Residence.getConfigManager().enabledRentSystem()) {
             String resname = residence.getName();
-            if(Residence.getRentManager().isRented(resname))
-            {
-                if(requireOwner)
+            if (Residence.getRentManager().isRented(resname)) {
+                if (requireOwner) {
                     return false;
+                }
                 String renter = Residence.getRentManager().getRentingPlayer(resname);
-                if(player.getName().equalsIgnoreCase(renter))
+                if (player.getName().equalsIgnoreCase(renter)) {
                     return true;
-                else
-                    return (playerHas(player.getName(), "admin",false));
+                } else {
+                    return (playerHas(player.getName(), "admin", false));
+                }
             }
         }
-        if(requireOwner)
-            return(owner.equalsIgnoreCase(player.getName()));
-        return (playerHas(player.getName(), "admin",false) || owner.equalsIgnoreCase(player.getName()));
+        if (requireOwner) {
+            return (owner.equalsIgnoreCase(player.getName()));
+        }
+        return (playerHas(player.getName(), "admin", false) || owner.equalsIgnoreCase(player.getName()));
     }
 
     private boolean checkCanSetFlag(Player player, String flag, FlagState state, boolean globalflag, boolean resadmin)

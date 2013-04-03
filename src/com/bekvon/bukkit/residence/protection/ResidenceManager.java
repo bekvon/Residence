@@ -659,15 +659,16 @@ public class ResidenceManager {
         ClaimedResidence res = residences.get(name);
         if (res != null) {
             String world = res.getWorld();
-            if (chunkResidences.get(world) != null) {
-                for (String chunk : getChunks(res)) {
-                    List<String> ress = new ArrayList<String>();
-                    if (chunkResidences.get(world).containsKey(chunk)) {
-                        ress.addAll(chunkResidences.get(world).get(chunk));
-                    }
-                    ress.add(name);
-                    chunkResidences.get(world).put(chunk, ress);
+            if (chunkResidences.get(world) == null) {
+                chunkResidences.put(world, new HashMap<String, List<String>>());
+            }
+            for (String chunk : getChunks(res)) {
+                List<String> ress = new ArrayList<String>();
+                if (chunkResidences.get(world).containsKey(chunk)) {
+                    ress.addAll(chunkResidences.get(world).get(chunk));
                 }
+                ress.add(name);
+                chunkResidences.get(world).put(chunk, ress);
             }
         }
     }

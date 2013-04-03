@@ -25,7 +25,7 @@
 * authors and contributors and should not be interpreted as representing official policies,
 * either expressed or implied, of anybody else.
 */
-package org.residence.mcstats;
+package com.residence.mcstats;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

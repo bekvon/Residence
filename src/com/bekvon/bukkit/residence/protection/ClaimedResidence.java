@@ -304,7 +304,7 @@ public class ClaimedResidence {
         }
         if (!resadmin && player != null) {
             if (!this.perms.hasResidencePermission(player, true)) {
-                if (!this.perms.playerHas(player.getName(), "subzone", false)) {
+                if (!this.perms.playerHas(player.getName(), "subzone", this.perms.playerHas(player.getName(), "admin", false))) {
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
                     return false;
                 }
