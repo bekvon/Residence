@@ -34,6 +34,9 @@ permissions:
   residence.admin.tp:
     description: Allows to override tp flag
     default: op
+  residence.admin.move:
+    description: Allows to override move flag
+    default: op
   residence.create:
     description: Allows you to create residences
     default: op
