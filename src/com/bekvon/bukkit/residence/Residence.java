@@ -312,12 +312,6 @@ public class Residence extends JavaPlugin {
                 firstenable = false;
             } else {
                 plistener.reload();
-                Player[] players = getServer().getOnlinePlayers();
-                for (Player player : players) {
-                    if (Residence.getPermissionManager().isResidenceAdmin(player)) {
-                        turnResAdminOn(player);
-                    }
-                }
             }
             int autosaveInt = cmanager.getAutoSaveInterval();
             if (autosaveInt < 1) {
@@ -341,6 +335,12 @@ public class Residence extends JavaPlugin {
                 }
                 rentint = rentint * 60 * 20;
                 rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
+            }
+            Player[] players = getServer().getOnlinePlayers();
+            for (Player player : players) {
+                if (Residence.getPermissionManager().isResidenceAdmin(player)) {
+                    turnResAdminOn(player);
+                }
             }
             try {
                 Metrics metrics = new Metrics(this);

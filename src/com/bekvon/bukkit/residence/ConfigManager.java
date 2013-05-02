@@ -54,6 +54,7 @@ public class ConfigManager {
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
     protected List<Integer> customRightClick;
+    private boolean enforceAreaInsideArea;
 
     public ConfigManager(FileConfiguration config)
     {
@@ -81,6 +82,7 @@ public class ConfigManager {
         flagsInherit = config.getBoolean("Global.ResidenceFlagsInherit", false);
         minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
         chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
+        enforceAreaInsideArea = config.getBoolean("Global.EnforceAreaInsideArea", false);
         language = config.getString("Global.Language","English");
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getConfigurationSection("Global"));
         globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getConfigurationSection("Global"));
@@ -270,5 +272,9 @@ public class ConfigManager {
     public List<Integer> getCustomRightClick()
     {
     	return customRightClick;
+    }
+
+    public boolean getEnforceAreaInsideArea() {
+        return enforceAreaInsideArea;
     }
 }

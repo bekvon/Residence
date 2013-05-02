@@ -81,6 +81,17 @@ public class ClaimedResidence {
             }
             return false;
         }
+        if (!resadmin && Residence.getConfigManager().getEnforceAreaInsideArea() && this.getParent() == null) {
+            boolean inside = false;
+            for (CuboidArea are: areas.values()) {
+                if (are.isAreaWithinArea(area)) {
+                    inside = true;
+                }
+            }
+            if (!inside) {
+                return false;
+            }
+        }
         if (!area.getWorld().getName().equalsIgnoreCase(perms.getWorld())) {
             if (player != null) {
                 player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaDiffWorld"));
