@@ -439,7 +439,7 @@ public class ResidencePlayerListener implements Listener {
             }
             return;
         }
-        if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player)) {
+        if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player) && !player.hasPermission("residence.admin.move")) {
             Location lastLoc = lastOutsideLoc.get(pname);
             if (lastLoc != null) {
                 player.teleport(lastLoc);
