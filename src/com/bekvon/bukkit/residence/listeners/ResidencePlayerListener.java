@@ -98,17 +98,7 @@ public class ResidencePlayerListener implements Listener {
         if (Residence.getPermissionManager().isResidenceAdmin(player)) {
             Residence.turnResAdminOn(player);
         }
-        ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
-        String areaname = Residence.getResidenceManager().getNameByLoc(player.getLocation());
-        String subzone = null;
-        if (res != null) {
-            while (res.getSubzoneByLoc(player.getLocation()) != null) {
-                subzone = res.getSubzoneNameByLoc(player.getLocation());
-                res = res.getSubzoneByLoc(player.getLocation());
-                areaname = areaname + "." + subzone;
-            }
-            currentRes.put(player.getName(), areaname);
-        }
+        handleNewLocation(player, player.getLocation(), false);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -373,6 +363,7 @@ public class ResidencePlayerListener implements Listener {
                 if (!res.getPermissions().playerHas(player.getName(), "move", true)) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", areaname));
+                    return;
                 }
             }
         }
@@ -382,9 +373,11 @@ public class ResidencePlayerListener implements Listener {
                 if (!res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportDeny", areaname));
+                    return;
                 }
             }
         }
+        handleNewLocation(player, loc, false);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -404,8 +397,12 @@ public class ResidencePlayerListener implements Listener {
                 return;
             }
         }
+        handleNewLocation(player, event.getTo(), true);
+    }
+
+    public void handleNewLocation(Player player, Location loc, boolean move) {
         String pname = player.getName();
-        Location loc = event.getTo();
+
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
         String areaname = null;
         boolean chatchange = false;
@@ -439,15 +436,17 @@ public class ResidencePlayerListener implements Listener {
             }
             return;
         }
-        if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player) && !player.hasPermission("residence.admin.move")) {
-            Location lastLoc = lastOutsideLoc.get(pname);
-            if (lastLoc != null) {
-                player.teleport(lastLoc);
-            } else {
-                player.teleport(res.getOutsideFreeLoc(event.getTo()));
+        if (move) {
+            if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player) && !player.hasPermission("residence.admin.move")) {
+                Location lastLoc = lastOutsideLoc.get(pname);
+                if (lastLoc != null) {
+                    player.teleport(lastLoc);
+                } else {
+                    player.teleport(res.getOutsideFreeLoc(loc));
+                }
+                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", res.getName().split("\\.")[res.getName().split("\\.").length - 1]));
+                return;
             }
-            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", res.getName().split("\\.")[res.getName().split("\\.").length - 1]));
-            return;
         }
         lastOutsideLoc.put(pname, loc);
         if (!currentRes.containsKey(pname) || ResOld != res) {
