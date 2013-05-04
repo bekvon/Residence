@@ -353,9 +353,12 @@ public class ResidencePlayerListener implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Location loc = event.getTo();
         Player player = event.getPlayer();
+        
         if (Residence.isResAdminOn(player)) {
+            handleNewLocation(player, loc, false);
             return;
         }
+        
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
         if (event.getCause() == TeleportCause.ENDER_PEARL) {
             if (res != null) {
