@@ -37,8 +37,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
-import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
+import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -430,7 +429,9 @@ public class ResidencePlayerListener implements Listener {
             if (ResOld != null) {
                 String leave = ResOld.getLeaveMessage();
                 ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld, player);
+                ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
+                Residence.getServ().getPluginManager().callEvent(chgEvent);
                 if (leave != null && !leave.equals("")) {
                     player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 }
@@ -457,8 +458,11 @@ public class ResidencePlayerListener implements Listener {
             if (subzone == null) {
                 chatchange = true;
             }
+            
+            ClaimedResidence chgFrom = null;
             if (ResOld != res && ResOld != null) {
                 String leave = ResOld.getLeaveMessage();
+                chgFrom = ResOld;
                 ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld, player);
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
                 if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
@@ -467,7 +471,9 @@ public class ResidencePlayerListener implements Listener {
             }
             String enterMessage = res.getEnterMessage();
             ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
+            ResidenceChangedEvent chgEvent = new ResidenceChangedEvent( chgFrom, res, player);
             Residence.getServ().getPluginManager().callEvent(enterevent);
+            Residence.getServ().getPluginManager().callEvent(chgEvent);
             if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
                 player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
             }
