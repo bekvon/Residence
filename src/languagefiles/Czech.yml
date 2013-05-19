@@ -85,7 +85,7 @@ Language:
     BankNoMoney: Nemas dostatek financi v bance.
     BankDeposit: 'Prave si vlozil %1 do banky residence.'
     BankWithdraw: 'Prave si vybral %1 z banky residence.'
-    MoneyCharged: 'Nabil jsi tvuj ucez %2 castkou %1.'
+    MoneyCharged: 'Nabil jsi svuj ucet %2 castkou %1.'
     MoneyCredit: '%1 bylo pricteno na tvuj ucet %2.'
     RentDisabled: System najemneho je vypnuty.
     RentReleaseInvalid: 'Residenci %1 neni k pronajmu.'
