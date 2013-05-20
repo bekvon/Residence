@@ -194,8 +194,13 @@ public class CuboidArea {
         return newArea;
     }
 
-    public List<String> getChunks() {
-        List<String> chunks = new ArrayList<String>();
+    /**
+     * Returns coordinates of all chunks in which lies this area.
+     * 
+     * @return chunk coordinates
+     */
+    public List<ChunkCoord> getChunkCoords() {
+        List<ChunkCoord> chunks = new ArrayList<ChunkCoord>();
         Chunk high = this.highPoints.getChunk();
         Chunk low = this.lowPoints.getChunk();
         int highX = high.getX();
@@ -204,9 +209,10 @@ public class CuboidArea {
         int lowZ = low.getZ();
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
-                chunks.add(x + ":" + z);
+                chunks.add(new ChunkCoord(x, z));
             }
         }
         return chunks;
     }
+    
 }
