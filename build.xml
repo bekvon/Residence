@@ -1,68 +1,95 @@
 <project name="Residence" default="main" basedir=".">
-  <!-- env variables -->
-  <property name="target" location="target/"/>
-  <property name="Ver" value="2.6.6.5"/>
-  <property name="Authors" value="bekvon,nate302,t00thpick1"/>
-  <property name="Former Authors" value="inorixu,lemon42,smbarbour"/>
-  <path id="classpath"><fileset dir="lib" includes="**/*.jar"/></path>
-  <target name="main" depends="prep, class, compile, jar" description="Main target">
-      <echo>Building the .jar file.</echo>
-  </target>
-  
-  <!-- Prep -->
-  <target name="prep" description="Cleans project">
-    <echo>Cleaning</echo>
-    <delete failonerror="false"><fileset dir="build" includes="**/*"/></delete>
-    <delete file="dist/Residence.jar" />
-    <tstamp/>
-    <delete dir="build"/>
-    <delete dir="lib"/>
-    <mkdir dir="dist"/>
-    <mkdir dir="build"/>
-    <mkdir dir="lib"/>
-  </target>
-  
-  <!-- Download and unzip libraries -->
-  <target name="class">
-    <get src="http://www.whiskeycraft.net/repo/org/spout/spoutapi/spoutpluginapi.jar" dest="lib/SpoutpluginAPI.jar"/>
-    <get src="http://dev.bukkit.org/media/files/658/548/Essentials.zip" dest="lib/Essentials.zip"/> <!--essentials core -->
-    <get src="http://cloud.github.com/downloads/essentials/Essentials/Essentials-gm-2.9.5.zip" dest="lib/GroupManager.zip"/> <!-- essentials group manager and bridge-->
-    <get src="http://dl.bukkit.org/latest-dev/bukkit.jar" dest="lib/Bukkit.jar"/>
-    <get src="http://palmergames.com/downloads/iCo501/iConomy.jar" dest="lib/iConomy5.jar"/>
-    <get src="http://dev.bukkit.org/media/files/575/485/iConomy.jar" dest="lib/iConomy6.jar"/>
-    <get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar"/>
-    <get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar"/>
-    <get src="http://dev.bukkit.org/media/files/656/592/Vault.jar" dest="lib/Vault.jar"/>
-    <get src="http://dev.bukkit.org/media/files/644/439/worldedit-5.4.5.zip" dest="lib/WorldEdit.zip"/>
-    <get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip"/>
-    <get src="http://dev.bukkit.org/media/files/644/317/RealPlugin.jar" dest="lib/RealPlugin.jar"/>
-    <get src="http://dev.bukkit.org/media/files/610/407/bpermissions.jar" dest="lib/bPermissions.jar"/>
-    <unzip src="lib/BOSEconomy.zip" dest="lib/"></unzip>
-    <delete file="lib/BOSEconomy.zip"/>
-    <unzip src="lib\Essentials.zip" dest="lib\Essentials.jar"><patternset><include name="Essentials.jar"/></patternset></unzip>
-    <unzip src="lib\GroupManager.zip" dest="lib\"><patternset><include name="*.jar"/></patternset></unzip>
-    <unzip src="lib\WorldEdit.zip" dest="lib\"><patternset><include name="*.jar"/></patternset></unzip>
-  </target>
+	<!-- env variables -->
+	<property name="target" location="target/" />
+	<property name="Ver" value="2.6.6.5" />
+	<property name="Authors" value="bekvon,nate302,t00thpick1" />
+	<property name="Former Authors" value="inorixu,lemon42,smbarbour" />
+	<path id="classpath">
+		<fileset dir="lib" includes="**/*.jar" />
+	</path>
+	<target name="main" depends="prep, class, compile, jar, clean" description="Main target">
+		<echo>Building the .jar file.</echo>
+	</target>
 
-  <!-- compile -->
-  <target name="compile">
-      <echo>Compiling</echo>
-      <javac target="1.6" source="1.6" srcdir="src/com/" destdir="build" debug="true" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false">
-      <compilerarg value="-Xbootclasspath/p:${toString:classpath}"/>
-      </javac>
-      <copy file="src/plugin.yml" tofile="build/plugin.yml"/>
-      <copy file="src/config.yml" tofile="build/config.yml"/>
-      <copy todir="build/languagefiles"><fileset dir="src/languagefiles"/></copy>  
-  </target>
-  
-  <!-- jar -->
-  <target name="jar" depends="compile">
-      <jar jarfile="dist/Residence.jar" basedir="build">
-    <manifest>
-      <attribute name="Residence" value="Dev Team: ${Authors} Former Dev Team: ${Former Authors}"/>
-      <attribute name="Version" value="${Ver}"/>
-      <attribute name="Built-By" value="${user.name}"/>
-    </manifest>
-      </jar>
-  </target>
+	<!-- Prep -->
+	<target name="prep" description="Initializes project">
+		<echo>Cleaning</echo>
+		<delete failonerror="false">
+			<fileset dir="build" includes="**/*" />
+		</delete>
+		<delete file="dist/Residence.jar" />
+		<tstamp />
+		<mkdir dir="dist" />
+		<mkdir dir="build" />
+		<mkdir dir="lib" />
+	</target>
+
+	<!-- Download and unzip libraries -->
+	<target name="class" description="Install third-party support libraries and plugins">
+		<get src="http://www.whiskeycraft.net/repo/org/spout/spoutapi/spoutpluginapi.jar" dest="lib/SpoutpluginAPI.jar" />
+		<get src="http://dev.bukkit.org/media/files/658/548/Essentials.zip" dest="lib/Essentials.zip" />
+		<!--essentials core -->
+		<get src="http://cloud.github.com/downloads/essentials/Essentials/Essentials-gm-2.9.5.zip" dest="lib/GroupManager.zip" />
+		<!-- essentials group manager and bridge-->
+		<get src="http://dl.bukkit.org/latest-dev/bukkit.jar" dest="lib/Bukkit.jar" />
+		<get src="http://palmergames.com/downloads/iCo501/iConomy.jar" dest="lib/iConomy5.jar" />
+		<get src="http://dev.bukkit.org/media/files/575/485/iConomy.jar" dest="lib/iConomy6.jar" />
+		<get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar" />
+		<get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar" />
+		<get src="http://dev.bukkit.org/media/files/656/592/Vault.jar" dest="lib/Vault.jar" />
+		<get src="http://dev.bukkit.org/media/files/644/439/worldedit-5.4.5.zip" dest="lib/WorldEdit.zip" />
+		<get src="http://dev.bukkit.org/media/files/577/409/BOSEcon0731.zip" dest="lib/BOSEconomy.zip" />
+		<get src="http://dev.bukkit.org/media/files/644/317/RealPlugin.jar" dest="lib/RealPlugin.jar" />
+		<get src="http://dev.bukkit.org/media/files/610/407/bpermissions.jar" dest="lib/bPermissions.jar" />
+		<unzip src="lib/BOSEconomy.zip" dest="lib/">
+		</unzip>
+		<delete file="lib/BOSEconomy.zip" />
+		<unzip src="lib\Essentials.zip" dest="lib\Essentials.jar">
+			<patternset>
+				<include name="Essentials.jar" />
+			</patternset>
+		</unzip>
+		<unzip src="lib\GroupManager.zip" dest="lib\">
+			<patternset>
+				<include name="*.jar" />
+			</patternset>
+		</unzip>
+		<unzip src="lib\WorldEdit.zip" dest="lib\">
+			<patternset>
+				<include name="*.jar" />
+			</patternset>
+		</unzip>
+	</target>
+
+	<!-- compile -->
+	<target name="compile" description="Compile Residence source">
+		<echo>Compiling</echo>
+		<javac target="1.6" source="1.6" srcdir="src/com/" destdir="build" debug="true" debuglevel="lines,vars,source" classpathref="classpath" includeantruntime="false">
+			<compilerarg value="-Xbootclasspath/p:${toString:classpath}" />
+		</javac>
+		<copy file="src/plugin.yml" tofile="build/plugin.yml" />
+		<copy file="src/config.yml" tofile="build/config.yml" />
+		<copy todir="build/languagefiles">
+			<fileset dir="src/languagefiles" />
+		</copy>
+	</target>
+
+	<!-- jar -->
+	<target name="jar" description="Packages JAR distribution">
+		<echo>Packaging JAR distribution</echo>
+		<jar jarfile="dist/Residence.jar" basedir="build">
+			<manifest>
+				<attribute name="Residence" value="Dev Team: ${Authors} Former Dev Team: ${Former Authors}" />
+				<attribute name="Version" value="${Ver}" />
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- clean -->
+	<target name="clean" description="Clean up project">
+		<echo>Cleaning up</echo>
+		<delete dir="build" />
+		<delete dir="lib" />
+	</target>
 </project>
