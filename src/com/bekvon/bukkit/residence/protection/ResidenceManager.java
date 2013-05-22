@@ -45,7 +45,7 @@ public class ResidenceManager {
         ClaimedResidence res = null;
         boolean found = false;
         String world = loc.getWorld().getName();
-        ChunkCoord chunk = ChunkCoord.valueOf(loc);
+        ChunkCoord chunk = new ChunkCoord(loc);
         if (chunkResidences.get(world) != null) {
             if (chunkResidences.get(world).get(chunk) != null) {
                 for (String key : chunkResidences.get(world).get(chunk)) {
@@ -95,7 +95,7 @@ public class ResidenceManager {
         String name = null;
         boolean found = false;
         String world = loc.getWorld().getName();
-        ChunkCoord chunk = ChunkCoord.valueOf(loc);
+        ChunkCoord chunk = new ChunkCoord(loc);
         if (chunkResidences.get(world) != null) {
             if (chunkResidences.get(world).get(chunk) != null) {
                 for (String key : chunkResidences.get(world).get(chunk)) {

@@ -1,6 +1,5 @@
 package com.bekvon.bukkit.residence.protection;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 
 /**
@@ -13,10 +12,10 @@ import org.bukkit.Location;
 public final class ChunkCoord {
 
     /** The X-coordinate. */
-    public final int x;
+    private final int x;
 
     /** The Z-coordinate. */
-    public final int z;
+    private final int z;
 
     /**
      * Constructs a new chunk coordinate.
@@ -34,24 +33,42 @@ public final class ChunkCoord {
      * @param location the location
      * @return the chunk coordinate
      */
-    public static ChunkCoord valueOf(final Location location) {
-        final Chunk chunk = location.getChunk();
-        return new ChunkCoord(chunk.getX(), chunk.getZ());
+    public ChunkCoord(final Location location) {
+        this(location.getBlockX() >> 4, location.getBlockZ() >> 4);
+    }
+
+    /**
+     * Returns the X-coordinate.
+     * @return the X-coordinate
+     */
+    public int getX() {
+        return this.x;
+    }
+
+    /**
+     * Returns the Z-coordinate.
+     * @return the Z-coordinate
+     */
+    public int getZ() {
+        return this.z;
     }
 
     @Override
     public int hashCode() {
-        return 251 * (251 + x) + z;
+        return this.x ^ this.z;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ChunkCoord other = (ChunkCoord) obj;
         return this.x == other.x && this.z == other.z;
     }
