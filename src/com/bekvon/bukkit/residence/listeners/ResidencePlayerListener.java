@@ -37,8 +37,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
-import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
+import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -429,8 +428,18 @@ public class ResidencePlayerListener implements Listener {
             lastOutsideLoc.put(pname, loc);
             if (ResOld != null) {
                 String leave = ResOld.getLeaveMessage();
+                /*
+                 * TODO - ResidenceLeaveEvent is deprecated as of 21-MAY-2013. Its functionality is replaced by
+                 * ResidenceChangedEvent. For now, this event is still supported until it is removed at a
+                 * suitable time in the future.
+                 */
                 ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld, player);
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
+                
+                // New ResidenceChangeEvent
+                ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
+                Residence.getServ().getPluginManager().callEvent(chgEvent);
+                
                 if (leave != null && !leave.equals("")) {
                     player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 }
@@ -457,17 +466,39 @@ public class ResidencePlayerListener implements Listener {
             if (subzone == null) {
                 chatchange = true;
             }
+            
+            // "from" residence for ResidenceChangedEvent
+            ClaimedResidence chgFrom = null;
             if (ResOld != res && ResOld != null) {
                 String leave = ResOld.getLeaveMessage();
+                chgFrom = ResOld;
+                
+                /*
+                 * TODO - ResidenceLeaveEvent is deprecated as of 21-MAY-2013. Its functionality is replaced by
+                 * ResidenceChangedEvent. For now, this event is still supported until it is removed at a
+                 * suitable time in the future.
+                 */
                 ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld, player);
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
+                
                 if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
                     player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 }
             }
             String enterMessage = res.getEnterMessage();
+            
+            /*
+             * TODO - ResidenceEnterEvent is deprecated as of 21-MAY-2013. Its functionality is replaced by
+             * ResidenceChangedEvent. For now, this event is still supported until it is removed at a
+             * suitable time in the future.
+             */
             ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
             Residence.getServ().getPluginManager().callEvent(enterevent);
+            
+            // New ResidenceChangedEvent
+            ResidenceChangedEvent chgEvent = new ResidenceChangedEvent( chgFrom, res, player);
+            Residence.getServ().getPluginManager().callEvent(chgEvent);
+            
             if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
                 player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
             }
