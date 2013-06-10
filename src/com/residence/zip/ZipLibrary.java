@@ -17,8 +17,7 @@ import org.bukkit.World;
 import com.bekvon.bukkit.residence.Residence;
 
 public class ZipLibrary {
-    private static String BackupDirectory = Residence.getDataLocation() + "backup" + File.separator;
-    private static File BackupDir = new File(BackupDirectory);
+    private static File BackupDir = new File(Residence.getDataLocation(), "Backup");
 
     public static void backup() throws IOException {
         try {
@@ -33,7 +32,7 @@ public class ZipLibrary {
         // Generate the proper date for the backup filename
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        File fileZip = new File(BackupDirectory + File.separator + dateFormat.format(date) + ".zip");
+        File fileZip = new File(BackupDir, dateFormat.format(date) + ".zip");
 
         // Create the Source List, and add directories/etc to the file.
         List<File> sources = new ArrayList<File>();
