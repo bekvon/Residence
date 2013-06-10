@@ -199,14 +199,13 @@ public class ResidenceBlockListener implements Listener {
         	}
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
         	Player player = event.getPlayer();
-        	if (!perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
+        	if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
         		event.setCancelled(true);
         		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
         	}
-        } else {
-        	if(!perms.has("ignite", true)){
-        		event.setCancelled(true);
-        	}
+        }
+        if(!perms.has("ignite", true)){
+            event.setCancelled(true);
         }
     }
 }
