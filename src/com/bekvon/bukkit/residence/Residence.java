@@ -62,6 +62,7 @@ import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
 import com.residence.mcstats.Metrics;
+import com.residence.zip.ZipLibrary;
 
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
@@ -161,6 +162,7 @@ public class Residence extends JavaPlugin {
         if (initsuccess) {
             try {
                 saveYml();
+                ZipLibrary.backup();
             } catch (Exception ex) {
                 Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
             }
