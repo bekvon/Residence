@@ -10,8 +10,10 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
@@ -187,6 +189,19 @@ public class ResidenceBlockListener implements Listener {
         if (!perms.has("firespread", true)) {
             event.setCancelled(true);
         }
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockFade(BlockFadeEvent event) {
+    	final Block fading = event.getBlock();
+    	//Don't do a lookup if it isn't soil.
+    	if (fading.getType() != Material.SOIL) {
+    		return;
+    	}
+    	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+    	if (!perms.has("spread", true)) {
+    		event.setCancelled(true);
+    	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
