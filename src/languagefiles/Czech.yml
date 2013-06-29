@@ -1,4 +1,4 @@
-# Czech traslation by AyACZE for server Coolcraft.wbs.cz IP:93.91.240.149:27428
+# Czech traslation by AyACZE for server Coolcraft.eu IP:mc.coolcraft.eu
 # NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
 # of this file and modify that instead. This file will be updated automatically by Residence
 # when a newer version is detected, and your changes will be overwritten.  Once you 
@@ -95,7 +95,7 @@ Language:
     OwnerRentFail: Nemuzes si pronajmout vlastni pozemek!
     AlreadySellFail: Residence je jiz k prodeji!
     ResidenceBought: 'Koupil sis residenci %1'
-    ResidenceBuy: 'Prodal jsi residenci %1 ze %2.'
+    ResidenceBuy: 'Prodal jsi residenci %1 za %2.'
     ResidenceBuyTooBig: Tato rezidence presahuje tobe povolene limity.
     ResidenceNotForSale: Residence neni na prodej.
     ResidenceForSale: 'Residence %1 je na prodej za %2'
@@ -105,8 +105,8 @@ Language:
     ResidenceAlreadyRent: Residence je jiz pronajimana...
     ResidenceNotForRent: Residence neni k pronajmu...
     ResidenceNotRented: Residence neni pronajimana.
-    ResidenceUnrent: 'V residence %1 skoncil pronajem.'
-    ResidenceRemoveRentable: 'Residence %1 jiz neni dalo k pronajmu.'
+    ResidenceUnrent: 'V residenci %1 skoncil pronajem.'
+    ResidenceRemoveRentable: 'Residence %1 jiz neni nadale k pronajmu.'
     ResidenceForRentSuccess: 'Residence %1 je nyni k pronajmuti za %2 za kazdy %3 den,dnu.'
     ResidenceRentSuccess: 'Pronajal sis residenci %1 na %2 dny,dnu.'
     ResidenceAlreadyRented: 'Residence %1 je pronajata hraci %2'
@@ -130,7 +130,7 @@ Language:
     ListMaterialRemove: 'Material %1 odstranen z residence %2'
     ItemBlacklisted: Pouzivani tohoto itemu je zde zakazano - je na blacklistu.
     RentedModifyDeny: Neni mozno upravovat pronajimanou residenci.
-    WorldPVPDisabled: World PVP is disabled.
+    WorldPVPDisabled: V tomto svete neni PVP povoleno.
     NoPVPZone: Zde neni PVP zona.
     FlagDeny: 'Zde nemas opravneni na %1.'
     FlagSetDeny: 'Vlastnik nema pristup k vlajce %1'
@@ -149,7 +149,7 @@ Language:
     LeaseRenew: 'Pronajem je uzavren do %1'
     LeaseRenewMax: Pronajem prodlouzen na maximalne povolenou dobu
     LeaseNotExpire: Najem neskoncil.
-    LeaseRenewalCost: 'Cena za prodlozeni najmu %1 je %2'
+    LeaseRenewalCost: 'Cena za prodlouzeni najmu %1 je %2'
     LeaseInfinite: Doba pronajmu nastavena na nekonecno...
     PermissionsApply: Opravneni pouzite v residenci.
     PhysicalAreas: Fyzicke oblasti
@@ -188,9 +188,9 @@ Language:
     #Version 21 New Fields
     AdminToggle: 'Automaticky zapinat %1'
     #Version 22 New Fields
-    NoSpawn: 'You do not have move permissions at your spawn point. Relocating'
-    CompassTargetReset: 'Your compass has been reset'
-    CompassTargetSet: 'Your compass now points to %1'
+    NoSpawn: 'Nemas opravneni pohybu v urcenem bode. Premistuji'
+    CompassTargetReset: 'Tvuj kompas byl zresetovan'
+    CompassTargetSet: 'Tvuj kompas nyni smeruje na %1'
     
     #The below lines are mostly a word bank for various uses.
     #Version 1 Fields
@@ -293,12 +293,12 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Description: Smerove rozsireni vyberu
                             Info:
                                 - 'Pouzij: /res select expand <rozsah>'
-                                - 'Vyber se rozsiri o <rozsah> ve smeru kterym se divas.'
+                                - 'Vyber se rozsiri o <rozsah> bloku ve smeru kterym se divas.'
                         shift:
-                            Description: Smerome zuzeni vyberu
+                            Description: Smerove zuzeni vyberu
                             Info:
                                 - 'Pouzij: /res select shift <rozsah>'
-                                - 'Vyber se zmensi o <rozsah> smerek kterym se divas.'
+                                - 'Vyber se zmensi o <rozsah> bloku ve smeru kterym se divas.'
                         chunk:
                             Description: Vyber aktualniho chunku.
                             Info:
@@ -326,8 +326,8 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: Odstraneni vsech residenci vlastnenych hracem.
                     Info:
                         - 'Pouzij: /res removeall [vlastnik]'
-                        - 'Odstrani vsechny residence vlatnene uvedenym hracem.'
-                        - 'Vyzaduje /resadmin pokud mazete res nekoho jineho nez svoje.'
+                        - 'Odstrani vsechny residence vlastnene uvedenym hracem.'
+                        - 'Vyzaduje /resadmin pokud mazete residenci nekoho jineho nez svoji.'
                 confirm:
                     - 'Pouzij: /res confirm'
                     - 'Potvrdi odstraneni residence.'
@@ -335,7 +335,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: Vytvoreni subzony v residenci.
                     Info:
                         - 'Pouzij: /res subzone <nazev residence> [nazev subzony]'
-                        - 'Pokud vynechas nazev residence bude pouzito na uktualni res ve ktere stojis.'
+                        - 'Pokud vynechas nazev residence bude pouzito na uktualni residenci ve ktere stojis.'
                 area:
                     Description: Sprava fyzickych uzemi.
                     SubCommands:
@@ -348,25 +348,25 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Info:
                                 - 'Pouzij: /res area listall [nazev residence] <strana>'
                         add:
-                            Description: Pridat fyzickeho uzemi residence
+                            Description: Pridani fyzickeho uzemi residence
                             Info:
                                 - 'Pouzij: /res area add [nazev residence] [areaID]'
-                                - 'Prvne musis vybrat dva body.'
+                                - 'Nejprve musis vybrat dva body.'
                         remove:
-                            Description: Odstranit fyzicke uzemi residence
+                            Description: Odstraneni fyzickeho uzemi residence
                             Info:
                                 - 'Pouzij: /res area remove [nazev residence] [areaID]'
                         replace:
                             Description: Premisteni fyzickeho uzemi residence
                             Info:
                                 - 'Pouzij: /res area replace [nazev residence] [areaID]'
-                                - 'Prvne musis vybrat dva body.'
+                                - 'Nejprve musis vybrat dva body.'
                                 - 'Premisti uzemi.'
                 info:
-                    Description: Zobrazeni info o residenci.
+                    Description: Zobrazeni informaci o residenci.
                     Info:
                         - 'Pouzij: /res info <nazev residence>'
-                        - 'Vynechas li <nazev residence> zobrazi info o aktualni residenci ve ktere ses.'
+                        - 'Vynechas li <nazev residence> zobrazi se info o aktualni residenci ve ktere stojis.'
                 limits:
                     Description: Zobrazeni limitu.
                     Info:
@@ -400,16 +400,16 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 tp:
                     Description: Teleport do residence
                     Info:
-                        - 'Poutzij: /res tp [nazev residence]'
+                        - 'Pouzij: /res tp [nazev residence]'
                         - 'Teleportuje te do residence pokud je nastavena vlajka +tp nebo pokud ses vlastnik.'
                         - 'Musis mit opravneni teleportu na serveru od adminu.'
                 tpset:
                     Description: Nastaveni mista teleportu v residenci
                     Info:
                         - 'Pouzij: /res tpset'
-                        - 'Nastavi bid na kterem stojis jako misto teleportu do residence.'
+                        - 'Nastavi bod na kterem stojis jako misto teleportu do residence.'
                         - 'Musis stat v residenci pri provadeni tohoto prikazu.'
-                        - 'Take musis byt vlastnikem residence nebo musis mit adminske opravneni na residence.'
+                        - 'Take musis byt vlastnikem residence nebo musis mit adminske opravneni v residenci.'
                 set:
                     Description: Nastaveni obecnych vlajek
                     Info:
@@ -432,7 +432,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Pouzij: /res lset <nazev residence> [blacklist/ignorelist] [material]'
                         - 'Pouzij: /res lset <nazev residence> info'
-                        - 'Material na blacklistu je prevenci pred jejich pokladanim v residenci.'
+                        - 'Material na blacklistu je chranen pred jejich pokladanim a nicenim v residenci.'
                         - 'Material na ignorelistu je vyjmut z ochrany residence.'
                 flags:
                     Description: Seznam vlajek
@@ -448,7 +448,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'pvp - povoli nebo zakaze pvp v residenci'
                         - 'tp - povoli nebo zakaze teleport do residence.'
                         - 'admin - povoli nebo zakaze hraci opravneni menit vlajky v residenci.'
-                        - 'subzone - povoli nebo zakaze hraci vytvaret subzony v raesidenci.'
+                        - 'subzone - povoli nebo zakaze hraci vytvaret subzony v residenci.'
                         - 'monsters - povoli nebo zakaze spawnovani monster v residenci'
                         - 'animals - povoli nebo zakaze spawnovani zvirat v residenci.'
                         - 'healing - povoli nebo zakaze uzdravovani v residenci'
@@ -472,12 +472,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'enchant - povoli nebo zakaze pouziti enchant stolu v residenci'
                         - 'brew - povoli nebo zakaze brewing v residenci'
                         - 'bed - povoli nebo zakaze pouziti postele v residenci'
-                        - 'button - povoli nebo zakaze pouziti tlacitek v residenci'
                         - 'pressure - povoli nebo zakaze funkci naslapnych desek v residenci'
                         - 'note - povoli nebo zakaze pouziti note blocku v residenci'
                         - 'redstone - povoli nebo zakaze funci pacek, repeateru, tlacitek, nasl.desek v residenci'
                         - 'craft - povoli nebo zakaze pouziti ponku, enchant tablu a brewingu v residenci'
-                        - 'burn - povoli nebo zakaze horen mobu v residenci'
+                        - 'burn - povoli nebo zakaze horeni mobu v residenci'
                 list:
                     Description: Seznem residenci
                     Info:
@@ -517,10 +516,10 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'Musis byt vlastnikem resky nebo admin. Nepouzivej mezery v nazvu'
                         - 'Jmeno residence musi byt volne.'
                 mirror:
-                    Description: Mirrors vlajky
+                    Description: Zrcadleni vlajek
                     Info:
                         - 'Pouzij: /res mirror [Zdrojova Residence] [Cilova Residence]'
-                        - 'Zkopiruje vsechny vlajky z jedne residence na druho. Musis byt vlastnik obou nebo admin.'
+                        - 'Zkopiruje vsechny vlajky z jedne residence na druhou. Musis byt vlastnik obou nebo admin.'
                 market:
                     Description: Koupe, prodej nebo pronajem residenci
                     Info:
@@ -617,12 +616,12 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Pouzij: /resreload'
                 resload:
-                    Description: Load residence save file (NEBEZPECNE POUZE ADMINI).
+                    Description: Nacteni ulozeneho souboru residenci (NEBEZPECNE POUZE ADMINI).
                     Info:
-                        - 'Usage: /resload'
+                        - 'Pouzij: /resload'
                         - 'NEBEZPECNY PRIKAZ.'
                         - 'Nacte plugin ze souboru po provedenych zmenach.'
                 version:
                     Description: Vypise vezi pluginu
                     Info:
-                        - 'Usage: /res version'
+                        - 'Pouzij: /res version'
