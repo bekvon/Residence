@@ -203,9 +203,10 @@ public class ResidenceBlockListener implements Listener {
         		event.setCancelled(true);
         		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
         	}
-        }
-        if(!perms.has("ignite", true)){
-            event.setCancelled(true);
+        } else {
+        	if(!perms.has("ignite", true)){
+        	    event.setCancelled(true);
+        	}
         }
     }
 }
