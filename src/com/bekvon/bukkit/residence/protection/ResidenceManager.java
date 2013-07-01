@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
@@ -32,16 +27,15 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 
 /**
- * 
- * @author Administrator
+ * Residence Manager places and controls all residences.
  */
 public class ResidenceManager {
     protected Map<String, ClaimedResidence> residences;
-    protected Map<String, Map<String, List<String>>> chunkResidences;
+    protected Map<String, Map<ChunkCoord, List<String>>> chunkResidences;
 
     public ResidenceManager() {
         residences = new HashMap<String, ClaimedResidence>();
-        chunkResidences = new HashMap<String, Map<String, List<String>>>();
+        chunkResidences = new HashMap<String, Map<ChunkCoord, List<String>>>();
     }
 
     public ClaimedResidence getByLoc(Location loc) {
@@ -51,7 +45,7 @@ public class ResidenceManager {
         ClaimedResidence res = null;
         boolean found = false;
         String world = loc.getWorld().getName();
-        String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
+        ChunkCoord chunk = new ChunkCoord(loc);
         if (chunkResidences.get(world) != null) {
             if (chunkResidences.get(world).get(chunk) != null) {
                 for (String key : chunkResidences.get(world).get(chunk)) {
@@ -101,7 +95,7 @@ public class ResidenceManager {
         String name = null;
         boolean found = false;
         String world = loc.getWorld().getName();
-        String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
+        ChunkCoord chunk = new ChunkCoord(loc);
         if (chunkResidences.get(world) != null) {
             if (chunkResidences.get(world).get(chunk) != null) {
                 for (String key : chunkResidences.get(world).get(chunk)) {
@@ -489,13 +483,13 @@ public class ResidenceManager {
         return resm;
     }
 
-    public static Map<String, List<String>> loadMap(Map<String, Object> root, ResidenceManager resm) throws Exception {
-        Map<String, List<String>> retRes = new HashMap<String, List<String>>();
+    public static Map<ChunkCoord, List<String>> loadMap(Map<String, Object> root, ResidenceManager resm) throws Exception {
+        Map<ChunkCoord, List<String>> retRes = new HashMap<ChunkCoord, List<String>>();
         if (root != null) {
             for (Entry<String, Object> res : root.entrySet()) {
                 try {
                     ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null);
-                    for (String chunk : getChunks(residence)) {
+                    for (ChunkCoord chunk : getChunks(residence)) {
                         List<String> ress = new ArrayList<String>();
                         if (retRes.containsKey(chunk)) {
                             ress.addAll(retRes.get(chunk));
@@ -516,10 +510,10 @@ public class ResidenceManager {
         return retRes;
     }
 
-    private static List<String> getChunks(ClaimedResidence res) {
-        List<String> chunks = new ArrayList<String>();
+    private static List<ChunkCoord> getChunks(ClaimedResidence res) {
+        List<ChunkCoord> chunks = new ArrayList<ChunkCoord>();
         for (CuboidArea area : res.getAreaArray()) {
-            chunks.addAll(area.getChunks());
+            chunks.addAll(area.getChunkCoords());
         }
         return chunks;
     }
@@ -626,7 +620,7 @@ public class ResidenceManager {
             }
         }
         chunkResidences.remove(world);
-        chunkResidences.put(world, new HashMap<String, List<String>>());
+        chunkResidences.put(world, new HashMap<ChunkCoord, List<String>>());
         if (count == 0) {
             sender.sendMessage(ChatColor.RED + "No residences found in world: " + ChatColor.YELLOW + world);
         } else {
@@ -643,7 +637,7 @@ public class ResidenceManager {
         if (res != null) {
             String world = res.getWorld();
             if (chunkResidences.get(world) != null) {
-                for (String chunk : getChunks(res)) {
+                for (ChunkCoord chunk : getChunks(res)) {
                     List<String> ress = new ArrayList<String>();
                     if (chunkResidences.get(world).containsKey(chunk)) {
                         ress.addAll(chunkResidences.get(world).get(chunk));
@@ -660,9 +654,9 @@ public class ResidenceManager {
         if (res != null) {
             String world = res.getWorld();
             if (chunkResidences.get(world) == null) {
-                chunkResidences.put(world, new HashMap<String, List<String>>());
+                chunkResidences.put(world, new HashMap<ChunkCoord, List<String>>());
             }
-            for (String chunk : getChunks(res)) {
+            for (ChunkCoord chunk : getChunks(res)) {
                 List<String> ress = new ArrayList<String>();
                 if (chunkResidences.get(world).containsKey(chunk)) {
                     ress.addAll(chunkResidences.get(world).get(chunk));
