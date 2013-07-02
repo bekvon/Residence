@@ -150,6 +150,9 @@ public class ResidencePlayerListener implements Listener {
         Player player = event.getPlayer();
         Material heldItem = player.getItemInHand().getType();
         Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
         Material mat = block.getType();
         if (!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block) || event.getAction() == Action.PHYSICAL)) {
             int typeId = player.getItemInHand().getTypeId();
