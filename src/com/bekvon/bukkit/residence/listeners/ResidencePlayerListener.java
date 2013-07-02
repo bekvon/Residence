@@ -532,7 +532,7 @@ public class ResidencePlayerListener implements Listener {
                     res = Residence.getResidenceManager().getByName(resname);
                 }
                 if (res != null && res.getPermissions().has("healing", false)) {
-                    int health = player.getHealth();
+                    double health = player.getHealth();
                     if (health < 20 && !player.isDead()) {
                         player.setHealth(health + 1);
                     }
