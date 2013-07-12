@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,6 +35,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -41,6 +43,8 @@ import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 /**
  * 
@@ -186,6 +190,12 @@ public class ResidencePlayerListener implements Listener {
         }
         if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
+                Plugin wep = Bukkit.getPluginManager().getPlugin("WorldEdit");
+                if (wep != null) {
+                    if (((WorldEditPlugin) wep).getConfig().getInt("wand-item") == Residence.getConfigManager().selectionToolId) {
+                        return;
+                    }
+                }
                 PermissionGroup group = Residence.getPermissionManager().getGroup(player);
                 if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group.canCreateResidences() && !player.isPermissionSet("residence.create") && !player.isPermissionSet("residence.select") || resadmin) {
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
