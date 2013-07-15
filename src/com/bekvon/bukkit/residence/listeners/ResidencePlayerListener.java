@@ -192,7 +192,7 @@ public class ResidencePlayerListener implements Listener {
             if (player.getItemInHand().getTypeId() == Residence.getConfigManager().getSelectionTooldID()) {
                 Plugin wep = Bukkit.getPluginManager().getPlugin("WorldEdit");
                 if (wep != null) {
-                    if (((WorldEditPlugin) wep).getConfig().getInt("wand-item") == Residence.getConfigManager().selectionToolId) {
+                    if (((WorldEditPlugin) wep).getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
                         return;
                     }
                 }
