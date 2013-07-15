@@ -439,14 +439,14 @@ public class ClaimedResidence {
     }
 
     public String[] getSubzoneList() {
-        ArrayList zones = new ArrayList<String>();
+        ArrayList<String> zones = new ArrayList<String>();
         Set<String> set = subzones.keySet();
         for (String key : set) {
             if (key != null) {
                 zones.add(key);
             }
         }
-        return (String[]) zones.toArray();
+        return zones.toArray(new String[zones.size()]);
     }
 
     public boolean checkCollision(CuboidArea area) {
