@@ -9,109 +9,109 @@ Language:
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
     #Version 1 Fields
-    InvalidResidence: '无效的领地。。。'
-    InvalidSubzone: '无效的附属领地。。。'
-    InvalidDirection: '无效方向。。。'
-    InvalidChannel: '无效频道。。。'
-    InvalidAmount: '无效数量。。。'
-    InvalidCost: '无效花费。。。'
-    InvalidDays: '无效的天数。。。'
-    InvalidMaterial: '无效的材料。。。'
-    InvalidBoolean: '无效值，必须是 true(t) 或者 false(f)'
-    InvalidArea: '无效的区域。。。'
-    InvalidGroup: '无效的权限组。。。'
-    InvalidMessageType: '消息类型必须enter（输入）或（移除）remove。'
-    InvalidList: '无效的清单。。。'
-    InvalidFlag: '权限无效。。。'
-    InvalidFlagState: '无效的权限状态, 必须是 true(t)开启, false(f)关闭, 或者 remove(r)移除'
-    AreaExists: '区域名字已经存在.'
+    InvalidResidence: '无效的领地...'
+    InvalidSubzone: '无效的附属领地...'
+    InvalidDirection: '无效的方向...'
+    InvalidChannel: '无效频道...'
+    InvalidAmount: '无效数量...'
+    InvalidCost: '无效花费...'
+    InvalidDays: '无效的天数...'
+    InvalidMaterial: '无效的材料...'
+    InvalidBoolean: '无效值，必须是布尔值，true(t)或者false(f)。'
+    InvalidArea: '无效的区域...'
+    InvalidGroup: '无效的权限组...'
+    InvalidMessageType: '消息类型必须enter(进入)或remove(离开)。'
+    InvalidList: '无效的清单...'
+    InvalidFlag: '权限不存在...'
+    InvalidFlagState: '无效的权限状态，必须是true(t)开启，false(f)关闭，或者 remove(r)移除。'
+    AreaExists: '区域名字已经存在。'
     AreaCreate: '领地ID %1 创建成功'
-    AreaDiffWorld: '区域与领地是在一个不同的世界.'
-    AreaCollision: '区域与领地 %1 冲突'
-    AreaSubzoneCollision: '区域和附属领地 %1 冲突'
-    AreaNonExist: '区域不存在.'
+    AreaDiffWorld: '区域与领地是在一个不同的世界。'
+    AreaCollision: '区域与领地 %1 冲突。'
+    AreaSubzoneCollision: '区域和附属领地 %1 冲突。'
+    AreaNonExist: '区域不存在。'
     AreaInvalidName: '区域名无效...'
     AreaRename: '区域名从 %1 更改到 %2'
-    AreaRemove: '移除区域 %1...'
-    AreaRemoveLast: '不能把最后一个区域从领地中移除.'
-    AreaNotWithinParent: '这个区域不在父区域之内.'
+    AreaRemove: '移除区域 %1 ...'
+    AreaRemoveLast: '不能把最后一个区域从领地中移除。'
+    AreaNotWithinParent: '这个区域不在父区域之内。'
     AreaUpdate: '区域已更新...'
-    AreaMaxPhysical: '你已经达到你的领地所允许的最大区域.'
-    AreaSizeLimit: '区域的大小超出你允许的范围上限.'
-    AreaHighLimit: '你不能保护这样高的领地,你的上限是 %1'
-    AreaLowLimit: '你不能保护这样深的领地,你的上限是 %1'
-    NotInResidence: '你不在一个领地里.'
-    InResidence: '你正站在领地 %1里'
-    ResidenceOwnerChange: '领地的拥有者从玩家 %1 改为玩家 %2'
-    NonAdmin: '你不是领地的管理员.'
-    AdminOnly: '只有管理员才能使用这个权限.'
+    AreaMaxPhysical: '你已经达到你的领地所允许的最大区域。'
+    AreaSizeLimit: '区域的大小超出你允许的范围上限。'
+    AreaHighLimit: '你不能保护这样高的领地,你的上限是 %1 。'
+    AreaLowLimit: '你不能保护这样深的领地,你的上限是 %1 。'
+    NotInResidence: '你不在一个领地里。'
+    InResidence: '你正站在领地 %1 里。'
+    ResidenceOwnerChange: '领地的拥有者从玩家 %1 改为玩家 %2 。'
+    NonAdmin: '你不是领地的管理员。'
+    AdminOnly: '只有管理员才能使用这个命令。'
     ChatDisabled: '领地聊天已关闭...'
-    SubzoneRename: '附属领地%1 已重命名为 %2'
+    SubzoneRename: '附属领地 %1 已重命名为 %2 。'
     SubzoneRemove: '附属领地 %1 已移除.'
-    SubzoneCreate: '创建附属领地 %1'
-    SubzoneCreateFail: '不能创建附属领地 %1'
-    SubzoneExists: '附属领地 %1 已经存在.'
-    SubzoneCollide: '附属领地与另一个附属领地 %1 冲突'
-    SubzoneMaxDepth: '您已达到了系统允许的最大分区深度.'
-    SubzoneSelectInside: '两个选择点必须在领地内'
-    SelectPoints: '在用这个命令之前，请先用选择工具选取两个点!'
-    SelectionSuccess: '选择成功!'
+    SubzoneCreate: '创建附属领地 %1 。'
+    SubzoneCreateFail: '不能创建附属领地 %1 。'
+    SubzoneExists: '附属领地 %1 已经存在。'
+    SubzoneCollide: '附属领地与另一个附属领地 %1 冲突。'
+    SubzoneMaxDepth: '您已达到了系统允许的最大分区深度。'
+    SubzoneSelectInside: '两个选择点必须在领地内。'
+    SelectPoints: '在用这个命令之前，请先用选择工具选取两个点！'
+    SelectionSuccess: '选择成功！'
     SelectionFail: '无效的选择命令...'
-    SelectionBedrock: '扩大到允许的最低高度.'
-    SelectionSky: '扩大到允许的最高高度.'
-    SelectionArea: '在领地 %2 中选择区域 %1'
-    SelectDiabled: '你不能使用圈地权限.'
-    NoPermission: '你没有此命令的权限.'
-    OwnerNoPermission: '所有者无此命令的权限.'
-    ParentNoPermission: '你没有改变父区域的权限.'
+    SelectionBedrock: '扩大到允许的最低高度。'
+    SelectionSky: '扩大到允许的最高高度。'
+    SelectionArea: '在领地 %2 中选择区域 %1 。'
+    SelectDiabled: '你没有圈地权限。'
+    NoPermission: '你没有使用此命令的权限。'
+    OwnerNoPermission: '所有者无此命令的权限。'
+    ParentNoPermission: '你没有改变父区域的权限。'
     MessageChange: '消息已设置...'
     FlagSet: '权限已设置...'
-    FlagCheckTrue: '权限 %1 为玩家 %2 在领地 %3 设置,值为=%4'
-    FlagCheckFalse: '权限 %1 未为玩家 %2 在领地中设置.'
-    FlagsCleared: '权限已清除.'
-    FlagsDefault: '权限已设置为默认.'
+    FlagCheckTrue: '权限 %1 为玩家 %2 在领地 %3 设置，值为=%4 。'
+    FlagCheckFalse: '权限 %1 未为玩家 %2 在领地中设置。'
+    FlagsCleared: '权限已清除。'
+    FlagsDefault: '权限已设置为默认。'
     Usage: '命令用法'
     InvalidHelp: '无效的帮助页...'
     SubCommands: '子命令'
     InvalidList: '未知列表的类型,必须是黑名单中的类型.'
-    MaterialGet: '材料名称为ID %1 是 %2'
-    MarketDisabled: '市场被禁用!'
+    MaterialGet: '材料名称为ID %1 是 %2 。'
+    MarketDisabled: '市场功能已禁用！'
     MarketList: '市场列表'
     SelectionTool: '选择工具'
     InfoTool: '信息工具'
-    NoBankAccess: '你没有银行权限..'
-    NotEnoughMoney: '你没有足够的权限.'
-    BankNoMoney: '在银行里没有足够的钱.'
+    NoBankAccess: '你没有银行权限...'
+    NotEnoughMoney: '你没有足够的钱。'
+    BankNoMoney: '在银行里没有足够的钱。'
     BankDeposit: '你存 %1 元到领地银行。'
-    BankWithdraw: '你取出 %1 元从领地银行.'
-    MoneyCharged: '支出 %1 元从 %2 帐户.'
-    MoneyCredit: '收入 %1 元从 %2 帐户.'
-    RentDisabled: '租凭系统已关闭.'
-    RentReleaseInvalid: '领地 %1 没有被租用或者被出租.'
-    RentSellFail: '不能出售一个被租出去的领地.'
-    SellRentFail: '当前领地在出售不能出租领地.'
-    OwnerBuyFail: '无法购买自己的土地!'
-    OwnerRentFail: '不能租你自己的土地!'
-    AlreadySellFail: '领地已经出售!'
-    ResidenceBought: '你已经买下了领地 %1'
-    ResidenceBuy: '玩家 %1 从你那买下了领地 %2.'
-    ResidenceBuyTooBig: '此领地已超过系统允许的最大领域.'
-    ResidenceNotForSale: '领地没有用于出售.'
-    ResidenceForSale: '现在以 %2 销售领地 %1 '
-    ResidenceStopSelling: '领地不再销售.'
-    ResidenceTooMany: '已达到系统允许领地的最大上限.'
-    ResidenceMaxRent: '已达到系统允许你租用领地的最大上限.'
+    BankWithdraw: '你取出 %1 元从领地银行。'
+    MoneyCharged: '支出 %1 元从 %2 帐户。'
+    MoneyCredit: '收入 %1 元从 %2 帐户。'
+    RentDisabled: '租凭系统已关闭。'
+    RentReleaseInvalid: '领地 %1 没有被租用或者被出租。'
+    RentSellFail: '不能出售一个被租出去的领地。'
+    SellRentFail: '当前领地在出售不能出租领地。'
+    OwnerBuyFail: '无法购买自己的土地！'
+    OwnerRentFail: '不能租你自己的土地！'
+    AlreadySellFail: '领地已经出售！'
+    ResidenceBought: '你已经买下了领地 %1 ！'
+    ResidenceBuy: '玩家 %1 从你那买下了领地 %2 。'
+    ResidenceBuyTooBig: '此领地已超过系统允许的最大领域。'
+    ResidenceNotForSale: '领地没有用于出售。'
+    ResidenceForSale: '现在以 %2 销售领地 %1 。'
+    ResidenceStopSelling: '领地不再销售。'
+    ResidenceTooMany: '已达到系统允许领地的最大上限。'
+    ResidenceMaxRent: '已达到系统允许你租用领地的最大上限。'
     ResidenceAlreadyRent: '领地已经被租用...'
     ResidenceNotForRent: '领地不用于出租...'
-    ResidenceNotRented: '领地没有被租用.'
-    ResidenceUnrent: '领地%1已不再出租。'
-    ResidenceRemoveRentable: '领地 %1 不再出租.'
-    ResidenceForRentSuccess: '领地%1 现在租金为%2,每次 %3天.'
-    ResidenceRentSuccess: '你已经租用领地 %1 %2天..'
-    ResidenceAlreadyRented: '领地 %1,目前已出租给 %2'
-    ResidenceAlreadyExists: '领地 %1已存在.'
-    ResidenceCreate: '你创建了领地 %1!'
-    ResidenceRename: '领地 %1 已改名为 %2'
+    ResidenceNotRented: '领地没有被租用。'
+    ResidenceUnrent: '领地 %1 已不再出租。'
+    ResidenceRemoveRentable: '领地 %1 不再出租。'
+    ResidenceForRentSuccess: '领地 %1 现在租金为 %2 ，每次 %3 天。'
+    ResidenceRentSuccess: '你已经租用领地 %1  %2 天...'
+    ResidenceAlreadyRented: '领地 %1 ，目前已出租给 %2 。'
+    ResidenceAlreadyExists: '领地 %1 已存在。'
+    ResidenceCreate: '你创建了领地 %1 ！'
+    ResidenceRename: '领地 %1 已改名为 %2 。'
     ResidenceRemove: '领地 %1 已经被移除...'
     RentDisabled: '出租被禁用...'
     RentDisableRenew: '%1 自动到期续约已关闭'
@@ -126,19 +126,19 @@ Language:
     RentAutoRenew: '租借自动更新'
     RentableLand: '可供出租土地'
     ListMaterialAdd: '%1 添加到领地 %2'
-    ListMaterialRemove: '%1 已从领地 %2移除'
+    ListMaterialRemove: '%1 已从领地 %2 移除'
     ItemBlacklisted: '你不能在这使用被禁止的物品.'
     RentedModifyDeny: '不能修改一个租来的领地.'
     WorldPVPDisabled: '当前世界的PvP被禁止.'
     NoPVPZone: '没有PVP的区域.'
     FlagDeny: '你没有拥有领地 %1 的权限.'
     FlagSetDeny: '所有者不能使用这个权限 %1'
-    SelectPoint: '选择了 %1的选择点'
-    ResidenceChat: '领地聊天切换到 %1'
+    SelectPoint: '选择了 %1 的选择点'
+    ResidenceChat: '领地聊天切换到 %1 '
     ResidenceMoveDeny: '你没有领地 %1 的移动权限'
-    TeleportDeny: '你没有传送权限.'
-    TeleportSuccess: '已传送!'
-    TeleportNear: '传送到领地的附近.'
+    TeleportDeny: '你没有传送权限。'
+    TeleportSuccess: '已传送！'
+    TeleportNear: '已传送到领地的附近。'
     TeleportNoFlag: '对不起，你没有传送权限去目标领地。'
     SetTeleportLocation: '传送点已设置...'
     HelpPageHeader: '帮助页 - %1 - 第 %2页 共 %3页'
@@ -165,21 +165,21 @@ Language:
     NextPage: '下一页'
     #Version 10 New Fields
     RemovePlayersResidences: '删除了所有这个玩家的领地 %1'
-    GenericPage: '页数 %1 of %2'
+    GenericPage: '页数 %1 / %2'
     #Version 11 New Fields
     ResidenceRentedBy: '被 %1 租用'
     #Version 14 New Fields
     InvalidCharacters: '侦测到无效名字...'
     InvalidNameCharacters: '名字里包含非法字符...'
     #Version 15 New Fields
-    DeleteConfirm: '你确定要删除这个领地 %1 吗？, 请用命令"/res confirm" .来确定.'
+    DeleteConfirm: '你确定要删除领地 %1 吗？输入"/res confirm"来确定。'
     #Version 18 New Fields
-    SelectTooHigh: '上述警告，选择了地图上方，限制.'
-    SelectTooLow: '警告，选择了以下地图的底部，限制.'
-    WorldEditNotFound: '未检出 WorldEdit.'
+    SelectTooHigh: '警告！你所选择的地方超过了服务器限制！'
+    SelectTooLow: '警告！你所选择的地方超过了服务器限制！'
+    WorldEditNotFound: '未发现WorldEdit插件。'
     #Version 19 New Fields
-    NoResHere: '有没有在那里居住.'
-    DeleteSubzoneConfirm: '你确定你要删除的分区%1，使用“/res confirm”确.'
+    NoResHere: '没有人在这里设置了领地。'
+    DeleteSubzoneConfirm: '你确定要删除分区 %1 吗？输入“/res confirm”来确定。'
     #Version 20 New Fields
     SubzoneOwnerChange: '分区 %1 所有者改为 %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
@@ -231,8 +231,8 @@ Language:
     CoordsT: '顶坐标'
     CoordsB: '底部的坐标'
     #Version 22 Fields
-    TurnOn: 'on'
-    TurnOff: 'off'
+    TurnOn: '开'
+    TurnOff: '关'
     
 # This is the help / usage messages for each command.
 # It follows this format:
@@ -247,14 +247,14 @@ Language:
 
 HelpLinesPerPage: 7
 CommandHelp: #this is just a holder node, that holds the entire help
-    Description: Contains Help for 领地插件
+    Description: 领地插件相关帮助
     SubCommands: #this is the actual beginning of all commands
         res: #main residence command
-            Description: Main 领地 Command
+            Description: 领地插件相关帮助
             Info:
-                - 'See the 领地 wiki for more help.'
-                - 'Wiki: residencebukkitmod.wikispaces.com'
-                - 'Use /[command] ? <page> to view more help information.'
+                - '如果有疑问在这里找不到，欢迎访问Wiki'
+                - '地址：residencebukkitmod.wikispaces.com (英文)'
+                - '输入/[命令] ? <页面>获得更多信息'
             SubCommands:
                 select: #selection commands
                     Description: Selection Commands
@@ -587,16 +587,16 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Info:
                                 - Usage: /res lists view <listname>
                 server:
-                    Description: Make land server owned (admin only).
+                    Description: 设置某个领地为服务器所属(仅限管理员使用)
                     Info:
                         - Usage: /resadmin server [residence]
-                        - Make a residence server owned.
+                        - 可以让某个领地变为服务器所属
                 setowner:
-                    Description: Change owner of a residence (admin only).
+                    Description: 设置某个领地的所有者(仅限管理员使用)
                     Info:
-                        - Usage: /resadmin setowner [residence] [player]
+                        - Usage: /resadmin setowner [领地名] [玩家]
                 resreload:
-                    Description: Reload residence (admin only).
+                    Description: 重新加载插件配置(仅限管理员使用)
                     Info:
                         - Usage: /resreload
                 resload:
@@ -606,6 +606,6 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - UNSAFE command, does not save residences first.
                         - Loads the residence save file after you have made changes.
                 version:
-                    Description: Show residence version
+                    Description: 显示领地插件的版本信息
                     Info:
                         - Usage: /res version
