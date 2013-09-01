@@ -6,6 +6,8 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.ResidenceManager.ChunkRef;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -194,17 +195,18 @@ public class CuboidArea {
         return newArea;
     }
 
-    public List<String> getChunks() {
-        List<String> chunks = new ArrayList<String>();
-        Chunk high = this.highPoints.getChunk();
-        Chunk low = this.lowPoints.getChunk();
-        int highX = high.getX();
-        int lowX = low.getX();
-        int highZ = high.getZ();
-        int lowZ = low.getZ();
+    public List<ChunkRef> getChunks() {
+        List<ChunkRef> chunks = new ArrayList<ChunkRef>();
+        Location high = this.highPoints;
+        Location low = this.lowPoints;
+        int lowX = ChunkRef.getBase(low.getBlockX());
+        int lowZ = ChunkRef.getBase(low.getBlockZ());
+        int highX = ChunkRef.getBase(high.getBlockX());
+        int highZ = ChunkRef.getBase(high.getBlockZ());
+
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
-                chunks.add(x + ":" + z);
+                chunks.add(new ChunkRef(x, z));
             }
         }
         return chunks;

@@ -99,6 +99,10 @@ public class WorldEditSelectionManager extends SelectionManager {
         super.selectChunk(player);
         afterSelectionUpdate(player);
     }
-   
-    
+
+    @Override
+    public void showSelectionInfo(Player player) {
+        this.worldEdit(player);
+        super.showSelectionInfo(player);
+    }
 }

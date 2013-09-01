@@ -37,11 +37,11 @@ import com.bekvon.bukkit.residence.text.help.InformationPager;
  */
 public class ResidenceManager {
     protected Map<String, ClaimedResidence> residences;
-    protected Map<String, Map<String, List<String>>> chunkResidences;
+    protected Map<String, Map<ChunkRef, List<String>>> chunkResidences;
 
     public ResidenceManager() {
         residences = new HashMap<String, ClaimedResidence>();
-        chunkResidences = new HashMap<String, Map<String, List<String>>>();
+        chunkResidences = new HashMap<String, Map<ChunkRef, List<String>>>();
     }
 
     public ClaimedResidence getByLoc(Location loc) {
@@ -489,13 +489,13 @@ public class ResidenceManager {
         return resm;
     }
 
-    public static Map<String, List<String>> loadMap(Map<String, Object> root, ResidenceManager resm) throws Exception {
-        Map<String, List<String>> retRes = new HashMap<String, List<String>>();
+    public static Map<ChunkRef, List<String>> loadMap(Map<String, Object> root, ResidenceManager resm) throws Exception {
+        Map<ChunkRef, List<String>> retRes = new HashMap<ChunkRef, List<String>>();
         if (root != null) {
             for (Entry<String, Object> res : root.entrySet()) {
                 try {
                     ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null);
-                    for (String chunk : getChunks(residence)) {
+                    for (ChunkRef chunk : getChunks(residence)) {
                         List<String> ress = new ArrayList<String>();
                         if (retRes.containsKey(chunk)) {
                             ress.addAll(retRes.get(chunk));
@@ -626,7 +626,7 @@ public class ResidenceManager {
             }
         }
         chunkResidences.remove(world);
-        chunkResidences.put(world, new HashMap<String, List<String>>());
+        chunkResidences.put(world, new HashMap<ChunkRef, List<String>>());
         if (count == 0) {
             sender.sendMessage(ChatColor.RED + "No residences found in world: " + ChatColor.YELLOW + world);
         } else {
@@ -643,7 +643,7 @@ public class ResidenceManager {
         if (res != null) {
             String world = res.getWorld();
             if (chunkResidences.get(world) != null) {
-                for (String chunk : getChunks(res)) {
+                for (ChunkRef chunk : getChunks(res)) {
                     List<String> ress = new ArrayList<String>();
                     if (chunkResidences.get(world).containsKey(chunk)) {
                         ress.addAll(chunkResidences.get(world).get(chunk));
@@ -660,9 +660,9 @@ public class ResidenceManager {
         if (res != null) {
             String world = res.getWorld();
             if (chunkResidences.get(world) == null) {
-                chunkResidences.put(world, new HashMap<String, List<String>>());
+                chunkResidences.put(world, new HashMap<ChunkRef, List<String>>());
             }
-            for (String chunk : getChunks(res)) {
+            for (ChunkRef chunk : getChunks(res)) {
                 List<String> ress = new ArrayList<String>();
                 if (chunkResidences.get(world).containsKey(chunk)) {
                     ress.addAll(chunkResidences.get(world).get(chunk));
@@ -670,6 +670,46 @@ public class ResidenceManager {
                 ress.add(name);
                 chunkResidences.get(world).put(chunk, ress);
             }
+        }
+    }
+
+    public static final class ChunkRef {
+
+        public static int getBase(final int val) {
+            // >> 4 << 4 will convert any block coordinate to its chunk coordinate base,
+            // negatives need to go up in value so -16 first
+            // so -35 will go to -48, 18 will be 16
+            return (val < 0 ? val - 16 : val) >> 4 << 4;
+        }
+        private final int z;
+        private final int x;
+
+        public ChunkRef(Location loc) {
+            this.x = getBase(loc.getBlockX());
+            this.z = getBase(loc.getBlockZ());
+        }
+        public ChunkRef(int x, int z) {
+            this.x = (int) x;
+            this.z = (int) z;
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            ChunkRef other = (ChunkRef) obj;
+            return this.x == other.x && this.z == other.z;
+        } 
+
+        public int hashCode() {
+            return x ^ z;
         }
     }
 }

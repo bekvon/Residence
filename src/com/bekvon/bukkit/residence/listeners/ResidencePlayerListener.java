@@ -262,7 +262,7 @@ public class ResidencePlayerListener implements Listener {
                             return;
                         }
                     }
-                    if (Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()))) {
+                    if (Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()))) {
                         if (!hasuse) {
                             event.setCancelled(true);
                             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "use"));

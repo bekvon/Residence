@@ -92,6 +92,23 @@ public class TransactionManager {
         player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceForSale", ChatColor.YELLOW + areaname + ChatColor.GREEN + "." + ChatColor.YELLOW + amount + ChatColor.GREEN));
     }
 
+    public boolean putForSale(String areaname, int amount) {
+        if (Residence.getConfigManager().enabledRentSystem()) {
+            if (Residence.getRentManager().isForRent(areaname)) {
+                return false;
+            }
+        }
+        ClaimedResidence area = manager.getByName(areaname);
+        if (area == null) {
+            return false;
+        }
+        if (sellAmount.containsKey(areaname)) {
+            return false;
+        }
+        sellAmount.put(areaname, amount);
+        return true;
+    }
+
     public void buyPlot(String areaname, Player player, boolean resadmin) {
         PermissionGroup group = gm.getGroup(player);
         if (!resadmin) {
