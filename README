@@ -2,16 +2,14 @@ Residence - Self serve area protection system
 =============================================
 
 Official links:
-Wiki: http://residencebukkitmod.wikispaces.com/
 IRC: irc://irc.esper.net/Residence
 BukkitDev: http://dev.bukkit.org/server-mods/residence/
 
 Downloads:
-Latest Development Snapshot: https://github.com/bekvon/Residence/raw/dist/dist/Residence.jar
-Latest Config.yml: https://github.com/bekvon/Residence/raw/master/src/config.yml
+Latest Config.yml: https://github.com/t00thpick1/Residence/src/main/resourcesconfig.yml
 
-To build the source yourself, simply download the source:
-https://github.com/bekvon/Residence/zipball/master
+To build the source yourself, simply download the source from github:
+https://github.com/t00thpick1/Residence
 
 Unzip and run ant.
 
