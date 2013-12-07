@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sk89q:worldedit:5.5.8-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sk89q/worldedit/5.5.8-SNAPSHOT/worldedit-5.5.8-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sk89q/worldedit/5.5.8-SNAPSHOT/worldedit-5.5.8-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sk89q/worldedit/5.5.8-SNAPSHOT/worldedit-5.5.8-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

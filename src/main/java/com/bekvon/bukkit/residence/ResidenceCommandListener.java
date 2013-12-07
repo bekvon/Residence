@@ -14,7 +14,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.getspout.spoutapi.SpoutManager;
 
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
@@ -22,7 +21,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import java.util.List;
 
@@ -1408,13 +1406,6 @@ public class ResidenceCommandListener extends Residence {
     }
 
     private boolean commandResGui(String[] args, boolean resadmin, Player player, int page) {
-        if (slistener != null) {
-            if (args.length == 1) {
-                ResidenceSpout.showResidenceFlagGUI(SpoutManager.getPlayer(player), this, rmanager.getNameByLoc(player.getLocation()), resadmin);
-            } else if (args.length == 2) {
-                ResidenceSpout.showResidenceFlagGUI(SpoutManager.getPlayer(player), this, args[1], resadmin);
-            }
-        }
         return true;
     }
 

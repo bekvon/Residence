@@ -21,6 +21,8 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.bekvon.bukkit.residence.mcstats.Metrics;
+import com.bekvon.bukkit.residence.zip.ZipLibrary;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -54,8 +56,6 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
-import com.residence.mcstats.Metrics;
-import com.residence.zip.ZipLibrary;
 
 /**
  * 

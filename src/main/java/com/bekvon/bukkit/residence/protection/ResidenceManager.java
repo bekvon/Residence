@@ -516,8 +516,8 @@ public class ResidenceManager {
         return retRes;
     }
 
-    private static List<String> getChunks(ClaimedResidence res) {
-        List<String> chunks = new ArrayList<String>();
+    private static List<ChunkRef> getChunks(ClaimedResidence res) {
+        List<ChunkRef> chunks = new ArrayList<ChunkRef>();
         for (CuboidArea area : res.getAreaArray()) {
             chunks.addAll(area.getChunks());
         }
