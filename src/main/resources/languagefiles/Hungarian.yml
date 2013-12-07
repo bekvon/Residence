@@ -1,0 +1,626 @@
+# NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten.  Once you 
+# have a copy of this file, change the Language: option under the Residence config.yml
+# to whatever you named your copy.
+Version: 01
+FieldsVersion: 22
+Language:
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
+    #Version 1 Fields
+    InvalidResidence: ervenytelen lakhely...
+    InvalidSubzone: ervenytelen alosztaly...
+    InvalidDirection: ervenytelen irany...
+    InvalidChannel: ervenytelen csatorna...
+    InvalidAmount: ervenytelen osszeg...
+    InvalidCost: ervenytelen osszeg...
+    InvalidDays: ervenytelen napszam...
+    InvalidMaterial: ervenytelen anyag...
+    InvalidBoolean: ervenytelen ertek, igaznak kell lennie(t) vagy hamisnak(f)
+    InvalidArea: ervenytelen terulet...
+    InvalidGroup: ervenytelen csoport...
+    InvalidMessageType: Az uzenet tipusa belepes vagy torles lehet.
+    InvalidList: ervenytelen lista...
+    InvalidFlag: ervenytelen engedely...
+    InvalidFlagState: ervenytelen engedely beallitas, igaznak(t), hamisnak(f), vagy torles(r) kell lennie
+    AreaExists: A terulet nev mar letezik.
+    AreaCreate: 'lakhely terulet letrejott, ID %1'
+    AreaDiffWorld: A terulet egy masik vilag lakhelye.
+    AreaCollision: 'A terulet utkozik egy lakohellyel %1'
+    AreaSubzoneCollision: 'A terulet utkozik egy alosztallyal %1'
+    AreaNonExist: Ilyen terulet nem letezik.
+    AreaInvalidName: ervenytelen terulet nev...
+    AreaRename: 'Terulet atnevezve %1 erre %2'
+    AreaRemove: 'Terulet torolve %1...'
+    AreaRemoveLast: Nem lehet torolni az utolso lakoteruletet.
+    AreaNotWithinParent: A terulet nem tartozik a kozponti terulethez.
+    AreaUpdate: Terulet frissitve...
+    AreaMaxPhysical: Elerted a megengedett maximalis fizikai teruletek szamat a lakhelyeden.
+    AreaSizeLimit: A terulet merete meghaladja a megengedett erteket.
+    AreaHighLimit: 'Nem vedheted le a teruletet ilyen magasan, a te hatarod %1'
+    AreaLowLimit: 'Nem vedheted le a teruletet ilyen melyen, a te hatarod %1'
+    NotInResidence: Nem vagy a lakhely rendszerben.
+    InResidence: 'Te egy lakhelyen allsz %1'
+    ResidenceOwnerChange: 'lakhely %1 tulajdonos jog atruhazva ra %2'
+    NonAdmin: Te nem vagy lakhely admin.
+    AdminOnly: Csak adminoknak hozzaferheto ez a parancs.
+    ChatDisabled: lakhely chat kikapcsolva...
+    SubzoneRename: 'Alosztaly atnevezve %1 erre %2'
+    SubzoneRemove: 'Alosztaly %1 torolve.'
+    SubzoneCreate: 'Alosztaly letrehozva %1'
+    SubzoneCreateFail: 'Nem lehet letrehozni az alosztalyt %1'
+    SubzoneExists: 'Alosztaly %1 mar letezik.'
+    SubzoneCollide: 'Az alosztaly utkozik egy masik alosztallyal %1'
+    SubzoneMaxDepth: Elerted a megengedett maximalis melyseget az alosztalynak.
+    SubzoneSelectInside: Mindket kivalasztasi pontnak a lakhelyen belul kell lennie.
+    SelectPoints: Eloszor jelolj ki ket pontot, aztan hasznald a parancsot!
+    SelectionSuccess: Kijeloles sikeres!
+    SelectionFail: ervenytelen kijelolesi parancs...
+    SelectionBedrock: A kijeloles bovult a megengedett legmelyebb hatarertekre.
+    SelectionSky: A kijeloles bovult a megengedett legmagasabb hatarertekre.
+    SelectionArea: 'A kijelolt terulet %1 lakhelye %2'
+    SelectDiabled: Nincs hozzaferesed a kijelolesi parancsokhoz.
+    NoPermission: Nincs hozzaferesed ehhez.
+    OwnerNoPermission: A tulajdonosnak nincs hozzaferese ehhez.
+    ParentNoPermission: Nincs hozzaferesed a kozponti terulet modositasahoz.
+    MessageChange: uzenet beallitva...
+    FlagSet: Engedely beallitva...
+    FlagCheckTrue: 'Engedely %1 vonatkozik a jatekosra %2 a lakhelyen %3, erteken = %4'
+    FlagCheckFalse: 'Engedely %1 nem vonatkozik a jatekosra %2 a lakhelyen.'
+    FlagsCleared: Engedely megtisztitva.
+    FlagsDefault: Engedelyek alapertekre allitva.
+    Usage: Parancs hasznalat
+    InvalidHelp: ervenytelen Parancs sugo...
+    SubCommands: Alparancsok
+    InvalidList: Ismeretlen lista tipus, feketelistanak vagy kivetellistanak kell lennie.
+    MaterialGet: 'Az anyag neve ID-vel kifejezve %1 ez %2'
+    MarketDisabled: Gazdasag(Economy) kikapcsolva!
+    MarketList: Lakasborze
+    SelectionTool: Kijelolo eszkoz
+    InfoTool: Informacios eszkoz
+    NoBankAccess: Nincs banki hozzaferesed.
+    NotEnoughMoney: Nincs eleg penzed.
+    BankNoMoney: Nincs eleg penzed a bankban.
+    BankDeposit: 'Elhelyeztel %1 osszeget a lakhelyi bankban.'
+    BankWithdraw: 'Kivettel %1 osszeget a lakhelyi bankbol.'
+    MoneyCharged: 'Felszamitva %1 a te %2 fiokodhoz.'
+    MoneyCredit: 'Jovairva %1 a te %2 fiokodhoz.'
+    RentDisabled: Ber rendszer kikapcsolva.
+    RentReleaseInvalid: 'lakhely %1 nincs kiberelve vagy berelheto.'
+    RentSellFail: A lakhelyet nem lehet eladni, ha az berelheto.
+    SellRentFail: A lakhelyet nem lehet kibetelni, ha az elado.
+    OwnerBuyFail: Nem veheted meg a sajat folded!
+    OwnerRentFail: Nem berelheted ki a sajat folded!
+    AlreadySellFail: A lakhely mar elado!
+    ResidenceBought: 'Vettel egy lakhelyet %1'
+    ResidenceBuy: 'Megvette %1 a lakhelyet %2 toled.'
+    ResidenceBuyTooBig: Ez a lakhely nagyobb teruletu, mint a megengedett maximalis ertek.
+    ResidenceNotForSale: A lakhely nem elado.
+    ResidenceForSale: 'lakhely %1 mar elado ennyiert %2'
+    ResidenceStopSelling: A lakhely mar nem elado.
+    ResidenceTooMany: Mar elerted a megengedett maximalis szamu lakhelyet ami hozzad tartozik.
+    ResidenceMaxRent: Mar elerted a megengedett maximalis szamu lakhelyet amit berelhetsz.
+    ResidenceAlreadyRent: A lakhely mar berelheto...
+    ResidenceNotForRent: A lakhely nem berelheto...
+    ResidenceNotRented: A lakhely nem berelt.
+    ResidenceUnrent: 'lakhely %1 nincs berelve.'
+    ResidenceRemoveRentable: 'lakhely %1 mar nem berelheto.'
+    ResidenceForRentSuccess: 'lakhely %1 most berelheto %2 minden %3 nap.'
+    ResidenceRentSuccess: 'Kiberelted a lakhelyet %1 tole %2 napra.'
+    ResidenceAlreadyRented: 'lakhely %1 jelenleg is berelt altala %2'
+    ResidenceAlreadyExists: 'A lakhely nev %1 mar letezik.'
+    ResidenceCreate: 'Letrehoztad ezt a lakhelyet %1!'
+    ResidenceRename: 'lakhely atnevezve %1 erre %2'
+    ResidenceRemove: 'lakhely %1 eltavolitva...'
+    RentDisabled: Bereles kikapcsolva...
+    RentDisableRenew: 'lakhely %1 mar nem lesz ujra berelheto annak lejarta utan.'
+    RentEnableRenew: 'lakhely %1 mar automatikusan ujra berelheto lesz a lejarta utan.'
+    RentableDisableRenew: '%1 mar nem lesz megujithato a berleti statusz a lejarat utan.'
+    RentableEnableRenew: '%1 mar automatikusan megujithato lesz a berleti statusz lejarta utan.'
+    LandForSale: Elado telek
+    SellAmount: Eladasi osszeg
+    LeaseExpire: Berbeadas lejarati ideje
+    RentExpire: Kiadas lejarati ideje
+    RentableAutoRenew: Berelhetoseg automatikus megujitasa
+    RentAutoRenew: Bereles automatikus megujitasa
+    RentableLand: Berelheto telek
+    ListMaterialAdd: '%1 hozzaadva a telekhez %2'
+    ListMaterialRemove: '%1 eltavolitva a telekbol %2'
+    ItemBlacklisted: Itt feketelistara kerultel ennek az anyagnak a hasznalataert.
+    RentedModifyDeny: A berelt lakhely nem modosithato.
+    WorldPVPDisabled: Vilagi PVP kikapcsolva.
+    NoPVPZone: PVP mentes terulet.
+    FlagDeny: 'Neked nincs ilyen %1 hozzaferesed itt.'
+    FlagSetDeny: 'A tulajdonos nem rendelkezik ilyen hozzaferessel %1'
+    SelectPoint: 'Elhelyezve a(z) %1 kijelolesi pont'
+    ResidenceChat: 'lakhely chat atvaltva erre %1'
+    ResidenceMoveDeny: 'Nincs hozzaferesed a lakhely mozgatasara %1'
+    TeleportDeny: Nincs teleport hozzaferesed.
+    TeleportSuccess: 'Teleportaltal!'
+    TeleportNear: Teleportaltal a lakhely kozeleben.
+    TeleportNoFlag: Nincs teleportalasi engedelyed erre a lakhelyre.
+    SetTeleportLocation: Teleport helyzetenek beallitasa...
+    HelpPageHeader: 'Sugu oldalak - %1 - Oldal <%2 ennyibol %3>'
+    ListExists: Lista mar letezik...
+    ListRemoved: Lista eltavolitva...
+    ListCreate: 'Lista letrehozva %1'
+    LeaseRenew: 'Bereles eddig ervenyes %1'
+    LeaseRenewMax: Berbeadas megujitva az elerheto maximumig.
+    LeaseNotExpire: Nincs ilyen berlet, vagy pedig nem fog lejarni.
+    LeaseRenewalCost: 'Megujitas koltsege a teruleten %1 ennyi %2'
+    LeaseInfinite: Berleti ido beallitva vegtelenre...
+    PermissionsApply: Hozzaferes engedelyezve a lakhelyhez.
+    PhysicalAreas: Fizikai teruletek
+    CurrentArea: Jelenlegi terulet
+    LeaseExpire: Berbeadas lejarta
+    NotOnline: A kijelolt jatekosnak online kell lennie.
+    ResidenceGiveLimits: Nem adhatsz meg lakhelyet a kijelolt jatekosnak, mert az kivul esik a kijelolt jatekos limiten.
+    ResidenceGive: 'lakhelyet adsz %1 neki %2'
+    ResidenceRecieve: 'lakhelyet kaptal %1 ettol a jatekostol %2'
+    #Version 4 New Fields
+    #ResidenceListAll: 'Residences - <Page %1 of %2>' - removed, use GenericPage now
+    ResidenceListAllEmpty: Nincsenek lakhelyek a szerveren...
+    InvalidPage: ervenytelen oldal...
+    NextPage: Kovetkezo oldal
+    #Version 10 New Fields
+    RemovePlayersResidences: 'Eltavolitva az osszes hozzatartozo lakhely tole %1'
+    GenericPage: 'Oldal %1 ennyibol %2'
+    #Version 11 New Fields
+    ResidenceRentedBy: 'Bereli %1'
+    #Version 14 New Fields
+    InvalidCharacters: ervenytelen karakterek eszlelve...
+    InvalidNameCharacters: A nev tiltott karaktereket tartalmaz...
+    #Version 15 New Fields
+    DeleteConfirm: 'Ha biztos vagy benne hogy torolni szeretned a lakhelyet %1, hasznald "/res confirm" a megerositeshez.'
+    #Version 18 New Fields
+    SelectTooHigh: Figyelem, a kijeloles tul nyulik a terkep tetejen, korlatozas.
+    SelectTooLow: Figyelem, a kijeloles tul nyulik a terkep aljan, korlatozas.
+    WorldEditNotFound: WorldEdit nem talalhato.
+    #Version 19 New Fields
+    NoResHere: Itt nincs lakhely.
+    DeleteSubzoneConfirm: 'Ha biztos vagy benne hogy torolni szeretned az alosztalyt %1, hasznald "/res confirm" a megerositeshez.'
+    #Version 20 New Fields
+    SubzoneOwnerChange: 'alosztalyt %1 tulajdonosa megváltozott %2'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatic resadmin toggle turned %1'
+    #Version 22 New Fields
+    NoSpawn: 'You do not have move permissions at your spawn point. Relocating'
+    CompassTargetReset: 'Your compass has been reset'
+    CompassTargetSet: 'Your compass now points to %1'
+    
+    #The below lines are mostly a word bank for various uses.
+    #Version 1 Fields
+    Description: Leiras
+    Land: Telek
+    Cost: Koltseg
+    Selection: Kijeloles
+    Total: Teljes
+    Size: Meret
+    Expanding: Bovites
+    Shifting: Eltolas
+    Up: Fel
+    Down: Le
+    Error: Hiba
+    Flags: Engedelyek
+    Your: Tied
+    Group: Csoport
+    Others: Egyebek
+    Primary: Elsodleges
+    Secondary: Masodlagos
+    Selection: Kijeloles
+    Moved: Mozgatas
+    Status: Helyzet
+    Available: Elerheto
+    On: Be
+    Off: Ki
+    Name: Nev
+    Lists: Listak
+    Residences: lakhelyek
+    Residence: lakhely
+    Count: osszeg
+    Owner: Tuljadonos
+    #Version 4 Fields
+    World: Vilag
+    #Version 12 Fields
+    Subzones: Alosztalyok
+    #Version 20 Fields
+    CoordsT: Top Coords
+    CoordsB: Bottom Coords
+    #Version 22 Fields
+    TurnOn: 'on'
+    TurnOff: 'off'
+    
+# This is the help / usage messages for each command.
+# It follows this format:
+# <Command>
+#     Description: <general description of command, one line of text>
+#     Info: <extra info lines to describe the command, list of text>
+#     SubCommands:
+#           <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
+# Add a page number after the ? mark to see that page.
+
+HelpLinesPerPage: 7
+CommandHelp: #this is just a holder node, that holds the entire help
+    Description: Segitseg a lakhelyekhez
+    SubCommands: #this is the actual beginning of all commands
+        res: #main residence command
+            Description: Elsodleges lakhely parancs
+            Info:
+                - 'Nezd meg a lakhely wiki-t tovabbi segitsegert.'
+                - 'Wiki: residencebukkitmod.wikispaces.com'
+                - 'Hasznald /[parancs] ? <oldal> parancsot a tovabbi informaciokhoz.'
+            SubCommands:
+                select: #selection commands
+                    Description: Kijeloles parancsok
+                    Info:
+                        - 'Ez a parancs a kijelolt teruleteket hasznalja a lakhelyekkel.'
+                        - '/res select [x] [y] [z] - kivalasztja a blokkok sugarat, kozepen veled.'
+                    SubCommands:
+                        coords:
+                            Description: Jelzi a kivalasztott koordinatakat
+                            Info:
+                                - 'Hasznalat: /res select coords'
+                        size:
+                            Description: Jelzi a kivalasztott meretet
+                            Info:
+                                - 'Hasznalat: /res select size'
+                        cost:
+                            Description: Jelzi a kivalasztott osszeget
+                            Info:
+                                - 'Hasznalat: /res select cost'
+                        vert:
+                            Description: Boviti a kijelolest fuggolegesen
+                            Info:
+                                - 'Hasznalat: /res select vert'
+                                - 'Boviti a kijelolest olyan magasan es alacsonyan ahogy lehetseges.'
+                        sky:
+                            Description: Boviti a kijelolest az egig
+                            Info:
+                                - 'Hasznalat: /res select sky'
+                                - 'Kiboviti olyan magassagig ahogy lehetseges.'
+                        bedrock:
+                            Description: Boviti a kijelolest az alapkoig
+                            Info:
+                                - 'Hasznalat: /res select bedrock'
+                                - 'Kiboviti olyan melysegig ahogy lehetseges.'
+                        expand:
+                            Description: Boviti a kijelolest egy iranyban.
+                            Info:
+                                - 'Hasznalat: /res select expand <szam>'
+                                - 'Boviti <szam> egy iranyban amerre nezel.'
+                        shift:
+                            Description: Shift selection in a direction
+                            Info:
+                                - 'Hasznalat: /res select shift <szam>'
+                                - 'Eltolja a kijelolest ennyivel <szam> az iranyba amerre nezel.'
+                        chunk:
+                            Description: Kijeloli a chunkot amin vagy.
+                            Info:
+                                - 'Hasznalat: /res select chunk'
+                                - 'Kijeloli a chunkot amin jelenleg allsz.'
+                        residence:
+                            Description: Kijelol egy letezo teruletet a lakhelyen.
+                            Info:
+                                - 'Hasznalat /res select <lakhely> <teruletID>'
+                                - 'Kijelol egy letezo teruletet a lakhelyen.'
+                        worldedit:
+                            Description: Beallitja a kijelolest az aktualis World Edit kijeloles szerint.
+                            Info:
+                                - 'Hasznalat /res select worldedit'
+                                - 'Beallitja a kijelolest az aktualis World Edit kijeloles szerint.'
+                create: #creation command
+                    Description: lakhely letrehozasa
+                    Info:
+                        - 'Hasznalat: /res create <lakhely neve>'
+                remove: #remove command
+                    Description: Eltavolitja a lakhelyeket.
+                    Info:
+                        - 'Hasznalat: /res remove <lakhely neve>'
+                removeall:
+                    Description: Eltavolitja az osszes jatekosok birtokolta lakhelyet.
+                    Info:
+                        - 'Hasznalat: /res removeall [tulaj]'
+                        - 'Eltavolitja az osszes lakhelyet egy adott jatekosnak.'
+                        - 'Szukseges /resadmin ha valaki meg hasznalja melletted.'
+                confirm:
+                    - 'Hasznalat: /res confirm'
+                    - 'Megerositi a lakhely eltavolitast.'
+                subzone:
+                    Description: Letrehoz alosztalyokat a lakhelyen.
+                    Info:
+                        - 'Hasznalat: /res subzone <lakhely neve> [alosztaly neve (subzone)]'
+                        - 'Ha a lakhely nev kimarad, akkor megprobalja ahasznalni a lakhelyet amin allsz.'
+                area:
+                    Description: A fizikai teruletek kezelese a lakhelyekhez.
+                    SubCommands:
+                        list:
+                            Description: Listazza a fizikai teruleteket a lakhelyen
+                            Info:
+                                - 'Hasznalat: /res area list [lakhely] <oldal>'
+                        listall:
+                            Description: Listazza a koordinatait es egyeb infoit a lakhelynek
+                            Info:
+                                - 'Hasznalat: /res area listall [lakhely] <oldal>'
+                        add:
+                            Description: Fizikai teruletet ad a lakhelyhez
+                            Info:
+                                - 'Hasznalat: /res area add [lakhely] [teruletID]'
+                                - 'Eloszor ket pontot kell kivalasztanod.'
+                        remove:
+                            Description: A fizikai teruletet torli a lakhelyrol
+                            Info:
+                                - 'Hasznalat: /res area remove [lakhely] [teruletID]'
+                        replace:
+                            Description: Lecsereli a fizikai teruleteket a lakhelyen
+                            Info:
+                                - 'Hasznalat: /res area replace [lakhely] [teruletID]'
+                                - 'Eloszor ket pontot kell kivalasztanod.'
+                                - 'Ha a terulet cserelesnel a teruletek kulonboznek, akkor tobbet kell fizetni a nagyobb teruletert.'
+                info:
+                    Description: Megjeleniti a lakhely infoit.
+                    Info:
+                        - 'Hasznalat: /res info <lakhely>'
+                        - 'Hagyd el <lakhely> hogy megjelenitse az infoit az adott lakhelynek.'
+                limits:
+                    Description: Megjeleniti a hatarertekeket.
+                    Info:
+                        - 'Hasznalat: /res limits'
+                        - 'Megjeleniti a hatarertekeit a lakhelyek letrehozasanak es kezelesenek.'
+                message:
+                    Description: Kezeli a lakhely belepo / kilepo uzeneteit
+                    Info:
+                        - 'Hasznalat: /res message <lakhely> [enter/leave] [uzenet]'
+                        - 'Beallitja a belepo es kilepo uzeneteit a lakhelynek.'
+                        - 'Hasznalat: /res message <lakhely> remove [enter/leave]'
+                        - 'Eltavolitja a belepo es kilepo uzenetet.'
+                lease:
+                    Description: Kezeli a lakhely berbeadast
+                    Info:
+                        - 'Hasznalat: /res lease [renew/cost] [lakhely]'
+                        - '/res lease cost ahhoz hogy megmutassa a lakhely berlse megujitasanak koltesgeit.'
+                        - '/res lease renew megujitja a berlest, felteve ha van eleg penzed.'
+                    SubCommands:
+                        set:
+                            Description: Beallitja a berles idejet (csak admin)
+                            Info:
+                                - 'Hasznalat: /resadmin lease set [lakhely] [#days/infinite]'
+                                - 'Beallitja a berles idejet napra pontosan (days), vagy orokre (infinite).'
+                bank:
+                    Description: Kezeli a lakhely penzt
+                    Info:
+                        - 'Hasznalat: /res bank [deposit/withdraw] [osszeg]'
+                        - 'A lakhelyen kell allnod, deposit:elhelyez, withdraw:kivesz'
+                        - 'es kell lennie +bank flagnek (engedely).'
+                tp:
+                    Description: Teleport egy lakhelyhez
+                    Info:
+                        - 'Hasznalat: /res tp [lakhely]'
+                        - 'Elteleportal teged egy lakhelyhez, kell egy +tp flag engedely vagy tulajnak kell lenned.'
+                        - 'A csoportban amibe tartozol pedig engedely kell a teleportalashoz a szerver adminjatol.'
+                tpset:
+                    Description: Beallitja a teleport helyet egy lakhelyen
+                    Info:
+                        - 'Hasznalat: /res tpset'
+                        - 'Ez beallitja a teleport helyet a lakhelyen oda ahol epp allsz.'
+                        - 'Egy lakhelyen kell allnod a parancs hasznalatahoz.'
+                        - 'Tulajnak kell lenned vagy +admin flag engedely kell a lakhelyhez.'
+                set:
+                    Description: Set general flags on a Residence
+                    Info:
+                        - 'Hasznalat: /res set <lakhely> [engedely] [true/false/remove]'
+                        - 'Hogy lasd az engedelyeket, hasznald /res flags ?'
+                        - 'Ezek az engedelyek ervenyesek minden jatekosra, akik nem rendelkeznek kiveteles engedelyekkel. (lasd /res pset ?)'
+                pset:
+                    Description: Beallitani kiveteles engedelyeket egy jatekosnak a lakhelyen.
+                    Info:
+                        - 'Hasznalat: /res pset <lakhely> [jatekos] [engedely] [true/false/remove]'
+                        - 'Hasznalat: /res pset <lakhely> [jatekos] removeall'
+                        - 'Hogy lasd az engedelyek listajat, hasznald /res flags ?'
+                gset:
+                    Description: Beallitani kiveteles engedelyeket egy csoportnakk a lakhelyen
+                    Info:
+                        - 'Hasznalat: /res gset <lakhely> [csoport] [engedely] [true/false/remove]'
+                        - 'Hogy lasd az engedelyek listajat, hasznald /res flags ?'
+                lset:
+                    Description: Valtoztatni a feketelista es a kivetellista beallitasait
+                    Info:
+                        - 'Hasznalat: /res lset <lakhely> [blacklist/ignorelist] [anyag]'
+                        - 'Hasznalat: /res lset <lakhely> info'
+                        - 'A feketelistazott anyagnak akadalyozva van, hogy elhelyezzek a lakhelyen.'
+                        - 'A kivetellista hatasara az adott anyag nincs levedve a lakhely altal.'
+                flags:
+                    Description: Engedelyek listaja
+                    Info:
+                        - 'Az engedely ertekek rendszerint, ha igazak(true) akkor engedelyezik, ha hamisak(false), akkor megakadalyozzak a tortenest.'
+                        - 'build - engedi vagy tiltja az epitest'
+                        - 'use - engedi vagy tiltja az ajtok, kapcsolok, gombok, stb... hasznalatat'
+                        - 'move - engedi vagy tiltja a mozgast a lakhelyen.'
+                        - 'container - engedi vagy tiltja a kemencek, ladak, adagolok, stb... hasznalatat'
+                        - 'trusted - Gives build, use, move, container and tp flags'
+                        - 'place - engedi / tiltja csak a blokkok lerakasat, felulirja az epites engedelyt'
+                        - 'destroy -engedi / tiltja csak a blokkok kiuteset felulirja az epites engedelyt.'
+                        - 'pvp - engedi vagy tiltja pvp-t a lakhelyen.'
+                        - 'tp - engedi vagy tiltja a teleportalast a lakhelyre.'
+                        - 'admin - ad a jatekosnak jogot az engedelyek valtoztatasara a lakhelyen.'
+                        - 'subzone - engedi a jatekosoknak alosztalyokat kesziteni a lakhelyen.'
+                        - 'monsters - engedi vagy tiltja a szorny spawnolast'
+                        - 'animals - engedi vagy tiltja az allat spawnolast.'
+                        - 'healing - igazra(true) allitasara a lakhely gyogyitja a rajta levoket'
+                        - 'tnt - engedi vagy tiltja a tnt robbanasokat'
+                        - 'creeper - engedi vagy tiltja a creeper robbanast'
+                        - 'ignite - engedi vagy tiltja a tuz keletkezeset.'
+                        - 'firespread - engedi vagy tiltja a tuzterjedest.'
+                        - 'bucket - engedi vagy tiltja a vodor hasznalatot.'
+                        - 'flow - engedi vagy tiltja a folyadekaramlast.'
+                        - 'lavaflow - engedi vagy tiltja a lavafolyast, felulirja a folyadekaramlast'
+                        - 'waterflow - engedi vagy tiltja a vizfolyast, felulirja a folyadekaramlast'
+                        - 'damage - engedi vagy tiltja minden szemely serulest a lakhelyen belul.'
+                        - 'piston - engedi vagy tiltja a dugattyuknak(piston)a nyomast/tolast a lakhelyen.'
+                        - 'hidden - elrejti a lakhelyet a list es a listall parancsrol.'
+                        - 'cake - allows or denys players to eat cake'
+                        - 'lever - allows or denys players to use levers'
+                        - 'button - allows or denys players to use buttons'
+                        - 'diode - allows or denys players to use redstone repeaters'
+                        - 'door - allows or denys players to use doors and trapdoors'
+                        - 'table - allows or denys players to use workbenches'
+                        - 'enchant - allows or denys players to use enchanting tables'
+                        - 'brew - allows or denys players to use brewing stands'
+                        - 'bed - allows or denys players to use beds'
+                        - 'button - allows or denys players to use buttons'
+                        - 'pressure - allows or denys players to use pressure plates'
+                        - 'note - allows or denys players to use note blocks'
+                        - 'redstone - Gives lever, diode, button, pressure, note flags'
+                        - 'craft - Gives table, enchant, brew flags'
+                list:
+                    Description: Lakhelyek listaja
+                    Info:
+                        - 'Hasznalat: /res list <jatekos> <oldal>'
+                        - 'Listazza az osszes telket a jatekosnak (kiveve a rejtettek).'
+                        - 'Ha a sajajaidat listazod, akkor mutatja a rejtetteket is.'
+                        - 'Hogy listazza mindenki lakhelyet, hasznald /res listall.'
+                listhidden:
+                    Description: Listazza a rejtett lakhelyeket (CSAK ADMIN)
+                    Info:
+                        - 'Hasznalat: /res listhidden <jatekos> <oldal>'
+                        - 'Listazza a jatekos rejtett lakhelyeit.'
+                listall:
+                    Description: Listaz minden lakhelyet
+                    Info:
+                        - 'Hasznalat: /res listall <oldal>'
+                        - 'Listazza az osszes lakhelyet a szerveren. (kiveve a rejtetteket, ami nem a tied)'
+                listallhidden:
+                    Description: Listaz minden rejtett lakhelyet (CSAK ADMIN)
+                    Info:
+                        - 'Hasznalat: /res listhidden <oldal>'
+                        - 'Listazza az osszes rejtett lakhelyet a szerveren.'
+                sublist:
+                    Description: Listazza a Lakhely alosztalyokat
+                    Info:
+                        - 'Hasznalat: /res sublist <lakhely> <oldal>'
+                        - 'Listaz minden alosztalyt a lakhelyen.'
+                default:
+                    Description: Visszaallitja a lakhely engedelyeit alapertekre.
+                    Info:
+                        - 'Hasznalat: /res default <lakhely>'
+                        - 'Visszaalllitja az engedelyeket a lakhelyen alapertekeikre. Tulajdonosnak vagy adminnak kell lenned a hasznalatahoz.'
+                rename:
+                    Description: Lakhely atnevezese.
+                    Info:
+                        - 'Hasznalat: /res rename [RegiNev] [ujNev]'
+                        - 'Tulajdonsonak vagy adminnak kell lenned a hasznalatahoz.'
+                        - 'A nevnak szabadnak kell lennie, nem lehet mas lakhely neve.'
+                mirror:
+                    Description: Engedelyek tukrozese
+                    Info:
+                        - 'Hasznalat: /res mirror [Eredeti lakhely] [Celpont lakhely]'
+                        - 'Az engedely tukrozese egy lakhelyrol a masikra. Tulajdonosnak vagy adminnak kell lenned a hasznalatahoz.'
+                market:
+                    Description: Venni, eladni, vagy berelni lakhelyet
+                    Info:
+                        - 'Hasznalat: /res market ? tovabbi informaciokert'
+                    SubCommands:
+                        info:
+                            Description: Economy(gazdasag) informaciok a lakhelyrol
+                            Info:
+                                - 'Hasznalat: /res market info [lakhely]'
+                                - 'Megjeleniti a lakhely informaciot, ha az elado vagy berelheto, es a koltsegeket.'
+                        list:
+                            Description: Listazza a berelheto es elado lakhelyeket.
+                            Info:
+                                - 'Hasznalat: /res market list'
+                        sell:
+                            Description: Eladni egy lakhelyet
+                            Info:
+                                - 'Hasznalat: /res sell [lakhely] [osszeg]'
+                                - 'Eladova teszi a lakhelyet ennyi [osszeg] penzert.'
+                                - 'Egy masik jatekos megtudja venni a lakhelyet: /res market buy'
+                        buy:
+                            Description: Venni egy lakhelyet
+                            Info:
+                                - 'Hasznalat: /res buy [lakhely]'
+                                - 'Venni egy elado lakhelyet.'
+                        unsell:
+                            Description: A lakhely eladasanak megszuntetese
+                            Info:
+                                - 'Hasznalat: /res unsell [lakhely]'
+                        rent:
+                            Description: Berelni egy lakhelyet
+                            Info:
+                                - 'Hasznalat: /res market rent [lakhely] <autorenew>'
+                                - 'Lakhely berlese. Az autorenew igaz(true) vagy hamis(false) lehet. Ha igaz, akkor automatikusan ujra lesz berelve a lejarat utan a lakhely, ha a tulaj engedelyezi.'
+                        rentable:
+                            Description: Berelhetove tenni a lakhelyet.
+                            Info:
+                                - 'Hasznalat: /res market rentable [lakhely] [osszeg] [nap] <repeat>'
+                                - 'Berelhetove tesz egy lakhelyet [osszeg] penzert minden [nap] napszamban. Ha <repeat> igaz(true), a lakhely automatikusan ujraberelheto lesz a jelenlegi berles lejarta utan.'
+                        release:
+                            Description: Eltavolitja a lakhelyrol a berlest, vagy a berelhetoseget.
+                            Info:
+                                - 'Hasznalat: /res market release [lakhely]'
+                                - 'Ha te vagy a berlo, akkor ez a parancs berelhetove teszi a hazat szamodra.'
+                                - 'Ha te vagy a tulaj, akkor ez a parancs eltavolitja a berelhetoseget.'
+                current:
+                    Description: Megjeleniti a lakhelyet amin jelenleg allsz.
+                    Info:
+                        - 'Hasznalat: /res current'
+                lists:
+                    Description: Elore megadott jogosultsag listak
+                    Info:
+                        - 'Elore megadott jogosultsag listak, amiket alkalmazni lehet egy lakhelyre.'
+                    SubCommands:
+                        add:
+                            Description: Letrehoz egy listat
+                            Info:
+                                - 'Hasznalat: /res lists add <listanev>'
+                        remove:
+                            Description: Eltavolit egy listat
+                            Info:
+                                - 'Hasznalat: /res lists remove <listanev>'
+                        apply:
+                            Description: Alkalmaz egy listat a lakhelyre
+                            Info:
+                                - 'Hasznalat: /res lists apply <listanev> <lakhely>'
+                        set:
+                            Description: Beallit egy engedelyt
+                            Info:
+                                - 'Hasznalat: /res lists set <listanev> <engedely> <ertek>'
+                        pset:
+                            Description: Beallit egy jatekos engedelyt
+                            Info:
+                                - 'Hasznalat: /res lists pset <listanev> <jatekos> <engedely> <ertek>'
+                        gset:
+                            Description: Beallit egy csoport engedelyt
+                            Info:
+                                - 'Hasznalat: /res lists gset <listanev> <csoport> <engedely> <ertek>'
+                        view:
+                            Description: Megmutatja a listat.
+                            Info:
+                                - 'Hasznalat: /res lists view <listanev>'
+                server:
+                    Description: Szervertelekke teszi a teruletet (csak admin).
+                    Info:
+                        - 'Hasznalat: /resadmin server [lakhely]'
+                        - 'Szervertelekke teszi a teruletet.'
+                setowner:
+                    Description: Change owner of a residence (csak admin).
+                    Info:
+                        - 'Hasznalat: /resadmin setowner [lakhely] [jatekos]'
+                resreload:
+                    Description: ujratolti a lakhely plugint (csak admin).
+                    Info:
+                        - 'Hasznalat: /resreload'
+                resload:
+                    Description: Load residence save file (KOCKaZATOS, csak admin).
+                    Info:
+                        - 'Hasznalat: /resload'
+                        - 'KOCKaZATOS parancs, eloszor nem menti a lakhelyeket.'
+                        - 'Loads the residence save file after you have made changes.'
+                version:
+                    Description: Megjeleniti a lakhely plugin verziojat
+                    Info:
+                        - 'Hasznalat: /res version'

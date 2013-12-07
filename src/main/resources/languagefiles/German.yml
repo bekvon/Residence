@@ -1,0 +1,635 @@
+# NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten.  Once you 
+# have a copy of this file, change the Language: option under the Residence config.yml
+# to whatever you named your copy.
+# German translation by webnews2
+Version: 03
+Fieldsversion: 22
+Language:
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
+    #Version 1 Fields
+    InvalidResidence: ungültiges Grundstück...
+    InvalidSubzone: ungültige Subzone...
+    InvalidDirection: ungültige Richtung...
+    InvalidChannel: ungültiger Kanal...
+    InvalidAmount: ungültiger Betrag...
+    InvalidCost: ungültiger Preis...
+    InvalidDays: ungültige Anzahl der Tage...
+    InvalidMaterial: ungültiges Material...
+    InvalidBoolean: ungültiger Wert, muss true(t) oder false(f) sein...
+    InvalidArea: ungültiges Gebiet...
+    InvalidGroup: ungültige Gruppe...
+    InvalidMessageType: Nachrichten-Typ muss enter oder leave sein.
+    InvalidList: ungültige Liste...
+    InvalidFlag: ungültige Flag...
+    InvalidFlagState: ungültiger Flag-Status, muss true(t), false(f), oder remove(r) sein...
+    AreaExists: Dieser Gebietsname existiert bereits.
+    AreaCreate: 'Grundstücksgebiet erstellt, ID %1'
+    AreaDiffWorld: Das Gebiet befindet sich in einer anderen Welt von Residence.
+    AreaCollision: 'Das Gebiet kollidiert mit dem Gründstück %1.'
+    AreaSubzoneCollision: 'Das Gebiet kollidiert mit der Subzone %1.'
+    AreaNonExist: Dieses Gebiet existiert nicht.
+    AreaInvalidName: ungültiger Gebietsname...
+    AreaRename: 'Gebiet %1 zu %2 umbenannt!'
+    AreaRemove: 'Gebiet %1 entfernt!'
+    AreaRemoveLast: Das letzte Gebiet eines Grundstücks kann nicht entfernt werden.
+    AreaNotWithinParent: Das Gebiet befindet sich nicht im Hauptgebiet.
+    AreaUpdate: Gebiet aktuallisiert...
+    AreaMaxPhysical: Du hast das Maximum an erlaubten physikalischen Gebieten für dein Grundstück erreicht.
+    AreaSizeLimit: Die Gebietsgröße befindet sich außerhalb deines Limits.
+    AreaHighLimit: 'Du kannst nicht bis zu dieser Höhe schützen, da dein Limit %1 ist'
+    AreaLowLimit: 'Du kannst nicht bis zu dieser Tiefe schützen, da dein Limit %1 ist'
+    NotInResidence: Du bist auf keinem Grundstück.
+    InResidence: 'Du stehst auf dem Grundstück %1!'
+    ResidenceOwnerChange: 'Besitzer von Grundstück %1 zu %2 geändert!'
+    NonAdmin: Du bist kein Residence-Admin!
+    AdminOnly: Nur Residence-Admins können dieses Kommando benutzen!
+    ChatDisabled: Residence-Chat deaktiviert...
+    SubzoneRename: 'Subzone %1 zu %2 umbenannt!'
+    SubzoneRemove: 'Subzone %1 entfernt!'
+    SubzoneCreate: 'Subzone %1 erstellt!'
+    SubzoneCreateFail: 'Die Subzone %1 kann nicht erstellt werden.'
+    SubzoneExists: 'Die Subzone %1 existiert bereits.'
+    SubzoneCollide: 'Die Subzone kollidiert mit der Subzone %1!'
+    SubzoneMaxDepth: Du hast das Maximum der erlaubten Subzonen-Tiefe erreicht!
+    SubzoneSelectInside: Beide Auswahlpunkte müssen sich auf dem Grundstück befinden!
+    SelectPoints: Wähle erst 2 Punkte aus, bevor du dieses Kommando benutzt!
+    SelectionSuccess: Auswahl erfolgreich!
+    SelectionFail: ungültiges Auswahlkommando...
+    SelectionBedrock: Die Auswahl wurde zu deiner maximal erlaubten Höhe expandiert!
+    SelectionSky: Die Auswahl wurde zu deiner maximal erlaubten Tiefe expandiert!
+    SelectionArea: 'Gebiet %1 des Grundstücks %2 ausgewählt!'
+    SelectDiabled: Du kannst keine Auswahl-Kommandos benutzen!
+    NoPermission: Du hast dafür keine Berechtigung!
+    OwnerNoPermission: Der Besitzer hat keine Berechtigung dafür!
+    ParentNoPermission: Du hast keine Berechtigung dafür, Änderungen an der Hauptzone vorzunehmen!
+    MessageChange: Nachricht geändert...
+    FlagSet: Flag gesetzt...
+    FlagCheckTrue: 'Die Flag %1 gehört zum Spieler %2 vom Grundstück %3, Wert = %4!'
+    FlagCheckFalse: 'Die Flag %1 gehört nicht zum Spieler %2 vom Grundstück %3!'
+    FlagsCleared: Flags gelöscht!
+    FlagsDefault: Flags zu Standard zurückgesetzt!
+    Usage: Kommando-Nutzung
+    InvalidHelp: ungültige Hilfe-Seite...
+    SubCommands: Sub-Kommandos
+    InvalidList: Unbekannter Listentyp, muss Blacklist oder Ignorelist sein.
+    MaterialGet: 'Der Materialname für ID %1 ist %2.'
+    MarketDisabled: Wirtschaft deaktiviert!
+    MarketList: Marktliste
+    SelectionTool: Auswahl-Werkzeug
+    InfoTool: Info-Werkzeug
+    NoBankAccess: Du hast keinen Zugang zur Bank!
+    NotEnoughMoney: Du hast nicht genug Geld!
+    BankNoMoney: Es ist nicht genug Geld auf der Bank!
+    BankDeposit: 'Du zahlst %1 in die Residence-Bank ein.'
+    BankWithdraw: 'Du hebst %1 von der Residence-Bank ab.'
+    MoneyCharged: 'Deinem %2 Konto wurden %1 abgezogen.'
+    MoneyCredit: 'Deinem %2 Konto wurden %1 gutgeschrieben.'
+    RentDisabled: Miet-System deaktiviert!
+    RentReleaseInvalid: 'Das Grundstück %1 wird nicht gemietet oder wird nicht vermietet!'
+    RentSellFail: Ein Grundstück kann nicht verkauft werden, wenn es zur Miete steht!
+    SellRentFail: Ein Grundstück kann nicht gemietet werden, wenn es zum Verkauf steht!
+    OwnerBuyFail: Du kannst dein eigenes Grundstück nicht kaufen!
+    OwnerRentFail: Du kannst dein eigenes Grundstück nicht mieten!
+    AlreadySellFail: Das Grundstück steht bereits zum Verkauf!
+    ResidenceBought: 'Du hast das Grundstück %1 gekauft!'
+    ResidenceBuy: 'Das Grundstück %1 hat das Grundstück %2 von dir gekauft.'
+    ResidenceBuyTooBig: Dieses Grundstück hat Gebiete, die größer sind als dein erlaubtes Maximum.
+    ResidenceNotForSale: Das Grundstück steht nicht zum Verkauf!
+    ResidenceForSale: 'Das Grundstück %1 steht nun zum Verkauf für %2.'
+    ResidenceStopSelling: Das Grundstück steht nicht mehr zum Verkauf.
+    ResidenceTooMany: Du besitzt bereits die maximale Anzahl an Grundstücken!
+    ResidenceMaxRent: Du mietest bereits die maximale Anzahl an Grundstücken!
+    ResidenceAlreadyRent: Das Grundstück steht bereits zur Miete...
+    ResidenceNotForRent: Das Grundstück steht nicht zur Miete...
+    ResidenceNotRented: Das Grundstück wird nicht gemietet.
+    ResidenceUnrent: 'Das Grundstück %1 wurde unvermietet.'
+    ResidenceRemoveRentable: 'Das Grundstück %1 ist nicht mehr mietbar.'
+    ResidenceForRentSuccess: 'Das Grundstück %1 ist nun mietbar für %2 alle %3 Tage.'
+    ResidenceRentSuccess: 'Du hast das Grundstück %1 für %2 Tage gemietet.'
+    ResidenceAlreadyRented: 'Das Grundstück %1 wird bereits an %2 vermietet.'
+    ResidenceAlreadyExists: 'Ein Grundstück namens %1 existiert bereits.'
+    ResidenceCreate: 'Du hast das Grundstück %1 erstellt!'
+    ResidenceRename: 'Grundstück %1 zu %2 umbenannt'
+    ResidenceRemove: 'Das Grundstück %1 wurde entfernt...'
+    RentDisabled: Miete deaktiviert!
+    RentDisableRenew: 'Das Grundstück %1 wird nun nach Ablauf nicht länger neu gemietet.'
+    RentEnableRenew: 'Das Grundstück %1 wird nun nach Ablauf automatisch neu gemietet.'
+    RentableDisableRenew: '%1 wird nun den Vermietbar-Status nach Ablauf nicht mehr erneuern.'
+    RentableEnableRenew: '%1 wird nun den Vermietbar-Status nach Ablauf automatisch erneuern.'
+    LandForSale: Grundstück zu verkaufen!
+    SellAmount: Verkaufssumme
+    LeaseExpire: Leasing-Auslaufzeit
+    RentExpire: Miet-Auslaufzeit
+    RentableAutoRenew: Vermietbar-Status automatisch erneuern
+    RentAutoRenew: Miete automatisch erneuern
+    RentableLand: mietbares Grundstück
+    ListMaterialAdd: '%1 zum Grundstück %2 hinzugefügt!'
+    ListMaterialRemove: '%1 vom Grundstück %2 entfernt!'
+    ItemBlacklisted: Dir ist es nicht gestattet, dieses Item hier zu benutzen.
+    RentedModifyDeny: Ein gemietetes Grundstück kann nicht verändert werden.
+    WorldPVPDisabled: Welt-PVP deaktiviert!
+    NoPVPZone: Keine PVP-Zone!
+    FlagDeny: 'Du hast hier keine %1-Berechtigung!'
+    FlagSetDeny: 'Der Besitzer hat keinen Zugang zur Flag %1.'
+    SelectPoint: 'Auswahl-Punkt %1 markiert!'
+    ResidenceChat: 'Residence-Chat getoggelt, %1'
+    ResidenceMoveDeny: 'Du kannst dich auf dem Grundstück %1 nicht bewegen!'
+    TeleportDeny: Du hast keinen Teleport-Zugang!
+    TeleportSuccess: 'Teleportiert!'
+    TeleportNear: Du wurdest zu einem naheliegenden Grundstück teleportiert.
+    TeleportNoFlag: Du hast keinen Teleport-Zugang für dieses Grundstück.
+    SetTeleportLocation: Teleport-Standort gesetzt...
+    HelpPageHeader: 'Hilfe-Seiten - %1 - Seite <%2 von %3>'
+    ListExists: Liste existiert bereits...
+    ListRemoved: Liste entfernt...
+    ListCreate: 'Liste %1 erstellt!'
+    LeaseRenew: 'Leasing gültig bis %1'
+    LeaseRenewMax: Leasing bis zum erlaubten Maximum erneuert!
+    LeaseNotExpire: Kein solch Leasing oder Leasing läuft nicht aus.
+    LeaseRenewalCost: 'Erneuerungskosten für das Gebiet %1 betragen %2!'
+    LeaseInfinite: Leasing-Zeit auf unendlich gesetzt...
+    PermissionsApply: Residence wendet Permissions an.
+    PhysicalAreas: physikalische Gebiete
+    CurrentArea: aktuelles Gebiet
+    LeaseExpire: Leaseablaufdatum
+    NotOnline: Ziel-Spieler muss Online sein!
+    ResidenceGiveLimits: Grundstück kann dem Ziel-Spieler nicht gegeben werden, da es außerhalb der Limits dieses Spielers liegt.
+    ResidenceGive: 'Du gibst %2 das Grundstück %1!'
+    ResidenceRecieve: 'Du hast von %2 das Grundstück %1 erhalten!'
+    #Version 4 New Fields
+    #ResidenceListAll: 'Residences - <Page %1 of %2>' - removed, use GenericPage now
+    ResidenceListAllEmpty: Es existieren keine Grundstücke auf diesem Server...
+    InvalidPage: ungültige Seite...
+    NextPage: Nächste Seite
+    #Version 10 New Fields
+    RemovePlayersResidences: 'Alle Grundstück die %1 gehören, wurden entfernt!'
+    GenericPage: 'Seite %1 von %2'
+    #Version 11 New Fields
+    ResidenceRentedBy: 'Gemietet von %1'
+    #Version 14 New Fields
+    InvalidCharacters: ungültige Zeichen entdeckt...
+    InvalidNameCharacters: Name enthält unerlaubte Zeichen...
+    #Version 15 New Fields
+    DeleteConfirm: 'Bist du sicher, dass du das Grundstück %1 löschen willst? Nutze "/res confirm" zum bestätigen.'
+    #Version 18 New Fields
+    SelectTooHigh: Warnung, Auswahl befindet sich über der Höhe des Karten-Limits.
+    SelectTooLow: Warnung, Auswahl befindet sich unter dem Boden des Karten-Limits.
+    WorldEditNotFound: WorldEdit wurde nicht gefunden!
+    #Version 19 New Fields
+    NoResHere: Es gibt dort kein Grundstück!
+    DeleteSubzoneConfirm: 'Bist du sicher, dass du die Subzone %1 löschen willst? Nutze "/res confirm" zum bestätigen.'
+    #Version 20 New Fields
+    SubzoneOwnerChange: 'Die Subzone %1 gehört nun %2.'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatisches /resadmin getoggelt: %1'
+    #Version 22 New Fields
+    NoSpawn: 'Du hast keine Berechtigung um dich an deinem Spawn-Punkt zu bewegen. Neu lokalisieren...'
+    CompassTargetReset: 'Dein Kompass wurde zurückgesetzt'
+    CompassTargetSet: 'Dein Kompass hat nun Punkte zu %1'
+    
+    #The below lines are mostly a word bank for various uses.
+    #Version 1 Fields
+    Description: Beschreibung
+    Land: Grundstück
+    Cost: Betrag
+    Selection: Auswahl
+    Total: Total
+    Size: Größe
+    Expanding: Expandieren
+    Shifting: Verschiebung
+    Up: Hoch
+    Down: Runter
+    Error: Error
+    Flags: Flags
+    Your: Deine
+    Group: Gruppe
+    Others: Andere
+    Primary: Primär
+    Secondary: Sekundär
+    Selection: Auswahl
+    Moved: Bewegt
+    Status: Status
+    Available: Verfügbar
+    On: An
+    Off: Aus
+    Name: Name
+    Lists: Listen
+    Residences: Grundstücke
+    Residence: Grundstück
+    Count: Zählung
+    Owner: Besitzer
+    #Version 4 Fields
+    World: Welt
+    #Version 12 Fields
+    Subzones: Subzonen
+    #Version 20 Fields
+    CoordsT: obere Koordinaten
+    CoordsB: untere Koordinaten
+    #Version 22 Fields
+    TurnOn: 'an'
+    TurnOff: 'aus'
+    
+# This is the help / usage messages for each command.
+# It follows this format:
+# <Command>
+#     Description: <general description of command, one line of text>
+#     Info: <extra info lines to describe the command, list of text>
+#     SubCommands:
+#           <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
+# Add a page number after the ? mark to see that page.
+
+HelpLinesPerPage: 7
+CommandHelp: #this is just a holder node, that holds the entire help
+    Description: Contains Help for Residence
+    SubCommands: #this is the actual beginning of all commands
+        res: #main residence command
+            Description: Haupt-Kommando für Residence
+            Info:
+                - 'Sieh dir das Residence-Wiki für mehr Info´s an.'
+                - 'Wiki: residencebukkitmod.wikispaces.com'
+                - 'Nutze /[Kommando] ? <Seite> um mehr Informationen zu erhalten.'
+            SubCommands:
+                select: #selection commands
+                    Description: Auswahl-Kommandos
+                    Info:
+                        - 'Dieses Kommando wählt Gebiete aus, die über Residence genutzt werden können.'
+                        - '/res select [x] [y] [z] - selektiert einen Radius von Blöcken mit dir als Mittelpunkt.'
+                    SubCommands:
+                        coords:
+                            Description: Zeigt die ausgewählten Koordinaten an
+                            Info:
+                                - 'Verwendung: /res select coords'
+                        size:
+                            Description: Zeigt die ausgewählte Größe an
+                            Info:
+                                - 'Verwendung: /res select size'
+                        cost:
+                            Description: Zeigt den Kostenbetrag der ausgewählten Fläche an
+                            Info:
+                                - 'Verwendung: /res select cost'
+                        vert:
+                            Description: expandiert die Auswahl vertikal
+                            Info:
+                                - 'Verwendung: /res select vert'
+                                - 'Expandiert die Auswahl zum höchsten und tiefsten Limit des Spielers.'
+                        sky:
+                            Description: expandiert die Auswahl bis zum Himmel
+                            Info:
+                                - 'Verwendung: /res select sky'
+                                - 'Expandiert die Auswahl bis zum Höhen-Limit des Spielers.'
+                        bedrock:
+                            Description: expandiert die Auswahl bis zum Grundgestein
+                            Info:
+                                - 'Verwendung: /res select bedrock'
+                                - 'Expandiert die Auswahl bis zum Tiefen-Limit des Spielers.'
+                        expand:
+                            Description: expandiert die Auswahl in eine beliebige Richtung
+                            Info:
+                                - 'Verwendung: /res select expand <Betrag>'
+                                - 'Expandiert die Auswahl um den <Betrag> in die Blickrichtung.'
+                        shift:
+                            Description: verschiebt die Auswahl in eine beliebige Richtung
+                            Info:
+                                - 'Verwendung: /res select shift <Betrag>'
+                                - 'Verschiebt die Auswahl um den <Betrag> in die Blickrichtung.'
+                        chunk:
+                            Description: Selektiert den aktuellen Chunk
+                            Info:
+                                - 'Verwendung: /res select chunk'
+                                - 'Selektiert den Chunk in dem du dich momentan befindest.'
+                        residence:
+                            Description: wählt ein vorhandenes Gebiet eines Grundstücks aus
+                            Info:
+                                - 'Verwendung /res select <Grundstücksname> <Gebiets-ID>'
+                                - 'Wählt ein vorhandenes Gebiet eines Grundstücks aus.'
+                        worldedit:
+                            Description: verwendet die aktuelle WorldEdit-Auswahl um ein Grundstück zu erstellen
+                            Info:
+                                - 'Verwendung /res select worldedit'
+                                - 'Die aktuelle WorldEdit-Auswahl wird zum erstellen eines Grundstücks verwendet.'
+                create: #creation command
+                    Description: erstellt Grundstücke
+                    Info:
+                        - 'Verwendung: /res create <Grundstücksname>'
+                remove: #remove command
+                    Description: entfernt Grundstücke
+                    Info:
+                        - 'Verwendung: /res remove <Grundstücksname>'
+                removeall:
+                    Description: Entfernt alle Grundstück eines Spielers!
+                    Info:
+                        - 'Verwendung: /res removeall [Besitzer]'
+                        - 'Entfernt alle Grundstücke eines beliebigen Spielers.'
+                        - 'Erfordert /resadmin wenn du es für andere Spieler nutzen willst.'
+                confirm:
+                    - 'Verwendung: /res confirm'
+                    - 'Bestätigt die Löschung eines Grundstücks.'
+                subzone:
+                    Description: erstellt Subzonen auf einem Grundstück
+                    Info:
+                        - 'Verwendung: /res subzone <Grundstücksname> [Subzonenname]'
+                        - 'Wenn der Grundstücksname ausgelassen wurde, wird der Name des Grundstücks verwendet, in dem du dich befindest.'
+                area:
+                    Description: verwaltet die physikalischen Gebiete eines Grundstücks
+                    SubCommands:
+                        list:
+                            Description: listet die physikalischen Gebiete eines Grundstücks auf
+                            Info:
+                                - 'Verwendung: /res area list [Grundstücksname] <Seite>'
+                        listall:
+                            Description: listet Koordinaten und andere Info´s von Gebieten auf
+                            Info:
+                                - 'Verwendung: /res area listall [Grundstücksname] <Seite>'
+                        add:
+                            Description: fügt physikalische Gebiete zu einem Grundstück hinzu
+                            Info:
+                                - 'Verwendung: /res area add [Grundstücksname] [Gebiets-ID]'
+                                - 'Du musst erst 2 Auswahlpunkte festlegen.'
+                        remove:
+                            Description: entfernt physikalische Gebiete eines Grundstücks
+                            Info:
+                                - 'Verwendung: /res area remove [Grundstücksname] [Gebiets-ID]'
+                        replace:
+                            Description: ersetzt physikalische Gebiete eines Grundstücks
+                            Info:
+                                - 'Verwendung: /res area replace [Grundstücksname] [Gebiets-ID]'
+                                - 'Du musst erst 2 Auswahlpunkte festlegen.'
+                                - 'Das ersetzen eines Gebietes wird die Differenz der Größe abziehen, wenn das neue Gebiet größer ist.'
+                info:
+                    Description: zeigt Info´s zu einem Grundstück an
+                    Info:
+                        - 'Verwendung: /res info <Grundstücksname>'
+                        - 'Lass <Grundstücksname> weg um Info´s zum aktuellen Grundstück zu erhalten.'
+                limits:
+                    Description: zeigt deine Limits an
+                    Info:
+                        - 'Verwendung: /res limits'
+                        - 'Zeigt die Limitierungen an, die du für das erstellen und verwalten von Grundstücken hast.'
+                message:
+                    Description: verwaltet die enter / leave Nachrichten eines Grundstücks
+                    Info:
+                        - 'Verwendung: /res message <Grundstücksname> [enter/leave] [Nachricht]'
+                        - 'Ändert die Betreten-(enter) oder Verlassennachricht(leave) eines Grundstücks.'
+                        - 'Verwendung: /res message <Grundstücksname> remove [enter/leave]'
+                        - 'Entfernt die Betreten-(enter) oder Verlssennachricht(leave) eines Grundstücks.'
+                lease:
+                    Description: verwaltet Grundstück-Leasings
+                    Info:
+                        - 'Verwendung: /res lease [renew/cost] [Grundstücksname]'
+                        - '/res lease cost zeigt an, was das erneuern eines Grundstück-Leasings kostet.'
+                        - '/res lease renew erneuert das Leasing des Grundstücks, vorausgesetzt du hast genug Geld.'
+                    SubCommands:
+                        set:
+                            Description: setzt die Lease-Zeit (Nur Admins)
+                            Info:
+                                - 'Verwendung: /resadmin lease set [Grundstücksname] [#days/infinite]'
+                                - 'Setzt die Lease-Zeit auf eine beliebige Anzahl an Tagen oder unendlich.'
+                bank:
+                    Description: verwaltet das Geld eines Grundstücks
+                    Info:
+                        - 'Verwendung: /res bank [deposit/withdraw] [Betrag]'
+                        - 'Du musst auf einem Grundstück stehen.'
+                        - 'Du musst die +Bank-Flag haben!'
+                        - 'deposit=einzahlen, withdraw=abheben'
+                tp:
+                    Description: teleportiert dich zu einem Grundstück
+                    Info:
+                        - 'Verwendung: /res tp [Grundstücksname]'
+                        - 'Teleportiert dich zu einem Grundstück, du musst die +Tp-Flag haben oder der Besitzer sein.'
+                        - 'Deiner Gruppe muss es außerdem gestattet sein, vom Server-Admin teleportiert zu werden.'
+                tpset:
+                    Description: setzt den Teleport-Standort eines Grundstücks
+                    Info:
+                        - 'Verwendung: /res tpset'
+                        - 'Dies wird den Teleport-Standort zu dem Punkt setzen wo du grade stehst.'
+                        - 'Du musst auf einem Grundstück stehen, um dieses Kommando nutzen zu können.'
+                        - 'Du musst außerdem der Besitzer sein oder die +Admin-Flag haben.'
+                set:
+                    Description: setzt generelle Flags auf Grundstücken
+                    Info:
+                        - 'Verwendung: /res set <Grundstücksname> [Flag] [true/false/remove]'
+                        - 'true=erlauben, false=verbieten, remove=entfernen'
+                        - 'Um eine Liste der Flags zu sehen, nutze /res flags ?'
+                        - 'Diese Flags gehören zu allen Spielern, die keine speziellen Rechte auf dem Grundstück haben. (siehe /res pset ?)'
+                pset:
+                    Description: setzt Flags für einen beliebigen Spieler auf einem Grundstück
+                    Info:
+                        - 'Verwendung: /res pset <Grundstücksname> [Spielername] [Flag] [true/false/remove]'
+                        - 'Verwendung: /res pset <Grundstücksname> [Spielername] removeall'
+                        - 'true=erlauben, false=verbieten, remove=entfernen, removeall=alle entfernen'
+                        - 'Um eine Liste der Flags zu sehen, nutze /res flags ?'
+                gset:
+                    Description: setzt Flags für eine beliebige Gruppe auf einem Grundstück
+                    Info:
+                        - 'Verwendung: /res gset <Grundstücksname> [Gruppe] [Flag] [true/false/remove]'
+                        - 'true=erlauben, false=verbieten, remove=entfernen'
+                        - 'Um eine Liste der Flags zu sehen, nutze /res flags ?'
+                lset:
+                    Description: ändert Blacklist- und Ignorelistoptionen
+                    Info:
+                        - 'Verwendung: /res lset <Grundstücksname> [blacklist/ignorelist] [Material]'
+                        - 'Verwendung: /res lset <Grundstücksname> info'
+                        - 'Blacklisten eines Materials verhindert, dass dieses auf einem Grundstück platziert wird.'
+                        - 'Ignorelisten verursacht, dass ein beliebiges Material nicht mehr von Residence geschützt wird.'
+                flags:
+                    Description: Liste der Flags
+                    Info:
+                        - 'Flag-Werte: [true] erlaubt die Handlung, [false] verbietet die Handlung'
+                        - 'build - erlaubt / verbietet das Bauen'
+                        - 'use - erlaubt / verbietet das nutzen von Türen, Schaltern, Knöpfen, etc.'
+                        - 'move - erlaubt / verbietet das bewegen auf einem Grundstück'
+                        - 'container - erlaubt / verbietet das nutzen von Öfen, Truhen, Spendern, etc.'
+                        - 'trusted - gibt einem Spieler Build-, Use-, Move-, Container- und Tp-Flags'
+                        - 'place - erlaubt / verbietet das platzieren von Blöcken, überschreibt die Build-Flag'
+                        - 'destroy - erlaubt / verbietet das zerstören von Blöcken, überschreibt die Build-Flag'
+                        - 'pvp - erlaubt / verbietet PVP auf dem Grundstück, PVP=Spieler gegen Spieler'
+                        - 'tp - erlaubt / verbietet das teleportieren zum Grundstück'
+                        - 'admin - gibt einem Spieler die Berechtigung, die Flags eines Grundstücks zu ändern'
+                        - 'subzone - erlaubt einem Spieler Subzonen auf einem Grundstück zu erstellen'
+                        - 'monsters - erlaubt / verbietet das spawnen von Monstern'
+                        - 'animals - erlaubt / verbietet das spawnen von Tieren'
+                        - 'healing - auf [true] gesetzt werden alle auf dem Grundstück befindlichen Spieler geheilt'
+                        - 'tnt - erlaubt / verbietet TNT-Explosionen'
+                        - 'creeper - erlaubt / verbietet Creeper-Explosionen'
+                        - 'ignite - erlaubt / verbietet das entfachen von Feuer'
+                        - 'firespread - erlaubt / verbietet das ausbreiten von Feuer'
+                        - 'bucket - erlaubt / verbietet die Verwendung von Eimern'
+                        - 'flow - erlaubt / verbietet den Flüssigkeitsstrom'
+                        - 'lavaflow - erlaubt / verbietet den Lavastrom, überschreibt die Flow-Flag'
+                        - 'waterflow - erlaubt / verbietet den Wasserstrom, überschreibt die Flow-Flag'
+                        - 'damage - erlaubt / verbietet das erhalten von Schaden auf einem Grundstück'
+                        - 'piston - erlaubt / verbietet das Kolben Blöcke schieben und ziehen können'
+                        - 'hidden - versteckt das Grundstück vor list- oder listall-Kommandos'
+                        - 'cake - erlaubt / verbietet das essen von Kuchen'
+                        - 'lever - erlaubt / verbietet das nutzen von Schaltern'
+                        - 'button - erlaubt / verbietet das nutzen von Knöpfen'
+                        - 'diode - erlaubt / verbietet das nutzen von Redstone Repeatern'
+                        - 'door - erlaubt / verbietet das nutzen von Türen und Falltüren'
+                        - 'table - erlaubt / verbietet das nutzen von Werkbänken'
+                        - 'enchant - erlaubt / verbietet das nutzen von Zaubertischen'
+                        - 'brew - erlaubt / verbietet das nutzen von Brauständen'
+                        - 'bed - erlaubt / verbietet das nutzen von Betten'
+                        - 'pressure - erlaubt / verbietet das nutzen von Druckplatten'
+                        - 'note - erlaubt / verbietet das nutzen von Noten-Blöcken'
+                        - 'redstone - gibt einem Spieler Lever-, Diode-, Button-, Pressure- und Note-Flags'
+                        - 'craft - gibt einem Spieler Table-, Enchant- und Brew-Flags'
+                        - 'burn - erlaubt / verbietet das Mobs auf Grundstücken brennen'
+                        - 'trample - erlaubt / verbietet das zertampeln von Feldern auf Grundstücken'
+                        - 'fire - fügt die Ignite- und Firespread-Flag zum Grundstück hinzu'
+                list:
+                    Description: listet Grundstücke
+                    Info:
+                        - 'Verwendung: /res list <Spielername> <Seite>'
+                        - 'Listet alle Grundstücke des Spielers auf, außer die Versteckten.'
+                        - 'Wenn deine Grundstücke gelistet werden, zeigt er deine versteckten Grundstücke auch an.'
+                        - 'Um sämtliche Grundstücke zu listen, nutze /res listall.'
+                listhidden:
+                    Description: listet versteckte Grundstücke (nur Admins)
+                    Info:
+                        - 'Verwendung: /res listhidden <Spielername> <Seite>'
+                        - 'Listet die versteckten Grundstücke des Spielers auf.'
+                listall:
+                    Description: listet alle Grundstücke
+                    Info:
+                        - 'Verwendung: /res listall <Seite>'
+                        - 'Listet alle Grundstücke des Servers auf, außer die Versteckten die dir nicht gehören.'
+                listallhidden:
+                    Description: listet alle versteckten Grundstücke (nur Admins)
+                    Info:
+                        - 'Verwendung: /res listhidden <Seite>'
+                        - 'Listet alle versteckten Grundstücke des Servers auf.'
+                sublist:
+                    Description: listet Grundstückssubzonen
+                    Info:
+                        - 'Verwendung: /res sublist <Grundstücksname> <Seite>'
+                        - 'Listet alle Subzonen innerhalb eines Grundstücks auf.'
+                default:
+                    Description: setzt die Flags des Grundstücks auf Standart zurück
+                    Info:
+                        - 'Verwendung: /res default <Grundstücksname>'
+                        - 'Setzt die Flags eines Grundstücks auf Standart zurück. Um dies zu tun musst du der Besitzer oder ein Admin sein.'
+                rename:
+                    Description: benennt ein Grundstück um
+                    Info:
+                        - 'Verwendung: /res rename [alter Grundstücksname] [neuer Grundstücksname]'
+                        - 'Um dies zu tun musst du der Besitzer oder ein Admin sein.'
+                        - 'Der Name darf noch nicht vergeben sein!'
+                mirror:
+                    Description: spiegelt Flags wieder
+                    Info:
+                        - 'Usage: /res mirror [Quell-Grundstück] [Ziel-Grundstück]'
+                        - 'Spiegelt die Flags eines Grundstück auf ein anderes wieder. Um dies zu tun musst du der Besitzer oder ein Admin sein.'
+                market:
+                    Description: kauft, verkauft oder mietet Grundstücke
+                    Info:
+                        - 'Verwendung: /res market ? für mehr Info´s'
+                    SubCommands:
+                        info:
+                            Description: zeigt Wirtschafts-Info´s zum Grundstück an
+                            Info:
+                                - 'Verwendung: /res market info [Grundstücksname]'
+                                - 'Zeigt an ob das Grundstück zum Verkauf oder zur Miete steht, und was es kostet.'
+                        list:
+                            Description: listet mietbare und verkäufliche Grundstücke
+                            Info:
+                                - 'Verwendung: /res market list'
+                        sell:
+                            Description: verkauft ein Grundstück
+                            Info:
+                                - 'Verwendung: /res sell [Grundstücksname] [Betrag]'
+                                - 'Stellt ein Grundstück zum Verkauf für einen beliebigen [Betrag] an Geld.'
+                                - 'Ein Spieler kann dieses Grundstück mit /res market buy kaufen!'
+                        buy:
+                            Description: kauft ein Grundstück
+                            Info:
+                                - 'Verwendung: /res buy [Grundstücksname]'
+                                - 'Kauft ein Grundstück, wenn es zum Verkauf steht!'
+                        unsell:
+                            Description: stoppt den Verkauf eines Grundstücks
+                            Info:
+                                - 'Verwendung: /res unsell [Grundstücksname]'
+                        rent:
+                            Description: mietet ein Grundstück
+                            Info:
+                                - 'Verwendung: /res market rent [Grundstücksname] <autorenew>'
+                                - 'Mietet ein Grundstück.  Autorenew(automatisch erneuern) kann dabei true(ja) oder false(nein) sein.'
+                                - 'Wenn autorenew auf true ist, wird das Grundstück kurz vor Ablauf des Mietvertrags erneut gemietet.'
+                        rentable:
+                            Description: macht ein Grundstück mietbar
+                            Info:
+                                - 'Verwendung: /res market rentable [Grundstücksname] [Betrag] [Tage] <repeat>'
+                                - 'Macht ein Grundstück mietbar für einen [Betrag] an Geld für beliebig viele [Tage].'
+                                - 'Wenn repeat(wiederholen) auf true(ja) ist, wird das Grundstück nach Ablauf des Mietvertrags automatisch wieder mietbar.'
+                        release:
+                            Description: entfernt den Miet- oder Mietbar-Status eines Grundstücks
+                            Info:
+                                - 'Verwendung: /res market release [Grundstücksname]'
+                                - 'Wenn du der Mieter bist, wirst du von dem Mietverhältnis entlassen.'
+                                - 'Wenn du der Besitzer bist, wird das Grundstück nicht mehr mietbar sein.'
+                current:
+                    Description: zeigt das Grundstück in dem du dich grade befindest an
+                    Info:
+                        - 'Verwendung: /res current'
+                lists:
+                    Description: vordefinierte Berechtigungs-Liste
+                    Info:
+                        - 'Vordefinierte Berechtigungen, die zu einem Grundstück gehören können.'
+                    SubCommands:
+                        add:
+                            Description: fügt eine Liste hinzu
+                            Info:
+                                - 'Verwendung: /res lists add <Listenname>'
+                        remove:
+                            Description: entfernt eine Liste
+                            Info:
+                                - 'Verwendung: /res lists remove <Listenname>'
+                        apply:
+                            Description: macht ein Grundstück zu einer Liste gehörig
+                            Info:
+                                - 'Verwendung: /res lists apply <Listenname> <Grundstücksname>'
+                        set:
+                            Description: setzt eine Flag
+                            Info:
+                                - 'Verwendung: /res lists set <Listenname> <Flag> <Wert>'
+                        pset:
+                            Description: setzt eine Spieler-Flag
+                            Info:
+                                - 'Verwendung: /res lists pset <Listenname> <Spielername> <Flag> <Wert>'
+                        gset:
+                            Description: setzt eine Gruppen-Flag
+                            Info:
+                                - 'Verwendung: /res lists gset <Listenname> <Gruppe> <Flag> <Wert>'
+                        view:
+                            Description: schau eine Liste an
+                            Info:
+                                - 'Verwendung: /res lists view <Listenname>'
+                server:
+                    Description: Grundstücke gehören dem Server (nur Admins).
+                    Info:
+                        - 'Verwendung: /resadmin server [Grundstücksname]'
+                        - 'Das Grundstück gehört dem Server.'
+                setowner:
+                    Description: ändert den Besitzer eines Grundstücks (nur Admins).
+                    Info:
+                        - 'Verwendung: /resadmin setowner [Grundstücksname] [Spielername]'
+                resreload:
+                    Description: lädt Residence neu (nur Admins).
+                    Info:
+                        - 'Verwendung: /resreload'
+                resload:
+                    Description: lädt die Speicher-Dateien der Grundstücke (UNSICHER, nur Admins).
+                    Info:
+                        - 'Verwendung: /resload'
+                        - 'UNSICHERES Kommando, weil es die Grundstücke vorher nicht abspeichert.'
+                        - 'Lädt die Grundstück-Speicher-Dateien nach Änderungen neu.'
+                version:
+                    Description: zeigt die Residence-Version an
+                    Info:
+                        - 'Verwendung: /res version'
