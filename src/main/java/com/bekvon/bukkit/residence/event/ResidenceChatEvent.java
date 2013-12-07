@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 /**
- *
  * @author Administrator
  */
 public class ResidenceChatEvent extends CancellableResidencePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+
     @Override
     public HandlerList getHandlers() {
         return handlers;
@@ -27,30 +27,26 @@ public class ResidenceChatEvent extends CancellableResidencePlayerEvent {
 
     protected String message;
     ChatColor color;
-    
+
     public ResidenceChatEvent(ClaimedResidence resref, Player player, String message, ChatColor color) {
         super("RESIDENCE_CHAT_EVENT", resref, player);
         this.message = message;
         this.color = color;
     }
-    
-    public String getChatMessage()
-    {
+
+    public String getChatMessage() {
         return message;
     }
-    
-    public void setChatMessage(String newmessage)
-    {
+
+    public void setChatMessage(String newmessage) {
         message = newmessage;
     }
-    
-    public ChatColor getColor()
-    {
+
+    public ChatColor getColor() {
         return color;
     }
-    
-    public void setColor(ChatColor c)
-    {
+
+    public void setColor(ChatColor c) {
         color = c;
     }
 }

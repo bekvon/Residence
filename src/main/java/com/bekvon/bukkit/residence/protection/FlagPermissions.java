@@ -4,25 +4,16 @@
  */
 package com.bekvon.bukkit.residence.protection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.bekvon.bukkit.residence.Residence;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.Residence;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
- * 
  * @author Administrator
  */
 public class FlagPermissions {

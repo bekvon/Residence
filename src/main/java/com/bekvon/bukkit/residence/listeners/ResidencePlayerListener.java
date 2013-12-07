@@ -5,12 +5,15 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.event.ResidenceChangedEvent;
+import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
+import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,30 +27,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.event.*;
-import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
- * 
  * @author Administrator
  */
 public class ResidencePlayerListener implements Listener {
@@ -365,12 +355,12 @@ public class ResidencePlayerListener implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Location loc = event.getTo();
         Player player = event.getPlayer();
-        
+
         if (Residence.isResAdminOn(player)) {
             handleNewLocation(player, loc, false);
             return;
         }
-        
+
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
         if (event.getCause() == TeleportCause.ENDER_PEARL) {
             if (res != null) {
@@ -448,11 +438,11 @@ public class ResidencePlayerListener implements Listener {
                  */
                 ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld, player);
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
-                
+
                 // New ResidenceChangeEvent
                 ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
                 Residence.getServ().getPluginManager().callEvent(chgEvent);
-                
+
                 if (leave != null && !leave.equals("")) {
                     player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 }
@@ -479,7 +469,7 @@ public class ResidencePlayerListener implements Listener {
             if (subzone == null) {
                 chatchange = true;
             }
-            
+
             // "from" residence for ResidenceChangedEvent
             ClaimedResidence chgFrom = null;
             if (ResOld != res && ResOld != null) {
@@ -493,7 +483,7 @@ public class ResidencePlayerListener implements Listener {
                  */
                 ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld, player);
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
-                
+
                 if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
                     player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 }
@@ -507,11 +497,11 @@ public class ResidencePlayerListener implements Listener {
              */
             ResidenceEnterEvent enterevent = new ResidenceEnterEvent(res, player);
             Residence.getServ().getPluginManager().callEvent(enterevent);
-            
+
             // New ResidenceChangedEvent
-            ResidenceChangedEvent chgEvent = new ResidenceChangedEvent( chgFrom, res, player);
+            ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(chgFrom, res, player);
             Residence.getServ().getPluginManager().callEvent(chgEvent);
-            
+
             if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
                 player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
             }

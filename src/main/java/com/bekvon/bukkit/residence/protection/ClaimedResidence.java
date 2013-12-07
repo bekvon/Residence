@@ -4,8 +4,6 @@
  */
 package com.bekvon.bukkit.residence.protection;
 
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
@@ -14,20 +12,16 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 /**
- * 
  * @author Administrator
- * 
  */
 public class ClaimedResidence {
 
@@ -83,7 +77,7 @@ public class ClaimedResidence {
         }
         if (!resadmin && Residence.getConfigManager().getEnforceAreaInsideArea() && this.getParent() == null) {
             boolean inside = false;
-            for (CuboidArea are: areas.values()) {
+            for (CuboidArea are : areas.values()) {
                 if (are.isAreaWithinArea(area)) {
                     inside = true;
                 }
@@ -214,10 +208,10 @@ public class ClaimedResidence {
             ClaimedResidence res = getSubzone(sz);
             if (res != null && res != this) {
                 String[] areas = res.getAreaList();
-                for (String area: areas) {
+                for (String area : areas) {
                     if (!newarea.isAreaWithinArea(res.getArea(area))) {
                         boolean good = false;
-                        for (CuboidArea arae: getAreaArray()) {
+                        for (CuboidArea arae : getAreaArray()) {
                             if (arae != oldarea && arae.isAreaWithinArea(res.getArea(area))) {
                                 good = true;
                             }
@@ -763,20 +757,17 @@ public class ClaimedResidence {
         root.put("StoredMoney", bank.getStoredMoney());
         root.put("BlackList", blacklist.save());
         root.put("IgnoreList", ignorelist.save());
-        for (Entry<String, CuboidArea> entry : areas.entrySet())
-        {
+        for (Entry<String, CuboidArea> entry : areas.entrySet()) {
             areamap.put(entry.getKey(), entry.getValue().save());
         }
         root.put("Areas", areamap);
         Map<String, Object> subzonemap = new HashMap<String, Object>();
-        for (Entry<String, ClaimedResidence> sz : subzones.entrySet())
-        {
+        for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
             subzonemap.put(sz.getKey(), sz.getValue().save());
         }
         root.put("Subzones", subzonemap);
         root.put("Permissions", perms.save());
-        if (tpLoc != null)
-        {
+        if (tpLoc != null) {
             Map<String, Object> tpmap = new HashMap<String, Object>();
             tpmap.put("X", tpLoc.getBlockX());
             tpmap.put("Y", tpLoc.getBlockY());
@@ -821,38 +812,31 @@ public class ClaimedResidence {
         return res;
     }
 
-    public int getAreaCount()
-    {
+    public int getAreaCount() {
         return areas.size();
     }
 
-    public boolean renameSubzone(String oldName, String newName)
-    {
+    public boolean renameSubzone(String oldName, String newName) {
         return this.renameSubzone(null, oldName, newName, true);
     }
 
-    public boolean renameSubzone(Player player, String oldName, String newName, boolean resadmin)
-    {
-        if (!Residence.validName(newName))
-        {
+    public boolean renameSubzone(Player player, String oldName, String newName, boolean resadmin) {
+        if (!Residence.validName(newName)) {
             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
             return false;
         }
         ClaimedResidence res = subzones.get(oldName);
-        if (res == null)
-        {
+        if (res == null) {
             if (player != null)
                 player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidSubzone"));
             return false;
         }
-        if (player != null && !res.getPermissions().hasResidencePermission(player, true) && !resadmin)
-        {
+        if (player != null && !res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
             if (player != null)
                 player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
             return false;
         }
-        if (subzones.containsKey(newName))
-        {
+        if (subzones.containsKey(newName)) {
             if (player != null)
                 player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneExists", ChatColor.YELLOW + newName));
             return false;
@@ -864,29 +848,23 @@ public class ClaimedResidence {
         return true;
     }
 
-    public boolean renameArea(String oldName, String newName)
-    {
+    public boolean renameArea(String oldName, String newName) {
         return this.renameArea(null, oldName, newName, true);
     }
 
-    public boolean renameArea(Player player, String oldName, String newName, boolean resadmin)
-    {
-        if (!Residence.validName(newName))
-        {
+    public boolean renameArea(Player player, String oldName, String newName, boolean resadmin) {
+        if (!Residence.validName(newName)) {
             player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
             return false;
         }
-        if (player == null || perms.hasResidencePermission(player, true) || resadmin)
-        {
-            if (areas.containsKey(newName))
-            {
+        if (player == null || perms.hasResidencePermission(player, true) || resadmin) {
+            if (areas.containsKey(newName)) {
                 if (player != null)
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaExists"));
                 return false;
             }
             CuboidArea area = areas.get(oldName);
-            if (area == null)
-            {
+            if (area == null) {
                 if (player != null)
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaInvalidName"));
                 return false;
@@ -896,17 +874,14 @@ public class ClaimedResidence {
             if (player != null)
                 player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaRename", oldName + "." + newName));
             return true;
-        }
-        else
-        {
+        } else {
             if (player != null)
                 player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
             return false;
         }
     }
 
-    public CuboidArea getArea(String name)
-    {
+    public CuboidArea getArea(String name) {
         return areas.get(name);
     }
 
@@ -922,28 +897,23 @@ public class ClaimedResidence {
         }
     }
 
-    public ResidenceBank getBank()
-    {
+    public ResidenceBank getBank() {
         return bank;
     }
 
-    public String getWorld()
-    {
+    public String getWorld() {
         return perms.getWorld();
     }
 
-    public String getOwner()
-    {
+    public String getOwner() {
         return perms.getOwner();
     }
 
-    public ResidenceItemList getItemBlacklist()
-    {
+    public ResidenceItemList getItemBlacklist() {
         return blacklist;
     }
 
-    public ResidenceItemList getItemIgnoreList()
-    {
+    public ResidenceItemList getItemIgnoreList() {
         return ignorelist;
     }
 

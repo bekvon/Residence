@@ -4,24 +4,24 @@
  */
 package com.bekvon.bukkit.residence;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.bekvon.bukkit.residence.chat.ChatManager;
+import com.bekvon.bukkit.residence.economy.EconomyInterface;
+import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.economy.rent.RentManager;
+import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
+import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
+import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.mcstats.Metrics;
+import com.bekvon.bukkit.residence.permissions.PermissionManager;
+import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
+import com.bekvon.bukkit.residence.protection.*;
+import com.bekvon.bukkit.residence.selection.SelectionManager;
+import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
+import com.bekvon.bukkit.residence.text.Language;
+import com.bekvon.bukkit.residence.text.help.HelpEntry;
+import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.bekvon.bukkit.residence.zip.ZipLibrary;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -34,33 +34,19 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.bekvon.bukkit.residence.chat.ChatManager;
-import com.bekvon.bukkit.residence.economy.EconomyInterface;
-import com.bekvon.bukkit.residence.economy.TransactionManager;
-import com.bekvon.bukkit.residence.economy.rent.RentManager;
-import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
-import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
-import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
-import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
-import com.bekvon.bukkit.residence.permissions.PermissionManager;
-import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.protection.LeaseManager;
-import com.bekvon.bukkit.residence.protection.PermissionListManager;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.protection.WorldFlagManager;
-import com.bekvon.bukkit.residence.selection.SelectionManager;
-import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
-import com.bekvon.bukkit.residence.text.Language;
-import com.bekvon.bukkit.residence.text.help.HelpEntry;
-import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * 
  * @author Gary Smoak - bekvon
- * 
  */
 public class Residence extends JavaPlugin {
 
@@ -92,14 +78,13 @@ public class Residence extends JavaPlugin {
     protected static boolean initsuccess = false;
     protected Map<String, String> deleteConfirm;
     protected static List<String> resadminToggle;
-    private final static String[] validLanguages = { "English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian" };
+    private final static String[] validLanguages = {"English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian"};
     private Runnable doHeals = new Runnable() {
         public void run() {
             plistener.doHeals();
         }
     };
-    private Runnable rentExpire = new Runnable()
-    {
+    private Runnable rentExpire = new Runnable() {
         public void run() {
             rentmanager.checkCurrentRents();
             if (cmanager.showIntervalMessages()) {
@@ -228,8 +213,7 @@ public class Residence extends JavaPlugin {
                 System.out.println("[Residence] Scanning for economy systems...");
                 if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
                     ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
-                    if (vault.economyOK())
-                    {
+                    if (vault.economyOK()) {
                         economy = vault;
                         System.out.println("[Residence] Found Vault using economy system: " + vault.getEconomyName());
                     }
@@ -327,8 +311,7 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    public static boolean validName(String name)
-    {
+    public static boolean validName(String name) {
         if (name.contains(":") || name.contains(".")) {
             return false;
         }
@@ -423,8 +406,7 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    public static FlagPermissions getPermsByLocForPlayer(Location loc, Player player)
-    {
+    public static FlagPermissions getPermsByLocForPlayer(Location loc, Player player) {
         ClaimedResidence res = rmanager.getByLoc(loc);
         if (res != null) {
             return res.getPermissions();

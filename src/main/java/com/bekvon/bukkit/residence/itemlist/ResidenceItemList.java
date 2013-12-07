@@ -4,50 +4,44 @@
  */
 
 package com.bekvon.bukkit.residence.itemlist;
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import java.util.Map;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
+
 /**
- *
  * @author Administrator
  */
 public class ResidenceItemList extends ItemList {
     ClaimedResidence res;
 
-    public ResidenceItemList(ClaimedResidence parent, ListType type)
-    {
+    public ResidenceItemList(ClaimedResidence parent, ListType type) {
         super(type);
         res = parent;
     }
 
-    private ResidenceItemList()
-    {
-        
+    private ResidenceItemList() {
+
     }
 
     public void playerListChange(Player player, Material mat, boolean resadmin) {
         PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-        if(resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess()))
-        {
-            if(super.toggle(mat))
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialAdd",ChatColor.GREEN + mat.toString() + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
+        if (resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess())) {
+            if (super.toggle(mat))
+                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialAdd", ChatColor.GREEN + mat.toString() + ChatColor.YELLOW + "." + ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
             else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialRemove",ChatColor.GREEN + mat.toString() + ChatColor.YELLOW+"."+ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
-        }
-        else
-        {
-            player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
+                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialRemove", ChatColor.GREEN + mat.toString() + ChatColor.YELLOW + "." + ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
+        } else {
+            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
         }
     }
 
-    public static ResidenceItemList load(ClaimedResidence parent, Map<String,Object> map)
-    {
+    public static ResidenceItemList load(ClaimedResidence parent, Map<String, Object> map) {
         ResidenceItemList newlist = new ResidenceItemList();
         newlist.res = parent;
         return (ResidenceItemList) ItemList.load(map, newlist);

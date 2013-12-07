@@ -1,5 +1,8 @@
 package com.bekvon.bukkit.residence.zip;
 
+import com.bekvon.bukkit.residence.Residence;
+import org.bukkit.World;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,18 +15,14 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.bekvon.bukkit.residence.Residence;
-import org.bukkit.World;
-
 public class ZipLibrary {
     private static File BackupDir = new File(Residence.getDataLocation(), "Backup");
 
     public static void backup() throws IOException {
         try {
             BackupDir.mkdir();
-            
-        }
-        catch (Exception e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
@@ -60,8 +59,7 @@ public class ZipLibrary {
         for (File source : sources) {
             if (source.isDirectory()) {
                 zipDir(zipOut, "", source);
-            }
-            else {
+            } else {
                 zipFile(zipOut, "", source);
             }
         }
@@ -89,8 +87,7 @@ public class ZipLibrary {
         for (File source : files) {
             if (source.isDirectory()) {
                 zipDir(zos, path, source);
-            }
-            else {
+            } else {
                 zipFile(zos, path, source);
             }
         }

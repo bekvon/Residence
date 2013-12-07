@@ -4,23 +4,21 @@
  */
 
 package com.bekvon.bukkit.residence.itemlist;
-import org.bukkit.ChatColor;
+
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- *
  * @author Administrator
  */
 public class WorldItemManager {
     protected List<WorldItemList> lists;
 
-    public WorldItemManager(FileConfiguration config)
-    {
+    public WorldItemManager(FileConfiguration config) {
         lists = new ArrayList<WorldItemList>();
         this.readLists(config);
     }
@@ -34,8 +32,7 @@ public class WorldItemManager {
         return true;
     }
 
-    public boolean isIgnored(Material mat, String group, String world)
-    {
+    public boolean isIgnored(Material mat, String group, String world) {
         for (WorldItemList list : lists) {
             if (list.isIgnored(mat, world, group)) {
                 return true;

@@ -5,13 +5,13 @@
 
 package com.bekvon.bukkit.residence.text;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * 
  * @author Administrator
  */
 public class Language {

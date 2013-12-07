@@ -4,13 +4,11 @@
  */
 
 package com.bekvon.bukkit.residence.economy.rent;
-import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Administrator
  */
 public class RentableLand {
@@ -29,9 +27,9 @@ public class RentableLand {
 
     public static RentableLand load(Map<String, Object> map) {
         RentableLand newland = new RentableLand();
-        newland.cost = (Integer)map.get("Cost");
-        newland.days = (Integer)map.get("Days");
-        newland.repeatable = (Boolean)map.get("Repeatable");
+        newland.cost = (Integer) map.get("Cost");
+        newland.days = (Integer) map.get("Days");
+        newland.repeatable = (Boolean) map.get("Repeatable");
         return newland;
     }
 }

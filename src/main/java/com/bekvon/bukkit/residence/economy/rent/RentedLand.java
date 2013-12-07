@@ -4,13 +4,11 @@
  */
 
 package com.bekvon.bukkit.residence.economy.rent;
-import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Administrator
  */
 public class RentedLand {
@@ -28,13 +26,13 @@ public class RentedLand {
         rentables.put("AutoRefresh", autoRefresh);
         return rentables;
     }
-    public static RentedLand load(Map<String,Object> map)
-    {
+
+    public static RentedLand load(Map<String, Object> map) {
         RentedLand newland = new RentedLand();
         newland.player = (String) map.get("Player");
-        newland.startTime = (Long)map.get("StartTime");
-        newland.endTime = (Long)map.get("EndTime");
-        newland.autoRefresh = (Boolean)map.get("AutoRefresh");
+        newland.startTime = (Long) map.get("StartTime");
+        newland.endTime = (Long) map.get("EndTime");
+        newland.autoRefresh = (Boolean) map.get("AutoRefresh");
         return newland;
     }
 }

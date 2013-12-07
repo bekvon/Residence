@@ -4,60 +4,31 @@
  */
 
 package com.bekvon.bukkit.residence.listeners;
+
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-
-import org.bukkit.Material;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Bat;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.IronGolem;
-import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Snowman;
-import org.bukkit.entity.Squid;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Wolf;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingBreakEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
-
 /**
- *
  * @author Administrator
  */
 public class ResidenceEntityListener implements Listener {
-    
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEndermanChangeBlock(EntityChangeBlockEvent event) {
         if (event.getEntityType() != EntityType.ENDERMAN && event.getEntityType() != EntityType.WITHER) {
@@ -73,31 +44,31 @@ public class ResidenceEntityListener implements Listener {
             event.setCancelled(true);
         }
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onEntityInteract(EntityInteractEvent event){
-    	Block block = event.getBlock();
-    	Material mat = block.getType();
-    	Entity entity = event.getEntity();    	
-    	FlagPermissions perms = Residence.getPermsByLoc(block.getLocation());
-    	boolean hastrample = perms.has("trample", perms.has("hasbuild", true));     			
-    	if(!hastrample && !(entity.getType() == EntityType.FALLING_BLOCK) && (mat == Material.SOIL || mat == Material.SOUL_SAND)){
-    		event.setCancelled(true);
-    	}
+    public void onEntityInteract(EntityInteractEvent event) {
+        Block block = event.getBlock();
+        Material mat = block.getType();
+        Entity entity = event.getEntity();
+        FlagPermissions perms = Residence.getPermsByLoc(block.getLocation());
+        boolean hastrample = perms.has("trample", perms.has("hasbuild", true));
+        if (!hastrample && !(entity.getType() == EntityType.FALLING_BLOCK) && (mat == Material.SOIL || mat == Material.SOUL_SAND)) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
-        if(ent instanceof Horse || ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
-        	if(!perms.has("animals", true)){
-        		event.setCancelled(true);
-        	}
+        if (ent instanceof Horse || ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager) {
+            if (!perms.has("animals", true)) {
+                event.setCancelled(true);
+            }
         } else {
-        	if (!perms.has("monsters", true)) {
-        		event.setCancelled(true);
-        	}
+            if (!perms.has("monsters", true)) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -231,32 +202,32 @@ public class ResidenceEntityListener implements Listener {
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSplashPotion(PotionSplashEvent event) {
-    	if(event.isCancelled())
-    		return;
-    	Entity ent = event.getEntity();
-    	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has("pvp", true);
-    	Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
-    	while(it.hasNext()){
-    		LivingEntity target = it.next();
-    		if(target.getType()==EntityType.PLAYER){
-    			Boolean tgtpvp = Residence.getPermsByLoc(target.getLocation()).has("pvp", true);
-    			if(!srcpvp || !tgtpvp){
-    				event.setIntensity(target, 0);
-    			}
-    		}
-    	}
+        if (event.isCancelled())
+            return;
+        Entity ent = event.getEntity();
+        boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has("pvp", true);
+        Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
+        while (it.hasNext()) {
+            LivingEntity target = it.next();
+            if (target.getType() == EntityType.PLAYER) {
+                Boolean tgtpvp = Residence.getPermsByLoc(target.getLocation()).has("pvp", true);
+                if (!srcpvp || !tgtpvp) {
+                    event.setIntensity(target, 0);
+                }
+            }
+        }
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         Entity ent = event.getEntity();
-        if(ent.hasMetadata("NPC")) {
+        if (ent.hasMetadata("NPC")) {
             return;
         }
-        boolean tamedWolf = ent instanceof Wolf ? ((Wolf)ent).isTamed() : false;
+        boolean tamedWolf = ent instanceof Wolf ? ((Wolf) ent).isTamed() : false;
         ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
         /* Living Entities */
         if (event instanceof EntityDamageByEntityEvent) {
@@ -271,15 +242,15 @@ public class ResidenceEntityListener implements Listener {
                 srcpvp = srcarea.getPermissions().has("pvp", true);
             }
             ent = attackevent.getEntity();
-            if ((ent instanceof Player || tamedWolf) && (damager instanceof Player || (damager instanceof Arrow && (((Arrow)damager).getShooter() instanceof Player)))) {
+            if ((ent instanceof Player || tamedWolf) && (damager instanceof Player || (damager instanceof Arrow && (((Arrow) damager).getShooter() instanceof Player)))) {
                 Player attacker = null;
                 if (damager instanceof Player) {
                     attacker = (Player) damager;
                 } else if (damager instanceof Arrow) {
-                    attacker = (Player)((Arrow)damager).getShooter();
+                    attacker = (Player) ((Arrow) damager).getShooter();
                 }
-                if(!srcpvp) {
-                    attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPVPZone"));
+                if (!srcpvp) {
+                    attacker.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPVPZone"));
                     event.setCancelled(true);
                     return;
                 }
@@ -287,13 +258,13 @@ public class ResidenceEntityListener implements Listener {
                 if (area == null) {
                     /* World PvP */
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-                        attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
+                        attacker.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("WorldPVPDisabled"));
                         event.setCancelled(true);
                     }
                 } else {
                     /* Normal PvP */
                     if (!area.getPermissions().has("pvp", true)) {
-                        attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPVPZone"));
+                        attacker.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPVPZone"));
                         event.setCancelled(true);
                     }
                 }

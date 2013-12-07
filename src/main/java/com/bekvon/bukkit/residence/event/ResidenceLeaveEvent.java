@@ -13,15 +13,16 @@ import org.bukkit.event.HandlerList;
  * Note: This event has been replaced with {@link ResidenceChangedEvent} and is marked as
  * deprecated as of 21-MAY-2013. It will be removed in future releases. Please see
  * {@link ResidenceChangedEvent} comments for further information.
- * 
+ * <p/>
  * TODO - Remove this class at a suitable time in the future.
- * 
+ *
  * @author Administrator
  */
 @Deprecated
 public class ResidenceLeaveEvent extends ResidencePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+
     @Override
     public HandlerList getHandlers() {
         return handlers;
@@ -31,8 +32,7 @@ public class ResidenceLeaveEvent extends ResidencePlayerEvent {
         return handlers;
     }
 
-    public ResidenceLeaveEvent(ClaimedResidence resref, Player player)
-    {
+    public ResidenceLeaveEvent(ClaimedResidence resref, Player player) {
         super("RESIDENCE_LEAVE", resref, player);
     }
 }

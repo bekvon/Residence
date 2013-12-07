@@ -3,21 +3,19 @@
  * and open the template in the editor.
  */
 package com.bekvon.bukkit.residence;
-import com.bekvon.bukkit.residence.Residence;
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
- *
  * @author Administrator
  */
 public class ConfigManager {
@@ -42,7 +40,7 @@ public class ConfigManager {
     protected int minMoveUpdate;
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalResidenceDefaults;
-    protected Map<String,FlagPermissions> globalGroupDefaults;
+    protected Map<String, FlagPermissions> globalGroupDefaults;
     protected String language;
     protected boolean preventBuildInRent;
     protected boolean stopOnSaveError;
@@ -57,11 +55,10 @@ public class ConfigManager {
     protected List<Integer> customRightClick;
     private boolean enforceAreaInsideArea;
 
-    public ConfigManager(FileConfiguration config)
-    {
+    public ConfigManager(FileConfiguration config) {
         globalCreatorDefaults = new FlagPermissions();
         globalResidenceDefaults = new FlagPermissions();
-        globalGroupDefaults = new HashMap<String,FlagPermissions>();
+        globalGroupDefaults = new HashMap<String, FlagPermissions>();
         this.load(config);
     }
 
@@ -84,13 +81,13 @@ public class ConfigManager {
         minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
         chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
         enforceAreaInsideArea = config.getBoolean("Global.EnforceAreaInsideArea", false);
-        language = config.getString("Global.Language","English");
+        language = config.getString("Global.Language", "English");
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getConfigurationSection("Global"));
         globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", config.getConfigurationSection("Global"));
         preventBuildInRent = config.getBoolean("Global.PreventRentModify", true);
-        stopOnSaveError = config.getBoolean("Global.StopOnSaveFault",true);
-        legacyperms = config.getBoolean("Global.LegacyPermissions",false);
-        namefix = config.getString("Global.ResidenceNameRegex",null);//"[^a-zA-Z0-9\\-\\_]"
+        stopOnSaveError = config.getBoolean("Global.StopOnSaveFault", true);
+        legacyperms = config.getBoolean("Global.LegacyPermissions", false);
+        namefix = config.getString("Global.ResidenceNameRegex", null);//"[^a-zA-Z0-9\\-\\_]"
         showIntervalMessages = config.getBoolean("Global.ShowIntervalMessages", false);
         spoutEnable = config.getBoolean("Global.EnableSpout", false);
         enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);
@@ -99,13 +96,10 @@ public class ConfigManager {
         customBothClick = config.getIntegerList("Global.CustomBothClick");
         customRightClick = config.getIntegerList("Global.CustomRightClick");
         ConfigurationSection node = config.getConfigurationSection("Global.GroupDefault");
-        if(node!=null)
-        {
+        if (node != null) {
             Set<String> keys = node.getConfigurationSection(defaultGroup).getKeys(false);
-            if(keys!=null)
-            {
-                for(String key: keys)
-                {
+            if (keys != null) {
+                for (String key : keys) {
                     globalGroupDefaults.put(key, FlagPermissions.parseFromConfigNode(key, config.getConfigurationSection("Global.GroupDefault")));
                 }
             }
@@ -117,8 +111,7 @@ public class ConfigManager {
         }
     }
 
-    public boolean useLegacyPermissions()
-    {
+    public boolean useLegacyPermissions() {
         return legacyperms;
     }
 
@@ -126,17 +119,15 @@ public class ConfigManager {
         return defaultGroup;
     }
 
-    public String getResidenceNameRegex()
-    {
+    public String getResidenceNameRegex() {
         return namefix;
     }
 
     public boolean enableEconomy() {
-        return enableEconomy && Residence.getEconomyManager()!=null;
+        return enableEconomy && Residence.getEconomyManager() != null;
     }
 
-    public boolean enabledRentSystem()
-    {
+    public boolean enabledRentSystem() {
         return enableRentSystem && enableEconomy();
     }
 
@@ -147,132 +138,113 @@ public class ConfigManager {
     public boolean allowAdminsOnly() {
         return adminsOnly;
     }
-    public boolean allowEmptyResidences()
-    {
+
+    public boolean allowEmptyResidences() {
         return allowEmptyResidences;
     }
-    public int getInfoToolID()
-    {
+
+    public int getInfoToolID() {
         return infoToolId;
     }
-    public int getSelectionTooldID()
-    {
+
+    public int getSelectionTooldID() {
         return selectionToolId;
     }
 
-    public boolean getOpsAreAdmins()
-    {
+    public boolean getOpsAreAdmins() {
         return adminOps;
     }
 
-    public String getMultiworldPlugin()
-    {
+    public String getMultiworldPlugin() {
         return multiworldPlugin;
     }
 
-    public boolean autoRenewLeases()
-    {
+    public boolean autoRenewLeases() {
         return leaseAutoRenew;
     }
 
-    public String getEconomySystem()
-    {
+    public String getEconomySystem() {
         return economySystem;
     }
 
-    public int getRentCheckInterval()
-    {
+    public int getRentCheckInterval() {
         return rentCheckInterval;
     }
 
-    public int getLeaseCheckInterval()
-    {
+    public int getLeaseCheckInterval() {
         return leaseCheckInterval;
     }
 
-    public int getAutoSaveInterval()
-    {
+    public int getAutoSaveInterval() {
         return autoSaveInt;
     }
 
-    public boolean flagsInherit()
-    {
+    public boolean flagsInherit() {
         return flagsInherit;
     }
 
-    public boolean chatEnabled()
-    {
+    public boolean chatEnabled() {
         return chatEnable;
     }
 
-    public ChatColor getChatColor()
-    {
+    public ChatColor getChatColor() {
         return chatColor;
     }
 
-    public int getMinMoveUpdateInterval()
-    {
+    public int getMinMoveUpdateInterval() {
         return minMoveUpdate;
     }
 
-    public FlagPermissions getGlobalCreatorDefaultFlags()
-    {
+    public FlagPermissions getGlobalCreatorDefaultFlags() {
         return globalCreatorDefaults;
     }
 
-    public FlagPermissions getGlobalResidenceDefaultFlags()
-    {
+    public FlagPermissions getGlobalResidenceDefaultFlags() {
         return globalResidenceDefaults;
     }
 
-    public Map<String,FlagPermissions> getGlobalGroupDefaultFlags()
-    {
+    public Map<String, FlagPermissions> getGlobalGroupDefaultFlags() {
         return globalGroupDefaults;
     }
 
-    public String getLanguage()
-    {
+    public String getLanguage() {
         return language;
     }
 
-    public boolean preventRentModify()
-    {
+    public boolean preventRentModify() {
         return preventBuildInRent;
     }
-    public boolean stopOnSaveError()
-    {
+
+    public boolean stopOnSaveError() {
         return stopOnSaveError;
     }
-    public boolean showIntervalMessages()
-    {
+
+    public boolean showIntervalMessages() {
         return showIntervalMessages;
     }
-    public boolean enableSpout()
-    {
+
+    public boolean enableSpout() {
         return spoutEnable;
     }
-    public boolean enableLeaseMoneyAccount()
-    {
+
+    public boolean enableLeaseMoneyAccount() {
         return enableLeaseMoneyAccount;
     }
-    public boolean debugEnabled()
-    {
+
+    public boolean debugEnabled() {
         return enableDebug;
     }
-    
-    public List<Integer> getCustomContainers()
-    {
-    	return customContainers;
+
+    public List<Integer> getCustomContainers() {
+        return customContainers;
     }
-    
-    public List<Integer> getCustomBothClick()
-    {
-    	return customBothClick;
+
+    public List<Integer> getCustomBothClick() {
+        return customBothClick;
     }
-    
-    public List<Integer> getCustomRightClick()
-    {
-    	return customRightClick;
+
+    public List<Integer> getCustomRightClick() {
+        return customRightClick;
     }
 
     public boolean getEnforceAreaInsideArea() {

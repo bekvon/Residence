@@ -5,25 +5,20 @@
 
 package com.bekvon.bukkit.residence.economy;
 
-import org.bukkit.ChatColor;
-
-import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 /**
- * 
  * @author Administrator
  */
 public class TransactionManager {
@@ -255,7 +250,7 @@ public class TransactionManager {
         return sellAmount;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static TransactionManager load(Map root, PermissionManager p, ResidenceManager r) {
         TransactionManager tman = new TransactionManager(r, p);
         if (root != null) {

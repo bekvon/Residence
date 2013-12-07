@@ -5,24 +5,6 @@
 
 package com.bekvon.bukkit.residence.protection;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
@@ -30,9 +12,18 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * 
  * @author Administrator
  */
 public class ResidenceManager {
@@ -681,6 +672,7 @@ public class ResidenceManager {
             // so -35 will go to -48, 18 will be 16
             return (val < 0 ? val - 16 : val) >> 4 << 4;
         }
+
         private final int z;
         private final int x;
 
@@ -688,6 +680,7 @@ public class ResidenceManager {
             this.x = getBase(loc.getBlockX());
             this.z = getBase(loc.getBlockZ());
         }
+
         public ChunkRef(int x, int z) {
             this.x = (int) x;
             this.z = (int) z;
@@ -706,7 +699,7 @@ public class ResidenceManager {
             }
             ChunkRef other = (ChunkRef) obj;
             return this.x == other.x && this.z == other.z;
-        } 
+        }
 
         public int hashCode() {
             return x ^ z;

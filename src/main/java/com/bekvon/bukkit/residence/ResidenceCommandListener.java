@@ -4,9 +4,13 @@
  */
 package com.bekvon.bukkit.residence;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,14 +19,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
-import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ResidenceCommandListener extends Residence {
 
@@ -161,8 +160,7 @@ public class ResidenceCommandListener extends Residence {
             sender.sendMessage(ChatColor.GREEN + "Created by: " + ChatColor.YELLOW + "bekvon");
             String names = null;
             List<String> authlist = this.getDescription().getAuthors();
-            for (String auth : authlist)
-            {
+            for (String auth : authlist) {
                 if (names == null)
                     names = auth;
                 else
@@ -783,9 +781,7 @@ public class ResidenceCommandListener extends Residence {
                 player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
             }
             return true;
-        }
-        else if ((args.length == 3 || args.length == 4) && args[1].equals("listall"))
-        {
+        } else if ((args.length == 3 || args.length == 4) && args[1].equals("listall")) {
             ClaimedResidence res = rmanager.getByName(args[2]);
             if (res != null) {
                 res.printAdvancedAreaList(player, page);

@@ -5,31 +5,21 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
-import org.bukkit.ChatColor;
-
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import org.bukkit.entity.Player;
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 
 /**
- *
  * @author Administrator
  */
 public class ResidenceBlockListener implements Listener {
@@ -125,15 +115,15 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-        if (!perms.has("piston", true)){
+        if (!perms.has("piston", true)) {
             event.setCancelled(true);
-        	return;
-    	}
-        if (event.isSticky()){
+            return;
+        }
+        if (event.isSticky()) {
             Location location = event.getRetractLocation();
             FlagPermissions blockperms = Residence.getPermsByLoc(location);
             if (!blockperms.has("piston", true)) {
-            	event.setCancelled(true);
+                event.setCancelled(true);
             }
         }
     }
@@ -145,15 +135,15 @@ public class ResidenceBlockListener implements Listener {
             event.setCancelled(true);
         }
         for (Block block : event.getBlocks()) {
-        	FlagPermissions blockpermsfrom = Residence.getPermsByLoc(block.getLocation());
-        	Location blockto = block.getLocation();
-        	blockto.setX(blockto.getX()+event.getDirection().getModX());
-        	blockto.setY(blockto.getY()+event.getDirection().getModY());
-        	blockto.setZ(blockto.getZ()+event.getDirection().getModZ());
-        	FlagPermissions blockpermsto = Residence.getPermsByLoc(blockto);
+            FlagPermissions blockpermsfrom = Residence.getPermsByLoc(block.getLocation());
+            Location blockto = block.getLocation();
+            blockto.setX(blockto.getX() + event.getDirection().getModX());
+            blockto.setY(blockto.getY() + event.getDirection().getModY());
+            blockto.setZ(blockto.getZ() + event.getDirection().getModZ());
+            FlagPermissions blockpermsto = Residence.getPermsByLoc(blockto);
             if (!blockpermsfrom.has("piston", true) || !blockpermsto.has("piston", true)) {
-            	event.setCancelled(true);
-            	return;
+                event.setCancelled(true);
+                return;
             }
         }
     }
@@ -169,14 +159,14 @@ public class ResidenceBlockListener implements Listener {
         }
         if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
             if (!perms.has("lavaflow", hasflow)) {
-        		event.setCancelled(true);
-        	}
+                event.setCancelled(true);
+            }
             return;
         }
         if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
-        	if (!perms.has("waterflow", hasflow)) {
-        		event.setCancelled(true);
-        	}
+            if (!perms.has("waterflow", hasflow)) {
+                event.setCancelled(true);
+            }
             return;
         }
     }
@@ -195,18 +185,18 @@ public class ResidenceBlockListener implements Listener {
         IgniteCause cause = event.getCause();
         if (cause == IgniteCause.SPREAD) {
             if (!perms.has("firespread", true)) {
-        		event.setCancelled(true);
-        	}
+                event.setCancelled(true);
+            }
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
-        	Player player = event.getPlayer();
-        	if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
-        		event.setCancelled(true);
-        		player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
-        	}
+            Player player = event.getPlayer();
+            if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+            }
         } else {
-        	if(!perms.has("ignite", true)){
-        	    event.setCancelled(true);
-        	}
+            if (!perms.has("ignite", true)) {
+                event.setCancelled(true);
+            }
         }
     }
 }

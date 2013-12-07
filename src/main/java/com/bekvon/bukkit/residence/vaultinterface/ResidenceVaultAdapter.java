@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
- * 
  * @author Administrator
  */
 public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInterface {
