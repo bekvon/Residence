@@ -1,16 +1,33 @@
-#Eclipse and netbeans
-.classpath
-.project
-.settings
+# Eclipse stuff
+/.classpath
+/.project
+/.settings
+
+# netbeans
 /nbproject
 
-#build
-/dist
+# we use maven!
+/build.xml
+
+# maven
+/target
+
+# vim
+.*.sw[a-p]
+
+# various other potential build files
 /build
 /bin
-/lib
+/dist
 /manifest.mf
 
-#Repo
-README
-LICENSE.txt
+/world
+
+# Mac filesystem dust
+/.DS_Store
+
+# intellij
+*.iml
+*.ipr
+*.iws
+.idea/
