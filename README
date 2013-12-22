@@ -3,15 +3,15 @@ Residence - Self serve area protection system
 
 Official links:
 IRC: irc://irc.esper.net/Residence
-BukkitDev: http://dev.bukkit.org/server-mods/residence/
+BukkitDev: http://dev.bukkit.org/bukkit-plugins/residence/
 
 Downloads:
-Latest Config.yml: https://github.com/t00thpick1/Residence/src/main/resourcesconfig.yml
+Latest Config.yml: https://github.com/t00thpick1/Residence/blob/master/src/main/resources/config.yml
 
 To build the source yourself, simply download the source from github:
 https://github.com/t00thpick1/Residence
 
-Unzip and run ant.
+Unzip and run maven.
 
 Need Help?:
 
