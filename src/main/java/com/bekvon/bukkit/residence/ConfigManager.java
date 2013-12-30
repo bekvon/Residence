@@ -135,7 +135,7 @@ public class ConfigManager {
         return useLeases;
     }
 
-    public boolean allowAdminsOnly() {
+    public boolean AdminOnlyCommands() {
         return adminsOnly;
     }
 

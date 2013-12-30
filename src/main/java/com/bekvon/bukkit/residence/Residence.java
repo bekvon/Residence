@@ -32,7 +32,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,19 +45,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Residence extends JavaPlugin {
-    protected static Residence instance;
-    protected ResidenceManager rmanager;
-    protected SelectionManager smanager;
-    protected PermissionManager gmanager;
-    protected ConfigManager cmanager;
-    protected TransactionManager tmanager;
-    protected PermissionListManager pmanager;
-    protected WorldItemManager imanager;
-    protected WorldFlagManager wmanager;
-    protected RentManager rentmanager;
-    protected ChatManager chatmanager;
-    protected HelpEntry helppages;
-    protected ResidenceVaultAdapter vault;
+    public final static int saveVersion = 1;
+
+    private static Residence instance;
+
+    private ResidenceManager rmanager;
+    private SelectionManager smanager;
+    private PermissionManager gmanager;
+    private ConfigManager cmanager;
+    private TransactionManager tmanager;
+    private PermissionListManager pmanager;
+    private WorldItemManager imanager;
+    private WorldFlagManager wmanager;
+    private RentManager rentmanager;
+    private ChatManager chatmanager;
+    private HelpEntry helppages;
+    private ResidenceVaultAdapter vault;
 
     @Override
     public void onDisable() {
@@ -209,7 +213,7 @@ public class Residence extends JavaPlugin {
             File ymlSaveLoc = new File(worldFolder, "res_" + entry.getKey() + ".yml");
             File tmpFile = new File(worldFolder, "tmp_res_" + entry.getKey() + ".yml");
             yml = new YMLSaveHelper(tmpFile);
-            yml.getRoot().put("Version", 1);
+            yml.getRoot().put("Version", saveVersion);
             World world = getServer().getWorld(entry.getKey());
             if (world != null)
                 yml.getRoot().put("Seed", world.getSeed());
@@ -232,7 +236,7 @@ public class Residence extends JavaPlugin {
         File tmpFile = new File(saveFolder, "tmp_forsale.yml");
         yml = new YMLSaveHelper(tmpFile);
         yml.save();
-        yml.getRoot().put("Version", 1);
+        yml.getRoot().put("Version", saveVersion);
         yml.getRoot().put("Economy", tmanager.save());
         yml.save();
         if (ymlSaveLoc.isFile()) {
@@ -250,7 +254,7 @@ public class Residence extends JavaPlugin {
         ymlSaveLoc = new File(saveFolder, "permlists.yml");
         tmpFile = new File(saveFolder, "tmp_permlists.yml");
         yml = new YMLSaveHelper(tmpFile);
-        yml.getRoot().put("Version", 1);
+        yml.getRoot().put("Version", saveVersion);
         yml.getRoot().put("PermissionLists", pmanager.save());
         yml.save();
         if (ymlSaveLoc.isFile()) {
@@ -268,7 +272,7 @@ public class Residence extends JavaPlugin {
         ymlSaveLoc = new File(saveFolder, "rent.yml");
         tmpFile = new File(saveFolder, "tmp_rent.yml");
         yml = new YMLSaveHelper(tmpFile);
-        yml.getRoot().put("Version", 1);
+        yml.getRoot().put("Version", saveVersion);
         yml.getRoot().put("RentSystem", rentmanager.save());
         yml.save();
         if (ymlSaveLoc.isFile()) {
@@ -287,7 +291,7 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    protected boolean loadSaves() throws Exception {
+    private boolean loadSaves() throws Exception {
         File saveFolder = new File(getDataFolder(), "Save");
         try {
             File worldFolder = new File(saveFolder, "Worlds");
