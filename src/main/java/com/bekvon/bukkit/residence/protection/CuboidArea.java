@@ -1,32 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager.ChunkRef;
+
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Administrator
- */
 public class CuboidArea {
     protected Location highPoints;
     protected Location lowPoints;
 
-    protected CuboidArea() {
+    protected CuboidArea() {}
+
+    protected CuboidArea(CuboidArea area) {
+        this.highPoints = area.highPoints;
+        this.lowPoints = area.lowPoints;
     }
 
     public CuboidArea(Location startLoc, Location endLoc) {
@@ -141,31 +134,6 @@ public class CuboidArea {
         return highPoints.getWorld();
     }
 
-    public void save(DataOutputStream out, int version) throws IOException {
-        out.writeUTF(highPoints.getWorld().getName());
-        out.writeInt(highPoints.getBlockX());
-        out.writeInt(highPoints.getBlockY());
-        out.writeInt(highPoints.getBlockZ());
-        out.writeInt(lowPoints.getBlockX());
-        out.writeInt(lowPoints.getBlockY());
-        out.writeInt(lowPoints.getBlockZ());
-    }
-
-    public static CuboidArea load(DataInputStream in, int version) throws IOException {
-        CuboidArea newArea = new CuboidArea();
-        Server server = Residence.getServ();
-        World world = server.getWorld(in.readUTF());
-        int highx = in.readInt();
-        int highy = in.readInt();
-        int highz = in.readInt();
-        int lowx = in.readInt();
-        int lowy = in.readInt();
-        int lowz = in.readInt();
-        newArea.highPoints = new Location(world, highx, highy, highz);
-        newArea.lowPoints = new Location(world, lowx, lowy, lowz);
-        return newArea;
-    }
-
     public Map<String, Object> save() {
         Map<String, Object> root = new LinkedHashMap<String, Object>();
         root.put("X1", this.highPoints.getBlockX());
@@ -177,20 +145,23 @@ public class CuboidArea {
         return root;
     }
 
-    public static CuboidArea load(Map<String, Object> root, World world) throws Exception {
+    public void load(Map<String, Object> root) throws Exception {
         if (root == null) {
             throw new Exception("Invalid residence physical location...");
         }
-        CuboidArea newArea = new CuboidArea();
+        String worldName = (String) root.get("World");
+        World world = Residence.getInstance().getServer().getWorld(worldName);
+        if (world == null) {
+            throw new Exception("Cant Find World: " + worldName);
+        }
         int x1 = (Integer) root.get("X1");
         int y1 = (Integer) root.get("Y1");
         int z1 = (Integer) root.get("Z1");
         int x2 = (Integer) root.get("X2");
         int y2 = (Integer) root.get("Y2");
         int z2 = (Integer) root.get("Z2");
-        newArea.highPoints = new Location(world, x1, y1, z1);
-        newArea.lowPoints = new Location(world, x2, y2, z2);
-        return newArea;
+        highPoints = new Location(world, x1, y1, z1);
+        lowPoints = new Location(world, x2, y2, z2);
     }
 
     public List<ChunkRef> getChunks() {

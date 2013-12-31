@@ -16,12 +16,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipLibrary {
-    private static File BackupDir = new File(Residence.getDataLocation(), "Backup");
+    private static File BackupDir = new File(Residence.getInstance().getDataFolder(), "Backup");
 
     public static void backup() throws IOException {
         try {
             BackupDir.mkdir();
-
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -35,13 +34,13 @@ public class ZipLibrary {
         // Create the Source List, and add directories/etc to the file.
         List<File> sources = new ArrayList<File>();
 
-        File saveFolder = new File(Residence.getDataLocation(), "Save");
+        File saveFolder = new File(Residence.getInstance().getDataFolder(), "Save");
         File worldFolder = new File(saveFolder, "Worlds");
         if (!saveFolder.isDirectory()) {
             return;
         }
         File saveFile;
-        for (World world : Residence.getServ().getWorlds()) {
+        for (World world : Residence.getInstance().getServer().getWorlds()) {
             saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");
             if (saveFile.isFile()) {
                 sources.add(saveFile);
