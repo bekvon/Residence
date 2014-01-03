@@ -19,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 public class DiodeFlag extends RedstoneFlag implements Listener {
     public static final String FLAG = LocaleLoader.getString("DiodeFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -38,7 +38,7 @@ public class DiodeFlag extends RedstoneFlag implements Listener {
         if (block == null) {
             return;
         }
-        if (block.getType() != Material.DIODE_BLOCK_OFF && block.getType() != Material.DIODE_BLOCK_ON) {
+        if (block.getType() != Material.DIODE_BLOCK_OFF && block.getType() != Material.DIODE_BLOCK_ON && block.getType() != Material.DIODE) {
             return;
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()))) {

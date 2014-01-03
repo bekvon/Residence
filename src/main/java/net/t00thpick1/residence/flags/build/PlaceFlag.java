@@ -27,7 +27,7 @@ import org.bukkit.plugin.Plugin;
 public class PlaceFlag extends BuildFlag implements Listener {
     public static final String FLAG = LocaleLoader.getString("PlaceFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

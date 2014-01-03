@@ -11,11 +11,11 @@ import org.bukkit.entity.Player;
 public abstract class BuildFlag extends Flag {
     public static final String FLAG = LocaleLoader.getString("BuildFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(area));
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     public static void initialize() {

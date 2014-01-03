@@ -11,7 +11,7 @@ import org.bukkit.plugin.Plugin;
 public class LavaFlowFlag extends FlowFlag implements Listener {
     public static final String FLAG = LocaleLoader.getString("LavaFlowFlag");
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(area));
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     public boolean shouldCheck(Material material) {

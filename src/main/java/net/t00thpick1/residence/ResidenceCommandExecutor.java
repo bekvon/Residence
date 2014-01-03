@@ -2,7 +2,6 @@ package net.t00thpick1.residence;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-import net.t00thpick1.residence.chat.ChatChannel;
 import net.t00thpick1.residence.event.ResidenceCommandEvent;
 import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.permissions.PermissionGroup;
@@ -24,8 +23,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ResidenceCommandListener implements CommandExecutor {
-    private Residence plugin = Residence.getInstance();
+public class ResidenceCommandExecutor implements CommandExecutor {
+    private Residence plugin;
+
+    public ResidenceCommandExecutor(Residence residence) {
+        plugin = residence;
+        residence.getServer().getPluginCommand("residence").setExecutor(this);
+        residence.getServer().getPluginCommand("resadmin").setExecutor(this);
+        residence.getServer().getPluginCommand("resreload").setExecutor(this);
+        residence.getServer().getPluginCommand("resload").setExecutor(this);
+    }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(), args, sender);

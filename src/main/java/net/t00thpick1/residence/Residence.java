@@ -1,23 +1,16 @@
 package net.t00thpick1.residence;
 
-import net.t00thpick1.residence.chat.ChatManager;
-import net.t00thpick1.residence.economy.EconomyInterface;
 import net.t00thpick1.residence.economy.ResidenceVaultAdapter;
 import net.t00thpick1.residence.economy.TransactionManager;
 import net.t00thpick1.residence.economy.rent.RentManager;
-import net.t00thpick1.residence.flags.ResidenceBlockListener;
-import net.t00thpick1.residence.flags.PVPFlag;
-import net.t00thpick1.residence.flags.move.MoveFlag;
-import net.t00thpick1.residence.itemlist.WorldItemManager;
+import net.t00thpick1.residence.listeners.LoginLogoutListener;
+import net.t00thpick1.residence.listeners.ToolListener;
 import net.t00thpick1.residence.mcstats.Metrics;
 import net.t00thpick1.residence.permissions.PermissionManager;
 import net.t00thpick1.residence.persistance.YMLSaveHelper;
 import net.t00thpick1.residence.protection.*;
 import net.t00thpick1.residence.selection.SelectionManager;
 import net.t00thpick1.residence.selection.WorldEditSelectionManager;
-import net.t00thpick1.residence.text.Language;
-import net.t00thpick1.residence.text.help.HelpEntry;
-import net.t00thpick1.residence.text.help.InformationPager;
 import net.t00thpick1.residence.zip.ZipLibrary;
 
 import org.bukkit.Location;
@@ -45,21 +38,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Residence extends JavaPlugin {
-    public final static int saveVersion = 1;
+    public final static int saveVersion = 2;
 
     private static Residence instance;
 
     private ResidenceManager rmanager;
     private SelectionManager smanager;
     private PermissionManager gmanager;
-    private ConfigManager cmanager;
     private TransactionManager tmanager;
     private PermissionListManager pmanager;
-    private WorldItemManager imanager;
     private WorldFlagManager wmanager;
     private RentManager rentmanager;
-    private ChatManager chatmanager;
-    private HelpEntry helppages;
     private ResidenceVaultAdapter vault;
 
     @Override
@@ -70,9 +59,9 @@ public class Residence extends JavaPlugin {
                 save();
                 ZipLibrary.backup();
             } catch (Exception ex) {
-                getLogger().log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
+                getLogger().log(Level.SEVERE, "SEVERE SAVE ERROR", ex);
             }
-            getLogger().log(Level.INFO, "[Residence] Disabled!");
+            getLogger().log(Level.INFO, "Disabled!");
         }
         instance = null;
     }
@@ -89,11 +78,9 @@ public class Residence extends JavaPlugin {
             saveDefaultConfig();
         }
 
-        cmanager = new ConfigManager(getConfig());
+        new ConfigManager(getConfig());
         gmanager = new PermissionManager();
-        imanager = new WorldItemManager();
         wmanager = new WorldFlagManager();
-        chatmanager = new ChatManager();
 
         if (cmanager.isEconomyEnabled()) {
             Plugin p = getServer().getPluginManager().getPlugin("Vault");
@@ -134,9 +121,10 @@ public class Residence extends JavaPlugin {
 
 
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new ResidenceBlockListener(), this);
-        pm.registerEvents(new MoveFlag(), this);
-        pm.registerEvents(new PVPFlag(), this);
+        new ResidenceCommandExecutor(this);
+        pm.registerEvents(new ToolListener(), this);
+        pm.registerEvents(new LoginLogoutListener(), this);
+        FlagManager.initiateFlags
 
         (new BukkitRunnable() {
             public void run() {
@@ -175,20 +163,8 @@ public class Residence extends JavaPlugin {
         return gmanager;
     }
 
-    public EconomyInterface getEconomyManager() {
-        return vault;
-    }
-
-    public ConfigManager getConfigManager() {
-        return cmanager;
-    }
-
     public TransactionManager getTransactionManager() {
         return tmanager;
-    }
-
-    public WorldItemManager getItemManager() {
-        return imanager;
     }
 
     public WorldFlagManager getWorldFlags() {
@@ -197,10 +173,6 @@ public class Residence extends JavaPlugin {
 
     public RentManager getRentManager() {
         return rentmanager;
-    }
-
-    public ChatManager getChatManager() {
-        return chatmanager;
     }
 
     private void save() throws IOException {
@@ -287,7 +259,7 @@ public class Residence extends JavaPlugin {
         tmpFile.renameTo(ymlSaveLoc);
 
         if (cmanager.showIntervalMessages()) {
-            getLogger().info("[Residence] - Saved Residences...");
+            getLogger().info("Saved Residences...");
         }
     }
 

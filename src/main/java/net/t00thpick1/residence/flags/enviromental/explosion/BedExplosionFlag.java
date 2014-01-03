@@ -23,7 +23,7 @@ import org.bukkit.plugin.Plugin;
 public class BedExplosionFlag extends Flag implements Listener {
     public static final String FLAG = LocaleLoader.getString("BedExplosionFlag");
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, area.allow(ExplosionFlag.FLAG, super.allowAction(area)));
+        return area.allowAction(FLAG, area.allowAction(ExplosionFlag.FLAG, super.allowAction(area)));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

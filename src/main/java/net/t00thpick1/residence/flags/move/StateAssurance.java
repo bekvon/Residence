@@ -54,10 +54,10 @@ public class StateAssurance extends MoveFlag {
             return true;
         }
         PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(location);
-        if (player.getVehicle() != null && !area.allow(VehicleMoveFlag.FLAG, area.allow(MoveFlag.FLAG, false))) {
+        if (player.getVehicle() != null && !area.allowAction(player, VehicleMoveFlag.FLAG, area.allowAction(player, MoveFlag.FLAG, false))) {
             return false;
         }
-        if (!area.allow(MoveFlag.FLAG, false)) {
+        if (!area.allowAction(player, MoveFlag.FLAG, false)) {
             return false;
         }
         return true;

@@ -13,7 +13,7 @@ import net.t00thpick1.residence.protection.FlagManager;
 public abstract class FlowFlag extends Flag {
     public static final String FLAG = LocaleLoader.getString("FlowFlag");
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(area));
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     public abstract boolean shouldCheck(Material material);

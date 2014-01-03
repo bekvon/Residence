@@ -15,7 +15,7 @@ import org.bukkit.plugin.Plugin;
 public class WitherExplosionFlag extends ExplosionFlag {
     public static final String FLAG = LocaleLoader.getString("WitherExplosionFlag");
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(area));
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     protected boolean shouldCheck(EntityType type) {

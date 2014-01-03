@@ -18,7 +18,7 @@ public class MoveFlag extends Flag implements Listener {
     public static final String FLAG = LocaleLoader.getString("MoveFlag");
 
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     protected static HashMap<String, ClaimedResidence> currentRes;

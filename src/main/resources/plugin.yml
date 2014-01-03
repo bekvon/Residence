@@ -1,17 +1,16 @@
 name: Residence
-main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.6.6.6
+main: net.t00thpick1.residence.Residence
+version: 3.0.0-ALPHA-SNAPSHOT
 description: Cuboid Residence Plugin
-authors: [bekvon,nate302,t00thpick1]
-contributors: [lemon42,smbarbour,inorixu,Shayana_fr]
-softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,My Worlds]
+author: t00thpick1
+authors: [bekvon]
+contributors: [nate302,lemon42,smbarbour,inorixu,Shayana_fr]
+softdepend: [Vault,WorldEdit]
 commands:
-  res:
-    description: Manage Residences
-    usage: §c/res ? for more info
   residence:
     description: Manage Residences
-    usage: §c/residence ? for more info
+    usage: §c/res ? for more info
+    alias: res
   resadmin:
     description: Residence admin functions.
     usage: §c/res ? or /resadmin ? for more info
@@ -21,12 +20,6 @@ commands:
   resload:
     description: Load the save file again after you have made modifications.
     usage: §c/resload
-  rc:
-    description: §cChat in current residence channel.
-    usage: §c/rc to toggle, or /rc <message>
-  resworld:
-    description: §cRemoves every residence in a world.
-    usage: §c/resworld remove [world]
 permissions:
   residence.admin:
     description: Gives you access to /resadmin

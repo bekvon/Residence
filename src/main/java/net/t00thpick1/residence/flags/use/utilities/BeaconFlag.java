@@ -13,7 +13,7 @@ import org.bukkit.plugin.Plugin;
 public class BeaconFlag extends UtilityFlag implements Listener {
     public static final String FLAG = LocaleLoader.getString("BrewFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     protected boolean shouldCheck(Material material) {

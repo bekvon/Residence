@@ -16,7 +16,7 @@ import org.bukkit.plugin.Plugin;
 public class EndermanPickupFlag extends BuildFlag implements Listener {
     public static final String FLAG = LocaleLoader.getString("EndermanPickupFlag");
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(area));
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

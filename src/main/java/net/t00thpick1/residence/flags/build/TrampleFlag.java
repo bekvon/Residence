@@ -21,7 +21,11 @@ import org.bukkit.plugin.Plugin;
 public class TrampleFlag extends BuildFlag implements Listener {
     public static final String FLAG = LocaleLoader.getString("TrampleFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
+    }
+
+    public boolean allowAction(PermissionsArea area) {
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -32,8 +36,7 @@ public class TrampleFlag extends BuildFlag implements Listener {
         if ((entity.getType() == EntityType.FALLING_BLOCK) || !(mat == Material.SOIL || mat == Material.SOUL_SAND)) {
             return;
         }
-        PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(block.getLocation());
-        if (!area.allow(FLAG, area.allow(BuildFlag.FLAG, false))) {
+        if (!allowAction(ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()))) {
             event.setCancelled(true);
         }
     }

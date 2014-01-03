@@ -19,11 +19,11 @@ public class IgniteFlag extends Flag implements Listener {
     public static final String FLAG = LocaleLoader.getString("IgniteFlag");
 
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(area));
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

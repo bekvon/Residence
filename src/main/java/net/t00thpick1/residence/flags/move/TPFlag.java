@@ -18,7 +18,7 @@ public class TPFlag extends MoveFlag {
     public static final String FLAG = LocaleLoader.getString("TPFlag");
 
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

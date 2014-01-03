@@ -13,7 +13,7 @@ import net.t00thpick1.residence.utils.Utilities;
 public class AnimalSpawnFlag extends SpawnFlag implements Listener {
     public static final String FLAG = LocaleLoader.getString("AnimalSpawnFlag");
     public boolean allowAction(PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(area));
+        return area.allowAction(FLAG, super.allowAction(area));
     }
 
     protected boolean shouldCheck(EntityType type) {

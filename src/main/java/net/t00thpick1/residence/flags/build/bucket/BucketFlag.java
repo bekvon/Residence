@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 public abstract class BucketFlag extends BuildFlag {
     public static final String FLAG = LocaleLoader.getString("BucketFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     protected Material emptyMaterial;

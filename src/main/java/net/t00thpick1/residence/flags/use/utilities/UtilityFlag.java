@@ -17,7 +17,7 @@ import net.t00thpick1.residence.protection.FlagManager;
 public abstract class UtilityFlag extends UseFlag {
     public static final String FLAG = LocaleLoader.getString("UtilityFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allow(FLAG, super.allowAction(player, area));
+        return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     protected abstract boolean shouldCheck(Material material);
