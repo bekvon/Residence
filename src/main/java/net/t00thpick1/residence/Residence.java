@@ -124,7 +124,7 @@ public class Residence extends JavaPlugin {
         new ResidenceCommandExecutor(this);
         pm.registerEvents(new ToolListener(), this);
         pm.registerEvents(new LoginLogoutListener(), this);
-        FlagManager.initiateFlags
+        FlagManager.initializeFlags();
 
         (new BukkitRunnable() {
             public void run() {
