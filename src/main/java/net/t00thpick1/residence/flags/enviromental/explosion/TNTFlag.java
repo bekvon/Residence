@@ -9,7 +9,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 
 public class TNTFlag extends ExplosionFlag {
-    public static final String FLAG = LocaleLoader.getString("TNTFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.TNT");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

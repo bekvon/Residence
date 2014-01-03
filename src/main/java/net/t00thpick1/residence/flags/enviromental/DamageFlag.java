@@ -18,7 +18,7 @@ import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.FlagManager;
 
 public class DamageFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("DamageFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Damage");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

@@ -15,7 +15,7 @@ import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.FlagManager;
 
 public abstract class UtilityFlag extends UseFlag {
-    public static final String FLAG = LocaleLoader.getString("UtilityFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Utility");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
@@ -24,7 +24,7 @@ public abstract class UtilityFlag extends UseFlag {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onClick(PlayerInteractEvent event) {
-        if (isSelectionTool(event)) {
+        if (isTool(event)) {
             return;
         }
         Player player = event.getPlayer();

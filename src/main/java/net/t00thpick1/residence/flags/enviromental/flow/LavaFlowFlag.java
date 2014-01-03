@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 public class LavaFlowFlag extends FlowFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("LavaFlowFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.LavaFlow");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

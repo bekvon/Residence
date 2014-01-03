@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 import java.util.HashMap;
 
 public class MoveFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("MoveFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Move");
 
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));

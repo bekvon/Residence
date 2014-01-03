@@ -8,7 +8,7 @@ import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.FlagManager;
 
 public class DoorFlag extends UseFlag {
-    public static final String FLAG = LocaleLoader.getString("DoorFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Door");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }

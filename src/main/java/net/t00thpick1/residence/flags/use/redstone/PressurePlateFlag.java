@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
 public class PressurePlateFlag extends RedstoneFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("PressurePlateFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.PressurePlate");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
@@ -41,7 +41,7 @@ public class PressurePlateFlag extends RedstoneFlag implements Listener {
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()))) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("UseFlagDeny", FLAG)));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.UseFlagDeny", FLAG)));
         }
     }
 

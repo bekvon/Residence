@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 public class WorkBenchFlag extends UtilityFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("WorkBenchFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.WorkBench");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }

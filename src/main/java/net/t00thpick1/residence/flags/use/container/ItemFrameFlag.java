@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.Plugin;
 
 public class ItemFrameFlag extends ContainerFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("ItemFrameFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.ItemFrameFlag");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
@@ -37,7 +37,7 @@ public class ItemFrameFlag extends ContainerFlag implements Listener {
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()))) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("ContainerFlagDeny", FLAG)));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.ContainerFlagDeny", FLAG)));
         }
     }
 
@@ -57,7 +57,7 @@ public class ItemFrameFlag extends ContainerFlag implements Listener {
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(frame.getLocation()))) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("ContainerFlagDeny", FLAG)));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.ContainerFlagDeny", FLAG)));
         }
     }
 

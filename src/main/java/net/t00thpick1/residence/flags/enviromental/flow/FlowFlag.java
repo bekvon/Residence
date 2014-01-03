@@ -11,7 +11,7 @@ import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.FlagManager;
 
 public abstract class FlowFlag extends Flag {
-    public static final String FLAG = LocaleLoader.getString("FlowFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Flow");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

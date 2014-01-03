@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 public class LavaBucketFlag extends BucketFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("LavaBucketFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.LavaBucket");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }

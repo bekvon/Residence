@@ -8,7 +8,7 @@ import net.t00thpick1.residence.protection.FlagManager;
 import org.bukkit.entity.Player;
 
 public class RedstoneFlag extends UseFlag {
-    public static final String FLAG = LocaleLoader.getString("RedstoneFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Redstone");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }

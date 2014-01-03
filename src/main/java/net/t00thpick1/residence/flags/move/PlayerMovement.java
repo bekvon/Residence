@@ -40,7 +40,7 @@ public class PlayerMovement extends MoveFlag {
             } else {
                 player.teleport(res.getOutsideFreeLoc(player.getLocation()));
             }
-            player.sendMessage(LocaleLoader.getString("MoveDeny"));
+            player.sendMessage(LocaleLoader.getString("Flags.Message.MoveDeny"));
             return;
         }
         handleNewLocation(player, event.getTo());

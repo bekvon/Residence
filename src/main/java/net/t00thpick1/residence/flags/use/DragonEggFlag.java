@@ -16,14 +16,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
 public class DragonEggFlag extends UseFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("DragonEggFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.DragonEgg");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (isSelectionTool(event)) {
+        if (isTool(event)) {
             return;
         }
         Player player = event.getPlayer();
@@ -43,7 +43,7 @@ public class DragonEggFlag extends UseFlag implements Listener {
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()))) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("UseFlagDeny", FLAG)));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.UseFlagDeny", FLAG)));
         }
     }
 

@@ -15,7 +15,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.Iterator;
 
 public class PVPFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("PVPFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.PVP");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

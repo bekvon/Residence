@@ -21,7 +21,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.plugin.Plugin;
 
 public class BedExplosionFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("BedExplosionFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.BedExplosion");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, area.allowAction(ExplosionFlag.FLAG, super.allowAction(area)));
     }

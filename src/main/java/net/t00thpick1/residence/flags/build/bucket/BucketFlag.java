@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
 public abstract class BucketFlag extends BuildFlag {
-    public static final String FLAG = LocaleLoader.getString("BucketFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Bucket");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
@@ -36,7 +36,7 @@ public abstract class BucketFlag extends BuildFlag {
         BlockFace face = event.getBlockFace();
         Location blockLocation = event.getBlockClicked().getLocation().add(face.getModX(), face.getModY(), face.getModZ());
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(blockLocation))) {
-            player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("DenyBucketEmpty", FLAG)));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.DenyBucketEmpty", FLAG)));
             event.setCancelled(true);
         }
     }
@@ -51,7 +51,7 @@ public abstract class BucketFlag extends BuildFlag {
             return;
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(event.getBlockClicked().getLocation()))) {
-            player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("DenyBucketFill", FLAG)));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.DenyBucketFill", FLAG)));
             event.setCancelled(true);
         }
     }

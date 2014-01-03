@@ -16,7 +16,7 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.plugin.Plugin;
 
 public class IgniteFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("IgniteFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Ignite");
 
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
@@ -36,7 +36,7 @@ public class IgniteFlag extends Flag implements Listener {
             }
             if (!allowAction(player, area)) {
                 event.setCancelled(true);
-                player.sendMessage(LocaleLoader.getString("FlagDeny", FLAG));
+                player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", FLAG));
             }
         } else {
            if (!allowAction(area)) {

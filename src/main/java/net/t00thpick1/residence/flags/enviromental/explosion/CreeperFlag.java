@@ -9,7 +9,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 
 public class CreeperFlag extends ExplosionFlag {
-    public static final String FLAG = LocaleLoader.getString("CreeperFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Creeper");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
 public class TrampleFlag extends BuildFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("TrampleFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Trample");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }

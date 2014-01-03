@@ -27,12 +27,12 @@ import net.t00thpick1.residence.permissions.PermissionGroup;
 import net.t00thpick1.residence.protection.FlagManager;
 
 public class UseFlag extends Flag {
-    public static final String FLAG = LocaleLoader.getString("UseFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Use");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
-    public static boolean isSelectionTool(PlayerInteractEvent event) {
+    public static boolean isTool(PlayerInteractEvent event) {
         if (event.getPlayer().getItemInHand() == null) {
             return false;
         }

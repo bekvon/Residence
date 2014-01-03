@@ -11,7 +11,7 @@ import net.t00thpick1.residence.protection.FlagManager;
 import net.t00thpick1.residence.utils.Utilities;
 
 public class MonsterSpawnFlag extends SpawnFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("MonsterSpawnFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.MonsterSpawn");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

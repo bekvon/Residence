@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
 
 public class TPFlag extends MoveFlag {
-    public static final String FLAG = LocaleLoader.getString("TPFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.TP");
 
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
@@ -28,18 +28,18 @@ public class TPFlag extends MoveFlag {
 
         if (!StateAssurance.canSpawn(player, loc)) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("CannotMoveAtDestination"));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.CannotMoveAtDestination"));
             return;
         }
         if (!player.hasPermission("residence.admin.tp") && event.getCause() == TeleportCause.PLUGIN) {
             if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(event.getFrom()))) {
                 event.setCancelled(true);
-                player.sendMessage(LocaleLoader.getString("TPOutDeny"));
+                player.sendMessage(LocaleLoader.getString("Flags.Messages.TPOutDeny"));
                 return;
             }
             if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(loc))) {
                 event.setCancelled(true);
-                player.sendMessage(LocaleLoader.getString("TPDeny"));
+                player.sendMessage(LocaleLoader.getString("Flags.Messages.TPDeny"));
                 return;
             }
         }

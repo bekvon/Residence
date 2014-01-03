@@ -12,7 +12,7 @@ import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.FlagManager;
 
 public abstract class SpawnFlag extends Flag {
-    public static final String FLAG = LocaleLoader.getString("SpawnFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Spawn");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

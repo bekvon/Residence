@@ -9,13 +9,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 
 public class FireballFlag extends ExplosionFlag {
-    public static final String FLAG = LocaleLoader.getString("FireballFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Fireball");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }
 
     protected boolean shouldCheck(EntityType type) {
-        return type == EntityType.FIREBALL;
+        return type == EntityType.FIREBALL || type == EntityType.SMALL_FIREBALL;
     }
 
     public static void initialize() {

@@ -16,7 +16,7 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.plugin.Plugin;
 
 public class VehicleMoveFlag extends MoveFlag {
-    public static final String FLAG = LocaleLoader.getString("VehicleMoveFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.VehicleMove");
 
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
@@ -44,7 +44,7 @@ public class VehicleMoveFlag extends MoveFlag {
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(event.getTo()))) {
             event.getVehicle().teleport(event.getFrom());
-            player.sendMessage(LocaleLoader.getString("VehicleMoveDeny"));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.VehicleMoveDeny"));
             return;
         }
 

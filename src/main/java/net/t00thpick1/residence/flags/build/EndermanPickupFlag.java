@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.plugin.Plugin;
 
 public class EndermanPickupFlag extends BuildFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("EndermanPickupFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.EndermanPickup");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

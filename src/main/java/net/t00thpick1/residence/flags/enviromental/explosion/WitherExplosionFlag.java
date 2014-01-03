@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.plugin.Plugin;
 
 public class WitherExplosionFlag extends ExplosionFlag {
-    public static final String FLAG = LocaleLoader.getString("WitherExplosionFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.WitherExplosion");
     public boolean allowAction(PermissionsArea area) {
         return area.allowAction(FLAG, super.allowAction(area));
     }

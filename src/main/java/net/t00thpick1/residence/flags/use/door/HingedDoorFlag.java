@@ -17,14 +17,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
 public class HingedDoorFlag extends DoorFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("HingedDoorFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.HingedDoor");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void OnClick(PlayerInteractEvent event) {
-        if (isSelectionTool(event)) {
+        if (isTool(event)) {
             return;
         }
         Player player = event.getPlayer();
@@ -43,7 +43,7 @@ public class HingedDoorFlag extends DoorFlag implements Listener {
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()))) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("UseFlagDeny", FLAG)));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.UseFlagDeny", FLAG)));
         }
     }
 

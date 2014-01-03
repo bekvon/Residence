@@ -19,7 +19,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.plugin.Plugin;
 
 public class DestroyFlag extends BuildFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("DestroyFlag");
+    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Destroy");
     public boolean allowAction(Player player, PermissionsArea area) {
         return area.allowAction(player, FLAG, super.allowAction(player, area));
     }
@@ -53,7 +53,7 @@ public class DestroyFlag extends BuildFlag implements Listener {
         }
         if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(location))) {
             cancellable.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("FlagDeny", FLAG));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", FLAG));
         }
     }
 
