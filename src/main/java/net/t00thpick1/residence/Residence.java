@@ -133,13 +133,13 @@ public class Residence extends JavaPlugin {
         }).runTaskTimer(this, cmanager.getAutoSaveInterval() * 60 * 20, cmanager.getAutoSaveInterval() * 60 * 20);
         (new BukkitRunnable() {
             public void run() {
-                // Heals
+                // Heals I guess
             }
         }).runTaskTimer(this, 20, 20);
         if (cmanager.enabledRentSystem()) {
             (new BukkitRunnable() {
                 public void run() {
-                    // Heals
+                    // Rent checks?
                 }
             }).runTaskTimer(this, cmanager.getRentCheckInterval() * 60 * 20, cmanager.getRentCheckInterval() * 60 * 20);
         }
