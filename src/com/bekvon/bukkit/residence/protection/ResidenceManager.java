@@ -51,7 +51,7 @@ public class ResidenceManager {
         ClaimedResidence res = null;
         boolean found = false;
         String world = loc.getWorld().getName();
-        String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
+        ChunkRef chunk = new ChunkRef( loc );
         if (chunkResidences.get(world) != null) {
             if (chunkResidences.get(world).get(chunk) != null) {
                 for (String key : chunkResidences.get(world).get(chunk)) {
@@ -101,7 +101,7 @@ public class ResidenceManager {
         String name = null;
         boolean found = false;
         String world = loc.getWorld().getName();
-        String chunk = loc.getChunk().getX() + ":" + loc.getChunk().getZ();
+        ChunkRef chunk = new ChunkRef( loc );
         if (chunkResidences.get(world) != null) {
             if (chunkResidences.get(world).get(chunk) != null) {
                 for (String key : chunkResidences.get(world).get(chunk)) {
@@ -675,22 +675,20 @@ public class ResidenceManager {
 
     public static final class ChunkRef {
 
-        public static int getBase(final int val) {
-            // >> 4 << 4 will convert any block coordinate to its chunk coordinate base,
-            // negatives need to go up in value so -16 first
-            // so -35 will go to -48, 18 will be 16
-            return (val < 0 ? val - 16 : val) >> 4 << 4;
+        public static int getChunkCoord(final int val) {
+        	// For more info, see CraftBukkit.CraftWorld.getChunkAt( Location )
+            return val >> 4;
         }
         private final int z;
         private final int x;
 
         public ChunkRef(Location loc) {
-            this.x = getBase(loc.getBlockX());
-            this.z = getBase(loc.getBlockZ());
+            this.x = getChunkCoord(loc.getBlockX());
+            this.z = getChunkCoord(loc.getBlockZ());
         }
         public ChunkRef(int x, int z) {
-            this.x = (int) x;
-            this.z = (int) z;
+            this.x = x;
+            this.z = z;
         }
 
         @Override
@@ -710,6 +708,15 @@ public class ResidenceManager {
 
         public int hashCode() {
             return x ^ z;
+        }
+        
+        /**
+         * Useful for debug
+         */
+        public String toString() {
+        	StringBuilder sb = new StringBuilder();
+        	sb.append( "{ x: " ).append(x).append( ", z: " ).append( z ).append( " }" );
+        	return sb.toString();
         }
     }
 }
