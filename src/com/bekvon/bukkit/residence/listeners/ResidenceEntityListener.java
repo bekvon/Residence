@@ -5,6 +5,7 @@
 
 package com.bekvon.bukkit.residence.listeners;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -246,6 +247,23 @@ public class ResidenceEntityListener implements Listener {
     			if(!srcpvp || !tgtpvp){
     				event.setIntensity(target, 0);
     			}
+    		}
+    	}
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityDamageByEntityEvent( EntityDamageByEntityEvent event ) {
+    	if ( event.getEntityType() == EntityType.ITEM_FRAME ) {
+    		Player player = (Player) event.getDamager();
+    		if (  Residence.isResAdminOn( player ) )
+    			return;
+    		
+    		// Note: Location of entity, not player; otherwise player could stand outside of res and still damage
+    		Location loc = event.getEntity().getLocation();
+    		ClaimedResidence res = Residence.getResidenceManager().getByLoc( loc );
+    		if ( res != null && !res.getPermissions().playerHas( player.getName(), "container", false ) ) {
+    			event.setCancelled( true );
+                player.sendMessage( ChatColor.RED + Residence.getLanguage().getPhrase( "FlagDeny", "container" ) );
     		}
     	}
     }
