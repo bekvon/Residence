@@ -199,10 +199,10 @@ public class CuboidArea {
         List<ChunkRef> chunks = new ArrayList<ChunkRef>();
         Location high = this.highPoints;
         Location low = this.lowPoints;
-        int lowX = ChunkRef.getBase(low.getBlockX());
-        int lowZ = ChunkRef.getBase(low.getBlockZ());
-        int highX = ChunkRef.getBase(high.getBlockX());
-        int highZ = ChunkRef.getBase(high.getBlockZ());
+        int lowX = ChunkRef.getChunkCoord(low.getBlockX());
+        int lowZ = ChunkRef.getChunkCoord(low.getBlockZ());
+        int highX = ChunkRef.getChunkCoord(high.getBlockX());
+        int highZ = ChunkRef.getChunkCoord(high.getBlockZ());
 
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
