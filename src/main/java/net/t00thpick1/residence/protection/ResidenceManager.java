@@ -69,7 +69,7 @@ public class ResidenceManager {
         ClaimedResidence res = residences.get(split[0]);
         for (int i = 1; i < split.length; i++) {
             if (res != null) {
-                res = res.getSubzone(split[i]);
+                res = res.getSubzoneByName(split[i]);
             } else {
                 return null;
             }

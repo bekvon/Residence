@@ -1,0 +1,233 @@
+res:
+    Description: >
+        Main Residence Command
+        See the residence wiki for more help.
+        Wiki: residencebukkitmod.wikispaces.com
+        Use /[command] ? <page> to view more help information.
+    Subcommands:
+        select: #select command
+            Description: >
+                This command selects areas for usage with residence.
+                Usage: /res select [x] [y] [z] - selects a radius of blocks, with you in the middle.
+            Subcommands:
+                coords:
+                    Description: >
+                        Display selected coordinates
+                        Usage: /res select coords
+                size:
+                    Description: >
+                        Display selected size
+                        Usage: /res select size
+                cost:
+                    Description: >
+                        Display selection cost
+                        Usage: /res select cost
+                vert:
+                    Description: >
+                        Expand Selection Vertically
+                        Usage: /res select vert
+                        Will expand selection as high and as low as possible.
+                sky:
+                    Description: >
+                        Expand Selection to Sky
+                        Usage: /res select sky
+                        Expands to the sky.
+                bedrock:
+                    Description: >
+                        Expand Selection to Bedrock
+                        Usage: /res select bedrock
+                        Expands to the bedrock.
+                expand:
+                    Description: >
+                        Expand selection in a direction.
+                        Usage: /res select expand <amount>
+                        Expands <amount> in the direction your looking.
+                shift:
+                    Description: >
+                        Shift selection in a direction
+                        Usage: /res select shift <amount>
+                        Pushes your selection by <amount> in the direction your looking.
+                chunk:
+                    Description: >
+                        Select the chunk your currently in.
+                        Usage: /res select chunk
+                        Selects the chunk your currently standing in.
+                residence:
+                    Description: >
+                        Select an existing area of a residence.
+                        Usage /res select <Residence>
+                        Selects an existing area of a residence.
+                worldedit:
+                    Description: >
+                        Set selection using the current WorldEdit selection.
+                        Usage /res select worldedit
+                        Sets selection area using the current WorldEdit selection.
+        create: #creation command
+            Description: >
+                Create Residences
+                Usage: /res create <residence name>
+        remove: #remove command
+            Description: >
+                Remove residences.
+                Usage: /res remove <residence name>
+        confirm:
+            Description: >
+                Usage: /res confirm
+                Confirms removal of a residence.
+        subzone:
+            Description: >
+                Create subzones in residences.
+                Usage: /res subzone <residence name> [subzone name]
+                If residence name is left off, will attempt to use residence your standing in.
+        info:
+            Description: >
+                Show info on a residence.
+                Usage: /res info <residence>
+                Leave off <residence> to display info for the residence your currently in.
+        message:
+            Description: >
+                Manage residence enter / leave messages
+                Usage: /res message <residence> [enter/leave] [message]
+                Set the enter or leave message of a residence.
+                Usage: /res message <residence> remove [enter/leave]
+                Removes a enter or leave message.
+        tp:
+            Description: >
+                Teleport to a residence
+                Usage: /res tp [residence]
+                Teleports you to a residence, you must have +tp flag access.
+                You must also have the teleport permission node
+        tpset:
+            Description: >
+                Set the teleport location of a Residence
+                Usage: /res tpset
+                This will set the teleport location for a residence to where your standing.
+                You must be standing in the residence to use this command.
+                You must also be the owner or have the +admin flag for the residence.
+        set:
+            Description: >
+                Set general flags on a Residence
+                Usage: /res set <residence> [flag] [true/false/remove]
+                To see a list of flags, use /res flags
+                These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)
+        pset:
+            Description: >
+                Set flags on a specific player for a Residence.
+                Usage: /res pset <residence> [player] [flag] [true/false/remove]
+                Usage: /res pset <residence> [player] removeall
+                To see a list of flags, use /res flags
+        gset:
+            Description: >
+                Set flags on a specific group for a Residence.
+                Usage: /res gset <residence> [group] [flag] [true/false/remove]
+                To see a list of flags, use /res flags
+        rset:
+            Description: >
+                Set flags for renters of either the residence or residences linked to it
+                Usage: /res rset <residence> [flag] [true/false/remove]
+                To see a list of flags, use /res flags
+        list:
+            Description: >
+                List Residences
+                Usage: /res list <player> <page>
+                Lists all the residences a player owns (except hidden ones).
+                If listing your own residences, shows hidden ones as well.
+                To list everyones residences, use /res listall.
+        listhidden:
+            Description: >
+                List Hidden Residences (ADMIN ONLY)
+                Usage: /res listhidden <player> <page>
+                lists hidden residences for a player.
+        listall:
+            Description: >
+                List All Residences
+                Usage: /res listall <page>
+                Lists all residences on the server. (except hidden ones that you don't own)
+        listallhidden:
+            Description: >
+                List All Hidden Residences (ADMIN ONLY)
+                Usage: /res listhidden <page>
+                Lists all hidden residences on the server.
+        sublist:
+            Description: >
+                List Residence Subzones
+                Usage: /res sublist <residence> <page>
+                List subzones within a residence.
+        default:
+            Description: >
+                Reset residence to default flags.
+                Usage: /res default <residence>
+                Resets the flags on a residence to their default. You must be the owner or an admin to do this.
+        rename:
+            Description: >
+                Renames a residence.
+                Usage: /res rename [OldName] [NewName]
+                You must be the owner or an admin to do this.
+                The name must not already be taken by another residence.
+        mirror:
+            Description: >
+                Mirrors Flags
+                Usage: /res mirror [Source Residence] [Target Residence]
+                Mirrors flags from one residence to another. You must be owner of both or a admin to do this.
+        market:
+            Description: >
+                Buy, Sell, or Rent Residences
+                Usage: /res market ? for more info
+            SubCommands:
+                info:
+                    Description: >
+                        Get economy info on residence
+                        Usage: /res market info [residence]
+                        Shows if the Residence is for sale or for rent, and the cost.
+                list:
+                    Description: >
+                        Lists rentable and for sale residences.
+                        Usage: /res market list
+                sell:
+                    Description: >
+                        Sell a residence
+                        Usage: /res market sell [residence] [amount]
+                        Puts a residence for sale for [amount] of money.
+                        Another player can buy the residence with /res market buy
+                buy:
+                    Description: >
+                        Buy a residence
+                        Usage: /res market buy [residence]
+                        Buys a Residence if its for sale.
+                unsell:
+                    Description: >
+                        Stops selling a residence
+                        Usage: /res market unsell [residence]
+                rent:
+                    Description: >
+                        Rent a residence
+                        Usage: /res market rent [residence] <autorenew>
+                        Rents a residence. Autorenew can be either true or false. If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.
+                rentable:
+                    Description: >
+                        Make a residence rentable.
+                        Usage: /res market rentable [residence] [cost] [days] <repeat>
+                        Makes a residence rentable for [cost] money for every [days] number of days. If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.
+                release:
+                    Description: >
+                        Remove a residence from rent or rentable.
+                        Usage: /res market release [residence]
+                        If you are the renter, this command releases the rent on the house for you.
+                        If you are the owner, this command makes the residence not for rent anymore.
+        current:
+            Description: >
+                Show residence your currently in.
+                Usage: /res current
+        server:
+            Description: >
+                Make land server owned (admin only).
+                Usage: /resadmin server [residence]
+                Make a residence server owned.
+        setowner:
+            Description: >
+                Change owner of a residence (admin only).
+                Usage: /resadmin setowner [residence] [player]
+        version:
+            Description: >
+                Show residence version
+                Usage: /res version

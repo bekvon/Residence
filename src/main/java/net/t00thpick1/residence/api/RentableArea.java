@@ -12,6 +12,9 @@ public interface RentableArea {
     public void setAutoRenewEnabled(boolean autoRenew);
 
 
+    void setRentFlag(Flag flag, Boolean value);
+
+
     public boolean buy(String buyer);
     public boolean rent(String renter, boolean isAutoRenew);
 
@@ -20,4 +23,5 @@ public interface RentableArea {
     public boolean isAutoRenew();
     public void setAutoRenew(boolean autoRenew);
     public long getLastPaymentDate();
+
 }

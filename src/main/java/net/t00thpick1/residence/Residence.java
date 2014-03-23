@@ -118,6 +118,17 @@ public class Residence extends JavaPlugin {
             }
         }
 
+        File commandsFile = new File(dataFolder, "commandhelp.yml");
+        try {
+            if (!commandsFile.isFile()) {
+                commandsFile.createNewFile();
+                FileConfiguration internalConfig = YamlConfiguration.loadConfiguration(getResource("commandhelp.yml"));
+                internalConfig.save(commandsFile);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HelpManager.init(YamlConfiguration.loadConfiguration(commandsFile));
         FlagManager.initFlags();
         Plugin we = getServer().getPluginManager().getPlugin("WorldEdit");
         if (we != null) {

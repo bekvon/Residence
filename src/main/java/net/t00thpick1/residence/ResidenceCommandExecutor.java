@@ -70,28 +70,20 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             return commandHelp(args, resadmin, sender);
         }
 
-        int page = 1;
-        try {
-            if (args.length > 0) {
-                page = Integer.parseInt(args[args.length - 1]);
-            }
-        } catch (Exception ex) {
-        }
-
         String cmd = args[0].toLowerCase();
         if (cmd.equalsIgnoreCase("remove") || cmd.equalsIgnoreCase("delete")) {
             if (!sender.hasPermission("residence.commands.remove")) {
                 sender.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResRemove(args, resadmin, sender, page);
+            return commandResRemove(args, resadmin, sender);
         }
         if (cmd.equalsIgnoreCase("confirm")) {
             if (!sender.hasPermission("residence.commands.remove")) {
                 sender.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResConfirm(args, resadmin, sender, page);
+            return commandResConfirm(args, resadmin, sender);
         }
         if (cmd.equalsIgnoreCase("version")) {
             sender.sendMessage(ChatColor.GRAY + "------------------------------------");
@@ -148,42 +140,42 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResSelect(args, resadmin, player, page);
+            return commandResSelect(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("create")) {
             if (!player.hasPermission("residence.commands.create")) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResCreate(args, resadmin, player, page);
+            return commandResCreate(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("subzone") || cmd.equalsIgnoreCase("sz")) {
             if (!player.hasPermission("residence.commands.subzone")) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResSubzone(args, resadmin, player, page);
+            return commandResSubzone(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("gui")) {
             if (!player.hasPermission("residence.commands.gui")) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResGui(args, resadmin, player, page);
+            return commandResGui(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("sublist")) {
             if (!player.hasPermission("residence.commands.sublist")) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResSublist(args, resadmin, player, page);
+            return commandResSublist(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("compass")) {
             if (!player.hasPermission("residence.commands.compass")) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResCompass(args, resadmin, player, page);
+            return commandResCompass(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("info")) {
             if (!player.hasPermission("residence.commands.info")) {
@@ -230,21 +222,65 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResSet(args, resadmin, player, page);
+            return commandResSet(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("pset")) {
             if (!player.hasPermission("residence.commands.pset")) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResPset(args, resadmin, player, page);
+            return commandResPset(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("gset")) {
             if (!player.hasPermission("residence.commands.gset")) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResGset(args, resadmin, player, page);
+            return commandResGset(args, resadmin, player);
+        }
+        if (cmd.equalsIgnoreCase("rset")) {
+            if (!player.hasPermission("residence.commands.rset")) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
+                return true;
+            }
+            return commandResRset(args, resadmin, player);
+        }
+        if (cmd.equalsIgnoreCase("rentlink")) {
+            if (!player.hasPermission("residence.commands.rentlink")) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
+                return true;
+            }
+            if (args.length < 2) {
+                return false;
+            }
+            ClaimedResidence res = rmanager.getByLoc(player.getLocation());
+            if (res == null) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
+                return true;
+            }
+            ClaimedResidence link = rmanager.getByName(args[1]);
+            if (link == null) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", args[1]));
+                return true;
+            }
+            if (!resadmin && !res.getOwner().equalsIgnoreCase(player.getName())) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
+                return true;
+            }
+            res.rentLink(link);
+        }
+        if (cmd.equalsIgnoreCase("rentlinks")) {
+            if (!player.hasPermission("residence.commands.rentlinks")) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
+                return true;
+            }
+            ClaimedResidence res = rmanager.getByLoc(player.getLocation());
+            if (res == null) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
+                return true;
+            }
+            res.printRentLinks(player);
+            return true;
         }
         if (cmd.equalsIgnoreCase("rename")) {
             if (!player.hasPermission("residence.commands.rename")) {
@@ -384,7 +420,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            return commandResMarket(args, resadmin, player, page);
+            return commandResMarket(args, resadmin, player);
         }
         if (cmd.equalsIgnoreCase("message")) {
             if (!player.hasPermission("residence.commands.message")) {
@@ -460,11 +496,11 @@ public class ResidenceCommandExecutor implements CommandExecutor {
     }
 
     private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender) {
-        // TODO
-        return false;
+        HelpManager.help(sender, args);
+        return true;
     }
 
-    private boolean commandResSelect(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResSelect(String[] args, boolean resadmin, Player player) {
         SelectionManager selectionManager = Residence.getInstance().getSelectionManager();
         if (!resadmin && !player.hasPermission("residence.select")) {
             player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
@@ -559,7 +595,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         }
     }
 
-    private boolean commandResCreate(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResCreate(String[] args, boolean resadmin, Player player) {
         if (args.length != 2) {
             return false;
         }
@@ -619,7 +655,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResSubzone(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResSubzone(String[] args, boolean resadmin, Player player) {
         if (args.length != 2 && args.length != 3) {
             return false;
         }
@@ -645,7 +681,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             }
             zname = args[2];
         }
-        if (res.getSubzone(zname) != null) {
+        if (res.getSubzoneByName(zname) != null) {
             player.sendMessage(LocaleLoader.getString("Commands.Subzone.AlreadyExists", zname));
             return true;
         }
@@ -668,7 +704,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResRemove(String[] args, boolean resadmin, CommandSender sender, int page) {
+    private boolean commandResRemove(String[] args, boolean resadmin, CommandSender sender) {
         Player player = null;
         if (sender instanceof Player) {
             player = (Player) sender;
@@ -716,7 +752,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResConfirm(String[] args, boolean resadmin, CommandSender sender, int page) {
+    private boolean commandResConfirm(String[] args, boolean resadmin, CommandSender sender) {
         if (args.length == 1) {
             String area = deleteConfirm.get(sender.getName());
             ClaimedResidence res = rmanager.getByName(area);
@@ -743,7 +779,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResSet(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResSet(String[] args, boolean resadmin, Player player) {
         if (args.length < 3 || args.length > 4) {
             return false;
         }
@@ -792,7 +828,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResPset(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResPset(String[] args, boolean resadmin, Player player) {
         if (args.length == 3 && args[2].equalsIgnoreCase("removeall")) {
             ClaimedResidence res = rmanager.getByLoc(player.getLocation());
             if (res == null) {
@@ -887,7 +923,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return false;
     }
 
-    private boolean commandResGset(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResGset(String[] args, boolean resadmin, Player player) {
         if (args.length == 4) {
             ClaimedResidence res = rmanager.getByLoc(player.getLocation());
             if (res == null) {
@@ -956,22 +992,71 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return false;
     }
 
-    private boolean commandResMarket(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResRset(String[] args, boolean resadmin, Player player) {
+        if (args.length < 3 || args.length > 4) {
+            return false;
+        }
+        ClaimedResidence res = null;
+        String flagName = null;
+        String boolName = null;
+        if (args.length == 3) {
+            res = rmanager.getByLoc(player.getLocation());
+            if (res == null) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
+                return true;
+            }
+            flagName = args[1];
+            boolName = args[2];
+        } else if (args.length == 4) {
+            res = rmanager.getByName(args[1]);
+            if (res == null) {
+                player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", args[1]));
+                return true;
+            }
+            flagName = args[2];
+            boolName = args[3];
+        }
+        if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
+            player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
+            return true;
+        }
+        Flag flag = FlagManager.getFlag(flagName);
+        if (flag == null) {
+            player.sendMessage(LocaleLoader.getString("Commands.Flags.InvalidFlag", flagName));
+            return true;
+        }
+        Boolean value;
+        if (boolName.equalsIgnoreCase("true") || boolName.equalsIgnoreCase("t")) {
+            value = true;
+        } else if (boolName.equalsIgnoreCase("false") || boolName.equalsIgnoreCase("f")) {
+            value = false;
+        } else if (boolName.equalsIgnoreCase("remove") || boolName.equalsIgnoreCase("r")) {
+            value = null;
+        } else {
+            player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidBoolean", boolName));
+            return true;
+        }
+        res.setRentFlag(flag, value);
+        player.sendMessage(LocaleLoader.getString("Commands.Flags.RentFlagSet", flag.getName(), value));
+        return true;
+    }
+
+    private boolean commandResMarket(String[] args, boolean resadmin, Player player) {
         if (args.length == 1) {
             return false;
         }
         String command = args[1].toLowerCase();
         if (command.equalsIgnoreCase("list")) {
-            return commandResMarketList(args, resadmin, player, page);
+            return commandResMarketList(args, resadmin, player);
         }
         if (command.equalsIgnoreCase("autorenew")) {
-            return commandResMarketAutorenew(args, resadmin, player, page);
+            return commandResMarketAutorenew(args, resadmin, player);
         }
         if (command.equalsIgnoreCase("rentable")) {
-            return commandResMarketRentable(args, resadmin, player, page);
+            return commandResMarketRentable(args, resadmin, player);
         }
         if (command.equalsIgnoreCase("rent")) {
-            return commandResMarketRent(args, resadmin, player, page);
+            return commandResMarketRent(args, resadmin, player);
         }
         if (command.equalsIgnoreCase("release")) {
             if (args.length != 3) {
@@ -1096,7 +1181,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return false;
     }
 
-    private boolean commandResMarketRent(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResMarketRent(String[] args, boolean resadmin, Player player) {
         if (args.length < 3 || args.length > 4) {
             return false;
         }
@@ -1133,7 +1218,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResMarketRentable(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResMarketRentable(String[] args, boolean resadmin, Player player) {
         if (args.length < 5 || args.length > 6) {
             return false;
         }
@@ -1176,7 +1261,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResMarketAutorenew(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResMarketAutorenew(String[] args, boolean resadmin, Player player) {
         if (!ConfigManager.getInstance().isEconomy()) {
             return true;
         }
@@ -1217,7 +1302,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResMarketList(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResMarketList(String[] args, boolean resadmin, Player player) {
         if (!ConfigManager.getInstance().isEconomy()) {
             return true;
         }
@@ -1332,8 +1417,8 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResSublist(String[] args, boolean resadmin, Player player, int page) {
-        if (args.length == 1 || args.length == 2 || args.length == 3) {
+    private boolean commandResSublist(String[] args, boolean resadmin, Player player) {
+        if (args.length > 0 && args.length < 4) {
             ClaimedResidence res;
             if (args.length == 1) {
                 res = rmanager.getByLoc(player.getLocation());
@@ -1348,14 +1433,33 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     return true;
                 }
             }
-            res.getSubzoneNameList();
-            // TODO Print this out
+            int page = 0;
+            if (args.length == 3) {
+                try {
+                    page = Integer.parseInt(args[2]);
+                    if (page <= 0) {
+                        throw new Exception();
+                    }
+                } catch (Exception ex) {
+                    player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidNumber", args[2]));
+                    return true;
+                }
+                page--;
+            }
+            String[] subzones = res.getSubzoneNameList().toArray(new String[0]);
+            player.sendMessage(LocaleLoader.getString("Commands.Sublist.List"));
+            for (int i = 0; i < 8; i++) {
+                int index = (page*8) + i;
+                if (index < subzones.length) {
+                    player.sendMessage(LocaleLoader.getString("Commands.Sublist.Subzone", subzones[index]));
+                }
+            }
             return true;
         }
         return false;
     }
 
-    private boolean commandResCompass(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResCompass(String[] args, boolean resadmin, Player player) {
         if (args.length != 2) {
             player.setCompassTarget(player.getWorld().getSpawnLocation());
             player.sendMessage(LocaleLoader.getString("Commands.CompassTarget.Reset"));
@@ -1373,7 +1477,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         return true;
     }
 
-    private boolean commandResGui(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResGui(String[] args, boolean resadmin, Player player) {
         // TODO
         return true;
     }
