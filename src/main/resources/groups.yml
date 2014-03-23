@@ -1,0 +1,21 @@
+DefaultSettings:
+    DefaultEnterMessage: "You have entered %area%"
+    DefaultLeaveMessage: "You have left %area%"
+    GroupFlags: {}
+    OwnerFlags:
+        admin: true
+        build: true
+        use: true
+    AreaFlags:
+        build: false
+        use: false
+    MaxHeight: 255
+    MinHeight: 0
+    MaxLength: 200
+    MinLength: 0
+    MaxWidth: 200
+    MinWidth: 0
+    MinY: 0
+    MaxY: 255
+    MaxResidences: 10
+    CostPerBlock: 0

@@ -48,25 +48,11 @@ public class ConfigManager {
         return config.getInt("General.AutoSaveInterval");
     }
 
-    public String getDefaultEnterMessage() {
-        if (noMessages()) {
-            return null;
-        }
-        return config.getString("General.DefaultEnterMessage");
-    }
-
-    public String getDefaultLeaveMessage() {
-        if (noMessages()) {
-            return null;
-        }
-        return config.getString("General.DefaultLeaveMessage");
-    }
-
-    private boolean noMessages() {
+    public boolean noMessages() {
         return config.getBoolean("General.EnterLeaveMessages");
     }
 
     public boolean isAutoRenewDefault() {
-        return config.getBoolean("Economy.AutoRenewRentByDefault");
+        return config.getBoolean("Economy.Rent.AutoRenewRentByDefault");
     }
 }

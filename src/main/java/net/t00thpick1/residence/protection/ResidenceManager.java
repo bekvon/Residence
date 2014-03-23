@@ -2,7 +2,8 @@ package net.t00thpick1.residence.protection;
 
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.flags.move.MoveFlag;
+import net.t00thpick1.residence.flags.move.StateAssurance;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -78,12 +79,12 @@ public class ResidenceManager {
         return res;
     }
 
-    public boolean createResidence(String name, Location loc1, Location loc2) {
-        return this.createResidence(name, "Server Land", loc1, loc2);
+    public boolean createResidence(String name, CuboidArea area) {
+        return createResidence(name, "Server Land", area);
     }
 
-    public boolean createResidence(String name, String owner, Location loc1, Location loc2) {
-        if (loc1 == null || loc2 == null || !loc1.getWorld().equals(loc2.getWorld())) {
+    public boolean createResidence(String name, String owner, CuboidArea area) {
+        if (area == null) {
             return false;
         }
         if (residences.containsKey(name)) {
@@ -91,14 +92,13 @@ public class ResidenceManager {
         }
 
         try {
-            CuboidArea newArea = new CuboidArea(loc1, loc2);
-            ConfigurationSection res = worldFiles.get(loc1.getWorld().getName()).createSection(name);
+            ConfigurationSection res = worldFiles.get(area.getWorld().getName()).createSection(name);
             ConfigurationSection data = res.createSection("Data");
             data.set("Owner", owner);
             data.set("CreationDate", System.currentTimeMillis());
-            data.set("EnterMessage", ConfigManager.getInstance().getDefaultEnterMessage());
-            data.set("LeaveMessage", ConfigManager.getInstance().getDefaultLeaveMessage());
-            newArea.saveArea(data.createSection("Area"));
+            data.set("EnterMessage", GroupManager.getDefaultEnterMessage(owner));
+            data.set("LeaveMessage", GroupManager.getDefaultLeaveMessage(owner));
+            area.saveArea(data.createSection("Area"));
             ConfigurationSection marketData = data.createSection("MarketData");
             marketData.set("ForSale", false);
             marketData.set("ForRent", false);
@@ -169,7 +169,7 @@ public class ResidenceManager {
             removeChunkList(res);
             residences.remove(res.getName());
             for (Player player : res.getPlayersInResidence()) {
-                MoveFlag.handleNewLocation(player, player.getLocation());
+                StateAssurance.handleNewLocation(player, player.getLocation());
             }
         } else {
             res.getParent().removeSubzone(res.getName());

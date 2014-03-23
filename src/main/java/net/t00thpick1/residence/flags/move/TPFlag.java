@@ -44,7 +44,7 @@ public class TPFlag extends Flag implements Listener {
                 return;
             }
         }
-        MoveFlag.handleNewLocation(player, loc);
+        StateAssurance.handleNewLocation(player, loc);
     }
 
     public static void initialize() {

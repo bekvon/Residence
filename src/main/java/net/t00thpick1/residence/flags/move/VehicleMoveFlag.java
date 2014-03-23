@@ -33,7 +33,7 @@ public class VehicleMoveFlag extends Flag implements Listener {
         Player player = (Player) passenger;
 
         if (Utilities.isAdminMode(player) || player.hasPermission("residence.admin.move")) {
-            MoveFlag.handleNewLocation(player, event.getTo());
+            StateAssurance.handleNewLocation(player, event.getTo());
             return;
         }
 
@@ -41,7 +41,7 @@ public class VehicleMoveFlag extends Flag implements Listener {
 
         ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(event.getTo());
         if (res == null) {
-            MoveFlag.handleNewLocation(player, event.getTo());
+            StateAssurance.handleNewLocation(player, event.getTo());
             return;
         }
         if (!ResidenceAPI.getPermissionsAreaByLocation(event.getTo()).allowAction(player, this)) {
@@ -50,7 +50,7 @@ public class VehicleMoveFlag extends Flag implements Listener {
             return;
         }
 
-        MoveFlag.handleNewLocation(player, loc);
+        StateAssurance.handleNewLocation(player, loc);
     }
 
     public static void initialize() {

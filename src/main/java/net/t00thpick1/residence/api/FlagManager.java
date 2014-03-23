@@ -10,6 +10,7 @@ import net.t00thpick1.residence.flags.build.DestroyFlag;
 import net.t00thpick1.residence.flags.build.PlaceFlag;
 import net.t00thpick1.residence.flags.enviromental.DamageFlag;
 import net.t00thpick1.residence.flags.enviromental.FireSpreadFlag;
+import net.t00thpick1.residence.flags.enviromental.HealingFlag;
 import net.t00thpick1.residence.flags.enviromental.IgniteFlag;
 import net.t00thpick1.residence.flags.enviromental.PistonFlag;
 import net.t00thpick1.residence.flags.enviromental.explosion.ExplosionFlag;
@@ -24,8 +25,10 @@ public class FlagManager {
     public static Flag BUILD = BuildFlag.FLAG;
     public static Flag PLACE = PlaceFlag.FLAG;
     public static Flag DESTROY = DestroyFlag.FLAG;
+    public static Flag HEALING = HealingFlag.FLAG;
     
     private static Map<String, Flag> validFlags;
+
 
     public static void addFlag(Flag flag) {
         validFlags.put(flag.getName(), flag);
@@ -39,6 +42,7 @@ public class FlagManager {
         validFlags = new HashMap<String, Flag>();
         BuildFlag.initialize();
         PVPFlag.initialize();
+        HealingFlag.initialize();
         DamageFlag.initialize();
         FireSpreadFlag.initialize();
         IgniteFlag.initialize();

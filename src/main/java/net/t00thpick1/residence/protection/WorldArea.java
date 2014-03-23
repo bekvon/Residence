@@ -48,7 +48,7 @@ public class WorldArea implements PermissionsArea {
 
     @Override
     public boolean allowAction(Player player, Flag flag) {
-        String group = GroupManager.getPlayerGroup(player, world);
+        String group = GroupManager.getPlayerGroup(player.getName());
         while (true) {
             if (groups.isConfigurationSection(group)) {
                 ConfigurationSection groupPerms = groups.getConfigurationSection(group);

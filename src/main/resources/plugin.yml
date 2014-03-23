@@ -24,15 +24,25 @@ permissions:
   residence.admin:
     description: Gives you access to /resadmin
     default: op
+    children:
+      residence.admin.tp: true
+      residence.admin.move: true
+      residence.commands: true
   residence.admin.tp:
     description: Allows to override tp flag
     default: op
   residence.admin.move:
     description: Allows to override move flag
     default: op
-  residence.create:
+  residence.commands:
+    description: Allows all commands
+    default: op
+    children:
+      residence.commands.create: true
+      residence.commands.select: true
+  residence.commands.create:
     description: Allows you to create residences
     default: op
-  residence.select:
+  residence.commands.select:
     description: Allows you to select an area to make residences
     default: op

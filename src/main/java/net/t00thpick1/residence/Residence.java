@@ -3,6 +3,7 @@ package net.t00thpick1.residence;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.flags.move.StateAssurance;
 import net.t00thpick1.residence.listeners.LoginLogoutListener;
 import net.t00thpick1.residence.listeners.ToolListener;
 import net.t00thpick1.residence.locale.LocaleLoader;
@@ -13,6 +14,8 @@ import net.t00thpick1.residence.utils.CompatabilityManager;
 import net.t00thpick1.residence.utils.metrics.Metrics;
 import net.t00thpick1.residence.utils.zip.ZipLibrary;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -51,6 +54,7 @@ public class Residence extends JavaPlugin {
         }
         instance = null;
     }
+
     private void setupVault() {
         RegisteredServiceProvider<Economy> econProvider = getServer().getServicesManager().getRegistration(Economy.class);
         if (econProvider != null) {
@@ -61,6 +65,7 @@ public class Residence extends JavaPlugin {
             permissions = groupProvider.getProvider();
         }
     }
+
     @Override
     public void onEnable() {
         instance = this;
@@ -73,8 +78,19 @@ public class Residence extends JavaPlugin {
             saveDefaultConfig();
         }
 
+        File groupsFile = new File(dataFolder, "groups.yml");
+        try {
+            if (!groupsFile.isFile()) {
+                groupsFile.createNewFile();
+                FileConfiguration internalConfig = YamlConfiguration.loadConfiguration(getResource("groups.yml"));
+                internalConfig.save(groupsFile);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         new ConfigManager(getConfig());
-        new GroupManager(dataFolder);
+        GroupManager.init(YamlConfiguration.loadConfiguration(groupsFile));
         File worldFolder = new File(dataFolder, "WorldConfigurations");
         if (!worldFolder.isDirectory()) {
             worldFolder.mkdirs();
@@ -93,6 +109,7 @@ public class Residence extends JavaPlugin {
             getLogger().log(Level.INFO, "Vault NOT found!");
         }
 
+        EconomyManager.init();
         try {
             loadSaves();
         } catch (Exception e) {
@@ -113,7 +130,6 @@ public class Residence extends JavaPlugin {
             getLogger().log(Level.INFO, "WorldEdit NOT found!");
         }
 
-
         PluginManager pm = getServer().getPluginManager();
         new ResidenceCommandExecutor(this);
         pm.registerEvents(new ToolListener(), this);
@@ -131,13 +147,22 @@ public class Residence extends JavaPlugin {
         }).runTaskTimer(this, 2000, ConfigManager.getInstance().getAutoSaveInterval() * 60 * 20);
         (new BukkitRunnable() {
             public void run() {
-                // Heals I guess
+                Player[] p = getServer().getOnlinePlayers();
+                for (Player player : p) {
+                    ClaimedResidence res = StateAssurance.getCurrentResidence(player.getName());
+                    if (res != null && res.allowAction(FlagManager.HEALING)) {
+                        double health = player.getHealth();
+                        if (health < 20 && !player.isDead()) {
+                            player.setHealth(health + 1);
+                        }
+                    }
+                }
             }
         }).runTaskTimer(this, 20, 20);
         if (ConfigManager.getInstance().isRent()) {
             (new BukkitRunnable() {
                 public void run() {
-                    // Rent checks?
+                    EconomyManager.checkRent();
                 }
             }).runTaskTimer(this, 2000, ConfigManager.getInstance().getRentCheckInterval() * 60 * 20);
         }
@@ -204,8 +229,8 @@ public class Residence extends JavaPlugin {
     public boolean isAdminMode(Player player) {
         return adminMode.contains(player.getName());
     }
+
     public WorldManager getWorldManager() {
         return wmanager;
     }
 }
-

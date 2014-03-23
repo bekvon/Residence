@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.milkbowl.vault.economy.Economy;
 import net.t00thpick1.residence.ConfigManager;
@@ -39,6 +40,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             rentData = data.getConfigurationSection("RentData");
         }
         marketData = data.getConfigurationSection("MarketData");
+        initMarketState();
         loadTpLoc();
         loadArea(data.getConfigurationSection("Area"));
         flags = section.getConfigurationSection("Flags");
@@ -46,6 +48,18 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         playerFlags = section.getConfigurationSection("Players");
         subzones = section.getConfigurationSection("Subzones");
         loadSubzones();
+    }
+
+    private void initMarketState() {
+        if (isRented()) {
+            EconomyManager.setRented(this);
+        }
+        if (isForRent()) {
+            EconomyManager.setForRent(this);
+        }
+        if (isForSale()) {
+            EconomyManager.setForSale(this);
+        }
     }
 
     private void loadRentLinks() {
@@ -88,7 +102,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
                 }
             }
 
-            String group = GroupManager.getPlayerGroup(player, getWorld());
+            String group = GroupManager.getPlayerGroup(player.getName());
             if (groupFlags.isConfigurationSection(group)) {
                 ConfigurationSection groupPerms = groupFlags.getConfigurationSection(group);
                 if (groupPerms.contains(flag.getName())) {
@@ -132,8 +146,8 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             ConfigurationSection data = res.createSection("Data");
             data.set("Owner", owner);
             data.set("CreationDate", System.currentTimeMillis());
-            data.set("EnterMessage", ConfigManager.getInstance().getDefaultEnterMessage());
-            data.set("LeaveMessage", ConfigManager.getInstance().getDefaultLeaveMessage());
+            data.set("EnterMessage", GroupManager.getDefaultEnterMessage(owner));
+            data.set("LeaveMessage", GroupManager.getDefaultLeaveMessage(owner));
             newArea.saveArea(data.createSection("Area"));
             ConfigurationSection marketData = data.createSection("MarketData");
             marketData.set("ForSale", false);
@@ -334,6 +348,8 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
 
     public void setOwner(String string) {
         data.set("Owner", string);
+        clearFlags();
+        applyDefaultFlags();
     }
 
     public boolean isRented() {
@@ -356,6 +372,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         }
         rentData.set("Renter", renter);
         rentData.set("IsAutoRenew", autoRenew);
+        EconomyManager.setRented(this);
         return checkRent();
     }
 
@@ -389,6 +406,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             marketData.set("Cost", 0);
             marketData.set("RentPeriod", 0);
         }
+        EconomyManager.evict(this);
         return;
     }
 
@@ -463,6 +481,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         marketData.set("Cost", cost);
         marketData.set("RentPeriod", rentPeriod);
         marketData.set("IsAutoRenew", isAutoRenewEnabled);
+        EconomyManager.setForRent(this);
     }
 
     @Override
@@ -474,12 +493,15 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
     public void setForSale(int cost) {
         marketData.set("ForSale", true);
         marketData.set("Cost", cost);
+        EconomyManager.setForSale(this);
     }
 
     
     public void removeFromMarket() {
         marketData.set("ForSale", false);
         marketData.set("ForRent", false);
+        EconomyManager.removeFromSale(this);
+        EconomyManager.removeFromRent(this);
         if (!isRented()) {
             marketData.set("Cost", 0);
             marketData.set("RentPeriod", 0);
@@ -494,6 +516,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         econ.withdrawPlayer(buyer, getCost());
         econ.depositPlayer(getOwner(), getCost());
         removeFromMarket();
+        EconomyManager.removeFromSale(this);
         setOwner(buyer);
         return true;
     }
@@ -506,13 +529,18 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         return rentData.getLong("NextPayment");
     }
 
-    public void applyOwnerFlags(String newOwner) {
-        // TODO
-        
-    }
-
     public void applyDefaultFlags() {
-        // TODO
+        for (Entry<Flag, Boolean> defaultFlag : GroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
+            setFlag(defaultFlag.getKey(), defaultFlag.getValue());
+        }
+        for (Entry<Flag, Boolean> defaultFlag : GroupManager.getDefaultOwnerFlags(getOwner()).entrySet()) {
+            setPlayerFlag(getOwner(), defaultFlag.getKey(), defaultFlag.getValue());
+        }
+        for (Entry<String, Map<Flag, Boolean>> group : GroupManager.getDefaultGroupFlags(getOwner()).entrySet()) {
+            for (Entry<Flag, Boolean> defaultFlag : group.getValue().entrySet()) {
+                setGroupFlag(group.getKey(), defaultFlag.getKey(), defaultFlag.getValue());
+            }
+        }
     }
 
     public void clearFlags() {

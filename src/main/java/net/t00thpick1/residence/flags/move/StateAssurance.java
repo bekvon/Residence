@@ -1,11 +1,14 @@
 package net.t00thpick1.residence.flags.move;
 
+import java.util.HashMap;
+
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.PermissionsArea;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.protection.ClaimedResidence;
 import net.t00thpick1.residence.utils.Utilities;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,11 +20,17 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 
 public class StateAssurance implements Listener {
+
+    private StateAssurance() {
+        currentRes = new HashMap<String, ClaimedResidence>();
+        lastOutsideLoc = new HashMap<String, Location>();
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         String pname = event.getPlayer().getName();
-        MoveFlag.currentRes.remove(pname);
-        MoveFlag.lastOutsideLoc.remove(pname);
+        currentRes.remove(pname);
+        lastOutsideLoc.remove(pname);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -30,7 +39,7 @@ public class StateAssurance implements Listener {
         if (!canSpawn(player, player.getLocation())) {
             player.teleport(getSpawnLocation(player, player.getLocation()));
         }
-        MoveFlag.handleNewLocation(player, player.getLocation());
+        handleNewLocation(player, player.getLocation());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -39,10 +48,10 @@ public class StateAssurance implements Listener {
         if (!canSpawn(player, event.getRespawnLocation())) {
             event.setRespawnLocation(getSpawnLocation(player, event.getRespawnLocation()));
         }
-        MoveFlag.handleNewLocation(player, event.getRespawnLocation());
+        handleNewLocation(player, event.getRespawnLocation());
     }
 
-    protected static boolean canSpawn(Player player, Location location) {
+    public static boolean canSpawn(Player player, Location location) {
         if (player.hasPermission("residence.admin.move") || Utilities.isAdminMode(player)) {
             return true;
         }
@@ -56,7 +65,7 @@ public class StateAssurance implements Listener {
         return true;
     }
 
-    protected static Location getSpawnLocation(Player player, Location location) {
+    private static Location getSpawnLocation(Player player, Location location) {
         PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(location);
         Location loc = null;
         if (area instanceof ClaimedResidence) {
@@ -71,8 +80,71 @@ public class StateAssurance implements Listener {
         return loc;
     }
 
+    private HashMap<String, ClaimedResidence> currentRes;
+    private HashMap<String, Location> lastOutsideLoc;
+
+    public static void handleNewLocation(Player player, Location loc) {
+        String pname = player.getName();
+
+        ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(loc);
+        if (res != null) {
+            if (res.getSubzoneByLoc(loc) != null) {
+                res = res.getSubzoneByLoc(loc);
+            }
+        }
+
+        ClaimedResidence resOld = null;
+        if (instance.currentRes.containsKey(pname)) {
+            resOld = instance.currentRes.get(pname);
+        }
+        if (res == null) {
+            instance.lastOutsideLoc.put(pname, loc);
+            if (resOld != null) {
+                String leave = resOld.getLeaveMessage();
+
+                if (leave != null && !leave.equals("")) {
+                    player.sendMessage(formatString(leave, resOld.getName(), player));
+                }
+                instance.currentRes.remove(pname);
+            }
+            return;
+        }
+        instance.lastOutsideLoc.put(pname, loc);
+        if (!instance.currentRes.containsKey(pname) || resOld != res) {
+            instance.currentRes.put(pname, res);
+
+            if (resOld != res && resOld != null) {
+                String leaveMessage = resOld.getLeaveMessage();
+
+                if (leaveMessage != null && !leaveMessage.equals("") && resOld != res.getParent()) {
+                    player.sendMessage(formatString(leaveMessage, resOld.getName(), player));
+                }
+            }
+            String enterMessage = res.getEnterMessage();
+
+            if (enterMessage != null && !enterMessage.equals("") && !(resOld != null && res == resOld.getParent())) {
+                player.sendMessage(formatString(enterMessage, res.getName(), player));
+            }
+        }
+    }
+
+    private static String formatString(String message, String areaName, Player player) {
+        return ChatColor.translateAlternateColorCodes('&', message.replaceAll("(%player%)", player.getName()).replaceAll("(%area%)", areaName));
+    }
+
+    public static ClaimedResidence getCurrentResidence(String player) {
+        return instance.currentRes.get(player);
+    }
+
     public static void initialize() {
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new StateAssurance(), plugin);
+        instance = new StateAssurance();
+        plugin.getServer().getPluginManager().registerEvents(instance, plugin);
+    }
+
+    private static StateAssurance instance;
+
+    public static Location getLastOutsideLocation(String name) {
+        return instance.lastOutsideLoc.get(name);
     }
 }

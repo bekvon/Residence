@@ -9,8 +9,6 @@ import net.t00thpick1.residence.protection.EconomyManager;
 import net.t00thpick1.residence.protection.GroupManager;
 import net.t00thpick1.residence.protection.ResidenceManager;
 import net.t00thpick1.residence.selection.SelectionManager;
-import net.t00thpick1.residence.utils.Utilities;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -403,7 +401,6 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 return true;
             }
             res.setOwner(newOwner);
-            res.applyOwnerFlags(newOwner);
             return true;
         }
         if (cmd.equalsIgnoreCase("server")) {
@@ -567,14 +564,46 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             player.sendMessage(LocaleLoader.getString("Commands.Create.AlreadyExists", args[1]));
             return true;
         }
-        if (!resadmin && Utilities.checkSelectionSize(player.getName(), true)) {
-            return true;
+        CuboidArea newArea = new CuboidArea(selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
+        if (!resadmin) {
+            if (newArea.getXSize() > GroupManager.getMaxWidth(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooWide"));
+                return true;
+            }
+            if (newArea.getXSize() < GroupManager.getMinWidth(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooNarrow"));
+                return true;
+            }
+            if (newArea.getZSize() > GroupManager.getMaxLength(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooLong"));
+                return true;
+            }
+            if (newArea.getZSize() < GroupManager.getMinLength(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooSkinny"));
+                return true;
+            }
+            if (newArea.getYSize() > GroupManager.getMaxHeight(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooTall"));
+                return true;
+            }
+            if (newArea.getYSize() < GroupManager.getMinHeight(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooShort"));
+                return true;
+            }
+            if (newArea.getLowLocation().getBlockY() < GroupManager.getMinY(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooLow"));
+                return true;
+            }
+            if (newArea.getHighLocation().getBlockY() > GroupManager.getMaxY(player)) {
+                player.sendMessage(LocaleLoader.getString("Commands.Create.TooHigh"));
+                return true;
+            }
         }
         if (!resadmin && GroupManager.getMaxResidences(player.getName()) > rmanager.getOwnedZoneCount(player.getName())) {
             player.sendMessage(LocaleLoader.getString("Commands.Create.TooManyResidences", args[1]));
             return true;
         }
-        rmanager.createResidence(args[1], player.getName(), selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
+        rmanager.createResidence(args[1], player.getName(), newArea);
         return true;
     }
 
@@ -717,7 +746,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             flagName = args[2];
             boolName = args[3];
         }
-        if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)){
+        if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
             player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
             return true;
         }
@@ -749,7 +778,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
             }
-            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)){
+            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
@@ -762,7 +791,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", args[1]));
                 return true;
             }
-            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)){
+            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
@@ -775,7 +804,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
             }
-            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)){
+            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
@@ -807,7 +836,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", args[1]));
                 return true;
             }
-            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)){
+            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
@@ -844,7 +873,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
             }
-            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)){
+            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
@@ -876,7 +905,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", args[1]));
                 return true;
             }
-            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)){
+            if (!resadmin && !res.allowAction(player, FlagManager.ADMIN)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
