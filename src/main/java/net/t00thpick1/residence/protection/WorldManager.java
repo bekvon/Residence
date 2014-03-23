@@ -1,10 +1,11 @@
-package net.t00thpick1.residence;
+package net.t00thpick1.residence.protection;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-import net.t00thpick1.residence.protection.WorldArea;
+import net.t00thpick1.residence.Residence;
 
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,6 +15,7 @@ public class WorldManager {
     private Map<String, WorldArea> worldAreas;
 
     public WorldManager(File worldFolder) throws IOException {
+        worldAreas = new HashMap<String, WorldArea>();
         for (World world : Residence.getInstance().getServer().getWorlds()) {
             File worldFile = new File(worldFolder, world.getName() + "_configuration.yml");
             boolean newFile = false;

@@ -2,6 +2,7 @@ package net.t00thpick1.residence.protection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,12 +42,13 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         }
         marketData = data.getConfigurationSection("MarketData");
         initMarketState();
-        loadTpLoc();
         loadArea(data.getConfigurationSection("Area"));
+        loadTpLoc();
         flags = section.getConfigurationSection("Flags");
         groupFlags = section.getConfigurationSection("Groups");
         playerFlags = section.getConfigurationSection("Players");
         subzones = section.getConfigurationSection("Subzones");
+        subzoneObjects = new HashMap<String, ClaimedResidence>();
         loadSubzones();
     }
 
@@ -93,10 +95,10 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
 
     public boolean allowAction(Player player, Flag flag) {
         Flag origFlag = flag;
-        String uuid = player.getUniqueId().toString();
+        String name = player.getName();
         while (true) {
-            if (playerFlags.isConfigurationSection(uuid)) {
-                ConfigurationSection playerPerms = playerFlags.getConfigurationSection(uuid);
+            if (playerFlags.isConfigurationSection(name)) {
+                ConfigurationSection playerPerms = playerFlags.getConfigurationSection(name);
                 if (playerPerms.contains(flag.getName())) {
                     return playerPerms.getBoolean(flag.getName());
                 }

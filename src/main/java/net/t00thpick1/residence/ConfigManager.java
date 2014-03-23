@@ -21,7 +21,7 @@ public class ConfigManager {
     }
 
     public Material getInfoToolType() {
-        return Material.matchMaterial(config.getString("General.InformationToolType"));
+        return Material.matchMaterial(config.getString("General.InfoToolType"));
     }
 
     public boolean isEconomy() {

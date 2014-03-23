@@ -9,6 +9,7 @@ import net.t00thpick1.residence.protection.EconomyManager;
 import net.t00thpick1.residence.protection.GroupManager;
 import net.t00thpick1.residence.protection.ResidenceManager;
 import net.t00thpick1.residence.selection.SelectionManager;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -16,6 +17,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
     private Map<String, String> deleteConfirm;
 
     public ResidenceCommandExecutor(Residence residence) {
+        deleteConfirm = new HashMap<String, String>();
         plugin = residence;
         residence.getServer().getPluginCommand("residence").setExecutor(this);
         residence.getServer().getPluginCommand("resadmin").setExecutor(this);

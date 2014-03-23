@@ -14,7 +14,7 @@ import net.t00thpick1.residence.Residence;
 import org.bukkit.ChatColor;
 
 public final class LocaleLoader {
-    private static final String BUNDLE_ROOT = LocaleLoader.class.getPackage().getName();
+    private static final String BUNDLE_ROOT = "net.t00thpick1.residence.locale.locale";
     private static ResourceBundle bundle = null;
     private static ResourceBundle enBundle = null;
 

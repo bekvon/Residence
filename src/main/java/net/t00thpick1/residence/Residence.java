@@ -100,6 +100,7 @@ public class Residence extends JavaPlugin {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+        cmanager = new CompatabilityManager();
 
         Plugin p = getServer().getPluginManager().getPlugin("Vault");
         if (p != null) {
@@ -110,10 +111,7 @@ public class Residence extends JavaPlugin {
         }
 
         EconomyManager.init();
-        try {
-            loadSaves();
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Unable to load save file", e);
+        if (!loadSaves()) {
             if (ConfigManager.getInstance().stopOnLoadError()) {
                 getServer().getPluginManager().disablePlugin(this);
                 return;
@@ -195,7 +193,7 @@ public class Residence extends JavaPlugin {
         rmanager.save();
     }
 
-    private boolean loadSaves() throws Exception {
+    private boolean loadSaves() {
         File saveFolder = new File(getDataFolder(), "Save");
         try {
             File worldFolder = new File(saveFolder, "Worlds");
@@ -205,6 +203,7 @@ public class Residence extends JavaPlugin {
             rmanager = ResidenceManager.load(worldFolder);
             return true;
         } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Unable to load save file", e);
             getLogger().info(LocaleLoader.getString("General.FailedLoad"));
             return false;
         }

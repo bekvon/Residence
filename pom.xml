@@ -27,7 +27,7 @@
                 </includes>
             </resource>
             <resource>
-                <targetPath>net/t00thpick1/residence/locale</targetPath>
+                <targetPath>net/t00thpick1/residence/locale/</targetPath>
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/locale/</directory>
                 <includes>

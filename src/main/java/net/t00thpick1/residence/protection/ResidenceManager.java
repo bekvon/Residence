@@ -24,10 +24,8 @@ public class ResidenceManager {
 
     public ResidenceManager() {
         residenceNamesByChunk = new HashMap<String, Map<ChunkRef, List<String>>>();
-    }
-
-    public void cleanUp() {
-        residenceNamesByChunk = null;
+        residences = new HashMap<String, ClaimedResidence>();
+        worldFiles = new HashMap<String, FileConfiguration>();
     }
 
     public ClaimedResidence getByLoc(Location loc) {
@@ -92,7 +90,7 @@ public class ResidenceManager {
         }
 
         try {
-            ConfigurationSection res = worldFiles.get(area.getWorld().getName()).createSection(name);
+            ConfigurationSection res = worldFiles.get(area.getWorld().getName()).getConfigurationSection("Residences").createSection(name);
             ConfigurationSection data = res.createSection("Data");
             data.set("Owner", owner);
             data.set("CreationDate", System.currentTimeMillis());
@@ -142,8 +140,9 @@ public class ResidenceManager {
         removeChunkList(res);
         residences.remove(res.getName());
         FileConfiguration file = worldFiles.get(res.getWorld());
-        file.createSection(res.getName(), file.getConfigurationSection(res.getName()).getValues(true));
-        file.set(res.getName(), null);
+        ConfigurationSection residenceSection = file.getConfigurationSection("Residences");
+        residenceSection.createSection(res.getName(), file.getConfigurationSection(res.getName()).getValues(true));
+        residenceSection.set(res.getName(), null);
         residences.put(newName, res);
         calculateChunks(res);
         return true;

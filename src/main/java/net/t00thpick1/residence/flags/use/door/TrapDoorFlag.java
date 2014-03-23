@@ -23,7 +23,7 @@ public class TrapDoorFlag extends Flag implements Listener {
         super(flag, type, parent);
     }
 
-    public static final TrapDoorFlag FLAG = new TrapDoorFlag(LocaleLoader.getString("Flags.Flags.Messages.TrapDoor"), FlagType.ANY, DoorFlag.FLAG);
+    public static final TrapDoorFlag FLAG = new TrapDoorFlag(LocaleLoader.getString("Flags.Flags.TrapDoor"), FlagType.ANY, DoorFlag.FLAG);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void OnClick(PlayerInteractEvent event) {

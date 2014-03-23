@@ -27,9 +27,9 @@ public class WorldArea implements PermissionsArea {
             this.perms = section.getConfigurationSection("Permissions");
         }
         if (!section.isConfigurationSection("Groups")) {
-            this.perms = section.createSection("Groups");
+            this.groups = section.createSection("Groups");
         } else {
-            this.perms = section.getConfigurationSection("Groups");
+            this.groups = section.getConfigurationSection("Groups");
         }
         this.saveFile = worldFile;
         this.file = section;

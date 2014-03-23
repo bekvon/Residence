@@ -22,7 +22,7 @@ public class ItemFrameFlag extends Flag implements Listener {
         super(flag, type, parent);
     }
 
-    public static final ItemFrameFlag FLAG = new ItemFrameFlag(LocaleLoader.getString("Flags.Flags.ItemFrameFlag"), FlagType.ANY, ContainerFlag.FLAG);
+    public static final ItemFrameFlag FLAG = new ItemFrameFlag(LocaleLoader.getString("Flags.Flags.ItemFrame"), FlagType.ANY, ContainerFlag.FLAG);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onClick(PlayerInteractEntityEvent event) {
