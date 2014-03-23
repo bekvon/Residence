@@ -26,7 +26,8 @@ public class FlagManager {
     public static Flag PLACE = PlaceFlag.FLAG;
     public static Flag DESTROY = DestroyFlag.FLAG;
     public static Flag HEALING = HealingFlag.FLAG;
-    
+    // TODO: rest of flags
+
     private static Map<String, Flag> validFlags;
 
 
@@ -40,6 +41,7 @@ public class FlagManager {
 
     public static void initFlags() {
         validFlags = new HashMap<String, Flag>();
+        // TODO: Selectively initialize flags
         BuildFlag.initialize();
         PVPFlag.initialize();
         HealingFlag.initialize();

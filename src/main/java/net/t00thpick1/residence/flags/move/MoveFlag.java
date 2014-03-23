@@ -48,7 +48,7 @@ public class MoveFlag extends Flag implements Listener {
             } else {
                 player.teleport(res.getOutsideFreeLoc(player.getLocation()));
             }
-            player.sendMessage(LocaleLoader.getString("Flags.Message.MoveDeny"));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.MoveDeny"));
             return;
         }
         StateAssurance.handleNewLocation(player, event.getTo());

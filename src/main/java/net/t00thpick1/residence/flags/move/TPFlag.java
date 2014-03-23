@@ -29,7 +29,7 @@ public class TPFlag extends Flag implements Listener {
 
         if (!StateAssurance.canSpawn(player, loc)) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("Flags.Messages.CannotMoveAtDestination"));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.CannotSpawnAtDestination"));
             return;
         }
         if (!player.hasPermission("residence.admin.tp") && event.getCause() == TeleportCause.PLUGIN) {

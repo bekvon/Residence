@@ -590,4 +590,8 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         // TODO Auto-generated method stub
         
     }
+
+    public void removeAllPlayerFlags(String player) {
+        playerFlags.set(player, null);
+    }
 }

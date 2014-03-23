@@ -37,7 +37,7 @@ public class LavaBucketFlag extends Flag implements Listener {
         BlockFace face = event.getBlockFace();
         Location blockLocation = event.getBlockClicked().getLocation().add(face.getModX(), face.getModY(), face.getModZ());
         if (!ResidenceAPI.getPermissionsAreaByLocation(blockLocation).allowAction(player, this)) {
-            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.DenyBucketEmpty", getName())));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", getName()));
             event.setCancelled(true);
         }
     }
@@ -52,7 +52,7 @@ public class LavaBucketFlag extends Flag implements Listener {
             return;
         }
         if (!ResidenceAPI.getPermissionsAreaByLocation(event.getBlockClicked().getLocation()).allowAction(player, this)) {
-            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.DenyBucketFill", getName())));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", getName()));
             event.setCancelled(true);
         }
     }

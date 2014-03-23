@@ -65,12 +65,12 @@ public class PVPFlag extends Flag implements Listener {
         }
         if (!ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()).allowAction(this)) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("PVPDeny"));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.PVPDeny"));
             return;
         }
         if (!ResidenceAPI.getPermissionsAreaByLocation(player.getLocation()).allowAction(this)) {
             event.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("PVPDeny"));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.PVPDeny"));
             return;
         }
         if (damager == player) {

@@ -3,7 +3,7 @@ main: net.t00thpick1.residence.Residence
 version: 3.0.0-ALPHA-SNAPSHOT
 description: Cuboid Residence Plugin
 author: t00thpick1
-authors: [bekvon]
+authors: [t00thpick1,bekvon]
 contributors: [nate302,lemon42,smbarbour,inorixu,Shayana_fr]
 softdepend: [Vault,WorldEdit]
 commands:
