@@ -1,11 +1,12 @@
 package net.t00thpick1.residence.flags.enviromental;
 
 import net.t00thpick1.residence.Residence;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.PermissionsArea;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.flags.Flag;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
+import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,30 +17,26 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.plugin.Plugin;
 
 public class IgniteFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Ignite");
-
-    public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allowAction(player, FLAG, super.allowAction(player, area));
+    private IgniteFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
 
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, super.allowAction(area));
-    }
+    public static final IgniteFlag FLAG = new IgniteFlag(LocaleLoader.getString("Flags.Flags.Ignite"), FlagType.ANY, null);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
         PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(event.getBlock().getLocation());
         if (event.getCause() == IgniteCause.FLINT_AND_STEEL) {
             Player player = event.getPlayer();
-            if (isAdminMode(player)) {
+            if (Utilities.isAdminMode(player)) {
                 return;
             }
-            if (!allowAction(player, area)) {
+            if (!area.allowAction(player, this)) {
                 event.setCancelled(true);
-                player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", FLAG));
+                player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", this.getName()));
             }
         } else {
-           if (!allowAction(area)) {
+           if (!area.allowAction(this)) {
                 event.setCancelled(true);
             }
         }
@@ -48,6 +45,6 @@ public class IgniteFlag extends Flag implements Listener {
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new IgniteFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

@@ -1,15 +1,13 @@
 package net.t00thpick1.residence.listeners;
 
 import net.t00thpick1.residence.Residence;
+import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.api.PermissionsArea;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.permissions.PermissionGroup;
 import net.t00thpick1.residence.protection.ClaimedResidence;
 import net.t00thpick1.residence.utils.Utilities;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,9 +16,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
-
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class ToolListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -52,7 +47,7 @@ public class ToolListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (player.getItemInHand().getType() == ConfigManager.getInstance().getInfoToolID()) {
+        if (player.getItemInHand().getType() == ConfigManager.getInstance().getInfoToolType()) {
             if (!player.hasPermission("residence.info")) {
                 return;
             }

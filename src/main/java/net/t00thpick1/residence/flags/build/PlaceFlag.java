@@ -1,11 +1,11 @@
 package net.t00thpick1.residence.flags.build;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.flags.use.UseFlag;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
+import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -24,11 +24,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dye;
 import org.bukkit.plugin.Plugin;
 
-public class PlaceFlag extends BuildFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Place");
-    public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allowAction(player, FLAG, super.allowAction(player, area));
+public class PlaceFlag extends Flag implements Listener {
+    private PlaceFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
+
+    public static final PlaceFlag FLAG = new PlaceFlag(LocaleLoader.getString("Flags.Flags.Place"), FlagType.ANY, BuildFlag.FLAG);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
@@ -42,11 +43,8 @@ public class PlaceFlag extends BuildFlag implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlace(PlayerInteractEvent event) {
-        if (UseFlag.isTool(event)) {
-            return;
-        }
         Player player = event.getPlayer();
-        if (isAdminMode(player)) {
+        if (Utilities.isAdminMode(player)) {
             return;
         }
         if (player.getItemInHand() == null) {
@@ -95,18 +93,18 @@ public class PlaceFlag extends BuildFlag implements Listener {
     }
 
     private void place(Player player, Location location, Cancellable cancellable) {
-        if (isAdminMode(player)) {
+        if (Utilities.isAdminMode(player)) {
             return;
         }
-        if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(location))) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(location).allowAction(player, this)) {
             cancellable.setCancelled(true);
-            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", FLAG));
+            player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", getName()));
         }
     }
 
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new PlaceFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

@@ -1,7 +1,9 @@
 package net.t00thpick1.residence.utils;
 
+import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -14,7 +16,16 @@ public class Utilities {
                 || type == EntityType.WOLF || Residence.getInstance().getCompatabilityManager().isAnimal(type);
     }
 
+    public static boolean isTool(Material mat) {
+        return mat == ConfigManager.getInstance().getSelectionToolType() || mat == ConfigManager.getInstance().getInfoToolType();
+    }
+
     public static boolean isAdminMode(Player player) {
         return Residence.getInstance().isAdminMode(player);
+    }
+
+    public static boolean checkSelectionSize(String name, boolean b) {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

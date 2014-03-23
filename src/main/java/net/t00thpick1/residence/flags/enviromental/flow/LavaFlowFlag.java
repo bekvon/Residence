@@ -1,19 +1,35 @@
 package net.t00thpick1.residence.flags.enviromental.flow;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
+
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.plugin.Plugin;
 
-public class LavaFlowFlag extends FlowFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.LavaFlow");
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, super.allowAction(area));
+public class LavaFlowFlag extends Flag implements Listener {
+    private LavaFlowFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
 
+    public static final LavaFlowFlag FLAG = new LavaFlowFlag(LocaleLoader.getString("Flags.Flags.LavaFlow"), FlagType.AREA_ONLY, null);
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockFromTo(BlockFromToEvent event) {
+        Material mat = event.getBlock().getType();
+        if (!shouldCheck(mat)) {
+            return;
+        }
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getBlock().getLocation()).allowAction(this)) {
+            event.setCancelled(true);
+        }
+    }
     public boolean shouldCheck(Material material) {
         return material == Material.LAVA || material == Material.STATIONARY_LAVA;
     }
@@ -21,7 +37,7 @@ public class LavaFlowFlag extends FlowFlag implements Listener {
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new LavaFlowFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 
 }

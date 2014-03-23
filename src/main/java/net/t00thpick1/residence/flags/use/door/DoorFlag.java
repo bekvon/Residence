@@ -1,17 +1,16 @@
 package net.t00thpick1.residence.flags.use.door;
 
-import org.bukkit.entity.Player;
-
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.flags.use.UseFlag;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
 
-public class DoorFlag extends UseFlag {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Door");
-    public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allowAction(player, FLAG, super.allowAction(player, area));
+public class DoorFlag extends Flag {
+    private DoorFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
+
+    public static final DoorFlag FLAG = new DoorFlag(LocaleLoader.getString("Flags.Flags.Door"), FlagType.ANY, UseFlag.FLAG);
 
     public static void initialize() {
         FlagManager.addFlag(FLAG);

@@ -15,6 +15,6 @@ public class ResidenceAPI {
     }
 
     public static PermissionsArea getResidenceWorld(World world) {
-        Residence.getInstance().getWorldManager().getResidenceWorld(world);
+        return Residence.getInstance().getWorldManager().getResidenceWorld(world);
     }
 }

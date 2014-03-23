@@ -1,10 +1,11 @@
 package net.t00thpick1.residence.flags;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
+
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,20 +16,21 @@ import org.bukkit.plugin.Plugin;
 import java.util.Iterator;
 
 public class PVPFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.PVP");
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, super.allowAction(area));
+    public static final PVPFlag FLAG = new PVPFlag(LocaleLoader.getString("Flags.Flags.PVP"), FlagType.AREA_ONLY, null);
+
+    private PVPFlag(String name, FlagType type, Flag parent) {
+        super(name, type, parent);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSplashPotion(PotionSplashEvent event) {
         Entity ent = event.getEntity();
-        boolean srcpvp = allowAction(ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()));
+        boolean srcpvp = ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()).allowAction(this);
         Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
         while (it.hasNext()) {
             LivingEntity target = it.next();
             if (target.getType() == EntityType.PLAYER) {
-                if (!srcpvp || !allowAction(ResidenceAPI.getPermissionsAreaByLocation(target.getLocation()))) {
+                if (!srcpvp || !ResidenceAPI.getPermissionsAreaByLocation(target.getLocation()).allowAction(this)) {
                     event.setIntensity(target, 0);
                 }
             }
@@ -61,17 +63,20 @@ public class PVPFlag extends Flag implements Listener {
         if (player == null) {
             return;
         }
-        if (!allowAction(ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()))) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()).allowAction(this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("PVPDeny"));
             return;
         }
-        if (!allowAction(ResidenceAPI.getPermissionsAreaByLocation(player.getLocation()))) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(player.getLocation()).allowAction(this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("PVPDeny"));
             return;
         }
-        if (!allowAction(ResidenceAPI.getPermissionsAreaByLocation(damager.getLocation()))) {
+        if (damager == player) {
+            return;
+        }
+        if (!ResidenceAPI.getPermissionsAreaByLocation(damager.getLocation()).allowAction(this)) {
             event.setCancelled(true);
             return;
         }
@@ -80,6 +85,6 @@ public class PVPFlag extends Flag implements Listener {
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new PVPFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

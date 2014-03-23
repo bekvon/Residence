@@ -1,25 +1,31 @@
 package net.t00thpick1.residence.protection;
 
+import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
-
+import net.t00thpick1.residence.flags.move.MoveFlag;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 
 public class ResidenceManager {
     private Map<String, ClaimedResidence> residences;
     private Map<String, Map<ChunkRef, List<String>>> residenceNamesByChunk;
+    private Map<String, FileConfiguration> worldFiles;
+    private File worldFolder;
 
     public ResidenceManager() {
-        residences = new HashMap<String, ClaimedResidence>();
         residenceNamesByChunk = new HashMap<String, Map<ChunkRef, List<String>>>();
     }
 
     public void cleanUp() {
-        residences = null;
         residenceNamesByChunk = null;
     }
 
@@ -35,7 +41,7 @@ public class ResidenceManager {
             if (residenceNamesByChunk.get(world).get(chunk) != null) {
                 for (String key : residenceNamesByChunk.get(world).get(chunk)) {
                     ClaimedResidence entry = residences.get(key);
-                    if (entry.containsLoc(loc)) {
+                    if (entry.containsLocation(loc)) {
                         res = entry;
                         found = true;
                         break;
@@ -83,10 +89,33 @@ public class ResidenceManager {
         if (residences.containsKey(name)) {
             return false;
         }
-        CuboidArea newArea = new CuboidArea(loc1, loc2);
-        ClaimedResidence newRes = new ClaimedResidence(owner, name, newArea);
-        residences.put(name, newRes);
-        calculateChunks(newRes);
+
+        try {
+            CuboidArea newArea = new CuboidArea(loc1, loc2);
+            ConfigurationSection res = worldFiles.get(loc1.getWorld().getName()).createSection(name);
+            ConfigurationSection data = res.createSection("Data");
+            data.set("Owner", owner);
+            data.set("CreationDate", System.currentTimeMillis());
+            data.set("EnterMessage", ConfigManager.getInstance().getDefaultEnterMessage());
+            data.set("LeaveMessage", ConfigManager.getInstance().getDefaultLeaveMessage());
+            newArea.saveArea(data.createSection("Area"));
+            ConfigurationSection marketData = data.createSection("MarketData");
+            marketData.set("ForSale", false);
+            marketData.set("ForRent", false);
+            marketData.set("Cost", 0);
+            marketData.set("IsAutoRenew", ConfigManager.getInstance().isAutoRenewDefault());
+            res.createSection("Flags");
+            res.createSection("Groups");
+            res.createSection("Players");
+            res.createSection("Subzones");
+            ClaimedResidence newRes = new ClaimedResidence(res, null);
+            residences.put(name, newRes);
+            calculateChunks(newRes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 
@@ -94,7 +123,7 @@ public class ResidenceManager {
         Collection<ClaimedResidence> set = residences.values();
         int count = 0;
         for (ClaimedResidence res : set) {
-            if (res.getPermissions().getOwner().equalsIgnoreCase(player)) {
+            if (res.getOwner().equalsIgnoreCase(player)) {
                 count++;
             }
         }
@@ -112,6 +141,9 @@ public class ResidenceManager {
 
         removeChunkList(res);
         residences.remove(res.getName());
+        FileConfiguration file = worldFiles.get(res.getWorld());
+        file.createSection(res.getName(), file.getConfigurationSection(res.getName()).getValues(true));
+        file.set(res.getName(), null);
         residences.put(newName, res);
         calculateChunks(res);
         return true;
@@ -136,6 +168,9 @@ public class ResidenceManager {
         if (res.getParent() == null) {
             removeChunkList(res);
             residences.remove(res.getName());
+            for (Player player : res.getPlayersInResidence()) {
+                MoveFlag.handleNewLocation(player, player.getLocation());
+            }
         } else {
             res.getParent().removeSubzone(res.getName());
         }
@@ -206,70 +241,69 @@ public class ResidenceManager {
         }
     }
 
-    public static ResidenceManager load(Map<String, Object> root) throws Exception {
+    public static ResidenceManager load(File worldFolder) throws Exception {
         ResidenceManager resm = new ResidenceManager();
-        if (root == null) {
-            return resm;
-        }
+        resm.worldFolder = worldFolder;
         for (World world : Residence.getInstance().getServer().getWorlds()) {
-            Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
-            if (reslist != null) {
-                try {
-                    resm.residenceNamesByChunk.put(world.getName(), loadMap(reslist, resm));
-                } catch (Exception ex) {
-                    Residence.getInstance().getLogger().severe("Error in loading save file for world: " + world.getName());
-                    if (Residence.getInstance().getConfigManager().stopOnSaveError()) {
-                        throw (ex);
-                    }
+            File worldFile = new File(worldFolder, "res_" + world.getName() + ".yml");
+            boolean newFile = false;
+            if (!worldFile.isFile()) {
+                worldFile.createNewFile();
+                newFile = true;
+            }
+
+            FileConfiguration worldSave = YamlConfiguration.loadConfiguration(worldFile);
+            resm.worldFiles.put(world.getName(), worldSave);
+            if (newFile) {
+                worldSave.set("Version", Residence.saveVersion);
+                worldSave.set("Seed", world.getSeed());
+                worldSave.createSection("Residences");
+            }
+            try {
+                resm.residenceNamesByChunk.put(world.getName(), loadWorld(worldSave.getConfigurationSection("Residences"), resm));
+            } catch (Exception ex) {
+                Residence.getInstance().getLogger().severe("Error in loading save file for world: " + world.getName());
+                if (ConfigManager.getInstance().stopOnLoadError()) {
+                    throw (ex);
                 }
             }
         }
         return resm;
     }
 
-    public static Map<ChunkRef, List<String>> loadMap(Map<String, Object> root, ResidenceManager resm) throws Exception {
+    public static Map<ChunkRef, List<String>> loadWorld(ConfigurationSection section, ResidenceManager resm) throws Exception {
         Map<ChunkRef, List<String>> retRes = new HashMap<ChunkRef, List<String>>();
-        if (root != null) {
-            for (Entry<String, Object> res : root.entrySet()) {
-                try {
-                    ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null);
-                    for (ChunkRef chunk : residence.getChunks()) {
-                        List<String> ress = new ArrayList<String>();
-                        if (retRes.containsKey(chunk)) {
-                            ress.addAll(retRes.get(chunk));
-                        }
-                        ress.add(res.getKey());
-                        retRes.put(chunk, ress);
+        for (String res : section.getKeys(false)) {
+            try {
+                ClaimedResidence residence = new ClaimedResidence(section.getConfigurationSection(res), null);
+                for (ChunkRef chunk : residence.getChunks()) {
+                    List<String> ress = new ArrayList<String>();
+                    if (retRes.containsKey(chunk)) {
+                        ress.addAll(retRes.get(chunk));
                     }
-                    resm.residences.put(res.getKey(), residence);
-                } catch (Exception ex) {
-                    Residence.getInstance().getLogger().severe("Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
-                    Residence.getInstance().getLogger().log(Level.SEVERE, null, ex);
-                    if (Residence.getInstance().getConfigManager().stopOnSaveError()) {
-                        throw (ex);
-                    }
+                    ress.add(res);
+                    retRes.put(chunk, ress);
+                }
+                resm.residences.put(res, residence);
+            } catch (Exception ex) {
+                Residence.getInstance().getLogger().severe("Failed to load residence (" + res + ")! Reason:" + ex.getMessage() + " Error Log:");
+                Residence.getInstance().getLogger().log(Level.SEVERE, null, ex);
+                if (ConfigManager.getInstance().stopOnLoadError()) {
+                    throw (ex);
                 }
             }
         }
         return retRes;
     }
 
-    public Map<String, Object> save() {
-        Map<String, Object> worldmap = new LinkedHashMap<String, Object>();
+    public void save() throws IOException {
         for (World world : Residence.getInstance().getServer().getWorlds()) {
-            Map<String, Object> resmap = new LinkedHashMap<String, Object>();
-            for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
-                if (res.getValue().getWorld().equals(world.getName())) {
-                    try {
-                        resmap.put(res.getKey(), res.getValue().save());
-                    } catch (Exception ex) {
-                        Residence.getInstance().getLogger().severe("Failed to save residence (" + res.getKey() + ")!");
-                        Residence.getInstance().getLogger().log(Level.SEVERE, null, ex);
-                    }
-                }
+            File saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");
+            if (!saveFile.isFile()) {
+                saveFile.createNewFile();
             }
-            worldmap.put(world.getName(), resmap);
+            FileConfiguration worldSave = worldFiles.get(world.getName());
+            worldSave.save(saveFile);
         }
-        return worldmap;
     }
 }

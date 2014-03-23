@@ -10,7 +10,7 @@ commands:
   residence:
     description: Manage Residences
     usage: §c/res ? for more info
-    alias: res
+    aliases: [res]
   resadmin:
     description: Residence admin functions.
     usage: §c/res ? or /resadmin ? for more info

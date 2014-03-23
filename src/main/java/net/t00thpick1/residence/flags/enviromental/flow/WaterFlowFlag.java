@@ -1,17 +1,34 @@
 package net.t00thpick1.residence.flags.enviromental.flow;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
+
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.plugin.Plugin;
 
-public class WaterFlowFlag extends FlowFlag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.WaterFlow");
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, super.allowAction(area));
+public class WaterFlowFlag extends Flag implements Listener {
+    private WaterFlowFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
+    }
+
+    public static final WaterFlowFlag FLAG = new WaterFlowFlag(LocaleLoader.getString("Flags.Flags.WaterFlow"), FlagType.AREA_ONLY, null);
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockFromTo(BlockFromToEvent event) {
+        Material mat = event.getBlock().getType();
+        if (!shouldCheck(mat)) {
+            return;
+        }
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getBlock().getLocation()).allowAction(this)) {
+            event.setCancelled(true);
+        }
     }
 
     public boolean shouldCheck(Material material) {
@@ -21,6 +38,6 @@ public class WaterFlowFlag extends FlowFlag implements Listener {
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new WaterFlowFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

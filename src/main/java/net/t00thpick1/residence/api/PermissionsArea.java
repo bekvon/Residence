@@ -4,7 +4,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public interface PermissionsArea {
-    public abstract boolean allowAction(String flag, boolean defaultIfNotSet);
-    public abstract boolean allowAction(Player player, String flag, boolean defaultIfNotSet);
-    public abstract World getWorld();
+    public boolean allowAction(Flag flag);
+    public boolean allowAction(Player player, Flag flag);
+    public World getWorld();
+    public void setFlag(Flag flag, Boolean value);
+    public void setGroupFlag(String group, Flag flag, Boolean value);
 }

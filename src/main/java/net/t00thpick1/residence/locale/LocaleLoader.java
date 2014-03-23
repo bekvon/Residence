@@ -81,7 +81,7 @@ public final class LocaleLoader {
         if (bundle == null) {
             Locale.setDefault(new Locale("en", "US"));
             Locale locale = null;
-            String[] myLocale = Residence.getInstance().getConfigManager().getLocale().split("[-_ ]");
+            String[] myLocale = ConfigManager.getInstance().getLocale().split("[-_ ]");
 
             if (myLocale.length == 1) {
                 locale = new Locale(myLocale[0]);

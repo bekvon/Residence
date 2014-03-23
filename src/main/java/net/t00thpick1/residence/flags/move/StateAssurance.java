@@ -3,7 +3,6 @@ package net.t00thpick1.residence.flags.move;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.PermissionsArea;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.event.ResidenceDeleteEvent;
 import net.t00thpick1.residence.protection.ClaimedResidence;
 import net.t00thpick1.residence.utils.Utilities;
 
@@ -11,17 +10,18 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 
-public class StateAssurance extends MoveFlag {
+public class StateAssurance implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         String pname = event.getPlayer().getName();
-        currentRes.remove(pname);
-        lastOutsideLoc.remove(pname);
+        MoveFlag.currentRes.remove(pname);
+        MoveFlag.lastOutsideLoc.remove(pname);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -30,7 +30,7 @@ public class StateAssurance extends MoveFlag {
         if (!canSpawn(player, player.getLocation())) {
             player.teleport(getSpawnLocation(player, player.getLocation()));
         }
-        handleNewLocation(player, player.getLocation());
+        MoveFlag.handleNewLocation(player, player.getLocation());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -39,14 +39,7 @@ public class StateAssurance extends MoveFlag {
         if (!canSpawn(player, event.getRespawnLocation())) {
             event.setRespawnLocation(getSpawnLocation(player, event.getRespawnLocation()));
         }
-        handleNewLocation(player, event.getRespawnLocation());
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onResidenceDelete(ResidenceDeleteEvent event) {
-        for (Player player : event.getResidence().getPlayersInResidence()) {
-            handleNewLocation(player, player.getLocation());
-        }
+        MoveFlag.handleNewLocation(player, event.getRespawnLocation());
     }
 
     protected static boolean canSpawn(Player player, Location location) {
@@ -54,10 +47,10 @@ public class StateAssurance extends MoveFlag {
             return true;
         }
         PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(location);
-        if (player.getVehicle() != null && !area.allowAction(player, VehicleMoveFlag.FLAG, area.allowAction(player, MoveFlag.FLAG, false))) {
+        if (player.getVehicle() != null && !area.allowAction(player, VehicleMoveFlag.FLAG)) {
             return false;
         }
-        if (!area.allowAction(player, MoveFlag.FLAG, false)) {
+        if (!area.allowAction(player, MoveFlag.FLAG)) {
             return false;
         }
         return true;

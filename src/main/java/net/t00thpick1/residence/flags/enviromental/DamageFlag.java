@@ -11,17 +11,17 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.flags.Flag;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
 
 public class DamageFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Damage");
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, super.allowAction(area));
+    private DamageFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
+
+    public static final DamageFlag FLAG = new DamageFlag(LocaleLoader.getString("Flags.Flags.Damage"), FlagType.ANY, null);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
@@ -32,7 +32,7 @@ public class DamageFlag extends Flag implements Listener {
         if (!(ent instanceof Player || (ent instanceof Wolf && ((Wolf) ent).isTamed()))) {
             return;
         }
-        if (!allowAction(ResidenceAPI.getPermissionsAreaByLocation(event.getEntity().getLocation()))) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getEntity().getLocation()).allowAction(this)) {
             event.setCancelled(true);
             if (event.getCause() == EntityDamageEvent.DamageCause.FIRE || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
                 ent.setFireTicks(0);
@@ -43,6 +43,6 @@ public class DamageFlag extends Flag implements Listener {
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new DamageFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

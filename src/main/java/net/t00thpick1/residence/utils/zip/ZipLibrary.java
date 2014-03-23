@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.zip;
+package net.t00thpick1.residence.utils.zip;
 
 import net.t00thpick1.residence.Residence;
 
@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipLibrary {
-    private static File BackupDir = new File(Residence.getInstance().getDataFolder(), "Backup");
+    private static final File BackupDir = new File(Residence.getInstance().getDataFolder(), "Backup");
 
     public static void backup() throws IOException {
         try {

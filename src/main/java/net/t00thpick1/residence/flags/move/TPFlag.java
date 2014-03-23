@@ -1,25 +1,26 @@
 package net.t00thpick1.residence.flags.move;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
 
-public class TPFlag extends MoveFlag {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.TP");
-
-    public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allowAction(player, FLAG, super.allowAction(player, area));
+public class TPFlag extends Flag implements Listener {
+    private TPFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
+
+    public static final TPFlag FLAG = new TPFlag(LocaleLoader.getString("Flags.Flags.TP"), FlagType.ANY, MoveFlag.FLAG);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
@@ -32,23 +33,23 @@ public class TPFlag extends MoveFlag {
             return;
         }
         if (!player.hasPermission("residence.admin.tp") && event.getCause() == TeleportCause.PLUGIN) {
-            if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(event.getFrom()))) {
+            if (!ResidenceAPI.getPermissionsAreaByLocation(event.getFrom()).allowAction(player, this)) {
                 event.setCancelled(true);
                 player.sendMessage(LocaleLoader.getString("Flags.Messages.TPOutDeny"));
                 return;
             }
-            if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(loc))) {
+            if (!ResidenceAPI.getPermissionsAreaByLocation(loc).allowAction(player, this)) {
                 event.setCancelled(true);
                 player.sendMessage(LocaleLoader.getString("Flags.Messages.TPDeny"));
                 return;
             }
         }
-        handleNewLocation(player, loc);
+        MoveFlag.handleNewLocation(player, loc);
     }
 
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new TPFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

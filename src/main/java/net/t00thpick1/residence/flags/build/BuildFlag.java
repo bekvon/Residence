@@ -1,27 +1,22 @@
 package net.t00thpick1.residence.flags.build;
 
-import net.t00thpick1.residence.api.PermissionsArea;
-import net.t00thpick1.residence.flags.Flag;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.flags.build.bucket.BucketFlag;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
 
-import org.bukkit.entity.Player;
+public class BuildFlag extends Flag {
+    public final static BuildFlag FLAG = new BuildFlag(LocaleLoader.getString("Flags.Flags.Build"), FlagType.ANY, null);
 
-public abstract class BuildFlag extends Flag {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.Build");
-    public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allowAction(player, FLAG, super.allowAction(player, area));
-    }
-
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, super.allowAction(area));
+    private BuildFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
 
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         PlaceFlag.initialize();
         DestroyFlag.initialize();
+        EndermanPickupFlag.initialize();
         BucketFlag.initialize();
         TrampleFlag.initialize();
     }

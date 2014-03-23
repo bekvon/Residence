@@ -1,26 +1,28 @@
 package net.t00thpick1.residence.flags.move;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.ClaimedResidence;
-import net.t00thpick1.residence.protection.FlagManager;
+import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.plugin.Plugin;
 
-public class VehicleMoveFlag extends MoveFlag {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.VehicleMove");
-
-    public boolean allowAction(Player player, PermissionsArea area) {
-        return area.allowAction(player, FLAG, super.allowAction(player, area));
+public class VehicleMoveFlag extends Flag implements Listener {
+    private VehicleMoveFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
+
+    public static final VehicleMoveFlag FLAG = new VehicleMoveFlag(LocaleLoader.getString("Flags.Flags.VehicleMove"), FlagType.ANY, MoveFlag.FLAG);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onVehicleMove(VehicleMoveEvent event) {
@@ -30,8 +32,8 @@ public class VehicleMoveFlag extends MoveFlag {
         }
         Player player = (Player) passenger;
 
-        if (isAdminMode(player) || player.hasPermission("residence.admin.move")) {
-            handleNewLocation(player, event.getTo());
+        if (Utilities.isAdminMode(player) || player.hasPermission("residence.admin.move")) {
+            MoveFlag.handleNewLocation(player, event.getTo());
             return;
         }
 
@@ -39,21 +41,21 @@ public class VehicleMoveFlag extends MoveFlag {
 
         ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(event.getTo());
         if (res == null) {
-            handleNewLocation(player, event.getTo());
+            MoveFlag.handleNewLocation(player, event.getTo());
             return;
         }
-        if (!allowAction(player, ResidenceAPI.getPermissionsAreaByLocation(event.getTo()))) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getTo()).allowAction(player, this)) {
             event.getVehicle().teleport(event.getFrom());
             player.sendMessage(LocaleLoader.getString("Flags.Messages.VehicleMoveDeny"));
             return;
         }
 
-        handleNewLocation(player, loc);
+        MoveFlag.handleNewLocation(player, loc);
     }
 
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new VehicleMoveFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

@@ -5,64 +5,73 @@ import net.t00thpick1.residence.protection.ResidenceManager.ChunkRef;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CuboidArea {
-    protected Location highPoints;
-    protected Location lowPoints;
+    protected World world;
+    private int highX;
+    private int highY;
+    private int highZ;
+    private int lowX;
+    private int lowY;
+    private int lowZ;
 
-    protected CuboidArea() {}
-
-    protected CuboidArea(CuboidArea area) {
-        this.highPoints = area.highPoints;
-        this.lowPoints = area.lowPoints;
+    protected CuboidArea() {
     }
 
     public CuboidArea(Location startLoc, Location endLoc) {
-        int highx, highy, highz, lowx, lowy, lowz;
         if (startLoc.getBlockX() > endLoc.getBlockX()) {
-            highx = startLoc.getBlockX();
-            lowx = endLoc.getBlockX();
+            highX = startLoc.getBlockX();
+            lowX = endLoc.getBlockX();
         } else {
-            highx = endLoc.getBlockX();
-            lowx = startLoc.getBlockX();
+            highX = endLoc.getBlockX();
+            lowX = startLoc.getBlockX();
         }
         if (startLoc.getBlockY() > endLoc.getBlockY()) {
-            highy = startLoc.getBlockY();
-            lowy = endLoc.getBlockY();
+            highY = startLoc.getBlockY();
+            lowY = endLoc.getBlockY();
         } else {
-            highy = endLoc.getBlockY();
-            lowy = startLoc.getBlockY();
+            highY = endLoc.getBlockY();
+            lowY = startLoc.getBlockY();
         }
         if (startLoc.getBlockZ() > endLoc.getBlockZ()) {
-            highz = startLoc.getBlockZ();
-            lowz = endLoc.getBlockZ();
+            highZ = startLoc.getBlockZ();
+            lowZ = endLoc.getBlockZ();
         } else {
-            highz = endLoc.getBlockZ();
-            lowz = startLoc.getBlockZ();
+            highZ = endLoc.getBlockZ();
+            lowZ = startLoc.getBlockZ();
         }
-        highPoints = new Location(startLoc.getWorld(), highx, highy, highz);
-        lowPoints = new Location(startLoc.getWorld(), lowx, lowy, lowz);
+        world = startLoc.getWorld();
     }
 
-    public boolean isAreaWithinArea(CuboidArea area) {
-        return (this.containsLoc(area.highPoints) && this.containsLoc(area.lowPoints));
+    public boolean isAreaWithin(CuboidArea area) {
+        if (!area.getWorld().equals(world)) {
+            return false;
+        }
+        return (containsLocation(area.highX, area.highY, area.highZ) && containsLocation(area.lowX, area.lowY, area.lowZ));
     }
 
-    public boolean containsLoc(Location loc) {
+    public boolean containsLocation(Location loc) {
         if (loc == null) {
             return false;
         }
-        if (!loc.getWorld().equals(highPoints.getWorld())) {
+        return containsLocation(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+
+    public boolean containsLocation(World world, int x, int y, int z) {
+        if (!world.equals(getWorld())) {
             return false;
         }
-        if (lowPoints.getBlockX() <= loc.getBlockX() && highPoints.getBlockX() >= loc.getBlockX()) {
-            if (lowPoints.getBlockZ() <= loc.getBlockZ() && highPoints.getBlockZ() >= loc.getBlockZ()) {
-                if (lowPoints.getBlockY() <= loc.getBlockY() && highPoints.getBlockY() >= loc.getBlockY()) {
+        return containsLocation(x, y, z);
+    }
+
+    private boolean containsLocation(int x, int y, int z) {
+        if (lowX <= x && highX >= x) {
+            if (lowZ <= z && highZ >= z) {
+                if (lowY <= y && highY >= y) {
                     return true;
                 }
             }
@@ -74,28 +83,16 @@ public class CuboidArea {
         if (!area.getWorld().equals(this.getWorld())) {
             return false;
         }
-        if (area.containsLoc(lowPoints) || area.containsLoc(highPoints) || this.containsLoc(area.highPoints) || this.containsLoc(area.lowPoints)) {
+        if (area.containsLocation(highX, highY, highZ) || area.containsLocation(lowX, lowY, lowZ) || this.containsLocation(area.highX, area.highY, area.highZ) || this.containsLocation(area.lowX, area.lowY, area.lowZ)) {
             return true;
         }
-        return advCuboidCheckCollision(highPoints, lowPoints, area.highPoints, area.lowPoints);
+        return advCuboidCheckCollision(area);
     }
 
-    private boolean advCuboidCheckCollision(Location A1High, Location A1Low, Location A2High, Location A2Low) {
-        int A1HX = A1High.getBlockX();
-        int A1LX = A1Low.getBlockX();
-        int A1HY = A1High.getBlockY();
-        int A1LY = A1Low.getBlockY();
-        int A1HZ = A1High.getBlockZ();
-        int A1LZ = A1Low.getBlockZ();
-        int A2HX = A2High.getBlockX();
-        int A2LX = A2Low.getBlockX();
-        int A2HY = A2High.getBlockY();
-        int A2LY = A2Low.getBlockY();
-        int A2HZ = A2High.getBlockZ();
-        int A2LZ = A2Low.getBlockZ();
-        if ((A1HX >= A2LX && A1HX <= A2HX) || (A1LX >= A2LX && A1LX <= A2HX) || (A2HX >= A1LX && A2HX <= A1HX) || (A2LX >= A1LX && A2LX <= A1HX)) {
-            if ((A1HY >= A2LY && A1HY <= A2HY) || (A1LY >= A2LY && A1LY <= A2HY) || (A2HY >= A1LY && A2HY <= A1HY) || (A2LY >= A1LY && A2LY <= A1HY)) {
-                if ((A1HZ >= A2LZ && A1HZ <= A2HZ) || (A1LZ >= A2LZ && A1LZ <= A2HZ) || (A2HZ >= A1LZ && A2HZ <= A1HZ) || (A2LZ >= A1LZ && A2LZ <= A1HZ)) {
+    private boolean advCuboidCheckCollision(CuboidArea area) {
+        if ((highX >= area.lowX && highX <= area.highX) || (lowX >= area.lowX && lowX <= area.highX) || (area.highX >= lowX && area.highX <= highX) || (area.lowX >= lowX && area.lowX <= highX)) {
+            if ((highY >= area.lowY && highY <= area.highY) || (lowY >= area.lowY && lowY <= area.highY) || (area.highY >= lowY && area.highY <= highY) || (area.lowY >= lowY && area.lowY <= highY)) {
+                if ((highZ >= area.lowZ && highZ <= area.highZ) || (lowZ >= area.lowZ && lowZ <= area.highZ) || (area.highZ >= lowZ && area.highZ <= highZ) || (area.lowZ >= lowZ && area.lowZ <= highZ)) {
                     return true;
                 }
             }
@@ -104,80 +101,76 @@ public class CuboidArea {
     }
 
     public long getSize() {
-        int xsize = (highPoints.getBlockX() - lowPoints.getBlockX()) + 1;
-        int ysize = (highPoints.getBlockY() - lowPoints.getBlockY()) + 1;
-        int zsize = (highPoints.getBlockZ() - lowPoints.getBlockZ()) + 1;
+        int xsize = (highX - lowX) + 1;
+        int ysize = (highY - lowY) + 1;
+        int zsize = (highZ - lowZ) + 1;
         return xsize * ysize * zsize;
     }
 
     public int getXSize() {
-        return (highPoints.getBlockX() - lowPoints.getBlockX()) + 1;
+        return (highX - lowX) + 1;
     }
 
     public int getYSize() {
-        return (highPoints.getBlockY() - lowPoints.getBlockY()) + 1;
+        return (highY - lowY) + 1;
     }
 
     public int getZSize() {
-        return (highPoints.getBlockZ() - lowPoints.getBlockZ()) + 1;
+        return (highZ - lowZ) + 1;
     }
 
-    public Location getHighLoc() {
-        return highPoints;
+    public Location getHighLocation() {
+        return new Location(world, highX, highY, highZ);
     }
 
-    public Location getLowLoc() {
-        return lowPoints;
+    public Location getLowLocation() {
+        return new Location(world, lowX, lowY, lowZ);
     }
 
     public World getWorld() {
-        return highPoints.getWorld();
+        return world;
     }
 
-    public Map<String, Object> save() {
-        Map<String, Object> root = new LinkedHashMap<String, Object>();
-        root.put("X1", this.highPoints.getBlockX());
-        root.put("Y1", this.highPoints.getBlockY());
-        root.put("Z1", this.highPoints.getBlockZ());
-        root.put("X2", this.lowPoints.getBlockX());
-        root.put("Y2", this.lowPoints.getBlockY());
-        root.put("Z2", this.lowPoints.getBlockZ());
-        return root;
+    public void saveArea(ConfigurationSection section) {
+        section.set("World", getWorld().getName());
+        section.set("X1", highX);
+        section.set("Y1", highY);
+        section.set("Z1", highZ);
+        section.set("X2", lowX);
+        section.set("Y2", lowY);
+        section.set("Z2", lowZ);
     }
 
-    public void load(Map<String, Object> root) throws Exception {
-        if (root == null) {
-            throw new Exception("Invalid residence physical location...");
-        }
-        String worldName = (String) root.get("World");
-        World world = Residence.getInstance().getServer().getWorld(worldName);
+    public void loadArea(ConfigurationSection section) throws Exception {
+        String worldName = section.getString("World");
+        world = Residence.getInstance().getServer().getWorld(worldName);
         if (world == null) {
             throw new Exception("Cant Find World: " + worldName);
         }
-        int x1 = (Integer) root.get("X1");
-        int y1 = (Integer) root.get("Y1");
-        int z1 = (Integer) root.get("Z1");
-        int x2 = (Integer) root.get("X2");
-        int y2 = (Integer) root.get("Y2");
-        int z2 = (Integer) root.get("Z2");
-        highPoints = new Location(world, x1, y1, z1);
-        lowPoints = new Location(world, x2, y2, z2);
+        highX = section.getInt("X1");
+        highY = section.getInt("Y1");
+        highZ = section.getInt("Z1");
+        lowX = section.getInt("X2");
+        lowY = section.getInt("Y2");
+        lowZ = section.getInt("Z2");
     }
 
     public List<ChunkRef> getChunks() {
         List<ChunkRef> chunks = new ArrayList<ChunkRef>();
-        Location high = this.highPoints;
-        Location low = this.lowPoints;
-        int lowX = ChunkRef.getBase(low.getBlockX());
-        int lowZ = ChunkRef.getBase(low.getBlockZ());
-        int highX = ChunkRef.getBase(high.getBlockX());
-        int highZ = ChunkRef.getBase(high.getBlockZ());
+        int lowCX = ChunkRef.getBase(lowX);
+        int lowCZ = ChunkRef.getBase(lowZ);
+        int highCX = ChunkRef.getBase(highX);
+        int highCZ = ChunkRef.getBase(highZ);
 
-        for (int x = lowX; x <= highX; x++) {
-            for (int z = lowZ; z <= highZ; z++) {
+        for (int x = lowCX; x <= highCX; x++) {
+            for (int z = lowCZ; z <= highCZ; z++) {
                 chunks.add(new ChunkRef(x, z));
             }
         }
         return chunks;
+    }
+
+    public Location getCenter() {
+        return new Location(world, (highX + lowX) / 2, (highY + lowY) / 2, (highZ + lowZ) / 2);
     }
 }

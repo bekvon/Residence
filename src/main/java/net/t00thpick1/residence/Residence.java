@@ -1,55 +1,41 @@
 package net.t00thpick1.residence;
 
-import net.t00thpick1.residence.economy.ResidenceVaultAdapter;
-import net.t00thpick1.residence.economy.TransactionManager;
-import net.t00thpick1.residence.economy.rent.RentManager;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.listeners.LoginLogoutListener;
 import net.t00thpick1.residence.listeners.ToolListener;
-import net.t00thpick1.residence.mcstats.Metrics;
-import net.t00thpick1.residence.permissions.PermissionManager;
-import net.t00thpick1.residence.persistance.YMLSaveHelper;
+import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.*;
 import net.t00thpick1.residence.selection.SelectionManager;
 import net.t00thpick1.residence.selection.WorldEditSelectionManager;
-import net.t00thpick1.residence.zip.ZipLibrary;
+import net.t00thpick1.residence.utils.CompatabilityManager;
+import net.t00thpick1.residence.utils.metrics.Metrics;
+import net.t00thpick1.residence.utils.zip.ZipLibrary;
 
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Residence extends JavaPlugin {
-    public final static int saveVersion = 2;
-
+    public final static int saveVersion = 3;
     private static Residence instance;
-
     private ResidenceManager rmanager;
     private SelectionManager smanager;
-    private PermissionManager gmanager;
-    private TransactionManager tmanager;
-    private PermissionListManager pmanager;
-    private WorldFlagManager wmanager;
-    private RentManager rentmanager;
-    private ResidenceVaultAdapter vault;
+    private WorldManager wmanager;
+    private Economy economy;
+    private Permission permissions;
+    private List<String> adminMode = new ArrayList<String>();
+    private CompatabilityManager cmanager;
 
     @Override
     public void onDisable() {
@@ -65,7 +51,16 @@ public class Residence extends JavaPlugin {
         }
         instance = null;
     }
-
+    private void setupVault() {
+        RegisteredServiceProvider<Economy> econProvider = getServer().getServicesManager().getRegistration(Economy.class);
+        if (econProvider != null) {
+            economy = econProvider.getProvider();
+        }
+        RegisteredServiceProvider<Permission> groupProvider = getServer().getServicesManager().getRegistration(Permission.class);
+        if (groupProvider != null) {
+            permissions = groupProvider.getProvider();
+        }
+    }
     @Override
     public void onEnable() {
         instance = this;
@@ -79,40 +74,39 @@ public class Residence extends JavaPlugin {
         }
 
         new ConfigManager(getConfig());
-        gmanager = new PermissionManager();
-        wmanager = new WorldFlagManager();
-
-        if (cmanager.isEconomyEnabled()) {
-            Plugin p = getServer().getPluginManager().getPlugin("Vault");
-            if (p != null) {
-                ResidenceVaultAdapter vault = new ResidenceVaultAdapter(getServer());
-                if (vault.economyOK()) {
-                    getLogger().log(Level.INFO, "Found Vault using economy: " + vault.getEconomyName());
-                    this.vault = vault;
-                    rentmanager = new RentManager();
-                    tmanager = new TransactionManager();
-                } else {
-                    getLogger().log(Level.INFO, "Found Vault, but Vault reported no usable economy system...");
-                }
-            } else {
-                getLogger().log(Level.INFO, "Vault NOT found! No economy features will be enabled");
-            }
+        new GroupManager(dataFolder);
+        File worldFolder = new File(dataFolder, "WorldConfigurations");
+        if (!worldFolder.isDirectory()) {
+            worldFolder.mkdirs();
         }
+        try {
+            wmanager = new WorldManager(worldFolder);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        Plugin p = getServer().getPluginManager().getPlugin("Vault");
+        if (p != null) {
+            getLogger().log(Level.INFO, "Found Vault");
+            setupVault();
+        } else {
+            getLogger().log(Level.INFO, "Vault NOT found!");
+        }
+
         try {
             loadSaves();
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Unable to load save file", e);
-            throw e;
+            if (ConfigManager.getInstance().stopOnLoadError()) {
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
         }
-        
-        rmanager = new ResidenceManager();
 
-        pmanager = new PermissionListManager();
-
-        FlagPermissions.initValidFlags();
-        Plugin p = getServer().getPluginManager().getPlugin("WorldEdit");
-        if (p != null) {
-            smanager = new WorldEditSelectionManager();
+        FlagManager.initFlags();
+        Plugin we = getServer().getPluginManager().getPlugin("WorldEdit");
+        if (we != null) {
+            smanager = new WorldEditSelectionManager(we);
             getLogger().log(Level.INFO, "Found WorldEdit");
         } else {
             smanager = new SelectionManager();
@@ -124,24 +118,28 @@ public class Residence extends JavaPlugin {
         new ResidenceCommandExecutor(this);
         pm.registerEvents(new ToolListener(), this);
         pm.registerEvents(new LoginLogoutListener(), this);
-        FlagManager.initializeFlags();
+        FlagManager.initFlags();
 
         (new BukkitRunnable() {
             public void run() {
-                Residence.getInstance().save();
+                try {
+                    Residence.getInstance().save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }).runTaskTimer(this, cmanager.getAutoSaveInterval() * 60 * 20, cmanager.getAutoSaveInterval() * 60 * 20);
+        }).runTaskTimer(this, 2000, ConfigManager.getInstance().getAutoSaveInterval() * 60 * 20);
         (new BukkitRunnable() {
             public void run() {
                 // Heals I guess
             }
         }).runTaskTimer(this, 20, 20);
-        if (cmanager.enabledRentSystem()) {
+        if (ConfigManager.getInstance().isRent()) {
             (new BukkitRunnable() {
                 public void run() {
                     // Rent checks?
                 }
-            }).runTaskTimer(this, cmanager.getRentCheckInterval() * 60 * 20, cmanager.getRentCheckInterval() * 60 * 20);
+            }).runTaskTimer(this, 2000, ConfigManager.getInstance().getRentCheckInterval() * 60 * 20);
         }
         try {
             Metrics metrics = new Metrics(this);
@@ -159,157 +157,55 @@ public class Residence extends JavaPlugin {
         return smanager;
     }
 
-    public PermissionManager getPermissionManager() {
-        return gmanager;
+    public Permission getPermissions() {
+        return permissions;
     }
 
-    public TransactionManager getTransactionManager() {
-        return tmanager;
-    }
-
-    public WorldFlagManager getWorldFlags() {
-        return wmanager;
-    }
-
-    public RentManager getRentManager() {
-        return rentmanager;
+    public Economy getEconomy() {
+        return economy;
     }
 
     private void save() throws IOException {
-        File saveFolder = new File(getDataFolder(), "Save");
-        File worldFolder = new File(saveFolder, "Worlds");
-        worldFolder.mkdirs();
-        YMLSaveHelper yml;
-        Map<String, Object> save = rmanager.save();
-        for (Entry<String, Object> entry : save.entrySet()) {
-            File ymlSaveLoc = new File(worldFolder, "res_" + entry.getKey() + ".yml");
-            File tmpFile = new File(worldFolder, "tmp_res_" + entry.getKey() + ".yml");
-            yml = new YMLSaveHelper(tmpFile);
-            yml.getRoot().put("Version", saveVersion);
-            World world = getServer().getWorld(entry.getKey());
-            if (world != null)
-                yml.getRoot().put("Seed", world.getSeed());
-            yml.getRoot().put("Residences", (Map) entry.getValue());
-            yml.save();
-            if (ymlSaveLoc.isFile()) {
-                File backupFolder = new File(worldFolder, "Backup");
-                backupFolder.mkdirs();
-                File backupFile = new File(backupFolder, "res_" + entry.getKey() + ".yml");
-                if (backupFile.isFile()) {
-                    backupFile.delete();
-                }
-                ymlSaveLoc.renameTo(backupFile);
-            }
-            tmpFile.renameTo(ymlSaveLoc);
-        }
-
-        // For Sale save
-        File ymlSaveLoc = new File(saveFolder, "forsale.yml");
-        File tmpFile = new File(saveFolder, "tmp_forsale.yml");
-        yml = new YMLSaveHelper(tmpFile);
-        yml.save();
-        yml.getRoot().put("Version", saveVersion);
-        yml.getRoot().put("Economy", tmanager.save());
-        yml.save();
-        if (ymlSaveLoc.isFile()) {
-            File backupFolder = new File(saveFolder, "Backup");
-            backupFolder.mkdirs();
-            File backupFile = new File(backupFolder, "forsale.yml");
-            if (backupFile.isFile()) {
-                backupFile.delete();
-            }
-            ymlSaveLoc.renameTo(backupFile);
-        }
-        tmpFile.renameTo(ymlSaveLoc);
-
-        // permlist save
-        ymlSaveLoc = new File(saveFolder, "permlists.yml");
-        tmpFile = new File(saveFolder, "tmp_permlists.yml");
-        yml = new YMLSaveHelper(tmpFile);
-        yml.getRoot().put("Version", saveVersion);
-        yml.getRoot().put("PermissionLists", pmanager.save());
-        yml.save();
-        if (ymlSaveLoc.isFile()) {
-            File backupFolder = new File(saveFolder, "Backup");
-            backupFolder.mkdirs();
-            File backupFile = new File(backupFolder, "permlists.yml");
-            if (backupFile.isFile()) {
-                backupFile.delete();
-            }
-            ymlSaveLoc.renameTo(backupFile);
-        }
-        tmpFile.renameTo(ymlSaveLoc);
-
-        // rent save
-        ymlSaveLoc = new File(saveFolder, "rent.yml");
-        tmpFile = new File(saveFolder, "tmp_rent.yml");
-        yml = new YMLSaveHelper(tmpFile);
-        yml.getRoot().put("Version", saveVersion);
-        yml.getRoot().put("RentSystem", rentmanager.save());
-        yml.save();
-        if (ymlSaveLoc.isFile()) {
-            File backupFolder = new File(saveFolder, "Backup");
-            backupFolder.mkdirs();
-            File backupFile = new File(backupFolder, "rent.yml");
-            if (backupFile.isFile()) {
-                backupFile.delete();
-            }
-            ymlSaveLoc.renameTo(backupFile);
-        }
-        tmpFile.renameTo(ymlSaveLoc);
-
-        if (cmanager.showIntervalMessages()) {
-            getLogger().info("Saved Residences...");
-        }
+        wmanager.save();
+        rmanager.save();
     }
 
     private boolean loadSaves() throws Exception {
         File saveFolder = new File(getDataFolder(), "Save");
         try {
             File worldFolder = new File(saveFolder, "Worlds");
-            if (!saveFolder.isDirectory()) {
-                getLogger().warning("Save directory does not exist...");
-                save();
+            if (!worldFolder.isDirectory()) {
+                worldFolder.mkdirs();
             }
-            YMLSaveHelper yml;
-            File loadFile;
-            HashMap<String, Object> worlds = new HashMap<String, Object>();
-            for (World world : getServer().getWorlds()) {
-                loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
-                if (loadFile.isFile()) {
-                    yml = new YMLSaveHelper(loadFile);
-                    yml.load();
-                    worlds.put(world.getName(), yml.getRoot().get("Residences"));
-                }
-            }
-            rmanager = ResidenceManager.load(worlds);
-            loadFile = new File(saveFolder, "forsale.yml");
-            if (loadFile.isFile()) {
-                yml = new YMLSaveHelper(loadFile);
-                yml.load();
-                tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
-            }
-            loadFile = new File(saveFolder, "permlists.yml");
-            if (loadFile.isFile()) {
-                yml = new YMLSaveHelper(loadFile);
-                yml.load();
-                pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
-            }
-            loadFile = new File(saveFolder, "rent.yml");
-            if (loadFile.isFile()) {
-                yml = new YMLSaveHelper(loadFile);
-                yml.load();
-                rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
-            }
+            rmanager = ResidenceManager.load(worldFolder);
             return true;
-        } catch (Exception ex) {
-            getLogger().log(Level.SEVERE, null, ex);
-            throw ex;
+        } catch (Exception e) {
+            getLogger().info(LocaleLoader.getString("General.FailedLoad"));
+            return false;
         }
     }
 
     public static Residence getInstance() {
         return instance;
+    }
+
+    public CompatabilityManager getCompatabilityManager() {
+        return cmanager;
+    }
+
+    public void deactivateAdminMode(Player player) {
+        adminMode.remove(player.getName());
+    }
+
+    public void activateAdminMode(Player player) {
+        adminMode.add(player.getName());
+    }
+
+    public boolean isAdminMode(Player player) {
+        return adminMode.contains(player.getName());
+    }
+    public WorldManager getWorldManager() {
+        return wmanager;
     }
 }
 

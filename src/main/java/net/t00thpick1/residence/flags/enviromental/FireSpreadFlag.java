@@ -9,21 +9,21 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.plugin.Plugin;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.flags.Flag;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
 
 public class FireSpreadFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.FireSpread");
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, super.allowAction(area));
+    private FireSpreadFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
+
+    public static final FireSpreadFlag FLAG = new FireSpreadFlag(LocaleLoader.getString("Flags.Flags.FireSpread"), FlagType.AREA_ONLY, null);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
-        if (!allowAction(ResidenceAPI.getPermissionsAreaByLocation(event.getBlock().getLocation()))) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getBlock().getLocation()).allowAction(this)) {
             event.setCancelled(true);
         }
     }
@@ -33,7 +33,7 @@ public class FireSpreadFlag extends Flag implements Listener {
         if (event.getCause() != IgniteCause.SPREAD) {
             return;
         }
-        if (!allowAction(ResidenceAPI.getPermissionsAreaByLocation(event.getBlock().getLocation()))) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getBlock().getLocation()).allowAction(this)) {
             event.setCancelled(true);
         }
     }
@@ -41,6 +41,6 @@ public class FireSpreadFlag extends Flag implements Listener {
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new FireSpreadFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

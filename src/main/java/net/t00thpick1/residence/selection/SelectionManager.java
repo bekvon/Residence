@@ -1,42 +1,30 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package net.t00thpick1.residence.selection;
 
-import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.permissions.PermissionGroup;
+import net.t00thpick1.residence.ConfigManager;
+import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.CuboidArea;
+import net.t00thpick1.residence.protection.GroupManager;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Administrator
- */
 public class SelectionManager {
     protected Map<String, Location> playerLoc1;
     protected Map<String, Location> playerLoc2;
-    protected Server server;
 
     public static final int MAX_HEIGHT = 255, MIN_HEIGHT = 0;
 
     public enum Direction {
-        UP, DOWN, PLUSX, PLUSZ, MINUSX, MINUSZ
+        PLUSY, PLUSX, PLUSZ, MINUSY, MINUSX, MINUSZ
     }
 
-    public SelectionManager(Server server) {
-        this.server = server;
-        playerLoc1 = Collections.synchronizedMap(new HashMap<String, Location>());
-        playerLoc2 = Collections.synchronizedMap(new HashMap<String, Location>());
+    public SelectionManager() {
+        playerLoc1 = new HashMap<String, Location>();
+        playerLoc2 = new HashMap<String, Location>();
     }
 
     public void placeLoc1(Player player, Location loc) {
@@ -51,99 +39,68 @@ public class SelectionManager {
         }
     }
 
-    public Location getPlayerLoc1(String player) {
-        return playerLoc1.get(player);
+    public Location getPlayerLoc1(Player player) {
+        return playerLoc1.get(player.getName());
     }
 
-    public Location getPlayerLoc2(String player) {
-        return playerLoc2.get(player);
+    public Location getPlayerLoc2(Player player) {
+        return playerLoc2.get(player.getName());
     }
 
-    public boolean hasPlacedBoth(String player) {
-        return (playerLoc1.containsKey(player) && playerLoc2.containsKey(player));
+    public boolean hasPlacedBoth(Player player) {
+        return (playerLoc1.containsKey(player.getName()) && playerLoc2.containsKey(player.getName()));
     }
 
     public void showSelectionInfo(Player player) {
-        String pname = player.getName();
-        if (this.hasPlacedBoth(pname)) {
-            CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
-            player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Selection.Total.Size") + ":" + ChatColor.DARK_AQUA + " " + cuboidArea.getSize());
-            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-            if (Residence.getConfigManager().enableEconomy())
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Land.Cost") + ":" + ChatColor.DARK_AQUA + " " + ((int) Math.ceil((double) cuboidArea.getSize() * group.getCostPerBlock())));
-            player.sendMessage(ChatColor.YELLOW + "X" + Residence.getLanguage().getPhrase("Size") + ":" + ChatColor.DARK_AQUA + " " + cuboidArea.getXSize());
-            player.sendMessage(ChatColor.YELLOW + "Y" + Residence.getLanguage().getPhrase("Size") + ":" + ChatColor.DARK_AQUA + " " + cuboidArea.getYSize());
-            player.sendMessage(ChatColor.YELLOW + "Z" + Residence.getLanguage().getPhrase("Size") + ":" + ChatColor.DARK_AQUA + " " + cuboidArea.getZSize());
+        if (this.hasPlacedBoth(player)) {
+            CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
+            player.sendMessage(LocaleLoader.getString("Selection.Total.Size", cuboidArea.getSize()));
+            if (ConfigManager.getInstance().isEconomy()) {
+                player.sendMessage(LocaleLoader.getString("Land.Cost", (int) Math.ceil((double) cuboidArea.getSize() * GroupManager.getCostPerBlock(player))));
+            }
+            player.sendMessage(LocaleLoader.getString("Selection.Size.X", cuboidArea.getXSize()));
+            player.sendMessage(LocaleLoader.getString("Selection.Size.Y", cuboidArea.getYSize()));
+            player.sendMessage(LocaleLoader.getString("Selection.Size.Z", cuboidArea.getZSize()));
         } else
-            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("SelectPoints"));
     }
 
     public void vert(Player player, boolean resadmin) {
-        if (hasPlacedBoth(player.getName())) {
+        if (hasPlacedBoth(player)) {
             this.sky(player, resadmin);
             this.bedrock(player, resadmin);
         } else {
-            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("SelectPoints"));
         }
     }
 
     public void sky(Player player, boolean resadmin) {
-        if (hasPlacedBoth(player.getName())) {
-            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+        if (hasPlacedBoth(player)) {
             int y1 = playerLoc1.get(player.getName()).getBlockY();
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if (y1 > y2) {
-                int newy = MAX_HEIGHT;
-                if (!resadmin) {
-                    if (group.getMaxHeight() < newy)
-                        newy = group.getMaxHeight();
-                    if (newy - y2 > (group.getMaxY() - 1))
-                        newy = y2 + (group.getMaxY() - 1);
-                }
-                playerLoc1.get(player.getName()).setY(newy);
+                playerLoc1.get(player.getName()).setY(MAX_HEIGHT);
             } else {
-                int newy = MAX_HEIGHT;
-                if (!resadmin) {
-                    if (group.getMaxHeight() < newy)
-                        newy = group.getMaxHeight();
-                    if (newy - y1 > (group.getMaxY() - 1))
-                        newy = y1 + (group.getMaxY() - 1);
-                }
-                playerLoc2.get(player.getName()).setY(newy);
+                playerLoc2.get(player.getName()).setY(MAX_HEIGHT);
             }
-            player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectionSky"));
+            player.sendMessage(LocaleLoader.getString("SelectionSky"));
         } else {
-            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("SelectPoints"));
         }
     }
 
     public void bedrock(Player player, boolean resadmin) {
-        if (hasPlacedBoth(player.getName())) {
-            PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+        if (hasPlacedBoth(player)) {
             int y1 = playerLoc1.get(player.getName()).getBlockY();
             int y2 = playerLoc2.get(player.getName()).getBlockY();
             if (y1 < y2) {
-                int newy = MIN_HEIGHT;
-                if (!resadmin) {
-                    if (newy < group.getMinHeight())
-                        newy = group.getMinHeight();
-                    if (y2 - newy > (group.getMaxY() - 1))
-                        newy = y2 - (group.getMaxY() - 1);
-                }
-                playerLoc1.get(player.getName()).setY(newy);
+                playerLoc1.get(player.getName()).setY(MIN_HEIGHT);
             } else {
-                int newy = MIN_HEIGHT;
-                if (!resadmin) {
-                    if (newy < group.getMinHeight())
-                        newy = group.getMinHeight();
-                    if (y1 - newy > (group.getMaxY() - 1))
-                        newy = y1 - (group.getMaxY() - 1);
-                }
-                playerLoc2.get(player.getName()).setY(newy);
+                playerLoc2.get(player.getName()).setY(MIN_HEIGHT);
             }
-            player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectionBedrock"));
+            player.sendMessage(LocaleLoader.getString("SelectionBedrock"));
         } else {
-            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("SelectPoints"));
         }
     }
 
@@ -162,11 +119,11 @@ public class SelectionManager {
         int ymax = MAX_HEIGHT;
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax, ymax, zmax));
-        player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectionSuccess"));
+        player.sendMessage(LocaleLoader.getString("SelectionSuccess"));
     }
 
     public boolean worldEdit(Player player) {
-        player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("WorldEditNotFound"));
+        player.sendMessage(LocaleLoader.getString("WorldEditNotFound"));
         return false;
     }
 
@@ -176,111 +133,95 @@ public class SelectionManager {
         Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
         placeLoc1(player, loc1);
         placeLoc2(player, loc2);
-        player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectionSuccess"));
+        player.sendMessage(LocaleLoader.getString("SelectionSuccess"));
         showSelectionInfo(player);
     }
 
     public void modify(Player player, boolean shift, int amount) {
-        if (!this.hasPlacedBoth(player.getName())) {
-            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectPoints"));
+        if (!this.hasPlacedBoth(player)) {
+            player.sendMessage(LocaleLoader.getString("SelectPoints"));
             return;
         }
         Direction d = this.getDirection(player);
         if (d == null) {
-            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidDirection"));
+            player.sendMessage(LocaleLoader.getString("InvalidDirection"));
         }
-        CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
-        if (d == Direction.UP) {
-            int oldy = area.getHighLoc().getBlockY();
-            oldy = oldy + amount;
-            if (oldy > MAX_HEIGHT) {
-                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectTooHigh"));
-                oldy = MAX_HEIGHT;
-            }
-            area.getHighLoc().setY(oldy);
-            if (shift) {
-                int oldy2 = area.getLowLoc().getBlockY();
-                oldy2 = oldy2 + amount;
-                area.getLowLoc().setY(oldy2);
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Shifting.Up") + "...");
-            } else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Expanding.Up") + "...");
+        Location loc1 = playerLoc1.get(player.getName());
+        Location loc2 = playerLoc2.get(player.getName());
+        Location highLoc;
+        Location lowLoc;
+        if (loc1.getBlockY() > loc2.getBlockY()) {
+            highLoc = loc1;
+            lowLoc = loc2;
+        } else {
+            highLoc = loc2;
+            lowLoc = loc1;
         }
-        if (d == Direction.DOWN) {
-            int oldy = area.getLowLoc().getBlockY();
-            oldy = oldy - amount;
-            if (oldy < MIN_HEIGHT) {
-                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectTooLow"));
-                oldy = MIN_HEIGHT;
+        if (d == Direction.PLUSY) {
+            if (highLoc.getBlockY() + amount > MAX_HEIGHT) {
+                player.sendMessage(LocaleLoader.getString("Select.TooHigh"));
+                return;
             }
-            area.getLowLoc().setY(oldy);
+            highLoc.add(0, amount, 0);
             if (shift) {
-                int oldy2 = area.getHighLoc().getBlockY();
-                oldy2 = oldy2 - amount;
-                area.getHighLoc().setY(oldy2);
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Shifting.Down") + "...");
+                lowLoc.add(0, amount, 0);
+                player.sendMessage(LocaleLoader.getString("Shifting.Y.Positive"));
             } else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Expanding.Down") + "...");
+                player.sendMessage(LocaleLoader.getString("Expanding.Y.Positive"));
+        }
+        if (d == Direction.MINUSY) {
+            if (lowLoc.getBlockY() - amount < MIN_HEIGHT) {
+                player.sendMessage(LocaleLoader.getString("Select.TooLow"));
+                return;
+            }
+            lowLoc.add(0, -amount, 0);
+            if (shift) {
+                highLoc.add(0, -amount, 0);
+                player.sendMessage(LocaleLoader.getString("Shifting.Y.Negative"));
+            } else
+                player.sendMessage(LocaleLoader.getString("Expanding.Y.Negative"));
         }
         if (d == Direction.MINUSX) {
-            int oldx = area.getLowLoc().getBlockX();
-            oldx = oldx - amount;
-            area.getLowLoc().setX(oldx);
+            lowLoc.add(-amount, 0, 0);
             if (shift) {
-                int oldx2 = area.getHighLoc().getBlockX();
-                oldx2 = oldx2 - amount;
-                area.getHighLoc().setX(oldx2);
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Shifting") + " -X...");
+                highLoc.add(-amount, 0, 0);
+                player.sendMessage(LocaleLoader.getString("Shifting.X.Negative"));
             } else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Expanding") + " -X...");
+                player.sendMessage(LocaleLoader.getString("Expanding.X.Negative"));
         }
         if (d == Direction.PLUSX) {
-            int oldx = area.getHighLoc().getBlockX();
-            oldx = oldx + amount;
-            area.getHighLoc().setX(oldx);
+            highLoc.add(amount, 0, 0);
             if (shift) {
-                int oldx2 = area.getLowLoc().getBlockX();
-                oldx2 = oldx2 + amount;
-                area.getLowLoc().setX(oldx2);
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Shifting") + " +X...");
+                lowLoc.add(amount, 0, 0);
+                player.sendMessage(LocaleLoader.getString("Shifting.X.Positive"));
             } else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Expanding") + " +X...");
+                player.sendMessage(LocaleLoader.getString("Expanding.X.Positive"));
         }
         if (d == Direction.MINUSZ) {
-            int oldz = area.getLowLoc().getBlockZ();
-            oldz = oldz - amount;
-            area.getLowLoc().setZ(oldz);
+            lowLoc.add(0, 0, -amount);
             if (shift) {
-                int oldz2 = area.getHighLoc().getBlockZ();
-                oldz2 = oldz2 - amount;
-                area.getHighLoc().setZ(oldz2);
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Shifting") + " -Z...");
+                highLoc.add(0, 0, -amount);
+                player.sendMessage(LocaleLoader.getString("Shifting.Z.Negative"));
             } else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Expanding") + " -Z...");
+                player.sendMessage(LocaleLoader.getString("Expanding.Z.Negative"));
         }
         if (d == Direction.PLUSZ) {
-            int oldz = area.getHighLoc().getBlockZ();
-            oldz = oldz + amount;
-            area.getHighLoc().setZ(oldz);
+            highLoc.add(0, 0, amount);
             if (shift) {
-                int oldz2 = area.getLowLoc().getBlockZ();
-                oldz2 = oldz2 + amount;
-                area.getLowLoc().setZ(oldz2);
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Shifting") + " +Z...");
+                lowLoc.add(0, 0, amount);
+                player.sendMessage(LocaleLoader.getString("Shifting.Z.Positive"));
             } else
-                player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Expanding") + " +Z...");
+                player.sendMessage(LocaleLoader.getString("Expanding.Z.Postive"));
         }
-        playerLoc1.put(player.getName(), area.getHighLoc());
-        playerLoc2.put(player.getName(), area.getLowLoc());
     }
 
     private Direction getDirection(Player player) {
         float pitch = player.getLocation().getPitch();
         float yaw = player.getLocation().getYaw();
         if (pitch < -50)
-            return Direction.UP;
+            return Direction.PLUSY;
         if (pitch > 50)
-            return Direction.DOWN;
+            return Direction.MINUSY;
         if ((yaw > 45 && yaw < 135) || (yaw < -45 && yaw > -135))
             return Direction.PLUSX;
         if ((yaw > 225 && yaw < 315) || (yaw < -225 && yaw > -315))

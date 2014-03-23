@@ -3,11 +3,10 @@ package net.t00thpick1.residence.flags.enviromental.explosion;
 import java.util.Iterator;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.flags.Flag;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.FlagManager;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,10 +20,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.plugin.Plugin;
 
 public class BedExplosionFlag extends Flag implements Listener {
-    public static final String FLAG = LocaleLoader.getString("Flags.Flags.BedExplosion");
-    public boolean allowAction(PermissionsArea area) {
-        return area.allowAction(FLAG, area.allowAction(ExplosionFlag.FLAG, super.allowAction(area)));
+    private BedExplosionFlag(String flag, FlagType type, Flag parent) {
+        super(flag, type, parent);
     }
+
+    public static final BedExplosionFlag FLAG = new BedExplosionFlag(LocaleLoader.getString("Flags.Flags.BedExplosion"), FlagType.AREA_ONLY, ExplosionFlag.FLAG);
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
@@ -35,7 +35,7 @@ public class BedExplosionFlag extends Flag implements Listener {
         Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Location loc = it.next().getLocation();
-            if (allowAction(ResidenceAPI.getPermissionsAreaByLocation(loc))) {
+            if (ResidenceAPI.getPermissionsAreaByLocation(loc).allowAction(this)) {
                 it.remove();
             }
         }
@@ -53,7 +53,7 @@ public class BedExplosionFlag extends Flag implements Listener {
         if (block.getType() != Material.BED_BLOCK) {
             return;
         }
-        if (allowAction(ResidenceAPI.getPermissionsAreaByLocation(event.getEntity().getLocation()))) {
+        if (ResidenceAPI.getPermissionsAreaByLocation(event.getEntity().getLocation()).allowAction(this)) {
             event.setCancelled(true);
         }
     }
@@ -61,6 +61,6 @@ public class BedExplosionFlag extends Flag implements Listener {
     public static void initialize() {
         FlagManager.addFlag(FLAG);
         Plugin plugin = Residence.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(new BedExplosionFlag(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }
 }

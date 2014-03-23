@@ -1,30 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.t00thpick1.residence.selection;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.regions.CuboidRegion;
+
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
-/**
- * @author Administrator
- */
 public class WorldEditSelectionManager extends SelectionManager {
+    private WorldEditPlugin wep;
 
-    public WorldEditSelectionManager(Server serv) {
-        super(serv);
+    public WorldEditSelectionManager(Plugin plugin) {
+        super();
+        wep = (WorldEditPlugin) plugin;
     }
 
     @Override
     public boolean worldEdit(Player player) {
-        WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
         Selection sel = wep.getSelection(player);
         if (sel != null) {
             Location pos1 = sel.getMinimumPoint();
@@ -42,9 +37,14 @@ public class WorldEditSelectionManager extends SelectionManager {
         return false;
     }
 
+    @Override
+    public boolean hasPlacedBoth(Player player) {
+        worldEdit(player);
+        return super.hasPlacedBoth(player);
+    }
+
     private void afterSelectionUpdate(Player player) {
-        if (hasPlacedBoth(player.getName())) {
-            WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+        if (hasPlacedBoth(player)) {
             World world = playerLoc1.get(player.getName()).getWorld();
             Selection selection = new CuboidSelection(world, playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
             wep.setSelection(player, selection);
