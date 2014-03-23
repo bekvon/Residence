@@ -1172,6 +1172,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             }
         }
         res.setForRent(cost, days * 24 * 60 * 60 * 1000, autoRenew);
+        player.sendMessage(LocaleLoader.getString("Commands.Market.Rentable.Success", res.getName(), cost, days));
         return true;
     }
 
