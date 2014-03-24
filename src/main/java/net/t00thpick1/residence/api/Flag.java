@@ -3,7 +3,7 @@ package net.t00thpick1.residence.api;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-public abstract class Flag {
+public class Flag {
     private final String name;
     private final Flag parent;
     private final FlagType type;
@@ -40,7 +40,6 @@ public abstract class Flag {
     }
 
     public Permission getPermission() {
-        // TODO Auto-generated method stub
-        return null;
+        return perm;
     }
 }
