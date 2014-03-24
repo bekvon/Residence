@@ -32,17 +32,17 @@ public class ToolListener implements Listener {
             if (Residence.getInstance().getCompatabilityManager().isUsingExternalSelectionTool()) {
                 return;
             }
-            if (!Utilities.isAdminMode(player) && (!player.hasPermission("residence.select") && !(player.hasPermission("residence.create") && !player.isPermissionSet("residence.select")))) {
+            if (!Utilities.isAdminMode(player) && !player.hasPermission("residence.select")) {
                 return;
             }
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 Location loc = block.getLocation();
                 Residence.getInstance().getSelectionManager().placeLoc1(player, loc);
-                player.sendMessage(LocaleLoader.getString("SelectPoint", LocaleLoader.getString("Primary"), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+                player.sendMessage(LocaleLoader.getString("Commands.Select.PrimaryPoint", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
             } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 Location loc = block.getLocation();
                 Residence.getInstance().getSelectionManager().placeLoc2(player, loc);
-                player.sendMessage(LocaleLoader.getString("SelectPoint", LocaleLoader.getString("Secondary"), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+                player.sendMessage(LocaleLoader.getString("Commands.Select.SecondaryPoint", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
             }
             event.setCancelled(true);
             return;

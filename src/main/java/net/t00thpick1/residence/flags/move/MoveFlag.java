@@ -2,6 +2,7 @@ package net.t00thpick1.residence.flags.move;
 
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.ClaimedResidence;
 import net.t00thpick1.residence.utils.Utilities;
@@ -58,6 +59,7 @@ public class MoveFlag extends Flag implements Listener {
         TPFlag.initialize();
         StateAssurance.initialize();
         VehicleMoveFlag.initialize();
+        FlagManager.addFlag(FLAG);
         Residence plugin = Residence.getInstance();
         plugin.getServer().getPluginManager().registerEvents(FLAG, plugin);
     }

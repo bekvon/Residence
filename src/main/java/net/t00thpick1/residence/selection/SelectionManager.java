@@ -1,6 +1,7 @@
 package net.t00thpick1.residence.selection;
 
 import net.t00thpick1.residence.ConfigManager;
+import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.CuboidArea;
 import net.t00thpick1.residence.protection.GroupManager;
@@ -56,13 +57,13 @@ public class SelectionManager {
             CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
             player.sendMessage(LocaleLoader.getString("Selection.Total.Size", cuboidArea.getSize()));
             if (ConfigManager.getInstance().isEconomy()) {
-                player.sendMessage(LocaleLoader.getString("Land.Cost", (int) Math.ceil((double) cuboidArea.getSize() * GroupManager.getCostPerBlock(player))));
+                player.sendMessage(LocaleLoader.getString("Selection.Land.Cost", Residence.getInstance().getEconomy().format((double) cuboidArea.getSize() * GroupManager.getCostPerBlock(player))));
             }
             player.sendMessage(LocaleLoader.getString("Selection.Size.X", cuboidArea.getXSize()));
             player.sendMessage(LocaleLoader.getString("Selection.Size.Y", cuboidArea.getYSize()));
             player.sendMessage(LocaleLoader.getString("Selection.Size.Z", cuboidArea.getZSize()));
         } else
-            player.sendMessage(LocaleLoader.getString("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("Selection.SelectPoints"));
     }
 
     public void vert(Player player, boolean resadmin) {
@@ -70,7 +71,7 @@ public class SelectionManager {
             this.sky(player, resadmin);
             this.bedrock(player, resadmin);
         } else {
-            player.sendMessage(LocaleLoader.getString("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("Selection.SelectPoints"));
         }
     }
 
@@ -83,9 +84,9 @@ public class SelectionManager {
             } else {
                 playerLoc2.get(player.getName()).setY(MAX_HEIGHT);
             }
-            player.sendMessage(LocaleLoader.getString("SelectionSky"));
+            player.sendMessage(LocaleLoader.getString("Selection.SelectionSky"));
         } else {
-            player.sendMessage(LocaleLoader.getString("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("Selection.SelectPoints"));
         }
     }
 
@@ -98,9 +99,9 @@ public class SelectionManager {
             } else {
                 playerLoc2.get(player.getName()).setY(MIN_HEIGHT);
             }
-            player.sendMessage(LocaleLoader.getString("SelectionBedrock"));
+            player.sendMessage(LocaleLoader.getString("Selection.SelectionBedrock"));
         } else {
-            player.sendMessage(LocaleLoader.getString("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("Selection.SelectPoints"));
         }
     }
 
@@ -119,11 +120,11 @@ public class SelectionManager {
         int ymax = MAX_HEIGHT;
         this.playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
         this.playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax, ymax, zmax));
-        player.sendMessage(LocaleLoader.getString("SelectionSuccess"));
+        player.sendMessage(LocaleLoader.getString("Selection.SelectionSuccess"));
     }
 
     public boolean worldEdit(Player player) {
-        player.sendMessage(LocaleLoader.getString("WorldEditNotFound"));
+        player.sendMessage(LocaleLoader.getString("Selection.WorldEditNotFound"));
         return false;
     }
 
@@ -133,18 +134,18 @@ public class SelectionManager {
         Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
         placeLoc1(player, loc1);
         placeLoc2(player, loc2);
-        player.sendMessage(LocaleLoader.getString("SelectionSuccess"));
+        player.sendMessage(LocaleLoader.getString("Selection.SelectionSuccess"));
         showSelectionInfo(player);
     }
 
     public void modify(Player player, boolean shift, int amount) {
         if (!this.hasPlacedBoth(player)) {
-            player.sendMessage(LocaleLoader.getString("SelectPoints"));
+            player.sendMessage(LocaleLoader.getString("Selection.SelectPoints"));
             return;
         }
         Direction d = this.getDirection(player);
         if (d == null) {
-            player.sendMessage(LocaleLoader.getString("InvalidDirection"));
+            player.sendMessage(LocaleLoader.getString("Selection.InvalidDirection"));
         }
         Location loc1 = playerLoc1.get(player.getName());
         Location loc2 = playerLoc2.get(player.getName());
@@ -159,59 +160,59 @@ public class SelectionManager {
         }
         if (d == Direction.PLUSY) {
             if (highLoc.getBlockY() + amount > MAX_HEIGHT) {
-                player.sendMessage(LocaleLoader.getString("Select.TooHigh"));
+                player.sendMessage(LocaleLoader.getString("Selection.TooHigh"));
                 return;
             }
             highLoc.add(0, amount, 0);
             if (shift) {
                 lowLoc.add(0, amount, 0);
-                player.sendMessage(LocaleLoader.getString("Shifting.Y.Positive"));
+                player.sendMessage(LocaleLoader.getString("Selection.Shifting.Y.Positive"));
             } else
-                player.sendMessage(LocaleLoader.getString("Expanding.Y.Positive"));
+                player.sendMessage(LocaleLoader.getString("Selection.Expanding.Y.Positive"));
         }
         if (d == Direction.MINUSY) {
             if (lowLoc.getBlockY() - amount < MIN_HEIGHT) {
-                player.sendMessage(LocaleLoader.getString("Select.TooLow"));
+                player.sendMessage(LocaleLoader.getString("Selection.TooLow"));
                 return;
             }
             lowLoc.add(0, -amount, 0);
             if (shift) {
                 highLoc.add(0, -amount, 0);
-                player.sendMessage(LocaleLoader.getString("Shifting.Y.Negative"));
+                player.sendMessage(LocaleLoader.getString("Selection.Shifting.Y.Negative"));
             } else
-                player.sendMessage(LocaleLoader.getString("Expanding.Y.Negative"));
+                player.sendMessage(LocaleLoader.getString("Selection.Expanding.Y.Negative"));
         }
         if (d == Direction.MINUSX) {
             lowLoc.add(-amount, 0, 0);
             if (shift) {
                 highLoc.add(-amount, 0, 0);
-                player.sendMessage(LocaleLoader.getString("Shifting.X.Negative"));
+                player.sendMessage(LocaleLoader.getString("Selection.Shifting.X.Negative"));
             } else
-                player.sendMessage(LocaleLoader.getString("Expanding.X.Negative"));
+                player.sendMessage(LocaleLoader.getString("Selection.Expanding.X.Negative"));
         }
         if (d == Direction.PLUSX) {
             highLoc.add(amount, 0, 0);
             if (shift) {
                 lowLoc.add(amount, 0, 0);
-                player.sendMessage(LocaleLoader.getString("Shifting.X.Positive"));
+                player.sendMessage(LocaleLoader.getString("Selection.Shifting.X.Positive"));
             } else
-                player.sendMessage(LocaleLoader.getString("Expanding.X.Positive"));
+                player.sendMessage(LocaleLoader.getString("Selection.Expanding.X.Positive"));
         }
         if (d == Direction.MINUSZ) {
             lowLoc.add(0, 0, -amount);
             if (shift) {
                 highLoc.add(0, 0, -amount);
-                player.sendMessage(LocaleLoader.getString("Shifting.Z.Negative"));
+                player.sendMessage(LocaleLoader.getString("Selection.Shifting.Z.Negative"));
             } else
-                player.sendMessage(LocaleLoader.getString("Expanding.Z.Negative"));
+                player.sendMessage(LocaleLoader.getString("Selection.Expanding.Z.Negative"));
         }
         if (d == Direction.PLUSZ) {
             highLoc.add(0, 0, amount);
             if (shift) {
                 lowLoc.add(0, 0, amount);
-                player.sendMessage(LocaleLoader.getString("Shifting.Z.Positive"));
+                player.sendMessage(LocaleLoader.getString("Selection.Shifting.Z.Positive"));
             } else
-                player.sendMessage(LocaleLoader.getString("Expanding.Z.Postive"));
+                player.sendMessage(LocaleLoader.getString("Selection.Expanding.Z.Postive"));
         }
     }
 

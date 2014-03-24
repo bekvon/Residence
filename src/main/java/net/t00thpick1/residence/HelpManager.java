@@ -1,5 +1,7 @@
 package net.t00thpick1.residence;
 
+import java.util.Set;
+
 import net.t00thpick1.residence.locale.LocaleLoader;
 
 import org.bukkit.command.CommandSender;
@@ -21,18 +23,37 @@ public class HelpManager {
     public static void help(CommandSender sender, String[] args) {
         int i = 0;
         ConfigurationSection section = file.getConfigurationSection("res");
-        while (i < args.length - 1) {
+        while (!args[i].equalsIgnoreCase("?")) {
             if (!section.isConfigurationSection(args[i].toLowerCase())) {
                 sender.sendMessage(LocaleLoader.getString("Commands.Help.NotFound"));
                 return;
             }
             section = section.getConfigurationSection(args[i].toLowerCase());
+            i++;
+        }
+        int page = 0;
+        if (i < args.length - 1) {
+            try {
+                page = Integer.parseInt(args[args.length - 1]);
+                if (page <= 0) {
+                    throw new Exception();
+                }
+            } catch (Exception ex) {
+                sender.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidNumber", args[args.length - 1]));
+                return;
+            }
+            page--;
         }
         sender.sendMessage(section.getString("Description"));
         if (section.isConfigurationSection("Subcommands")) {
-            for (String subcommand : section.getConfigurationSection("Subcommands").getKeys(false)) {
-                args[args.length - 1] = subcommand;
-                sender.sendMessage("/res" + Joiner.on(" ").join(args) + subcommand);
+            sender.sendMessage(LocaleLoader.getString("Commands.Help.Subcommands", page+1));
+            String[] subcommands = section.getConfigurationSection("Subcommands").getKeys(false).toArray(new String[0]);
+            for (int j = 0; j < 8; j++) {
+                int index = (page*8) + j;
+                if (index < subcommands.length) {
+                    args[args.length - 1] = subcommands[index];
+                    sender.sendMessage("/res " + Joiner.on(" ").join(args));
+                }
             }
         }
     }

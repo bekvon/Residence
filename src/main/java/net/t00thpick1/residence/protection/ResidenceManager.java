@@ -109,6 +109,7 @@ public class ResidenceManager {
             ClaimedResidence newRes = new ClaimedResidence(res, null);
             residences.put(name, newRes);
             calculateChunks(newRes);
+            newRes.applyDefaultFlags();
         } catch (Exception e) {
             e.printStackTrace();
             return false;

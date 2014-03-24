@@ -10,16 +10,7 @@ commands:
   residence:
     description: Manage Residences
     usage: §c/res ? for more info
-    aliases: [res]
-  resadmin:
-    description: Residence admin functions.
-    usage: §c/res ? or /resadmin ? for more info
-  resreload:
-    description: Reload the entire residence plugin.
-    usage: §c/resreload
-  resload:
-    description: Load the save file again after you have made modifications.
-    usage: §c/resload
+    aliases: [res, resadmin]
 permissions:
   residence.admin:
     description: Gives you access to /resadmin
@@ -38,11 +29,139 @@ permissions:
     description: Allows all commands
     default: op
     children:
+      residence.commands.admin: true
+  residence.commands.admin:
+    description: Allows all admin commands
+    default: op
+    children:
+      residence.commands.user: true
+      residence.commands.setowner: true
+      residence.commands.listallhidden: true
+      residence.commands.server: true
+  residence.commands.user:
+    description: Allows regular commands
+    default: op
+    children:
       residence.commands.create: true
       residence.commands.select: true
+      residence.commands.remove: true
+      residence.commands.subzone: true
+      residence.commands.gui: true
+      residence.commands.sublist: true
+      residence.commands.compass: true
+      residence.commands.info: true
+      residence.commands.current: true
+      residence.commands.set: true
+      residence.commands.pset: true
+      residence.commands.gset: true
+      residence.commands.rset: true
+      residence.commands.rentlink: true
+      residence.commands.rentlinks: true
+      residence.commands.rename: true
+      residence.commands.unstuck: true
+      residence.commands.mirror: true
+      residence.commands.defualt: true
+      residence.commands.list: true
+      residence.commands.listall: true
+      residence.commands.tp: true
+      residence.commands.tpset: true
+      residence.commands.market: true
+      residence.commands.give: true
+      residence.commands.message: true
+      residence.commands.clearflags: true
+      residence.commands.tool: true
   residence.commands.create:
     description: Allows you to create residences
     default: op
+    children:
+      residence.commands.select: true
   residence.commands.select:
     description: Allows you to select an area to make residences
+    default: op
+  residence.commands.remove:
+    description: Allows you to remove a residence
+    default: op
+  residence.commands.setowner:
+    description: Allows you to set a residences owner
+    default: op
+  residence.commands.subzone:
+    description: Allows you to create subzones
+    default: op
+  residence.commands.gui:
+    description: currently nonfunctional
+    default: op
+  residence.commands.sublist:
+    description: Allows you to view subzones
+    default: op
+  residence.commands.compass:
+    description: Allows you to set compass destinations to residences
+    default: op
+  residence.commands.info:
+    description: Allows you to view residence info
+    default: op
+  residence.commands.current:
+    description: Allows you to view the residence you are currently in
+    default: op
+  residence.commands.set:
+    description: Allows you to set area flags
+    default: op
+  residence.commands.pset:
+    description: Allows you to set player flags
+    default: op
+  residence.commands.gset:
+    description: Allows you to set group flags
+    default: op
+  residence.commands.rset:
+    description: Allows you to set rent flags
+    default: op
+  residence.commands.rentlink:
+    description: Allows you to link a subzone to another via a rentlink
+    default: op
+  residence.commands.rentlinks:
+    description: Allows you to view rentlinks in a zone
+    default: op
+  residence.commands.rename:
+    description: Allows you to rename a residence
+    default: op
+  residence.commands.unstuck:
+    description: Allows you to escape a residence
+    default: op
+  residence.commands.mirror:
+    description: Allows you to mirror residence perms from one to another
+    default: op
+  residence.commands.defualt:
+    description: Allows you to set a residence's perms to default
+    default: op
+  residence.commands.list:
+    description: Allows you to view a list of your residences
+    default: op
+  residence.commands.listall:
+    description: Allows you to view a list of all residences
+    default: op
+  residence.commands.listall.hidden:
+    description: Allows you to view hidden residences
+    default: op
+  residence.commands.tp:
+    description: Allows you to use /res tp
+    default: op
+  residence.commands.tpset:
+    description: Allows you to set a residences teleport point
+    default: op
+  residence.commands.market:
+    description: Allows you to use the market command
+    default: op
+  residence.commands.give:
+    description: Allows you to give away residences
+    default: op
+  residence.commands.message:
+    description: Allows you to set residence messages
+    default: op
+  residence.commands.clearflags:
+    description: Allows you to clear flags in your residence
+    default: op
+  residence.commands.tool:
+    description: Allows you to view the residence tools
+    default: op
+  residence.commands.server:
+    description: Allows you to set a residence to be owned by the server
     default: op

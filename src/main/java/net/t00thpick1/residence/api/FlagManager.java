@@ -1,5 +1,7 @@
 package net.t00thpick1.residence.api;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +39,10 @@ public class FlagManager {
 
     public static Flag getFlag(String flag) {
         return validFlags.get(flag.toLowerCase());
+    }
+
+    public static Collection<Flag> getFlags() {
+        return Collections.unmodifiableCollection(validFlags.values());
     }
 
     public static void initFlags() {

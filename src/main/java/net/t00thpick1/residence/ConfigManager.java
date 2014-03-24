@@ -49,7 +49,7 @@ public class ConfigManager {
     }
 
     public boolean noMessages() {
-        return config.getBoolean("General.EnterLeaveMessages");
+        return !config.getBoolean("General.EnterLeaveMessages");
     }
 
     public boolean isAutoRenewDefault() {

@@ -11,6 +11,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.Flag;
+import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.locale.LocaleLoader;
@@ -124,6 +125,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
     public boolean allowAction(Player player, Flag flag) {
         Flag origFlag = flag;
         String name = player.getName();
+        if (flag == FlagManager.ADMIN && getOwner().equalsIgnoreCase(name)) {
+            return true;
+        }
         while (true) {
             if (playerFlags.isConfigurationSection(name)) {
                 ConfigurationSection playerPerms = playerFlags.getConfigurationSection(name);
@@ -191,8 +195,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             res.createSection("Groups");
             res.createSection("Players");
             res.createSection("Subzones");
-            ClaimedResidence newres = new ClaimedResidence(res, this);
-            subzoneObjects.put(name, newres);
+            ClaimedResidence newRes = new ClaimedResidence(res, this);
+            subzoneObjects.put(name, newRes);
+            newRes.applyDefaultFlags();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -500,6 +505,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             groupPerms = groupFlags.getConfigurationSection(group);
         }
         groupPerms.set(flag.getName(), value);
+        if (value == null && groupPerms.getKeys(false).size() == 0) {
+            groupFlags.set(group, null);
+        }
     }
 
     @Override
@@ -511,6 +519,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             playerPerms = playerFlags.getConfigurationSection(player);
         }
         playerPerms.set(flag.getName(), value);
+        if (value == null && playerPerms.getKeys(false).size() == 0) {
+            playerFlags.set(player, null);
+        }
     }
 
     @Override
@@ -667,6 +678,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             }
             builder.append("] ");
         }
+        if (builder.length() == 0) {
+            builder.append(LocaleLoader.getString("Info.None"));
+        }
         player.sendMessage(LocaleLoader.getString("Info.GroupFlags", builder.toString()));
         builder = new StringBuilder();
         for (String play : playerFlags.getKeys(false)) {
@@ -679,6 +693,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
                 builder.append(flag);
             }
             builder.append("] ");
+        }
+        if (builder.length() == 0) {
+            builder.append(LocaleLoader.getString("Info.None"));
         }
         player.sendMessage(LocaleLoader.getString("Info.OtherFlags", builder.toString()));
         builder = new StringBuilder();

@@ -24,7 +24,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -122,8 +127,15 @@ public class Residence extends JavaPlugin {
         try {
             if (!commandsFile.isFile()) {
                 commandsFile.createNewFile();
-                FileConfiguration internalConfig = YamlConfiguration.loadConfiguration(getResource("commandhelp.yml"));
-                internalConfig.save(commandsFile);
+                FileOutputStream out = new FileOutputStream(commandsFile);
+                InputStream in = getResource("commandhelp.yml");
+                byte[] buf = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(buf)) > 0) {
+                    out.write(buf, 0, bytesRead);
+                }
+                out.close();
+                in.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

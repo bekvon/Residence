@@ -25,11 +25,14 @@ public class Utilities {
     }
 
     public static String toDayString(long millis) {
-        return (millis/1000/60/60/24) + " days";
+        return (millis / 1000 / 60 / 60 / 24) + " days";
     }
 
-    public static boolean validName(String newName) {
-        // TODO Auto-generated method stub
-        return false;
+    public static boolean validName(String name) {
+        String namecheck = name.replaceAll("^[a-zA-Z0-9_]*$", "");
+        if (!namecheck.equals("")) {
+            return false;
+        }
+        return true;
     }
 }
