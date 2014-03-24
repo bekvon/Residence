@@ -2,10 +2,11 @@ package net.t00thpick1.residence.listeners;
 
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.ConfigManager;
+import net.t00thpick1.residence.ResidenceCommandExecutor;
 import net.t00thpick1.residence.api.PermissionsArea;
 import net.t00thpick1.residence.api.ResidenceAPI;
+import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.ClaimedResidence;
 import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.Location;
@@ -55,10 +56,10 @@ public class ToolListener implements Listener {
                 return;
             }
             PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(block.getLocation());
-            if (area instanceof ClaimedResidence) {
-                ((ClaimedResidence) area).printInformation(player);
+            if (area instanceof ResidenceArea) {
+                ResidenceCommandExecutor.printInformation(player, (ResidenceArea) area);
             } else {
-                player.sendMessage(LocaleLoader.getString("NoResidenceHere"));
+                player.sendMessage(LocaleLoader.getString("Tool.Info.NoResidenceHere"));
             }
             event.setCancelled(true);
         }

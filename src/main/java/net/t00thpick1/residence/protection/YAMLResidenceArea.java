@@ -14,16 +14,15 @@ import net.t00thpick1.residence.api.Flag;
 import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.ResidenceArea;
-import net.t00thpick1.residence.locale.LocaleLoader;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-public class ClaimedResidence extends CuboidArea implements ResidenceArea {
+public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     private String name;
-    private ClaimedResidence parent;
-    private Map<String, ClaimedResidence> subzoneObjects;
+    private ResidenceArea parent;
+    private Map<String, ResidenceArea> subzoneObjects;
     private ConfigurationSection data;
     private Location tpLoc;
     private ConfigurationSection flags;
@@ -34,9 +33,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
     private ConfigurationSection subzones;
     private ConfigurationSection marketData;
     private ConfigurationSection rentData;
-    private List<ClaimedResidence> rentLinkObjects;
+    private List<ResidenceArea> rentLinkObjects;
 
-    public ClaimedResidence(ConfigurationSection section, ClaimedResidence parent) throws Exception {
+    public YAMLResidenceArea(ConfigurationSection section, YAMLResidenceArea parent) throws Exception {
         super();
         name = section.getName();
         this.parent = parent;
@@ -69,7 +68,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         }
         rentLinks = section.getConfigurationSection("RentLinks");
         subzones = section.getConfigurationSection("Subzones");
-        subzoneObjects = new HashMap<String, ClaimedResidence>();
+        subzoneObjects = new HashMap<String, ResidenceArea>();
         loadSubzones();
         if (getParent() == null) {
             loadRentLinks();
@@ -78,13 +77,13 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
 
     private void initMarketState() {
         if (isRented()) {
-            EconomyManager.setRented(this);
+            YAMLEconomyManager.setRented(this);
         }
         if (isForRent()) {
-            EconomyManager.setForRent(this);
+            YAMLEconomyManager.setForRent(this);
         }
         if (isForSale()) {
-            EconomyManager.setForSale(this);
+            YAMLEconomyManager.setForSale(this);
         }
     }
 
@@ -92,14 +91,14 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         for (String rentLink : rentLinks.getStringList("Links")) {
             rentLinkObjects.add(getSubzoneByName(rentLink.substring(rentLink.indexOf(".") + 1)));
         }
-        for (ClaimedResidence subzone : subzoneObjects.values()) {
-            subzone.loadRentLinks();
+        for (ResidenceArea subzone : subzoneObjects.values()) {
+            ((YAMLResidenceArea) subzone).loadRentLinks();
         }
     }
 
     private void loadSubzones() throws Exception {
         for (String subzone : subzones.getKeys(false)) {
-            subzoneObjects.put(subzone, new ClaimedResidence(subzones.getConfigurationSection(subzone), this));
+            subzoneObjects.put(subzone, new YAMLResidenceArea(subzones.getConfigurationSection(subzone), this));
         }
     }
 
@@ -147,7 +146,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
                 if (isRented() && getRenter().equalsIgnoreCase(name)) {
                     return rentFlags.getBoolean(flag.getName());
                 }
-                for (ClaimedResidence rentLocation : rentLinkObjects) {
+                for (ResidenceArea rentLocation : rentLinkObjects) {
                     if (rentLocation.getRenter().equalsIgnoreCase(name)) {
                         return rentFlags.getBoolean(flag.getName());
                     }
@@ -164,15 +163,15 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         }
     }
 
-    public boolean addSubzone(String name, String owner, Location loc1, Location loc2) {
+    public boolean createSubzone(String name, String owner, Location loc1, Location loc2) {
         if (subzones.isConfigurationSection(name)) {
             return false;
         }
-        CuboidArea newArea = new CuboidArea(loc1, loc2);
+        YAMLCuboidArea newArea = new YAMLCuboidArea(loc1, loc2);
         if (!isAreaWithin(newArea)) {
             return false;
         }
-        for (ClaimedResidence subzone : getSubzoneList()) {
+        for (ResidenceArea subzone : getSubzoneList()) {
             if (subzone.checkCollision(newArea)) {
                 return false;
             }
@@ -195,7 +194,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             res.createSection("Groups");
             res.createSection("Players");
             res.createSection("Subzones");
-            ClaimedResidence newRes = new ClaimedResidence(res, this);
+            ResidenceArea newRes = new YAMLResidenceArea(res, this);
             subzoneObjects.put(name, newRes);
             newRes.applyDefaultFlags();
         } catch (Exception e) {
@@ -205,9 +204,9 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         return true;
     }
 
-    public ClaimedResidence getSubzoneByLoc(Location loc) {
-        ClaimedResidence residence = null;
-        for (ClaimedResidence res : subzoneObjects.values()) {
+    public ResidenceArea getSubzoneByLoc(Location loc) {
+        ResidenceArea residence = null;
+        for (ResidenceArea res : subzoneObjects.values()) {
             if (res.containsLocation(loc)) {
                 residence = res;
                 break;
@@ -216,19 +215,19 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         if (residence == null) {
             return null;
         }
-        ClaimedResidence subrez = residence.getSubzoneByLoc(loc);
+        ResidenceArea subrez = residence.getSubzoneByLoc(loc);
         if (subrez == null) {
             return residence;
         }
         return subrez;
     }
 
-    public ClaimedResidence getSubzoneByName(String subzonename) {
+    public ResidenceArea getSubzoneByName(String subzonename) {
         if (!subzonename.contains(".")) {
             return subzoneObjects.get(subzonename);
         }
         String split[] = subzonename.split("\\.");
-        ClaimedResidence get = subzoneObjects.get(split[0]);
+        ResidenceArea get = subzoneObjects.get(split[0]);
         for (int i = 1; i < split.length; i++) {
             if (get == null) {
                 return null;
@@ -238,7 +237,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         return get;
     }
 
-    public Collection<ClaimedResidence> getSubzoneList() {
+    public Collection<ResidenceArea> getSubzoneList() {
         return subzoneObjects.values();
     }
 
@@ -246,18 +245,18 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         return subzoneObjects.keySet();
     }
 
-    public ClaimedResidence getParent() {
+    public ResidenceArea getParent() {
         return parent;
     }
 
-    public ClaimedResidence getTopParent() {
+    public ResidenceArea getTopParent() {
         if (parent != null) {
             return this;
         }
         return parent.getTopParent();
     }
 
-    public void rentLink(ClaimedResidence res) {
+    public void rentLink(ResidenceArea res) {
         if (res.getTopParent() != this.getTopParent()) {
             return;
         }
@@ -269,10 +268,10 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
 
     public int getSubzoneDepth() {
         int count = 0;
-        ClaimedResidence res = parent;
+        ResidenceArea res = parent;
         while (res != null) {
             count++;
-            res = res.parent;
+            res = res.getParent();
         }
         return count;
     }
@@ -356,7 +355,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             }
             return false;
         } else {
-            ClaimedResidence parent = getParent();
+            ResidenceArea parent = getParent();
             if (parent.renameSubzone(name, newName)) {
                 name = newName;
                 return true;
@@ -420,7 +419,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         }
         rentData.set("Renter", renter);
         rentData.set("IsAutoRenew", autoRenew);
-        EconomyManager.setRented(this);
+        YAMLEconomyManager.setRented(this);
         return checkRent();
     }
 
@@ -454,7 +453,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
             marketData.set("Cost", 0);
             marketData.set("RentPeriod", 0);
         }
-        EconomyManager.evict(this);
+        YAMLEconomyManager.evict(this);
         return;
     }
 
@@ -540,7 +539,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         marketData.set("Cost", cost);
         marketData.set("RentPeriod", rentPeriod);
         marketData.set("IsAutoRenew", isAutoRenewEnabled);
-        EconomyManager.setForRent(this);
+        YAMLEconomyManager.setForRent(this);
     }
 
     @Override
@@ -552,15 +551,15 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
     public void setForSale(int cost) {
         marketData.set("ForSale", true);
         marketData.set("Cost", cost);
-        EconomyManager.setForSale(this);
+        YAMLEconomyManager.setForSale(this);
     }
 
     
     public void removeFromMarket() {
         marketData.set("ForSale", false);
         marketData.set("ForRent", false);
-        EconomyManager.removeFromSale(this);
-        EconomyManager.removeFromRent(this);
+        YAMLEconomyManager.removeFromSale(this);
+        YAMLEconomyManager.removeFromRent(this);
         if (!isRented()) {
             marketData.set("Cost", 0);
             marketData.set("RentPeriod", 0);
@@ -575,7 +574,7 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         econ.withdrawPlayer(buyer, getCost());
         econ.depositPlayer(getOwner(), getCost());
         removeFromMarket();
-        EconomyManager.removeFromSale(this);
+        YAMLEconomyManager.removeFromSale(this);
         setOwner(buyer);
         return true;
     }
@@ -608,16 +607,16 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         removeAllAreaFlags();
     }
 
-    public void copyPermissions(ClaimedResidence mirror) {
+    public void copyPermissions(ResidenceArea mirror) {
         ConfigurationSection parent = playerFlags.getParent();
         parent.set("Players", null);
-        playerFlags = parent.createSection("Players", mirror.playerFlags.getValues(true));
+        playerFlags = parent.createSection("Players", ((YAMLResidenceArea) mirror).playerFlags.getValues(true));
         parent = groupFlags.getParent();
         parent.set("Groups", null);
-        groupFlags = parent.createSection("Groups", mirror.groupFlags.getValues(true));
+        groupFlags = parent.createSection("Groups", ((YAMLResidenceArea) mirror).groupFlags.getValues(true));
         parent = flags.getParent();
         parent.set("Flags", null);
-        flags = parent.createSection("Flags", mirror.flags.getValues(true));
+        flags = parent.createSection("Flags", ((YAMLResidenceArea) mirror).flags.getValues(true));
     }
 
     public void removeAllPlayerFlags() {
@@ -638,110 +637,88 @@ public class ClaimedResidence extends CuboidArea implements ResidenceArea {
         flags = parent.createSection("Flags");
     }
 
-    public void printInformation(Player player) {
-        player.sendMessage(LocaleLoader.getString("Info.Residence", getName()));
-        player.sendMessage(LocaleLoader.getString("Info.Owner", getOwner()));
-        if (isRented()) {
-            player.sendMessage(LocaleLoader.getString("Info.Renter", getRenter()));
-        }
-        StringBuilder builder = new StringBuilder();
-        for (String flag : flags.getKeys(false)) {
-            builder.append(" ");
-            builder.append(flags.getBoolean(flag) ? "+" : "-");
-            builder.append(flag);
-        }
-        if (builder.length() == 0) {
-            builder.append(LocaleLoader.getString("Info.None"));
-        }
-        player.sendMessage(LocaleLoader.getString("Info.AreaFlags", builder.toString()));
-        builder = new StringBuilder();
-        if (playerFlags.isConfigurationSection(player.getName())) {
-            ConfigurationSection section = playerFlags.getConfigurationSection(player.getName());
-            for (String flag : section.getKeys(false)) {
-                builder.append(" ");
-                builder.append(section.getBoolean(flag) ? "+" : "-");
-                builder.append(flag);
-            }
-        } else {
-            builder.append(LocaleLoader.getString("Info.None"));
-        }
-        player.sendMessage(LocaleLoader.getString("Info.YourFlags", builder.toString()));
-        builder = new StringBuilder();
-        for (String group : groupFlags.getKeys(false)) {
-            ConfigurationSection section = groupFlags.getConfigurationSection(group);
-            builder.append(group);
-            builder.append(" [");
-            for (String flag : section.getKeys(false)) {
-                builder.append(" ");
-                builder.append(section.getBoolean(flag) ? "+" : "-");
-                builder.append(flag);
-            }
-            builder.append("] ");
-        }
-        if (builder.length() == 0) {
-            builder.append(LocaleLoader.getString("Info.None"));
-        }
-        player.sendMessage(LocaleLoader.getString("Info.GroupFlags", builder.toString()));
-        builder = new StringBuilder();
-        for (String play : playerFlags.getKeys(false)) {
-            ConfigurationSection section = playerFlags.getConfigurationSection(play);
-            builder.append(play);
-            builder.append(" [");
-            for (String flag : section.getKeys(false)) {
-                builder.append(" ");
-                builder.append(section.getBoolean(flag) ? "+" : "-");
-                builder.append(flag);
-            }
-            builder.append("] ");
-        }
-        if (builder.length() == 0) {
-            builder.append(LocaleLoader.getString("Info.None"));
-        }
-        player.sendMessage(LocaleLoader.getString("Info.OtherFlags", builder.toString()));
-        builder = new StringBuilder();
-        for (String flag : marketData.getStringList("RentFlags")) {
-            builder.append(" ");
-            builder.append("+");
-            builder.append(flag);
-        }
-        if (builder.length() == 0) {
-            builder.append(LocaleLoader.getString("Info.None"));
-        }
-        player.sendMessage(LocaleLoader.getString("Info.RentFlags", builder.toString()));
-        player.sendMessage(LocaleLoader.getString("Info.Size", getSize()));
-        Location loc = getHighLocation();
-        player.sendMessage(LocaleLoader.getString("Info.CoordsTop", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-        loc = getLowLocation();
-        player.sendMessage(LocaleLoader.getString("Info.CoordsBottom", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-    }
-
-    public void printRentLinks(Player player) {
-        player.sendMessage(LocaleLoader.getString("Info.Residence", getName()));
-        player.sendMessage(LocaleLoader.getString("Info.RentLinks"));
-        for (String rentLink : rentLinks.getStringList("Links")) {
-            player.sendMessage(LocaleLoader.getString("Info.RentLink", rentLink));
-        }
-    }
-
-    public void printMarketInfo(Player player) {
-        player.sendMessage(LocaleLoader.getString("Info.Residence", getName()));
-        player.sendMessage(LocaleLoader.getString("Info.Owner", getOwner()));
-        if (isRented()) {
-            player.sendMessage(LocaleLoader.getString("Info.Renter", getRenter()));
-            player.sendMessage(LocaleLoader.getString("Info.AutoRenew", isAutoRenew()));
-        } else if (isForRent()) {
-            player.sendMessage(LocaleLoader.getString("Info.ForRent", getCost(), getRentPeriod()));
-            if (isAutoRenewEnabled()) {
-                player.sendMessage(LocaleLoader.getString("Info.AutoRenewEnabled"));
-            } else {
-                player.sendMessage(LocaleLoader.getString("Info.AutoRenewDisabled"));
-            }
-        } else if (isForSale()) {
-            player.sendMessage(LocaleLoader.getString("Info.ForSale", getCost()));
-        }
-    }
-
     public void removeAllPlayerFlags(String player) {
         playerFlags.set(player, null);
+    }
+
+    @Override
+    public Map<Flag, Boolean> getRentFlags() {
+        HashMap<Flag, Boolean> rFlags = new HashMap<Flag, Boolean>();
+        for (String flag : rentFlags.getKeys(false)) {
+            Flag flagObj = FlagManager.getFlag(flag);
+            if (flagObj != null) {
+                rFlags.put(flagObj, rentFlags.getBoolean(flag));
+            }
+        }
+        return rFlags;
+    }
+
+    @Override
+    public Map<String, Map<Flag, Boolean>> getPlayerFlags() {
+        Map<String, Map<Flag, Boolean>> playerFlags = new HashMap<String, Map<Flag, Boolean>>();
+        for (String player : this.playerFlags.getKeys(false)) {
+            ConfigurationSection playerSection = this.playerFlags.getConfigurationSection(player);
+            HashMap<Flag, Boolean> pFlags = new HashMap<Flag, Boolean>();
+            for (String flag : playerSection.getKeys(false)) {
+                Flag flagObj = FlagManager.getFlag(flag);
+                if (flagObj != null) {
+                    pFlags.put(flagObj, playerSection.getBoolean(flag));
+                }
+            }
+            if (pFlags.size() > 0) {
+                playerFlags.put(player, pFlags);
+            }
+        }
+        return playerFlags;
+    }
+
+    @Override
+    public Map<Flag, Boolean> getPlayerFlags(String name) {
+        HashMap<Flag, Boolean> pFlags = new HashMap<Flag, Boolean>();
+        if (!playerFlags.isConfigurationSection(name)) {
+            return pFlags;
+        }
+        ConfigurationSection playerSection = playerFlags.getConfigurationSection(name);
+        for (String flag : playerSection.getKeys(false)) {
+            Flag flagObj = FlagManager.getFlag(flag);
+            if (flagObj != null) {
+                pFlags.put(flagObj, playerSection.getBoolean(flag));
+            }
+        }
+        return pFlags;
+    }
+
+    @Override
+    public Map<Flag, Boolean> getAreaFlags() {
+        HashMap<Flag, Boolean> areaFlags = new HashMap<Flag, Boolean>();
+        for (String flag : flags.getKeys(false)) {
+            Flag flagObj = FlagManager.getFlag(flag);
+            if (flagObj != null) {
+                areaFlags.put(flagObj, flags.getBoolean(flag));
+            }
+        }
+        return areaFlags;
+    }
+
+    @Override
+    public Map<String, Map<Flag, Boolean>> getGroupFlags() {
+        Map<String, Map<Flag, Boolean>> groupFlags = new HashMap<String, Map<Flag, Boolean>>();
+        for (String group : this.groupFlags.getKeys(false)) {
+            ConfigurationSection groupSection = this.groupFlags.getConfigurationSection(group);
+            HashMap<Flag, Boolean> gFlags = new HashMap<Flag, Boolean>();
+            for (String flag : groupSection.getKeys(false)) {
+                Flag flagObj = FlagManager.getFlag(flag);
+                if (flagObj != null) {
+                    gFlags.put(flagObj, groupSection.getBoolean(flag));
+                }
+            }
+            groupFlags.put(group, gFlags);
+        }
+        return groupFlags;
+    }
+
+    @Override
+    public Collection<String> getRentLinkStrings() {
+        return rentLinks.getStringList("Links");
     }
 }

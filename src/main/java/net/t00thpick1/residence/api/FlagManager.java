@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.flags.AdminFlag;
 import net.t00thpick1.residence.flags.PVPFlag;
 import net.t00thpick1.residence.flags.build.BuildFlag;
@@ -35,6 +36,7 @@ public class FlagManager {
 
     public static void addFlag(Flag flag) {
         validFlags.put(flag.getName(), flag);
+        Residence.getInstance().getServer().getPluginManager().addPermission(flag.getPermission());
     }
 
     public static Flag getFlag(String flag) {

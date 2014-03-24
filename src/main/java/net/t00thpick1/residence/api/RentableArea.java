@@ -10,7 +10,7 @@ public interface RentableArea {
     public long getRentPeriod();
     public boolean isAutoRenewEnabled();
     public void setAutoRenewEnabled(boolean autoRenew);
-
+    public boolean isRented();
 
     void setRentFlag(Flag flag, Boolean value);
 
@@ -23,5 +23,5 @@ public interface RentableArea {
     public boolean isAutoRenew();
     public void setAutoRenew(boolean autoRenew);
     public long getLastPaymentDate();
-
+    public void evict();
 }

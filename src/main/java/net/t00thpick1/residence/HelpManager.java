@@ -1,7 +1,5 @@
 package net.t00thpick1.residence;
 
-import java.util.Set;
-
 import net.t00thpick1.residence.locale.LocaleLoader;
 
 import org.bukkit.command.CommandSender;

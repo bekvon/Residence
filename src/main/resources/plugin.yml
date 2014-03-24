@@ -1,6 +1,6 @@
 name: Residence
 main: net.t00thpick1.residence.Residence
-version: 3.0.0-ALPHA-SNAPSHOT
+version: 3.0.0-SNAPSHOT
 description: Cuboid Residence Plugin
 author: t00thpick1
 authors: [t00thpick1,bekvon]
@@ -18,13 +18,20 @@ permissions:
     children:
       residence.admin.tp: true
       residence.admin.move: true
-      residence.commands: true
+      residence.commands.admin: true
+      residence.user: true
   residence.admin.tp:
     description: Allows to override tp flag
     default: op
   residence.admin.move:
     description: Allows to override move flag
     default: op
+  residence.user:
+    description: Allows default user perms
+    default: true
+    children:
+      residence.commands.user: true
+      residence.flags.all: true
   residence.commands:
     description: Allows all commands
     default: op
@@ -164,4 +171,7 @@ permissions:
     default: op
   residence.commands.server:
     description: Allows you to set a residence to be owned by the server
+    default: op
+  residence.flags.all:
+    description: Allows you to set all flags
     default: op

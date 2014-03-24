@@ -3,8 +3,8 @@ package net.t00thpick1.residence.flags.move;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.Flag;
 import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.ClaimedResidence;
 import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.Location;
@@ -37,7 +37,7 @@ public class MoveFlag extends Flag implements Listener {
             StateAssurance.handleNewLocation(player, event.getTo());
             return;
         }
-        ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(event.getTo());
+        ResidenceArea res = Residence.getInstance().getResidenceManager().getByLoc(event.getTo());
         if (res == null) {
             StateAssurance.handleNewLocation(player, event.getTo());
             return;

@@ -3,6 +3,7 @@ package net.t00thpick1.residence;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.flags.move.StateAssurance;
 import net.t00thpick1.residence.listeners.LoginLogoutListener;
 import net.t00thpick1.residence.listeners.ToolListener;
@@ -25,11 +26,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -37,7 +35,7 @@ import java.util.logging.Level;
 public class Residence extends JavaPlugin {
     public final static int saveVersion = 3;
     private static Residence instance;
-    private ResidenceManager rmanager;
+    private YAMLResidenceManager rmanager;
     private SelectionManager smanager;
     private WorldManager wmanager;
     private Economy economy;
@@ -115,7 +113,7 @@ public class Residence extends JavaPlugin {
             getLogger().log(Level.INFO, "Vault NOT found!");
         }
 
-        EconomyManager.init();
+        YAMLEconomyManager.init();
         if (!loadSaves()) {
             if (ConfigManager.getInstance().stopOnLoadError()) {
                 getServer().getPluginManager().disablePlugin(this);
@@ -170,11 +168,11 @@ public class Residence extends JavaPlugin {
             public void run() {
                 Player[] p = getServer().getOnlinePlayers();
                 for (Player player : p) {
-                    ClaimedResidence res = StateAssurance.getCurrentResidence(player.getName());
+                    ResidenceArea res = StateAssurance.getCurrentResidence(player.getName());
                     if (res != null && res.allowAction(FlagManager.HEALING)) {
                         double health = player.getHealth();
-                        if (health < 20 && !player.isDead()) {
-                            player.setHealth(health + 1);
+                        if (health < player.getMaxHealth() && !player.isDead()) {
+                            player.setHealth(Math.min(health + 1, player.getMaxHealth()));
                         }
                     }
                 }
@@ -183,9 +181,9 @@ public class Residence extends JavaPlugin {
         if (ConfigManager.getInstance().isRent()) {
             (new BukkitRunnable() {
                 public void run() {
-                    EconomyManager.checkRent();
+                    YAMLEconomyManager.checkRent();
                 }
-            }).runTaskTimer(this, 2000, ConfigManager.getInstance().getRentCheckInterval() * 60 * 20);
+            }).runTaskTimer(this, 20, ConfigManager.getInstance().getRentCheckInterval() * 60 * 20);
         }
         try {
             Metrics metrics = new Metrics(this);
@@ -195,7 +193,7 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    public ResidenceManager getResidenceManager() {
+    public YAMLResidenceManager getResidenceManager() {
         return rmanager;
     }
 
@@ -223,7 +221,7 @@ public class Residence extends JavaPlugin {
             if (!worldFolder.isDirectory()) {
                 worldFolder.mkdirs();
             }
-            rmanager = ResidenceManager.load(worldFolder);
+            rmanager = YAMLResidenceManager.load(worldFolder);
             return true;
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Unable to load save file", e);

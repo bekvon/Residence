@@ -2,6 +2,8 @@ package net.t00thpick1.residence.protection;
 
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
+import net.t00thpick1.residence.api.ResidenceArea;
+import net.t00thpick1.residence.api.ResidenceManager;
 import net.t00thpick1.residence.flags.move.StateAssurance;
 
 import org.bukkit.Location;
@@ -16,30 +18,30 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 
-public class ResidenceManager {
-    private Map<String, ClaimedResidence> residences;
+public class YAMLResidenceManager implements ResidenceManager {
+    private Map<String, ResidenceArea> residences;
     private Map<String, Map<ChunkRef, List<String>>> residenceNamesByChunk;
     private Map<String, FileConfiguration> worldFiles;
     private File worldFolder;
 
-    public ResidenceManager() {
+    public YAMLResidenceManager() {
         residenceNamesByChunk = new HashMap<String, Map<ChunkRef, List<String>>>();
-        residences = new HashMap<String, ClaimedResidence>();
+        residences = new HashMap<String, ResidenceArea>();
         worldFiles = new HashMap<String, FileConfiguration>();
     }
 
-    public ClaimedResidence getByLoc(Location loc) {
+    public ResidenceArea getByLoc(Location loc) {
         if (loc == null) {
             return null;
         }
-        ClaimedResidence res = null;
+        ResidenceArea res = null;
         boolean found = false;
         String world = loc.getWorld().getName();
         ChunkRef chunk = new ChunkRef(loc);
         if (residenceNamesByChunk.get(world) != null) {
             if (residenceNamesByChunk.get(world).get(chunk) != null) {
                 for (String key : residenceNamesByChunk.get(world).get(chunk)) {
-                    ClaimedResidence entry = residences.get(key);
+                    ResidenceArea entry = residences.get(key);
                     if (entry.containsLocation(loc)) {
                         res = entry;
                         found = true;
@@ -51,14 +53,14 @@ public class ResidenceManager {
         if (!found) {
             return null;
         }
-        ClaimedResidence subres = res.getSubzoneByLoc(loc);
+        ResidenceArea subres = res.getSubzoneByLoc(loc);
         if (subres == null) {
             return res;
         }
         return subres;
     }
 
-    public ClaimedResidence getByName(String name) {
+    public ResidenceArea getByName(String name) {
         if (name == null) {
             return null;
         }
@@ -66,7 +68,7 @@ public class ResidenceManager {
         if (split.length == 1) {
             return residences.get(name);
         }
-        ClaimedResidence res = residences.get(split[0]);
+        ResidenceArea res = residences.get(split[0]);
         for (int i = 1; i < split.length; i++) {
             if (res != null) {
                 res = res.getSubzoneByName(split[i]);
@@ -77,11 +79,11 @@ public class ResidenceManager {
         return res;
     }
 
-    public boolean createResidence(String name, CuboidArea area) {
+    public boolean createResidence(String name, YAMLCuboidArea area) {
         return createResidence(name, "Server Land", area);
     }
 
-    public boolean createResidence(String name, String owner, CuboidArea area) {
+    public boolean createResidence(String name, String owner, YAMLCuboidArea area) {
         if (area == null) {
             return false;
         }
@@ -106,7 +108,7 @@ public class ResidenceManager {
             res.createSection("Groups");
             res.createSection("Players");
             res.createSection("Subzones");
-            ClaimedResidence newRes = new ClaimedResidence(res, null);
+            YAMLResidenceArea newRes = new YAMLResidenceArea(res, null);
             residences.put(name, newRes);
             calculateChunks(newRes);
             newRes.applyDefaultFlags();
@@ -119,9 +121,9 @@ public class ResidenceManager {
     }
 
     public int getOwnedZoneCount(String player) {
-        Collection<ClaimedResidence> set = residences.values();
+        Collection<ResidenceArea> set = residences.values();
         int count = 0;
-        for (ClaimedResidence res : set) {
+        for (ResidenceArea res : set) {
             if (res.getOwner().equalsIgnoreCase(player)) {
                 count++;
             }
@@ -129,7 +131,18 @@ public class ResidenceManager {
         return count;
     }
 
-    public boolean rename(ClaimedResidence res, String newName) {
+    public List<ResidenceArea> getOwnedResidences(String player) {
+        Collection<ResidenceArea> set = residences.values();
+        List<ResidenceArea> owned = new ArrayList<ResidenceArea>();
+        for (ResidenceArea res : set) {
+            if (res.getOwner().equalsIgnoreCase(player)) {
+                owned.add(res);
+            }
+        }
+        return owned;
+    }
+
+    public boolean rename(YAMLResidenceArea res, String newName) {
         if (res.getParent() != null) {
             return res.rename(newName);
         }
@@ -151,9 +164,9 @@ public class ResidenceManager {
 
     public boolean removeAllFromWorld(String world) {
         boolean removed = false;
-        Iterator<ClaimedResidence> it = residences.values().iterator();
+        Iterator<ResidenceArea> it = residences.values().iterator();
         while (it.hasNext()) {
-            ClaimedResidence next = it.next();
+            ResidenceArea next = it.next();
             if (next.getWorld().equals(world)) {
                 it.remove();
                 removed = true;
@@ -164,7 +177,7 @@ public class ResidenceManager {
         return removed;
     }
 
-    public void remove(ClaimedResidence res) {
+    public void remove(ResidenceArea res) {
         if (res.getParent() == null) {
             removeChunkList(res);
             residences.remove(res.getName());
@@ -176,10 +189,10 @@ public class ResidenceManager {
         }
     }
 
-    public void removeChunkList(ClaimedResidence res) {
+    private void removeChunkList(ResidenceArea res) {
         String world = res.getWorld().getName();
         if (residenceNamesByChunk.get(world) != null) {
-            for (ChunkRef chunk : res.getChunks()) {
+            for (ChunkRef chunk : ((YAMLResidenceArea) res).getChunks()) {
                 List<String> ress = new ArrayList<String>();
                 if (residenceNamesByChunk.get(world).containsKey(chunk)) {
                     ress.addAll(residenceNamesByChunk.get(world).get(chunk));
@@ -190,7 +203,7 @@ public class ResidenceManager {
         }
     }
 
-    public void calculateChunks(ClaimedResidence res) {
+    public void calculateChunks(YAMLResidenceArea res) {
         String world = res.getWorld().getName();
         if (residenceNamesByChunk.get(world) == null) {
             residenceNamesByChunk.put(world, new HashMap<ChunkRef, List<String>>());
@@ -207,10 +220,8 @@ public class ResidenceManager {
 
     public static final class ChunkRef {
         public static int getBase(final int val) {
-            // >> 4 << 4 will convert any block coordinate to its chunk coordinate base,
-            // negatives need to go up in value so -16 first
-            // so -35 will go to -48, 18 will be 16
-            return (val < 0 ? val - 16 : val) >> 4 << 4;
+            // get chunk base
+            return val >> 4;
         }
         private final int z;
         private final int x;
@@ -241,8 +252,8 @@ public class ResidenceManager {
         }
     }
 
-    public static ResidenceManager load(File worldFolder) throws Exception {
-        ResidenceManager resm = new ResidenceManager();
+    public static YAMLResidenceManager load(File worldFolder) throws Exception {
+        YAMLResidenceManager resm = new YAMLResidenceManager();
         resm.worldFolder = worldFolder;
         for (World world : Residence.getInstance().getServer().getWorlds()) {
             File worldFile = new File(worldFolder, "res_" + world.getName() + ".yml");
@@ -271,11 +282,11 @@ public class ResidenceManager {
         return resm;
     }
 
-    public static Map<ChunkRef, List<String>> loadWorld(ConfigurationSection section, ResidenceManager resm) throws Exception {
+    public static Map<ChunkRef, List<String>> loadWorld(ConfigurationSection section, YAMLResidenceManager resm) throws Exception {
         Map<ChunkRef, List<String>> retRes = new HashMap<ChunkRef, List<String>>();
         for (String res : section.getKeys(false)) {
             try {
-                ClaimedResidence residence = new ClaimedResidence(section.getConfigurationSection(res), null);
+                YAMLResidenceArea residence = new YAMLResidenceArea(section.getConfigurationSection(res), null);
                 for (ChunkRef chunk : residence.getChunks()) {
                     List<String> ress = new ArrayList<String>();
                     if (retRes.containsKey(chunk)) {

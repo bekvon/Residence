@@ -1,7 +1,8 @@
 package net.t00thpick1.residence.protection;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.protection.ResidenceManager.ChunkRef;
+import net.t00thpick1.residence.api.CuboidArea;
+import net.t00thpick1.residence.protection.YAMLResidenceManager.ChunkRef;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -10,19 +11,18 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CuboidArea {
+public class YAMLCuboidArea implements CuboidArea {
     protected World world;
-    private int highX;
-    private int highY;
-    private int highZ;
-    private int lowX;
-    private int lowY;
-    private int lowZ;
+    protected int highX;
+    protected int highY;
+    protected int highZ;
+    protected int lowX;
+    protected int lowY;
+    protected int lowZ;
 
-    protected CuboidArea() {
-    }
+    protected YAMLCuboidArea() { }
 
-    public CuboidArea(Location startLoc, Location endLoc) {
+    public YAMLCuboidArea(Location startLoc, Location endLoc) {
         if (startLoc.getBlockX() > endLoc.getBlockX()) {
             highX = startLoc.getBlockX();
             lowX = endLoc.getBlockX();
@@ -35,7 +35,7 @@ public class CuboidArea {
             lowY = endLoc.getBlockY();
         } else {
             highY = endLoc.getBlockY();
-            lowY = startLoc.getBlockY();
+            highY = startLoc.getBlockY();
         }
         if (startLoc.getBlockZ() > endLoc.getBlockZ()) {
             highZ = startLoc.getBlockZ();
@@ -51,7 +51,7 @@ public class CuboidArea {
         if (!area.getWorld().equals(world)) {
             return false;
         }
-        return (containsLocation(area.highX, area.highY, area.highZ) && containsLocation(area.lowX, area.lowY, area.lowZ));
+        return (containsLocation(area.getHighX(), area.getHighY(), area.getHighZ()) && containsLocation(area.getLowX(), area.getLowY(), area.getLowZ()));
     }
 
     public boolean containsLocation(Location loc) {
@@ -69,9 +69,9 @@ public class CuboidArea {
     }
 
     private boolean containsLocation(int x, int y, int z) {
-        if (lowX <= x && highX >= x) {
+        if (getLowX() <= x && highX >= x) {
             if (lowZ <= z && highZ >= z) {
-                if (lowY <= y && highY >= y) {
+                if (getLowY() <= y && highY >= y) {
                     return true;
                 }
             }
@@ -80,19 +80,16 @@ public class CuboidArea {
     }
 
     public boolean checkCollision(CuboidArea area) {
-        if (!area.getWorld().equals(this.getWorld())) {
-            return false;
-        }
-        if (area.containsLocation(highX, highY, highZ) || area.containsLocation(lowX, lowY, lowZ) || this.containsLocation(area.highX, area.highY, area.highZ) || this.containsLocation(area.lowX, area.lowY, area.lowZ)) {
+        if (area.containsLocation(getWorld(), getHighX(), getHighY(), getHighZ()) || area.containsLocation(getWorld(), getLowX(), getLowY(), getLowZ()) || this.containsLocation(area.getHighX(), area.getHighY(), area.getHighZ()) || this.containsLocation(area.getLowX(), area.getLowY(), area.getLowZ())) {
             return true;
         }
         return advCuboidCheckCollision(area);
     }
 
     private boolean advCuboidCheckCollision(CuboidArea area) {
-        if ((highX >= area.lowX && highX <= area.highX) || (lowX >= area.lowX && lowX <= area.highX) || (area.highX >= lowX && area.highX <= highX) || (area.lowX >= lowX && area.lowX <= highX)) {
-            if ((highY >= area.lowY && highY <= area.highY) || (lowY >= area.lowY && lowY <= area.highY) || (area.highY >= lowY && area.highY <= highY) || (area.lowY >= lowY && area.lowY <= highY)) {
-                if ((highZ >= area.lowZ && highZ <= area.highZ) || (lowZ >= area.lowZ && lowZ <= area.highZ) || (area.highZ >= lowZ && area.highZ <= highZ) || (area.lowZ >= lowZ && area.lowZ <= highZ)) {
+        if ((getHighX() >= area.getLowX() && getHighX() <= area.getHighX()) || (getLowX() >= area.getLowX() && getLowX() <= area.getHighX()) || (area.getHighX() >= getLowX() && area.getHighX() <= getHighX()) || (area.getLowX() >= getLowX() && area.getLowX() <= getHighX())) {
+            if ((getHighY() >= area.getLowY() && getHighY() <= area.getHighY()) || (getLowY() >= area.getLowY() && getLowY() <= area.getHighY()) || (area.getHighY() >= getLowY() && area.getHighY() <= getHighY()) || (area.getLowY() >= getLowY() && area.getLowY() <= getHighY())) {
+                if ((getHighZ() >= area.getLowZ() && getHighZ() <= area.getHighZ()) || (getLowZ() >= area.getLowZ() && getLowZ() <= area.getHighZ()) || (area.getHighZ() >= getLowZ() && area.getHighZ() <= getHighZ()) || (area.getLowZ() >= getLowZ() && area.getLowZ() <= getHighZ())) {
                     return true;
                 }
             }
@@ -101,18 +98,18 @@ public class CuboidArea {
     }
 
     public long getSize() {
-        int xsize = (highX - lowX) + 1;
-        int ysize = (highY - lowY) + 1;
+        int xsize = (highX - getLowX()) + 1;
+        int ysize = (highY - getLowY()) + 1;
         int zsize = (highZ - lowZ) + 1;
         return xsize * ysize * zsize;
     }
 
     public int getXSize() {
-        return (highX - lowX) + 1;
+        return (highX - getLowX()) + 1;
     }
 
     public int getYSize() {
-        return (highY - lowY) + 1;
+        return (highY - getLowY()) + 1;
     }
 
     public int getZSize() {
@@ -124,11 +121,15 @@ public class CuboidArea {
     }
 
     public Location getLowLocation() {
-        return new Location(world, lowX, lowY, lowZ);
+        return new Location(world, getLowX(), getLowY(), lowZ);
     }
 
     public World getWorld() {
         return world;
+    }
+
+    public Location getCenter() {
+        return new Location(world, (highX + getLowX()) / 2, (highY + getLowY()) / 2, (highZ + lowZ) / 2);
     }
 
     public void saveArea(ConfigurationSection section) {
@@ -136,8 +137,8 @@ public class CuboidArea {
         section.set("X1", highX);
         section.set("Y1", highY);
         section.set("Z1", highZ);
-        section.set("X2", lowX);
-        section.set("Y2", lowY);
+        section.set("X2", getLowX());
+        section.set("Y2", getLowY());
         section.set("Z2", lowZ);
     }
 
@@ -157,7 +158,7 @@ public class CuboidArea {
 
     public List<ChunkRef> getChunks() {
         List<ChunkRef> chunks = new ArrayList<ChunkRef>();
-        int lowCX = ChunkRef.getBase(lowX);
+        int lowCX = ChunkRef.getBase(getLowX());
         int lowCZ = ChunkRef.getBase(lowZ);
         int highCX = ChunkRef.getBase(highX);
         int highCZ = ChunkRef.getBase(highZ);
@@ -170,7 +171,33 @@ public class CuboidArea {
         return chunks;
     }
 
-    public Location getCenter() {
-        return new Location(world, (highX + lowX) / 2, (highY + lowY) / 2, (highZ + lowZ) / 2);
+    @Override
+    public int getHighX() {
+        return highX;
+    }
+
+    @Override
+    public int getHighY() {
+        return highY;
+    }
+
+    @Override
+    public int getHighZ() {
+        return highZ;
+    }
+
+    @Override
+    public int getLowX() {
+        return getLowX();
+    }
+
+    @Override
+    public int getLowY() {
+        return getLowY();
+    }
+
+    @Override
+    public int getLowZ() {
+        return lowZ;
     }
 }

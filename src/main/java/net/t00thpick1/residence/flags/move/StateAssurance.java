@@ -5,7 +5,7 @@ import java.util.HashMap;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.PermissionsArea;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.protection.ClaimedResidence;
+import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.ChatColor;
@@ -22,7 +22,7 @@ import org.bukkit.plugin.Plugin;
 public class StateAssurance implements Listener {
 
     private StateAssurance() {
-        currentRes = new HashMap<String, ClaimedResidence>();
+        currentRes = new HashMap<String, ResidenceArea>();
         lastOutsideLoc = new HashMap<String, Location>();
     }
 
@@ -68,8 +68,8 @@ public class StateAssurance implements Listener {
     private static Location getSpawnLocation(Player player, Location location) {
         PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(location);
         Location loc = null;
-        if (area instanceof ClaimedResidence) {
-            loc = ((ClaimedResidence) area).getOutsideFreeLoc(location);
+        if (area instanceof ResidenceArea) {
+            loc = ((ResidenceArea) area).getOutsideFreeLoc(location);
             if (!canSpawn(player, loc)) {
                 loc = null;
             }
@@ -80,20 +80,20 @@ public class StateAssurance implements Listener {
         return loc;
     }
 
-    private HashMap<String, ClaimedResidence> currentRes;
+    private HashMap<String, ResidenceArea> currentRes;
     private HashMap<String, Location> lastOutsideLoc;
 
     public static void handleNewLocation(Player player, Location loc) {
         String pname = player.getName();
 
-        ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(loc);
+        ResidenceArea res = Residence.getInstance().getResidenceManager().getByLoc(loc);
         if (res != null) {
             if (res.getSubzoneByLoc(loc) != null) {
                 res = res.getSubzoneByLoc(loc);
             }
         }
 
-        ClaimedResidence resOld = null;
+        ResidenceArea resOld = null;
         if (instance.currentRes.containsKey(pname)) {
             resOld = instance.currentRes.get(pname);
         }
@@ -132,7 +132,7 @@ public class StateAssurance implements Listener {
         return ChatColor.translateAlternateColorCodes('&', message.replaceAll("(%player%)", player.getName()).replaceAll("(%area%)", areaName));
     }
 
-    public static ClaimedResidence getCurrentResidence(String player) {
+    public static ResidenceArea getCurrentResidence(String player) {
         return instance.currentRes.get(player);
     }
 
