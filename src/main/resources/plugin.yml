@@ -31,7 +31,7 @@ permissions:
     default: true
     children:
       residence.commands.user: true
-      residence.flags.all: true
+      residence.flags.*: true
   residence.commands:
     description: Allows all commands
     default: op
@@ -172,6 +172,6 @@ permissions:
   residence.commands.server:
     description: Allows you to set a residence to be owned by the server
     default: op
-  residence.flags.all:
+  residence.flags.*:
     description: Allows you to set all flags
     default: op

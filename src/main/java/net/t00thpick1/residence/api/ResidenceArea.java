@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 
-public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea {
+public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea, BuyableArea {
     public String getOwner();
     public void setOwner(String owner);
     public void setPlayerFlag(String player, Flag flag, Boolean value);
@@ -37,6 +37,7 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
     public void setLeaveMessage(String string);
     public void setEnterMessage(String string);
     public Collection<String> getSubzoneNameList();
+    public void setRentFlag(Flag flag, Boolean value);
     public Map<Flag, Boolean> getRentFlags();
     public Map<String, Map<Flag, Boolean>> getPlayerFlags();
     public Map<Flag, Boolean> getPlayerFlags(String name);

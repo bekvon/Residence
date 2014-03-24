@@ -69,9 +69,9 @@ public class YAMLCuboidArea implements CuboidArea {
     }
 
     private boolean containsLocation(int x, int y, int z) {
-        if (getLowX() <= x && highX >= x) {
+        if (lowX <= x && highX >= x) {
             if (lowZ <= z && highZ >= z) {
-                if (getLowY() <= y && highY >= y) {
+                if (lowY <= y && highY >= y) {
                     return true;
                 }
             }
@@ -98,18 +98,18 @@ public class YAMLCuboidArea implements CuboidArea {
     }
 
     public long getSize() {
-        int xsize = (highX - getLowX()) + 1;
-        int ysize = (highY - getLowY()) + 1;
+        int xsize = (highX - lowX) + 1;
+        int ysize = (highY - lowY) + 1;
         int zsize = (highZ - lowZ) + 1;
         return xsize * ysize * zsize;
     }
 
     public int getXSize() {
-        return (highX - getLowX()) + 1;
+        return (highX - lowX) + 1;
     }
 
     public int getYSize() {
-        return (highY - getLowY()) + 1;
+        return (highY - lowY) + 1;
     }
 
     public int getZSize() {
@@ -121,7 +121,7 @@ public class YAMLCuboidArea implements CuboidArea {
     }
 
     public Location getLowLocation() {
-        return new Location(world, getLowX(), getLowY(), lowZ);
+        return new Location(world, lowX, lowY, lowZ);
     }
 
     public World getWorld() {
@@ -137,8 +137,8 @@ public class YAMLCuboidArea implements CuboidArea {
         section.set("X1", highX);
         section.set("Y1", highY);
         section.set("Z1", highZ);
-        section.set("X2", getLowX());
-        section.set("Y2", getLowY());
+        section.set("X2", lowX);
+        section.set("Y2", lowY);
         section.set("Z2", lowZ);
     }
 
@@ -158,7 +158,7 @@ public class YAMLCuboidArea implements CuboidArea {
 
     public List<ChunkRef> getChunks() {
         List<ChunkRef> chunks = new ArrayList<ChunkRef>();
-        int lowCX = ChunkRef.getBase(getLowX());
+        int lowCX = ChunkRef.getBase(lowX);
         int lowCZ = ChunkRef.getBase(lowZ);
         int highCX = ChunkRef.getBase(highX);
         int highCZ = ChunkRef.getBase(highZ);
@@ -188,12 +188,12 @@ public class YAMLCuboidArea implements CuboidArea {
 
     @Override
     public int getLowX() {
-        return getLowX();
+        return lowX;
     }
 
     @Override
     public int getLowY() {
-        return getLowY();
+        return lowY;
     }
 
     @Override

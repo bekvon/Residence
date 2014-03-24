@@ -554,7 +554,6 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
         YAMLEconomyManager.setForSale(this);
     }
 
-    
     public void removeFromMarket() {
         marketData.set("ForSale", false);
         marketData.set("ForRent", false);
@@ -565,6 +564,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
             marketData.set("RentPeriod", 0);
         }
     }
+
     @Override
     public boolean buy(String buyer) {
         Economy econ = Residence.getInstance().getEconomy();
@@ -588,8 +588,10 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     }
 
     public void applyDefaultFlags() {
-        for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
-            setFlag(defaultFlag.getKey(), defaultFlag.getValue());
+        if (!getOwner().equalsIgnoreCase("Server Land")) {
+            for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
+                setFlag(defaultFlag.getKey(), defaultFlag.getValue());
+            }
         }
         for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultOwnerFlags(getOwner()).entrySet()) {
             setPlayerFlag(getOwner(), defaultFlag.getKey(), defaultFlag.getValue());
