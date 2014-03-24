@@ -3,8 +3,8 @@ package net.t00thpick1.residence.selection;
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.YAMLCuboidArea;
-import net.t00thpick1.residence.protection.GroupManager;
+import net.t00thpick1.residence.protection.yaml.YAMLCuboidArea;
+import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -57,7 +57,7 @@ public class SelectionManager {
             YAMLCuboidArea cuboidArea = new YAMLCuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
             player.sendMessage(LocaleLoader.getString("Selection.Total.Size", cuboidArea.getSize()));
             if (ConfigManager.getInstance().isEconomy()) {
-                player.sendMessage(LocaleLoader.getString("Selection.Land.Cost", Residence.getInstance().getEconomy().format((double) cuboidArea.getSize() * GroupManager.getCostPerBlock(player))));
+                player.sendMessage(LocaleLoader.getString("Selection.Land.Cost", Residence.getInstance().getEconomy().format((double) cuboidArea.getSize() * YAMLGroupManager.getCostPerBlock(player))));
             }
             player.sendMessage(LocaleLoader.getString("Selection.Size.X", cuboidArea.getXSize()));
             player.sendMessage(LocaleLoader.getString("Selection.Size.Y", cuboidArea.getYSize()));

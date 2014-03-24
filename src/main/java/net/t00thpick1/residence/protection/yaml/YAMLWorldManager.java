@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.protection;
+package net.t00thpick1.residence.protection.yaml;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,11 +11,11 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class WorldManager {
-    private Map<String, WorldArea> worldAreas;
+public class YAMLWorldManager {
+    private Map<String, YAMLWorldArea> worldAreas;
 
-    public WorldManager(File worldFolder) throws IOException {
-        worldAreas = new HashMap<String, WorldArea>();
+    public YAMLWorldManager(File worldFolder) throws IOException {
+        worldAreas = new HashMap<String, YAMLWorldArea>();
         for (World world : Residence.getInstance().getServer().getWorlds()) {
             File worldFile = new File(worldFolder, world.getName() + "_configuration.yml");
             boolean newFile = false;
@@ -28,16 +28,16 @@ public class WorldManager {
             if (newFile) {
                 worldSave.set("World", world.getName());
             }
-            worldAreas.put(world.getName(), new WorldArea(worldSave, worldFile));
+            worldAreas.put(world.getName(), new YAMLWorldArea(worldSave, worldFile));
         }
     }
 
-    public WorldArea getResidenceWorld(World world) {
+    public YAMLWorldArea getResidenceWorld(World world) {
         return worldAreas.get(world.getName());
     }
 
     public void save() throws IOException {
-        for (WorldArea area: worldAreas.values()) {
+        for (YAMLWorldArea area: worldAreas.values()) {
             area.save();
         }
     }

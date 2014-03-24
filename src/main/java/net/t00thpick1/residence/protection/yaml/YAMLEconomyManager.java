@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.protection;
+package net.t00thpick1.residence.protection.yaml;
 
 import java.util.ArrayList;
 import java.util.Iterator;

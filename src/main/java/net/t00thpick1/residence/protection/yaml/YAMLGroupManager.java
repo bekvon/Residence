@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.protection;
+package net.t00thpick1.residence.protection.yaml;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class GroupManager {
+public class YAMLGroupManager {
 
     private static FileConfiguration config;
 

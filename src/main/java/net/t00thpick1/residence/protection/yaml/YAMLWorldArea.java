@@ -1,25 +1,25 @@
-package net.t00thpick1.residence.protection;
+package net.t00thpick1.residence.protection.yaml;
 
 import java.io.File;
 import java.io.IOException;
 
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.PermissionsArea;
+import net.t00thpick1.residence.api.WorldArea;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class WorldArea implements PermissionsArea {
+public class YAMLWorldArea implements WorldArea {
     private World world;
     private ConfigurationSection perms;
     private ConfigurationSection groups;
     private File saveFile;
     private FileConfiguration file;
 
-    public WorldArea(FileConfiguration section, File worldFile) {
+    public YAMLWorldArea(FileConfiguration section, File worldFile) {
         this.world = Residence.getInstance().getServer().getWorld(section.getString("World"));
         if (!section.isConfigurationSection("Permissions")) {
             this.perms = section.createSection("Permissions");
@@ -48,7 +48,7 @@ public class WorldArea implements PermissionsArea {
 
     @Override
     public boolean allowAction(Player player, Flag flag) {
-        String group = GroupManager.getPlayerGroup(player.getName());
+        String group = YAMLGroupManager.getPlayerGroup(player.getName());
         while (true) {
             if (groups.isConfigurationSection(group)) {
                 ConfigurationSection groupPerms = groups.getConfigurationSection(group);

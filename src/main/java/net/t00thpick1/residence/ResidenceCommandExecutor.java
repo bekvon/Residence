@@ -4,10 +4,10 @@ import net.t00thpick1.residence.api.Flag;
 import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.YAMLCuboidArea;
-import net.t00thpick1.residence.protection.YAMLEconomyManager;
-import net.t00thpick1.residence.protection.GroupManager;
-import net.t00thpick1.residence.protection.YAMLResidenceManager;
+import net.t00thpick1.residence.protection.yaml.YAMLCuboidArea;
+import net.t00thpick1.residence.protection.yaml.YAMLEconomyManager;
+import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
+import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager;
 import net.t00thpick1.residence.selection.SelectionManager;
 import net.t00thpick1.residence.utils.Utilities;
 
@@ -666,40 +666,40 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         }
         YAMLCuboidArea newArea = new YAMLCuboidArea(selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
         if (!resadmin) {
-            if (newArea.getXSize() > GroupManager.getMaxWidth(player)) {
+            if (newArea.getXSize() > YAMLGroupManager.getMaxWidth(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooWide"));
                 return true;
             }
-            if (newArea.getXSize() < GroupManager.getMinWidth(player)) {
+            if (newArea.getXSize() < YAMLGroupManager.getMinWidth(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooNarrow"));
                 return true;
             }
-            if (newArea.getZSize() > GroupManager.getMaxLength(player)) {
+            if (newArea.getZSize() > YAMLGroupManager.getMaxLength(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooLong"));
                 return true;
             }
-            if (newArea.getZSize() < GroupManager.getMinLength(player)) {
+            if (newArea.getZSize() < YAMLGroupManager.getMinLength(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooSkinny"));
                 return true;
             }
-            if (newArea.getYSize() > GroupManager.getMaxHeight(player)) {
+            if (newArea.getYSize() > YAMLGroupManager.getMaxHeight(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooTall"));
                 return true;
             }
-            if (newArea.getYSize() < GroupManager.getMinHeight(player)) {
+            if (newArea.getYSize() < YAMLGroupManager.getMinHeight(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooShort"));
                 return true;
             }
-            if (newArea.getLowLocation().getBlockY() < GroupManager.getMinY(player)) {
+            if (newArea.getLowLocation().getBlockY() < YAMLGroupManager.getMinY(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooLow"));
                 return true;
             }
-            if (newArea.getHighLocation().getBlockY() > GroupManager.getMaxY(player)) {
+            if (newArea.getHighLocation().getBlockY() > YAMLGroupManager.getMaxY(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooHigh"));
                 return true;
             }
         }
-        if (!resadmin && GroupManager.getMaxResidences(player.getName()) <= rmanager.getOwnedZoneCount(player.getName())) {
+        if (!resadmin && YAMLGroupManager.getMaxResidences(player.getName()) <= rmanager.getOwnedZoneCount(player.getName())) {
             player.sendMessage(LocaleLoader.getString("Commands.Create.TooManyResidences"));
             return true;
         }

@@ -8,7 +8,10 @@ import net.t00thpick1.residence.flags.move.StateAssurance;
 import net.t00thpick1.residence.listeners.LoginLogoutListener;
 import net.t00thpick1.residence.listeners.ToolListener;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.*;
+import net.t00thpick1.residence.protection.yaml.YAMLEconomyManager;
+import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
+import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager;
+import net.t00thpick1.residence.protection.yaml.YAMLWorldManager;
 import net.t00thpick1.residence.selection.SelectionManager;
 import net.t00thpick1.residence.selection.WorldEditSelectionManager;
 import net.t00thpick1.residence.utils.CompatabilityManager;
@@ -37,7 +40,7 @@ public class Residence extends JavaPlugin {
     private static Residence instance;
     private YAMLResidenceManager rmanager;
     private SelectionManager smanager;
-    private WorldManager wmanager;
+    private YAMLWorldManager wmanager;
     private Economy economy;
     private Permission permissions;
     private List<String> adminMode = new ArrayList<String>();
@@ -93,13 +96,13 @@ public class Residence extends JavaPlugin {
         }
 
         new ConfigManager(getConfig());
-        GroupManager.init(YamlConfiguration.loadConfiguration(groupsFile));
+        YAMLGroupManager.init(YamlConfiguration.loadConfiguration(groupsFile));
         File worldFolder = new File(dataFolder, "WorldConfigurations");
         if (!worldFolder.isDirectory()) {
             worldFolder.mkdirs();
         }
         try {
-            wmanager = new WorldManager(worldFolder);
+            wmanager = new YAMLWorldManager(worldFolder);
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -250,7 +253,7 @@ public class Residence extends JavaPlugin {
         return adminMode.contains(player.getName());
     }
 
-    public WorldManager getWorldManager() {
+    public YAMLWorldManager getWorldManager() {
         return wmanager;
     }
 }

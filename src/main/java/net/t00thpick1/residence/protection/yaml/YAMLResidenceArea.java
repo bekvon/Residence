@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.protection;
+package net.t00thpick1.residence.protection.yaml;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -135,7 +135,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
                 }
             }
 
-            String group = GroupManager.getPlayerGroup(player.getName());
+            String group = YAMLGroupManager.getPlayerGroup(player.getName());
             if (groupFlags.isConfigurationSection(group)) {
                 ConfigurationSection groupPerms = groupFlags.getConfigurationSection(group);
                 if (groupPerms.contains(flag.getName())) {
@@ -182,8 +182,8 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
             ConfigurationSection data = res.createSection("Data");
             data.set("Owner", owner);
             data.set("CreationDate", System.currentTimeMillis());
-            data.set("EnterMessage", GroupManager.getDefaultEnterMessage(owner));
-            data.set("LeaveMessage", GroupManager.getDefaultLeaveMessage(owner));
+            data.set("EnterMessage", YAMLGroupManager.getDefaultEnterMessage(owner));
+            data.set("LeaveMessage", YAMLGroupManager.getDefaultLeaveMessage(owner));
             newArea.saveArea(data.createSection("Area"));
             ConfigurationSection marketData = data.createSection("MarketData");
             marketData.set("ForSale", false);
@@ -588,13 +588,13 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     }
 
     public void applyDefaultFlags() {
-        for (Entry<Flag, Boolean> defaultFlag : GroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
+        for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
             setFlag(defaultFlag.getKey(), defaultFlag.getValue());
         }
-        for (Entry<Flag, Boolean> defaultFlag : GroupManager.getDefaultOwnerFlags(getOwner()).entrySet()) {
+        for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultOwnerFlags(getOwner()).entrySet()) {
             setPlayerFlag(getOwner(), defaultFlag.getKey(), defaultFlag.getValue());
         }
-        for (Entry<String, Map<Flag, Boolean>> group : GroupManager.getDefaultGroupFlags(getOwner()).entrySet()) {
+        for (Entry<String, Map<Flag, Boolean>> group : YAMLGroupManager.getDefaultGroupFlags(getOwner()).entrySet()) {
             for (Entry<Flag, Boolean> defaultFlag : group.getValue().entrySet()) {
                 setGroupFlag(group.getKey(), defaultFlag.getKey(), defaultFlag.getValue());
             }

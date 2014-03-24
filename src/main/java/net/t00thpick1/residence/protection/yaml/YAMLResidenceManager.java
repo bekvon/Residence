@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.protection;
+package net.t00thpick1.residence.protection.yaml;
 
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
@@ -96,8 +96,8 @@ public class YAMLResidenceManager implements ResidenceManager {
             ConfigurationSection data = res.createSection("Data");
             data.set("Owner", owner);
             data.set("CreationDate", System.currentTimeMillis());
-            data.set("EnterMessage", GroupManager.getDefaultEnterMessage(owner));
-            data.set("LeaveMessage", GroupManager.getDefaultLeaveMessage(owner));
+            data.set("EnterMessage", YAMLGroupManager.getDefaultEnterMessage(owner));
+            data.set("LeaveMessage", YAMLGroupManager.getDefaultLeaveMessage(owner));
             area.saveArea(data.createSection("Area"));
             ConfigurationSection marketData = data.createSection("MarketData");
             marketData.set("ForSale", false);
