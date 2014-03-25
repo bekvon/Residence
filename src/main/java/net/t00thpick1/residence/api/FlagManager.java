@@ -21,6 +21,8 @@ import net.t00thpick1.residence.flags.enviromental.flow.FlowFlag;
 import net.t00thpick1.residence.flags.enviromental.spawn.SpawnFlag;
 import net.t00thpick1.residence.flags.move.MoveFlag;
 import net.t00thpick1.residence.flags.use.UseFlag;
+import net.t00thpick1.residence.flags.use.container.ChestFlag;
+import net.t00thpick1.residence.flags.use.container.ContainerFlag;
 
 public class FlagManager {
     public static Flag ADMIN = AdminFlag.FLAG;
@@ -29,10 +31,11 @@ public class FlagManager {
     public static Flag PLACE = PlaceFlag.FLAG;
     public static Flag DESTROY = DestroyFlag.FLAG;
     public static Flag HEALING = HealingFlag.FLAG;
+    public static Flag CONTAINER = ContainerFlag.FLAG;
+    public static Flag CHEST = ChestFlag.FLAG;
     // TODO: rest of flags
 
     private static Map<String, Flag> validFlags;
-
 
     public static void addFlag(Flag flag) {
         validFlags.put(flag.getName(), flag);

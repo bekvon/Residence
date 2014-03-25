@@ -526,10 +526,19 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            ResidenceArea area = rmanager.getByName(args[1]);
-            if (area == null) {
-                player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", args[1]));
-                return true;
+            ResidenceArea area = null;
+            if (args.length == 0) {
+                area = rmanager.getByLoc(player.getLocation());
+                if (area == null) {
+                    player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
+                    return true;
+                }
+            } else {
+                area = rmanager.getByName(args[1]);
+                if (area == null) {
+                    player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", args[1]));
+                    return true;
+                }
             }
             if (!resadmin && !area.allowAction(player, FlagManager.ADMIN)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
@@ -1538,9 +1547,9 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         StringBuilder builder = new StringBuilder();
         Map<Flag, Boolean> flags = res.getAreaFlags();
         for (Entry<Flag, Boolean> flag : flags.entrySet()) {
-                builder.append(" ");
-                builder.append(flag.getValue() ? "+" : "-");
-                builder.append(flag.getKey().getName());
+            builder.append(" ");
+            builder.append(flag.getValue() ? "+" : "-");
+            builder.append(flag.getKey().getName());
         }
         if (builder.length() == 0) {
             builder.append(LocaleLoader.getString("Info.None"));
@@ -1549,9 +1558,9 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         builder = new StringBuilder();
         flags = res.getPlayerFlags(player.getName());
         for (Entry<Flag, Boolean> flag : flags.entrySet()) {
-                builder.append(" ");
-                builder.append(flag.getValue() ? "+" : "-");
-                builder.append(flag.getKey().getName());
+            builder.append(" ");
+            builder.append(flag.getValue() ? "+" : "-");
+            builder.append(flag.getKey().getName());
         }
         if (builder.length() == 0) {
             builder.append(LocaleLoader.getString("Info.None"));
