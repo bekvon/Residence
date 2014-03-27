@@ -2,8 +2,9 @@ package net.t00thpick1.residence.selection;
 
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
+import net.t00thpick1.residence.api.ResidenceAPI;
+import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.yaml.YAMLCuboidArea;
 import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
 
 import org.bukkit.Chunk;
@@ -54,7 +55,7 @@ public class SelectionManager {
 
     public void showSelectionInfo(Player player) {
         if (this.hasPlacedBoth(player)) {
-            YAMLCuboidArea cuboidArea = new YAMLCuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
+            CuboidArea cuboidArea = ResidenceAPI.createCuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
             player.sendMessage(LocaleLoader.getString("Selection.Total.Size", cuboidArea.getSize()));
             if (ConfigManager.getInstance().isEconomy()) {
                 player.sendMessage(LocaleLoader.getString("Selection.Land.Cost", Residence.getInstance().getEconomy().format((double) cuboidArea.getSize() * YAMLGroupManager.getCostPerBlock(player))));

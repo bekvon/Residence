@@ -37,7 +37,14 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Residence extends JavaPlugin {
+    public enum BackEndType {
+        YAML,
+        MYSQL,
+        WORLDGUARD;
+    }
+
     public final static int saveVersion = 3;
+    private BackEndType backend = BackEndType.YAML;
     private static Residence instance;
     private ResidenceManager rmanager;
     private SelectionManager smanager;
@@ -255,5 +262,9 @@ public class Residence extends JavaPlugin {
 
     public YAMLWorldManager getWorldManager() {
         return wmanager;
+    }
+
+    public BackEndType getBackend() {
+        return backend;
     }
 }

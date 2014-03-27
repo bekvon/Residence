@@ -4,7 +4,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import net.t00thpick1.residence.Residence;
+import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.PermissionsArea;
+import net.t00thpick1.residence.protection.CuboidAreaFactory;
 
 public class ResidenceAPI {
     public static PermissionsArea getPermissionsAreaByLocation(Location location) {
@@ -17,6 +19,10 @@ public class ResidenceAPI {
 
     public static ResidenceManager getResidenceManager() {
         return Residence.getInstance().getResidenceManager();
+    }
+
+    public static CuboidArea createCuboidArea(Location lowPoint, Location highPoint) {
+        return CuboidAreaFactory.createNewCuboidArea(lowPoint, highPoint);
     }
 
     public static PermissionsArea getResidenceWorld(World world) {

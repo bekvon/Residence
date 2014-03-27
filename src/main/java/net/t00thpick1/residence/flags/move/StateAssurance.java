@@ -2,6 +2,7 @@ package net.t00thpick1.residence.flags.move;
 
 import java.util.HashMap;
 
+import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.areas.PermissionsArea;
@@ -103,7 +104,9 @@ public class StateAssurance implements Listener {
                 String leave = resOld.getLeaveMessage();
 
                 if (leave != null && !leave.equals("")) {
-                    player.sendMessage(formatString(leave, resOld.getName(), player));
+                    if (!ConfigManager.getInstance().noMessages()) {
+                        player.sendMessage(formatString(leave, resOld.getName(), player));
+                    }
                 }
                 instance.currentRes.remove(pname);
             }
@@ -117,13 +120,17 @@ public class StateAssurance implements Listener {
                 String leaveMessage = resOld.getLeaveMessage();
 
                 if (leaveMessage != null && !leaveMessage.equals("") && resOld != res.getParent()) {
-                    player.sendMessage(formatString(leaveMessage, resOld.getName(), player));
+                    if (!ConfigManager.getInstance().noMessages()) {
+                        player.sendMessage(formatString(leaveMessage, resOld.getName(), player));
+                    }
                 }
             }
             String enterMessage = res.getEnterMessage();
 
             if (enterMessage != null && !enterMessage.equals("") && !(resOld != null && res == resOld.getParent())) {
-                player.sendMessage(formatString(enterMessage, res.getName(), player));
+                if (!ConfigManager.getInstance().noMessages()) {
+                    player.sendMessage(formatString(enterMessage, res.getName(), player));
+                }
             }
         }
     }

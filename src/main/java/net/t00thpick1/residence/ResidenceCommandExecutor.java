@@ -2,11 +2,11 @@ package net.t00thpick1.residence;
 
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.ResidenceManager;
+import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.yaml.YAMLCuboidArea;
 import net.t00thpick1.residence.protection.yaml.YAMLEconomyManager;
 import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
 import net.t00thpick1.residence.selection.SelectionManager;
@@ -674,7 +674,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             player.sendMessage(LocaleLoader.getString("Commands.Create.AlreadyExists", args[1]));
             return true;
         }
-        YAMLCuboidArea newArea = new YAMLCuboidArea(selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
+        CuboidArea newArea = ResidenceAPI.createCuboidArea(selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
         if (!resadmin) {
             if (newArea.getXSize() > YAMLGroupManager.getMaxWidth(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooWide"));
@@ -756,7 +756,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             player.sendMessage(LocaleLoader.getString("Commands.Subzone.InvalidName", zname));
             return true;
         }
-        YAMLCuboidArea newArea = new YAMLCuboidArea(selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
+        CuboidArea newArea = ResidenceAPI.createCuboidArea(selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
         if (!res.isAreaWithin(newArea)) {
             player.sendMessage(LocaleLoader.getString("Commands.Subzone.MustBeInside"));
             return true;
