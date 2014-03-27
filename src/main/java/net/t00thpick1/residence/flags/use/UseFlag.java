@@ -1,7 +1,7 @@
 package net.t00thpick1.residence.flags.use;
 
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.api.flags.Flag;
+import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.flags.use.container.ContainerFlag;
 import net.t00thpick1.residence.flags.use.door.DoorFlag;
 import net.t00thpick1.residence.flags.use.redstone.RedstoneFlag;

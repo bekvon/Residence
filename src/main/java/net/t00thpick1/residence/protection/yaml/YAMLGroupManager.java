@@ -5,8 +5,8 @@ import java.util.Map;
 
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.api.flags.Flag;
+import net.t00thpick1.residence.api.flags.FlagManager;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

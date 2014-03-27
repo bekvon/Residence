@@ -4,10 +4,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import net.t00thpick1.residence.Residence;
+import net.t00thpick1.residence.api.areas.PermissionsArea;
 
 public class ResidenceAPI {
     public static PermissionsArea getPermissionsAreaByLocation(Location location) {
-        PermissionsArea area = Residence.getInstance().getResidenceManager().getByLoc(location);
+        PermissionsArea area = Residence.getInstance().getResidenceManager().getByLocation(location);
         if (area == null) {
             area = getResidenceWorld(location.getWorld());
         }

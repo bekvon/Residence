@@ -1,7 +1,7 @@
 package net.t00thpick1.residence.flags.build;
 
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.FlagManager;
+import net.t00thpick1.residence.api.flags.Flag;
+import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.flags.build.bucket.BucketFlag;
 import net.t00thpick1.residence.locale.LocaleLoader;
 

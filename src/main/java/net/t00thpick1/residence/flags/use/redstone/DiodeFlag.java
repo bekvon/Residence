@@ -1,9 +1,9 @@
 package net.t00thpick1.residence.flags.use.redstone;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
+import net.t00thpick1.residence.api.flags.Flag;
+import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.utils.Utilities;
 

@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.api;
+package net.t00thpick1.residence.api.areas;
 
 import org.bukkit.Location;
 import org.bukkit.World;

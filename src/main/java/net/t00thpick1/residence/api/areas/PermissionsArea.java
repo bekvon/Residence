@@ -1,4 +1,6 @@
-package net.t00thpick1.residence.api;
+package net.t00thpick1.residence.api.areas;
+
+import net.t00thpick1.residence.api.flags.Flag;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;

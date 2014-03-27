@@ -3,9 +3,9 @@ package net.t00thpick1.residence.flags.move;
 import java.util.HashMap;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.PermissionsArea;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.api.ResidenceArea;
+import net.t00thpick1.residence.api.areas.PermissionsArea;
+import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.ChatColor;
@@ -86,7 +86,7 @@ public class StateAssurance implements Listener {
     public static void handleNewLocation(Player player, Location loc) {
         String pname = player.getName();
 
-        ResidenceArea res = Residence.getInstance().getResidenceManager().getByLoc(loc);
+        ResidenceArea res = Residence.getInstance().getResidenceManager().getByLocation(loc);
         if (res != null) {
             if (res.getSubzoneByLoc(loc) != null) {
                 res = res.getSubzoneByLoc(loc);

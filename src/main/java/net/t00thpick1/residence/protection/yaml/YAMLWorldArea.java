@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.WorldArea;
+import net.t00thpick1.residence.api.areas.WorldArea;
+import net.t00thpick1.residence.api.flags.Flag;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

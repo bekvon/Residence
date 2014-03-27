@@ -1,13 +1,14 @@
 package net.t00thpick1.residence;
 
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.FlagManager;
-import net.t00thpick1.residence.api.ResidenceArea;
+import net.t00thpick1.residence.api.ResidenceAPI;
+import net.t00thpick1.residence.api.ResidenceManager;
+import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.flags.Flag;
+import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.yaml.YAMLCuboidArea;
 import net.t00thpick1.residence.protection.yaml.YAMLEconomyManager;
 import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
-import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager;
 import net.t00thpick1.residence.selection.SelectionManager;
 import net.t00thpick1.residence.utils.Utilities;
 
@@ -25,7 +26,7 @@ import java.util.Map.Entry;
 
 public class ResidenceCommandExecutor implements CommandExecutor {
     private Residence plugin;
-    private YAMLResidenceManager rmanager = Residence.getInstance().getResidenceManager();
+    private ResidenceManager rmanager = ResidenceAPI.getResidenceManager();
     private Map<String, String> deleteConfirm;
 
     public ResidenceCommandExecutor(Residence residence) {
@@ -104,7 +105,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 sender.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            ResidenceArea area = Residence.getInstance().getResidenceManager().getByName(args[1]);
+            ResidenceArea area = rmanager.getByName(args[1]);
             if (area != null) {
                 area.setOwner(args[2]);
                 if (area.getParent() == null) {
@@ -179,7 +180,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 return true;
             }
             if (args.length == 1) {
-                ResidenceArea area = Residence.getInstance().getResidenceManager().getByLoc(player.getLocation());
+                ResidenceArea area = Residence.getInstance().getResidenceManager().getByLocation(player.getLocation());
                 if (area != null) {
                     printInformation(player, area);
                 } else {
@@ -205,7 +206,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             if (args.length != 1) {
                 return false;
             }
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
             } else {
@@ -249,7 +250,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             if (args.length < 2) {
                 return false;
             }
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -272,7 +273,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -323,7 +324,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             if (args.length != 1) {
                 return false;
             }
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
             } else {
@@ -364,7 +365,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             }
             ResidenceArea res = null;
             if (args.length == 1) {
-                res = rmanager.getByLoc(player.getLocation());
+                res = rmanager.getByLocation(player.getLocation());
                 if (res == null) {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                     return true;
@@ -443,7 +444,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -528,7 +529,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             }
             ResidenceArea area = null;
             if (args.length == 0) {
-                area = rmanager.getByLoc(player.getLocation());
+                area = rmanager.getByLocation(player.getLocation());
                 if (area == null) {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                     return true;
@@ -638,7 +639,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     return true;
                 }
             } else {
-                res = rmanager.getByLoc(player.getLocation());
+                res = rmanager.getByLocation(player.getLocation());
                 if (res == null) {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                     return true;
@@ -733,7 +734,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         String zname;
         ResidenceArea res;
         if (args.length == 2) {
-            res = rmanager.getByLoc(player.getLocation());
+            res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -775,7 +776,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         if (sender instanceof Player) {
             player = (Player) sender;
             if (args.length == 1) {
-                ResidenceArea res = rmanager.getByLoc(player.getLocation());
+                ResidenceArea res = rmanager.getByLocation(player.getLocation());
                 if (res == null) {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                     return true;
@@ -853,7 +854,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         String flagName = null;
         String boolName = null;
         if (args.length == 3) {
-            res = rmanager.getByLoc(player.getLocation());
+            res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -902,7 +903,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
 
     private boolean commandResPset(String[] args, boolean resadmin, Player player) {
         if (args.length == 3 && args[2].equalsIgnoreCase("removeall")) {
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -933,7 +934,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             String flagName = null;
             String boolName = null;
             if (args.length == 4) {
-                res = rmanager.getByLoc(player.getLocation());
+                res = rmanager.getByLocation(player.getLocation());
                 if (res == null) {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                     return true;
@@ -991,7 +992,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         String flagName = null;
         String boolName = null;
         if (args.length == 4) {
-            res = rmanager.getByLoc(player.getLocation());
+            res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -1050,7 +1051,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         String flagName = null;
         String boolName = null;
         if (args.length == 3) {
-            res = rmanager.getByLoc(player.getLocation());
+            res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -1152,7 +1153,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         if (command.equalsIgnoreCase("info")) {
             ResidenceArea res = null;
             if (args.length == 2) {
-                res = rmanager.getByLoc(player.getLocation());
+                res = rmanager.getByLocation(player.getLocation());
                 if (res == null) {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                     return true;
@@ -1375,21 +1376,21 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             return false;
         }
         if (args[1].equals("enter")) {
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
             }
             return commandResMessageEnter(args, resadmin, player, 2, res);
         } else if (args[1].equals("leave")) {
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
             }
             return commandResMessageLeave(args, resadmin, player, 2, res);
         } else if (args[1].equals("remove")) {
-            ResidenceArea res = rmanager.getByLoc(player.getLocation());
+            ResidenceArea res = rmanager.getByLocation(player.getLocation());
             if (res == null) {
                 player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                 return true;
@@ -1477,7 +1478,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
         if (args.length > 0 && args.length < 4) {
             ResidenceArea res;
             if (args.length == 1) {
-                res = rmanager.getByLoc(player.getLocation());
+                res = rmanager.getByLocation(player.getLocation());
                 if (res == null) {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.NotInResidence"));
                     return true;

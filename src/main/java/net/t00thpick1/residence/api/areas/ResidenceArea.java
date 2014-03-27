@@ -1,8 +1,10 @@
-package net.t00thpick1.residence.api;
+package net.t00thpick1.residence.api.areas;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import net.t00thpick1.residence.api.flags.Flag;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

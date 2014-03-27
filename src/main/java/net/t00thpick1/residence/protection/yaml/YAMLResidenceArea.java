@@ -10,10 +10,10 @@ import java.util.Map.Entry;
 import net.milkbowl.vault.economy.Economy;
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.api.ResidenceArea;
+import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.flags.Flag;
+import net.t00thpick1.residence.api.flags.FlagManager;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -349,7 +349,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
 
     public boolean rename(String newName) {
         if (parent == null) {
-            if (Residence.getInstance().getResidenceManager().rename(this, newName)) {
+            if (((YAMLResidenceManager) ResidenceAPI.getResidenceManager()).rename(this, newName)) {
                 this.name = newName;
                 return true;
             }

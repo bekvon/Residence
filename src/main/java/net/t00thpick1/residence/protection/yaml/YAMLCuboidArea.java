@@ -1,7 +1,7 @@
 package net.t00thpick1.residence.protection.yaml;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.CuboidArea;
+import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager.ChunkRef;
 
 import org.bukkit.Location;

@@ -1,4 +1,4 @@
-package net.t00thpick1.residence.api;
+package net.t00thpick1.residence.api.flags;
 
 import java.util.Collection;
 import java.util.Collections;

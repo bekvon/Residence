@@ -2,9 +2,9 @@ package net.t00thpick1.residence;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import net.t00thpick1.residence.api.FlagManager;
-import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.api.ResidenceManager;
+import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.flags.move.StateAssurance;
 import net.t00thpick1.residence.listeners.LoginLogoutListener;
 import net.t00thpick1.residence.listeners.ToolListener;

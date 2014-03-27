@@ -1,9 +1,9 @@
 package net.t00thpick1.residence.flags.move;
 
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.Flag;
-import net.t00thpick1.residence.api.FlagManager;
-import net.t00thpick1.residence.api.ResidenceArea;
+import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.flags.Flag;
+import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.utils.Utilities;
 
@@ -37,7 +37,7 @@ public class MoveFlag extends Flag implements Listener {
             StateAssurance.handleNewLocation(player, event.getTo());
             return;
         }
-        ResidenceArea res = Residence.getInstance().getResidenceManager().getByLoc(event.getTo());
+        ResidenceArea res = Residence.getInstance().getResidenceManager().getByLocation(event.getTo());
         if (res == null) {
             StateAssurance.handleNewLocation(player, event.getTo());
             return;
