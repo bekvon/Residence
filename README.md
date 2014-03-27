@@ -1,4 +1,0 @@
-Residence
-=========
-
-Residence Bukkit Plugin
