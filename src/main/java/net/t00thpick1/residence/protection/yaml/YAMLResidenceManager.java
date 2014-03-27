@@ -2,8 +2,9 @@ package net.t00thpick1.residence.protection.yaml;
 
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.ResidenceArea;
 import net.t00thpick1.residence.api.ResidenceManager;
+import net.t00thpick1.residence.api.areas.CuboidArea;
+import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.flags.move.StateAssurance;
 
 import org.bukkit.Location;
@@ -30,7 +31,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         worldFiles = new HashMap<String, FileConfiguration>();
     }
 
-    public ResidenceArea getByLoc(Location loc) {
+    public ResidenceArea getByLocation(Location loc) {
         if (loc == null) {
             return null;
         }
@@ -79,11 +80,11 @@ public class YAMLResidenceManager implements ResidenceManager {
         return res;
     }
 
-    public boolean createResidence(String name, YAMLCuboidArea area) {
+    public boolean createResidence(String name, CuboidArea area) {
         return createResidence(name, "Server Land", area);
     }
 
-    public boolean createResidence(String name, String owner, YAMLCuboidArea area) {
+    public boolean createResidence(String name, String owner, CuboidArea area) {
         if (area == null) {
             return false;
         }
@@ -98,7 +99,7 @@ public class YAMLResidenceManager implements ResidenceManager {
             data.set("CreationDate", System.currentTimeMillis());
             data.set("EnterMessage", YAMLGroupManager.getDefaultEnterMessage(owner));
             data.set("LeaveMessage", YAMLGroupManager.getDefaultLeaveMessage(owner));
-            area.saveArea(data.createSection("Area"));
+            ((YAMLCuboidArea) area).saveArea(data.createSection("Area"));
             ConfigurationSection marketData = data.createSection("MarketData");
             marketData.set("ForSale", false);
             marketData.set("ForRent", false);
