@@ -4,6 +4,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import net.t00thpick1.residence.api.FlagManager;
 import net.t00thpick1.residence.api.ResidenceArea;
+import net.t00thpick1.residence.api.ResidenceManager;
 import net.t00thpick1.residence.flags.move.StateAssurance;
 import net.t00thpick1.residence.listeners.LoginLogoutListener;
 import net.t00thpick1.residence.listeners.ToolListener;
@@ -38,7 +39,7 @@ import java.util.logging.Level;
 public class Residence extends JavaPlugin {
     public final static int saveVersion = 3;
     private static Residence instance;
-    private YAMLResidenceManager rmanager;
+    private ResidenceManager rmanager;
     private SelectionManager smanager;
     private YAMLWorldManager wmanager;
     private Economy economy;
@@ -195,7 +196,7 @@ public class Residence extends JavaPlugin {
         }
     }
 
-    public YAMLResidenceManager getResidenceManager() {
+    public ResidenceManager getResidenceManager() {
         return rmanager;
     }
 
