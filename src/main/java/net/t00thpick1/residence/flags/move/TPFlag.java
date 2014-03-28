@@ -6,7 +6,6 @@ import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,10 +23,9 @@ public class TPFlag extends Flag implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        Location loc = event.getTo();
         Player player = event.getPlayer();
 
-        if (!StateAssurance.canSpawn(player, loc)) {
+        if (!StateAssurance.canSpawn(player, event.getTo())) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("Flags.Messages.CannotSpawnAtDestination"));
             return;
@@ -38,13 +36,13 @@ public class TPFlag extends Flag implements Listener {
                 player.sendMessage(LocaleLoader.getString("Flags.Messages.TPOutDeny"));
                 return;
             }
-            if (!ResidenceAPI.getPermissionsAreaByLocation(loc).allowAction(player.getName(), this)) {
+            if (!ResidenceAPI.getPermissionsAreaByLocation(event.getTo()).allowAction(player.getName(), this)) {
                 event.setCancelled(true);
                 player.sendMessage(LocaleLoader.getString("Flags.Messages.TPDeny"));
                 return;
             }
         }
-        StateAssurance.handleNewLocation(player, loc);
+        StateAssurance.handleNewLocation(player, event.getFrom(), event.getTo());
     }
 
     public static void initialize() {

@@ -34,12 +34,12 @@ public class MoveFlag extends Flag implements Listener {
             return;
         }
         if (Utilities.isAdminMode(player) || player.hasPermission("residence.admin.move")) {
-            StateAssurance.handleNewLocation(player, event.getTo());
+            StateAssurance.handleNewLocation(player, event.getFrom(), event.getTo());
             return;
         }
         ResidenceArea res = Residence.getInstance().getResidenceManager().getByLocation(event.getTo());
         if (res == null) {
-            StateAssurance.handleNewLocation(player, event.getTo());
+            StateAssurance.handleNewLocation(player, event.getFrom(), event.getTo());
             return;
         }
         if (!res.allowAction(player.getName(), MoveFlag.FLAG)) {
@@ -52,7 +52,7 @@ public class MoveFlag extends Flag implements Listener {
             player.sendMessage(LocaleLoader.getString("Flags.Messages.MoveDeny"));
             return;
         }
-        StateAssurance.handleNewLocation(player, event.getTo());
+        StateAssurance.handleNewLocation(player, event.getFrom(), event.getTo());
     }
 
     public static void initialize() {

@@ -183,7 +183,7 @@ public class YAMLResidenceManager implements ResidenceManager {
             removeChunkList(res);
             residences.remove(res.getName());
             for (Player player : res.getPlayersInResidence()) {
-                StateAssurance.handleNewLocation(player, player.getLocation());
+                StateAssurance.getLastOutsideLocation(player.getName()).zero().add(player.getLocation());
             }
         } else {
             res.getParent().removeSubzone(res.getName());

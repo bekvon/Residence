@@ -2,10 +2,10 @@ package net.t00thpick1.residence;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.ResidenceManager;
-import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.areas.PermissionsArea;
 import net.t00thpick1.residence.api.flags.FlagManager;
-import net.t00thpick1.residence.flags.move.StateAssurance;
 import net.t00thpick1.residence.listeners.LoginLogoutListener;
 import net.t00thpick1.residence.listeners.ToolListener;
 import net.t00thpick1.residence.locale.LocaleLoader;
@@ -178,8 +178,8 @@ public class Residence extends JavaPlugin {
             public void run() {
                 Player[] p = getServer().getOnlinePlayers();
                 for (Player player : p) {
-                    ResidenceArea res = StateAssurance.getCurrentResidence(player.getName());
-                    if (res != null && res.allowAction(FlagManager.HEALING)) {
+                    PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(player.getLocation());
+                    if (area.allowAction(FlagManager.HEALING)) {
                         double health = player.getHealth();
                         if (health < player.getMaxHealth() && !player.isDead()) {
                             player.setHealth(Math.min(health + 1, player.getMaxHealth()));

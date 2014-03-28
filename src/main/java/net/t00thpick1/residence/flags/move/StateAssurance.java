@@ -2,11 +2,12 @@ package net.t00thpick1.residence.flags.move;
 
 import java.util.HashMap;
 
-import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.areas.PermissionsArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.areas.WorldArea;
+import net.t00thpick1.residence.api.events.PlayerChangedAreaEvent;
 import net.t00thpick1.residence.utils.Utilities;
 
 import org.bukkit.ChatColor;
@@ -23,14 +24,12 @@ import org.bukkit.plugin.Plugin;
 public class StateAssurance implements Listener {
 
     private StateAssurance() {
-        currentRes = new HashMap<String, ResidenceArea>();
         lastOutsideLoc = new HashMap<String, Location>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         String pname = event.getPlayer().getName();
-        currentRes.remove(pname);
         lastOutsideLoc.remove(pname);
     }
 
@@ -40,7 +39,6 @@ public class StateAssurance implements Listener {
         if (!canSpawn(player, player.getLocation())) {
             player.teleport(getSpawnLocation(player, player.getLocation()));
         }
-        handleNewLocation(player, player.getLocation());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -49,7 +47,6 @@ public class StateAssurance implements Listener {
         if (!canSpawn(player, event.getRespawnLocation())) {
             event.setRespawnLocation(getSpawnLocation(player, event.getRespawnLocation()));
         }
-        handleNewLocation(player, event.getRespawnLocation());
     }
 
     public static boolean canSpawn(Player player, Location location) {
@@ -81,66 +78,51 @@ public class StateAssurance implements Listener {
         return loc;
     }
 
-    private HashMap<String, ResidenceArea> currentRes;
     private HashMap<String, Location> lastOutsideLoc;
 
-    public static void handleNewLocation(Player player, Location loc) {
+    public static void handleNewLocation(Player player, Location from, Location to) {
         String pname = player.getName();
 
-        ResidenceArea res = Residence.getInstance().getResidenceManager().getByLocation(loc);
-        if (res != null) {
-            if (res.getSubzoneByLocation(loc) != null) {
-                res = res.getSubzoneByLocation(loc);
-            }
-        }
+        PermissionsArea newArea = ResidenceAPI.getPermissionsAreaByLocation(to);
+        PermissionsArea oldArea = ResidenceAPI.getPermissionsAreaByLocation(from);
+        if (newArea instanceof WorldArea) {
+            instance.lastOutsideLoc.put(pname, to);
+            if (oldArea instanceof ResidenceArea) {
+                ResidenceArea oldRes = (ResidenceArea) oldArea;
+                String leave = oldRes.getLeaveMessage();
 
-        ResidenceArea resOld = null;
-        if (instance.currentRes.containsKey(pname)) {
-            resOld = instance.currentRes.get(pname);
-        }
-        if (res == null) {
-            instance.lastOutsideLoc.put(pname, loc);
-            if (resOld != null) {
-                String leave = resOld.getLeaveMessage();
-
-                if (leave != null && !leave.equals("")) {
-                    if (!ConfigManager.getInstance().noMessages()) {
-                        player.sendMessage(formatString(leave, resOld.getName(), player));
-                    }
+                if (leave != null) {
+                    player.sendMessage(formatString(leave, oldRes.getName(), player));
                 }
-                instance.currentRes.remove(pname);
             }
+            PlayerChangedAreaEvent event = new PlayerChangedAreaEvent(oldArea, newArea, player);
+            Residence.getInstance().getServer().getPluginManager().callEvent(event);
             return;
         }
-        instance.lastOutsideLoc.put(pname, loc);
-        if (!instance.currentRes.containsKey(pname) || resOld != res) {
-            instance.currentRes.put(pname, res);
+        instance.lastOutsideLoc.put(pname, to);
+        if (!oldArea.equals(newArea)) {
+            ResidenceArea oldRes = null;
+            ResidenceArea newRes = (ResidenceArea) newArea;
+            if (oldArea instanceof ResidenceArea) {
+                oldRes = (ResidenceArea) oldArea;
+                String leaveMessage = oldRes.getLeaveMessage();
 
-            if (resOld != res && resOld != null) {
-                String leaveMessage = resOld.getLeaveMessage();
-
-                if (leaveMessage != null && !leaveMessage.equals("") && resOld != res.getParent()) {
-                    if (!ConfigManager.getInstance().noMessages()) {
-                        player.sendMessage(formatString(leaveMessage, resOld.getName(), player));
-                    }
+                if (leaveMessage != null && !oldArea.equals(newRes.getTopParent())) {
+                    player.sendMessage(formatString(leaveMessage, oldRes.getName(), player));
                 }
             }
-            String enterMessage = res.getEnterMessage();
+            String enterMessage = newRes.getEnterMessage();
 
-            if (enterMessage != null && !enterMessage.equals("") && !(resOld != null && res == resOld.getParent())) {
-                if (!ConfigManager.getInstance().noMessages()) {
-                    player.sendMessage(formatString(enterMessage, res.getName(), player));
-                }
+            if (enterMessage != null && (oldRes == null || !newArea.equals(oldRes.getTopParent()))) {
+                 player.sendMessage(formatString(enterMessage, newRes.getName(), player));
             }
+            PlayerChangedAreaEvent event = new PlayerChangedAreaEvent(oldArea, newArea, player);
+            Residence.getInstance().getServer().getPluginManager().callEvent(event);
         }
     }
 
     private static String formatString(String message, String areaName, Player player) {
         return ChatColor.translateAlternateColorCodes('&', message.replaceAll("(%player%)", player.getName()).replaceAll("(%area%)", areaName));
-    }
-
-    public static ResidenceArea getCurrentResidence(String player) {
-        return instance.currentRes.get(player);
     }
 
     public static void initialize() {
