@@ -37,7 +37,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     private ConfigurationSection rentData;
     private List<ResidenceArea> rentLinkObjects;
 
-    public YAMLResidenceArea(ConfigurationSection section, YAMLResidenceArea parent) throws Exception {
+    public YAMLResidenceArea(ConfigurationSection section, ResidenceArea parent) throws Exception {
         super();
         name = section.getName();
         this.parent = parent;
@@ -421,7 +421,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
         return checkRent();
     }
 
-    public boolean checkRent() {
+    boolean checkRent() {
         if (System.currentTimeMillis() >= rentData.getLong("NextPayment", 0)) {
             return true;
         }
@@ -750,5 +750,24 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
             return other.getFullName() == getFullName() && other.getCreationDate() == this.getCreationDate();
         }
         return false;
+    }
+
+    void applyNewSection(ConfigurationSection section) {
+        data = section.getConfigurationSection("Data");
+        if (data.isConfigurationSection("RentData")) {
+            rentData = data.getConfigurationSection("RentData");
+        } else {
+            rentData = null;
+        }
+        marketData = data.getConfigurationSection("MarketData");
+        flags = section.getConfigurationSection("Flags");
+        groupFlags = section.getConfigurationSection("Groups");
+        playerFlags = section.getConfigurationSection("Players");
+        rentFlags = section.getConfigurationSection("RentFlags");
+        rentLinks = section.getConfigurationSection("RentLinks");
+        subzones = section.getConfigurationSection("Subzones");
+        for (Entry<String, ResidenceArea> subzone : subzoneObjects.entrySet()) {
+            ((YAMLResidenceArea) subzone.getValue()).applyNewSection(subzones.getConfigurationSection(subzone.getKey()));
+        }
     }
 }

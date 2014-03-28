@@ -55,7 +55,22 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
     public boolean removeSubzone(ResidenceArea subzone);
     public boolean renameSubzone(String name, String newName);
     public ResidenceArea getParent();
+
+    /**
+     * Gets the topmost parent of the ResidenceArea.  This function will never return
+     * a ResidenceArea in which {@link #getParent()} returns anything other than null.
+     * If the ResidenceArea is not a subzone, it returns itself.
+     *
+     * @return the topmost ResidenceArea within the subzone chain
+     */
     public ResidenceArea getTopParent();
+
+    /**
+     * Returns the friendly name of this ResidenceArea.  If it is a subzone it will be the name
+     * of the subzone itself.
+     *
+     * @return the name of the ResidenceArea
+     */
     public String getName();
     public boolean rename(String newName);
     public String getFullName();

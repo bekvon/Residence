@@ -156,7 +156,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         residences.remove(res.getName());
         FileConfiguration file = worldFiles.get(res.getWorld());
         ConfigurationSection residenceSection = file.getConfigurationSection("Residences");
-        residenceSection.createSection(res.getName(), file.getConfigurationSection(res.getName()).getValues(true));
+        res.applyNewSection(residenceSection.createSection(newName, file.getConfigurationSection(res.getName()).getValues(true)));
         residenceSection.set(res.getName(), null);
         residences.put(newName, res);
         calculateChunks(res);
