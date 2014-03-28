@@ -54,7 +54,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         if (!found) {
             return null;
         }
-        ResidenceArea subres = res.getSubzoneByLoc(loc);
+        ResidenceArea subres = res.getSubzoneByLocation(loc);
         if (subres == null) {
             return res;
         }

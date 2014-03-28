@@ -45,7 +45,7 @@ public class HingedDoorFlag extends Flag implements Listener {
         if (block.getType() != Material.WOODEN_DOOR && block.getType() != Material.IRON_DOOR_BLOCK) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.UseFlagDeny", this.getName())));
         }

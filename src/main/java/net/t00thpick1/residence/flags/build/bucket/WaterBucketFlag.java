@@ -36,7 +36,7 @@ public class WaterBucketFlag extends Flag implements Listener {
         }
         BlockFace face = event.getBlockFace();
         Location blockLocation = event.getBlockClicked().getLocation().add(face.getModX(), face.getModY(), face.getModZ());
-        if (!ResidenceAPI.getPermissionsAreaByLocation(blockLocation).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(blockLocation).allowAction(player.getName(), this)) {
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", getName()));
             event.setCancelled(true);
         }
@@ -51,7 +51,7 @@ public class WaterBucketFlag extends Flag implements Listener {
         if (Utilities.isAdminMode(player)) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getBlockClicked().getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getBlockClicked().getLocation()).allowAction(player.getName(), this)) {
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", getName()));
             event.setCancelled(true);
         }

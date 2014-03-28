@@ -42,7 +42,7 @@ public class MoveFlag extends Flag implements Listener {
             StateAssurance.handleNewLocation(player, event.getTo());
             return;
         }
-        if (!res.allowAction(player, MoveFlag.FLAG)) {
+        if (!res.allowAction(player.getName(), MoveFlag.FLAG)) {
             Location lastLoc = StateAssurance.getLastOutsideLocation(player.getName());
             if (lastLoc != null) {
                 player.teleport(lastLoc);

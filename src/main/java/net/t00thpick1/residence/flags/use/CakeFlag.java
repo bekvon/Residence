@@ -46,7 +46,7 @@ public class CakeFlag extends Flag implements Listener {
         if (mat != Material.CAKE_BLOCK) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.UseFlagDeny", getName())));
         }

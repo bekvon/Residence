@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class YAMLCuboidArea implements CuboidArea {
     protected World world;
@@ -140,6 +141,16 @@ public class YAMLCuboidArea implements CuboidArea {
         section.set("X2", lowX);
         section.set("Y2", lowY);
         section.set("Z2", lowZ);
+    }
+
+    public void saveArea(Map<String, Object> map) {
+        map.put("World", getWorld().getName());
+        map.put("X1", highX);
+        map.put("Y1", highY);
+        map.put("Z1", highZ);
+        map.put("X2", lowX);
+        map.put("Y2", lowY);
+        map.put("Z2", lowZ);
     }
 
     public void loadArea(ConfigurationSection section) throws Exception {

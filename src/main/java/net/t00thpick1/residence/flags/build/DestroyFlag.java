@@ -54,7 +54,7 @@ public class DestroyFlag extends Flag implements Listener {
         if (Utilities.isAdminMode(player)) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(location).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(location).allowAction(player.getName(), this)) {
             cancellable.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", getName()));
         }

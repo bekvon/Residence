@@ -37,7 +37,7 @@ public class ItemFrameFlag extends Flag implements Listener {
         if (ent.getType() != EntityType.ITEM_FRAME) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(ent.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.ContainerFlagDeny", this.getName())));
         }
@@ -57,7 +57,7 @@ public class ItemFrameFlag extends Flag implements Listener {
         if (Utilities.isAdminMode(player)) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(frame.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(frame.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.ContainerFlagDeny", this.getName())));
         }

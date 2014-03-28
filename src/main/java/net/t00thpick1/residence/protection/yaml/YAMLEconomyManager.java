@@ -4,58 +4,48 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.entity.Player;
+import net.t00thpick1.residence.api.areas.ResidenceArea;
 
 public class YAMLEconomyManager {
-    private List<YAMLResidenceArea> rentList;
-    private List<YAMLResidenceArea> rentable;
-    private List<YAMLResidenceArea> buyable;
+    private List<ResidenceArea> rentList;
+    private List<ResidenceArea> rentable;
+    private List<ResidenceArea> buyable;
     private static YAMLEconomyManager instance;
 
     private YAMLEconomyManager() {
-        rentList = new ArrayList<YAMLResidenceArea>();
-        rentable = new ArrayList<YAMLResidenceArea>();
-        buyable = new ArrayList<YAMLResidenceArea>();
+        rentList = new ArrayList<ResidenceArea>();
+        rentable = new ArrayList<ResidenceArea>();
+        buyable = new ArrayList<ResidenceArea>();
     }
 
-    public static void printForSaleResidences(Player player) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public static void printRentableResidences(Player player) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    static void setForRent(YAMLResidenceArea res) {
+    static void setForRent(ResidenceArea res) {
         instance.rentable.add(res);
     }
 
-    static void removeFromRent(YAMLResidenceArea res) {
+    static void removeFromRent(ResidenceArea res) {
         instance.rentable.remove(res);
     }
 
-    static void setRented(YAMLResidenceArea res) {
+    static void setRented(ResidenceArea res) {
         instance.rentList.add(res);
     }
 
-    static void evict(YAMLResidenceArea res) {
+    static void evict(ResidenceArea res) {
         instance.rentList.remove(res);
     }
 
-    static void setForSale(YAMLResidenceArea res) {
+    static void setForSale(ResidenceArea res) {
         instance.buyable.add(res);
     }
 
-    static void removeFromSale(YAMLResidenceArea res) {
+    static void removeFromSale(ResidenceArea res) {
         instance.buyable.remove(res);
     }
 
     public static void checkRent() {
-        Iterator<YAMLResidenceArea> it = instance.rentList.iterator();
+        Iterator<ResidenceArea> it = instance.rentList.iterator();
         while (it.hasNext()) {
-            if (!it.next().checkRent()) {
+            if (!((YAMLResidenceArea) it.next()).checkRent()) {
                 it.remove();
             }
         }

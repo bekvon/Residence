@@ -57,7 +57,7 @@ public class TrampleFlag extends Flag implements Listener {
         if (!(mat == Material.SOIL || mat == Material.SOUL_SAND)) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             return;
         }

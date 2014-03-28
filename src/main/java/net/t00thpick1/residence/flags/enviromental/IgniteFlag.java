@@ -31,7 +31,7 @@ public class IgniteFlag extends Flag implements Listener {
             if (Utilities.isAdminMode(player)) {
                 return;
             }
-            if (!area.allowAction(player, this)) {
+            if (!area.allowAction(player.getName(), this)) {
                 event.setCancelled(true);
                 player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", this.getName()));
             }

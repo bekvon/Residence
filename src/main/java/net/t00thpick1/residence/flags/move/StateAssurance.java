@@ -57,10 +57,10 @@ public class StateAssurance implements Listener {
             return true;
         }
         PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(location);
-        if (player.getVehicle() != null && !area.allowAction(player, VehicleMoveFlag.FLAG)) {
+        if (player.getVehicle() != null && !area.allowAction(player.getName(), VehicleMoveFlag.FLAG)) {
             return false;
         }
-        if (!area.allowAction(player, MoveFlag.FLAG)) {
+        if (!area.allowAction(player.getName(), MoveFlag.FLAG)) {
             return false;
         }
         return true;
@@ -89,8 +89,8 @@ public class StateAssurance implements Listener {
 
         ResidenceArea res = Residence.getInstance().getResidenceManager().getByLocation(loc);
         if (res != null) {
-            if (res.getSubzoneByLoc(loc) != null) {
-                res = res.getSubzoneByLoc(loc);
+            if (res.getSubzoneByLocation(loc) != null) {
+                res = res.getSubzoneByLocation(loc);
             }
         }
 

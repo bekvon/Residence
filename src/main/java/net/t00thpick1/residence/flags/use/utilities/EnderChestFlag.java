@@ -45,7 +45,7 @@ public class EnderChestFlag extends Flag implements Listener {
         if (block.getType() != Material.ENDER_CHEST) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("UseFlagDeny", this.getName())));
         }

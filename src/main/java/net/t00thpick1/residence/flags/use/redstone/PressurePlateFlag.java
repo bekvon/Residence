@@ -41,7 +41,7 @@ public class PressurePlateFlag extends Flag implements Listener {
                 && block.getType() != Material.GOLD_PLATE && block.getType() != Material.IRON_PLATE) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("Flags.Messages.FlagDeny", LocaleLoader.getString("Flags.Messages.UseFlagDeny", this.getName())));
         }

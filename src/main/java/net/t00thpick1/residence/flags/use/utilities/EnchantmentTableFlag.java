@@ -45,7 +45,7 @@ public class EnchantmentTableFlag extends Flag implements Listener {
         if (block.getType() != Material.ENCHANTMENT_TABLE) {
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(block.getLocation()).allowAction(player.getName(), this)) {
             event.setCancelled(true);
             player.sendMessage(LocaleLoader.getString("FlagDeny", LocaleLoader.getString("UseFlagDeny", this.getName())));
         }

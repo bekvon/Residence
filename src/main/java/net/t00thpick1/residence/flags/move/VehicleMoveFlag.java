@@ -44,7 +44,7 @@ public class VehicleMoveFlag extends Flag implements Listener {
             StateAssurance.handleNewLocation(player, event.getTo());
             return;
         }
-        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getTo()).allowAction(player, this)) {
+        if (!ResidenceAPI.getPermissionsAreaByLocation(event.getTo()).allowAction(player.getName(), this)) {
             event.getVehicle().teleport(event.getFrom());
             player.sendMessage(LocaleLoader.getString("Flags.Messages.VehicleMoveDeny"));
             return;

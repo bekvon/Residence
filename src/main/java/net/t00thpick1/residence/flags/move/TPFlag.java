@@ -33,12 +33,12 @@ public class TPFlag extends Flag implements Listener {
             return;
         }
         if (!player.hasPermission("residence.admin.tp") && event.getCause() == TeleportCause.PLUGIN) {
-            if (!ResidenceAPI.getPermissionsAreaByLocation(event.getFrom()).allowAction(player, this)) {
+            if (!ResidenceAPI.getPermissionsAreaByLocation(event.getFrom()).allowAction(player.getName(), this)) {
                 event.setCancelled(true);
                 player.sendMessage(LocaleLoader.getString("Flags.Messages.TPOutDeny"));
                 return;
             }
-            if (!ResidenceAPI.getPermissionsAreaByLocation(loc).allowAction(player, this)) {
+            if (!ResidenceAPI.getPermissionsAreaByLocation(loc).allowAction(player.getName(), this)) {
                 event.setCancelled(true);
                 player.sendMessage(LocaleLoader.getString("Flags.Messages.TPDeny"));
                 return;

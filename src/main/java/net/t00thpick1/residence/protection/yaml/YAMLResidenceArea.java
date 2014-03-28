@@ -11,11 +11,13 @@ import net.milkbowl.vault.economy.Economy;
 import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceAPI;
+import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -121,21 +123,20 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
         return ResidenceAPI.getResidenceWorld(world).allowAction(flag);
     }
 
-    public boolean allowAction(Player player, Flag flag) {
+    public boolean allowAction(String player, Flag flag) {
         Flag origFlag = flag;
-        String name = player.getName();
-        if (flag == FlagManager.ADMIN && getOwner().equalsIgnoreCase(name)) {
+        if (flag == FlagManager.ADMIN && getOwner().equalsIgnoreCase(player)) {
             return true;
         }
         while (true) {
-            if (playerFlags.isConfigurationSection(name)) {
-                ConfigurationSection playerPerms = playerFlags.getConfigurationSection(name);
+            if (playerFlags.isConfigurationSection(player)) {
+                ConfigurationSection playerPerms = playerFlags.getConfigurationSection(player);
                 if (playerPerms.contains(flag.getName())) {
                     return playerPerms.getBoolean(flag.getName());
                 }
             }
 
-            String group = YAMLGroupManager.getPlayerGroup(player.getName());
+            String group = YAMLGroupManager.getPlayerGroup(player);
             if (groupFlags.isConfigurationSection(group)) {
                 ConfigurationSection groupPerms = groupFlags.getConfigurationSection(group);
                 if (groupPerms.contains(flag.getName())) {
@@ -143,11 +144,11 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
                 }
             }
             if (rentFlags.contains(flag.getName())) {
-                if (isRented() && getRenter().equalsIgnoreCase(name)) {
+                if (isRented() && getRenter().equalsIgnoreCase(player)) {
                     return rentFlags.getBoolean(flag.getName());
                 }
                 for (ResidenceArea rentLocation : rentLinkObjects) {
-                    if (rentLocation.getRenter().equalsIgnoreCase(name)) {
+                    if (rentLocation.getRenter().equalsIgnoreCase(player)) {
                         return rentFlags.getBoolean(flag.getName());
                     }
                 }
@@ -163,16 +164,15 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
         }
     }
 
-    public boolean createSubzone(String name, String owner, Location loc1, Location loc2) {
+    public boolean createSubzone(String name, String owner, CuboidArea area) {
         if (subzones.isConfigurationSection(name)) {
             return false;
         }
-        YAMLCuboidArea newArea = new YAMLCuboidArea(loc1, loc2);
-        if (!isAreaWithin(newArea)) {
+        if (!isAreaWithin(area)) {
             return false;
         }
         for (ResidenceArea subzone : getSubzoneList()) {
-            if (subzone.checkCollision(newArea)) {
+            if (subzone.checkCollision(area)) {
                 return false;
             }
         }
@@ -184,7 +184,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
             data.set("CreationDate", System.currentTimeMillis());
             data.set("EnterMessage", YAMLGroupManager.getDefaultEnterMessage(owner));
             data.set("LeaveMessage", YAMLGroupManager.getDefaultLeaveMessage(owner));
-            newArea.saveArea(data.createSection("Area"));
+            ((YAMLCuboidArea) area).saveArea(data.createSection("Area"));
             ConfigurationSection marketData = data.createSection("MarketData");
             marketData.set("ForSale", false);
             marketData.set("ForRent", false);
@@ -198,13 +198,15 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
             subzoneObjects.put(name, newRes);
             newRes.applyDefaultFlags();
         } catch (Exception e) {
+            subzones.set(name, null);
+            subzoneObjects.remove(name);
             e.printStackTrace();
             return false;
         }
         return true;
     }
 
-    public ResidenceArea getSubzoneByLoc(Location loc) {
+    public ResidenceArea getSubzoneByLocation(Location loc) {
         ResidenceArea residence = null;
         for (ResidenceArea res : subzoneObjects.values()) {
             if (res.containsLocation(loc)) {
@@ -215,7 +217,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
         if (residence == null) {
             return null;
         }
-        ResidenceArea subrez = residence.getSubzoneByLoc(loc);
+        ResidenceArea subrez = residence.getSubzoneByLocation(loc);
         if (subrez == null) {
             return residence;
         }
@@ -301,34 +303,30 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     }
 
     public Location getOutsideFreeLoc(Location insideLoc) {
-        int maxIt = 100;
         if (!containsLocation(insideLoc)) {
             return insideLoc;
         }
         Location highLoc = getHighLocation();
         Location newLoc = new Location(highLoc.getWorld(), highLoc.getBlockX(), highLoc.getBlockY(), highLoc.getBlockZ());
-        boolean found = false;
-        int it = 0;
-        while (!found && it < maxIt) {
-            it++;
-            Location lowLoc;
-            newLoc.setX(newLoc.getBlockX() + 1);
-            newLoc.setZ(newLoc.getBlockZ() + 1);
-            lowLoc = new Location(newLoc.getWorld(), newLoc.getBlockX(), 254, newLoc.getBlockZ());
+        Location middleLoc = newLoc.clone().add(0, -1, 0);
+        Location lowLoc = newLoc.clone().add(0, -2, 0);
+        for (int i = 0; i < 100; i++) {
+            newLoc.add(1, 0, 1);
+            middleLoc.add(1, 0, 1);
+            lowLoc.add(1, 0, 1);
             newLoc.setY(255);
-            while ((newLoc.getBlock().getTypeId() != 0 || lowLoc.getBlock().getTypeId() == 0) && lowLoc.getBlockY() > -126) {
-                newLoc.setY(newLoc.getY() - 1);
-                lowLoc.setY(lowLoc.getY() - 1);
+            middleLoc.setY(254);
+            lowLoc.setY(253);
+            while ((newLoc.getBlock().getType() != Material.AIR || middleLoc.getBlock().getType() != Material.AIR || lowLoc.getBlock().getType() == Material.AIR) && lowLoc.getBlockY() > 0) {
+                newLoc.add(0, -1, 0);
+                middleLoc.add(0, -1, 0);
+                lowLoc.add(0, -1, 0);
             }
-            if (newLoc.getBlock().getTypeId() == 0 && lowLoc.getBlock().getTypeId() != 0) {
-                found = true;
+            if (lowLoc.getBlockY() > 0) {
+                return newLoc;
             }
         }
-        if (found) {
-            return newLoc;
-        } else {
-            return getWorld().getSpawnLocation();
-        }
+        return getWorld().getSpawnLocation();
     }
 
     public Location getTeleportLocation() {
@@ -491,7 +489,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     }
 
     @Override
-    public void setFlag(Flag flag, Boolean value) {
+    public void setAreaFlag(Flag flag, Boolean value) {
         flags.set(flag.getName(), value);
     }
 
@@ -590,7 +588,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     public void applyDefaultFlags() {
         if (!getOwner().equalsIgnoreCase("Server Land")) {
             for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
-                setFlag(defaultFlag.getKey(), defaultFlag.getValue());
+                setAreaFlag(defaultFlag.getKey(), defaultFlag.getValue());
             }
         }
         for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultOwnerFlags(getOwner()).entrySet()) {
@@ -609,7 +607,7 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
         removeAllAreaFlags();
     }
 
-    public void copyPermissions(ResidenceArea mirror) {
+    public void copyFlags(ResidenceArea mirror) {
         ConfigurationSection parent = playerFlags.getParent();
         parent.set("Players", null);
         playerFlags = parent.createSection("Players", ((YAMLResidenceArea) mirror).playerFlags.getValues(true));
@@ -631,6 +629,11 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
         ConfigurationSection parent = groupFlags.getParent();
         parent.set("Groups", null);
         groupFlags = parent.createSection("Groups");
+    }
+
+    @Override
+    public void removeAllGroupFlags(String group) {
+        groupFlags.set(group, null);
     }
 
     public void removeAllAreaFlags() {
@@ -722,5 +725,30 @@ public class YAMLResidenceArea extends YAMLCuboidArea implements ResidenceArea {
     @Override
     public Collection<String> getRentLinkStrings() {
         return rentLinks.getStringList("Links");
+    }
+
+    @Override
+    public boolean removeSubzone(ResidenceArea subzone) {
+        if (!subzone.getParent().equals(this)) {
+            return false;
+        }
+        return removeSubzone(subzone.getName());
+    }
+
+    @Override
+    public long getCreationDate() {
+        return data.getLong("CreationDate");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof ResidenceArea) {
+            ResidenceArea other = ((ResidenceArea) obj);
+            return other.getFullName() == getFullName() && other.getCreationDate() == this.getCreationDate();
+        }
+        return false;
     }
 }
