@@ -3,27 +3,15 @@ package net.t00thpick1.residence;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.api.ResidenceManager;
-import net.t00thpick1.residence.api.areas.PermissionsArea;
 import net.t00thpick1.residence.api.flags.FlagManager;
-import net.t00thpick1.residence.listeners.LoginLogoutListener;
-import net.t00thpick1.residence.listeners.ToolListener;
-import net.t00thpick1.residence.locale.LocaleLoader;
-import net.t00thpick1.residence.protection.yaml.YAMLEconomyManager;
-import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
-import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager;
-import net.t00thpick1.residence.protection.yaml.YAMLWorldManager;
+import net.t00thpick1.residence.protection.ProtectionFactory;
 import net.t00thpick1.residence.selection.SelectionManager;
 import net.t00thpick1.residence.selection.WorldEditSelectionManager;
 import net.t00thpick1.residence.utils.CompatabilityManager;
 import net.t00thpick1.residence.utils.metrics.Metrics;
-import net.t00thpick1.residence.utils.zip.ZipLibrary;
-
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -46,9 +34,7 @@ public class Residence extends JavaPlugin {
     public final static int saveVersion = 3;
     private BackEndType backend = BackEndType.YAML;
     private static Residence instance;
-    private ResidenceManager rmanager;
     private SelectionManager smanager;
-    private YAMLWorldManager wmanager;
     private Economy economy;
     private Permission permissions;
     private List<String> adminMode = new ArrayList<String>();
@@ -57,15 +43,12 @@ public class Residence extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
-        if (isInitialized()) {
-            try {
-                save();
-                ZipLibrary.backup();
-            } catch (Exception ex) {
-                getLogger().log(Level.SEVERE, "SEVERE SAVE ERROR", ex);
-            }
-            getLogger().log(Level.INFO, "Disabled!");
+        try {
+            ProtectionFactory.save();
+        } catch (Exception ex) {
+            getLogger().log(Level.SEVERE, "SEVERE SAVE ERROR", ex);
         }
+        getLogger().log(Level.INFO, "Disabled!");
         instance = null;
     }
 
@@ -92,28 +75,8 @@ public class Residence extends JavaPlugin {
             saveDefaultConfig();
         }
 
-        File groupsFile = new File(dataFolder, "groups.yml");
-        try {
-            if (!groupsFile.isFile()) {
-                groupsFile.createNewFile();
-                FileConfiguration internalConfig = YamlConfiguration.loadConfiguration(getResource("groups.yml"));
-                internalConfig.save(groupsFile);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         new ConfigManager(getConfig());
-        YAMLGroupManager.init(YamlConfiguration.loadConfiguration(groupsFile));
-        File worldFolder = new File(dataFolder, "WorldConfigurations");
-        if (!worldFolder.isDirectory()) {
-            worldFolder.mkdirs();
-        }
-        try {
-            wmanager = new YAMLWorldManager(worldFolder);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+
         cmanager = new CompatabilityManager();
 
         Plugin p = getServer().getPluginManager().getPlugin("Vault");
@@ -124,12 +87,12 @@ public class Residence extends JavaPlugin {
             getLogger().log(Level.INFO, "Vault NOT found!");
         }
 
-        YAMLEconomyManager.init();
-        if (!loadSaves()) {
-            if (ConfigManager.getInstance().stopOnLoadError()) {
-                getServer().getPluginManager().disablePlugin(this);
-                return;
-            }
+        try {
+            ProtectionFactory.init(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         File commandsFile = new File(dataFolder, "commandhelp.yml");
@@ -159,39 +122,16 @@ public class Residence extends JavaPlugin {
             smanager = new SelectionManager();
             getLogger().log(Level.INFO, "WorldEdit NOT found!");
         }
-
-        PluginManager pm = getServer().getPluginManager();
         new ResidenceCommandExecutor(this);
-        pm.registerEvents(new ToolListener(), this);
-        pm.registerEvents(new LoginLogoutListener(), this);
-
         (new BukkitRunnable() {
             public void run() {
-                try {
-                    Residence.getInstance().save();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                ProtectionFactory.save();
             }
         }).runTaskTimer(this, 2000, ConfigManager.getInstance().getAutoSaveInterval() * 60 * 20);
-        (new BukkitRunnable() {
-            public void run() {
-                Player[] p = getServer().getOnlinePlayers();
-                for (Player player : p) {
-                    PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(player.getLocation());
-                    if (area.allowAction(FlagManager.HEALING)) {
-                        double health = player.getHealth();
-                        if (health < player.getMaxHealth() && !player.isDead()) {
-                            player.setHealth(Math.min(health + 1, player.getMaxHealth()));
-                        }
-                    }
-                }
-            }
-        }).runTaskTimer(this, 20, 20);
         if (ConfigManager.getInstance().isRent()) {
             (new BukkitRunnable() {
                 public void run() {
-                    YAMLEconomyManager.checkRent();
+                    ResidenceAPI.getEconomyManager().checkRent();
                 }
             }).runTaskTimer(this, 20, ConfigManager.getInstance().getRentCheckInterval() * 60 * 20);
         }
@@ -201,10 +141,6 @@ public class Residence extends JavaPlugin {
         } catch (IOException e) {
             // Failed to submit the stats :-(
         }
-    }
-
-    public ResidenceManager getResidenceManager() {
-        return rmanager;
     }
 
     public SelectionManager getSelectionManager() {
@@ -217,27 +153,6 @@ public class Residence extends JavaPlugin {
 
     public Economy getEconomy() {
         return economy;
-    }
-
-    private void save() throws IOException {
-        wmanager.save();
-        rmanager.save();
-    }
-
-    private boolean loadSaves() {
-        File saveFolder = new File(getDataFolder(), "Save");
-        try {
-            File worldFolder = new File(saveFolder, "Worlds");
-            if (!worldFolder.isDirectory()) {
-                worldFolder.mkdirs();
-            }
-            rmanager = YAMLResidenceManager.load(worldFolder);
-            return true;
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Unable to load save file", e);
-            getLogger().info(LocaleLoader.getString("General.FailedLoad"));
-            return false;
-        }
     }
 
     public static Residence getInstance() {
@@ -258,10 +173,6 @@ public class Residence extends JavaPlugin {
 
     public boolean isAdminMode(Player player) {
         return adminMode.contains(player.getName());
-    }
-
-    public YAMLWorldManager getWorldManager() {
-        return wmanager;
     }
 
     public BackEndType getBackend() {

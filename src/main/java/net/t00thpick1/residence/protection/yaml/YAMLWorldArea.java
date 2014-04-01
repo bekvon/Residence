@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.areas.WorldArea;
 import net.t00thpick1.residence.api.flags.Flag;
@@ -17,7 +16,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class YAMLWorldArea implements WorldArea {
     private World world;
     private ConfigurationSection perms;
-    private ConfigurationSection groups;
     private File saveFile;
     private FileConfiguration file;
 
@@ -27,11 +25,6 @@ public class YAMLWorldArea implements WorldArea {
             this.perms = section.createSection("Permissions");
         } else {
             this.perms = section.getConfigurationSection("Permissions");
-        }
-        if (!section.isConfigurationSection("Groups")) {
-            this.groups = section.createSection("Groups");
-        } else {
-            this.groups = section.getConfigurationSection("Groups");
         }
         this.saveFile = worldFile;
         this.file = section;
@@ -45,19 +38,15 @@ public class YAMLWorldArea implements WorldArea {
         if (flag.getParent() != null) {
             return allowAction(flag.getParent());
         }
+        if (flag == FlagManager.ADMIN) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public boolean allowAction(String player, Flag flag) {
-        String group = YAMLGroupManager.getPlayerGroup(player);
         while (true) {
-            if (groups.isConfigurationSection(group)) {
-                ConfigurationSection groupPerms = groups.getConfigurationSection(group);
-                if (groupPerms.contains(flag.getName())) {
-                    return groupPerms.getBoolean(flag.getName());
-                }
-            }
             if (perms.contains(flag.getName())) {
                 return perms.getBoolean(flag.getName());
             }
@@ -71,13 +60,6 @@ public class YAMLWorldArea implements WorldArea {
 
     public void setAreaFlag(Flag flag, Boolean value) {
         perms.set(flag.getName(), value);
-    }
-
-    public void setGroupFlag(String group, Flag flag, Boolean value) {
-        if (!groups.isConfigurationSection(group)) {
-            groups.createSection(group);
-        }
-        groups.getConfigurationSection(group).set(flag.getName(), value);
     }
 
     @Override
@@ -109,36 +91,7 @@ public class YAMLWorldArea implements WorldArea {
     }
 
     @Override
-    public Map<String, Map<Flag, Boolean>> getGroupFlags() {
-        Map<String, Map<Flag, Boolean>> groupFlags = new HashMap<String, Map<Flag, Boolean>>();
-        for (String group : this.groups.getKeys(false)) {
-            ConfigurationSection groupSection = this.groups.getConfigurationSection(group);
-            HashMap<Flag, Boolean> gFlags = new HashMap<Flag, Boolean>();
-            for (String flag : groupSection.getKeys(false)) {
-                Flag flagObj = FlagManager.getFlag(flag);
-                if (flagObj != null) {
-                    gFlags.put(flagObj, groupSection.getBoolean(flag));
-                }
-            }
-            groupFlags.put(group, gFlags);
-        }
-        return groupFlags;
-    }
-
-    @Override
-    public void removeAllGroupFlags(String group) {
-        groups.set(group, null);
-    }
-
-    public void removeAllGroupFlags() {
-        ConfigurationSection parent = groups.getParent();
-        parent.set("Groups", null);
-        groups = parent.createSection("Groups");
-    }
-
-    @Override
     public void clearFlags() {
         removeAllAreaFlags();
-        removeAllGroupFlags();
     }
 }

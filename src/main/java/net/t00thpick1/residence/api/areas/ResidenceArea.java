@@ -3,7 +3,6 @@ package net.t00thpick1.residence.api.areas;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 import net.t00thpick1.residence.api.flags.Flag;
 
 import org.bukkit.Location;
@@ -36,24 +35,25 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
     public void applyDefaultFlags();
     public void copyFlags(ResidenceArea mirror);
 
-    public Map<Flag, Boolean> getPlayerFlags(String name);
+    public Map<Flag, Boolean> getPlayerFlags(String player);
     public Map<String, Map<Flag, Boolean>> getPlayerFlags();
     public void removeAllPlayerFlags(String player);
     public void setPlayerFlag(String player, Flag flag, Boolean value);
 
     public void rentLink(ResidenceArea link);
+    public Collection<ResidenceArea> getRentLinks();
     public void setRentFlag(Flag flag, Boolean value);
     public Map<Flag, Boolean> getRentFlags();
 
-    public Collection<String> getRentLinkStrings();
     public Collection<ResidenceArea> getSubzoneList();
     public Collection<String> getSubzoneNameList();
     public ResidenceArea getSubzoneByLocation(Location loc);
     public ResidenceArea getSubzoneByName(String string);
-    public boolean createSubzone(String zname, String name, CuboidArea area);
+    public boolean createSubzone(String name, String owner, CuboidArea area);
     public boolean removeSubzone(String name);
     public boolean removeSubzone(ResidenceArea subzone);
     public boolean renameSubzone(String name, String newName);
+    public int getSubzoneDepth();
     public ResidenceArea getParent();
 
     /**
@@ -83,5 +83,4 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
      * @return whether or not the given ResidenceArea is equivalent to this ResidenceArea.
      */
     public boolean equals(Object object);
-
 }

@@ -1,7 +1,6 @@
 package net.t00thpick1.residence.api.areas;
 
 import java.util.Map;
-
 import net.t00thpick1.residence.api.flags.Flag;
 
 import org.bukkit.World;
@@ -30,7 +29,7 @@ public interface PermissionsArea {
     /**
      * Determines whether or not a player has permission to a flag with the area.
      *
-     * @param player the player to check
+     * @param player  the player to check
      * @param flag the flag to check
      * @return whether or not the player has permission in the area
      */
@@ -65,38 +64,6 @@ public interface PermissionsArea {
      *
      */
     public void removeAllAreaFlags();
-
-    /**
-     * Sets an group flag in an area for a group.  A null value will remove the flag.
-     *
-     * @param group the group to set the flag for
-     * @param flag the flag to set
-     * @param value the value to set it to, or null to remove
-     */
-    public void setGroupFlag(String group, Flag flag, Boolean value);
-
-    /**
-     * Gets a map of group flags.  The outer map contains group names to inner map.
-     * the inner map contains Flag to value.
-     *
-     * Note: Map is immutable
-     *
-     * @return the group flag maps.
-     */
-    public Map<String, Map<Flag, Boolean>> getGroupFlags();
-
-    /**
-     * Removes all flags for a group in the PermissionsArea.
-     *
-     * @param group the group to remove flags for
-     */
-    public void removeAllGroupFlags(String group);
-
-    /**
-     * Clears all group flags in the PermissionsArea.
-     *
-     */
-    public void removeAllGroupFlags();
 
     /**
      * Clears all flags within the PermissionsArea.

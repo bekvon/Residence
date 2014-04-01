@@ -2,6 +2,7 @@ package net.t00thpick1.residence.protection.yaml;
 
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.areas.CuboidArea;
+import net.t00thpick1.residence.protection.CuboidAreaFactory;
 import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager.ChunkRef;
 
 import org.bukkit.Location;
@@ -10,7 +11,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class YAMLCuboidArea implements CuboidArea {
     protected World world;
@@ -21,7 +21,19 @@ public class YAMLCuboidArea implements CuboidArea {
     protected int lowY;
     protected int lowZ;
 
-    protected YAMLCuboidArea() { }
+    public YAMLCuboidArea(ConfigurationSection section) throws Exception {
+        String worldName = section.getString("World");
+        world = Residence.getInstance().getServer().getWorld(worldName);
+        if (world == null) {
+            throw new Exception("Cant Find World: " + worldName);
+        }
+        highX = section.getInt("X1");
+        highY = section.getInt("Y1");
+        highZ = section.getInt("Z1");
+        lowX = section.getInt("X2");
+        lowY = section.getInt("Y2");
+        lowZ = section.getInt("Z2");
+    }
 
     public YAMLCuboidArea(Location startLoc, Location endLoc) {
         if (startLoc.getBlockX() > endLoc.getBlockX()) {
@@ -36,7 +48,7 @@ public class YAMLCuboidArea implements CuboidArea {
             lowY = endLoc.getBlockY();
         } else {
             highY = endLoc.getBlockY();
-            highY = startLoc.getBlockY();
+            lowY = startLoc.getBlockY();
         }
         if (startLoc.getBlockZ() > endLoc.getBlockZ()) {
             highZ = startLoc.getBlockZ();
@@ -106,15 +118,15 @@ public class YAMLCuboidArea implements CuboidArea {
     }
 
     public int getXSize() {
-        return (highX - lowX) + 1;
+        return (highX - lowX);
     }
 
     public int getYSize() {
-        return (highY - lowY) + 1;
+        return (highY - lowY);
     }
 
     public int getZSize() {
-        return (highZ - lowZ) + 1;
+        return (highZ - lowZ);
     }
 
     public Location getHighLocation() {
@@ -133,7 +145,7 @@ public class YAMLCuboidArea implements CuboidArea {
         return new Location(world, (highX + getLowX()) / 2, (highY + getLowY()) / 2, (highZ + lowZ) / 2);
     }
 
-    public void saveArea(ConfigurationSection section) {
+    public void save(ConfigurationSection section) {
         section.set("World", getWorld().getName());
         section.set("X1", highX);
         section.set("Y1", highY);
@@ -141,30 +153,6 @@ public class YAMLCuboidArea implements CuboidArea {
         section.set("X2", lowX);
         section.set("Y2", lowY);
         section.set("Z2", lowZ);
-    }
-
-    public void saveArea(Map<String, Object> map) {
-        map.put("World", getWorld().getName());
-        map.put("X1", highX);
-        map.put("Y1", highY);
-        map.put("Z1", highZ);
-        map.put("X2", lowX);
-        map.put("Y2", lowY);
-        map.put("Z2", lowZ);
-    }
-
-    public void loadArea(ConfigurationSection section) throws Exception {
-        String worldName = section.getString("World");
-        world = Residence.getInstance().getServer().getWorld(worldName);
-        if (world == null) {
-            throw new Exception("Cant Find World: " + worldName);
-        }
-        highX = section.getInt("X1");
-        highY = section.getInt("Y1");
-        highZ = section.getInt("Z1");
-        lowX = section.getInt("X2");
-        lowY = section.getInt("Y2");
-        lowZ = section.getInt("Z2");
     }
 
     public List<ChunkRef> getChunks() {
@@ -210,5 +198,12 @@ public class YAMLCuboidArea implements CuboidArea {
     @Override
     public int getLowZ() {
         return lowZ;
+    }
+
+    public static class YAMLCuboidAreaFactory implements CuboidAreaFactory {
+        @Override
+        public CuboidArea createArea(Location loc1, Location loc2) {
+            return new YAMLCuboidArea(loc1, loc2);
+        }
     }
 }

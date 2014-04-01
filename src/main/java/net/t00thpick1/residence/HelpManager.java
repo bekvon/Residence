@@ -22,6 +22,11 @@ public class HelpManager {
         int i = 0;
         ConfigurationSection section = file.getConfigurationSection("res");
         while (!args[i].equalsIgnoreCase("?")) {
+            if (!section.isConfigurationSection("Subcommands")) {
+                sender.sendMessage(LocaleLoader.getString("Commands.Help.NotFound"));
+                return;
+            }
+            section = section.getConfigurationSection("Subcommands");
             if (!section.isConfigurationSection(args[i].toLowerCase())) {
                 sender.sendMessage(LocaleLoader.getString("Commands.Help.NotFound"));
                 return;

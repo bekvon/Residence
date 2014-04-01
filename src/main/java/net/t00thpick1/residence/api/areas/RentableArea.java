@@ -13,4 +13,5 @@ public interface RentableArea extends MarketableArea {
     public void setAutoRenew(boolean autoRenew);
     public long getLastPaymentDate();
     public void evict();
+    public long getNextPaymentDate();
 }

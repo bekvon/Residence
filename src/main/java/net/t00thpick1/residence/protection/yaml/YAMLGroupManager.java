@@ -2,8 +2,6 @@ package net.t00thpick1.residence.protection.yaml;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
@@ -99,34 +97,11 @@ public class YAMLGroupManager {
         return defFlags;
     }
 
-    public static Map<String, Map<Flag, Boolean>> getDefaultGroupFlags(String player) {
-        Map<String, Map<Flag, Boolean>> gFlags = new HashMap<String, Map<Flag, Boolean>>();
-        ConfigurationSection groupFlags = getGroup(player).getConfigurationSection("GroupFlags");
-        for (String group : groupFlags.getKeys(false)) {
-            Map<Flag, Boolean> defFlags = new HashMap<Flag, Boolean>();
-            ConfigurationSection flags = groupFlags.getConfigurationSection(group);
-            for (String key : flags.getKeys(false)) {
-                Flag flag = FlagManager.getFlag(key);
-                if (flag != null) {
-                    defFlags.put(flag, flags.getBoolean(key));
-                }
-            }
-            gFlags.put(group, defFlags);
-        }
-        return gFlags;
+    public static String getDefaultEnterMessage(String owner) {
+        return getGroup(owner).getString("DefaultEnterMessage");
     }
 
-    public static String getDefaultEnterMessage(String player) {
-        if (ConfigManager.getInstance().noMessages()) {
-            return null;
-        }
-        return getGroup(player).getString("DefaultEnterMessage");
-    }
-
-    public static String getDefaultLeaveMessage(String player) {
-        if (ConfigManager.getInstance().noMessages()) {
-            return null;
-        }
-        return getGroup(player).getString("DefaultLeaveMessage");
+    public static String getDefaultLeaveMessage(String owner) {
+        return getGroup(owner).getString("DefaultLeaveMessage");
     }
 }

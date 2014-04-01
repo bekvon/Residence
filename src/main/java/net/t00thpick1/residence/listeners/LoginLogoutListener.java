@@ -1,6 +1,7 @@
 package net.t00thpick1.residence.listeners;
 
 import net.t00thpick1.residence.Residence;
+import net.t00thpick1.residence.api.ResidenceAPI;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,5 +22,6 @@ public class LoginLogoutListener implements Listener {
         if (player.hasPermission("residence.admin.onlogin")) {
             Residence.getInstance().activateAdminMode(player);
         }
+        ResidenceAPI.getUsernameUUIDCache().cacheName(player.getUniqueId(), player.getName());
     }
 }

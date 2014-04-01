@@ -5,7 +5,8 @@ import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceManager;
 import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
-import net.t00thpick1.residence.flags.move.StateAssurance;
+import net.t00thpick1.residence.listeners.StateAssurance;
+import net.t00thpick1.residence.utils.zip.ZipLibrary;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -25,10 +26,63 @@ public class YAMLResidenceManager implements ResidenceManager {
     private Map<String, FileConfiguration> worldFiles;
     private File worldFolder;
 
-    public YAMLResidenceManager() {
+    public YAMLResidenceManager(File dataFolder) throws Exception {
         residenceNamesByChunk = new HashMap<String, Map<ChunkRef, List<String>>>();
         residences = new HashMap<String, ResidenceArea>();
         worldFiles = new HashMap<String, FileConfiguration>();
+        worldFolder = new File(new File(dataFolder, "Save"), "Worlds");
+        if (!worldFolder.isDirectory()) {
+            worldFolder.mkdirs();
+        }
+        for (World world : Residence.getInstance().getServer().getWorlds()) {
+            File worldFile = new File(worldFolder, "res_" + world.getName() + ".yml");
+            boolean newFile = false;
+            if (!worldFile.isFile()) {
+                worldFile.createNewFile();
+                newFile = true;
+            }
+
+            FileConfiguration worldSave = YamlConfiguration.loadConfiguration(worldFile);
+            worldFiles.put(world.getName(), worldSave);
+            if (newFile) {
+                worldSave.set("Version", Residence.saveVersion);
+                worldSave.set("Seed", world.getSeed());
+                worldSave.createSection("Residences");
+            }
+            try {
+                residenceNamesByChunk.put(world.getName(), loadWorld(worldSave.getConfigurationSection("Residences")));
+            } catch (Exception ex) {
+                Residence.getInstance().getLogger().severe("Error in loading save file for world: " + world.getName());
+                if (ConfigManager.getInstance().stopOnLoadError()) {
+                    throw (ex);
+                }
+            }
+        }
+    }
+
+    public Map<ChunkRef, List<String>> loadWorld(ConfigurationSection section) throws Exception {
+        Map<ChunkRef, List<String>> retRes = new HashMap<ChunkRef, List<String>>();
+        for (String res : section.getKeys(false)) {
+            try {
+                YAMLResidenceArea residence = new YAMLResidenceArea(section.getConfigurationSection(res), null);
+                for (ChunkRef chunk : residence.getChunks()) {
+                    List<String> ress = new ArrayList<String>();
+                    if (retRes.containsKey(chunk)) {
+                        ress.addAll(retRes.get(chunk));
+                    }
+                    ress.add(res);
+                    retRes.put(chunk, ress);
+                }
+                residences.put(res, residence);
+            } catch (Exception ex) {
+                Residence.getInstance().getLogger().severe("Failed to load residence (" + res + ")! Reason:" + ex.getMessage() + " Error Log:");
+                Residence.getInstance().getLogger().log(Level.SEVERE, null, ex);
+                if (ConfigManager.getInstance().stopOnLoadError()) {
+                    throw (ex);
+                }
+            }
+        }
+        return retRes;
     }
 
     public ResidenceArea getByLocation(Location loc) {
@@ -81,7 +135,7 @@ public class YAMLResidenceManager implements ResidenceManager {
     }
 
     public boolean createResidence(String name, CuboidArea area) {
-        return createResidence(name, "Server Land", area);
+        return createResidence(name, null, area);
     }
 
     public boolean createResidence(String name, String owner, CuboidArea area) {
@@ -94,22 +148,7 @@ public class YAMLResidenceManager implements ResidenceManager {
 
         try {
             ConfigurationSection res = worldFiles.get(area.getWorld().getName()).getConfigurationSection("Residences").createSection(name);
-            ConfigurationSection data = res.createSection("Data");
-            data.set("Owner", owner);
-            data.set("CreationDate", System.currentTimeMillis());
-            data.set("EnterMessage", YAMLGroupManager.getDefaultEnterMessage(owner));
-            data.set("LeaveMessage", YAMLGroupManager.getDefaultLeaveMessage(owner));
-            ((YAMLCuboidArea) area).saveArea(data.createSection("Area"));
-            ConfigurationSection marketData = data.createSection("MarketData");
-            marketData.set("ForSale", false);
-            marketData.set("ForRent", false);
-            marketData.set("Cost", 0);
-            marketData.set("IsAutoRenew", ConfigManager.getInstance().isAutoRenewDefault());
-            res.createSection("Flags");
-            res.createSection("Groups");
-            res.createSection("Players");
-            res.createSection("Subzones");
-            YAMLResidenceArea newRes = new YAMLResidenceArea(res, null);
+            YAMLResidenceArea newRes = new YAMLResidenceArea(res, (YAMLCuboidArea) area, owner, null);
             residences.put(name, newRes);
             calculateChunks(newRes);
             newRes.applyDefaultFlags();
@@ -125,7 +164,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         Collection<ResidenceArea> set = residences.values();
         int count = 0;
         for (ResidenceArea res : set) {
-            if (res.getOwner().equalsIgnoreCase(player)) {
+            if (res.getOwner().equals(player)) {
                 count++;
             }
         }
@@ -136,7 +175,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         Collection<ResidenceArea> set = residences.values();
         List<ResidenceArea> owned = new ArrayList<ResidenceArea>();
         for (ResidenceArea res : set) {
-            if (res.getOwner().equalsIgnoreCase(player)) {
+            if (res.getOwner().equals(player)) {
                 owned.add(res);
             }
         }
@@ -156,7 +195,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         residences.remove(res.getName());
         FileConfiguration file = worldFiles.get(res.getWorld());
         ConfigurationSection residenceSection = file.getConfigurationSection("Residences");
-        res.applyNewSection(residenceSection.createSection(newName, file.getConfigurationSection(res.getName()).getValues(true)));
+        res.newSection(residenceSection.createSection(newName));
         residenceSection.set(res.getName(), null);
         residences.put(newName, res);
         calculateChunks(res);
@@ -224,16 +263,20 @@ public class YAMLResidenceManager implements ResidenceManager {
             // get chunk base
             return val >> 4;
         }
+
         private final int z;
         private final int x;
+
         public ChunkRef(Location loc) {
             this.x = getBase(loc.getBlockX());
             this.z = getBase(loc.getBlockZ());
         }
+
         public ChunkRef(int x, int z) {
             this.x = (int) x;
             this.z = (int) z;
         }
+
         @Override
         public boolean equals(final Object obj) {
             if (this == obj) {
@@ -248,74 +291,46 @@ public class YAMLResidenceManager implements ResidenceManager {
             ChunkRef other = (ChunkRef) obj;
             return this.x == other.x && this.z == other.z;
         }
+
         public int hashCode() {
             return x ^ z;
         }
     }
 
-    public static YAMLResidenceManager load(File worldFolder) throws Exception {
-        YAMLResidenceManager resm = new YAMLResidenceManager();
-        resm.worldFolder = worldFolder;
-        for (World world : Residence.getInstance().getServer().getWorlds()) {
-            File worldFile = new File(worldFolder, "res_" + world.getName() + ".yml");
-            boolean newFile = false;
-            if (!worldFile.isFile()) {
-                worldFile.createNewFile();
-                newFile = true;
-            }
-
-            FileConfiguration worldSave = YamlConfiguration.loadConfiguration(worldFile);
-            resm.worldFiles.put(world.getName(), worldSave);
-            if (newFile) {
-                worldSave.set("Version", Residence.saveVersion);
-                worldSave.set("Seed", world.getSeed());
-                worldSave.createSection("Residences");
-            }
-            try {
-                resm.residenceNamesByChunk.put(world.getName(), loadWorld(worldSave.getConfigurationSection("Residences"), resm));
-            } catch (Exception ex) {
-                Residence.getInstance().getLogger().severe("Error in loading save file for world: " + world.getName());
-                if (ConfigManager.getInstance().stopOnLoadError()) {
-                    throw (ex);
-                }
-            }
-        }
-        return resm;
-    }
-
-    public static Map<ChunkRef, List<String>> loadWorld(ConfigurationSection section, YAMLResidenceManager resm) throws Exception {
-        Map<ChunkRef, List<String>> retRes = new HashMap<ChunkRef, List<String>>();
-        for (String res : section.getKeys(false)) {
-            try {
-                YAMLResidenceArea residence = new YAMLResidenceArea(section.getConfigurationSection(res), null);
-                for (ChunkRef chunk : residence.getChunks()) {
-                    List<String> ress = new ArrayList<String>();
-                    if (retRes.containsKey(chunk)) {
-                        ress.addAll(retRes.get(chunk));
-                    }
-                    ress.add(res);
-                    retRes.put(chunk, ress);
-                }
-                resm.residences.put(res, residence);
-            } catch (Exception ex) {
-                Residence.getInstance().getLogger().severe("Failed to load residence (" + res + ")! Reason:" + ex.getMessage() + " Error Log:");
-                Residence.getInstance().getLogger().log(Level.SEVERE, null, ex);
-                if (ConfigManager.getInstance().stopOnLoadError()) {
-                    throw (ex);
-                }
-            }
-        }
-        return retRes;
-    }
-
     public void save() throws IOException {
+        for (ResidenceArea residence : residences.values()) {
+            ((YAMLResidenceArea) residence).save();
+        }
         for (World world : Residence.getInstance().getServer().getWorlds()) {
             File saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");
             if (!saveFile.isFile()) {
                 saveFile.createNewFile();
             }
+
             FileConfiguration worldSave = worldFiles.get(world.getName());
             worldSave.save(saveFile);
         }
+        ZipLibrary.backup();
+    }
+
+    public void newWorld(World world) {
+        if (worldFiles.get(world.getName()) != null) {
+            return;
+        }
+        File saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");
+        if (!saveFile.isFile()) {
+            try {
+                saveFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        FileConfiguration worldSave = worldFiles.get(world.getName());
+        worldSave = YamlConfiguration.loadConfiguration(saveFile);
+        worldSave.set("Version", Residence.saveVersion);
+        worldSave.set("Seed", world.getSeed());
+        worldSave.createSection("Residences");
+        residenceNamesByChunk.put(world.getName(), new HashMap<ChunkRef, List<String>>());
     }
 }

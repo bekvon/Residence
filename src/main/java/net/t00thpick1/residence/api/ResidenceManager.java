@@ -12,16 +12,15 @@ public interface ResidenceManager {
 
     public ResidenceArea getByLocation(Location location);
 
-    public void save() throws IOException;
-
     public ResidenceArea getByName(String string);
 
     public Collection<ResidenceArea> getOwnedResidences(String player);
 
     public int getOwnedZoneCount(String player);
 
-    public boolean createResidence(String residenceName, String player, CuboidArea area);
+    public boolean createResidence(String residenceName, String owner, CuboidArea area);
 
     public void remove(ResidenceArea res);
 
+    public void save() throws IOException;
 }

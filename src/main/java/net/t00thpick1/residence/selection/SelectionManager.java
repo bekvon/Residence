@@ -20,6 +20,9 @@ public class SelectionManager {
 
     public static final int MAX_HEIGHT = 255, MIN_HEIGHT = 0;
 
+    public static void main(String[] args) {
+        System.out.println(MAX_HEIGHT);
+    }
     public enum Direction {
         PLUSY, PLUSX, PLUSZ, MINUSY, MINUSX, MINUSZ
     }
@@ -213,7 +216,7 @@ public class SelectionManager {
                 lowLoc.add(0, 0, amount);
                 player.sendMessage(LocaleLoader.getString("Selection.Shifting.Z.Positive"));
             } else
-                player.sendMessage(LocaleLoader.getString("Selection.Expanding.Z.Postive"));
+                player.sendMessage(LocaleLoader.getString("Selection.Expanding.Z.Positive"));
         }
     }
 
