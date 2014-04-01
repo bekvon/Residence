@@ -193,7 +193,7 @@ public class YAMLResidenceManager implements ResidenceManager {
 
         removeChunkList(res);
         residences.remove(res.getName());
-        FileConfiguration file = worldFiles.get(res.getWorld());
+        FileConfiguration file = worldFiles.get(res.getWorld().getName());
         ConfigurationSection residenceSection = file.getConfigurationSection("Residences");
         res.newSection(residenceSection.createSection(newName));
         residenceSection.set(res.getName(), null);
@@ -214,11 +214,17 @@ public class YAMLResidenceManager implements ResidenceManager {
         }
         residenceNamesByChunk.remove(world);
         residenceNamesByChunk.put(world, new HashMap<ChunkRef, List<String>>());
+        FileConfiguration file = worldFiles.get(world);
+        file.set("Residences", null);
+        file.createSection("Residences");
         return removed;
     }
 
     public void remove(ResidenceArea res) {
         if (res.getParent() == null) {
+            FileConfiguration file = worldFiles.get(res.getWorld().getName());
+            ConfigurationSection residenceSection = file.getConfigurationSection("Residences");
+            residenceSection.set(res.getName(), null);
             removeChunkList(res);
             residences.remove(res.getName());
             for (Player player : res.getPlayersInResidence()) {

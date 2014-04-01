@@ -77,6 +77,7 @@ public class ProtectionFactory {
     public static void save() {
         try {
             residenceManager.save();
+            usernameUUIDCache.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
