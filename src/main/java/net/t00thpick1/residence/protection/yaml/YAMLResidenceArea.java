@@ -105,19 +105,19 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         } else {
             this.fullName = parent.fullName + "." + name;
         }
-        section.createSection("Data");
+        ConfigurationSection data = section.createSection("Data");
         this.owner = owner;
         this.creationDate = System.currentTimeMillis();
         this.enterMessage = YAMLGroupManager.getDefaultEnterMessage(owner);
         this.leaveMessage = YAMLGroupManager.getDefaultLeaveMessage(owner);
-        section.createSection("Area");
-        section.createSection("MarketData");
+        data.createSection("Area");
+        data.createSection("MarketData");
         this.isBuyable = false;
         this.isRentable = false;
         this.cost = 0;
         this.autoRenewEnabled = ConfigManager.getInstance().isAutoRenewDefault();
         this.teleportLocation = getCenter();
-        section.createSection("TPLocation");
+        data.createSection("TPLocation");
         this.areaFlags = new HashMap<Flag, Boolean>();
         section.createSection("Flags");
         this.playerFlags = new HashMap<String, Map<Flag, Boolean>>();
@@ -319,8 +319,8 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         data.set("LeaveMessage", leaveMessage);
         ConfigurationSection tploc = data.getConfigurationSection("TPLocation");
         tploc.set("X", teleportLocation.getX());
-        tploc.set("Y", teleportLocation.getX());
-        tploc.set("Z", teleportLocation.getX());
+        tploc.set("Y", teleportLocation.getY());
+        tploc.set("Z", teleportLocation.getZ());
         area.save(data.getConfigurationSection("Area"));
         if (isRented()) {
             ConfigurationSection rentData = data.createSection("RentData");

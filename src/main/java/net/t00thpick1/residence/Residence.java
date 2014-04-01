@@ -43,12 +43,9 @@ public class Residence extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
-        try {
-            ProtectionFactory.save();
-        } catch (Exception ex) {
-            getLogger().log(Level.SEVERE, "SEVERE SAVE ERROR", ex);
-        }
-        getLogger().log(Level.INFO, "Disabled!");
+        getLogger().info("Saving");
+        ProtectionFactory.save();
+        getLogger().info("Disabled!");
         instance = null;
     }
 

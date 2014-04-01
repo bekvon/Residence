@@ -2,6 +2,7 @@ package net.t00thpick1.residence.protection;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -80,7 +81,7 @@ public class ProtectionFactory {
             residenceManager.save();
             usernameUUIDCache.save();
         } catch (IOException e) {
-            e.printStackTrace();
+            Residence.getInstance().getLogger().log(Level.SEVERE, "SEVERE SAVE ERROR", e);
         }
     }
 }
