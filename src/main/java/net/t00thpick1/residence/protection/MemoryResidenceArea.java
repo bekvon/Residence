@@ -489,7 +489,7 @@ public abstract class MemoryResidenceArea implements ResidenceArea {
                 return subzone.getSubzoneByLocation(loc);
             }
         }
-        return null;
+        return this;
     }
 
     @Override
