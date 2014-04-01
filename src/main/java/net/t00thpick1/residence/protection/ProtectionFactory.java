@@ -34,9 +34,10 @@ public class ProtectionFactory {
                 throw new UnsupportedOperationException();
             case YAML:
                 File dataFolder = residence.getDataFolder();
-                residenceManager = new YAMLResidenceManager(dataFolder);
-                usernameUUIDCache = new YAMLUsernameUUIDCache(new File(dataFolder, "UsernameUUIDCache.yml"));
                 economyManager = new MemoryEconomyManager();
+                usernameUUIDCache = new YAMLUsernameUUIDCache(new File(dataFolder, "UsernameUUIDCache.yml"));
+                residenceManager = new YAMLResidenceManager(dataFolder);
+
                 File groupsFile = new File(dataFolder, "groups.yml");
                 if (!groupsFile.isFile()) {
                     groupsFile.createNewFile();
