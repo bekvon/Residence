@@ -838,7 +838,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 sender.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidResidence", area));
                 return true;
             }
-            if (!resadmin && !res.getOwner().equals(((Player) sender).getUniqueId())) {
+            if (!resadmin && !res.getOwner().equals(((Player) sender).getName())) {
                 sender.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
                 return true;
             }
