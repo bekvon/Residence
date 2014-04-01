@@ -38,8 +38,8 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         this.creationDate = data.getLong("CreationDate");
         this.enterMessage = data.getString("EnterMessage");
         this.leaveMessage = data.getString("LeaveMessage");
-        this.teleportLocation = loadTeleportLocation(data.getConfigurationSection("TPLocation"));
         this.area = new YAMLCuboidArea(data.getConfigurationSection("Area"));
+        this.teleportLocation = loadTeleportLocation(data.getConfigurationSection("TPLocation"));
         if (data.isConfigurationSection("RentData")) {
             ConfigurationSection rentData = data.getConfigurationSection("RentData");
             this.lastPayment = rentData.getLong("LastPayment");
