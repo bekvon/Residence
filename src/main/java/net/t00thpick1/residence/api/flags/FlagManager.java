@@ -5,30 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import net.t00thpick1.residence.Residence;
-import net.t00thpick1.residence.api.ResidenceAPI;
-import net.t00thpick1.residence.api.areas.PermissionsArea;
 import net.t00thpick1.residence.api.flags.Flag.FlagType;
-import net.t00thpick1.residence.listeners.BucketListener;
-import net.t00thpick1.residence.listeners.EndermanPickupListener;
-import net.t00thpick1.residence.listeners.EntityDamageListener;
-import net.t00thpick1.residence.listeners.DestroyListener;
-import net.t00thpick1.residence.listeners.ExplosionListener;
-import net.t00thpick1.residence.listeners.FireListener;
-import net.t00thpick1.residence.listeners.FlowListener;
-import net.t00thpick1.residence.listeners.InteractListener;
-import net.t00thpick1.residence.listeners.LoginLogoutListener;
-import net.t00thpick1.residence.listeners.MoveListener;
-import net.t00thpick1.residence.listeners.PistonListener;
-import net.t00thpick1.residence.listeners.PlaceListener;
-import net.t00thpick1.residence.listeners.SpawnListener;
-import net.t00thpick1.residence.listeners.StateAssurance;
-import net.t00thpick1.residence.listeners.TeleportListener;
-import net.t00thpick1.residence.listeners.VehicleMoveListener;
-import net.t00thpick1.residence.listeners.WorldListener;
 import net.t00thpick1.residence.locale.LocaleLoader;
 
 public class FlagManager {
@@ -81,6 +59,9 @@ public class FlagManager {
     public static final Flag CHEST = new Flag(LocaleLoader.getString("Flags.Flags.Chest"), FlagType.ANY, CONTAINER);
     public static final Flag FURNACE = new Flag(LocaleLoader.getString("Flags.Flags.Furnace"), FlagType.ANY, CONTAINER);
     public static final Flag BREW = new Flag(LocaleLoader.getString("Flags.Flags.Brew"), FlagType.ANY, CONTAINER);
+    public static final Flag HOPPER = new Flag(LocaleLoader.getString("Flags.Flags.Hopper"), FlagType.ANY, CONTAINER);
+    public static final Flag DROPPER = new Flag(LocaleLoader.getString("Flags.Flags.Dropper"), FlagType.ANY, CONTAINER);
+    public static final Flag DISPENSER = new Flag(LocaleLoader.getString("Flags.Flags.Dispenser"), FlagType.ANY, CONTAINER);
 
     public static final Flag FLOW = new Flag(LocaleLoader.getString("Flags.Flags.Flow"), FlagType.AREA_ONLY, null);
     public static final Flag LAVAFLOW = new Flag(LocaleLoader.getString("Flags.Flags.LavaFlow"), FlagType.AREA_ONLY, FLOW);
@@ -118,41 +99,10 @@ public class FlagManager {
     }
 
     public static void initFlags() {
-        Residence residence = Residence.getInstance();
-        residence.getServer().getPluginManager().registerEvents(new StateAssurance(), residence);
-        residence.getServer().getPluginManager().registerEvents(new VehicleMoveListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new MoveListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new TeleportListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new ExplosionListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new SpawnListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new FlowListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new PistonListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new FireListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new InteractListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new LoginLogoutListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new WorldListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new BucketListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new EntityDamageListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new PlaceListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new DestroyListener(), residence);
-        residence.getServer().getPluginManager().registerEvents(new EndermanPickupListener(), residence);
         validFlags = new HashMap<String, Flag>();
         addFlag(ADMIN);
         addFlag(HEALING);
-        (new BukkitRunnable() {
-            public void run() {
-                Player[] p = Residence.getInstance().getServer().getOnlinePlayers();
-                for (Player player : p) {
-                    PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(player.getLocation());
-                    if (area.allowAction(FlagManager.HEALING)) {
-                        double health = player.getHealth();
-                        if (health < player.getMaxHealth() && !player.isDead()) {
-                            player.setHealth(Math.min(health + 1, player.getMaxHealth()));
-                        }
-                    }
-                }
-            }
-        }).runTaskTimer(residence, 20, 20);
+
         addFlag(DAMAGE);
         addFlag(PVP);
 
@@ -200,6 +150,9 @@ public class FlagManager {
         addFlag(CHEST);
         addFlag(FURNACE);
         addFlag(BREW);
+        addFlag(HOPPER);
+        addFlag(DROPPER);
+        addFlag(DISPENSER);
 
         addFlag(FLOW);
         addFlag(WATERFLOW);

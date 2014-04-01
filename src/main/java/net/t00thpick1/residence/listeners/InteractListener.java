@@ -106,6 +106,12 @@ public class InteractListener implements Listener {
                 return FlagManager.ENDERCHEST;
             case WORKBENCH:
                 return FlagManager.WORKBENCH;
+            case HOPPER:
+                return FlagManager.HOPPER;
+            case DROPPER:
+                return FlagManager.DROPPER;
+            case DISPENSER:
+                return FlagManager.DISPENSER;
             default:
                 return null;
         }

@@ -37,7 +37,7 @@ public class VehicleMoveListener implements Listener {
             return;
         }
         if (!ResidenceAPI.getPermissionsAreaByLocation(event.getTo()).allowAction(player.getName(), FlagManager.VEHICLEMOVE)) {
-            event.getVehicle().teleport(event.getFrom());
+            player.teleport(event.getFrom());
             player.sendMessage(LocaleLoader.getString("Flags.Messages.VehicleMoveDeny"));
             return;
         }

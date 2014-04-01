@@ -3,12 +3,15 @@ package net.t00thpick1.residence;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import net.t00thpick1.residence.api.ResidenceAPI;
+import net.t00thpick1.residence.api.areas.PermissionsArea;
 import net.t00thpick1.residence.api.flags.FlagManager;
+import net.t00thpick1.residence.listeners.*;
 import net.t00thpick1.residence.protection.ProtectionFactory;
 import net.t00thpick1.residence.selection.SelectionManager;
 import net.t00thpick1.residence.selection.WorldEditSelectionManager;
 import net.t00thpick1.residence.utils.CompatabilityManager;
 import net.t00thpick1.residence.utils.metrics.Metrics;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -49,6 +52,22 @@ public class Residence extends JavaPlugin {
         instance = null;
     }
 
+    @Override
+    public void onLoad() {
+        instance = this;
+        File dataFolder = getDataFolder();
+        if (!dataFolder.isDirectory()) {
+            dataFolder.mkdirs();
+        }
+
+        if (!new File(dataFolder, "config.yml").isFile()) {
+            saveDefaultConfig();
+        }
+
+        new ConfigManager(getConfig());
+        FlagManager.initFlags();
+    }
+
     private void setupVault() {
         RegisteredServiceProvider<Economy> econProvider = getServer().getServicesManager().getRegistration(Economy.class);
         if (econProvider != null) {
@@ -62,18 +81,7 @@ public class Residence extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
         File dataFolder = getDataFolder();
-        if (!dataFolder.isDirectory()) {
-            dataFolder.mkdirs();
-        }
-
-        if (!new File(dataFolder, "config.yml").isFile()) {
-            saveDefaultConfig();
-        }
-
-        new ConfigManager(getConfig());
-
         cmanager = new CompatabilityManager();
 
         Plugin p = getServer().getPluginManager().getPlugin("Vault");
@@ -84,7 +92,6 @@ public class Residence extends JavaPlugin {
             getLogger().log(Level.INFO, "Vault NOT found!");
         }
 
-        FlagManager.initFlags();
         try {
             ProtectionFactory.init(this);
         } catch (Exception e) {
@@ -92,6 +99,38 @@ public class Residence extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        getServer().getPluginManager().registerEvents(new StateAssurance(), this);
+        getServer().getPluginManager().registerEvents(new VehicleMoveListener(), this);
+        getServer().getPluginManager().registerEvents(new MoveListener(), this);
+        getServer().getPluginManager().registerEvents(new TeleportListener(), this);
+        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
+        getServer().getPluginManager().registerEvents(new SpawnListener(), this);
+        getServer().getPluginManager().registerEvents(new FlowListener(), this);
+        getServer().getPluginManager().registerEvents(new PistonListener(), this);
+        getServer().getPluginManager().registerEvents(new FireListener(), this);
+        getServer().getPluginManager().registerEvents(new InteractListener(), this);
+        getServer().getPluginManager().registerEvents(new LoginLogoutListener(), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(), this);
+        getServer().getPluginManager().registerEvents(new BucketListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new PlaceListener(), this);
+        getServer().getPluginManager().registerEvents(new DestroyListener(), this);
+        getServer().getPluginManager().registerEvents(new EndermanPickupListener(), this);
+        (new BukkitRunnable() {
+            public void run() {
+                Player[] p = Residence.getInstance().getServer().getOnlinePlayers();
+                for (Player player : p) {
+                    PermissionsArea area = ResidenceAPI.getPermissionsAreaByLocation(player.getLocation());
+                    if (area.allowAction(FlagManager.HEALING)) {
+                        double health = player.getHealth();
+                        if (health < player.getMaxHealth() && !player.isDead()) {
+                            player.setHealth(Math.min(health + 1, player.getMaxHealth()));
+                        }
+                    }
+                }
+            }
+        }).runTaskTimer(this, 20, 20);
 
         File commandsFile = new File(dataFolder, "commandhelp.yml");
         try {
