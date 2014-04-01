@@ -87,6 +87,7 @@ public class Residence extends JavaPlugin {
             getLogger().log(Level.INFO, "Vault NOT found!");
         }
 
+        FlagManager.initFlags();
         try {
             ProtectionFactory.init(this);
         } catch (Exception e) {
@@ -113,7 +114,6 @@ public class Residence extends JavaPlugin {
             e.printStackTrace();
         }
         HelpManager.init(YamlConfiguration.loadConfiguration(commandsFile));
-        FlagManager.initFlags();
         Plugin we = getServer().getPluginManager().getPlugin("WorldEdit");
         if (we != null) {
             smanager = new WorldEditSelectionManager(we);
