@@ -198,7 +198,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         res.newSection(residenceSection.createSection(newName));
         residenceSection.set(res.getName(), null);
         residences.put(newName, res);
-        calculateChunks(res);
+        calculateChunks(res, newName);
         return true;
     }
 
@@ -250,6 +250,10 @@ public class YAMLResidenceManager implements ResidenceManager {
     }
 
     public void calculateChunks(YAMLResidenceArea res) {
+        calculateChunks(res, res.getName());
+    }
+
+    public void calculateChunks(YAMLResidenceArea res, String name) {
         String world = res.getWorld().getName();
         if (residenceNamesByChunk.get(world) == null) {
             residenceNamesByChunk.put(world, new HashMap<ChunkRef, List<String>>());
@@ -259,7 +263,7 @@ public class YAMLResidenceManager implements ResidenceManager {
             if (residenceNamesByChunk.get(world).containsKey(chunk)) {
                 ress.addAll(residenceNamesByChunk.get(world).get(chunk));
             }
-            ress.add(res.getName());
+            ress.add(name);
             residenceNamesByChunk.get(world).put(chunk, ress);
         }
     }

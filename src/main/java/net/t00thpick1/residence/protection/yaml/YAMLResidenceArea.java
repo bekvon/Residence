@@ -369,10 +369,10 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
 
     public void newSection(ConfigurationSection newSection) {
         this.section = newSection;
-        section.createSection("Data");
-        section.createSection("Area");
-        section.createSection("MarketData");
-        section.createSection("TPLocation");
+        ConfigurationSection data = section.createSection("Data");
+        data.createSection("Area");
+        data.createSection("MarketData");
+        data.createSection("TPLocation");
         section.createSection("Flags");
         section.createSection("Players");
         section.createSection("RentFlags");
