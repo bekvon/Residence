@@ -71,7 +71,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
             ConfigurationSection flags = data.getConfigurationSection(player);
             for (String flagKey : flags.getKeys(false)) {
                 Flag flag = FlagManager.getFlag(flagKey);
-                pFlags.put(flag, data.getBoolean(flagKey));
+                pFlags.put(flag, flags.getBoolean(flagKey));
             }
             playerFlags.put(player, pFlags);
         }
