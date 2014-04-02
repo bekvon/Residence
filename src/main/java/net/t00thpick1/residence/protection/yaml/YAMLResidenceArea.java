@@ -12,6 +12,7 @@ import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
+import net.t00thpick1.residence.api.flags.Flag.FlagType;
 import net.t00thpick1.residence.protection.MemoryEconomyManager;
 import net.t00thpick1.residence.protection.MemoryResidenceArea;
 import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager.ChunkRef;
@@ -59,9 +60,17 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         this.rentPeriod = data.getLong("RentPeriod", 0);
         initMarketState();
         areaFlags = new HashMap<Flag, Boolean>();
+        boolean preserveFlags = ConfigManager.getInstance().preserveUnregisteredFlags();
         data = section.getConfigurationSection("Flags");
         for (String flagKey : data.getKeys(false)) {
             Flag flag = FlagManager.getFlag(flagKey);
+            if (flag == null) {
+                if (!preserveFlags) {
+                    continue;
+                }
+                flag = new Flag(flagKey, FlagType.DUMMY, null, null);
+                FlagManager.addFlag(flag);
+            }
             areaFlags.put(flag, data.getBoolean(flagKey));
         }
         playerFlags = new HashMap<String, Map<Flag, Boolean>>();
@@ -71,6 +80,13 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
             ConfigurationSection flags = data.getConfigurationSection(player);
             for (String flagKey : flags.getKeys(false)) {
                 Flag flag = FlagManager.getFlag(flagKey);
+                if (flag == null) {
+                    if (!preserveFlags) {
+                        continue;
+                    }
+                    flag = new Flag(flagKey, FlagType.DUMMY, null, null);
+                    FlagManager.addFlag(flag);
+                }
                 pFlags.put(flag, flags.getBoolean(flagKey));
             }
             playerFlags.put(player, pFlags);
@@ -79,6 +95,13 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         data = section.getConfigurationSection("RentFlags");
         for (String flagKey : data.getKeys(false)) {
             Flag flag = FlagManager.getFlag(flagKey);
+            if (flag == null) {
+                if (!preserveFlags) {
+                    continue;
+                }
+                flag = new Flag(flagKey, FlagType.DUMMY, null, null);
+                FlagManager.addFlag(flag);
+            }
             rentFlags.put(flag, data.getBoolean(flagKey));
         }
         subzones = new HashMap<String, ResidenceArea>();

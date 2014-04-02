@@ -55,4 +55,8 @@ public class ConfigManager {
     public boolean isAutoRenewDefault() {
         return config.getBoolean("Economy.Rent.AutoRenewRentByDefault");
     }
+
+    public boolean preserveUnregisteredFlags() {
+        return config.getBoolean("General.PreserveUnregisteredFlags", true);
+    }
 }

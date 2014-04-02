@@ -10,77 +10,78 @@ import net.t00thpick1.residence.api.flags.Flag.FlagType;
 import net.t00thpick1.residence.locale.LocaleLoader;
 
 public class FlagManager {
-    public static final Flag ADMIN = new Flag(LocaleLoader.getString("Flags.Flags.Admin"), FlagType.PLAYER_ONLY, null);
-    public static final Flag HEALING = new Flag(LocaleLoader.getString("Flags.Flags.Healing"), FlagType.AREA_ONLY, null);
-    public static final Flag DAMAGE = new Flag(LocaleLoader.getString("Flags.Flags.Damage"), FlagType.ANY, null);
-    public static final Flag PVP = new Flag(LocaleLoader.getString("Flags.Flags.PVP"), FlagType.AREA_ONLY, null);
+    // TODO Flag Descriptions
+    public static final Flag ADMIN = new Flag(LocaleLoader.getString("Flags.Flags.Admin"), FlagType.PLAYER_ONLY, null, null);
+    public static final Flag HEALING = new Flag(LocaleLoader.getString("Flags.Flags.Healing"), FlagType.AREA_ONLY, null, null);
+    public static final Flag DAMAGE = new Flag(LocaleLoader.getString("Flags.Flags.Damage"), FlagType.ANY, null, null);
+    public static final Flag PVP = new Flag(LocaleLoader.getString("Flags.Flags.PVP"), FlagType.AREA_ONLY, null, null);
 
-    public static final Flag BUILD = new Flag(LocaleLoader.getString("Flags.Flags.Build"), FlagType.ANY, null);
-    public static final Flag PLACE = new Flag(LocaleLoader.getString("Flags.Flags.Place"), FlagType.ANY, BUILD);
-    public static final Flag DESTROY = new Flag(LocaleLoader.getString("Flags.Flags.Destroy"), FlagType.ANY, BUILD);
+    public static final Flag BUILD = new Flag(LocaleLoader.getString("Flags.Flags.Build"), FlagType.ANY, null, null);
+    public static final Flag PLACE = new Flag(LocaleLoader.getString("Flags.Flags.Place"), FlagType.ANY, BUILD, null);
+    public static final Flag DESTROY = new Flag(LocaleLoader.getString("Flags.Flags.Destroy"), FlagType.ANY, BUILD, null);
 
-    public static final Flag ENDERMANPICKUP = new Flag(LocaleLoader.getString("Flags.Flags.EndermanPickup"), FlagType.AREA_ONLY, BUILD);
-    public static final Flag TRAMPLE = new Flag(LocaleLoader.getString("Flags.Flags.Trample"), FlagType.ANY, BUILD);
+    public static final Flag ENDERMANPICKUP = new Flag(LocaleLoader.getString("Flags.Flags.EndermanPickup"), FlagType.AREA_ONLY, BUILD, null);
+    public static final Flag TRAMPLE = new Flag(LocaleLoader.getString("Flags.Flags.Trample"), FlagType.ANY, BUILD, null);
 
-    public static final Flag BUCKET = new Flag(LocaleLoader.getString("Flags.Flags.Bucket"), FlagType.ANY, BUILD);
-    public static final Flag LAVABUCKET = new Flag(LocaleLoader.getString("Flags.Flags.LavaBucket"), FlagType.ANY, BUCKET);
-    public static final Flag WATERBUCKET = new Flag(LocaleLoader.getString("Flags.Flags.WaterBucket"), FlagType.ANY, BUCKET);
+    public static final Flag BUCKET = new Flag(LocaleLoader.getString("Flags.Flags.Bucket"), FlagType.ANY, BUILD, null);
+    public static final Flag LAVABUCKET = new Flag(LocaleLoader.getString("Flags.Flags.LavaBucket"), FlagType.ANY, BUCKET, null);
+    public static final Flag WATERBUCKET = new Flag(LocaleLoader.getString("Flags.Flags.WaterBucket"), FlagType.ANY, BUCKET, null);
 
-    public static final Flag FIRESPREAD = new Flag(LocaleLoader.getString("Flags.Flags.FireSpread"), FlagType.AREA_ONLY, null);
-    public static final Flag IGNITE = new Flag(LocaleLoader.getString("Flags.Flags.Ignite"), FlagType.ANY, null);
-    public static final Flag PISTON = new Flag(LocaleLoader.getString("Flags.Flags.Piston"), FlagType.AREA_ONLY, null);
+    public static final Flag FIRESPREAD = new Flag(LocaleLoader.getString("Flags.Flags.FireSpread"), FlagType.AREA_ONLY, null, null);
+    public static final Flag IGNITE = new Flag(LocaleLoader.getString("Flags.Flags.Ignite"), FlagType.ANY, null, null);
+    public static final Flag PISTON = new Flag(LocaleLoader.getString("Flags.Flags.Piston"), FlagType.AREA_ONLY, null, null);
 
-    public static final Flag USE = new Flag(LocaleLoader.getString("Flags.Flags.Use"), FlagType.ANY, null);
+    public static final Flag USE = new Flag(LocaleLoader.getString("Flags.Flags.Use"), FlagType.ANY, null, null);
 
-    public static final Flag REDSTONE = new Flag(LocaleLoader.getString("Flags.Flags.Redstone"), FlagType.ANY, USE);
-    public static final Flag BUTTON = new Flag(LocaleLoader.getString("Flags.Flags.Button"), FlagType.ANY, REDSTONE);
-    public static final Flag PRESSUREPLATE = new Flag(LocaleLoader.getString("Flags.Flags.PressurePlate"), FlagType.ANY, REDSTONE);
-    public static final Flag LEVER = new Flag(LocaleLoader.getString("Flags.Flags.Lever"), FlagType.ANY, REDSTONE);
-    public static final Flag DIODE = new Flag(LocaleLoader.getString("Flags.Flags.Diode"), FlagType.ANY, REDSTONE);
+    public static final Flag REDSTONE = new Flag(LocaleLoader.getString("Flags.Flags.Redstone"), FlagType.ANY, USE, null);
+    public static final Flag BUTTON = new Flag(LocaleLoader.getString("Flags.Flags.Button"), FlagType.ANY, REDSTONE, null);
+    public static final Flag PRESSUREPLATE = new Flag(LocaleLoader.getString("Flags.Flags.PressurePlate"), FlagType.ANY, REDSTONE, null);
+    public static final Flag LEVER = new Flag(LocaleLoader.getString("Flags.Flags.Lever"), FlagType.ANY, REDSTONE, null);
+    public static final Flag DIODE = new Flag(LocaleLoader.getString("Flags.Flags.Diode"), FlagType.ANY, REDSTONE, null);
 
-    public static final Flag CAKE = new Flag(LocaleLoader.getString("Flags.Flags.Cake"), FlagType.ANY, USE);
-    public static final Flag DRAGONEGG = new Flag(LocaleLoader.getString("Flags.Flags.DragonEgg"), FlagType.ANY, USE);
+    public static final Flag CAKE = new Flag(LocaleLoader.getString("Flags.Flags.Cake"), FlagType.ANY, USE, null);
+    public static final Flag DRAGONEGG = new Flag(LocaleLoader.getString("Flags.Flags.DragonEgg"), FlagType.ANY, USE, null);
 
-    public static final Flag DOOR = new Flag(LocaleLoader.getString("Flags.Flags.Door"), FlagType.ANY, USE);
-    public static final Flag FENCEGATE = new Flag(LocaleLoader.getString("Flags.Flags.FenceGate"), FlagType.ANY, DOOR);
-    public static final Flag HINGEDDOOR = new Flag(LocaleLoader.getString("Flags.Flags.HingedDoor"), FlagType.ANY, DOOR);
-    public static final Flag TRAPDOOR = new Flag(LocaleLoader.getString("Flags.Flags.TrapDoor"), FlagType.ANY, DOOR);
+    public static final Flag DOOR = new Flag(LocaleLoader.getString("Flags.Flags.Door"), FlagType.ANY, USE, null);
+    public static final Flag FENCEGATE = new Flag(LocaleLoader.getString("Flags.Flags.FenceGate"), FlagType.ANY, DOOR, null);
+    public static final Flag HINGEDDOOR = new Flag(LocaleLoader.getString("Flags.Flags.HingedDoor"), FlagType.ANY, DOOR, null);
+    public static final Flag TRAPDOOR = new Flag(LocaleLoader.getString("Flags.Flags.TrapDoor"), FlagType.ANY, DOOR, null);
 
-    public static final Flag UTILITY = new Flag(LocaleLoader.getString("Flags.Flags.Utility"), FlagType.ANY, USE);
-    public static final Flag ANVIL = new Flag(LocaleLoader.getString("Flags.Flags.Anvil"), FlagType.ANY, UTILITY);
-    public static final Flag BEACON = new Flag(LocaleLoader.getString("Flags.Flags.Beacon"), FlagType.ANY, UTILITY);
-    public static final Flag BED = new Flag(LocaleLoader.getString("Flags.Flags.Bed"), FlagType.ANY, UTILITY);
-    public static final Flag ENCHANTMENTTABLE = new Flag(LocaleLoader.getString("Flags.Flags.EnchantmentTable"), FlagType.ANY, UTILITY);
-    public static final Flag ENDERCHEST = new Flag(LocaleLoader.getString("Flags.Flags.EnderChest"), FlagType.ANY, UTILITY);
-    public static final Flag WORKBENCH = new Flag(LocaleLoader.getString("Flags.Flags.WorkBench"), FlagType.ANY, UTILITY);
+    public static final Flag UTILITY = new Flag(LocaleLoader.getString("Flags.Flags.Utility"), FlagType.ANY, USE, null);
+    public static final Flag ANVIL = new Flag(LocaleLoader.getString("Flags.Flags.Anvil"), FlagType.ANY, UTILITY, null);
+    public static final Flag BEACON = new Flag(LocaleLoader.getString("Flags.Flags.Beacon"), FlagType.ANY, UTILITY, null);
+    public static final Flag BED = new Flag(LocaleLoader.getString("Flags.Flags.Bed"), FlagType.ANY, UTILITY, null);
+    public static final Flag ENCHANTMENTTABLE = new Flag(LocaleLoader.getString("Flags.Flags.EnchantmentTable"), FlagType.ANY, UTILITY, null);
+    public static final Flag ENDERCHEST = new Flag(LocaleLoader.getString("Flags.Flags.EnderChest"), FlagType.ANY, UTILITY, null);
+    public static final Flag WORKBENCH = new Flag(LocaleLoader.getString("Flags.Flags.WorkBench"), FlagType.ANY, UTILITY, null);
 
-    public static final Flag CONTAINER = new Flag(LocaleLoader.getString("Flags.Flags.Container"), FlagType.ANY, USE);
-    public static final Flag ITEMFRAME = new Flag(LocaleLoader.getString("Flags.Flags.ItemFrame"), FlagType.ANY, CONTAINER);
-    public static final Flag CHEST = new Flag(LocaleLoader.getString("Flags.Flags.Chest"), FlagType.ANY, CONTAINER);
-    public static final Flag FURNACE = new Flag(LocaleLoader.getString("Flags.Flags.Furnace"), FlagType.ANY, CONTAINER);
-    public static final Flag BREW = new Flag(LocaleLoader.getString("Flags.Flags.Brew"), FlagType.ANY, CONTAINER);
-    public static final Flag HOPPER = new Flag(LocaleLoader.getString("Flags.Flags.Hopper"), FlagType.ANY, CONTAINER);
-    public static final Flag DROPPER = new Flag(LocaleLoader.getString("Flags.Flags.Dropper"), FlagType.ANY, CONTAINER);
-    public static final Flag DISPENSER = new Flag(LocaleLoader.getString("Flags.Flags.Dispenser"), FlagType.ANY, CONTAINER);
+    public static final Flag CONTAINER = new Flag(LocaleLoader.getString("Flags.Flags.Container"), FlagType.ANY, USE, null);
+    public static final Flag ITEMFRAME = new Flag(LocaleLoader.getString("Flags.Flags.ItemFrame"), FlagType.ANY, CONTAINER, null);
+    public static final Flag CHEST = new Flag(LocaleLoader.getString("Flags.Flags.Chest"), FlagType.ANY, CONTAINER, null);
+    public static final Flag FURNACE = new Flag(LocaleLoader.getString("Flags.Flags.Furnace"), FlagType.ANY, CONTAINER, null);
+    public static final Flag BREW = new Flag(LocaleLoader.getString("Flags.Flags.Brew"), FlagType.ANY, CONTAINER, null);
+    public static final Flag HOPPER = new Flag(LocaleLoader.getString("Flags.Flags.Hopper"), FlagType.ANY, CONTAINER, null);
+    public static final Flag DROPPER = new Flag(LocaleLoader.getString("Flags.Flags.Dropper"), FlagType.ANY, CONTAINER, null);
+    public static final Flag DISPENSER = new Flag(LocaleLoader.getString("Flags.Flags.Dispenser"), FlagType.ANY, CONTAINER, null);
 
-    public static final Flag FLOW = new Flag(LocaleLoader.getString("Flags.Flags.Flow"), FlagType.AREA_ONLY, null);
-    public static final Flag LAVAFLOW = new Flag(LocaleLoader.getString("Flags.Flags.LavaFlow"), FlagType.AREA_ONLY, FLOW);
-    public static final Flag WATERFLOW = new Flag(LocaleLoader.getString("Flags.Flags.WaterFlow"), FlagType.AREA_ONLY, FLOW);
+    public static final Flag FLOW = new Flag(LocaleLoader.getString("Flags.Flags.Flow"), FlagType.AREA_ONLY, null, null);
+    public static final Flag LAVAFLOW = new Flag(LocaleLoader.getString("Flags.Flags.LavaFlow"), FlagType.AREA_ONLY, FLOW, null);
+    public static final Flag WATERFLOW = new Flag(LocaleLoader.getString("Flags.Flags.WaterFlow"), FlagType.AREA_ONLY, FLOW, null);
 
-    public static final Flag SPAWN = new Flag(LocaleLoader.getString("Flags.Flags.Spawn"), FlagType.AREA_ONLY, null);
-    public static final Flag MONSTERSPAWN = new Flag(LocaleLoader.getString("Flags.Flags.MonsterSpawn"), FlagType.AREA_ONLY, SPAWN);
-    public static final Flag ANIMALSPAWN = new Flag(LocaleLoader.getString("Flags.Flags.AnimalSpawn"), FlagType.AREA_ONLY, SPAWN);
+    public static final Flag SPAWN = new Flag(LocaleLoader.getString("Flags.Flags.Spawn"), FlagType.AREA_ONLY, null, null);
+    public static final Flag MONSTERSPAWN = new Flag(LocaleLoader.getString("Flags.Flags.MonsterSpawn"), FlagType.AREA_ONLY, SPAWN, null);
+    public static final Flag ANIMALSPAWN = new Flag(LocaleLoader.getString("Flags.Flags.AnimalSpawn"), FlagType.AREA_ONLY, SPAWN, null);
 
-    public static final Flag EXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.Explosion"), FlagType.AREA_ONLY, null);
-    public static final Flag BEDEXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.BedExplosion"), FlagType.AREA_ONLY, EXPLOSION);
-    public static final Flag CREEPEREXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.Creeper"), FlagType.AREA_ONLY, EXPLOSION);
-    public static final Flag FIREBALLEXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.Fireball"), FlagType.AREA_ONLY, EXPLOSION);
-    public static final Flag TNTEXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.TNT"), FlagType.AREA_ONLY, EXPLOSION);
-    public static final Flag WITHEREXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.WitherExplosion"), FlagType.AREA_ONLY, EXPLOSION);
+    public static final Flag EXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.Explosion"), FlagType.AREA_ONLY, null, null);
+    public static final Flag BEDEXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.BedExplosion"), FlagType.AREA_ONLY, EXPLOSION, null);
+    public static final Flag CREEPEREXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.Creeper"), FlagType.AREA_ONLY, EXPLOSION, null);
+    public static final Flag FIREBALLEXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.Fireball"), FlagType.AREA_ONLY, EXPLOSION, null);
+    public static final Flag TNTEXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.TNT"), FlagType.AREA_ONLY, EXPLOSION, null);
+    public static final Flag WITHEREXPLOSION = new Flag(LocaleLoader.getString("Flags.Flags.WitherExplosion"), FlagType.AREA_ONLY, EXPLOSION, null);
 
-    public static final Flag MOVE = new Flag(LocaleLoader.getString("Flags.Flags.Move"), FlagType.ANY, null);
-    public static final Flag VEHICLEMOVE = new Flag(LocaleLoader.getString("Flags.Flags.VehicleMove"), FlagType.ANY, MOVE);
-    public static final Flag TELEPORT = new Flag(LocaleLoader.getString("Flags.Flags.TP"), FlagType.ANY, MOVE);
+    public static final Flag MOVE = new Flag(LocaleLoader.getString("Flags.Flags.Move"), FlagType.ANY, null, null);
+    public static final Flag VEHICLEMOVE = new Flag(LocaleLoader.getString("Flags.Flags.VehicleMove"), FlagType.ANY, MOVE, null);
+    public static final Flag TELEPORT = new Flag(LocaleLoader.getString("Flags.Flags.TP"), FlagType.ANY, MOVE, null);
 
     private static Map<String, Flag> validFlags;
 
@@ -171,6 +172,6 @@ public class FlagManager {
 
         addFlag(MOVE);
         addFlag(TELEPORT);
-        addFlag(VEHICLEMOVE);
+        // addFlag(VEHICLEMOVE);  TODO Make VehicleMove function
     }
 }

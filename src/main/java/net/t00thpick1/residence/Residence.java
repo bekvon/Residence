@@ -104,7 +104,7 @@ public class Residence extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new StateAssurance(), this);
-        getServer().getPluginManager().registerEvents(new VehicleMoveListener(), this);
+        // getServer().getPluginManager().registerEvents(new VehicleMoveListener(), this); TODO
         getServer().getPluginManager().registerEvents(new MoveListener(), this);
         getServer().getPluginManager().registerEvents(new TeleportListener(), this);
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
