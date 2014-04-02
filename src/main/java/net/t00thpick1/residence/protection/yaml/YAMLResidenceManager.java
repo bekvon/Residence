@@ -341,6 +341,7 @@ public class YAMLResidenceManager implements ResidenceManager {
         worldSave.set("Version", Residence.saveVersion);
         worldSave.set("Seed", world.getSeed());
         worldSave.createSection("Residences");
+        worldFiles.put(world.getName(), worldSave);
         residenceNamesByChunk.put(world.getName(), new HashMap<ChunkRef, List<String>>());
     }
 }
