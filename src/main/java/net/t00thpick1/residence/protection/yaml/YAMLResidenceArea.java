@@ -199,6 +199,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
             ResidenceArea parent = getParent();
             if (parent.renameSubzone(name, newName)) {
                 name = newName;
+                fullName = newName;
                 return true;
             }
             return false;
@@ -368,6 +369,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
     }
 
     public void newSection(ConfigurationSection newSection) {
+        this.fullName = parent.getFullName() + "." + newSection.getName();
         this.section = newSection;
         ConfigurationSection data = section.createSection("Data");
         data.createSection("Area");
