@@ -97,6 +97,9 @@ public class Residence extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             getServer().getPluginManager().disablePlugin(this);
+            if (ConfigManager.getInstance().stopOnLoadError()) {
+                getServer().shutdown();
+            }
             return;
         }
 
