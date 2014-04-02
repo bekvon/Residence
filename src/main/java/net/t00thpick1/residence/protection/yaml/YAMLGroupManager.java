@@ -27,10 +27,14 @@ public class YAMLGroupManager {
     }
 
     public static ConfigurationSection getGroup(String player) {
-        if (!config.isConfigurationSection(getPlayerGroup(player))) {
+        if (player == null) {
             return config.getConfigurationSection("DefaultSettings");
         }
-        return config.getConfigurationSection(getPlayerGroup(player));
+        String group = getPlayerGroup(player);
+        if (!config.isConfigurationSection(group)) {
+            return config.getConfigurationSection("DefaultSettings");
+        }
+        return config.getConfigurationSection(group);
     }
 
     public static double getCostPerBlock(Player player) {
