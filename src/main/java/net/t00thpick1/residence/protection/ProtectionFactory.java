@@ -29,7 +29,9 @@ public class ProtectionFactory {
 
     public static void init(Residence residence) throws Exception {
         switch (residence.getBackend()) {
-            case MYSQL:
+            case MYSQL_LIVE:
+                throw new UnsupportedOperationException();
+            case MYSQL_MEMORY:
                 throw new UnsupportedOperationException();
             case WORLDGUARD:
                 throw new UnsupportedOperationException();

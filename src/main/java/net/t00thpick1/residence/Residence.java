@@ -30,7 +30,8 @@ import java.util.logging.Level;
 public class Residence extends JavaPlugin {
     public enum BackEndType {
         YAML,
-        MYSQL,
+        MYSQL_MEMORY,
+        MYSQL_LIVE,
         WORLDGUARD;
     }
 
