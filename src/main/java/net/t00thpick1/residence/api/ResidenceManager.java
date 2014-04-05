@@ -7,6 +7,7 @@ import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public interface ResidenceManager {
 
@@ -23,4 +24,6 @@ public interface ResidenceManager {
     public void remove(ResidenceArea res);
 
     public void save() throws IOException;
+
+    public Collection<ResidenceArea> getResidencesInWorld(World world);
 }

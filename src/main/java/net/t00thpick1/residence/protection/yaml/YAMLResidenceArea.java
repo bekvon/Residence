@@ -392,7 +392,11 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
     }
 
     public void newSection(ConfigurationSection newSection) {
-        this.fullName = parent.getFullName() + "." + newSection.getName();
+        if (parent != null) {
+            this.fullName = parent.getFullName() + "." + newSection.getName();
+        } else {
+            this.fullName = newSection.getName();
+        }
         this.section = newSection;
         ConfigurationSection data = section.createSection("Data");
         data.createSection("Area");

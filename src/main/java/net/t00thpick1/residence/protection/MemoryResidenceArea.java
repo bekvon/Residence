@@ -154,17 +154,11 @@ public abstract class MemoryResidenceArea implements ResidenceArea {
 
     @Override
     public boolean isAutoRenewEnabled() {
-        if (!isForRent() && !isRented()) {
-            throw new IllegalStateException("Not for rent or being rented");
-        }
         return autoRenewEnabled;
     }
 
     @Override
     public void setAutoRenewEnabled(boolean autoRenew) {
-        if (!isForRent() && !isRented()) {
-            throw new IllegalStateException("Not for rent or being rented");
-        }
         this.autoRenewEnabled = autoRenew;
     }
 

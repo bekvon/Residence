@@ -344,4 +344,10 @@ public class YAMLResidenceManager implements ResidenceManager {
         worldFiles.put(world.getName(), worldSave);
         residenceNamesByChunk.put(world.getName(), new HashMap<ChunkRef, List<String>>());
     }
+
+    @Override
+    public Collection<ResidenceArea> getResidencesInWorld(World world) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
