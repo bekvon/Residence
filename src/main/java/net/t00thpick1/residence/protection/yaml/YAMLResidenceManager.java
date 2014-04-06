@@ -309,7 +309,11 @@ public class YAMLResidenceManager implements ResidenceManager {
 
     public void save() throws IOException {
         for (ResidenceArea residence : residences.values()) {
-            ((YAMLResidenceArea) residence).save();
+            try {
+                ((YAMLResidenceArea) residence).save();
+            } catch (Exception e) {
+                Residence.getInstance().getLogger().log(Level.SEVERE, "Failed to save residence (" + residence.getFullName() + ")! Reason:" + e.getMessage() + " Error Log:", e);
+            }
         }
         for (World world : Residence.getInstance().getServer().getWorlds()) {
             File saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");

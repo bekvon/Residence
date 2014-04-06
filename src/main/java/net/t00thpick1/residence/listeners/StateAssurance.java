@@ -2,6 +2,7 @@ package net.t00thpick1.residence.listeners;
 
 import java.util.HashMap;
 
+import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.areas.PermissionsArea;
@@ -22,6 +23,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class StateAssurance implements Listener {
+    private static boolean messages = !ConfigManager.getInstance().noMessages();
+
     public StateAssurance() {
         lastOutsideLoc = new HashMap<String, Location>();
         instance = this;
@@ -91,7 +94,7 @@ public class StateAssurance implements Listener {
                 ResidenceArea oldRes = (ResidenceArea) oldArea;
                 String leave = oldRes.getLeaveMessage();
 
-                if (leave != null) {
+                if (messages && leave != null && !leave.equals("")) {
                     player.sendMessage(formatString(leave, oldRes.getName(), player));
                 }
             }
@@ -107,13 +110,13 @@ public class StateAssurance implements Listener {
                 oldRes = (ResidenceArea) oldArea;
                 String leaveMessage = oldRes.getLeaveMessage();
 
-                if (leaveMessage != null && !oldArea.equals(newRes.getTopParent())) {
+                if (messages && leaveMessage != null && !leaveMessage.equals("") && !oldArea.equals(newRes.getTopParent())) {
                     player.sendMessage(formatString(leaveMessage, oldRes.getName(), player));
                 }
             }
             String enterMessage = newRes.getEnterMessage();
 
-            if (enterMessage != null && (oldRes == null || !newArea.equals(oldRes.getTopParent()))) {
+            if (messages  && enterMessage != null && !enterMessage.equals("") && (oldRes == null || !newArea.equals(oldRes.getTopParent()))) {
                  player.sendMessage(formatString(enterMessage, newRes.getName(), player));
             }
             PlayerChangedAreaEvent event = new PlayerChangedAreaEvent(oldArea, newArea, player);
@@ -122,7 +125,7 @@ public class StateAssurance implements Listener {
     }
 
     private static String formatString(String message, String areaName, Player player) {
-        return ChatColor.translateAlternateColorCodes('&', message.replaceAll("(%player%)", player.getName()).replaceAll("(%area%)", areaName));
+        return ChatColor.translateAlternateColorCodes('&', message.replaceAll("(%player%)", player.getName()).replaceAll("(%area%)", areaName.replaceAll("(_)", " ")));
     }
 
     private static StateAssurance instance;
