@@ -84,31 +84,28 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
         return retRes;
     }
 
-    public boolean createResidence(String name, CuboidArea area) {
-        return createResidence(name, null, area);
-    }
-
-    public boolean createResidence(String name, String owner, CuboidArea area) {
+    public ResidenceArea createResidence(String name, String owner, CuboidArea area) {
         if (area == null) {
-            return false;
+            return null;
         }
         if (residences.containsKey(name.toLowerCase())) {
-            return false;
+            return null;
         }
 
+        YAMLResidenceArea newRes = null;
         try {
             ConfigurationSection res = worldFiles.get(area.getWorld().getName()).getConfigurationSection("Residences").createSection(name);
-            YAMLResidenceArea newRes = new YAMLResidenceArea(res, area, owner, null);
+            newRes = new YAMLResidenceArea(res, area, owner, null);
             residencesByWorld.get(area.getWorld().getName()).put(name.toLowerCase(), newRes);
             residences.put(name.toLowerCase(), newRes);
             calculateChunks(newRes);
             newRes.applyDefaultFlags();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
 
-        return true;
+        return newRes;
     }
 
     public int getOwnedZoneCount(String player) {
