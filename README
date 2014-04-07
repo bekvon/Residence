@@ -4,6 +4,8 @@ Residence - Self serve area protection system
 Official links:
 IRC: irc://irc.esper.net/Residence
 BukkitDev: http://dev.bukkit.org/bukkit-plugins/residence/
+Maven Repo: http://ci.drtshock.com/plugin/repository/everything/net/t00thpick1/Residence/
+
 
 Downloads:
 Latest Config.yml: https://github.com/t00thpick1/Residence/blob/master/src/main/resources/config.yml

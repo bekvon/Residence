@@ -15,17 +15,14 @@ import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.api.flags.Flag.FlagType;
 import net.t00thpick1.residence.protection.MemoryEconomyManager;
 import net.t00thpick1.residence.protection.MemoryResidenceArea;
-import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager.ChunkRef;
-
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class YAMLResidenceArea extends MemoryResidenceArea {
     private ConfigurationSection section;
-    private YAMLCuboidArea area;
 
     public YAMLResidenceArea(ConfigurationSection section, YAMLResidenceArea parent) throws Exception {
+        super(YAMLCuboidAreaSerializer.deserialize(section.getConfigurationSection("Data").getConfigurationSection("Area")));
         this.section = section;
         this.name = section.getName();
         if (parent == null) {
@@ -39,7 +36,6 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         this.creationDate = data.getLong("CreationDate");
         this.enterMessage = data.getString("EnterMessage");
         this.leaveMessage = data.getString("LeaveMessage");
-        this.area = new YAMLCuboidArea(data.getConfigurationSection("Area"));
         this.teleportLocation = loadTeleportLocation(data.getConfigurationSection("TPLocation"));
         if (data.isConfigurationSection("RentData")) {
             ConfigurationSection rentData = data.getConfigurationSection("RentData");
@@ -118,9 +114,9 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         return new Location(getWorld(), section.getDouble("X"), section.getDouble("Y"), section.getDouble("Z"));
     }
 
-    public YAMLResidenceArea(ConfigurationSection section, YAMLCuboidArea area, String owner, YAMLResidenceArea parent) {
+    public YAMLResidenceArea(ConfigurationSection section, CuboidArea area, String owner, YAMLResidenceArea parent) {
+        super(area);
         this.section = section;
-        this.area = area;
         this.name = section.getName();
         this.parent = parent;
         if (parent == null) {
@@ -192,7 +188,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         }
         ConfigurationSection subzoneSection = section.getConfigurationSection("Subzones");
         try {
-            subzones.put(name, new YAMLResidenceArea(subzoneSection.createSection(name), (YAMLCuboidArea) area, owner, this));
+            subzones.put(name, new YAMLResidenceArea(subzoneSection.createSection(name), area, owner, this));
         } catch (Exception e) {
             subzoneSection.set(name, null);
             subzones.remove(name);
@@ -245,96 +241,6 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         return true;
     }
 
-    @Override
-    public boolean isAreaWithin(CuboidArea area) {
-        return this.area.isAreaWithin(area);
-    }
-
-    @Override
-    public boolean containsLocation(Location loc) {
-        return this.area.containsLocation(loc);
-    }
-
-    @Override
-    public boolean containsLocation(World world, int x, int y, int z) {
-        return this.area.containsLocation(world, x, y, z);
-    }
-
-    @Override
-    public boolean checkCollision(CuboidArea area) {
-        return this.area.checkCollision(area);
-    }
-
-    @Override
-    public long getSize() {
-        return this.area.getSize();
-    }
-
-    @Override
-    public int getXSize() {
-        return this.area.getXSize();
-    }
-
-    @Override
-    public int getYSize() {
-        return this.area.getYSize();
-    }
-
-    @Override
-    public int getZSize() {
-        return this.area.getZSize();
-    }
-
-    @Override
-    public Location getHighLocation() {
-        return this.area.getHighLocation();
-    }
-
-    @Override
-    public Location getLowLocation() {
-        return this.area.getLowLocation();
-    }
-
-    @Override
-    public World getWorld() {
-        return this.area.getWorld();
-    }
-
-    @Override
-    public Location getCenter() {
-        return this.area.getCenter();
-    }
-
-    @Override
-    public int getHighX() {
-        return this.area.getHighX();
-    }
-
-    @Override
-    public int getHighY() {
-        return this.area.getHighY();
-    }
-
-    @Override
-    public int getHighZ() {
-        return this.area.getHighZ();
-    }
-
-    @Override
-    public int getLowX() {
-        return this.area.getLowX();
-    }
-
-    @Override
-    public int getLowY() {
-        return this.area.getLowY();
-    }
-
-    @Override
-    public int getLowZ() {
-        return this.area.getLowZ();
-    }
-
     public void save() {
         ConfigurationSection data = section.getConfigurationSection("Data");
         data.set("Owner", owner);
@@ -345,7 +251,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         tploc.set("X", teleportLocation.getX());
         tploc.set("Y", teleportLocation.getY());
         tploc.set("Z", teleportLocation.getZ());
-        area.save(data.getConfigurationSection("Area"));
+        YAMLCuboidAreaSerializer.serialize(this, data.getConfigurationSection("Area"));
         if (isRented()) {
             ConfigurationSection rentData = data.createSection("RentData");
             rentData.set("LastPayment", lastPayment);
@@ -385,10 +291,6 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         data = section.getConfigurationSection("RentLinks");
         List<String> rentLink = new ArrayList<String>(rentLinks.keySet());
         data.set("Links", rentLink);
-    }
-
-    public List<ChunkRef> getChunks() {
-        return area.getChunks();
     }
 
     public void newSection(ConfigurationSection newSection) {

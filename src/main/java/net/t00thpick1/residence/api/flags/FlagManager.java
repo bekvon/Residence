@@ -13,8 +13,8 @@ public class FlagManager {
     // TODO Flag Descriptions
     public static final Flag ADMIN = new Flag(LocaleLoader.getString("Flags.Flags.Admin"), FlagType.PLAYER_ONLY, null, null);
     public static final Flag HEALING = new Flag(LocaleLoader.getString("Flags.Flags.Healing"), FlagType.AREA_ONLY, null, null);
-    public static final Flag DAMAGE = new Flag(LocaleLoader.getString("Flags.Flags.Damage"), FlagType.ANY, null, null);
-    public static final Flag PVP = new Flag(LocaleLoader.getString("Flags.Flags.PVP"), FlagType.AREA_ONLY, null, null);
+    public static final Flag DAMAGE = new Flag(LocaleLoader.getString("Flags.Flags.Damage"), FlagType.AREA_ONLY, null, null);
+    public static final Flag PVP = new Flag(LocaleLoader.getString("Flags.Flags.PVP"), FlagType.AREA_ONLY, DAMAGE, null);
 
     public static final Flag BUILD = new Flag(LocaleLoader.getString("Flags.Flags.Build"), FlagType.ANY, null, null);
     public static final Flag PLACE = new Flag(LocaleLoader.getString("Flags.Flags.Place"), FlagType.ANY, BUILD, null);

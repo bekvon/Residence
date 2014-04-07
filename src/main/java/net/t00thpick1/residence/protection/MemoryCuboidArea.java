@@ -1,18 +1,14 @@
-package net.t00thpick1.residence.protection.yaml;
+package net.t00thpick1.residence.protection;
 
-import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.areas.CuboidArea;
-import net.t00thpick1.residence.protection.CuboidAreaFactory;
-import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager.ChunkRef;
+import net.t00thpick1.residence.protection.MemoryResidenceManager.ChunkRef;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class YAMLCuboidArea implements CuboidArea {
+public class MemoryCuboidArea implements CuboidArea {
     protected World world;
     protected int highX;
     protected int highY;
@@ -21,21 +17,17 @@ public class YAMLCuboidArea implements CuboidArea {
     protected int lowY;
     protected int lowZ;
 
-    public YAMLCuboidArea(ConfigurationSection section) throws Exception {
-        String worldName = section.getString("World");
-        world = Residence.getInstance().getServer().getWorld(worldName);
-        if (world == null) {
-            throw new Exception("Cant Find World: " + worldName);
-        }
-        highX = section.getInt("X1");
-        highY = section.getInt("Y1");
-        highZ = section.getInt("Z1");
-        lowX = section.getInt("X2");
-        lowY = section.getInt("Y2");
-        lowZ = section.getInt("Z2");
+    public MemoryCuboidArea(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+        this.world = world;
+        highX = x1;
+        highY = y1;
+        highZ = z1;
+        lowX = x2;
+        lowY = y2;
+        lowZ = z2;
     }
 
-    public YAMLCuboidArea(Location startLoc, Location endLoc) {
+    public MemoryCuboidArea(Location startLoc, Location endLoc) {
         if (startLoc.getBlockX() > endLoc.getBlockX()) {
             highX = startLoc.getBlockX();
             lowX = endLoc.getBlockX();
@@ -58,6 +50,16 @@ public class YAMLCuboidArea implements CuboidArea {
             lowZ = startLoc.getBlockZ();
         }
         world = startLoc.getWorld();
+    }
+
+    public MemoryCuboidArea(CuboidArea area) {
+        this.world = area.getWorld();
+        this.highX = area.getHighX();
+        this.highY = area.getHighY();
+        this.highZ = area.getHighZ();
+        this.lowX = area.getLowX();
+        this.lowY = area.getLowY();
+        this.lowZ = area.getLowZ();
     }
 
     public boolean isAreaWithin(CuboidArea area) {
@@ -145,16 +147,6 @@ public class YAMLCuboidArea implements CuboidArea {
         return new Location(world, (highX + getLowX()) / 2, (highY + getLowY()) / 2, (highZ + lowZ) / 2);
     }
 
-    public void save(ConfigurationSection section) {
-        section.set("World", getWorld().getName());
-        section.set("X1", highX);
-        section.set("Y1", highY);
-        section.set("Z1", highZ);
-        section.set("X2", lowX);
-        section.set("Y2", lowY);
-        section.set("Z2", lowZ);
-    }
-
     public List<ChunkRef> getChunks() {
         List<ChunkRef> chunks = new ArrayList<ChunkRef>();
         int lowCX = ChunkRef.getBase(lowX);
@@ -200,10 +192,11 @@ public class YAMLCuboidArea implements CuboidArea {
         return lowZ;
     }
 
-    public static class YAMLCuboidAreaFactory implements CuboidAreaFactory {
+    public static class MemoryCuboidAreaFactory implements CuboidAreaFactory {
         @Override
         public CuboidArea createArea(Location loc1, Location loc2) {
-            return new YAMLCuboidArea(loc1, loc2);
+            return new MemoryCuboidArea(loc1, loc2);
         }
+
     }
 }

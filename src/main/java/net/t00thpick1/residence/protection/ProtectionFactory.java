@@ -14,7 +14,6 @@ import net.t00thpick1.residence.api.ResidenceManager;
 import net.t00thpick1.residence.api.UsernameUUIDCache;
 import net.t00thpick1.residence.api.WorldManager;
 import net.t00thpick1.residence.api.areas.CuboidArea;
-import net.t00thpick1.residence.protection.yaml.YAMLCuboidArea;
 import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
 import net.t00thpick1.residence.protection.yaml.YAMLResidenceManager;
 import net.t00thpick1.residence.protection.yaml.YAMLUsernameUUIDCache;
@@ -54,7 +53,7 @@ public class ProtectionFactory {
                     worldFolder.mkdirs();
                 }
                 worldManager = new YAMLWorldManager(worldFolder);
-                cuboidAreaFactory = new YAMLCuboidArea.YAMLCuboidAreaFactory();
+                cuboidAreaFactory = new MemoryCuboidArea.MemoryCuboidAreaFactory();
         }
     }
 

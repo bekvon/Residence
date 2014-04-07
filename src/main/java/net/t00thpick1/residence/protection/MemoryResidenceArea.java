@@ -17,12 +17,13 @@ import com.google.common.collect.ImmutableMap;
 import net.milkbowl.vault.economy.Economy;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceAPI;
+import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
 
-public abstract class MemoryResidenceArea implements ResidenceArea {
+public abstract class MemoryResidenceArea extends MemoryCuboidArea implements ResidenceArea {
     protected Map<Flag, Boolean> areaFlags;
     protected Map<String, Map<Flag, Boolean>> playerFlags;
     protected Map<Flag, Boolean> rentFlags;
@@ -45,6 +46,10 @@ public abstract class MemoryResidenceArea implements ResidenceArea {
     protected String fullName;
     protected long creationDate;
     protected long nextPayment;
+
+    public MemoryResidenceArea(CuboidArea area) {
+        super(area);
+    }
 
     @Override
     public boolean allowAction(Flag flag) {

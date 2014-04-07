@@ -456,10 +456,6 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     return true;
                 }
             }
-            if (true) {
-                return true;
-            }
-            // TODO
             ResidenceArea[] reses = rmanager.getResidencesInWorld(player.getWorld()).toArray(new ResidenceArea[0]);
             player.sendMessage(LocaleLoader.getString("Commands.List.List", page));
             for (int i = 0; i < 8; i++) {

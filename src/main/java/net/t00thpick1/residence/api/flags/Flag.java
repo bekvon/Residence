@@ -96,7 +96,7 @@ public final class Flag {
      *
      * @return the flag's permission
      */
-    public Permission getPermission() {
+    public final Permission getPermission() {
         return perm;
     }
 
@@ -105,7 +105,7 @@ public final class Flag {
      *
      * @return the flag's description
      */
-    public String getDescription() {
+    public final String getDescription() {
         return description;
     }
 }
