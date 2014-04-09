@@ -1,6 +1,6 @@
 name: Residence
 main: net.t00thpick1.residence.Residence
-version: 3.0.0-SNAPSHOT
+version: ${version}
 description: Cuboid Residence Plugin
 author: t00thpick1
 authors: [t00thpick1,bekvon]
