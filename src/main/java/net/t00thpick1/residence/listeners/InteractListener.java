@@ -156,6 +156,9 @@ public class InteractListener implements Listener {
         if (event.getAction() != Action.PHYSICAL) {
             return;
         }
+        if (Utilities.isAdminMode(player)) {
+            return;
+        }
         Material mat = block.getType();
         if (mat == Material.SOIL || mat == Material.SOUL_SAND) {
             if (Utilities.isAdminMode(player)) {
