@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,6 +45,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
     protected ResidenceArea parent;
     protected String name;
     protected String fullName;
+    protected UUID uuid;
     protected long creationDate;
     protected long nextPayment;
 
@@ -561,13 +563,18 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
     }
 
     @Override
+    public UUID getResidenceUUID() {
+        return uuid;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj instanceof ResidenceArea) {
             ResidenceArea other = ((ResidenceArea) obj);
-            return other.getFullName() == getFullName() && other.getCreationDate() == this.getCreationDate();
+            return other.getResidenceUUID().equals(getResidenceUUID()) && other.getCreationDate() == this.getCreationDate();
         }
         return false;
     }

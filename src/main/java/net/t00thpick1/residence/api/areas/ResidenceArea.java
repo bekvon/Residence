@@ -3,6 +3,8 @@ package net.t00thpick1.residence.api.areas;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import net.t00thpick1.residence.api.flags.Flag;
 
 import org.bukkit.Location;
@@ -72,8 +74,18 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
      * @return the name of the ResidenceArea
      */
     public String getName();
+
+    /**
+     * Attempts to rename the ResidenceArea to the given name.  If successful returns true,
+     * otherwise false.
+     * <p>
+     * NOTE: It is extremely poor etiquette to not call a {@link net.t00thpick1.residence.api.events.ResidenceRenamedEvent ResidenceRenamedEvent} whenever this method returns true.
+     * @param newName the name to attempt to change to
+     * @return whether or not the renaming was successful
+     */
     public boolean rename(String newName);
     public String getFullName();
+    public UUID getResidenceUUID();
     public long getCreationDate();
 
     /**

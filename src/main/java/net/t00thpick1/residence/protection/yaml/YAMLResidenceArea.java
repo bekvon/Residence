@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import net.t00thpick1.residence.ConfigManager;
@@ -15,6 +16,7 @@ import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.api.flags.Flag.FlagType;
 import net.t00thpick1.residence.protection.MemoryEconomyManager;
 import net.t00thpick1.residence.protection.MemoryResidenceArea;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -36,6 +38,11 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         this.creationDate = data.getLong("CreationDate");
         this.enterMessage = data.getString("EnterMessage");
         this.leaveMessage = data.getString("LeaveMessage");
+        if (data.contains("ResidenceUUID")) {
+            this.uuid = UUID.fromString(data.getString("ResidenceUUID"));
+        } else {
+            this.uuid = UUID.randomUUID();
+        }
         this.teleportLocation = loadTeleportLocation(data.getConfigurationSection("TPLocation"));
         if (data.isConfigurationSection("RentData")) {
             ConfigurationSection rentData = data.getConfigurationSection("RentData");
@@ -147,6 +154,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         section.createSection("Subzones");
         this.rentLinks = new HashMap<String, ResidenceArea>();
         section.createSection("RentLinks");
+        this.uuid = UUID.randomUUID();
         applyDefaultFlags();
     }
 
@@ -245,6 +253,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         ConfigurationSection data = section.getConfigurationSection("Data");
         data.set("Owner", owner);
         data.set("CreationDate", creationDate);
+        data.set("ResidenceUUID", uuid);
         data.set("EnterMessage", enterMessage);
         data.set("LeaveMessage", leaveMessage);
         ConfigurationSection tploc = data.getConfigurationSection("TPLocation");
