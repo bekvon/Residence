@@ -461,7 +461,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             for (int i = 0; i < 8; i++) {
                 int index = (8 * (page - 1)) + i;
                 if (reses.length > index) {
-                    player.sendMessage(LocaleLoader.getString("Commands.List.Residence", reses[i].getName()));
+                    player.sendMessage(LocaleLoader.getString("Commands.List.Residence", reses[index].getName()));
                 }
             }
             return true;
