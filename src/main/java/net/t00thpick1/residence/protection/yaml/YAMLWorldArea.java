@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import net.t00thpick1.residence.Residence;
+
 import net.t00thpick1.residence.api.areas.WorldArea;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
@@ -19,8 +19,8 @@ public class YAMLWorldArea implements WorldArea {
     private File saveFile;
     private FileConfiguration file;
 
-    public YAMLWorldArea(FileConfiguration section, File worldFile) {
-        this.world = Residence.getInstance().getServer().getWorld(section.getString("World"));
+    public YAMLWorldArea(FileConfiguration section, File worldFile, World world) {
+        this.world = world;
         if (!section.isConfigurationSection("Permissions")) {
             this.perms = section.createSection("Permissions");
         } else {

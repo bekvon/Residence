@@ -33,7 +33,7 @@ public class YAMLWorldManager implements WorldManager {
             if (newFile) {
                 worldSave.set("World", world.getName());
             }
-            worldAreas.put(world.getName(), new YAMLWorldArea(worldSave, worldFile));
+            worldAreas.put(world.getName(), new YAMLWorldArea(worldSave, worldFile, world));
         }
     }
 
@@ -41,22 +41,16 @@ public class YAMLWorldManager implements WorldManager {
         WorldArea area = worldAreas.get(world.getName());
         if (area == null) {
             File worldFile = new File(worldFolder, world.getName() + "_configuration.yml");
-            boolean newFile = false;
             if (!worldFile.isFile()) {
                 try {
                     worldFile.createNewFile();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                newFile = true;
             }
 
             FileConfiguration worldSave = YamlConfiguration.loadConfiguration(worldFile);
-            if (newFile) {
-                worldSave.set("World", world.getName());
-            }
-            area = new YAMLWorldArea(worldSave, worldFile);
+            area = new YAMLWorldArea(worldSave, worldFile, world);
             worldAreas.put(world.getName(), area);
             ((YAMLResidenceManager) ResidenceAPI.getResidenceManager()).newWorld(world);
         }
