@@ -4,6 +4,7 @@ import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.ResidenceManager;
 import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.events.ResidenceRenamedEvent;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
@@ -302,6 +303,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     return true;
                 }
                 if (res.rename(newName)) {
+                    Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceRenamedEvent(res));
                     sender.sendMessage(LocaleLoader.getString("Commands.Rename.Success", oldName, newName));
                 } else {
                     sender.sendMessage(LocaleLoader.getString("Commands.Rename.Failure"));
