@@ -1484,12 +1484,11 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     player.sendMessage(LocaleLoader.getString("Commands.Generic.InvalidNumber", args[2]));
                     return true;
                 }
-                page--;
             }
             String[] subzones = res.getSubzoneNameList().toArray(new String[0]);
-            player.sendMessage(LocaleLoader.getString("Commands.Sublist.List"));
+            player.sendMessage(LocaleLoader.getString("Commands.Sublist.List", page));
             for (int i = 0; i < 8; i++) {
-                int index = (page * 8) + i;
+                int index = ((page - 1) * 8) + i;
                 if (index < subzones.length) {
                     player.sendMessage(LocaleLoader.getString("Commands.Sublist.Subzone", subzones[index]));
                 }
