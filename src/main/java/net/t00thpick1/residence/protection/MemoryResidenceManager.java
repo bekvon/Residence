@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -17,15 +18,21 @@ import net.t00thpick1.residence.api.areas.ResidenceArea;
 public abstract class MemoryResidenceManager implements ResidenceManager {
     protected Map<String, Map<String, ResidenceArea>> residencesByWorld;
     protected Map<String, Map<ChunkRef, List<String>>> residenceNamesByChunk;
-    protected Map<String, ResidenceArea> residences;
+    protected Map<String, ResidenceArea> residencesByName;
+    protected Map<UUID, ResidenceArea> residencesByUUID;
 
     public MemoryResidenceManager() {
         residenceNamesByChunk = new HashMap<String, Map<ChunkRef, List<String>>>();
         residencesByWorld = new HashMap<String, Map<String, ResidenceArea>>();
-        residences = new HashMap<String, ResidenceArea>();
+        residencesByName = new HashMap<String, ResidenceArea>();
+        residencesByUUID = new HashMap<UUID, ResidenceArea>();
     }
 
     public ResidenceArea getByLocation(Location loc) {
+        return getByLocation(loc, true);
+    }
+
+    public ResidenceArea getByLocation(Location loc, boolean recurse) {
         if (loc == null) {
             return null;
         }
@@ -46,6 +53,9 @@ public abstract class MemoryResidenceManager implements ResidenceManager {
         if (!found) {
             return null;
         }
+        if (!recurse) {
+            return res;
+        }
         ResidenceArea subres = res.getSubzoneByLocation(loc);
         if (subres == null) {
             return res;
@@ -59,9 +69,9 @@ public abstract class MemoryResidenceManager implements ResidenceManager {
         }
         String[] split = name.split("\\.");
         if (split.length == 1) {
-            return residences.get(name.toLowerCase());
+            return residencesByName.get(name.toLowerCase());
         }
-        ResidenceArea res = residences.get(split[0]);
+        ResidenceArea res = residencesByName.get(split[0]);
         for (int i = 1; i < split.length; i++) {
             if (res != null) {
                 res = res.getSubzoneByName(split[i]);
@@ -70,6 +80,11 @@ public abstract class MemoryResidenceManager implements ResidenceManager {
             }
         }
         return res;
+    }
+
+    @Override
+    public ResidenceArea getByUUID(UUID uuid) {
+        return residencesByUUID.get(uuid);
     }
 
     @Override

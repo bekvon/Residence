@@ -70,7 +70,8 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
                     ress.add(res.toLowerCase());
                     retRes.put(chunk, ress);
                 }
-                this.residences.put(res.toLowerCase(), residence);
+                residencesByName.put(res.toLowerCase(), residence);
+                residencesByUUID.put(residence.getResidenceUUID(), residence);
                 residences.put(res.toLowerCase(), residence);
             } catch (Exception ex) {
                 Residence.getInstance().getLogger().severe("Failed to load residence (" + res + ")! Reason:" + ex.getMessage() + " Error Log:");
@@ -88,7 +89,7 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
         if (area == null) {
             return null;
         }
-        if (residences.containsKey(name.toLowerCase())) {
+        if (residencesByName.containsKey(name.toLowerCase())) {
             return null;
         }
 
@@ -97,7 +98,8 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
             ConfigurationSection res = worldFiles.get(area.getWorld().getName()).getConfigurationSection("Residences").createSection(name);
             newRes = new YAMLResidenceArea(res, area, owner, null);
             residencesByWorld.get(area.getWorld().getName()).put(name.toLowerCase(), newRes);
-            residences.put(name.toLowerCase(), newRes);
+            residencesByName.put(name.toLowerCase(), newRes);
+            residencesByUUID.put(newRes.getResidenceUUID(), newRes);
             calculateChunks(newRes);
             newRes.applyDefaultFlags();
         } catch (Exception e) {
@@ -109,7 +111,7 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
     }
 
     public int getOwnedZoneCount(String player) {
-        Collection<ResidenceArea> set = residences.values();
+        Collection<ResidenceArea> set = residencesByName.values();
         int count = 0;
         for (ResidenceArea res : set) {
             if (res.getOwner().equals(player)) {
@@ -120,7 +122,7 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
     }
 
     public List<ResidenceArea> getOwnedResidences(String player) {
-        Collection<ResidenceArea> set = residences.values();
+        Collection<ResidenceArea> set = residencesByName.values();
         List<ResidenceArea> owned = new ArrayList<ResidenceArea>();
         for (ResidenceArea res : set) {
             if (res.getOwner().equals(player)) {
@@ -135,26 +137,26 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
             return res.rename(newName);
         }
 
-        if (residences.get(newName) != null) {
+        if (residencesByName.get(newName) != null) {
             return false;
         }
 
         removeChunkList(res);
         residencesByWorld.get(res.getWorld().getName()).remove(res.getName().toLowerCase());
-        residences.remove(res.getName().toLowerCase());
+        residencesByName.remove(res.getName().toLowerCase());
         FileConfiguration file = worldFiles.get(res.getWorld().getName());
         ConfigurationSection residenceSection = file.getConfigurationSection("Residences");
         res.newSection(residenceSection.createSection(newName));
         residenceSection.set(res.getName(), null);
         residencesByWorld.get(res.getWorld().getName()).put(newName.toLowerCase(), res);
-        residences.put(newName.toLowerCase(), res);
+        residencesByName.put(newName.toLowerCase(), res);
         calculateChunks(res, newName);
         return true;
     }
 
     public void removeAllFromWorld(String world) {
         for (String res : residencesByWorld.get(world).keySet()) {
-            residences.remove(res);
+            residencesByName.remove(res);
         }
         residencesByWorld.remove(world);
         residencesByWorld.put(world, new HashMap<String, ResidenceArea>());
@@ -172,7 +174,7 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
             residenceSection.set(res.getName(), null);
             removeChunkList(res);
             residencesByWorld.get(res.getWorld().getName()).remove(res.getName().toLowerCase());
-            residences.remove(res.getName().toLowerCase());
+            residencesByName.remove(res.getName().toLowerCase());
             for (Player player : res.getPlayersInResidence()) {
                 StateAssurance.getLastOutsideLocation(player.getName()).zero().add(player.getLocation());
             }

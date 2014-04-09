@@ -2,6 +2,7 @@ package net.t00thpick1.residence.api;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
@@ -17,7 +18,9 @@ import org.bukkit.World;
 public interface ResidenceManager {
 
     /**
-     * Gets a ResidenceArea by location.
+     * Gets a ResidenceArea by location.  Recursing down into subzone depths
+     * <p>
+     * This is equivalent to calling {@link #getByLocation(Location, true)}
      *
      * @param location the location to check
      * @return a ResidenceArea at that location, or null if none
@@ -25,12 +28,34 @@ public interface ResidenceManager {
     public ResidenceArea getByLocation(Location location);
 
     /**
+     * Gets a ResidenceArea by location.
+     *
+     * @param location the location to check
+     * @param whether or not to recurse into subzones
+     * @return a ResidenceArea at that location, or null if none
+     */
+    public ResidenceArea getByLocation(Location location, boolean recurseIntoSubzones);
+
+    /**
      * Gets a ResidenceArea by it's fully qualified name.
+     * <p>
+     * This should be used for user input only, any data storage/recollection should use
+     * {@link #getByUUID(UUID)}
      *
      * @param name the fully qualified name of the ResidenceArea
      * @return the ResidenceArea by that name, or null
      */
     public ResidenceArea getByName(String name);
+
+    /**
+     * Gets a ResidenceArea by it's UUID, this method is the most accurate get method
+     * and should be used for any data storage purposes.
+     * <p>
+     * NOTE: Will not return subzones.
+     * @param uuid the uuid of the ResidenceArea
+     * @return the ResidenceArea with the given UUID
+     */
+    public ResidenceArea getByUUID(UUID uuid);
 
     public Collection<ResidenceArea> getOwnedResidences(String player);
 
