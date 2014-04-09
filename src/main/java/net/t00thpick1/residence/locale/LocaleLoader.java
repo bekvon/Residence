@@ -65,6 +65,7 @@ public final class LocaleLoader {
         }
 
         string.replaceAll("\'", "''");
+        string.replaceAll("_", " ");
         string = addColors(string);
 
         return string;
