@@ -436,7 +436,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             for (int i = 0; i < 8; i++) {
                 int index = (8 * (page - 1)) + i;
                 if (reses.length > index) {
-                    player.sendMessage(LocaleLoader.getString("Commands.List.Residence", reses[i].getName()));
+                    player.sendMessage(LocaleLoader.getString("Commands.List.Residence", player.getName(), reses[i].getName()));
                 }
             }
             return true;
@@ -459,7 +459,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 }
             }
             ResidenceArea[] reses = rmanager.getResidencesInWorld(player.getWorld()).toArray(new ResidenceArea[0]);
-            player.sendMessage(LocaleLoader.getString("Commands.List.List", page));
+            player.sendMessage(LocaleLoader.getString("Commands.List.ListAll", page));
             for (int i = 0; i < 8; i++) {
                 int index = (8 * (page - 1)) + i;
                 if (reses.length > index) {
@@ -1488,7 +1488,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 }
             }
             String[] subzones = res.getSubzoneNameList().toArray(new String[0]);
-            player.sendMessage(LocaleLoader.getString("Commands.Sublist.List", page));
+            player.sendMessage(LocaleLoader.getString("Commands.Sublist.List", res.getName(), page));
             for (int i = 0; i < 8; i++) {
                 int index = ((page - 1) * 8) + i;
                 if (index < subzones.length) {
