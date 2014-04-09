@@ -284,8 +284,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         for (Entry<Flag, Boolean> flag : rentFlags.entrySet()) {
             data.set(flag.getKey().getName(), flag.getValue());
         }
-        section.set("Subzones", null);
-        data = section.createSection("Subzones");
+        data = section.getConfigurationSection("Subzones");
         for (ResidenceArea subzone : subzones.values()) {
             ((YAMLResidenceArea) subzone).save();
         }
