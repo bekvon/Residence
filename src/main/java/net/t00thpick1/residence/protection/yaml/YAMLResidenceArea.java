@@ -266,25 +266,26 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         data.set("ForSale", isBuyable);
         data.set("Cost", cost);
         data.set("RentPeriod", rentPeriod);
-        data = section.getConfigurationSection("Flags");
+        section.set("Flags", null);
+        data = section.createSection("Flags");
         for (Entry<Flag, Boolean> flag : areaFlags.entrySet()) {
             data.set(flag.getKey().getName(), flag.getValue());
         }
-        data = section.getConfigurationSection("Players");
+        section.set("Players", null);
+        data = section.createSection("Players");
         for (Entry<String, Map<Flag, Boolean>> player : playerFlags.entrySet()) {
-            if (!data.isConfigurationSection(player.getKey())) {
-                data.createSection(player.getKey());
-            }
-            ConfigurationSection playerSection = data.getConfigurationSection(player.getKey());
+            ConfigurationSection playerSection = data.createSection(player.getKey());
             for (Entry<Flag, Boolean> flag : player.getValue().entrySet()) {
                 playerSection.set(flag.getKey().getName(), flag.getValue());
             }
         }
-        data = section.getConfigurationSection("RentFlags");
+        section.set("RentFlags", null);
+        data = section.createSection("RentFlags");
         for (Entry<Flag, Boolean> flag : rentFlags.entrySet()) {
             data.set(flag.getKey().getName(), flag.getValue());
         }
-        data = section.getConfigurationSection("Subzones");
+        section.set("Subzones", null);
+        data = section.createSection("Subzones");
         for (ResidenceArea subzone : subzones.values()) {
             ((YAMLResidenceArea) subzone).save();
         }

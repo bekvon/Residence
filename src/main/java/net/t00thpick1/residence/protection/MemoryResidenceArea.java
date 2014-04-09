@@ -439,6 +439,9 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
         }
         if (value == null) {
             flags.remove(flag);
+            if (flags.isEmpty()) {
+                playerFlags.remove(player);
+            }
             return;
         }
         flags.put(flag, value);
