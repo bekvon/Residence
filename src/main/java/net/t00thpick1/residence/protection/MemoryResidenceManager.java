@@ -67,9 +67,10 @@ public abstract class MemoryResidenceManager implements ResidenceManager {
         if (name == null) {
             return null;
         }
+        name = name.toLowerCase();
         String[] split = name.split("\\.");
         if (split.length == 1) {
-            return residencesByName.get(name.toLowerCase());
+            return residencesByName.get(name);
         }
         ResidenceArea res = residencesByName.get(split[0]);
         for (int i = 1; i < split.length; i++) {
