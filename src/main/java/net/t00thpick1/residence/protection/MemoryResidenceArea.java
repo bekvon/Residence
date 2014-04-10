@@ -12,7 +12,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import net.milkbowl.vault.economy.Economy;
@@ -23,6 +22,8 @@ import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
+import net.t00thpick1.residence.utils.immutable.ImmutableWrapperCollection;
+import net.t00thpick1.residence.utils.immutable.ImmutableWrapperMap;
 
 public abstract class MemoryResidenceArea extends MemoryCuboidArea implements ResidenceArea {
     protected Map<Flag, Boolean> areaFlags;
@@ -123,7 +124,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public Map<Flag, Boolean> getAreaFlags() {
-        return ImmutableMap.copyOf(areaFlags);
+        return new ImmutableWrapperMap<Flag, Boolean>(areaFlags);
     }
 
     @Override
@@ -412,14 +413,14 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
         if (flags == null) {
             return ImmutableMap.of();
         }
-        return ImmutableMap.copyOf(flags);
+        return new ImmutableWrapperMap<Flag, Boolean>(flags);
     }
 
     @Override
     public Map<String, Map<Flag, Boolean>> getPlayerFlags() {
         ImmutableMap.Builder<String, Map<Flag, Boolean>> builder = ImmutableMap.builder();
         for (String player : playerFlags.keySet()) {
-            builder.put(player, ImmutableMap.copyOf(playerFlags.get(player)));
+            builder.put(player, new ImmutableWrapperMap<Flag, Boolean>(playerFlags.get(player)));
         }
         return builder.build();
     }
@@ -459,7 +460,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public Collection<ResidenceArea> getRentLinks() {
-        return ImmutableList.copyOf(rentLinks.values());
+        return new ImmutableWrapperCollection<ResidenceArea>(rentLinks.values());
     }
 
     @Override
@@ -473,17 +474,17 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public Map<Flag, Boolean> getRentFlags() {
-        return ImmutableMap.copyOf(rentFlags);
+        return new ImmutableWrapperMap<Flag, Boolean>(rentFlags);
     }
 
     @Override
     public Collection<ResidenceArea> getSubzoneList() {
-        return ImmutableList.copyOf(subzones.values());
+        return new ImmutableWrapperCollection<ResidenceArea>(subzones.values());
     }
 
     @Override
     public Collection<String> getSubzoneNameList() {
-        return ImmutableList.copyOf(subzones.keySet());
+        return new ImmutableWrapperCollection<String>(subzones.keySet());
     }
 
     @Override

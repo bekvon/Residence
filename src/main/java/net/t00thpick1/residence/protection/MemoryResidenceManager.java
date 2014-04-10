@@ -10,10 +10,9 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.google.common.collect.ImmutableList;
-
 import net.t00thpick1.residence.api.ResidenceManager;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.utils.immutable.ImmutableWrapperCollection;
 
 public abstract class MemoryResidenceManager implements ResidenceManager {
     protected Map<String, Map<String, ResidenceArea>> residencesByWorld;
@@ -90,7 +89,7 @@ public abstract class MemoryResidenceManager implements ResidenceManager {
 
     @Override
     public Collection<ResidenceArea> getResidencesInWorld(World world) {
-        return ImmutableList.copyOf(residencesByWorld.get(world.getName()).values());
+        return new ImmutableWrapperCollection<ResidenceArea>(residencesByWorld.get(world.getName()).values());
     }
 
     public void removeChunkList(ResidenceArea res) {
