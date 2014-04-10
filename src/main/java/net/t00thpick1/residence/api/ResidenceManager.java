@@ -50,8 +50,7 @@ public interface ResidenceManager {
     /**
      * Gets a ResidenceArea by it's UUID, this method is the most accurate get method
      * and should be used for any data storage purposes.
-     * <p>
-     * NOTE: Will not return subzones.
+     *
      * @param uuid the uuid of the ResidenceArea
      * @return the ResidenceArea with the given UUID
      */

@@ -4,7 +4,6 @@ import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.ResidenceManager;
 import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
-import net.t00thpick1.residence.api.events.ResidenceRenamedEvent;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
@@ -303,7 +302,6 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     return true;
                 }
                 if (res.rename(newName)) {
-                    Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceRenamedEvent(res));
                     sender.sendMessage(LocaleLoader.getString("Commands.Rename.Success", oldName, newName));
                 } else {
                     sender.sendMessage(LocaleLoader.getString("Commands.Rename.Failure"));
@@ -1487,12 +1485,12 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     return true;
                 }
             }
-            String[] subzones = res.getSubzoneNameList().toArray(new String[0]);
+            ResidenceArea[] subzones = res.getSubzoneList().toArray(new ResidenceArea[0]);
             player.sendMessage(LocaleLoader.getString("Commands.Sublist.List", res.getName(), page));
             for (int i = 0; i < 8; i++) {
                 int index = ((page - 1) * 8) + i;
                 if (index < subzones.length) {
-                    player.sendMessage(LocaleLoader.getString("Commands.Sublist.Subzone", subzones[index]));
+                    player.sendMessage(LocaleLoader.getString("Commands.Sublist.Subzone", subzones[index].getName()));
                 }
             }
             return true;

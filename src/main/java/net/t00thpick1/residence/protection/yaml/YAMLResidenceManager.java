@@ -4,9 +4,11 @@ import net.t00thpick1.residence.ConfigManager;
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.events.ResidenceAreaDeletedEvent;
 import net.t00thpick1.residence.listeners.StateAssurance;
 import net.t00thpick1.residence.protection.MemoryResidenceManager;
-import net.t00thpick1.residence.utils.zip.ZipLibrary;
+import net.t00thpick1.residence.utils.backup.prune.CleanBackupsTask;
+import net.t00thpick1.residence.utils.backup.zip.ZipLibrary;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -178,13 +180,14 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
             for (Player player : res.getPlayersInResidence()) {
                 StateAssurance.getLastOutsideLocation(player.getName()).zero().add(player.getLocation());
             }
+            Residence residence = Residence.getInstance();
+            residence.getServer().getPluginManager().callEvent(new ResidenceAreaDeletedEvent(res));
         } else {
             res.getParent().removeSubzone(res.getName());
         }
     }
 
     public void save() throws IOException {
-
         for (World world : Residence.getInstance().getServer().getWorlds()) {
             File saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");
             if (!saveFile.isFile()) {
@@ -204,6 +207,7 @@ public class YAMLResidenceManager extends MemoryResidenceManager {
             worldSave.save(saveFile);
         }
         ZipLibrary.backup();
+        new CleanBackupsTask().runTask(Residence.getInstance());
     }
 
     public void newWorld(World world) {

@@ -163,4 +163,12 @@ public abstract class MemoryResidenceManager implements ResidenceManager {
             return x ^ z;
         }
     }
+
+    public void removeSubzoneUUID(ResidenceArea subzone) {
+        residencesByUUID.remove(subzone.getResidenceUUID());
+    }
+
+    public void addSubzoneUUID(ResidenceArea subzone) {
+        residencesByUUID.put(subzone.getResidenceUUID(), subzone);
+    }
 }

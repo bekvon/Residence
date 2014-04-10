@@ -1,4 +1,7 @@
-package net.t00thpick1.residence.utils.zip;
+/*
+    Original Code from mcMMO
+*/
+package net.t00thpick1.residence.utils.backup.zip;
 
 import net.t00thpick1.residence.Residence;
 
@@ -17,11 +20,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipLibrary {
-    private static final File BackupDir = new File(Residence.getInstance().getDataFolder(), "Backup");
+    public static final File BACKUP_DIR = new File(Residence.getInstance().getDataFolder(), "Backup");
 
     public static void backup() throws IOException {
         try {
-            BackupDir.mkdir();
+            BACKUP_DIR.mkdir();
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -30,7 +33,7 @@ public class ZipLibrary {
         // Generate the proper date for the backup filename
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        File fileZip = new File(BackupDir, dateFormat.format(date) + ".zip");
+        File fileZip = new File(BACKUP_DIR, dateFormat.format(date) + ".zip");
 
         // Create the Source List, and add directories/etc to the file.
         List<File> sources = new ArrayList<File>();

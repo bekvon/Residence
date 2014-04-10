@@ -48,7 +48,6 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
     public Map<Flag, Boolean> getRentFlags();
 
     public Collection<ResidenceArea> getSubzoneList();
-    public Collection<String> getSubzoneNameList();
     public ResidenceArea getSubzoneByLocation(Location loc);
     public ResidenceArea getSubzoneByName(String string);
     public boolean createSubzone(String name, String owner, CuboidArea area);
@@ -78,8 +77,7 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
     /**
      * Attempts to rename the ResidenceArea to the given name.  If successful returns true,
      * otherwise false.
-     * <p>
-     * NOTE: It is extremely poor etiquette to not call a {@link net.t00thpick1.residence.api.events.ResidenceRenamedEvent ResidenceRenamedEvent} whenever this method returns true.
+     *
      * @param newName the name to attempt to change to
      * @return whether or not the renaming was successful
      */

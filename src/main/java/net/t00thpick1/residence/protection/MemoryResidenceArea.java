@@ -483,11 +483,6 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
     }
 
     @Override
-    public Collection<String> getSubzoneNameList() {
-        return new ImmutableWrapperCollection<String>(subzones.keySet());
-    }
-
-    @Override
     public ResidenceArea getSubzoneByLocation(Location loc) {
         for (ResidenceArea subzone : subzones.values()) {
             if (subzone.containsLocation(loc)) {
@@ -499,6 +494,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public ResidenceArea getSubzoneByName(String subzonename) {
+        subzonename = subzonename.toLowerCase();
         if (!subzonename.contains(".")) {
             return subzones.get(subzonename);
         }

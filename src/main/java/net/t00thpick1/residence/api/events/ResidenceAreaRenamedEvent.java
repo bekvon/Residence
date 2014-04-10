@@ -10,11 +10,13 @@ import org.bukkit.event.HandlerList;
  * 
  * @author t00thpick1
  */
-public class ResidenceRenamedEvent extends Event {
-    private ResidenceArea residence;
+public class ResidenceAreaRenamedEvent extends Event {
+    private final ResidenceArea residence;
+    private final String oldName;
 
-    public ResidenceRenamedEvent(ResidenceArea residence) {
+    public ResidenceAreaRenamedEvent(ResidenceArea residence, String oldName) {
         this.residence = residence;
+        this.oldName = oldName;
     }
 
     /**
@@ -24,6 +26,15 @@ public class ResidenceRenamedEvent extends Event {
      */
     public ResidenceArea getResidenceArea() {
         return residence;
+    }
+
+    /**
+     * Gets the previous name of the ResidenceArea
+     *
+     * @return the previous name
+     */
+    public String getOldName() {
+        return oldName;
     }
 
     @Override

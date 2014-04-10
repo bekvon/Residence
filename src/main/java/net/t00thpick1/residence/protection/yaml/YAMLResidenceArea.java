@@ -8,14 +8,19 @@ import java.util.UUID;
 import java.util.Map.Entry;
 
 import net.t00thpick1.residence.ConfigManager;
+import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.events.ResidenceAreaCreatedEvent;
+import net.t00thpick1.residence.api.events.ResidenceAreaDeletedEvent;
+import net.t00thpick1.residence.api.events.ResidenceAreaRenamedEvent;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.api.flags.Flag.FlagType;
 import net.t00thpick1.residence.protection.MemoryEconomyManager;
 import net.t00thpick1.residence.protection.MemoryResidenceArea;
+import net.t00thpick1.residence.protection.MemoryResidenceManager;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -196,10 +201,14 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         }
         ConfigurationSection subzoneSection = section.getConfigurationSection("Subzones");
         try {
-            subzones.put(name, new YAMLResidenceArea(subzoneSection.createSection(name), area, owner, this));
+            ResidenceArea newRes = new YAMLResidenceArea(subzoneSection.createSection(name), area, owner, this);
+            subzones.put(name.toLowerCase(), newRes);
+            ((MemoryResidenceManager) ResidenceAPI.getResidenceManager()).addSubzoneUUID(newRes);
+            Residence residence = Residence.getInstance();
+            residence.getServer().getPluginManager().callEvent(new ResidenceAreaCreatedEvent(newRes));
         } catch (Exception e) {
             subzoneSection.set(name, null);
-            subzones.remove(name);
+            subzones.remove(name.toLowerCase());
             e.printStackTrace();
             return false;
         }
@@ -207,26 +216,37 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
     }
 
     public boolean removeSubzone(String subzone) {
-        if (subzones.remove(subzone) == null) {
+        ResidenceArea sub = subzones.remove(subzone.toLowerCase());
+        if (sub == null) {
             return false;
         }
         ConfigurationSection subzoneSection = section.getConfigurationSection("Subzones");
         subzoneSection.set(subzone, null);
+        ((MemoryResidenceManager) ResidenceAPI.getResidenceManager()).removeSubzoneUUID(sub);
+        Residence residence = Residence.getInstance();
+        residence.getServer().getPluginManager().callEvent(new ResidenceAreaDeletedEvent(sub));
         return true;
     }
 
     public boolean rename(String newName) {
         if (parent == null) {
             if (((YAMLResidenceManager) ResidenceAPI.getResidenceManager()).rename(this, newName)) {
+                String oldName = this.name;
+                this.fullName = newName;
                 this.name = newName;
+                Residence residence = Residence.getInstance();
+                residence.getServer().getPluginManager().callEvent(new ResidenceAreaRenamedEvent(this, oldName));
                 return true;
             }
             return false;
         } else {
             ResidenceArea parent = getParent();
             if (parent.renameSubzone(name, newName)) {
-                name = newName;
-                fullName = newName;
+                String oldName = this.name;
+                this.fullName = parent.getFullName() + "." + newName;
+                this.name = newName;
+                Residence residence = Residence.getInstance();
+                residence.getServer().getPluginManager().callEvent(new ResidenceAreaRenamedEvent(this, oldName));
                 return true;
             }
             return false;
@@ -234,18 +254,18 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
     }
 
     public boolean renameSubzone(String oldName, String newName) {
-        if (!subzones.containsKey(oldName)) {
+        if (!subzones.containsKey(oldName.toLowerCase())) {
             return false;
         }
-        if (subzones.containsKey(newName)) {
+        if (subzones.containsKey(newName.toLowerCase())) {
             return false;
         }
         ConfigurationSection subzoneSection = section.getConfigurationSection("Subzones");
         ConfigurationSection newSection = subzoneSection.createSection(newName);
         subzoneSection.set(oldName, null);
-        YAMLResidenceArea area = (YAMLResidenceArea) subzones.remove(oldName);
+        YAMLResidenceArea area = (YAMLResidenceArea) subzones.remove(oldName.toLowerCase());
         area.newSection(newSection);
-        subzones.put(newName, area);
+        subzones.put(newName.toLowerCase(), area);
         return true;
     }
 
