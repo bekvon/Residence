@@ -33,7 +33,7 @@ public class ExplosionListener implements Listener {
         Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Location loc = it.next().getLocation();
-            if (ResidenceAPI.getPermissionsAreaByLocation(loc).allowAction(flag)) {
+            if (!ResidenceAPI.getPermissionsAreaByLocation(loc).allowAction(flag)) {
                 it.remove();
             }
         }
