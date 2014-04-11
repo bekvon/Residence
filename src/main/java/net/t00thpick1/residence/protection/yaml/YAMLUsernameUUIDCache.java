@@ -43,8 +43,6 @@ public class YAMLUsernameUUIDCache implements UsernameUUIDCache {
     public void cacheName(UUID uuid, String name) {
         String old = fileCache.getString(name);
         if (old != null && !old.equalsIgnoreCase(uuid.toString())) {
-            System.out.println(old);
-            System.out.println(uuid.toString());
             // Refresh our cache for replaced user
             grabUsernameFromMojang(UUID.fromString(old));
         }
