@@ -273,7 +273,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         ConfigurationSection data = section.getConfigurationSection("Data");
         data.set("Owner", owner);
         data.set("CreationDate", creationDate);
-        data.set("ResidenceUUID", uuid);
+        data.set("ResidenceUUID", uuid.toString());
         data.set("EnterMessage", enterMessage);
         data.set("LeaveMessage", leaveMessage);
         ConfigurationSection tploc = data.getConfigurationSection("TPLocation");
