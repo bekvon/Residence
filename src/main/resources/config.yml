@@ -11,8 +11,12 @@ General:
     ResidenceFlagsInherit: true
     # Setting this to false will cause residence to continue to load even if a error is detected in the save file.
     ShutdownIfFailLoad: true
+    # This setting enables enter and leave messages
     EnterLeaveMessages: true
-    
+    # This setting will allow other plugins to spawn entities without residence interfering
+    IgnorePluginSpawns: true
+    # This setting will preserve flags on a residence that are not registered (generally flags from third party addons)
+    PreserveUnregisteredFlags: true
 Economy:
     Enabled: true
     Rent:
