@@ -47,7 +47,7 @@ public class HelpManager {
             }
             page--;
         }
-        sender.sendMessage(section.getString("Description"));
+        sender.sendMessage(section.getStringList("Description").toArray(new String[0]));
         if (section.isConfigurationSection("Subcommands")) {
             sender.sendMessage(LocaleLoader.getString("Commands.Help.Subcommands", page+1));
             String[] subcommands = section.getConfigurationSection("Subcommands").getKeys(false).toArray(new String[0]);
