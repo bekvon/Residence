@@ -404,7 +404,11 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 int index = (page * 8) + i;
                 if (index < flags.length) {
                     Flag flag = flags[index];
-                    player.sendMessage(LocaleLoader.getString("Commands.Flags.Flag", flag.getName(), flag.getType()));
+                    String description = flag.getDescription();
+                    if (description == null) {
+                        description = "A description for this flag is not provided";
+                    }
+                    player.sendMessage(LocaleLoader.getString("Commands.Flags.Flag", flag.getName(), flag.getType(), description));
                 }
             }
             return true;
