@@ -115,7 +115,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         subzones = new HashMap<String, ResidenceArea>();
         data = section.getConfigurationSection("Subzones");
         for (String subzone : data.getKeys(false)) {
-            subzones.put(subzone, new YAMLResidenceArea(data.getConfigurationSection(subzone), this));
+            subzones.put(subzone.toLowerCase(), new YAMLResidenceArea(data.getConfigurationSection(subzone), this));
         }
         if (getParent() == null) {
             loadRentLinks();
