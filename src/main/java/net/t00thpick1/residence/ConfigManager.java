@@ -25,15 +25,15 @@ public class ConfigManager {
     }
 
     public boolean isEconomy() {
-        return config.getBoolean("Economy.Enabled");
+        return config.getBoolean("Economy.Enabled", true);
     }
 
     public String getLocale() {
-        return config.getString("General.Locale");
+        return config.getString("General.Locale", "en_US");
     }
 
     public boolean stopOnLoadError() {
-        return config.getBoolean("General.ShutdownIfFailLoad");
+        return config.getBoolean("General.ShutdownIfFailLoad", true);
     }
 
     public int getRentCheckInterval() {
@@ -41,22 +41,26 @@ public class ConfigManager {
     }
 
     public boolean isRent() {
-        return config.getBoolean("Economy.Rent.Enabled");
+        return config.getBoolean("Economy.Rent.Enabled", true);
     }
 
     public int getAutoSaveInterval() {
-        return config.getInt("General.AutoSaveInterval");
+        return config.getInt("General.AutoSaveInterval", 30);
     }
 
     public boolean noMessages() {
-        return !config.getBoolean("General.EnterLeaveMessages");
+        return !config.getBoolean("General.EnterLeaveMessages", true);
     }
 
     public boolean isAutoRenewDefault() {
-        return config.getBoolean("Economy.Rent.AutoRenewRentByDefault");
+        return config.getBoolean("Economy.Rent.AutoRenewRentByDefault", true);
     }
 
     public boolean preserveUnregisteredFlags() {
         return config.getBoolean("General.PreserveUnregisteredFlags", true);
+    }
+
+    public boolean ignorePluginSpawns() {
+        return config.getBoolean("General.IgnorePluginSpawns", true);
     }
 }
