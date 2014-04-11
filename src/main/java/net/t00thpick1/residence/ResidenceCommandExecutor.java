@@ -399,16 +399,17 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 page--;
             }
             Flag[] flags = FlagManager.getFlags().toArray(new Flag[0]);
-            player.sendMessage(LocaleLoader.getString("Commands.Flags.Flags", page + 1));
-            for (int i = 0; i < 8; i++) {
-                int index = (page * 8) + i;
+            player.sendMessage(LocaleLoader.getString("Commands.Flags.Flags", page + 1, Math.ceil(((double) flags.length) / 5D)));
+            for (int i = 0; i < 5; i++) {
+                int index = (page * 5) + i;
                 if (index < flags.length) {
                     Flag flag = flags[index];
                     String description = flag.getDescription();
-                    if (description == null) {
-                        description = "A description for this flag is not provided";
+                    player.sendMessage(LocaleLoader.getString("Commands.Flags.Flag", flag.getName()));
+                    player.sendMessage(LocaleLoader.getString("Commands.Flags.FlagType", flag.getType()));
+                    if (description != null) {
+                        player.sendMessage(LocaleLoader.getString("Commands.Flags.Description", description));
                     }
-                    player.sendMessage(LocaleLoader.getString("Commands.Flags.Flag", flag.getName(), flag.getType(), description));
                 }
             }
             return true;
