@@ -21,6 +21,7 @@ import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
+import net.t00thpick1.residence.locale.LocaleLoader;
 import net.t00thpick1.residence.protection.yaml.YAMLGroupManager;
 import net.t00thpick1.residence.utils.immutable.ImmutableWrapperCollection;
 import net.t00thpick1.residence.utils.immutable.ImmutableWrapperMap;
@@ -300,6 +301,9 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public String getOwner() {
+        if (owner == null) {
+            return LocaleLoader.getString("Info.ServerLand");
+        }
         return owner;
     }
 
@@ -389,7 +393,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
         for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
             setAreaFlag(defaultFlag.getKey(), defaultFlag.getValue());
         }
-        if (getOwner() != null) {
+        if (owner != null) {
             for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultOwnerFlags(getOwner()).entrySet()) {
                 setPlayerFlag(getOwner(), defaultFlag.getKey(), defaultFlag.getValue());
             }
