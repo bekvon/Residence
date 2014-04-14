@@ -436,10 +436,17 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             }
             ResidenceArea[] reses = rmanager.getOwnedResidences(player.getName()).toArray(new ResidenceArea[0]);
             player.sendMessage(LocaleLoader.getString("Commands.List.List", player.getName(), page));
+            int k = 0;
             for (int i = 0; i < 8; i++) {
-                int index = (8 * (page - 1)) + i;
+                int index = (8 * (page - 1)) + i + k;
                 if (reses.length > index) {
-                    player.sendMessage(LocaleLoader.getString("Commands.List.Residence", reses[i].getName()));
+                    ResidenceArea res = reses[index];
+                    if (!resadmin && !res.getOwner().equalsIgnoreCase(player.getName()) && res.allowAction(FlagManager.HIDDEN)) {
+                        k++;
+                        i--;
+                        continue;
+                    }
+                    player.sendMessage(LocaleLoader.getString("Commands.List.Residence", res.getName()));
                 }
             }
             return true;
@@ -1492,10 +1499,17 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             }
             ResidenceArea[] subzones = res.getSubzoneList().toArray(new ResidenceArea[0]);
             player.sendMessage(LocaleLoader.getString("Commands.Sublist.List", res.getName(), page));
+            int k = 0;
             for (int i = 0; i < 8; i++) {
-                int index = ((page - 1) * 8) + i;
+                int index = ((page - 1) * 8) + i + k;
                 if (index < subzones.length) {
-                    player.sendMessage(LocaleLoader.getString("Commands.Sublist.Subzone", subzones[index].getName()));
+                    ResidenceArea subzone = subzones[index];
+                    if (!resadmin && !subzone.getOwner().equalsIgnoreCase(player.getName()) && subzone.allowAction(FlagManager.HIDDEN)) {
+                        k++;
+                        i--;
+                        continue;
+                    }
+                    player.sendMessage(LocaleLoader.getString("Commands.Sublist.Subzone", subzone.getName()));
                 }
             }
             return true;
