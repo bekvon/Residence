@@ -1301,7 +1301,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 return true;
             }
         }
-        res.setForRent(cost, days * 24 * 60 * 60 * 1000, autoRenew);
+        res.setForRent(cost, ((long) days) * 24L * 60L * 60L * 1000L, autoRenew);
         player.sendMessage(LocaleLoader.getString("Commands.Market.Rentable.Success", res.getName(), cost, days));
         return true;
     }
@@ -1616,7 +1616,7 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             player.sendMessage(LocaleLoader.getString("Info.Renter", res.getRenter()));
             player.sendMessage(LocaleLoader.getString("Info.AutoRenew", res.isAutoRenew()));
         } else if (res.isForRent()) {
-            player.sendMessage(LocaleLoader.getString("Info.ForRent", res.getCost(), res.getRentPeriod()));
+            player.sendMessage(LocaleLoader.getString("Info.ForRent", res.getCost(), Utilities.toDayString(res.getRentPeriod())));
             if (res.isAutoRenewEnabled()) {
                 player.sendMessage(LocaleLoader.getString("Info.AutoRenewEnabled"));
             } else {
