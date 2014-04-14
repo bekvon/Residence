@@ -15,6 +15,7 @@ import net.t00thpick1.residence.utils.immutable.ImmutableWrapperCollection;
  * @author t00thpick1
  */
 public class FlagManager {
+    public static final Flag HIDDEN = new Flag(LocaleLoader.getString("Flags.Flags.Hidden"), FlagType.AREA_ONLY, null, LocaleLoader.getString("Flags.Descriptions.Hidden"));
     public static final Flag ADMIN = new Flag(LocaleLoader.getString("Flags.Flags.Admin"), FlagType.PLAYER_ONLY, null, LocaleLoader.getString("Flags.Descriptions.Admin"));
     public static final Flag HEALING = new Flag(LocaleLoader.getString("Flags.Flags.Healing"), FlagType.AREA_ONLY, null, LocaleLoader.getString("Flags.Descriptions.Healing"));
     public static final Flag DAMAGE = new Flag(LocaleLoader.getString("Flags.Flags.Damage"), FlagType.AREA_ONLY, null, LocaleLoader.getString("Flags.Descriptions.Damage"));
@@ -130,6 +131,7 @@ public class FlagManager {
      */
     public static void initFlags() {
         validFlags = new HashMap<String, Flag>();
+        addFlag(HIDDEN);
         addFlag(ADMIN);
         addFlag(HEALING);
 
