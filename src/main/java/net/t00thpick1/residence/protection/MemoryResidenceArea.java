@@ -19,6 +19,8 @@ import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.ResidenceAPI;
 import net.t00thpick1.residence.api.areas.CuboidArea;
 import net.t00thpick1.residence.api.areas.ResidenceArea;
+import net.t00thpick1.residence.api.events.ResidenceAreaFlagsChangedEvent;
+import net.t00thpick1.residence.api.events.ResidenceAreaOwnerChangedEvent;
 import net.t00thpick1.residence.api.flags.Flag;
 import net.t00thpick1.residence.api.flags.FlagManager;
 import net.t00thpick1.residence.locale.LocaleLoader;
@@ -118,9 +120,11 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
         }
         if (value == null) {
             areaFlags.remove(flag);
+            Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
             return;
         }
         areaFlags.put(flag, value);
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
     }
 
     @Override
@@ -135,7 +139,10 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public void clearFlags() {
-        removeAllAreaFlags();
+        areaFlags.clear();
+        playerFlags.clear();
+        rentFlags.clear();
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
     }
 
     @Override
@@ -295,7 +302,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
             econ.depositPlayer(getOwner(), cost);
         }
         removeFromMarket();
-        owner = buyer;
+        setOwner(buyer);
         return true;
     }
 
@@ -309,9 +316,10 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public void setOwner(String owner) {
+        String previousOwner = this.owner;
         this.owner = owner;
-        clearFlags();
         applyDefaultFlags();
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaOwnerChangedEvent(this, previousOwner));
     }
 
     @Override
@@ -390,14 +398,20 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
 
     @Override
     public void applyDefaultFlags() {
+        areaFlags.clear();
+        playerFlags.clear();
+        rentFlags.clear();
         for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultAreaFlags(getOwner()).entrySet()) {
-            setAreaFlag(defaultFlag.getKey(), defaultFlag.getValue());
+            areaFlags.put(defaultFlag.getKey(), defaultFlag.getValue());
         }
         if (owner != null) {
+            Map<Flag, Boolean> flags = new HashMap<Flag, Boolean>();
             for (Entry<Flag, Boolean> defaultFlag : YAMLGroupManager.getDefaultOwnerFlags(getOwner()).entrySet()) {
-                setPlayerFlag(getOwner(), defaultFlag.getKey(), defaultFlag.getValue());
+                flags.put(defaultFlag.getKey(), defaultFlag.getValue());
             }
+            playerFlags.put(getOwner(), flags);
         }
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
     }
 
     @Override
@@ -409,6 +423,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
             playerFlags.put(player, new HashMap<Flag, Boolean>(flags.get(player)));
         }
         this.rentFlags = new HashMap<Flag, Boolean>(mirror.getRentFlags());
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
     }
 
     @Override
@@ -432,6 +447,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
     @Override
     public void removeAllPlayerFlags(String player) {
         playerFlags.remove(player);
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
     }
 
     @Override
@@ -449,9 +465,11 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
             if (flags.isEmpty()) {
                 playerFlags.remove(player);
             }
+            Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
             return;
         }
         flags.put(flag, value);
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
     }
 
     @Override
@@ -471,9 +489,11 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
     public void setRentFlag(Flag flag, Boolean value) {
         if (value == null) {
             rentFlags.remove(flag);
+            Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
             return;
         }
         rentFlags.put(flag, value);
+        Residence.getInstance().getServer().getPluginManager().callEvent(new ResidenceAreaFlagsChangedEvent(this));
     }
 
     @Override
