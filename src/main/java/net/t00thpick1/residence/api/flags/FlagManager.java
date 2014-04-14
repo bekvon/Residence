@@ -1,16 +1,20 @@
 package net.t00thpick1.residence.api.flags;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import net.t00thpick1.residence.Residence;
 import net.t00thpick1.residence.api.flags.Flag.FlagType;
 import net.t00thpick1.residence.locale.LocaleLoader;
+import net.t00thpick1.residence.utils.immutable.ImmutableWrapperCollection;
 
+/**
+ * This class is for the registration and tracking of Flags.
+ *
+ * @author t00thpick1
+ */
 public class FlagManager {
-    // TODO Flag Descriptions
     public static final Flag ADMIN = new Flag(LocaleLoader.getString("Flags.Flags.Admin"), FlagType.PLAYER_ONLY, null, LocaleLoader.getString("Flags.Descriptions.Admin"));
     public static final Flag HEALING = new Flag(LocaleLoader.getString("Flags.Flags.Healing"), FlagType.AREA_ONLY, null, LocaleLoader.getString("Flags.Descriptions.Healing"));
     public static final Flag DAMAGE = new Flag(LocaleLoader.getString("Flags.Flags.Damage"), FlagType.AREA_ONLY, null, LocaleLoader.getString("Flags.Descriptions.Damage"));
@@ -85,20 +89,45 @@ public class FlagManager {
 
     private static Map<String, Flag> validFlags;
 
-
+    /**
+     * This method should only ever be called from JavaPlugin.onLoad().  Any other origin
+     * will fail to properly register the flag.
+     *
+     * @param flag
+     */
     public static void addFlag(Flag flag) {
+        if (Residence.getInstance().isEnabled()) {
+            return;
+        }
         validFlags.put(flag.getName(), flag);
         Residence.getInstance().getServer().getPluginManager().addPermission(flag.getPermission());
     }
 
+    /**
+     * Gets the flag by the given name.
+     *
+     * @param flagName
+     * @return the flag by that name, or null
+     */
     public static Flag getFlag(String flag) {
         return validFlags.get(flag.toLowerCase());
     }
 
+    /**
+     * Gets a list of all flags in the registry.
+     *
+     * @return a collection of all flags
+     */
     public static Collection<Flag> getFlags() {
-        return Collections.unmodifiableCollection(validFlags.values());
+        return new ImmutableWrapperCollection<Flag>(validFlags.values());
     }
 
+    /**
+     * FOR INTERNAL USE ONLY.
+     * Re-initializes Residence flags, will remove all third party flags from the valid flags list.
+     * Generally should not be called for any reason.
+     *
+     */
     public static void initFlags() {
         validFlags = new HashMap<String, Flag>();
         addFlag(ADMIN);
