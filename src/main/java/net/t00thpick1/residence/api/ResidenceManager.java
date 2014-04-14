@@ -56,8 +56,16 @@ public interface ResidenceManager {
      */
     public ResidenceArea getByUUID(UUID uuid);
 
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public Collection<ResidenceArea> getOwnedResidences(String player);
 
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public int getOwnedZoneCount(String player);
 
     /**
@@ -75,7 +83,9 @@ public interface ResidenceManager {
      * @param owner the person to own the ResidenceArea (null for server land)
      * @param area the area for the ResidenceArea to encompass
      * @return the created ResidenceArea or null if not successful
+     * @Deprecated Will be using a UUID system soonish
      */
+    @Deprecated
     public ResidenceArea createResidence(String residenceName, String owner, CuboidArea area);
 
     /**

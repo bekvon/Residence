@@ -21,7 +21,15 @@ import org.bukkit.entity.Player;
  *
  */
 public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea, BuyableArea {
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public String getOwner();
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public void setOwner(String owner);
 
     public List<Player> getPlayersInResidence();
@@ -37,9 +45,25 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
     public void applyDefaultFlags();
     public void copyFlags(ResidenceArea mirror);
 
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public Map<Flag, Boolean> getPlayerFlags(String player);
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public Map<String, Map<Flag, Boolean>> getPlayerFlags();
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public void removeAllPlayerFlags(String player);
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public void setPlayerFlag(String player, Flag flag, Boolean value);
 
     public void rentLink(ResidenceArea link);
@@ -50,6 +74,10 @@ public interface ResidenceArea extends CuboidArea, PermissionsArea, RentableArea
     public Collection<ResidenceArea> getSubzoneList();
     public ResidenceArea getSubzoneByLocation(Location loc);
     public ResidenceArea getSubzoneByName(String string);
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public boolean createSubzone(String name, String owner, CuboidArea area);
     public boolean removeSubzone(String name);
     public boolean removeSubzone(ResidenceArea subzone);

@@ -7,7 +7,15 @@ public interface RentableArea extends MarketableArea {
     public boolean isAutoRenewEnabled();
     public void setAutoRenewEnabled(boolean autoRenew);
     public boolean isRented();
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public boolean rent(String renter, boolean isAutoRenew);
+    /**
+    * @Deprecated Will be using a UUID system soonish
+    */
+    @Deprecated
     public String getRenter();
     public boolean isAutoRenew();
     public void setAutoRenew(boolean autoRenew);
