@@ -776,8 +776,11 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                 Residence.getInstance().getEconomy().withdrawPlayer(player.getName(), cost);
             }
         }
-        rmanager.createResidence(args[1], player.getName(), newArea);
-        player.sendMessage(LocaleLoader.getString("Commands.Create.Success", args[1]));
+        if (rmanager.createResidence(args[1], player.getName(), newArea) != null) {
+            player.sendMessage(LocaleLoader.getString("Commands.Create.Success", args[1]));
+        } else {
+            player.sendMessage(LocaleLoader.getString("Commands.Create.Failed"));
+        }
         return true;
     }
 
