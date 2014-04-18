@@ -201,7 +201,7 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
     }
 
     public boolean checkRent() {
-        if (System.currentTimeMillis() >= nextPayment) {
+        if (System.currentTimeMillis() < nextPayment) {
             return true;
         }
         Economy econ = Residence.getInstance().getEconomy();
