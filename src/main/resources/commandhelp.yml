@@ -163,7 +163,7 @@ res:
             Description:
                 - 'Buy, Sell, or Rent Residences'
                 - 'Usage: /res market ? for more info'
-            SubCommands:
+            Subcommands:
                 info:
                     Description:
                         - 'Get economy info on residence'
@@ -193,6 +193,11 @@ res:
                         - 'Rent a residence'
                         - 'Usage: /res market rent [residence] <autorenew>'
                         - 'Rents a residence. Autorenew can be either true or false. If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.'
+                unrent:
+                    Description:
+                        - 'Remove a residence from being rented.'
+                        - 'Usage: /res market unrent [residence]'
+                        - 'If you are the renter, this command makes the residence not rented anymore.'
                 rentable:
                     Description:
                         - 'Make a residence rentable.'
@@ -200,9 +205,8 @@ res:
                         - 'Makes a residence rentable for [cost] money for every [days] number of days. If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.'
                 release:
                     Description:
-                        - 'Remove a residence from rent or rentable.'
+                        - 'Remove a residence from being rentable.'
                         - 'Usage: /res market release [residence]'
-                        - 'If you are the renter, this command releases the rent on the house for you.'
                         - 'If you are the owner, this command makes the residence not for rent anymore.'
         current:
             Description:
