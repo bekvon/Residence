@@ -618,13 +618,13 @@ public class ResidenceCommandExecutor implements CommandExecutor {
                     return true;
                 }
             } else if (args[1].equals("vert")) {
-                selectionManager.vert(player, resadmin);
+                selectionManager.vert(player);
                 return true;
             } else if (args[1].equals("sky")) {
-                selectionManager.sky(player, resadmin);
+                selectionManager.sky(player);
                 return true;
             } else if (args[1].equals("bedrock")) {
-                selectionManager.bedrock(player, resadmin);
+                selectionManager.bedrock(player);
                 return true;
             } else if (args[1].equals("coords")) {
                 Location playerLoc1 = selectionManager.getPlayerLoc1(player);
@@ -714,6 +714,9 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             return true;
         }
         CuboidArea newArea = ResidenceAPI.createCuboidArea(selectionManager.getPlayerLoc1(player), selectionManager.getPlayerLoc2(player));
+        if (ConfigManager.getInstance().isAutoVert()) {
+            selectionManager.vert(player);
+        }
         if (!resadmin) {
             if (newArea.getXSize() > YAMLGroupManager.getMaxWidth(player)) {
                 player.sendMessage(LocaleLoader.getString("Commands.Create.TooWide", YAMLGroupManager.getMaxWidth(player)));

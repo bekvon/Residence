@@ -63,4 +63,8 @@ public class ConfigManager {
     public boolean ignorePluginSpawns() {
         return config.getBoolean("General.IgnorePluginSpawns", true);
     }
+
+    public boolean isAutoVert() {
+        return config.getBoolean("General.AutoVertResidences", false);
+    }
 }

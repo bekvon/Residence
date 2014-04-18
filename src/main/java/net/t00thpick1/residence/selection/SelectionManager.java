@@ -67,16 +67,16 @@ public class SelectionManager {
             player.sendMessage(LocaleLoader.getString("Selection.SelectPoints"));
     }
 
-    public void vert(Player player, boolean resadmin) {
+    public void vert(Player player) {
         if (hasPlacedBoth(player)) {
-            this.sky(player, resadmin);
-            this.bedrock(player, resadmin);
+            this.sky(player);
+            this.bedrock(player);
         } else {
             player.sendMessage(LocaleLoader.getString("Selection.SelectPoints"));
         }
     }
 
-    public void sky(Player player, boolean resadmin) {
+    public void sky(Player player) {
         if (hasPlacedBoth(player)) {
             int y1 = playerLoc1.get(player.getName()).getBlockY();
             int y2 = playerLoc2.get(player.getName()).getBlockY();
@@ -91,7 +91,7 @@ public class SelectionManager {
         }
     }
 
-    public void bedrock(Player player, boolean resadmin) {
+    public void bedrock(Player player) {
         if (hasPlacedBoth(player)) {
             int y1 = playerLoc1.get(player.getName()).getBlockY();
             int y2 = playerLoc2.get(player.getName()).getBlockY();
