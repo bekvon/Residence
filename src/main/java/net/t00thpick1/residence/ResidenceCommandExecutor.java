@@ -765,6 +765,17 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             player.sendMessage(LocaleLoader.getString("Commands.Create.InvalidName", args[1]));
             return true;
         }
+        if (ConfigManager.getInstance().isEconomy()) {
+            double cost = (double) newArea.getSize() * YAMLGroupManager.getCostPerBlock(player);
+            if (cost != 0) {
+                if (!Residence.getInstance().getEconomy().has(player.getName(), cost)) {
+                    player.sendMessage(LocaleLoader.getString("Commands.Create.NotEnoughMoneyz", cost));
+                    return true;
+                }
+                player.sendMessage(LocaleLoader.getString("Commands.Create.Charged", cost));
+                Residence.getInstance().getEconomy().withdrawPlayer(player.getName(), cost);
+            }
+        }
         rmanager.createResidence(args[1], player.getName(), newArea);
         player.sendMessage(LocaleLoader.getString("Commands.Create.Success", args[1]));
         return true;
