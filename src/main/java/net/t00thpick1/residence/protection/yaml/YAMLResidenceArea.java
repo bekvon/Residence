@@ -66,6 +66,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         this.isBuyable = data.getBoolean("ForSale");
         this.cost = data.getInt("Cost");
         this.rentPeriod = data.getLong("RentPeriod", 0);
+        this.autoRenewEnabled = data.getBoolean("AutoRenew", true);
         initMarketState();
         areaFlags = new HashMap<Flag, Boolean>();
         boolean preserveFlags = ConfigManager.getInstance().preserveUnregisteredFlags();
@@ -295,6 +296,7 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         data.set("ForSale", isBuyable);
         data.set("Cost", cost);
         data.set("RentPeriod", rentPeriod);
+        data.set("AutoRenew", autoRenewEnabled);
         section.set("Flags", null);
         data = section.createSection("Flags");
         for (Entry<Flag, Boolean> flag : areaFlags.entrySet()) {
