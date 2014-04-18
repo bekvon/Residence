@@ -606,6 +606,9 @@ public class ResidenceCommandExecutor implements CommandExecutor {
     }
 
     private boolean commandResSelect(String[] args, boolean resadmin, Player player) {
+        if (Residence.getInstance().getCompatabilityManager().isUsingExternalSelectionTool()) {
+            return true;
+        }
         SelectionManager selectionManager = Residence.getInstance().getSelectionManager();
         if (!resadmin && !player.hasPermission("residence.commands.select")) {
             player.sendMessage(LocaleLoader.getString("Commands.Generic.NoPermission"));
@@ -705,6 +708,9 @@ public class ResidenceCommandExecutor implements CommandExecutor {
             return false;
         }
         SelectionManager selectionManager = Residence.getInstance().getSelectionManager();
+        if (Residence.getInstance().getCompatabilityManager().isUsingExternalSelectionTool()) {
+            selectionManager.worldEdit(player);
+        }
         if (!selectionManager.hasPlacedBoth(player)) {
             player.sendMessage(LocaleLoader.getString("Commands.Create.SelectPoints"));
             return true;
