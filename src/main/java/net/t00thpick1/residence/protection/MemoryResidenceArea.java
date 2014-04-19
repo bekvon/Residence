@@ -192,7 +192,6 @@ public abstract class MemoryResidenceArea extends MemoryCuboidArea implements Re
         this.autoRenew = true;
         this.lastPayment = 0;
         if (!checkRent()) {
-            evict();
             return false;
         }
         this.autoRenew = autoRenew;
