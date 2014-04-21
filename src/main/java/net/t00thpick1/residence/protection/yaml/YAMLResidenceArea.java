@@ -285,9 +285,9 @@ public class YAMLResidenceArea extends MemoryResidenceArea {
         if (isRented()) {
             ConfigurationSection rentData = data.createSection("RentData");
             rentData.set("LastPayment", lastPayment);
-            rentData.getString("Renter", renter);
-            rentData.getLong("NextPayment", nextPayment);
-            rentData.getBoolean("IsAutoRenew", autoRenew);
+            rentData.set("Renter", renter);
+            rentData.set("NextPayment", nextPayment);
+            rentData.set("IsAutoRenew", autoRenew);
         } else {
             data.set("RentData", null);
         }
