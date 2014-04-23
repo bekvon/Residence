@@ -203,6 +203,6 @@ public class FlagManager {
 
         addFlag(MOVE);
         addFlag(TELEPORT);
-        // addFlag(VEHICLEMOVE);  TODO Make VehicleMove function
+        addFlag(VEHICLEMOVE);
     }
 }

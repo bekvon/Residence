@@ -13,12 +13,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.util.Vector;
 
 public class VehicleMoveListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onVehicleMove(VehicleMoveEvent event) {
-        Entity passenger = event.getVehicle().getPassenger();
+        Entity vehicle = event.getVehicle();
+        Entity passenger = vehicle.getPassenger();
         if (!(passenger instanceof Player)) {
             return;
         }
@@ -37,7 +39,8 @@ public class VehicleMoveListener implements Listener {
             return;
         }
         if (!ResidenceAPI.getPermissionsAreaByLocation(event.getTo()).allowAction(player.getName(), FlagManager.VEHICLEMOVE)) {
-            player.teleport(event.getFrom());
+            vehicle.setVelocity(new Vector(0,0,0));
+            vehicle.teleport(event.getFrom());
             player.sendMessage(LocaleLoader.getString("Flags.Messages.VehicleMoveDeny"));
             return;
         }
