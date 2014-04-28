@@ -17,9 +17,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 public class ExplosionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (event.getEntity() == null) {
-            return;
-        }
         Flag flag = null;
         if (event.getEntity() != null) {
             EntityType entity = event.getEntityType();
