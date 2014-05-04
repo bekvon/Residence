@@ -10,11 +10,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.bukkit:bukkit:1.7.2-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.sk89q:worldguard:5.8.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.sk89q:worldedit:5.5.8-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.khelekore:prtree:1.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.bukkit:bukkit:1.7.2-R0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.bukkit:bukkit:1.7.5-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.sk89q:worldguard:5.9.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.sk89q:worldedit:5.5.8" level="project" />
     <orderEntry type="library" name="Maven: de.schlichtherle:truezip:6.8.3" level="project" />
@@ -24,7 +23,7 @@
     <orderEntry type="library" name="Maven: com.sk89q:commandbook:2.3" level="project" />
     <orderEntry type="library" name="Maven: net.sf.opencsv:opencsv:2.0" level="project" />
     <orderEntry type="library" name="Maven: com.nijikokun:iconomy:5.0" level="project" />
-    <orderEntry type="library" name="Maven: net.milkbowl.vault:Vault:1.2.27" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.daboross.vault:vault-api:1.2.27" level="project" />
   </component>
 </module>
 
