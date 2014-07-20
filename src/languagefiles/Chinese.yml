@@ -14,7 +14,7 @@ Language:
     InvalidDirection: '无效的方向...'
     InvalidChannel: '无效频道...'
     InvalidAmount: '无效数量...'
-    InvalidCost: '无效花费...'
+    InvalidCost: '无效的花费金额...'
     InvalidDays: '无效的天数...'
     InvalidMaterial: '无效的材料...'
     InvalidBoolean: '无效值，必须是布尔值，true(t)或者false(f)。'
@@ -174,8 +174,8 @@ Language:
     #Version 15 New Fields
     DeleteConfirm: '你确定要删除领地 %1 吗？输入"/res confirm"来确定。'
     #Version 18 New Fields
-    SelectTooHigh: '警告！你所选择的地方超过了服务器限制！'
-    SelectTooLow: '警告！你所选择的地方超过了服务器限制！'
+    SelectTooHigh: '警告！你所划分的领地大小已超过服务器限制！'
+    SelectTooLow: '警告！你所划分的领地大小已超过服务器限制！'
     WorldEditNotFound: '未发现WorldEdit插件。'
     #Version 19 New Fields
     NoResHere: '没有人在这里设置了领地。'
@@ -188,8 +188,8 @@ Language:
     AdminToggle: 'Automatic resadmin toggle turned %1'
     #Version 22 New Fields
     NoSpawn: 'You do not have move permissions at your spawn point. Relocating'
-    CompassTargetReset: 'Your compass has been reset'
-    CompassTargetSet: 'Your compass now points to %1'
+    CompassTargetReset: '你的指南针指向已重置'
+    CompassTargetSet: '你的指南针现在指向领地 %1'
 
     
     #The below lines are mostly a word bank for various uses.
@@ -259,7 +259,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 select: #selection commands
                     Description: Selection Commands
                     Info:
-                        - '选择此命令的使用范围 领地.'
+                        - '选择此命令的使用范围领地.'
                         - '/res select [x] [y] [z] - 选择一个区块在中间, 你的半径.'
                     SubCommands:
                         coords:
@@ -267,11 +267,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Info:
                                 - 'Usage: /res select coords'
                         size:
-                            Description: Display selected size
+                            Description: 显示选定的领地大小
                             Info:
                                 - 'Usage: /res select size'
                         cost:
-                            Description: Display selection cost
+                            Description: 显示选定的领地需缴纳金
                             Info:
                                 - 'Usage: /res select cost'
                         vert:
@@ -310,27 +310,27 @@ CommandHelp: #this is just a holder node, that holds the entire help
                                 - 'Usage /res select <领地> <AreaID>'
                                 - 'Selects a existing area in a 领地.'
                 create: #creation command
-                    Description: Create 领地
+                    Description: 创建领地
                     Info:
                         - Usage: '/res create <领地名字>'
                 remove: #remove command
-                    Description: 'Remove residences.'
+                    Description: 删除领地
                     Info:
                         - 'Usage: /res remove <领地名字>'
                 removeall:
-                    Description: Remove all 领地 owned by a player.
+                    Description: 删除某位玩家所属的全部领地
                     Info:
                         - 'Usage: /res removeall [owner]'
                         - 'Removes all residences owned by a specific player.'
                         - 'Requires /resadmin if you use it on anyone besides yourself.'
                 confirm:
                     - 'Usage: /res confirm'
-                    - 'Confirms removal of a 领地.'
+                    - '确认你要删除某个领地'
                 subzone:
-                    Description: 'Create subzones in residences.'
+                    Description: 在某个领地里创建附属领地
                     Info:
-                        - 'Usage: /res subzone <residence name> [subzone name]'
-                        - 'If residence name is left off, will attempt to use residence your standing in.'
+                        - 'Usage: /res subzone <领地名> [附属领地名]'
+                        - '如果领地名为空，那么将以你所在的领地为主'
                 area:
                     Description: 'Manage physical areas for a residence.'
                     SubCommands:
@@ -358,22 +358,22 @@ CommandHelp: #this is just a holder node, that holds the entire help
                                 - You must first select two points first.
                                 - Replacing a area will charge the difference in size if the new area is bigger.
                 info:
-                    Description: Show info on a residence.
+                    Description: 显示某个领地的信息
                     Info:
-                        - Usage: /res info <residence>
-                        - Leave off <residence> to display info for the residence your currently in.
+                        - Usage: /res info <领地名>
+                        - 如果领地名为空，将以你所处的领地为主
                 limits:
-                    Description: Show your limits.
+                    Description: 显示领地功能限制
                     Info:
                         - Usage: /res limits
-                        - Shows the limitations you have on creating and managing residences.
+                        - 显示你在创建或管理领地时对部分功能的限制
                 message:
-                    Description: Manage residence enter / leave messages
+                    Description: 设置领地进入/离开信息
                     Info:
-                        - Usage: /res message <residence> [enter/leave] [message]
-                        - Set the enter or leave message of a residence.
-                        - Usage: /res message <residence> remove [enter/leave]
-                        - Removes a enter or leave message.
+                        - Usage: /res message <领地名> [enter/leave] [信息]
+                        - 设置某个领地的进入/离开信息
+                        - Usage: /res message <领地名> remove [enter/leave]
+                        - 删除某个领地的进入/离开信息
                 lease:
                     Description: Manage residence leases
                     Info:
@@ -393,13 +393,13 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - You must be standing in a Residence
                         - You must have the +bank flag.
                 tp:
-                    Description: Teleport to a residence
+                    Description: 传送到某个领地
                     Info:
-                        - Usage: /res tp [residence]
-                        - Teleports you to a residence, you must have +tp flag access or be the owner.
+                        - Usage: /res tp [领地名]
+                        - 将你传送到某个领地，前提对应领地允许传送或你是对应领地的主人
                         - Your permission group must also be allowed to teleport by the server admin.
                 tpset:
-                    Description: Set the teleport location of a Residence
+                    Description: 设置某个领地的传送目标
                     Info:
                         - Usage: /res tpset
                         - This will set the teleport location for a residence to where your standing.
@@ -433,11 +433,11 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: List of flags
                     Info:
                         - 'For flag values, usually true allows the action, and false denys the action.'
-                        - 'build - allows or denys building'
-                        - 'use - allows or denys use of doors, lever, buttons, etc...'
-                        - 'move - allows or denys movement in the residence.'
-                        - 'container - allows or denys use of furnaces, chests, dispensers, etc...'
-                        - 'trusted - Gives buildd, use, move, container and tp flags'
+                        - 'build - 允许或禁止玩家放置破坏方块'
+                        - 'use - 允许或禁止玩家使用门、按钮、拉杆等'
+                        - 'move - 允许或禁止玩家进入此领地或在此领地活动'
+                        - 'container - 允许或禁止玩家使用熔炉、箱子、发射器等'
+                        - 'trusted - Gives build, use, move, container and tp flags'
                         - 'place - allows or denys only placement of blocks, overrides the build flag.'
                         - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
                         - 'pvp - allow or deny pvp in the residence'
