@@ -401,6 +401,28 @@ public class ResidenceCommandListener extends Residence {
             }
             return true;
         }
+	if (cmd.equals("kick")) {
+ 		if (args.length != 2) {
+              	  return false;
+            	}
+            Player targetplayer = Bukkit.getPlayer(args[1]);
+            if (targetplayer == null) {
+			
+		} 
+	    group = gmanager.getGroup(player);
+            if (!group.hasKickAccess()) {
+		player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		return true;
+            }
+            ClaimedResidence res = rmanager.getByLoc(targetplayer.getLocation);
+            if (res.getOwner().equals(player.getName())) {
+		if (res.getPlayersInResidence().contains(targetplayer) {
+			targetplayer.teleport(res.getOutsideFreeLoc(player.getLocation()));
+                        targetplayer.sendMessage(ChatColor.RED + language.getPhrase("Kicked") + "!");
+                   }
+            }
+	    
+	}
         if (cmd.equals("mirror")) {
             if (args.length != 3) {
                 return false;

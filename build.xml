@@ -31,9 +31,9 @@
 		<!--essentials core -->
 		<get src="http://cloud.github.com/downloads/essentials/Essentials/Essentials-gm-2.9.5.zip" dest="lib/GroupManager.zip" />
 		<!-- essentials group manager and bridge-->
-		<get src="http://dl.bukkit.org/latest-dev/bukkit.jar" dest="lib/Bukkit.jar" />
-		<get src="http://palmergames.com/downloads/iCo501/iConomy.jar" dest="lib/iConomy5.jar" />
-		<get src="http://dev.bukkit.org/media/files/575/485/iConomy.jar" dest="lib/iConomy6.jar" />
+		<!--<get src="http://dl.bukkit.org/latest-dev/bukkit.jar" dest="lib/Bukkit.jar" />-->
+		<!--<get src="http://palmergames.com/downloads/iCo501/iConomy.jar" dest="lib/iConomy5.jar" />-->
+		<!--<get src="http://dev.bukkit.org/media/files/575/485/iConomy.jar" dest="lib/iConomy6.jar" />-->
 		<get src="http://www.whiskeycraft.net/repo/com/nijikokun/bukkit/permissions/Permissions.jar" dest="lib/Permissions.jar" />
 		<get src="http://www.whiskeycraft.net/repo/com/platymuus/bukkit-permissions/1.5/bukkit-permissions-1.5.jar" dest="lib/PermissionsBukkit.jar" />
 		<get src="http://dev.bukkit.org/media/files/656/592/Vault.jar" dest="lib/Vault.jar" />

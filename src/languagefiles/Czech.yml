@@ -42,6 +42,7 @@ Language:
     AreaHighLimit: 'Nelze ochranit takovou vysku, limit je %1'
     AreaLowLimit: 'Nelze ochranit takovou hloubku, limit je is %1'
     NotInResidence: Nejsi v residenci.
+    Kicked: 'Byl jsi vykopnut z residence'
     InResidence: 'Nachazis se v residenci %1'
     ResidenceOwnerChange: 'Majitel residence %1 zmenen na %2'
     NonAdmin: Nejsi admin teto residence.
