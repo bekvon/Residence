@@ -39,6 +39,7 @@ public class ResidenceCommandListener extends Residence {
                 Player player = (Player) sender;
                 if (Residence.getPermissionManager().isResidenceAdmin(player)) {
                     this.reloadPlugin();
+                    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded config.");
                     System.out.println("[Residence] Reloaded by " + player.getName() + ".");
                 }
             } else {
@@ -161,6 +162,7 @@ public class ResidenceCommandListener extends Residence {
             sender.sendMessage(ChatColor.GRAY + "------------------------------------");
             sender.sendMessage(ChatColor.RED + "This server running " + ChatColor.GOLD + "Residence" + ChatColor.RED + " version: " + ChatColor.BLUE + this.getDescription().getVersion());
             sender.sendMessage(ChatColor.GREEN + "Created by: " + ChatColor.YELLOW + "bekvon");
+            sender.sendMessage(ChatColor.GREEN + "Updated to 1.8 by: " + ChatColor.YELLOW + "DartCZ");
             String names = null;
             List<String> authlist = this.getDescription().getAuthors();
             for (String auth : authlist)
@@ -173,8 +175,8 @@ public class ResidenceCommandListener extends Residence {
             sender.sendMessage(ChatColor.GREEN + "Authors: " + ChatColor.YELLOW + names);
             sender.sendMessage(ChatColor.DARK_AQUA + "For a command list, and help, see the wiki:");
             sender.sendMessage(ChatColor.GREEN + "http://residencebukkitmod.wikispaces.com/");
-            sender.sendMessage(ChatColor.AQUA + "Visit the BukkitDev page at:");
-            sender.sendMessage(ChatColor.BLUE + "http://dev.bukkit.org/server-mods/Residence");
+            sender.sendMessage(ChatColor.AQUA + "Visit the Spigot Resource page at:");
+            sender.sendMessage(ChatColor.BLUE + "http://www.spigotmc.org/resources/residence-reloaded-1-8.2697/");
             sender.sendMessage(ChatColor.GRAY + "------------------------------------");
             return true;
         }

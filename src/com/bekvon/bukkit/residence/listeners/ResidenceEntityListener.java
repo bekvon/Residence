@@ -38,8 +38,11 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Squid;
@@ -91,12 +94,12 @@ public class ResidenceEntityListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
-        if(ent instanceof Horse || ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager){
+        if(ent instanceof Horse || ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager || ent instanceof Rabbit){
         	if(!perms.has("animals", true)){
         		event.setCancelled(true);
         	}
         } else {
-        	if (!perms.has("monsters", true)) {
+        	if (!perms.has("monsters", true) && (ent instanceof Monster)) {
         		event.setCancelled(true);
         	}
         }
@@ -252,18 +255,28 @@ public class ResidenceEntityListener implements Listener {
     }
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityDamageByEntityEvent( EntityDamageByEntityEvent event ) {
-    	if ( event.getEntityType() == EntityType.ITEM_FRAME ) {
-    		Player player = (Player) event.getDamager();
-    		if (  Residence.isResAdminOn( player ) )
+    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+    	if (event.getEntityType() == EntityType.ITEM_FRAME || event.getEntityType() == EntityType.ARMOR_STAND) {
+    		Entity dmgr = event.getDamager();
+    		Player player;
+    		if (event.getDamager() instanceof Player) {
+    			player = (Player) event.getDamager();
+    		} else {		
+    			if (dmgr instanceof Projectile && ((Projectile) dmgr).getShooter() instanceof Player) {
+    				player = (Player) ((Projectile) dmgr).getShooter();
+    			} else
+    				return;
+    		}
+    		
+    		if (Residence.isResAdminOn(player))
     			return;
     		
     		// Note: Location of entity, not player; otherwise player could stand outside of res and still damage
     		Location loc = event.getEntity().getLocation();
-    		ClaimedResidence res = Residence.getResidenceManager().getByLoc( loc );
-    		if ( res != null && !res.getPermissions().playerHas( player.getName(), "container", false ) ) {
-    			event.setCancelled( true );
-                player.sendMessage( ChatColor.RED + Residence.getLanguage().getPhrase( "FlagDeny", "container" ) );
+    		ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+    		if (res != null && !res.getPermissions().playerHas(player.getName(), "container", false)) {
+    			event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
     		}
     	}
     }
