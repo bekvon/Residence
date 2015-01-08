@@ -41,6 +41,7 @@ Language:
     AreaHighLimit: 'You cannot protect this high up, your limit is %1'
     AreaLowLimit: 'You cannot protect this deep, your limit is %1'
     NotInResidence: You are not in a Residence.
+    Kicked: 'You were kicked from residence'
     InResidence: 'You are standing in Residence %1'
     ResidenceOwnerChange: 'Residence %1 owner changed to %2'
     NonAdmin: You are not a Residence admin.

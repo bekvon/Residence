@@ -165,6 +165,8 @@ Groups:
            CanTeleport: true
            # Allow or Disallow the use of /res unstuck, to get yourself out of a residence if stuck in one somehow
            Unstuck: true
+           # Allow or Disallow the use of /res kick, to kick player from residence.
+           Kick: False
            # Allow or Disallow the use of the /res select command, if disabled they can only use the selection tool.
            SelectCommandAccess: true
            # Allow or Disallow the group to access the Blacklist/Ignorelist for residences they own.
