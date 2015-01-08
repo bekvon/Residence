@@ -167,11 +167,11 @@ public class FlagPermissions {
         addFlagToFlagGroup("craft", "table");
         addFlagToFlagGroup("craft", "enchant");
         addFlagToFlagGroup("trusted", "use");
-        addFlagToFlagGroup("trusted", "move");
         addFlagToFlagGroup("trusted", "tp");
         addFlagToFlagGroup("trusted", "build");
         addFlagToFlagGroup("trusted", "container");
         addFlagToFlagGroup("trusted", "bucket");
+        addFlagToFlagGroup("trusted", "move");
         addFlagToFlagGroup("fire", "ignite");
         addFlagToFlagGroup("fire", "firespread");
         addMaterialToUseFlag(Material.DIODE, "diode");
@@ -179,6 +179,20 @@ public class FlagPermissions {
         addMaterialToUseFlag(Material.DIODE_BLOCK_ON, "diode");
         addMaterialToUseFlag(Material.WORKBENCH, "table");
         addMaterialToUseFlag(Material.WOODEN_DOOR, "door");
+        /* 1.8 Doors */
+        addMaterialToUseFlag(Material.SPRUCE_DOOR, "door");
+        addMaterialToUseFlag(Material.BIRCH_DOOR, "door");
+        addMaterialToUseFlag(Material.JUNGLE_DOOR, "door");
+        addMaterialToUseFlag(Material.ACACIA_DOOR, "door");
+        addMaterialToUseFlag(Material.DARK_OAK_DOOR, "door");
+        
+        /* 1.8 Fence Gates */
+        addMaterialToUseFlag(Material.SPRUCE_FENCE_GATE, "door");
+        addMaterialToUseFlag(Material.BIRCH_FENCE_GATE, "door");
+        addMaterialToUseFlag(Material.JUNGLE_FENCE_GATE, "door");
+        addMaterialToUseFlag(Material.ACACIA_FENCE_GATE, "door");
+        addMaterialToUseFlag(Material.DARK_OAK_FENCE_GATE, "door");
+        
         addMaterialToUseFlag(Material.FENCE_GATE, "door");
         addMaterialToUseFlag(Material.NETHER_FENCE, "door");
         addMaterialToUseFlag(Material.TRAP_DOOR, "door");
