@@ -409,7 +409,7 @@ public class ResidencePlayerListener implements Listener {
         }
         
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-        if (event.getCause() == TeleportCause.ENDER_PEARL) {
+        if (event.getCause() == TeleportCause.ENDER_PEARL || event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL) {
             if (res != null) {
                 String areaname = Residence.getResidenceManager().getNameByLoc(loc);
                 if (!res.getPermissions().playerHas(player.getName(), "move", true)) {
