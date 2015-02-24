@@ -48,6 +48,8 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Ghast;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -99,7 +101,7 @@ public class ResidenceEntityListener implements Listener {
         		event.setCancelled(true);
         	}
         } else {
-        	if (!perms.has("monsters", true) && (ent instanceof Monster)) {
+        	if (!perms.has("monsters", true) && (ent instanceof Monster || ent instanceof Slime || ent instanceof Ghast)) {
         		event.setCancelled(true);
         	}
         }
