@@ -68,8 +68,7 @@ public class ResidencePlayerListener implements Listener {
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
-        Player[] players = Residence.getServ().getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             lastUpdate.put(player.getName(), System.currentTimeMillis());
         }
     }
@@ -81,8 +80,7 @@ public class ResidencePlayerListener implements Listener {
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
-        Player[] players = Residence.getServ().getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             lastUpdate.put(player.getName(), System.currentTimeMillis());
         }
     }
@@ -571,8 +569,7 @@ public class ResidencePlayerListener implements Listener {
 
     public void doHeals() {
         try {
-            Player[] p = Residence.getServ().getOnlinePlayers();
-            for (Player player : p) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 String resname = Residence.getPlayerListener().getCurrentResidenceName(player.getName());
                 ClaimedResidence res = null;
                 if (resname != null) {

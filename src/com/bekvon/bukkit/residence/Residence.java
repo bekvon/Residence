@@ -21,6 +21,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -338,8 +339,7 @@ public class Residence extends JavaPlugin {
                 rentint = rentint * 60 * 20;
                 rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
             }
-            Player[] players = getServer().getOnlinePlayers();
-            for (Player player : players) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (Residence.getPermissionManager().isResidenceAdmin(player)) {
                     turnResAdminOn(player);
                 }

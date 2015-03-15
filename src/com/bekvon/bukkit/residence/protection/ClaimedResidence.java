@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -949,8 +951,7 @@ public class ClaimedResidence {
 
     public ArrayList<Player> getPlayersInResidence() {
         ArrayList<Player> within = new ArrayList<Player>();
-        Player[] players = Residence.getServ().getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if (this.containsLoc(player.getLocation())) {
                 within.add(player);
             }
