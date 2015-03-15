@@ -155,7 +155,7 @@ public class ResidencePlayerListener implements Listener {
     private boolean isCanUseEntity(Material mat, Block block) {
         return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
     }
-
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -304,6 +304,17 @@ public class ResidencePlayerListener implements Listener {
             return;
         }
         Entity ent = event.getRightClicked();
+        /* Trade */
+        if (ent.getType() == EntityType.VILLAGER) {
+        	ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getPlayer().getLocation());
+    		
+    		if (res != null && !res.getPermissions().playerHas(player.getName(), "trade", true)) {
+    			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+    			event.setCancelled(true);
+    		}
+    	}
+        
+        /* Container - ItemFrame protection */
         Material heldItem = player.getItemInHand().getType();
         if (!(ent instanceof Hanging)) {
             return;

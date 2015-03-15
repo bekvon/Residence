@@ -30,6 +30,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Chicken;
@@ -92,16 +93,57 @@ public class ResidenceEntityListener implements Listener {
     	}
     }
 
+    private boolean isMonster(Entity ent) {
+    	return (ent instanceof Monster || ent instanceof Slime || ent instanceof Ghast);
+    }
+    
+    private boolean isAnimal(Entity ent) {
+    	return (ent instanceof Horse || ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager || ent instanceof Rabbit);
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void AnimalKilling (EntityDamageByEntityEvent event){
+		Entity damager = event.getDamager();
+		
+		if ((!(damager instanceof Arrow)) && (!(damager instanceof Player))) {
+			return;
+		}
+		
+		Player cause;
+		if ((damager instanceof Arrow) && (!(((Arrow) damager).getShooter() instanceof Player))) {
+			return;
+			
+		} else if (damager instanceof Player) {
+			cause = (Player) damager;
+		} else {
+			cause = (Player) ((Arrow) damager).getShooter();
+		}
+		
+		if (Residence.isResAdminOn(cause)) {
+			return;
+		}
+		
+		Entity entity = event.getEntity();
+		ClaimedResidence res = Residence.getResidenceManager().getByLoc(entity.getLocation());
+
+		if (res != null && !res.getPermissions().playerHas(cause.getName(), "animalkilling", true)) {
+			if (isAnimal(entity)) {
+				cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+				event.setCancelled(true);
+			}
+		}
+	}
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
         Entity ent = event.getEntity();
-        if(ent instanceof Horse || ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager || ent instanceof Rabbit){
+        if(isAnimal(ent)){
         	if(!perms.has("animals", true)){
         		event.setCancelled(true);
         	}
         } else {
-        	if (!perms.has("monsters", true) && (ent instanceof Monster || ent instanceof Slime || ent instanceof Ghast)) {
+        	if (!perms.has("monsters", true) && isMonster(ent)) {
         		event.setCancelled(true);
         	}
         }

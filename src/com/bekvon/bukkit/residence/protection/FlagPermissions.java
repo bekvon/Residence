@@ -136,6 +136,11 @@ public class FlagPermissions {
         addFlag("bucket");
         addFlag("bank");
         addFlag("beacon");
+        
+        /* New flags */
+        addFlag("animalkilling");
+        addFlag("trade");
+        
         addResidenceOnlyFlag("trample");
         addResidenceOnlyFlag("pvp");
         addResidenceOnlyFlag("fireball");
