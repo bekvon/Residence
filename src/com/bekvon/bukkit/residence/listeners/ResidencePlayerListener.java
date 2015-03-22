@@ -45,6 +45,7 @@ import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.VersionChecker;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
@@ -102,6 +103,10 @@ public class ResidencePlayerListener implements Listener {
             Residence.turnResAdminOn(player);
         }
         handleNewLocation(player, player.getLocation(), false);
+        
+        if(player.isOp()){
+        	Residence.getVersionChecker().VersionCheck(player);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

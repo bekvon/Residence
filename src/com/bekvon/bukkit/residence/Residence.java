@@ -22,9 +22,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -60,6 +62,7 @@ import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
 import com.residence.mcstats.Metrics;
@@ -102,6 +105,7 @@ public class Residence extends JavaPlugin {
     protected static int rentBukkitId = -1;
     protected static int healBukkitId = -1;
     protected static int autosaveBukkitId = -1;
+    protected static VersionChecker versionChecker;
     protected static boolean initsuccess = false;
     protected Map<String, String> deleteConfirm;
     protected static List<String> resadminToggle;
@@ -358,8 +362,15 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
             Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
         }
+        versionChecker = new VersionChecker(this);
+        versionChecker.VersionCheck(null);
     }
 
+    public void consoleMessage(String message){
+	    ConsoleCommandSender console = Bukkit.getConsoleSender();
+	    console.sendMessage("[Residence] " + message);
+	}
+    
     public static boolean validName(String name)
     {
         if (name.contains(":") || name.contains(".")) {
@@ -375,7 +386,11 @@ public class Residence extends JavaPlugin {
             return true;
         }
     }
-
+    
+    public static VersionChecker getVersionChecker() {
+        return versionChecker;
+    }
+    
     public static File getDataLocation() {
         return dataFolder;
     }
