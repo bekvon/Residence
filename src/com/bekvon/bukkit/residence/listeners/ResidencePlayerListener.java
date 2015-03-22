@@ -103,7 +103,7 @@ public class ResidencePlayerListener implements Listener {
         }
         handleNewLocation(player, player.getLocation(), false);
         
-        if(player.isOp()){
+        if(player.isOp() || player.hasPermission("residence.versioncheck")){
         	Residence.getVersionChecker().VersionCheck(player);
         }
     }

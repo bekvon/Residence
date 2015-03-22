@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.6.6.8
+version: 2.6.6.9
 website: http://www.spigotmc.org/resources/residence-reloaded-1-8.2697/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -43,4 +43,7 @@ permissions:
     default: op
   residence.select:
     description: Allows you to select an area to make residences
+    default: op
+  residence.versioncheck:
+    description: Notice to new version after connect
     default: op
