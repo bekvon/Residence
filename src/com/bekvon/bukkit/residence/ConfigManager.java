@@ -38,6 +38,7 @@ public class ConfigManager {
     protected boolean flagsInherit;
     protected ChatColor chatColor;
     protected boolean chatEnable;
+    protected boolean actionBar;
     protected int minMoveUpdate;
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalResidenceDefaults;
@@ -82,6 +83,7 @@ public class ConfigManager {
         flagsInherit = config.getBoolean("Global.ResidenceFlagsInherit", false);
         minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
         chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
+        actionBar = config.getBoolean("Global.UseActionBar", true);
         enforceAreaInsideArea = config.getBoolean("Global.EnforceAreaInsideArea", false);
         language = config.getString("Global.Language","English");
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getConfigurationSection("Global"));
@@ -204,6 +206,11 @@ public class ConfigManager {
         return chatEnable;
     }
 
+    public boolean useActionBar()
+    {
+        return actionBar;
+    }
+    
     public ChatColor getChatColor()
     {
         return chatColor;

@@ -45,7 +45,6 @@ import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.VersionChecker;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
@@ -505,7 +504,11 @@ public class ResidencePlayerListener implements Listener {
                 Residence.getServ().getPluginManager().callEvent(chgEvent);
                 
                 if (leave != null && !leave.equals("")) {
-                    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	if(Residence.getConfigManager().useActionBar()){
+                		Residence.sendActionBar(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
+                	} else {
+                		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	}
                 }
                 currentRes.remove(pname);
                 Residence.getChatManager().removeFromChannel(pname);
@@ -546,7 +549,11 @@ public class ResidencePlayerListener implements Listener {
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
                 
                 if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
-                    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	if(Residence.getConfigManager().useActionBar()){
+                		Residence.sendActionBar(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
+                	} else {
+                		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	}
                 }
             }
             String enterMessage = res.getEnterMessage();
@@ -564,7 +571,11 @@ public class ResidencePlayerListener implements Listener {
             Residence.getServ().getPluginManager().callEvent(chgEvent);
             
             if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
-                player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+            	if(Residence.getConfigManager().useActionBar()){
+            		Residence.sendActionBar(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, areaname, res, enterMessage))).toString());
+            	} else {
+            		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+            	}
             }
         }
         if (chatchange && chatenabled) {
@@ -572,6 +583,11 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
+    public String colorize(String str)
+    {
+        return ChatColor.translateAlternateColorCodes('&', str);
+    }
+    
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
         try {
             message = message.replaceAll("%player", player.getName());

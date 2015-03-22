@@ -35,6 +35,9 @@ Global:
     RentCheckInterval: 10
     # Enable or disable residence chat channels.
     ResidenceChatEnable: true
+    # True for ActionBar - new component in 1.8
+    # False for old Messaging in chat enter/leave Residence messages
+    UseActionBar: true
     # Color of residence chat.
     ResidenceChatColor: DARK_PURPLE
     # Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.
