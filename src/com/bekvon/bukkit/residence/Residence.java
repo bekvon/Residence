@@ -391,14 +391,6 @@ public class Residence extends JavaPlugin {
         }
     }
     
-    public static void sendActionBar(Player player, String message)
-    {
-        CraftPlayer p = (CraftPlayer)player;
-        net.minecraft.server.v1_8_R2.IChatBaseComponent chatBC = ChatSerializer.a((new StringBuilder("{\"text\": \"")).append(JSONObject.escape(message)).append("\"}").toString());
-        PacketPlayOutChat packetPOC = new PacketPlayOutChat(chatBC, (byte)2);
-        p.getHandle().playerConnection.sendPacket(packetPOC);
-    }
-    
     public static VersionChecker getVersionChecker() {
         return versionChecker;
     }

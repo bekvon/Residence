@@ -45,6 +45,7 @@ import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.ActionBar;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
@@ -505,7 +506,7 @@ public class ResidencePlayerListener implements Listener {
                 
                 if (leave != null && !leave.equals("")) {
                 	if(Residence.getConfigManager().useActionBar()){
-                		Residence.sendActionBar(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
+                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
                 	} else {
                 		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 	}
@@ -550,7 +551,7 @@ public class ResidencePlayerListener implements Listener {
                 
                 if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
                 	if(Residence.getConfigManager().useActionBar()){
-                		Residence.sendActionBar(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
+                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
                 	} else {
                 		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 	}
@@ -572,7 +573,7 @@ public class ResidencePlayerListener implements Listener {
             
             if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
             	if(Residence.getConfigManager().useActionBar()){
-            		Residence.sendActionBar(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, areaname, res, enterMessage))).toString());
+            		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, areaname, res, enterMessage))).toString());
             	} else {
             		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
             	}
