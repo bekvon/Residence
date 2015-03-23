@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.spout;
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;

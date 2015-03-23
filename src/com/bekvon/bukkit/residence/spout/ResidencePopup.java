@@ -4,17 +4,12 @@
  */
 
 package com.bekvon.bukkit.residence.spout;
-import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.gui.Color;
-import org.getspout.spoutapi.gui.GenericButton;
-import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
-import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.Widget;
 

@@ -506,7 +506,7 @@ public class ResidencePlayerListener implements Listener {
                 
                 if (leave != null && !leave.equals("")) {
                 	if(Residence.getConfigManager().useActionBar()){
-                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
+                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave)).toString());
                 	} else {
                 		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 	}
@@ -551,7 +551,7 @@ public class ResidencePlayerListener implements Listener {
                 
                 if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
                 	if(Residence.getConfigManager().useActionBar()){
-                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, ResOld.getName(), ResOld, leave))).toString());
+                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave)).toString());
                 	} else {
                 		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
                 	}
@@ -573,7 +573,7 @@ public class ResidencePlayerListener implements Listener {
             
             if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
             	if(Residence.getConfigManager().useActionBar()){
-            		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(colorize(insertMessages(player, areaname, res, enterMessage))).toString());
+            		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage)).toString());
             	} else {
             		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
             	}
@@ -582,11 +582,6 @@ public class ResidencePlayerListener implements Listener {
         if (chatchange && chatenabled) {
             Residence.getChatManager().setChannel(pname, areaname);
         }
-    }
-
-    public String colorize(String str)
-    {
-        return ChatColor.translateAlternateColorCodes('&', str);
     }
     
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {

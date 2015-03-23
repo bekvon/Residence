@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-import net.minecraft.server.v1_8_R2.IChatBaseComponent.ChatSerializer;
  
 /**
 *

@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.event;
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.event.Event;

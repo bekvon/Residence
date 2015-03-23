@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.economy.rent;
-import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
