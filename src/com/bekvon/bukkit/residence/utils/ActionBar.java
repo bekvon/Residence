@@ -87,7 +87,7 @@ public class ActionBar {
         }
  
         private static String getChatSerializerClasspath() {
-        	if(version.equals("1_8_R1") || version.contains("1_7")){
+        	if(version.equals("v1_8_R1") || version.contains("1_7")){
         		return "net.minecraft.server." + version + ".ChatSerializer";
         	} else {
         		return "net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer"; // 1_8_R2 moved to IChatBaseComponent
