@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -416,7 +417,14 @@ public class ResidencePermissions extends FlagPermissions {
         else if (root.containsKey("Owner")) //convert old owner name save format into uuid format
         {
             String owner = (String) root.get("Owner");
-            newperms.ownerUUID = Residence.getServ().getPlayer(owner).getUniqueId();
+            newperms.ownerUUID = UUID.randomUUID();
+            
+            OfflinePlayer[] players = Residence.getServ().getOfflinePlayers();
+            for(OfflinePlayer player : players)
+            {
+                if(player.getName().equals(owner))
+                    newperms.ownerUUID = player.getUniqueId();
+            }
         }
         else
         {
