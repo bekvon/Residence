@@ -398,7 +398,7 @@ public class ResidencePermissions extends FlagPermissions {
         Player p = Residence.getServ().getPlayer(ownerUUID);
         if(p==null)
         {
-            if(ownerUUID.toString().equals(UUID.fromString("00000000-0000-0000-0000-000000000000")))
+            if(ownerUUID.toString().equals("00000000-0000-0000-0000-000000000000"))
                 return "Server Land";
             return ownerUUID.toString();
         }
