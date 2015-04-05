@@ -16,12 +16,10 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -37,6 +35,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     private ResidencePermissions(ClaimedResidence res)
     {
+        super();
         residence = res;
     }
 
@@ -400,9 +399,9 @@ public class ResidencePermissions extends FlagPermissions {
             return "Server Land";
         String name = Residence.getPlayerName(ownerUUID); //try to find the owner's name
         if(name==null)
-        {   
             return ownerLastKnownName; //return last known if we cannot find it
-        }
+        else
+            ownerLastKnownName = name; //update last known if we did find it
         return name;
     }
     
@@ -460,29 +459,9 @@ public class ResidencePermissions extends FlagPermissions {
         FlagPermissions.load(root, newperms);
         if(newperms.getOwner()==null||newperms.world==null||newperms.playerFlags==null||newperms.groupFlags==null||newperms.cuboidFlags==null)
             throw new Exception("Invalid Residence Permissions...");
-        newperms.fixNames();
         return newperms;
     }
 
-    public void fixNames()
-    {
-        ArrayList<String> fixNames = new ArrayList<String>();
-        Iterator<Entry<String, Map<String, Boolean>>> it = playerFlags.entrySet().iterator();
-        while(it.hasNext())
-        {
-            String name = it.next().getKey();
-            if(!name.equals(name.toLowerCase()))
-            {
-                fixNames.add(name);
-            }
-        }
-        for(String name : fixNames)
-        {
-            Map<String, Boolean> get = playerFlags.get(name);
-            playerFlags.remove(name);
-            playerFlags.put(name.toLowerCase(), get);
-        }
-    }
 
     public void applyGlobalDefaults()
     {
