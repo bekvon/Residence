@@ -42,7 +42,9 @@ public class ResidencePermissions extends FlagPermissions {
     public ResidencePermissions(ClaimedResidence res, String creator, String inworld)
     {
         this(res);
-        ownerUUID = Residence.getServ().getPlayer(creator).getUniqueId();
+        ownerUUID = Residence.getPlayerUUID(creator);
+        if(ownerUUID == null)
+            ownerUUID = UUID.randomUUID();
         world = inworld;
     }
 
@@ -373,11 +375,15 @@ public class ResidencePermissions extends FlagPermissions {
 
     public void setOwner(String newOwner, boolean resetFlags)
     {
-        ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence,newOwner);
-        Residence.getServ().getPluginManager().callEvent(ownerchange);
-        ownerUUID = Residence.getServ().getPlayer(newOwner).getUniqueId();
-        if(resetFlags)
-            this.applyDefaultFlags();
+        UUID playerUUID = Residence.getPlayerUUID(newOwner);
+        if(playerUUID !=null)
+        {
+            ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence,newOwner);
+            Residence.getServ().getPluginManager().callEvent(ownerchange);
+            ownerUUID = playerUUID;
+            if(resetFlags)
+                this.applyDefaultFlags();
+        }
     }
 
     public String getOwner()
