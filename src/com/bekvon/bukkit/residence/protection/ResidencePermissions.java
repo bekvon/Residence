@@ -114,13 +114,12 @@ public class ResidencePermissions extends FlagPermissions {
         }
         for(Entry<String, Map<String, Boolean>> plists : list.playerFlags.entrySet())
         {
+            Map<String, Boolean> map = this.getPlayerFlags(plists.getKey(), true);
             for(Entry<String, Boolean> flag : plists.getValue().entrySet())
             {
                 if(group.hasFlagAccess(flag.getKey()) || resadmin)
                 {
-                    if(!this.playerFlags.containsKey(plists.getKey()))
-                        this.playerFlags.put(plists.getKey(), Collections.synchronizedMap(new HashMap<String,Boolean>()));
-                    this.playerFlags.get(plists.getKey()).put(flag.getKey(), flag.getValue());
+                    map.put(flag.getKey(), flag.getValue());
                 }
                 else
                 {
