@@ -820,6 +820,24 @@ public class Residence extends JavaPlugin {
         return null;
     }
     
+    public static String getPlayerUUIDString(String playername)
+    {
+        UUID playerUUID = Residence.getPlayerUUID(playername);
+        if(playerUUID!=null)
+            return playerUUID.toString();
+        return null;
+    }
+    
+    public static String getPlayerName(String uuid)
+    {
+        try
+        {
+            return Residence.getPlayerName(UUID.fromString(uuid));
+        }
+        catch (IllegalArgumentException ex) { }
+        return null;
+    }
+    
     public static String getPlayerName(UUID uuid)
     {
         OfflinePlayer p = Residence.getServ().getPlayer(uuid);
