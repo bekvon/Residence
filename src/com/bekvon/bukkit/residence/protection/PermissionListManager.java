@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
  */
 public class PermissionListManager {
 
-    private Map<String,Map<String,FlagPermissions>> lists;
+    private final Map<String,Map<String,FlagPermissions>> lists;
 
     public PermissionListManager()
     {
@@ -42,7 +42,7 @@ public class PermissionListManager {
         Map<String, FlagPermissions> get = lists.get(player.getName());
         if(get==null)
         {
-            get=new HashMap<String,FlagPermissions>();
+            get=new HashMap<>();
             lists.put(player.getName(), get);
         }
         FlagPermissions perms = get.get(listname);
@@ -108,10 +108,10 @@ public class PermissionListManager {
 
     public Map<String,Object> save()
     {
-        Map root = new LinkedHashMap<String,Object>();
+        Map root = new LinkedHashMap<>();
         for(Entry<String, Map<String, FlagPermissions>> players : lists.entrySet())
         {
-            Map saveMap = new LinkedHashMap<String,Object>();
+            Map saveMap = new LinkedHashMap<>();
             Map<String, FlagPermissions> map = players.getValue();
             for(Entry<String, FlagPermissions> list : map.entrySet())
             {
@@ -146,7 +146,7 @@ public class PermissionListManager {
     {
         StringBuilder sbuild = new StringBuilder();
         Map<String, FlagPermissions> get = lists.get(player.getName());
-        sbuild.append(ChatColor.YELLOW+Residence.getLanguage().getPhrase("Lists")+":"+ChatColor.DARK_AQUA+" ");
+        sbuild.append(ChatColor.YELLOW).append(Residence.getLanguage().getPhrase("Lists")).append(":").append(ChatColor.DARK_AQUA).append(" ");
         if(get!=null)
         {
             for( Entry<String, FlagPermissions> thislist : get.entrySet())

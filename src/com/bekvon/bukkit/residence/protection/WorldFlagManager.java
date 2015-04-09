@@ -27,8 +27,8 @@ public class WorldFlagManager {
     public WorldFlagManager()
     {
         globaldefaults = new FlagPermissions();
-        worldperms = new HashMap<String,FlagPermissions>();
-        groupperms = new HashMap<String,Map<String,FlagPermissions>>();
+        worldperms = new HashMap<>();
+        groupperms = new HashMap<>();
     }
 
     public WorldFlagManager(FileConfiguration config)
@@ -76,7 +76,7 @@ public class WorldFlagManager {
         return list;
     }
 
-    public void parsePerms(FileConfiguration config) {
+    public final void parsePerms(FileConfiguration config) {
         try {
             
             Set<String> keys = config.getConfigurationSection("Global.Flags").getKeys(false);
@@ -97,7 +97,7 @@ public class WorldFlagManager {
                 for (String key : keys) {
                     Set<String> worldkeys = config.getConfigurationSection("Groups." + key + ".Flags.World").getKeys(false); 
                     if (worldkeys != null) {
-                        Map<String, FlagPermissions> perms = new HashMap<String, FlagPermissions>();
+                        Map<String, FlagPermissions> perms = new HashMap<>();
                         for (String wkey : worldkeys) {
                             FlagPermissions list = FlagPermissions.parseFromConfigNode(wkey, config.getConfigurationSection("Groups." + key + ".Flags.World"));
                             if(wkey.equalsIgnoreCase("global"))

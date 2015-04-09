@@ -109,6 +109,7 @@ public class ResidencePermissions extends FlagPermissions {
             }
             else
             {
+                if(player!=null)
                     player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW+flag.getKey() + ChatColor.RED));
             }
         }
@@ -123,7 +124,8 @@ public class ResidencePermissions extends FlagPermissions {
                 }
                 else
                 {
-                    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW+flag.getKey() + ChatColor.RED));
+                    if(player!=null)
+                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW+flag.getKey() + ChatColor.RED));
                 }
             }
         }
@@ -139,7 +141,8 @@ public class ResidencePermissions extends FlagPermissions {
                 }
                 else
                 {
-                    player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW+flag.getKey() + ChatColor.RED));
+                    if(player!=null)
+                        player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW+flag.getKey() + ChatColor.RED));
                 }
             }
         }

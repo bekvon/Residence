@@ -169,7 +169,7 @@ public class CuboidArea {
     }
 
     public Map<String, Object> save() {
-        Map<String, Object> root = new LinkedHashMap<String, Object>();
+        Map<String, Object> root = new LinkedHashMap<>();
         root.put("X1", this.highPoints.getBlockX());
         root.put("Y1", this.highPoints.getBlockY());
         root.put("Z1", this.highPoints.getBlockZ());
@@ -196,7 +196,7 @@ public class CuboidArea {
     }
 
     public List<ChunkRef> getChunks() {
-        List<ChunkRef> chunks = new ArrayList<ChunkRef>();
+        List<ChunkRef> chunks = new ArrayList<>();
         Location high = this.highPoints;
         Location low = this.lowPoints;
         int lowX = ChunkRef.getChunkCoord(low.getBlockX());

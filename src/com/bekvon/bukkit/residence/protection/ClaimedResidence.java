@@ -45,8 +45,8 @@ public class ClaimedResidence {
     protected ResidenceItemList blacklist;
 
     private ClaimedResidence() {
-        subzones = new HashMap<String, ClaimedResidence>();
-        areas = new HashMap<String, CuboidArea>();
+        subzones = new HashMap<>();
+        areas = new HashMap<>();
         bank = new ResidenceBank(this);
         blacklist = new ResidenceItemList(this, ListType.BLACKLIST);
         ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
@@ -215,8 +215,8 @@ public class ClaimedResidence {
         for (String sz : szs) {
             ClaimedResidence res = getSubzone(sz);
             if (res != null && res != this) {
-                String[] areas = res.getAreaList();
-                for (String area: areas) {
+                String[] szareas = res.getAreaList();
+                for (String area: szareas) {
                     if (!newarea.isAreaWithinArea(res.getArea(area))) {
                         boolean good = false;
                         for (CuboidArea arae: getAreaArray()) {
@@ -280,7 +280,8 @@ public class ClaimedResidence {
         areas.remove(name);
         areas.put(name, newarea);
         Residence.getResidenceManager().calculateChunks(getName());
-        player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaUpdate"));
+        if(player!=null)
+            player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaUpdate"));
         return true;
     }
 
@@ -374,15 +375,15 @@ public class ClaimedResidence {
         ClaimedResidence res = null;
         String key = null;
         for (Entry<String, ClaimedResidence> entry : set) {
-            res = entry.getValue();
-            if (res.containsLoc(loc)) {
+            if (entry.getValue().containsLoc(loc)) {
                 key = entry.getKey();
+                res = entry.getValue();
                 break;
             }
         }
-        if (key == null) {
+        if (key == null || res == null)
             return null;
-        }
+        
         String subname = res.getSubzoneNameByLoc(loc);
         if (subname != null) {
             return key + "." + subname;
@@ -392,18 +393,16 @@ public class ClaimedResidence {
 
     public ClaimedResidence getSubzoneByLoc(Location loc) {
         Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
-        boolean found = false;
         ClaimedResidence res = null;
         for (Entry<String, ClaimedResidence> entry : set) {
-            res = entry.getValue();
-            if (res.containsLoc(loc)) {
-                found = true;
+            if (entry.getValue().containsLoc(loc)) {
+                res = entry.getValue();
                 break;
             }
         }
-        if (!found) {
+        if (res==null) 
             return null;
-        }
+        
         ClaimedResidence subrez = res.getSubzoneByLoc(loc);
         if (subrez == null) {
             return res;
@@ -441,7 +440,7 @@ public class ClaimedResidence {
     }
 
     public String[] getSubzoneList() {
-        ArrayList<String> zones = new ArrayList<String>();
+        ArrayList<String> zones = new ArrayList<>();
         Set<String> set = subzones.keySet();
         for (String key : set) {
             if (key != null) {
@@ -627,7 +626,7 @@ public class ClaimedResidence {
     }
 
     public void printSubzoneList(Player player, int page) {
-        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> temp = new ArrayList<>();
         for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
             temp.add(ChatColor.GREEN + sz.getKey() + ChatColor.YELLOW + " - " + Residence.getLanguage().getPhrase("Owner") + ": " + sz.getValue().getOwner());
         }
@@ -635,7 +634,7 @@ public class ClaimedResidence {
     }
 
     public void printAreaList(Player player, int page) {
-        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> temp = new ArrayList<>();
         for (String area : areas.keySet()) {
             temp.add(area);
         }
@@ -643,7 +642,7 @@ public class ClaimedResidence {
     }
 
     public void printAdvancedAreaList(Player player, int page) {
-        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> temp = new ArrayList<>();
         for (Entry<String, CuboidArea> entry : areas.entrySet()) {
             CuboidArea a = entry.getValue();
             Location h = a.getHighLoc();
@@ -758,8 +757,8 @@ public class ClaimedResidence {
     }
 
     public Map<String, Object> save() {
-        Map<String, Object> root = new HashMap<String, Object>();
-        Map<String, Object> areamap = new HashMap<String, Object>();
+        Map<String, Object> root = new HashMap<>();
+        Map<String, Object> areamap = new HashMap<>();
         root.put("EnterMessage", enterMessage);
         root.put("LeaveMessage", leaveMessage);
         root.put("StoredMoney", bank.getStoredMoney());
@@ -770,7 +769,7 @@ public class ClaimedResidence {
             areamap.put(entry.getKey(), entry.getValue().save());
         }
         root.put("Areas", areamap);
-        Map<String, Object> subzonemap = new HashMap<String, Object>();
+        Map<String, Object> subzonemap = new HashMap<>();
         for (Entry<String, ClaimedResidence> sz : subzones.entrySet())
         {
             subzonemap.put(sz.getKey(), sz.getValue().save());
@@ -779,7 +778,7 @@ public class ClaimedResidence {
         root.put("Permissions", perms.save());
         if (tpLoc != null)
         {
-            Map<String, Object> tpmap = new HashMap<String, Object>();
+            Map<String, Object> tpmap = new HashMap<>();
             tpmap.put("X", tpLoc.getBlockX());
             tpmap.put("Y", tpLoc.getBlockY());
             tpmap.put("Z", tpLoc.getBlockZ());
@@ -849,8 +848,7 @@ public class ClaimedResidence {
         }
         if (player != null && !res.getPermissions().hasResidencePermission(player, true) && !resadmin)
         {
-            if (player != null)
-                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
             return false;
         }
         if (subzones.containsKey(newName))
@@ -901,8 +899,7 @@ public class ClaimedResidence {
         }
         else
         {
-            if (player != null)
-                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+            player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
             return false;
         }
     }
@@ -950,7 +947,7 @@ public class ClaimedResidence {
     }
 
     public ArrayList<Player> getPlayersInResidence() {
-        ArrayList<Player> within = new ArrayList<Player>();
+        ArrayList<Player> within = new ArrayList<>();
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if (this.containsLoc(player.getLocation())) {
                 within.add(player);

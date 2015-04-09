@@ -27,10 +27,10 @@ import com.bekvon.bukkit.residence.Residence;
  */
 public class FlagPermissions {
 
-    protected static ArrayList<String> validFlags = new ArrayList<String>();
-    protected static ArrayList<String> validPlayerFlags = new ArrayList<String>();
-    protected static ArrayList<String> validAreaFlags = new ArrayList<String>();
-    final static Map<Material, String> matUseFlagList = new EnumMap<Material, String>(Material.class);
+    protected static ArrayList<String> validFlags = new ArrayList<>();
+    protected static ArrayList<String> validPlayerFlags = new ArrayList<>();
+    protected static ArrayList<String> validAreaFlags = new ArrayList<>();
+    final static Map<Material, String> matUseFlagList = new EnumMap<>(Material.class);
     protected Map<String, String> cachedPlayerNameUUIDs;
     protected Map<String, Map<String, Boolean>> playerFlags;
     protected Map<String, Map<String, Boolean>> groupFlags;
@@ -79,7 +79,7 @@ public class FlagPermissions {
         }
     }
 
-    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<String, ArrayList<String>>();
+    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<>();
 
     public static void addFlagToFlagGroup(String group, String flag) {
         if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {
@@ -504,7 +504,7 @@ public class FlagPermissions {
     }
 
     public Map<String, Object> save() {
-        Map<String, Object> root = new LinkedHashMap<String, Object>();
+        Map<String, Object> root = new LinkedHashMap<>();
         root.put("LastKnownPlayerNames", cachedPlayerNameUUIDs);
         root.put("PlayerFlags", playerFlags);
         root.put("GroupFlags", groupFlags);
@@ -556,7 +556,7 @@ public class FlagPermissions {
     public String listFlags() {
         StringBuilder sbuild = new StringBuilder();
         Set<Entry<String, Boolean>> set = cuboidFlags.entrySet();
-        synchronized (cuboidFlags) {
+        synchronized (set) {
             Iterator<Entry<String, Boolean>> it = set.iterator();
             while (it.hasNext()) {
                 Entry<String, Boolean> next = it.next();
@@ -620,7 +620,7 @@ public class FlagPermissions {
         String uuids = Residence.getPlayerUUIDString(player);
         StringBuilder sbuild = new StringBuilder();
         Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
-        synchronized (playerFlags) {
+        synchronized (set) {
             Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
             while (it.hasNext()) {
                 Entry<String, Map<String, Boolean>> nextEnt = it.next();
@@ -639,7 +639,7 @@ public class FlagPermissions {
                             next = this.cachedPlayerNameUUIDs.get(next);                        
                     }
                     if (!perms.equals("none")) {
-                        sbuild.append(next).append("[" + ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED + "] ");
+                        sbuild.append(next).append("[").append(ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED).append("] ");
                     }
                 }
             }
@@ -650,13 +650,13 @@ public class FlagPermissions {
     public String listGroupFlags() {
         StringBuilder sbuild = new StringBuilder();
         Set<String> set = groupFlags.keySet();
-        synchronized (groupFlags) {
+        synchronized (set) {
             Iterator<String> it = set.iterator();
             while (it.hasNext()) {
                 String next = it.next();
                 String perms = listGroupFlags(next);
                 if (!perms.equals("none")) {
-                    sbuild.append(next).append("[" + ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED + "] ");
+                    sbuild.append(next).append("[").append(ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED).append("] ");
                 }
             }
         }
