@@ -57,6 +57,8 @@ Global:
     ResidenceNameRegex: '[^a-zA-Z0-9\\-\\_]'
     # Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.
     ShowIntervalMessages: false
+    # Check for new version when server start and connect OP. 
+    VersionCheck: true
     # Experimental - The following settings are lists of block IDs to be used as part of the checks for the "container" and "use" flags when using mods.
     CustomContainers: []
     CustomBothClick: []

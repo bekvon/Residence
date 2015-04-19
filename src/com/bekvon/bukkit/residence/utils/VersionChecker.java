@@ -20,6 +20,10 @@ public class VersionChecker {
 	}
 	 
 	public void VersionCheck(final Player player) {
+		if(!Residence.getConfigManager().versionCheck()){
+			return;
+		}
+		
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
             public void run() {
             	String readURL = "https://raw.githubusercontent.com/bekvon/Residence/master/src/plugin.yml";

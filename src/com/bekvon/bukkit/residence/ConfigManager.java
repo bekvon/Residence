@@ -51,6 +51,7 @@ public class ConfigManager {
     protected boolean spoutEnable;
     protected boolean enableLeaseMoneyAccount;
     protected boolean enableDebug;
+    protected boolean versionCheck;
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
     protected List<Integer> customRightClick;
@@ -95,6 +96,7 @@ public class ConfigManager {
         spoutEnable = config.getBoolean("Global.EnableSpout", false);
         enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);
         enableDebug = config.getBoolean("Global.EnableDebug", false);
+        versionCheck = config.getBoolean("Global.VersionCheck", true);
         customContainers = config.getIntegerList("Global.CustomContainers");
         customBothClick = config.getIntegerList("Global.CustomBothClick");
         customRightClick = config.getIntegerList("Global.CustomRightClick");
@@ -263,6 +265,11 @@ public class ConfigManager {
     public boolean debugEnabled()
     {
         return enableDebug;
+    }
+    
+    public boolean versionCheck()
+    {
+        return versionCheck;
     }
     
     public List<Integer> getCustomContainers()
