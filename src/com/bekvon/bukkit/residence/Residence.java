@@ -681,15 +681,19 @@ public class Residence extends JavaPlugin {
                 this.getLogger().warning("Please restart server");
                 return true;
             }
+            long time;
             YMLSaveHelper yml;
             File loadFile;
-            HashMap<String, Object> worlds = new HashMap<String, Object>();
-            for (World world : server.getWorlds()) {
+            HashMap<String, Object> worlds = new HashMap<>();
+            for (World world : getServ().getWorlds()) {
                 loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
                 if (loadFile.isFile()) {
+                	time = System.currentTimeMillis();
+                	this.getLogger().info("Loading save data for world " + world.getName() + "...");
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
                     worlds.put(world.getName(), yml.getRoot().get("Residences"));
+                    this.getLogger().info("Save data for world " + world.getName() + " loaded. (" + ((float) (System.currentTimeMillis() - time) / 1000) + " secs)");
                 }
             }
             rmanager = ResidenceManager.load(worlds);
