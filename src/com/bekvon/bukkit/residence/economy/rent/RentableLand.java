@@ -19,7 +19,7 @@ public class RentableLand {
     public boolean repeatable;
 
     public Map<String, Object> save() {
-        Map<String, Object> rented = new HashMap<String, Object>();
+        Map<String, Object> rented = new HashMap<>();
         rented.put("Days", days);
         rented.put("Cost", cost);
         rented.put("Repeatable", repeatable);

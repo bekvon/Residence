@@ -30,8 +30,8 @@ public class RentManager {
 
     public RentManager()
     {
-        rentedLand = new HashMap<String,RentedLand>();
-        rentableLand = new HashMap<String,RentableLand>();
+        rentedLand = new HashMap<>();
+        rentableLand = new HashMap<>();
     }
 
     public void setForRent(Player player, String landName, int amount, int days, boolean repeatable, boolean resadmin)

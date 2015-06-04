@@ -301,8 +301,9 @@ public class ResidenceEntityListener implements Listener {
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
     	if (event.getEntityType() == EntityType.ITEM_FRAME || event.getEntityType() == EntityType.ARMOR_STAND) {
     		Entity dmgr = event.getDamager();
+
     		Player player;
-    		if (event.getDamager() instanceof Player) {
+    		if (dmgr instanceof Player) {
     			player = (Player) event.getDamager();
     		} else {		
     			if (dmgr instanceof Projectile && ((Projectile) dmgr).getShooter() instanceof Player) {
@@ -317,9 +318,18 @@ public class ResidenceEntityListener implements Listener {
     		// Note: Location of entity, not player; otherwise player could stand outside of res and still damage
     		Location loc = event.getEntity().getLocation();
     		ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-    		if (res != null && !res.getPermissions().playerHas(player.getName(), "container", false)) {
-    			event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
+    		if(res != null) {
+    			if(!res.getPermissions().has("container", false)){
+    	    		if(isMonster(dmgr)){
+    	    			event.setCancelled(true);
+    	    			return;
+    	    		}
+    			}
+    		
+	    		if (!res.getPermissions().playerHas(player.getName(), "container", false)) {
+	    			event.setCancelled(true);
+	                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
+	    		}
     		}
     	}
     }

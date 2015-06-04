@@ -20,7 +20,7 @@ public class RentedLand {
     public boolean autoRefresh;
 
     public Map<String, Object> save() {
-        Map<String, Object> rentables = new HashMap<String, Object>();
+        Map<String, Object> rentables = new HashMap<>();
         rentables.put("Player", player);
         rentables.put("StartTime", startTime);
         rentables.put("EndTime", endTime);
