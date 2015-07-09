@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
 public class ResidencePermissions extends FlagPermissions {
 
     protected UUID ownerUUID;
-    protected String ownerLastKnownName;
     protected String world;
     protected ClaimedResidence residence;
 
@@ -398,14 +397,15 @@ public class ResidencePermissions extends FlagPermissions {
 
     public String getOwner()
     {
-        if(ownerUUID.toString().equals("00000000-0000-0000-0000-000000000000"))
-            return "Server Land";
-        String name = Residence.getPlayerName(ownerUUID);
-        if(name==null)
-        {   
-            return ownerLastKnownName;
+        Player p = Residence.getServ().getPlayer(ownerUUID);
+        if(p==null)
+        {
+            if(ownerUUID.toString().equals("00000000-0000-0000-0000-000000000000"))
+                return "Server Land";
+            return ownerUUID.toString();
         }
-        return name;
+        else
+            return p.getName();
     }
     
     public UUID getOwnerUUID()
@@ -422,7 +422,6 @@ public class ResidencePermissions extends FlagPermissions {
     public Map<String, Object> save() {
         Map<String, Object> root = super.save();
         root.put("OwnerUUID", ownerUUID.toString());
-        root.put("OwnerLastKnownName", ownerLastKnownName);
         root.put("World", world);
         return root;
     }
@@ -433,12 +432,10 @@ public class ResidencePermissions extends FlagPermissions {
         if(root.containsKey("OwnerUUID"))
         {
             newperms.ownerUUID = UUID.fromString((String) root.get("OwnerUUID"));
-            newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName");
         }
         else if (root.containsKey("Owner")) //convert old owner name save format into uuid format
         {
             String owner = (String) root.get("Owner");
-            newperms.ownerLastKnownName = owner;
             newperms.ownerUUID = Residence.getPlayerUUID(owner);
             if(newperms.ownerUUID == null)
                 newperms.ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
@@ -446,7 +443,6 @@ public class ResidencePermissions extends FlagPermissions {
         else
         {
             newperms.ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000"); //cant determine owner... setting zero UUID
-            newperms.ownerLastKnownName = "Server Land";
         }
         newperms.world = (String) root.get("World");
         FlagPermissions.load(root, newperms);
