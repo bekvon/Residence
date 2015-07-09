@@ -87,7 +87,7 @@ public class ResidencePermissions extends FlagPermissions {
     {
         if(player!=null)
         {
-            if(!player.getUniqueId().toString().equals(ownerUUID.toString()) && !resadmin)
+            if(!player.getUniqueId().toString().equals(ownerUUID) && !resadmin)
             {
                 player.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPermission"));
                 return;
