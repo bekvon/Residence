@@ -438,7 +438,7 @@ public class ResidencePermissions extends FlagPermissions {
                 newperms.ownerLastKnownName = name; //if found update last known name to current name
             else
                 newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName"); //otherwise load last known name from file
-            if(newperms.ownerUUID.toString().equals("ffffffff-ffff-ffff-ffff-ffffffffffff")) //check for fake UUID
+            if(newperms.ownerUUID.equals("ffffffff-ffff-ffff-ffff-ffffffffffff")) //check for fake UUID
             {
                 UUID realUUID = Residence.getPlayerUUID(newperms.ownerLastKnownName); //try to find the real UUID of the player if possible now
                 if(realUUID != null)
