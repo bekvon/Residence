@@ -44,7 +44,7 @@ public class ResidencePermissions extends FlagPermissions {
         this(res);
         ownerUUID = Residence.getPlayerUUID(creator);
         if(ownerUUID == null)
-            ownerUUID = ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+            ownerUUID = UUID.randomUUID();
         world = inworld;
     }
 
@@ -375,13 +375,8 @@ public class ResidencePermissions extends FlagPermissions {
         }
     }
 
-    public boolean setOwner(String newOwner, boolean resetFlags)
+    public void setOwner(String newOwner, boolean resetFlags)
     {
-        if(newOwner.equals("Server Land"))
-        {
-            ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-            return true;
-        }
         UUID playerUUID = Residence.getPlayerUUID(newOwner);
         if(playerUUID !=null)
         {
@@ -390,20 +385,14 @@ public class ResidencePermissions extends FlagPermissions {
             ownerUUID = playerUUID;
             if(resetFlags)
                 this.applyDefaultFlags();
-            return true;
         }
-        return false;
     }
 
     public String getOwner()
     {
         Player p = Residence.getServ().getPlayer(ownerUUID);
         if(p==null)
-        {
-            if(ownerUUID.toString().equals(UUID.fromString("00000000-0000-0000-0000-000000000000")))
-                return "Server Land";
-            return ownerUUID.toString();
-        }
+            return "Server Land";
         else
             return p.getName();
     }
@@ -436,13 +425,18 @@ public class ResidencePermissions extends FlagPermissions {
         else if (root.containsKey("Owner")) //convert old owner name save format into uuid format
         {
             String owner = (String) root.get("Owner");
-            newperms.ownerUUID = Residence.getPlayerUUID(owner);
-            if(newperms.ownerUUID == null)
-                newperms.ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+            newperms.ownerUUID = UUID.randomUUID();
+            
+            OfflinePlayer[] players = Residence.getServ().getOfflinePlayers();
+            for(OfflinePlayer player : players)
+            {
+                if(player.getName().equals(owner))
+                    newperms.ownerUUID = player.getUniqueId();
+            }
         }
         else
         {
-            newperms.ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000"); //cant determine owner... setting zero UUID
+            newperms.ownerUUID=UUID.randomUUID(); //cant determine owner... setting random UUID
         }
         newperms.world = (String) root.get("World");
         FlagPermissions.load(root, newperms);
