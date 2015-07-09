@@ -44,7 +44,7 @@ public class ResidencePermissions extends FlagPermissions {
         this(res);
         ownerUUID = Residence.getPlayerUUID(creator);
         if(ownerUUID == null)
-            ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+            ownerUUID = ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
         world = inworld;
     }
 
