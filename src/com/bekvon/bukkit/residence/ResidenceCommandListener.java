@@ -188,11 +188,13 @@ public class ResidenceCommandListener extends Residence {
             }
             ClaimedResidence area = rmanager.getByName(args[1]);
             if (area != null) {
-                area.getPermissions().setOwner(args[2], true);
-                if (area.getParent() == null) {
-                    sender.sendMessage(ChatColor.GREEN + language.getPhrase("ResidenceOwnerChange", ChatColor.YELLOW + " " + args[1] + " " + ChatColor.GREEN + "." + ChatColor.YELLOW + args[2] + ChatColor.GREEN));
-                } else {
-                    sender.sendMessage(ChatColor.GREEN + language.getPhrase("SubzoneOwnerChange", ChatColor.YELLOW + " " + args[1].split("\\.")[args[1].split("\\.").length - 1] + " " + ChatColor.GREEN + "." + ChatColor.YELLOW + args[2] + ChatColor.GREEN));
+                if(area.getPermissions().setOwner(args[2], true))
+                {
+                    if (area.getParent() == null) {
+                        sender.sendMessage(ChatColor.GREEN + language.getPhrase("ResidenceOwnerChange", ChatColor.YELLOW + " " + args[1] + " " + ChatColor.GREEN + "." + ChatColor.YELLOW + args[2] + ChatColor.GREEN));
+                    } else {
+                        sender.sendMessage(ChatColor.GREEN + language.getPhrase("SubzoneOwnerChange", ChatColor.YELLOW + " " + args[1].split("\\.")[args[1].split("\\.").length - 1] + " " + ChatColor.GREEN + "." + ChatColor.YELLOW + args[2] + ChatColor.GREEN));
+                    }
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
