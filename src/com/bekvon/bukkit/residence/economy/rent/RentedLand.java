@@ -4,7 +4,6 @@
  */
 
 package com.bekvon.bukkit.residence.economy.rent;
-import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +20,7 @@ public class RentedLand {
     public boolean autoRefresh;
 
     public Map<String, Object> save() {
-        Map<String, Object> rentables = new HashMap<String, Object>();
+        Map<String, Object> rentables = new HashMap<>();
         rentables.put("Player", player);
         rentables.put("StartTime", startTime);
         rentables.put("EndTime", endTime);

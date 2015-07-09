@@ -214,13 +214,11 @@ public class LeaseManager {
     {
         leaseExpireTime.clear();
         String[] list = manager.getResidenceList();
-        for(int i = 0; i < list.length; i++)
-        {
-            if(list[i]!=null)
-            {
-                ClaimedResidence res = Residence.getResidenceManager().getByName(list[i]);
+        for (String item : list) {
+            if (item != null) {
+                ClaimedResidence res = Residence.getResidenceManager().getByName(item);
                 PermissionGroup group = Residence.getPermissionManager().getGroup(res.getPermissions().getOwner(),res.getPermissions().getWorld());
-                this.setExpireTime(null,list[i], group.getLeaseGiveTime());
+                this.setExpireTime(null, item, group.getLeaseGiveTime());
             }
         }
         System.out.println("[Residence] - Set default leases.");

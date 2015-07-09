@@ -338,9 +338,9 @@ public class SelectionManager {
         if(pitch > 50)
             return Direction.DOWN;
         if((yaw>45 && yaw<135) || (yaw<-45 && yaw>-135))
-            return Direction.PLUSX;
-        if((yaw>225 && yaw<315) ||  (yaw<-225 && yaw>-315))
             return Direction.MINUSX;
+        if((yaw>225 && yaw<315) ||  (yaw<-225 && yaw>-315))
+            return Direction.PLUSX;
         if((yaw>135 && yaw<225) || (yaw<-135 && yaw>-225))
             return Direction.MINUSZ;
         if((yaw<45 || yaw>315) || (yaw>-45 || yaw<-315))

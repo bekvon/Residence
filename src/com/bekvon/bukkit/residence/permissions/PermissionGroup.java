@@ -50,6 +50,7 @@ public class PermissionGroup {
     protected String groupname;
     protected int maxPhysical;
     protected boolean unstuck;
+    protected boolean kick;
     protected int minHeight;
     protected int maxHeight;
     protected int maxRents;
@@ -102,6 +103,7 @@ public class PermissionGroup {
         buyIgnoreLimits = limits.getBoolean("Economy.IgnoreLimits", false);
         costperarea = limits.getDouble("Economy.BuyCost", 0);
         unstuck = limits.getBoolean("Residence.Unstuck", false);
+        kick = limits.getBoolean("Residence.Kick", false);
         selectCommandAccess = limits.getBoolean("Residence.SelectCommandAccess", true);
         itemListAccess = limits.getBoolean("Residence.ItemListAccess", true);
         ConfigurationSection node = limits.getConfigurationSection("Flags.Permission");
@@ -247,7 +249,9 @@ public class PermissionGroup {
     public boolean hasUnstuckAccess() {
         return unstuck;
     }
-
+    public boolean hasKickAccess() {
+	return kick;
+    }
     public int getMaxPhysicalPerResidence() {
         return maxPhysical;
     }

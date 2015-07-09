@@ -68,6 +68,12 @@ public class PermissionManager {
         player = player.toLowerCase();
         if (playersGroup.containsKey(player)) {
             String group = playersGroup.get(player);
+            if(group==null)
+            {
+                String uuids = Residence.getPlayerUUIDString(player);
+                if(uuids != null)
+                    group = playersGroup.get(uuids);
+            }
             if (group != null) {
                 group = group.toLowerCase();
                 if (group != null && groups.containsKey(group)) {

@@ -6,7 +6,9 @@ package com.bekvon.bukkit.residence;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,7 +26,6 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import java.util.List;
 
 public class ResidenceCommandListener extends Residence {
 
@@ -403,6 +404,28 @@ public class ResidenceCommandListener extends Residence {
             }
             return true;
         }
+	if (cmd.equals("kick")) {
+ 		if (args.length != 2) {
+              	  return false;
+            	}
+            Player targetplayer = Bukkit.getPlayer(args[1]);
+            if (targetplayer == null) {
+			
+		} 
+	    group = gmanager.getGroup(player);
+            if (!group.hasKickAccess()) {
+		player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		return true;
+            }
+            ClaimedResidence res = rmanager.getByLoc(targetplayer.getLocation());
+            if (res.getOwner().equals(player.getName())) {
+		if (res.getPlayersInResidence().contains(targetplayer)) {
+			targetplayer.teleport(res.getOutsideFreeLoc(player.getLocation()));
+                        targetplayer.sendMessage(ChatColor.RED + language.getPhrase("Kicked") + "!");
+                   }
+            }
+	    
+	}
         if (cmd.equals("mirror")) {
             if (args.length != 3) {
                 return false;

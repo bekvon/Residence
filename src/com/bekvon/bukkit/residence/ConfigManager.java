@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,6 +37,7 @@ public class ConfigManager {
     protected boolean flagsInherit;
     protected ChatColor chatColor;
     protected boolean chatEnable;
+    protected boolean actionBar;
     protected int minMoveUpdate;
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalResidenceDefaults;
@@ -51,6 +51,7 @@ public class ConfigManager {
     protected boolean spoutEnable;
     protected boolean enableLeaseMoneyAccount;
     protected boolean enableDebug;
+    protected boolean versionCheck;
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
     protected List<Integer> customRightClick;
@@ -82,6 +83,7 @@ public class ConfigManager {
         flagsInherit = config.getBoolean("Global.ResidenceFlagsInherit", false);
         minMoveUpdate = config.getInt("Global.MoveCheckInterval", 500);
         chatEnable = config.getBoolean("Global.ResidenceChatEnable", true);
+        actionBar = config.getBoolean("Global.UseActionBar", true);
         enforceAreaInsideArea = config.getBoolean("Global.EnforceAreaInsideArea", false);
         language = config.getString("Global.Language","English");
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", config.getConfigurationSection("Global"));
@@ -94,6 +96,7 @@ public class ConfigManager {
         spoutEnable = config.getBoolean("Global.EnableSpout", false);
         enableLeaseMoneyAccount = config.getBoolean("Global.EnableLeaseMoneyAccount", true);
         enableDebug = config.getBoolean("Global.EnableDebug", false);
+        versionCheck = config.getBoolean("Global.VersionCheck", true);
         customContainers = config.getIntegerList("Global.CustomContainers");
         customBothClick = config.getIntegerList("Global.CustomBothClick");
         customRightClick = config.getIntegerList("Global.CustomRightClick");
@@ -204,6 +207,11 @@ public class ConfigManager {
         return chatEnable;
     }
 
+    public boolean useActionBar()
+    {
+        return actionBar;
+    }
+    
     public ChatColor getChatColor()
     {
         return chatColor;
@@ -257,6 +265,11 @@ public class ConfigManager {
     public boolean debugEnabled()
     {
         return enableDebug;
+    }
+    
+    public boolean versionCheck()
+    {
+        return versionCheck;
     }
     
     public List<Integer> getCustomContainers()

@@ -35,6 +35,9 @@ Global:
     RentCheckInterval: 10
     # Enable or disable residence chat channels.
     ResidenceChatEnable: true
+    # True for ActionBar - new component in 1.8
+    # False for old Messaging in chat enter/leave Residence messages
+    UseActionBar: true
     # Color of residence chat.
     ResidenceChatColor: DARK_PURPLE
     # Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.
@@ -54,6 +57,8 @@ Global:
     ResidenceNameRegex: '[^a-zA-Z0-9\\-\\_]'
     # Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.
     ShowIntervalMessages: false
+    # Check for new version when server start and connect OP. 
+    VersionCheck: true
     # Experimental - The following settings are lists of block IDs to be used as part of the checks for the "container" and "use" flags when using mods.
     CustomContainers: []
     CustomBothClick: []
@@ -165,6 +170,8 @@ Groups:
            CanTeleport: true
            # Allow or Disallow the use of /res unstuck, to get yourself out of a residence if stuck in one somehow
            Unstuck: true
+           # Allow or Disallow the use of /res kick, to kick player from residence.
+           Kick: False
            # Allow or Disallow the use of the /res select command, if disabled they can only use the selection tool.
            SelectCommandAccess: true
            # Allow or Disallow the group to access the Blacklist/Ignorelist for residences they own.

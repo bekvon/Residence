@@ -45,6 +45,7 @@ import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.ActionBar;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
@@ -68,8 +69,7 @@ public class ResidencePlayerListener implements Listener {
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
-        Player[] players = Residence.getServ().getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             lastUpdate.put(player.getName(), System.currentTimeMillis());
         }
     }
@@ -81,8 +81,7 @@ public class ResidencePlayerListener implements Listener {
         playerToggleChat = new ArrayList<String>();
         minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
         chatenabled = Residence.getConfigManager().chatEnabled();
-        Player[] players = Residence.getServ().getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             lastUpdate.put(player.getName(), System.currentTimeMillis());
         }
     }
@@ -104,6 +103,10 @@ public class ResidencePlayerListener implements Listener {
             Residence.turnResAdminOn(player);
         }
         handleNewLocation(player, player.getLocation(), false);
+        
+        if(player.isOp() || player.hasPermission("residence.versioncheck")){
+        	Residence.getVersionChecker().VersionCheck(player);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -157,7 +160,7 @@ public class ResidencePlayerListener implements Listener {
     private boolean isCanUseEntity(Material mat, Block block) {
         return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
     }
-
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -306,6 +309,17 @@ public class ResidencePlayerListener implements Listener {
             return;
         }
         Entity ent = event.getRightClicked();
+        /* Trade */
+        if (ent.getType() == EntityType.VILLAGER) {
+        	ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getPlayer().getLocation());
+    		
+    		if (res != null && !res.getPermissions().playerHas(player.getName(), "trade", true)) {
+    			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+    			event.setCancelled(true);
+    		}
+    	}
+        
+        /* Container - ItemFrame protection */
         Material heldItem = player.getItemInHand().getType();
         if (!(ent instanceof Hanging)) {
             return;
@@ -491,7 +505,11 @@ public class ResidencePlayerListener implements Listener {
                 Residence.getServ().getPluginManager().callEvent(chgEvent);
                 
                 if (leave != null && !leave.equals("")) {
-                    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	if(Residence.getConfigManager().useActionBar()){
+                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave)).toString());
+                	} else {
+                		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	}
                 }
                 currentRes.remove(pname);
                 Residence.getChatManager().removeFromChannel(pname);
@@ -532,7 +550,11 @@ public class ResidencePlayerListener implements Listener {
                 Residence.getServ().getPluginManager().callEvent(leaveevent);
                 
                 if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
-                    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	if(Residence.getConfigManager().useActionBar()){
+                		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave)).toString());
+                	} else {
+                		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+                	}
                 }
             }
             String enterMessage = res.getEnterMessage();
@@ -550,14 +572,18 @@ public class ResidencePlayerListener implements Listener {
             Residence.getServ().getPluginManager().callEvent(chgEvent);
             
             if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
-                player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+            	if(Residence.getConfigManager().useActionBar()){
+            		ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage)).toString());
+            	} else {
+            		player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+            	}
             }
         }
         if (chatchange && chatenabled) {
             Residence.getChatManager().setChannel(pname, areaname);
         }
     }
-
+    
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
         try {
             message = message.replaceAll("%player", player.getName());
@@ -571,8 +597,7 @@ public class ResidencePlayerListener implements Listener {
 
     public void doHeals() {
         try {
-            Player[] p = Residence.getServ().getOnlinePlayers();
-            for (Player player : p) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 String resname = Residence.getPlayerListener().getCurrentResidenceName(player.getName());
                 ClaimedResidence res = null;
                 if (resname != null) {

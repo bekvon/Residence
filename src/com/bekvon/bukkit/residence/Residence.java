@@ -21,9 +21,12 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -59,6 +62,7 @@ import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
 import com.residence.mcstats.Metrics;
@@ -67,6 +71,8 @@ import com.residence.zip.ZipLibrary;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
+import java.util.UUID;
+import org.bukkit.OfflinePlayer;
 
 /**
  * 
@@ -101,10 +107,11 @@ public class Residence extends JavaPlugin {
     protected static int rentBukkitId = -1;
     protected static int healBukkitId = -1;
     protected static int autosaveBukkitId = -1;
+    protected static VersionChecker versionChecker;
     protected static boolean initsuccess = false;
     protected Map<String, String> deleteConfirm;
     protected static List<String> resadminToggle;
-    private final static String[] validLanguages = { "English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian" };
+    private final static String[] validLanguages = { "English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian", "Polish" };
     private Runnable doHeals = new Runnable() {
         public void run() {
             plistener.doHeals();
@@ -338,8 +345,7 @@ public class Residence extends JavaPlugin {
                 rentint = rentint * 60 * 20;
                 rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
             }
-            Player[] players = getServer().getOnlinePlayers();
-            for (Player player : players) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (Residence.getPermissionManager().isResidenceAdmin(player)) {
                     turnResAdminOn(player);
                 }
@@ -358,8 +364,15 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
             Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
         }
+        versionChecker = new VersionChecker(this);
+        versionChecker.VersionCheck(null);
     }
 
+    public void consoleMessage(String message){
+	    ConsoleCommandSender console = Bukkit.getConsoleSender();
+	    console.sendMessage("[Residence] " + message);
+	}
+    
     public static boolean validName(String name)
     {
         if (name.contains(":") || name.contains(".")) {
@@ -375,7 +388,11 @@ public class Residence extends JavaPlugin {
             return true;
         }
     }
-
+    
+    public static VersionChecker getVersionChecker() {
+        return versionChecker;
+    }
+    
     public static File getDataLocation() {
         return dataFolder;
     }
@@ -664,15 +681,19 @@ public class Residence extends JavaPlugin {
                 this.getLogger().warning("Please restart server");
                 return true;
             }
+            long time;
             YMLSaveHelper yml;
             File loadFile;
-            HashMap<String, Object> worlds = new HashMap<String, Object>();
-            for (World world : server.getWorlds()) {
+            HashMap<String, Object> worlds = new HashMap<>();
+            for (World world : getServ().getWorlds()) {
                 loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
                 if (loadFile.isFile()) {
+                	time = System.currentTimeMillis();
+                	this.getLogger().info("Loading save data for world " + world.getName() + "...");
                     yml = new YMLSaveHelper(loadFile);
                     yml.load();
                     worlds.put(world.getName(), yml.getRoot().get("Residences"));
+                    this.getLogger().info("Save data for world " + world.getName() + " loaded. (" + ((float) (System.currentTimeMillis() - time) / 1000) + " secs)");
                 }
             }
             rmanager = ResidenceManager.load(worlds);
@@ -784,6 +805,52 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] Failed to write file: " + writeName);
             return false;
         }
+    }
+    
+    public static UUID getPlayerUUID(String playername)
+    {
+        Player p = Residence.getServ().getPlayer(playername);
+        if(p==null)
+        {
+            OfflinePlayer[] oplayers = Residence.getServ().getOfflinePlayers();
+            for(OfflinePlayer player : oplayers)
+            {
+                if(player.getName().equals(playername))
+                    return player.getUniqueId();
+            }
+        }
+        else
+            return p.getUniqueId();
+        return null;
+    }
+    
+    public static String getPlayerUUIDString(String playername)
+    {
+        UUID playerUUID = Residence.getPlayerUUID(playername);
+        if(playerUUID!=null)
+            return playerUUID.toString();
+        return null;
+    }
+    
+    public static String getPlayerName(String uuid)
+    {
+        try
+        {
+            return Residence.getPlayerName(UUID.fromString(uuid));
+        }
+        catch (IllegalArgumentException ex) { }
+        return null;
+    }
+    
+    public static String getPlayerName(UUID uuid)
+    {
+        OfflinePlayer p = Residence.getServ().getPlayer(uuid);
+        if(p==null)
+            p = Residence.getServ().getOfflinePlayer(uuid);
+        if(p!=null)
+            return p.getName();
+        else
+            return null;
     }
 }
 
