@@ -4,6 +4,7 @@
  */
 
 package com.bekvon.bukkit.residence.listeners;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
@@ -301,7 +302,19 @@ public class ResidenceEntityListener implements Listener {
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
     	if (event.getEntityType() == EntityType.ITEM_FRAME || event.getEntityType() == EntityType.ARMOR_STAND) {
     		Entity dmgr = event.getDamager();
-
+    		
+			Location loc = event.getEntity().getLocation();
+    		ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+			
+    		if(res != null) {
+    		
+			if ((dmgr instanceof Projectile) && (!(((Projectile) dmgr).getShooter() instanceof Player))) {
+	    		if(!res.getPermissions().has("container", true)){
+	    	    	event.setCancelled(true);
+	    	    	return;
+	    		}	
+    		}
+			
     		Player player;
     		if (dmgr instanceof Player) {
     			player = (Player) event.getDamager();
@@ -314,25 +327,15 @@ public class ResidenceEntityListener implements Listener {
     		
     		if (Residence.isResAdminOn(player))
     			return;
-    		
-    		// Note: Location of entity, not player; otherwise player could stand outside of res and still damage
-    		Location loc = event.getEntity().getLocation();
-    		ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-    		if(res != null) {
-    			if(!res.getPermissions().has("container", false)){
-    	    		if(isMonster(dmgr)){
-    	    			event.setCancelled(true);
-    	    			return;
-    	    		}
-    			}
-    		
-	    		if (!res.getPermissions().playerHas(player.getName(), "container", false)) {
+
+	    		if (!res.getPermissions().playerHas(player.getName(), "container", true)) {
 	    			event.setCancelled(true);
 	                player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
 	    		}
     		}
     	}
     }
+
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
@@ -371,13 +374,13 @@ public class ResidenceEntityListener implements Listener {
                 if (area == null) {
                     /* World PvP */
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-                        attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
+                        //attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("WorldPVPDisabled"));
                         event.setCancelled(true);
                     }
                 } else {
                     /* Normal PvP */
                     if (!area.getPermissions().has("pvp", true)) {
-                        attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPVPZone"));
+                        //attacker.sendMessage(ChatColor.RED+Residence.getLanguage().getPhrase("NoPVPZone"));
                         event.setCancelled(true);
                     }
                 }
