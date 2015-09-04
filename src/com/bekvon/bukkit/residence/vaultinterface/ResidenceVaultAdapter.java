@@ -79,7 +79,8 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
     }
 
     public String getPlayerGroup(String player, String world) {
-        String group = permissions.getPrimaryGroup(world, player);
+        @SuppressWarnings("deprecation")
+	String group = permissions.getPrimaryGroup(world, player);
         if (group == null) {
             return group;
         } else {
@@ -87,26 +88,31 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public double getBalance(String playerName) {
         return economy.getBalance(playerName);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean canAfford(String playerName, double amount) {
         return economy.has(playerName, amount);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean add(String playerName, double amount) {
         return economy.depositPlayer(playerName, amount).transactionSuccess();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean subtract(String playerName, double amount) {
         return economy.withdrawPlayer(playerName, amount).transactionSuccess();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
         if (economy.withdrawPlayer(playerFrom, amount).transactionSuccess()) {

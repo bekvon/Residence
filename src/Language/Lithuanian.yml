@@ -1,0 +1,649 @@
+# NOTE: If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten.  Once you 
+# have a copy of this file, change the Language: option under the Residence config.yml
+# to whatever you named your copy.
+Version: 21
+FieldsVersion: 22
+Language:
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
+    #Version 1 Fields
+    InvalidResidence: Bloga Rezidencija...
+    InvalidSubzone: Bloga Subzona...
+    InvalidDirection: Bloga kriptis...
+    InvalidChannel: Blogas kanalas...
+    InvalidAmount: Blogas kiekis...
+    InvalidCost: Bloga kaina...
+    InvalidDays: Blogas dienu kiekis...
+    InvalidMaterial: Bloga medziaga...
+    InvalidBoolean: Bloga reiksme, turi buti true(t) arba false(f)
+    InvalidArea: Bloga teritorija...
+    InvalidGroup: Bloga grupe...
+    InvalidMessageType: Zinutes tipas turi buti enter arba remove.
+    InvalidList: Blogas sarasas...
+    InvalidFlag: Blogas Flag...
+    InvalidFlagState: Bloga flag reiksme, turi buti true(t), false(f), arba remove(r)
+    AreaExists: Toks ploto vardas jau egzistuoja.
+    AreaCreate: 'Sukurta rezidencija, ID %1'
+    AreaDiffWorld: Plotas yra kitame pasaulyje nuo rezidencijos.
+    AreaCollision: 'Pazymetas plotas kertasi su kita rezidencija %1'
+    AreaSubzoneCollision: 'Pazymetas plotas kertasi su subzona %1'
+    AreaNonExist: Toks plotas neegzistuoja.
+    AreaInvalidName: Blogas ploto pavadinimas...
+    AreaRename: 'Pervadinti plota is %1 i %2'
+    AreaRemove: 'Panaikintas plotas %1...'
+    AreaRemoveLast: Negalima pasalinti paskutinio ploto rezidencijoje.
+    AreaNotWithinParent: Plotas nera tevinio ploto viduje.
+    AreaUpdate: Plotas atnaujintas...
+    AreaMaxPhysical: Jus pasiekete maksimalu galimu plutu skaiciu savo rezidencijai.
+    AreaSizeLimit: Ploto dydis nera jusu galimybiu ribose.
+    AreaHighLimit: 'Jus negalite apsaugoti sitaip aukstai, jusu riba yra %1'
+    AreaLowLimit: 'Jus negalite apsaugoti sitaip giliai, jusu riba yra %1'
+    NotInResidence: Tu nesi savo rezidencijoje.
+    InResidence: 'Tu stovi rezidencijoje kurios pavadinimas %1'
+    ResidenceOwnerChange: 'Rezidencijos %1 savininkas pakeistas i %2'
+    NonAdmin: Tu nesi rezidencijos administratorius.
+    AdminOnly: Tik administratorei turi teise i sita komanda.
+    ChatDisabled: Rezidencijos pokalbiu kanalas isjungtas...
+    SubzoneRename: 'Pervadinta subzona is %1 i %2'
+    SubzoneRemove: 'Subzona %1 panaikinta.'
+    SubzoneCreate: 'Sukurta subzona %1'
+    SubzoneCreateFail: 'Neimanoma sukurti subzonos %1'
+    SubzoneExists: 'Subzona %1 jau egzistuoa.'
+    SubzoneCollide: 'Subzona kertasi su kita sub zona %1'
+    SubzoneMaxDepth: Pasiekete maksimalu subzonu gyli.
+    SubzoneSelectInside: Abudu pazimeti taskai turi buti rezidencijos ribose.
+    SelectPoints: Visu pirma pazimek du taskus pries naudodamas sita komanda!
+    SelectionSuccess: Zymejimas sekmingas!
+    SelectionFail: Neteisinga zymejimo komanda...
+    SelectionBedrock: Zymejimas istemptas iki zemiausio jums leistino tasko.
+    SelectionSky: Zymejimas istemptas iki auksciausio jums leistino tasko.
+    SelectionArea: 'Pazimetas plotas %1 rezidencijos %2'
+    SelectDiabled: Jus neturite prieigos prie pasirinkimu komandu.
+    NoPermission: Jus neturite tam teises.
+    OwnerNoPermission: Savininkas neturi tam teises.
+    ParentNoPermission: Jus neturite teises pakeitimams Parent zonai.
+    MessageChange: Zinute nustatyta...
+    FlagSet: Flagas nustatytas...
+    FlagCheckTrue: 'Flagas %1 priskirtas zaidejui %2 rezidencijai %3, reiksme = %4'
+    FlagCheckFalse: 'Flagas %1 nepriskirtas zaidejui %2 rezidencijai.'
+    FlagsCleared: Flagai istrinti.
+    FlagsDefault: Flagai nustatyti i pradine busena.
+    Usage: Komandos panaudojimas
+    InvalidHelp: Blogas pagalbos puslapis...
+    SubCommands: Sub komandos
+    InvalidList: Nezinomas saraso tipas, turi buti juodasis sarasas arba ignoravimo sarasas.
+    MaterialGet: 'Medziagos pavadinimas kadangi ID %1 yra %2'
+    MarketDisabled: Ekonomika isjungta!
+    MarketList: parduotuviu sarasas
+    SelectionTool: Zymejimo irankis
+    InfoTool: Informacinis irankis
+    NoBankAccess: Neturi priejimo prie banko.
+    NotEnoughMoney: Neturi uztektinai pinigu.
+    BankNoMoney: Nera uztektinai pinigu banke.
+    BankDeposit: 'Jus pervedete %1 i jusu rezidencijos banka.'
+    BankWithdraw: 'Jus istraukete %1 is jusu rezidencijos banko.'
+    MoneyCharged: 'Nuskaiciuota %1 is jusu %2 saskaitos.'
+    MoneyCredit: 'Kredituotas %1 i jusu %2 saskaita.'
+    RentDisabled: Nuomuos sistema isjungta.
+    RentReleaseInvalid: 'Rezidencija %1 nera nuomuojama arba isnuomuota.'
+    RentSellFail: Negali parduoti rezidencijos jeigu ji yra nuomuojama.
+    SellRentFail: Negali nuomuoti rezidencijos jeigu ji yra parduodama.
+    OwnerBuyFail: Negali pirkti savo paties zemes!
+    OwnerRentFail: Negali nuomuotis savo paties zemes!
+    AlreadySellFail: Rezidencija jau yra parduodama!
+    ResidenceBought: 'Jus nusipirkote rezidencija %1'
+    ResidenceBuy: 'Rezidencija %1 nupirko rezidencija %2 is jusu.'
+    ResidenceBuyTooBig: Si rezidencija turi didesnius plotus, nei jums leistas maximalus.
+    ResidenceNotForSale: Rezidencija neparduodama.
+    ResidenceForSale: 'Rezidencija %1 parduodama uz %2'
+    ResidenceStopSelling: Rezidencija nebeparduodama.
+    ResidenceTooMany: Tu jau turi maksimalu rezidenciju skaiciu kuris yra tau leistinas.
+    ResidenceMaxRent: Tu jau nuomuojiesi maksimalu rezidenciju skaiciu kuris yra tau leistinas.
+    ResidenceAlreadyRent: Rezidencija jau yra skirta nuomuoti...
+    ResidenceNotForRent: Rezidencija nenuomuojama...
+    ResidenceNotRented: Rezidencija neisnuomuota.
+    ResidenceUnrent: 'Rezidencija %1 daugiau nebeisnuomuota.'
+    ResidenceRemoveRentable: 'Rezidencija %1 daugiau nebenuomuojama.'
+    ResidenceForRentSuccess: 'Rezidencija %1 nuos iol nuomuojama uz %2 kas %3 dienas.'
+    ResidenceRentSuccess: 'Jus issinuomavote rezidencija %1 %2 dienoms.'
+    ResidenceAlreadyRented: 'Rezidencija %1 siuo metu isnuomuota %2'
+    ResidenceAlreadyExists: 'Rezidencija tokiu vardu %1 jau egzistuoja.'
+    ResidenceCreate: 'Jus sukurete rezidencija %1!'
+    ResidenceRename: 'Pervadinote rezidencija is %1 i %2'
+    ResidenceRemove: 'Rezidencija %1 panaikinta...'
+    RentDisabled: Nuoma isjungta...
+    RentDisableRenew: 'Rezidencija %1 automatiksai nebeissinuomuos pasibaigus nuomos laikui.'
+    RentEnableRenew: 'Rezidencija %1 automatiksai issinuomuos pasibaigus nuomos laikui.'
+    RentableDisableRenew: '%1 nebeprates nuomos laiko jam pasibaigus.'
+    RentableEnableRenew: '%1 automatiskai prates nuomos laika jam pasibaigus.'
+    LandForSale: Parduodama zeme
+    SellAmount: Pardavimu kiekis
+    LeaseExpire: Nuomos sutarties pasibaigimo laikas
+    RentExpire: Nuomos pasibaigimo laikas
+    RentableAutoRenew: Isnuomojamas automatinis atnaujinimas
+    RentAutoRenew: Nuoma automatinio atnaujinimo
+    RentableLand: Nuomuojama zeme
+    ListMaterialAdd: '%1 pridetas prie rezidencijos %2'
+    ListMaterialRemove: '%1 iskeldintas is %2'
+    ItemBlacklisted: Sitas blokas cia nera leidziamas.
+    RentedModifyDeny: Negali keisti isnuomuotos rezidencijos.
+    WorldPVPDisabled: Pasulinis PVP isjungtas.
+    NoPVPZone: Cia tu negali kautis.
+    FlagDeny: 'Tu neturi %1 privilegiju.'
+    FlagSetDeny: 'Savininkas neturi priejimo prie Flago %1'
+    SelectPoint: 'Pasirinktas %1 pazimejimo taskas'
+    ResidenceChat: 'Perjungti rezidencijos poklabiai %1'
+    ResidenceMoveDeny: 'Tu neturi judejimo teisiu sitoje rezidencijoje %1'
+    TeleportDeny: Tu neturi teleporto teisiu i sita rezidencija.
+    TeleportSuccess: 'Nuteleportuotas!'
+    TeleportNear: Nuteleportuotas prie rezidencijos.
+    TeleportNoFlag: Tu neturi teleporto teisiu i sita rezidencija.
+    SetTeleportLocation: Nustatyta teleporto vieta...
+    HelpPageHeader: 'Pagalbos puslapiai - %1 - puslapis <%2 is %3>'
+    ListExists: Sarasas jau egzistuoja...
+    ListRemoved: Sarasas pasalintas...
+    ListCreate: 'Sukurtas sarasas %1'
+    LeaseRenew: 'Nuomos sutartis galioja iki %1'
+    LeaseRenewMax: Nuomos sutartis atnaujinta i leistina maksimalu
+    LeaseNotExpire: Nera tokios nuomos sutarties, arba tokia nuomos sutartis nesibaigia.
+    LeaseRenewalCost: 'Atnaujinimo kaina plotui %1 yra %2'
+    LeaseInfinite: Nuomos sutarties laikas nustatytas neribotam laikui...
+    PermissionsApply: Leidimai pritaikyti rezidencijai.
+    PhysicalAreas: Fiziniai Plotai
+    CurrentArea: Einamieji Plotai
+    LeaseExpire: Nuomos pabaiga
+    NotOnline: Zaidejas turi buti prisijunges.
+    ResidenceGiveLimits: Negalima duoti rezidencijos pazymetam zaidejui, nes ji yra uz pazymeto zaidejo ribu.
+    ResidenceGive: 'Jus atiduodate rezidencija %1 zaidejui %2'
+    ResidenceRecieve: 'Jus gavote rezidencija %1 is zaidejo %2'
+    #Version 4 New Fields
+    #ResidenceListAll: 'Residences - <Page %1 of %2>' - removed, use GenericPage now
+    ResidenceListAllEmpty: Jokios rezidencijos neegzistuoja serveryje...
+    InvalidPage: Klaidingas puslapis...
+    NextPage: Kitas puslapis
+    #Version 10 New Fields
+    RemovePlayersResidences: 'Panaikintos visos rezidencijos priklausiancios zaidejui %1'
+    GenericPage: 'Puslapis %1 is %2'
+    #Version 11 New Fields
+    ResidenceRentedBy: 'Issinuomuota %1'
+    #Version 14 New Fields
+    InvalidCharacters: Aptikti negaliojantys zenklai...
+    InvalidNameCharacters: Varda sudaro neleistini zenklai...
+    #Version 15 New Fields
+    DeleteConfirm: 'Ar tikrai norite panaikinti rezidencija %1, naudok "/res confirm" kad patvirtinti.'
+    #Version 18 New Fields
+    SelectTooHigh: Ispejimas, pasirinkimas nuejo virs zemelapio virsunes, ribojama.
+    SelectTooLow: Ispejimas, pasirinkimas nuejo zemiau zemelapio pagrindo, ribojama.
+    WorldEditNotFound: WorldEdit nebuvo aptiktas.
+    #Version 19 New Fields
+    NoResHere: Nera cia rezidencijos.
+    DeleteSubzoneConfirm: 'Ar tikrai norite istrinti subzona %1, naudok "/res confirm" kad patvirtinti.'
+    #Version 20 New Fields
+    SubzoneOwnerChange: 'Subzonos %1 savininkas pakeistas i %2'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatinis rezidencijos admin jungiklis pasuktas %1'
+    #Version 22 New Fields
+    NoSpawn: 'Jus neturite leidimo judeti jusu atsiradimo taske.  Perkelimas'
+    CompassTargetReset: 'Jusu kompasas buvo perstatytas'
+    CompassTargetSet: 'Jusu kompasas dabar nurodo i %1'
+    #The below lines are mostly a word bank for various uses.
+    #Version 1 Fields
+    Description: Aprasymas
+    Land: Zeme
+    Cost: Kaina
+    Selection: Pazymeta
+    Total: Isviso
+    Size: dydis
+    Expanding: Isplesta
+    Shifting: Perkelta
+    Up: Aukstyn
+    Down: Zemyn
+    Error: Klaida
+    Flags: Veleveles
+    Your: Tavo
+    Group: Grupe
+    Others: Kiti
+    Primary: Pirminis
+    Secondary: Antrinis
+    Selection: Pazymeta
+    Moved: Perkelta
+    Status: Statusas
+    Available: Galimas
+    On: Ijungtas
+    Off: Isjungtas
+    Name: Vardas
+    Lists: Sarasas
+    Residences: Rezidencijos
+    Residence: Rezidencija
+    Count: Kiekis
+    Owner: Savininkas
+    #Version 4 Fields
+    World: Pasaulis
+    #Version 12 Fields
+    Subzones: Subzona
+    #Version 20 Fields
+    CoordsT: Virsutines koordinates
+    CoordsB: Apatines koordinates
+    #Version 22 Fields
+    TurnOn: 'ijungti'
+    TurnOff: 'isjungti'
+    
+# This is the help / usage messages for each command.
+# It follows this format:
+# <Command>
+#     Description: <general description of command, one line of text>
+#     Info: <extra info lines to describe the command, list of text>
+#     SubCommands:
+#           <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
+# Add a page number after the ? mark to see that page.
+
+HelpLinesPerPage: 7
+CommandHelp: #this is just a holder node, that holds the entire help
+    Description: Ieina pagalba del rezidenciju
+    SubCommands: #this is the actual beginning of all commands
+        res: #main residence command
+            Description: Pagrindines rezidencijos komandos
+            Info:
+                - 'Paziurek pamokas: http://ltcraft.lt/?page_id=311'
+                - 'Naudok /[komanda] ? <puslapis> kad perziureti issamiau.'
+                - 'Naudok /res flags <puslapis> kad perziureti apie galimus leidymus.'
+            SubCommands:
+                select: #selection commands
+                    Description: Zymejimo komandos
+                    Info:
+                        - 'Sia komanda pasirenkamas plotas naudojimui su rezidencija.'
+                        - '/res select [x] [y] [z] - parenka bloku spinduli, jums bunant viduje.'
+                    SubCommands:
+                        coords:
+                            Description: Rodomos pazymetos koordinates
+                            Info:
+                                - 'Naudojimas: /res select coords'
+                        size:
+                            Description: Rodomas pazymetas dydis
+                            Info:
+                                - 'Naudojimas: /res select size'
+                        cost:
+                            Description: Rodoma pasirinkimo kaina
+                            Info:
+                                - 'Naudojimas: /res select cost'
+                        vert:
+                            Description: Isplesti pasirinkima vertikaliai
+                            Info:
+                                - 'Naudojimas: /res select vert'
+                                - 'Isples pasirinkima taip aukstai ir taip zemai kaip leistina.'
+                        sky:
+                            Description: Isplesti pasirinkima i dangu
+                            Info:
+                                - 'Naudojimas: /res select sky'
+                                - 'Isples tiek aukstai kiek jums yra leista.'
+                        bedrock:
+                            Description: Isplesti pasirinkima iki Bedrock
+                            Info:
+                                - 'Naudojimas: /res select bedrock'
+                                - 'Isples tiek zemai kiek jums yra leista.'
+                        expand:
+                            Description: Isplesti pasirinkima kryptimi.
+                            Info:
+                                - 'Naudojimas: /res select expand <amount>'
+                                - 'Isplecia <kiekis> i ta krypti i kuria ziurite.'
+                        shift:
+                            Description: Paslinkti pasirinkima kryptimi
+                            Info:
+                                - 'Naudojimas: /res select shift <amount>'
+                                - 'Pastumia jusu pasirinkima <kiekis> i ta krypti i kuria ziurite.'
+                        chunk:
+                            Description: Pazymi dali kurioje esate siuo metu.
+                            Info:
+                                - 'Naudojimas: /res select chunk'
+                                - 'Pazymi dali kurioje stovite siuo metu.'
+                        residence:
+                            Description: Isrinkite egzistuojanti plota rezidencijoje.
+                            Info:
+                                - 'Naudojimas /res select <Residence> <AreaID>'
+                                - 'Isrenka egzistuojanti plota rezidencijoje.'
+                        worldedit:
+                            Description: nustatyti esama WorldEdit pasirinkima.
+                            Info:
+                                - 'Naudojimas /res select worldedit'
+                                - 'nustato pasirinkta arena naudojant esama WorldEdit pasirinkima.'
+                create: #Sukurymo komandos
+                    Description: Sukurti rezidencija
+                    Info:
+                        - 'Naudojimas: /res create <rezidencijos pavadinimas>'
+                remove: #Panaikinimo komandos
+                    Description: Panaikinti rezidencija.
+                    Info:
+                        - 'Naudojimas: /res remove <rezidencijos pavadinimas>'
+                removeall:
+                    Description: Panaikinti visas rezidencijas priklausiancias zaidejui.
+                    Info:
+                        - 'Naudojimas: /res removeall [savininkas]'
+                        - 'Panaikina visas rezidencijas priklausiancias zaidejui.'
+                        - 'reikalingas /resadmin jei tu tai naudosi ant kazkieno ir saves.'
+                confirm:
+                    - 'Naudojimas: /res confirm'
+                    - 'Patvirtinti rezidencijos panaikinima.'
+                subzone:
+                    Description: Sukurti subzonas rezidencijoje.
+                    Info:
+                        - 'Naudojimas: /res subzone <rezidencijos pavadinimas> [subzonos pavadinimas]'
+                        - 'Jeigu rezidencijos vardas istrinamas, bus bandyta naudoti rezidencija kurioje jus stovite.'
+                area:
+                    Description: valdyti fizines arenas rezidencijoje.
+                    SubCommands:
+                        list:
+                            Description: sarasas fiziniu arenu rezidencijoje.
+                            Info:
+                                - 'Naudojimas: /res area list [residence] <page>'
+                        listall:
+                            Description: sarasas koordinaciu ir kita informacija apie arenas.
+                            Info:
+                                - 'Naudojimas: /res area listall [residence] <page>'
+                        add:
+                            Description: prideti fizines arenas rezidencijoje
+                            Info:
+                                - 'Naudojimas: /res area add [residence] [areaID]'
+                                - 'Jus pirma turite pazymeti du taskus rezidencijoje.'
+                        remove:
+                            Description: Pasalinti fizines arenas is rezidencijos
+                            Info:
+                                - 'Naudojimas: /res area remove [residence] [areaID]'
+                        replace:
+                            Description: pakeisti fizines arenas rezidencijoje
+                            Info:
+                                - 'Naudojimas: /res area replace [residence] [areaID]'
+                                - 'Just privalote pirma pazymeti du taskus rezidencijoje.'
+                                - 'Pakeičiant arena reikės sumokėti dydžio skirtumą, jei naujas plotas yra didesnis.'
+                info:
+                    Description: Parodyti informacija apie rezidencija.
+                    Info:
+                        - 'Naudojimas: /res info <residence>'
+                        - 'nustojus <residence> rodyti informacija rezidencijai kurioje esate.'
+                limits:
+                    Description: Parodytu jusu limitus.
+                    Info:
+                        - 'Naudojimas: /res limits'
+                        - 'Parodo jusus galimus limitus kuriant ir monipuliuojant rezidencija.'
+                message:
+                    Description: Valdyti rezidencijos ieinancius / iseinacius pranesimus 
+                    Info:
+                        - 'Naudojimas: /res message <residence> [enter/leave] [message]'
+                        - 'nustatyti isvykimo ar atvykimo zinute.'
+                        - 'Naudojimas: /res message <residence> remove [enter/leave]'
+                        - 'pasalina atvykimo ar isvykimo zinute.'
+                lease:
+                    Description: Valdyti rezidencijos nuoma
+                    Info:
+                        - 'Naudojimas: /res lease [renew/cost] [residence]'
+                        - '/res lease parodo atsinaujinancia rezidencijos nuomos kaina.'
+                        - '/res lease renew parodo ar turi uztenkamai pinigu issinuomoti rezidencija.'
+                    SubCommands:
+                        set:
+                            Description: Nustatyti nuomos laika (admin only)
+                            Info:
+                                - 'Naudojimas: /resadmin lease set [residence] [#days/infinite]'
+                                - 'nustato specialu nuomos laika dienomis arba neribotai.'
+                bank:
+                    Description: Valdyti rezidencijos pinigus
+                    Info:
+                        - 'Naudojimas: /res bank [deposit/withdraw] [amount]'
+                        - 'jus turite stoveti rezidencijoje'
+                        - 'jus turite tureti +bank velevele rezidencijoje.'
+                tp:
+                    Description: Teleportuotis i rezidencija
+                    Info:
+                        - 'Naudojimas: /res tp [residence]'
+                        - 'Telepotuoja jus i rezidencija, just privalote tureti +tp velevele arba buti rezidencijos seimininkas.'
+                        - 'jusu privilegiju grupe taipat turi tureti leidima teleportuotis i rezidencijas.'
+                tpset:
+                    Description: Nustatyti teleportacijos vieta rezidencijoje
+                    Info:
+                        - 'Naudojimas: /res tpset'
+                        - 'nustatyts teleportacijos vieta i rezidencija ten kur jus stovite.'
+                        - 'just turite stoveti rezidencijoje naudodami sia komanda.'
+                        - 'Jus turite buti rezidencijos savininkas arba tureti +admin velevele.'
+                set:
+                    Description: Nustatyti bendras veliavas rezidencijoje
+                    Info:
+                        - 'Naudojimas: /res set <residence> [flag] [true/false/remove]'
+                        - 'Noredami paziureti veleveliu sarasa rasykite /res flags ?'
+                        - 'Šios vėliavos taikomos visiems žaidėjams, kurie neturi vėliavu konkrečiai pritaikytu jiems. ( /res set ?)'
+                pset:
+                    Description: Nustatyti veliavas specifiniam zaidejui rezidencijoje.
+                    Info:
+                        - 'Naudojimas: /res pset <residence> [player] [flag] [true/false/remove]'
+                        - 'Naudojimas: /res pset <residence> [player] removeall'
+                        - 'perziureti veleveliu sarasa naudokite /res flags ?'
+                gset:
+                    Description: Nustatyti veliavas specifinei grupei rezidencijoje.
+                    Info:
+                        - 'Naudojimas: /res gset <residence> [group] [flag] [true/false/remove]'
+                        - 'perziureti veleveliu sarasa naudokite /res flags ?'
+                lset:
+                    Description: pakeisti juodojo saraso ir ignoriamuju saraso nustatymus
+                    Info:
+                        - 'Naudojimas: /res lset <residence> [blacklist/ignorelist] [material]'
+                        - 'Naudojimas: /res lset <residence> info'
+                        - 'medziagos itraukimas i juodaji sarasa neleidzia buti padetas rezidencijoje.'
+                        - 'ignoriamuju sarasas padaro specifine medziaga neapsaugota rezidencijos.'
+                flags:
+                    Description: Veliavu sarasas
+                    Info:
+                        - 'flagu reiksmes, pagrinde naudoti "true" kai nori leisti ir "false" kai nori uzdrausti naudoti komanda ar veiksma.'
+                        - 'build - leisti arba uzdrausti statyti'
+                        - 'use - leisti arba uzdrausti duru, svirciu, mygtuku ir panasei naudojima...'
+                        - 'move - leisti arba uzdrausti judejima jusu rezidencijoje.'
+                        - 'container - leisti arba uzdrausti naudojima skriniu, krosniu, dalytuvu ir panasei naudojima...'
+                        - 'trusted - Suteikia statybos, naudojimo, judejimo, skriniu ir teleporto teises'
+                        - 'place - leisti arba uzdrausti tik bloku padejima jusu rezidencijoje.'
+                        - 'destroy - leisti arba uzdrausti tik bloku naikinima jusu rezidencijoje.'
+                        - 'pvp - leisti arba uzdrausti pvp jusu rezidencijoje'
+                        - 'tp - leisti arba uzdrausti teleportuotis i jusu rezidencija.'
+                        - 'admin - suteikia teise keisti flagus rezidencijoje.'
+                        - 'subzone - suteike teise kurti subzonas rezidencijoje.'
+                        - 'monsters - leisti arba uzdrausti monstru atsiradyma jusu rezidencijoje'
+                        - 'animals - leisti arba uzdrausti gyvunu atsiradima jusu rezidencijoje.'
+                        - 'healing - nustatyk i "true" is visi esantis bus pagydyti'
+                        - 'tnt - leisti arba uzdrausti TNT sprogimus'
+                        - 'creeper - leisti arba uzdrausti kreeperiu sprogimus'
+                        - 'ignite - leisti arba uzdrausti ugnies iziebima.'
+                        - 'firespread - leisti arba uzdrausti ugnies plitima.'
+                        - 'bucket - leisti arba uzdrausti kibiro naudojima.'
+                        - 'flow - leisti arba uzdrausti vandens tekejima.'
+                        - 'lavaflow - leisti arba uzdrausti lavos tekejima'
+                        - 'waterflow - leisti arba uzdrausti vandens tekejima'
+                        - 'damage - leisti arba uzdrausti patiriama zala nuo monstru'
+                        - 'piston - leisti arba uzdrausti stumoklius.'
+                        - 'hidden - paslepti rezidencija nuo list komandos'
+                        - 'cake - leisti arba uzdrausti valgyti torta'
+                        - 'lever - leisti arba uzdrausti naudotis svirtimis'
+                        - 'button - leisti arba uzdrausti naudotis mygtukais'
+                        - 'diode - leisti arba uzdrausti diodus'
+                        - 'door - leisti arba uzdrausti naudotis durimis ir liukais'
+                        - 'table - leisti arba uzdrausti naudotis darbastaleis'
+                        - 'enchant - leisti arba uzdrausti naudotis kerejimo stalais'
+                        - 'brew - leisti arba uzdrausti naudotis eleksiru staliukais'
+                        - 'bed - leisti arba uzdrausti naudotis lovomis'
+                        - 'button - leisti arba uzdrausti naudotis mygtukais'
+                        - 'pressure - leisti arba uzdrausti naudotis slegio plokstem'
+                        - 'note - leisti arba uzdrausti naudotis natu blokais'
+                        - 'redstone - suteikia lever, diode, button, pressure, note flagus'
+                        - 'craft - suteikia table, enchant, brew flagus'
+                        - 'burn - leisti arba uzdrausti monstru uzsiliepsnojima nuo saules'
+                        - 'melt - Apsaugo nuo sniego istirpimo'
+                        - 'form - Apsaugo nuo sniego susiformavimo'
+                        - 'animalkilling - Apsaugo nuo gyvunu zudymo'
+                        - 'mobkilling - Apsaugo nuo mobu zudymo'
+                        - 'drops - Apsaugo nuo item metimu rese'
+                        - 'enderpearl - Apsaugo nuo enderperl naudojimo rese'
+                        - 'falldamage - Apsaugo nuo falldamage'
+                        - 'portal - Apsaugo nuo portalu naudojimo'
+                        - 'villagerkilling - Apsaugo nuo kaimieciu zudimo'
+                        - 'vehicleprotect - Apsaugo vagoneliu nugriovima'
+                        - 'lightning - Apsaugo nuo zaibu'
+                        - 'grow - Sustabdo augmenijos augima'
+                        - 'hunger - Netampama alkanu'
+                        - 'fishing - Apsaugo nuo zvejojimo'
+                        - 'eggs - Apsaugo nuo kiausiniu metimo'
+                        - 'pigzap - Apsaugo kiaules nuo pasivertimo i pigzombie'
+                        - 'slimesplit - Apsaugo slime pasidalinima'
+                        - 'shear - Apsaugo nuo aviu nukirpimo'
+                        - 'pigsaddle - Apsaugo nuo balno uzdejimo ant kiaules'
+                        - 'trade - Apsaugo nuo prekybos su kaimieciais'
+                        - 'day - Diena visa laika'
+                        - 'night - Naktis visa laika'
+                        - 'weather - Lija visa laika'
+                list:
+                    Description: Rezidenciju sarasas
+                    Info:
+                        - 'Naudojimas: /res list <player> <page>'
+                        - 'Lists all the residences a player owns (except hidden ones).'
+                        - 'Jeigu sarasuose ziurimos savo rezidencijos, matos ir pasleptos.'
+                        - 'Norint pamatyti visu serverio zaideju rezidencijas, naudokite /res listall.'
+                listhidden:
+                    Description: Pamatyti pasleptas rezidencijas (TIK ADMINISTRATORIAMS)
+                    Info:
+                        - 'Naudojimas: /res listhidden <player> <page>'
+                        - 'Parodo sarasa pasleptu zaideju rezidenciju.'
+                listall:
+                    Description: List All Residences
+                    Info:
+                        - 'Naudojimas: /res listall <page>'
+                        - 'parodo sarasa viso serverio zaideju rezidenciju. (isskyrus pasleptu)'
+                listallhidden:
+                    Description: Pamatyti pasleptas rezidencijas (TIK ADMINISTRATORIAMS)
+                    Info:
+                        - 'Naudojimas: /res listhidden <page>'
+                        - 'Parodo viso serverio vpasleptu rezidenciju sarasa.'
+                sublist:
+                    Description: Sarasas rezidenciju subzonu
+                    Info:
+                        - 'Naudojimas: /res sublist <residence> <page>'
+                        - 'subzonu sarasas kartu su rezidencijomis.'
+                default:
+                    Description: Restartuoti rezidencija iki pradiniu nustatymu.
+                    Info:
+                        - 'Naudojimas: /res default <residence>'
+                        - '.  Restartuoti rezidencija iki pradiniu nustatymu.'
+                rename:
+                    Description: Pervadina rezidencija.
+                    Info:
+                        - 'Naudojimas: /res rename [OldName] [NewName]'
+                        - 'Tu turi buti savininkas arba adminas kad tai galetum padaryti.'
+                        - 'Vardas turi buti laisvas.'
+                mirror:
+                    Description: Veidrodines veleveles
+                    Info:
+                        - 'Naudojimas: /res mirror [Source Residence] [Target Residence]'
+                        - 'Suvienodink dvieju rezidenciju flagus.  Kad tai daryti turite buti abie ju rezidenciju adminas'
+                market:
+                    Description: Buy, Sell, or Rent Residences
+                    Info:
+                        - 'Naudojimas: /res market ? for more info'
+                    SubCommands:
+                        info:
+                            Description: Gauk ekonomine informacija apie rezidencija
+                            Info:
+                                - 'Naudojimas: /res market info [residence]'
+                                - 'Parodo ar rezidencija nomuojama,parduodama. parodo jos kaina.'
+                        list:
+                            Description: sarasas isnomuojamu rezidenciju.
+                            Info:
+                                - 'Naudojimas: /res market list'
+                        sell:
+                            Description: Rezidencijos pardavimas
+                            Info:
+                                - 'Naudojimas: /res market sell [pavadinimas] [suma]'
+                                - 'pradeda pardavineti rezidencija [suma] pinigu.'
+                                - 'kitas zaidejas gali pirkti rezidencija su komanda /res market buy'
+                        buy:
+                            Description: rezidencijos pirkimas
+                            Info:
+                                - 'Naudojimas: /res market buy [residence]'
+                                - 'perkama rezidencija jeigu ji parduodama.'
+                        unsell:
+                            Description: Sustabdyt rezidencijos pardavinejima.
+                            Info:
+                                - 'Naudojimas: /res market unsell [residence]'
+                        rent:
+                            Description: Isnuomoti rezidencija.
+                            Info:
+                                - 'Naudojimas: /res market rent [residence] <autorenew>'
+                                - 'Isnuomoja rezidencija. Automatini atnaujinima galima ijungti ir isjungti true arba false .  Jeigu True nuoma automatiskai prasites'
+                        rentable:
+                            Description: Padaryti rezidencija nuomojama.
+                            Info:
+                                - 'Naudojimas: /res market rentable [residence] [cost] [days] <repeat>'
+                                - 'padaro rezidencija nomuojama uz [cost] pinigu uz [days] dienu.  jai <repeat> nustatytas true, rezidencija automatiskai prasites.'
+                        release:
+                            Description: pasalinti rezidencija is nuomojamuju.
+                            Info:
+                                - 'Naudojimas: /res market release [residence]'
+                                - 'jeigu esate nuomininkas, sis namas nebepriklausys jums .'
+                                - 'jeigu esate seimininkas, si komanda nurtrauks jusu rezidencijos nuoma.'
+                current:
+                    Description: Parodo rezidencija kurioje esate.
+                    Info:
+                        - 'Naudojimas: /res current'
+                lists:
+                    Description: Isanksto nustatytu leidimu sarasas
+                    Info:
+                        - 'Isanksto nustatytu leidimu sarasas kuri galima pritaikyti rezidencijai.'
+                    SubCommands:
+                        add:
+                            Description: Prideti sarasa
+                            Info:
+                                - 'Naudojimas: /res lists add <listname>'
+                        remove:
+                            Description: Pasalinti sarasa
+                            Info:
+                                - 'Naudojimas: /res lists remove <listname>'
+                        apply:
+                            Description: Taikyti sarasa rezidencijai
+                            Info:
+                                - 'Naudojimas: /res lists apply <listname> <residence>'
+                        set:
+                            Description: Nustatyti veliava
+                            Info:
+                                - 'Naudojimas: /res lists set <listname> <flag> <value>'
+                        pset:
+                            Description: Nustatyti zaidejo veliava
+                            Info:
+                                - 'Naudojimas: /res lists pset <listname> <player> <flag> <value>'
+                        gset:
+                            Description: Nustatyti grupes veliava
+                            Info:
+                                - 'Naudojimas: /res lists gset <listname> <group> <flag> <value>'
+                        view:
+                            Description: Perziureti sarasa.
+                            Info:
+                                - 'Naudojimas: /res lists view <listname>'
+                server:
+                    Description: Nustatyti zemes savininka (tik administratoriam).
+                    Info:
+                        - 'Naudojimas: /resadmin server [residence]'
+                        - 'padaryti rezidencija uzimta.'
+                setowner:
+                    Description: pakeisti rezidencijos seimininka (tik administratoriam).
+                    Info:
+                        - 'Naudojimas: /resadmin setowner [residence] [player]'
+                resreload:
+                    Description: perkrauti rezidencija (tik administratoriam).
+                    Info:
+                        - 'Naudojimas: /resreload'
+                resload:
+                    Description: uzkrauti rezidencijos saugojimo faila (nesaugu, tik administratoriam).
+                    Info:
+                        - 'Naudojimas: /resload'
+                        - 'Nesaugi komanda, neapsaugoti rezidencija pirma.'
+                        - 'uzkrauna rezidencijos issaugojimo faila ir restartuoja rezidencija.'
+                version:
+                    Description: parodyti rezidencijos versija	
+                    Info:
+                        - 'Naudojimas: /res version'

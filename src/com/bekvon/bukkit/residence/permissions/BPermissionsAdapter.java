@@ -15,6 +15,7 @@ import de.bananaco.bpermissions.api.util.CalculableType;
  * 
  * @author Administrator
  */
+@SuppressWarnings("deprecation")
 public class BPermissionsAdapter implements PermissionsInterface {
 
     public BPermissionsAdapter() {
@@ -25,7 +26,7 @@ public class BPermissionsAdapter implements PermissionsInterface {
     }
 
     public String getPlayerGroup(String player, String world) {
-        String[] groups = ApiLayer.getGroups(world, CalculableType.USER, player);
+	String[] groups = ApiLayer.getGroups(world, CalculableType.USER, player);
         PermissionManager pmanager = Residence.getPermissionManager();
         for (String group : groups) {
             if (pmanager.hasGroup(group)) {

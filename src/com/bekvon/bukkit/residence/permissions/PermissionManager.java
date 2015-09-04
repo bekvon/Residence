@@ -29,12 +29,12 @@ public class PermissionManager {
     protected Map<String, String> playersGroup;
     protected FlagPermissions globalFlagPerms;
 
-    public PermissionManager(FileConfiguration config) {
+    public PermissionManager(FileConfiguration config, FileConfiguration flags) {
         try {
             groups = Collections.synchronizedMap(new HashMap<String, PermissionGroup>());
             playersGroup = Collections.synchronizedMap(new HashMap<String, String>());
             globalFlagPerms = new FlagPermissions();
-            this.readConfig(config);
+            this.readConfig(config, flags);
             boolean enable = config.getBoolean("Global.EnablePermissions", true);
             if (enable) {
                 this.checkPermissions();
@@ -143,9 +143,9 @@ public class PermissionManager {
         Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Permissions plugin NOT FOUND!");
     }
 
-    private void readConfig(FileConfiguration config) {
+    private void readConfig(FileConfiguration config, FileConfiguration flags) {
         String defaultGroup = Residence.getConfigManager().getDefaultGroup();
-        globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", config.getConfigurationSection("Global"));
+        globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", flags.getConfigurationSection("Global"));
         ConfigurationSection nodes = config.getConfigurationSection("Groups");
         if (nodes != null) {
             Set<String> entrys = nodes.getKeys(false);

@@ -106,6 +106,7 @@ public class PermissionListManager {
         list.printFlags(player);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Map<String,Object> save()
     {
         Map root = new LinkedHashMap<>();
@@ -121,6 +122,7 @@ public class PermissionListManager {
         }
         return root;
     }
+    @SuppressWarnings("unchecked")
     public static PermissionListManager load(Map<String, Object> root) {
         
         PermissionListManager p = new PermissionListManager();

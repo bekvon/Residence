@@ -50,6 +50,7 @@ public class YMLSaveHelper {
         osw.close();
     }
 
+    @SuppressWarnings("unchecked")
     public void load() throws IOException
     {
         FileInputStream fis = new FileInputStream(f);
