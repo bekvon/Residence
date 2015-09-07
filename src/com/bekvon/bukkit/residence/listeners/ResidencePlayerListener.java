@@ -19,9 +19,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,6 +49,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -809,9 +812,9 @@ public class ResidencePlayerListener implements Listener {
 		for (Entity ent : entities) {
 		    if (!ResidenceEntityListener.isMonster(ent))
 			continue;
+
 		    if (res.containsLoc(ent.getLocation())) {
-			Monster monster = (Monster) ent;
-			monster.remove();
+			ent.remove();
 		    }
 		}
 	    }
