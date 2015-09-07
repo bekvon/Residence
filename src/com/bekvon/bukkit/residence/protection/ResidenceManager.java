@@ -52,7 +52,8 @@ public class ResidenceManager {
 	ClaimedResidence res = null;
 	String world = loc.getWorld().getName();
 	ChunkRef chunk = new ChunkRef(loc);
-	//if (chunkResidences.containsKey(world)) {
+	if (!chunkResidences.containsKey(world))
+	    return null;
 
 	Map<ChunkRef, List<String>> ChunkMap = chunkResidences.get(world);
 
@@ -65,7 +66,7 @@ public class ResidenceManager {
 		}
 	    }
 	}
-	//}
+
 	if (res == null)
 	    return null;
 
