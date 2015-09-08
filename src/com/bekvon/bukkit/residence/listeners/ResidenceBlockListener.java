@@ -36,6 +36,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -222,8 +223,24 @@ public class ResidenceBlockListener implements Listener {
 
 	Location location = new Location(event.getBlock().getWorld(), event.getVelocity().getBlockX(), event.getVelocity().getBlockY(), event.getVelocity().getBlockZ());
 
-	ClaimedResidence sourceres = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
 	ClaimedResidence targetres = Residence.getResidenceManager().getByLoc(location);
+
+	if (targetres == null && location.getBlockY() >= Residence.getConfigManager().getPlaceLevel()) {
+	    ItemStack mat = event.getItem();
+	    if (Residence.getConfigManager().isNoLavaPlace())
+		if (mat.getType() == Material.LAVA_BUCKET) {
+		    event.setCancelled(true);
+		    return;
+		}
+
+	    if (Residence.getConfigManager().isNoWaterPlace())
+		if (mat.getType() == Material.WATER_BUCKET) {
+		    event.setCancelled(true);
+		    return;
+		}
+	}
+
+	ClaimedResidence sourceres = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
 	if (sourceres == null && targetres != null || sourceres != null && targetres == null || sourceres != null && targetres != null && !sourceres.getName().equals(
 	    targetres.getName())) {
