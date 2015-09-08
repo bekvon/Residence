@@ -13,6 +13,7 @@ import com.bekvon.bukkit.residence.utils.ParticleEffects;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,11 @@ public class ConfigManager {
     protected boolean enableEconomy;
     protected boolean adminsOnly;
     protected boolean allowEmptyResidences;
+    protected boolean NoLava;
+    protected boolean NoWater;
+    protected boolean NoLavaPlace;
+    protected boolean NoWaterPlace;
+    protected boolean UseClean;
     protected int infoToolId;
     protected int selectionToolId;
     protected boolean adminOps;
@@ -43,6 +49,9 @@ public class ConfigManager {
     protected int rentCheckInterval;
     protected int leaseCheckInterval;
     protected int autoSaveInt;
+    protected int FlowLevel;
+    protected int PlaceLevel;
+    protected int CleanLevel;
     protected int VisualizerRange;
     protected int VisualizerShowFor;
     protected int VisualizerUpdateInterval;
@@ -80,6 +89,7 @@ public class ConfigManager {
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
     protected List<Integer> customRightClick;
+    protected List<Integer> CleanBlocks;
     private boolean enforceAreaInsideArea;
 
     protected ParticleEffects SelectedFrame;
@@ -203,15 +213,38 @@ public class ConfigManager {
 	writer.addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = GetConfigInt("Global.SaveInterval", 10, writer, conf);
 
+	writer.addComment("Global.AntiGreef.SeaLevel", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
+	FlowLevel = GetConfigInt("Global.AntiGreef.Flow.Level", 63, writer, conf);
+	writer.addComment("Global.AntiGreef.Flow.NoLavaFlow", "With this set to true, lava flow outside residence is blocked");
+	NoLava = GetConfigBoolean("Global.AntiGreef.Flow.NoLavaFlow", true, writer, conf);
+	writer.addComment("Global.AntiGreef.Flow.NoWaterFlow", "With this set to true, water flow outside residence is blocked");
+	NoWater = GetConfigBoolean("Global.AntiGreef.Flow.NoWaterFlow", true, writer, conf);
+
+	writer.addComment("Global.AntiGreef.Place.Level", "Level from witch one to start block lava and water place", "This don't have effect in residence area");
+	PlaceLevel = GetConfigInt("Global.AntiGreef.Place.Level", 63, writer, conf);
+	writer.addComment("Global.AntiGreef.Place.NoLavaPlace", "With this set to true, playrs cant place lava outside residence");
+	NoLavaPlace = GetConfigBoolean("Global.AntiGreef.Place.NoLavaPlace", true, writer, conf);
+	writer.addComment("Global.AntiGreef.Place.NoWaterPlace", "With this set to true, playrs cant place water outside residence");
+	NoWaterPlace = GetConfigBoolean("Global.AntiGreef.Place.NoWaterPlace", true, writer, conf);
+
+	writer.addComment("Global.AntiGreef.ResCleaning.Use",
+	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
+	    "Effective way to prevent residence creating near greefing target and then remove it");
+	UseClean = GetConfigBoolean("Global.AntiGreef.ResCleaning.Use", true, writer, conf);
+	writer.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
+	CleanLevel = GetConfigInt("Global.AntiGreef.ResCleaning.Level", 63, writer, conf);
+	writer.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced","By default only water and lava will be replaced");
+	CleanBlocks = GetConfigIntArray("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11), writer, conf);
+
 	writer.addComment("Global.DefaultGroup", "The default group to use if Permissions fails to attach or your not using Permissions.");
 	defaultGroup = GetConfigString("Global.DefaultGroup", "default", writer, conf, false);
 
 	writer.addComment("Global.UseLeaseSystem", "Enable / Disable the Lease System.");
 	useLeases = GetConfigBoolean("Global.UseLeaseSystem", false, writer, conf);
-	
+
 	writer.addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
 	ResMoneyBack = GetConfigBoolean("Global.ResMoneyBack", false, writer, conf);
-	
+
 	writer.addComment("Global.LeaseCheckInterval", "The interval, in minutes, between residence lease checks (if leases are enabled).");
 	leaseCheckInterval = GetConfigInt("Global.LeaseCheckInterval", 10, writer, conf);
 
@@ -335,14 +368,15 @@ public class ConfigManager {
 	    OverlapSides = ParticleEffects.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
-	
+
 	writer.addComment("Global.AutoMobRemoval",
-	    "Default = false. Enabling this, residences with flag nomobs will be cleared from monsters in regular intervals.","This is quite heavy on server side, so enable only if you really need this feature");
+	    "Default = false. Enabling this, residences with flag nomobs will be cleared from monsters in regular intervals.",
+	    "This is quite heavy on server side, so enable only if you really need this feature");
 	AutoMobRemoval = GetConfigBoolean("Global.AutoMobRemoval.Use", false, writer, conf);
 	writer.addComment("Global.AutoMobRemoval.Interval",
 	    "How often in seconds to check for monsters in residences. Keep it at reasonable amount");
 	AutoMobRemovalInterval = GetConfigInt("Global.AutoMobRemoval.Interval", 3, writer, conf);
-	
+
 	enforceAreaInsideArea = GetConfigBoolean("Global.EnforceAreaInsideArea", false, writer, conf);
 	spoutEnable = GetConfigBoolean("Global.EnableSpout", false, writer, conf);
 	enableLeaseMoneyAccount = GetConfigBoolean("Global.EnableLeaseMoneyAccount", true, writer, conf);
@@ -453,7 +487,7 @@ public class ConfigManager {
     public boolean useLeases() {
 	return useLeases;
     }
-    
+
     public boolean useResMoneyBack() {
 	return ResMoneyBack;
     }
@@ -464,6 +498,26 @@ public class ConfigManager {
 
     public boolean allowEmptyResidences() {
 	return allowEmptyResidences;
+    }
+
+    public boolean isNoLava() {
+	return NoLava;
+    }
+
+    public boolean isNoWater() {
+	return NoWater;
+    }
+
+    public boolean isNoLavaPlace() {
+	return NoLavaPlace;
+    }
+
+    public boolean isNoWaterPlace() {
+	return NoWaterPlace;
+    }
+
+    public boolean isUseClean() {
+	return UseClean;
     }
 
     public int getInfoToolID() {
@@ -496,6 +550,18 @@ public class ConfigManager {
 
     public int getAutoSaveInterval() {
 	return autoSaveInt;
+    }
+
+    public int getFlowLevel() {
+	return FlowLevel;
+    }
+
+    public int getPlaceLevel() {
+	return PlaceLevel;
+    }
+
+    public int getCleanLevel() {
+	return CleanLevel;
     }
 
     public boolean flagsInherit() {
@@ -557,11 +623,11 @@ public class ConfigManager {
     public boolean enableSpout() {
 	return spoutEnable;
     }
-    
+
     public boolean AutoMobRemoval() {
 	return AutoMobRemoval;
     }
-    
+
     public int AutoMobRemovalInterval() {
 	return AutoMobRemovalInterval;
     }
@@ -588,6 +654,10 @@ public class ConfigManager {
 
     public List<Integer> getCustomRightClick() {
 	return customRightClick;
+    }
+
+    public List<Integer> getCleanBlocks() {
+	return CleanBlocks;
     }
 
     public boolean getEnforceAreaInsideArea() {

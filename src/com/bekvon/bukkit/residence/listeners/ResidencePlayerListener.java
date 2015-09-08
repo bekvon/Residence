@@ -468,6 +468,22 @@ public class ResidencePlayerListener implements Listener {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "bucket"));
 	    event.setCancelled(true);
 	}
+
+	Material mat = event.getBucket();
+
+	if (Residence.getConfigManager().isNoLavaPlace() && event.getBlockClicked().getLocation().getBlockY() >= Residence.getConfigManager().getPlaceLevel() - 1) {
+	    if (mat == Material.LAVA_BUCKET) {
+		Debug.D("blocking lava place");
+		event.setCancelled(true);
+		return;
+	    }
+	}
+
+	if (Residence.getConfigManager().isNoWaterPlace() && event.getBlockClicked().getLocation().getBlockY() >= Residence.getConfigManager().getPlaceLevel() - 1)
+	    if (mat == Material.WATER_BUCKET) {
+		event.setCancelled(true);
+		return;
+	    }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

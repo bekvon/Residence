@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,6 +33,9 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.Debug;
+import com.sk89q.worldedit.blocks.BlockType;
+
+import net.minecraft.server.v1_8_R3.Material;
 
 /**
  * 
@@ -329,6 +333,42 @@ public class ResidenceManager {
 	    if (parent == null) {
 		removeChunkList(name);
 		residences.remove(name);
+
+		if (Residence.getConfigManager().isUseClean()) {
+		    CuboidArea area = res.getAreaArray()[0];
+
+		    Location low = area.getLowLoc();
+		    Location high = area.getHighLoc();
+
+		    if (high.getBlockY() > Residence.getConfigManager().getCleanLevel()) {
+
+			if (low.getBlockY() < Residence.getConfigManager().getCleanLevel())
+			    low.setY(Residence.getConfigManager().getCleanLevel());
+
+			World world = low.getWorld();
+
+			Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
+
+			Debug.D("before removing block");
+			int i = 0;
+			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+			    temploc.setX(x);
+			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
+				temploc.setY(y);
+				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+				    temploc.setZ(z);
+				    if (Residence.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
+					temploc.getBlock().setTypeId(0);
+					i++;
+				    }
+				}
+			    }
+			}
+
+			Debug.D(i + " Block replaced after clean");
+		    }
+		}
+
 		if (player != null) {
 		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceRemove", ChatColor.YELLOW + name + ChatColor.GREEN));
 		}
@@ -340,6 +380,7 @@ public class ResidenceManager {
 		    parent.removeSubzone(split[split.length - 1]);
 		}
 	    }
+
 	    // Residence.getLeaseManager().removeExpireTime(name); - causing
 	    // concurrent modification exception in lease manager... worked
 	    // around for now

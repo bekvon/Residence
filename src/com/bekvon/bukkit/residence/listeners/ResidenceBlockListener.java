@@ -11,10 +11,13 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
@@ -32,6 +35,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 
 /**
  *
@@ -189,25 +193,70 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFromTo(BlockFromToEvent event) {
-        FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
-        boolean hasflow = perms.has("flow", true);
-        Material mat = event.getBlock().getType();
-        if (!hasflow) {
-            event.setCancelled(true);
-            return;
-        }
-        if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
-            if (!perms.has("lavaflow", hasflow)) {
-        		event.setCancelled(true);
-        	}
-            return;
-        }
-        if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
-        	if (!perms.has("waterflow", hasflow)) {
-        		event.setCancelled(true);
-        	}
-            return;
-        }
+	FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
+	boolean hasflow = perms.has("flow", true);
+	Material mat = event.getBlock().getType();
+	if (!hasflow) {
+	    event.setCancelled(true);
+	    return;
+	}
+	if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+	    if (!perms.has("lavaflow", hasflow)) {
+		event.setCancelled(true);
+	    }
+	    return;
+	}
+	if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
+	    if (!perms.has("waterflow", hasflow)) {
+		event.setCancelled(true);
+	    }
+	    return;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onDispense(BlockDispenseEvent event) {
+
+	if (event.isCancelled())
+	    return;
+
+	Location location = new Location(event.getBlock().getWorld(), event.getVelocity().getBlockX(), event.getVelocity().getBlockY(), event.getVelocity().getBlockZ());
+
+	ClaimedResidence sourceres = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+	ClaimedResidence targetres = Residence.getResidenceManager().getByLoc(location);
+
+	if (sourceres == null && targetres != null || sourceres != null && targetres == null || sourceres != null && targetres != null && !sourceres.getName().equals(
+	    targetres.getName())) {
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLavaWaterFlow(BlockFromToEvent event) {
+
+	Material mat = event.getBlock().getType();
+
+	Location location = event.getToBlock().getLocation();
+
+	if (location.getBlockY() < Residence.getConfigManager().getFlowLevel())
+	    return;
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(location);
+
+	if (res != null)
+	    return;
+
+	if (Residence.getConfigManager().isNoLava())
+	    if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+		event.setCancelled(true);
+		return;
+	    }
+
+	if (Residence.getConfigManager().isNoWater())
+	    if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
+		event.setCancelled(true);
+		return;
+	    }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
