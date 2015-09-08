@@ -90,6 +90,9 @@ public class ConfigManager {
     protected List<Integer> customBothClick;
     protected List<Integer> customRightClick;
     protected List<Integer> CleanBlocks;
+    protected List<String> NoFlowWorlds;
+    protected List<String> NoPlaceWorlds;
+    protected List<String> CleanWorlds;
     private boolean enforceAreaInsideArea;
 
     protected ParticleEffects SelectedFrame;
@@ -219,6 +222,7 @@ public class ConfigManager {
 	NoLava = GetConfigBoolean("Global.AntiGreef.Flow.NoLavaFlow", true, writer, conf);
 	writer.addComment("Global.AntiGreef.Flow.NoWaterFlow", "With this set to true, water flow outside residence is blocked");
 	NoWater = GetConfigBoolean("Global.AntiGreef.Flow.NoWaterFlow", true, writer, conf);
+	NoFlowWorlds = GetConfigArray("Global.AntiGreef.Flow.Worlds", Arrays.asList("World"), writer, conf, false);
 
 	writer.addComment("Global.AntiGreef.Place.Level", "Level from witch one to start block lava and water place", "This don't have effect in residence area");
 	PlaceLevel = GetConfigInt("Global.AntiGreef.Place.Level", 63, writer, conf);
@@ -226,6 +230,7 @@ public class ConfigManager {
 	NoLavaPlace = GetConfigBoolean("Global.AntiGreef.Place.NoLavaPlace", true, writer, conf);
 	writer.addComment("Global.AntiGreef.Place.NoWaterPlace", "With this set to true, playrs cant place water outside residence");
 	NoWaterPlace = GetConfigBoolean("Global.AntiGreef.Place.NoWaterPlace", true, writer, conf);
+	NoPlaceWorlds = GetConfigArray("Global.AntiGreef.Place.Worlds", Arrays.asList("World"), writer, conf, false);
 
 	writer.addComment("Global.AntiGreef.ResCleaning.Use",
 	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
@@ -235,6 +240,7 @@ public class ConfigManager {
 	CleanLevel = GetConfigInt("Global.AntiGreef.ResCleaning.Level", 63, writer, conf);
 	writer.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced","By default only water and lava will be replaced");
 	CleanBlocks = GetConfigIntArray("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11), writer, conf);
+	CleanWorlds = GetConfigArray("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList("World"), writer, conf, false);
 
 	writer.addComment("Global.DefaultGroup", "The default group to use if Permissions fails to attach or your not using Permissions.");
 	defaultGroup = GetConfigString("Global.DefaultGroup", "default", writer, conf, false);
@@ -658,6 +664,15 @@ public class ConfigManager {
 
     public List<Integer> getCleanBlocks() {
 	return CleanBlocks;
+    }
+    public List<String> getNoFlowWorlds() {
+	return NoFlowWorlds;
+    }
+    public List<String> getNoPlaceWorlds() {
+	return NoPlaceWorlds;
+    }
+    public List<String> getCleanWorlds() {
+	return CleanWorlds;
     }
 
     public boolean getEnforceAreaInsideArea() {

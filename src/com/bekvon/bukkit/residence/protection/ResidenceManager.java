@@ -334,7 +334,7 @@ public class ResidenceManager {
 		removeChunkList(name);
 		residences.remove(name);
 
-		if (Residence.getConfigManager().isUseClean()) {
+		if (Residence.getConfigManager().isUseClean() && Residence.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
 		    CuboidArea area = res.getAreaArray()[0];
 
 		    Location low = area.getLowLoc();
@@ -349,7 +349,6 @@ public class ResidenceManager {
 
 			Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
 
-			Debug.D("before removing block");
 			int i = 0;
 			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
 			    temploc.setX(x);
@@ -364,8 +363,6 @@ public class ResidenceManager {
 				}
 			    }
 			}
-
-			Debug.D(i + " Block replaced after clean");
 		    }
 		}
 

@@ -225,7 +225,8 @@ public class ResidenceBlockListener implements Listener {
 
 	ClaimedResidence targetres = Residence.getResidenceManager().getByLoc(location);
 
-	if (targetres == null && location.getBlockY() >= Residence.getConfigManager().getPlaceLevel()) {
+	if (targetres == null && location.getBlockY() >= Residence.getConfigManager().getPlaceLevel() && Residence.getConfigManager().getNoPlaceWorlds().contains(location
+	    .getWorld().getName())) {
 	    ItemStack mat = event.getItem();
 	    if (Residence.getConfigManager().isNoLavaPlace())
 		if (mat.getType() == Material.LAVA_BUCKET) {
@@ -254,7 +255,9 @@ public class ResidenceBlockListener implements Listener {
 	Material mat = event.getBlock().getType();
 
 	Location location = event.getToBlock().getLocation();
-
+	if (!Residence.getConfigManager().getNoFlowWorlds().contains(location.getWorld().getName()))
+	    return;
+	
 	if (location.getBlockY() < Residence.getConfigManager().getFlowLevel())
 	    return;
 
