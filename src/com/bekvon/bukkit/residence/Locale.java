@@ -88,6 +88,10 @@ public class Locale {
 	GetConfigString("Language.InvalidBoolean", "Invalid value, must be true(t) or false(f)", writer, conf, true);
 	GetConfigString("Language.InvalidArea", "Invalid Area...", writer, conf, true);
 	GetConfigString("Language.InvalidGroup", "Invalid Group...", writer, conf, true);
+	writer.addComment("Language.CantPlaceLava", "Replace all text with '' to disable this message");
+	GetConfigString("Language.CantPlaceLava", "You can't place lava outside residence and higher than %1 block level", writer, conf, true);
+	writer.addComment("Language.CantPlaceWater", "Replace all text with '' to disable this message");
+	GetConfigString("Language.CantPlaceWater", "You can't place Water outside residence and higher than %1 block level", writer, conf, true);
 	GetConfigString("Language.InvalidMessageType", "Message type must be enter or remove.", writer, conf, true);
 	// GetConfigString("Language.InvalidList", "Invalid List...", writer,
 	// conf, true);

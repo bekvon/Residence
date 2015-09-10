@@ -90,6 +90,10 @@ public class WorldFlagManager {
 	    keys = groups.getConfigurationSection("Groups").getKeys(false);
 	    if (keys != null) {
 		for (String key : keys) {
+		    if (!groups.contains("Groups." + key + ".Flags"))
+			continue;
+		    if (!groups.contains("Groups." + key + ".Flags.World"))
+			continue;
 		    Set<String> worldkeys = groups.getConfigurationSection("Groups." + key + ".Flags.World").getKeys(false);
 		    if (worldkeys != null) {
 			Map<String, FlagPermissions> perms = new HashMap<>();

@@ -19,11 +19,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Hanging;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -49,7 +46,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ActionBar;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -461,26 +457,46 @@ public class ResidencePlayerListener implements Listener {
 		    return;
 		}
 	    }
+
+	    Material mat = event.getBucket();
+	    if (!res.getPermissions().playerHas(player.getName(), "bucket", true) && Residence.getConfigManager().getNoPlaceWorlds().contains(event.getBlockClicked()
+		.getLocation().getWorld().getName())) {
+		if (mat == Material.LAVA_BUCKET) {
+		    event.setCancelled(true);
+		    return;
+		}
+		if (mat == Material.WATER_BUCKET) {
+		    event.setCancelled(true);
+		    return;
+		}
+	    }
 	}
+
 	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
 	if (!perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true))) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "bucket"));
 	    event.setCancelled(true);
+	    return;
 	}
 
 	Material mat = event.getBucket();
-
-	if (Residence.getConfigManager().isNoLavaPlace() && event.getBlockClicked().getLocation().getBlockY() >= Residence.getConfigManager().getPlaceLevel() - 1) {
+	int level = Residence.getConfigManager().getPlaceLevel();
+	if (res == null && Residence.getConfigManager().isNoLavaPlace() && event.getBlockClicked().getLocation().getBlockY() >= level - 1 && Residence.getConfigManager()
+	    .getNoPlaceWorlds().contains(event.getBlockClicked().getLocation().getWorld().getName())) {
 	    if (mat == Material.LAVA_BUCKET) {
-		Debug.D("blocking lava place");
+		if (!Residence.getLanguage().getPhrase("CantPlaceLava").equalsIgnoreCase(""))
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("CantPlaceLava", String.valueOf(level)));
 		event.setCancelled(true);
 		return;
 	    }
 	}
 
-	if (Residence.getConfigManager().isNoWaterPlace() && event.getBlockClicked().getLocation().getBlockY() >= Residence.getConfigManager().getPlaceLevel() - 1)
+	if (res == null && Residence.getConfigManager().isNoWaterPlace() && event.getBlockClicked().getLocation().getBlockY() >= level - 1 && Residence.getConfigManager()
+	    .getNoPlaceWorlds().contains(event.getBlockClicked().getLocation().getWorld().getName()))
 	    if (mat == Material.WATER_BUCKET) {
+		if (!Residence.getLanguage().getPhrase("CantPlaceWater").equalsIgnoreCase(""))
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("CantPlaceWater", String.valueOf(level)));
 		event.setCancelled(true);
 		return;
 	    }
