@@ -156,6 +156,28 @@ public class Locale {
 	GetConfigString("Language.MaterialGet", "The material name for ID %1 is %2", writer, conf, true);
 	GetConfigString("Language.MarketDisabled", "Economy Disabled!", writer, conf, true);
 	GetConfigString("Language.MarketList", "Market List", writer, conf, true);
+
+	GetConfigString("Language.SignTopLine", "[market]", writer, conf, true);
+	GetConfigString("Language.SignDateFormat", "YY/MM/dd HH:mm", writer, conf, true);
+	
+	GetConfigString("Language.SignForRentTopLine", "&8For Rent", writer, conf, true);
+	GetConfigString("Language.SignForRentPriceLine", "&8%1&f/&8%2&f/&8%3", writer, conf, true);
+	GetConfigString("Language.SignForRentResName", "&8%1", writer, conf, true);
+	GetConfigString("Language.SignForRentBottomLine", "&9Available", writer, conf, true);
+
+	GetConfigString("Language.SignRentedAutorenewTrue", "&2", writer, conf, true);
+	GetConfigString("Language.SignRentedAutorenewFalse", "&c", writer, conf, true);
+	
+	GetConfigString("Language.SignRentedTopLine", "%1", writer, conf, true);
+	GetConfigString("Language.SignRentedPriceLine", "&8%1&f/&8%2&f/&8%3", writer, conf, true);
+	GetConfigString("Language.SignRentedResName", "&8%1", writer, conf, true);
+	GetConfigString("Language.SignRentedBottomLine", "&1%1", writer, conf, true);
+	
+	GetConfigString("Language.SignForSaleTopLine", "&8For Sale", writer, conf, true);
+	GetConfigString("Language.SignForSalePriceLine", "&8%1", writer, conf, true);
+	GetConfigString("Language.SignForSaleResName", "&8%1", writer, conf, true);
+	GetConfigString("Language.SignForSaleBottomLine", "&5Available", writer, conf, true);
+
 	GetConfigString("Language.SelectionTool", "Selection Tool", writer, conf, true);
 	GetConfigString("Language.InfoTool", "Info Tool", writer, conf, true);
 	GetConfigString("Language.NoBankAccess", "You dont have bank access.", writer, conf, true);

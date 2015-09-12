@@ -34,6 +34,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
@@ -431,6 +432,9 @@ public class Residence extends JavaPlugin {
 	    System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 	}
+	
+	SignUtil.LoadSigns();
+	
 	//versionChecker = new VersionChecker(this);
 	// versionChecker.VersionCheck(null);
     }

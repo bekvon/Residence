@@ -9,7 +9,10 @@ import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.Signs.SignUtil;
+import com.bekvon.bukkit.residence.Signs.Signs;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -105,6 +108,9 @@ public class TransactionManager {
 	    return;
 	}
 	sellAmount.put(areaname, amount);
+
+	SignUtil.CheckSign(area);
+
 	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceForSale", ChatColor.YELLOW + areaname + ChatColor.GREEN + "." + ChatColor.YELLOW
 	    + amount + ChatColor.GREEN));
     }
@@ -186,6 +192,9 @@ public class TransactionManager {
 		res.getPermissions().setOwner(player.getName(), true);
 		res.getPermissions().applyDefaultFlags();
 		this.removeFromSale(areaname);
+
+		SignUtil.CheckSign(res);
+
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCharged", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN
 		    + "." + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceBought", ChatColor.GREEN + areaname + ChatColor.YELLOW));
@@ -213,6 +222,7 @@ public class TransactionManager {
 	    }
 	    if (area.getPermissions().getOwner().equals(player.getName()) || resadmin) {
 		removeFromSale(areaname);
+		SignUtil.CheckSign(area);
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceStopSelling"));
 	    } else {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));

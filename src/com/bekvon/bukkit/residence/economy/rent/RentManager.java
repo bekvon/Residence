@@ -34,6 +34,10 @@ public class RentManager {
 	rentableLand = new HashMap<>();
     }
 
+    public RentedLand getRentedLand(String name) {
+	return rentedLand.containsKey(name) ? rentedLand.get(name) : null;
+    }
+
     public void setForRent(Player player, String landName, int amount, int days, boolean repeatable, boolean resadmin) {
 	if (!Residence.getConfigManager().enabledRentSystem()) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("MarketDisabled"));

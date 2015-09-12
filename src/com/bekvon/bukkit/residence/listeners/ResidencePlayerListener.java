@@ -5,7 +5,9 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -25,6 +28,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -41,11 +46,15 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+import com.bekvon.bukkit.residence.utils.Debug;
+import com.bekvon.bukkit.residence.Signs.SignUtil;
+import com.bekvon.bukkit.residence.Signs.Signs;
 
 /**
  * 
@@ -81,6 +90,166 @@ public class ResidencePlayerListener implements Listener {
 	chatenabled = Residence.getConfigManager().chatEnabled();
 	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onSignInteract(PlayerInteractEvent event) {
+
+	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+	    return;
+
+	Block block = event.getClickedBlock();
+
+	if (block == null)
+	    return;
+
+	if (!(block.getState() instanceof Sign))
+	    return;
+
+	Player player = (Player) event.getPlayer();
+
+	Location loc = block.getLocation();
+
+	for (Signs one : SignUtil.Signs.GetAllSigns()) {
+	    if (!one.GetWorld().equalsIgnoreCase(loc.getWorld().getName()))
+		continue;
+	    if (one.GetX() != loc.getBlockX())
+		continue;
+	    if (one.GetY() != loc.getBlockY())
+		continue;
+	    if (one.GetZ() != loc.getBlockZ())
+		continue;
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+
+	    if (res == null)
+		return;
+
+	    String landName = res.getName();
+
+	    boolean ForSale = Residence.getTransactionManager().isForSale(landName);
+	    boolean ForRent = Residence.getRentManager().isForRent(landName);
+
+	    if (ForSale) {
+		Bukkit.dispatchCommand(player, "res market buy " + landName);
+		break;
+	    }
+
+	    if (ForRent) {
+		if (Residence.getRentManager().isRented(landName) && player.isSneaking())
+		    Bukkit.dispatchCommand(player, "res market release " + landName);
+		else {
+		    boolean stage = true;
+		    if (player.isSneaking())
+			stage = false;
+
+		    Bukkit.dispatchCommand(player, "res market rent " + landName + " " + stage);
+		}
+	    }
+
+	}
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onSignCreate(SignChangeEvent event) {
+
+	Block block = event.getBlock();
+
+	if (!(block.getState() instanceof Sign))
+	    return;
+
+	Sign sign = (Sign) block.getState();
+
+	if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase(Residence.getLanguage().getPhrase("SignTopLine")))
+	    return;
+
+//	if (!event.getPlayer().hasPermission("residence.market.signs")) {
+//	    event.setCancelled(true);
+//	    player.sendMessage(Language.getMessage("signs.cantcreate"));
+//	    return;
+//	}
+
+	Signs signInfo = new Signs();
+
+	Location loc = sign.getLocation();
+
+	final ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+
+	if (res == null)
+	    return;
+
+	String landName = res.getName();
+
+	boolean ForSale = Residence.getTransactionManager().isForSale(landName);
+	boolean ForRent = Residence.getRentManager().isForRent(landName);
+
+	int category = 1;
+	if (SignUtil.Signs.GetAllSigns().size() > 0)
+	    category = SignUtil.Signs.GetAllSigns().get(SignUtil.Signs.GetAllSigns().size() - 1).GetCategory() + 1;
+
+	if (ForSale || ForRent) {
+	    signInfo.setCategory(category);
+	    signInfo.setResidence(landName);
+	    signInfo.setWorld(loc.getWorld().getName());
+	    signInfo.setX(loc.getBlockX());
+	    signInfo.setY(loc.getBlockY());
+	    signInfo.setZ(loc.getBlockZ());
+	    signInfo.setLocation(loc);
+	    SignUtil.Signs.addSign(signInfo);
+	    SignUtil.saveSigns();
+	}
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+	    public void run() {
+		SignUtil.CheckSign(res);
+	    }
+	}, 5L);
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onRentEvent(ResidenceRentEvent event) {
+	ClaimedResidence res = event.getResidence();
+	for (final Signs one : SignUtil.Signs.GetAllSigns()) {
+	    if (!res.containsLoc(one.GetLocation()))
+		continue;
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+		public void run() {
+		    SignUtil.SignUpdate(one);
+		}
+	    }, 5L);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onSignDestroy(BlockBreakEvent event) {
+
+	if (event.isCancelled())
+	    return;
+
+	Block block = event.getBlock();
+
+	if (block == null)
+	    return;
+
+	if (!(block.getState() instanceof Sign))
+	    return;
+
+	Location loc = block.getLocation();
+
+	for (Signs one : SignUtil.Signs.GetAllSigns()) {
+
+	    if (!one.GetWorld().equalsIgnoreCase(loc.getWorld().getName()))
+		continue;
+	    if (one.GetX() != loc.getBlockX())
+		continue;
+	    if (one.GetY() != loc.getBlockY())
+		continue;
+	    if (one.GetZ() != loc.getBlockZ())
+		continue;
+
+	    SignUtil.Signs.removeSign(one);
+	    SignUtil.saveSigns();
+	    break;
 	}
     }
 

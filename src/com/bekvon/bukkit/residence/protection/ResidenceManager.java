@@ -140,7 +140,6 @@ public class ResidenceManager {
 
     public boolean addResidence(Player player, String owner, String name, Location loc1, Location loc2, boolean resadmin) {
 
-	long time = System.currentTimeMillis();
 	if (!Residence.validName(name)) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
@@ -153,7 +152,6 @@ public class ResidenceManager {
 	    }
 	    return false;
 	}
-	Debug.D("1 " + (System.currentTimeMillis() - time));
 	PermissionGroup group = Residence.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
 	boolean createpermission = group.canCreateResidences() || (player == null ? true : player.hasPermission("residence.create"));
 	if (!createpermission && !resadmin) {
@@ -162,14 +160,12 @@ public class ResidenceManager {
 	    }
 	    return false;
 	}
-	Debug.D("2 " + (System.currentTimeMillis() - time));
 	if (player != null) {
 	    if (!hasMaxZones(player.getName(), group.getMaxZones()) && !resadmin) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceTooMany"));
 		return false;
 	    }
 	}
-	Debug.D("3 " + (System.currentTimeMillis() - time));
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
 	ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName());
 	newRes.getPermissions().applyDefaultFlags();
