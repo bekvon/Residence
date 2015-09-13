@@ -228,7 +228,7 @@ public class ResidencePermissions extends FlagPermissions {
 	    if (fc.isCancelled())
 		return false;
 	    if (super.setFlag(flag, state)) {
-		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet"));
+		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet", flag + "." + residence.getName() + "." + flagstate));
 		return true;
 	    }
 	}
