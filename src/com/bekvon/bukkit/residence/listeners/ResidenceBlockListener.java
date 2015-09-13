@@ -15,6 +15,7 @@ import com.bekvon.bukkit.residence.utils.Debug;
 
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -174,6 +175,16 @@ public class ResidenceBlockListener implements Listener {
 		    return;
 		}
 	    }
+
+	    for (Block block : event.getBlocks()) {
+		ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(block.getLocation());
+		ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+		if (blockRes == null && pistonRes != null || blockRes != null && pistonRes == null || blockRes != null && pistonRes != null && !blockRes.getName()
+		    .equalsIgnoreCase(pistonRes.getName())) {
+		    event.setCancelled(true);
+		    return;
+		}
+	    }
 	}
     }
 
@@ -190,6 +201,19 @@ public class ResidenceBlockListener implements Listener {
 		return;
 	    }
 	}
+
+	BlockFace dir = event.getDirection();
+	for (Block block : event.getBlocks()) {
+	    Location loc = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
+	    ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(loc);
+	    ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+	    if (blockRes == null && pistonRes != null || blockRes != null && pistonRes == null || blockRes != null && pistonRes != null && !blockRes.getName()
+		.equalsIgnoreCase(pistonRes.getName())) {
+		event.setCancelled(true);
+		return;
+	    }
+	}
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -257,7 +281,7 @@ public class ResidenceBlockListener implements Listener {
 	Location location = event.getToBlock().getLocation();
 	if (!Residence.getConfigManager().getNoFlowWorlds().contains(location.getWorld().getName()))
 	    return;
-	
+
 	if (location.getBlockY() < Residence.getConfigManager().getFlowLevel())
 	    return;
 
