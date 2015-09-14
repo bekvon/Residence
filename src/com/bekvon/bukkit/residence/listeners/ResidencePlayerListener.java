@@ -5,9 +5,7 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +44,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -121,12 +118,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (one.GetZ() != loc.getBlockZ())
 		continue;
 
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-
-	    if (res == null)
-		return;
-
-	    String landName = res.getName();
+	    String landName = one.GetResidence();
 
 	    boolean ForSale = Residence.getTransactionManager().isForSale(landName);
 	    boolean ForRent = Residence.getRentManager().isForRent(landName);
@@ -164,22 +156,29 @@ public class ResidencePlayerListener implements Listener {
 	if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase(Residence.getLanguage().getPhrase("SignTopLine")))
 	    return;
 
-//	if (!event.getPlayer().hasPermission("residence.market.signs")) {
-//	    event.setCancelled(true);
-//	    player.sendMessage(Language.getMessage("signs.cantcreate"));
-//	    return;
-//	}
-
 	Signs signInfo = new Signs();
 
 	Location loc = sign.getLocation();
 
-	final ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+	String landName = null;
 
-	if (res == null)
-	    return;
+	ClaimedResidence res = null;
+	if (!event.getLine(1).equalsIgnoreCase("")) {
+	    res = Residence.getResidenceManager().getByName(event.getLine(1));
 
-	String landName = res.getName();
+	    if (res == null) {
+		event.setCancelled(true);
+		return;
+	    }
+
+	    landName = res.getName();
+
+	} else {
+	    res = Residence.getResidenceManager().getByLoc(loc);
+	    landName = Residence.getResidenceManager().getNameByLoc(loc);
+	}
+
+	final ClaimedResidence residence = res;
 
 	boolean ForSale = Residence.getTransactionManager().isForSale(landName);
 	boolean ForRent = Residence.getRentManager().isForRent(landName);
@@ -201,23 +200,9 @@ public class ResidencePlayerListener implements Listener {
 	}
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
 	    public void run() {
-		SignUtil.CheckSign(res);
+		SignUtil.CheckSign(residence);
 	    }
 	}, 5L);
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onRentEvent(ResidenceRentEvent event) {
-	ClaimedResidence res = event.getResidence();
-	for (final Signs one : SignUtil.Signs.GetAllSigns()) {
-	    if (!res.containsLoc(one.GetLocation()))
-		continue;
-	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
-		public void run() {
-		    SignUtil.SignUpdate(one);
-		}
-	    }, 5L);
-	}
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

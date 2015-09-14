@@ -5,19 +5,18 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
+import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -107,7 +106,7 @@ public class SignUtil {
 	signList.addAll(SignUtil.Signs.GetAllSigns());
 
 	for (Signs one : signList) {
-	    if (!res.containsLoc(one.GetLocation()))
+	    if (!res.getName().equals(one.GetResidence()))
 		continue;
 	    SignUtil.SignUpdate(one);
 	}
@@ -116,9 +115,7 @@ public class SignUtil {
 
     public static boolean SignUpdate(Signs Sign) {
 
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(Sign.GetLocation());
-
-	String landName = res.getName();
+	String landName = Sign.GetResidence();
 
 	boolean ForSale = Residence.getTransactionManager().isForSale(landName);
 	boolean ForRent = Residence.getRentManager().isForRent(landName);
@@ -169,8 +166,8 @@ public class SignUtil {
 
 	    sign.setLine(1, infoLine);
 
-	    sign.setLine(2, rented ? Residence.getLanguage().getPhrase("SignRentedResName", landName)
-		: Residence.getLanguage().getPhrase("SignForRentResName", landName));
+	    sign.setLine(2, rented ? NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", landName)
+		: NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", landName));
 	    sign.setLine(3, rented ? Residence.getLanguage().getPhrase("SignRentedBottomLine", Residence.getRentManager().getRentingPlayer(landName))
 		: Residence.getLanguage().getPhrase("SignForRentBottomLine"));
 	    sign.update();
@@ -180,7 +177,7 @@ public class SignUtil {
 	    sign.setLine(0, Residence.getLanguage().getPhrase("SignForSaleTopLine"));
 	    String infoLine = Residence.getLanguage().getPhrase("SignForSalePriceLine", String.valueOf(Residence.getTransactionManager().getSaleAmount(landName)));
 	    sign.setLine(1, infoLine);
-	    sign.setLine(2, Residence.getLanguage().getPhrase("SignForSaleResName", landName));
+	    sign.setLine(2, NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", landName));
 	    sign.setLine(3, Residence.getLanguage().getPhrase("SignForSaleBottomLine"));
 	    sign.update();
 	}

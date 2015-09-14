@@ -174,7 +174,7 @@ public class ResidenceEntityListener implements Listener {
 
 	if (damager instanceof Player) {
 	    cause = (Player) damager;
-	} else {
+	} else if (damager instanceof Projectile) {
 	    cause = (Player) ((Projectile) damager).getShooter();
 	}
 

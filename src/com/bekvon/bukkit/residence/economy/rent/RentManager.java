@@ -8,11 +8,14 @@ package com.bekvon.bukkit.residence.economy.rent;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -127,6 +130,9 @@ public class RentManager {
 		newrent.endTime = System.currentTimeMillis() + daysToMs(land.days);
 		newrent.autoRefresh = repeat;
 		rentedLand.put(landName, newrent);
+
+		SignUtil.CheckSign(res);
+
 		res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
 		res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
 		res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
@@ -158,8 +164,10 @@ public class RentManager {
 		rentableLand.remove(landName);
 	    }
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
-	    if (res != null)
+	    if (res != null) {
 		res.getPermissions().applyDefaultFlags();
+		SignUtil.CheckSign(res);
+	    }
 	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceUnrent", ChatColor.YELLOW + landName + ChatColor.GREEN));
 	} else {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
@@ -200,8 +208,10 @@ public class RentManager {
 	    rentableLand.remove(landName);
 	    if (rentedLand.containsKey(landName)) {
 		rentedLand.remove(landName);
-		if (res != null)
+		if (res != null) {
 		    res.getPermissions().applyDefaultFlags();
+		    SignUtil.CheckSign(res);
+		}
 	    }
 	    if (split.length != 0)
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceRemoveRentable", ChatColor.YELLOW + split[split.length - 1]
