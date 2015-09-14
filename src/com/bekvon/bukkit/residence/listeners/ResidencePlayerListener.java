@@ -164,10 +164,17 @@ public class ResidencePlayerListener implements Listener {
 
 	ClaimedResidence res = null;
 	if (!event.getLine(1).equalsIgnoreCase("")) {
-	    res = Residence.getResidenceManager().getByName(event.getLine(1));
+
+	    String resname = event.getLine(1);
+	    if (!event.getLine(2).equalsIgnoreCase(""))
+		resname += "." + event.getLine(2);
+	    if (!event.getLine(3).equalsIgnoreCase(""))
+		resname += "." + event.getLine(3);
+
+	    res = Residence.getResidenceManager().getByName(resname);
 
 	    if (res == null) {
-		event.setCancelled(true);
+		event.getPlayer().sendMessage(Residence.getLanguage().getPhrase("InvalidResidence"));
 		return;
 	    }
 
