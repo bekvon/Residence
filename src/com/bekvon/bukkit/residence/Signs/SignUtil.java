@@ -6,12 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,7 +23,6 @@ import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SignUtil {
 
@@ -184,4 +186,94 @@ public class SignUtil {
 
 	return true;
     }
+
+    public static void convertSigns(CommandSender sender) {
+	File file = new File("plugins/ResidenceSigns/signs.yml");
+	if (!file.exists()) {
+	    sender.sendMessage(ChatColor.GOLD + "Can't find ResidenceSign file");
+	    return;
+	}
+	YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
+
+	if (!conf.contains("signs")) {
+	    sender.sendMessage(ChatColor.GOLD + "Incorrect format of signs file");
+	    return;
+	}
+
+	Set<String> sectionname = conf.getConfigurationSection("signs").getKeys(false);
+	ConfigurationSection section = conf.getConfigurationSection("signs");
+
+	int category = 1;
+	if (SignUtil.Signs.GetAllSigns().size() > 0)
+	    category = SignUtil.Signs.GetAllSigns().get(SignUtil.Signs.GetAllSigns().size() - 1).GetCategory() + 1;
+
+	long time = System.currentTimeMillis();
+
+	int i = 0;
+	for (String one : sectionname) {
+	    Signs signs = new Signs();
+	    String resname = section.getString(one + ".resName");
+	    signs.setCategory(category);
+	    signs.setResidence(resname);
+
+	    List<String> loc = section.getStringList(one + ".loc");
+
+	    if (loc.size() != 4)
+		continue;
+
+	    World world = Bukkit.getWorld(loc.get(0));
+	    if (world == null)
+		continue;
+
+	    signs.setWorld(world.getName());
+	    int x = 0;
+	    int y = 0;
+	    int z = 0;
+
+	    try {
+		x = Integer.parseInt(loc.get(1));
+		y = Integer.parseInt(loc.get(2));
+		z = Integer.parseInt(loc.get(3));
+	    } catch (Exception ex) {
+		continue;
+	    }
+
+	    signs.setX(x);
+	    signs.setY(y);
+	    signs.setZ(z);
+	    boolean found = false;
+
+	    for (Signs onesigns : SignUtil.Signs.GetAllSigns()) {
+		if (!onesigns.GetWorld().equalsIgnoreCase(signs.GetWorld()))
+		    continue;
+		if (onesigns.GetX() != signs.GetX())
+		    continue;
+		if (onesigns.GetY() != signs.GetY())
+		    continue;
+		if (onesigns.GetZ() != signs.GetZ())
+		    continue;
+		found = true;
+	    }
+
+	    if (found)
+		continue;
+
+	    Location nloc = signs.GetLocation();
+	    Block block = nloc.getBlock();
+
+	    if (!(block.getState() instanceof Sign))
+		continue;
+
+	    SignUtil.Signs.addSign(signs);
+	    SignUtil.SignUpdate(signs);
+	    category++;
+	    i++;
+	}
+
+	SignUtil.saveSigns();
+
+	sender.sendMessage(ChatColor.GOLD + "" + i + ChatColor.YELLOW + " signs have being converted to new format! It took " + ChatColor.GOLD + (System
+	    .currentTimeMillis() - time) + ChatColor.YELLOW + " ms!");
+    }
+
 }

@@ -10,6 +10,8 @@ import com.bekvon.bukkit.residence.permissions.PermissionsInterface;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -77,7 +79,7 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
             return group.toLowerCase();
         }
     }
-
+    
     public String getPlayerGroup(String player, String world) {
         @SuppressWarnings("deprecation")
 	String group = permissions.getPrimaryGroup(world, player);

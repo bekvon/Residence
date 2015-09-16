@@ -51,6 +51,8 @@ public class TransactionManager {
     }
 
     public static boolean giveEconomyMoney(Player player, int amount) {
+	if (player == null)
+	    return false;
 	if (amount == 0)
 	    return true;
 	EconomyInterface econ = Residence.getEconomyManager();

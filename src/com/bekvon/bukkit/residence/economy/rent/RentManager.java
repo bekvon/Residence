@@ -14,8 +14,6 @@ import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;

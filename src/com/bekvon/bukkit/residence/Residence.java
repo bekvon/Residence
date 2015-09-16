@@ -63,6 +63,8 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.FileCleanUp;
+import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
@@ -230,7 +232,9 @@ public class Residence extends JavaPlugin {
 		this.writeDefaultGroupsFromJar();
 		this.writeDefaultFlagsFromJar();
 	    }
-
+	    
+	    this.getCommand("res").setTabCompleter(new TabComplete());
+	    
 //	    Residence.getConfigManager().UpdateConfigFile();
 
 //	    if (this.getConfig().getInt("ResidenceVersion", 0) == 0) {
@@ -329,6 +333,9 @@ public class Residence extends JavaPlugin {
 		this.getLogger().log(Level.SEVERE, "Unable to load save file", e);
 		throw e;
 	    }
+
+//	    FileCleanUp.cleanFiles();
+
 	    if (rmanager == null) {
 		rmanager = new ResidenceManager();
 	    }
@@ -432,9 +439,9 @@ public class Residence extends JavaPlugin {
 	    System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 	}
-	
+
 	SignUtil.LoadSigns();
-	
+
 	//versionChecker = new VersionChecker(this);
 	// versionChecker.VersionCheck(null);
     }

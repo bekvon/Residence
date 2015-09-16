@@ -11,8 +11,6 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -36,7 +34,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**

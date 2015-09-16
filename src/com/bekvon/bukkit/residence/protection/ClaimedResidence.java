@@ -16,14 +16,13 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -1098,6 +1097,10 @@ public class ClaimedResidence {
 	return perms.getOwner();
     }
 
+    public UUID getOwnerUUID() {
+	return perms.getOwnerUUID();
+    }
+    
     public ResidenceItemList getItemBlacklist() {
 	return blacklist;
     }

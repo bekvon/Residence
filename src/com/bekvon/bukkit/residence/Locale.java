@@ -159,7 +159,7 @@ public class Locale {
 
 	GetConfigString("Language.SignTopLine", "[market]", writer, conf, true);
 	GetConfigString("Language.SignDateFormat", "YY/MM/dd HH:mm", writer, conf, true);
-	
+
 	GetConfigString("Language.SignForRentTopLine", "&8For Rent", writer, conf, true);
 	GetConfigString("Language.SignForRentPriceLine", "&8%1&f/&8%2&f/&8%3", writer, conf, true);
 	GetConfigString("Language.SignForRentResName", "&8%1", writer, conf, true);
@@ -167,12 +167,12 @@ public class Locale {
 
 	GetConfigString("Language.SignRentedAutorenewTrue", "&2", writer, conf, true);
 	GetConfigString("Language.SignRentedAutorenewFalse", "&c", writer, conf, true);
-	
+
 	GetConfigString("Language.SignRentedTopLine", "%1", writer, conf, true);
 	GetConfigString("Language.SignRentedPriceLine", "&8%1&f/&8%2&f/&8%3", writer, conf, true);
 	GetConfigString("Language.SignRentedResName", "&8%1", writer, conf, true);
 	GetConfigString("Language.SignRentedBottomLine", "&1%1", writer, conf, true);
-	
+
 	GetConfigString("Language.SignForSaleTopLine", "&8For Sale", writer, conf, true);
 	GetConfigString("Language.SignForSalePriceLine", "&8%1", writer, conf, true);
 	GetConfigString("Language.SignForSaleResName", "&8%1", writer, conf, true);
@@ -361,7 +361,7 @@ public class Locale {
 
 	GetConfigString("CommandHelp.Description", "Contains Help for Residence", writer, conf, true);
 	GetConfigString("CommandHelp.SubCommands.res.Description", "Main Residence Command", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.Info", Arrays.asList("See the residence wiki for more help.", "Wiki: residencebukkitmod.wikispaces.com",
+	GetConfigArray("CommandHelp.SubCommands.res.Info", Arrays.asList("See the residence wiki for more help.", "Wiki: https://github.com/bekvon/Residence/wiki",
 	    "Use /res [command] ? <page> to view more help information."), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.select.Description", "Selection Commands", writer, conf, true);
@@ -738,6 +738,10 @@ public class Locale {
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.resload.Info",
 	    Arrays.asList("Usage: /resload", "UNSAFE command, does not save residences first.", "Loads the residence save file after you have made changes."),
 	    writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.ressignconvert.Description", "Converts ResidenceSigns plugins saved signs (admin only).", writer, conf,
+	    true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.ressignconvert.Info", Arrays.asList("Usage: /ressignconvert"), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.version.Description", "how residence version", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.version.Info",

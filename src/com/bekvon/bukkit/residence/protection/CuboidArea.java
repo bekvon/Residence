@@ -7,8 +7,6 @@ package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager.ChunkRef;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

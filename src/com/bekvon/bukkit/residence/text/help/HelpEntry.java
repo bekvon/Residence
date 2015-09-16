@@ -9,14 +9,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  *
@@ -88,12 +95,16 @@ public class HelpEntry {
 	    }
 	}
 
+	if (pagecount == 1)
+	    return;
+
 	int NextPage = page + 1;
 	NextPage = page < pagecount ? NextPage : page;
 	int Prevpage = page - 1;
 	Prevpage = page > 1 ? Prevpage : page;
 	String prevCmd = !name.equalsIgnoreCase("res") ? "/res " + name + " ? " + Prevpage : "/res ? " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + Residence.getLanguage().getPhrase("PrevInfoPage") + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
+	String prev = "[\"\",{\"text\":\"" + Residence.getLanguage().getPhrase("PrevInfoPage") + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+	    + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = !name.equalsIgnoreCase("res") ? "/res " + name + " ? " + NextPage : "/res ? " + NextPage;
 	String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
@@ -101,10 +112,6 @@ public class HelpEntry {
 
 	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
 
-//	if (page < pagecount)
-//	    sender.sendMessage(ChatColor.GRAY + "---<" + Residence.getLanguage().getPhrase("NextPage") + ">---");
-//	else
-//	    sender.sendMessage(ChatColor.GRAY + "-----------------------");
     }
 
     public void printHelp(CommandSender sender, int page, String path) {
@@ -195,6 +202,69 @@ public class HelpEntry {
 	    }
 	}
 	return entry;
+    }
+
+    public static Set<String> getSubCommands(String[] args) {
+	File langFile = new File(new File(Residence.getDataLocation(), "Language"), Residence.getConfigManager().getLanguage() + ".yml");
+
+	Set<String> subCommands = new HashSet<String>(Arrays.asList(""));
+
+	if (langFile.isFile()) {
+	    FileConfiguration node = new YamlConfiguration();
+	    try {
+		node.load(langFile);
+	    } catch (FileNotFoundException e) {
+		e.printStackTrace();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    } catch (InvalidConfigurationException e) {
+		e.printStackTrace();
+	    }
+
+	    subCommands = node.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands").getKeys(false);
+	    ConfigurationSection meinPath = node.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands");
+
+	    String key = convertArgs(args);
+
+	    if (key == "") {
+		return subCommands;
+	    } else {
+		if (meinPath.contains(key)) {
+		    return meinPath.getConfigurationSection(key).getKeys(false);
+		} else {
+		    String[] arg = new String[args.length - 1];
+		    for (int i = 0; i < args.length - 1; i++) {
+			arg[i] = args[i];
+		    }
+		    key = convertArgs(arg);
+		    if (meinPath.contains(key)) {
+			return meinPath.getConfigurationSection(key).getKeys(false);
+		    }
+		}
+	    }
+	}
+	return new HashSet<String>(Arrays.asList("?"));
+    }
+
+    private static String convertArgs(String[] args) {
+	String key = "";
+	if (args.length > 0) {
+	    int i = 1;
+	    for (String one : args) {
+		if (one.equalsIgnoreCase(""))
+		    continue;
+		key += one;
+		if (i < args.length)
+		    key += ".SubCommands.";
+		if (i < args.length + 1)
+		    key += ".SubCommands";
+		i++;
+	    }
+	} else if (args.length == 1) {
+	    key = args[0];
+	    key += ".SubCommands";
+	}
+	return key;
     }
 
 }

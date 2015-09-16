@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,6 +19,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.SpoutManager;
 
+import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -49,10 +49,23 @@ public class ResidenceCommandListener extends Residence {
 		    this.reloadPlugin();
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded config.");
 		    System.out.println("[Residence] Reloaded by " + player.getName() + ".");
-		}
+		} else
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
 	    } else {
 		this.reloadPlugin();
 		System.out.println("[Residence] Reloaded by console.");
+	    }
+	    return true;
+	}
+	if (command.getName().equals("ressignconvert") && args.length == 0) {
+	    if (sender instanceof Player) {
+		Player player = (Player) sender;
+		if (Residence.getPermissionManager().isResidenceAdmin(player)) {
+		    SignUtil.convertSigns(sender);
+		} else
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+	    } else {
+		SignUtil.convertSigns(sender);
 	    }
 	    return true;
 	}
@@ -66,7 +79,8 @@ public class ResidenceCommandListener extends Residence {
 		    sender.sendMessage(ChatColor.RED + ex.getMessage());
 		    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	    }
+	    } else
+		sender.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
 	    return true;
 	} else if (command.getName().equals("resworld")) {
 	    if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
@@ -173,6 +187,7 @@ public class ResidenceCommandListener extends Residence {
 		.getDescription().getVersion());
 	    sender.sendMessage(ChatColor.GREEN + "Created by: " + ChatColor.YELLOW + "bekvon");
 	    sender.sendMessage(ChatColor.GREEN + "Updated to 1.8 by: " + ChatColor.YELLOW + "DartCZ");
+	    sender.sendMessage(ChatColor.GREEN + "Maintained by: " + ChatColor.YELLOW + "Zrips");
 	    String names = null;
 	    List<String> authlist = this.getDescription().getAuthors();
 	    for (String auth : authlist) {
@@ -183,9 +198,9 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    sender.sendMessage(ChatColor.GREEN + "Authors: " + ChatColor.YELLOW + names);
 	    sender.sendMessage(ChatColor.DARK_AQUA + "For a command list, and help, see the wiki:");
-	    sender.sendMessage(ChatColor.GREEN + "http://residencebukkitmod.wikispaces.com/");
+	    sender.sendMessage(ChatColor.GREEN + "https://github.com/bekvon/Residence/wiki");
 	    sender.sendMessage(ChatColor.AQUA + "Visit the Spigot Resource page at:");
-	    sender.sendMessage(ChatColor.BLUE + "http://www.spigotmc.org/resources/residence-reloaded-1-8.2697/");
+	    sender.sendMessage(ChatColor.BLUE + "https://www.spigotmc.org/resources/residence.11480/");
 	    sender.sendMessage(ChatColor.GRAY + "------------------------------------");
 	    return true;
 	}

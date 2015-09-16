@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,10 +31,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
-import com.sk89q.worldedit.blocks.BlockType;
-
-import net.minecraft.server.v1_8_R3.Material;
 
 /**
  * 
@@ -345,7 +340,6 @@ public class ResidenceManager {
 
 			Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
 
-			int i = 0;
 			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
 			    temploc.setX(x);
 			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
@@ -354,7 +348,6 @@ public class ResidenceManager {
 				    temploc.setZ(z);
 				    if (Residence.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
 					temploc.getBlock().setTypeId(0);
-					i++;
 				    }
 				}
 			    }
