@@ -336,7 +336,7 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public void setOwner(String newOwner, boolean resetFlags) {
-	if (newOwner.equals("Server Land"))
+	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase("Server_Land"))
 	    ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");// the UUID for server owned land
 
 	UUID playerUUID = Residence.getPlayerUUID(newOwner);
@@ -355,7 +355,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     public String getOwner() {
 	if (ownerUUID.toString().equals("00000000-0000-0000-0000-000000000000")) //check for server land
-	    return "Server Land";
+	    return "Server_Land";
 	String name = Residence.getPlayerName(ownerUUID);//try to find the owner's name
 	if (name == null)
 	    return ownerLastKnownName;//return last known if we cannot find it
@@ -403,7 +403,7 @@ public class ResidencePermissions extends FlagPermissions {
 		newperms.ownerUUID = UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");//set fake UUID until we can find real one for last known player
 	} else {
 	    newperms.ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");//cant determine owner name or UUID... setting zero UUID which is server land
-	    newperms.ownerLastKnownName = "Server Land";
+	    newperms.ownerLastKnownName = "Server_Land";
 	}
 	newperms.world = (String) root.get("World");
 	FlagPermissions.load(root, newperms);

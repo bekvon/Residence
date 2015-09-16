@@ -122,7 +122,7 @@ public class ResidenceManager {
     }
 
     public boolean addResidence(String name, Location loc1, Location loc2) {
-	return this.addResidence(name, "Server Land", loc1, loc2);
+	return this.addResidence(name, "Server_Land", loc1, loc2);
     }
 
     public boolean addResidence(String name, String owner, Location loc1, Location loc2) {
@@ -547,8 +547,13 @@ public class ResidenceManager {
 		try {
 		    @SuppressWarnings("unchecked")
 		    ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null);
-		    if (residence.getPermissions().getOwnerUUID().toString().equals("ffffffff-ffff-ffff-ffff-ffffffffffff"))
+		    if (residence.getPermissions().getOwnerUUID().toString().equals("ffffffff-ffff-ffff-ffff-ffffffffffff") && !residence.getOwner().equalsIgnoreCase(
+			"Server land") && !residence.getOwner().equalsIgnoreCase("Server_land"))
 			continue;
+
+		    if (residence.getOwner().equalsIgnoreCase("Server land")){
+			residence.getPermissions().setOwner("Server_Land", false);
+		    }
 
 		    for (ChunkRef chunk : getChunks(residence)) {
 			List<String> ress = new ArrayList<>();

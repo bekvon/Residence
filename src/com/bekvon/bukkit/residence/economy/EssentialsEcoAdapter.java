@@ -20,7 +20,7 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 
     public EssentialsEcoAdapter(Essentials p) {
         plugin = p;
-        String serverland = "Server Land";
+        String serverland = "Server_Land";
         if (!Economy.playerExists(serverland)) {
             Economy.createNPC(serverland);
         }

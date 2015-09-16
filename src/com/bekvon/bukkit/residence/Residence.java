@@ -232,9 +232,9 @@ public class Residence extends JavaPlugin {
 		this.writeDefaultGroupsFromJar();
 		this.writeDefaultFlagsFromJar();
 	    }
-	    
+
 	    this.getCommand("res").setTabCompleter(new TabComplete());
-	    
+
 //	    Residence.getConfigManager().UpdateConfigFile();
 
 //	    if (this.getConfig().getInt("ResidenceVersion", 0) == 0) {
@@ -334,7 +334,8 @@ public class Residence extends JavaPlugin {
 		throw e;
 	    }
 
-//	    FileCleanUp.cleanFiles();
+	    if (Residence.getConfigManager().isUseResidenceFileClean())
+		FileCleanUp.cleanFiles();
 
 	    if (rmanager == null) {
 		rmanager = new ResidenceManager();

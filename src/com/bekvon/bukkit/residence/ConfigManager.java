@@ -39,8 +39,10 @@ public class ConfigManager {
     protected boolean NoWater;
     protected boolean NoLavaPlace;
     protected boolean NoWaterPlace;
+    protected boolean AutoCleanUp;
     protected boolean UseClean;
     protected int infoToolId;
+    protected int AutoCleanUpDays;
     protected int selectionToolId;
     protected boolean adminOps;
     protected String multiworldPlugin;
@@ -91,6 +93,7 @@ public class ConfigManager {
     protected List<Integer> customRightClick;
     protected List<Integer> CleanBlocks;
     protected List<String> NoFlowWorlds;
+    protected List<String> AutoCleanUpWorlds;
     protected List<String> NoPlaceWorlds;
     protected List<String> CleanWorlds;
     private boolean enforceAreaInsideArea;
@@ -216,7 +219,14 @@ public class ConfigManager {
 	writer.addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = GetConfigInt("Global.SaveInterval", 10, writer, conf);
 
-	writer.addComment("Global.AntiGreef.SeaLevel", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
+	writer.addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.");
+	AutoCleanUp = GetConfigBoolean("Global.AutoCleanUp.Use", false, writer, conf);
+	writer.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
+	AutoCleanUpDays = GetConfigInt("Global.AutoCleanUp.Days", 60, writer, conf);
+	writer.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
+	AutoCleanUpWorlds = GetConfigArray("Global.AutoCleanUp.Worlds", Arrays.asList("TestWorld"), writer, conf, false);
+
+	writer.addComment("Global.AntiGreef.Flow.Level", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
 	FlowLevel = GetConfigInt("Global.AntiGreef.Flow.Level", 63, writer, conf);
 	writer.addComment("Global.AntiGreef.Flow.NoLavaFlow", "With this set to true, lava flow outside residence is blocked");
 	NoLava = GetConfigBoolean("Global.AntiGreef.Flow.NoLavaFlow", true, writer, conf);
@@ -238,7 +248,7 @@ public class ConfigManager {
 	UseClean = GetConfigBoolean("Global.AntiGreef.ResCleaning.Use", true, writer, conf);
 	writer.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
 	CleanLevel = GetConfigInt("Global.AntiGreef.ResCleaning.Level", 63, writer, conf);
-	writer.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced","By default only water and lava will be replaced");
+	writer.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
 	CleanBlocks = GetConfigIntArray("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11), writer, conf);
 	CleanWorlds = GetConfigArray("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList("World"), writer, conf, false);
 
@@ -522,6 +532,14 @@ public class ConfigManager {
 	return NoWaterPlace;
     }
 
+    public boolean isUseResidenceFileClean() {
+	return AutoCleanUp;
+    }
+
+    public int getResidenceFileCleanDays() {
+	return AutoCleanUpDays;
+    }
+
     public boolean isUseClean() {
 	return UseClean;
     }
@@ -665,12 +683,19 @@ public class ConfigManager {
     public List<Integer> getCleanBlocks() {
 	return CleanBlocks;
     }
+
     public List<String> getNoFlowWorlds() {
 	return NoFlowWorlds;
     }
+
+    public List<String> getAutoCleanUpWorlds() {
+	return AutoCleanUpWorlds;
+    }
+
     public List<String> getNoPlaceWorlds() {
 	return NoPlaceWorlds;
     }
+
     public List<String> getCleanWorlds() {
 	return CleanWorlds;
     }
