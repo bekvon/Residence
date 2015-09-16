@@ -44,28 +44,16 @@ public class WorldEditSelectionManager extends SelectionManager {
 	return false;
     }
 
-    private void afterSelectionUpdate(Player player) {
-	if (hasPlacedBoth(player.getName())) {
-	    WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
-	    World world = playerLoc1.get(player.getName()).getWorld();
-	    Selection selection = new CuboidSelection(world, playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
-	    wep.setSelection(player, selection);
-	    NewMakeBorders(player, getPlayerLoc1(player.getName()), getPlayerLoc2(player.getName()), false);
-	}
-    }
-
     @Override
     public void placeLoc1(Player player, Location loc) {
 	this.worldEdit(player);
 	super.placeLoc1(player, loc);
-	this.afterSelectionUpdate(player);
     }
 
     @Override
     public void placeLoc2(Player player, Location loc) {
 	this.worldEdit(player);
 	super.placeLoc2(player, loc);
-	this.afterSelectionUpdate(player);
     }
 
     @Override
