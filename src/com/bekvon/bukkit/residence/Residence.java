@@ -213,6 +213,7 @@ public class Residence extends JavaPlugin {
     @Override
     public void onEnable() {
 	try {
+
 	    instance = this;
 	    initsuccess = false;
 	    deleteConfirm = new HashMap<String, String>();
@@ -434,6 +435,17 @@ public class Residence extends JavaPlugin {
 	    }
 	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
 	    initsuccess = true;
+
+	    Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+		@Override
+		public void run() {
+		    for (OfflinePlayer player : Residence.getServ().getOfflinePlayers()) {
+			UUIDList.put(player.getName().toLowerCase(), player.getUniqueId());
+		    }
+		    return;
+		}
+	    });
+
 	} catch (Exception ex) {
 	    initsuccess = false;
 	    getServer().getPluginManager().disablePlugin(this);

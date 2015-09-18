@@ -21,6 +21,7 @@ import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hanging;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,9 +29,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -41,6 +47,10 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -49,6 +59,9 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+
+import GUI.SetFlag;
+
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.Signs.Signs;
 
@@ -64,6 +77,8 @@ public class ResidencePlayerListener implements Listener {
     protected int minUpdateTime;
     protected boolean chatenabled;
     protected List<String> playerToggleChat;
+
+    public static Map<String, SetFlag> GUI = new HashMap<String, SetFlag>();
 
     public ResidencePlayerListener() {
 	currentRes = new HashMap<String, String>();
@@ -87,6 +102,57 @@ public class ResidencePlayerListener implements Listener {
 	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+	Player player = event.getPlayer();
+	String resname = Residence.getPlayerListener().getCurrentResidenceName(player.getName());
+	if (resname == null)
+	    return;
+	ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
+	if (res == null)
+	    return;
+	if (res.getPermissions().playerHas(player.getName(), "command", true))
+	    return;
+
+	event.setCancelled(true);
+	player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "command"));
+
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onFlagGuiClick(InventoryClickEvent event) {
+	if (GUI.size() == 0)
+	    return;
+
+	Player player = (Player) event.getWhoClicked();
+
+	if (!GUI.containsKey(player.getName()))
+	    return;
+
+	event.setCancelled(true);
+	int slot = event.getRawSlot();
+
+	if (slot > 53 || slot < 0)
+	    return;
+
+	SetFlag setFlag = GUI.get(player.getName());
+	ClickType click = event.getClick();
+	InventoryAction action = event.getAction();
+	setFlag.toggleFlag(slot, click, action);
+	setFlag.recalculateInv();
+	player.getOpenInventory().getTopInventory().setItem(slot, setFlag.getInventory().getItem(slot));
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onFlagGuiClose(InventoryCloseEvent event) {
+	if (GUI.size() == 0)
+	    return;
+	HumanEntity player = event.getPlayer();
+	if (!GUI.containsKey(player.getName()))
+	    return;
+	GUI.remove(player.getName());
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

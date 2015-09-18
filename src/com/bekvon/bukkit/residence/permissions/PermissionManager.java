@@ -44,6 +44,10 @@ public class PermissionManager {
         }
     }
 
+    public FlagPermissions getAllFlags() {
+        return this.globalFlagPerms;
+    }
+    
     public PermissionGroup getGroup(Player player) {
         return groups.get(this.getGroupNameByPlayer(player));
     }

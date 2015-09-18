@@ -21,6 +21,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -35,7 +36,7 @@ public class FlagPermissions {
     protected Map<String, String> cachedPlayerNameUUIDs;
     protected Map<String, Map<String, Boolean>> playerFlags;
     protected Map<String, Map<String, Boolean>> groupFlags;
-    protected Map<String, Boolean> cuboidFlags;
+    protected Map<String, Boolean> cuboidFlags = new HashMap<String, Boolean>();
     protected FlagPermissions parent;
 
     public static void addMaterialToUseFlag(Material mat, String flag) {
@@ -144,11 +145,13 @@ public class FlagPermissions {
 	addFlag("mobkilling");
 	addFlag("vehicledestroy");
 	addFlag("trade");
-	
+
 	addFlag("leash");
 	addFlag("shear");
 	addFlag("nofly");
 	
+	addFlag("command");
+
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
 	addResidenceOnlyFlag("fireball");
@@ -173,7 +176,7 @@ public class FlagPermissions {
 
 	// prevents from mobs entering residence
 	addResidenceOnlyFlag("nomobs");
-	
+
 	addPlayerOrGroupOnlyFlag("admin");
 	addFlagToFlagGroup("redstone", "note");
 	addFlagToFlagGroup("redstone", "pressure");
@@ -279,6 +282,7 @@ public class FlagPermissions {
 
     protected Map<String, Boolean> getPlayerFlags(String player, boolean allowCreate)//this function works with uuid in string format as well, instead of player name
     {
+
 	player = player.toLowerCase();
 	String uuids;
 	Map<String, Boolean> flags = null;
@@ -610,6 +614,18 @@ public class FlagPermissions {
 	    sbuild.append("none");
 	}
 	return sbuild.toString();
+    }
+
+    public Map<String, Boolean> getFlags() {
+	return cuboidFlags;
+    }
+
+    public Map<String, Boolean> getPlayerFlags(String player) {
+	return this.getPlayerFlags(player, false);
+    }
+
+    public ArrayList<String> getposibleFlags() {
+	return FlagPermissions.validFlags;
     }
 
     public String listPlayerFlags(String player) {

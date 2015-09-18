@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,19 +20,27 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.getspout.spoutapi.SpoutManager;
 
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
+import com.bekvon.bukkit.residence.utils.Debug;
+import com.bekvon.bukkit.residence.utils.Sorting;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
+import GUI.SetFlag;
 
 public class ResidenceCommandListener extends Residence {
 
@@ -1123,6 +1134,24 @@ public class ResidenceCommandListener extends Residence {
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    }
 	    return true;
+	} else if (args.length == 1) {
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    if (res != null) {
+		SetFlag flag = new SetFlag(res.getName(), player);
+		flag.recalculateInv(res);
+		ResidencePlayerListener.GUI.put(player.getName(), flag);
+		player.openInventory(flag.getInventory());
+	    } else
+		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
+	} else if (args.length == 2) {
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	    if (res != null) {
+		SetFlag flag = new SetFlag(res.getName(), player);
+		flag.recalculateInv(res);
+		ResidencePlayerListener.GUI.put(player.getName(), flag);
+		player.openInventory(flag.getInventory());
+	    } else
+		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	}
 	return false;
     }
@@ -1159,6 +1188,29 @@ public class ResidenceCommandListener extends Residence {
 	    } else {
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    }
+	    return true;
+	} else if (args.length == 2) {
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    if (res != null) {
+		SetFlag flag = new SetFlag(res.getName(), player);
+		flag.setTargePlayer(args[1]);
+		flag.recalculateInv(res);
+		ResidencePlayerListener.GUI.put(player.getName(), flag);
+		player.openInventory(flag.getInventory());
+	    } else
+		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
+	    return true;
+
+	} else if (args.length == 3) {
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	    if (res != null) {
+		SetFlag flag = new SetFlag(res.getName(), player);
+		flag.setTargePlayer(args[2]);
+		flag.recalculateInv(res);
+		ResidencePlayerListener.GUI.put(player.getName(), flag);
+		player.openInventory(flag.getInventory());
+	    } else
+		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    return true;
 	}
 	return false;
