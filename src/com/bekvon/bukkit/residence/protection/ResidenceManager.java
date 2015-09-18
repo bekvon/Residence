@@ -464,9 +464,9 @@ public class ResidenceManager {
 
 	if (Residence.getEconomyManager() != null) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(res.getOwner(), res.getWorld());
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TotalWorth", String.valueOf((res.getTotalSize() * group.getCostPerBlock())).replace(
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TotalWorth", String.valueOf((int)((res.getTotalSize() * group.getCostPerBlock())*100)/100.0).replace(
 		".", ",") + "." +
-		String.valueOf(res.getTotalSize() * res.getBlockSellPrice()).replace(".", ",")));
+		String.valueOf((int)((res.getTotalSize() * res.getBlockSellPrice())*100)/100.0).replace(".", ",")));
 	}
 
 	if (aid != null) {

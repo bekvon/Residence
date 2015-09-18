@@ -219,7 +219,7 @@ public class ConfigManager {
 	writer.addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = GetConfigInt("Global.SaveInterval", 10, writer, conf);
 
-	writer.addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.");
+	writer.addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.","Players can bypass this wih residence.cleanbypass permission node");
 	AutoCleanUp = GetConfigBoolean("Global.AutoCleanUp.Use", false, writer, conf);
 	writer.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
 	AutoCleanUpDays = GetConfigInt("Global.AutoCleanUp.Days", 60, writer, conf);
