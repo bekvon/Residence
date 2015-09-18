@@ -577,6 +577,7 @@ public class Locale {
 		"&2nomobs &3- &ePrevents monsters from entering residence residence",
 		"&2explode &3- &eAllows or denys explosions in residences",
 		"&2fireball &3- &eAllows or denys fire balls in residences",
+		"&2command &3- &eAllows or denys comamnd use in residences",
 		"&2burn &3- &eallows or denys Mob combustion in residences"),
 	    writer, conf, true);
 

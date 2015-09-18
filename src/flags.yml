@@ -39,7 +39,7 @@ Global:
         trade: true
         shear: true
         leash: true
-        nofly: true
+        nofly: false
         subzone: true
         healing: true
         piston: true
@@ -53,10 +53,11 @@ Global:
         bed: true
         cake: true
         note: true
-        trample: false
+        trample: true
         burn: true
-        explode: false
+        explode: true
         fireball: true
+        command: false
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
