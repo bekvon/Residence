@@ -53,3 +53,6 @@ permissions:
   residence.nofly.bypass:
     description: Bypasses nofly flag in residence
     default: op
+  residence.command.bypass:
+    description: Bypasses command flag in residence
+    default: op

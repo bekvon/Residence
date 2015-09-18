@@ -116,6 +116,12 @@ public class ResidencePlayerListener implements Listener {
 	if (res.getPermissions().playerHas(player.getName(), "command", true))
 	    return;
 
+	if (Residence.getPermissionManager().isResidenceAdmin(player))
+	    return;
+
+	if (player.hasPermission("residence.command.bypass"))
+	    return;
+
 	event.setCancelled(true);
 	player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "command"));
 

@@ -1143,6 +1143,7 @@ public class ResidenceCommandListener extends Residence {
 		player.openInventory(flag.getInventory());
 	    } else
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
+	    return true;
 	} else if (args.length == 2) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
@@ -1152,6 +1153,7 @@ public class ResidenceCommandListener extends Residence {
 		player.openInventory(flag.getInventory());
 	    } else
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
+	    return true;
 	}
 	return false;
     }
