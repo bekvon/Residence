@@ -142,6 +142,9 @@ public class ResidenceCommandListener extends Residence {
 		    ((Player) sender).sendMessage(ChatColor.RED + language.getPhrase("NonAdmin"));
 		    return true;
 		}
+		if (command.getName().equals("res") && gmanager.isResidenceAdmin((Player) sender) && Residence.getConfigManager().getAdminFullAccess()) {
+		    resadmin = true;
+		}
 	    } else {
 		resadmin = true;
 	    }
@@ -1137,6 +1140,10 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 1) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
+		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		    return true;
+		}
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.recalculateInv(res);
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
@@ -1147,6 +1154,10 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 2) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
+		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		    return true;
+		}
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.recalculateInv(res);
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
@@ -1194,6 +1205,10 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 2) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
+		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		    return true;
+		}
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.setTargePlayer(args[1]);
 		flag.recalculateInv(res);
@@ -1205,6 +1220,11 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 3) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
+		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		    return true;
+		}
+
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.setTargePlayer(args[2]);
 		flag.recalculateInv(res);

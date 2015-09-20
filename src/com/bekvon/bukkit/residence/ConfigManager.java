@@ -46,6 +46,7 @@ public class ConfigManager {
     protected int AutoCleanUpDays;
     protected int selectionToolId;
     protected boolean adminOps;
+    protected boolean AdminFullAccess;
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
     protected boolean leaseAutoRenew;
@@ -313,6 +314,10 @@ public class ConfigManager {
 	writer.addComment("Global.AdminOPs", "Setting this to true makes server OPs admins.");
 	adminOps = GetConfigBoolean("Global.AdminOPs", true, writer, conf);
 
+	writer.addComment("Global.AdminFullAccess",
+	    "Setting this to true server administration wont need to use /resadmin command to access admin command if they are op or have residence.admin permission node.");
+	AdminFullAccess = GetConfigBoolean("Global.AdminFullAccess", false, writer, conf);
+
 	writer.addComment("Global.MultiWorldPlugin",
 	    "This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.",
 	    "The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.");
@@ -392,27 +397,28 @@ public class ConfigManager {
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
 
-	writer.addComment("Global.GUI.True.Id",
-	    "Item id to use when flag is set to true");
+	writer.addComment("Global.GUI.setTrue", "Item id and data to use when flag is set to true");
 
-	int id = GetConfigInt("Global.GUI.True.Id", 35, writer, conf);
-	int data = GetConfigInt("Global.GUI.True.Data", 13, writer, conf);
+	int id = GetConfigInt("Global.GUI.setTrue.Id", 35, writer, conf);
+	int data = GetConfigInt("Global.GUI.setTrue.Data", 13, writer, conf);
 
 	Material Mat = Material.getMaterial(id);
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiTrue = new ItemStack(Mat, 1, (short) data);
 
-	id = GetConfigInt("Global.GUI.False.Id", 35, writer, conf);
-	data = GetConfigInt("Global.GUI.False.Data", 14, writer, conf);
+	writer.addComment("Global.GUI.setFalse", "Item id and data to use when flag is set to false");
+	id = GetConfigInt("Global.GUI.setFalse.Id", 35, writer, conf);
+	data = GetConfigInt("Global.GUI.setFalse.Data", 14, writer, conf);
 
 	Mat = Material.getMaterial(id);
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiFalse = new ItemStack(Mat, 1, (short) data);
 
-	id = GetConfigInt("Global.GUI.Remove.Id", 35, writer, conf);
-	data = GetConfigInt("Global.GUI.Remove.Data", 8, writer, conf);
+	writer.addComment("Global.GUI.setRemove", "Item id and data to use when flag is set to remove");
+	id = GetConfigInt("Global.GUI.setRemove.Id", 35, writer, conf);
+	data = GetConfigInt("Global.GUI.setRemove.Data", 8, writer, conf);
 
 	Mat = Material.getMaterial(id);
 	if (Mat == null)
@@ -588,6 +594,10 @@ public class ConfigManager {
 
     public boolean getOpsAreAdmins() {
 	return adminOps;
+    }
+
+    public boolean getAdminFullAccess() {
+	return AdminFullAccess;
     }
 
     public String getMultiworldPlugin() {
