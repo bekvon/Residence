@@ -23,6 +23,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -96,6 +97,11 @@ public class ConfigManager {
     protected List<String> AutoCleanUpWorlds;
     protected List<String> NoPlaceWorlds;
     protected List<String> CleanWorlds;
+
+    protected ItemStack GuiTrue;
+    protected ItemStack GuiFalse;
+    protected ItemStack GuiRemove;
+
     private boolean enforceAreaInsideArea;
 
     protected ParticleEffects SelectedFrame;
@@ -219,7 +225,8 @@ public class ConfigManager {
 	writer.addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = GetConfigInt("Global.SaveInterval", 10, writer, conf);
 
-	writer.addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.","Players can bypass this wih residence.cleanbypass permission node");
+	writer.addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
+	    "Players can bypass this wih residence.cleanbypass permission node");
 	AutoCleanUp = GetConfigBoolean("Global.AutoCleanUp.Use", false, writer, conf);
 	writer.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
 	AutoCleanUpDays = GetConfigInt("Global.AutoCleanUp.Days", 60, writer, conf);
@@ -384,6 +391,33 @@ public class ConfigManager {
 	    OverlapSides = ParticleEffects.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
+
+	writer.addComment("Global.GUI.True.Id",
+	    "Item id to use when flag is set to true");
+
+	int id = GetConfigInt("Global.GUI.True.Id", 35, writer, conf);
+	int data = GetConfigInt("Global.GUI.True.Data", 13, writer, conf);
+
+	Material Mat = Material.getMaterial(id);
+	if (Mat == null)
+	    Mat = Material.STONE;
+	GuiTrue = new ItemStack(Mat, 1, (short) data);
+
+	id = GetConfigInt("Global.GUI.False.Id", 35, writer, conf);
+	data = GetConfigInt("Global.GUI.False.Data", 14, writer, conf);
+
+	Mat = Material.getMaterial(id);
+	if (Mat == null)
+	    Mat = Material.STONE;
+	GuiFalse = new ItemStack(Mat, 1, (short) data);
+
+	id = GetConfigInt("Global.GUI.Remove.Id", 35, writer, conf);
+	data = GetConfigInt("Global.GUI.Remove.Data", 8, writer, conf);
+
+	Mat = Material.getMaterial(id);
+	if (Mat == null)
+	    Mat = Material.STONE;
+	GuiRemove = new ItemStack(Mat, 1, (short) data);
 
 	writer.addComment("Global.AutoMobRemoval",
 	    "Default = false. Enabling this, residences with flag nomobs will be cleared from monsters in regular intervals.",
@@ -702,5 +736,17 @@ public class ConfigManager {
 
     public boolean getEnforceAreaInsideArea() {
 	return enforceAreaInsideArea;
+    }
+
+    public ItemStack getGuiTrue() {
+	return GuiTrue;
+    }
+
+    public ItemStack getGuiFalse() {
+	return GuiFalse;
+    }
+
+    public ItemStack getGuiRemove() {
+	return GuiRemove;
     }
 }

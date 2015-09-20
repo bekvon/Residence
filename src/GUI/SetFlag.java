@@ -32,11 +32,21 @@ public class SetFlag {
     private Inventory inventory;
     private LinkedHashMap<String, Integer> permMap = new LinkedHashMap<String, Integer>();
     private LinkedHashMap<String, List<String>> description = new LinkedHashMap<String, List<String>>();
+    private boolean admin = false;
 
-    public SetFlag(String residence, Player player) {
+    public SetFlag(String residence, Player player, boolean admin) {
 	this.residence = residence;
 	this.player = player;
+	this.admin = admin;
 	fillFlagDescriptions();
+    }
+
+    public void setAdmin(boolean state) {
+	this.admin = state;
+    }
+
+    public boolean isAdmin() {
+	return this.admin;
     }
 
     public void setTargePlayer(String player) {
@@ -76,11 +86,17 @@ public class SetFlag {
 	    }
 	    i++;
 	}
-	if (targetPlayer == null)
-	    Bukkit.dispatchCommand(player, "res set " + residence + " " + flag + " " + command);
-	else
-	    Bukkit.dispatchCommand(player, "res pset " + residence + " " + targetPlayer + " " + flag + " " + command);
-
+	if (targetPlayer == null) {
+	    if (admin)
+		Bukkit.dispatchCommand(player, "resadmin set " + residence + " " + flag + " " + command);
+	    else
+		Bukkit.dispatchCommand(player, "res set " + residence + " " + flag + " " + command);
+	} else {
+	    if (admin)
+		Bukkit.dispatchCommand(player, "resadmin pset " + residence + " " + targetPlayer + " " + flag + " " + command);
+	    else
+		Bukkit.dispatchCommand(player, "res pset " + residence + " " + targetPlayer + " " + flag + " " + command);
+	}
     }
 
     public void recalculateInv() {
@@ -153,16 +169,17 @@ public class SetFlag {
 	    else
 		permMap.put(one.getKey(), 2);
 	}
+	String title = "";
+	if (targetPlayer == null)
+	    title = NewLanguage.getMessage("Language.Gui.Set.Title").replace("%1%", res.getName());
+	else
+	    title = NewLanguage.getMessage("Language.Gui.Pset.Title").replace("%1%", targetPlayer).replace("%2%", res.getName());
 
-	String name = targetPlayer == null ? "" : targetPlayer + " ";
-
-	name = name + res.getName() + " flags";
-
-	if (name.length() > 32) {
-	    name = name.substring(0, Math.min(name.length(), 32));
+	if (title.length() > 32) {
+	    title = title.substring(0, Math.min(title.length(), 32));
 	}
 
-	Inventory GuiInv = Bukkit.createInventory(null, 54, name);
+	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
 
 	permMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(permMap);
@@ -173,13 +190,12 @@ public class SetFlag {
 	    if (Mat == null)
 		Mat = Material.STONE;
 
-	    short meta = 6;
+	    ItemStack MiscInfo = Residence.getConfigManager().getGuiRemove();
 	    if (one.getValue() == 1)
-		meta = 13;
+		MiscInfo = Residence.getConfigManager().getGuiTrue();
 	    else if (one.getValue() == 0)
-		meta = 14;
+		MiscInfo = Residence.getConfigManager().getGuiFalse();
 
-	    ItemStack MiscInfo = new ItemStack(Mat, 1, (short) meta);
 	    ItemMeta MiscInfoMeta = MiscInfo.getItemMeta();
 	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + one.getKey());
 

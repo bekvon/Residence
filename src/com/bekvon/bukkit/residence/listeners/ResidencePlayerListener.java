@@ -119,7 +119,7 @@ public class ResidencePlayerListener implements Listener {
 	if (Residence.getPermissionManager().isResidenceAdmin(player))
 	    return;
 
-	if (player.hasPermission("residence.command.bypass"))
+	if (player.hasPermission("residence.flag.command.bypass"))
 	    return;
 
 	event.setCancelled(true);

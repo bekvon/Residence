@@ -356,6 +356,8 @@ public class Locale {
 	GetConfigString("Language.LimitsLeaseTime", "&7- &eLease Time Given on Renew:&3 %1", writer, conf, true);
 	GetConfigString("Language.LimitsRenewCost", "&7- &eRenew Cost Per Block:&3 %1", writer, conf, true);
 	GetConfigString("Language.LimitsBottom", "----------------------------------------", writer, conf, true);
+	GetConfigString("Language.Gui.Set.Title", "&6%1% flags", writer, conf, true);
+	GetConfigString("Language.Gui.Pset.Title", "&6%1% %2% flags", writer, conf, true);
 	GetConfigArray("Language.Gui.Actions", Arrays.asList("&2Left click to enable", "&cRight click to disable","&eShift + left click to remove"), writer, conf, true);
 
 	writer.addComment("CommandHelp", "");

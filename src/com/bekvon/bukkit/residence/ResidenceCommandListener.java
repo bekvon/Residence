@@ -1137,7 +1137,7 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 1) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
-		SetFlag flag = new SetFlag(res.getName(), player);
+		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.recalculateInv(res);
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
 		player.openInventory(flag.getInventory());
@@ -1147,7 +1147,7 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 2) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
-		SetFlag flag = new SetFlag(res.getName(), player);
+		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.recalculateInv(res);
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
 		player.openInventory(flag.getInventory());
@@ -1194,7 +1194,7 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 2) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
-		SetFlag flag = new SetFlag(res.getName(), player);
+		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.setTargePlayer(args[1]);
 		flag.recalculateInv(res);
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
@@ -1202,11 +1202,10 @@ public class ResidenceCommandListener extends Residence {
 	    } else
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    return true;
-
 	} else if (args.length == 3) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
-		SetFlag flag = new SetFlag(res.getName(), player);
+		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.setTargePlayer(args[2]);
 		flag.recalculateInv(res);
 		ResidencePlayerListener.GUI.put(player.getName(), flag);

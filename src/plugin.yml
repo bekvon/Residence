@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.7.7.0
+version: 2.7.7.1
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -53,6 +53,6 @@ permissions:
   residence.nofly.bypass:
     description: Bypasses nofly flag in residence
     default: op
-  residence.command.bypass:
+  residence.flag.command.bypass:
     description: Bypasses command flag in residence
     default: op
