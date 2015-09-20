@@ -156,6 +156,8 @@ public class Locale {
 	GetConfigString("Language.MaterialGet", "The material name for ID %1 is %2", writer, conf, true);
 	GetConfigString("Language.MarketDisabled", "Economy Disabled!", writer, conf, true);
 	GetConfigString("Language.MarketList", "Market List", writer, conf, true);
+	GetConfigString("Language.ResidenceList", "&a%1%2 &e- %3: %4", writer, conf, true);
+	GetConfigString("Language.Rented", " &a(Rented)", writer, conf, true);
 
 	GetConfigString("Language.SignTopLine", "[market]", writer, conf, true);
 	GetConfigString("Language.SignDateFormat", "YY/MM/dd HH:mm", writer, conf, true);
@@ -358,7 +360,7 @@ public class Locale {
 	GetConfigString("Language.LimitsBottom", "----------------------------------------", writer, conf, true);
 	GetConfigString("Language.Gui.Set.Title", "&6%1% flags", writer, conf, true);
 	GetConfigString("Language.Gui.Pset.Title", "&6%1% %2% flags", writer, conf, true);
-	GetConfigArray("Language.Gui.Actions", Arrays.asList("&2Left click to enable", "&cRight click to disable","&eShift + left click to remove"), writer, conf, true);
+	GetConfigArray("Language.Gui.Actions", Arrays.asList("&2Left click to enable", "&cRight click to disable", "&eShift + left click to remove"), writer, conf, true);
 
 	writer.addComment("CommandHelp", "");
 

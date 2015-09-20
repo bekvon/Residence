@@ -283,7 +283,8 @@ public class ResidenceManager {
 	if ((showhidden) || (!showhidden && !hidden)) {
 	    if (targetplayer == null || res.getPermissions().getOwner().equalsIgnoreCase(targetplayer)) {
 		if (formattedOutput) {
-		    list.add(ChatColor.GREEN + parentzone + resname + ChatColor.YELLOW + " - " + Residence.getLanguage().getPhrase("World") + ": " + res.getWorld());
+		    list.add(Residence.getLanguage().getPhrase("ResidenceList", parentzone + "." + resname + "." + Residence.getLanguage().getPhrase("World") + "." + res
+			.getWorld()));
 		} else {
 		    list.add(parentzone + resname);
 		}
@@ -377,7 +378,7 @@ public class ResidenceManager {
 	    // around for now
 	    Residence.getRentManager().removeRentable(name);
 	    Residence.getTransactionManager().removeFromSale(name);
-	    
+
 	    if (parent == null && Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().useResMoneyBack()) {
 		int chargeamount = (int) Math.ceil((double) res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
 		TransactionManager.giveEconomyMoney(player, chargeamount);

@@ -46,8 +46,11 @@ public class RentManager {
 	List<String> rentedLands = new ArrayList<String>();
 	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
 	    if (oneland.getValue().player.equalsIgnoreCase(playername)) {
-		rentedLands.add(ChatColor.GREEN + oneland.getKey() + ChatColor.YELLOW + " - " + Residence.getLanguage().getPhrase("World") + ": " + Residence
-		    .getResidenceManager().getByName(oneland.getKey()).getWorld() + ChatColor.GREEN +" (Rented)");
+		
+		
+		
+		rentedLands.add(Residence.getLanguage().getPhrase("ResidenceList", "." + oneland.getKey() + "." + Residence.getLanguage().getPhrase("World") + "." + Residence
+		    .getResidenceManager().getByName(oneland.getKey()).getWorld())+Residence.getLanguage().getPhrase("Rented"));
 	    }
 	}
 	return rentedLands;
