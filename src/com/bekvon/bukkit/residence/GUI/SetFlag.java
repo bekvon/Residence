@@ -1,4 +1,4 @@
-package GUI;
+package com.bekvon.bukkit.residence.GUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;

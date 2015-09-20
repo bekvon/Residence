@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.getspout.spoutapi.SpoutManager;
 
+import com.bekvon.bukkit.residence.GUI.SetFlag;
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
@@ -39,8 +40,6 @@ import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.Sorting;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
-import GUI.SetFlag;
 
 public class ResidenceCommandListener extends Residence {
 

@@ -53,15 +53,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.GUI.SetFlag;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ActionBar;
-
-import GUI.SetFlag;
-
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.Signs.Signs;
 
