@@ -115,6 +115,17 @@ public class SignUtil {
 
     }
 
+    public static void removeSign(String res) {
+	List<Signs> signList = new ArrayList<Signs>();
+	signList.addAll(SignUtil.Signs.GetAllSigns());
+
+	for (Signs one : signList) {
+	    if (!res.equals(one.GetResidence()))
+		continue;
+	    SignUtil.SignUpdate(one);
+	}
+    }
+
     public static boolean SignUpdate(Signs Sign) {
 
 	String landName = Sign.GetResidence();

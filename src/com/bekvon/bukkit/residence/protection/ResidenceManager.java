@@ -24,6 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
@@ -233,8 +234,12 @@ public class ResidenceManager {
 	if (showhidden && !Residence.isResAdminOn(player) && !player.getName().equals(targetplayer)) {
 	    showhidden = false;
 	}
-	InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, this.getResidenceList(targetplayer, showhidden,
-	    showsubzones, true), page);
+
+	ArrayList<String> ownedResidences = this.getResidenceList(targetplayer, showhidden, showsubzones, true);
+
+	ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer));
+
+	InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, ownedResidences, page);
     }
 
     public void listAllResidences(Player player, int page) {
@@ -371,6 +376,8 @@ public class ResidenceManager {
 	    // concurrent modification exception in lease manager... worked
 	    // around for now
 	    Residence.getRentManager().removeRentable(name);
+	    Residence.getTransactionManager().removeFromSale(name);
+	    
 	    if (parent == null && Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().useResMoneyBack()) {
 		int chargeamount = (int) Math.ceil((double) res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
 		TransactionManager.giveEconomyMoney(player, chargeamount);
@@ -464,9 +471,10 @@ public class ResidenceManager {
 
 	if (Residence.getEconomyManager() != null) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(res.getOwner(), res.getWorld());
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TotalWorth", String.valueOf((int)((res.getTotalSize() * group.getCostPerBlock())*100)/100.0).replace(
-		".", ",") + "." +
-		String.valueOf((int)((res.getTotalSize() * res.getBlockSellPrice())*100)/100.0).replace(".", ",")));
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TotalWorth", String.valueOf((int) ((res.getTotalSize() * group.getCostPerBlock())
+		* 100) / 100.0).replace(
+		    ".", ",") + "." +
+		String.valueOf((int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0).replace(".", ",")));
 	}
 
 	if (aid != null) {
@@ -551,7 +559,7 @@ public class ResidenceManager {
 			"Server land") && !residence.getOwner().equalsIgnoreCase("Server_land"))
 			continue;
 
-		    if (residence.getOwner().equalsIgnoreCase("Server land")){
+		    if (residence.getOwner().equalsIgnoreCase("Server land")) {
 			residence.getPermissions().setOwner("Server_Land", false);
 		    }
 

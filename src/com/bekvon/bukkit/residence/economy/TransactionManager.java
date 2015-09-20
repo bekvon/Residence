@@ -236,6 +236,7 @@ public class TransactionManager {
 
     public void removeFromSale(String areaname) {
 	sellAmount.remove(areaname);
+	SignUtil.removeSign(areaname);
     }
 
     public boolean isForSale(String areaname) {

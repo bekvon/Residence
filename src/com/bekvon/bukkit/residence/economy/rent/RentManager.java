@@ -14,9 +14,12 @@ import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -37,6 +40,17 @@ public class RentManager {
 
     public RentedLand getRentedLand(String name) {
 	return rentedLand.containsKey(name) ? rentedLand.get(name) : null;
+    }
+
+    public List<String> getRentedLands(String playername) {
+	List<String> rentedLands = new ArrayList<String>();
+	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
+	    if (oneland.getValue().player.equalsIgnoreCase(playername)) {
+		rentedLands.add(ChatColor.GREEN + oneland.getKey() + ChatColor.YELLOW + " - " + Residence.getLanguage().getPhrase("World") + ": " + Residence
+		    .getResidenceManager().getByName(oneland.getKey()).getWorld() + ChatColor.GREEN +" (Rented)");
+	    }
+	}
+	return rentedLands;
     }
 
     public void setForRent(Player player, String landName, int amount, int days, boolean repeatable, boolean resadmin) {
@@ -227,6 +241,8 @@ public class RentManager {
     public void removeRentable(String landName) {
 	removeFromRent(landName);
 	rentableLand.remove(landName);
+	
+	SignUtil.removeSign(landName);
     }
 
     public boolean isForRent(String landName) {

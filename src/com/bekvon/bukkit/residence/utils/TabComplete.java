@@ -25,8 +25,8 @@ public class TabComplete implements TabCompleter {
 	    for (String one : args) {
 		com += " " + one;
 	    }
-	    Bukkit.dispatchCommand(sender, "res" + com + "?");
-	    Bukkit.getConsoleSender().sendMessage(sender.getName() + " issued server command: /res" + com + "?");
+	    Bukkit.dispatchCommand(sender, command.getName() + com + "?");
+	    Bukkit.getConsoleSender().sendMessage(sender.getName() + " issued server command: " + command.getName() + com + "?");
 	    Commands.clear();
 	    Commands.add("");
 	}
