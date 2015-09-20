@@ -11,6 +11,8 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -264,8 +266,8 @@ public class ResidenceBlockListener implements Listener {
 
 	ClaimedResidence sourceres = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
-	if (sourceres == null && targetres != null || sourceres != null && targetres == null || sourceres != null && targetres != null && !sourceres.getName().equals(
-	    targetres.getName())) {
+	if ((sourceres == null && targetres != null || sourceres != null && targetres == null || sourceres != null && targetres != null && !sourceres.getName().equals(
+	    targetres.getName())) && (event.getItem().getType() == Material.LAVA_BUCKET || event.getItem().getType() == Material.WATER_BUCKET)) {
 	    event.setCancelled(true);
 	}
     }
