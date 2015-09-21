@@ -7,6 +7,7 @@ package com.bekvon.bukkit.residence.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,6 +17,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
@@ -60,6 +62,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.Signs.Signs;
 
@@ -426,16 +429,46 @@ public class ResidencePlayerListener implements Listener {
 	return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerFireInteract(PlayerInteractEvent event) {
+
+	if (event.getAction() != Action.LEFT_CLICK_BLOCK)
+	    return;
+
+	Block block = event.getClickedBlock();
+
+	if (block == null)
+	    return;
+
+	Block relativeBlock = block.getRelative(event.getBlockFace());
+
+	if (relativeBlock == null)
+	    return;
+
+	Player player = event.getPlayer();
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
+	if (relativeBlock.getType() == Material.FIRE) {
+	    boolean hasplace = perms.playerHas(player.getName(), player.getWorld().getName(), "place", perms.playerHas(player.getName(), player.getWorld().getName(),
+		"build", true));
+	    if (!hasplace) {
+		event.setCancelled(true);
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
+		return;
+	    }
+	}
+    }
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
+
 	Player player = event.getPlayer();
 	Material heldItem = player.getItemInHand().getType();
 	int heldItemId = player.getItemInHand().getTypeId();
 	Block block = event.getClickedBlock();
-	if (block == null) {
+	if (block == null)
 	    return;
-	}
+
 	int blockId = block.getTypeId();
 
 	Material mat = block.getType();
@@ -446,6 +479,7 @@ public class ResidencePlayerListener implements Listener {
 		return;
 	    }
 	}
+
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
 	String world = player.getWorld().getName();
 	String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
@@ -532,6 +566,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	}
+
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
 	    boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
 	    for (Entry<Material, String> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
