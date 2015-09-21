@@ -103,9 +103,8 @@ public class ResidenceBlockListener implements Listener {
 	if (informed.contains(player.getName()))
 	    return;
 
-	for (String one : NewLanguage.getMessageList("Language.NewPlayerInfo")) {
-	    player.sendMessage(one);
-	}
+	player.sendMessage(NewLanguage.getMessage("Language.NewPlayerInfo"));
+
 	informed.add(player.getName());
     }
 

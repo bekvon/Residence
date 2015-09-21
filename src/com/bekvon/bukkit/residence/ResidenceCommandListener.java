@@ -9,9 +9,6 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,9 +17,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.getspout.spoutapi.SpoutManager;
 
 import com.bekvon.bukkit.residence.GUI.SetFlag;
@@ -36,8 +30,6 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
-import com.bekvon.bukkit.residence.utils.Debug;
-import com.bekvon.bukkit.residence.utils.Sorting;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
