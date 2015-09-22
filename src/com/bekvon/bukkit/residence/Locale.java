@@ -349,6 +349,7 @@ public class Locale {
 	GetConfigString("Language.LimitsMaxUD", "&7- &eMax Up/Down Size:&3 %1", writer, conf, true);
 	GetConfigString("Language.LimitsMinMax", "&7- &eMin/Max Protection Height:&3 %1 to %2", writer, conf, true);
 	GetConfigString("Language.LimitsMaxSub", "&7- &eMax Subzone Depth:&3 %1", writer, conf, true);
+	GetConfigString("Language.LimitsMaxRents", "&7- &eMax Rents:&3 %1", writer, conf, true);
 	GetConfigString("Language.LimitsEnterLeave", "&7- &eCan Set Enter/Leave Messages:&3 %1", writer, conf, true);
 	GetConfigString("Language.LimitsNumberOwn", "&7- &eNumber of Residences you own:&3 %1", writer, conf, true);
 	GetConfigString("Language.LimitsCost", "&7- &eResidence Cost Per Block:&3 %1", writer, conf, true);
@@ -361,6 +362,11 @@ public class Locale {
 	GetConfigString("Language.Gui.Set.Title", "&6%1% flags", writer, conf, true);
 	GetConfigString("Language.Gui.Pset.Title", "&6%1% %2% flags", writer, conf, true);
 	GetConfigArray("Language.Gui.Actions", Arrays.asList("&2Left click to enable", "&cRight click to disable", "&eShift + left click to remove"), writer, conf, true);
+
+	GetConfigString("Language.InformationPage.TopLine", "&e---< &a %1 &e >---", writer, conf, true);
+	GetConfigString("Language.InformationPage.Page", "&e-----< %1 >-----", writer, conf, true);
+	GetConfigString("Language.InformationPage.NextPage", "&e-----< %1 >-----", writer, conf, true);
+	GetConfigString("Language.InformationPage.NoNextPage", "&e-----------------------", writer, conf, true);
 
 	writer.addComment("CommandHelp", "");
 

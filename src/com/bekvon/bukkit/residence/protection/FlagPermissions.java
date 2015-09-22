@@ -21,7 +21,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 

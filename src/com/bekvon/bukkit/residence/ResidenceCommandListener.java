@@ -19,10 +19,10 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.SpoutManager;
 
-import com.bekvon.bukkit.residence.GUI.SetFlag;
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
+import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -742,7 +742,7 @@ public class ResidenceCommandListener extends Residence {
 	    player.sendMessage(ChatColor.RED + language.getPhrase("SelectDiabled"));
 	    return true;
 	}
-	if (!group.canCreateResidences() && group.getMaxSubzoneDepth() <= 0 && !resadmin) {
+	if (!group.canCreateResidences() && group.getMaxSubzoneDepth(player.getName()) <= 0 && !resadmin) {
 	    player.sendMessage(ChatColor.RED + language.getPhrase("SelectDiabled"));
 	    return true;
 	}

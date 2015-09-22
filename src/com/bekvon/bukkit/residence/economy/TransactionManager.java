@@ -10,9 +10,7 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.Signs.SignUtil;
-import com.bekvon.bukkit.residence.Signs.Signs;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -158,7 +156,7 @@ public class TransactionManager {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("OwnerBuyFail"));
 		return;
 	    }
-	    if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= group.getMaxZones() && !resadmin) {
+	    if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= group.getMaxZones(player.getName()) && !resadmin) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceTooMany"));
 		return;
 	    }

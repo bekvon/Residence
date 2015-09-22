@@ -378,7 +378,7 @@ public class ClaimedResidence {
 		}
 	    }
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-	    if (this.getZoneDepth() >= group.getMaxSubzoneDepth()) {
+	    if (this.getZoneDepth() >= group.getMaxSubzoneDepth(owner)) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneMaxDepth"));
 		return false;
 	    }

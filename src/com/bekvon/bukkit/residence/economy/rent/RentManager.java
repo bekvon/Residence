@@ -46,11 +46,8 @@ public class RentManager {
 	List<String> rentedLands = new ArrayList<String>();
 	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
 	    if (oneland.getValue().player.equalsIgnoreCase(playername)) {
-		
-		
-		
-		rentedLands.add(Residence.getLanguage().getPhrase("ResidenceList", "." + oneland.getKey() + "." + Residence.getLanguage().getPhrase("World") + "." + Residence
-		    .getResidenceManager().getByName(oneland.getKey()).getWorld())+Residence.getLanguage().getPhrase("Rented"));
+		rentedLands.add(Residence.getLanguage().getPhrase("ResidenceList", "." + oneland.getKey() + "." + Residence.getLanguage().getPhrase("World") + "."
+		    + Residence.getResidenceManager().getByName(oneland.getKey()).getWorld()) + Residence.getLanguage().getPhrase("Rented"));
 	    }
 	}
 	return rentedLands;
@@ -117,7 +114,7 @@ public class RentManager {
 	    return;
 	}
 	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-	if (!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents()) {
+	if (!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents(player.getName())) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMaxRent"));
 	    return;
 	}
@@ -244,7 +241,7 @@ public class RentManager {
     public void removeRentable(String landName) {
 	removeFromRent(landName);
 	rentableLand.remove(landName);
-	
+
 	SignUtil.removeSign(landName);
     }
 

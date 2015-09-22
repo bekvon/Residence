@@ -1,4 +1,4 @@
-package com.bekvon.bukkit.residence.GUI;
+package com.bekvon.bukkit.residence.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -19,10 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.Sorting;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class SetFlag {
 

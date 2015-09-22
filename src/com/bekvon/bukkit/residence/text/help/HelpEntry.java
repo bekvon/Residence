@@ -9,8 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

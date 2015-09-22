@@ -11,8 +11,6 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,6 +25,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.bekvon.bukkit.residence.NewLanguage;
+import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -96,7 +95,7 @@ public class ResidenceBlockListener implements Listener {
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
-	ArrayList<String> list = Residence.getResidenceManager().getResidenceList(player.getName(), true, false);
+	ArrayList<String> list = PlayerManager.getResidenceList(player.getName());
 	if (list.size() != 0)
 	    return;
 

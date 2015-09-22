@@ -7,7 +7,6 @@ package com.bekvon.bukkit.residence.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,7 +16,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
@@ -49,20 +47,16 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
+import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
-import com.bekvon.bukkit.residence.GUI.SetFlag;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.*;
+import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ActionBar;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.Signs.Signs;
 
@@ -330,12 +324,20 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-	Player player = event.getPlayer();
+	final Player player = event.getPlayer();
 	lastUpdate.put(player.getName(), 0L);
 	if (Residence.getPermissionManager().isResidenceAdmin(player)) {
 	    Residence.turnResAdminOn(player);
 	}
 	handleNewLocation(player, player.getLocation(), false);
+
+	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	    @Override
+	    public void run() {
+		PlayerManager.playerJoin(player);
+		return;
+	    }
+	});
 
 	// if (player.isOp() || player.hasPermission("residence.versioncheck"))
 	// {

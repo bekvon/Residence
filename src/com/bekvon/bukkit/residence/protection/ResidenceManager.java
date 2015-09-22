@@ -6,7 +6,6 @@
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -17,14 +16,15 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
@@ -32,6 +32,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -157,7 +158,7 @@ public class ResidenceManager {
 	    return false;
 	}
 	if (player != null) {
-	    if (!hasMaxZones(player.getName(), group.getMaxZones()) && !resadmin) {
+	    if (!hasMaxZones(player.getName(), group.getMaxZones(player.getName())) && !resadmin) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceTooMany"));
 		return false;
 	    }
@@ -188,6 +189,9 @@ public class ResidenceManager {
 	    newRes.addArea(newArea, "main");
 	}
 	if (newRes.getAreaCount() != 0) {
+
+	    PlayerManager.addResidence(owner, newRes);
+
 	    residences.put(name, newRes);
 	    calculateChunks(name);
 	    Residence.getLeaseManager().removeExpireTime(name);
@@ -230,16 +234,21 @@ public class ResidenceManager {
 	this.listResidences(player, targetplayer, page, showhidden, false);
     }
 
-    public void listResidences(Player player, String targetplayer, int page, boolean showhidden, boolean showsubzones) {
+    public void listResidences(final Player player, final String targetplayer, final int page, boolean showhidden, boolean showsubzones) {
 	if (showhidden && !Residence.isResAdminOn(player) && !player.getName().equals(targetplayer)) {
 	    showhidden = false;
 	}
-
-	ArrayList<String> ownedResidences = this.getResidenceList(targetplayer, showhidden, showsubzones, true);
-
-	ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer));
-
-	InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, ownedResidences, page);
+	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	    @Override
+	    public void run() {
+		long time = System.currentTimeMillis();
+		ArrayList<String> ownedResidences = PlayerManager.getResidenceListString(targetplayer);
+		ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer));
+		InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, ownedResidences, page);
+		Debug.D(targetplayer + "1 " + (System.currentTimeMillis() - time));
+		return;
+	    }
+	});
     }
 
     public void listAllResidences(Player player, int page) {
@@ -259,6 +268,19 @@ public class ResidenceManager {
 
     public String[] getResidenceList() {
 	return this.getResidenceList(true, true).toArray(new String[0]);
+    }
+
+    public Map<String, ClaimedResidence> getResidenceMapList(String targetplayer, boolean showhidden) {
+	Map<String, ClaimedResidence> temp = new HashMap<String, ClaimedResidence>();
+	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
+	    if (res.getValue().getPermissions().getOwner().equalsIgnoreCase(targetplayer)) {
+		boolean hidden = res.getValue().getPermissions().has("hidden", false);
+		if ((showhidden) || (!showhidden && !hidden)) {
+		    temp.put(res.getKey(), res.getValue());
+		}
+	    }
+	}
+	return temp;
     }
 
     public ArrayList<String> getResidenceList(boolean showhidden, boolean showsubzones) {
@@ -312,6 +334,7 @@ public class ResidenceManager {
 	this.removeResidence(null, name, true);
     }
 
+    @SuppressWarnings("deprecation")
     public void removeResidence(Player player, String name, boolean resadmin) {
 	ClaimedResidence res = this.getByName(name);
 	if (res != null) {
@@ -376,6 +399,7 @@ public class ResidenceManager {
 	    // Residence.getLeaseManager().removeExpireTime(name); - causing
 	    // concurrent modification exception in lease manager... worked
 	    // around for now
+	    PlayerManager.removeResFromPlayer(player, name);
 	    Residence.getRentManager().removeRentable(name);
 	    Residence.getTransactionManager().removeFromSale(name);
 
@@ -407,6 +431,7 @@ public class ResidenceManager {
 		Residence.getServ().getPluginManager().callEvent(resevent);
 		if (resevent.isCancelled())
 		    return;
+		PlayerManager.removeResFromPlayer(player, res.getName());
 		removeChunkList(res.getName());
 		it.remove();
 	    } else {
@@ -416,26 +441,31 @@ public class ResidenceManager {
     }
 
     public int getOwnedZoneCount(String player) {
-	Collection<ClaimedResidence> set = residences.values();
-	int count = 0;
-	for (ClaimedResidence res : set) {
-	    if (res.getPermissions().getOwner().equalsIgnoreCase(player)) {
-		count++;
-	    }
-	}
-	return count;
+
+//	Collection<ClaimedResidence> set = residences.values();
+//	int count = 0;
+//	for (ClaimedResidence res : set) {
+//	    if (res.getPermissions().getOwner().equalsIgnoreCase(player)) {
+//		count++;
+//	    }
+//	}
+	return PlayerManager.getResidenceList(player).size();
     }
 
     public boolean hasMaxZones(String player, int target) {
-	Collection<ClaimedResidence> set = residences.values();
-	int count = 0;
-	for (ClaimedResidence res : set) {
-	    if (res.getPermissions().getOwner().equalsIgnoreCase(player)) {
-		count++;
-		if (count >= target)
-		    return false;
-	    }
-	}
+//	Collection<ClaimedResidence> set = residences.values();
+//	int count = 0;
+//	for (ClaimedResidence res : set) {
+//	    if (res.getPermissions().getOwner().equalsIgnoreCase(player)) {
+//		count++;
+//		if (count >= target)
+//		    return false;
+//	    }
+//	}
+	int count = getOwnedZoneCount(player);
+	if (count >= target)
+	    return false;
+
 	return true;
     }
 
@@ -617,11 +647,15 @@ public class ResidenceManager {
 			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + newName + ChatColor.RED));
 		    return false;
 		}
+
 		ResidenceRenameEvent resevent = new ResidenceRenameEvent(res, newName, oldName);
 		Residence.getServ().getPluginManager().callEvent(resevent);
 		removeChunkList(oldName);
 		residences.put(newName, res);
 		residences.remove(oldName);
+
+		PlayerManager.renameResidence(player.getName(), oldName, newName);
+
 		calculateChunks(newName);
 		if (Residence.getConfigManager().useLeases()) {
 		    Residence.getLeaseManager().updateLeaseName(oldName, newName);
@@ -668,7 +702,7 @@ public class ResidenceManager {
 	    reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceGiveLimits"));
 	    return;
 	}
-	if (!hasMaxZones(giveplayer.getName(), g.getMaxZones()) && !resadmin) {
+	if (!hasMaxZones(giveplayer.getName(), g.getMaxZones(giveplayer.getName())) && !resadmin) {
 	    reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceGiveLimits"));
 	    return;
 	}
@@ -680,6 +714,10 @@ public class ResidenceManager {
 		}
 	    }
 	}
+
+	PlayerManager.removeResFromPlayer(reqPlayer, residence);
+	PlayerManager.addResidence(targPlayer, res);
+
 	res.getPermissions().setOwner(giveplayer.getName(), true);
 	// Fix phrases here
 	reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceGive", ChatColor.YELLOW + residence + ChatColor.GREEN + "." + ChatColor.YELLOW
@@ -705,6 +743,8 @@ public class ResidenceManager {
 	} else {
 	    sender.sendMessage(ChatColor.RED + "Removed " + ChatColor.YELLOW + count + ChatColor.RED + " residences in world: " + ChatColor.YELLOW + world);
 	}
+
+	PlayerManager.fillList();
     }
 
     public int getResidenceCount() {
