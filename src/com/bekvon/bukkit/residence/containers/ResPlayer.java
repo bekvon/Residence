@@ -44,21 +44,21 @@ public class ResPlayer {
     }
 
     public void recountMaxRes() {
-	for (int i = 1; i <= 50; i++) {
+	for (int i = 1; i <= 250; i++) {
 	    if (this.player.isPermissionSet("residence.max.res." + i))
 		this.maxRes = i;
 	}
     }
 
     public void recountMaxRents() {
-	for (int i = 1; i <= 50; i++) {
+	for (int i = 1; i <= 250; i++) {
 	    if (this.player.isPermissionSet("residence.max.rents." + i))
 		this.maxRents = i;
 	}
     }
 
     public void recountMaxSubzones() {
-	for (int i = 1; i <= 50; i++) {
+	for (int i = 1; i <= 250; i++) {
 	    if (this.player.isPermissionSet("residence.max.subzones." + i))
 		this.maxSubzones = i;
 	}
@@ -72,18 +72,22 @@ public class ResPlayer {
     }
 
     public int getMaxRes() {
+	recountMaxRes();
 	return this.maxRes;
     }
 
     public int getMaxRents() {
+	recountMaxRents();
 	return this.maxRents;
     }
 
     public int getMaxSubzones() {
+	recountMaxSubzones();
 	return this.maxSubzones;
-    }    
-    
+    }
+
     public PermissionGroup getGroup() {
+	recountGroup();
 	return this.group;
     }
 

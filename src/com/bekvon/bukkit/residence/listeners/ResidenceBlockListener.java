@@ -11,8 +11,6 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
@@ -40,8 +38,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 /**
  *
@@ -120,7 +116,7 @@ public class ResidenceBlockListener implements Listener {
 	    if (loc.getBlock().getType() != Material.AIR) {
 		ClaimedResidence targetRes = Residence.getResidenceManager().getByLoc(loc);
 		if (res == null && targetRes != null || res != null && targetRes == null || res != null && targetRes != null && !res.getName()
-		    .equalsIgnoreCase(targetRes.getName())) {
+		    .equals(targetRes.getName())) {
 		    event.setCancelled(true);
 		    block.setType(Material.AIR);
 		}

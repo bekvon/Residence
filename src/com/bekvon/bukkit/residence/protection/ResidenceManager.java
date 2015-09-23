@@ -32,7 +32,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -241,11 +240,9 @@ public class ResidenceManager {
 	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
 	    @Override
 	    public void run() {
-		long time = System.currentTimeMillis();
 		ArrayList<String> ownedResidences = PlayerManager.getResidenceListString(targetplayer);
 		ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer));
 		InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, ownedResidences, page);
-		Debug.D(targetplayer + "1 " + (System.currentTimeMillis() - time));
 		return;
 	    }
 	});
