@@ -11,6 +11,9 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -35,7 +38,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 /**
  *
@@ -44,6 +50,8 @@ import org.bukkit.inventory.ItemStack;
 public class ResidenceBlockListener implements Listener {
 
     private static List<String> informed = new ArrayList<String>();
+
+    public static final String BlockMetadata = "ResFallingBlock";
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -79,6 +87,45 @@ public class ResidenceBlockListener implements Listener {
 	    event.setCancelled(true);
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 	    return;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockFall(EntityChangeBlockEvent event) {
+
+	if (!Residence.getConfigManager().isBlockFall())
+	    return;
+
+	if ((event.getEntityType() != EntityType.FALLING_BLOCK))
+	    return;
+
+	if (event.getTo().hasGravity())
+	    return;
+
+	Block block = event.getBlock();
+
+	if (block == null)
+	    return;
+
+	if (!Residence.getConfigManager().getBlockFallWorlds().contains(block.getLocation().getWorld().getName()))
+	    return;
+
+	if (block.getY() <= Residence.getConfigManager().getBlockFallLevel())
+	    return;
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+	Location loc = new Location(block.getLocation().getWorld(), block.getX(), block.getY(), block.getZ());
+	for (int i = loc.getBlockY() - 1; i >= Residence.getConfigManager().getBlockFallLevel() - 1; i--) {
+	    loc.setY(i);
+	    if (loc.getBlock().getType() != Material.AIR) {
+		ClaimedResidence targetRes = Residence.getResidenceManager().getByLoc(loc);
+		if (res == null && targetRes != null || res != null && targetRes == null || res != null && targetRes != null && !res.getName()
+		    .equalsIgnoreCase(targetRes.getName())) {
+		    event.setCancelled(true);
+		    block.setType(Material.AIR);
+		}
+		return;
+	    }
 	}
     }
 

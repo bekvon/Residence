@@ -39,6 +39,7 @@ public class ConfigManager {
     protected boolean NoLava;
     protected boolean NoWater;
     protected boolean NoLavaPlace;
+    protected boolean useBlockFall;
     protected boolean NoWaterPlace;
     protected boolean AutoCleanUp;
     protected boolean UseClean;
@@ -55,6 +56,7 @@ public class ConfigManager {
     protected int autoSaveInt;
     protected int FlowLevel;
     protected int PlaceLevel;
+    protected int BlockFallLevel;
     protected int CleanLevel;
     protected int VisualizerRange;
     protected int VisualizerShowFor;
@@ -97,6 +99,7 @@ public class ConfigManager {
     protected List<String> NoFlowWorlds;
     protected List<String> AutoCleanUpWorlds;
     protected List<String> NoPlaceWorlds;
+    protected List<String> BlockFallWorlds;
     protected List<String> CleanWorlds;
 
     protected ItemStack GuiTrue;
@@ -195,6 +198,8 @@ public class ConfigManager {
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
 	conf.options().copyDefaults(true);
 
+	String defaultWorldName = Bukkit.getServer().getWorlds().size() > 0 ? Bukkit.getServer().getWorlds().get(0).getName() : "World";
+	
 	writer.addComment("Global", "These are Global Settings for Residence.");
 	writer.addComment("Global.Language", "This loads the <language>.yml file in the Residence Language folder",
 	    "All Residence text comes from this file. (NOT DONE YET)");
@@ -232,23 +237,32 @@ public class ConfigManager {
 	writer.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
 	AutoCleanUpDays = GetConfigInt("Global.AutoCleanUp.Days", 60, writer, conf);
 	writer.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
-	AutoCleanUpWorlds = GetConfigArray("Global.AutoCleanUp.Worlds", Arrays.asList("TestWorld"), writer, conf, false);
+	AutoCleanUpWorlds = GetConfigArray("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
 
+	// Flow
 	writer.addComment("Global.AntiGreef.Flow.Level", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
 	FlowLevel = GetConfigInt("Global.AntiGreef.Flow.Level", 63, writer, conf);
 	writer.addComment("Global.AntiGreef.Flow.NoLavaFlow", "With this set to true, lava flow outside residence is blocked");
 	NoLava = GetConfigBoolean("Global.AntiGreef.Flow.NoLavaFlow", true, writer, conf);
 	writer.addComment("Global.AntiGreef.Flow.NoWaterFlow", "With this set to true, water flow outside residence is blocked");
 	NoWater = GetConfigBoolean("Global.AntiGreef.Flow.NoWaterFlow", true, writer, conf);
-	NoFlowWorlds = GetConfigArray("Global.AntiGreef.Flow.Worlds", Arrays.asList("World"), writer, conf, false);
+	NoFlowWorlds = GetConfigArray("Global.AntiGreef.Flow.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
 
+	// Place
 	writer.addComment("Global.AntiGreef.Place.Level", "Level from witch one to start block lava and water place", "This don't have effect in residence area");
 	PlaceLevel = GetConfigInt("Global.AntiGreef.Place.Level", 63, writer, conf);
 	writer.addComment("Global.AntiGreef.Place.NoLavaPlace", "With this set to true, playrs cant place lava outside residence");
 	NoLavaPlace = GetConfigBoolean("Global.AntiGreef.Place.NoLavaPlace", true, writer, conf);
 	writer.addComment("Global.AntiGreef.Place.NoWaterPlace", "With this set to true, playrs cant place water outside residence");
 	NoWaterPlace = GetConfigBoolean("Global.AntiGreef.Place.NoWaterPlace", true, writer, conf);
-	NoPlaceWorlds = GetConfigArray("Global.AntiGreef.Place.Worlds", Arrays.asList("World"), writer, conf, false);
+	NoPlaceWorlds = GetConfigArray("Global.AntiGreef.Place.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+
+	// Sand fall
+	writer.addComment("Global.AntiGreef.BlockFall.Use", "With this set to true, falling blocks will be deleted if they will land in different area");
+	useBlockFall = GetConfigBoolean("Global.AntiGreef.BlockFall.Use", true, writer, conf);
+	writer.addComment("Global.AntiGreef.BlockFall.Level", "Level from witch one to start block block's fall", "This don't have effect in residence area or outside");
+	BlockFallLevel = GetConfigInt("Global.AntiGreef.BlockFall.Level", 62, writer, conf);
+	BlockFallWorlds = GetConfigArray("Global.AntiGreef.BlockFall.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
 
 	writer.addComment("Global.AntiGreef.ResCleaning.Use",
 	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
@@ -258,7 +272,7 @@ public class ConfigManager {
 	CleanLevel = GetConfigInt("Global.AntiGreef.ResCleaning.Level", 63, writer, conf);
 	writer.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
 	CleanBlocks = GetConfigIntArray("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11), writer, conf);
-	CleanWorlds = GetConfigArray("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList("World"), writer, conf, false);
+	CleanWorlds = GetConfigArray("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
 
 	writer.addComment("Global.DefaultGroup", "The default group to use if Permissions fails to attach or your not using Permissions.");
 	defaultGroup = GetConfigString("Global.DefaultGroup", "default", writer, conf, false);
@@ -568,6 +582,10 @@ public class ConfigManager {
 	return NoLavaPlace;
     }
 
+    public boolean isBlockFall() {
+	return useBlockFall;
+    }
+
     public boolean isNoWaterPlace() {
 	return NoWaterPlace;
     }
@@ -626,6 +644,10 @@ public class ConfigManager {
 
     public int getPlaceLevel() {
 	return PlaceLevel;
+    }
+
+    public int getBlockFallLevel() {
+	return BlockFallLevel;
     }
 
     public int getCleanLevel() {
@@ -738,6 +760,10 @@ public class ConfigManager {
 
     public List<String> getNoPlaceWorlds() {
 	return NoPlaceWorlds;
+    }
+
+    public List<String> getBlockFallWorlds() {
+	return BlockFallWorlds;
     }
 
     public List<String> getCleanWorlds() {
