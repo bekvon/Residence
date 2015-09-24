@@ -189,11 +189,11 @@ public class ResidenceManager {
 	}
 	if (newRes.getAreaCount() != 0) {
 
-	    PlayerManager.addResidence(owner, newRes);
-
 	    residences.put(name, newRes);
 	    calculateChunks(name);
 	    Residence.getLeaseManager().removeExpireTime(name);
+
+	    PlayerManager.addResidence(newRes.getOwner(), newRes);
 	    if (player != null) {
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceCreate", ChatColor.YELLOW + name + ChatColor.GREEN));
 	    }
@@ -273,7 +273,7 @@ public class ResidenceManager {
 	    if (res.getValue().getPermissions().getOwner().equalsIgnoreCase(targetplayer)) {
 		boolean hidden = res.getValue().getPermissions().has("hidden", false);
 		if ((showhidden) || (!showhidden && !hidden)) {
-		    temp.put(res.getKey(), res.getValue());
+		    temp.put(res.getValue().getName(), res.getValue());
 		}
 	    }
 	}
@@ -396,7 +396,7 @@ public class ResidenceManager {
 	    // Residence.getLeaseManager().removeExpireTime(name); - causing
 	    // concurrent modification exception in lease manager... worked
 	    // around for now
-	    PlayerManager.removeResFromPlayer(player, name);
+	    PlayerManager.removeResFromPlayer(res.getOwner(), name);
 	    Residence.getRentManager().removeRentable(name);
 	    Residence.getTransactionManager().removeFromSale(name);
 

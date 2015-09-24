@@ -43,10 +43,10 @@ permissions:
     default: op
   residence.create:
     description: Allows you to create residences
-    default: op
+    default: true
   residence.select:
     description: Allows you to select an area to make residences
-    default: op
+    default: true
   residence.versioncheck:
     description: Notice to new version after connect
     default: op
