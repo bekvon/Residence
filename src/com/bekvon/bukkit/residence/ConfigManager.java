@@ -94,7 +94,7 @@ public class ConfigManager {
     protected int AutoMobRemovalInterval;
     protected boolean enableLeaseMoneyAccount;
     protected boolean enableDebug = false;
-    protected boolean versionCheck;
+    protected boolean versionCheck = true;
     protected boolean useVisualizer;
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
@@ -203,8 +203,12 @@ public class ConfigManager {
 	conf.options().copyDefaults(true);
 
 	String defaultWorldName = Bukkit.getServer().getWorlds().size() > 0 ? Bukkit.getServer().getWorlds().get(0).getName() : "World";
-
+	
 	writer.addComment("Global", "These are Global Settings for Residence.");
+	
+	writer.addComment("Global.versionCheck", "Players with residence.versioncheck permission node will be noticed about new residence version on login");
+	versionCheck = GetConfigBoolean("Global.versionCheck", true, writer, conf);
+	
 	writer.addComment("Global.Language", "This loads the <language>.yml file in the Residence Language folder", "All Residence text comes from this file. (NOT DONE YET)");
 	language = GetConfigString("Global.Language", "English", writer, conf, false);
 

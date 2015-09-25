@@ -322,32 +322,32 @@ public class ResidencePlayerListener implements Listener {
 	Residence.getChatManager().removeFromChannel(pname);
 
 	Residence.UUIDList.put(pname, event.getPlayer().getUniqueId());
-	
+
 	if (AutoSelection.getList().containsKey(pname.toLowerCase()))
 	    AutoSelection.getList().remove(pname);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-	final Player player = event.getPlayer();
+	Player player = event.getPlayer();
 	lastUpdate.put(player.getName(), 0L);
 	if (Residence.getPermissionManager().isResidenceAdmin(player)) {
 	    Residence.turnResAdminOn(player);
 	}
 	handleNewLocation(player, player.getLocation(), false);
 
+	final Player p = player;
 	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
 	    @Override
 	    public void run() {
-		PlayerManager.playerJoin(player);
+		PlayerManager.playerJoin(p);
 		return;
 	    }
 	});
 
-	// if (player.isOp() || player.hasPermission("residence.versioncheck"))
-	// {
-	// Residence.getVersionChecker().VersionCheck(player);
-	// }
+	if (player.hasPermission("residence.versioncheck")) {
+	    Residence.getVersionChecker().VersionCheck(player);
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -924,7 +924,7 @@ public class ResidencePlayerListener implements Listener {
 		return;
 	    }
 	});
-	
+
 	if (res == null) {
 	    lastOutsideLoc.put(pname, loc);
 	    if (ResOld != null) {

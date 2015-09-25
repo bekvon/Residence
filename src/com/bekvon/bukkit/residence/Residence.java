@@ -459,8 +459,8 @@ public class Residence extends JavaPlugin {
 
 	SignUtil.LoadSigns();
 
-	//versionChecker = new VersionChecker(this);
-	// versionChecker.VersionCheck(null);
+	versionChecker = new VersionChecker(this);
+	versionChecker.VersionCheck(null);
     }
 
     public void consoleMessage(String message) {

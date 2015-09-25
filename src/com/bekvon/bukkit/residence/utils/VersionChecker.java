@@ -38,9 +38,11 @@ public class VersionChecker {
 		    String newVersion = config.getString("version");
 		    br.close();
 		    if (!newVersion.equals(currentVersion)) {
-			String msg = ChatColor.GREEN + "Residence v" + newVersion + " is now available!\n" +
-			    "Your version: " + currentVersion + "\n" +
-			    "You can download new version from " + ChatColor.BLUE + plugin.getDescription().getWebsite();
+			String msg = ChatColor.GREEN + "***********************************************************\n" +
+			    ChatColor.GREEN + "* Residence " + newVersion + " is now available!\n" +
+			    "* Your version: " + currentVersion + "\n" +
+			    "* You can download new version from \n* " + ChatColor.BLUE + plugin.getDescription().getWebsite() +
+			    ChatColor.GREEN + "\n***********************************************************";
 			if (player != null) {
 			    player.sendMessage(msg);
 			} else {
