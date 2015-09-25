@@ -46,8 +46,7 @@ public class InformationPager {
 	}
 	sender.sendMessage(NewLanguage.getMessage("Language.InformationPage.TopLine").replace("%1", title));
 	sender.sendMessage(NewLanguage.getMessage("Language.InformationPage.Page").replace("%1", Residence.getLanguage().getPhrase("GenericPage", ChatColor.GREEN + String
-	    .format("%d", page) + ChatColor.YELLOW
-	    + "." + ChatColor.GREEN + pagecount + ChatColor.YELLOW)));
+	    .format("%d", page) + ChatColor.YELLOW + "|" + ChatColor.GREEN + pagecount + ChatColor.YELLOW)));
 	for (int i = start; i < end; i++) {
 	    if (lines.size() > i)
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));

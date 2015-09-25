@@ -56,7 +56,6 @@ public class LeaseManager {
     }
 
     public void setExpireTime(Player player, String area, int days) {
-	area = area.replace(".", "_");
 	if (manager.getByName(area) != null) {
 	    leaseExpireTime.put(area, daysToMs(days) + System.currentTimeMillis());
 	    if (player != null)
@@ -87,7 +86,7 @@ public class LeaseManager {
 		    econ.subtract(player.getName(), amount);
 		    econ.add("Lease Money", amount);
 		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCharged", ChatColor.YELLOW + String.format("%d", amount)
-			+ ChatColor.GREEN + "." + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
+			+ ChatColor.GREEN + "|" + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
 		} else {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NotEnoughMoney"));
 		    return;

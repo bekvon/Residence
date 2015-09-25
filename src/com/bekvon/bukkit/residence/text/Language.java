@@ -56,7 +56,7 @@ public class Language {
 	if (words == null) {
 	    return this.getPhrase(keys, (String[]) null);
 	} else {
-	    return this.getPhrase(keys, words.split("\\."));
+	    return this.getPhrase(keys, words.split("\\|"));
 	}
     }
 

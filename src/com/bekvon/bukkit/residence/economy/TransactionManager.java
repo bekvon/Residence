@@ -43,7 +43,7 @@ public class TransactionManager {
 	    return false;
 	}
 	econ.subtract(player.getName(), amount);
-	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCharged", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN + "."
+	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCharged", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN + "|"
 	    + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
 	return true;
     }
@@ -60,7 +60,7 @@ public class TransactionManager {
 	}
 
 	econ.add(player.getName(), amount);
-	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyAdded", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN + "."
+	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyAdded", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN + "|"
 	    + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
 	return true;
     }
@@ -111,7 +111,7 @@ public class TransactionManager {
 
 	SignUtil.CheckSign(area);
 
-	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceForSale", ChatColor.YELLOW + areaname + ChatColor.GREEN + "." + ChatColor.YELLOW
+	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceForSale", ChatColor.YELLOW + areaname + ChatColor.GREEN + "|" + ChatColor.YELLOW
 	    + amount + ChatColor.GREEN));
     }
 
@@ -196,14 +196,14 @@ public class TransactionManager {
 		SignUtil.CheckSign(res);
 
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCharged", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN
-		    + "." + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
+		    + "|" + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceBought", ChatColor.GREEN + areaname + ChatColor.YELLOW));
 		Player seller = serv.getPlayer(sellerName);
 		if (seller != null && seller.isOnline()) {
-		    seller.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceBuy", ChatColor.YELLOW + player.getName() + ChatColor.GREEN + "."
+		    seller.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceBuy", ChatColor.YELLOW + player.getName() + ChatColor.GREEN + "|"
 			+ ChatColor.YELLOW + areaname + ChatColor.GREEN));
 		    seller.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCredit", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN
-			+ "." + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
+			+ "|" + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
 		}
 	    } else {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NotEnoughMoney"));

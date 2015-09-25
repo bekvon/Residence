@@ -86,21 +86,21 @@ public class ClaimedResidence {
 
 	if (!resadmin && area.getXSize() < Residence.getConfigManager().getMinimalResX()) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallX", String.valueOf(area.getXSize()) + "." + String.valueOf(Residence
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallX", String.valueOf(area.getXSize()) + "|" + String.valueOf(Residence
 		    .getConfigManager().getMinimalResX())));
 	    }
 	    return false;
 	}
 	if (!resadmin && area.getYSize() < Residence.getConfigManager().getMinimalResY()) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallY", String.valueOf(area.getYSize()) + "." + String.valueOf(Residence
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallY", String.valueOf(area.getYSize()) + "|" + String.valueOf(Residence
 		    .getConfigManager().getMinimalResY())));
 	    }
 	    return false;
 	}
 	if (!resadmin && area.getZSize() < Residence.getConfigManager().getMinimalResZ()) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallZ", String.valueOf(area.getZSize()) + "." + String.valueOf(Residence
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallZ", String.valueOf(area.getZSize()) + "|" + String.valueOf(Residence
 		    .getConfigManager().getMinimalResZ())));
 	    }
 	    return false;
@@ -830,7 +830,7 @@ public class ClaimedResidence {
 	}
 
 	if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin) {
-	    reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("TeleportStarted", this.getName() + "." + Residence.getConfigManager()
+	    reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("TeleportStarted", this.getName() + "|" + Residence.getConfigManager()
 		.getTeleportDelay()));
 	    ResidenceCommandListener.teleportDelayMap.add(reqPlayer.getName());
 	}
@@ -1033,7 +1033,7 @@ public class ClaimedResidence {
 	subzones.put(newName, res);
 	subzones.remove(oldName);
 	if (player != null)
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SubzoneRename", oldName + "." + newName));
+	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SubzoneRename", oldName + "|" + newName));
 	return true;
     }
 
@@ -1061,7 +1061,7 @@ public class ClaimedResidence {
 	    areas.put(newName, area);
 	    areas.remove(oldName);
 	    if (player != null)
-		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaRename", oldName + "." + newName));
+		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaRename", oldName + "|" + newName));
 	    return true;
 	} else {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));

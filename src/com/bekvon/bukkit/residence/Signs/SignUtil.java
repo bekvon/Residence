@@ -174,8 +174,8 @@ public class SignUtil {
 	    String TopLine = rented ? endDate : Residence.getLanguage().getPhrase("SignForRentTopLine");
 	    sign.setLine(0, TopLine);
 
-	    String infoLine = Residence.getLanguage().getPhrase("SignForRentPriceLine", Residence.getRentManager().getCostOfRent(landName) + "." + Residence
-		.getRentManager().getRentDays(landName) + "." + Residence.getRentManager().getRentableRepeatable(landName));
+	    String infoLine = Residence.getLanguage().getPhrase("SignForRentPriceLine", Residence.getRentManager().getCostOfRent(landName) + "|" + Residence
+		.getRentManager().getRentDays(landName) + "|" + Residence.getRentManager().getRentableRepeatable(landName));
 
 	    sign.setLine(1, infoLine);
 

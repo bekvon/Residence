@@ -5,7 +5,9 @@
 
 package com.bekvon.bukkit.residence.permissions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 
 import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
@@ -171,11 +173,11 @@ public class PermissionGroup {
 	    }
 	}
     }
-    
+
     public String getGroupName() {
 	return groupname;
     }
-    
+
     public int getMaxX() {
 	return xmax;
     }
@@ -322,32 +324,34 @@ public class PermissionGroup {
 	return itemListAccess;
     }
 
-    public void printLimits(Player player) {
+    public void printLimits(Player player, OfflinePlayer target, boolean resadmin) {
 	player.sendMessage(ChatColor.GRAY + Residence.getLanguage().getPhrase("LimitsTop"));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsPGroup", Residence.getPermissionManager().getPermissionsGroup(player)));
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsPGroup", Residence.getPermissionManager().getPermissionsGroup(target.getName(),
+	    Residence.getConfigManager().getDefaultWorld())));
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsRGroup", groupname));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsAdmin", String.valueOf(Residence.getPermissionManager().isResidenceAdmin(
-	    player))));
+	if (target.isOnline() && resadmin)
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsAdmin", String.valueOf(Residence.getPermissionManager().isResidenceAdmin(
+		player))));
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsCanCreate", String.valueOf(cancreate)));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxRes", String.valueOf(getMaxZones(player.getName()))));
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxRes", String.valueOf(getMaxZones(target.getName()))));
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxEW", String.valueOf(xmax)));
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxNS", String.valueOf(zmax)));
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxUD", String.valueOf(ymax)));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMinMax", String.valueOf(minHeight) + "." + String.valueOf(maxHeight)));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxSub", String.valueOf(getMaxSubzoneDepth(player.getName()))));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxRents", String.valueOf(getMaxRents(player.getName()))));
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMinMax", String.valueOf(minHeight) + "|" + String.valueOf(maxHeight)));
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxSub", String.valueOf(getMaxSubzoneDepth(target.getName()))));
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsMaxRents", String.valueOf(getMaxRents(target.getName()))));
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsEnterLeave", String.valueOf(messageperms)));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsNumberOwn", String.valueOf(Residence.getResidenceManager().getOwnedZoneCount(player
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsNumberOwn", String.valueOf(Residence.getResidenceManager().getOwnedZoneCount(target
 	    .getName()))));
 	if (Residence.getEconomyManager() != null) {
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsCost", String.valueOf(costperarea).replace(".", ",")));
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsSell", String.valueOf(sellperarea).replace(".", ",")));
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsCost", String.valueOf(costperarea)));
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsSell", String.valueOf(sellperarea)));
 	}
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsFlag", flagPerms.listFlags()));
 	if (Residence.getConfigManager().useLeases()) {
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsFlag", String.valueOf(maxLeaseTime).replace(".", ",")));
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsFlag", String.valueOf(leaseGiveTime).replace(".", ",")));
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsFlag", String.valueOf(renewcostperarea).replace(".", ",")));
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsFlag", String.valueOf(maxLeaseTime)));
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsFlag", String.valueOf(leaseGiveTime)));
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LimitsFlag", String.valueOf(renewcostperarea)));
 	}
 	player.sendMessage(ChatColor.GRAY + Residence.getLanguage().getPhrase("LimitsBottom"));
     }

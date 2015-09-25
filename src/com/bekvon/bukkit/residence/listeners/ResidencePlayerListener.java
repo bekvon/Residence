@@ -56,7 +56,9 @@ import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.Signs.Signs;
 
@@ -650,7 +652,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	if (!res.getPermissions().playerHas(player.getName(), "shear", true)) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Shear." + res.getName()));
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Shear|" + res.getName()));
 	    event.setCancelled(true);
 	}
 
@@ -887,7 +889,7 @@ public class ResidencePlayerListener implements Listener {
 	return false;
     }
 
-    public void handleNewLocation(Player player, Location loc, boolean move) {
+    public void handleNewLocation(final Player player, Location loc, boolean move) {
 
 	String pname = player.getName();
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
@@ -912,6 +914,14 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
+	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	    @Override
+	    public void run() {
+		AutoSelection.UpdateSelection(player);
+		return;
+	    }
+	});
+	
 	if (res == null) {
 	    lastOutsideLoc.put(pname, loc);
 	    if (ResOld != null) {
@@ -980,11 +990,11 @@ public class ResidencePlayerListener implements Listener {
 			    else
 				player.teleport(res.getOutsideFreeLoc(loc));
 
-			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly." + orres.getName()));
+			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly|" + orres.getName()));
 			    return;
 			}
 		    }
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly." + orres.getName()));
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly|" + orres.getName()));
 		    player.teleport(location);
 		    player.setFlying(false);
 		    player.setAllowFlight(false);

@@ -302,7 +302,7 @@ public class ResidenceManager {
 	if ((showhidden) || (!showhidden && !hidden)) {
 	    if (targetplayer == null || res.getPermissions().getOwner().equalsIgnoreCase(targetplayer)) {
 		if (formattedOutput) {
-		    list.add(Residence.getLanguage().getPhrase("ResidenceList", parentzone + "." + resname + "." + Residence.getLanguage().getPhrase("World") + "." + res
+		    list.add(Residence.getLanguage().getPhrase("ResidenceList", parentzone + "|" + resname + "|" + Residence.getLanguage().getPhrase("World") + "|" + res
 			.getWorld()));
 		} else {
 		    list.add(parentzone + resname);
@@ -500,17 +500,15 @@ public class ResidenceManager {
 	if (Residence.getEconomyManager() != null) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(res.getOwner(), res.getWorld());
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TotalWorth", String.valueOf((int) ((res.getTotalSize() * group.getCostPerBlock())
-		* 100) / 100.0).replace(
-		    ".", ",") + "." +
-		String.valueOf((int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0).replace(".", ",")));
+		* 100) / 100.0) + "|" + String.valueOf((int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0)));
 	}
 
 	if (aid != null) {
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("CoordsT") + ": " + ChatColor.LIGHT_PURPLE + Residence.getLanguage().getPhrase(
-		"CoordsTop", res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockX() + "." + res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockY() + "."
+		"CoordsTop", res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockX() + "|" + res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockY() + "|"
 		    + res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockZ()));
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("CoordsB") + ": " + ChatColor.LIGHT_PURPLE + Residence.getLanguage().getPhrase(
-		"CoordsBottom", res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockX() + "." + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockY()
+		"CoordsBottom", res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockX() + "|" + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockY()
 		    + "." + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockZ()));
 	}
 	if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
@@ -661,7 +659,7 @@ public class ResidenceManager {
 		    Residence.getRentManager().updateRentableName(oldName, newName);
 		}
 		if (player != null) {
-		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceRename", ChatColor.YELLOW + oldName + ChatColor.GREEN + "."
+		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceRename", ChatColor.YELLOW + oldName + ChatColor.GREEN + "|"
 			+ ChatColor.YELLOW + newName + ChatColor.GREEN));
 		}
 		return true;
@@ -717,9 +715,9 @@ public class ResidenceManager {
 
 	res.getPermissions().setOwner(giveplayer.getName(), true);
 	// Fix phrases here
-	reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceGive", ChatColor.YELLOW + residence + ChatColor.GREEN + "." + ChatColor.YELLOW
+	reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceGive", ChatColor.YELLOW + residence + ChatColor.GREEN + "|" + ChatColor.YELLOW
 	    + giveplayer.getName() + ChatColor.GREEN));
-	giveplayer.sendMessage(Residence.getLanguage().getPhrase("ResidenceRecieve", ChatColor.GREEN + residence + ChatColor.YELLOW + "." + ChatColor.GREEN + reqPlayer
+	giveplayer.sendMessage(Residence.getLanguage().getPhrase("ResidenceRecieve", ChatColor.GREEN + residence + ChatColor.YELLOW + "|" + ChatColor.GREEN + reqPlayer
 	    .getName() + ChatColor.YELLOW));
     }
 

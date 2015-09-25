@@ -31,16 +31,16 @@ public class PlayerManager {
 	}
     }
 
-    public static void playerJoin(String player, UUID uuid) {
-	synchronized (players) {
-	    ResPlayer resPlayer = players.get(player.toLowerCase());
-	    if (resPlayer == null) {
-		resPlayer = new ResPlayer(player);
-		resPlayer.recountRes();
-		players.put(player.toLowerCase(), resPlayer);
-	    }
-	    return;
+    public static void playerJoin(String player) {
+
+	ResPlayer resPlayer = players.get(player.toLowerCase());
+	if (resPlayer == null) {
+	    resPlayer = new ResPlayer(player);
+	    resPlayer.recountRes();
+	    players.put(player.toLowerCase(), resPlayer);
 	}
+	return;
+
     }
 
     public static void fillList() {
@@ -59,7 +59,7 @@ public class PlayerManager {
     public static ArrayList<String> getResidenceList(String player) {
 	synchronized (players) {
 	    ArrayList<String> temp = new ArrayList<String>();
-	    playerJoin(player, null);
+	    playerJoin(player);
 	    ResPlayer resPlayer = players.get(player.toLowerCase());
 	    if (resPlayer != null) {
 		for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
@@ -74,19 +74,18 @@ public class PlayerManager {
     public static ArrayList<String> getResidenceListString(String player) {
 	synchronized (players) {
 	    ArrayList<String> temp = new ArrayList<String>();
-	    playerJoin(player, null);
+	    playerJoin(player);
 	    ResPlayer resPlayer = players.get(player.toLowerCase());
 	    if (resPlayer != null) {
 		for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
-		    temp.add(Residence.getLanguage().getPhrase("ResidenceList", "." + one.getKey() + "." + Residence.getLanguage().getPhrase("World") + "." + one
-			.getValue()));
+		    temp.add(Residence.getLanguage().getPhrase("ResidenceList", "|" + one.getKey() + "|" + Residence.getLanguage().getPhrase("World") + "|" + one.getValue()));
 		}
 		return temp;
 	    }
 	    return temp;
 	}
     }
-    
+
     public static PermissionGroup getGroup(String player) {
 	ResPlayer resPlayer = getResPlayer(player);
 	if (resPlayer != null) {
@@ -94,7 +93,7 @@ public class PlayerManager {
 	}
 	return null;
     }
-    
+
     public static int getMaxResidences(String player) {
 	ResPlayer resPlayer = getResPlayer(player);
 	if (resPlayer != null) {
@@ -121,6 +120,10 @@ public class PlayerManager {
 
     public static ResPlayer getResPlayer(String player) {
 	ResPlayer resPlayer = players.get(player.toLowerCase());
+	if (resPlayer == null) {
+	    playerJoin(player);
+	    resPlayer = players.get(player.toLowerCase());
+	}
 	return resPlayer;
     }
 

@@ -46,7 +46,7 @@ public class RentManager {
 	List<String> rentedLands = new ArrayList<String>();
 	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
 	    if (oneland.getValue().player.equalsIgnoreCase(playername)) {
-		rentedLands.add(Residence.getLanguage().getPhrase("ResidenceList", "." + oneland.getKey() + "." + Residence.getLanguage().getPhrase("World") + "."
+		rentedLands.add(Residence.getLanguage().getPhrase("ResidenceList", "|" + oneland.getKey() + "|" + Residence.getLanguage().getPhrase("World") + "|"
 		    + Residence.getResidenceManager().getByName(oneland.getKey()).getWorld()) + Residence.getLanguage().getPhrase("Rented"));
 	    }
 	}
@@ -91,7 +91,7 @@ public class RentManager {
 	    String[] split = landName.split("\\.");
 	    if (split.length != 0)
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceForRentSuccess", ChatColor.YELLOW + split[split.length - 1]
-		    + ChatColor.GREEN + "." + ChatColor.YELLOW + amount + ChatColor.GREEN + "." + ChatColor.YELLOW + days + ChatColor.GREEN));
+		    + ChatColor.GREEN + "|" + ChatColor.YELLOW + amount + ChatColor.GREEN + "|" + ChatColor.YELLOW + days + ChatColor.GREEN));
 	} else {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRent"));
 	}
@@ -125,7 +125,7 @@ public class RentManager {
 	if (this.isRented(landName)) {
 	    String[] split = landName.split("\\.");
 	    if (split.length != 0)
-		player.sendMessage(Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + split[split.length - 1] + ChatColor.RED + "."
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + split[split.length - 1] + ChatColor.RED + "|"
 		    + ChatColor.YELLOW + this.getRentingPlayer(landName)));
 	    return;
 	}
@@ -148,10 +148,8 @@ public class RentManager {
 		res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
 		res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
 		res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
-		String[] split = landName.split("\\.");
-		if (split.length != 0)
-		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceRentSuccess", ChatColor.YELLOW + split[split.length - 1]
-			+ ChatColor.GREEN + "." + ChatColor.YELLOW + land.days + ChatColor.GREEN));
+		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceRentSuccess", ChatColor.YELLOW + landName
+		    + ChatColor.GREEN + "|" + ChatColor.YELLOW + land.days + ChatColor.GREEN));
 	    } else {
 		player.sendMessage(ChatColor.RED + "Error, unable to transfer money...");
 	    }
@@ -196,7 +194,6 @@ public class RentManager {
     }
 
     public void unrent(Player player, String landName, boolean resadmin) {
-	String[] split = landName.split("\\.");
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	if (res == null) {
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("InvalidResidence"));
@@ -207,9 +204,8 @@ public class RentManager {
 	    return;
 	}
 	if (rentedLand.containsKey(landName) && !resadmin) {
-	    if (split.length != 0)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + split[split.length - 1] + ChatColor.RED
-		    + "." + ChatColor.YELLOW + rentedLand.get(landName).player) + ChatColor.YELLOW);
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + landName + ChatColor.RED
+		+ "|" + ChatColor.YELLOW + rentedLand.get(landName).player) + ChatColor.YELLOW);
 	    return;
 	}
 	if (rentableLand.containsKey(landName)) {
@@ -225,9 +221,8 @@ public class RentManager {
 		    SignUtil.CheckSign(res);
 		}
 	    }
-	    if (split.length != 0)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceRemoveRentable", ChatColor.YELLOW + split[split.length - 1]
-		    + ChatColor.RED));
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceRemoveRentable", ChatColor.YELLOW + landName
+		+ ChatColor.RED));
 
 	} else {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceNotForRent"));

@@ -71,10 +71,6 @@ public class Locale {
 	writer.addComment("Language.NewPlayerInfo", "The below lines represent various messages residence sends to the players.",
 	    "Note that some messages have variables such as %1 that are inserted at runtime.");
 
-	GetConfigArray("Language.NewPlayerInfo", Arrays.asList("&e******************************************************",
-	    "Please use wooden axe to select opposite sides of your home and execute command &2/res create yourHouseName",
-	    "&e******************************************************"), writer, conf, true);
-
 	GetConfigString("Language.NewPlayerInfo", "&ePlease use wooden axe to select opposite sides of your home and execute command &2/res create your name", writer,
 	    conf, true);
 	GetConfigString("Language.InvalidResidence", "Invalid Residence...", writer, conf, true);
@@ -367,6 +363,8 @@ public class Locale {
 	GetConfigString("Language.InformationPage.Page", "&e-----< %1 >-----", writer, conf, true);
 	GetConfigString("Language.InformationPage.NextPage", "&e-----< %1 >-----", writer, conf, true);
 	GetConfigString("Language.InformationPage.NoNextPage", "&e-----------------------", writer, conf, true);
+	GetConfigString("Language.AutoSelection.Enabled", "&eAuto selection mode turned ON. To disable it write /res select auto", writer, conf, true);
+	GetConfigString("Language.AutoSelection.Disabled", "&eAuto selection mode turned OFF. To enable it again write /res select auto", writer, conf, true);
 
 	writer.addComment("CommandHelp", "");
 
@@ -385,6 +383,9 @@ public class Locale {
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.size.Description", "Display selected size", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.size.Info", Arrays.asList("Usage: /res select size"), writer, conf, true);
+	
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.auto.Description", "Turns on auto selection tool", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.auto.Info", Arrays.asList("Usage: /res select auto [playername]"), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.cost.Description", "Display selection cost", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.cost.Info", Arrays.asList("Usage: /res select cost"), writer, conf, true);

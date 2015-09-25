@@ -70,10 +70,12 @@ public class SetFlag {
 	String command = "true";
 	if (click.isLeftClick() && action != InventoryAction.MOVE_TO_OTHER_INVENTORY)
 	    command = "true";
-	else if (click.isRightClick())
+	else if (click.isRightClick() && action != InventoryAction.MOVE_TO_OTHER_INVENTORY)
 	    command = "false";
 	else if (click.isLeftClick() && action == InventoryAction.MOVE_TO_OTHER_INVENTORY)
 	    command = "remove";
+	else if (click.isRightClick() && action == InventoryAction.MOVE_TO_OTHER_INVENTORY)
+	    return;
 
 	String flag = "";
 	int i = 0;

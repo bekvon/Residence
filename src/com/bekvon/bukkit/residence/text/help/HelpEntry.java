@@ -75,8 +75,8 @@ public class HelpEntry {
 	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
 	    return;
 	}
-	sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("HelpPageHeader", ChatColor.YELLOW + name + ChatColor.RED + "." + ChatColor.YELLOW + page
-	    + ChatColor.RED + "." + ChatColor.YELLOW + pagecount + ChatColor.RED));
+	sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("HelpPageHeader", ChatColor.YELLOW + name + ChatColor.RED + "|" + ChatColor.YELLOW + page
+	    + ChatColor.RED + "|" + ChatColor.YELLOW + pagecount + ChatColor.RED));
 	sender.sendMessage(ChatColor.DARK_AQUA + Residence.getLanguage().getPhrase("Description") + ": " + ChatColor.GREEN + desc);
 	int start = linesPerPage * (page - 1);
 	int end = start + linesPerPage;
