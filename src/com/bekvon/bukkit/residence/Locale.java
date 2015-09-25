@@ -155,6 +155,8 @@ public class Locale {
 	GetConfigString("Language.ResidenceList", "&a%1%2 &e- %3: %4", writer, conf, true);
 	GetConfigString("Language.Rented", " &a(Rented)", writer, conf, true);
 
+	GetConfigString("Language.SignsUpdated", "&e%1 signs updated!", writer, conf, true);
+
 	GetConfigString("Language.SignTopLine", "[market]", writer, conf, true);
 	GetConfigString("Language.SignDateFormat", "YY/MM/dd HH:mm", writer, conf, true);
 
@@ -383,7 +385,7 @@ public class Locale {
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.size.Description", "Display selected size", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.size.Info", Arrays.asList("Usage: /res select size"), writer, conf, true);
-	
+
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.auto.Description", "Turns on auto selection tool", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.auto.Info", Arrays.asList("Usage: /res select auto [playername]"), writer, conf, true);
 
@@ -695,6 +697,11 @@ public class Locale {
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.current.Description", "Show residence your currently in.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.current.Info",
 	    Arrays.asList("Usage: /res current"),
+	    writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.signupdate.Description", "Updated residence signs (Admin only)", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.signupdate.Info",
+	    Arrays.asList("Usage: /res signupdate"),
 	    writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lists.Description", "Predefined permission lists", writer, conf, true);

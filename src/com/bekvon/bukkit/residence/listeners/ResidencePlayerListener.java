@@ -322,6 +322,9 @@ public class ResidencePlayerListener implements Listener {
 	Residence.getChatManager().removeFromChannel(pname);
 
 	Residence.UUIDList.put(pname, event.getPlayer().getUniqueId());
+	
+	if (AutoSelection.getList().containsKey(pname.toLowerCase()))
+	    AutoSelection.getList().remove(pname);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

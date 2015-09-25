@@ -27,7 +27,7 @@ public class VersionChecker {
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    public void run() {
-		String readURL = "https://raw.githubusercontent.com/bekvon/Residence/master/src/plugin.yml";
+		String readURL = "https://raw.githubusercontent.com/Zrips/Residence/master/src/plugin.yml";
 		FileConfiguration config;
 		String currentVersion = plugin.getDescription().getVersion();
 		try {

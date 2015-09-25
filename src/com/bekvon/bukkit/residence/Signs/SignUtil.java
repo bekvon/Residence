@@ -28,6 +28,15 @@ public class SignUtil {
 
     public static SignInfo Signs = new SignInfo();
 
+    public static int updateAllSigns() {
+	List<com.bekvon.bukkit.residence.Signs.Signs> temp = new ArrayList<com.bekvon.bukkit.residence.Signs.Signs>();
+	temp.addAll(Signs.GetAllSigns());
+	for (com.bekvon.bukkit.residence.Signs.Signs one : temp) {
+	    SignUpdate(one);
+	}
+	return temp.size();
+    }
+
     // Sign file
     public static void LoadSigns() {
 	Thread threadd = new Thread() {
