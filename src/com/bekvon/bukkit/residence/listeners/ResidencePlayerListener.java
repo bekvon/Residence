@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -518,8 +519,8 @@ public class ResidencePlayerListener implements Listener {
 	if (heldItemId == Residence.getConfigManager().getSelectionTooldID()) {
 	    if (Residence.wepid == Residence.getConfigManager().getSelectionTooldID())
 		return;
-
-	    event.setCancelled(true);
+	    if (player.getGameMode() == GameMode.CREATIVE)
+		event.setCancelled(true);
 
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	    if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group
