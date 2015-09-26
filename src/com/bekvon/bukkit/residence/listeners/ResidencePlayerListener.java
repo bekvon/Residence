@@ -519,6 +519,8 @@ public class ResidencePlayerListener implements Listener {
 	    if (Residence.wepid == Residence.getConfigManager().getSelectionTooldID())
 		return;
 
+	    event.setCancelled(true);
+
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	    if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group
 		.canCreateResidences() && !player.isPermissionSet("residence.create") && !player.isPermissionSet("residence.select") || resadmin) {
@@ -537,6 +539,7 @@ public class ResidencePlayerListener implements Listener {
 		if (Residence.getSelectionManager().hasPlacedBoth(player.getName()))
 		    Residence.getSelectionManager().showSelectionInfoInActionBar(player);
 	    }
+	    return;
 	}
 	if (heldItemId == Residence.getConfigManager().getInfoToolID() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
 	    Location loc = block.getLocation();

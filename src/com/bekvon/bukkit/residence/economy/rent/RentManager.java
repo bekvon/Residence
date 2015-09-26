@@ -13,6 +13,7 @@ import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 
 import java.util.ArrayList;
@@ -125,7 +126,8 @@ public class RentManager {
 	if (this.isRented(landName)) {
 	    String[] split = landName.split("\\.");
 	    if (split.length != 0)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + split[split.length - 1] + ChatColor.RED + "|"
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + split[split.length - 1] + ChatColor.RED
+		    + "|"
 		    + ChatColor.YELLOW + this.getRentingPlayer(landName)));
 	    return;
 	}
@@ -144,6 +146,9 @@ public class RentManager {
 		rentedLand.put(landName, newrent);
 
 		SignUtil.CheckSign(res);
+
+		CuboidArea area = res.getAreaArray()[0];
+		Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
 
 		res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
 		res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());

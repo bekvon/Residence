@@ -194,6 +194,9 @@ public class ResidenceManager {
 	    Residence.getLeaseManager().removeExpireTime(name);
 
 	    PlayerManager.addResidence(newRes.getOwner(), newRes);
+
+	    Residence.getSelectionManager().NewMakeBorders(player, newArea.getHighLoc(), newArea.getLowLoc(), false);
+
 	    if (player != null) {
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceCreate", ChatColor.YELLOW + name + ChatColor.GREEN));
 	    }

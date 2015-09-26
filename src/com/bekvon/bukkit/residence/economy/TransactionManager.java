@@ -194,7 +194,10 @@ public class TransactionManager {
 		this.removeFromSale(areaname);
 
 		SignUtil.CheckSign(res);
-
+		
+		CuboidArea area = res.getAreaArray()[0];
+		Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
+		
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCharged", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN
 		    + "|" + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceBought", ChatColor.GREEN + areaname + ChatColor.YELLOW));
