@@ -29,7 +29,7 @@ public class VersionChecker {
 	    public void run() {
 		String currentVersion = plugin.getDescription().getVersion();
 		String newVersion = getNewVersion();
-		if (newVersion == null || !newVersion.equals(currentVersion))
+		if (newVersion == null || newVersion.equalsIgnoreCase(currentVersion))
 		    return;
 		List<String> msg = Arrays.asList(
 		    ChatColor.GREEN + "*********************** " + plugin.getDescription().getName() + " **************************",
