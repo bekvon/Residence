@@ -18,6 +18,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -262,10 +263,92 @@ public class ResidenceEntityListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
 	FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
 	Entity ent = event.getEntity();
-	if (isAnimal(ent) && !perms.has("animals", true))
-	    event.setCancelled(true);
-	else if (isMonster(ent) && !perms.has("monsters", true))
-	    event.setCancelled(true);
+	if (isAnimal(ent)) {
+	    if (!perms.has("animals", true)) {
+		event.setCancelled(true);
+		return;
+	    } else
+		switch (event.getSpawnReason()) {
+		case BUILD_WITHER:
+		    break;
+		case BUILD_IRONGOLEM:
+		case BUILD_SNOWMAN:
+		case CUSTOM:
+		    if (!perms.has("canimals", true)) {
+			event.setCancelled(true);
+			return;
+		    }
+		    break;
+		case DEFAULT:
+		    break;
+		case BREEDING:
+		case CHUNK_GEN:
+		case CURED:
+		case DISPENSE_EGG:
+		case EGG:
+		case JOCKEY:
+		case MOUNT:
+		case VILLAGE_INVASION:
+		case VILLAGE_DEFENSE:
+		case NETHER_PORTAL:
+		case OCELOT_BABY:
+		case NATURAL:
+		    if (!perms.has("nanimals", true)) {
+			event.setCancelled(true);
+			return;
+		    }
+		    break;
+		case SPAWNER_EGG:
+		case SPAWNER:
+		    if (!perms.has("sanimals", true)) {
+			event.setCancelled(true);
+			return;
+		    }
+		    break;
+		default:
+		    break;
+		}
+	} else if (isMonster(ent))
+	    if (!perms.has("monsters", true)) {
+		event.setCancelled(true);
+		return;
+	    } else
+		switch (event.getSpawnReason()) {
+		case BUILD_WITHER:
+		case CUSTOM:
+		    if (!perms.has("cmonsters", true)) {
+			event.setCancelled(true);
+			return;
+		    }
+		    break;
+		case DEFAULT:
+		    break;
+		case CHUNK_GEN:
+		case CURED:
+		case DISPENSE_EGG:
+		case INFECTION:
+		case JOCKEY:
+		case MOUNT:
+		case NETHER_PORTAL:
+		case SILVERFISH_BLOCK:
+		case SLIME_SPLIT:
+		case LIGHTNING:
+		case NATURAL:
+		    if (!perms.has("nmonsters", true)) {
+			event.setCancelled(true);
+			return;
+		    }
+		    break;
+		case SPAWNER_EGG:
+		case SPAWNER:
+		    if (!perms.has("smonsters", true)) {
+			event.setCancelled(true);
+			return;
+		    }
+		    break;
+		default:
+		    break;
+		}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

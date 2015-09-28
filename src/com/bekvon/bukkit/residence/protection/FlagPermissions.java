@@ -157,6 +157,9 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("explode");
 	addResidenceOnlyFlag("damage");
 	addResidenceOnlyFlag("monsters");
+	addResidenceOnlyFlag("cmonsters");
+	addResidenceOnlyFlag("smonsters");
+	addResidenceOnlyFlag("nmonsters");
 	addResidenceOnlyFlag("firespread");
 	addResidenceOnlyFlag("burn");
 	addResidenceOnlyFlag("tnt");
@@ -165,6 +168,9 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("flow");
 	addResidenceOnlyFlag("healing");
 	addResidenceOnlyFlag("animals");
+	addResidenceOnlyFlag("canimals");
+	addResidenceOnlyFlag("sanimals");
+	addResidenceOnlyFlag("nanimals");
 	addResidenceOnlyFlag("lavaflow");
 	addResidenceOnlyFlag("waterflow");
 	addResidenceOnlyFlag("physics");
@@ -299,8 +305,10 @@ public class FlagPermissions {
 	if (uuids == null) {
 	    Set<Entry<String, String>> values = cachedPlayerNameUUIDs.entrySet();
 	    for (Entry<String, String> value : values) {
-		if (value.getValue().equals(player))
+		if (value.getValue().equals(player)){
 		    uuids = value.getKey();
+		    break;
+		}
 	    }
 	}
 
@@ -352,8 +360,10 @@ public class FlagPermissions {
 	String uuids = Residence.getPlayerUUIDString(player);
 	if (uuids == null)
 	    for (Entry<String, String> entry : cachedPlayerNameUUIDs.entrySet())
-		if (entry.getValue().equals(player))
+		if (entry.getValue().equals(player)){
 		    uuids = entry.getKey();
+		    break;
+		}
 
 	if (uuids != null) {
 	    playerFlags.remove(uuids);
