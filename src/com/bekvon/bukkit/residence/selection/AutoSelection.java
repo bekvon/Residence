@@ -6,17 +6,18 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.AutoSelector;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 public class AutoSelection {
 
-    private static HashMap<String, PermissionGroup> list = new HashMap<String, PermissionGroup>();
+    private static HashMap<String, AutoSelector> list = new HashMap<String, AutoSelector>();
 
     public static void switchAutoSelection(Player player) {
 	if (!list.containsKey(player.getName().toLowerCase())) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player.getName(), player.getLocation().getWorld().getName());
-	    list.put(player.getName().toLowerCase(), group);
+	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
 	    player.sendMessage(NewLanguage.getMessage("Language.AutoSelection.Enabled"));
 	} else {
 	    list.remove(player.getName().toLowerCase());
@@ -31,6 +32,16 @@ public class AutoSelection {
 
 	if (!getList().containsKey(player.getName().toLowerCase()))
 	    return;
+
+	AutoSelector AutoSelector = getList().get(player.getName().toLowerCase());
+
+	int Curenttime = (int) (System.currentTimeMillis() - AutoSelector.getTime()) / 1000;
+
+	if (Curenttime > 270) {
+	    list.remove(player.getName().toLowerCase());
+	    player.sendMessage(NewLanguage.getMessage("Language.AutoSelection.Disabled"));
+	    return;
+	}
 
 	String name = player.getName();
 
@@ -87,7 +98,7 @@ public class AutoSelection {
 	    changed = true;
 	}
 
-	PermissionGroup group = getList().get(player.getName().toLowerCase());
+	PermissionGroup group = AutoSelector.getGroup();
 
 	if (area.getXSize() > group.getMaxX()) {
 	    return;
@@ -108,7 +119,7 @@ public class AutoSelection {
 	}
     }
 
-    public static HashMap<String, PermissionGroup> getList() {
+    public static HashMap<String, AutoSelector> getList() {
 	return list;
     }
 }
