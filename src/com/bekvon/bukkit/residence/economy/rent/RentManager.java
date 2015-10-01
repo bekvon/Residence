@@ -15,7 +15,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,8 +46,16 @@ public class RentManager {
 	List<String> rentedLands = new ArrayList<String>();
 	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
 	    if (oneland.getValue().player.equalsIgnoreCase(playername)) {
-		rentedLands.add(Residence.getLanguage().getPhrase("ResidenceList", "|" + oneland.getKey() + "|" + Residence.getLanguage().getPhrase("World") + "|"
-		    + Residence.getResidenceManager().getByName(oneland.getKey()).getWorld()) + Residence.getLanguage().getPhrase("Rented"));
+		ClaimedResidence res = Residence.getResidenceManager().getByName(oneland.getKey());
+		String world = " ";
+		if (res != null) {
+		    res = res.getTopParent();
+		    world = res.getWorld();
+		}
+		rentedLands.add(Residence.getLanguage().getPhrase("ResidenceList", "|"
+		    + oneland.getKey() + "|" + Residence.getLanguage().getPhrase("World") + "|"
+		    + world)
+		    + Residence.getLanguage().getPhrase("Rented"));
 	    }
 	}
 	return rentedLands;

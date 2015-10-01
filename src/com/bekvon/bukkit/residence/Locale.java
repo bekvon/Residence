@@ -71,7 +71,7 @@ public class Locale {
 	writer.addComment("Language.NewPlayerInfo", "The below lines represent various messages residence sends to the players.",
 	    "Note that some messages have variables such as %1 that are inserted at runtime.");
 
-	GetConfigString("Language.NewPlayerInfo", "&ePlease use wooden axe to select opposite sides of your home and execute command &2/res create your name", writer,
+	GetConfigString("Language.NewPlayerInfo", "&ePlease use wooden axe to select opposite sides of your home and execute command &2/res create YourResidenceName", writer,
 	    conf, true);
 	GetConfigString("Language.InvalidResidence", "Invalid Residence...", writer, conf, true);
 	GetConfigString("Language.InvalidSubzone", "Invalid Subzone...", writer, conf, true);

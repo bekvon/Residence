@@ -509,7 +509,7 @@ public class ClaimedResidence {
 	}
 	return zones.toArray(new String[zones.size()]);
     }
-
+    
     public boolean checkCollision(CuboidArea area) {
 	Set<String> set = areas.keySet();
 	for (String key : set) {

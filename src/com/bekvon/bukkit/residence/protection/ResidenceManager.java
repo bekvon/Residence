@@ -199,7 +199,7 @@ public class ResidenceManager {
 	    if (player != null) {
 		Residence.getSelectionManager().NewMakeBorders(player, newArea.getHighLoc(), newArea.getLowLoc(), false);
 		AutoSelection.getList().remove(player.getName().toLowerCase());
-		
+
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceCreate", ChatColor.YELLOW + name + ChatColor.GREEN));
 	    }
 	    if (Residence.getConfigManager().useLeases()) {
@@ -401,7 +401,15 @@ public class ResidenceManager {
 	    // Residence.getLeaseManager().removeExpireTime(name); - causing
 	    // concurrent modification exception in lease manager... worked
 	    // around for now
+
+	    for (String oneSub : res.getSubzoneList()) {
+		PlayerManager.removeResFromPlayer(res.getOwner(), name + "." + oneSub);
+		Residence.getRentManager().removeRentable(name + "." + oneSub);
+		Residence.getTransactionManager().removeFromSale(name + "." + oneSub);
+	    }
+
 	    PlayerManager.removeResFromPlayer(res.getOwner(), name);
+
 	    Residence.getRentManager().removeRentable(name);
 	    Residence.getTransactionManager().removeFromSale(name);
 

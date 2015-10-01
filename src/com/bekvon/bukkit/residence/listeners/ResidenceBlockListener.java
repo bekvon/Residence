@@ -144,8 +144,39 @@ public class ResidenceBlockListener implements Listener {
 
 	if (informed.contains(player.getName()))
 	    return;
-
 	player.sendMessage(NewLanguage.getMessage("Language.NewPlayerInfo"));
+	informed.add(player.getName());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onChestPlaceCreateRes(BlockPlaceEvent event) {
+
+	if (!Residence.getConfigManager().isNewPlayerUse())
+	    return;
+
+	Player player = event.getPlayer();
+	if (Residence.isResAdminOn(player))
+	    return;
+	Block block = event.getBlock();
+	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
+	    return;
+
+	ArrayList<String> list = PlayerManager.getResidenceList(player.getName());
+	if (list.size() != 0)
+	    return;
+
+	if (informed.contains(player.getName()))
+	    return;
+
+	Location loc = block.getLocation();
+
+	Residence.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), loc.getBlockX() - Residence.getConfigManager().getNewPlayerRangeX(), loc
+	    .getBlockY() - Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() - Residence.getConfigManager().getNewPlayerRangeZ()));
+	Residence.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), loc.getBlockX() + Residence.getConfigManager().getNewPlayerRangeX(), loc
+	    .getBlockY() + Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() + Residence.getConfigManager().getNewPlayerRangeZ()));
+
+	Residence.getResidenceManager().addResidence(player, player.getName(), Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
+	    .getSelectionManager().getPlayerLoc2(player.getName()), true);
 
 	informed.add(player.getName());
     }
