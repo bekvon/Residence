@@ -438,17 +438,16 @@ public class Residence extends JavaPlugin {
 	    initsuccess = true;
 
 	    PlayerManager.fillList();
-	    
+
 	    Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
 		@Override
-		public void run() {		    
+		public void run() {
 		    for (OfflinePlayer player : Residence.getServ().getOfflinePlayers()) {
 			UUIDList.put(player.getName().toLowerCase(), player.getUniqueId());
 		    }
 		    return;
 		}
-	    });	    
-	    
+	    });
 
 	} catch (Exception ex) {
 	    initsuccess = false;
@@ -782,13 +781,14 @@ public class Residence extends JavaPlugin {
 		loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-		    this.getLogger().info("Loading save data for world " + world.getName() + "...");
+//		    this.getLogger().info("Loading save data for world " + world.getName() + "...");
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
 		    worlds.put(world.getName(), yml.getRoot().get("Residences"));
-		    this.getLogger().info("Save data for world " + world.getName() + " loaded. (" + ((float) (System.currentTimeMillis() - time) / 1000) + " secs)");
+		    this.getLogger().info("Reading " + world.getName() + " data. (" + (System.currentTimeMillis() - time) + " ms)");
 		}
 	    }
+		
 	    rmanager = ResidenceManager.load(worlds);
 	    loadFile = new File(saveFolder, "forsale.yml");
 	    if (loadFile.isFile()) {

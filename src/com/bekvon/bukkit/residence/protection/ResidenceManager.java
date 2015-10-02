@@ -571,6 +571,7 @@ public class ResidenceManager {
 	    return resm;
 
 	for (World world : Residence.getServ().getWorlds()) {
+	    long time = System.currentTimeMillis();
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
 	    if (reslist != null) {
@@ -582,6 +583,7 @@ public class ResidenceManager {
 			throw (ex);
 		}
 	    }
+	    Residence.instance.getLogger().info("Loading " + world.getName() + " data into memory. (" + (System.currentTimeMillis() - time) + " ms)");
 	}
 	return resm;
     }
@@ -594,7 +596,7 @@ public class ResidenceManager {
 		try {
 		    @SuppressWarnings("unchecked")
 		    ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null);
-		    if (residence.getPermissions().getOwnerUUID().toString().equals("ffffffff-ffff-ffff-ffff-ffffffffffff") && !residence.getOwner().equalsIgnoreCase(
+		    if (residence.getPermissions().getOwnerUUID().toString().equals("00000000-0000-0000-0000-000000000000") && !residence.getOwner().equalsIgnoreCase(
 			"Server land") && !residence.getOwner().equalsIgnoreCase("Server_land"))
 			continue;
 

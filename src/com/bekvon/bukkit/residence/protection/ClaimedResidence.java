@@ -509,7 +509,7 @@ public class ClaimedResidence {
 	}
 	return zones.toArray(new String[zones.size()]);
     }
-    
+
     public boolean checkCollision(CuboidArea area) {
 	Set<String> set = areas.keySet();
 	for (String key : set) {
@@ -752,7 +752,10 @@ public class ClaimedResidence {
 	if (player.getAllowFlight())
 	    return 0;
 
-	if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR)
+	if (player.getGameMode() == GameMode.CREATIVE)
+	    return 0;
+
+	if (player.getGameMode() == GameMode.SPECTATOR)
 	    return 0;
 
 	if (tpLoc == null)
@@ -780,7 +783,6 @@ public class ClaimedResidence {
 	case AIR:
 	case WEB:
 	case STRING:
-	case WALL_BANNER:
 	case WALL_SIGN:
 	case SAPLING:
 	case VINE:
@@ -790,6 +792,7 @@ public class ClaimedResidence {
 	case WOOD_BUTTON:
 	case PAINTING:
 	case ITEM_FRAME:
+	case WALL_BANNER:
 	    return true;
 	default:
 	    break;
@@ -1100,7 +1103,7 @@ public class ClaimedResidence {
     public UUID getOwnerUUID() {
 	return perms.getOwnerUUID();
     }
-    
+
     public ResidenceItemList getItemBlacklist() {
 	return blacklist;
     }

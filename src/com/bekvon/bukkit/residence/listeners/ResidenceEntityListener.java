@@ -273,12 +273,11 @@ public class ResidenceEntityListener implements Listener {
 		case BUILD_IRONGOLEM:
 		case BUILD_SNOWMAN:
 		case CUSTOM:
+		case DEFAULT:
 		    if (!perms.has("canimals", true)) {
 			event.setCancelled(true);
 			return;
 		    }
-		    break;
-		case DEFAULT:
 		    break;
 		case BREEDING:
 		case CHUNK_GEN:
@@ -315,12 +314,11 @@ public class ResidenceEntityListener implements Listener {
 		switch (event.getSpawnReason()) {
 		case BUILD_WITHER:
 		case CUSTOM:
+		case DEFAULT:
 		    if (!perms.has("cmonsters", true)) {
 			event.setCancelled(true);
 			return;
 		    }
-		    break;
-		case DEFAULT:
 		    break;
 		case CHUNK_GEN:
 		case CURED:

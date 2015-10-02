@@ -148,7 +148,7 @@ public class FlagPermissions {
 	addFlag("leash");
 	addFlag("shear");
 	addFlag("nofly");
-	
+
 	addFlag("command");
 
 	addResidenceOnlyFlag("trample");
@@ -208,6 +208,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.DIODE_BLOCK_ON, "diode");
 	addMaterialToUseFlag(Material.WORKBENCH, "table");
 	addMaterialToUseFlag(Material.WOODEN_DOOR, "door");
+
 	/* 1.8 Doors */
 	addMaterialToUseFlag(Material.SPRUCE_DOOR, "door");
 	addMaterialToUseFlag(Material.BIRCH_DOOR, "door");
@@ -222,10 +223,10 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.ACACIA_FENCE_GATE, "door");
 	addMaterialToUseFlag(Material.DARK_OAK_FENCE_GATE, "door");
 
+	addMaterialToUseFlag(Material.IRON_TRAPDOOR, "door");
 	addMaterialToUseFlag(Material.FENCE_GATE, "door");
 	addMaterialToUseFlag(Material.NETHER_FENCE, "door");
 	addMaterialToUseFlag(Material.TRAP_DOOR, "door");
-	addMaterialToUseFlag(Material.IRON_TRAPDOOR, "door");
 	addMaterialToUseFlag(Material.ENCHANTMENT_TABLE, "enchant");
 	addMaterialToUseFlag(Material.STONE_BUTTON, "button");
 	addMaterialToUseFlag(Material.LEVER, "lever");
@@ -305,7 +306,7 @@ public class FlagPermissions {
 	if (uuids == null) {
 	    Set<Entry<String, String>> values = cachedPlayerNameUUIDs.entrySet();
 	    for (Entry<String, String> value : values) {
-		if (value.getValue().equals(player)){
+		if (value.getValue().equals(player)) {
 		    uuids = value.getKey();
 		    break;
 		}
@@ -360,7 +361,7 @@ public class FlagPermissions {
 	String uuids = Residence.getPlayerUUIDString(player);
 	if (uuids == null)
 	    for (Entry<String, String> entry : cachedPlayerNameUUIDs.entrySet())
-		if (entry.getValue().equals(player)){
+		if (entry.getValue().equals(player)) {
 		    uuids = entry.getKey();
 		    break;
 		}
