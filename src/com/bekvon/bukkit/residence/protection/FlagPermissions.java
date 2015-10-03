@@ -178,6 +178,9 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("spread");
 	addResidenceOnlyFlag("hidden");
 	addResidenceOnlyFlag("witherdamage");
+	
+	addResidenceOnlyFlag("day");
+	addResidenceOnlyFlag("night");
 
 	// prevents from mobs entering residence
 	addResidenceOnlyFlag("nomobs");

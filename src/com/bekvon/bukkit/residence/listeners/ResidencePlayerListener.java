@@ -59,6 +59,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.Signs.Signs;
 
@@ -945,6 +946,9 @@ public class ResidencePlayerListener implements Listener {
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		Residence.getServ().getPluginManager().callEvent(chgEvent);
 
+		if (ResOld.getPermissions().has("night", false) || ResOld.getPermissions().has("day", false))
+		    player.resetPlayerTime();
+
 		if (leave != null && !leave.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave)).toString());
@@ -971,41 +975,46 @@ public class ResidencePlayerListener implements Listener {
 		} else {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", orres.getName()));
 		}
-
 		return;
 		// Preventing fly in residence only when player has move permission
-	    } else if (player.isFlying()) {
-		if (res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission("residence.nofly.bypass")) {
-		    Location lc = player.getLocation();
-		    Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
-		    location.setPitch(lc.getPitch());
-		    location.setYaw(lc.getYaw());
-		    int from = location.getBlockY();
-		    int maxH = location.getWorld().getMaxHeight();
-		    for (int i = 0; i < maxH; i++) {
-			location.setY(from - i);
-			Block block = location.getBlock();
-			if (!isEmptyBlock(block)) {
-			    location.setY(from - i + 1);
-			    break;
-			}
-			if (location.getBlockY() <= 0) {
-			    Location lastLoc = lastOutsideLoc.get(pname);
-			    if (lastLoc != null)
-				player.teleport(lastLoc);
-			    else
-				player.teleport(res.getOutsideFreeLoc(loc));
-
-			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly|" + orres.getName()));
-			    return;
-			}
-		    }
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly|" + orres.getName()));
-		    player.teleport(location);
-		    player.setFlying(false);
-		    player.setAllowFlight(false);
-		}
 	    }
+
+	    if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+		"residence.nofly.bypass")) {
+		Location lc = player.getLocation();
+		Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
+		location.setPitch(lc.getPitch());
+		location.setYaw(lc.getYaw());
+		int from = location.getBlockY();
+		int maxH = location.getWorld().getMaxHeight();
+		for (int i = 0; i < maxH; i++) {
+		    location.setY(from - i);
+		    Block block = location.getBlock();
+		    if (!isEmptyBlock(block)) {
+			location.setY(from - i + 1);
+			break;
+		    }
+		    if (location.getBlockY() <= 0) {
+			Location lastLoc = lastOutsideLoc.get(pname);
+			if (lastLoc != null)
+			    player.teleport(lastLoc);
+			else
+			    player.teleport(res.getOutsideFreeLoc(loc));
+
+			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly|" + orres.getName()));
+			return;
+		    }
+		}
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "Fly|" + orres.getName()));
+		player.teleport(location);
+		player.setFlying(false);
+		player.setAllowFlight(false);
+	    }
+
+	    if (res.getPermissions().has("day", false))
+		player.setPlayerTime(6000L, false);
+	    else if (res.getPermissions().has("night", false))
+		player.setPlayerTime(14000L, false);
 	}
 
 	lastOutsideLoc.put(pname, loc);
@@ -1033,6 +1042,9 @@ public class ResidencePlayerListener implements Listener {
 		 */
 //		ResidenceLeaveEvent leaveevent = new ResidenceLeaveEvent(ResOld, player);
 //		Residence.getServ().getPluginManager().callEvent(leaveevent);
+
+		if (ResOld.getPermissions().has("night", false) || ResOld.getPermissions().has("day", false))
+		    player.resetPlayerTime();
 
 		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
 		    if (Residence.getConfigManager().useActionBar()) {
