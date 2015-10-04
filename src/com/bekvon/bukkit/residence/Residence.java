@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
+import com.bekvon.bukkit.residence.allNms.v1_8Events;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
@@ -62,6 +64,7 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
@@ -125,6 +128,12 @@ public class Residence extends JavaPlugin {
     public static WorldEditPlugin wep = null;
     public static WorldGuardPlugin wg = null;
     public static int wepid;
+
+    private static NMS nms;
+
+    public static NMS getNms() {
+	return nms;
+    }
 
     private Runnable doHeals = new Runnable() {
 	public void run() {
@@ -212,6 +221,40 @@ public class Residence extends JavaPlugin {
     @Override
     public void onEnable() {
 	try {
+
+	    String packageName = getServer().getClass().getPackage().getName();
+	    String[] packageSplit = packageName.split("\\.");
+	    String version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{4})")[0];
+	    try {
+		Class<?> nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + version);
+		if (NMS.class.isAssignableFrom(nmsClass)) {
+		    nms = (NMS) nmsClass.getConstructor().newInstance();
+		} else {
+		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
+		    this.setEnabled(false);
+		}
+	    } catch (ClassNotFoundException e) {
+		System.out.println("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version);
+		this.setEnabled(false);
+	    } catch (InstantiationException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (IllegalAccessException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (IllegalArgumentException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (InvocationTargetException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (NoSuchMethodException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (SecurityException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    }
 
 	    instance = this;
 	    initsuccess = false;
@@ -378,10 +421,15 @@ public class Residence extends JavaPlugin {
 		blistener = new ResidenceBlockListener();
 		plistener = new ResidencePlayerListener();
 		elistener = new ResidenceEntityListener();
+
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(blistener, this);
 		pm.registerEvents(plistener, this);
 		pm.registerEvents(elistener, this);
+
+		// 1.8 event
+		if (VersionChecker.GetVersion() >= 1800)
+		    pm.registerEvents(new v1_8Events(), this);
 
 		if (getServer().getPluginManager().getPlugin("CrackShot") != null)
 		    pm.registerEvents(new CrackShot(), this);
@@ -788,7 +836,7 @@ public class Residence extends JavaPlugin {
 		    this.getLogger().info("Reading " + world.getName() + " data. (" + (System.currentTimeMillis() - time) + " ms)");
 		}
 	    }
-		
+
 	    rmanager = ResidenceManager.load(worlds);
 	    loadFile = new File(saveFolder, "forsale.yml");
 	    if (loadFile.isFile()) {

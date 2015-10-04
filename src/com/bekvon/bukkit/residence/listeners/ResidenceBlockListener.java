@@ -11,6 +11,8 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Block;
@@ -45,7 +47,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ResidenceBlockListener implements Listener {
 
-    private static List<String> informed = new ArrayList<String>();
+    private static List<String> MessageInformed = new ArrayList<String>();
+    private static List<String> ResCreated = new ArrayList<String>();
 
     public static final String BlockMetadata = "ResFallingBlock";
 
@@ -142,10 +145,11 @@ public class ResidenceBlockListener implements Listener {
 	if (list.size() != 0)
 	    return;
 
-	if (informed.contains(player.getName()))
+	if (MessageInformed.contains(player.getName()))
 	    return;
 	player.sendMessage(NewLanguage.getMessage("Language.NewPlayerInfo"));
-	informed.add(player.getName());
+
+	MessageInformed.add(player.getName());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -165,7 +169,7 @@ public class ResidenceBlockListener implements Listener {
 	if (list.size() != 0)
 	    return;
 
-	if (informed.contains(player.getName()))
+	if (ResCreated.contains(player.getName()))
 	    return;
 
 	Location loc = block.getLocation();
@@ -178,7 +182,7 @@ public class ResidenceBlockListener implements Listener {
 	Residence.getResidenceManager().addResidence(player, player.getName(), Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
 	    .getSelectionManager().getPlayerLoc2(player.getName()), true);
 
-	informed.add(player.getName());
+	ResCreated.add(player.getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -236,7 +240,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	}
 
-	List<Block> blocks = event.getBlocks();
+	List<Block> blocks = Residence.getNms().getPistonRetractBlocks(event);
 
 	if (event.isSticky()) {
 	    for (Block oneBlock : blocks) {
@@ -247,7 +251,7 @@ public class ResidenceBlockListener implements Listener {
 		}
 	    }
 
-	    for (Block block : event.getBlocks()) {
+	    for (Block block : blocks) {
 		ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(block.getLocation());
 		ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
 		if (blockRes == null && pistonRes != null || blockRes != null && pistonRes == null || blockRes != null && pistonRes != null && !blockRes.getName()
@@ -257,6 +261,7 @@ public class ResidenceBlockListener implements Listener {
 		}
 	    }
 	}
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

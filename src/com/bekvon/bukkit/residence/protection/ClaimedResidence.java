@@ -754,8 +754,8 @@ public class ClaimedResidence {
 
 	if (player.getGameMode() == GameMode.CREATIVE)
 	    return 0;
-
-	if (player.getGameMode() == GameMode.SPECTATOR)
+	
+	if (Residence.getNms().isSpectator(player.getGameMode()))
 	    return 0;
 
 	if (tpLoc == null)
@@ -769,36 +769,13 @@ public class ClaimedResidence {
 	for (int i = 0; i < 255; i++) {
 	    tempLoc.setY(from - i);
 	    Block block = tempLoc.getBlock();
-	    if (isEmptyBlock(block)) {
+	    if (Residence.getNms().isEmptyBlock(block)) {
 		fallDistance++;
 	    } else {
 		break;
 	    }
 	}
 	return fallDistance;
-    }
-
-    public boolean isEmptyBlock(Block block) {
-	switch (block.getType()) {
-	case AIR:
-	case WEB:
-	case STRING:
-	case WALL_SIGN:
-	case SAPLING:
-	case VINE:
-	case TRIPWIRE_HOOK:
-	case TRIPWIRE:
-	case STONE_BUTTON:
-	case WOOD_BUTTON:
-	case PAINTING:
-	case ITEM_FRAME:
-	case WALL_BANNER:
-	    return true;
-	default:
-	    break;
-	}
-
-	return false;
     }
 
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {

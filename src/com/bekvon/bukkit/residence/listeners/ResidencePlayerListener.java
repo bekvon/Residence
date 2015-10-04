@@ -38,7 +38,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -382,35 +381,6 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    private boolean isCanUseEntity_BothClick(Material mat, Block block) {
-	switch (mat) {
-	case LEVER:
-	case STONE_BUTTON:
-	case WOOD_BUTTON:
-	case WOODEN_DOOR:
-	case SPRUCE_DOOR:
-	case BIRCH_DOOR:
-	case JUNGLE_DOOR:
-	case ACACIA_DOOR:
-	case DARK_OAK_DOOR:
-	case SPRUCE_FENCE_GATE:
-	case BIRCH_FENCE_GATE:
-	case JUNGLE_FENCE_GATE:
-	case ACACIA_FENCE_GATE:
-	case DARK_OAK_FENCE_GATE:
-	case TRAP_DOOR:
-	case IRON_TRAPDOOR:
-	case FENCE_GATE:
-	case PISTON_BASE:
-	case PISTON_STICKY_BASE:
-	case DRAGON_EGG:
-	    return true;
-	default:
-	    return Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
-	}
-    }
-
-    @SuppressWarnings("deprecation")
     private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
 	switch (mat) {
 	case ITEM_FRAME:
@@ -434,7 +404,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     private boolean isCanUseEntity(Material mat, Block block) {
-	return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
+	return Residence.getNms().isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -469,7 +439,6 @@ public class ResidencePlayerListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-
 	Player player = event.getPlayer();
 	Material heldItem = player.getItemInHand().getType();
 	int heldItemId = player.getItemInHand().getTypeId();
@@ -480,7 +449,8 @@ public class ResidencePlayerListener implements Listener {
 	int blockId = block.getTypeId();
 
 	Material mat = block.getType();
-	if (!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || isCanUseEntity_BothClick(mat, block)
+	if (!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || Residence.getNms()
+	    .isCanUseEntity_BothClick(mat, block)
 	    || event.getAction() == Action.PHYSICAL)) {
 	    if (heldItemId != Residence.getConfigManager().getSelectionTooldID() && heldItemId != Residence.getConfigManager().getInfoToolID() && heldItemId != 351
 		&& heldItemId != 416) {
@@ -542,6 +512,7 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	    return;
 	}
+
 	if (heldItemId == Residence.getConfigManager().getInfoToolID() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
 	    Location loc = block.getLocation();
 	    String res = Residence.getResidenceManager().getNameByLoc(loc);
@@ -568,7 +539,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		}
 	    }
-	    if (heldItem == Material.ARMOR_STAND) {
+	    if (Residence.getNms().isArmorStandMaterial(heldItem)) {
 		perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		if (!perms.playerHas(player.getName(), world, "build", true)) {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
@@ -693,25 +664,6 @@ public class ResidencePlayerListener implements Listener {
 	    event.setCancelled(true);
 	    return;
 	}
-	if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
-	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
-	}
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerInteractAtArmoStand(PlayerInteractAtEntityEvent event) {
-	Player player = event.getPlayer();
-	if (Residence.isResAdminOn(player))
-	    return;
-
-	Entity ent = event.getRightClicked();
-	if (ent.getType() != EntityType.ARMOR_STAND)
-	    return;
-
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
-	String world = player.getWorld().getName();
-
 	if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
 	    event.setCancelled(true);
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
@@ -873,29 +825,6 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
-    public boolean isEmptyBlock(Block block) {
-	switch (block.getType()) {
-	case AIR:
-	case WEB:
-	case STRING:
-	case WALL_BANNER:
-	case WALL_SIGN:
-	case SAPLING:
-	case VINE:
-	case TRIPWIRE_HOOK:
-	case TRIPWIRE:
-	case STONE_BUTTON:
-	case WOOD_BUTTON:
-	case PAINTING:
-	case ITEM_FRAME:
-	    return true;
-	default:
-	    break;
-	}
-
-	return false;
-    }
-
     public void handleNewLocation(final Player player, Location loc, boolean move) {
 
 	String pname = player.getName();
@@ -990,7 +919,7 @@ public class ResidencePlayerListener implements Listener {
 		for (int i = 0; i < maxH; i++) {
 		    location.setY(from - i);
 		    Block block = location.getBlock();
-		    if (!isEmptyBlock(block)) {
+		    if (!Residence.getNms().isEmptyBlock(block)) {
 			location.setY(from - i + 1);
 			break;
 		    }
@@ -1113,7 +1042,7 @@ public class ResidencePlayerListener implements Listener {
 
 		Damageable damage = player;
 		double health = damage.getHealth();
-		if (health < player.getMaxHealth() && !player.isDead()) {
+		if (health < damage.getMaxHealth() && !player.isDead()) {
 		    player.setHealth(health + 1);
 		}
 	    }

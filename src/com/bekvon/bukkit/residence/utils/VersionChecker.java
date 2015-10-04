@@ -16,9 +16,39 @@ import com.bekvon.bukkit.residence.Residence;
 public class VersionChecker {
     Residence plugin;
     private int resource = 11480;
+    private static int cleanVersion = 0;
 
     public VersionChecker(Residence plugin) {
 	this.plugin = plugin;
+    }
+
+    public static int GetVersion() {
+	if (cleanVersion == 0) {
+	    String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+	    // Translating version to integer for simpler use
+	    try {
+		cleanVersion = Integer.parseInt(version.replace("v", "").replace("V", "").replace("_", "").replace("r", "").replace("R", ""));
+	    } catch (NumberFormatException e) {
+		// Fail save if it for some reason can't translate version to integer
+		if (version.contains("v1_7"))
+		    cleanVersion = 1700;
+		if (version.contains("v1_6"))
+		    cleanVersion = 1600;
+		if (version.contains("v1_5"))
+		    cleanVersion = 1500;
+		if (version.contains("v1_4"))
+		    cleanVersion = 1400;
+		if (version.contains("v1_8_R1"))
+		    cleanVersion = 1810;
+		if (version.contains("v1_8_R2"))
+		    cleanVersion = 1820;
+		if (version.contains("v1_8_R3"))
+		    cleanVersion = 1830;
+	    }
+	    if (cleanVersion < 1000)
+		cleanVersion = cleanVersion * 10;
+	}
+	return cleanVersion;
     }
 
     public void VersionCheck(final Player player) {

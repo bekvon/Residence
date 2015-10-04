@@ -212,21 +212,8 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.WORKBENCH, "table");
 	addMaterialToUseFlag(Material.WOODEN_DOOR, "door");
 
-	/* 1.8 Doors */
-	addMaterialToUseFlag(Material.SPRUCE_DOOR, "door");
-	addMaterialToUseFlag(Material.BIRCH_DOOR, "door");
-	addMaterialToUseFlag(Material.JUNGLE_DOOR, "door");
-	addMaterialToUseFlag(Material.ACACIA_DOOR, "door");
-	addMaterialToUseFlag(Material.DARK_OAK_DOOR, "door");
-
-	/* 1.8 Fence Gates */
-	addMaterialToUseFlag(Material.SPRUCE_FENCE_GATE, "door");
-	addMaterialToUseFlag(Material.BIRCH_FENCE_GATE, "door");
-	addMaterialToUseFlag(Material.JUNGLE_FENCE_GATE, "door");
-	addMaterialToUseFlag(Material.ACACIA_FENCE_GATE, "door");
-	addMaterialToUseFlag(Material.DARK_OAK_FENCE_GATE, "door");
-
-	addMaterialToUseFlag(Material.IRON_TRAPDOOR, "door");
+	Residence.getNms().addDefaultFlags(matUseFlagList);
+	
 	addMaterialToUseFlag(Material.FENCE_GATE, "door");
 	addMaterialToUseFlag(Material.NETHER_FENCE, "door");
 	addMaterialToUseFlag(Material.TRAP_DOOR, "door");

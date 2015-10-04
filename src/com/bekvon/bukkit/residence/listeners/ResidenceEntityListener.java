@@ -31,25 +31,12 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Bat;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Monster;
-import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Pig;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Snowman;
-import org.bukkit.entity.Squid;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Vehicle;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Ghast;
 import org.bukkit.event.EventHandler;
@@ -109,17 +96,12 @@ public class ResidenceEntityListener implements Listener {
 	return (ent instanceof Tameable ? ((Tameable) ent).isTamed() : false);
     }
 
-    public static boolean isAnimal(Entity ent) {
-	return (ent instanceof Horse || ent instanceof Bat || ent instanceof Snowman || ent instanceof IronGolem || ent instanceof Ocelot || ent instanceof Pig
-	    || ent instanceof Sheep || ent instanceof Chicken || ent instanceof Wolf || ent instanceof Cow || ent instanceof Squid || ent instanceof Villager
-	    || ent instanceof Rabbit);
-    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(EntityDamageByEntityEvent event) {
 
 	Entity entity = event.getEntity();
-	if (!isAnimal(entity))
+	if (!Residence.getNms().isAnimal(entity))
 	    return;
 
 	Entity damager = event.getDamager();
@@ -241,7 +223,7 @@ public class ResidenceEntityListener implements Listener {
 
 	Entity entity = event.getEntity();
 
-	if (!isAnimal(entity) && !(player instanceof Player))
+	if (!Residence.getNms().isAnimal(entity) && !(player instanceof Player))
 	    return;
 
 	if (Residence.isResAdminOn(player))
@@ -262,7 +244,7 @@ public class ResidenceEntityListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
 	FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
 	Entity ent = event.getEntity();
-	if (isAnimal(ent)) {
+	if (Residence.getNms().isAnimal(ent)) {
 	    if (!perms.has("animals", true)) {
 		event.setCancelled(true);
 		return;
@@ -523,9 +505,10 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-	if (event.getEntityType() != EntityType.ITEM_FRAME && event.getEntityType() != EntityType.ARMOR_STAND)
+	
+	if (event.getEntityType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event.getEntityType()))
 	    return;
-
+	
 	Entity dmgr = event.getDamager();
 
 	Player player = null;
