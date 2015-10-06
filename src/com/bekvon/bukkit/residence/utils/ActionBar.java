@@ -10,6 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
+import com.bekvon.bukkit.residence.Residence;
+
 /**
 *
 * @author hamzaxx

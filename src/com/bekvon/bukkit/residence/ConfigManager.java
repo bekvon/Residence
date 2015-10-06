@@ -98,6 +98,7 @@ public class ConfigManager {
     protected boolean AutoMobRemoval;
     protected int AutoMobRemovalInterval;
     protected boolean enableLeaseMoneyAccount;
+    protected boolean CouldronCompatability;
     protected boolean enableDebug = false;
     protected boolean versionCheck = true;
     protected boolean useVisualizer;
@@ -481,6 +482,15 @@ public class ConfigManager {
 	spoutEnable = GetConfigBoolean("Global.EnableSpout", false, writer, conf);
 	enableLeaseMoneyAccount = GetConfigBoolean("Global.EnableLeaseMoneyAccount", true, writer, conf);
 
+	writer.addComment("Global.CouldronCompatability",
+	    "By setting this to true, partial compatability for kCouldron servers will be anabled. Action bar messages and selection visualizer will be disabled automaticaly as off incorrect compatability");
+	CouldronCompatability = GetConfigBoolean("Global.CouldronCompatability", false, writer, conf);
+	if (CouldronCompatability) {
+	    useVisualizer = false;
+	    actionBar = false;
+	    ActionBarOnSelection = false;
+	}
+
 	try {
 	    writer.save(f);
 	} catch (IOException e) {
@@ -790,6 +800,10 @@ public class ConfigManager {
 
     public boolean enableLeaseMoneyAccount() {
 	return enableLeaseMoneyAccount;
+    }
+
+    public boolean CouldronCompatability() {
+	return CouldronCompatability;
     }
 
     public boolean debugEnabled() {

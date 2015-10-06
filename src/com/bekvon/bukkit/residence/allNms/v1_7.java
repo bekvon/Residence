@@ -104,6 +104,9 @@ public class v1_7 implements NMS {
 
     @Override
     public int getOnlinePlayerAmount() {
-	return Bukkit.getServer().getOnlinePlayers().length;
+	if (Residence.getConfigManager().CouldronCompatability())
+	    return 0;
+	else
+	    return Bukkit.getServer().getOnlinePlayers().length;
     }
 }
