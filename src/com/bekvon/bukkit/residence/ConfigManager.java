@@ -402,7 +402,7 @@ public class ConfigManager {
 	useVisualizer = GetConfigBoolean("Global.Visualizer.Use", true, writer, conf);
 	writer.addComment("Global.Visualizer.Range", "Range in blocks to draw particle effects for player",
 	    "Keep it no more as 30, as player cant see more than 16 blocks");
-	VisualizerRange = GetConfigInt("Global.Visualizer.Range", 25, writer, conf);
+	VisualizerRange = GetConfigInt("Global.Visualizer.Range", 16, writer, conf);
 	writer.addComment("Global.Visualizer.ShowFor", "For how long in miliseconds (5000 = 5sec) to show particle effects");
 	VisualizerShowFor = GetConfigInt("Global.Visualizer.ShowFor", 5000, writer, conf);
 	writer.addComment("Global.Visualizer.updateInterval", "How often in miliseconds update particles for player");

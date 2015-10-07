@@ -64,7 +64,6 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
@@ -222,40 +221,6 @@ public class Residence extends JavaPlugin {
     public void onEnable() {
 	try {
 
-	    String packageName = getServer().getClass().getPackage().getName();
-	    String[] packageSplit = packageName.split("\\.");
-	    String version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{4})")[0];
-	    try {
-		Class<?> nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + version);
-		if (NMS.class.isAssignableFrom(nmsClass)) {
-		    nms = (NMS) nmsClass.getConstructor().newInstance();
-		} else {
-		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
-		    this.setEnabled(false);
-		}
-	    } catch (ClassNotFoundException e) {
-		System.out.println("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version);
-		this.setEnabled(false);
-	    } catch (InstantiationException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (IllegalAccessException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (IllegalArgumentException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (InvocationTargetException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (NoSuchMethodException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (SecurityException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    }
-
 	    instance = this;
 	    initsuccess = false;
 	    deleteConfirm = new HashMap<String, String>();
@@ -301,6 +266,44 @@ public class Residence extends JavaPlugin {
 			server.getPluginManager().enablePlugin(plugin);
 		    }
 		}
+	    }
+
+	    String packageName = getServer().getClass().getPackage().getName();
+	    String[] packageSplit = packageName.split("\\.");
+	    String version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{4})")[0];
+	    try {
+		Class<?> nmsClass;
+		if (Residence.getConfigManager().CouldronCompatability())
+		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms.v1_7_Couldron");
+		else
+		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + version);
+		if (NMS.class.isAssignableFrom(nmsClass)) {
+		    nms = (NMS) nmsClass.getConstructor().newInstance();
+		} else {
+		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
+		    this.setEnabled(false);
+		}
+	    } catch (ClassNotFoundException e) {
+		System.out.println("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version);
+		this.setEnabled(false);
+	    } catch (InstantiationException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (IllegalAccessException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (IllegalArgumentException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (InvocationTargetException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (NoSuchMethodException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
+	    } catch (SecurityException e) {
+		e.printStackTrace();
+		this.setEnabled(false);
 	    }
 
 	    gmanager = new PermissionManager(groups, flags);

@@ -116,6 +116,8 @@ public class SelectionManager {
     }
 
     public static boolean showParticle(Player player, Location Current, boolean error) {
+	if (!player.getLocation().getWorld().getName().equalsIgnoreCase(Current.getWorld().getName()))
+	    return false;
 	if (!error) {
 	    Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, Current, player);
 	} else
@@ -124,6 +126,8 @@ public class SelectionManager {
     }
 
     public static boolean showParticleWalls(final Player player, final Location Current, final boolean error) {
+	if (!player.getLocation().getWorld().getName().equalsIgnoreCase(Current.getWorld().getName()))
+	    return false;
 	if (!error)
 	    Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, Current, player);
 	else

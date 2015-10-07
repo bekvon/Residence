@@ -25,10 +25,8 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import com.bekvon.bukkit.residence.NMS;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
-public class v1_7 implements NMS {
+public class v1_7_Couldron implements NMS {
     @Override
     public List<Block> getPistonRetractBlocks(BlockPistonRetractEvent event) {
 	List<Block> blocks = new ArrayList<Block>();
@@ -104,6 +102,6 @@ public class v1_7 implements NMS {
 
     @Override
     public int getOnlinePlayerAmount() {
-	return Bukkit.getServer().getOnlinePlayers().length;
+	return Bukkit.getServer().getOnlinePlayers().size();
     }
 }
