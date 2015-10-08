@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -22,6 +24,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -179,7 +182,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void MonsterKilling(EntityDamageByEntityEvent event) {
-
+	
 	Entity entity = event.getEntity();
 	if (!isMonster(entity))
 	    return;
@@ -553,7 +556,7 @@ public class ResidenceEntityListener implements Listener {
 	Entity ent = event.getEntity();
 	if (ent.hasMetadata("NPC"))
 	    return;
-
+	
 	boolean tamedAnimal = isTamed(ent);
 	ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
 	/* Living Entities */
@@ -570,7 +573,7 @@ public class ResidenceEntityListener implements Listener {
 	    }
 	    ent = attackevent.getEntity();
 	    if ((ent instanceof Player || tamedAnimal) && (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager)
-		.getShooter() instanceof Player)))) {
+		.getShooter() instanceof Player))) && event.getCause() != DamageCause.FALL) {
 		Player attacker = null;
 		if (damager instanceof Player) {
 		    attacker = (Player) damager;
