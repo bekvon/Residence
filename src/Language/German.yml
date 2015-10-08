@@ -173,14 +173,14 @@ Language:
     InvalidCharacters: ungültige Zeichen entdeckt...
     InvalidNameCharacters: Name enthält unerlaubte Zeichen...
     #Version 15 New Fields
-    DeleteConfirm: 'Bist du sicher, dass du das Grundstück %1 löschen willst? Nutze "/res confirm" zum bestätigen.'
+    DeleteConfirm: 'Bist du sicher, dass du das Grundstück %1 löschen willst? Nutze /res confirm zum bestätigen.'
     #Version 18 New Fields
     SelectTooHigh: Warnung, Auswahl befindet sich über der Höhe des Karten-Limits.
     SelectTooLow: Warnung, Auswahl befindet sich unter dem Boden des Karten-Limits.
     WorldEditNotFound: WorldEdit wurde nicht gefunden!
     #Version 19 New Fields
     NoResHere: Es gibt dort kein Grundstück!
-    DeleteSubzoneConfirm: 'Bist du sicher, dass du die Subzone %1 löschen willst? Nutze "/res confirm" zum bestätigen.'
+    DeleteSubzoneConfirm: 'Bist du sicher, dass du die Subzone %1 löschen willst? Nutze /res confirm zum bestätigen.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'Die Subzone %1 gehört nun %2.'
     CoordsTop: 'X:%1 Y:%2 Z:%3'

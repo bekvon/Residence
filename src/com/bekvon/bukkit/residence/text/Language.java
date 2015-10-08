@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.configuration.file.FileConfiguration;
+
 import org.bukkit.ChatColor;
 
 /**
@@ -76,13 +77,14 @@ public class Language {
 	}
 
 	sentence = ChatColor.translateAlternateColorCodes('&', sentence);
+	
 	return sentence;
     }
 
     public static Language parseText(FileConfiguration node, String topkey) {
 	Language newholder = new Language();
 	Set<String> keys = node.getConfigurationSection(topkey).getKeys(false);
-	for (String key : keys) {
+	for (String key : keys) {	    	
 	    newholder.text.put(key, node.getString(topkey + "." + key));
 	}
 	return newholder;

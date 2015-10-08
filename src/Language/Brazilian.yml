@@ -172,14 +172,14 @@ Language:
     InvalidCharacters: Detectado caracteres invalidos...
     InvalidNameCharacters: O nome contem caracteres invalidos...
     #Version 15 New Fields
-    DeleteConfirm: 'Se voce tem certeza que quer deletar a residencia %1, use "/res confirm" para confirmar.'
+    DeleteConfirm: 'Se voce tem certeza que quer deletar a residencia %1, use /res confirm para confirmar.'
     #Version 18 New Fields
     SelectTooHigh: Aviso, a selecao foi acima do topo do mapa, limitando...
     SelectTooLow: Aviso, a selecao foi abaixo do fundo do mapa, limitando...
     WorldEditNotFound: WorldEdit nao foi detectado.
     #Version 19 New Fields
     NoResHere: Nao ha nenhuma residencia aqui.
-    DeleteSubzoneConfirm: 'Se voce tem certeza que quer deletar a subzona %1, use "/res confirm" para confirmar.'
+    DeleteSubzoneConfirm: 'Se voce tem certeza que quer deletar a subzona %1, use /res confirm para confirmar.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'A subzona %1 mudou de proprietario, agora sera do(a) %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'

@@ -3,14 +3,17 @@
  */
 package com.bekvon.bukkit.residence;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -330,9 +333,19 @@ public class Residence extends JavaPlugin {
 
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
+		
+		BufferedReader in = null;
+		try {
+		    in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
+		} catch (UnsupportedEncodingException e1) {
+		    e1.printStackTrace();
+		} catch (FileNotFoundException e1) {
+		    e1.printStackTrace();
+		}
+		
 		if (langFile.isFile()) {
 		    FileConfiguration langconfig = new YamlConfiguration();
-		    langconfig.load(langFile);
+		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		    HelpEntry.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
@@ -519,7 +532,7 @@ public class Residence extends JavaPlugin {
     }
 
     public static boolean validName(String name) {
-	if (name.contains(":") || name.contains(".")) {
+	if (name.contains(":") || name.contains(".") || name.contains("|")) {
 	    return false;
 	}
 	if (cmanager.getResidenceNameRegex() == null) {

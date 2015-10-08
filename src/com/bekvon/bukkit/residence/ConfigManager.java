@@ -101,6 +101,7 @@ public class ConfigManager {
     protected boolean CouldronCompatability;
     protected boolean enableDebug = false;
     protected boolean versionCheck = true;
+    protected boolean SelectionIgnoreY = false;
     protected boolean useVisualizer;
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
@@ -223,6 +224,9 @@ public class ConfigManager {
 	    "You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values");
 	selectionToolId = GetConfigInt("Global.SelectionToolId", Material.WOOD_AXE.getId(), writer, conf);
 
+	writer.addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
+	SelectionIgnoreY = GetConfigBoolean("Global.Selection.IgnoreY", false, writer, conf);
+	
 	writer.addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
 	    "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
 	infoToolId = GetConfigInt("Global.InfoToolId", Material.STRING.getId(), writer, conf);
@@ -810,6 +814,10 @@ public class ConfigManager {
 	return enableDebug;
     }
 
+    public boolean isSelectionIgnoreY() {
+	return SelectionIgnoreY;
+    }
+    
     public boolean versionCheck() {
 	return versionCheck;
     }

@@ -34,9 +34,9 @@ Language:
   AreaNonExist: No existe tal zona.
   AreaInvalidName: Nombre de área inválido...
   AreaToSmallTotal: El área seleccionada es más pequeña de la permitida (%1)
-  AreaToSmallX: La longitud "x" es demasiado pequeña. %1 permitida %2
-  AreaToSmallY: La longitud "altura" es demasiado pequeña. %1 permitida %2
-  AreaToSmallZ: La longitud "z" es demasiado pequeña. %1 permitida %2
+  AreaToSmallX: La longitud x es demasiado pequeña. %1 permitida %2
+  AreaToSmallY: La longitud altura es demasiado pequeña. %1 permitida %2
+  AreaToSmallZ: La longitud z es demasiado pequeña. %1 permitida %2
   AreaRename: Área renombrada de %1 a %2
   AreaRemove: Área eliminada %1 ...
   AreaRemoveLast: No se puede eliminar el último área de una residencia.
@@ -200,12 +200,12 @@ Language:
   ResidenceRentedBy: En alquiler por %1
   InvalidCharacters: Caracteres no válidos detectados...
   InvalidNameCharacters: El nombre contiene caracteres no permitidos...
-  DeleteConfirm: Si estás seguro que deseas eliminar la residencia %1, Usa "/res confirm" para confirmarlo.
+  DeleteConfirm: Si estás seguro que deseas eliminar la residencia %1, Usa /res confirm para confirmarlo.
   SelectTooHigh: La selección está por encima de la parte superior de los límites del mapa.
   SelectTooLow: La selección está por debajo de la parte inferior de los límites del mapa.
   WorldEditNotFound: WorldEdit no fue detectado.
   NoResHere: No hay ninguna residencia aquí.
-  DeleteSubzoneConfirm: Si estás seguro que deseas eliminar la subzona %1, Usa "/res confirm" para confirmarlo.
+  DeleteSubzoneConfirm: Si estás seguro que deseas eliminar la subzona %1, Usa /res confirm para confirmarlo.
   SubzoneOwnerChange: La subzona propiedad de %1 ahora es del jugador %2
   CoordsTop: X:%1 Y:%2 Z:%3
   CoordsBottom: X:%1 Y:%2 Z:%3

@@ -172,14 +172,14 @@ Language:
     InvalidCharacters: Wykryto nieprawidłowe znaki...
     InvalidNameCharacters: Nazwa wymieniona zawiera zablokowane znaki...
     #Version 15 New Fields
-    DeleteConfirm: 'Jesteś pewien że chcesz usunąć Rezydencje %1, uzyj "/res confirm" do potwierdzenia.'
+    DeleteConfirm: 'Jesteś pewien że chcesz usunąć Rezydencje %1, uzyj /res confirm do potwierdzenia.'
     #Version 18 New Fields
     SelectTooHigh: Uwaga, wybór padł w górnej części mapy, pozycja jest zbyt wysoka.
     SelectTooLow: Uwaga, wybór padł w dolnej części mapy, pozycja jest zbyt niska.
     WorldEditNotFound: WorldEdit nie zostal wykryty.
     #Version 19 New Fields
     NoResHere: Nie ma w nim miejsca zamieszkania.
-    DeleteSubzoneConfirm: 'Jesteś pewien że chcesz usunąć podstrefe %1, uzyj "/res confirm" aby kontynuować.'
+    DeleteSubzoneConfirm: 'Jesteś pewien że chcesz usunąć podstrefe %1, uzyj /res confirm aby kontynuować.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'Podstrefa %1 zmieniła włąściciela na %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'

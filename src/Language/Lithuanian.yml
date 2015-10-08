@@ -172,14 +172,14 @@ Language:
     InvalidCharacters: Aptikti negaliojantys zenklai...
     InvalidNameCharacters: Varda sudaro neleistini zenklai...
     #Version 15 New Fields
-    DeleteConfirm: 'Ar tikrai norite panaikinti rezidencija %1, naudok "/res confirm" kad patvirtinti.'
+    DeleteConfirm: 'Ar tikrai norite panaikinti rezidencija %1, naudok /res confirm kad patvirtinti.'
     #Version 18 New Fields
     SelectTooHigh: Ispejimas, pasirinkimas nuejo virs zemelapio virsunes, ribojama.
     SelectTooLow: Ispejimas, pasirinkimas nuejo zemiau zemelapio pagrindo, ribojama.
     WorldEditNotFound: WorldEdit nebuvo aptiktas.
     #Version 19 New Fields
     NoResHere: Nera cia rezidencijos.
-    DeleteSubzoneConfirm: 'Ar tikrai norite istrinti subzona %1, naudok "/res confirm" kad patvirtinti.'
+    DeleteSubzoneConfirm: 'Ar tikrai norite istrinti subzona %1, naudok /res confirm kad patvirtinti.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'Subzonos %1 savininkas pakeistas i %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
@@ -435,7 +435,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 flags:
                     Description: Veliavu sarasas
                     Info:
-                        - 'flagu reiksmes, pagrinde naudoti "true" kai nori leisti ir "false" kai nori uzdrausti naudoti komanda ar veiksma.'
+                        - 'flagu reiksmes, pagrinde naudoti true kai nori leisti ir false kai nori uzdrausti naudoti komanda ar veiksma.'
                         - 'build - leisti arba uzdrausti statyti'
                         - 'use - leisti arba uzdrausti duru, svirciu, mygtuku ir panasei naudojima...'
                         - 'move - leisti arba uzdrausti judejima jusu rezidencijoje.'
@@ -449,7 +449,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'subzone - suteike teise kurti subzonas rezidencijoje.'
                         - 'monsters - leisti arba uzdrausti monstru atsiradyma jusu rezidencijoje'
                         - 'animals - leisti arba uzdrausti gyvunu atsiradima jusu rezidencijoje.'
-                        - 'healing - nustatyk i "true" is visi esantis bus pagydyti'
+                        - 'healing - nustatyk i true is visi esantis bus pagydyti'
                         - 'tnt - leisti arba uzdrausti TNT sprogimus'
                         - 'creeper - leisti arba uzdrausti kreeperiu sprogimus'
                         - 'ignite - leisti arba uzdrausti ugnies iziebima.'

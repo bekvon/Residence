@@ -522,7 +522,7 @@ public class ResidenceManager {
 		    + res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockZ()));
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("CoordsB") + ": " + ChatColor.LIGHT_PURPLE + Residence.getLanguage().getPhrase(
 		"CoordsBottom", res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockX() + "|" + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockY()
-		    + "." + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockZ()));
+		    + "|" + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockZ()));
 	}
 	if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LeaseExpire") + ":" + ChatColor.GREEN + " " + Residence.getLeaseManager()

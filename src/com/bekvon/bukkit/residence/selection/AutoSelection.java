@@ -104,7 +104,7 @@ public class AutoSelection {
 	    return;
 	}
 
-	if (area.getYSize() > group.getMaxY()) {
+	if (area.getYSize() > group.getMaxY() && !Residence.getConfigManager().isSelectionIgnoreY()) {
 	    return;
 	}
 

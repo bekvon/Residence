@@ -172,14 +172,14 @@ Language:
     InvalidCharacters: ervenytelen karakterek eszlelve...
     InvalidNameCharacters: A nev tiltott karaktereket tartalmaz...
     #Version 15 New Fields
-    DeleteConfirm: 'Ha biztos vagy benne hogy torolni szeretned a lakhelyet %1, hasznald "/res confirm" a megerositeshez.'
+    DeleteConfirm: 'Ha biztos vagy benne hogy torolni szeretned a lakhelyet %1, hasznald /res confirm a megerositeshez.'
     #Version 18 New Fields
     SelectTooHigh: Figyelem, a kijeloles tul nyulik a terkep tetejen, korlatozas.
     SelectTooLow: Figyelem, a kijeloles tul nyulik a terkep aljan, korlatozas.
     WorldEditNotFound: WorldEdit nem talalhato.
     #Version 19 New Fields
     NoResHere: Itt nincs lakhely.
-    DeleteSubzoneConfirm: 'Ha biztos vagy benne hogy torolni szeretned az alosztalyt %1, hasznald "/res confirm" a megerositeshez.'
+    DeleteSubzoneConfirm: 'Ha biztos vagy benne hogy torolni szeretned az alosztalyt %1, hasznald /res confirm a megerositeshez.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'alosztalyt %1 tulajdonosa megváltozott %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
