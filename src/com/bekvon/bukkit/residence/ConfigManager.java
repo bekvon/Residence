@@ -102,6 +102,7 @@ public class ConfigManager {
     protected boolean enableDebug = false;
     protected boolean versionCheck = true;
     protected boolean SelectionIgnoreY = false;
+    protected boolean NoCostForYBlocks = false;
     protected boolean useVisualizer;
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
@@ -226,7 +227,10 @@ public class ConfigManager {
 
 	writer.addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
 	SelectionIgnoreY = GetConfigBoolean("Global.Selection.IgnoreY", false, writer, conf);
-	
+	writer.addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
+	    "This will lower residence price by up to 256 times, so ajust block price BEFORE enabling this");
+	NoCostForYBlocks = GetConfigBoolean("Global.Selection.NoCostForYBlocks", false, writer, conf);
+
 	writer.addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
 	    "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
 	infoToolId = GetConfigInt("Global.InfoToolId", Material.STRING.getId(), writer, conf);
@@ -817,7 +821,11 @@ public class ConfigManager {
     public boolean isSelectionIgnoreY() {
 	return SelectionIgnoreY;
     }
-    
+
+    public boolean isNoCostForYBlocks() {
+	return NoCostForYBlocks;
+    }
+
     public boolean versionCheck() {
 	return versionCheck;
     }

@@ -565,9 +565,14 @@ public class ClaimedResidence {
     public long getTotalSize() {
 	Collection<CuboidArea> set = areas.values();
 	long size = 0;
-	for (CuboidArea entry : set) {
-	    size = size + entry.getSize();
-	}
+	if (!Residence.getConfigManager().isNoCostForYBlocks())
+	    for (CuboidArea entry : set) {
+		size = size + entry.getSize();
+	    }
+	else
+	    for (CuboidArea entry : set) {
+		size = size + (entry.getXSize() * entry.getZSize());
+	    }
 	return size;
     }
 
@@ -754,7 +759,7 @@ public class ClaimedResidence {
 
 	if (player.getGameMode() == GameMode.CREATIVE)
 	    return 0;
-	
+
 	if (Residence.getNms().isSpectator(player.getGameMode()))
 	    return 0;
 
