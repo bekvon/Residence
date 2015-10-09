@@ -1,10 +1,9 @@
 package com.bekvon.bukkit.residence;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -14,23 +13,20 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class PlayerManager {
-    private static Map<String, ResPlayer> players = Collections.synchronizedMap(new HashMap<String, ResPlayer>());
+    private static ConcurrentHashMap<String, ResPlayer> players = new ConcurrentHashMap<String, ResPlayer>();
 
     public static void playerJoin(OfflinePlayer player) {
-	synchronized (players) {
-	    ResPlayer resPlayer = players.get(player.getName().toLowerCase());
-	    if (resPlayer == null) {
-		resPlayer = new ResPlayer(player.getName());
-		resPlayer.recountRes();
-		players.put(player.getName().toLowerCase(), resPlayer);
-	    } else
-		resPlayer.RecalculatePermissions();
-	    return;
-	}
+	ResPlayer resPlayer = players.get(player.getName().toLowerCase());
+	if (resPlayer == null) {
+	    resPlayer = new ResPlayer(player.getName());
+	    resPlayer.recountRes();
+	    players.put(player.getName().toLowerCase(), resPlayer);
+	} else
+	    resPlayer.RecalculatePermissions();
+	return;
     }
 
     public static void playerJoin(String player) {
-
 	ResPlayer resPlayer = players.get(player.toLowerCase());
 	if (resPlayer == null) {
 	    resPlayer = new ResPlayer(player);
@@ -55,33 +51,30 @@ public class PlayerManager {
     }
 
     public static ArrayList<String> getResidenceList(String player) {
-	synchronized (players) {
-	    ArrayList<String> temp = new ArrayList<String>();
-	    playerJoin(player);
-	    ResPlayer resPlayer = players.get(player.toLowerCase());
-	    if (resPlayer != null) {
-		for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
-		    temp.add(one.getKey());
-		}
-		return temp;
+	ArrayList<String> temp = new ArrayList<String>();
+	playerJoin(player);
+	ResPlayer resPlayer = players.get(player.toLowerCase());
+	if (resPlayer != null) {
+	    for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
+		temp.add(one.getKey());
 	    }
 	    return temp;
 	}
+	return temp;
     }
 
     public static ArrayList<String> getResidenceListString(String player) {
-	synchronized (players) {
-	    ArrayList<String> temp = new ArrayList<String>();
-	    playerJoin(player);
-	    ResPlayer resPlayer = players.get(player.toLowerCase());
-	    if (resPlayer != null) {
-		for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
-		    temp.add(Residence.getLanguage().getPhrase("ResidenceList", "|" + one.getKey() + "|" + Residence.getLanguage().getPhrase("World") + "|" + one.getValue()));
-		}
-		return temp;
+	ArrayList<String> temp = new ArrayList<String>();
+	playerJoin(player);
+	ResPlayer resPlayer = players.get(player.toLowerCase());
+	if (resPlayer != null) {
+	    for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
+		temp.add(Residence.getLanguage().getPhrase("ResidenceList", "|" + one.getKey() + "|" + Residence.getLanguage().getPhrase("World") + "|" + one
+		    .getValue()));
 	    }
 	    return temp;
 	}
+	return temp;
     }
 
     public static PermissionGroup getGroup(String player) {
