@@ -256,9 +256,6 @@ public class Locale {
 	GetConfigString("Language.FlagDeny", "You dont have %1 permission<s> here.", writer, conf, true);
 	GetConfigString("Language.FlagSetDeny", "Owner does not have access to flag %1", writer, conf, true);
 	GetConfigString("Language.SelectPoint", "Placed %1 Selection Point", writer, conf, true);
-	GetConfigString("Language.ResidenceChat", "Residence chat toggled %1", writer, conf, true);
-	GetConfigString("Language.ChatChannelChange", "Changed residence chat chanel to %1", writer, conf, true);
-	GetConfigString("Language.ChatChannelLeave", "Left residence chat", writer, conf, true);
 	GetConfigString("Language.ResidenceMoveDeny", "You dont have movement permission for Residence %1", writer, conf, true);
 	GetConfigString("Language.ResidenceFlagDeny", "You dont have %1 permission for Residence %2", writer, conf, true);
 	GetConfigString("Language.TeleportDeny", "You dont have teleport access.", writer, conf, true);
@@ -389,6 +386,9 @@ public class Locale {
 	GetConfigString("Language.AutoSelection.Enabled", "&eAuto selection mode turned ON. To disable it write /res select auto", writer, conf, true);
 	GetConfigString("Language.AutoSelection.Disabled", "&eAuto selection mode turned OFF. To enable it again write /res select auto", writer, conf, true);
 
+	GetConfigString("Language.Chat.ChatChannelChange", "Changed residence chat channel to %1", writer, conf, true);
+	GetConfigString("Language.Chat.ChatChannelLeave", "Left residence chat", writer, conf, true);
+	
 	GetConfigString("Language.Chat.JoinFirst", "&4Join residence chat channel first...", writer, conf, true);
 	GetConfigString("Language.Chat.InvalidChannel", "&4Invalid Channel...", writer, conf, true);
 	GetConfigString("Language.Chat.InvalidColor", "&4Incorrect color code", writer, conf, true);
@@ -397,6 +397,7 @@ public class Locale {
 	GetConfigString("Language.Chat.InvalidPrefixLength", "&4Prefix is to long. Allowed length: %1", writer, conf, true);
 	GetConfigString("Language.Chat.ChangedColor", "&eResidence chat channel color changed to %1", writer, conf, true);
 	GetConfigString("Language.Chat.ChangedPrefix", "&eResidence chat channel prefix changed to %1", writer, conf, true);
+	
 
 	writer.addComment("CommandHelp", "");
 

@@ -36,7 +36,6 @@ public class ChatManager {
     public void removeFromChannel(String player) {
 	for (ChatChannel chan : channelmap.values()) {
 	    if (chan.hasMember(player)) {
-		Residence.getPlayerListener().removePlayerResidenceChat(player);
 		chan.leave(player);
 		break;
 	    }

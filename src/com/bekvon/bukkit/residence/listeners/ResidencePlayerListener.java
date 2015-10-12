@@ -47,6 +47,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
@@ -319,6 +321,7 @@ public class ResidencePlayerListener implements Listener {
 	lastUpdate.remove(pname);
 	lastOutsideLoc.remove(pname);
 	Residence.getChatManager().removeFromChannel(pname);
+	Residence.getPlayerListener().removePlayerResidenceChat(pname);
 
 	Residence.UUIDList.put(pname, event.getPlayer().getUniqueId());
 
@@ -1079,20 +1082,21 @@ public class ResidencePlayerListener implements Listener {
     public void tooglePlayerResidenceChat(Player player, String residence) {
 	String pname = player.getName();
 	playerToggleChat.add(pname);
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ChatChannelChange", ChatColor.RED + residence + ChatColor.YELLOW + "!"));
+	player.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.Chat.ChatChannelChange").replace("%1", ChatColor.RED + residence + ChatColor.YELLOW
+	    + "!"));
     }
 
     public void removePlayerResidenceChat(String pname) {
 	playerToggleChat.remove(pname);
 	Player player = Bukkit.getPlayer(pname);
 	if (player != null)
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ChatChannelLeave"));
+	    player.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.Chat.ChatChannelLeave"));
     }
 
     public void removePlayerResidenceChat(Player player) {
 	String pname = player.getName();
 	playerToggleChat.remove(pname);
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ChatChannelLeave"));
+	player.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.Chat.ChatChannelLeave"));
     }
 
     public String getCurrentResidenceName(String player) {
