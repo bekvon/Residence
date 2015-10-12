@@ -49,7 +49,7 @@ public class ResidenceCommandListener extends Residence {
 	if (command.getName().equals("resreload") && args.length == 0) {
 	    if (sender instanceof Player) {
 		Player player = (Player) sender;
-		if (Residence.getPermissionManager().isResidenceAdmin(player)) {
+		if (Residence.getPermissionManager().isResidenceAdmin(player) && player.hasPermission("residence.topadmin")) {
 		    this.reloadPlugin();
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded config.");
 		    System.out.println("[Residence] Reloaded by " + player.getName() + ".");
@@ -74,7 +74,7 @@ public class ResidenceCommandListener extends Residence {
 	    return true;
 	}
 	if (command.getName().equals("resload")) {
-	    if (!(sender instanceof Player) || sender instanceof Player && gmanager.isResidenceAdmin((Player) sender)) {
+	    if (!(sender instanceof Player) || sender instanceof Player && gmanager.isResidenceAdmin((Player) sender) && ((Player) sender).hasPermission("residence.topadmin")) {
 		try {
 		    this.loadYml();
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded save file...");

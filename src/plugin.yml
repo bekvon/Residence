@@ -35,6 +35,9 @@ permissions:
   residence.admin:
     description: Gives you access to /resadmin
     default: op
+  residence.Topadmin:
+    description: Gives you access to /resreload and resload commands
+    default: op
   residence.admin.tp:
     description: Allows to override tp flag
     default: op
