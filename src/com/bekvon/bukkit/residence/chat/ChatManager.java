@@ -6,6 +6,8 @@
 package com.bekvon.bukkit.residence.chat;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Server;
@@ -24,16 +26,17 @@ public class ChatManager {
 	channelmap = new HashMap<String, ChatChannel>();
     }
 
-    public void setChannel(String player, String channel) {
+    public void setChannel(String player, ClaimedResidence res) {
 	this.removeFromChannel(player);
-	if (!channelmap.containsKey(channel))
-	    channelmap.put(channel, new ChatChannel(channel));
-	channelmap.get(channel).join(player);
+	if (!channelmap.containsKey(res.getName()))
+	    channelmap.put(res.getName(), new ChatChannel(res.getName(), res.getChatPrefix(), res.getChannelColor()));
+	channelmap.get(res.getName()).join(player);
     }
 
     public void removeFromChannel(String player) {
 	for (ChatChannel chan : channelmap.values()) {
 	    if (chan.hasMember(player)) {
+		Residence.getPlayerListener().removePlayerResidenceChat(player);
 		chan.leave(player);
 		break;
 	    }

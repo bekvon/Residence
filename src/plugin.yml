@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.9.1.0
+version: 2.9.2.0
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -24,7 +24,7 @@ commands:
     usage: §c/resload
   rc:
     description: §cChat in current residence channel.
-    usage: §c/rc to toggle, or /rc <message>
+    usage: §c/rc §eto toggle, §c/rc l §eto leave, §c/rc setprefix §eto set prefix, §c/rc setcolor §eto set color or §c/rc kick §eto kick player
   resworld:
     description: §cRemoves every residence in a world.
     usage: §c/resworld remove [world]

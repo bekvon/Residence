@@ -97,34 +97,164 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    return false;
 	} else if (command.getName().equals("rc")) {
-	    if (sender instanceof Player) {
-		Player player = (Player) sender;
-		String pname = player.getName();
-		if (cmanager.chatEnabled()) {
-		    if (args.length == 0) {
-			plistener.tooglePlayerResidenceChat(player);
-		    } else {
-			String area = plistener.getCurrentResidenceName(pname);
-			if (area != null) {
-			    ChatChannel channel = chatmanager.getChannel(area);
-			    if (channel != null) {
-				String message = "";
-				for (String arg : args) {
-				    message = message + " " + arg;
-				}
-				channel.chat(pname, message);
-			    } else {
-				player.sendMessage(ChatColor.RED + language.getPhrase("InvalidChannel"));
-			    }
-			} else {
-			    player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
-			}
+	    if (!(sender instanceof Player))
+		return true;
+
+	    Player player = (Player) sender;
+	    String pname = player.getName();
+
+	    if (cmanager.chatEnabled()) {
+
+		if (args.length == 0) {
+		    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    if (res == null) {
+			player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
+			return true;
 		    }
-		} else {
-		    player.sendMessage(ChatColor.RED + language.getPhrase("ChatDisabled"));
+		    if (!res.getPermissions().playerHas(player.getName(), "chat", true) && !gmanager.isResidenceAdmin(player)) {
+			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "chat|" + res.getName()));
+			return false;
+		    }
+
+		    plistener.tooglePlayerResidenceChat(player, res.getName());
+		    Residence.getChatManager().setChannel(pname, res);
+		    return true;
+		} else if (args.length == 1) {
+
+		    if (args[0].equalsIgnoreCase("l")) {
+			Residence.getChatManager().removeFromChannel(pname);
+			plistener.removePlayerResidenceChat(player);
+			return true;
+		    }
+
+		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[0]);
+		    if (res == null) {
+			player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.InvalidChannel"));
+			return true;
+		    }
+
+		    if (!res.getPermissions().playerHas(player.getName(), "chat", true) && !gmanager.isResidenceAdmin(player)) {
+			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "chat|" + res.getName()));
+			return false;
+		    }
+		    plistener.tooglePlayerResidenceChat(player, res.getName());
+		    Residence.getChatManager().setChannel(pname, res);
+
+		    return true;
+		} else if (args.length == 2) {
+		    if (args[0].equalsIgnoreCase("setcolor")) {
+
+			ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+
+			if (chat == null) {
+			    player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.JoinFirst"));
+			    return true;
+			}
+
+			ClaimedResidence res = Residence.getResidenceManager().getByName(chat.getChannelName());
+
+			if (res == null)
+			    return false;
+
+			if (!res.getOwner().equals(player.getName()) && !gmanager.isResidenceAdmin(player)) {
+			    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+			    return true;
+			}
+
+			if (!player.hasPermission("residence.chatcolor")) {
+			    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+			    return true;
+			}
+
+			String posibleColor = args[1];
+
+			if (!posibleColor.contains("&"))
+			    posibleColor = "&" + posibleColor;
+
+			if (posibleColor.length() != 2 || ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', posibleColor)).length() != 0) {
+			    player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.InvalidColor"));
+			    return true;
+			}
+
+			ChatColor color = ChatColor.getByChar(posibleColor.replace("&", ""));
+			res.setChannelColor(color);
+			chat.setChannelColor(color);
+			player.sendMessage(ChatColor.GOLD + NewLanguage.getMessage("Language.Chat.ChangedColor").replace("%1", color.name()));
+			return true;
+		    } else if (args[0].equalsIgnoreCase("setprefix")) {
+			ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+
+			if (chat == null) {
+			    player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.JoinFirst"));
+			    return true;
+			}
+
+			ClaimedResidence res = Residence.getResidenceManager().getByName(chat.getChannelName());
+
+			if (res == null)
+			    return false;
+
+			if (!res.getOwner().equals(player.getName()) && !gmanager.isResidenceAdmin(player)) {
+			    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+			    return true;
+			}
+
+			if (!player.hasPermission("residence.chatprefix")) {
+			    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+			    return true;
+			}
+
+			String prefix = args[1];
+
+			if (prefix.length() > Residence.getConfigManager().getChatPrefixLength()) {
+			    player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.InvalidPrefixLength").replace("%1", String.valueOf(Residence
+				.getConfigManager().getChatPrefixLength())));
+			    return true;
+			}
+
+			res.setChatPrefix(prefix);
+			chat.setChatPrefix(prefix);
+			player.sendMessage(ChatColor.GOLD + NewLanguage.getMessage("Language.Chat.ChangedPrefix").replace("%1", ChatColor.translateAlternateColorCodes(
+			    '&', prefix)));
+			return true;
+		    } else if (args[0].equalsIgnoreCase("kick")) {
+			ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+
+			if (chat == null) {
+			    player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.JoinFirst"));
+			    return true;
+			}
+
+			ClaimedResidence res = Residence.getResidenceManager().getByName(chat.getChannelName());
+
+			if (res == null)
+			    return false;
+
+			if (!res.getOwner().equals(player.getName()) && !gmanager.isResidenceAdmin(player)) {
+			    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+			    return true;
+			}
+
+			if (!player.hasPermission("residence.chatkick")) {
+			    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+			    return true;
+			}
+
+			String targetName = args[1];
+			if (!chat.hasMember(targetName)) {
+			    player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.NotInChannel"));
+			    return false;
+			}
+
+			chat.leave(targetName);
+			plistener.removePlayerResidenceChat(targetName);
+			player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.Kicked").replace("%1", targetName).replace("%2", chat.getChannelName()));
+			return true;
+		    }
 		}
+	    } else {
+		player.sendMessage(ChatColor.RED + language.getPhrase("ChatDisabled"));
 	    }
-	    return true;
 	} else if (command.getName().equals("res") || command.getName().equals("residence") || command.getName().equals("resadmin")) {
 	    boolean resadmin = false;
 	    if (sender instanceof Player) {

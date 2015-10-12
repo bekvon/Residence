@@ -46,6 +46,8 @@ public class ClaimedResidence {
     protected Location tpLoc;
     protected String enterMessage;
     protected String leaveMessage;
+    protected String ChatPrefix = "";
+    protected ChatColor ChannelColor = ChatColor.WHITE;
     protected ResidenceItemList ignorelist;
     protected ResidenceItemList blacklist;
 
@@ -916,6 +918,8 @@ public class ClaimedResidence {
 	root.put("LeaveMessage", leaveMessage);
 	root.put("StoredMoney", bank.getStoredMoney());
 	root.put("BlockSellPrice", BlockSellPrice);
+	root.put("ChatPrefix", ChatPrefix);
+	root.put("ChannelColor", ChannelColor.name());
 	root.put("BlackList", blacklist.save());
 	root.put("IgnoreList", ignorelist.save());
 	for (Entry<String, CuboidArea> entry : areas.entrySet()) {
@@ -984,6 +988,16 @@ public class ClaimedResidence {
 	if (tploc != null) {
 	    res.tpLoc = new Location(world, (Integer) tploc.get("X"), (Integer) tploc.get("Y"), (Integer) tploc.get("Z"));
 	}
+
+	if (root.containsKey("ChatPrefix"))
+	    res.ChatPrefix = (String) root.get("ChatPrefix");	
+	
+	if (root.containsKey("ChannelColor"))
+	    res.ChannelColor = ChatColor.valueOf((String) root.get("ChannelColor"));
+	else {
+	    res.ChannelColor = Residence.getConfigManager().getChatColor();
+	}
+
 	return res;
     }
 
@@ -1080,6 +1094,22 @@ public class ClaimedResidence {
 
     public String getOwner() {
 	return perms.getOwner();
+    }
+
+    public void setChatPrefix(String ChatPrefix) {
+	this.ChatPrefix = ChatPrefix;
+    }
+
+    public String getChatPrefix() {	
+	return this.ChatPrefix == null ? "" : this.ChatPrefix;
+    }
+
+    public void setChannelColor(ChatColor ChannelColor) {
+	this.ChannelColor = ChannelColor;
+    }
+
+    public ChatColor getChannelColor() {
+	return ChannelColor;
     }
 
     public UUID getOwnerUUID() {

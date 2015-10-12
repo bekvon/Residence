@@ -60,6 +60,7 @@ Global:
         command: false
         day: true
         night: true
+        chat: true
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false

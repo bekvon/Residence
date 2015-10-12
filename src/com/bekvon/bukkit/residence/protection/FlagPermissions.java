@@ -150,6 +150,8 @@ public class FlagPermissions {
 	addFlag("nofly");
 
 	addFlag("command");
+	
+	addFlag("chat");
 
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");

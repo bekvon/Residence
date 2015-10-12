@@ -95,8 +95,7 @@ public class Locale {
 	    writer, conf, true);
 	GetConfigString("Language.InvalidResidence", "Invalid Residence...", writer, conf, true);
 	GetConfigString("Language.InvalidSubzone", "Invalid Subzone...", writer, conf, true);
-	GetConfigString("Language.InvalidDirection", "Invalid Direction...", writer, conf, true);
-	GetConfigString("Language.InvalidChannel", "Invalid Channel...", writer, conf, true);
+	GetConfigString("Language.InvalidDirection", "Invalid Direction...", writer, conf, true);		
 	GetConfigString("Language.InvalidAmount", "Invalid Amount...", writer, conf, true);
 	GetConfigString("Language.InvalidCost", "Invalid Cost...", writer, conf, true);
 	GetConfigString("Language.InvalidDays", "Invalid number of days...", writer, conf, true);
@@ -258,6 +257,8 @@ public class Locale {
 	GetConfigString("Language.FlagSetDeny", "Owner does not have access to flag %1", writer, conf, true);
 	GetConfigString("Language.SelectPoint", "Placed %1 Selection Point", writer, conf, true);
 	GetConfigString("Language.ResidenceChat", "Residence chat toggled %1", writer, conf, true);
+	GetConfigString("Language.ChatChannelChange", "Changed residence chat chanel to %1", writer, conf, true);
+	GetConfigString("Language.ChatChannelLeave", "Left residence chat", writer, conf, true);
 	GetConfigString("Language.ResidenceMoveDeny", "You dont have movement permission for Residence %1", writer, conf, true);
 	GetConfigString("Language.ResidenceFlagDeny", "You dont have %1 permission for Residence %2", writer, conf, true);
 	GetConfigString("Language.TeleportDeny", "You dont have teleport access.", writer, conf, true);
@@ -387,6 +388,15 @@ public class Locale {
 	GetConfigString("Language.InformationPage.NoNextPage", "&e-----------------------", writer, conf, true);
 	GetConfigString("Language.AutoSelection.Enabled", "&eAuto selection mode turned ON. To disable it write /res select auto", writer, conf, true);
 	GetConfigString("Language.AutoSelection.Disabled", "&eAuto selection mode turned OFF. To enable it again write /res select auto", writer, conf, true);
+
+	GetConfigString("Language.Chat.JoinFirst", "&4Join residence chat channel first...", writer, conf, true);
+	GetConfigString("Language.Chat.InvalidChannel", "&4Invalid Channel...", writer, conf, true);
+	GetConfigString("Language.Chat.InvalidColor", "&4Incorrect color code", writer, conf, true);
+	GetConfigString("Language.Chat.NotInChannel", "&4Player is not in channel", writer, conf, true);
+	GetConfigString("Language.Chat.Kicked", "&6%1 &ewas kicked from &6%2 &echannel", writer, conf, true);
+	GetConfigString("Language.Chat.InvalidPrefixLength", "&4Prefix is to long. Allowed length: %1", writer, conf, true);
+	GetConfigString("Language.Chat.ChangedColor", "&eResidence chat channel color changed to %1", writer, conf, true);
+	GetConfigString("Language.Chat.ChangedPrefix", "&eResidence chat channel prefix changed to %1", writer, conf, true);
 
 	writer.addComment("CommandHelp", "");
 

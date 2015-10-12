@@ -72,7 +72,7 @@ public class ResidencePlayerListener implements Listener {
     protected Map<String, Location> lastOutsideLoc;
     protected int minUpdateTime;
     protected boolean chatenabled;
-    protected List<String> playerToggleChat;
+    protected List<String> playerToggleChat = new ArrayList<String>();
 
     public static Map<String, SetFlag> GUI = new HashMap<String, SetFlag>();
 
@@ -80,7 +80,7 @@ public class ResidencePlayerListener implements Listener {
 	currentRes = new HashMap<String, String>();
 	lastUpdate = new HashMap<String, Long>();
 	lastOutsideLoc = new HashMap<String, Location>();
-	playerToggleChat = new ArrayList<String>();
+	playerToggleChat.clear();
 	minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = Residence.getConfigManager().chatEnabled();
 	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -92,7 +92,7 @@ public class ResidencePlayerListener implements Listener {
 	currentRes = new HashMap<String, String>();
 	lastUpdate = new HashMap<String, Long>();
 	lastOutsideLoc = new HashMap<String, Location>();
-	playerToggleChat = new ArrayList<String>();
+	playerToggleChat.clear();
 	minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = Residence.getConfigManager().chatEnabled();
 	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -791,7 +791,6 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	}
-	//handleNewLocation(player, loc, false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -885,7 +884,6 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		}
 		currentRes.remove(pname);
-		Residence.getChatManager().removeFromChannel(pname);
 	    }
 	    return;
 	}
@@ -947,14 +945,8 @@ public class ResidencePlayerListener implements Listener {
 
 	lastOutsideLoc.put(pname, loc);
 
-	boolean chatchange = false;
-	if (!currentRes.containsKey(pname) || ResOld != res)
-
-	{
+	if (!currentRes.containsKey(pname) || ResOld != res) {
 	    currentRes.put(pname, areaname);
-	    if (subzone == null) {
-		chatchange = true;
-	    }
 
 	    // "from" residence for ResidenceChangedEvent
 	    ClaimedResidence chgFrom = null;
@@ -1006,12 +998,6 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	}
-	if (chatchange && chatenabled)
-
-	{
-	    Residence.getChatManager().setChannel(pname, areaname);
-	}
-
     }
 
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
@@ -1080,27 +1066,33 @@ public class ResidencePlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 	String pname = event.getPlayer().getName();
-	if (chatenabled && playerToggleChat.contains(pname)) {
-	    String area = currentRes.get(pname);
-	    if (area != null) {
-		ChatChannel channel = Residence.getChatManager().getChannel(area);
-		if (channel != null) {
-		    channel.chat(pname, event.getMessage());
-		}
-		event.setCancelled(true);
-	    }
+	if (!chatenabled || !playerToggleChat.contains(pname))
+	    return;
+
+	ChatChannel channel = Residence.getChatManager().getPlayerChannel(pname);
+	if (channel != null) {
+	    channel.chat(pname, event.getMessage());
 	}
+	event.setCancelled(true);
     }
 
-    public void tooglePlayerResidenceChat(Player player) {
+    public void tooglePlayerResidenceChat(Player player, String residence) {
 	String pname = player.getName();
-	if (playerToggleChat.contains(pname)) {
-	    playerToggleChat.remove(pname);
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ResidenceChat", ChatColor.RED + "OFF" + ChatColor.YELLOW + "!"));
-	} else {
-	    playerToggleChat.add(pname);
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ResidenceChat", ChatColor.RED + "ON" + ChatColor.YELLOW + "!"));
-	}
+	playerToggleChat.add(pname);
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ChatChannelChange", ChatColor.RED + residence + ChatColor.YELLOW + "!"));
+    }
+
+    public void removePlayerResidenceChat(String pname) {
+	playerToggleChat.remove(pname);
+	Player player = Bukkit.getPlayer(pname);
+	if (player != null)
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ChatChannelLeave"));
+    }
+
+    public void removePlayerResidenceChat(Player player) {
+	String pname = player.getName();
+	playerToggleChat.remove(pname);
+	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ChatChannelLeave"));
     }
 
     public String getCurrentResidenceName(String player) {

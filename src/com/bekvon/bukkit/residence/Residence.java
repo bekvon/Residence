@@ -333,7 +333,7 @@ public class Residence extends JavaPlugin {
 
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
-		
+
 		BufferedReader in = null;
 		try {
 		    in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
@@ -342,7 +342,7 @@ public class Residence extends JavaPlugin {
 		} catch (FileNotFoundException e1) {
 		    e1.printStackTrace();
 		}
-		
+
 		if (langFile.isFile()) {
 		    FileConfiguration langconfig = new YamlConfiguration();
 		    langconfig.load(in);
@@ -1111,7 +1111,15 @@ public class Residence extends JavaPlugin {
 	if (p == null) {
 	    if (UUIDList.size() == 0) {
 		for (OfflinePlayer player : Residence.getServ().getOfflinePlayers()) {
-		    UUIDList.put(player.getName().toLowerCase(), player.getUniqueId());
+		    if (player == null)
+			continue;
+		    String name = player.getName();
+		    if (name == null)
+			continue;
+		    UUID uuid = player.getUniqueId();
+		    if (uuid == null)
+			continue;
+		    UUIDList.put(name.toLowerCase(), player.getUniqueId());
 		}
 	    }
 

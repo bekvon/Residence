@@ -52,6 +52,7 @@ public class ConfigManager {
     protected boolean enableRentSystem;
     protected boolean leaseAutoRenew;
     protected int rentCheckInterval;
+    protected int chatPrefixLength;
     protected int leaseCheckInterval;
     protected int autoSaveInt;
     protected int FlowLevel;
@@ -352,6 +353,9 @@ public class ConfigManager {
 	} catch (Exception ex) {
 	    chatColor = ChatColor.DARK_PURPLE;
 	}
+
+	writer.addComment("Global.ResidenceChatPrefixLenght", "Max lenght of residence chat prefix including color codes");
+	chatPrefixLength = GetConfigInt("Global.ResidenceChatPrefixLength", 16, writer, conf);
 
 	writer.addComment("Global.AdminOnlyCommands",
 	    "Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.");
@@ -688,6 +692,10 @@ public class ConfigManager {
 
     public int getRentCheckInterval() {
 	return rentCheckInterval;
+    }
+
+    public int getChatPrefixLength() {
+	return chatPrefixLength;
     }
 
     public int getLeaseCheckInterval() {
