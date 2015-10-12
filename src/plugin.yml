@@ -59,3 +59,12 @@ permissions:
   residence.select.auto.others:
     description: Allows to turn on auto selection for other players
     default: op
+  residence.chatcolor:
+    description: Allows to change residence chat color
+    default: true
+  residence.chatprefix:
+    description: Allows to change residence chat prefix
+    default: op
+  residence.chatkick:
+    description: Allows to kick players from residence chat
+    default: true
