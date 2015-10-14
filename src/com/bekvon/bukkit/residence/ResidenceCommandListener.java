@@ -74,7 +74,8 @@ public class ResidenceCommandListener extends Residence {
 	    return true;
 	}
 	if (command.getName().equals("resload")) {
-	    if (!(sender instanceof Player) || sender instanceof Player && gmanager.isResidenceAdmin((Player) sender) && ((Player) sender).hasPermission("residence.topadmin")) {
+	    if (!(sender instanceof Player) || sender instanceof Player && gmanager.isResidenceAdmin((Player) sender) && ((Player) sender).hasPermission(
+		"residence.topadmin")) {
 		try {
 		    this.loadYml();
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded save file...");
@@ -99,17 +100,27 @@ public class ResidenceCommandListener extends Residence {
 	} else if (command.getName().equals("rc")) {
 	    if (!(sender instanceof Player))
 		return true;
-
 	    Player player = (Player) sender;
 	    String pname = player.getName();
-
 	    if (cmanager.chatEnabled()) {
-
 		if (args.length == 0) {
 		    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
 		    if (res == null) {
+			ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+			if (chat != null) {
+			    Residence.getChatManager().removeFromChannel(pname);
+			    plistener.removePlayerResidenceChat(player);
+			    return true;
+			}
 			player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
 			return true;
+		    } else {
+			ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+			if (chat != null && chat.getChannelName().equals(res.getName())) {
+			    Residence.getChatManager().removeFromChannel(pname);
+			    plistener.removePlayerResidenceChat(player);
+			    return true;
+			}
 		    }
 		    if (!res.getPermissions().playerHas(player.getName(), "chat", true) && !gmanager.isResidenceAdmin(player)) {
 			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "chat|" + res.getName()));
@@ -120,13 +131,11 @@ public class ResidenceCommandListener extends Residence {
 		    Residence.getChatManager().setChannel(pname, res);
 		    return true;
 		} else if (args.length == 1) {
-
 		    if (args[0].equalsIgnoreCase("l")) {
 			Residence.getChatManager().removeFromChannel(pname);
 			plistener.removePlayerResidenceChat(player);
 			return true;
 		    }
-
 		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[0]);
 		    if (res == null) {
 			player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Chat.InvalidChannel"));
