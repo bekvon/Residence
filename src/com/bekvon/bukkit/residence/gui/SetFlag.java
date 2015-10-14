@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -111,27 +111,30 @@ public class SetFlag {
 		String onelisttemp = ChatColor.stripColor(onelist);
 
 		String splited = "";
-		if (onelisttemp.contains("-")) {
-		    splited = onelisttemp.split("-")[0];
-		    if (splited.toLowerCase().contains(one.getKey().toLowerCase())) {
-			List<String> lore = new ArrayList<String>();
+		if (!onelisttemp.contains("-"))
+		    continue;
 
-			int i = 0;
-			String sentence = "";
-			for (String oneWord : onelist.split(" ")) {
-			    sentence += oneWord + " ";
-			    if (i > 4) {
-				lore.add(ChatColor.YELLOW + sentence);
-				sentence = "";
-				i = 0;
-			    }
-			    i++;
-			}
+		splited = onelisttemp.split("-")[0];
+		if (!splited.toLowerCase().contains(one.getKey().toLowerCase()))
+		    continue;
+
+		List<String> lore = new ArrayList<String>();
+
+		int i = 0;
+		String sentence = "";
+		for (String oneWord : onelist.split(" ")) {
+		    sentence += oneWord + " ";
+		    if (i > 4) {
 			lore.add(ChatColor.YELLOW + sentence);
-			description.put(one.getKey(), lore);
-			break;
+			sentence = "";
+			i = 0;
 		    }
+		    i++;
 		}
+		lore.add(ChatColor.YELLOW + sentence);
+		description.put(one.getKey(), lore);
+		break;
+
 	    }
 	}
     }
@@ -184,22 +187,37 @@ public class SetFlag {
 
 	permMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(permMap);
 
-	for (Entry<String, Integer> one : permMap.entrySet()) {
-	    @SuppressWarnings("deprecation")
-	    Material Mat = Material.getMaterial(35);
-	    if (Mat == null)
-		Mat = Material.STONE;
+	FlagData flagData = FlagUtil.getFlagData();
 
+	for (Entry<String, Integer> one : permMap.entrySet()) {
 	    ItemStack MiscInfo = Residence.getConfigManager().getGuiRemove();
-	    if (one.getValue() == 1)
-		MiscInfo = Residence.getConfigManager().getGuiTrue();
-	    else if (one.getValue() == 0)
-		MiscInfo = Residence.getConfigManager().getGuiFalse();
+
+	    if (flagData.contains(one.getKey()))
+		MiscInfo = flagData.getItem(one.getKey());
+
+	    if (one.getValue() == 1) {
+		ItemMeta im = MiscInfo.getItemMeta();
+		im.addEnchant(Enchantment.LUCK, 1, true);
+		MiscInfo.setItemMeta(im);
+	    } else
+		MiscInfo.removeEnchantment(Enchantment.LUCK);
 
 	    ItemMeta MiscInfoMeta = MiscInfo.getItemMeta();
 	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + one.getKey());
 
 	    List<String> lore = new ArrayList<String>();
+
+	    switch (one.getValue()) {
+	    case 0:
+		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.DARK_RED + "False");
+		break;
+	    case 1:
+		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.GREEN + "True");
+		break;
+	    case 2:
+		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.RED + "Removed");
+		break;
+	    }
 
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));

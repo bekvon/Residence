@@ -61,6 +61,161 @@ Global:
         day: true
         night: true
         chat: true
+    # This sets GUI items to represent each flag, if not given, then gray wool will be used
+    FlagGui:
+        animalkilling: 
+            Id: 365
+            Data: 0
+        animals: 
+            Id: 383
+            Data: 90
+        bed:
+            Id: 355
+            Data: 0
+        brew:
+            Id: 379
+            Data: 0
+        bucket: 
+            Id: 325
+            Data: 0
+        build: 
+            Id: 45
+            Data: 0            
+        burn:
+            Id: 50
+            Data: 0
+        button: 
+            Id: 143
+            Data: 0
+        cake:
+            Id: 354
+            Data: 0
+        canimals: 
+            Id: 383
+            Data: 91
+        chat:
+            Id: 386
+            Data: 0
+        cmonsters: 
+            Id: 383
+            Data: 50
+        command:
+            Id: 137
+            Data: 0
+        container: 
+            Id: 342
+            Data: 0
+        creeper: 
+            Id: 383
+            Data: 50
+        destroy: 
+            Id: 121
+            Data: 0
+        diode: 
+            Id: 356
+            Data: 0
+        door: 
+            Id: 324
+            Data: 0
+        enchant:
+            Id: 116
+            Data: 0
+        explode:
+            Id: 407
+            Data: 0
+        fireball:
+            Id: 385
+            Data: 0
+        firespread: 
+            Id: 377
+            Data: 0
+        flow: 
+            Id: 111
+            Data: 0
+        healing: 
+            Id: 373
+            Data: 0
+        ignite: 
+            Id: 259
+            Data: 0
+        lavaflow: 
+            Id: 327
+            Data: 0
+        leash: 
+            Id: 420
+            Data: 0
+        lever: 
+            Id: 69
+            Data: 0
+        mobkilling: 
+            Id: 367
+            Data: 0
+        monsters: 
+            Id: 52
+            Data: 0
+        move: 
+            Id: 301
+            Data: 0
+        nanimals: 
+            Id: 383
+            Data: 92
+        nmonsters: 
+            Id: 383
+            Data: 51
+        nofly: 
+            Id: 171
+            Data: 1
+        nomobs: 
+            Id: 166
+            Data: 0
+        note:
+            Id: 25
+            Data: 0
+        piston: 
+            Id: 33
+            Data: 0
+        place: 
+            Id: 169
+            Data: 0
+        pvp: 
+            Id: 268
+            Data: 0
+        sanimals: 
+            Id: 383
+            Data: 101
+        shear: 
+            Id: 359
+            Data: 0
+        smonsters: 
+            Id: 383
+            Data: 54
+        subzone: 
+            Id: 160
+            Data: 7
+        table: 
+            Id: 58
+            Data: 0
+        tnt: 
+            Id: 46
+            Data: 0
+        tp: 
+            Id: 120
+            Data: 0
+        trade: 
+            Id: 388
+            Data: 0
+        trample:
+            Id: 3
+            Data: 0
+        use: 
+            Id: 70
+            Data: 0
+        vehicledestroy: 
+            Id: 328
+            Data: 0
+        waterflow: 
+            Id: 326
+            Data: 0
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false

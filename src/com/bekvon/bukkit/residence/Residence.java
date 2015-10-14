@@ -47,6 +47,7 @@ import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
 import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
+import com.bekvon.bukkit.residence.gui.FlagUtil;
 import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
@@ -271,6 +272,8 @@ public class Residence extends JavaPlugin {
 		}
 	    }
 
+	    FlagUtil.load();
+	    
 	    String packageName = getServer().getClass().getPackage().getName();
 	    String[] packageSplit = packageName.split("\\.");
 	    String version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{4})")[0];

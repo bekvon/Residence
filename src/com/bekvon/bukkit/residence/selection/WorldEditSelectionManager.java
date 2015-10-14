@@ -24,7 +24,7 @@ public class WorldEditSelectionManager extends SelectionManager {
 
     @Override
     public boolean worldEdit(Player player) {
-	WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
+	WorldEditPlugin wep = (WorldEditPlugin) this.server.getPluginManager().getPlugin("WorldEdit");
 	Selection sel = wep.getSelection(player);
 	if (sel != null) {
 	    Location pos1 = sel.getMinimumPoint();
@@ -37,6 +37,7 @@ public class WorldEditSelectionManager extends SelectionManager {
 	    }
 	    this.playerLoc1.put(player.getName(), pos1);
 	    this.playerLoc2.put(player.getName(), pos2);
+	    afterSelectionUpdate(player);
 	    return true;
 	}
 	return false;
@@ -44,47 +45,47 @@ public class WorldEditSelectionManager extends SelectionManager {
 
     @Override
     public void placeLoc1(Player player, Location loc) {
-	this.worldEdit(player);
+//	this.worldEdit(player);
 	super.placeLoc1(player, loc);
     }
 
     @Override
     public void placeLoc2(Player player, Location loc) {
-	this.worldEdit(player);
+//	this.worldEdit(player);
 	super.placeLoc2(player, loc);
     }
 
     @Override
     public void sky(Player player, boolean resadmin) {
-	this.worldEdit(player);
+//	this.worldEdit(player);
 	super.sky(player, resadmin);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void bedrock(Player player, boolean resadmin) {
-	this.worldEdit(player);
+//	this.worldEdit(player);
 	super.bedrock(player, resadmin);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void modify(Player player, boolean shift, int amount) {
-	this.worldEdit(player);
+//	this.worldEdit(player);
 	super.modify(player, shift, amount);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void selectChunk(Player player) {
-	this.worldEdit(player);
+//	this.worldEdit(player);
 	super.selectChunk(player);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void showSelectionInfo(Player player) {
-	this.worldEdit(player);
+//	this.worldEdit(player);
 	super.showSelectionInfo(player);
     }
 }

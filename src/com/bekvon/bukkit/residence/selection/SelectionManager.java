@@ -49,28 +49,22 @@ public class SelectionManager {
 
     public void placeLoc1(Player player, Location loc) {
 	if (loc != null) {
-
 	    playerLoc1.put(player.getName(), loc);
-
 	    if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName())) {
 		this.qsky(player);
 		this.qbedrock(player);
 	    }
-
 	    this.afterSelectionUpdate(player);
 	}
     }
 
     public void placeLoc2(Player player, Location loc) {
 	if (loc != null) {
-
 	    playerLoc2.put(player.getName(), loc);
-
 	    if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName())) {
 		this.qsky(player);
 		this.qbedrock(player);
 	    }
-
 	    this.afterSelectionUpdate(player);
 	}
     }
@@ -90,7 +84,7 @@ public class SelectionManager {
     }
 
     public boolean hasPlacedBoth(String player) {
-	return (playerLoc1.containsKey(player) && playerLoc2.containsKey(player));
+	return playerLoc1.containsKey(player) && playerLoc2.containsKey(player);
     }
 
     public void showSelectionInfoInActionBar(Player player) {
