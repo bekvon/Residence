@@ -915,7 +915,7 @@ public class ResidencePlayerListener implements Listener {
 		location.setPitch(lc.getPitch());
 		location.setYaw(lc.getYaw());
 		int from = location.getBlockY();
-		int maxH = location.getWorld().getMaxHeight();
+		int maxH = location.getWorld().getMaxHeight() - 1;
 		for (int i = 0; i < maxH; i++) {
 		    location.setY(from - i);
 		    Block block = location.getBlock();

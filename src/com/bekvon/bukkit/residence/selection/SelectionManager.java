@@ -36,7 +36,7 @@ public class SelectionManager {
     public static HashMap<String, Integer> errorIDMap = new HashMap<String, Integer>();
 
     public static final int MIN_HEIGHT = 0;
-    
+
     public enum Direction {
 	UP, DOWN, PLUSX, PLUSZ, MINUSX, MINUSZ
     }
@@ -516,13 +516,11 @@ public class SelectionManager {
     public void qsky(Player player) {
 	int y1 = playerLoc1.get(player.getName()).getBlockY();
 	int y2 = playerLoc2.get(player.getName()).getBlockY();
-	if (y1 > y2) {
-	    int newy = player.getLocation().getWorld().getMaxHeight();
+	int newy = player.getLocation().getWorld().getMaxHeight() - 1;
+	if (y1 > y2)
 	    playerLoc1.get(player.getName()).setY(newy);
-	} else {
-	    int newy = player.getLocation().getWorld().getMaxHeight();
+	else
 	    playerLoc2.get(player.getName()).setY(newy);
-	}
     }
 
     public void qbedrock(Player player) {
@@ -542,8 +540,8 @@ public class SelectionManager {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	    int y1 = playerLoc1.get(player.getName()).getBlockY();
 	    int y2 = playerLoc2.get(player.getName()).getBlockY();
+	    int newy = player.getLocation().getWorld().getMaxHeight() - 1;
 	    if (y1 > y2) {
-		int newy = player.getLocation().getWorld().getMaxHeight();
 		if (!resadmin) {
 		    if (group.getMaxHeight() < newy)
 			newy = group.getMaxHeight();
@@ -552,7 +550,6 @@ public class SelectionManager {
 		}
 		playerLoc1.get(player.getName()).setY(newy);
 	    } else {
-		int newy = player.getLocation().getWorld().getMaxHeight();
 		if (!resadmin) {
 		    if (group.getMaxHeight() < newy)
 			newy = group.getMaxHeight();
@@ -609,7 +606,7 @@ public class SelectionManager {
 	int ycoord = MIN_HEIGHT;
 	int xmax = xcoord + 15;
 	int zmax = zcoord + 15;
-	int ymax = player.getLocation().getWorld().getMaxHeight();
+	int ymax = player.getLocation().getWorld().getMaxHeight() - 1;
 	playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
 	playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax, ymax, zmax));
 	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectionSuccess"));
@@ -643,9 +640,9 @@ public class SelectionManager {
 	if (d == Direction.UP) {
 	    int oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy + amount;
-	    if (oldy > player.getLocation().getWorld().getMaxHeight()) {
+	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectTooHigh"));
-		oldy = player.getLocation().getWorld().getMaxHeight();
+		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
 	    if (shift) {
@@ -738,9 +735,9 @@ public class SelectionManager {
 	case DOWN:
 	    int oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy - amount;
-	    if (oldy > player.getLocation().getWorld().getMaxHeight()) {
+	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SelectTooHigh"));
-		oldy = player.getLocation().getWorld().getMaxHeight();
+		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Contracting.Down") + " (" + amount + ")");
