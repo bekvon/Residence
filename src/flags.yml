@@ -233,6 +233,7 @@ Global:
         animalkilling: false
         shear: false
         leash: false
+        tp: false
     # These are default flags applied to the residence creator of any group.
     CreatorDefault:
         build: true
