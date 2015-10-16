@@ -61,6 +61,7 @@ Global:
         day: true
         night: true
         chat: true
+        hidden: false
     # This sets GUI items to represent each flag, if not given, then gray wool will be used
     FlagGui:
         animalkilling: 

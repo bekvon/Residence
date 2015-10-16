@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.9.4.0
+version: 2.9.4.0/er
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -70,4 +70,7 @@ permissions:
     default: op
   residence.chatkick:
     description: Allows to kick players from residence chat
+    default: true
+  residence.compass:
+    description: Allows to set compass pointer to residence
     default: true

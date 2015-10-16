@@ -1856,6 +1856,12 @@ public class ResidenceCommandListener extends Residence {
 	    player.sendMessage(ChatColor.GREEN + language.getPhrase("CompassTargetReset"));
 	    return true;
 	}
+
+	if (!player.hasPermission("residence.compass")) {
+	    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+	    return true;
+	}
+
 	if (rmanager.getByName(args[1]) != null) {
 	    if (rmanager.getByName(args[1]).getWorld().equalsIgnoreCase(player.getWorld().getName())) {
 		Location low = rmanager.getByName(args[1]).getArea("main").getLowLoc();
