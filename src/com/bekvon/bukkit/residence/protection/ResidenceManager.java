@@ -242,10 +242,11 @@ public class ResidenceManager {
 	if (showhidden && !Residence.isResAdminOn(player) && !player.getName().equals(targetplayer)) {
 	    showhidden = false;
 	}
+	final boolean hidden = showhidden;
 	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
 	    @Override
 	    public void run() {
-		ArrayList<String> ownedResidences = PlayerManager.getResidenceListString(targetplayer);
+		ArrayList<String> ownedResidences = PlayerManager.getResidenceListString(targetplayer, hidden);
 		ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer));
 		InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Residences") + " - " + targetplayer, ownedResidences, page);
 		return;

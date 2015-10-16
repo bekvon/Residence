@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.9.2.0
+version: 2.9.4.0
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -35,8 +35,8 @@ permissions:
   residence.admin:
     description: Gives you access to /resadmin
     default: op
-  residence.Topadmin:
-    description: Gives you access to /resreload and resload commands
+  residence.topadmin:
+    description: Gives you access to /resreload and /resload commands
     default: op
   residence.admin.tp:
     description: Allows to override tp flag

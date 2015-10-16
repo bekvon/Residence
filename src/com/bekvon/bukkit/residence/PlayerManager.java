@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.containers.ResPlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class PlayerManager {
     private static ConcurrentHashMap<String, ResPlayer> players = new ConcurrentHashMap<String, ResPlayer>();
@@ -63,12 +64,19 @@ public class PlayerManager {
 	return temp;
     }
 
-    public static ArrayList<String> getResidenceListString(String player) {
+    public static ArrayList<String> getResidenceListString(String player, boolean showhidden) {
 	ArrayList<String> temp = new ArrayList<String>();
 	playerJoin(player);
 	ResPlayer resPlayer = players.get(player.toLowerCase());
 	if (resPlayer != null) {
 	    for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
+		if (!showhidden) {
+		    ClaimedResidence res = Residence.getResidenceManager().getByName(one.getKey());
+		    boolean hidden = res.getPermissions().has("hidden", false);
+		    if (hidden)
+			continue;
+		}
+
 		temp.add(Residence.getLanguage().getPhrase("ResidenceList", "|" + one.getKey() + "|" + Residence.getLanguage().getPhrase("World") + "|" + one
 		    .getValue()));
 	    }

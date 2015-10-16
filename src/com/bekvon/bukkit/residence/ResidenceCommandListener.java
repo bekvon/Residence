@@ -622,14 +622,20 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    Player targetplayer = Bukkit.getPlayer(args[1]);
 	    if (targetplayer == null) {
-
+		player.sendMessage(ChatColor.RED + language.getPhrase("NotOnline"));
+		return true;
 	    }
 	    group = gmanager.getGroup(player);
-	    if (!group.hasKickAccess()) {
+	    if (!group.hasKickAccess() && !resadmin) {
 		player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
 		return true;
 	    }
 	    ClaimedResidence res = rmanager.getByLoc(targetplayer.getLocation());
+
+	    if (res == null) {
+		player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
+		return true;
+	    }
 	    if (res.getOwner().equals(player.getName())) {
 		if (res.getPlayersInResidence().contains(targetplayer)) {
 		    targetplayer.teleport(res.getOutsideFreeLoc(player.getLocation()));

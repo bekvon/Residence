@@ -675,6 +675,12 @@ public class Locale {
 		"The name must not already be taken by another residence."),
 	    writer, conf, true);
 
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.kick.Description", "Kicks player from residence.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.kick.Info",
+	    Arrays.asList("Usage: /res kick <player>", "You must be the owner or an admin to do this.",
+		"Player should be online."),
+	    writer, conf, true);
+	
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.mirror.Description", "Mirrors Flags", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.mirror.Info",
 	    Arrays.asList("Usage: /res mirror [Source Residence] [Target Residence]",

@@ -114,7 +114,7 @@ public class ResPlayer {
     }
 
     public void recountRes() {
-	this.ResidenceList = Residence.getResidenceManager().getResidenceMapList(this.userName, false);
+	this.ResidenceList = Residence.getResidenceManager().getResidenceMapList(this.userName, true);
 	recountResAmount();
     }
 
