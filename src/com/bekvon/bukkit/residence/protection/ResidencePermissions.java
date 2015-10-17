@@ -221,7 +221,27 @@ public class ResidencePermissions extends FlagPermissions {
     public boolean setFlag(Player player, String flag, String flagstate, boolean resadmin) {
 	if (validFlagGroups.containsKey(flag))
 	    return this.setFlagGroup(player, flag, flagstate, resadmin);
+
 	FlagState state = FlagPermissions.stringToFlagState(flagstate);
+
+	if (Residence.getConfigManager().isPvPFlagPrevent()) {
+	    for (String oneFlag : Residence.getConfigManager().getProtectedFlagsList()) {
+		if (!flag.equalsIgnoreCase(oneFlag))
+		    continue;
+
+		ArrayList<Player> players = this.residence.getPlayersInResidence();
+		if (!resadmin && (players.size() > 1 || players.size() == 1 && !players.get(0).getName().equals(this.getOwner()))) {
+		    int size = 0;
+		    for (Player one : players) {
+			if (!one.getName().equals(this.getOwner()))
+			    size++;
+		    }
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagChangeDeny", flag + "|" + size));
+		    return false;
+		}
+	    }
+	}
+
 	if (checkCanSetFlag(player, flag, state, true, resadmin)) {
 	    ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, player, flag, ResidenceFlagChangeEvent.FlagType.RESIDENCE, state, null);
 	    Residence.getServ().getPluginManager().callEvent(fc);

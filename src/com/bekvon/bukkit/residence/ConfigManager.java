@@ -43,6 +43,7 @@ public class ConfigManager {
     protected boolean NoWaterPlace;
     protected boolean AutoCleanUp;
     protected boolean UseClean;
+    protected boolean PvPFlagPrevent;
     protected int infoToolId;
     protected int AutoCleanUpDays;
     protected int selectionToolId;
@@ -114,6 +115,7 @@ public class ConfigManager {
     protected List<String> NoPlaceWorlds;
     protected List<String> BlockFallWorlds;
     protected List<String> CleanWorlds;
+    protected List<String> FlagsList;
 
     protected ItemStack GuiTrue;
     protected ItemStack GuiFalse;
@@ -298,6 +300,7 @@ public class ConfigManager {
 	BlockFallLevel = GetConfigInt("Global.AntiGreef.BlockFall.Level", 62, writer, conf);
 	BlockFallWorlds = GetConfigArray("Global.AntiGreef.BlockFall.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
 
+	// Res cleaning
 	writer.addComment("Global.AntiGreef.ResCleaning.Use",
 	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
 	    "Effective way to prevent residence creating near greefing target and then remove it");
@@ -307,6 +310,12 @@ public class ConfigManager {
 	writer.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
 	CleanBlocks = GetConfigIntArray("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11), writer, conf);
 	CleanWorlds = GetConfigArray("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+
+	writer.addComment("Global.AntiGreef.Flags.Prevent",
+	    "By setting this to true flags from list will be protected from change while there is some one inside residence besides owner",
+	    "Protects in example from people inviting some one and changing pvp flag to true to kill them");
+	PvPFlagPrevent = GetConfigBoolean("Global.AntiGreef.Flags.Prevent", true, writer, conf);
+	FlagsList = GetConfigArray("Global.AntiGreef.Flags.list", Arrays.asList("pvp"), writer, conf, false);
 
 	writer.addComment("Global.DefaultGroup", "The default group to use if Permissions fails to attach or your not using Permissions.");
 	defaultGroup = GetConfigString("Global.DefaultGroup", "default", writer, conf, false);
@@ -666,6 +675,10 @@ public class ConfigManager {
 	return UseClean;
     }
 
+    public boolean isPvPFlagPrevent() {
+	return PvPFlagPrevent;
+    }
+
     public int getInfoToolID() {
 	return infoToolId;
     }
@@ -872,6 +885,10 @@ public class ConfigManager {
 
     public List<String> getCleanWorlds() {
 	return CleanWorlds;
+    }
+
+    public List<String> getProtectedFlagsList() {
+	return FlagsList;
     }
 
     public boolean getEnforceAreaInsideArea() {

@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.containers.ResPlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class PlayerManager {
     private static ConcurrentHashMap<String, ResPlayer> players = new ConcurrentHashMap<String, ResPlayer>();

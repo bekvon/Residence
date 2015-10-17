@@ -255,6 +255,9 @@ public class Locale {
 	GetConfigString("Language.NoPVPZone", "No PVP zone.", writer, conf, true);
 	GetConfigString("Language.FlagDeny", "You dont have %1 permission<s> here.", writer, conf, true);
 	GetConfigString("Language.FlagSetDeny", "Owner does not have access to flag %1", writer, conf, true);
+	
+	GetConfigString("Language.FlagChangeDeny", "&cYou cant change &e%1 &cflag state while there is &e%2 &cplayer(s) inside.", writer, conf, true);
+	
 	GetConfigString("Language.SelectPoint", "Placed %1 Selection Point", writer, conf, true);
 	GetConfigString("Language.ResidenceMoveDeny", "You dont have movement permission for Residence %1", writer, conf, true);
 	GetConfigString("Language.ResidenceFlagDeny", "You dont have %1 permission for Residence %2", writer, conf, true);
