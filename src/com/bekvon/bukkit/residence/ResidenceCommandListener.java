@@ -32,12 +32,14 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
+import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class ResidenceCommandListener extends Residence {
 
     public static HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
+    public static HashMap<String, Long> rtMap = new HashMap<String, Long>();
     public static List<String> teleportDelayMap = new ArrayList<String>();
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -712,6 +714,46 @@ public class ResidenceCommandListener extends Residence {
 		return true;
 	    }
 	    res.tpToResidence(player, player, resadmin);
+	    return true;
+	}
+
+	if (cmd.equals("rt")) {
+	    if (args.length != 1) {
+		return false;
+	    }
+
+	    int sec = 5;
+	    if (rtMap.containsKey(player.getName()) && !resadmin) {
+		if (rtMap.get(player.getName()) + (sec * 1000) > System.currentTimeMillis()) {
+		    int left = (int) (sec - ((System.currentTimeMillis() - rtMap.get(player.getName())) / 1000));
+		    player.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.RandomTeleport.TpLimit").replace("%1", String.valueOf(left)));
+		    return true;
+		}
+	    }
+
+	    if (!player.hasPermission("residence.randomtp") && !resadmin) {
+		player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		return true;
+	    }
+
+	    Location loc = RandomTp.getRandomlocation();
+	    rtMap.put(pname, System.currentTimeMillis());
+
+	    if (loc == null) {
+		player.sendMessage(NewLanguage.getMessage("Language.RandomTeleport.IncorrectLocation").replace("%1", String.valueOf(sec)));
+		return true;
+	    }
+
+	    if (Residence.getConfigManager().getTeleportDelay() > 0 && !resadmin) {
+		player.sendMessage(ChatColor.GREEN + NewLanguage.getMessage("Language.RandomTeleport.TeleportStarted").replace("%1", String.valueOf(loc.getX()))
+		    .replace("%2", String.valueOf(loc.getY())).replace("%3", String.valueOf(loc.getZ())).replace("%4", String.valueOf(Residence.getConfigManager().getTeleportDelay())));
+		ResidenceCommandListener.teleportDelayMap.add(player.getName());
+	    }
+
+	    if (!resadmin)
+		RandomTp.performDelaydTp(loc, player);
+	    else
+		RandomTp.performInstantTp(loc, player);
 	    return true;
 	}
 

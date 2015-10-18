@@ -62,6 +62,7 @@ Global:
         night: true
         chat: true
         hidden: false
+        overridepvp: false
     # This sets GUI items to represent each flag, if not given, then gray wool will be used
     FlagGui:
         animalkilling: 

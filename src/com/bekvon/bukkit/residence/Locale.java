@@ -95,7 +95,7 @@ public class Locale {
 	    writer, conf, true);
 	GetConfigString("Language.InvalidResidence", "Invalid Residence...", writer, conf, true);
 	GetConfigString("Language.InvalidSubzone", "Invalid Subzone...", writer, conf, true);
-	GetConfigString("Language.InvalidDirection", "Invalid Direction...", writer, conf, true);		
+	GetConfigString("Language.InvalidDirection", "Invalid Direction...", writer, conf, true);
 	GetConfigString("Language.InvalidAmount", "Invalid Amount...", writer, conf, true);
 	GetConfigString("Language.InvalidCost", "Invalid Cost...", writer, conf, true);
 	GetConfigString("Language.InvalidDays", "Invalid number of days...", writer, conf, true);
@@ -255,9 +255,9 @@ public class Locale {
 	GetConfigString("Language.NoPVPZone", "No PVP zone.", writer, conf, true);
 	GetConfigString("Language.FlagDeny", "You dont have %1 permission<s> here.", writer, conf, true);
 	GetConfigString("Language.FlagSetDeny", "Owner does not have access to flag %1", writer, conf, true);
-	
+
 	GetConfigString("Language.FlagChangeDeny", "&cYou cant change &e%1 &cflag state while there is &e%2 &cplayer(s) inside.", writer, conf, true);
-	
+
 	GetConfigString("Language.SelectPoint", "Placed %1 Selection Point", writer, conf, true);
 	GetConfigString("Language.ResidenceMoveDeny", "You dont have movement permission for Residence %1", writer, conf, true);
 	GetConfigString("Language.ResidenceFlagDeny", "You dont have %1 permission for Residence %2", writer, conf, true);
@@ -391,7 +391,7 @@ public class Locale {
 
 	GetConfigString("Language.Chat.ChatChannelChange", "Changed residence chat channel to %1", writer, conf, true);
 	GetConfigString("Language.Chat.ChatChannelLeave", "Left residence chat", writer, conf, true);
-	
+
 	GetConfigString("Language.Chat.JoinFirst", "&4Join residence chat channel first...", writer, conf, true);
 	GetConfigString("Language.Chat.InvalidChannel", "&4Invalid Channel...", writer, conf, true);
 	GetConfigString("Language.Chat.InvalidColor", "&4Incorrect color code", writer, conf, true);
@@ -400,7 +400,12 @@ public class Locale {
 	GetConfigString("Language.Chat.InvalidPrefixLength", "&4Prefix is to long. Allowed length: %1", writer, conf, true);
 	GetConfigString("Language.Chat.ChangedColor", "&eResidence chat channel color changed to %1", writer, conf, true);
 	GetConfigString("Language.Chat.ChangedPrefix", "&eResidence chat channel prefix changed to %1", writer, conf, true);
-	
+
+	GetConfigString("Language.RandomTeleport.TpLimit", "&eYou can't teleport so fast, please wait &6%1 &esec and try again", writer, conf, true);
+	GetConfigString("Language.RandomTeleport.TeleportSuccess", "&eTeleported to X:&6%1&e, Y:&6%2&e, Z:&6%3 &elocation", writer, conf, true);
+	GetConfigString("Language.RandomTeleport.IncorrectLocation", "&6Could not find correct teleport location, please wait &e%1 &6sec and try again.", writer, conf,
+	    true);
+	GetConfigString("Language.RandomTeleport.TeleportStarted", "&eTeleportation started, don't move for next &6%4 &esec.", writer, conf, true);
 
 	writer.addComment("CommandHelp", "");
 
@@ -536,8 +541,11 @@ public class Locale {
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tp.Description", "Teleport to a residence", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tp.Info",
 	    Arrays.asList("Usage: /res tp [residence]", "Teleports you to a residence, you must have +tp flag access or be the owner.",
-		"Your permission group must also be allowed to teleport by the server admin."),
-	    writer, conf, true);
+		"Your permission group must also be allowed to teleport by the server admin."), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.rt.Description", "Teleports to random location in world", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.rt.Info",
+	    Arrays.asList("Usage: /res rt", "Teleports you to random location in defined world."), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Description", "Ignore unsafe teleportation warning and teleport anyways", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Info",
@@ -683,7 +691,7 @@ public class Locale {
 	    Arrays.asList("Usage: /res kick <player>", "You must be the owner or an admin to do this.",
 		"Player should be online."),
 	    writer, conf, true);
-	
+
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.mirror.Description", "Mirrors Flags", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.mirror.Info",
 	    Arrays.asList("Usage: /res mirror [Source Residence] [Target Residence]",

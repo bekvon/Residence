@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.9.5.0
+version: 2.9.6.0
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -73,4 +73,7 @@ permissions:
     default: true
   residence.compass:
     description: Allows to set compass pointer to residence
+    default: true
+  residence.randomtp:
+    description: Allows to use /res rt command
     default: true

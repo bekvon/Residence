@@ -6,6 +6,7 @@ package com.bekvon.bukkit.residence;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ParticleEffects;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -116,6 +118,12 @@ public class ConfigManager {
     protected List<String> BlockFallWorlds;
     protected List<String> CleanWorlds;
     protected List<String> FlagsList;
+
+    protected Location rtCenter;
+    protected int rtMaxCoord;
+    protected int rtMinCoord;
+    protected int rtCooldown;
+    protected int rtMaxTries;
 
     protected ItemStack GuiTrue;
     protected ItemStack GuiFalse;
@@ -257,6 +265,31 @@ public class ConfigManager {
 
 	writer.addComment("Global.Tp.TeleportDelay", "The interval, in seconds, for teleportation.", "Use 0 to disable");
 	TeleportDelay = GetConfigInt("Global.Tp.TeleportDelay", 3, writer, conf);
+
+	writer.addComment("Global.RandomTeleportation.MaxCoord",
+	    "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
+	rtMaxCoord = GetConfigInt("Global.RandomTeleportation.MaxCoord", 1000, writer, conf);
+	writer.addComment("Global.RandomTeleportation.MinCoord",
+	    "If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
+	rtMinCoord = GetConfigInt("Global.RandomTeleportation.MinCoord", 500, writer, conf);
+
+	writer.addComment("Global.RandomTeleportation.WorldName", "World to use this function, set main residence world");
+	String rtWorld = GetConfigString("Global.RandomTeleportation.WorldName", defaultWorldName, writer, conf, false);
+
+	int rtCenterX = GetConfigInt("Global.RandomTeleportation.CenterX", 0, writer, conf);
+	int rtCenterZ = GetConfigInt("Global.RandomTeleportation.CenterZ", 0, writer, conf);
+
+	World world = Bukkit.getWorld(rtWorld);
+	rtCenter = new Location(Bukkit.getWorlds().get(0), 0, 63, 0);
+	if (world != null)
+	    rtCenter = new Location(world, rtCenterX, 63, rtCenterZ);
+
+	writer.addComment("Global.RandomTeleportation.Cooldown", "How long force player to wait before using command again.");
+	rtCooldown = GetConfigInt("Global.RandomTeleportation.Cooldown", 5, writer, conf);
+
+	writer.addComment("Global.RandomTeleportation.Cooldown", "How many times to try find correct location for teleportation.",
+	    "Keep it at low number, as player always can try again after delay");
+	rtMaxTries = GetConfigInt("Global.RandomTeleportation.MaxTries", 20, writer, conf);
 
 	writer.addComment("Global.Size.MinimalSize", "Minimal size of residence in blocks", "1000 is 10x10x10 residence size");
 	MinimalResSize = GetConfigInt("Global.Size.MinimalSize", 100, writer, conf);
@@ -905,5 +938,25 @@ public class ConfigManager {
 
     public ItemStack getGuiRemove() {
 	return GuiRemove;
+    }
+
+    public Location getrtCenter() {
+	return rtCenter;
+    }
+
+    public int getrtMaxCoord() {
+	return rtMaxCoord;
+    }
+
+    public int getrtMinCoord() {
+	return rtMinCoord;
+    }
+
+    public int getrtCooldown() {
+	return rtCooldown;
+    }
+
+    public int getrtMaxTries() {
+	return rtMaxTries;
     }
 }

@@ -33,6 +33,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Projectile;
@@ -96,7 +97,6 @@ public class ResidenceEntityListener implements Listener {
     private boolean isTamed(Entity ent) {
 	return (ent instanceof Tameable ? ((Tameable) ent).isTamed() : false);
     }
-
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(EntityDamageByEntityEvent event) {
@@ -180,7 +180,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void MonsterKilling(EntityDamageByEntityEvent event) {
-	
+
 	Entity entity = event.getEntity();
 	if (!isMonster(entity))
 	    return;
@@ -506,10 +506,10 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-	
+
 	if (event.getEntityType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event.getEntityType()))
 	    return;
-	
+
 	Entity dmgr = event.getDamager();
 
 	Player player = null;
@@ -554,13 +554,26 @@ public class ResidenceEntityListener implements Listener {
 	Entity ent = event.getEntity();
 	if (ent.hasMetadata("NPC"))
 	    return;
-	
+
 	boolean tamedAnimal = isTamed(ent);
 	ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
+
 	/* Living Entities */
 	if (event instanceof EntityDamageByEntityEvent) {
 	    EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
 	    Entity damager = attackevent.getDamager();
+
+	    if (area != null && ent instanceof Player && damager instanceof Player) {
+		if (area.getPermissions().has("overridepvp", false)) {
+		    Player player = (Player) event.getEntity();
+		    Damageable damage = player;
+		    damage.damage(event.getDamage());
+		    damage.setVelocity(damager.getLocation().getDirection());
+		    event.setCancelled(true);
+		    return;
+		}
+	    }
+
 	    ClaimedResidence srcarea = null;
 	    if (damager != null) {
 		srcarea = Residence.getResidenceManager().getByLoc(damager.getLocation());

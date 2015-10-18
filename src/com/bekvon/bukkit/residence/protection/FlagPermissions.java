@@ -186,6 +186,9 @@ public class FlagPermissions {
 
 	// prevents from mobs entering residence
 	addResidenceOnlyFlag("nomobs");
+	
+	// Players will suffer damage even if another plugin tries to block it
+	addResidenceOnlyFlag("overridepvp");
 
 	addPlayerOrGroupOnlyFlag("admin");
 	addFlagToFlagGroup("redstone", "note");

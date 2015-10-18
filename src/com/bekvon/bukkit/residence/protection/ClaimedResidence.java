@@ -843,7 +843,7 @@ public class ClaimedResidence {
 	}
     }
 
-    private void performDelaydTp(final Location targloc, final Player targetPlayer, Player reqPlayer, final boolean near) {
+    public void performDelaydTp(final Location targloc, final Player targetPlayer, Player reqPlayer, final boolean near) {
 	ResidenceTPEvent tpevent = new ResidenceTPEvent(this, targloc, targetPlayer, reqPlayer);
 	Residence.getServ().getPluginManager().callEvent(tpevent);
 	if (!tpevent.isCancelled()) {
