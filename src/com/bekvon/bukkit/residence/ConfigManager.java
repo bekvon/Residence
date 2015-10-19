@@ -287,7 +287,7 @@ public class ConfigManager {
 	writer.addComment("Global.RandomTeleportation.Cooldown", "How long force player to wait before using command again.");
 	rtCooldown = GetConfigInt("Global.RandomTeleportation.Cooldown", 5, writer, conf);
 
-	writer.addComment("Global.RandomTeleportation.Cooldown", "How many times to try find correct location for teleportation.",
+	writer.addComment("Global.RandomTeleportation.MaxTries", "How many times to try find correct location for teleportation.",
 	    "Keep it at low number, as player always can try again after delay");
 	rtMaxTries = GetConfigInt("Global.RandomTeleportation.MaxTries", 20, writer, conf);
 

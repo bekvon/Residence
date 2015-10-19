@@ -722,7 +722,7 @@ public class ResidenceCommandListener extends Residence {
 		return false;
 	    }
 
-	    int sec = 5;
+	    int sec = Residence.getConfigManager().getrtCooldown();
 	    if (rtMap.containsKey(player.getName()) && !resadmin) {
 		if (rtMap.get(player.getName()) + (sec * 1000) > System.currentTimeMillis()) {
 		    int left = (int) (sec - ((System.currentTimeMillis() - rtMap.get(player.getName())) / 1000));
