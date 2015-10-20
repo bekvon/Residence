@@ -55,12 +55,17 @@ public class PermissionManager {
 
     public PermissionGroup getGroup(Player player) {
 	PermissionGroup group = PlayerManager.getGroup(player.getName());
-	if (group != null)
+	if (group != null) {
 	    return group;
+	}
 	return groups.get(this.getGroupNameByPlayer(player));
     }
 
     public PermissionGroup getGroup(String player, String world) {
+	PermissionGroup group = PlayerManager.getGroup(player);
+	if (group != null) {
+	    return group;
+	}
 	return groups.get(this.getGroupNameByPlayer(player, world));
     }
 
@@ -102,13 +107,13 @@ public class PermissionManager {
     }
 
     public String getPermissionsGroup(Player player) {
-	return this.getPermissionsGroup(player.getName(), player.getWorld().getName());
+	return this.getPermissionsGroup(player.getName(), player.getWorld().getName()).toLowerCase();
     }
 
     public String getPermissionsGroup(String player, String world) {
 	if (perms == null)
-	    return Residence.getConfigManager().getDefaultGroup();
-	return perms.getPlayerGroup(player, world);
+	    return Residence.getConfigManager().getDefaultGroup().toLowerCase();
+	return perms.getPlayerGroup(player, world).toLowerCase();
     }
 
     public boolean isResidenceAdmin(Player player) {
@@ -156,7 +161,7 @@ public class PermissionManager {
     }
 
     private void readConfig(FileConfiguration config, FileConfiguration flags) {
-	String defaultGroup = Residence.getConfigManager().getDefaultGroup();
+	String defaultGroup = Residence.getConfigManager().getDefaultGroup().toLowerCase();
 	globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", flags.getConfigurationSection("Global"));
 	ConfigurationSection nodes = config.getConfigurationSection("Groups");
 	if (nodes != null) {

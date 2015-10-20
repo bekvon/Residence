@@ -564,7 +564,7 @@ public class ResidenceEntityListener implements Listener {
 	    Entity damager = attackevent.getDamager();
 
 	    if (area != null && ent instanceof Player && damager instanceof Player) {
-		if (area.getPermissions().has("overridepvp", false)) {
+		if (area.getPermissions().has("overridepvp", false) || Residence.getConfigManager().isOverridePvp() && area.getPermissions().has("pvp", false)) {
 		    Player player = (Player) event.getEntity();
 		    Damageable damage = player;
 		    damage.damage(event.getDamage());

@@ -46,6 +46,7 @@ public class ConfigManager {
     protected boolean AutoCleanUp;
     protected boolean UseClean;
     protected boolean PvPFlagPrevent;
+    protected boolean OverridePvp;
     protected int infoToolId;
     protected int AutoCleanUpDays;
     protected int selectionToolId;
@@ -258,6 +259,9 @@ public class ConfigManager {
 	writer.addComment("Global.Optimizations.MaxSubzoneCount", "Set this as low as posible depending of residence.max.subzones.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
 	MaxSubzonesCount = GetConfigInt("Global.Optimizations.MaxSubzoneCount", 5, writer, conf);
+	writer.addComment("Global.Optimizations.OverridePvp", "By setting this to true, regular pvp flag will be acting as overridepvp flag",
+	    "Overridepvp flag tries to ignore any pvp protection in that residence by any other plugin");
+	OverridePvp = GetConfigBoolean("Global.Optimizations.OverridePvp", false, writer, conf);
 
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
@@ -710,6 +714,10 @@ public class ConfigManager {
 
     public boolean isPvPFlagPrevent() {
 	return PvPFlagPrevent;
+    }
+
+    public boolean isOverridePvp() {
+	return OverridePvp;
     }
 
     public int getInfoToolID() {

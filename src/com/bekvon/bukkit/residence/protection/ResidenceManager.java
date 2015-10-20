@@ -33,6 +33,7 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -136,7 +137,6 @@ public class ResidenceManager {
     }
 
     public boolean addResidence(Player player, String owner, String name, Location loc1, Location loc2, boolean resadmin) {
-
 	if (!Residence.validName(name)) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));

@@ -746,7 +746,8 @@ public class ResidenceCommandListener extends Residence {
 
 	    if (Residence.getConfigManager().getTeleportDelay() > 0 && !resadmin) {
 		player.sendMessage(ChatColor.GREEN + NewLanguage.getMessage("Language.RandomTeleport.TeleportStarted").replace("%1", String.valueOf(loc.getX()))
-		    .replace("%2", String.valueOf(loc.getY())).replace("%3", String.valueOf(loc.getZ())).replace("%4", String.valueOf(Residence.getConfigManager().getTeleportDelay())));
+		    .replace("%2", String.valueOf(loc.getY())).replace("%3", String.valueOf(loc.getZ())).replace("%4", String.valueOf(Residence.getConfigManager()
+			.getTeleportDelay())));
 		ResidenceCommandListener.teleportDelayMap.add(player.getName());
 	    }
 

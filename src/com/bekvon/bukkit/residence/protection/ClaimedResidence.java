@@ -192,6 +192,7 @@ public class ClaimedResidence {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		return false;
 	    }
+
 	    if (areas.size() >= group.getMaxPhysicalPerResidence()) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaMaxPhysical"));
 		return false;
@@ -990,8 +991,8 @@ public class ClaimedResidence {
 	}
 
 	if (root.containsKey("ChatPrefix"))
-	    res.ChatPrefix = (String) root.get("ChatPrefix");	
-	
+	    res.ChatPrefix = (String) root.get("ChatPrefix");
+
 	if (root.containsKey("ChannelColor"))
 	    res.ChannelColor = ChatColor.valueOf((String) root.get("ChannelColor"));
 	else {
@@ -1100,7 +1101,7 @@ public class ClaimedResidence {
 	this.ChatPrefix = ChatPrefix;
     }
 
-    public String getChatPrefix() {	
+    public String getChatPrefix() {
 	return this.ChatPrefix == null ? "" : this.ChatPrefix;
     }
 
