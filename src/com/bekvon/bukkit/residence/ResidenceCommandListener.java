@@ -491,6 +491,28 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    return false;
 	}
+	if (cmd.equals("padd")) {
+	    if (args.length == 2) {
+		Bukkit.dispatchCommand(player, "res pset " + args[1] + " trusted true");
+		return true;
+	    }
+	    if (args.length == 3) {
+		Bukkit.dispatchCommand(player, "res pset " + args[1] + " " + args[2] + " trusted true");
+		return true;
+	    }
+	    return false;
+	}
+	if (cmd.equals("pdel")) {
+	    if (args.length == 2) {
+		Bukkit.dispatchCommand(player, "res pset " + args[1] + " trusted remove");
+		return true;
+	    }
+	    if (args.length == 3) {
+		Bukkit.dispatchCommand(player, "res pset " + args[1] + " " + args[2] + " trusted remove");
+		return true;
+	    }
+	    return false;
+	}
 	if (cmd.equals("check")) {
 	    if (args.length == 3 || args.length == 4) {
 		if (args.length == 4) {

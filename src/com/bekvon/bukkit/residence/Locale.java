@@ -472,11 +472,22 @@ public class Locale {
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.remove.Description", "Remove residences.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.remove.Info", Arrays.asList("Usage: /res remove <residence name>"), writer, conf, true);
+	
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.padd.Description", "Add player to residence.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.padd.Info", Arrays.asList("Usage: /res padd <residence name> [player]",
+	    "Adds essential flags for player"), writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.removeall.Description", "Remove all residences owned by a player.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.removeall.Info", Arrays.asList("Usage: /res removeall [owner]",
-	    "Removes all residences owned by a specific player.'",
-	    "Requires /resadmin if you use it on anyone besides yourself."), writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.pdel.Description", "Remove player from residence.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.pdel.Info", Arrays.asList("Usage: /res pdel <residence name> [player]",
+	    "Removes essential flags from player"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.info.Description", "Show info on a residence.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.info.info",
+	    Arrays.asList("Usage: /res info <residence>", "Leave off <residence> to display info for the residence your currently in."), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.limits.Description", "Show your limits.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.limits.info",
+	    Arrays.asList("Usage: /res limits", "Shows the limitations you have on creating and managing residences."), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.confirm.Description", "Confirms removal of a residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.confirm.info", Arrays.asList("Usage: /res confirm", "Confirms removal of a residence."), writer, conf,
@@ -509,14 +520,6 @@ public class Locale {
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Description", "Replace physical areas in a residence", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Info", Arrays.asList("Usage: /res area replace [residence] [areaID]",
 	    "You must first select two points first.", "Replacing a area will charge the difference in size if the new area is bigger."), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.info.Description", "Show info on a residence.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.info.info",
-	    Arrays.asList("Usage: /res info <residence>", "Leave off <residence> to display info for the residence your currently in."), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.limits.Description", "Show your limits.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.limits.info",
-	    Arrays.asList("Usage: /res limits", "Shows the limitations you have on creating and managing residences."), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.message.Description", "Manage residence enter / leave messages", writer, conf, true);
 	GetConfigArray(
@@ -579,6 +582,11 @@ public class Locale {
 		"Blacklisting a material prevents it from being placed in the residence.",
 		"Ignorelist causes a specific material to not be protected by Residence."),
 	    writer, conf, true);
+	
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.removeall.Description", "Remove all residences owned by a player.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.removeall.Info", Arrays.asList("Usage: /res removeall [owner]",
+	    "Removes all residences owned by a specific player.'",
+	    "Requires /resadmin if you use it on anyone besides yourself."), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.flags.Description", "List of flags", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.flags.Info",

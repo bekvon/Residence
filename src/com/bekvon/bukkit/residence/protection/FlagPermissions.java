@@ -215,6 +215,7 @@ public class FlagPermissions {
 	addFlagToFlagGroup("trusted", "animalkilling");
 	addFlagToFlagGroup("trusted", "mobkilling");
 	addFlagToFlagGroup("trusted", "shear");
+	addFlagToFlagGroup("trusted", "chat");
 	addFlagToFlagGroup("fire", "ignite");
 	addFlagToFlagGroup("fire", "firespread");
 	addMaterialToUseFlag(Material.DIODE, "diode");
