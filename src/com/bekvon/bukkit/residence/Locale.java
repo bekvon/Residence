@@ -133,6 +133,7 @@ public class Locale {
 	GetConfigString("Language.AreaHighLimit", "You cannot protect this high up, your limit is %1", writer, conf, true);
 	GetConfigString("Language.AreaLowLimit", "You cannot protect this deep, your limit is %1", writer, conf, true);
 	GetConfigString("Language.NotInResidence", "You are not in a Residence.", writer, conf, true);
+	GetConfigString("Language.PlayerNotInResidence", "Player standing not in your Residence area.", writer, conf, true);
 	GetConfigString("Language.Kicked", "You were kicked from residence", writer, conf, true);
 	GetConfigString("Language.InResidence", "You are standing in Residence %1", writer, conf, true);
 	GetConfigString("Language.ResidenceOwnerChange", "Residence %1 owner changed to %2", writer, conf, true);

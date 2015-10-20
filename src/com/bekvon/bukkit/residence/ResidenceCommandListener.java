@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bekvon.bukkit.residence;
 
 import java.util.logging.Level;
@@ -634,13 +630,19 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    ClaimedResidence res = rmanager.getByLoc(targetplayer.getLocation());
 
-	    if (res == null) {
-		player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
+	    if (res == null || res != null && !res.getOwner().equals(player.getName()) && !resadmin) {
+		player.sendMessage(ChatColor.RED + language.getPhrase("PlayerNotInResidence"));
 		return true;
 	    }
+
 	    if (res.getOwner().equals(player.getName())) {
 		if (res.getPlayersInResidence().contains(targetplayer)) {
-		    targetplayer.teleport(res.getOutsideFreeLoc(player.getLocation()));
+
+		    Location loc = Residence.getConfigManager().getKickLocation();
+		    if (loc != null)
+			targetplayer.teleport(loc);
+		    else
+			targetplayer.teleport(res.getOutsideFreeLoc(player.getLocation()));
 		    targetplayer.sendMessage(ChatColor.RED + language.getPhrase("Kicked") + "!");
 		}
 	    }

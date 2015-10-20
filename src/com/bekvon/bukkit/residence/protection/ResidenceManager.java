@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
@@ -33,7 +28,6 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -486,26 +480,60 @@ public class ResidenceManager {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidResidence"));
 	    return;
 	}
+	player.sendMessage(ChatColor.GOLD + "**********************************************************");
+
 	ResidencePermissions perms = res.getPermissions();
+
+	String aid = res.getAreaIDbyLoc(player.getLocation());
 	if (Residence.getConfigManager().enableEconomy()) {
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Residence") + ":" + ChatColor.DARK_GREEN + " " + areaname + " " + ChatColor.YELLOW
-		+ "Bank: " + ChatColor.GOLD + res.getBank().getStoredMoney());
+
+	    String msg = ChatColor.YELLOW + Residence.getLanguage().getPhrase("Residence") + ":" + ChatColor.DARK_GREEN + " " + areaname + " ";
+
+	    if (Residence.getConfigManager().enabledRentSystem() && Residence.getRentManager().isRented(areaname)) {
+		msg += ChatColor.YELLOW + Residence.getLanguage().getPhrase("Owner") + ":" + ChatColor.RED + " " + perms.getOwner() + ChatColor.YELLOW
+		    + " Rented by: " + ChatColor.RED + Residence.getRentManager().getRentingPlayer(areaname);
+	    } else {
+		msg += " " + ChatColor.YELLOW + Residence.getLanguage().getPhrase("Owner") + ":" + ChatColor.RED + " " + perms.getOwner() + ChatColor.YELLOW;
+	    }
+
+	    msg += ChatColor.YELLOW + " Bank: " + ChatColor.GOLD + res.getBank().getStoredMoney();
+
+	    player.sendMessage(msg);
 	} else {
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Residence") + ":" + ChatColor.DARK_GREEN + " " + areaname);
 	}
-	if (Residence.getConfigManager().enabledRentSystem() && Residence.getRentManager().isRented(areaname)) {
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Owner") + ":" + ChatColor.RED + " " + perms.getOwner() + ChatColor.YELLOW
-		+ " Rented by: " + ChatColor.RED + Residence.getRentManager().getRentingPlayer(areaname));
-	} else {
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Owner") + ":" + ChatColor.RED + " " + perms.getOwner() + ChatColor.YELLOW + " - "
-		+ Residence.getLanguage().getPhrase("World") + ": " + ChatColor.RED + perms.getWorld());
+
+	String msg = ChatColor.YELLOW + Residence.getLanguage().getPhrase("World") + ": " + ChatColor.RED + perms.getWorld();
+
+	if (aid != null) {
+
+	    msg += ChatColor.YELLOW + " (" + ChatColor.DARK_AQUA;
+	    CuboidArea area = res.getAreaByLoc(player.getLocation());
+
+	    msg += Residence.getLanguage().getPhrase("CoordsTop", area.getHighLoc().getBlockX() + "|" + area.getHighLoc().getBlockY() + "|" + area.getHighLoc()
+		.getBlockZ());
+
+	    msg += ChatColor.YELLOW + "; " + ChatColor.DARK_AQUA;
+	    msg += Residence.getLanguage().getPhrase("CoordsBottom", area.getLowLoc().getBlockX() + "|" + area.getLowLoc().getBlockY() + "|" + area.getLowLoc()
+		.getBlockZ());
+
+	    msg += ChatColor.YELLOW + ")";
 	}
+	player.sendMessage(msg);
+
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Flags") + ":" + ChatColor.BLUE + " " + perms.listFlags());
 	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Your.Flags") + ": " + ChatColor.GREEN + perms.listPlayerFlags(player.getName()));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Group.Flags") + ":" + ChatColor.RED + " " + perms.listGroupFlags());
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Others.Flags") + ":" + ChatColor.RED + " " + perms.listOtherPlayersFlags(player
-	    .getName()));
-	String aid = res.getAreaIDbyLoc(player.getLocation());
+
+	String groupFlags = perms.listGroupFlags();
+	if (groupFlags.length() > 0)
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Group.Flags") + ":" + ChatColor.RED + " " + groupFlags);
+	if (!Residence.getConfigManager().isShortInfoUse())
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Others.Flags") + ":" + ChatColor.RED + " " + perms.listOtherPlayersFlags(player
+		.getName()));
+	else {
+	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + perms.listOtherPlayersFlagsRaw(ChatColor.YELLOW + Residence
+		.getLanguage().getPhrase("Others.Flags") + ": ", player.getName()));
+	}
 	if (aid != null) {
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("CurrentArea") + ": " + ChatColor.GOLD + aid);
 	}
@@ -516,19 +544,11 @@ public class ResidenceManager {
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TotalWorth", String.valueOf((int) ((res.getTotalSize() * group.getCostPerBlock())
 		* 100) / 100.0) + "|" + String.valueOf((int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0)));
 	}
-
-	if (aid != null) {
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("CoordsT") + ": " + ChatColor.LIGHT_PURPLE + Residence.getLanguage().getPhrase(
-		"CoordsTop", res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockX() + "|" + res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockY() + "|"
-		    + res.getAreaByLoc(player.getLocation()).getHighLoc().getBlockZ()));
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("CoordsB") + ": " + ChatColor.LIGHT_PURPLE + Residence.getLanguage().getPhrase(
-		"CoordsBottom", res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockX() + "|" + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockY()
-		    + "|" + res.getAreaByLoc(player.getLocation()).getLowLoc().getBlockZ()));
-	}
 	if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LeaseExpire") + ":" + ChatColor.GREEN + " " + Residence.getLeaseManager()
 		.getExpireTime(areaname));
 	}
+	player.sendMessage(ChatColor.GOLD + "**********************************************************");
     }
 
     public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea, boolean resadmin) {

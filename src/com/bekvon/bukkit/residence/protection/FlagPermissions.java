@@ -150,7 +150,7 @@ public class FlagPermissions {
 	addFlag("nofly");
 
 	addFlag("command");
-	
+
 	addFlag("chat");
 
 	addResidenceOnlyFlag("trample");
@@ -180,13 +180,13 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("spread");
 	addResidenceOnlyFlag("hidden");
 	addResidenceOnlyFlag("witherdamage");
-	
+
 	addResidenceOnlyFlag("day");
 	addResidenceOnlyFlag("night");
 
 	// prevents from mobs entering residence
 	addResidenceOnlyFlag("nomobs");
-	
+
 	// Players will suffer damage even if another plugin tries to block it
 	addResidenceOnlyFlag("overridepvp");
 
@@ -218,7 +218,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.WOODEN_DOOR, "door");
 
 	Residence.getNms().addDefaultFlags(matUseFlagList);
-	
+
 	addMaterialToUseFlag(Material.FENCE_GATE, "door");
 	addMaterialToUseFlag(Material.NETHER_FENCE, "door");
 	addMaterialToUseFlag(Material.TRAP_DOOR, "door");
@@ -603,12 +603,12 @@ public class FlagPermissions {
 	    while (it.hasNext()) {
 		Entry<String, Boolean> next = it.next();
 		if (next.getValue()) {
-		    sbuild.append("+").append(next.getKey());
+		    sbuild.append("&2").append("+").append(next.getKey());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append("-").append(next.getKey());
+		    sbuild.append("&3").append("-").append(next.getKey());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -618,7 +618,7 @@ public class FlagPermissions {
 	if (sbuild.length() == 0) {
 	    sbuild.append("none");
 	}
-	return sbuild.toString();
+	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
     }
 
     public Map<String, Boolean> getFlags() {
@@ -650,12 +650,12 @@ public class FlagPermissions {
 	    while (it.hasNext()) {
 		Entry<String, Boolean> next = it.next();
 		if (next.getValue()) {
-		    sbuild.append("+").append(next.getKey());
+		    sbuild.append("&2").append("+").append(next.getKey());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append("-").append(next.getKey());
+		    sbuild.append("&3").append("-").append(next.getKey());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -665,7 +665,7 @@ public class FlagPermissions {
 	if (sbuild.length() == 0) {
 	    sbuild.append("none");
 	}
-	return sbuild.toString();
+	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
     }
 
     public String listOtherPlayersFlags(String player) {
@@ -697,6 +697,68 @@ public class FlagPermissions {
 	return sbuild.toString();
     }
 
+    public String listOtherPlayersFlagsRaw(String text, String player) {
+	player = player.toLowerCase();
+	String uuids = Residence.getPlayerUUIDString(player);
+	StringBuilder sbuild = new StringBuilder();
+
+	sbuild.append("[\"\",");
+	sbuild.append("{\"text\":\"" + text + "\"}");
+	
+	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
+	synchronized (set) {
+	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
+	    boolean random = true;
+	    while (it.hasNext()) {
+		Entry<String, Map<String, Boolean>> nextEnt = it.next();
+		String next = nextEnt.getKey();
+		if (!next.equals(player) && !next.equals(uuids)) {
+		    String perms = printPlayerFlags(nextEnt.getValue());
+		    if (next.length() == 36) {
+			String resolvedName = Residence.getPlayerName(next);
+			if (resolvedName != null) {
+			    this.cachedPlayerNameUUIDs.put(next, resolvedName);
+			    next = resolvedName;
+			} else if (this.cachedPlayerNameUUIDs.containsKey(next))
+			    next = this.cachedPlayerNameUUIDs.get(next);
+		    }
+		    if (!perms.equals("none")) {
+			    sbuild.append(",");
+
+			if (random) {
+			    random = false;
+			    next = "&2" + next + "&r";
+			} else {
+			    random = true;
+			    next = "&3" + next + "&r";
+			}
+			sbuild.append(ConvertToRaw(next, perms));
+		    }
+		}
+	    }
+	}
+
+	sbuild.append("]");
+	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
+    }
+
+    protected String ConvertToRaw(String playerName, String perms) {
+	if (perms.contains(" ")) {
+	    String[] splited = perms.split(" ");
+	    int i = 0;
+	    perms = "";
+	    for (String one : splited) {
+		i++;
+		perms += one + " ";
+		if (i >= 5) {
+		    i = 0;
+		    perms += "\n";
+		}
+	    }
+	}
+	return "{\"text\":\"[" + playerName + "]\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + perms + "\"}]}}}";
+    }
+
     public String listGroupFlags() {
 	StringBuilder sbuild = new StringBuilder();
 	Set<String> set = groupFlags.keySet();
@@ -706,7 +768,13 @@ public class FlagPermissions {
 		String next = it.next();
 		String perms = listGroupFlags(next);
 		if (!perms.equals("none")) {
-		    sbuild.append(next).append("[").append(ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED).append("] ");
+		    sbuild
+			.append(next)
+			.append("[")
+			.append(ChatColor.DARK_AQUA)
+			.append(perms)
+			.append(ChatColor.RED)
+			.append("] ");
 		}
 	    }
 	}
@@ -724,12 +792,12 @@ public class FlagPermissions {
 		while (it.hasNext()) {
 		    Entry<String, Boolean> next = it.next();
 		    if (next.getValue()) {
-			sbuild.append("+").append(next.getKey());
+			sbuild.append("&2").append("+").append(next.getKey());
 			if (it.hasNext()) {
 			    sbuild.append(" ");
 			}
 		    } else {
-			sbuild.append("-").append(next.getKey());
+			sbuild.append("&3").append("-").append(next.getKey());
 			if (it.hasNext()) {
 			    sbuild.append(" ");
 			}
@@ -740,7 +808,7 @@ public class FlagPermissions {
 		groupFlags.remove(group);
 		sbuild.append("none");
 	    }
-	    return sbuild.toString();
+	    return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
 	} else {
 	    return "none";
 	}

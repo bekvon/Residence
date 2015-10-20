@@ -55,6 +55,7 @@ public class ConfigManager {
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
     protected boolean leaseAutoRenew;
+    protected boolean ShortInfoUse;
     protected int rentCheckInterval;
     protected int chatPrefixLength;
     protected int leaseCheckInterval;
@@ -119,6 +120,8 @@ public class ConfigManager {
     protected List<String> BlockFallWorlds;
     protected List<String> CleanWorlds;
     protected List<String> FlagsList;
+
+    protected Location KickLocation;
 
     protected Location rtCenter;
     protected int rtMaxCoord;
@@ -263,6 +266,31 @@ public class ConfigManager {
 	    "Overridepvp flag tries to ignore any pvp protection in that residence by any other plugin");
 	OverridePvp = GetConfigBoolean("Global.Optimizations.OverridePvp", false, writer, conf);
 
+	// residence kick location
+	writer.addComment("Global.Optimizations.KickLocation.Use",
+	    "By setting this to true, when player kicks another player from residence, he will be teleported to this location instead of getting outside residence");
+	Boolean UseKick = GetConfigBoolean("Global.Optimizations.KickLocation.Use", false, writer, conf);
+	String KickLocationWorld = GetConfigString("Global.Optimizations.KickLocation.World", defaultWorldName, writer, conf, false);
+	Double KickLocationX = GetConfigDouble("Global.Optimizations.KickLocation.X", 0.5, writer, conf);
+	Double KickLocationY = GetConfigDouble("Global.Optimizations.KickLocation.Y", 63.0, writer, conf);
+	Double KickLocationZ = GetConfigDouble("Global.Optimizations.KickLocation.Z", 0.5, writer, conf);
+	writer.addComment("Global.Optimizations.KickLocation.Pitch", "Less than 0 - head up, more than 0 - head down. Range from -90 to 90");
+	Double KickPitch = GetConfigDouble("Global.Optimizations.KickLocation.Pitch", 0.0, writer, conf);
+	writer.addComment("Global.Optimizations.KickLocation.Yaw", "Head position to left and right. Range from -180 to 180");
+	Double KickYaw = GetConfigDouble("Global.Optimizations.KickLocation.Yaw", 0.0, writer, conf);
+	if (UseKick) {
+	    World world = Bukkit.getWorld(KickLocationWorld);
+	    if (world != null) {
+		KickLocation = new Location(world, KickLocationX, KickLocationY, KickLocationZ);
+		KickLocation.setPitch(KickPitch.floatValue());
+		KickLocation.setYaw(KickYaw.floatValue());
+	    }
+	}
+
+	writer.addComment("Global.Optimizations.ShortInfo.Use",
+	    "By setting this to true, when checking residence info with /res info, you will get only names in list, by hovering on them, you will get flag list");
+	ShortInfoUse = GetConfigBoolean("Global.Optimizations.ShortInfo.Use", false, writer, conf);
+	
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
 	minMoveUpdate = GetConfigInt("Global.MoveCheckInterval", 500, writer, conf);
@@ -743,6 +771,10 @@ public class ConfigManager {
     public boolean autoRenewLeases() {
 	return leaseAutoRenew;
     }
+    
+    public boolean isShortInfoUse() {
+	return ShortInfoUse;
+    }
 
     public int getRentCheckInterval() {
 	return rentCheckInterval;
@@ -962,6 +994,10 @@ public class ConfigManager {
 
     public int getrtCooldown() {
 	return rtCooldown;
+    }
+
+    public Location getKickLocation() {
+	return KickLocation;
     }
 
     public int getrtMaxTries() {
