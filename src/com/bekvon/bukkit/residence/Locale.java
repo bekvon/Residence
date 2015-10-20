@@ -640,6 +640,9 @@ public class Locale {
 		"&2explode &3- &eAllows or denys explosions in residences",
 		"&2fireball &3- &eAllows or denys fire balls in residences",
 		"&2command &3- &eAllows or denys comamnd use in residences",
+		"&2overridepvp &3- &eOverrides any plugin pvp protection",
+		"&2keepinv &3- &ePlayers keeps inventory after death",
+		"&2keepexp &3- &ePlayers keeps exp after death",
 		"&2burn &3- &eallows or denys Mob combustion in residences"),
 	    writer, conf, true);
 

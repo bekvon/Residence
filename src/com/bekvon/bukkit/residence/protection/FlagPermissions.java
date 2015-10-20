@@ -190,6 +190,12 @@ public class FlagPermissions {
 	// Players will suffer damage even if another plugin tries to block it
 	addResidenceOnlyFlag("overridepvp");
 
+	// Players will keep hes inventory on death
+	addResidenceOnlyFlag("keepinv");
+	
+	// Players will keep hes exp on death
+	addResidenceOnlyFlag("keepexp");
+	
 	addPlayerOrGroupOnlyFlag("admin");
 	addFlagToFlagGroup("redstone", "note");
 	addFlagToFlagGroup("redstone", "pressure");

@@ -30,6 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -794,6 +795,25 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+	Player player = event.getEntity();
+	if (player == null)
+	    return;
+	if (player.hasMetadata("NPC"))
+	    return;
+	Location loc = player.getLocation();
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+	if (res == null)
+	    return;
+
+	if (res.getPermissions().has("keepinv", false))
+	    event.setKeepInventory(true);
+
+	if (res.getPermissions().has("keepexp", false))
+	    event.setKeepLevel(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
