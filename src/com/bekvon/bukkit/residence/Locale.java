@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -480,7 +481,7 @@ public class Locale {
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.pdel.Description", "Remove player from residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.pdel.Info", Arrays.asList("Usage: /res pdel <residence name> [player]",
 	    "Removes essential flags from player"), writer, conf, true);
-
+	
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.info.Description", "Show info on a residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.info.info",
 	    Arrays.asList("Usage: /res info <residence>", "Leave off <residence> to display info for the residence your currently in."), writer, conf, true);

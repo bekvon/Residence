@@ -503,11 +503,13 @@ public class ResidencePlayerListener implements Listener {
 		    Residence.getSelectionManager().placeLoc1(player, loc);
 		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Primary")) + ChatColor.RED
 			+ "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
+		    event.setCancelled(true);
 		} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 		    Location loc = block.getLocation();
 		    Residence.getSelectionManager().placeLoc2(player, loc);
 		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Secondary")) + ChatColor.RED
 			+ "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
+		    event.setCancelled(true);
 		}
 
 		if (Residence.getSelectionManager().hasPlacedBoth(player.getName()))
