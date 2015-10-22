@@ -521,13 +521,11 @@ public class ResidencePlayerListener implements Listener {
 	if (heldItemId == Residence.getConfigManager().getInfoToolID() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
 	    Location loc = block.getLocation();
 	    String res = Residence.getResidenceManager().getNameByLoc(loc);
-	    if (res != null) {
+	    if (res != null)
 		Residence.getResidenceManager().printAreaInfo(res, player);
-		event.setCancelled(true);
-	    } else {
-		event.setCancelled(true);
+	    else
 		player.sendMessage(Residence.getLanguage().getPhrase("NoResHere"));
-	    }
+	    event.setCancelled(true);
 	}
 
 	if (resadmin)

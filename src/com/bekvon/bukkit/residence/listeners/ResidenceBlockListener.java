@@ -144,8 +144,8 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	if (MessageInformed.contains(player.getName()))
-	    return;	
-	
+	    return;
+
 	player.sendMessage(NewLanguage.getMessage("Language.NewPlayerInfo"));
 
 	MessageInformed.add(player.getName());
@@ -178,10 +178,10 @@ public class ResidenceBlockListener implements Listener {
 	Residence.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), loc.getBlockX() + Residence.getConfigManager().getNewPlayerRangeX(), loc
 	    .getBlockY() + Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() + Residence.getConfigManager().getNewPlayerRangeZ()));
 
-	Residence.getResidenceManager().addResidence(player, player.getName(), Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
-	    .getSelectionManager().getPlayerLoc2(player.getName()), Residence.getConfigManager().isNewPlayerFree());
-
-	ResCreated.add(player.getName());
+	boolean created = Residence.getResidenceManager().addResidence(player, player.getName(), Residence.getSelectionManager().getPlayerLoc1(player.getName()),
+	    Residence.getSelectionManager().getPlayerLoc2(player.getName()), Residence.getConfigManager().isNewPlayerFree());
+	if (created)
+	    ResCreated.add(player.getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
