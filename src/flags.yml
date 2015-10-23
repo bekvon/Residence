@@ -1,0 +1,274 @@
+#These are Global Settings for Residence.
+Global:
+    # These are world flags that are applied when the player is NOT within a residence.
+    Flags:
+        Global: #these are default for all worlds unless specified below, they can be overridden per group
+            use: true
+            build: true
+            ignite: true
+            firespread: true
+            damage: true
+            creeper: true
+            tnt: true
+            pvp: true
+        WorldNameHere: #here you can set flags for individual worlds, these override Global
+            #build: true
+    # This gives permission to change certain flags to all groups, unless specifically denied to the group.
+    FlagPermission:
+        move: true
+        build: true
+        place: true
+        destroy: true
+        use: true
+        container: true
+        pvp: true
+        tp: true
+        ignite: true
+        firespread: true
+        bucket: true
+        flow: true
+        lavaflow: true
+        waterflow: true
+        creeper: true
+        tnt: true
+        monsters: true
+        animals: true
+        animalkilling: true
+        mobkilling: true
+        vehicledestroy: true
+        trade: true
+        shear: true
+        leash: true
+        nofly: false
+        subzone: true
+        healing: true
+        piston: true
+        diode: true
+        lever: true
+        button: true
+        door: true
+        table: true
+        enchant: true
+        brew: true
+        bed: true
+        cake: true
+        note: true
+        trample: true
+        burn: true
+        explode: true
+        fireball: true
+        command: false
+        day: true
+        night: true
+        chat: true
+        hidden: false
+        overridepvp: false
+        keepinv: false
+        keepexp: false
+    # This sets GUI items to represent each flag, if not given, then gray wool will be used
+    FlagGui:
+        animalkilling: 
+            Id: 365
+            Data: 0
+        animals: 
+            Id: 383
+            Data: 90
+        bed:
+            Id: 355
+            Data: 0
+        brew:
+            Id: 379
+            Data: 0
+        bucket: 
+            Id: 325
+            Data: 0
+        build: 
+            Id: 45
+            Data: 0            
+        burn:
+            Id: 50
+            Data: 0
+        button: 
+            Id: 143
+            Data: 0
+        cake:
+            Id: 354
+            Data: 0
+        canimals: 
+            Id: 383
+            Data: 91
+        chat:
+            Id: 386
+            Data: 0
+        cmonsters: 
+            Id: 383
+            Data: 50
+        command:
+            Id: 137
+            Data: 0
+        container: 
+            Id: 342
+            Data: 0
+        creeper: 
+            Id: 383
+            Data: 50
+        destroy: 
+            Id: 121
+            Data: 0
+        diode: 
+            Id: 356
+            Data: 0
+        door: 
+            Id: 324
+            Data: 0
+        enchant:
+            Id: 116
+            Data: 0
+        explode:
+            Id: 407
+            Data: 0
+        fireball:
+            Id: 385
+            Data: 0
+        firespread: 
+            Id: 377
+            Data: 0
+        flow: 
+            Id: 111
+            Data: 0
+        healing: 
+            Id: 373
+            Data: 0
+        ignite: 
+            Id: 259
+            Data: 0
+        lavaflow: 
+            Id: 327
+            Data: 0
+        leash: 
+            Id: 420
+            Data: 0
+        lever: 
+            Id: 69
+            Data: 0
+        mobkilling: 
+            Id: 367
+            Data: 0
+        monsters: 
+            Id: 52
+            Data: 0
+        move: 
+            Id: 301
+            Data: 0
+        nanimals: 
+            Id: 383
+            Data: 92
+        nmonsters: 
+            Id: 383
+            Data: 51
+        nofly: 
+            Id: 171
+            Data: 1
+        nomobs: 
+            Id: 166
+            Data: 0
+        note:
+            Id: 25
+            Data: 0
+        piston: 
+            Id: 33
+            Data: 0
+        place: 
+            Id: 169
+            Data: 0
+        pvp: 
+            Id: 268
+            Data: 0
+        sanimals: 
+            Id: 383
+            Data: 101
+        shear: 
+            Id: 359
+            Data: 0
+        smonsters: 
+            Id: 383
+            Data: 54
+        subzone: 
+            Id: 160
+            Data: 7
+        table: 
+            Id: 58
+            Data: 0
+        tnt: 
+            Id: 46
+            Data: 0
+        tp: 
+            Id: 120
+            Data: 0
+        trade: 
+            Id: 388
+            Data: 0
+        trample:
+            Id: 3
+            Data: 0
+        use: 
+            Id: 70
+            Data: 0
+        vehicledestroy: 
+            Id: 328
+            Data: 0
+        waterflow: 
+            Id: 326
+            Data: 0
+    # These are default flags applied to all residences from any user group.
+    ResidenceDefault:
+        build: false
+        use: false
+        container: false
+        pvp: false
+        tnt: false
+        creeper: false
+        flow: false
+        piston: false
+        ignite: false
+        firespread: false
+        vehicledestroy: false
+        animalkilling: false
+        shear: false
+        leash: false
+        tp: false
+    # These are default flags applied to the residence creator of any group.
+    CreatorDefault:
+        build: true
+        move: true
+        use: true
+        ignite: true
+        container: true
+        animalkilling: true
+        mobkilling: true
+        vehicledestroy: true
+        trade: true
+        shear: true
+        leash: true
+     # These are default group flags applied to a residence made by a user of any group.
+    GroupDefault:
+        #default: #group name
+            #build: true
+ItemList: #this is where you can create blacklists / whitelists
+     DefaultList: #list name is not important, as long as it is unique. Its good to use a descripive name. 
+        #type of the list, can be blacklist, whitelist, or ignorelist
+        Type: blacklist
+        #If you want, you can have this list only apply to one world, otherwise it applys to all worlds
+        #World: world
+        #You can also have the list apply only to one group, otherwise it applys for all groups
+        #Group: default
+        #this is the actual list of material names that this list allows or dissallows
+        #You can look up the material name by item ID in game by typing /res material <id>
+        #Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance
+        Items: 
+           - 'BEDROCK'
+           - 'LAVA'
+           - 'WATER'
+           - 'STATIONARY_LAVA'
+           - 'STATIONARY_WATER'
+           - 'MOB_SPAWNER'

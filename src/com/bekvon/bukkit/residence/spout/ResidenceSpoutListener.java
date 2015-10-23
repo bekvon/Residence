@@ -74,7 +74,7 @@ public class ResidenceSpoutListener implements Listener {
                     if(flagval.equalsIgnoreCase("removeall"))
                         res.getPermissions().removeAllPlayerFlags(p, player, resadmin);
                     else
-                        res.getPermissions().setPlayerFlag(p, player, flag, flagval, resadmin);
+                        res.getPermissions().setPlayerFlag(p, player, flag, flagval, resadmin, true);
                 }
             }
         }

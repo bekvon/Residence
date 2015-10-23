@@ -1,56 +1,93 @@
 package com.bekvon.bukkit.residence.utils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 
 public class VersionChecker {
-	Residence plugin;
-	public VersionChecker(Residence plugin) {
-		this.plugin = plugin;
+    Residence plugin;
+    private int resource = 11480;
+    private static int cleanVersion = 0;
+
+    public VersionChecker(Residence plugin) {
+	this.plugin = plugin;
+    }
+
+    public static int GetVersion() {
+	if (cleanVersion == 0) {
+	    String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+	    // Translating version to integer for simpler use
+	    try {
+		cleanVersion = Integer.parseInt(version.replace("v", "").replace("V", "").replace("_", "").replace("r", "").replace("R", ""));
+	    } catch (NumberFormatException e) {
+		// Fail save if it for some reason can't translate version to integer
+		if (version.contains("v1_7"))
+		    cleanVersion = 1700;
+		if (version.contains("v1_6"))
+		    cleanVersion = 1600;
+		if (version.contains("v1_5"))
+		    cleanVersion = 1500;
+		if (version.contains("v1_4"))
+		    cleanVersion = 1400;
+		if (version.contains("v1_8_R1"))
+		    cleanVersion = 1810;
+		if (version.contains("v1_8_R2"))
+		    cleanVersion = 1820;
+		if (version.contains("v1_8_R3"))
+		    cleanVersion = 1830;
+	    }
+	    if (cleanVersion < 1000)
+		cleanVersion = cleanVersion * 10;
 	}
-	 
-	public void VersionCheck(final Player player) {
-		if(!Residence.getConfigManager().versionCheck()){
-			return;
-		}
-		
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            public void run() {
-            	String readURL = "https://raw.githubusercontent.com/bekvon/Residence/master/src/plugin.yml";
-    			FileConfiguration config;
-    			String currentVersion = plugin.getDescription().getVersion();
-    			try {
-    				URL url = new URL(readURL);
-    				BufferedReader br = new BufferedReader(new InputStreamReader(
-    						url.openStream()));
-    				config = YamlConfiguration.loadConfiguration(br);
-    				String newVersion = config.getString("version");
-    				br.close();
-    				if(!newVersion.equals(currentVersion)){
-    					String msg = ChatColor.GREEN + "Residence v" + newVersion + " is now available!\n" +
-								  "Your version: " + currentVersion + "\n" +
-								  "You can download new version from " + ChatColor.BLUE + plugin.getDescription().getWebsite();
-    					if(player != null){
-    						player.sendMessage(msg);
-    					} else {
-    						plugin.consoleMessage(msg);
-    					}
-    				}
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}
-            }
-        });
+	return cleanVersion;
+    }
+
+    public void VersionCheck(final Player player) {
+	if (!Residence.getConfigManager().versionCheck())
+	    return;
+
+	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+	    public void run() {
+		String currentVersion = plugin.getDescription().getVersion();
+		String newVersion = getNewVersion();
+		if (newVersion == null || newVersion.equalsIgnoreCase(currentVersion))
+		    return;
+		List<String> msg = Arrays.asList(
+		    ChatColor.GREEN + "*********************** " + plugin.getDescription().getName() + " **************************",
+		    ChatColor.GREEN + "* " + newVersion + " is now available! Your version: " + currentVersion,
+		    ChatColor.GREEN + "* " + ChatColor.DARK_GREEN + plugin.getDescription().getWebsite(),
+		    ChatColor.GREEN + "************************************************************");
+		for (String one : msg)
+		    if (player != null)
+			player.sendMessage(one);
+		    else
+			plugin.consoleMessage(one);
+	    }
+	});
+    }
+
+    public String getNewVersion() {
+	try {
+	    HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
+	    con.setDoOutput(true);
+	    con.setRequestMethod("POST");
+	    con.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resource).getBytes("UTF-8"));
+	    String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+	    if (version.length() <= 7)
+		return version;
+	} catch (Exception ex) {
+	    plugin.consoleMessage(ChatColor.RED + "Failed to check for " + plugin.getDescription().getName() + " update on spigot web page.");
 	}
+	return null;
+    }
 
 }

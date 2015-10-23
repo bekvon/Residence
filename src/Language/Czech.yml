@@ -174,14 +174,14 @@ Language:
     InvalidCharacters: Detekovany nepovolene znaky...
     InvalidNameCharacters: Jmeno obsahuje nepovolene znaky...
     #Version 15 New Fields
-    DeleteConfirm: 'Opravdu chces odstranit residenci %1 ?, pouzij "/res confirm" k potvrzeni.'
+    DeleteConfirm: 'Opravdu chces odstranit residenci %1 ?, pouzij /res confirm k potvrzeni.'
     #Version 18 New Fields
     SelectTooHigh: Upozorneni, vyber presahuje vyskovy limit mapy.
     SelectTooLow: Upozorneni, vyber presahuje hloubkoy limit mapy.
     WorldEditNotFound: WorldEdit nebyl nalezen.
     #Version 19 New Fields
     NoResHere: Zde neni zadna residence.
-    DeleteSubzoneConfirm: 'Opravdu chces odstranit subzonu %1 ?, pouzij "/res confirm" k potvrzeni.'
+    DeleteSubzoneConfirm: 'Opravdu chces odstranit subzonu %1 ?, pouzij /res confirm k potvrzeni.'
     #Version 20 New Fields
     SubzoneOwnerChange: 'Majitel subzony %1 byl zmenen na %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'

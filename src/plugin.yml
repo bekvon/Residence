@@ -1,11 +1,11 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.6.7.0
-website: http://www.spigotmc.org/resources/residence-reloaded-1-8.2697/
+version: 2.9.7.1
+website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
+softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,WorldGuard,CrackShot,My Worlds]
 contributors: [lemon42,smbarbour,inorixu,Shayana_fr]
-softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,My Worlds]
 commands:
   res:
     description: Manage Residences
@@ -24,13 +24,19 @@ commands:
     usage: §c/resload
   rc:
     description: §cChat in current residence channel.
-    usage: §c/rc to toggle, or /rc <message>
+    usage: §c/rc §eto toggle, §c/rc l §eto leave, §c/rc setprefix §eto set prefix, §c/rc setcolor §eto set color or §c/rc kick §eto kick player
   resworld:
     description: §cRemoves every residence in a world.
     usage: §c/resworld remove [world]
+  ressignconvert:
+    description: §cConverts signs from ResidenceSigns plugin.
+    usage: §c/ressignconvert
 permissions:
   residence.admin:
     description: Gives you access to /resadmin
+    default: op
+  residence.topadmin:
+    description: Gives you access to /resreload and /resload commands
     default: op
   residence.admin.tp:
     description: Allows to override tp flag
@@ -40,10 +46,34 @@ permissions:
     default: op
   residence.create:
     description: Allows you to create residences
-    default: op
+    default: true
   residence.select:
     description: Allows you to select an area to make residences
-    default: op
+    default: true
   residence.versioncheck:
     description: Notice to new version after connect
     default: op
+  residence.nofly.bypass:
+    description: Bypasses nofly flag in residence
+    default: op
+  residence.flag.command.bypass:
+    description: Bypasses command flag in residence
+    default: op
+  residence.select.auto.others:
+    description: Allows to turn on auto selection for other players
+    default: op
+  residence.chatcolor:
+    description: Allows to change residence chat color
+    default: true
+  residence.chatprefix:
+    description: Allows to change residence chat prefix
+    default: op
+  residence.chatkick:
+    description: Allows to kick players from residence chat
+    default: true
+  residence.compass:
+    description: Allows to set compass pointer to residence
+    default: true
+  residence.randomtp:
+    description: Allows to use /res rt command
+    default: true

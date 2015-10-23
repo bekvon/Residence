@@ -18,13 +18,13 @@ Language:
     InvalidCost: Prix invalide...
     InvalidDays: Nombre de jours invalide...
     InvalidMaterial: Matériau invalide...
-    InvalidBoolean: Valeur invalide, doit être "true" ou "false"
+    InvalidBoolean: Valeur invalide, doit être true ou false
     InvalidArea: Zone invalide...
     InvalidGroup: Groupe invalide...
     InvalidMessageType: Le type de message doit être enter ou remove
     InvalidList: Liste invalide...
     InvalidFlag: Flag invalide...
-    InvalidFlagState: Etat du flag invalide, doit être "true", "false", ou "remove"
+    InvalidFlagState: Etat du flag invalide, doit être true, false, ou remove
     AreaExists: Cette zone existe déjà
     AreaCreate: 'Zone créée, ID %1'
     AreaDiffWorld: La zone est dans un monde différent du lieu de résidence
@@ -74,7 +74,7 @@ Language:
     Utilisation: Utilisation de la commande
     InvalidHelp: Page d'aide invalide
     SubCommands: Sous-commandes
-    InvalidList: Type de liste inconnu, doit être "blacklist" ou "ignorelist"
+    InvalidList: Type de liste inconnu, doit être blacklist ou ignorelist
     MaterialGet: 'Le nom du matériau de l''ID %1 est %2'
     MarketDisabled: Economie désactivée
     MarketList: Liste du marché
@@ -173,14 +173,14 @@ Language:
     InvalidCharacters: Caractères invalides détectés...
     InvalidNameCharacters: Ce nom contient des caractères interdits...
     #Version 15 New Fields
-    DeleteConfirm: 'Voulez-vous vraiment supprimer la résidence %1, utilisez "/res confirm" pour confirmer'
+    DeleteConfirm: 'Voulez-vous vraiment supprimer la résidence %1, utilisez /res confirm pour confirmer'
     #Version 18 New Fields
     SelectTooHigh: Attention, la sélection est trop haute
     SelectTooLow: Attention, la sélection est trop basse
     WorldEditNotFound: WorldEdit n'est pas détecté
     #Version 19 New Fields
     NoResHere: Il n'y a pas de résidence là-dedans.
-    DeleteSubzoneConfirm: 'Voulez-vous vraiment supprimer la sous-zone %1, utilisez "/res confirm" pour confirmer'
+    DeleteSubzoneConfirm: 'Voulez-vous vraiment supprimer la sous-zone %1, utilisez /res confirm pour confirmer'
     #Version 20 New Fields
     SubzoneOwnerChange: 'Le propriétaire de la sous-zone %1 est remplacé par %2'
     CoordsTop: 'X:%1 Y:%2 Z:%3'
@@ -378,8 +378,8 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Description: Gère un contrat de location
                     Info:
                         - 'Utilisation: /res lease [renew/cost] [résidence]'
-                        - '"/res lease cost" affiche le prix du renouvellement du contrat de la résidence [résidence]'
-                        - '"/res lease renew" renouvelle le contrat si vous avez assez d''argent'
+                        - '/res lease cost affiche le prix du renouvellement du contrat de la résidence [résidence]'
+                        - '/res lease renew renouvelle le contrat si vous avez assez d''argent'
                     SubCommands:
                         set:
                             Description: Modifie la durée du contrat de location d'une résidence (administrateurs seulement)
@@ -391,20 +391,20 @@ CommandHelp: #this is just a holder node, that holds the entire help
                     Info:
                         - 'Utilisation: /res bank [deposit/withdraw] [montant]'
                         - 'Vous devez être dans une résidence'
-                        - 'Vous devez avec avoir le flag "+bank"'
+                        - 'Vous devez avec avoir le flag +bank'
                 tp:
                     Description: Téléporte à une résidence
                     Info:
                         - 'Utilisation: /res tp [résidence]'
                         - 'Vous téléporte à la résidence [résidence]'
-                        - 'Vous devez avoir le flag "+tp" ou être le propriétaire'
+                        - 'Vous devez avoir le flag +tp ou être le propriétaire'
                         - 'Votre groupe doit aussi avoir la permission'
                 tpset:
                     Description: Modifie le point de téléportation d'une résidence
                     Info:
                         - 'Utilisation: /res tpset'
                         - 'Vous devez être dans une résidence pour utiliser cette commande'
-                        - 'Vous devez aussi être le propriétaire de la résidence ou avoir le flag "+admin"'
+                        - 'Vous devez aussi être le propriétaire de la résidence ou avoir le flag +admin'
                 set:
                     Description: Modifie les flags d'une résidence
                     Info:
@@ -432,14 +432,14 @@ CommandHelp: #this is just a holder node, that holds the entire help
                 flags:
                     Description: Liste les flags
                     Info:
-                        - '"true" autorise, et "false" interdit l''action'
+                        - 'true autorise, et false interdit l''action'
                         - 'build - autorise ou interdit la construction'
                         - 'use - autorise ou interdit l''utilisation des portes, des leviers, des boutons, etc...'
                         - 'move - autorise ou interdit le déplacement dans la résidence'
                         - 'container - autorise ou interdit l''utilisation des fours, coffres, distributeurs, etc...'
                         - 'trusted - Gives build, use, move, container and tp flags'
-                        - 'place - autorise ou interdit seulement le placement des blocs, l''emporte sur le flag "build"'
-                        - 'destroy - autorise ou interdit seulement la destruction des block, l''emporte le flag "build"'
+                        - 'place - autorise ou interdit seulement le placement des blocs, l''emporte sur le flag build'
+                        - 'destroy - autorise ou interdit seulement la destruction des block, l''emporte le flag build'
                         - 'pvp - autorise ou interdit le PVP dans la résidence'
                         - 'tp - autorise ou interdit la téléportation à la résidence'
                         - 'admin - donne au joueur la permission de changer les flags de la résidence'
@@ -453,8 +453,8 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'firespread - autorise ou interdit la propagation du feu'
                         - 'bucket - autorise ou interdit l''utilisation des sceaux'
                         - 'flow - autorise ou interdit l''écoulement des liquides'
-                        - 'lavaflow - autorise ou interdit l''écoulement du feu, l''emporte sur le flag "flow"'
-                        - 'waterflow - autorise ou interdit l''écoulement de l''eau, l''emporte sur le flag "flow"'
+                        - 'lavaflow - autorise ou interdit l''écoulement du feu, l''emporte sur le flag flow'
+                        - 'waterflow - autorise ou interdit l''écoulement de l''eau, l''emporte sur le flag flow'
                         - 'damage - autorise ou interdit tous les dommages subis dans la résidence'
                         - 'piston - autorise ou interdit les pistons de pousser ou de tirer un bloc dans la résidence'
                         - 'hidden - cache la résidence de la liste'
@@ -478,7 +478,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                         - 'Utilisation: /res list <joueur> <page>'
                         - 'Liste toutes les résidences d''un joueur (sauf celles cachées)'
                         - 'Si vous listez vos propres résidences, les cachées seront affichées'
-                        - 'Pout lister toutes les résidences, utilisez "/res listall"'
+                        - 'Pout lister toutes les résidences, utilisez /res listall'
                 listhidden:
                     Description: Liste les résidences cachées (administrateurs seulement)
                     Info:
@@ -532,7 +532,7 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Info:
                                 - 'Utilisation: /res market sell [résidence] [prix]'
                                 - 'Met une résidence à vendre'
-                                - 'Un autre joueur peut acheter la résidence avec "/res market buy"'
+                                - 'Un autre joueur peut acheter la résidence avec /res market buy'
                         buy:
                             Description: Achète une résidence
                             Info:
@@ -546,14 +546,14 @@ CommandHelp: #this is just a holder node, that holds the entire help
                             Description: Loue une résidence
                             Info:
                                 - 'Utilisation: /res market rent [résidence] <renouvellementAutomatique>'
-                                - 'Loue la résidence [résidence]. <renouvellementAutomatique> peut être "true" ou "false"'
-                                - 'Si "true", la résidence sera automatiquement relouée'
+                                - 'Loue la résidence [résidence]. <renouvellementAutomatique> peut être true ou false'
+                                - 'Si true, la résidence sera automatiquement relouée'
                         rentable:
                             Description: Met à louer une résidence
                             Info:
                                 - 'Utilisation: /res market rentable [résidence] [prix] [jours] <répéter>'
                                 - 'Met à louer la résidence [résidence] et fixe le prix [prix] à payer tous les [jours] jours'
-                                - 'Si <répéter> est "true", la résidence sera automatiquement remise à louer'
+                                - 'Si <répéter> est true, la résidence sera automatiquement remise à louer'
                         release:
                             Description: Libère ou interrompt la mise en location d'une résidence
                             Info:

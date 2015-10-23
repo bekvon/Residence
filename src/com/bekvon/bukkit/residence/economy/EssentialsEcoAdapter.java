@@ -20,12 +20,13 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 
     public EssentialsEcoAdapter(Essentials p) {
         plugin = p;
-        String serverland = "Server Land";
+        String serverland = "Server_Land";
         if (!Economy.playerExists(serverland)) {
             Economy.createNPC(serverland);
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public double getBalance(String playerName) {
         try {
@@ -39,6 +40,7 @@ public class EssentialsEcoAdapter implements EconomyInterface {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean canAfford(String playerName, double amount) {
         try {
@@ -51,6 +53,7 @@ public class EssentialsEcoAdapter implements EconomyInterface {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean add(String playerName, double amount) {
         if (Economy.playerExists(playerName)) {
@@ -67,6 +70,7 @@ public class EssentialsEcoAdapter implements EconomyInterface {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean subtract(String playerName, double amount) {
         if (Economy.playerExists(playerName)) {
@@ -83,6 +87,7 @@ public class EssentialsEcoAdapter implements EconomyInterface {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
         try {
