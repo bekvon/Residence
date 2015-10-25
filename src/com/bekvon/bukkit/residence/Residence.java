@@ -71,8 +71,6 @@ import com.residence.zip.ZipLibrary;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
-import java.util.UUID;
-import org.bukkit.OfflinePlayer;
 
 /**
  * 
@@ -805,52 +803,6 @@ public class Residence extends JavaPlugin {
             System.out.println("[Residence] Failed to write file: " + writeName);
             return false;
         }
-    }
-    
-    public static UUID getPlayerUUID(String playername)
-    {
-        Player p = Residence.getServ().getPlayer(playername);
-        if(p==null)
-        {
-            OfflinePlayer[] oplayers = Residence.getServ().getOfflinePlayers();
-            for(OfflinePlayer player : oplayers)
-            {
-                if(player.getName().equals(playername))
-                    return player.getUniqueId();
-            }
-        }
-        else
-            return p.getUniqueId();
-        return null;
-    }
-    
-    public static String getPlayerUUIDString(String playername)
-    {
-        UUID playerUUID = Residence.getPlayerUUID(playername);
-        if(playerUUID!=null)
-            return playerUUID.toString();
-        return null;
-    }
-    
-    public static String getPlayerName(String uuid)
-    {
-        try
-        {
-            return Residence.getPlayerName(UUID.fromString(uuid));
-        }
-        catch (IllegalArgumentException ex) { }
-        return null;
-    }
-    
-    public static String getPlayerName(UUID uuid)
-    {
-        OfflinePlayer p = Residence.getServ().getPlayer(uuid);
-        if(p==null)
-            p = Residence.getServ().getOfflinePlayer(uuid);
-        if(p!=null)
-            return p.getName();
-        else
-            return null;
     }
 }
 
