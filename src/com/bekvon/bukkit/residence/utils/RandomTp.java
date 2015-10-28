@@ -89,8 +89,6 @@ public class RandomTp {
 		    return;
 		else if (ResidenceCommandListener.teleportDelayMap.contains(targetPlayer.getName()))
 		    ResidenceCommandListener.teleportDelayMap.remove(targetPlayer.getName());
-		else
-		    return;
 		targetPlayer.teleport(loc);
 		targetPlayer.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.RandomTeleport.TeleportSuccess").replace("%1", String.valueOf(loc.getX()))
 		    .replace("%2", String.valueOf(loc.getY())).replace("%3", String.valueOf(loc.getZ())));

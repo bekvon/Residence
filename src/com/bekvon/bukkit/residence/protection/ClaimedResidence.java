@@ -824,7 +824,7 @@ public class ClaimedResidence {
 	}
 
 	if (tpLoc != null) {
-	    if (!isAdmin)
+	    if (Residence.getConfigManager().getTeleportDelay() > 0 &&!isAdmin)
 		performDelaydTp(tpLoc, targetPlayer, reqPlayer, true);
 	    else
 		performInstantTp(tpLoc, targetPlayer, reqPlayer, true);
@@ -836,7 +836,7 @@ public class ClaimedResidence {
 		return;
 	    }
 	    final Location targloc = this.getOutsideFreeLoc(area.getHighLoc());
-	    if (!isAdmin)
+	    if (Residence.getConfigManager().getTeleportDelay() > 0 &&!isAdmin)
 		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
 	    else
 		performInstantTp(targloc, targetPlayer, reqPlayer, true);
@@ -854,8 +854,6 @@ public class ClaimedResidence {
 			return;
 		    else if (ResidenceCommandListener.teleportDelayMap.contains(targetPlayer.getName()))
 			ResidenceCommandListener.teleportDelayMap.remove(targetPlayer.getName());
-		    else
-			return;
 		    targetPlayer.teleport(targloc);
 		    if (near)
 			targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TeleportNear"));

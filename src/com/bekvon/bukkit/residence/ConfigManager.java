@@ -11,8 +11,13 @@ import org.bukkit.Location;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ParticleEffects;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -221,7 +226,21 @@ public class ConfigManager {
 	void UpdateConfigFile() {
 
 	File f = new File(Residence.instance.getDataFolder(), "config.yml");
-	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
+	
+	
+	BufferedReader in = null;
+	try {
+	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
+	} catch (UnsupportedEncodingException e1) {
+	    e1.printStackTrace();
+	} catch (FileNotFoundException e1) {
+	    e1.printStackTrace();
+	}
+
+	if (in == null)
+	    return;
+
+	YamlConfiguration conf = YamlConfiguration.loadConfiguration(in);
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
 	conf.options().copyDefaults(true);
 

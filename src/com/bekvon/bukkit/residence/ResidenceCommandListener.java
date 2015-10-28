@@ -773,12 +773,10 @@ public class ResidenceCommandListener extends Residence {
 		    .replace("%2", String.valueOf(loc.getY())).replace("%3", String.valueOf(loc.getZ())).replace("%4", String.valueOf(Residence.getConfigManager()
 			.getTeleportDelay())));
 		ResidenceCommandListener.teleportDelayMap.add(player.getName());
-	    }
-
-	    if (!resadmin)
 		RandomTp.performDelaydTp(loc, player);
-	    else
+	    } else
 		RandomTp.performInstantTp(loc, player);
+
 	    return true;
 	}
 
