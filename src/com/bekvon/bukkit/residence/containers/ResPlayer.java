@@ -85,7 +85,7 @@ public class ResPlayer {
 	for (Entry<String, PermissionGroup> one : Residence.getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
 		if (this.player.hasPermission("residence.group." + one.getKey()))
-		    this.group = one.getValue();		
+		    this.group = one.getValue();
 	    } else {
 		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.group." + one.getKey(), Residence.getConfigManager().getDefaultWorld()))
 		    this.group = one.getValue();
@@ -114,7 +114,8 @@ public class ResPlayer {
     }
 
     public void recountRes() {
-	this.ResidenceList = Residence.getResidenceManager().getResidenceMapList(this.userName, true);
+	if (this.userName != null)
+	    this.ResidenceList = Residence.getResidenceManager().getResidenceMapList(this.userName, true);
 	recountResAmount();
     }
 
