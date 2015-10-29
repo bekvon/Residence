@@ -9,6 +9,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,6 +25,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -68,8 +72,8 @@ public class HelpEntry {
 	linesPerPage = lines;
     }
 
-    public void printHelp(CommandSender sender, int page) {
-	List<String> helplines = this.getHelpData();
+    public void printHelp(CommandSender sender, int page, boolean resadmin) {
+	List<String> helplines = this.getHelpData(sender, resadmin);
 	int pagecount = (int) Math.ceil((double) helplines.size() / (double) linesPerPage);
 	if (page > pagecount || page < 1) {
 	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
@@ -100,11 +104,13 @@ public class HelpEntry {
 	NextPage = page < pagecount ? NextPage : page;
 	int Prevpage = page - 1;
 	Prevpage = page > 1 ? Prevpage : page;
-	String prevCmd = !name.equalsIgnoreCase("res") ? "/res " + name + " ? " + Prevpage : "/res ? " + Prevpage;
+	
+	String baseCmd = resadmin ? "resadmin" : "res";
+	String prevCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + Prevpage : "/" + baseCmd + " ? " + Prevpage;
 	String prev = "[\"\",{\"text\":\"" + Residence.getLanguage().getPhrase("PrevInfoPage") + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	String nextCmd = !name.equalsIgnoreCase("res") ? "/res " + name + " ? " + NextPage : "/res ? " + NextPage;
+	String nextCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + NextPage : "/" + baseCmd + " ? " + NextPage;
 	String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
@@ -112,21 +118,27 @@ public class HelpEntry {
 
     }
 
-    public void printHelp(CommandSender sender, int page, String path) {
+    public void printHelp(CommandSender sender, int page, String path, boolean resadmin) {
 	HelpEntry subEntry = this.getSubEntry(path);
 	if (subEntry != null) {
-	    subEntry.printHelp(sender, page);
+	    subEntry.printHelp(sender, page, resadmin);
 	} else {
 	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
 	}
     }
 
-    private List<String> getHelpData() {
+    private List<String> getHelpData(CommandSender sender, boolean resadmin) {
 	List<String> helplines = new ArrayList<String>();
 	helplines.addAll(Arrays.asList(lines));
 	if (subentrys.size() > 0)
 	    helplines.add(ChatColor.LIGHT_PURPLE + "---" + Residence.getLanguage().getPhrase("SubCommands") + "---");
 	for (HelpEntry entry : subentrys) {
+	    if (ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && !resadmin)
+		continue;
+	    
+	    if (!ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && resadmin)
+		continue;
+
 	    helplines.add(ChatColor.GREEN + entry.getName() + ChatColor.YELLOW + " - " + entry.getDescription());
 	}
 	return helplines;

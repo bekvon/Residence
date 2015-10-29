@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import org.bukkit.Bukkit;
@@ -37,6 +38,9 @@ public class ResidenceCommandListener extends Residence {
     public static HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
     public static HashMap<String, Long> rtMap = new HashMap<String, Long>();
     public static List<String> teleportDelayMap = new ArrayList<String>();
+
+    public static List<String> AdminCommands = Arrays.asList("setowner", "removeall", "signupdate", "listhidden", "listallhidden", "server", "clearflags", "resreload",
+	"resload", "ressignconvert");
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(), args, sender);
@@ -868,7 +872,7 @@ public class ResidenceCommandListener extends Residence {
 		}
 	    }
 	    if (helppages.containesEntry(helppath)) {
-		helppages.printHelp(sender, page, helppath);
+		helppages.printHelp(sender, page, helppath, resadmin);
 		return true;
 	    }
 	}

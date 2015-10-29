@@ -192,16 +192,14 @@ public class PermissionGroup {
 	return maxHeight;
     }
 
-    public int getMaxZones2() {
+    public int getMaxZones() {
 	return resmax;
     }
 
     public int getMaxZones(String player) {
-
 	int max = PlayerManager.getMaxResidences(player);
 	if (max != -1)
 	    return max;
-
 	return resmax;
     }
 
