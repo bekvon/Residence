@@ -51,8 +51,9 @@ public class ResPlayer {
 		if (this.player.isPermissionSet("residence.max.res." + i))
 		    this.maxRes = i;
 	    } else {
-		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res." + i, Residence.getConfigManager().getDefaultWorld()))
-		    this.maxRes = i;
+		if (ofPlayer != null)
+		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res." + i, Residence.getConfigManager().getDefaultWorld()))
+			this.maxRes = i;
 	    }
 	}
     }
@@ -63,8 +64,9 @@ public class ResPlayer {
 		if (this.player.isPermissionSet("residence.max.rents." + i))
 		    this.maxRents = i;
 	    } else {
-		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.rents." + i, Residence.getConfigManager().getDefaultWorld()))
-		    this.maxRents = i;
+		if (ofPlayer != null)
+		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.rents." + i, Residence.getConfigManager().getDefaultWorld()))
+			this.maxRents = i;
 	    }
 	}
     }
@@ -75,8 +77,9 @@ public class ResPlayer {
 		if (this.player.isPermissionSet("residence.max.subzones." + i))
 		    this.maxSubzones = i;
 	    } else {
-		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzones." + i, Residence.getConfigManager().getDefaultWorld()))
-		    this.maxSubzones = i;
+		if (ofPlayer != null)
+		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzones." + i, Residence.getConfigManager().getDefaultWorld()))
+			this.maxSubzones = i;
 	    }
 	}
     }
@@ -87,8 +90,9 @@ public class ResPlayer {
 		if (this.player.hasPermission("residence.group." + one.getKey()))
 		    this.group = one.getValue();
 	    } else {
-		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.group." + one.getKey(), Residence.getConfigManager().getDefaultWorld()))
-		    this.group = one.getValue();
+		if (ofPlayer != null)
+		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.group." + one.getKey(), Residence.getConfigManager().getDefaultWorld()))
+			this.group = one.getValue();
 	    }
 	}
     }
