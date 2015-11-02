@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResPlayer {
@@ -118,8 +119,10 @@ public class ResPlayer {
     }
 
     public void recountRes() {
-	if (this.userName != null)
-	    this.ResidenceList = Residence.getResidenceManager().getResidenceMapList(this.userName, true);
+	if (this.userName != null){
+	    ResidenceManager m = Residence.getResidenceManager();
+	    this.ResidenceList = m.getResidenceMapList(this.userName, true);
+	}
 	recountResAmount();
     }
 
