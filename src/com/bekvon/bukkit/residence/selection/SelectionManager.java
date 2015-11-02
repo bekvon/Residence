@@ -610,7 +610,12 @@ public class SelectionManager {
 	player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("WorldEditNotFound"));
 	return false;
     }
-
+    
+    public boolean worldEditUpdate(Player player) {
+	player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("WorldEditNotFound"));
+	return false;
+    }
+    
     public void selectBySize(Player player, int xsize, int ysize, int zsize) {
 	Location myloc = player.getLocation();
 	Location loc1 = new Location(myloc.getWorld(), myloc.getBlockX() + xsize, myloc.getBlockY() + ysize, myloc.getBlockZ() + zsize);

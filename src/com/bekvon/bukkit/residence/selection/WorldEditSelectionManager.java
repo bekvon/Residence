@@ -4,7 +4,9 @@
  */
 package com.bekvon.bukkit.residence.selection;
 
+import com.bekvon.bukkit.residence.Residence;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
@@ -43,49 +45,57 @@ public class WorldEditSelectionManager extends SelectionManager {
 	return false;
     }
 
+    public boolean worldEditUpdate(Player player) {
+	if (!hasPlacedBoth(player.getName()))
+	    return false;
+	CuboidSelection selection = new CuboidSelection(player.getWorld(), getPlayerLoc1(player.getName()), getPlayerLoc2(player.getName()));
+	Residence.wep.setSelection(player, selection);
+	return true;
+    }
+
     @Override
     public void placeLoc1(Player player, Location loc) {
-//	this.worldEdit(player);
 	super.placeLoc1(player, loc);
+	this.worldEditUpdate(player);
     }
 
     @Override
     public void placeLoc2(Player player, Location loc) {
-//	this.worldEdit(player);
 	super.placeLoc2(player, loc);
+	this.worldEditUpdate(player);
     }
 
     @Override
     public void sky(Player player, boolean resadmin) {
-//	this.worldEdit(player);
 	super.sky(player, resadmin);
+	this.worldEditUpdate(player);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void bedrock(Player player, boolean resadmin) {
-//	this.worldEdit(player);
 	super.bedrock(player, resadmin);
+	this.worldEditUpdate(player);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void modify(Player player, boolean shift, int amount) {
-//	this.worldEdit(player);
 	super.modify(player, shift, amount);
+	this.worldEditUpdate(player);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void selectChunk(Player player) {
-//	this.worldEdit(player);
 	super.selectChunk(player);
+	this.worldEditUpdate(player);
 	afterSelectionUpdate(player);
     }
 
     @Override
     public void showSelectionInfo(Player player) {
-//	this.worldEdit(player);
 	super.showSelectionInfo(player);
+	this.worldEditUpdate(player);
     }
 }
