@@ -412,9 +412,9 @@ public class Locale {
 
 	GetConfigString("CommandHelp.Description", "Contains Help for Residence", writer, conf, true);
 	GetConfigString("CommandHelp.SubCommands.res.Description", "Main Residence Command", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.Info", Arrays.asList("See the residence wiki for more help.", "Wiki: https://github.com/bekvon/Residence/wiki",
-	    "Use /res [command] ? <page> to view more help information."), writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.Info", Arrays.asList("Use /res [command] ? <page> to view more help Information."), writer, conf, true);
 
+	// res select
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.select.Description", "Selection Commands", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.select.Info",
 	    Arrays.asList("This command selects areas for usage with residence.", "/res select [x] [y] [z] - selects a radius of blocks, with you in the middle."),
@@ -467,127 +467,41 @@ public class Locale {
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.worldedit.Info",
 	    Arrays.asList("Usage /res select worldedit", "Sets selection area using the current WorldEdit selection."), writer, conf, true);
 
+	// res create
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.create.Description", "Create Residences", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.create.Info", Arrays.asList("Usage: /res create <residence name>"), writer, conf, true);
 
+	// res remove
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.remove.Description", "Remove residences.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.remove.Info", Arrays.asList("Usage: /res remove <residence name>"), writer, conf, true);
-	
+
+	// res padd
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.padd.Description", "Add player to residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.padd.Info", Arrays.asList("Usage: /res padd <residence name> [player]",
 	    "Adds essential flags for player"), writer, conf, true);
 
+	// res pdel
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.pdel.Description", "Remove player from residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.pdel.Info", Arrays.asList("Usage: /res pdel <residence name> [player]",
 	    "Removes essential flags from player"), writer, conf, true);
-	
+
+	// res info
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.info.Description", "Show info on a residence.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.info.info",
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.info.Info",
 	    Arrays.asList("Usage: /res info <residence>", "Leave off <residence> to display info for the residence your currently in."), writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.limits.Description", "Show your limits.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.limits.info",
-	    Arrays.asList("Usage: /res limits", "Shows the limitations you have on creating and managing residences."), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.confirm.Description", "Confirms removal of a residence.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.confirm.info", Arrays.asList("Usage: /res confirm", "Confirms removal of a residence."), writer, conf,
-	    true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.subzone.Description", "Create subzones in residences.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.subzone.Info",
-	    Arrays.asList("Usage: /res subzone <residence name> [subzone name]", "If residence name is left off, will attempt to use residence your standing in."),
-	    writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.Description", "Manage physical areas for a residence.", writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.list.Description", "List physical areas in a residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.list.Info",
-	    Arrays.asList("Usage: /res subzone <residence name> [subzone name]", "If residence name is left off, will attempt to use residence your standing in."),
-	    writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.listall.Description", "List coordinates and other info for areas", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.listall.Info", Arrays.asList("Usage: /res area listall [residence] <page>"), writer,
-	    conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.add.Description", "Add physical areas to a residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.add.Info",
-	    Arrays.asList("Usage: /res area add [residence] [areaID]", "You must first select two points first."), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.remove.Description", "Remove physical areas from a residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.remove.Info", Arrays.asList("Usage: /res area remove [residence] [areaID]"), writer,
-	    conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Description", "Replace physical areas in a residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Info", Arrays.asList("Usage: /res area replace [residence] [areaID]",
-	    "You must first select two points first.", "Replacing a area will charge the difference in size if the new area is bigger."), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.message.Description", "Manage residence enter / leave messages", writer, conf, true);
-	GetConfigArray(
-	    "CommandHelp.SubCommands.res.SubCommands.message.info", Arrays.asList("Usage: /res message <residence> [enter/leave] [message]",
-		"Set the enter or leave message of a residence.", "Usage: /res message <residence> remove [enter/leave]", "Removes a enter or leave message."),
-	    writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.Description", "Manage residence leases", writer, conf, true);
-	GetConfigArray(
-	    "CommandHelp.SubCommands.res.SubCommands.lease.info", Arrays.asList("Usage: /res lease [renew/cost] [residence]",
-		"/res lease cost will show the cost of renewing a residence lease.", "/res lease renew will renew the residence provided you have enough money."),
-	    writer, conf, true);
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Description", "Set the lease time (admin only)", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Info",
-	    Arrays.asList("Usage: /resadmin lease set [residence] [#days/infinite]", "Sets the lease time to a specified number of days, or infinite."), writer, conf,
-	    true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.bank.Description", "Manage money in a Residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.bank.Info",
-	    Arrays.asList("Usage: /res bank [deposit/withdraw] [amount]", "You must be standing in a Residence", "You must have the +bank flag."), writer, conf,
-	    true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tp.Description", "Teleport to a residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tp.Info",
-	    Arrays.asList("Usage: /res tp [residence]", "Teleports you to a residence, you must have +tp flag access or be the owner.",
-		"Your permission group must also be allowed to teleport by the server admin."), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.rt.Description", "Teleports to random location in world", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.rt.Info",
-	    Arrays.asList("Usage: /res rt", "Teleports you to random location in defined world."), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Description", "Ignore unsafe teleportation warning and teleport anyways", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Info",
-	    Arrays.asList("Usage: /res tpconfirm", "Teleports you to a residence, when teleportation is unsafe."),
-	    writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tpset.Description", "Set the teleport location of a Residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tpset.Info",
-	    Arrays.asList("Usage: /res tpset", "This will set the teleport location for a residence to where your standing.",
-		"You must be standing in the residence to use this command.", "You must also be the owner or have the +admin flag for the residence."),
-	    writer, conf, true);
-
+	// res set
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.set.Description", "Set general flags on a Residence", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.set.Info", Arrays.asList("Usage: /res set <residence> [flag] [true/false/remove]",
 	    "To see a list of flags, use /res flags ?", "These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)"),
 	    writer, conf, true);
 
+	// res pset
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.pset.Description", "Set flags on a specific player for a Residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.pset.Info", Arrays.asList("Usage: /res pset <residence> [player] [flag] [true/false/remove]",
 	    "Usage: /res pset <residence> [player] removeall", "To see a list of flags, use /res flags ?"), writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.gset.Description", "Set flags on a specific group for a Residence.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.gset.Info",
-	    Arrays.asList("Usage: /res gset <residence> [group] [flag] [true/false/remove]", "To see a list of flags, use /res flags ?"), writer, conf, true);
-
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lset.Description", "Change blacklist and ignorelist options", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lset.Info",
-	    Arrays.asList("Usage: /res lset <residence> [blacklist/ignorelist] [material]",
-		"Usage: /res lset <residence> info",
-		"Blacklisting a material prevents it from being placed in the residence.",
-		"Ignorelist causes a specific material to not be protected by Residence."),
-	    writer, conf, true);
-	
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.removeall.Description", "Remove all residences owned by a player.", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.removeall.Info", Arrays.asList("Usage: /res removeall [owner]",
-	    "Removes all residences owned by a specific player.'",
-	    "Requires /resadmin if you use it on anyone besides yourself."), writer, conf, true);
-
+	// res flags
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.flags.Description", "List of flags", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.flags.Info",
 	    Arrays.asList("For flag values, usually true allows the action, and false denys the action.",
@@ -642,7 +556,7 @@ public class Locale {
 		"&2note &3- &eallows or denys players to use note blocks",
 		"&2redstone &3- &eGives lever, diode, button, pressure, note flags",
 		"&2craft &3- &eGives table, enchant, brew flags",
-		"&2traample &3- &eAllows or denys crop trampling in residence",
+		"&2trample &3- &eAllows or denys crop trampling in residence",
 		"&2trade &3- &eAllows or denys villager trading in residence",
 		"&2nomobs &3- &ePrevents monsters from entering residence residence",
 		"&2explode &3- &eAllows or denys explosions in residences",
@@ -654,6 +568,109 @@ public class Locale {
 		"&2burn &3- &eallows or denys Mob combustion in residences"),
 	    writer, conf, true);
 
+	//res limits
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.limits.Description", "Show your limits.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.limits.Info",
+	    Arrays.asList("Usage: /res limits", "Shows the limitations you have on creating and managing residences."), writer, conf, true);
+
+	// res tpset
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tpset.Description", "Set the teleport location of a Residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tpset.Info",
+	    Arrays.asList("Usage: /res tpset", "This will set the teleport location for a residence to where your standing.",
+		"You must be standing in the residence to use this command.", "You must also be the owner or have the +admin flag for the residence."),
+	    writer, conf, true);
+
+	// res tp
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tp.Description", "Teleport to a residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tp.Info",
+	    Arrays.asList("Usage: /res tp [residence]", "Teleports you to a residence, you must have +tp flag access or be the owner.",
+		"Your permission group must also be allowed to teleport by the server admin."), writer, conf, true);
+
+	// res rt
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.rt.Description", "Teleports to random location in world", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.rt.Info",
+	    Arrays.asList("Usage: /res rt", "Teleports you to random location in defined world."), writer, conf, true);
+
+	// res tpconfirm
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Description", "Ignore unsafe teleportation warning", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Info",
+	    Arrays.asList("Usage: /res tpconfirm", "Teleports you to a residence, when teleportation is unsafe."),
+	    writer, conf, true);
+
+	// res subzone
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.subzone.Description", "Create subzones in residences.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.subzone.Info",
+	    Arrays.asList("Usage: /res subzone <residence name> [subzone name]", "If residence name is left off, will attempt to use residence your standing in."),
+	    writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.Description", "Manage physical areas for a residence.", writer, conf, true);
+	//res area
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.list.Description", "List physical areas in a residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.list.Info",
+	    Arrays.asList("Usage: /res area list [residence] <page>"),
+	    writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.listall.Description", "List coordinates and other Info for areas", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.listall.Info", Arrays.asList("Usage: /res area listall [residence] <page>"), writer,
+	    conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.add.Description", "Add physical areas to a residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.add.Info",
+	    Arrays.asList("Usage: /res area add [residence] [areaID]", "You must first select two points first."), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.remove.Description", "Remove physical areas from a residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.remove.Info", Arrays.asList("Usage: /res area remove [residence] [areaID]"), writer,
+	    conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Description", "Replace physical areas in a residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Info", Arrays.asList("Usage: /res area replace [residence] [areaID]",
+	    "You must first select two points first.", "Replacing a area will charge the difference in size if the new area is bigger."), writer, conf, true);
+
+	// res message
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.message.Description", "Manage residence enter / leave messages", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.message.Info", Arrays.asList("Usage: /res message <residence> [enter/leave] [message]",
+	    "Set the enter or leave message of a residence.", "Usage: /res message <residence> remove [enter/leave]", "Removes a enter or leave message."),
+	    writer, conf, true);
+
+	// res lease
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.Description", "Manage residence leases", writer, conf, true);
+	GetConfigArray(
+	    "CommandHelp.SubCommands.res.SubCommands.lease.Info", Arrays.asList("Usage: /res lease [renew/cost] [residence]",
+		"/res lease cost will show the cost of renewing a residence lease.", "/res lease renew will renew the residence provided you have enough money."),
+	    writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Description", "Set the lease time", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Info",
+	    Arrays.asList("Usage: /resadmin lease set [residence] [#days/infinite]", "Sets the lease time to a specified number of days, or infinite."), writer, conf,
+	    true);
+
+	// res bank
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.bank.Description", "Manage money in a Residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.bank.Info",
+	    Arrays.asList("Usage: /res bank [deposit/withdraw] [amount]", "You must be standing in a Residence", "You must have the +bank flag."), writer, conf,
+	    true);
+
+	// res confirm
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.confirm.Description", "Confirms removal of a residence.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.confirm.Info", Arrays.asList("Usage: /res confirm", "Confirms removal of a residence."), writer, conf,
+	    true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.gset.Description", "Set flags on a specific group for a Residence.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.gset.Info",
+	    Arrays.asList("Usage: /res gset <residence> [group] [flag] [true/false/remove]", "To see a list of flags, use /res flags ?"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lset.Description", "Change blacklist and ignorelist options", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lset.Info",
+	    Arrays.asList("Usage: /res lset <residence> [blacklist/ignorelist] [material]",
+		"Usage: /res lset <residence> Info",
+		"Blacklisting a material prevents it from being placed in the residence.",
+		"Ignorelist causes a specific material to not be protected by Residence."),
+	    writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.removeall.Description", "Remove all residences owned by a player.", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.removeall.Info", Arrays.asList("Usage: /res removeall [owner]",
+	    "Removes all residences owned by a specific player.'",
+	    "Requires /resadmin if you use it on anyone besides yourself."), writer, conf, true);
+
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.list.Description", "List Residences", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.list.Info",
 	    Arrays.asList("Usage: /res list <player> <page>",
@@ -662,7 +679,7 @@ public class Locale {
 		"To list everyones residences, use /res listall."),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.listhidden.Description", "List Hidden Residences (ADMIN ONLY)", writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.listhidden.Description", "List Hidden Residences", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.listhidden.Info",
 	    Arrays.asList("Usage: /res listhidden <player> <page>",
 		"Lists hidden residences for a player."),
@@ -674,7 +691,7 @@ public class Locale {
 		"Lists hidden residences for a player."),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.listallhidden.Description", "List All Hidden Residences (ADMIN ONLY)", writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.listallhidden.Description", "List All Hidden Residences", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.listallhidden.Info",
 	    Arrays.asList("Usage: /res listhidden <page>",
 		"Lists all hidden residences on the server."),
@@ -712,12 +729,12 @@ public class Locale {
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.market.Description", "Buy, Sell, or Rent Residences", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.mirror.Info",
-	    Arrays.asList("Usage: /res market ? for more info"),
+	    Arrays.asList("Usage: /res market ? for more Info"),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.info.Description", "Get economy info on residence", writer, conf, true);
-	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.info.Info",
-	    Arrays.asList("Usage: /res market info [residence]", "Shows if the Residence is for sale or for rent, and the cost."),
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.Info.Description", "Get economy Info on residence", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.Info.Info",
+	    Arrays.asList("Usage: /res market Info [residence]", "Shows if the Residence is for sale or for rent, and the cost."),
 	    writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.Description", "Lists rentable and for sale residences.", writer, conf, true);
@@ -810,27 +827,27 @@ public class Locale {
 	    Arrays.asList("Usage: /res lists view <listname>"),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.server.Description", "Make land server owned (admin only).", writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.server.Description", "Make land server owned.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.server.Info",
 	    Arrays.asList("Usage: /resadmin server [residence]", "Make a residence server owned."),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.setowner.Description", "Change owner of a residence (admin only).", writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.setowner.Description", "Change owner of a residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.setowner.Info",
 	    Arrays.asList("Usage: /resadmin setowner [residence] [player]"),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.resreload.Description", "Reload residence (admin only).", writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.resreload.Description", "Reload residence.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.resreload.Info",
 	    Arrays.asList("Usage: /resreload"),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.resload.Description", "Load residence save file (UNSAFE, admin only).", writer, conf, true);
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.resload.Description", "Load residence save file.", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.resload.Info",
 	    Arrays.asList("Usage: /resload", "UNSAFE command, does not save residences first.", "Loads the residence save file after you have made changes."),
 	    writer, conf, true);
 
-	GetConfigString("CommandHelp.SubCommands.res.SubCommands.ressignconvert.Description", "Converts ResidenceSigns plugins saved signs (admin only).", writer, conf,
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.ressignconvert.Description", "Converts ResidenceSigns plugins saved signs.", writer, conf,
 	    true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.ressignconvert.Info", Arrays.asList("Usage: /ressignconvert"), writer, conf, true);
 

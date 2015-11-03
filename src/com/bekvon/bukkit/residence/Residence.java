@@ -83,6 +83,8 @@ import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
 
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.OfflinePlayer;
 
 /**
@@ -127,7 +129,7 @@ public class Residence extends JavaPlugin {
     protected Map<String, String> deleteConfirm;
     protected static List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian", "Polish", "Lithuanian" };
-    public static HashMap<String, UUID> UUIDList = new HashMap<String, UUID>();
+    public static ConcurrentHashMap<String, UUID> UUIDList = new ConcurrentHashMap<String, UUID>();
     public static WorldEditPlugin wep = null;
     public static WorldGuardPlugin wg = null;
     public static int wepid;
@@ -273,7 +275,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    FlagUtil.load();
-	    
+
 	    String packageName = getServer().getClass().getPackage().getName();
 	    String[] packageSplit = packageName.split("\\.");
 	    String version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{4})")[0];
@@ -350,7 +352,6 @@ public class Residence extends JavaPlugin {
 		    FileConfiguration langconfig = new YamlConfiguration();
 		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
-		    HelpEntry.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 		    language = Language.parseText(langconfig, "Language");
 		} else {
@@ -392,7 +393,6 @@ public class Residence extends JavaPlugin {
 		}
 	    }
 
-
 	    if (rmanager == null) {
 		rmanager = new ResidenceManager();
 	    }
@@ -405,7 +405,7 @@ public class Residence extends JavaPlugin {
 	    if (pmanager == null) {
 		pmanager = new PermissionListManager();
 	    }
-	    
+
 	    try {
 		this.loadYml();
 	    } catch (Exception e) {
@@ -415,7 +415,7 @@ public class Residence extends JavaPlugin {
 
 	    if (Residence.getConfigManager().isUseResidenceFileClean())
 		FileCleanUp.cleanFiles();
-	    
+
 	    if (firstenable) {
 		if (!this.isEnabled()) {
 		    return;
@@ -513,7 +513,19 @@ public class Residence extends JavaPlugin {
 		@Override
 		public void run() {
 		    for (OfflinePlayer player : Residence.getServ().getOfflinePlayers()) {
-			UUIDList.put(player.getName().toLowerCase(), player.getUniqueId());
+			if (player == null)
+			    continue;
+
+			String name = player.getName();
+			if (name == null)
+			    continue;
+
+			UUID id = player.getUniqueId();
+
+			if (id == null)
+			    continue;
+
+			UUIDList.put(name.toLowerCase(), id);
 		    }
 		    return;
 		}

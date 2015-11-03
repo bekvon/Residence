@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.containers.HelpLines;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class HelpEntry {
     protected String desc;
     protected String[] lines;
     protected List<HelpEntry> subentrys;
-    protected static int linesPerPage = 7;
+    protected static int linesPerPage = 8;
 
     public HelpEntry(String entryname) {
 	name = entryname;
@@ -61,36 +62,53 @@ public class HelpEntry {
 	return desc;
     }
 
-    public static int getLinesPerPage() {
-	return linesPerPage;
-    }
-
-    public static void setLinesPerPage(int lines) {
-	linesPerPage = lines;
-    }
-
-    public void printHelp(CommandSender sender, int page, boolean resadmin) {
-	List<String> helplines = this.getHelpData(sender, resadmin);
+    public void printHelp(CommandSender sender, int page, boolean resadmin, String path) {
+	List<HelpLines> helplines = this.getHelpData(sender, resadmin);
+	path = "/" + path.replace(".", " ") + " ";
 	int pagecount = (int) Math.ceil((double) helplines.size() / (double) linesPerPage);
 	if (page > pagecount || page < 1) {
 	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
 	    return;
 	}
-	sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("HelpPageHeader", ChatColor.YELLOW + name + ChatColor.RED + "|" + ChatColor.YELLOW + page
-	    + ChatColor.RED + "|" + ChatColor.YELLOW + pagecount + ChatColor.RED));
-	sender.sendMessage(ChatColor.DARK_AQUA + Residence.getLanguage().getPhrase("Description") + ": " + ChatColor.GREEN + desc);
+
+	String separator = ChatColor.GOLD + "";
+	String simbol = "\u25AC";
+	for (int i = 0; i < 5; i++) {
+	    separator += simbol;
+	}
+
+	sender.sendMessage(ChatColor.GOLD + separator + " " + Residence.getLanguage().getPhrase("HelpPageHeader", ChatColor.YELLOW + path + ChatColor.GOLD + "|"
+	    + ChatColor.YELLOW + page + ChatColor.GOLD + "|" + ChatColor.YELLOW + pagecount + ChatColor.GOLD) + " " + separator);
+//	sender.sendMessage(ChatColor.DARK_AQUA + Residence.getLanguage().getPhrase("Description") + ": " + ChatColor.GREEN + desc);
 	int start = linesPerPage * (page - 1);
 	int end = start + linesPerPage;
-	boolean alternatecolor = false;
 	for (int i = start; i < end; i++) {
 	    if (helplines.size() > i) {
-		if (alternatecolor) {
-		    sender.sendMessage(ChatColor.YELLOW + helplines.get(i));
-		    alternatecolor = false;
-		} else {
-		    sender.sendMessage(ChatColor.GOLD + helplines.get(i));
-		    alternatecolor = true;
-		}
+
+		if (helplines.get(i).getCommand() != null) {
+		    HelpEntry sub = this.getSubEntry(helplines.get(i).getCommand());
+		    
+		    String desc = "";
+		    int y = 0;
+		    for (String one : sub.lines) {
+			desc += ChatColor.GOLD + one;
+			y++;
+			if (y < sub.lines.length) {
+			    desc += "\n";
+			}
+		    }
+		    
+		    if (resadmin)
+			path = path.replace("/res ", "/resadmin ");
+		    
+		    String prev = "[\"\",{\"text\":\"" + ChatColor.GOLD + " " + helplines.get(i).getDesc()
+			+ "\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + path + helplines.get(i).getCommand()
+			+ " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
+
+		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev);
+
+		} else
+		    sender.sendMessage(ChatColor.GOLD + " " + helplines.get(i).getDesc());
 	    }
 	}
 
@@ -101,42 +119,46 @@ public class HelpEntry {
 	NextPage = page < pagecount ? NextPage : page;
 	int Prevpage = page - 1;
 	Prevpage = page > 1 ? Prevpage : page;
-	
+
 	String baseCmd = resadmin ? "resadmin" : "res";
 	String prevCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + Prevpage : "/" + baseCmd + " ? " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + Residence.getLanguage().getPhrase("PrevInfoPage") + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
-	    + prevCmd
+	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLanguage().getPhrase("PrevInfoPage")
+	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + NextPage : "/" + baseCmd + " ? " + NextPage;
-	String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
-	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
+	String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + " " + separator + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
 	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
-
     }
 
     public void printHelp(CommandSender sender, int page, String path, boolean resadmin) {
 	HelpEntry subEntry = this.getSubEntry(path);
 	if (subEntry != null) {
-	    subEntry.printHelp(sender, page, resadmin);
+	    subEntry.printHelp(sender, page, resadmin, path);
 	} else {
 	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
 	}
     }
 
-    private List<String> getHelpData(CommandSender sender, boolean resadmin) {
-	List<String> helplines = new ArrayList<String>();
-	helplines.addAll(Arrays.asList(lines));
-	if (subentrys.size() > 0)
-	    helplines.add(ChatColor.LIGHT_PURPLE + "---" + Residence.getLanguage().getPhrase("SubCommands") + "---");
+    private List<HelpLines> getHelpData(CommandSender sender, boolean resadmin) {
+	List<HelpLines> helplines = new ArrayList<HelpLines>();
+
+	for (String one : lines) {
+	    helplines.add(new HelpLines(null, one));
+	}
+
+//	helplines.addAll(Arrays.asList(lines));
+//	if (subentrys.size() > 0)
+//	    helplines.add(ChatColor.LIGHT_PURPLE + "---" + Residence.getLanguage().getPhrase("SubCommands") + "---");
 	for (HelpEntry entry : subentrys) {
 	    if (ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && !resadmin)
 		continue;
-	    
+
 	    if (!ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && resadmin)
 		continue;
 
-	    helplines.add(ChatColor.GREEN + entry.getName() + ChatColor.YELLOW + " - " + entry.getDescription());
+	    helplines.add(new HelpLines(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + entry.getDescription()));
 	}
 	return helplines;
     }
@@ -194,7 +216,7 @@ public class HelpEntry {
 		if (stringList != null) {
 		    entry.lines = new String[stringList.size()];
 		    for (int i = 0; i < stringList.size(); i++) {
-			entry.lines[i] = "- " + ChatColor.translateAlternateColorCodes('&', stringList.get(i));
+			entry.lines[i] = ChatColor.translateAlternateColorCodes('&', stringList.get(i));
 		    }
 		}
 	    }

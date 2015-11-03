@@ -855,28 +855,28 @@ public class ResidenceCommandListener extends Residence {
     }
 
     private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender) {
-	if (helppages != null) {
-	    String helppath = "res";
-	    for (int i = 0; i < args.length; i++) {
-		if (args[i].equalsIgnoreCase("?")) {
-		    break;
-		}
-		helppath = helppath + "." + args[i];
+	if (helppages == null)
+	    return false;
+
+	String helppath = "res";
+	for (int i = 0; i < args.length; i++) {
+	    if (args[i].equalsIgnoreCase("?")) {
+		break;
 	    }
-	    int page = 1;
-	    if (!args[args.length - 1].equalsIgnoreCase("?")) {
-		try {
-		    page = Integer.parseInt(args[args.length - 1]);
-		} catch (Exception ex) {
-		    sender.sendMessage(ChatColor.RED + language.getPhrase("InvalidHelp"));
-		}
-	    }
-	    if (helppages.containesEntry(helppath)) {
-		helppages.printHelp(sender, page, helppath, resadmin);
-		return true;
+	    helppath = helppath + "." + args[i];
+	}
+	int page = 1;
+	if (!args[args.length - 1].equalsIgnoreCase("?")) {
+	    try {
+		page = Integer.parseInt(args[args.length - 1]);
+	    } catch (Exception ex) {
+		sender.sendMessage(ChatColor.RED + language.getPhrase("InvalidHelp"));
 	    }
 	}
-	return false;
+	if (helppages.containesEntry(helppath))
+	    helppages.printHelp(sender, page, helppath, resadmin);	
+
+	return true;
     }
 
     private boolean commandResExpand(String[] args, boolean resadmin, Player player, int page) {
