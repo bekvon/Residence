@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -26,7 +27,6 @@ public class CommentedYamlConfiguration extends YamlConfiguration {
 	comments = new HashMap<String, String>();
     }
 
-    @Override
     public void save(String file) throws IOException {
 	if (file == null) {
 	    throw new IllegalArgumentException("File cannot be null");
@@ -35,7 +35,6 @@ public class CommentedYamlConfiguration extends YamlConfiguration {
 	save(new File(file));
     }
 
-    @Override
     public void save(File file) throws IOException {
 	if (file == null) {
 	    throw new IllegalArgumentException("File cannot be null");
@@ -44,9 +43,10 @@ public class CommentedYamlConfiguration extends YamlConfiguration {
 	Files.createParentDirs(file);
 
 	String data = insertComments(saveToString());
+	data = data.replace("\\x", "\\u00");
 	data = StringEscapeUtils.unescapeJava(data);
-
-	Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+		
+	Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 
 	try {
 	    writer.write(data);

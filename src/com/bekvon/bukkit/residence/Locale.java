@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,9 +58,7 @@ public class Locale {
 
 	BufferedReader in = null;
 	try {
-	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
-	} catch (UnsupportedEncodingException e1) {
-	    e1.printStackTrace();
+	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
 	} catch (FileNotFoundException e1) {
 	    e1.printStackTrace();
 	}
