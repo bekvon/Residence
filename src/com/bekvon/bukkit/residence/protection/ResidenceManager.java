@@ -27,6 +27,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
+import com.bekvon.bukkit.residence.shopUtil.Shops;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 
 /**
@@ -36,6 +37,7 @@ import com.bekvon.bukkit.residence.text.help.InformationPager;
 public class ResidenceManager {
     protected Map<String, ClaimedResidence> residences;
     protected Map<String, Map<ChunkRef, List<String>>> chunkResidences;
+    protected Map<String, Shops> shops = new HashMap<String, Shops>();
 
     public ResidenceManager() {
 	residences = new HashMap<>();
@@ -116,6 +118,23 @@ public class ResidenceManager {
 	    }
 	}
 	return null;
+    }
+
+    public void addShop(ClaimedResidence res) {
+	Shops shop = new Shops(res);
+	shops.put(res.getName(), shop);
+    }
+    
+    public void removeShop(ClaimedResidence res) {
+	removeShop(res.getName());
+    }
+    
+    public void removeShop(String resName) {
+	shops.remove(resName);
+    }
+    
+    public Map<String, Shops> getShops() {
+	return shops;
     }
 
     public boolean addResidence(String name, Location loc1, Location loc2) {
@@ -784,6 +803,10 @@ public class ResidenceManager {
 
     public int getResidenceCount() {
 	return residences.size();
+    }
+
+    public Map<String, ClaimedResidence> getResidences() {
+	return residences;
     }
 
     public void removeChunkList(String name) {

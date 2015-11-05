@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -98,10 +97,5 @@ public class v1_7_Couldron implements NMS {
 
     @Override
     public void addDefaultFlags(Map<Material, String> matUseFlagList) {
-    }
-
-    @Override
-    public int getOnlinePlayerAmount() {
-	return Bukkit.getServer().getOnlinePlayers().size();
     }
 }

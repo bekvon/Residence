@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -28,6 +30,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
+import com.bekvon.bukkit.residence.shopUtil.Shops;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -581,6 +584,17 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    return false;
 	}
+	if (cmd.equals("shoplist")) {
+	    if (args.length == 1) {
+		int i = 1;
+		for (Entry<String, Shops> one : rmanager.getShops().entrySet()) {
+		    player.sendMessage(ChatColor.GOLD + "" + i + ". " + ChatColor.YELLOW + "" + one.getKey() + " (" + one.getValue().getRes().getOwner() + ")");
+		    i++;
+		}
+		return true;
+	    }
+	    return false;
+	}
 	if (cmd.equals("listhidden")) {
 	    if (!resadmin) {
 		player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
@@ -874,7 +888,7 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	}
 	if (helppages.containesEntry(helppath))
-	    helppages.printHelp(sender, page, helppath, resadmin);	
+	    helppages.printHelp(sender, page, helppath, resadmin);
 
 	return true;
     }

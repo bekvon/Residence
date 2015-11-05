@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,8 +24,6 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import com.bekvon.bukkit.residence.NMS;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
 public class v1_7 implements NMS {
     @Override
@@ -100,10 +97,5 @@ public class v1_7 implements NMS {
 
     @Override
     public void addDefaultFlags(Map<Material, String> matUseFlagList) {
-    }
-
-    @Override
-    public int getOnlinePlayerAmount() {
-	return Bukkit.getServer().getOnlinePlayers().length;
     }
 }

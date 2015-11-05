@@ -56,14 +56,6 @@ public class ActionBar {
 	} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
 	    Bukkit.getLogger().log(Level.SEVERE, "Error {0} " + version, ex);
 	}
-
-	try {
-	    Object player = getHandle.invoke(receivingPacket);
-	    Object connection = playerConnection.get(player);
-	    sendPacket.invoke(connection, packet);
-	} catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-	    Bukkit.getLogger().log(Level.SEVERE, "Error {0}", ex);
-	}
     }
 
     private static String getCraftPlayerClasspath() {

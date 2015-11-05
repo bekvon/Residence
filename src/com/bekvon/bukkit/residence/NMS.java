@@ -27,6 +27,4 @@ public interface NMS {
     public boolean isSpectator(GameMode mode);
     
     public void addDefaultFlags(Map<Material, String> matUseFlagList);
-    
-    public int getOnlinePlayerAmount();
 }

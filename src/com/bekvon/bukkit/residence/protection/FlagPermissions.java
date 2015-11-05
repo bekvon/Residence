@@ -196,6 +196,9 @@ public class FlagPermissions {
 	// Players will keep hes exp on death
 	addResidenceOnlyFlag("keepexp");
 	
+	// Special flag for making residence as shop
+	addResidenceOnlyFlag("shop");
+	
 	addPlayerOrGroupOnlyFlag("admin");
 	addFlagToFlagGroup("redstone", "note");
 	addFlagToFlagGroup("redstone", "pressure");

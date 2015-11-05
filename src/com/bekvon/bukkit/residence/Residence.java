@@ -60,14 +60,17 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
+import com.bekvon.bukkit.residence.shopUtil.ShopListener;
 import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
@@ -102,6 +105,7 @@ public class Residence extends JavaPlugin {
     protected static ResidencePlayerListener plistener;
     protected static ResidenceEntityListener elistener;
     protected static ResidenceSpoutListener slistener;
+    protected static ShopListener shlistener;
     protected static TransactionManager tmanager;
     protected static PermissionListManager pmanager;
     protected static LeaseManager leasemanager;
@@ -277,6 +281,7 @@ public class Residence extends JavaPlugin {
 	    FlagUtil.load();
 
 	    String packageName = getServer().getClass().getPackage().getName();
+
 	    String[] packageSplit = packageName.split("\\.");
 	    String version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{4})")[0];
 	    try {
@@ -444,10 +449,14 @@ public class Residence extends JavaPlugin {
 		plistener = new ResidencePlayerListener();
 		elistener = new ResidenceEntityListener();
 
+		shlistener = new ShopListener();
+
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(blistener, this);
 		pm.registerEvents(plistener, this);
 		pm.registerEvents(elistener, this);
+
+		pm.registerEvents(shlistener, this);
 
 		// 1.8 event
 		if (VersionChecker.GetVersion() >= 1800)
@@ -872,6 +881,20 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    rmanager = ResidenceManager.load(worlds);
+
+	    // Getting shop residences
+	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
+	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {
+
+		ResidencePermissions perms = one.getValue().getPermissions();
+		if (!perms.has("shop", false))
+		    continue;
+
+		rmanager.addShop(one.getValue());
+	    }
+
+	    Debug.D("" + rmanager.getShops().size());
+
 	    loadFile = new File(saveFolder, "forsale.yml");
 	    if (loadFile.isFile()) {
 		yml = new YMLSaveHelper(loadFile);

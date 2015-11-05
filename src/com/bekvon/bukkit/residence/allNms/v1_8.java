@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -125,10 +124,5 @@ public class v1_8 implements NMS {
 	matUseFlagList.put(Material.ACACIA_FENCE_GATE, "door");
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, "door");
 	matUseFlagList.put(Material.IRON_TRAPDOOR, "door");
-    }
-
-    @Override
-    public int getOnlinePlayerAmount() {
-	return Bukkit.getServer().getOnlinePlayers().size();
     }
 }
