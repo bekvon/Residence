@@ -15,10 +15,9 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
+import com.bekvon.bukkit.residence.utils.GetTime;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -363,8 +362,7 @@ public class RentManager {
 	    if (rented != null) {
 		player.sendMessage(ChatColor.GOLD + Residence.getLanguage().getPhrase("Status") + ":" + ChatColor.YELLOW + " " + Residence.getLanguage().getPhrase(
 		    "ResidenceRentedBy", ChatColor.RED + rented.player + ChatColor.YELLOW));
-		player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("RentExpire") + ":" + ChatColor.GREEN + new SimpleDateFormat(Residence
-		    .getConfigManager().getDateFormat()).format(new Date(rented.endTime)));
+		player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("RentExpire") + ":" + ChatColor.GREEN + GetTime.getTime(rented.endTime));
 
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("RentAutoRenew") + ":" + ChatColor.DARK_AQUA + rented.autoRefresh);
 	    } else {

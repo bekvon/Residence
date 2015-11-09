@@ -510,12 +510,12 @@ public class ResidenceManager {
 
 	    if (Residence.getConfigManager().enabledRentSystem() && Residence.getRentManager().isRented(areaname)) {
 		msg += ChatColor.YELLOW + Residence.getLanguage().getPhrase("Owner") + ":" + ChatColor.RED + " " + perms.getOwner() + ChatColor.YELLOW
-		    + " Rented by: " + ChatColor.RED + Residence.getRentManager().getRentingPlayer(areaname);
+		    + " " + Residence.getLanguage().getPhrase("RentedBy") + ": " + ChatColor.RED + Residence.getRentManager().getRentingPlayer(areaname);
 	    } else {
 		msg += " " + ChatColor.YELLOW + Residence.getLanguage().getPhrase("Owner") + ":" + ChatColor.RED + " " + perms.getOwner() + ChatColor.YELLOW;
 	    }
 
-	    msg += ChatColor.YELLOW + " Bank: " + ChatColor.GOLD + res.getBank().getStoredMoney();
+	    msg += ChatColor.YELLOW + " " + Residence.getLanguage().getPhrase("Bank") + ": " + ChatColor.GOLD + res.getBank().getStoredMoney();
 
 	    player.sendMessage(msg);
 	} else {

@@ -813,7 +813,7 @@ public class ResidenceCommandListener extends Residence {
 		    }
 		    resName = res.getName();
 		}
-		if (!res.getPermissions().has("shop", false)){
+		if (!res.getPermissions().has("shop", false)) {
 		    player.sendMessage(NewLanguage.getMessage("Language.Shop.CantVote"));
 		    return true;
 		}

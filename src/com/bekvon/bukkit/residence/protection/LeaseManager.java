@@ -12,10 +12,9 @@ import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.GetTime;
 
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -44,9 +43,7 @@ public class LeaseManager {
 
     public String getExpireTime(String area) {
 	if (leaseExpireTime.containsKey(area)) {
-	    Date dNow = new Date(leaseExpireTime.get(area));
-	    SimpleDateFormat ft = new SimpleDateFormat(Residence.getConfigManager().getDateFormat());
-	    return ft.format(dNow);
+	    return GetTime.getTime(leaseExpireTime.get(area));
 	}
 	return null;
     }

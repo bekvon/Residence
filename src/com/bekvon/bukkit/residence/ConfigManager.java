@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,7 @@ public class ConfigManager {
     protected String language;
     protected String DefaultWorld;
     protected String DateFormat;
+    protected String TimeZone;
     protected boolean preventBuildInRent;
     protected boolean stopOnSaveError;
     protected boolean legacyperms;
@@ -451,6 +453,10 @@ public class ConfigManager {
 	writer.addComment("Global.DateFormat", "Sets date format when shown in example lease or rent expire date",
 	    "How to use it properly, more information can be found at http://www.tutorialspoint.com/java/java_date_time.htm");
 	DateFormat = GetConfigString("Global.DateFormat", "E yyyy.MM.dd 'at' hh:mm:ss a zzz", writer, conf, false);
+
+	writer.addComment("Global.TimeZone", "Sets time zone for showing date, usefull when server is in different country then main server player base",
+	    "Full list of posible time zones can be found at http://www.mkyong.com/java/java-display-list-of-timezone-with-gmt/");
+	TimeZone = GetConfigString("Global.TimeZone", Calendar.getInstance().getTimeZone().getID(), writer, conf, false);
 
 	writer.addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
 	ResMoneyBack = GetConfigBoolean("Global.ResMoneyBack", false, writer, conf);
@@ -938,6 +944,10 @@ public class ConfigManager {
 
     public String getDateFormat() {
 	return DateFormat;
+    }
+
+    public String getTimeZone() {
+	return TimeZone;
     }
 
     public boolean preventRentModify() {

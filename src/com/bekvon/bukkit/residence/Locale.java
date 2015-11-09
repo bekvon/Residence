@@ -122,6 +122,7 @@ public class Locale {
 	GetConfigString("Language.AreaToSmallX", "Your x selection length is too small. %1 allowed %2", writer, conf, true);
 	GetConfigString("Language.AreaToSmallY", "Your selection height is too small. %1 allowed %2", writer, conf, true);
 	GetConfigString("Language.AreaToSmallZ", "Your z selection length is too small. %1 allowed %2", writer, conf, true);
+	GetConfigString("Language.AreaName", "Name", writer, conf, true);
 	GetConfigString("Language.AreaRename", "Renamed area %1 to %2", writer, conf, true);
 	GetConfigString("Language.AreaRemove", "Removed area %1...", writer, conf, true);
 	GetConfigString("Language.AreaRemoveLast", "Cannot remove the last area in a residence.", writer, conf, true);
@@ -201,6 +202,7 @@ public class Locale {
 	GetConfigString("Language.InfoTool", "Info Tool", writer, conf, true);
 	GetConfigString("Language.NoBankAccess", "You dont have bank access.", writer, conf, true);
 	GetConfigString("Language.NotEnoughMoney", "You dont have enough money.", writer, conf, true);
+	GetConfigString("Language.Bank", "Bank", writer, conf, true);
 	GetConfigString("Language.BankNoMoney", "Not enough money in the bank.", writer, conf, true);
 	GetConfigString("Language.BankDeposit", "You deposit %1 into the residence bank.", writer, conf, true);
 	GetConfigString("Language.BankWithdraw", "You withdraw %1 from the residence bank.", writer, conf, true);
@@ -211,6 +213,7 @@ public class Locale {
 	// writer, conf, true);
 	GetConfigString("Language.RentReleaseInvalid", "Residence %1 is not rented or for rent.", writer, conf, true);
 	GetConfigString("Language.RentSellFail", "Cannot sell a Residence if it is for rent.", writer, conf, true);
+	GetConfigString("Language.RentedBy", "Rented by", writer, conf, true);
 	GetConfigString("Language.SellRentFail", "Cannot rent a Residence if it is for sale.", writer, conf, true);
 	GetConfigString("Language.OwnerBuyFail", "Cannot buy your own land!", writer, conf, true);
 	GetConfigString("Language.OwnerRentFail", "Cannot rent your own land!", writer, conf, true);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -167,6 +168,7 @@ public class SignUtil {
 		time = rentedPlace.endTime;
 
 	    SimpleDateFormat formatter = new SimpleDateFormat(Residence.getLanguage().getPhrase("SignDateFormat"));
+	    formatter.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
 	    Calendar calendar = Calendar.getInstance();
 	    calendar.setTimeInMillis(time);
 	    String timeString = formatter.format(calendar.getTime());
