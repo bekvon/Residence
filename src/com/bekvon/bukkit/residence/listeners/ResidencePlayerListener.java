@@ -102,7 +102,30 @@ public class ResidencePlayerListener implements Listener {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
     }
+    
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeShopDayNight(ResidenceFlagChangeEvent event) {
+	if (event.isCancelled())
+	    return;
 
+	if (!event.getFlag().equalsIgnoreCase("day") && !event.getFlag().equalsIgnoreCase("night"))
+	    return;
+
+	switch (event.getNewState()) {
+	case NEITHER:
+	case FALSE:
+	    for (Player one : event.getResidence().getPlayersInResidence())	
+		one.resetPlayerTime();		    
+	    break;
+	case INVALID:
+	    break;
+	case TRUE:
+	    break;
+	default:
+	    break;
+	}
+    }
+    
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
 	Player player = event.getPlayer();
