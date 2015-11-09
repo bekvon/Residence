@@ -140,7 +140,7 @@ public class ShopSignUtil {
 	ConcurrentHashMap<String, List<ShopVote>> allvotes = GetAllVoteList();
 
 	if (!allvotes.containsKey(resName))
-	    return new Vote(5.0, 0);
+	    return new Vote(Residence.getConfigManager().getVoteRangeTo() / 2, 0);
 
 	List<ShopVote> votes = allvotes.get(resName);
 
