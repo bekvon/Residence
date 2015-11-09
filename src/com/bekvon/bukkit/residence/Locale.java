@@ -101,6 +101,7 @@ public class Locale {
 	GetConfigString("Language.InvalidBoolean", "Invalid value, must be true(t) or false(f)", writer, conf, true);
 	GetConfigString("Language.InvalidArea", "Invalid Area...", writer, conf, true);
 	GetConfigString("Language.InvalidGroup", "Invalid Group...", writer, conf, true);
+	GetConfigString("Language.UseNumbers", "&cPlease use numbers...", writer, conf, true);
 	writer.addComment("Language.CantPlaceLava", "Replace all text with '' to disable this message");
 	GetConfigString("Language.CantPlaceLava", "You can't place lava outside residence and higher than %1 block level", writer, conf, true);
 	writer.addComment("Language.CantPlaceWater", "Replace all text with '' to disable this message");
@@ -400,6 +401,23 @@ public class Locale {
 	GetConfigString("Language.Chat.ChangedColor", "&eResidence chat channel color changed to %1", writer, conf, true);
 	GetConfigString("Language.Chat.ChangedPrefix", "&eResidence chat channel prefix changed to %1", writer, conf, true);
 
+	GetConfigString("Language.Shop.ListTopLine", "&6%1 &eShop list - Page &6%2 &eof &6%3 %4", writer, conf, true);
+	GetConfigString("Language.Shop.List", " &e%1. &6%2 &e(&6%3&e) %4", writer, conf, true);
+	GetConfigString("Language.Shop.ListVoted", "&e%1 (&6%2&e)", writer, conf, true);
+	GetConfigString("Language.Shop.NoDesc", "&6No description", writer, conf, true);
+	GetConfigString("Language.Shop.Desc", "&6Description:\n%1", writer, conf, true);
+	GetConfigString("Language.Shop.DescChange", "&6Description changed to: %1", writer, conf, true);
+	GetConfigString("Language.Shop.NewBoard", "&6Successfully added new shop sign board", writer, conf, true);
+	GetConfigString("Language.Shop.DeleteBoard", "&6Right click sign of board you want to delete", writer, conf, true);
+	GetConfigString("Language.Shop.InvalidSelection", "&cLeft click with selection tool top left sign and then right click bottom right", writer, conf, true);
+	GetConfigString("Language.Shop.VoteChanged", "&6Vote changed from &e%1 &6to &e%2 &6for &e%3 &6residence", writer, conf, true);
+	GetConfigString("Language.Shop.Voted", "&6You voted, and gave &e%1 &6votes to &e%2 &6residence", writer, conf, true);
+	GetConfigString("Language.Shop.VotedRange", "&6Vote range is from &e%1 &6to &e%2", writer, conf, true);
+	GetConfigString("Language.Shop.SignLines.1", "&e--== &8%1 &e==--", writer, conf, true);
+	GetConfigString("Language.Shop.SignLines.2", "&9%1", writer, conf, true);
+	GetConfigString("Language.Shop.SignLines.3", "&4%1", writer, conf, true);
+	GetConfigString("Language.Shop.SignLines.4", "&8%1&e (&8%2&e)", writer, conf, true);
+
 	GetConfigString("Language.RandomTeleport.TpLimit", "&eYou can't teleport so fast, please wait &6%1 &esec and try again", writer, conf, true);
 	GetConfigString("Language.RandomTeleport.TeleportSuccess", "&eTeleported to X:&6%1&e, Y:&6%2&e, Z:&6%3 &elocation", writer, conf, true);
 	GetConfigString("Language.RandomTeleport.IncorrectLocation", "&6Could not find correct teleport location, please wait &e%1 &6sec and try again.", writer, conf,
@@ -563,7 +581,8 @@ public class Locale {
 		"&2overridepvp &3- &eOverrides any plugin pvp protection",
 		"&2keepinv &3- &ePlayers keeps inventory after death",
 		"&2keepexp &3- &ePlayers keeps exp after death",
-		"&2burn &3- &eallows or denys Mob combustion in residences"),
+		"&2burn &3- &eallows or denys Mob combustion in residences",
+		"&2bank &3- &eallows or denys deposit/withdraw money from res bank"),
 	    writer, conf, true);
 
 	//res limits
@@ -644,7 +663,7 @@ public class Locale {
 	// res bank
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.bank.Description", "Manage money in a Residence", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.bank.Info",
-	    Arrays.asList("Usage: /res bank [deposit/withdraw] [amount]", "You must be standing in a Residence", "You must have the +bank flag."), writer, conf,
+	    Arrays.asList("Usage: /res bank [deposit/withdraw] <residence> [amount]", "You must be standing in a Residence or provide residence name", "You must have the +bank flag."), writer, conf,
 	    true);
 
 	// res confirm

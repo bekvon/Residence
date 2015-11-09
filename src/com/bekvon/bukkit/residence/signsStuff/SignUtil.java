@@ -1,4 +1,4 @@
-package com.bekvon.bukkit.residence.Signs;
+package com.bekvon.bukkit.residence.signsStuff;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +29,9 @@ public class SignUtil {
     public static SignInfo Signs = new SignInfo();
 
     public static int updateAllSigns() {
-	List<com.bekvon.bukkit.residence.Signs.Signs> temp = new ArrayList<com.bekvon.bukkit.residence.Signs.Signs>();
+	List<com.bekvon.bukkit.residence.signsStuff.Signs> temp = new ArrayList<com.bekvon.bukkit.residence.signsStuff.Signs>();
 	temp.addAll(Signs.GetAllSigns());
-	for (com.bekvon.bukkit.residence.Signs.Signs one : temp) {
+	for (com.bekvon.bukkit.residence.signsStuff.Signs one : temp) {
 	    SignUpdate(one);
 	}
 	return temp.size();

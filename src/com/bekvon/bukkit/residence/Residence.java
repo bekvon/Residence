@@ -37,7 +37,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
@@ -64,13 +63,14 @@ import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
-import com.bekvon.bukkit.residence.shopUtil.ShopListener;
+import com.bekvon.bukkit.residence.shopStuff.ShopListener;
+import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
+import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
@@ -133,7 +133,7 @@ public class Residence extends JavaPlugin {
     protected Map<String, String> deleteConfirm;
     protected static List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian", "Polish", "Lithuanian" };
-    public static ConcurrentHashMap<String, UUID> UUIDList = new ConcurrentHashMap<String, UUID>();
+    public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     public static WorldEditPlugin wep = null;
     public static WorldGuardPlugin wg = null;
     public static int wepid;
@@ -398,6 +398,20 @@ public class Residence extends JavaPlugin {
 		}
 	    }
 
+	    Bukkit.getConsoleSender().sendMessage("[Residence] Loading (" + Bukkit.getOfflinePlayers().length + ") player data");
+	    for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+		if (player == null)
+		    continue;
+
+		String name = player.getName();
+		if (name == null)
+		    continue;
+
+		getOfflinePlayerMap().put(name.toLowerCase(), player);
+	    }
+
+	    Bukkit.getConsoleSender().sendMessage("[Residence] Player data loaded: " + getOfflinePlayerMap().size());
+
 	    if (rmanager == null) {
 		rmanager = new ResidenceManager();
 	    }
@@ -518,28 +532,6 @@ public class Residence extends JavaPlugin {
 
 	    PlayerManager.fillList();
 
-	    Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
-		@Override
-		public void run() {
-		    for (OfflinePlayer player : Residence.getServ().getOfflinePlayers()) {
-			if (player == null)
-			    continue;
-
-			String name = player.getName();
-			if (name == null)
-			    continue;
-
-			UUID id = player.getUniqueId();
-
-			if (id == null)
-			    continue;
-
-			UUIDList.put(name.toLowerCase(), id);
-		    }
-		    return;
-		}
-	    });
-
 	} catch (Exception ex) {
 	    initsuccess = false;
 	    getServer().getPluginManager().disablePlugin(this);
@@ -548,6 +540,10 @@ public class Residence extends JavaPlugin {
 	}
 
 	SignUtil.LoadSigns();
+	ShopSignUtil.LoadSigns();
+	ShopSignUtil.LoadShopVotes();
+
+	ShopSignUtil.BoardUpdate();
 
 	versionChecker = new VersionChecker(this);
 	versionChecker.VersionCheck(null);
@@ -893,7 +889,9 @@ public class Residence extends JavaPlugin {
 		rmanager.addShop(one.getValue());
 	    }
 
-	    Debug.D("" + rmanager.getShops().size());
+	    if (Residence.getConfigManager().isUUIDConvertion()) {
+		Residence.getConfigManager().ChangeConfig("Global.UUIDConvertion", false);
+	    }
 
 	    loadFile = new File(saveFolder, "forsale.yml");
 	    if (loadFile.isFile()) {
@@ -1150,26 +1148,24 @@ public class Residence extends JavaPlugin {
     public static UUID getPlayerUUID(String playername) {
 	Player p = Residence.getServ().getPlayer(playername);
 	if (p == null) {
-	    if (UUIDList.size() == 0) {
-		for (OfflinePlayer player : Residence.getServ().getOfflinePlayers()) {
-		    if (player == null)
-			continue;
-		    String name = player.getName();
-		    if (name == null)
-			continue;
-		    UUID uuid = player.getUniqueId();
-		    if (uuid == null)
-			continue;
-		    UUIDList.put(name.toLowerCase(), player.getUniqueId());
-		}
-	    }
-
-	    if (UUIDList.containsKey(playername.toLowerCase()))
-		return UUIDList.get(playername.toLowerCase());
+	    if (getOfflinePlayerMap().containsKey(playername.toLowerCase()))
+		return getOfflinePlayerMap().get(playername.toLowerCase()).getUniqueId();
 
 	} else
 	    return p.getUniqueId();
 	return null;
+    }
+
+    public static ConcurrentHashMap<String, OfflinePlayer> getOfflinePlayerMap() {
+	return OfflinePlayerList;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static OfflinePlayer getOfflinePlayer(String Name) {
+	if (OfflinePlayerList.containsKey(Name.toLowerCase())) {
+	    return getOfflinePlayerMap().get(Name.toLowerCase());
+	}
+	return Bukkit.getOfflinePlayer(Name);
     }
 
     public static String getPlayerUUIDString(String playername) {

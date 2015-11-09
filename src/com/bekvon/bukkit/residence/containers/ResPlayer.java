@@ -33,12 +33,11 @@ public class ResPlayer {
 	RecalculatePermissions();
     }
 
-    @SuppressWarnings("deprecation")
     public void RecalculatePermissions() {
 	this.player = Bukkit.getPlayerExact(userName);
 
 	if (this.player == null)
-	    ofPlayer = Bukkit.getOfflinePlayer(userName);
+	    ofPlayer = Residence.getOfflinePlayer(userName);
 
 	recountMaxRes();
 	recountMaxRents();
@@ -119,7 +118,7 @@ public class ResPlayer {
     }
 
     public void recountRes() {
-	if (this.userName != null){
+	if (this.userName != null) {
 	    ResidenceManager m = Residence.getResidenceManager();
 	    this.ResidenceList = m.getResidenceMapList(this.userName, true);
 	}

@@ -1,11 +1,12 @@
-package com.bekvon.bukkit.residence.shopUtil;
+package com.bekvon.bukkit.residence.signsStuff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-public class ShopSigns {
+public class Signs {
 
+    int Category = 0;
     String Residence = null;
     String world = null;
     double x = 0.01;
@@ -14,7 +15,7 @@ public class ShopSigns {
 
     Location loc = null;
 
-    public ShopSigns() {
+    public Signs() {
     }
 
     public void setLocation(Location Location) {
@@ -28,6 +29,14 @@ public class ShopSigns {
 		this.loc = new Location(Bukkit.getWorld(this.world), this.x, this.y, this.z);
 	}
 	return this.loc;
+    }
+
+    public void setCategory(int Category) {
+	this.Category = Category;
+    }
+
+    public int GetCategory() {
+	return this.Category;
     }
 
     public void setResidence(String Residence) {

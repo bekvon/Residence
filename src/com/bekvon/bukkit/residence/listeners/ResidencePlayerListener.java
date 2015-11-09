@@ -60,9 +60,9 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
+import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.utils.ActionBar;
-import com.bekvon.bukkit.residence.Signs.SignUtil;
-import com.bekvon.bukkit.residence.Signs.Signs;
 
 /**
  * 
@@ -86,7 +86,7 @@ public class ResidencePlayerListener implements Listener {
 	playerToggleChat.clear();
 	minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = Residence.getConfigManager().chatEnabled();
-	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+	for (Player player : Bukkit.getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
     }
@@ -98,7 +98,7 @@ public class ResidencePlayerListener implements Listener {
 	playerToggleChat.clear();
 	minUpdateTime = Residence.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = Residence.getConfigManager().chatEnabled();
-	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+	for (Player player : Bukkit.getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
     }
@@ -324,7 +324,7 @@ public class ResidencePlayerListener implements Listener {
 	Residence.getChatManager().removeFromChannel(pname);
 	Residence.getPlayerListener().removePlayerResidenceChat(pname);
 
-	Residence.UUIDList.put(pname, event.getPlayer().getUniqueId());
+	Residence.getOfflinePlayerMap().put(pname, event.getPlayer());
 
 	if (AutoSelection.getList().containsKey(pname.toLowerCase()))
 	    AutoSelection.getList().remove(pname);

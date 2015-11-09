@@ -8,13 +8,14 @@ package com.bekvon.bukkit.residence.economy.rent;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.signsStuff.SignUtil;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

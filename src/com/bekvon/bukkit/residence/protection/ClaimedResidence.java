@@ -46,6 +46,7 @@ public class ClaimedResidence {
     protected Location tpLoc;
     protected String enterMessage;
     protected String leaveMessage;
+    protected String ShopDesc = null;
     protected String ChatPrefix = "";
     protected ChatColor ChannelColor = ChatColor.WHITE;
     protected ResidenceItemList ignorelist;
@@ -601,12 +602,20 @@ public class ClaimedResidence {
 	return leaveMessage;
     }
 
+    public String getShopDesc() {
+	return ShopDesc;
+    }
+
     public void setEnterMessage(String message) {
 	enterMessage = message;
     }
 
     public void setLeaveMessage(String message) {
 	leaveMessage = message;
+    }
+
+    public void setShopDesc(String message) {
+	ShopDesc = message;
     }
 
     public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin) {
@@ -824,7 +833,7 @@ public class ClaimedResidence {
 	}
 
 	if (tpLoc != null) {
-	    if (Residence.getConfigManager().getTeleportDelay() > 0 &&!isAdmin)
+	    if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
 		performDelaydTp(tpLoc, targetPlayer, reqPlayer, true);
 	    else
 		performInstantTp(tpLoc, targetPlayer, reqPlayer, true);
@@ -836,7 +845,7 @@ public class ClaimedResidence {
 		return;
 	    }
 	    final Location targloc = this.getOutsideFreeLoc(area.getHighLoc());
-	    if (Residence.getConfigManager().getTeleportDelay() > 0 &&!isAdmin)
+	    if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
 		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
 	    else
 		performInstantTp(targloc, targetPlayer, reqPlayer, true);
@@ -915,6 +924,7 @@ public class ClaimedResidence {
 	Map<String, Object> areamap = new HashMap<>();
 	root.put("EnterMessage", enterMessage);
 	root.put("LeaveMessage", leaveMessage);
+	root.put("ShopDescription", ShopDesc);
 	root.put("StoredMoney", bank.getStoredMoney());
 	root.put("BlockSellPrice", BlockSellPrice);
 	root.put("ChatPrefix", ChatPrefix);
@@ -949,6 +959,10 @@ public class ClaimedResidence {
 
 	res.enterMessage = (String) root.get("EnterMessage");
 	res.leaveMessage = (String) root.get("LeaveMessage");
+	
+	if (root.containsKey("ShopDescription"))
+	    res.setShopDesc((String) root.get("ShopDescription"));
+	
 	if (root.containsKey("StoredMoney"))
 	    res.bank.setStoredMoney((Integer) root.get("StoredMoney"));
 

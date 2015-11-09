@@ -27,7 +27,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
-import com.bekvon.bukkit.residence.shopUtil.Shops;
+import com.bekvon.bukkit.residence.shopStuff.Shops;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 
 /**
@@ -124,15 +124,15 @@ public class ResidenceManager {
 	Shops shop = new Shops(res);
 	shops.put(res.getName(), shop);
     }
-    
+
     public void removeShop(ClaimedResidence res) {
 	removeShop(res.getName());
     }
-    
+
     public void removeShop(String resName) {
 	shops.remove(resName);
     }
-    
+
     public Map<String, Shops> getShops() {
 	return shops;
     }
@@ -635,8 +635,15 @@ public class ResidenceManager {
     public static Map<ChunkRef, List<String>> loadMap(String worldName, Map<String, Object> root, ResidenceManager resm) throws Exception {
 	Map<ChunkRef, List<String>> retRes = new HashMap<>();
 	if (root != null) {
+	    int i = 0;
+	    int y = 0;
 	    for (Entry<String, Object> res : root.entrySet()) {
-
+		if (i == 100 & Residence.getConfigManager().isUUIDConvertion())
+		    Bukkit.getConsoleSender().sendMessage("[Residence] " + worldName + " UUID conversion done: " + y + " of " + root.size());
+		if (i >= 100)
+		    i = 0;
+		i++;
+		y++;
 		try {
 		    @SuppressWarnings("unchecked")
 		    ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null);

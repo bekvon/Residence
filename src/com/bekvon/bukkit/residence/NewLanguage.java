@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,6 +44,35 @@ public class NewLanguage {
 	if (customlocale == null || !customlocale.contains(key))
 	    return enlocale.contains(key) == true ? ChatColor.translateAlternateColorCodes('&', enlocale.getString(key)) : missing;
 	return customlocale.contains(key) == true ? ChatColor.translateAlternateColorCodes('&', customlocale.getString(key)) : missing;
+    }
+
+    /**
+     * Get the message with the correct key
+     * 
+     * @param key
+     *            - the path of the message
+     * @param variables
+     *            - the variables separated with %
+     * @return the message
+     */
+    public static String getMessage(String key, String variables) {
+	String missing = "Missing locale for " + key;
+	String message = "";
+	if (customlocale == null || !customlocale.contains(key))
+	    message = enlocale.contains(key) == true ? enlocale.getString(key) : missing;
+	message = customlocale.contains(key) == true ? customlocale.getString(key) : missing;
+
+	List<String> var = new ArrayList<String>();
+
+	if (!variables.contains("%")) {
+	    var.add(variables);
+	} else {
+	    var = new ArrayList<String>(Arrays.asList(variables.split("%")));
+	}
+	for (int i = 1; i <= var.size(); i++) {
+	    message = message.replace("%" + i, var.get(i - 1));
+	}
+	return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     /**

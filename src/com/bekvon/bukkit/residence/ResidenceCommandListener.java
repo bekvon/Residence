@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +21,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.SpoutManager;
 
-import com.bekvon.bukkit.residence.Signs.SignUtil;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.gui.SetFlag;
@@ -30,7 +31,13 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
-import com.bekvon.bukkit.residence.shopUtil.Shops;
+import com.bekvon.bukkit.residence.shopStuff.ShopListener;
+import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
+import com.bekvon.bukkit.residence.shopStuff.Board;
+import com.bekvon.bukkit.residence.shopStuff.ShopVote;
+import com.bekvon.bukkit.residence.shopStuff.Shops;
+import com.bekvon.bukkit.residence.shopStuff.Vote;
+import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -332,6 +339,7 @@ public class ResidenceCommandListener extends Residence {
 	if (cmd.equals("confirm")) {
 	    return commandResConfirm(args, resadmin, sender, page);
 	}
+
 	if (cmd.equals("version")) {
 	    sender.sendMessage(ChatColor.GRAY + "------------------------------------");
 	    sender.sendMessage(ChatColor.RED + "This server running " + ChatColor.GOLD + "Residence" + ChatColor.RED + " version: " + ChatColor.BLUE + this
@@ -375,6 +383,11 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    return true;
 	}
+
+	if (cmd.equals("bank")) {
+	    return commandResBank(args, resadmin, sender, page);
+	}
+
 	if (player == null) {
 	    return true;
 	}
@@ -460,7 +473,7 @@ public class ResidenceCommandListener extends Residence {
 			    target = p;
 			    rsadm = true;
 			} else
-			    target = Bukkit.getOfflinePlayer(tempArgs[1]);
+			    target = Residence.getOfflinePlayer(tempArgs[1]);
 			if (target == null)
 			    return;
 			gmanager.getGroup(target.getName(), Residence.getConfigManager().getDefaultWorld()).printLimits(p, target, rsadm);
@@ -584,13 +597,256 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    return false;
 	}
-	if (cmd.equals("shoplist")) {
-	    if (args.length == 1) {
-		int i = 1;
-		for (Entry<String, Shops> one : rmanager.getShops().entrySet()) {
-		    player.sendMessage(ChatColor.GOLD + "" + i + ". " + ChatColor.YELLOW + "" + one.getKey() + " (" + one.getValue().getRes().getOwner() + ")");
+	if (cmd.equals("shop")) {
+
+	    if ((args.length == 2 || args.length == 3) && args[1].equalsIgnoreCase("list")) {
+
+		int Shoppage = 1;
+
+		if (args.length == 3) {
+		    try {
+			Shoppage = Integer.parseInt(args[2]);
+		    } catch (Exception ex) {
+			player.sendMessage(Residence.getLanguage().getPhrase("UseNumbers"));
+			return true;
+		    }
+		}
+
+		Map<Shops, Double> ShopList = ShopSignUtil.getSortedShopList();
+
+		String separator = ChatColor.GOLD + "";
+		String simbol = "\u25AC";
+		for (int i = 0; i < 5; i++) {
+		    separator += simbol;
+		}
+		int pagecount = (int) Math.ceil((double) ShopList.size() / (double) 10);
+		if (page > pagecount || page < 1) {
+		    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
+		    return true;
+		}
+
+		player.sendMessage(NewLanguage.getMessage("Language.Shop.ListTopLine").replace("%1", separator).replace("%2", String.valueOf(Shoppage)).replace("%3",
+		    String.valueOf(pagecount)).replace("%4", separator));
+
+		int start = Shoppage * 10 - 9;
+		int end = Shoppage * 10 + 1;
+		int position = 0;
+		int i = start;
+		for (Entry<Shops, Double> one : ShopList.entrySet()) {
+		    position++;
+
+		    if (position < start)
+			continue;
+
+		    if (position >= end)
+			break;
+
+		    Vote vote = ShopSignUtil.getAverageVote(one.getKey().getRes().getName());
+
+		    String votestat = vote.getAmount() == 0 ? "" : NewLanguage.getMessage("Language.Shop.ListVoted").replace("%1", String.valueOf(vote.getVote()))
+			.replace("%2", String.valueOf(vote.getAmount()));
+
+		    String message = NewLanguage.getMessage("Language.Shop.List").replace("%1", String.valueOf(i)).replace("%2", one.getKey().getRes().getName())
+			.replace("%3", one.getKey().getRes().getOwner()).replace("%4", votestat);
+
+		    String desc = one.getKey().getRes().getShopDesc() == null ? NewLanguage.getMessage("Language.Shop.NoDesc") : NewLanguage.getMessage(
+			"Language.Shop.Desc").replace("%1", ChatColor.translateAlternateColorCodes('&', one.getKey().getRes().getShopDesc()));
+
+		    String prev = "[\"\",{\"text\":\"" + ChatColor.GOLD + " " + message
+			+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/res tp " + one.getKey().getRes().getName()
+			+ " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
+
+		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev);
+
 		    i++;
 		}
+
+		if (pagecount == 1)
+		    return true;
+
+		int NextPage = page + 1;
+		NextPage = page < pagecount ? NextPage : page;
+		int Prevpage = page - 1;
+		Prevpage = page > 1 ? Prevpage : page;
+
+		String prevCmd = "/res shop list " + Prevpage;
+		String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLanguage().getPhrase("PrevInfoPage")
+		    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
+		    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
+		String nextCmd = "/res shop list " + NextPage;
+		String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + " " + separator
+		    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
+		    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
+
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
+
+		return true;
+	    }
+
+	    if (args.length == 2 && args[1].equalsIgnoreCase("delete")) {
+
+		if (!resadmin) {
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		    return true;
+		}
+
+		ShopListener.Delete.add(player.getName());
+		player.sendMessage(NewLanguage.getMessage("Language.Shop.DeleteBoard"));
+		return true;
+	    }
+	    if (args.length > 2 && args[1].equalsIgnoreCase("setdesc")) {
+
+		ClaimedResidence res = null;
+
+		String desc = "";
+		if (args.length >= 2) {
+		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    if (res == null) {
+			player.sendMessage(language.getPhrase("NotInResidence"));
+			return true;
+		    } else {
+			for (int i = 2; i < args.length; i++) {
+			    desc += args[i];
+			    if (i < args.length - 1)
+				desc += " ";
+			}
+		    }
+		}
+
+		if (res == null)
+		    return true;
+
+		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		    player.sendMessage(language.getPhrase("NonAdmin"));
+		    return true;
+		}
+
+		res.setShopDesc(desc);
+		player.sendMessage(NewLanguage.getMessage("Language.Shop.DescChange").replace("%1", ChatColor.translateAlternateColorCodes('&', desc)));
+		return true;
+	    }
+	    if (args.length == 3 && args[1].equalsIgnoreCase("create")) {
+
+		if (!resadmin) {
+		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
+		    return true;
+		}
+
+		if (!Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
+		    player.sendMessage(language.getPhrase("SelectPoints"));
+		    return true;
+		}
+
+		int place = 1;
+		try {
+		    place = Integer.parseInt(args[2]);
+		} catch (Exception ex) {
+		    player.sendMessage(language.getPhrase("UseNumbers"));
+		    return true;
+		}
+
+		if (place < 1)
+		    place = 1;
+
+		Location loc1 = Residence.getSelectionManager().getPlayerLoc1(player.getName());
+		Location loc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
+
+		if (loc1.getBlockY() < loc2.getBlockY()) {
+		    player.sendMessage(NewLanguage.getMessage("Language.Shop.InvalidSelection"));
+		    return true;
+		}
+
+		Board newTemp = new Board();
+		newTemp.setStartPlace(place);
+		newTemp.setWorld(loc1.getWorld().getName());
+		newTemp.setTX(loc1.getBlockX());
+		newTemp.setTY(loc1.getBlockY());
+		newTemp.setTZ(loc1.getBlockZ());
+		newTemp.setBX(loc2.getBlockX());
+		newTemp.setBY(loc2.getBlockY());
+		newTemp.setBZ(loc2.getBlockZ());
+
+		newTemp.GetTopLocation();
+		newTemp.GetBottomLocation();
+
+		newTemp.GetLocations();
+
+		ShopSignUtil.addBoard(newTemp);
+		player.sendMessage(NewLanguage.getMessage("Language.Shop.NewBoard"));
+
+		ShopSignUtil.BoardUpdate();
+		ShopSignUtil.saveSigns();
+
+		return true;
+
+	    }
+	    if ((args.length == 3 || args.length == 4) && args[1].equalsIgnoreCase("vote")) {
+		String resName = "";
+		int vote = 5;
+		if (args.length == 3) {
+		    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    if (res == null) {
+			player.sendMessage(language.getPhrase("NotInResidence"));
+			return true;
+		    }
+
+		    try {
+			vote = Integer.parseInt(args[2]);
+		    } catch (Exception ex) {
+			player.sendMessage(language.getPhrase("UseNumbers"));
+			return true;
+		    }
+		    resName = res.getName();
+		} else {
+		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+		    if (res == null) {
+			player.sendMessage(language.getPhrase("InvalidResidence"));
+			return true;
+		    }
+
+		    try {
+			vote = Integer.parseInt(args[3]);
+		    } catch (Exception ex) {
+			player.sendMessage(language.getPhrase("UseNumbers"));
+			return true;
+		    }
+		    resName = res.getName();
+		}
+
+		if (vote < Residence.getConfigManager().getVoteRangeFrom() || vote > Residence.getConfigManager().getVoteRangeTo()) {
+		    player.sendMessage(NewLanguage.getMessage("Language.Shop.VotedRange", Residence.getConfigManager().getVoteRangeFrom() + "%" + Residence
+			.getConfigManager().getVoteRangeTo()));
+
+		    return true;
+		}
+
+		ConcurrentHashMap<String, List<ShopVote>> VoteList = ShopSignUtil.GetAllVoteList();
+
+		if (VoteList.containsKey(resName)) {
+		    List<ShopVote> list = VoteList.get(resName);
+		    boolean found = false;
+		    for (ShopVote OneVote : list) {
+			if (OneVote.getName().equalsIgnoreCase(player.getName())) {
+			    player.sendMessage(NewLanguage.getMessage("Language.Shop.VoteChanged", OneVote.getVote() + "%" + vote + "%" + resName));
+			    OneVote.setVote(vote);
+			    found = true;
+			    break;
+			}
+		    }
+		    if (!found) {
+			ShopVote newVote = new ShopVote(player.getName(), vote);
+			list.add(newVote);
+			player.sendMessage(NewLanguage.getMessage("Language.Shop.Voted", vote + "%" + resName));
+		    }
+		} else {
+		    List<ShopVote> list = new ArrayList<ShopVote>();
+		    ShopVote newVote = new ShopVote(player.getName(), vote);
+		    list.add(newVote);
+		    VoteList.put(resName, list);
+		    player.sendMessage(NewLanguage.getMessage("Language.Shop.Voted", vote + "%" + resName));
+		}
+		ShopSignUtil.saveShopVotes();
+		ShopSignUtil.BoardUpdate();
 		return true;
 	    }
 	    return false;
@@ -813,9 +1069,7 @@ public class ResidenceCommandListener extends Residence {
 	if (cmd.equals("lease")) {
 	    return commandResLease(args, resadmin, player, page);
 	}
-	if (cmd.equals("bank")) {
-	    return commandResBank(args, resadmin, player, page);
-	}
+
 	if (cmd.equals("market")) {
 	    return commandResMarket(args, resadmin, player, page);
 	}
@@ -1576,26 +1830,40 @@ public class ResidenceCommandListener extends Residence {
 	}
     }
 
-    private boolean commandResBank(String[] args, boolean resadmin, Player player, int page) {
-	if (args.length != 3) {
+    private boolean commandResBank(String[] args, boolean resadmin, CommandSender sender, int page) {
+	if (args.length != 3 && args.length != 4) {
 	    return false;
 	}
-	ClaimedResidence res = rmanager.getByName(plistener.getCurrentResidenceName(player.getName()));
+	ClaimedResidence res = null;
+
+	if (args.length == 4) {
+	    res = rmanager.getByName(args[2]);
+	    if (res == null) {
+		sender.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
+		return true;
+	    }
+	} else {
+	    if (sender instanceof Player)
+		res = rmanager.getByLoc(((Player) sender).getLocation());
+	}
 	if (res == null) {
-	    player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
+	    sender.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
 	    return true;
 	}
 	int amount = 0;
 	try {
-	    amount = Integer.parseInt(args[2]);
+	    if (args.length == 3)
+		amount = Integer.parseInt(args[2]);
+	    else
+		amount = Integer.parseInt(args[3]);
 	} catch (Exception ex) {
-	    player.sendMessage(ChatColor.RED + language.getPhrase("InvalidAmount"));
+	    sender.sendMessage(ChatColor.RED + language.getPhrase("InvalidAmount"));
 	    return true;
 	}
 	if (args[1].equals("deposit")) {
-	    res.getBank().deposit(player, amount, resadmin);
+	    res.getBank().deposit(sender, amount, resadmin);
 	} else if (args[1].equals("withdraw")) {
-	    res.getBank().withdraw(player, amount, resadmin);
+	    res.getBank().withdraw(sender, amount, resadmin);
 	} else {
 	    return false;
 	}

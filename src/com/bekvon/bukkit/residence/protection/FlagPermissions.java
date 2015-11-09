@@ -192,13 +192,13 @@ public class FlagPermissions {
 
 	// Players will keep hes inventory on death
 	addResidenceOnlyFlag("keepinv");
-	
+
 	// Players will keep hes exp on death
 	addResidenceOnlyFlag("keepexp");
-	
+
 	// Special flag for making residence as shop
 	addResidenceOnlyFlag("shop");
-	
+
 	addPlayerOrGroupOnlyFlag("admin");
 	addFlagToFlagGroup("redstone", "note");
 	addFlagToFlagGroup("redstone", "pressure");
@@ -567,7 +567,9 @@ public class FlagPermissions {
 	    uuid = (String) root.get("OwnerUUID");
 	}
 
-	newperms.convertPlayerNamesToUUIDs(ownerName, uuid);
+	if (Residence.getConfigManager().isUUIDConvertion()) {
+	    newperms.convertPlayerNamesToUUIDs(ownerName, uuid);
+	}
 	return newperms;
     }
 
@@ -714,7 +716,7 @@ public class FlagPermissions {
 
 	sbuild.append("[\"\",");
 	sbuild.append("{\"text\":\"" + text + "\"}");
-	
+
 	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
 	synchronized (set) {
 	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
@@ -733,7 +735,7 @@ public class FlagPermissions {
 			    next = this.cachedPlayerNameUUIDs.get(next);
 		    }
 		    if (!perms.equals("none")) {
-			    sbuild.append(",");
+			sbuild.append(",");
 
 			if (random) {
 			    random = false;

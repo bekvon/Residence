@@ -92,6 +92,8 @@ public class ConfigManager {
     protected int MaxResCount;
     protected int MaxRentCount;
     protected int MaxSubzonesCount;
+    protected int VoteRangeFrom;
+    protected int VoteRangeTo;
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalResidenceDefaults;
     protected Map<String, FlagPermissions> globalGroupDefaults;
@@ -112,6 +114,7 @@ public class ConfigManager {
     protected boolean CouldronCompatability;
     protected boolean enableDebug = false;
     protected boolean versionCheck = true;
+    protected boolean UUIDConvertion = true;
     protected boolean SelectionIgnoreY = false;
     protected boolean NoCostForYBlocks = false;
     protected boolean useVisualizer;
@@ -160,6 +163,36 @@ public class ConfigManager {
 
     public static String Colors(String text) {
 	return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    public void ChangeConfig(String path, Boolean stage) {
+	File f = new File(Residence.instance.getDataFolder(), "config.yml");
+
+	BufferedReader in = null;
+	try {
+	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
+	} catch (UnsupportedEncodingException e1) {
+	    e1.printStackTrace();
+	} catch (FileNotFoundException e1) {
+	    e1.printStackTrace();
+	}
+
+	if (in == null)
+	    return;
+
+	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
+
+	if (!conf.isBoolean(path))
+	    return;
+
+	conf.set(path, stage);
+
+	try {
+	    conf.save(f);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	Residence.getConfigManager().UpdateConfigFile();
     }
 
     public static List<Integer> GetConfigIntArray(String path, List<Integer> list, CommentedYamlConfiguration writer, YamlConfiguration conf) {
@@ -226,8 +259,7 @@ public class ConfigManager {
 	void UpdateConfigFile() {
 
 	File f = new File(Residence.instance.getDataFolder(), "config.yml");
-	
-	
+
 	BufferedReader in = null;
 	try {
 	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
@@ -247,6 +279,9 @@ public class ConfigManager {
 	String defaultWorldName = Bukkit.getServer().getWorlds().size() > 0 ? Bukkit.getServer().getWorlds().get(0).getName() : "World";
 
 	writer.addComment("Global", "These are Global Settings for Residence.");
+
+	writer.addComment("Global.UUIDConvertion", "Starts UUID conversion on plugin startup", "DONT change this if you are not sure what you doing");
+	UUIDConvertion = GetConfigBoolean("Global.UUIDConvertion", true, writer, conf);
 
 	writer.addComment("Global.versionCheck", "Players with residence.versioncheck permission node will be noticed about new residence version on login");
 	versionCheck = GetConfigBoolean("Global.versionCheck", true, writer, conf);
@@ -309,7 +344,12 @@ public class ConfigManager {
 	writer.addComment("Global.Optimizations.ShortInfo.Use",
 	    "By setting this to true, when checking residence info with /res info, you will get only names in list, by hovering on them, you will get flag list");
 	ShortInfoUse = GetConfigBoolean("Global.Optimizations.ShortInfo.Use", false, writer, conf);
-	
+
+	// Vote range
+	writer.addComment("Global.Optimizations.Vote.RangeFrom", "Range players can vote to, by default its from 0 to 10 points");
+	VoteRangeFrom = GetConfigInt("Global.Optimizations.Vote.RangeFrom", 0, writer, conf);
+	VoteRangeTo = GetConfigInt("Global.Optimizations.Vote.RangeTo", 10, writer, conf);
+
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
 	minMoveUpdate = GetConfigInt("Global.MoveCheckInterval", 500, writer, conf);
@@ -790,7 +830,7 @@ public class ConfigManager {
     public boolean autoRenewLeases() {
 	return leaseAutoRenew;
     }
-    
+
     public boolean isShortInfoUse() {
 	return ShortInfoUse;
     }
@@ -861,6 +901,14 @@ public class ConfigManager {
 
     public int getMaxSubzonesCount() {
 	return MaxSubzonesCount;
+    }
+
+    public int getVoteRangeFrom() {
+	return VoteRangeFrom;
+    }
+
+    public int getVoteRangeTo() {
+	return VoteRangeTo;
     }
 
     public FlagPermissions getGlobalCreatorDefaultFlags() {
@@ -941,6 +989,10 @@ public class ConfigManager {
 
     public boolean versionCheck() {
 	return versionCheck;
+    }
+
+    public boolean isUUIDConvertion() {
+	return UUIDConvertion;
     }
 
     public List<Integer> getCustomContainers() {
