@@ -650,7 +650,7 @@ public class ResidenceCommandListener extends Residence {
 			.replace("%3", one.getKey().getRes().getOwner()).replace("%4", votestat);
 
 		    String desc = one.getKey().getRes().getShopDesc() == null ? NewLanguage.getMessage("Language.Shop.NoDesc") : NewLanguage.getMessage(
-			"Language.Shop.Desc").replace("%1", ChatColor.translateAlternateColorCodes('&', one.getKey().getRes().getShopDesc()));
+			"Language.Shop.Desc").replace("%1", ChatColor.translateAlternateColorCodes('&', one.getKey().getRes().getShopDesc().replace("/n", "\n")));
 
 		    String prev = "[\"\",{\"text\":\"" + ChatColor.GOLD + " " + message
 			+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/res tp " + one.getKey().getRes().getName()
@@ -725,7 +725,7 @@ public class ResidenceCommandListener extends Residence {
 		player.sendMessage(NewLanguage.getMessage("Language.Shop.DescChange").replace("%1", ChatColor.translateAlternateColorCodes('&', desc)));
 		return true;
 	    }
-	    if (args.length == 3 && args[1].equalsIgnoreCase("create")) {
+	    if (args.length == 3 && args[1].equalsIgnoreCase("createboard")) {
 
 		if (!resadmin) {
 		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));

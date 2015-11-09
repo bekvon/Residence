@@ -608,6 +608,30 @@ public class Locale {
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.rt.Info",
 	    Arrays.asList("Usage: /res rt", "Teleports you to random location in defined world."), writer, conf, true);
 
+	// res shop
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.Description", "Manage residence shop", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.Info", Arrays.asList("Manages residence shop feature"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.list.Description", "Shows list of res shops", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.list.Info", Arrays.asList("Usage: /res shop list",
+	    "Shows full list of all residences with shop flag"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Description", "Vote for residence shop", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Info", Arrays.asList("Usage: /res shop vote <residence> [amount]",
+	    "Votes for current or defined residence"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Description", "Sets residence shop description", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Info", Arrays.asList("Usage: /res shop setdesc [text]",
+	    "Sets residence shop description. Color code supported. For new line use /n"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.createboard.Description", "Create res shop board", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.createboard.Info", Arrays.asList("Usage: /res shop createboard [place]",
+	    "Creates res shop board from selected area. Place - position from which to start filling board"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.deleteboard.Description", "Deletes res shop board", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.deleteboard.Info", Arrays.asList("Usage: /res shop deleteboard",
+	    "Deletes res shop board bi right clicking on one of signs"), writer, conf, true);
+
 	// res tpconfirm
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Description", "Ignore unsafe teleportation warning", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Info",
