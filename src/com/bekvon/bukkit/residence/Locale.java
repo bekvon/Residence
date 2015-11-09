@@ -655,19 +655,22 @@ public class Locale {
 	    "CommandHelp.SubCommands.res.SubCommands.lease.Info", Arrays.asList("Usage: /res lease [renew/cost] [residence]",
 		"/res lease cost will show the cost of renewing a residence lease.", "/res lease renew will renew the residence provided you have enough money."),
 	    writer, conf, true);
-	
+
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Description", "Set the lease time", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Info",
 	    Arrays.asList("Usage: /resadmin lease set [residence] [#days/infinite]", "Sets the lease time to a specified number of days, or infinite."), writer, conf,
 	    true);
 
-	
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.renew.Description", "Renew the lease time", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.renew.Info",
 	    Arrays.asList("Usage: /resadmin lease renew <residence>", "Renews the lease time for current or specified residence."), writer, conf,
 	    true);
 
-	
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.expires.Description", "Lease end date", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.expires.Info",
+	    Arrays.asList("Usage: /resadmin lease expires <residence>", "Shows when expires residence lease time."), writer, conf,
+	    true);
+
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.cost.Description", "Shows renew cost", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.cost.Info",
 	    Arrays.asList("Usage: /resadmin lease cost <residence>", "Shows how much money you need to renew residence lease."), writer, conf,
@@ -676,7 +679,8 @@ public class Locale {
 	// res bank
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.bank.Description", "Manage money in a Residence", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.bank.Info",
-	    Arrays.asList("Usage: /res bank [deposit/withdraw] <residence> [amount]", "You must be standing in a Residence or provide residence name", "You must have the +bank flag."), writer, conf,
+	    Arrays.asList("Usage: /res bank [deposit/withdraw] <residence> [amount]", "You must be standing in a Residence or provide residence name",
+		"You must have the +bank flag."), writer, conf,
 	    true);
 
 	// res confirm

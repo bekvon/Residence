@@ -1872,6 +1872,27 @@ public class ResidenceCommandListener extends Residence {
 
     private boolean commandResLease(String[] args, boolean resadmin, Player player, int page) {
 	if (args.length == 2 || args.length == 3) {
+	    if (args[1].equals("expires")) {
+		ClaimedResidence res = null;
+		if (args.length == 2) {
+		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    if (res == null) {
+			player.sendMessage(ChatColor.RED + language.getPhrase("NotInResidence"));
+			return true;
+		    }
+		} else {
+		    res = Residence.getResidenceManager().getByName(args[2]);
+		    if (res == null) {
+			player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
+			return true;
+		    }
+		}
+
+		String until = ResidenceCommandListener.getLeaseManager().getExpireTime(res.getName());
+		if (until != null)
+		    player.sendMessage(ChatColor.GREEN + language.getPhrase("LeaseRenew", until));
+		return true;
+	    }
 	    if (args[1].equals("renew")) {
 		if (args.length == 3) {
 		    leasemanager.renewArea(args[2], player);

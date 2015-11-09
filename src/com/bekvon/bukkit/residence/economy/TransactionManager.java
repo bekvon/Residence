@@ -15,7 +15,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -250,7 +249,7 @@ public class TransactionManager {
 	    player.sendMessage(ChatColor.YELLOW + "Name:" + ChatColor.DARK_GREEN + " " + areaname);
 	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("SellAmount") + ":" + ChatColor.RED + " " + sellAmount.get(areaname));
 	    if (Residence.getConfigManager().useLeases()) {
-		Date etime = Residence.getLeaseManager().getExpireTime(areaname);
+		String etime = Residence.getLeaseManager().getExpireTime(areaname);
 		if (etime != null) {
 		    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LeaseExpire") + ":" + ChatColor.GREEN + " " + etime.toString());
 		}

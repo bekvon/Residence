@@ -99,6 +99,7 @@ public class ConfigManager {
     protected Map<String, FlagPermissions> globalGroupDefaults;
     protected String language;
     protected String DefaultWorld;
+    protected String DateFormat;
     protected boolean preventBuildInRent;
     protected boolean stopOnSaveError;
     protected boolean legacyperms;
@@ -446,6 +447,10 @@ public class ConfigManager {
 
 	writer.addComment("Global.UseLeaseSystem", "Enable / Disable the Lease System.");
 	useLeases = GetConfigBoolean("Global.UseLeaseSystem", false, writer, conf);
+
+	writer.addComment("Global.DateFormat", "Sets date format when shown in example lease or rent expire date",
+	    "How to use it properly, more information can be found at http://www.tutorialspoint.com/java/java_date_time.htm");
+	DateFormat = GetConfigString("Global.DateFormat", "E yyyy.MM.dd 'at' hh:mm:ss a zzz", writer, conf, false);
 
 	writer.addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
 	ResMoneyBack = GetConfigBoolean("Global.ResMoneyBack", false, writer, conf);
@@ -929,6 +934,10 @@ public class ConfigManager {
 
     public String getDefaultWorld() {
 	return DefaultWorld;
+    }
+
+    public String getDateFormat() {
+	return DateFormat;
     }
 
     public boolean preventRentModify() {
