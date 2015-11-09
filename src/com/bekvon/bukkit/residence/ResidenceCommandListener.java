@@ -783,8 +783,9 @@ public class ResidenceCommandListener extends Residence {
 	    if ((args.length == 3 || args.length == 4) && args[1].equalsIgnoreCase("vote")) {
 		String resName = "";
 		int vote = 5;
+		ClaimedResidence res = null;
 		if (args.length == 3) {
-		    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
 		    if (res == null) {
 			player.sendMessage(language.getPhrase("NotInResidence"));
 			return true;
@@ -798,7 +799,7 @@ public class ResidenceCommandListener extends Residence {
 		    }
 		    resName = res.getName();
 		} else {
-		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+		    res = Residence.getResidenceManager().getByName(args[2]);
 		    if (res == null) {
 			player.sendMessage(language.getPhrase("InvalidResidence"));
 			return true;
@@ -811,6 +812,10 @@ public class ResidenceCommandListener extends Residence {
 			return true;
 		    }
 		    resName = res.getName();
+		}
+		if (!res.getPermissions().has("shop", false)){
+		    player.sendMessage(NewLanguage.getMessage("Language.Shop.CantVote"));
+		    return true;
 		}
 
 		if (vote < Residence.getConfigManager().getVoteRangeFrom() || vote > Residence.getConfigManager().getVoteRangeTo()) {
