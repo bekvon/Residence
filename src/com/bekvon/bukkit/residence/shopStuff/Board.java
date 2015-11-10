@@ -30,6 +30,10 @@ public class Board {
     public Board() {
     }
 
+    public void clearSignLoc() {
+	SignLocations.clear();
+    }
+
     public void addSignLoc(String resName, Location loc) {
 	SignLocations.put(resName, loc);
     }

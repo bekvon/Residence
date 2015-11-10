@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
@@ -43,27 +44,43 @@ public class ShopListener implements Listener {
 
 	Location loc = block.getLocation();
 
-	Board Found = null;
+	if (Delete.contains(player.getName())) {
+	    Board Found = null;
+	    for (Board one : ShopSignUtil.GetAllBoards()) {
+		for (Location location : one.GetLocations()) {
+
+		    if (!loc.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()))
+			continue;
+		    if (loc.getBlockX() != location.getBlockX())
+			continue;
+		    if (loc.getBlockY() != location.getBlockY())
+			continue;
+		    if (loc.getBlockZ() != location.getBlockZ())
+			continue;
+
+		    Found = one;
+		    break;
+		}
+
+		if (Found != null)
+		    break;
+	    }
+	    if (Found != null) {
+		ShopSignUtil.GetAllBoards().remove(Found);
+		ShopSignUtil.saveSigns();
+		event.getPlayer().sendMessage(NewLanguage.getMessage("Language.Shop.DeletedBoard"));
+	    } else {
+		event.getPlayer().sendMessage(NewLanguage.getMessage("Language.Shop.IncorrectBoard"));
+	    }
+	    Delete.remove(player.getName());
+	    return;
+	}
 
 	String resName = null;
 	for (Board one : ShopSignUtil.GetAllBoards()) {
 	    resName = one.getResNameByLoc(loc);
-	    if (resName != null) {
-		Found = one;
+	    if (resName != null)
 		break;
-	    }
-	}
-
-	if (Delete.contains(player.getName())) {
-	    if (resName != null) {
-		ShopSignUtil.GetAllBoards().remove(Found);
-		ShopSignUtil.saveSigns();
-		event.getPlayer().sendMessage("Sign board removed");
-	    } else {
-		event.getPlayer().sendMessage("This is not sign board, try performing command again and clicking correct block");
-	    }
-	    Delete.remove(player.getName());
-	    return;
 	}
 
 	if (resName != null)

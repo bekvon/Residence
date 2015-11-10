@@ -412,6 +412,8 @@ public class Locale {
 	GetConfigString("Language.Shop.DescChange", "&6Description changed to: %1", writer, conf, true);
 	GetConfigString("Language.Shop.NewBoard", "&6Successfully added new shop sign board", writer, conf, true);
 	GetConfigString("Language.Shop.DeleteBoard", "&6Right click sign of board you want to delete", writer, conf, true);
+	GetConfigString("Language.Shop.DeletedBoard", "&6Sign board removed", writer, conf, true);
+	GetConfigString("Language.Shop.IncorrectBoard", "&cThis is not sign board, try performing command again and clicking correct sign", writer, conf, true);
 	GetConfigString("Language.Shop.InvalidSelection", "&cLeft click with selection tool top left sign and then right click bottom right", writer, conf, true);
 	GetConfigString("Language.Shop.VoteChanged", "&6Vote changed from &e%1 &6to &e%2 &6for &e%3 &6residence", writer, conf, true);
 	GetConfigString("Language.Shop.Voted", "&6You voted, and gave &e%1 &6votes to &e%2 &6residence", writer, conf, true);

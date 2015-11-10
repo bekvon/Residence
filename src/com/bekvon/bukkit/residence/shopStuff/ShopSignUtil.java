@@ -260,6 +260,7 @@ public class ShopSignUtil {
     public static boolean BoardUpdate() {
 
 	for (Board board : GetAllBoards()) {
+	    board.clearSignLoc();
 	    List<Location> SignsLocation = board.GetLocations();
 
 	    ArrayList<Shops> ShopNames = new ArrayList<Shops>(ShopSignUtil.getSortedShopList().keySet());

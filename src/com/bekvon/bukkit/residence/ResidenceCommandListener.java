@@ -683,7 +683,7 @@ public class ResidenceCommandListener extends Residence {
 		return true;
 	    }
 
-	    if (args.length == 2 && args[1].equalsIgnoreCase("delete")) {
+	    if (args.length == 2 && args[1].equalsIgnoreCase("DeleteBoard")) {
 
 		if (!resadmin) {
 		    player.sendMessage(ChatColor.RED + language.getPhrase("NoPermission"));
