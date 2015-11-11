@@ -407,6 +407,10 @@ public class Locale {
 	GetConfigString("Language.Shop.ListTopLine", "&6%1 &eShop list - Page &6%2 &eof &6%3 %4", writer, conf, true);
 	GetConfigString("Language.Shop.List", " &e%1. &6%2 &e(&6%3&e) %4", writer, conf, true);
 	GetConfigString("Language.Shop.ListVoted", "&e%1 (&6%2&e)", writer, conf, true);
+
+	GetConfigString("Language.Shop.VotesTopLine", "&6%1 &e%2 residence vote list &6- &ePage &6%3 &eof &6%4 %5", writer, conf, true);
+	GetConfigString("Language.Shop.VotesList", " &e%1. &6%2 &e%3 &7%4", writer, conf, true);
+	
 	GetConfigString("Language.Shop.NoDesc", "&6No description", writer, conf, true);
 	GetConfigString("Language.Shop.Desc", "&6Description:\n%1", writer, conf, true);
 	GetConfigString("Language.Shop.DescChange", "&6Description changed to: %1", writer, conf, true);
@@ -625,6 +629,10 @@ public class Locale {
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Description", "Vote for residence shop", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Info", Arrays.asList("Usage: /res shop vote <residence> [amount]",
 	    "Votes for current or defined residence"), writer, conf, true);
+
+	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.votes.Description", "Shows res shop votes", writer, conf, true);
+	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.votes.Info", Arrays.asList("Usage: /res shop votes <residence> <page>",
+	    "Shows full vote list of current or defined residence shop"), writer, conf, true);
 
 	GetConfigString("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Description", "Sets residence shop description", writer, conf, true);
 	GetConfigArray("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Info", Arrays.asList("Usage: /res shop setdesc [text]",

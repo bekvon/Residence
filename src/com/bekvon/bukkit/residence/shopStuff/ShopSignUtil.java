@@ -85,7 +85,11 @@ public class ShopSignUtil {
 		int vote = -1;
 
 		try {
-		    vote = Integer.parseInt(oneEntry.split("%")[1]);
+		    String voteString = oneEntry.split("%")[1];
+		    if (voteString.contains("!")){
+			voteString = oneEntry.split("%")[1].split("!")[0];
+		    }
+		    vote = Integer.parseInt(voteString);
 		} catch (Exception ex) {
 		    continue;
 		}
@@ -93,7 +97,17 @@ public class ShopSignUtil {
 		    vote = 0;
 		else if (vote > 10)
 		    vote = 10;
-		VoteList.add(new ShopVote(name, vote));
+
+		long time = 0L;
+
+		if (oneEntry.contains("!"))
+		    try {
+			time = Long.parseLong(oneEntry.split("!")[1]);
+		    } catch (Exception ex) {
+			time = System.currentTimeMillis();
+		    }
+
+		VoteList.add(new ShopVote(name, vote, time));
 
 	    }
 	    addVote(category, VoteList);
@@ -121,7 +135,7 @@ public class ShopSignUtil {
 	    List<String> list = new ArrayList<String>();
 
 	    for (ShopVote oneVote : one.getValue()) {
-		list.add(oneVote.getName() + "%" + oneVote.getVote());
+		list.add(oneVote.getName() + "%" + oneVote.getVote() + "!" + oneVote.getTime());
 	    }
 	    writer.set(path, list);
 	}

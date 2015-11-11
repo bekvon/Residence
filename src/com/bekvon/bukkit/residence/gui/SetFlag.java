@@ -192,6 +192,17 @@ public class SetFlag {
 	for (Entry<String, Integer> one : permMap.entrySet()) {
 	    ItemStack MiscInfo = Residence.getConfigManager().getGuiRemove();
 
+	    switch (one.getValue()) {
+	    case 0:
+		MiscInfo = Residence.getConfigManager().getGuiFalse();
+		break;
+	    case 1:
+		MiscInfo = Residence.getConfigManager().getGuiTrue();
+		break;
+	    case 2:
+		break;
+	    }
+
 	    if (flagData.contains(one.getKey()))
 		MiscInfo = flagData.getItem(one.getKey());
 

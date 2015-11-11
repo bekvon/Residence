@@ -65,6 +65,8 @@ Global:
         overridepvp: false
         keepinv: false
         keepexp: false
+        shop: true
+        bank: false
     # This sets GUI items to represent each flag, if not given, then gray wool will be used
     FlagGui:
         animalkilling: 

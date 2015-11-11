@@ -2,11 +2,14 @@ package com.bekvon.bukkit.residence;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,6 +42,7 @@ import com.bekvon.bukkit.residence.shopStuff.Shops;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -598,7 +602,113 @@ public class ResidenceCommandListener extends Residence {
 	    return false;
 	}
 	if (cmd.equals("shop")) {
+	    if ((args.length == 2 || args.length == 3 || args.length == 4) && args[1].equalsIgnoreCase("votes")) {
 
+		int VotePage = 1;
+
+		ClaimedResidence res = null;
+		if (args.length == 2) {
+		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    if (res == null) {
+			player.sendMessage(language.getPhrase("NotInResidence"));
+			return true;
+		    }
+		} else if (args.length == 3) {
+		    res = Residence.getResidenceManager().getByName(args[2]);
+		    if (res == null) {
+			try {
+			    VotePage = Integer.parseInt(args[2]);
+			} catch (Exception ex) {
+			    player.sendMessage(Residence.getLanguage().getPhrase("UseNumbers"));
+			    return true;
+			}
+		    }
+		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    if (res == null) {
+			player.sendMessage(language.getPhrase("NotInResidence"));
+			return true;
+		    }
+
+		} else if (args.length == 4) {
+		    res = Residence.getResidenceManager().getByName(args[2]);
+		    if (res == null) {
+			player.sendMessage(language.getPhrase("NotInResidence"));
+			return true;
+		    }
+		    try {
+			VotePage = Integer.parseInt(args[3]);
+		    } catch (Exception ex) {
+			player.sendMessage(Residence.getLanguage().getPhrase("UseNumbers"));
+			return true;
+		    }
+		}
+
+		Map<String, List<ShopVote>> ShopList = ShopSignUtil.GetAllVoteList();
+
+		List<ShopVote> VoteList = new ArrayList<ShopVote>();
+		if (ShopList.containsKey(res.getName())) {
+		    VoteList = ShopList.get(res.getName());
+		    Debug.D(res.getName() + " contains " + VoteList.size());
+		}
+
+		String separator = ChatColor.GOLD + "";
+		String simbol = "\u25AC";
+		for (int i = 0; i < 5; i++) {
+		    separator += simbol;
+		}
+		int pagecount = (int) Math.ceil((double) VoteList.size() / (double) 10);
+		if (page > pagecount || page < 1) {
+		    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
+		    return true;
+		}
+
+		player.sendMessage(NewLanguage.getMessage("Language.Shop.VotesTopLine", separator + "%" + res.getName() + "%" + VotePage + "%" + pagecount + "%"
+		    + separator));
+
+		int start = VotePage * 10 - 9;
+		int end = VotePage * 10 + 1;
+		int position = 0;
+		int i = start;
+		for (ShopVote one : VoteList) {
+		    position++;
+
+		    if (position < start)
+			continue;
+
+		    if (position >= end)
+			break;
+
+		    Date dNow = new Date(one.getTime());
+		    SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
+		    ft.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
+		    String timeString = ft.format(dNow);
+
+		    String message = NewLanguage.getMessage("Language.Shop.VotesList", i + "%" + one.getName() + "%" + one.getVote() + "%" + timeString);
+		    player.sendMessage(message);
+		    i++;
+		}
+
+		if (pagecount == 1)
+		    return true;
+
+		int NextPage = page + 1;
+		NextPage = page < pagecount ? NextPage : page;
+		int Prevpage = page - 1;
+		Prevpage = page > 1 ? Prevpage : page;
+
+		String prevCmd = "/res shop votes " + res.getName() + " " + Prevpage;
+		String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLanguage().getPhrase("PrevInfoPage")
+		    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
+		    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
+		String nextCmd = "/res shop votes " + res.getName() + " " + NextPage;
+		String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + " " + separator
+		    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
+		    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
+
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
+
+		return true;
+	    }
 	    if ((args.length == 2 || args.length == 3) && args[1].equalsIgnoreCase("list")) {
 
 		int Shoppage = 1;
@@ -821,7 +931,6 @@ public class ResidenceCommandListener extends Residence {
 		if (vote < Residence.getConfigManager().getVoteRangeFrom() || vote > Residence.getConfigManager().getVoteRangeTo()) {
 		    player.sendMessage(NewLanguage.getMessage("Language.Shop.VotedRange", Residence.getConfigManager().getVoteRangeFrom() + "%" + Residence
 			.getConfigManager().getVoteRangeTo()));
-
 		    return true;
 		}
 
@@ -834,18 +943,19 @@ public class ResidenceCommandListener extends Residence {
 			if (OneVote.getName().equalsIgnoreCase(player.getName())) {
 			    player.sendMessage(NewLanguage.getMessage("Language.Shop.VoteChanged", OneVote.getVote() + "%" + vote + "%" + resName));
 			    OneVote.setVote(vote);
+			    OneVote.setTime(System.currentTimeMillis());
 			    found = true;
 			    break;
 			}
 		    }
 		    if (!found) {
-			ShopVote newVote = new ShopVote(player.getName(), vote);
+			ShopVote newVote = new ShopVote(player.getName(), vote, System.currentTimeMillis());
 			list.add(newVote);
 			player.sendMessage(NewLanguage.getMessage("Language.Shop.Voted", vote + "%" + resName));
 		    }
 		} else {
 		    List<ShopVote> list = new ArrayList<ShopVote>();
-		    ShopVote newVote = new ShopVote(player.getName(), vote);
+		    ShopVote newVote = new ShopVote(player.getName(), vote, System.currentTimeMillis());
 		    list.add(newVote);
 		    VoteList.put(resName, list);
 		    player.sendMessage(NewLanguage.getMessage("Language.Shop.Voted", vote + "%" + resName));
