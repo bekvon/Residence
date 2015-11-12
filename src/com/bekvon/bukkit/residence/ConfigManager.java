@@ -94,6 +94,8 @@ public class ConfigManager {
     protected int MaxRentCount;
     protected int MaxSubzonesCount;
     protected int VoteRangeFrom;
+    protected int HealInterval;
+    protected int FeedInterval;
     protected int VoteRangeTo;
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalResidenceDefaults;
@@ -352,6 +354,12 @@ public class ConfigManager {
 	writer.addComment("Global.Optimizations.Vote.RangeFrom", "Range players can vote to, by default its from 0 to 10 points");
 	VoteRangeFrom = GetConfigInt("Global.Optimizations.Vote.RangeFrom", 0, writer, conf);
 	VoteRangeTo = GetConfigInt("Global.Optimizations.Vote.RangeTo", 10, writer, conf);
+
+	// Healing/Feed interval
+	writer.addComment("Global.Optimizations.Intervals.Heal", "How often in seconds to heal/feed players in residence with appropriate flag",
+	    "Bigger numbers can save some resources");
+	HealInterval = GetConfigInt("Global.Optimizations.Intervals.Heal", 1, writer, conf);
+	FeedInterval = GetConfigInt("Global.Optimizations.Intervals.Feed", 5, writer, conf);
 
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
@@ -916,6 +924,14 @@ public class ConfigManager {
 
     public int getVoteRangeFrom() {
 	return VoteRangeFrom;
+    }
+
+    public int getHealInterval() {
+	return HealInterval;
+    }
+
+    public int getFeedInterval() {
+	return FeedInterval;
     }
 
     public int getVoteRangeTo() {

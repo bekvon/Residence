@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.HelpLines;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -79,7 +80,6 @@ public class HelpEntry {
 
 	sender.sendMessage(ChatColor.GOLD + separator + " " + Residence.getLanguage().getPhrase("HelpPageHeader", ChatColor.YELLOW + path + ChatColor.GOLD + "|"
 	    + ChatColor.YELLOW + page + ChatColor.GOLD + "|" + ChatColor.YELLOW + pagecount + ChatColor.GOLD) + " " + separator);
-//	sender.sendMessage(ChatColor.DARK_AQUA + Residence.getLanguage().getPhrase("Description") + ": " + ChatColor.GREEN + desc);
 	int start = linesPerPage * (page - 1);
 	int end = start + linesPerPage;
 	for (int i = start; i < end; i++) {
@@ -87,7 +87,7 @@ public class HelpEntry {
 
 		if (helplines.get(i).getCommand() != null) {
 		    HelpEntry sub = this.getSubEntry(helplines.get(i).getCommand());
-		    
+
 		    String desc = "";
 		    int y = 0;
 		    for (String one : sub.lines) {
@@ -97,12 +97,12 @@ public class HelpEntry {
 			    desc += "\n";
 			}
 		    }
-		    
+
 		    if (resadmin)
 			path = path.replace("/res ", "/resadmin ");
-		    
+
 		    String prev = "[\"\",{\"text\":\"" + ChatColor.GOLD + " " + helplines.get(i).getDesc()
-			+ "\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + path + helplines.get(i).getCommand()
+			+ "\",\"color\":\"gold\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + path + helplines.get(i).getCommand()
 			+ " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
 
 		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev);

@@ -102,7 +102,7 @@ public class ResidencePlayerListener implements Listener {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onFlagChangeShopDayNight(ResidenceFlagChangeEvent event) {
 	if (event.isCancelled())
@@ -114,8 +114,8 @@ public class ResidencePlayerListener implements Listener {
 	switch (event.getNewState()) {
 	case NEITHER:
 	case FALSE:
-	    for (Player one : event.getResidence().getPlayersInResidence())	
-		one.resetPlayerTime();		    
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.resetPlayerTime();
 	    break;
 	case INVALID:
 	    break;
@@ -125,7 +125,7 @@ public class ResidencePlayerListener implements Listener {
 	    break;
 	}
     }
-    
+
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
 	Player player = event.getPlayer();
@@ -1075,6 +1075,28 @@ public class ResidencePlayerListener implements Listener {
 		double health = damage.getHealth();
 		if (health < damage.getMaxHealth() && !player.isDead()) {
 		    player.setHealth(health + 1);
+		}
+	    }
+	} catch (Exception ex) {
+	}
+    }
+
+    public void feed() {
+	try {
+	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+		String resname = Residence.getPlayerListener().getCurrentResidenceName(player.getName());
+
+		if (resname == null)
+		    continue;
+
+		ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
+
+		if (!res.getPermissions().has("feed", false))
+		    continue;
+
+		int food = player.getFoodLevel();
+		if (food < 20 && !player.isDead()) {
+		    player.setFoodLevel(food + 1);
 		}
 	    }
 	} catch (Exception ex) {

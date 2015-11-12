@@ -124,6 +124,7 @@ public class Residence extends JavaPlugin {
     protected static int leaseBukkitId = -1;
     protected static int rentBukkitId = -1;
     protected static int healBukkitId = -1;
+    protected static int feedBukkitId = -1;
 
     protected static int DespawnMobsBukkitId = -1;
 
@@ -147,6 +148,12 @@ public class Residence extends JavaPlugin {
     private Runnable doHeals = new Runnable() {
 	public void run() {
 	    plistener.doHeals();
+	}
+    };
+
+    private Runnable doFeed = new Runnable() {
+	public void run() {
+	    plistener.feed();
 	}
     };
 
@@ -207,6 +214,7 @@ public class Residence extends JavaPlugin {
     public void onDisable() {
 	server.getScheduler().cancelTask(autosaveBukkitId);
 	server.getScheduler().cancelTask(healBukkitId);
+	server.getScheduler().cancelTask(feedBukkitId);
 
 	server.getScheduler().cancelTask(DespawnMobsBukkitId);
 
@@ -495,7 +503,8 @@ public class Residence extends JavaPlugin {
 	    }
 	    autosaveInt = autosaveInt * 60 * 20;
 	    autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
-	    healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, 20);
+	    healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, Residence.getConfigManager().getHealInterval() * 20);
+	    feedBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doFeed, 20, Residence.getConfigManager().getFeedInterval() * 20);
 	    if (Residence.getConfigManager().AutoMobRemoval())
 		DespawnMobsBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, DespawnMobs, 20 * Residence.getConfigManager().AutoMobRemovalInterval(), 20
 		    * Residence.getConfigManager().AutoMobRemovalInterval());

@@ -169,6 +169,7 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("wither");
 	addResidenceOnlyFlag("flow");
 	addResidenceOnlyFlag("healing");
+	addResidenceOnlyFlag("feed");
 	addResidenceOnlyFlag("animals");
 	addResidenceOnlyFlag("canimals");
 	addResidenceOnlyFlag("sanimals");
