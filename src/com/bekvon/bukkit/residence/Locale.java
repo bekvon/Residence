@@ -10,12 +10,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Locale {
+
+    public static ArrayList<String> FlagList = new ArrayList<String>();
+
     public static String GetConfig(String path, String text, CommentedYamlConfiguration writer, YamlConfiguration conf, Boolean colorize) {
 	text = text.replace("\"", "\'");
 	conf.addDefault(path, text);
@@ -532,326 +536,423 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.Info",
 	    Arrays.asList("For flag values, usually true allows the action, and false denys the action."), writer, conf, true);
 
+	FlagList.clear();
 	// build
+	FlagList.add("build");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.build.Description",
 	    "allows or denys building", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.build.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// use
+	FlagList.add("use");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.use.Description",
 	    "allows or denys use of doors, lever, buttons, etc...", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.use.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// move
+	FlagList.add("move");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.move.Description",
 	    "allows or denys movement in the residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.move.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// container
+	FlagList.add("container");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.container.Description",
 	    "allows or denys use of furnaces, chests, dispensers, etc...", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.container.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset  <residence> [flag] true/false/remove"), writer, conf, true);
 	// trusted
+	FlagList.add("trusted");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trusted.Description",
 	    "gives build, use, move, container and tp flags", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trusted.Info",
 	    Arrays.asList("&eUsage: &6/res pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// place
+	FlagList.add("place");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.place.Description",
 	    "allows or denys only placement of blocks, overrides the build flag", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.place.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// destroy
+	FlagList.add("destroy");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.destroy.Description",
 	    "allows or denys only destruction of blocks, overrides the build flag", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.destroy.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// pvp
+	FlagList.add("pvp");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.pvp.Description",
 	    "allow or deny pvp in the residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.pvp.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// tp
+	FlagList.add("tp");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.tp.Description",
 	    "allow or disallow teleporting to the residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.tp.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// admin
+	FlagList.add("admin");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.admin.Description",
 	    "gives a player permission to change flags on a residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.admin.Info",
 	    Arrays.asList("&eUsage: &6/res pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// subzone
+	FlagList.add("subzone");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.subzone.Description",
 	    "allow a player to make subzones in the residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.subzone.Info",
 	    Arrays.asList("&eUsage: &6/res pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// monsters
+	FlagList.add("monsters");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.monsters.Description",
 	    "allows or denys monster spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.monsters.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// cmonsters
+	FlagList.add("cmonsters");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.cmonsters.Description",
 	    "allows or denys custom monster spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.cmonsters.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// smonsters
+	FlagList.add("smonsters");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.smonsters.Description",
 	    "allows or denys spawner or spawn egg monster spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.smonsters.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// nmonsters
+	FlagList.add("nmonsters");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nmonsters.Description",
 	    "allows or denys natural monster spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nmonsters.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// animals
+	FlagList.add("animals");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.animals.Description",
 	    "allows or denys animal spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.animals.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// canimals
+	FlagList.add("canimals");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.canimals.Description",
 	    "allows or denys custom animal spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.canimals.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// sanimals
+	FlagList.add("sanimals");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.sanimals.Description",
 	    "allows or denys spawner or spawn egg animal spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.sanimals.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// nanimals
+	FlagList.add("nanimals");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nanimals.Description",
 	    "allows or denys natural animal spawns", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nanimals.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// animalkilling
+	FlagList.add("animalkilling");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.animalkilling.Description",
 	    "allows or denys animal killing", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.animalkilling.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// mobkilling
+	FlagList.add("mobkilling");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.mobkilling.Description",
 	    "allows or denys mob killing", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.mobkilling.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// nofly
+	FlagList.add("nofly");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nofly.Description",
 	    "allows or denys fly in residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nofly.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// vehicledestroy
+	FlagList.add("vehicledestroy");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.vehicledestroy.Description",
 	    "allows or denys vehicle destroy", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.vehicledestroy.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// shear
+	FlagList.add("shear");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.shear.Description",
 	    "allows or denys sheep shear", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.shear.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// leash
+	FlagList.add("leash");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.leash.Description",
 	    "allows or denys aninal leash", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.leash.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// healing
+	FlagList.add("healing");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.healing.Description",
 	    "setting to true makes the residence heal its occupants", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.healing.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// feed
+	FlagList.add("feed");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.feed.Description",
 	    "setting to true makes the residence feed its occupants", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.feed.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// tnt
+	FlagList.add("tnt");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.tnt.Description",
 	    "allow or deny tnt explosions", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.tnt.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// creeper
+	FlagList.add("creeper");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.creeper.Description",
 	    "allow or deny creeper explosions", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.creeper.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// ignite
+	FlagList.add("ignite");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.ignite.Description",
 	    "allows or denys fire ignition", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.ignite.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// firespread
+	FlagList.add("firespread");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.firespread.Description",
 	    "allows or denys fire spread", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.firespread.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// bucket
+	FlagList.add("bucket");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bucket.Description",
 	    "allow or deny bucket use", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bucket.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// flow
+	FlagList.add("flow");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.flow.Description",
 	    "allows or denys liquid flow", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.flow.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// lavaflow
+	FlagList.add("lavaflow");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.lavaflow.Description",
 	    "allows or denys lava flow, overrides flow", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.lavaflow.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// waterflow
+	FlagList.add("waterflow");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.waterflow.Description",
 	    "allows or denys water flow, overrides flow", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.waterflow.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// damage
+	FlagList.add("damage");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.damage.Description",
 	    "allows or denys all entity damage within the residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.damage.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// piston
+	FlagList.add("piston");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.piston.Description",
 	    "allow or deny pistons from pushing or pulling blocks in the residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.piston.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// hidden
+	FlagList.add("hidden");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hidden.Description",
 	    "hides residence from list or listall commands", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hidden.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// cake
+	FlagList.add("cake");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.cake.Description",
 	    "allows or denys players to eat cake", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.cake.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// lever
+	FlagList.add("lever");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.lever.Description",
 	    "allows or denys players to use levers", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.lever.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// button
+	FlagList.add("button");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.button.Description",
 	    "allows or denys players to use buttons", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.button.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// diode
+	FlagList.add("diode");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.diode.Description",
 	    "allows or denys players to use redstone repeaters", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.diode.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// door
+	FlagList.add("door");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.door.Description",
 	    "allows or denys players to use doors and trapdoors", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.door.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// table
+	FlagList.add("table");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.table.Description",
 	    "allows or denys players to use workbenches", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.table.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// enchant
+	FlagList.add("enchant");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.enchant.Description",
 	    "allows or denys players to use enchanting tables", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.enchant.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// brew
+	FlagList.add("brew");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.brew.Description",
 	    "allows or denys players to use brewing stands", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.brew.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// bed
+	FlagList.add("bed");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bed.Description",
 	    "allows or denys players to use beds", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bed.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// pressure
+	FlagList.add("pressure");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.pressure.Description",
 	    "allows or denys players to use pressure plates", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.pressure.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// note
+	FlagList.add("note");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.note.Description",
 	    "allows or denys players to use note blocks", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.note.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// redstone
+	FlagList.add("redstone");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.redstone.Description",
 	    "Gives lever, diode, button, pressure, note flags", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.redstone.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// craft
+	FlagList.add("craft");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.craft.Description",
 	    "Gives table, enchant, brew flags", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.craft.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// trample
+	FlagList.add("trample");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trample.Description",
 	    "Allows or denys crop trampling in residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trample.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// trade
+	FlagList.add("trade");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trade.Description",
 	    "Allows or denys villager trading in residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trade.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// nomobs
+	FlagList.add("nomobs");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nomobs.Description",
 	    "Prevents monsters from entering residence residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nomobs.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// explode
+	FlagList.add("explode");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.explode.Description",
 	    "Allows or denys explosions in residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.explode.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// witherdamage
+	FlagList.add("witherdamage");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.witherdamage.Description",
 	    "Disables wither damage in residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.witherdamage.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// fireball
+	FlagList.add("fireball");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.fireball.Description",
 	    "Allows or denys fire balls in residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.fireball.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// command
+	FlagList.add("command");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.command.Description",
 	    "Allows or denys comamnd use in residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.command.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// overridepvp
+	FlagList.add("overridepvp");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.overridepvp.Description",
 	    "Overrides any plugin pvp protection", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.overridepvp.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// keepinv
+	FlagList.add("keepinv");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.keepinv.Description",
 	    "Players keeps inventory after death", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.keepinv.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// keepexp
+	FlagList.add("keepexp");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.keepexp.Description",
 	    "Players keeps exp after death", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.keepexp.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// burn
+	FlagList.add("burn");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.burn.Description",
 	    "allows or denys Mob combustion in residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.burn.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// bank
+	FlagList.add("bank");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bank.Description",
 	    "allows or denys deposit/withdraw money from res bank", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bank.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// shop
+	FlagList.add("shop");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.shop.Description",
-	    "allows or denys deposit/withdraw money from res bank", writer, conf, true);
+	    "adds residence to special residence shop list", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.shop.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// day
+	FlagList.add("day");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.day.Description",
+	    "sets day time in residence", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.day.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// night
+	FlagList.add("night");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.night.Description",
+	    "sets night time in residence", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.night.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// chat
+	FlagList.add("chat");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.chat.Description",
+	    "Allows to join residence chat room", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.chat.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+
+	// Filling with custom flags info
+	Set<String> sec = conf.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands").getKeys(false);
+	for (String one : sec) {
+	    if (FlagList.contains(one.toLowerCase()))
+		continue;
+	    String desc = conf.getString("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + one + ".Description");
+	    GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + one.toLowerCase() + ".Description",
+		desc, writer, conf, true);
+	    List<String> info = conf.getStringList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + one + ".Info");
+	    GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + one.toLowerCase() + ".Info",
+		info, writer, conf, true);
+	    FlagList.add(one.toLowerCase());
+	}
 
 	//res limits
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.limits.Description", "Show your limits.", writer, conf, true);

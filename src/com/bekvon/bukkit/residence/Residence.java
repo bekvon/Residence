@@ -346,8 +346,10 @@ public class Residence extends JavaPlugin {
 	    for (String lang : validLanguages) {
 		Locale.LoadLang(lang);
 	    }
+	    
+	    Residence.getConfigManager().UpdateFlagFile();
 
-	    NewLanguage.reload();
+	    NewLanguage.LanguageReload();
 
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");

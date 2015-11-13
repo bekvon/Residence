@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.HelpLines;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -151,12 +152,25 @@ public class HelpEntry {
 //	helplines.addAll(Arrays.asList(lines));
 //	if (subentrys.size() > 0)
 //	    helplines.add(ChatColor.LIGHT_PURPLE + "---" + Residence.getLanguage().getPhrase("SubCommands") + "---");
-	for (HelpEntry entry : subentrys) {
-	    if (ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && !resadmin)
-		continue;
 
-	    if (!ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && resadmin)
-		continue;
+	FlagPermissions GlobalFlags = Residence.getPermissionManager().getAllFlags();
+
+	for (HelpEntry entry : subentrys) { 
+	    
+	    if (!name.equalsIgnoreCase("flags")) {
+		if (ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && !resadmin)
+		    continue;
+
+		if (!ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && resadmin)
+		    continue;
+	    } else {
+		if (GlobalFlags.getFlags().containsKey(entry.getName().toLowerCase())) {
+		    Boolean state = GlobalFlags.getFlags().get(entry.getName().toLowerCase());
+		    if (!state && !resadmin) {
+			continue;
+		    }
+		}
+	    }
 
 	    helplines.add(new HelpLines(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + entry.getDescription()));
 	}

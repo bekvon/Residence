@@ -42,7 +42,6 @@ import com.bekvon.bukkit.residence.shopStuff.Shops;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -648,7 +647,6 @@ public class ResidenceCommandListener extends Residence {
 		List<ShopVote> VoteList = new ArrayList<ShopVote>();
 		if (ShopList.containsKey(res.getName())) {
 		    VoteList = ShopList.get(res.getName());
-		    Debug.D(res.getName() + " contains " + VoteList.size());
 		}
 
 		String separator = ChatColor.GOLD + "";

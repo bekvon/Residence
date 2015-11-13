@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.ParticleEffects;
 
 import java.io.BufferedReader;
@@ -258,6 +259,29 @@ public class ConfigManager {
 	    temp.add(Colors(part));
 	}
 	return temp;
+    }
+
+    void UpdateFlagFile() {
+
+	File f = new File(Residence.instance.getDataFolder(), "flags.yml");
+	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
+
+	Set<String> sections = conf.getConfigurationSection("Global.FlagPermission").getKeys(false);
+	int i = 0;
+	for (String one : Locale.FlagList) {
+	    i++;
+	    Debug.D(i + ". " + one);
+	    if (sections.contains(one.toLowerCase()))
+		continue;
+	    conf.createSection("Global.FlagPermission." + one.toLowerCase());
+	    conf.set("Global.FlagPermission." + one.toLowerCase(), false);
+	}
+
+	try {
+	    conf.save(f);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
     }
 
     @SuppressWarnings("deprecation")
