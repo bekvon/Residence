@@ -447,6 +447,7 @@ public class Locale {
 	GetConfig("Language.Shop.InvalidSelection", "&cLeft click with selection tool top left sign and then right click bottom right", writer, conf, true);
 	GetConfig("Language.Shop.VoteChanged", "&6Vote changed from &e%1 &6to &e%2 &6for &e%3 &6residence", writer, conf, true);
 	GetConfig("Language.Shop.Voted", "&6You voted, and gave &e%1 &6votes to &e%2 &6residence", writer, conf, true);
+	GetConfig("Language.Shop.NoVotes", "&cThere is no registered votes for this residence", writer, conf, true);
 	GetConfig("Language.Shop.CantVote", "&cResidence don't have shop flag set to true", writer, conf, true);
 	GetConfig("Language.Shop.VotedRange", "&6Vote range is from &e%1 &6to &e%2", writer, conf, true);
 	GetConfig("Language.Shop.SignLines.1", "&e--== &8%1 &e==--", writer, conf, true);

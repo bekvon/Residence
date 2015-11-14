@@ -1,6 +1,5 @@
 package com.bekvon.bukkit.residence;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,8 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -55,6 +52,7 @@ public class YmlMaker {
 	return config;
     }
 
+    @SuppressWarnings("deprecation")
     private static YamlConfiguration loadConfiguration(InputStream defConfigStream) {
 	Validate.notNull(defConfigStream, "File cannot be null");
 	YamlConfiguration config = new YamlConfiguration();

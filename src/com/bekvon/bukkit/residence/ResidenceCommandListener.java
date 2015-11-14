@@ -617,15 +617,15 @@ public class ResidenceCommandListener extends Residence {
 		    if (res == null) {
 			try {
 			    VotePage = Integer.parseInt(args[2]);
+			    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+			    if (res == null) {
+				player.sendMessage(language.getPhrase("NotInResidence"));
+				return true;
+			    }
 			} catch (Exception ex) {
 			    player.sendMessage(Residence.getLanguage().getPhrase("UseNumbers"));
 			    return true;
 			}
-		    }
-		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
-		    if (res == null) {
-			player.sendMessage(language.getPhrase("NotInResidence"));
-			return true;
 		    }
 
 		} else if (args.length == 4) {
@@ -642,6 +642,11 @@ public class ResidenceCommandListener extends Residence {
 		    }
 		}
 
+		if (res == null) {
+		    player.sendMessage(language.getPhrase("NotInResidence"));
+		    return true;
+		}
+
 		Map<String, List<ShopVote>> ShopList = ShopSignUtil.GetAllVoteList();
 
 		List<ShopVote> VoteList = new ArrayList<ShopVote>();
@@ -656,7 +661,7 @@ public class ResidenceCommandListener extends Residence {
 		}
 		int pagecount = (int) Math.ceil((double) VoteList.size() / (double) 10);
 		if (page > pagecount || page < 1) {
-		    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
+		    sender.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Shop.NoVotes"));
 		    return true;
 		}
 
@@ -729,7 +734,7 @@ public class ResidenceCommandListener extends Residence {
 		}
 		int pagecount = (int) Math.ceil((double) ShopList.size() / (double) 10);
 		if (page > pagecount || page < 1) {
-		    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
+		    sender.sendMessage(ChatColor.RED + NewLanguage.getMessage("Language.Shop.NoVotes"));
 		    return true;
 		}
 
