@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Locale {
@@ -55,6 +57,21 @@ public class Locale {
 	return ChatColor.translateAlternateColorCodes('&', text);
     }
 
+    private static YamlConfiguration loadConfiguration(BufferedReader in, String language) {
+	Validate.notNull(in, "File cannot be null");
+	YamlConfiguration config = new YamlConfiguration();
+	try {
+	    config.load(in);
+	} catch (FileNotFoundException ex) {
+	} catch (IOException ex) {
+	} catch (InvalidConfigurationException ex) {
+	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Residence] Your locale file for " + language + " is incorect! Use http://yaml-online-parser.appspot.com/ to find issue.");
+	    return null;
+	}
+
+	return config;
+    }
+
     // Language file
     public static void LoadLang(String lang) {
 
@@ -70,7 +87,12 @@ public class Locale {
 	if (in == null)
 	    return;
 
-	YamlConfiguration conf = YamlConfiguration.loadConfiguration(in);
+	YamlConfiguration conf = loadConfiguration(in, lang);
+
+	if (conf == null) {
+	    return;
+	}
+
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
 	conf.options().copyDefaults(true);
 

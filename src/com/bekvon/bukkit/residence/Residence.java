@@ -249,16 +249,19 @@ public class Residence extends JavaPlugin {
 		dataFolder.mkdirs();
 	    }
 
-	    if (!new File(dataFolder, "groups.yml").isFile() && new File(dataFolder, "config.yml").isFile()) {
-		this.ConvertGroupFile();
+	    if (!new File(dataFolder, "groups.yml").isFile() && !new File(dataFolder, "flags.yml").isFile() && new File(dataFolder, "config.yml").isFile()) {
+		this.ConvertFile();
 	    }
 
 	    if (!new File(dataFolder, "config.yml").isFile()) {
 		this.writeDefaultConfigFromJar();
-		this.writeDefaultGroupsFromJar();
+	    }
+	    if (!new File(dataFolder, "flags.yml").isFile()) {
 		this.writeDefaultFlagsFromJar();
 	    }
-
+	    if (!new File(dataFolder, "groups.yml").isFile()) {
+		this.writeDefaultGroupsFromJar();
+	    }
 	    this.getCommand("res").setTabCompleter(new TabComplete());
 	    this.getCommand("resadmin").setTabCompleter(new TabComplete());
 	    this.getCommand("residence").setTabCompleter(new TabComplete());
@@ -346,7 +349,7 @@ public class Residence extends JavaPlugin {
 	    for (String lang : validLanguages) {
 		Locale.LoadLang(lang);
 	    }
-	    
+
 	    Residence.getConfigManager().UpdateFlagFile();
 
 	    NewLanguage.LanguageReload();
@@ -954,7 +957,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private void ConvertGroupFile() {
+    private void ConvertFile() {
 	File file = new File(this.getDataFolder(), "config.yml");
 
 	File file_old = new File(this.getDataFolder(), "config_old.yml");
