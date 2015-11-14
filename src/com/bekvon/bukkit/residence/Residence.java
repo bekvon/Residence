@@ -30,6 +30,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -376,10 +377,28 @@ public class Residence extends JavaPlugin {
 		    System.out.println("[Residence] Language file does not exist...");
 		}
 	    } catch (Exception ex) {
-		System.out.println("[Residence] Failed to load language file: " + cmanager.getLanguage() + ".yml, Error: " + ex.getMessage());
-		Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-		helppages = new HelpEntry("");
-		language = new Language();
+		System.out.println("[Residence] Failed to load language file: " + cmanager.getLanguage() + ".yml setting to default - English");
+
+		File langFile = new File(new File(dataFolder, "Language"), "English.yml");
+
+		BufferedReader in = null;
+		try {
+		    in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
+		} catch (UnsupportedEncodingException e1) {
+		    e1.printStackTrace();
+		} catch (FileNotFoundException e1) {
+		    e1.printStackTrace();
+		}
+
+		if (langFile.isFile()) {
+		    FileConfiguration langconfig = new YamlConfiguration();
+		    langconfig.load(in);
+		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
+		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
+		    language = Language.parseText(langconfig, "Language");
+		} else {
+		    System.out.println("[Residence] Language file does not exist...");
+		}
 	    }
 	    economy = null;
 	    if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
