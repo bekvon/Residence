@@ -1016,9 +1016,17 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Info", Arrays.asList("Usage: /res shop vote <residence> [amount]",
 	    "Votes for current or defined residence"), writer, conf, true);
 
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.like.Description", "Give like for residence shop", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.like.Info", Arrays.asList("Usage: /res shop like <residence>",
+	    "Gives like for residence shop"), writer, conf, true);
+
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.votes.Description", "Shows res shop votes", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.votes.Info", Arrays.asList("Usage: /res shop votes <residence> <page>",
 	    "Shows full vote list of current or defined residence shop"), writer, conf, true);
+
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.likes.Description", "Shows res shop likes", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.likes.Info", Arrays.asList("Usage: /res shop likes <residence> <page>",
+	    "Shows full like list of current or defined residence shop"), writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Description", "Sets residence shop description", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Info", Arrays.asList("Usage: /res shop setdesc [text]",
