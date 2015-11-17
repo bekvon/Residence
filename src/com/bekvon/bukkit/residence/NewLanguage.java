@@ -55,6 +55,10 @@ public class NewLanguage {
      *            - the variables separated with %
      * @return the message
      */
+    public static String getMessage(String key, int variables) {
+	return getMessage(key, String.valueOf(variables));
+    }
+
     public static String getMessage(String key, String variables) {
 	String missing = "Missing locale for " + key;
 	String message = "";

@@ -32,8 +32,8 @@ public class FlagUtil {
 	    if (!conf.contains("Global.FlagGui." + oneFlag + ".Data"))
 		continue;
 
-	    int id = ConfigManager.GetConfigInt("Global.FlagGui." + oneFlag + ".Id", 35, writer, conf);
-	    int data = ConfigManager.GetConfigInt("Global.FlagGui." + oneFlag + ".Data", 0, writer, conf);
+	    int id = ConfigManager.GetConfig("Global.FlagGui." + oneFlag + ".Id", 35, writer, conf);
+	    int data = ConfigManager.GetConfig("Global.FlagGui." + oneFlag + ".Data", 0, writer, conf);
 
 	    @SuppressWarnings("deprecation")
 	    Material Mat = Material.getMaterial(id);

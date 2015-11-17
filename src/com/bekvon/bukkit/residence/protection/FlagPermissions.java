@@ -201,27 +201,32 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("shop");
 
 	addPlayerOrGroupOnlyFlag("admin");
-	addFlagToFlagGroup("redstone", "note");
-	addFlagToFlagGroup("redstone", "pressure");
-	addFlagToFlagGroup("redstone", "lever");
-	addFlagToFlagGroup("redstone", "button");
-	addFlagToFlagGroup("redstone", "diode");
-	addFlagToFlagGroup("craft", "brew");
-	addFlagToFlagGroup("craft", "table");
-	addFlagToFlagGroup("craft", "enchant");
-	addFlagToFlagGroup("trusted", "use");
-	addFlagToFlagGroup("trusted", "tp");
-	addFlagToFlagGroup("trusted", "build");
-	addFlagToFlagGroup("trusted", "container");
-	addFlagToFlagGroup("trusted", "bucket");
-	addFlagToFlagGroup("trusted", "move");
-	addFlagToFlagGroup("trusted", "leash");
-	addFlagToFlagGroup("trusted", "animalkilling");
-	addFlagToFlagGroup("trusted", "mobkilling");
-	addFlagToFlagGroup("trusted", "shear");
-	addFlagToFlagGroup("trusted", "chat");
-	addFlagToFlagGroup("fire", "ignite");
-	addFlagToFlagGroup("fire", "firespread");
+
+	Residence.getConfigManager().UpdateGroupedFlagsFile();
+
+	// All these flags are moved to flags.yml as of 2.9.11.0 version for option to customize them
+//	addFlagToFlagGroup("redstone", "note");
+//	addFlagToFlagGroup("redstone", "pressure");
+//	addFlagToFlagGroup("redstone", "lever");
+//	addFlagToFlagGroup("redstone", "button");
+//	addFlagToFlagGroup("redstone", "diode");
+//	addFlagToFlagGroup("craft", "brew");
+//	addFlagToFlagGroup("craft", "table");
+//	addFlagToFlagGroup("craft", "enchant");
+//	addFlagToFlagGroup("trusted", "use");
+//	addFlagToFlagGroup("trusted", "tp");
+//	addFlagToFlagGroup("trusted", "build");
+//	addFlagToFlagGroup("trusted", "container");
+//	addFlagToFlagGroup("trusted", "bucket");
+//	addFlagToFlagGroup("trusted", "move");
+//	addFlagToFlagGroup("trusted", "leash");
+//	addFlagToFlagGroup("trusted", "animalkilling");
+//	addFlagToFlagGroup("trusted", "mobkilling");
+//	addFlagToFlagGroup("trusted", "shear");
+//	addFlagToFlagGroup("trusted", "chat");
+//	addFlagToFlagGroup("fire", "ignite");
+//	addFlagToFlagGroup("fire", "firespread");
+
 	addMaterialToUseFlag(Material.DIODE, "diode");
 	addMaterialToUseFlag(Material.DIODE_BLOCK_OFF, "diode");
 	addMaterialToUseFlag(Material.DIODE_BLOCK_ON, "diode");
@@ -295,48 +300,61 @@ public class FlagPermissions {
     protected Map<String, Boolean> getPlayerFlags(String player, boolean allowCreate)//this function works with uuid in string format as well, instead of player name
     {
 
-	player = player.toLowerCase();
+	//player = player.toLowerCase(); <- Why its toLowerCase when its can be UUID when capitalization is required
 	String uuids;
 	Map<String, Boolean> flags = null;
 
-	if (player.length() == 36) {
-	    uuids = player;
-	    String resolvedName = Residence.getPlayerName(uuids);
-	    if (resolvedName != null)
-		player = resolvedName;
-	    else if (cachedPlayerNameUUIDs.containsKey(player))
-		player = cachedPlayerNameUUIDs.get(player);
-	} else
-	    uuids = Residence.getPlayerUUIDString(player);
+	if (!Residence.getConfigManager().isOfflineMode()) {
+	    if (player.length() == 36) {
+		uuids = player;
+		String resolvedName = Residence.getPlayerName(uuids);
+		if (resolvedName != null)
+		    player = resolvedName;
+		else if (cachedPlayerNameUUIDs.containsKey(player))
+		    player = cachedPlayerNameUUIDs.get(player);
+	    } else
+		uuids = Residence.getPlayerUUIDString(player);
 
-	if (uuids == null) {
-	    Set<Entry<String, String>> values = cachedPlayerNameUUIDs.entrySet();
-	    for (Entry<String, String> value : values) {
-		if (value.getValue().equals(player)) {
-		    uuids = value.getKey();
-		    break;
+	    if (uuids == null) {
+		Set<Entry<String, String>> values = cachedPlayerNameUUIDs.entrySet();
+		for (Entry<String, String> value : values) {
+		    if (value.getValue().equalsIgnoreCase(player)) {
+			uuids = value.getKey();
+			break;
+		    }
 		}
 	    }
-	}
 
-	if (uuids != null)
-	    flags = playerFlags.get(uuids);
-	if (flags == null) {
-	    flags = playerFlags.get(player);
-	    if (uuids != null && flags != null) {
-		flags = playerFlags.remove(player);
-		playerFlags.put(uuids, flags);
+	    if (uuids != null)
+		flags = playerFlags.get(uuids);
+	    if (flags == null) {
+		flags = playerFlags.get(player);
+		if (uuids != null && flags != null) {
+		    flags = playerFlags.remove(player);
+		    playerFlags.put(uuids, flags);
+		    cachedPlayerNameUUIDs.put(uuids, player);
+		}
+	    } else
 		cachedPlayerNameUUIDs.put(uuids, player);
+
+	    if (flags == null && allowCreate) {
+		if (uuids != null) {
+		    flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
+		    playerFlags.put(uuids, flags);
+		    cachedPlayerNameUUIDs.put(uuids, player);
+		} else {
+		    flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
+		    playerFlags.put(player, flags);
+		}
 	    }
-	} else
-	    cachedPlayerNameUUIDs.put(uuids, player);
-
-	if (flags == null && allowCreate) {
-	    if (uuids != null) {
-		flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
-		playerFlags.put(uuids, flags);
-		cachedPlayerNameUUIDs.put(uuids, player);
-	    } else {
+	} else {
+	    for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
+		if (!one.getKey().equalsIgnoreCase(player))
+		    continue;
+		flags = one.getValue();
+		break;
+	    }
+	    if (flags == null && allowCreate) {
 		flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
 		playerFlags.put(player, flags);
 	    }
@@ -363,22 +381,25 @@ public class FlagPermissions {
     }
 
     public void removeAllPlayerFlags(String player) {//this function works with uuid in string format as well, instead of player name
-	player = player.toLowerCase();
-	String uuids = Residence.getPlayerUUIDString(player);
-	if (uuids == null)
-	    for (Entry<String, String> entry : cachedPlayerNameUUIDs.entrySet())
-		if (entry.getValue().equals(player)) {
-		    uuids = entry.getKey();
-		    break;
-		}
+	// player = player.toLowerCase();
 
-	if (uuids != null) {
-	    playerFlags.remove(uuids);
-	    cachedPlayerNameUUIDs.remove(uuids);
+	if (!Residence.getConfigManager().isOfflineMode()) {
+	    String uuids = Residence.getPlayerUUIDString(player);
+	    if (uuids == null)
+		for (Entry<String, String> entry : cachedPlayerNameUUIDs.entrySet())
+		    if (entry.getValue().equals(player)) {
+			uuids = entry.getKey();
+			break;
+		    }
+
+	    if (uuids != null) {
+		playerFlags.remove(uuids);
+		cachedPlayerNameUUIDs.remove(uuids);
+	    }
 	}
-
 	playerFlags.remove(player);
 	cachedPlayerNameUUIDs.remove(player);
+
     }
 
     public void removeAllGroupFlags(String group) {
@@ -568,10 +589,37 @@ public class FlagPermissions {
 	    uuid = (String) root.get("OwnerUUID");
 	}
 
-	if (Residence.getConfigManager().isUUIDConvertion()) {
+	if (Residence.getConfigManager().isOfflineMode())
+	    newperms.convertFlagsUUIDsToPlayerNames();
+	else
 	    newperms.convertPlayerNamesToUUIDs(ownerName, uuid);
-	}
+
 	return newperms;
+    }
+
+    private void convertFlagsUUIDsToPlayerNames() {
+	HashMap<String, String> converts = new HashMap<>();
+	for (String keyset : playerFlags.keySet()) {
+	    if (keyset.length() == 36) {
+		String uuid = keyset;
+		if (uuid.equalsIgnoreCase("00000000-0000-0000-0000-000000000000"))
+		    converts.put(uuid, "Server_Land");
+		else {
+		    String name = Residence.getPlayerName(uuid);
+		    if (name != null)
+			converts.put(uuid, name);
+		}
+	    }
+	}
+
+	for (Entry<String, String> one : converts.entrySet()) {
+	    if (playerFlags.containsKey(one.getKey())) {
+		Map<String, Boolean> replace = playerFlags.get(one.getKey());
+		playerFlags.remove(one.getKey());
+		playerFlags.put(one.getValue(), replace);
+	    }
+	}
+
     }
 
     private void convertPlayerNamesToUUIDs(String OwnerName, String owneruuid) {
@@ -597,7 +645,6 @@ public class FlagPermissions {
 		if (pname != null)
 		    this.cachedPlayerNameUUIDs.put(keyset, pname);
 	    }
-
 	}
 	for (String one : Toremove) {
 	    playerFlags.remove(one);
@@ -682,7 +729,7 @@ public class FlagPermissions {
     }
 
     public String listOtherPlayersFlags(String player) {
-	player = player.toLowerCase();
+//	player = player.toLowerCase();
 	String uuids = Residence.getPlayerUUIDString(player);
 	StringBuilder sbuild = new StringBuilder();
 	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
@@ -691,7 +738,8 @@ public class FlagPermissions {
 	    while (it.hasNext()) {
 		Entry<String, Map<String, Boolean>> nextEnt = it.next();
 		String next = nextEnt.getKey();
-		if (!next.equals(player) && !next.equals(uuids)) {
+		if (!Residence.getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getConfigManager().isOfflineMode() && !next
+		    .equals(player)) {
 		    String perms = printPlayerFlags(nextEnt.getValue());
 		    if (next.length() == 36) {
 			String resolvedName = Residence.getPlayerName(next);
@@ -711,7 +759,7 @@ public class FlagPermissions {
     }
 
     public String listOtherPlayersFlagsRaw(String text, String player) {
-	player = player.toLowerCase();
+//	player = player.toLowerCase();
 	String uuids = Residence.getPlayerUUIDString(player);
 	StringBuilder sbuild = new StringBuilder();
 
@@ -725,7 +773,8 @@ public class FlagPermissions {
 	    while (it.hasNext()) {
 		Entry<String, Map<String, Boolean>> nextEnt = it.next();
 		String next = nextEnt.getKey();
-		if (!next.equals(player) && !next.equals(uuids)) {
+		if (!Residence.getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getConfigManager().isOfflineMode() && !next
+		    .equals(player)) {
 		    String perms = printPlayerFlags(nextEnt.getValue());
 		    if (next.length() == 36) {
 			String resolvedName = Residence.getPlayerName(next);

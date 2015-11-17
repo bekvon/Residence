@@ -256,6 +256,34 @@ Global:
     GroupDefault:
         #default: #group name
             #build: true
+     # These are grouped flags, so when using /res pset nickname redstone true, player will get all flags in list, same when setting to false or removing them.
+    GroupedFlags:
+      redstone:
+      - note
+      - pressure
+      - lever
+      - button
+      - diode
+      craft:
+      - brew
+      - table
+      - enchant
+      trusted:
+      - use
+      - tp
+      - build
+      - container
+      - bucket
+      - move
+      - leash
+      - animalkilling
+      - mobkilling
+      - shear
+      - chat
+      - beacon
+      fire:
+      - ignite
+      - firespread
 ItemList: #this is where you can create blacklists / whitelists
      DefaultList: #list name is not important, as long as it is unique. Its good to use a descripive name. 
         #type of the list, can be blacklist, whitelist, or ignorelist

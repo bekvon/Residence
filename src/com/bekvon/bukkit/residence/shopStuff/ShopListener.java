@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.shopStuff;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +21,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 
 public class ShopListener implements Listener {
@@ -105,7 +107,7 @@ public class ShopListener implements Listener {
 	case INVALID:
 	    break;
 	case TRUE:
-	    Residence.getResidenceManager().addShop(event.getResidence());
+	    Residence.getResidenceManager().addShop(event.getResidence().getName());
 	    event.getResidence().getPermissions().setFlag("tp", FlagState.TRUE);
 	    event.getResidence().getPermissions().setFlag("move", FlagState.TRUE);
 	    event.getResidence().getPermissions().setFlag("pvp", FlagState.FALSE);
@@ -116,7 +118,21 @@ public class ShopListener implements Listener {
 	    break;
 	}
     }
-
+    
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onResidenceRename(ResidenceRenameEvent event) {
+	ConcurrentHashMap<String, List<ShopVote>> Votes = ShopSignUtil.GetAllVoteList();		
+	if (Votes.containsKey(event.getOldResidenceName())){	  
+	    Residence.getResidenceManager().addShop(event.getNewResidenceName());
+	    Residence.getResidenceManager().removeShop(event.getOldResidenceName());
+	    List<ShopVote> obj = Votes.remove(event.getOldResidenceName());
+	    Votes.put(event.getNewResidenceName(), obj);
+	    ShopSignUtil.saveShopVotes();
+	    ShopSignUtil.BoardUpdateDelayed();
+	    ShopSignUtil.saveSigns();
+	}	
+    }
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onFlagChange(ResidenceFlagChangeEvent event) {
 	if (event.isCancelled())
@@ -151,7 +167,7 @@ public class ShopListener implements Listener {
 	if (!event.getResidence().getPermissions().has("shop", false))
 	    return;
 
-	Residence.getResidenceManager().addShop(event.getResidence());
+	Residence.getResidenceManager().addShop(event.getResidence().getName());
 
 	ShopSignUtil.BoardUpdate();
 	ShopSignUtil.saveSigns();

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -22,6 +23,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class ShopSignUtil {
 
@@ -86,7 +88,7 @@ public class ShopSignUtil {
 
 		try {
 		    String voteString = oneEntry.split("%")[1];
-		    if (voteString.contains("!")){
+		    if (voteString.contains("!")) {
 			voteString = oneEntry.split("%")[1].split("!")[0];
 		    }
 		    vote = Integer.parseInt(voteString);
@@ -130,6 +132,9 @@ public class ShopSignUtil {
 
 	for (Entry<String, List<ShopVote>> one : GetAllVoteList().entrySet()) {
 
+	    if (one.getKey() == null || one.getKey().equalsIgnoreCase(""))
+		continue;
+
 	    String path = "ShopVotes." + one.getKey();
 
 	    List<String> list = new ArrayList<String>();
@@ -168,15 +173,34 @@ public class ShopSignUtil {
 	return new Vote(vote, votes.size());
     }
 
-    public static Map<Shops, Double> getSortedShopList() {
+    // Res Shop vote file
+    public static int getLikes(String resName) {
+	ConcurrentHashMap<String, List<ShopVote>> allvotes = GetAllVoteList();
+	if (!allvotes.containsKey(resName))
+	    return 0;
 
-	Map<Shops, Double> allvotes = new HashMap<Shops, Double>();
+	List<ShopVote> votes = allvotes.get(resName);
 
-	Map<String, Shops> shops = Residence.getResidenceManager().getShops();
+	int likes = 0;
+	for (ShopVote oneVote : votes) {
+	    if (oneVote.getVote() >= (int) (Residence.getConfigManager().getVoteRangeTo() / 2))
+		likes++;
+	}
 
-	for (Entry<String, Shops> one : shops.entrySet()) {
-	    Vote vote = ShopSignUtil.getAverageVote(one.getKey());
-	    allvotes.put(one.getValue(), vote.getVote());
+	return likes;
+    }
+
+    public static Map<String, Double> getSortedShopList() {
+
+	Map<String, Double> allvotes = new HashMap<String, Double>();
+
+	List<String> shops = Residence.getResidenceManager().getShops();
+
+	for (String one : shops) {
+	    if (Residence.getConfigManager().isOnlyLike())
+		allvotes.put(one, (double) ShopSignUtil.getLikes(one));
+	    else
+		allvotes.put(one, ShopSignUtil.getAverageVote(one).getVote());
 	}
 
 	allvotes = sortByComparator(allvotes);
@@ -184,18 +208,18 @@ public class ShopSignUtil {
 	return allvotes;
     }
 
-    private static Map<Shops, Double> sortByComparator(Map<Shops, Double> unsortMap) {
+    private static Map<String, Double> sortByComparator(Map<String, Double> allvotes) {
 
-	List<Map.Entry<Shops, Double>> list = new LinkedList<Map.Entry<Shops, Double>>(unsortMap.entrySet());
+	List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(allvotes.entrySet());
 
-	Collections.sort(list, new Comparator<Map.Entry<Shops, Double>>() {
-	    public int compare(Map.Entry<Shops, Double> o1, Map.Entry<Shops, Double> o2) {
+	Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+	    public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
 		return (o2.getValue()).compareTo(o1.getValue());
 	    }
 	});
-	Map<Shops, Double> sortedMap = new LinkedHashMap<Shops, Double>();
-	for (Iterator<Map.Entry<Shops, Double>> it = list.iterator(); it.hasNext();) {
-	    Map.Entry<Shops, Double> entry = it.next();
+	Map<String, Double> sortedMap = new LinkedHashMap<String, Double>();
+	for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();) {
+	    Map.Entry<String, Double> entry = it.next();
 	    sortedMap.put(entry.getKey(), entry.getValue());
 	}
 	return sortedMap;
@@ -271,13 +295,22 @@ public class ShopSignUtil {
 	return;
     }
 
+    public static boolean BoardUpdateDelayed() {
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+	    public void run() {
+		BoardUpdate();
+		return;
+	    }
+	}, 20L);
+	return true;
+    }
+    
     public static boolean BoardUpdate() {
-
 	for (Board board : GetAllBoards()) {
 	    board.clearSignLoc();
 	    List<Location> SignsLocation = board.GetLocations();
 
-	    ArrayList<Shops> ShopNames = new ArrayList<Shops>(ShopSignUtil.getSortedShopList().keySet());
+	    ArrayList<String> ShopNames = new ArrayList<String>(ShopSignUtil.getSortedShopList().keySet());
 
 	    int Start = board.GetStartPlace();
 	    for (Location OneSignLoc : SignsLocation) {
@@ -287,26 +320,35 @@ public class ShopSignUtil {
 		if (!(block.getState() instanceof Sign))
 		    continue;
 
-		Shops Shop = null;
+		String Shop = null;
 		if (Residence.getResidenceManager().getShops().size() >= Start)
-		    Shop = Residence.getResidenceManager().getShops().get(ShopNames.get(Start - 1).getRes().getName());
+		    Shop = ShopNames.get(Start - 1);
+
+		ClaimedResidence res = Residence.getResidenceManager().getByName(Shop);
+
+		if (res == null)
+		    continue;
 
 		Sign sign = (Sign) block.getState();
 
 		Vote vote = null;
 		String votestat = "";
 		if (Residence.getResidenceManager().getShops().size() >= Start) {
-		    vote = ShopSignUtil.getAverageVote(ShopNames.get(Start - 1).getRes().getName());
-		    votestat = vote.getAmount() == 0 ? "" : NewLanguage.getMessage("Language.Shop.SignLines.4").replace("%1", String.valueOf(vote.getVote())).replace(
-			"%2", String.valueOf(vote.getAmount()));
+		    vote = ShopSignUtil.getAverageVote(ShopNames.get(Start - 1));
+
+		    if (Residence.getConfigManager().isOnlyLike()) {
+			votestat = vote.getAmount() == 0 ? "" : NewLanguage.getMessage("Language.Shop.ListLiked", ShopSignUtil.getLikes(ShopNames.get(Start - 1)));
+		    } else
+			votestat = vote.getAmount() == 0 ? "" : NewLanguage.getMessage("Language.Shop.SignLines.4").replace("%1", String.valueOf(vote.getVote())).replace(
+			    "%2", String.valueOf(vote.getAmount()));
 		}
 
 		if (Shop != null) {
 		    sign.setLine(0, NewLanguage.getMessage("Language.Shop.SignLines.1").replace("%1", String.valueOf(Start)));
-		    sign.setLine(1, NewLanguage.getMessage("Language.Shop.SignLines.2").replace("%1", Shop.getRes().getName()));
-		    sign.setLine(2, NewLanguage.getMessage("Language.Shop.SignLines.3").replace("%1", Shop.getRes().getOwner()));
+		    sign.setLine(1, NewLanguage.getMessage("Language.Shop.SignLines.2").replace("%1", res.getName()));
+		    sign.setLine(2, NewLanguage.getMessage("Language.Shop.SignLines.3").replace("%1", res.getOwner()));
 		    sign.setLine(3, votestat);
-		    board.addSignLoc(Shop.getRes().getName(), sign.getLocation());
+		    board.addSignLoc(res.getName(), sign.getLocation());
 		} else {
 		    sign.setLine(0, "");
 		    sign.setLine(1, "");

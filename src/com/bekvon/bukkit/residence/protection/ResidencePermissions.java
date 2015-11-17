@@ -86,9 +86,14 @@ public class ResidencePermissions extends FlagPermissions {
 
     public void applyTemplate(Player player, FlagPermissions list, boolean resadmin) {
 	if (player != null) {
-	    if (!player.getUniqueId().toString().equals(ownerUUID.toString()) && !resadmin) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
-		return;
+	    if (!resadmin) {
+		if (!Residence.getConfigManager().isOfflineMode() && !player.getUniqueId().toString().equals(ownerUUID.toString())) {
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		    return;
+		} else if (!player.getName().equals(ownerLastKnownName)) {
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		    return;
+		}
 	    }
 	} else {
 	    resadmin = true;
@@ -378,6 +383,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public String getOwner() {
+	if (Residence.getConfigManager().isOfflineMode())
+	    return ownerLastKnownName;
 	if (ownerUUID.toString().equals("00000000-0000-0000-0000-000000000000")) //check for server land
 	    return "Server_Land";
 	String name = Residence.getPlayerName(ownerUUID);//try to find the owner's name

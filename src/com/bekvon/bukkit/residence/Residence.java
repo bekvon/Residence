@@ -918,7 +918,7 @@ public class Residence extends JavaPlugin {
 		if (!perms.has("shop", false))
 		    continue;
 
-		rmanager.addShop(one.getValue());
+		rmanager.addShop(one.getValue().getName());
 	    }
 
 	    if (Residence.getConfigManager().isUUIDConvertion()) {
@@ -1178,6 +1178,8 @@ public class Residence extends JavaPlugin {
     }
 
     public static UUID getPlayerUUID(String playername) {
+	if (Residence.getConfigManager().isOfflineMode())
+	    return null;
 	Player p = Residence.getServ().getPlayer(playername);
 	if (p == null) {
 	    if (getOfflinePlayerMap().containsKey(playername.toLowerCase()))

@@ -433,6 +433,7 @@ public class Locale {
 	GetConfig("Language.Shop.ListTopLine", "&6%1 &eShop list - Page &6%2 &eof &6%3 %4", writer, conf, true);
 	GetConfig("Language.Shop.List", " &e%1. &6%2 &e(&6%3&e) %4", writer, conf, true);
 	GetConfig("Language.Shop.ListVoted", "&e%1 (&6%2&e)", writer, conf, true);
+	GetConfig("Language.Shop.ListLiked", "&eLikes: &0%1", writer, conf, true);
 
 	GetConfig("Language.Shop.VotesTopLine", "&6%1 &e%2 residence vote list &6- &ePage &6%3 &eof &6%4 %5", writer, conf, true);
 	GetConfig("Language.Shop.VotesList", " &e%1. &6%2 &e%3 &7%4", writer, conf, true);
@@ -447,6 +448,8 @@ public class Locale {
 	GetConfig("Language.Shop.InvalidSelection", "&cLeft click with selection tool top left sign and then right click bottom right", writer, conf, true);
 	GetConfig("Language.Shop.VoteChanged", "&6Vote changed from &e%1 &6to &e%2 &6for &e%3 &6residence", writer, conf, true);
 	GetConfig("Language.Shop.Voted", "&6You voted, and gave &e%1 &6votes to &e%2 &6residence", writer, conf, true);
+	GetConfig("Language.Shop.Liked", "&6You liked &e%1 &6residence", writer, conf, true);
+	GetConfig("Language.Shop.AlreadyLiked", "&6You already liked &e%1 &6residence", writer, conf, true);
 	GetConfig("Language.Shop.NoVotes", "&cThere is no registered votes for this residence", writer, conf, true);
 	GetConfig("Language.Shop.CantVote", "&cResidence don't have shop flag set to true", writer, conf, true);
 	GetConfig("Language.Shop.VotedRange", "&6Vote range is from &e%1 &6to &e%2", writer, conf, true);
@@ -454,6 +457,7 @@ public class Locale {
 	GetConfig("Language.Shop.SignLines.2", "&9%1", writer, conf, true);
 	GetConfig("Language.Shop.SignLines.3", "&4%1", writer, conf, true);
 	GetConfig("Language.Shop.SignLines.4", "&8%1&e (&8%2&e)", writer, conf, true);
+	GetConfig("Language.Shop.SignLines.Likes4", "&9Likes: &8%2", writer, conf, true);
 
 	GetConfig("Language.RandomTeleport.TpLimit", "&eYou can't teleport so fast, please wait &6%1 &esec and try again", writer, conf, true);
 	GetConfig("Language.RandomTeleport.TeleportSuccess", "&eTeleported to X:&6%1&e, Y:&6%2&e, Z:&6%3 &elocation", writer, conf, true);
