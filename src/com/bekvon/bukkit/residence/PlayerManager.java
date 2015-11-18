@@ -26,15 +26,14 @@ public class PlayerManager {
 	return;
     }
 
-    public static void playerJoin(String player) {
-	ResPlayer resPlayer = players.get(player.toLowerCase());
-	if (resPlayer == null) {
-	    resPlayer = new ResPlayer(player);
+    public static ResPlayer playerJoin(String player) {
+	if (!players.containsKey(player.toLowerCase())) {
+	    ResPlayer resPlayer = new ResPlayer(player);
 	    resPlayer.recountRes();
 	    players.put(player.toLowerCase(), resPlayer);
+	    return resPlayer;
 	}
-	return;
-
+	return null;
     }
 
     public static void fillList() {
@@ -117,10 +116,11 @@ public class PlayerManager {
     }
 
     public static ResPlayer getResPlayer(String player) {
-	ResPlayer resPlayer = players.get(player.toLowerCase());
-	if (resPlayer == null) {
-	    playerJoin(player);
+	ResPlayer resPlayer = null;
+	if (players.containsKey(player.toLowerCase()))
 	    resPlayer = players.get(player.toLowerCase());
+	else {
+	    resPlayer = playerJoin(player);
 	}
 	return resPlayer;
     }

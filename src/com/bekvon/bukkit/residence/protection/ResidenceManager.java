@@ -28,7 +28,6 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 /**
  * 
@@ -123,13 +122,12 @@ public class ResidenceManager {
     public void addShop(String res) {
 	shops.add(res);
     }
-    
+
     public void removeShop(ClaimedResidence res) {
 	removeShop(res.getName());
     }
 
     public void removeShop(String resName) {
-	Debug.D("Containe? "+shops.remove(resName));
 	shops.remove(resName);
     }
 
