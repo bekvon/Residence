@@ -1246,9 +1246,9 @@ public class ResidenceCommandListener extends Residence {
 		    player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 		    return true;
 		}
-		res.getPermissions().setOwner("Server_Land", false);
+		res.getPermissions().setOwner(Residence.getServerLandname(), false);
 		player.sendMessage(ChatColor.GREEN + language.getPhrase("ResidenceOwnerChange", ChatColor.YELLOW + args[1] + ChatColor.GREEN + "|" + ChatColor.YELLOW
-		    + "Server_Land" + ChatColor.GREEN));
+		    + Residence.getServerLandname() + ChatColor.GREEN));
 		return true;
 	    } else {
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));

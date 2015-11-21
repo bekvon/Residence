@@ -139,6 +139,10 @@ public class Residence extends JavaPlugin {
     public static WorldGuardPlugin wg = null;
     public static int wepid;
 
+    private static String ServerLandname = "Server_Land";
+    private static String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
+    private static String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
+
     private static NMS nms;
 
     public static NMS getNms() {
@@ -1178,8 +1182,8 @@ public class Residence extends JavaPlugin {
     }
 
     public static UUID getPlayerUUID(String playername) {
-	if (Residence.getConfigManager().isOfflineMode())
-	    return null;
+//	if (Residence.getConfigManager().isOfflineMode())
+//	    return null;
 	Player p = Residence.getServ().getPlayer(playername);
 	if (p == null) {
 	    if (getOfflinePlayerMap().containsKey(playername.toLowerCase()))
@@ -1215,6 +1219,18 @@ public class Residence extends JavaPlugin {
 	} catch (IllegalArgumentException ex) {
 	}
 	return null;
+    }
+
+    public static String getServerLandname() {
+	return ServerLandname;
+    }
+
+    public static String getServerLandUUID() {
+	return ServerLandUUID;
+    }
+
+    public static String getTempUserUUID() {
+	return TempUserUUID;
     }
 
     public static String getPlayerName(UUID uuid) {

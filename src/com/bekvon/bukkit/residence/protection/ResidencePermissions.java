@@ -43,7 +43,7 @@ public class ResidencePermissions extends FlagPermissions {
 	this(res);
 	ownerUUID = Residence.getPlayerUUID(creator);
 	if (ownerUUID == null)
-	    ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+	    ownerUUID = UUID.fromString(Residence.getTempUserUUID());
 	this.ownerLastKnownName = creator;
 	world = inworld;
     }
@@ -362,32 +362,29 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public void setOwner(String newOwner, boolean resetFlags) {
-	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase("Server_Land")) {
-	    ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, newOwner);
-	    Residence.getServ().getPluginManager().callEvent(ownerchange);
-	    ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");// the UUID for server owned land
-	    if (resetFlags)
-		this.applyDefaultFlags();
+	ownerLastKnownName = newOwner;
+
+	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, newOwner);
+	Residence.getServ().getPluginManager().callEvent(ownerchange);
+
+	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase(Residence.getServerLandname())) {
+	    ownerUUID = UUID.fromString(Residence.getServerLandUUID());// the UUID for server owned land
 	} else {
 	    UUID playerUUID = Residence.getPlayerUUID(newOwner);
-	    if (playerUUID != null) //if we find the players uuid
-	    {
-		ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, newOwner);
-		Residence.getServ().getPluginManager().callEvent(ownerchange);
+	    if (playerUUID != null)
 		ownerUUID = playerUUID;
-		if (resetFlags)
-		    this.applyDefaultFlags();
-	    } else
-		ownerUUID = UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");//the fake UUID used when unable to find the real one, will be updated with players real UUID when its possible to find it
+	    else
+		ownerUUID = UUID.fromString(Residence.getTempUserUUID());//the fake UUID used when unable to find the real one, will be updated with players real UUID when its possible to find it
 	}
-	ownerLastKnownName = newOwner;
+	if (resetFlags)
+	    this.applyDefaultFlags();
     }
 
     public String getOwner() {
 	if (Residence.getConfigManager().isOfflineMode())
 	    return ownerLastKnownName;
-	if (ownerUUID.toString().equals("00000000-0000-0000-0000-000000000000")) //check for server land
-	    return "Server_Land";
+	if (ownerUUID.toString().equals(Residence.getServerLandUUID())) //check for server land
+	    return Residence.getServerLandname();
 	String name = Residence.getPlayerName(ownerUUID);//try to find the owner's name
 	if (name == null)
 	    return ownerLastKnownName;//return last known if we cannot find it
@@ -421,10 +418,10 @@ public class ResidencePermissions extends FlagPermissions {
 	    //			String name = Residence.getPlayerName(newperms.ownerUUID); //try to find the current name of the owner
 	    newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName");//otherwise load last known name from file
 
-	    if (newperms.ownerLastKnownName.equalsIgnoreCase("Server land") || newperms.ownerLastKnownName.equalsIgnoreCase("Server_land")) {
-		newperms.ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");//UUID for server land
-		newperms.ownerLastKnownName = "Server_Land";
-	    } else if (newperms.ownerUUID.toString().equals("ffffffff-ffff-ffff-ffff-ffffffffffff")) //check for fake UUID
+	    if (newperms.ownerLastKnownName.equalsIgnoreCase("Server land") || newperms.ownerLastKnownName.equalsIgnoreCase(Residence.getServerLandname())) {
+		newperms.ownerUUID = UUID.fromString(Residence.getServerLandUUID());//UUID for server land
+		newperms.ownerLastKnownName = Residence.getServerLandname();
+	    } else if (newperms.ownerUUID.toString().equals(Residence.getTempUserUUID())) //check for fake UUID
 	    {
 		UUID realUUID = Residence.getPlayerUUID(newperms.ownerLastKnownName);//try to find the real UUID of the player if possible now
 		if (realUUID != null)
@@ -436,10 +433,10 @@ public class ResidencePermissions extends FlagPermissions {
 	    newperms.ownerLastKnownName = owner;
 	    newperms.ownerUUID = Residence.getPlayerUUID(owner);
 	    if (newperms.ownerUUID == null)
-		newperms.ownerUUID = UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");//set fake UUID until we can find real one for last known player
+		newperms.ownerUUID = UUID.fromString(Residence.getTempUserUUID());//set fake UUID until we can find real one for last known player
 	} else {
-	    newperms.ownerUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");//cant determine owner name or UUID... setting zero UUID which is server land
-	    newperms.ownerLastKnownName = "Server_Land";
+	    newperms.ownerUUID = UUID.fromString(Residence.getServerLandUUID());//cant determine owner name or UUID... setting zero UUID which is server land
+	    newperms.ownerLastKnownName = Residence.getServerLandname();
 	}
 	newperms.world = (String) root.get("World");
 	FlagPermissions.load(root, newperms);

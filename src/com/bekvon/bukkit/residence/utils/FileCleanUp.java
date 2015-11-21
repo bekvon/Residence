@@ -45,7 +45,7 @@ public class FileCleanUp {
 	    if (!Residence.getConfigManager().getCleanWorlds().contains(res.getWorld()))
 		continue;
 
-	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase("server_land"))
+	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(Residence.getServerLandname()))
 		continue;
 
 	    long lastPlayed = player.getLastPlayed();

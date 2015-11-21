@@ -5,6 +5,7 @@
 
 package com.bekvon.bukkit.residence.economy;
 
+import com.bekvon.bukkit.residence.Residence;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
@@ -20,7 +21,7 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 
     public EssentialsEcoAdapter(Essentials p) {
         plugin = p;
-        String serverland = "Server_Land";
+        String serverland = Residence.getServerLandname();
         if (!Economy.playerExists(serverland)) {
             Economy.createNPC(serverland);
         }

@@ -602,8 +602,8 @@ public class FlagPermissions {
 	for (String keyset : playerFlags.keySet()) {
 	    if (keyset.length() == 36) {
 		String uuid = keyset;
-		if (uuid.equalsIgnoreCase("00000000-0000-0000-0000-000000000000"))
-		    converts.put(uuid, "Server_Land");
+		if (uuid.equalsIgnoreCase(Residence.getServerLandUUID()))
+		    converts.put(uuid, Residence.getServerLandname());
 		else {
 		    String name = Residence.getPlayerName(uuid);
 		    if (name != null)
@@ -630,7 +630,7 @@ public class FlagPermissions {
 	for (String keyset : playerFlags.keySet()) {
 	    if (keyset.length() != 36) {
 		String uuid = null;
-		if (OwnerName != null && OwnerName.equalsIgnoreCase(keyset) && !owneruuid.equalsIgnoreCase("ffffffff-ffff-ffff-ffff-ffffffffffff"))
+		if (OwnerName != null && OwnerName.equalsIgnoreCase(keyset) && !owneruuid.equalsIgnoreCase(Residence.getTempUserUUID()))
 		    uuid = owneruuid;
 		else
 		    uuid = Residence.getPlayerUUIDString(keyset);
