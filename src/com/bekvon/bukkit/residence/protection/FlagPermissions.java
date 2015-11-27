@@ -153,8 +153,6 @@ public class FlagPermissions {
 
 	addFlag("chat");
 	
-	addFlag("nodurability");
-
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
 	addResidenceOnlyFlag("fireball");
@@ -205,6 +203,8 @@ public class FlagPermissions {
 	// Players will keep hes exp on death
 	addResidenceOnlyFlag("mobexpdrop");
 
+	// Players will not lose item durability
+	addResidenceOnlyFlag("nodurability");
 
 	// Special flag for making residence as shop
 	addResidenceOnlyFlag("shop");
