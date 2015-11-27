@@ -152,6 +152,8 @@ public class FlagPermissions {
 	addFlag("command");
 
 	addFlag("chat");
+	
+	addFlag("nodurability");
 
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
@@ -196,6 +198,13 @@ public class FlagPermissions {
 
 	// Players will keep hes exp on death
 	addResidenceOnlyFlag("keepexp");
+	
+	// Players will keep hes exp on death
+	addResidenceOnlyFlag("mobitemdrop");
+
+	// Players will keep hes exp on death
+	addResidenceOnlyFlag("mobexpdrop");
+
 
 	// Special flag for making residence as shop
 	addResidenceOnlyFlag("shop");

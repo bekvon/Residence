@@ -1552,6 +1552,7 @@ public class ResidenceCommandListener extends Residence {
 	if (args.length != 2) {
 	    return false;
 	}
+	
 	WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
 	if (wep != null) {
 	    if (wep.getConfig().getInt("wand-item") == Residence.getConfigManager().selectionToolId) {

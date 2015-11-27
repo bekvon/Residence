@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -103,6 +104,19 @@ public class NewLanguage {
 	if (customlocale.isList(key))
 	    return Locale.ColorsArray(customlocale.getStringList(key), true);
 	return enlocale.getStringList(key).size() > 0 ? Locale.ColorsArray(enlocale.getStringList(key), true) : Arrays.asList(missing);
+    }
+
+    /**
+     * Get the message with the correct key
+     * 
+     * @param key
+     *            - the key of the message
+     * @return the message
+     */
+    public static Set<String> getKeyList(String key) {
+	if (customlocale.isConfigurationSection(key))
+	    return customlocale.getConfigurationSection(key).getKeys(false);
+	return enlocale.getConfigurationSection(key).getKeys(false);
     }
 
     /**

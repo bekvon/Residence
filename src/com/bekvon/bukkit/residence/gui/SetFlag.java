@@ -6,9 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -31,6 +33,8 @@ public class SetFlag {
     private LinkedHashMap<String, Integer> permMap = new LinkedHashMap<String, Integer>();
     private LinkedHashMap<String, List<String>> description = new LinkedHashMap<String, List<String>>();
     private boolean admin = false;
+    private int page = 1;
+    private int pageCount = 1;
 
     public SetFlag(String residence, Player player, boolean admin) {
 	this.residence = residence;
@@ -77,6 +81,18 @@ public class SetFlag {
 	else if (click.isRightClick() && action == InventoryAction.MOVE_TO_OTHER_INVENTORY)
 	    return;
 
+	if (slot == 53) {
+	    if (page < pageCount)
+		page++;
+	    recalculateInv();
+	    return;
+	} else if (slot == 45) {
+	    if (page > 1)
+		page--;
+	    recalculateInv();
+	    return;
+	}
+
 	String flag = "";
 	int i = 0;
 	for (Entry<String, Integer> one : permMap.entrySet()) {
@@ -104,38 +120,23 @@ public class SetFlag {
     }
 
     private void fillFlagDescriptions() {
-	List<String> list = NewLanguage.getMessageList("CommandHelp.SubCommands.res.SubCommands.flags.Info");
-	for (Entry<String, Boolean> one : Residence.getPermissionManager().getAllFlags().getFlags().entrySet()) {
-	    for (String onelist : list) {
-
-		String onelisttemp = ChatColor.stripColor(onelist);
-
-		String splited = "";
-		if (!onelisttemp.contains("-"))
-		    continue;
-
-		splited = onelisttemp.split("-")[0];
-		if (!splited.toLowerCase().contains(one.getKey().toLowerCase()))
-		    continue;
-
-		List<String> lore = new ArrayList<String>();
-
-		int i = 0;
-		String sentence = "";
-		for (String oneWord : onelist.split(" ")) {
-		    sentence += oneWord + " ";
-		    if (i > 4) {
-			lore.add(ChatColor.YELLOW + sentence);
-			sentence = "";
-			i = 0;
-		    }
-		    i++;
+	Set<String> list = NewLanguage.getKeyList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands");
+	for (String onelist : list) {
+	    String onelisttemp = NewLanguage.getMessage("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
+	    List<String> lore = new ArrayList<String>();
+	    int i = 0;
+	    String sentence = "";
+	    for (String oneWord : onelisttemp.split(" ")) {
+		sentence += oneWord + " ";
+		if (i > 4) {
+		    lore.add(ChatColor.YELLOW + sentence);
+		    sentence = "";
+		    i = 0;
 		}
-		lore.add(ChatColor.YELLOW + sentence);
-		description.put(one.getKey(), lore);
-		break;
-
+		i++;
 	    }
+	    lore.add(ChatColor.YELLOW + sentence);
+	    description.put(onelist, lore);
 	}
     }
 
@@ -165,13 +166,15 @@ public class SetFlag {
 		    resFlags.put(one.getKey(), one.getValue());
 		}
 	}
+	LinkedHashMap<String, Integer> TempPermMap = new LinkedHashMap<String, Integer>();
 
 	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
 	    if (resFlags.containsKey(one.getKey()))
-		permMap.put(one.getKey(), resFlags.get(one.getKey()) ? 1 : 0);
+		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? 1 : 0);
 	    else
-		permMap.put(one.getKey(), 2);
+		TempPermMap.put(one.getKey(), 2);
 	}
+
 	String title = "";
 	if (targetPlayer == null)
 	    title = NewLanguage.getMessage("Language.Gui.Set.Title").replace("%1%", res.getName());
@@ -185,11 +188,28 @@ public class SetFlag {
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
 
-	permMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(permMap);
+	TempPermMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(TempPermMap);
 
 	FlagData flagData = FlagUtil.getFlagData();
 
+	pageCount = (int) Math.ceil((double) TempPermMap.size() / (double) 45);
+
+	int start = page * 45 - 45;
+	int end = page * 45;
+
+	int count = -1;
+	permMap.clear();
+	for (Entry<String, Integer> one : TempPermMap.entrySet()) {
+	    count++;
+	    if (count >= end)
+		break;
+	    if (count < start)
+		continue;
+	    permMap.put(one.getKey(), one.getValue());
+	}
+
 	for (Entry<String, Integer> one : permMap.entrySet()) {
+
 	    ItemStack MiscInfo = Residence.getConfigManager().getGuiRemove();
 
 	    switch (one.getValue()) {
@@ -242,6 +262,19 @@ public class SetFlag {
 	    i++;
 	    if (i > 53)
 		break;
+	}
+	ItemStack Item = new ItemStack(Material.ARROW);
+
+	ItemMeta meta = Item.getItemMeta();
+	if (page > 1) {
+	    meta.setDisplayName(NewLanguage.getMessage("Language.PrevInfoPage"));
+	    Item.setItemMeta(meta);
+	    GuiInv.setItem(45, Item);
+	}
+	if (page < pageCount) {
+	    meta.setDisplayName(NewLanguage.getMessage("Language.NextInfoPage"));
+	    Item.setItemMeta(meta);
+	    GuiInv.setItem(53, Item);
 	}
 
 	this.inventory = GuiInv;

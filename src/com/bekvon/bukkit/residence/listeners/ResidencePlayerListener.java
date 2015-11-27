@@ -41,6 +41,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -48,6 +49,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.PlayerManager;
@@ -170,7 +172,7 @@ public class ResidencePlayerListener implements Listener {
 	InventoryAction action = event.getAction();
 	setFlag.toggleFlag(slot, click, action);
 	setFlag.recalculateInv();
-	player.getOpenInventory().getTopInventory().setItem(slot, setFlag.getInventory().getItem(slot));
+	player.getOpenInventory().getTopInventory().setContents(setFlag.getInventory().getContents());
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -376,6 +378,22 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onItemDamage(PlayerItemDamageEvent event) {
+	Player player = event.getPlayer();
+	Location loc = player.getLocation();
+	FlagPermissions perms = Residence.getPermsByLoc(loc);
+	if (perms.has("nodurability", false)) {
+	    ItemStack held = player.getItemInHand();
+	    if (held.getType() != Material.AIR) {
+		held.setDurability(held.getDurability());
+		player.setItemInHand(held);
+		event.setDamage(0);
+		event.setCancelled(true);
+	    }
+	}
+    }
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerSpawn(PlayerRespawnEvent event) {
 	Location loc = event.getRespawnLocation();

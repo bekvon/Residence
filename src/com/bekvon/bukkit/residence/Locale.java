@@ -966,6 +966,24 @@ public class Locale {
 	    "Allows to join residence chat room", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.chat.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// nodurability
+	FlagList.add("nodurability");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nodurability.Description",
+	    "Prevents item durability loss", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.nodurability.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// mobitemdrop
+	FlagList.add("mobitemdrop");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.mobitemdrop.Description",
+	    "Prevents mob droping items on death", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.mobitemdrop.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// mobexpdrop
+	FlagList.add("mobexpdrop");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.mobexpdrop.Description",
+	    "Prevents mob droping exp on death", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.mobexpdrop.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 
 	// Filling with custom flags info
 	Set<String> sec = conf.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands").getKeys(false);

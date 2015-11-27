@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -135,6 +136,20 @@ public class ResidenceEntityListener implements Listener {
 	if (!res.getPermissions().playerHas(cause.getName(), "animalkilling", true)) {
 	    cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "AnimalKilling|" + res.getName()));
 	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void OnEntityDeath(EntityDeathEvent event) {
+	if (event.getEntity() instanceof Player)
+	    return;
+	Location loc = event.getEntity().getLocation();
+	FlagPermissions perms = Residence.getPermsByLoc(loc);
+	if (!perms.has("mobitemdrop", true)) {
+	    event.getDrops().clear();
+	}
+	if (!perms.has("mobexpdrop", true)) {
+	    event.setDroppedExp(0);
 	}
     }
 
@@ -377,7 +392,6 @@ public class ResidenceEntityListener implements Listener {
 	}
     }
 
-    @SuppressWarnings("incomplete-switch")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
 	EntityType entity = event.getEntityType();
@@ -410,6 +424,8 @@ public class ResidenceEntityListener implements Listener {
 		event.getEntity().remove();
 	    }
 	    break;
+	default:
+	    break;
 	}
     }
 
@@ -425,27 +441,23 @@ public class ResidenceEntityListener implements Listener {
 
 	switch (entity) {
 	case CREEPER:
-	    if (!perms.has("creeper", perms.has("explode", true))) {
+	    if (!perms.has("creeper", perms.has("explode", true)))
 		cancel = true;
-	    }
 	    break;
 	case PRIMED_TNT:
 	case MINECART_TNT:
-	    if (!perms.has("tnt", perms.has("explode", true))) {
+	    if (!perms.has("tnt", perms.has("explode", true)))
 		cancel = true;
-	    }
 	    break;
 	case SMALL_FIREBALL:
 	case FIREBALL:
-	    if (!perms.has("fireball", perms.has("explode", true))) {
+	    if (!perms.has("fireball", perms.has("explode", true)))
 		cancel = true;
-	    }
 	    break;
 	case WITHER_SKULL:
 	case WITHER:
-	    if (!perms.has("wither", perms.has("explode", world.has("wither", world.has("explode", true))))) {
+	    if (!perms.has("wither", perms.has("explode", world.has("wither", world.has("explode", true)))))
 		cancel = true;
-	    }
 	    break;
 	}
 
@@ -467,6 +479,10 @@ public class ResidenceEntityListener implements Listener {
 	    case PRIMED_TNT:
 	    case MINECART_TNT:
 		if (!blockperms.has("tnt", blockperms.has("explode", true)))
+		    preserve.add(block);
+		continue;
+	    case ENDER_CRYSTAL:
+		if (!blockperms.has("explode", true))
 		    preserve.add(block);
 		continue;
 	    case SMALL_FIREBALL:
