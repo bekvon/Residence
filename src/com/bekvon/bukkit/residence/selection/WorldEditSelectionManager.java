@@ -80,7 +80,7 @@ public class WorldEditSelectionManager extends SelectionManager {
     }
 
     @Override
-    public void modify(Player player, boolean shift, int amount) {
+    public void modify(Player player, boolean shift, double amount) {
 	super.modify(player, shift, amount);
 	this.worldEditUpdate(player);
 	afterSelectionUpdate(player);

@@ -481,6 +481,10 @@ public class ResidenceEntityListener implements Listener {
 		if (!blockperms.has("tnt", blockperms.has("explode", true)))
 		    preserve.add(block);
 		continue;
+	    case ENDER_DRAGON:
+		if (!blockperms.has("dragongrief", false))
+		    preserve.add(block);
+		break;
 	    case ENDER_CRYSTAL:
 		if (!blockperms.has("explode", true))
 		    preserve.add(block);

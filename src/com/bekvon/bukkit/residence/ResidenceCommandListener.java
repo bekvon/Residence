@@ -1380,6 +1380,11 @@ public class ResidenceCommandListener extends Residence {
 	    return true;
 	}
 
+	if (amount > 1000) {
+	    player.sendMessage(ChatColor.RED + language.getPhrase("InvalidAmount"));
+	    return true;
+	}
+
 	if (amount < 0)
 	    amount = amount * -1;
 
@@ -1552,7 +1557,7 @@ public class ResidenceCommandListener extends Residence {
 	if (args.length != 2) {
 	    return false;
 	}
-	
+
 	WorldEditPlugin wep = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
 	if (wep != null) {
 	    if (wep.getConfig().getInt("wand-item") == Residence.getConfigManager().selectionToolId) {

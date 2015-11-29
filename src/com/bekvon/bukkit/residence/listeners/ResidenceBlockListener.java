@@ -13,11 +13,13 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowman;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
@@ -36,6 +38,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -52,6 +55,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
+
 	Player player = event.getPlayer();
 	if (Residence.isResAdminOn(player)) {
 	    return;
@@ -84,6 +88,20 @@ public class ResidenceBlockListener implements Listener {
 	    event.setCancelled(true);
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 	    return;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockForm(BlockFormEvent event) {
+
+	if (!(event instanceof EntityBlockFormEvent))
+	    return;
+
+	if (((EntityBlockFormEvent) event).getEntity() instanceof Snowman) {
+	    FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	    if (!perms.has("snowtrail", true)) {
+		event.setCancelled(true);
+	    }
 	}
     }
 

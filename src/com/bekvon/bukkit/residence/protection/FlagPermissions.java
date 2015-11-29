@@ -208,6 +208,12 @@ public class FlagPermissions {
 
 	// Special flag for making residence as shop
 	addResidenceOnlyFlag("shop");
+	
+	// Prevent ender dragon block grief
+	addResidenceOnlyFlag("dragongrief");
+	
+	// Prevent snowman snow trail
+	addResidenceOnlyFlag("snowtrail");
 
 	addPlayerOrGroupOnlyFlag("admin");
 

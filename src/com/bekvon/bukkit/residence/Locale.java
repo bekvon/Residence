@@ -984,6 +984,18 @@ public class Locale {
 	    "Prevents mob droping exp on death", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.mobexpdrop.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// dragongrief
+	FlagList.add("dragongrief");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.dragongrief.Description",
+	    "Prevents ender dragon block griefing", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.dragongrief.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// snowtrail
+	FlagList.add("snowtrail");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.snowtrail.Description",
+	    "Prevents snowman snow trails", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.snowtrail.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 
 	// Filling with custom flags info
 	Set<String> sec = conf.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands").getKeys(false);
