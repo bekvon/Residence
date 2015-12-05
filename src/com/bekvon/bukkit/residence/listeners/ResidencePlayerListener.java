@@ -393,7 +393,7 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerSpawn(PlayerRespawnEvent event) {
 	Location loc = event.getRespawnLocation();
@@ -839,7 +839,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void onPlayerDeath(final PlayerDeathEvent event) {
 	Player player = event.getEntity();
 	if (player == null)
 	    return;
@@ -855,11 +855,21 @@ public class ResidencePlayerListener implements Listener {
 
 	if (res.getPermissions().has("keepexp", false))
 	    event.setKeepLevel(true);
+
+	if (res.getPermissions().has("respawn", false))
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+		public void run() {
+		    try {
+			event.getEntity().spigot().respawn();
+		    } catch (Exception e) {
+		    }
+		    return;
+		}
+	    }, 1L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-
 	Player player = event.getPlayer();
 	if (player == null)
 	    return;
@@ -867,21 +877,26 @@ public class ResidencePlayerListener implements Listener {
 	if (player.hasMetadata("NPC"))
 	    return;
 
-	String name = player.getName();
-	long last = lastUpdate.get(name);
-	long now = System.currentTimeMillis();
-	if (now - last < Residence.getConfigManager().getMinMoveUpdateInterval()) {
-	    return;
-	}
-	lastUpdate.put(name, now);
 	Location locfrom = event.getFrom();
 	Location locto = event.getTo();
 	if (locfrom.getX() == locto.getX() && locfrom.getY() == locto.getY() && locfrom.getZ() == locto.getZ())
 	    return;
 
-	handleNewLocation(player, locto, true);
+	String name = player.getName();
 
-	if (Residence.getConfigManager().getTeleportDelay() > 0 && ResidenceCommandListener.teleportDelayMap.contains(player.getName())) {
+	if (name == null)
+	    return;
+
+	long last = lastUpdate.get(name);
+	long now = System.currentTimeMillis();
+	if (now - last < Residence.getConfigManager().getMinMoveUpdateInterval())
+	    return;
+
+	this.lastUpdate.put(name, now);
+
+	handleNewLocation(player, locto, true);
+	if (!ResidenceCommandListener.teleportDelayMap.isEmpty() && Residence.getConfigManager().getTeleportDelay() > 0 && ResidenceCommandListener.teleportDelayMap
+	    .contains(player.getName())) {
 	    ResidenceCommandListener.teleportDelayMap.remove(player.getName());
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportCanceled"));
 	}
@@ -909,16 +924,22 @@ public class ResidencePlayerListener implements Listener {
 	    ResOld = Residence.getResidenceManager().getByName(currentRes.get(pname));
 	    if (ResOld == null) {
 		currentRes.remove(pname);
+	    } else {
+		if (res != null && ResOld.getName().equals(res.getName())) {
+		    return;
+		}
 	    }
 	}
 
-	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
-	    @Override
-	    public void run() {
-		AutoSelection.UpdateSelection(player);
-		return;
-	    }
-	});
+	if (!AutoSelection.getList().isEmpty()) {
+	    Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+		@Override
+		public void run() {
+		    AutoSelection.UpdateSelection(player);
+		    return;
+		}
+	    });
+	}
 
 	if (res == null) {
 	    lastOutsideLoc.put(pname, loc);

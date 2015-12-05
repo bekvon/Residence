@@ -13,13 +13,14 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class RandomTp {
 
     static int miny = 63;
 
-    public static Location getRandomlocation() {
+    public static Location getRandomlocation(String WorldName) {
 
 	Random random = new Random(System.currentTimeMillis());
 
@@ -29,14 +30,31 @@ public class RandomTp {
 
 	int tries = 0;
 
-	World world = Residence.getConfigManager().getrtCenter().getWorld();
+	RandomTeleport rtloc = null;
 
-	int inerrange = Residence.getConfigManager().getrtMinCoord();
-	int outerrange = Residence.getConfigManager().getrtMaxCoord();
+	for (RandomTeleport one : Residence.getConfigManager().getRandomTeleport()) {
+
+	    if (!one.getWorld().equalsIgnoreCase(WorldName))
+		continue;
+
+	    rtloc = one;
+	    break;
+	}
+
+	if (rtloc == null)
+	    return null;
+
+	World world = rtloc.getCenter().getWorld();
+
+	if (world == null)
+	    return null;
+
+	int inerrange = rtloc.getMinCord();
+	int outerrange = rtloc.getMaxCord();
 	int maxtries = Residence.getConfigManager().getrtMaxTries();
 
-	int centerX = Residence.getConfigManager().getrtCenter().getBlockX();
-	int centerY = Residence.getConfigManager().getrtCenter().getBlockZ();
+	int centerX = rtloc.getCenter().getBlockX();
+	int centerY = rtloc.getCenter().getBlockZ();
 
 	Location loc = null;
 

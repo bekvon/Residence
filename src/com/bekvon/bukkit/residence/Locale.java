@@ -996,6 +996,12 @@ public class Locale {
 	    "Prevents snowman snow trails", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.snowtrail.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// respawn
+	FlagList.add("respawn");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.respawn.Description",
+	    "Automaticaly respawns player", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.respawn.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 
 	// Filling with custom flags info
 	Set<String> sec = conf.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands").getKeys(false);

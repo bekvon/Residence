@@ -27,9 +27,6 @@ public class AutoSelection {
 
     public static void UpdateSelection(Player player) {
 
-	if (getList().size() == 0)
-	    return;
-
 	if (!getList().containsKey(player.getName().toLowerCase()))
 	    return;
 

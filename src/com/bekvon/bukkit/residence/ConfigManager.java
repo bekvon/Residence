@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
+import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ParticleEffects;
 
@@ -134,9 +135,8 @@ public class ConfigManager {
 
     protected Location KickLocation;
 
-    protected Location rtCenter;
-    protected int rtMaxCoord;
-    protected int rtMinCoord;
+    protected List<RandomTeleport> RTeleport = new ArrayList<RandomTeleport>();
+
     protected int rtCooldown;
     protected int rtMaxTries;
 
@@ -420,23 +420,55 @@ public class ConfigManager {
 	writer.addComment("Global.Tp.TeleportDelay", "The interval, in seconds, for teleportation.", "Use 0 to disable");
 	TeleportDelay = GetConfig("Global.Tp.TeleportDelay", 3, writer, conf);
 
-	writer.addComment("Global.RandomTeleportation.MaxCoord",
-	    "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
-	rtMaxCoord = GetConfig("Global.RandomTeleportation.MaxCoord", 1000, writer, conf);
-	writer.addComment("Global.RandomTeleportation.MinCoord",
-	    "If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
-	rtMinCoord = GetConfig("Global.RandomTeleportation.MinCoord", 500, writer, conf);
+	if (conf.contains("Global.RandomTeleportation.WorldName")) {
 
-	writer.addComment("Global.RandomTeleportation.WorldName", "World to use this function, set main residence world");
-	String rtWorld = GetConfig("Global.RandomTeleportation.WorldName", defaultWorldName, writer, conf, false);
+	    String path = "Global.RandomTeleportation.";
+	    String WorldName = conf.getString(path + "WorldName", defaultWorldName);
 
-	int rtCenterX = GetConfig("Global.RandomTeleportation.CenterX", 0, writer, conf);
-	int rtCenterZ = GetConfig("Global.RandomTeleportation.CenterZ", 0, writer, conf);
+	    int MaxCoord = conf.getInt(path + "MaxCoord", 1000);
+	    int MinCord = conf.getInt(path + "MinCord", 500);
+	    int CenterX = conf.getInt(path + "CenterX", 0);
+	    int CenterZ = conf.getInt(path + "CenterZ", 0);
 
-	World world = Bukkit.getWorld(rtWorld);
-	rtCenter = new Location(Bukkit.getWorlds().get(0), 0, 63, 0);
-	if (world != null)
-	    rtCenter = new Location(world, rtCenterX, 63, rtCenterZ);
+	    RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
+
+	    GetConfig("Global.RandomTeleportation." + WorldName + ".MaxCord", MaxCoord, writer, conf);
+	    GetConfig("Global.RandomTeleportation." + WorldName + ".MinCord", MinCord, writer, conf);
+	    GetConfig("Global.RandomTeleportation." + WorldName + ".CenterX", CenterX, writer, conf);
+	    GetConfig("Global.RandomTeleportation." + WorldName + ".CenterZ", CenterZ, writer, conf);
+	} else {
+	    if (conf.isConfigurationSection("Global.RandomTeleportation"))
+		for (String one : conf.getConfigurationSection("Global.RandomTeleportation").getKeys(false)) {
+		    String path = "Global.RandomTeleportation." + one + ".";
+
+		    writer.addComment("Global.RandomTeleportation." + one, "World to use this function, set main residence world");
+
+		    writer.addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
+		    int MaxCoord = GetConfig(path + "MaxCoord", 1000, writer, conf);
+		    writer.addComment(path + "MinCord",
+			"If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
+		    int MinCord = GetConfig(path + "MinCord", 500, writer, conf);
+		    int CenterX = GetConfig(path + "CenterX", 0, writer, conf);
+		    int CenterZ = GetConfig(path + "CenterZ", 0, writer, conf);
+
+		    RTeleport.add(new RandomTeleport(one, MaxCoord, MinCord, CenterX, CenterZ));
+		}
+	    else {
+		String path = "Global.RandomTeleportation." + defaultWorldName + ".";
+
+		writer.addComment(path + "WorldName", "World to use this function, set main residence world");
+		String WorldName = GetConfig(path + "WorldName", defaultWorldName, writer, conf, false);
+
+		writer.addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
+		int MaxCoord = GetConfig(path + "MaxCoord", 1000, writer, conf);
+		writer.addComment(path + "MinCord",
+		    "If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
+		int MinCord = GetConfig(path + "MinCord", 500, writer, conf);
+		int CenterX = GetConfig(path + "CenterX", 0, writer, conf);
+		int CenterZ = GetConfig(path + "CenterZ", 0, writer, conf);
+		RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
+	    }
+	}
 
 	writer.addComment("Global.RandomTeleportation.Cooldown", "How long force player to wait before using command again.");
 	rtCooldown = GetConfig("Global.RandomTeleportation.Cooldown", 5, writer, conf);
@@ -1146,16 +1178,8 @@ public class ConfigManager {
 	return GuiRemove;
     }
 
-    public Location getrtCenter() {
-	return rtCenter;
-    }
-
-    public int getrtMaxCoord() {
-	return rtMaxCoord;
-    }
-
-    public int getrtMinCoord() {
-	return rtMinCoord;
+    public List<RandomTeleport> getRandomTeleport() {
+	return RTeleport;
     }
 
     public int getrtCooldown() {

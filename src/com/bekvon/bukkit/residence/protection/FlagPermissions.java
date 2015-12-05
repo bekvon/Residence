@@ -214,6 +214,9 @@ public class FlagPermissions {
 	
 	// Prevent snowman snow trail
 	addResidenceOnlyFlag("snowtrail");
+	
+	// Auto respawn player
+	addResidenceOnlyFlag("respawn");
 
 	addPlayerOrGroupOnlyFlag("admin");
 

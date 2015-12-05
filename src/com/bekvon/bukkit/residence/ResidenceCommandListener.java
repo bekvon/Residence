@@ -1189,7 +1189,7 @@ public class ResidenceCommandListener extends Residence {
 		return true;
 	    }
 
-	    Location loc = RandomTp.getRandomlocation();
+	    Location loc = RandomTp.getRandomlocation(player.getLocation().getWorld().getName());
 	    rtMap.put(pname, System.currentTimeMillis());
 
 	    if (loc == null) {
