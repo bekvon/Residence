@@ -16,6 +16,8 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -647,6 +649,48 @@ public class ClaimedResidence {
 	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MessageChange"));
     }
 
+    public Location getMiddleFreeLoc(Location insideLoc) {
+	CuboidArea area = this.getAreaByLoc(insideLoc);
+	if (area == null) {
+	    return insideLoc;
+	}
+
+	int y = area.getHighLoc().getBlockY();
+
+	int x = area.getLowLoc().getBlockX() + (int) (area.getXSize() / 2);
+	int z = area.getLowLoc().getBlockZ() + (int) (area.getZSize() / 2);
+
+	Location newLoc = new Location(area.getWorld(), x + 0.5, y, z + 0.5);
+	boolean found = false;
+	int it = 0;
+	int maxIt = area.getWorld().getMaxHeight() - 63;
+	while (it < maxIt) {
+	    it++;
+	    newLoc.setY(newLoc.getY() - 1);
+
+	    if (newLoc.getBlockY() < 63)
+		break;
+
+	    Block block = newLoc.getBlock();
+	    Block block2 = newLoc.clone().add(0, 1, 0).getBlock();
+	    Block block3 = newLoc.clone().add(0, -1, 0).getBlock();
+
+	    Debug.D(newLoc.getBlockX() + " " + newLoc.getBlockZ() + " " + newLoc.getBlockY() + " " + Residence.getNms().isEmptyBlock(block) + " " + Residence.getNms()
+		.isEmptyBlock(block2) + " "
+		+ Residence.getNms().isEmptyBlock(block3));
+
+	    if (Residence.getNms().isEmptyBlock(block) && Residence.getNms().isEmptyBlock(block2) && !Residence.getNms().isEmptyBlock(block3)) {
+		found = true;
+		break;
+	    }
+	}
+	if (found) {
+	    return newLoc;
+	} else {
+	    return getOutsideFreeLoc(insideLoc);
+	}
+    }
+
     @SuppressWarnings("deprecation")
     public Location getOutsideFreeLoc(Location insideLoc) {
 	int maxIt = 100;
@@ -826,7 +870,7 @@ public class ClaimedResidence {
 	    }
 	}
 
-	if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin) {
+	if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !resadmin) {
 	    reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("TeleportStarted", this.getName() + "|" + Residence.getConfigManager()
 		.getTeleportDelay()));
 	    ResidenceCommandListener.teleportDelayMap.add(reqPlayer.getName());
@@ -844,7 +888,7 @@ public class ClaimedResidence {
 		ResidenceCommandListener.teleportDelayMap.remove(targetPlayer.getName());
 		return;
 	    }
-	    final Location targloc = this.getOutsideFreeLoc(area.getHighLoc());
+	    final Location targloc = this.getMiddleFreeLoc(area.getHighLoc());
 	    if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
 		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
 	    else
@@ -959,10 +1003,10 @@ public class ClaimedResidence {
 
 	res.enterMessage = (String) root.get("EnterMessage");
 	res.leaveMessage = (String) root.get("LeaveMessage");
-	
+
 	if (root.containsKey("ShopDescription"))
 	    res.setShopDesc((String) root.get("ShopDescription"));
-	
+
 	if (root.containsKey("StoredMoney"))
 	    res.bank.setStoredMoney((Integer) root.get("StoredMoney"));
 

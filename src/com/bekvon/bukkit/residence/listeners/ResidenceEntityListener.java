@@ -357,7 +357,7 @@ public class ResidenceEntityListener implements Listener {
 	String world = player.getWorld().getName();
 	if (!perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
 	}
     }
 
@@ -379,7 +379,7 @@ public class ResidenceEntityListener implements Listener {
 	String world = event.getEntity().getWorld().getName();
 	if (!perms.playerHas(pname, world, "destroy", perms.playerHas(pname, world, "build", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
 	}
 
     }

@@ -112,6 +112,7 @@ public class ConfigManager {
     protected boolean NewPlayerFree;
     protected boolean spoutEnable;
     protected boolean AutoMobRemoval;
+    protected boolean BounceAnimation;
     protected int AutoMobRemovalInterval;
     protected boolean enableLeaseMoneyAccount;
     protected boolean CouldronCompatability;
@@ -692,6 +693,9 @@ public class ConfigManager {
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
 
+	writer.addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
+	BounceAnimation = GetConfig("Global.BounceAnimation", true, writer, conf);
+	
 	writer.addComment("Global.GUI.setTrue", "Item id and data to use when flag is set to true");
 
 	int id = GetConfig("Global.GUI.setTrue.Id", 35, writer, conf);
@@ -1192,5 +1196,9 @@ public class ConfigManager {
 
     public int getrtMaxTries() {
 	return rtMaxTries;
+    }
+    
+    public boolean BounceAnimation() {
+	return BounceAnimation;
     }
 }

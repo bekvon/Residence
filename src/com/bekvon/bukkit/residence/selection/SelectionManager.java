@@ -10,9 +10,17 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -171,6 +179,391 @@ public class SelectionManager {
 		return;
 	    }
 	});
+    }
+
+    public boolean showBounces(final Player player, final ArrayList<Location> map) {
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+	    public void run() {
+		if (!player.isOnline() || map.size() == 0)
+		    return;
+		for (int i = 0; i < 20; i++) {
+		    if (i < map.size()) {
+			Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, map.get(i), player);
+		    }
+		}
+		for (int i = 0; i < 20; i++) {
+		    if (map.size() > 0)
+			map.remove(0);
+		}
+		showBounces(player, map);
+		return;
+	    }
+	}, 1L);
+
+	return false;
+    }
+
+    public boolean showBounce(final Player player, Location OriginalLow, Location OriginalHigh) {
+
+	CuboidArea cuboidArea = new CuboidArea(OriginalLow, OriginalHigh);
+	cuboidArea.getHighLoc().add(1, 1, 1);
+
+	Boolean NorthSide = true, WestSide = true, EastSide = true, SouthSide = true, TopSide = true, BottomSide = true;
+
+	double Range = 16.0;
+
+	Location loc = player.getLocation();
+	loc.add(0, 1.5, 0);
+	double PLLX = loc.getX() - Range;
+	double PLLZ = loc.getZ() - Range;
+	double PLLY = loc.getY() - Range;
+	double PLHX = loc.getX() + Range;
+	double PLHZ = loc.getZ() + Range;
+	double PLHY = loc.getY() + Range;
+
+	if (cuboidArea.getLowLoc().getBlockX() < PLLX) {
+	    cuboidArea.getLowLoc().setX(PLLX);
+	    WestSide = false;
+	}
+
+	if (cuboidArea.getHighLoc().getBlockX() > PLHX) {
+	    cuboidArea.getHighLoc().setX(PLHX);
+	    EastSide = false;
+	}
+
+	if (cuboidArea.getLowLoc().getBlockZ() < PLLZ) {
+	    cuboidArea.getLowLoc().setZ(PLLZ);
+	    NorthSide = false;
+	}
+
+	if (cuboidArea.getHighLoc().getBlockZ() > PLHZ) {
+	    cuboidArea.getHighLoc().setZ(PLHZ);
+	    SouthSide = false;
+	}
+
+	if (cuboidArea.getLowLoc().getBlockY() < PLLY) {
+	    cuboidArea.getLowLoc().setY(PLLY);
+	    BottomSide = false;
+	}
+
+	if (cuboidArea.getHighLoc().getBlockY() > PLHY) {
+	    cuboidArea.getHighLoc().setY(PLHY);
+	    TopSide = false;
+	}
+
+	double TX = cuboidArea.getHighLoc().getBlockX() - cuboidArea.getLowLoc().getBlockX();
+	double TY = cuboidArea.getHighLoc().getBlockY() - cuboidArea.getLowLoc().getBlockY();
+	double TZ = cuboidArea.getHighLoc().getBlockZ() - cuboidArea.getLowLoc().getBlockZ();
+
+	Map<Double, Location> map = GetLocationsByData(player, loc, TX, TY, TZ, cuboidArea.getLowLoc(), EastSide, SouthSide, WestSide, NorthSide, TopSide,
+	    BottomSide);
+
+	map = sortByComparatorASC(map);
+
+	final ArrayList<Location> locations = new ArrayList<Location>();
+	for (Entry<Double, Location> one : map.entrySet()) {
+	    locations.add(one.getValue());
+	}
+
+	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	    @Override
+	    public void run() {
+		showBounces(player, locations);
+		return;
+	    }
+	});
+
+	return true;
+    }
+
+    public HashMap<Double, Location> GetLocationsByData(Player player, Location loc, Double TX, Double TY, Double TZ, Location lowLoc, Boolean EastSide,
+	Boolean SouthSide, Boolean WestSide, Boolean NorthSide, Boolean TopSide, Boolean BottomSide) {
+	double Range = 40D;
+	HashMap<Double, Location> map = new HashMap<Double, Location>();
+
+	Location Current = lowLoc;
+
+	double OLX = lowLoc.getBlockX();
+	double OLY = lowLoc.getBlockY();
+	double OLZ = lowLoc.getBlockZ();
+
+	double eachCollumn = Residence.getConfigManager().getVisualizerRowSpacing() / 4.0;
+	double eachRow = Residence.getConfigManager().getVisualizerCollumnSpacing() / 4.0;
+
+	// North wall
+	if (NorthSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ);
+	    for (double y = eachCollumn; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		for (double x = eachRow; x < TX; x += eachRow) {
+		    Current.setX(OLX + x);
+		    double dist = loc.distanceSquared(Current);
+		    if (dist < Range)
+			map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+		}
+	    }
+	}
+
+	// South wall
+	if (SouthSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ + TZ);
+	    for (double y = eachCollumn; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		for (double x = eachRow; x < TX; x += eachRow) {
+		    Current.setX(OLX + x);
+		    double dist = loc.distanceSquared(Current);
+		    if (dist < Range)
+			map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+		}
+	    }
+	}
+
+	// West wall
+	if (WestSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ);
+	    for (double y = eachCollumn; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		for (double z = eachRow; z < TZ; z += eachRow) {
+		    Current.setZ(OLZ + z);
+		    double dist = loc.distanceSquared(Current);
+		    if (dist < Range)
+			map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+		}
+	    }
+	}
+
+	// East wall
+	if (EastSide) {
+	    Current.setX(OLX + TX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ);
+	    for (double y = eachCollumn; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		for (double z = eachRow; z < TZ; z += eachRow) {
+		    Current.setZ(OLZ + z);
+		    double dist = loc.distanceSquared(Current);
+		    if (dist < Range)
+			map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+		}
+	    }
+	}
+
+	// Roof wall
+	if (TopSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY + TY);
+	    Current.setZ(OLZ);
+	    for (double z = eachCollumn; z < TZ; z += eachCollumn) {
+		Current.setZ(OLZ + z);
+		for (double x = eachRow; x < TX; x += eachRow) {
+		    Current.setX(OLX + x);
+		    double dist = loc.distanceSquared(Current);
+		    if (dist < Range)
+			map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+		}
+	    }
+	}
+
+	// Ground wall
+	if (BottomSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ);
+	    for (double z = eachCollumn; z < TZ; z += eachCollumn) {
+		Current.setZ(OLZ + z);
+		for (double x = eachRow; x < TX; x += eachRow) {
+		    Current.setX(OLX + x);
+		    double dist = loc.distanceSquared(Current);
+		    if (dist < Range)
+			map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+		}
+	    }
+	}
+
+	// North bottom line
+	if (BottomSide && NorthSide) {
+	    Current.setZ(OLZ);
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    for (double x = 0; x < TX; x += eachCollumn) {
+		Current.setX(OLX + x);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// North top line
+	if (TopSide && NorthSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY + TY);
+	    Current.setZ(OLZ);
+	    for (double x = 0; x < TX; x += eachCollumn) {
+		Current.setX(OLX + x);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// South bottom line
+	if (BottomSide && SouthSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ + TZ);
+	    for (double x = 0; x < TX; x += eachCollumn) {
+		Current.setX(OLX + x);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// South top line
+	if (TopSide && SouthSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY + TY);
+	    Current.setZ(OLZ + TZ);
+	    for (double x = 0; x <= TX; x += eachCollumn) {
+		Current.setX(OLX + x);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// North - West corner
+	if (WestSide && NorthSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ);
+	    for (double y = 0; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// North - East corner
+	if (EastSide && NorthSide) {
+	    Current.setY(OLY);
+	    Current.setX(OLX + TX);
+	    Current.setZ(OLZ);
+	    for (double y = 0; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// South - West corner
+	if (SouthSide && WestSide) {
+	    Current.setY(OLY);
+	    Current.setX(OLX);
+	    Current.setZ(OLZ + TZ);
+	    for (double y = 0; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// South - East corner
+	if (SouthSide && EastSide) {
+	    Current.setY(OLY);
+	    Current.setX(OLX + TX);
+	    Current.setZ(OLZ + TZ);
+	    for (double y = 0; y < TY; y += eachCollumn) {
+		Current.setY(OLY + y);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// West bottom corner
+	if (WestSide && BottomSide) {
+	    Current.setX(OLX);
+	    Current.setY(OLY);
+	    Current.setZ(OLZ);
+	    for (double z = 0; z < TZ; z += eachCollumn) {
+		Current.setZ(OLZ + z);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// East bottom corner
+	if (EastSide && BottomSide) {
+	    Current.setY(OLY);
+	    Current.setX(OLX + TX);
+	    Current.setZ(OLZ);
+	    for (double z = 0; z < TZ; z += eachCollumn) {
+		Current.setZ(OLZ + z);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// West top corner
+	if (WestSide && TopSide) {
+	    Current.setY(OLY + TY);
+	    Current.setX(OLX);
+	    Current.setZ(OLZ + TZ);
+	    for (double z = 0; z < TZ; z += eachCollumn) {
+		Current.setZ(OLZ + z);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	// East top corner
+	if (EastSide && TopSide) {
+	    Current.setY(OLY + TY);
+	    Current.setX(OLX + TX);
+	    Current.setZ(OLZ + TZ);
+	    for (double z = 0; z < TZ; z += eachCollumn) {
+		Current.setZ(OLZ + z);
+		double dist = loc.distanceSquared(Current);
+		if (dist < Range)
+		    map.put(dist, new Location(Current.getWorld(), Current.getX(), Current.getY(), Current.getZ()));
+	    }
+	}
+
+	return map;
+    }
+
+    private static Map<Double, Location> sortByComparatorASC(Map<Double, Location> unsortMap) {
+
+	// Convert Map to List
+	List<Map.Entry<Double, Location>> list = new LinkedList<Map.Entry<Double, Location>>(unsortMap.entrySet());
+
+	// Sort list with comparator, to compare the Map values
+	Collections.sort(list, new Comparator<Map.Entry<Double, Location>>() {
+	    public int compare(Map.Entry<Double, Location> o1, Map.Entry<Double, Location> o2) {
+		return (o1.getKey()).compareTo(o2.getKey());
+	    }
+	});
+
+	// Convert sorted map back to a Map
+	Map<Double, Location> sortedMap = new LinkedHashMap<Double, Location>();
+	for (Iterator<Map.Entry<Double, Location>> it = list.iterator(); it.hasNext();) {
+	    Map.Entry<Double, Location> entry = it.next();
+	    sortedMap.put(entry.getKey(), entry.getValue());
+	}
+	return sortedMap;
     }
 
     public boolean MakeBorders(final Player player, final Location OriginalLow, final Location OriginalHigh, final boolean error) {

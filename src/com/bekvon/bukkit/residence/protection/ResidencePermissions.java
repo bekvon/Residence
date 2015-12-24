@@ -171,7 +171,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    }
 	    if (!hasFlagAccess(this.getOwner(), flag)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("OwnerNoPermission"));
+		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagSetFailed", flag));
 		return false;
 	    }
 	}
@@ -507,15 +507,16 @@ public class ResidencePermissions extends FlagPermissions {
 	    String flagString = "";
 	    int i = 0;
 	    for (String flag : flags) {
+		i++;
 		if (this.setPlayerFlag(player, target, flag, state, resadmin, false)) {
 		    changed = true;
 		    flagString += flag;
-		    i++;
-		    if (i < flags.size())
+		    if (i < flags.size() - 1)
 			flagString += ", ";
 		}
 	    }
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet", flagString + "|" + target + "|" + state));
+	    if (flagString.length() > 0)
+		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet", flagString + "|" + target + "|" + state));
 	    return changed;
 	}
 	return false;

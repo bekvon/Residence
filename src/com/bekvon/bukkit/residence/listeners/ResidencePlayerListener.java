@@ -586,7 +586,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (Residence.getNms().isArmorStandMaterial(heldItem)) {
 		perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		if (!perms.playerHas(player.getName(), world, "build", true)) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
 		    event.setCancelled(true);
 		    return;
 		}
@@ -651,7 +651,7 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getPlayer().getLocation());
 
 	if (res != null && !res.getPermissions().playerHas(player.getName(), "trade", true)) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "trade"));
 	    event.setCancelled(true);
 	}
 
@@ -976,11 +976,17 @@ public class ResidencePlayerListener implements Listener {
 	if (move) {
 	    if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player)) {
 		Location lastLoc = lastOutsideLoc.get(pname);
+
+		if (Residence.getConfigManager().BounceAnimation()) {
+		    Residence.getSelectionManager().showBounce(player, res.getAreaArray()[0].getLowLoc(), res.getAreaArray()[0].getHighLoc());
+		}
+		
 		if (lastLoc != null) {
 		    player.teleport(lastLoc);
 		} else {
 		    player.teleport(res.getOutsideFreeLoc(loc));
 		}
+
 		if (Residence.getConfigManager().useActionBar()) {
 		    ActionBar.send(player, ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", orres.getName()));
 		} else {

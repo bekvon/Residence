@@ -187,6 +187,7 @@ public class Locale {
 	GetConfig("Language.ParentNoPermission", "You don't have permission to make changes to the parent zone.", writer, conf, true);
 	GetConfig("Language.MessageChange", "Message Set...", writer, conf, true);
 	GetConfig("Language.FlagSet", "&e%1 &2flag set for &e%2 &2to &e%3 &2state", writer, conf, true);
+	GetConfig("Language.FlagSetFailed", "&cYou dont have access to &6%1 &cflag", writer, conf, true);
 	GetConfig("Language.FlagCheckTrue", "Flag %1 applys to player %2 for residence %3, value = %4", writer, conf, true);
 	GetConfig("Language.FlagCheckFalse", "Flag %1 does not apply to player %2 for residence.", writer, conf, true);
 	GetConfig("Language.FlagsCleared", "Flags Cleared.", writer, conf, true);

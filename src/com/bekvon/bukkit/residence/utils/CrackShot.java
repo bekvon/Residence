@@ -53,7 +53,7 @@ public class CrackShot implements Listener {
 
 	if (Residence.getNms().isAnimal(entity)) {
 	    if (res != null && !res.getPermissions().playerHas(cause.getName(), "animalkilling", true)) {
-		cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "animalkilling"));
 		event.setCancelled(true);
 	    }
 	}
