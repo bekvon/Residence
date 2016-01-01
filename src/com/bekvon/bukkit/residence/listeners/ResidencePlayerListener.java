@@ -978,9 +978,9 @@ public class ResidencePlayerListener implements Listener {
 		Location lastLoc = lastOutsideLoc.get(pname);
 
 		if (Residence.getConfigManager().BounceAnimation()) {
-		    Residence.getSelectionManager().showBounce(player, res.getAreaArray()[0].getLowLoc(), res.getAreaArray()[0].getHighLoc());
+		    Residence.getSelectionManager().MakeBorders(player, res.getAreaArray()[0].getLowLoc(), res.getAreaArray()[0].getHighLoc(), true);
 		}
-		
+
 		if (lastLoc != null) {
 		    player.teleport(lastLoc);
 		} else {
