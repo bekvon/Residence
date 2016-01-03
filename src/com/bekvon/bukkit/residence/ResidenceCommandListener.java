@@ -302,7 +302,7 @@ public class ResidenceCommandListener extends Residence {
     @SuppressWarnings("deprecation")
     private boolean commandRes(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (args.length > 0 && args[args.length - 1].equalsIgnoreCase("?") || args.length > 1 && args[args.length - 2].equals("?")) {
-	    return commandHelp(args, resadmin, sender);
+	    return commandHelp(args, resadmin, sender, command);
 	}
 	int page = 1;
 	try {
@@ -1277,7 +1277,7 @@ public class ResidenceCommandListener extends Residence {
 	return false;
     }
 
-    private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender) {
+    private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender, Command command) {
 	if (helppages == null)
 	    return false;
 
@@ -1296,6 +1296,10 @@ public class ResidenceCommandListener extends Residence {
 		sender.sendMessage(ChatColor.RED + language.getPhrase("InvalidHelp"));
 	    }
 	}
+
+	if (command.getName().equalsIgnoreCase("res"))
+	    resadmin = false;
+
 	if (helppages.containesEntry(helppath))
 	    helppages.printHelp(sender, page, helppath, resadmin);
 

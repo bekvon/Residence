@@ -387,6 +387,7 @@ public class SelectionManager {
 		return;
 	    }
 	});
+	
 
 	String planerName = player.getName();
 	if (!error && !normalPrintMap.containsKey(planerName))
