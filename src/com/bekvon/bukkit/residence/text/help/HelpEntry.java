@@ -26,6 +26,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -102,11 +103,14 @@ public class HelpEntry {
 		    if (resadmin)
 			path = path.replace("/res ", "/resadmin ");
 
-		    String prev = "[\"\",{\"text\":\"" + ChatColor.GOLD + " " + helplines.get(i).getDesc()
+		    String msg = "[\"\",{\"text\":\"" + ChatColor.GOLD + " " + helplines.get(i).getDesc()
 			+ "\",\"color\":\"gold\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + path + helplines.get(i).getCommand()
 			+ " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
 
-		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev);
+		    if (sender instanceof Player)
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + msg);
+		    else
+			sender.sendMessage(helplines.get(i).getDesc());
 
 		} else
 		    sender.sendMessage(ChatColor.GOLD + " " + helplines.get(i).getDesc());
@@ -130,7 +134,8 @@ public class HelpEntry {
 	String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + " " + separator + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
-	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
+	if (sender instanceof Player)
+	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
     }
 
     public void printHelp(CommandSender sender, int page, String path, boolean resadmin) {
@@ -155,8 +160,8 @@ public class HelpEntry {
 
 	FlagPermissions GlobalFlags = Residence.getPermissionManager().getAllFlags();
 
-	for (HelpEntry entry : subentrys) { 
-	    
+	for (HelpEntry entry : subentrys) {
+
 	    if (!name.equalsIgnoreCase("flags")) {
 		if (ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && !resadmin)
 		    continue;
