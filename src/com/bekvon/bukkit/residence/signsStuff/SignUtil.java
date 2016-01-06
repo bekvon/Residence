@@ -111,18 +111,31 @@ public class SignUtil {
 	threadd.start();
     }
 
-    public static void CheckSign(ClaimedResidence res) {
-
+    public static Signs getSignFromLoc(Location loc) {
 	List<Signs> signList = new ArrayList<Signs>();
-
 	signList.addAll(SignUtil.Signs.GetAllSigns());
+	for (Signs one : signList) {
+	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
+		continue;
+	    if (one.GetX() != loc.getX())
+		continue;
+	    if (one.GetY() != loc.getY())
+		continue;
+	    if (one.GetZ() != loc.getZ())
+		continue;
+	    return one;
+	}
+	return null;
+    }
 
+    public static void CheckSign(ClaimedResidence res) {
+	List<Signs> signList = new ArrayList<Signs>();
+	signList.addAll(SignUtil.Signs.GetAllSigns());
 	for (Signs one : signList) {
 	    if (!res.getName().equals(one.GetResidence()))
 		continue;
 	    SignUtil.SignUpdate(one);
 	}
-
     }
 
     public static void removeSign(String res) {
@@ -190,18 +203,25 @@ public class SignUtil {
 
 	    sign.setLine(1, infoLine);
 
-	    sign.setLine(2, rented ? NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", landName)
-		: NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", landName));
+	    String shortName = landName;
+	    if (landName.length() > 15)
+		shortName = "~" + landName.substring(landName.length() - 14);
+
+	    sign.setLine(2, rented ? NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName)
+		: NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
 	    sign.setLine(3, rented ? Residence.getLanguage().getPhrase("SignRentedBottomLine", Residence.getRentManager().getRentingPlayer(landName))
 		: Residence.getLanguage().getPhrase("SignForRentBottomLine"));
 	    sign.update();
 	}
 
 	if (ForSale) {
+	    String shortName = landName;
+	    if (landName.length() > 15)
+		shortName = "~" + landName.substring(landName.length() - 14);	    
 	    sign.setLine(0, Residence.getLanguage().getPhrase("SignForSaleTopLine"));
 	    String infoLine = Residence.getLanguage().getPhrase("SignForSalePriceLine", String.valueOf(Residence.getTransactionManager().getSaleAmount(landName)));
 	    sign.setLine(1, infoLine);
-	    sign.setLine(2, NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", landName));
+	    sign.setLine(2, NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
 	    sign.setLine(3, Residence.getLanguage().getPhrase("SignForSaleBottomLine"));
 	    sign.update();
 	}

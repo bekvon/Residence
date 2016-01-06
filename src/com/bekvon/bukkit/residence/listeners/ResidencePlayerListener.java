@@ -234,7 +234,6 @@ public class ResidencePlayerListener implements Listener {
 		    Bukkit.dispatchCommand(player, "res market rent " + landName + " " + stage);
 		}
 	    }
-
 	}
     }
 

@@ -128,6 +128,8 @@ public class Locale {
 	GetConfig("Language.InvalidArea", "Invalid Area...", writer, conf, true);
 	GetConfig("Language.InvalidGroup", "Invalid Group...", writer, conf, true);
 	GetConfig("Language.UseNumbers", "&cPlease use numbers...", writer, conf, true);
+	GetConfig("Language.NotOwner", "&cYou are not owner of this residence", writer, conf, true);
+	GetConfig("Language.LookAtSign", "&cYou are not looking at sign", writer, conf, true);
 	writer.addComment("Language.CantPlaceLava", "Replace all text with '' to disable this message");
 	GetConfig("Language.CantPlaceLava", "You can't place lava outside residence and higher than %1 block level", writer, conf, true);
 	writer.addComment("Language.CantPlaceWater", "Replace all text with '' to disable this message");
@@ -255,6 +257,7 @@ public class Locale {
 	GetConfig("Language.ResidenceMaxRent", "You already are renting the maximum number of residences your allowed to.", writer, conf, true);
 	GetConfig("Language.ResidenceAlreadyRent", "Residence is already for rent...", writer, conf, true);
 	GetConfig("Language.ResidenceNotForRent", "Residence not for rent...", writer, conf, true);
+	GetConfig("Language.ResidenceNotForRentOrSell", "&cResidence not for rent or sell...", writer, conf, true);
 	GetConfig("Language.ResidenceNotRented", "Residence not rented.", writer, conf, true);
 	GetConfig("Language.ResidenceUnrent", "Residence %1 has been unrented.", writer, conf, true);
 	GetConfig("Language.ResidenceRemoveRentable", "Residence %1 is no longer rentable.", writer, conf, true);
@@ -1249,6 +1252,11 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sell.Info",
 	    Arrays.asList("Usage: /res market sell [residence] [amount]", "Puts a residence for sale for [amount] of money.",
 		"Another player can buy the residence with /res market buy"),
+	    writer, conf, true);
+	
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sign.Description", "Set market sign", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sign.Info",
+	    Arrays.asList("Usage: /res market sign [residence]", "Sets market sign you are looking at."),
 	    writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.buy.Description", "Buy a residence", writer, conf, true);

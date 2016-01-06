@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
@@ -18,6 +19,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -40,6 +43,7 @@ import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
+import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -1228,6 +1232,7 @@ public class ResidenceCommandListener extends Residence {
 	if (cmd.equals("market")) {
 	    return commandResMarket(args, resadmin, player, page);
 	}
+
 	if (cmd.equals("message")) {
 	    return commandResMessage(args, resadmin, player, page);
 	}
@@ -2149,6 +2154,78 @@ public class ResidenceCommandListener extends Residence {
 	    } else {
 		rentmanager.unrent(player, args[2], resadmin);
 	    }
+	    return true;
+	}
+	if (command.equals("sign")) {
+
+	    Block block = player.getTargetBlock((Set<Material>) null, 10);
+
+	    if (!(block.getState() instanceof Sign)) {
+		player.sendMessage(Residence.getLanguage().getPhrase("LookAtSign"));
+		return true;
+	    }
+
+	    Sign sign = (Sign) block.getState();
+
+	    Signs signInfo = new Signs();
+
+	    Signs oldSign = SignUtil.getSignFromLoc(sign.getLocation());
+
+	    if (oldSign != null)
+		signInfo = oldSign;
+
+	    Location loc = sign.getLocation();
+
+	    String landName = null;
+
+	    ClaimedResidence CurrentRes = Residence.getResidenceManager().getByLoc(sign.getLocation());
+
+	    if (CurrentRes == null) {
+		player.sendMessage(Residence.getLanguage().getPhrase("InvalidResidence"));
+		return true;
+	    }
+	    
+	    if (!CurrentRes.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		player.sendMessage(Residence.getLanguage().getPhrase("NotOwner"));
+		return true;
+	    }
+
+	    final ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+
+	    if (res == null) {
+		player.sendMessage(Residence.getLanguage().getPhrase("InvalidResidence"));
+		return true;
+	    }
+
+	    landName = res.getName();
+
+	    boolean ForSale = Residence.getTransactionManager().isForSale(landName);
+	    boolean ForRent = Residence.getRentManager().isForRent(landName);
+
+	    int category = 1;
+	    if (SignUtil.Signs.GetAllSigns().size() > 0)
+		category = SignUtil.Signs.GetAllSigns().get(SignUtil.Signs.GetAllSigns().size() - 1).GetCategory() + 1;
+
+	    if (ForSale || ForRent) {
+		signInfo.setCategory(category);
+		signInfo.setResidence(landName);
+		signInfo.setWorld(loc.getWorld().getName());
+		signInfo.setX(loc.getBlockX());
+		signInfo.setY(loc.getBlockY());
+		signInfo.setZ(loc.getBlockZ());
+		signInfo.setLocation(loc);
+		SignUtil.Signs.addSign(signInfo);
+		SignUtil.saveSigns();
+	    } else {
+		player.sendMessage(Residence.getLanguage().getPhrase("ResidenceNotForRentOrSell"));
+		return true;
+	    }
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+		public void run() {
+		    SignUtil.CheckSign(res);
+		}
+	    }, 5L);
+
 	    return true;
 	}
 	if (command.equals("info")) {
