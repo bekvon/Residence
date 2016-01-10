@@ -63,7 +63,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.utils.ActionBar;
 
 /**
@@ -203,7 +202,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Location loc = block.getLocation();
 
-	for (Signs one : SignUtil.Signs.GetAllSigns()) {
+	for (Signs one : Residence.getSignUtil().getSigns().GetAllSigns()) {
 	    if (!one.GetWorld().equalsIgnoreCase(loc.getWorld().getName()))
 		continue;
 	    if (one.GetX() != loc.getBlockX())
@@ -285,8 +284,8 @@ public class ResidencePlayerListener implements Listener {
 	boolean ForRent = Residence.getRentManager().isForRent(landName);
 
 	int category = 1;
-	if (SignUtil.Signs.GetAllSigns().size() > 0)
-	    category = SignUtil.Signs.GetAllSigns().get(SignUtil.Signs.GetAllSigns().size() - 1).GetCategory() + 1;
+	if (Residence.getSignUtil().getSigns().GetAllSigns().size() > 0)
+	    category = Residence.getSignUtil().getSigns().GetAllSigns().get(Residence.getSignUtil().getSigns().GetAllSigns().size() - 1).GetCategory() + 1;
 
 	if (ForSale || ForRent) {
 	    signInfo.setCategory(category);
@@ -296,12 +295,12 @@ public class ResidencePlayerListener implements Listener {
 	    signInfo.setY(loc.getBlockY());
 	    signInfo.setZ(loc.getBlockZ());
 	    signInfo.setLocation(loc);
-	    SignUtil.Signs.addSign(signInfo);
-	    SignUtil.saveSigns();
+	    Residence.getSignUtil().getSigns().addSign(signInfo);
+	    Residence.getSignUtil().saveSigns();
 	}
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
 	    public void run() {
-		SignUtil.CheckSign(residence);
+		Residence.getSignUtil().CheckSign(residence);
 	    }
 	}, 5L);
     }
@@ -322,7 +321,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Location loc = block.getLocation();
 
-	for (Signs one : SignUtil.Signs.GetAllSigns()) {
+	for (Signs one : Residence.getSignUtil().getSigns().GetAllSigns()) {
 
 	    if (!one.GetWorld().equalsIgnoreCase(loc.getWorld().getName()))
 		continue;
@@ -333,8 +332,8 @@ public class ResidencePlayerListener implements Listener {
 	    if (one.GetZ() != loc.getBlockZ())
 		continue;
 
-	    SignUtil.Signs.removeSign(one);
-	    SignUtil.saveSigns();
+	    Residence.getSignUtil().getSigns().removeSign(one);
+	    Residence.getSignUtil().saveSigns();
 	    break;
 	}
     }

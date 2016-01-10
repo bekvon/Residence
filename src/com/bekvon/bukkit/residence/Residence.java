@@ -101,6 +101,9 @@ public class Residence extends JavaPlugin {
     protected static SelectionManager smanager;
     protected static PermissionManager gmanager;
     protected static ConfigManager cmanager;
+
+    protected static SignUtil signmanager;
+
     protected static ResidenceBlockListener blistener;
     protected static ResidencePlayerListener plistener;
     protected static ResidenceEntityListener elistener;
@@ -575,14 +578,22 @@ public class Residence extends JavaPlugin {
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 	}
 
-	SignUtil.LoadSigns();
-	ShopSignUtil.LoadSigns();
+	Residence.setSignUtil(this);
+	Residence.getSignUtil().LoadSigns();
+	
 	ShopSignUtil.LoadShopVotes();
-
 	ShopSignUtil.BoardUpdate();
 
 	versionChecker = new VersionChecker(this);
 	versionChecker.VersionCheck(null);
+    }
+
+    public static SignUtil getSignUtil() {
+	return signmanager;
+    }
+
+    public static void setSignUtil(Residence plugin) {
+	signmanager = new SignUtil(plugin);
     }
 
     public void consoleMessage(String message) {

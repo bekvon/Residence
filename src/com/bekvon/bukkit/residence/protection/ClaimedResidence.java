@@ -990,6 +990,8 @@ public class ClaimedResidence {
 	    tpmap.put("X", tpLoc.getBlockX());
 	    tpmap.put("Y", tpLoc.getBlockY());
 	    tpmap.put("Z", tpLoc.getBlockZ());
+	    tpmap.put("Pitch", tpLoc.getPitch());
+	    tpmap.put("Yaw", tpLoc.getYaw());
 	    root.put("TPLoc", tpmap);
 	}
 	return root;
@@ -1043,7 +1045,18 @@ public class ClaimedResidence {
 	res.parent = parent;
 	Map<String, Object> tploc = (Map<String, Object>) root.get("TPLoc");
 	if (tploc != null) {
+	    double pitch = 0.0;
+	    double yaw = 0.0;
+
+	    if (tploc.containsKey("Yaw"))
+		yaw = (double) tploc.get("Yaw");
+	    
+	    if (tploc.containsKey("Pitch"))
+		pitch = (double) tploc.get("Pitch");
+
 	    res.tpLoc = new Location(world, (Integer) tploc.get("X"), (Integer) tploc.get("Y"), (Integer) tploc.get("Z"));
+	    res.tpLoc.setPitch((float) pitch);
+	    res.tpLoc.setYaw((float) yaw);
 	}
 
 	if (root.containsKey("ChatPrefix"))

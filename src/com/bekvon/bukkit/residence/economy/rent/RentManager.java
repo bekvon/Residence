@@ -14,7 +14,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import java.util.ArrayList;
@@ -153,7 +152,7 @@ public class RentManager {
 		newrent.autoRefresh = repeat;
 		rentedLand.put(landName, newrent);
 
-		SignUtil.CheckSign(res);
+		Residence.getSignUtil().CheckSign(res);
 
 		CuboidArea area = res.getAreaArray()[0];
 		Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
@@ -189,7 +188,7 @@ public class RentManager {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	    if (res != null) {
 		res.getPermissions().applyDefaultFlags();
-		SignUtil.CheckSign(res);
+		Residence.getSignUtil().CheckSign(res);
 	    }
 	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceUnrent", ChatColor.YELLOW + landName + ChatColor.GREEN));
 	} else {
@@ -231,7 +230,7 @@ public class RentManager {
 		rentedLand.remove(landName);
 		if (res != null) {
 		    res.getPermissions().applyDefaultFlags();
-		    SignUtil.CheckSign(res);
+		    Residence.getSignUtil().CheckSign(res);
 		}
 	    }
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceRemoveRentable", ChatColor.YELLOW + landName
@@ -250,7 +249,7 @@ public class RentManager {
 	removeFromRent(landName);
 	rentableLand.remove(landName);
 
-	SignUtil.removeSign(landName);
+	Residence.getSignUtil().removeSign(landName);
     }
 
     public boolean isForRent(String landName) {

@@ -27,24 +27,33 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class SignUtil {
 
-    public static SignInfo Signs = new SignInfo();
+    private Residence plugin;
+    public SignInfo Signs = new SignInfo();
 
-    public static int updateAllSigns() {
-	List<com.bekvon.bukkit.residence.signsStuff.Signs> temp = new ArrayList<com.bekvon.bukkit.residence.signsStuff.Signs>();
+    public SignUtil(Residence plugin) {
+	this.plugin = plugin;
+    }
+
+    public SignInfo getSigns() {
+	return Signs;
+    }
+
+    public int updateAllSigns() {
+	List<Signs> temp = new ArrayList<Signs>();
 	temp.addAll(Signs.GetAllSigns());
-	for (com.bekvon.bukkit.residence.signsStuff.Signs one : temp) {
+	for (Signs one : temp) {
 	    SignUpdate(one);
 	}
 	return temp.size();
     }
 
     // Sign file
-    public static void LoadSigns() {
+    public void LoadSigns() {
 	Thread threadd = new Thread() {
 	    public void run() {
 
 		Signs.GetAllSigns().clear();
-		File file = new File(Residence.instance.getDataFolder(), "Signs.yml");
+		File file = new File(plugin.getDataFolder(), "Signs.yml");
 		YamlConfiguration f = YamlConfiguration.loadConfiguration(file);
 
 		if (!f.isConfigurationSection("Signs"))
@@ -76,11 +85,11 @@ public class SignUtil {
     }
 
     // Signs save file
-    public static void saveSigns() {
+    public void saveSigns() {
 
 	Thread threadd = new Thread() {
 	    public void run() {
-		File f = new File(Residence.instance.getDataFolder(), "Signs.yml");
+		File f = new File(plugin.getDataFolder(), "Signs.yml");
 		YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 		CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
@@ -111,9 +120,9 @@ public class SignUtil {
 	threadd.start();
     }
 
-    public static Signs getSignFromLoc(Location loc) {
+    public Signs getSignFromLoc(Location loc) {
 	List<Signs> signList = new ArrayList<Signs>();
-	signList.addAll(SignUtil.Signs.GetAllSigns());
+	signList.addAll(this.getSigns().GetAllSigns());
 	for (Signs one : signList) {
 	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
 		continue;
@@ -128,28 +137,28 @@ public class SignUtil {
 	return null;
     }
 
-    public static void CheckSign(ClaimedResidence res) {
+    public void CheckSign(ClaimedResidence res) {
 	List<Signs> signList = new ArrayList<Signs>();
-	signList.addAll(SignUtil.Signs.GetAllSigns());
+	signList.addAll(this.getSigns().GetAllSigns());
 	for (Signs one : signList) {
 	    if (!res.getName().equals(one.GetResidence()))
 		continue;
-	    SignUtil.SignUpdate(one);
+	    this.SignUpdate(one);
 	}
     }
 
-    public static void removeSign(String res) {
+    public void removeSign(String res) {
 	List<Signs> signList = new ArrayList<Signs>();
-	signList.addAll(SignUtil.Signs.GetAllSigns());
+	signList.addAll(this.getSigns().GetAllSigns());
 
 	for (Signs one : signList) {
 	    if (!res.equals(one.GetResidence()))
 		continue;
-	    SignUtil.SignUpdate(one);
+	    this.SignUpdate(one);
 	}
     }
 
-    public static boolean SignUpdate(Signs Sign) {
+    public boolean SignUpdate(Signs Sign) {
 
 	String landName = Sign.GetResidence();
 
@@ -202,11 +211,7 @@ public class SignUtil {
 		.getRentManager().getRentDays(landName) + "|" + Residence.getRentManager().getRentableRepeatable(landName));
 
 	    sign.setLine(1, infoLine);
-
-	    String shortName = landName;
-	    if (landName.length() > 15)
-		shortName = "~" + landName.substring(landName.length() - 14);
-
+	    String shortName = fixResName(landName);
 	    sign.setLine(2, rented ? NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName)
 		: NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
 	    sign.setLine(3, rented ? Residence.getLanguage().getPhrase("SignRentedBottomLine", Residence.getRentManager().getRentingPlayer(landName))
@@ -215,9 +220,8 @@ public class SignUtil {
 	}
 
 	if (ForSale) {
-	    String shortName = landName;
-	    if (landName.length() > 15)
-		shortName = "~" + landName.substring(landName.length() - 14);	    
+	    String shortName = fixResName(landName);
+
 	    sign.setLine(0, Residence.getLanguage().getPhrase("SignForSaleTopLine"));
 	    String infoLine = Residence.getLanguage().getPhrase("SignForSalePriceLine", String.valueOf(Residence.getTransactionManager().getSaleAmount(landName)));
 	    sign.setLine(1, infoLine);
@@ -229,7 +233,7 @@ public class SignUtil {
 	return true;
     }
 
-    public static void convertSigns(CommandSender sender) {
+    public void convertSigns(CommandSender sender) {
 	File file = new File("plugins/ResidenceSigns/signs.yml");
 	if (!file.exists()) {
 	    sender.sendMessage(ChatColor.GOLD + "Can't find ResidenceSign file");
@@ -246,8 +250,8 @@ public class SignUtil {
 	ConfigurationSection section = conf.getConfigurationSection("signs");
 
 	int category = 1;
-	if (SignUtil.Signs.GetAllSigns().size() > 0)
-	    category = SignUtil.Signs.GetAllSigns().get(SignUtil.Signs.GetAllSigns().size() - 1).GetCategory() + 1;
+	if (this.getSigns().GetAllSigns().size() > 0)
+	    category = this.getSigns().GetAllSigns().get(this.getSigns().GetAllSigns().size() - 1).GetCategory() + 1;
 
 	long time = System.currentTimeMillis();
 
@@ -285,7 +289,7 @@ public class SignUtil {
 	    signs.setZ(z);
 	    boolean found = false;
 
-	    for (Signs onesigns : SignUtil.Signs.GetAllSigns()) {
+	    for (Signs onesigns : this.getSigns().GetAllSigns()) {
 		if (!onesigns.GetWorld().equalsIgnoreCase(signs.GetWorld()))
 		    continue;
 		if (onesigns.GetX() != signs.GetX())
@@ -306,16 +310,25 @@ public class SignUtil {
 	    if (!(block.getState() instanceof Sign))
 		continue;
 
-	    SignUtil.Signs.addSign(signs);
-	    SignUtil.SignUpdate(signs);
+	    this.getSigns().addSign(signs);
+	    this.SignUpdate(signs);
 	    category++;
 	    i++;
 	}
 
-	SignUtil.saveSigns();
+	this.saveSigns();
 
 	sender.sendMessage(ChatColor.GOLD + "" + i + ChatColor.YELLOW + " signs have being converted to new format! It took " + ChatColor.GOLD + (System
 	    .currentTimeMillis() - time) + ChatColor.YELLOW + " ms!");
     }
 
+    public String fixResName(String name) {
+	if (name.length() > 15)
+	    name = "~" + name.substring(name.length() - 14);
+	if (name.length() == 15 && name.substring(name.length() - 13).contains(".")) {
+	    String[] temp = name.split("\\.");
+	    name = "~." + temp[temp.length - 1];
+	}
+	return name;
+    }
 }
