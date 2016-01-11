@@ -841,7 +841,7 @@ public class ClaimedResidence {
 
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
 	boolean isAdmin = Residence.isResAdminOn(reqPlayer);
-	if (!resadmin && !isAdmin) {
+	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass")) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(reqPlayer);
 	    if (!group.hasTpAccess()) {
 		reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportDeny"));
