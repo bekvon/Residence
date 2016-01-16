@@ -1822,7 +1822,7 @@ public class ResidenceCommandListener extends Residence {
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    }
 	    return true;
-	} else if (args.length == 1) {
+	} else if (args.length == 1 && Residence.getConfigManager().useFlagGUI) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
 		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
@@ -1836,7 +1836,7 @@ public class ResidenceCommandListener extends Residence {
 	    } else
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    return true;
-	} else if (args.length == 2) {
+	} else if (args.length == 2 && Residence.getConfigManager().useFlagGUI) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
 		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {

@@ -113,6 +113,7 @@ public class ConfigManager {
     protected boolean spoutEnable;
     protected boolean AutoMobRemoval;
     protected boolean BounceAnimation;
+    protected boolean useFlagGUI;
     protected int AutoMobRemovalInterval;
     protected boolean enableLeaseMoneyAccount;
     protected boolean CouldronCompatability;
@@ -695,6 +696,10 @@ public class ConfigManager {
 
 	writer.addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
 	BounceAnimation = GetConfig("Global.BounceAnimation", true, writer, conf);
+	
+	
+	writer.addComment("Global.GUI.Enabled", "Enable or disable flag GUI");
+	useFlagGUI = GetConfig("Global.GUI.Enabled", true, writer, conf);
 	
 	writer.addComment("Global.GUI.setTrue", "Item id and data to use when flag is set to true");
 

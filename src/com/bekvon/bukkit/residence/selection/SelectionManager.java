@@ -197,6 +197,9 @@ public class SelectionManager {
 	}
 
 	List<Location> locList = new ArrayList<Location>();
+	
+	if (lowLoc.getWorld() != loc.getWorld())
+	    return locList;
 
 	for (double x = CollumnStart; x < TX; x += eachCollumn) {
 	    Location CurrentX = lowLoc.clone();
