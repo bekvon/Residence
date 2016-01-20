@@ -65,7 +65,8 @@ public class Locale {
 	} catch (FileNotFoundException ex) {
 	} catch (IOException ex) {
 	} catch (InvalidConfigurationException ex) {
-	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Residence] Your locale file for " + language + " is incorect! Use http://yaml-online-parser.appspot.com/ to find issue.");
+	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Residence] Your locale file for " + language
+		+ " is incorect! Use http://yaml-online-parser.appspot.com/ to find issue.");
 	    return null;
 	}
 
@@ -489,6 +490,7 @@ public class Locale {
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.auto.Description", "Turns on auto selection tool", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.auto.Info", Arrays.asList("Usage: /res select auto [playername]"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.auto.Args", "[playername]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.cost.Description", "Display selection cost", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.cost.Info", Arrays.asList("Usage: /res select cost"), writer, conf, true);
@@ -520,7 +522,8 @@ public class Locale {
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.residence.Description", "Select a existing area in a residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.residence.Info",
-	    Arrays.asList("Usage /res select <Residence> <AreaID>", "Selects a existing area in a residence."), writer, conf, true);
+	    Arrays.asList("Usage /res select residence <residence>", "Selects a existing area in a residence."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.residence.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.select.SubCommands.worldedit.Description", "Set selection using the current WorldEdit selection.",
 	    writer, conf,
@@ -535,32 +538,38 @@ public class Locale {
 	// res remove
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.remove.Description", "Remove residences.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.remove.Info", Arrays.asList("Usage: /res remove <residence name>"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.remove.Args", "[residence]", writer, conf, true);
 
 	// res padd
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.padd.Description", "Add player to residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.padd.Info", Arrays.asList("Usage: /res padd <residence name> [player]",
 	    "Adds essential flags for player"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.padd.Args", "[residence] [playername]", writer, conf, true);
 
 	// res pdel
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.pdel.Description", "Remove player from residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.pdel.Info", Arrays.asList("Usage: /res pdel <residence name> [player]",
 	    "Removes essential flags from player"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.pdel.Args", "[residence] [playername]", writer, conf, true);
 
 	// res info
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.info.Description", "Show info on a residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.info.Info",
 	    Arrays.asList("Usage: /res info <residence>", "Leave off <residence> to display info for the residence your currently in."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.info.Args", "[residence]", writer, conf, true);
 
 	// res set
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.set.Description", "Set general flags on a Residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.set.Info", Arrays.asList("Usage: /res set <residence> [flag] [true/false/remove]",
 	    "To see a list of flags, use /res flags ?", "These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)"),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.set.Args", "[residence] [flag] [true/false/remove]", writer, conf, true);
 
 	// res pset
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.pset.Description", "Set flags on a specific player for a Residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.pset.Info", Arrays.asList("Usage: /res pset <residence> [player] [flag] [true/false/remove]",
 	    "Usage: /res pset <residence> [player] removeall", "To see a list of flags, use /res flags ?"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.pset.Args", "[residence] [playername] [flag] [true/false/remove]", writer, conf, true);
 
 	// res flags
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.Description", "List of flags", writer, conf, true);
@@ -1038,6 +1047,7 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.tp.Info",
 	    Arrays.asList("Usage: /res tp [residence]", "Teleports you to a residence, you must have +tp flag access or be the owner.",
 		"Your permission group must also be allowed to teleport by the server admin."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.tp.Args", "[residence]", writer, conf, true);
 
 	// res rt
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.rt.Description", "Teleports to random location in world", writer, conf, true);
@@ -1055,18 +1065,22 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Description", "Vote for residence shop", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Info", Arrays.asList("Usage: /res shop vote <residence> [amount]",
 	    "Votes for current or defined residence"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.vote.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.like.Description", "Give like for residence shop", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.like.Info", Arrays.asList("Usage: /res shop like <residence>",
 	    "Gives like for residence shop"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.like.Args", "[residenceshop]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.votes.Description", "Shows res shop votes", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.votes.Info", Arrays.asList("Usage: /res shop votes <residence> <page>",
 	    "Shows full vote list of current or defined residence shop"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.votes.Args", "[residenceshop]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.likes.Description", "Shows res shop likes", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.likes.Info", Arrays.asList("Usage: /res shop likes <residence> <page>",
 	    "Shows full like list of current or defined residence shop"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.likes.Args", "[residenceshop]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Description", "Sets residence shop description", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.SubCommands.setdesc.Info", Arrays.asList("Usage: /res shop setdesc [text]",
@@ -1091,6 +1105,7 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.subzone.Info",
 	    Arrays.asList("Usage: /res subzone <residence name> [subzone name]", "If residence name is left off, will attempt to use residence your standing in."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.subzone.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.Description", "Manage physical areas for a residence.", writer, conf, true);
 	//res area
@@ -1098,28 +1113,34 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.list.Info",
 	    Arrays.asList("Usage: /res area list [residence] <page>"),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.list.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.listall.Description", "List coordinates and other Info for areas", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.listall.Info", Arrays.asList("Usage: /res area listall [residence] <page>"), writer,
 	    conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.listall.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.add.Description", "Add physical areas to a residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.add.Info",
 	    Arrays.asList("Usage: /res area add [residence] [areaID]", "You must first select two points first."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.add.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.remove.Description", "Remove physical areas from a residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.remove.Info", Arrays.asList("Usage: /res area remove [residence] [areaID]"), writer,
 	    conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.remove.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Description", "Replace physical areas in a residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Info", Arrays.asList("Usage: /res area replace [residence] [areaID]",
 	    "You must first select two points first.", "Replacing a area will charge the difference in size if the new area is bigger."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.area.SubCommands.replace.Args", "[residence]", writer, conf, true);
 
 	// res message
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.message.Description", "Manage residence enter / leave messages", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.message.Info", Arrays.asList("Usage: /res message <residence> [enter/leave] [message]",
 	    "Set the enter or leave message of a residence.", "Usage: /res message <residence> remove [enter/leave]", "Removes a enter or leave message."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.message.Args", "[residence] [enter/leave]", writer, conf, true);
 
 	// res lease
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.Description", "Manage residence leases", writer, conf, true);
@@ -1127,33 +1148,36 @@ public class Locale {
 	    "CommandHelp.SubCommands.res.SubCommands.lease.Info", Arrays.asList("Usage: /res lease [renew/cost] [residence]",
 		"/res lease cost will show the cost of renewing a residence lease.", "/res lease renew will renew the residence provided you have enough money."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.Args", "[renew/cost] [residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Description", "Set the lease time", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Info",
 	    Arrays.asList("Usage: /resadmin lease set [residence] [#days/infinite]", "Sets the lease time to a specified number of days, or infinite."), writer, conf,
 	    true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.set.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.renew.Description", "Renew the lease time", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.renew.Info",
-	    Arrays.asList("Usage: /resadmin lease renew <residence>", "Renews the lease time for current or specified residence."), writer, conf,
-	    true);
+	    Arrays.asList("Usage: /resadmin lease renew <residence>", "Renews the lease time for current or specified residence."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.renew.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.expires.Description", "Lease end date", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.expires.Info",
-	    Arrays.asList("Usage: /resadmin lease expires <residence>", "Shows when expires residence lease time."), writer, conf,
-	    true);
+	    Arrays.asList("Usage: /resadmin lease expires <residence>", "Shows when expires residence lease time."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.expires.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.cost.Description", "Shows renew cost", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.cost.Info",
 	    Arrays.asList("Usage: /resadmin lease cost <residence>", "Shows how much money you need to renew residence lease."), writer, conf,
 	    true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.lease.SubCommands.cost.Args", "[residence]", writer, conf, true);
 
 	// res bank
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.bank.Description", "Manage money in a Residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.bank.Info",
 	    Arrays.asList("Usage: /res bank [deposit/withdraw] <residence> [amount]", "You must be standing in a Residence or provide residence name",
-		"You must have the +bank flag."), writer, conf,
-	    true);
+		"You must have the +bank flag."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.bank.Args", "[deposit/withdraw] [residence]", writer, conf, true);
 
 	// res confirm
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.confirm.Description", "Confirms removal of a residence.", writer, conf, true);
@@ -1171,11 +1195,13 @@ public class Locale {
 		"Blacklisting a material prevents it from being placed in the residence.",
 		"Ignorelist causes a specific material to not be protected by Residence."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.lset.Args", "[residence] [blacklist/ignorelist] [material]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.removeall.Description", "Remove all residences owned by a player.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.removeall.Info", Arrays.asList("Usage: /res removeall [owner]",
 	    "Removes all residences owned by a specific player.'",
 	    "Requires /resadmin if you use it on anyone besides yourself."), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.removeall.Args", "[playername]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.list.Description", "List Residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.list.Info",
@@ -1184,12 +1210,14 @@ public class Locale {
 		"If listing your own residences, shows hidden ones as well.",
 		"To list everyones residences, use /res listall."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.list.Args", "[playername]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.listhidden.Description", "List Hidden Residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.listhidden.Info",
 	    Arrays.asList("Usage: /res listhidden <player> <page>",
 		"Lists hidden residences for a player."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.listhidden.Args", "[playername]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.listall.Description", "List All Residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.listall.Info",
@@ -1208,30 +1236,35 @@ public class Locale {
 	    Arrays.asList("Usage: /res sublist <residence> <page>",
 		"List subzones within a residence."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.sublist.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.default.Description", "Reset residence to default flags.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.default.Info",
 	    Arrays.asList("Usage: /res default <residence>",
 		"Resets the flags on a residence to their default.  You must be the owner or an admin to do this."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.default.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.rename.Description", "Renames a residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.rename.Info",
 	    Arrays.asList("Usage: /res rename [OldName] [NewName]", "You must be the owner or an admin to do this.",
 		"The name must not already be taken by another residence."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.rename.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.kick.Description", "Kicks player from residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.kick.Info",
 	    Arrays.asList("Usage: /res kick <player>", "You must be the owner or an admin to do this.",
 		"Player should be online."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.kick.Args", "[playername]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.mirror.Description", "Mirrors Flags", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.mirror.Info",
 	    Arrays.asList("Usage: /res mirror [Source Residence] [Target Residence]",
 		"Mirrors flags from one residence to another.  You must be owner of both or a admin to do this."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.mirror.Args", "[residence] [residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.Description", "Buy, Sell, or Rent Residences", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.mirror.Info",
@@ -1242,6 +1275,7 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.Info.Info",
 	    Arrays.asList("Usage: /res market Info [residence]", "Shows if the Residence is for sale or for rent, and the cost."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.Info.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.Description", "Lists rentable and for sale residences.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.Info",
@@ -1253,33 +1287,39 @@ public class Locale {
 	    Arrays.asList("Usage: /res market sell [residence] [amount]", "Puts a residence for sale for [amount] of money.",
 		"Another player can buy the residence with /res market buy"),
 	    writer, conf, true);
-	
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sell.Args", "[residence]", writer, conf, true);
+
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sign.Description", "Set market sign", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sign.Info",
 	    Arrays.asList("Usage: /res market sign [residence]", "Sets market sign you are looking at."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sign.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.buy.Description", "Buy a residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.buy.Info",
 	    Arrays.asList("Usage: /res market buy [residence]", "Buys a Residence if its for sale."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.buy.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.unsell.Description", "Stops selling a residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.unsell.Info",
 	    Arrays.asList("Usage: /res market unsell [residence]"),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.unsell.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rent.Description", "ent a residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rent.Info",
 	    Arrays.asList("Usage: /res market rent [residence] <autorenew>",
 		"Rents a residence.  Autorenew can be either true or false.  If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rent.Args", "[cresidence] [true/false]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Description", "Make a residence rentable.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Info",
 	    Arrays.asList("Usage: /res market rentable [residence] [cost] [days] <repeat>",
 		"Makes a residence rentable for [cost] money for every [days] number of days.  If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.release.Description", "Remove a residence from rent or rentable.", writer, conf,
 	    true);
@@ -1287,6 +1327,7 @@ public class Locale {
 	    Arrays.asList("Usage: /res market release [residence]", "If you are the renter, this command releases the rent on the house for you.",
 		"If you are the owner, this command makes the residence not for rent anymore."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.release.Args", "[residence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.current.Description", "Show residence your currently in.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.current.Info",
@@ -1342,11 +1383,13 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.server.Info",
 	    Arrays.asList("Usage: /resadmin server [residence]", "Make a residence server owned."),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.server.Args", "[cresidence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.setowner.Description", "Change owner of a residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.setowner.Info",
 	    Arrays.asList("Usage: /resadmin setowner [residence] [player]"),
 	    writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.setowner.Args", "[cresidence]", writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.resreload.Description", "Reload residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.resreload.Info",
@@ -1366,8 +1409,6 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.version.Info",
 	    Arrays.asList("Usage: /res version"),
 	    writer, conf, true);
-	    // GetConfig("CommandHelp.SubCommands.res.select.Info",
-	    // Arrays.asList("", "", ""), writer, conf, true);
 
 	// Write back config
 	try {

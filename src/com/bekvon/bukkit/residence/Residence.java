@@ -580,7 +580,7 @@ public class Residence extends JavaPlugin {
 
 	Residence.setSignUtil(this);
 	Residence.getSignUtil().LoadSigns();
-	
+
 	ShopSignUtil.LoadShopVotes();
 	ShopSignUtil.BoardUpdate();
 
@@ -646,6 +646,10 @@ public class Residence extends JavaPlugin {
 
     public static LeaseManager getLeaseManager() {
 	return leasemanager;
+    }
+
+    public static HelpEntry getHelpPages() {
+	return helppages;
     }
 
     public static ConfigManager getConfigManager() {
