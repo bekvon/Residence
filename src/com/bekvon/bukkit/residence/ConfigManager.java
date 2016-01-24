@@ -50,6 +50,8 @@ public class ConfigManager {
     protected boolean UseClean;
     protected boolean PvPFlagPrevent;
     protected boolean OverridePvp;
+    protected boolean ResCreateCaseSensitive;
+    protected boolean ResTpCaseSensitive;
     protected int infoToolId;
     protected int AutoCleanUpDays;
     protected int selectionToolId;
@@ -362,6 +364,17 @@ public class ConfigManager {
 
 	writer.addComment("Global.Optimizations.DefaultWorld", "Name of your mein residence world. Usualy normal starting world 'World'. Capitalization essential");
 	DefaultWorld = GetConfig("Global.Optimizations.DefaultWorld", defaultWorldName, writer, conf, false);
+
+	writer.addComment("Global.Optimizations.ResCreateCaseSensitive",
+	    "When its true you can create residences with similar names but different capitalization. An example: Village and village are counted as different residences",
+	    "When it's set to false you can't create residences with same names but different capitalizations");
+	ResCreateCaseSensitive = GetConfig("Global.Optimizations.ResCreateCaseSensitive", false, writer, conf);
+
+	writer.addComment("Global.Optimizations.ResTpCaseSensitive",
+	    "When this set to true, when you are performing /res tp command and providing residence name, it should be exactly same as residence name. So in example Village is not same as village",
+	    "When it's set to false you can teleport to residence with name Village even if you executing command /res tp village",
+	    "Don't disable this if you already have some duplicating residences in your database as this will prevent players from teleporting to one of them");
+	ResTpCaseSensitive = GetConfig("Global.Optimizations.ResTpCaseSensitive", true, writer, conf);
 
 	writer.addComment("Global.Optimizations.MaxResCount", "Set this as low as posible depending of residence.max.res.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
@@ -696,11 +709,10 @@ public class ConfigManager {
 
 	writer.addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
 	BounceAnimation = GetConfig("Global.BounceAnimation", true, writer, conf);
-	
-	
+
 	writer.addComment("Global.GUI.Enabled", "Enable or disable flag GUI");
 	useFlagGUI = GetConfig("Global.GUI.Enabled", true, writer, conf);
-	
+
 	writer.addComment("Global.GUI.setTrue", "Item id and data to use when flag is set to true");
 
 	int id = GetConfig("Global.GUI.setTrue.Id", 35, writer, conf);
@@ -917,6 +929,14 @@ public class ConfigManager {
 
     public boolean isOverridePvp() {
 	return OverridePvp;
+    }
+
+    public boolean isResTpCaseSensitive() {
+	return ResTpCaseSensitive;
+    }
+
+    public boolean isResCreateCaseSensitive() {
+	return ResCreateCaseSensitive;
     }
 
     public int getInfoToolID() {
@@ -1202,7 +1222,7 @@ public class ConfigManager {
     public int getrtMaxTries() {
 	return rtMaxTries;
     }
-    
+
     public boolean BounceAnimation() {
 	return BounceAnimation;
     }

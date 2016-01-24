@@ -1165,6 +1165,11 @@ public class ResidenceCommandListener extends Residence {
 		return false;
 	    }
 	    ClaimedResidence res = rmanager.getByName(args[1]);
+	    if (Residence.getConfigManager().isResTpCaseSensitive())
+		res = rmanager.getByName(args[1]);
+	    else
+		res = rmanager.getByNameNoCase(args[1]);
+
 	    if (res == null) {
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 		return true;

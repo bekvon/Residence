@@ -491,6 +491,30 @@ public class ClaimedResidence {
 	return get;
     }
 
+    public ClaimedResidence getSubzoneNoCase(String subzonename) {
+	if (!subzonename.contains(".")) {
+	    for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
+		if (one.getKey().equalsIgnoreCase(subzonename))
+		    return one.getValue();
+	    }
+	}
+	String split[] = subzonename.split("\\.");
+
+	ClaimedResidence get = null;
+	for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
+	    if (one.getKey().equalsIgnoreCase(split[0]))
+		get = one.getValue();
+	}
+
+	for (int i = 1; i < split.length; i++) {
+	    if (get == null) {
+		return null;
+	    }
+	    get = get.getSubzoneNoCase(split[i]);
+	}
+	return get;
+    }
+
     public String getSubzoneNameByRes(ClaimedResidence res) {
 	Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
 	for (Entry<String, ClaimedResidence> entry : set) {
@@ -1050,7 +1074,7 @@ public class ClaimedResidence {
 
 	    if (tploc.containsKey("Yaw"))
 		yaw = (double) tploc.get("Yaw");
-	    
+
 	    if (tploc.containsKey("Pitch"))
 		pitch = (double) tploc.get("Pitch");
 

@@ -92,6 +92,33 @@ public class ResidenceManager {
 	return res;
     }
 
+    public ClaimedResidence getByNameNoCase(String name) {
+	if (name == null) {
+	    return null;
+	}
+	String[] split = name.split("\\.");
+	if (split.length == 1) {
+	    for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
+		if (one.getKey().equalsIgnoreCase(name))
+		    return one.getValue();
+	    }
+	}
+	ClaimedResidence res = null;
+	for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
+	    if (one.getKey().equalsIgnoreCase(split[0]))
+		res = one.getValue();
+	}
+
+	for (int i = 1; i < split.length; i++) {
+	    if (res != null) {
+		res = res.getSubzoneNoCase(split[i]);
+	    } else {
+		return null;
+	    }
+	}
+	return res;
+    }
+
     public String getNameByLoc(Location loc) {
 	ClaimedResidence res = this.getByLoc(loc);
 	if (res == null)
@@ -187,12 +214,25 @@ public class ResidenceManager {
 	}
 	newArea = resevent.getPhysicalArea();
 	name = resevent.getResidenceName();
-	if (residences.containsKey(name)) {
-	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + name + ChatColor.RED));
+
+	if (Residence.getConfigManager().isResCreateCaseSensitive()) {
+	    if (residences.containsKey(name)) {
+		if (player != null) {
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + name + ChatColor.RED));
+		}
+		return false;
 	    }
-	    return false;
+	} else {
+	    for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
+		if (one.getKey().equalsIgnoreCase(name)) {
+		    if (player != null) {
+			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + one.getKey() + ChatColor.RED));
+		    }
+		    return false;
+		}
+	    }
 	}
+
 	newRes.BlockSellPrice = group.getSellPerBlock();
 	if (player != null) {
 	    newRes.addArea(player, newArea, "main", resadmin);
