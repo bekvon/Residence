@@ -1324,6 +1324,17 @@ public class ResidenceCommandListener extends Residence {
 	    player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    return true;
 	}
+
+	if (res.isSubzone() && !player.hasPermission("residence.expand.subzone") && !resadmin) {
+	    player.sendMessage(NewLanguage.getMessage("Language.CantExpandSubzone"));
+	    return false;
+	}
+
+	if (!res.isSubzone() && !player.hasPermission("residence.expand") && !resadmin) {
+	    player.sendMessage(NewLanguage.getMessage("Language.CantExpandResidence"));
+	    return false;
+	}
+
 	resName = res.getName();
 	CuboidArea area = null;
 	areaName = res.getAreaIDbyLoc(player.getLocation());
@@ -1373,6 +1384,17 @@ public class ResidenceCommandListener extends Residence {
 	    player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 	    return true;
 	}
+
+	if (res.isSubzone() && !player.hasPermission("residence.contract.subzone") && !resadmin) {
+	    player.sendMessage(NewLanguage.getMessage("Language.CantContractSubzone"));
+	    return false;
+	}
+
+	if (!res.isSubzone() && !player.hasPermission("residence.contract") && !resadmin) {
+	    player.sendMessage(NewLanguage.getMessage("Language.CantContractResidence"));
+	    return false;
+	}
+
 	resName = res.getName();
 	CuboidArea area = null;
 	areaName = res.getAreaIDbyLoc(player.getLocation());
@@ -1633,6 +1655,12 @@ public class ResidenceCommandListener extends Residence {
 		player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
 		return true;
 	    }
+
+	    if (!player.hasPermission("residence.create.subzone") && !resadmin) {
+		player.sendMessage(NewLanguage.getMessage("Language.CantCreateSubzone"));
+		return false;
+	    }
+
 	    res.addSubzone(player, Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager().getPlayerLoc2(player.getName()),
 		zname, resadmin);
 	    return true;
@@ -1713,34 +1741,54 @@ public class ResidenceCommandListener extends Residence {
     }
 
     private boolean commandResRemove(String[] args, boolean resadmin, CommandSender sender, int page) {
+
 	Player player = null;
 	if (sender instanceof Player) {
 	    player = (Player) sender;
+
+	    if (deleteConfirm.containsKey(player.getName()))
+		deleteConfirm.remove(player.getName());
+
 	    if (args.length == 1) {
-		String area = rmanager.getNameByLoc(player.getLocation());
-		if (area != null) {
-		    ClaimedResidence res = rmanager.getByName(area);
-		    if (res.getParent() != null) {
-			String[] split = area.split("\\.");
-			String words = split[split.length - 1];
-			if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
-			    player.sendMessage(ChatColor.RED + language.getPhrase("DeleteSubzoneConfirm", ChatColor.YELLOW + words + ChatColor.RED));
-			    deleteConfirm.put(player.getName(), area);
-			} else {
-			    rmanager.removeResidence(player, area, resadmin);
-			}
-			return true;
-		    } else {
-			if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
-			    player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", ChatColor.YELLOW + area + ChatColor.RED));
-			    deleteConfirm.put(player.getName(), area);
-			} else {
-			    rmanager.removeResidence(player, area, resadmin);
-			}
-			return true;
-		    }
+
+		ClaimedResidence res = rmanager.getByLoc(player.getLocation());
+
+		if (res == null) {
+		    player.sendMessage(NewLanguage.getMessage("Language.InvalidResidence"));
+		    return false;
 		}
-		return false;
+
+		if (res.isSubzone() && !player.hasPermission("residence.delete.subzone") && !resadmin) {
+		    player.sendMessage(NewLanguage.getMessage("Language.CantDeleteSubzone"));
+		    return false;
+		}
+
+		if (!res.isSubzone() && !player.hasPermission("residence.delete") && !resadmin) {
+		    player.sendMessage(NewLanguage.getMessage("Language.CantDeleteResidence"));
+		    return false;
+		}
+
+		if (res.isSubzone()) {
+		    String area = rmanager.getNameByLoc(player.getLocation());
+		    String[] split = area.split("\\.");
+		    String words = split[split.length - 1];
+		    if (!deleteConfirm.containsKey(player.getName()) || !area.equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
+			player.sendMessage(ChatColor.RED + language.getPhrase("DeleteSubzoneConfirm", ChatColor.YELLOW + words + ChatColor.RED));
+			deleteConfirm.put(player.getName(), area);
+		    } else {
+			rmanager.removeResidence(player, area, resadmin);
+		    }
+		    return true;
+		} else {
+		    if (!deleteConfirm.containsKey(player.getName()) || !res.getName().equalsIgnoreCase(deleteConfirm.get(player.getName()))) {
+			player.sendMessage(ChatColor.RED + language.getPhrase("DeleteConfirm", ChatColor.YELLOW + res.getName() + ChatColor.RED));
+			deleteConfirm.put(player.getName(), res.getName());
+		    } else {
+			rmanager.removeResidence(player, res.getName(), resadmin);
+		    }
+		    return true;
+		}
+
 	    }
 	}
 	if (args.length != 2) {

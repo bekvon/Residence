@@ -338,6 +338,13 @@ public class Locale {
 	GetConfig("Language.InvalidCharacters", "Invalid characters detected...", writer, conf, true);
 	GetConfig("Language.InvalidNameCharacters", "Name contained unallowed characters...", writer, conf, true);
 	GetConfig("Language.DeleteConfirm", "Are you sure you want to delete residence %1, use /res confirm to confirm.", writer, conf, true);
+	GetConfig("Language.CantCreateSubzone", "&cYou dont have permission to create residence subzone.", writer, conf, true);
+	GetConfig("Language.CantDeleteResidence", "&cYou dont have permission to delete residence.", writer, conf, true);
+	GetConfig("Language.CantDeleteSubzone", "&cYou dont have permission to delete residence subzone.", writer, conf, true);
+	GetConfig("Language.CantExpandResidence", "&cYou dont have permission to expand residence.", writer, conf, true);
+	GetConfig("Language.CantExpandSubzone", "&cYou dont have permission to expand residence subzone.", writer, conf, true);
+	GetConfig("Language.CantContractResidence", "&cYou dont have permission to contract residence.", writer, conf, true);
+	GetConfig("Language.CantContractSubzone", "&cYou dont have permission to contract residence subzone.", writer, conf, true);
 	GetConfig("Language.SelectTooHigh", "Warning, selection went above top of map, limiting.", writer, conf, true);
 	GetConfig("Language.SelectTooLow", "Warning, selection went below bottom of map, limiting.", writer, conf, true);
 	GetConfig("Language.WorldEditNotFound", "WorldEdit was not detected.", writer, conf, true);

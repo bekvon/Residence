@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.9.21.0
+version: 2.9.22.0
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -46,6 +46,27 @@ permissions:
     default: op
   residence.create:
     description: Allows you to create residences
+    default: true
+  residence.delete:
+    description: Allows you to delete residences
+    default: true
+  residence.create.subzone:
+    description: Allows you to create residences subzone
+    default: true
+  residence.delete.subzone:
+    description: Allows you to delete residences subzone
+    default: true
+  residence.expand:
+    description: Allows you to expand residence
+    default: true
+  residence.expand.subzone:
+    description: Allows you to expand residences subzone
+    default: true
+  residence.contract:
+    description: Allows you to contract residence
+    default: true
+  residence.contract.subzone:
+    description: Allows you to contract residences subzone
     default: true
   residence.select:
     description: Allows you to select an area to make residences

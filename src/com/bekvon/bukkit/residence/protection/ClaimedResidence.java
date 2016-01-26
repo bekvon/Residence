@@ -62,6 +62,18 @@ public class ClaimedResidence {
 	ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
     }
 
+    public boolean isOwner(String name) {
+	return perms.getOwner().equalsIgnoreCase(name);
+    }
+    
+    public boolean isOwner(Player p) {
+	return perms.getOwner().equals(p.getName());
+    }
+    
+    public boolean isSubzone() {
+	return parent == null ? false : true;
+    }
+
     public ClaimedResidence(String creationWorld) {
 	this(Residence.getServerLandname(), creationWorld);
     }
@@ -971,6 +983,7 @@ public class ClaimedResidence {
 
     public void removeArea(Player player, String id, boolean resadmin) {
 
+	Debug.D("parent " + parent.getName());
 	if (this.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (!areas.containsKey(id)) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaNonExist"));
