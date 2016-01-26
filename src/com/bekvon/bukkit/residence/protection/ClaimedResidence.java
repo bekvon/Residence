@@ -65,11 +65,11 @@ public class ClaimedResidence {
     public boolean isOwner(String name) {
 	return perms.getOwner().equalsIgnoreCase(name);
     }
-    
+
     public boolean isOwner(Player p) {
-	return perms.getOwner().equals(p.getName());
+	return perms.getOwnerUUID().equals(p.getUniqueId());
     }
-    
+
     public boolean isSubzone() {
 	return parent == null ? false : true;
     }
@@ -203,7 +203,8 @@ public class ClaimedResidence {
 		}
 	    }
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-	    if (!group.canCreateResidences() && !player.hasPermission("residence.create")) {
+	    if (!this.isSubzone() && !group.canCreateResidences() && !player.hasPermission("residence.create") ||
+		this.isSubzone() && !group.canCreateResidences() && !player.hasPermission("residence.create.subzone")) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		return false;
 	    }
@@ -370,27 +371,33 @@ public class ClaimedResidence {
     }
 
     public boolean addSubzone(Player player, String owner, Location loc1, Location loc2, String name, boolean resadmin) {
+	Debug.D("subzone creation");
 	if (!Residence.validName(name)) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
 	    }
 	    return false;
 	}
+	Debug.D("5");
 	if (!(this.containsLoc(loc1) && this.containsLoc(loc2))) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneSelectInside"));
 	    }
 	    return false;
 	}
+	Debug.D("4");
 	if (subzones.containsKey(name)) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneExists", ChatColor.YELLOW + name));
 	    }
 	    return false;
 	}
+
+	Debug.D("1");
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
 		if (!this.perms.playerHas(player.getName(), "subzone", this.perms.playerHas(player.getName(), "admin", false))) {
+		    Debug.D("no perm");
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		    return false;
 		}
@@ -401,6 +408,7 @@ public class ClaimedResidence {
 		return false;
 	    }
 	}
+	Debug.D("2");
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
 	Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
 	for (Entry<String, ClaimedResidence> resEntry : set) {

@@ -105,6 +105,7 @@ public class ConfigManager {
     protected String DateFormat;
     protected String TimeZone;
     protected boolean preventBuildInRent;
+    protected boolean PreventSubZoneRemoval;
     protected boolean stopOnSaveError;
     protected boolean legacyperms;
     protected String namefix;
@@ -630,6 +631,9 @@ public class ConfigManager {
 	writer.addComment("Global.PreventRentModify", "Setting this to false will allow rented residences to be modified by the renting player.");
 	preventBuildInRent = GetConfig("Global.PreventRentModify", true, writer, conf);
 
+	writer.addComment("Global.PreventSubZoneRemoval", "Setting this to true will prevent subzone deletion when subzone owner is not same as parent zone owner.");
+	PreventSubZoneRemoval = GetConfig("Global.PreventSubZoneRemoval", true, writer, conf);
+
 	writer.addComment("Global.StopOnSaveFault", "Setting this to false will cause residence to continue to load even if a error is detected in the save file.");
 	stopOnSaveError = GetConfig("Global.StopOnSaveFault", true, writer, conf);
 
@@ -1085,6 +1089,10 @@ public class ConfigManager {
 
     public boolean preventRentModify() {
 	return preventBuildInRent;
+    }
+
+    public boolean isPreventSubZoneRemoval() {
+	return PreventSubZoneRemoval;
     }
 
     public boolean stopOnSaveError() {

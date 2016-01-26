@@ -341,6 +341,7 @@ public class Locale {
 	GetConfig("Language.CantCreateSubzone", "&cYou dont have permission to create residence subzone.", writer, conf, true);
 	GetConfig("Language.CantDeleteResidence", "&cYou dont have permission to delete residence.", writer, conf, true);
 	GetConfig("Language.CantDeleteSubzone", "&cYou dont have permission to delete residence subzone.", writer, conf, true);
+	GetConfig("Language.CantDeleteSubzoneNotOwnerOfParent", "&cYou are not owner of parent residence to delete this subzone.", writer, conf, true);
 	GetConfig("Language.CantExpandResidence", "&cYou dont have permission to expand residence.", writer, conf, true);
 	GetConfig("Language.CantExpandSubzone", "&cYou dont have permission to expand residence subzone.", writer, conf, true);
 	GetConfig("Language.CantContractResidence", "&cYou dont have permission to contract residence.", writer, conf, true);

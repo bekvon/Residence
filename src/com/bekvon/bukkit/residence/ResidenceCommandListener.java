@@ -1763,6 +1763,12 @@ public class ResidenceCommandListener extends Residence {
 		    return false;
 		}
 
+		if (res.isSubzone() && player.hasPermission("residence.delete.subzone") && !resadmin && Residence.getConfigManager().isPreventSubZoneRemoval() && !res
+		    .getParent().isOwner(player)) {
+		    player.sendMessage(NewLanguage.getMessage("Language.CantDeleteSubzoneNotOwnerOfParent"));
+		    return false;
+		}
+
 		if (!res.isSubzone() && !player.hasPermission("residence.delete") && !resadmin) {
 		    player.sendMessage(NewLanguage.getMessage("Language.CantDeleteResidence"));
 		    return false;
