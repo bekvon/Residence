@@ -67,7 +67,7 @@ public class Language {
 	    if (sentence.length() == 0) {
 		sentence = this.getText(key);
 	    } else {
-		sentence = sentence + " " + this.getText(key).toLowerCase();
+		sentence = sentence + " " + this.getText(key);
 	    }
 	}
 	if (words != null) {

@@ -20,8 +20,8 @@ import org.bukkit.entity.Player;
  */
 public class WorldEditSelectionManager extends SelectionManager {
 
-    public WorldEditSelectionManager(Server serv) {
-	super(serv);
+    public WorldEditSelectionManager(Server serv, Residence plugin) {
+	super(serv, plugin);
     }
 
     @Override
@@ -54,14 +54,14 @@ public class WorldEditSelectionManager extends SelectionManager {
     }
 
     @Override
-    public void placeLoc1(Player player, Location loc) {
-	super.placeLoc1(player, loc);
+    public void placeLoc1(Player player, Location loc, boolean show) {
+	super.placeLoc1(player, loc, show);
 	this.worldEditUpdate(player);
     }
 
     @Override
-    public void placeLoc2(Player player, Location loc) {
-	super.placeLoc2(player, loc);
+    public void placeLoc2(Player player, Location loc, boolean show) {
+	super.placeLoc2(player, loc, show);
 	this.worldEditUpdate(player);
     }
 

@@ -363,6 +363,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakEvent event) {
+	
 	if (!(event instanceof HangingBreakByEntityEvent))
 	    return;
 
@@ -381,7 +382,6 @@ public class ResidenceEntityListener implements Listener {
 	    event.setCancelled(true);
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
 	}
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

@@ -21,20 +21,25 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
-import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class ShopSignUtil {
 
-    static ConcurrentHashMap<String, List<ShopVote>> VoteList = new ConcurrentHashMap<String, List<ShopVote>>();
-    static List<Board> AllBoards = new ArrayList<Board>();
+    ConcurrentHashMap<String, List<ShopVote>> VoteList = new ConcurrentHashMap<String, List<ShopVote>>();
+    List<Board> AllBoards = new ArrayList<Board>();
 
-    public void setVoteList(ConcurrentHashMap<String, List<ShopVote>> VoteList) {
-	ShopSignUtil.VoteList = VoteList;
+    private Residence plugin;
+
+    public ShopSignUtil(Residence plugin) {
+	this.plugin = plugin;
     }
 
-    public static ConcurrentHashMap<String, List<ShopVote>> GetAllVoteList() {
+    public void setVoteList(ConcurrentHashMap<String, List<ShopVote>> VoteList) {
+	this.VoteList = VoteList;
+    }
+
+    public ConcurrentHashMap<String, List<ShopVote>> GetAllVoteList() {
 	return VoteList;
     }
 
@@ -42,15 +47,15 @@ public class ShopSignUtil {
 	VoteList.remove(resName);
     }
 
-    public static void addVote(String ResName, List<ShopVote> ShopVote) {
+    public void addVote(String ResName, List<ShopVote> ShopVote) {
 	VoteList.put(ResName, ShopVote);
     }
 
     public void setAllSigns(List<Board> AllBoards) {
-	ShopSignUtil.AllBoards = AllBoards;
+	this.AllBoards = AllBoards;
     }
 
-    public static List<Board> GetAllBoards() {
+    public List<Board> GetAllBoards() {
 	return AllBoards;
     }
 
@@ -58,14 +63,14 @@ public class ShopSignUtil {
 	AllBoards.remove(Board);
     }
 
-    public static void addBoard(Board Board) {
+    public void addBoard(Board Board) {
 	AllBoards.add(Board);
     }
 
     // Res Shop vote file
-    public static void LoadShopVotes() {
+    public void LoadShopVotes() {
 	GetAllVoteList().clear();
-	File file = new File(Residence.instance.getDataFolder(), "ShopVotes.yml");
+	File file = new File(plugin.getDataFolder(), "ShopVotes.yml");
 	YamlConfiguration f = YamlConfiguration.loadConfiguration(file);
 
 	if (!f.isConfigurationSection("ShopVotes"))
@@ -118,8 +123,8 @@ public class ShopSignUtil {
     }
 
     // Signs save file
-    public static void saveShopVotes() {
-	File f = new File(Residence.instance.getDataFolder(), "ShopVotes.yml");
+    public void saveShopVotes() {
+	File f = new File(plugin.getDataFolder(), "ShopVotes.yml");
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
@@ -154,7 +159,7 @@ public class ShopSignUtil {
     }
 
     // Res Shop vote file
-    public static Vote getAverageVote(String resName) {
+    public Vote getAverageVote(String resName) {
 
 	ConcurrentHashMap<String, List<ShopVote>> allvotes = GetAllVoteList();
 
@@ -174,7 +179,7 @@ public class ShopSignUtil {
     }
 
     // Res Shop vote file
-    public static int getLikes(String resName) {
+    public int getLikes(String resName) {
 	ConcurrentHashMap<String, List<ShopVote>> allvotes = GetAllVoteList();
 	if (!allvotes.containsKey(resName))
 	    return 0;
@@ -190,7 +195,7 @@ public class ShopSignUtil {
 	return likes;
     }
 
-    public static Map<String, Double> getSortedShopList() {
+    public Map<String, Double> getSortedShopList() {
 
 	Map<String, Double> allvotes = new HashMap<String, Double>();
 
@@ -198,9 +203,9 @@ public class ShopSignUtil {
 
 	for (String one : shops) {
 	    if (Residence.getConfigManager().isOnlyLike())
-		allvotes.put(one, (double) ShopSignUtil.getLikes(one));
+		allvotes.put(one, (double) getLikes(one));
 	    else
-		allvotes.put(one, ShopSignUtil.getAverageVote(one).getVote());
+		allvotes.put(one, getAverageVote(one).getVote());
 	}
 
 	allvotes = sortByComparator(allvotes);
@@ -208,7 +213,7 @@ public class ShopSignUtil {
 	return allvotes;
     }
 
-    private static Map<String, Double> sortByComparator(Map<String, Double> allvotes) {
+    private Map<String, Double> sortByComparator(Map<String, Double> allvotes) {
 
 	List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(allvotes.entrySet());
 
@@ -226,9 +231,9 @@ public class ShopSignUtil {
     }
 
     // Shop Sign file
-    public static void LoadSigns() {
+    public void LoadSigns() {
 	GetAllBoards().clear();
-	File file = new File(Residence.instance.getDataFolder(), "ShopSigns.yml");
+	File file = new File(plugin.getDataFolder(), "ShopSigns.yml");
 	YamlConfiguration f = YamlConfiguration.loadConfiguration(file);
 
 	if (!f.isConfigurationSection("ShopSigns"))
@@ -261,8 +266,8 @@ public class ShopSignUtil {
     }
 
     // Signs save file
-    public static void saveSigns() {
-	File f = new File(Residence.instance.getDataFolder(), "ShopSigns.yml");
+    public void saveSigns() {
+	File f = new File(plugin.getDataFolder(), "ShopSigns.yml");
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
@@ -295,8 +300,8 @@ public class ShopSignUtil {
 	return;
     }
 
-    public static boolean BoardUpdateDelayed() {
-	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+    public boolean BoardUpdateDelayed() {
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    public void run() {
 		BoardUpdate();
 		return;
@@ -304,13 +309,13 @@ public class ShopSignUtil {
 	}, 20L);
 	return true;
     }
-    
-    public static boolean BoardUpdate() {
+
+    public boolean BoardUpdate() {
 	for (Board board : GetAllBoards()) {
 	    board.clearSignLoc();
 	    List<Location> SignsLocation = board.GetLocations();
 
-	    ArrayList<String> ShopNames = new ArrayList<String>(ShopSignUtil.getSortedShopList().keySet());
+	    ArrayList<String> ShopNames = new ArrayList<String>(getSortedShopList().keySet());
 
 	    int Start = board.GetStartPlace();
 	    for (Location OneSignLoc : SignsLocation) {
@@ -334,19 +339,18 @@ public class ShopSignUtil {
 		Vote vote = null;
 		String votestat = "";
 		if (Residence.getResidenceManager().getShops().size() >= Start) {
-		    vote = ShopSignUtil.getAverageVote(ShopNames.get(Start - 1));
+		    vote = getAverageVote(ShopNames.get(Start - 1));
 
 		    if (Residence.getConfigManager().isOnlyLike()) {
-			votestat = vote.getAmount() == 0 ? "" : NewLanguage.getMessage("Language.Shop.ListLiked", ShopSignUtil.getLikes(ShopNames.get(Start - 1)));
+			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Language.Shop.ListLiked", getLikes(ShopNames.get(Start - 1)));
 		    } else
-			votestat = vote.getAmount() == 0 ? "" : NewLanguage.getMessage("Language.Shop.SignLines.4").replace("%1", String.valueOf(vote.getVote())).replace(
-			    "%2", String.valueOf(vote.getAmount()));
+			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Language.Shop.SignLines.4", vote.getVote() + "%" + vote.getAmount());
 		}
 
 		if (Shop != null) {
-		    sign.setLine(0, NewLanguage.getMessage("Language.Shop.SignLines.1").replace("%1", String.valueOf(Start)));
-		    sign.setLine(1, NewLanguage.getMessage("Language.Shop.SignLines.2").replace("%1", res.getName()));
-		    sign.setLine(2, NewLanguage.getMessage("Language.Shop.SignLines.3").replace("%1", res.getOwner()));
+		    sign.setLine(0, Residence.getLM().getMessage("Language.Shop.SignLines.1", String.valueOf(Start)));
+		    sign.setLine(1, Residence.getLM().getMessage("Language.Shop.SignLines.2", res.getName()));
+		    sign.setLine(2, Residence.getLM().getMessage("Language.Shop.SignLines.3", res.getOwner()));
 		    sign.setLine(3, votestat);
 		    board.addSignLoc(res.getName(), sign.getLocation());
 		} else {

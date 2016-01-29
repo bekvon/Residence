@@ -51,8 +51,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.residence.NewLanguage;
-import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -80,7 +78,9 @@ public class ResidencePlayerListener implements Listener {
 
     public static Map<String, SetFlag> GUI = new HashMap<String, SetFlag>();
 
-    public ResidencePlayerListener() {
+    private Residence plugin;
+
+    public ResidencePlayerListener(Residence plugin) {
 	currentRes = new HashMap<String, String>();
 	lastUpdate = new HashMap<String, Long>();
 	lastOutsideLoc = new HashMap<String, Location>();
@@ -90,6 +90,7 @@ public class ResidencePlayerListener implements Listener {
 	for (Player player : Bukkit.getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
+	this.plugin = plugin;
     }
 
     public void reload() {
@@ -298,7 +299,7 @@ public class ResidencePlayerListener implements Listener {
 	    Residence.getSignUtil().getSigns().addSign(signInfo);
 	    Residence.getSignUtil().saveSigns();
 	}
-	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    public void run() {
 		Residence.getSignUtil().CheckSign(residence);
 	    }
@@ -363,10 +364,10 @@ public class ResidencePlayerListener implements Listener {
 	handleNewLocation(player, player.getLocation(), false);
 
 	final Player p = player;
-	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		PlayerManager.playerJoin(p);
+		Residence.getPlayerManager().playerJoin(p);
 		return;
 	    }
 	});
@@ -539,13 +540,13 @@ public class ResidencePlayerListener implements Listener {
 		.canCreateResidences() && !player.isPermissionSet("residence.create") && !player.isPermissionSet("residence.select") || resadmin) {
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 		    Location loc = block.getLocation();
-		    Residence.getSelectionManager().placeLoc1(player, loc);
+		    Residence.getSelectionManager().placeLoc1(player, loc, true);
 		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Primary")) + ChatColor.RED
 			+ "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
 		    event.setCancelled(true);
 		} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 		    Location loc = block.getLocation();
-		    Residence.getSelectionManager().placeLoc2(player, loc);
+		    Residence.getSelectionManager().placeLoc2(player, loc, true);
 		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Secondary")) + ChatColor.RED
 			+ "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
 		    event.setCancelled(true);
@@ -718,7 +719,9 @@ public class ResidencePlayerListener implements Listener {
 	if (Residence.isResAdminOn(player))
 	    return;
 
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlockClicked().getLocation());
+	Location loc = event.getBlockClicked().getLocation();
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
 	if (res != null) {
 	    if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
 		if (Residence.getRentManager().isRented(res.getName())) {
@@ -729,8 +732,8 @@ public class ResidencePlayerListener implements Listener {
 	    }
 
 	    Material mat = event.getBucket();
-	    if (!res.getPermissions().playerHas(player.getName(), "bucket", true) && Residence.getConfigManager().getNoPlaceWorlds().contains(event.getBlockClicked()
-		.getLocation().getWorld().getName())) {
+	    if ((!res.getPermissions().playerHas(player.getName(), "bucket", true) && !res.getPermissions().playerHas(player.getName(), "bucketempty", true))
+		&& Residence.getConfigManager().getNoPlaceWorlds().contains(loc.getWorld().getName())) {
 		if (mat == Material.LAVA_BUCKET) {
 		    event.setCancelled(true);
 		    return;
@@ -743,8 +746,9 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	String pname = player.getName();
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
-	if (!perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true))) {
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(loc, player);
+	if (!perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true)) &&
+	    !perms.playerHas(pname, player.getWorld().getName(), "bucketempty", perms.playerHas(pname, player.getWorld().getName(), "build", true))) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "bucket"));
 	    event.setCancelled(true);
 	    return;
@@ -752,8 +756,8 @@ public class ResidencePlayerListener implements Listener {
 
 	Material mat = event.getBucket();
 	int level = Residence.getConfigManager().getPlaceLevel();
-	if (res == null && Residence.getConfigManager().isNoLavaPlace() && event.getBlockClicked().getLocation().getBlockY() >= level - 1 && Residence.getConfigManager()
-	    .getNoPlaceWorlds().contains(event.getBlockClicked().getLocation().getWorld().getName())) {
+	if (res == null && Residence.getConfigManager().isNoLavaPlace() && loc.getBlockY() >= level - 1 && Residence.getConfigManager()
+	    .getNoPlaceWorlds().contains(loc.getWorld().getName())) {
 	    if (mat == Material.LAVA_BUCKET) {
 		if (!Residence.getLanguage().getPhrase("CantPlaceLava").equalsIgnoreCase(""))
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("CantPlaceLava", String.valueOf(level)));
@@ -762,8 +766,8 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	if (res == null && Residence.getConfigManager().isNoWaterPlace() && event.getBlockClicked().getLocation().getBlockY() >= level - 1 && Residence.getConfigManager()
-	    .getNoPlaceWorlds().contains(event.getBlockClicked().getLocation().getWorld().getName()))
+	if (res == null && Residence.getConfigManager().isNoWaterPlace() && loc.getBlockY() >= level - 1 && Residence.getConfigManager()
+	    .getNoPlaceWorlds().contains(loc.getWorld().getName()))
 	    if (mat == Material.WATER_BUCKET) {
 		if (!Residence.getLanguage().getPhrase("CantPlaceWater").equalsIgnoreCase(""))
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("CantPlaceWater", String.valueOf(level)));
@@ -792,7 +796,8 @@ public class ResidencePlayerListener implements Listener {
 	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
 	boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
-	if (!hasbucket) {
+	boolean hasbucketfill = perms.playerHas(pname, player.getWorld().getName(), "bucketfill", perms.playerHas(pname, player.getWorld().getName(), "build", true));
+	if (!hasbucket && !hasbucketfill) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "bucket"));
 	    event.setCancelled(true);
 	}
@@ -855,7 +860,7 @@ public class ResidencePlayerListener implements Listener {
 	    event.setKeepLevel(true);
 
 	if (res.getPermissions().has("respawn", false))
-	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 		public void run() {
 		    try {
 			event.getEntity().spigot().respawn();
@@ -893,9 +898,9 @@ public class ResidencePlayerListener implements Listener {
 	this.lastUpdate.put(name, now);
 
 	handleNewLocation(player, locto, true);
-	if (!ResidenceCommandListener.teleportDelayMap.isEmpty() && Residence.getConfigManager().getTeleportDelay() > 0 && ResidenceCommandListener.teleportDelayMap
+	if (!ResidenceCommandListener.getTeleportMap().isEmpty() && Residence.getConfigManager().getTeleportDelay() > 0 && ResidenceCommandListener.getTeleportDelayMap()
 	    .contains(player.getName())) {
-	    ResidenceCommandListener.teleportDelayMap.remove(player.getName());
+	    ResidenceCommandListener.getTeleportMap().remove(player.getName());
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportCanceled"));
 	}
     }
@@ -930,7 +935,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (!AutoSelection.getList().isEmpty()) {
-	    Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		@Override
 		public void run() {
 		    AutoSelection.UpdateSelection(player);
@@ -1190,7 +1195,7 @@ public class ResidencePlayerListener implements Listener {
     public void tooglePlayerResidenceChat(Player player, String residence) {
 	String pname = player.getName();
 	playerToggleChat.add(pname);
-	player.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.Chat.ChatChannelChange").replace("%1", ChatColor.RED + residence + ChatColor.YELLOW
+	player.sendMessage(ChatColor.YELLOW + Residence.getLM().getMessage("Language.Chat.ChatChannelChange", ChatColor.RED + residence + ChatColor.YELLOW
 	    + "!"));
     }
 
@@ -1198,13 +1203,13 @@ public class ResidencePlayerListener implements Listener {
 	playerToggleChat.remove(pname);
 	Player player = Bukkit.getPlayer(pname);
 	if (player != null)
-	    player.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.Chat.ChatChannelLeave"));
+	    player.sendMessage(ChatColor.YELLOW + Residence.getLM().getMessage("Language.Chat.ChatChannelLeave"));
     }
 
     public void removePlayerResidenceChat(Player player) {
 	String pname = player.getName();
 	playerToggleChat.remove(pname);
-	player.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.Chat.ChatChannelLeave"));
+	player.sendMessage(ChatColor.YELLOW + Residence.getLM().getMessage("Language.Chat.ChatChannelLeave"));
     }
 
     public String getCurrentResidenceName(String player) {

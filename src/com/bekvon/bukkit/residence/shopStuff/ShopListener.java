@@ -16,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
@@ -48,7 +47,7 @@ public class ShopListener implements Listener {
 
 	if (Delete.contains(player.getName())) {
 	    Board Found = null;
-	    for (Board one : ShopSignUtil.GetAllBoards()) {
+	    for (Board one : Residence.getShopSignUtilManager().GetAllBoards()) {
 		for (Location location : one.GetLocations()) {
 
 		    if (!loc.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()))
@@ -68,18 +67,18 @@ public class ShopListener implements Listener {
 		    break;
 	    }
 	    if (Found != null) {
-		ShopSignUtil.GetAllBoards().remove(Found);
-		ShopSignUtil.saveSigns();
-		event.getPlayer().sendMessage(NewLanguage.getMessage("Language.Shop.DeletedBoard"));
+		Residence.getShopSignUtilManager().GetAllBoards().remove(Found);
+		Residence.getShopSignUtilManager().saveSigns();
+		event.getPlayer().sendMessage(Residence.getLM().getMessage("Language.Shop.DeletedBoard"));
 	    } else {
-		event.getPlayer().sendMessage(NewLanguage.getMessage("Language.Shop.IncorrectBoard"));
+		event.getPlayer().sendMessage(Residence.getLM().getMessage("Language.Shop.IncorrectBoard"));
 	    }
 	    Delete.remove(player.getName());
 	    return;
 	}
 
 	String resName = null;
-	for (Board one : ShopSignUtil.GetAllBoards()) {
+	for (Board one : Residence.getShopSignUtilManager().GetAllBoards()) {
 	    resName = one.getResNameByLoc(loc);
 	    if (resName != null)
 		break;
@@ -101,8 +100,8 @@ public class ShopListener implements Listener {
 	case NEITHER:
 	case FALSE:
 	    Residence.getResidenceManager().removeShop(event.getResidence());
-	    ShopSignUtil.BoardUpdate();
-	    ShopSignUtil.saveSigns();
+	    Residence.getShopSignUtilManager().BoardUpdate();
+	    Residence.getShopSignUtilManager().saveSigns();
 	    break;
 	case INVALID:
 	    break;
@@ -111,8 +110,8 @@ public class ShopListener implements Listener {
 	    event.getResidence().getPermissions().setFlag("tp", FlagState.TRUE);
 	    event.getResidence().getPermissions().setFlag("move", FlagState.TRUE);
 	    event.getResidence().getPermissions().setFlag("pvp", FlagState.FALSE);
-	    ShopSignUtil.BoardUpdate();
-	    ShopSignUtil.saveSigns();
+	    Residence.getShopSignUtilManager().BoardUpdate();
+	    Residence.getShopSignUtilManager().saveSigns();
 	    break;
 	default:
 	    break;
@@ -121,15 +120,15 @@ public class ShopListener implements Listener {
     
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceRename(ResidenceRenameEvent event) {
-	ConcurrentHashMap<String, List<ShopVote>> Votes = ShopSignUtil.GetAllVoteList();		
+	ConcurrentHashMap<String, List<ShopVote>> Votes = Residence.getShopSignUtilManager().GetAllVoteList();		
 	if (Votes.containsKey(event.getOldResidenceName())){	  
 	    Residence.getResidenceManager().addShop(event.getNewResidenceName());
 	    Residence.getResidenceManager().removeShop(event.getOldResidenceName());
 	    List<ShopVote> obj = Votes.remove(event.getOldResidenceName());
 	    Votes.put(event.getNewResidenceName(), obj);
-	    ShopSignUtil.saveShopVotes();
-	    ShopSignUtil.BoardUpdateDelayed();
-	    ShopSignUtil.saveSigns();
+	    Residence.getShopSignUtilManager().saveShopVotes();
+	    Residence.getShopSignUtilManager().BoardUpdateDelayed();
+	    Residence.getShopSignUtilManager().saveSigns();
 	}	
     }
     
@@ -169,8 +168,8 @@ public class ShopListener implements Listener {
 
 	Residence.getResidenceManager().addShop(event.getResidence().getName());
 
-	ShopSignUtil.BoardUpdate();
-	ShopSignUtil.saveSigns();
+	Residence.getShopSignUtilManager().BoardUpdate();
+	Residence.getShopSignUtilManager().saveSigns();
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -182,7 +181,7 @@ public class ShopListener implements Listener {
 	    return;
 
 	Residence.getResidenceManager().removeShop(event.getResidence());
-	ShopSignUtil.BoardUpdate();
-	ShopSignUtil.saveSigns();
+	Residence.getShopSignUtilManager().BoardUpdate();
+	Residence.getShopSignUtilManager().saveSigns();
     }
 }

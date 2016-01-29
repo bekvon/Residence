@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
@@ -136,6 +132,8 @@ public class FlagPermissions {
 	addFlag("destroy");
 	addFlag("place");
 	addFlag("bucket");
+	addFlag("bucketfill");
+	addFlag("bucketempty");
 	addFlag("bank");
 	addFlag("beacon");
 
@@ -152,7 +150,7 @@ public class FlagPermissions {
 	addFlag("command");
 
 	addFlag("chat");
-	
+
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
 	addResidenceOnlyFlag("fireball");
@@ -196,7 +194,7 @@ public class FlagPermissions {
 
 	// Players will keep hes exp on death
 	addResidenceOnlyFlag("keepexp");
-	
+
 	// Players will keep hes exp on death
 	addResidenceOnlyFlag("mobitemdrop");
 
@@ -208,13 +206,13 @@ public class FlagPermissions {
 
 	// Special flag for making residence as shop
 	addResidenceOnlyFlag("shop");
-	
+
 	// Prevent ender dragon block grief
 	addResidenceOnlyFlag("dragongrief");
-	
+
 	// Prevent snowman snow trail
 	addResidenceOnlyFlag("snowtrail");
-	
+
 	// Auto respawn player
 	addResidenceOnlyFlag("respawn");
 
@@ -709,6 +707,25 @@ public class FlagPermissions {
 
     public ArrayList<String> getposibleFlags() {
 	return FlagPermissions.validFlags;
+    }
+
+    public ArrayList<String> getposibleAreaFlags() {
+	return FlagPermissions.validAreaFlags;
+    }
+
+    public List<String> getPosibleFlags(boolean residence, boolean resadmin) {
+	List<String> flags = new ArrayList<String>();
+	for (Entry<String, Boolean> one : Residence.getPermissionManager().getAllFlags().getFlags().entrySet()) {
+	    if (!one.getValue() && !resadmin)
+		continue;
+
+	    if (!residence && !getposibleFlags().contains(one.getKey()))
+		continue;
+
+	    flags.add(one.getKey());
+	}
+
+	return flags;
     }
 
     public String listPlayerFlags(String player) {

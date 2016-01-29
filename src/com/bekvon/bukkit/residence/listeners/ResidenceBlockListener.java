@@ -27,8 +27,6 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import com.bekvon.bukkit.residence.NewLanguage;
-import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -48,10 +46,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ResidenceBlockListener implements Listener {
 
-    private static List<String> MessageInformed = new ArrayList<String>();
-    private static List<String> ResCreated = new ArrayList<String>();
-
-    public static final String BlockMetadata = "ResFallingBlock";
+    private List<String> MessageInformed = new ArrayList<String>();
+    private List<String> ResCreated = new ArrayList<String>();
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -159,14 +155,14 @@ public class ResidenceBlockListener implements Listener {
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
-	ArrayList<String> list = PlayerManager.getResidenceList(player.getName());
+	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(player.getName());
 	if (list.size() != 0)
 	    return;
 
 	if (MessageInformed.contains(player.getName()))
 	    return;
 
-	player.sendMessage(NewLanguage.getMessage("Language.NewPlayerInfo"));
+	player.sendMessage(Residence.getLM().getMessage("Language.NewPlayerInfo"));
 
 	MessageInformed.add(player.getName());
     }
@@ -184,7 +180,7 @@ public class ResidenceBlockListener implements Listener {
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
-	ArrayList<String> list = PlayerManager.getResidenceList(player.getName());
+	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(player.getName());
 	if (list.size() != 0)
 	    return;
 
@@ -194,9 +190,9 @@ public class ResidenceBlockListener implements Listener {
 	Location loc = block.getLocation();
 
 	Residence.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), loc.getBlockX() - Residence.getConfigManager().getNewPlayerRangeX(), loc
-	    .getBlockY() - Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() - Residence.getConfigManager().getNewPlayerRangeZ()));
+	    .getBlockY() - Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() - Residence.getConfigManager().getNewPlayerRangeZ()), true);
 	Residence.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), loc.getBlockX() + Residence.getConfigManager().getNewPlayerRangeX(), loc
-	    .getBlockY() + Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() + Residence.getConfigManager().getNewPlayerRangeZ()));
+	    .getBlockY() + Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() + Residence.getConfigManager().getNewPlayerRangeZ()), true);
 
 	boolean created = Residence.getResidenceManager().addResidence(player, player.getName(), Residence.getSelectionManager().getPlayerLoc1(player.getName()),
 	    Residence.getSelectionManager().getPlayerLoc2(player.getName()), Residence.getConfigManager().isNewPlayerFree());

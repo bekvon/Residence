@@ -3,7 +3,6 @@ package com.bekvon.bukkit.residence.permissions;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
-import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -197,7 +196,7 @@ public class PermissionGroup {
     }
 
     public int getMaxZones(String player) {
-	int max = PlayerManager.getMaxResidences(player);
+	int max = Residence.getPlayerManager().getMaxResidences(player);
 	if (max != -1)
 	    return max;
 	return resmax;
@@ -216,7 +215,7 @@ public class PermissionGroup {
     }
 
     public int getMaxSubzoneDepth(String player) {
-	int max = PlayerManager.getMaxSubzones(player);
+	int max = Residence.getPlayerManager().getMaxSubzones(player);
 	if (max != -1)
 	    return max;
 	return subzonedepth;
@@ -255,7 +254,7 @@ public class PermissionGroup {
     }
 
     public int getMaxRents(String player) {
-	int max = PlayerManager.getMaxRents(player);
+	int max = Residence.getPlayerManager().getMaxRents(player);
 	if (max != -1)
 	    return max;
 	return maxRents;

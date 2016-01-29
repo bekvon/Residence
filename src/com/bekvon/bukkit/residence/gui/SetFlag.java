@@ -19,7 +19,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -116,13 +115,16 @@ public class SetFlag {
     }
 
     public void recalculateInv() {
-	recalculateInv(Residence.getResidenceManager().getByName(residence));
+	if (targetPlayer == null)
+	    recalculateResidence(Residence.getResidenceManager().getByName(residence));
+	else
+	    recalculatePlayer(Residence.getResidenceManager().getByName(residence));
     }
 
     private void fillFlagDescriptions() {
-	Set<String> list = NewLanguage.getKeyList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands");
+	Set<String> list = Residence.getLM().getKeyList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands");
 	for (String onelist : list) {
-	    String onelisttemp = NewLanguage.getMessage("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
+	    String onelisttemp = Residence.getLM().getMessage("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
 	    List<String> lore = new ArrayList<String>();
 	    int i = 0;
 	    String sentence = "";
@@ -140,35 +142,22 @@ public class SetFlag {
 	}
     }
 
-    public void recalculateInv(ClaimedResidence res) {
+    public void recalculateResidence(ClaimedResidence res) {
 
+	List<String> flags = res.getPermissions().getPosibleFlags(true, this.admin);
+	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
+	LinkedHashMap<String, Integer> TempPermMap = new LinkedHashMap<String, Integer>();
 	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
 
-	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
-
 	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {
-	    resFlags.put(one.getKey(), one.getValue());
+	    if (flags.contains(one.getKey()))
+		resFlags.put(one.getKey(), one.getValue());
 	}
-
-	if (targetPlayer != null) {
-	    ArrayList<String> PosibleResPFlags = res.getPermissions().getposibleFlags();
-	    Map<String, Boolean> temp = new HashMap<String, Boolean>();
-	    for (String one : PosibleResPFlags) {
-		if (globalFlags.containsKey(one))
-		    temp.put(one, globalFlags.get(one));
-	    }
-	    globalFlags = temp;
-
-	    Map<String, Boolean> pFlags = res.getPermissions().getPlayerFlags(targetPlayer);
-
-	    if (pFlags != null)
-		for (Entry<String, Boolean> one : pFlags.entrySet()) {
-		    resFlags.put(one.getKey(), one.getValue());
-		}
-	}
-	LinkedHashMap<String, Integer> TempPermMap = new LinkedHashMap<String, Integer>();
 
 	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
+	    if (!flags.contains(one.getKey()))
+		continue;
+
 	    if (resFlags.containsKey(one.getKey()))
 		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? 1 : 0);
 	    else
@@ -177,9 +166,9 @@ public class SetFlag {
 
 	String title = "";
 	if (targetPlayer == null)
-	    title = NewLanguage.getMessage("Language.Gui.Set.Title").replace("%1%", res.getName());
+	    title = Residence.getLM().getMessage("Language.Gui.Set.Title", res.getName());
 	else
-	    title = NewLanguage.getMessage("Language.Gui.Pset.Title").replace("%1%", targetPlayer).replace("%2%", res.getName());
+	    title = Residence.getLM().getMessage("Language.Gui.Pset.Title", targetPlayer + "%" + res.getName());
 
 	if (title.length() > 32) {
 	    title = title.substring(0, Math.min(title.length(), 32));
@@ -190,7 +179,7 @@ public class SetFlag {
 
 	TempPermMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(TempPermMap);
 
-	FlagData flagData = FlagUtil.getFlagData();
+	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
 
 	pageCount = (int) Math.ceil((double) TempPermMap.size() / (double) 45);
 
@@ -253,7 +242,7 @@ public class SetFlag {
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
 
-	    lore.addAll(NewLanguage.getMessageList("Language.Gui.Actions"));
+	    lore.addAll(Residence.getLM().getMessageList("Language.Gui.Actions"));
 
 	    MiscInfoMeta.setLore(lore);
 
@@ -267,12 +256,158 @@ public class SetFlag {
 
 	ItemMeta meta = Item.getItemMeta();
 	if (page > 1) {
-	    meta.setDisplayName(NewLanguage.getMessage("Language.PrevInfoPage"));
+	    meta.setDisplayName(Residence.getLM().getMessage("Language.PrevInfoPage"));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
 	if (page < pageCount) {
-	    meta.setDisplayName(NewLanguage.getMessage("Language.NextInfoPage"));
+	    meta.setDisplayName(Residence.getLM().getMessage("Language.NextInfoPage"));
+	    Item.setItemMeta(meta);
+	    GuiInv.setItem(53, Item);
+	}
+
+	this.inventory = GuiInv;
+    }
+
+    public void recalculatePlayer(ClaimedResidence res) {
+
+	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
+
+	List<String> flags = res.getPermissions().getPosibleFlags(false, this.admin);
+	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
+
+	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {
+	    if (flags.contains(one.getKey()))
+		resFlags.put(one.getKey(), one.getValue());
+	}
+
+	if (targetPlayer != null) {
+	    ArrayList<String> PosibleResPFlags = res.getPermissions().getposibleFlags();
+	    Map<String, Boolean> temp = new HashMap<String, Boolean>();
+	    for (String one : PosibleResPFlags) {
+		if (globalFlags.containsKey(one))
+		    temp.put(one, globalFlags.get(one));
+	    }
+	    globalFlags = temp;
+
+	    Map<String, Boolean> pFlags = res.getPermissions().getPlayerFlags(targetPlayer);
+
+	    if (pFlags != null)
+		for (Entry<String, Boolean> one : pFlags.entrySet()) {
+		    resFlags.put(one.getKey(), one.getValue());
+		}
+	}
+
+	LinkedHashMap<String, Integer> TempPermMap = new LinkedHashMap<String, Integer>();
+
+	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
+	    if (!flags.contains(one.getKey()))
+		continue;
+
+	    if (resFlags.containsKey(one.getKey()))
+		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? 1 : 0);
+	    else
+		TempPermMap.put(one.getKey(), 2);
+	}
+
+	String title = "";
+	if (targetPlayer == null)
+	    title = Residence.getLM().getMessage("Language.Gui.Set.Title", res.getName());
+	else
+	    title = Residence.getLM().getMessage("Language.Gui.Pset.Title", targetPlayer + "%" + res.getName());
+
+	if (title.length() > 32) {
+	    title = title.substring(0, Math.min(title.length(), 32));
+	}
+
+	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
+	int i = 0;
+
+	TempPermMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(TempPermMap);
+
+	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
+
+	pageCount = (int) Math.ceil((double) TempPermMap.size() / (double) 45);
+
+	int start = page * 45 - 45;
+	int end = page * 45;
+
+	int count = -1;
+	permMap.clear();
+	for (Entry<String, Integer> one : TempPermMap.entrySet()) {
+	    count++;
+	    if (count >= end)
+		break;
+	    if (count < start)
+		continue;
+	    permMap.put(one.getKey(), one.getValue());
+	}
+
+	for (Entry<String, Integer> one : permMap.entrySet()) {
+
+	    ItemStack MiscInfo = Residence.getConfigManager().getGuiRemove();
+
+	    switch (one.getValue()) {
+	    case 0:
+		MiscInfo = Residence.getConfigManager().getGuiFalse();
+		break;
+	    case 1:
+		MiscInfo = Residence.getConfigManager().getGuiTrue();
+		break;
+	    case 2:
+		break;
+	    }
+
+	    if (flagData.contains(one.getKey()))
+		MiscInfo = flagData.getItem(one.getKey());
+
+	    if (one.getValue() == 1) {
+		ItemMeta im = MiscInfo.getItemMeta();
+		im.addEnchant(Enchantment.LUCK, 1, true);
+		MiscInfo.setItemMeta(im);
+	    } else
+		MiscInfo.removeEnchantment(Enchantment.LUCK);
+
+	    ItemMeta MiscInfoMeta = MiscInfo.getItemMeta();
+	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + one.getKey());
+
+	    List<String> lore = new ArrayList<String>();
+
+	    switch (one.getValue()) {
+	    case 0:
+		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.DARK_RED + "False");
+		break;
+	    case 1:
+		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.GREEN + "True");
+		break;
+	    case 2:
+		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.RED + "Removed");
+		break;
+	    }
+
+	    if (description.containsKey(one.getKey()))
+		lore.addAll(description.get(one.getKey()));
+
+	    lore.addAll(Residence.getLM().getMessageList("Language.Gui.Actions"));
+
+	    MiscInfoMeta.setLore(lore);
+
+	    MiscInfo.setItemMeta(MiscInfoMeta);
+	    GuiInv.setItem(i, MiscInfo);
+	    i++;
+	    if (i > 53)
+		break;
+	}
+	ItemStack Item = new ItemStack(Material.ARROW);
+
+	ItemMeta meta = Item.getItemMeta();
+	if (page > 1) {
+	    meta.setDisplayName(Residence.getLM().getMessage("Language.PrevInfoPage"));
+	    Item.setItemMeta(meta);
+	    GuiInv.setItem(45, Item);
+	}
+	if (page < pageCount) {
+	    meta.setDisplayName(Residence.getLM().getMessage("Language.NextInfoPage"));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(53, Item);
 	}

@@ -31,6 +31,7 @@ public class SelectionManager {
     protected Map<String, Location> playerLoc1;
     protected Map<String, Location> playerLoc2;
     protected Server server;
+    private Residence plugin;
 
     public static Integer id;
     public static HashMap<String, Long> normalPrintMap = new HashMap<String, Long>();
@@ -44,7 +45,8 @@ public class SelectionManager {
 	UP, DOWN, PLUSX, PLUSZ, MINUSX, MINUSZ
     }
 
-    public SelectionManager(Server server) {
+    public SelectionManager(Server server, Residence plugin) {
+	this.plugin = plugin;
 	this.server = server;
 	playerLoc1 = Collections.synchronizedMap(new HashMap<String, Location>());
 	playerLoc2 = Collections.synchronizedMap(new HashMap<String, Location>());
@@ -58,29 +60,31 @@ public class SelectionManager {
 		this.qsky(player);
 		this.qbedrock(player);
 	    }
-//	    this.afterSelectionUpdate(player);
+	    this.afterSelectionUpdate(player);
 	}
     }
 
-    public void placeLoc1(Player player, Location loc) {
+    public void placeLoc1(Player player, Location loc, boolean show) {
 	if (loc != null) {
 	    playerLoc1.put(player.getName(), loc);
 	    if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName())) {
 		this.qsky(player);
 		this.qbedrock(player);
 	    }
-	    this.afterSelectionUpdate(player);
+	    if (show)
+		this.afterSelectionUpdate(player);
 	}
     }
 
-    public void placeLoc2(Player player, Location loc) {
+    public void placeLoc2(Player player, Location loc, boolean show) {
 	if (loc != null) {
 	    playerLoc2.put(player.getName(), loc);
 	    if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName())) {
 		this.qsky(player);
 		this.qbedrock(player);
 	    }
-	    this.afterSelectionUpdate(player);
+	    if (show)
+		this.afterSelectionUpdate(player);
 	}
     }
 
@@ -167,7 +171,7 @@ public class SelectionManager {
 	    normalPrintMap.put(player.getName(), System.currentTimeMillis());
 	else
 	    errorPrintMap.put(player.getName(), System.currentTimeMillis());
-	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
 		MakeBorders(player, OriginalLow, OriginalHigh, error);
@@ -197,7 +201,7 @@ public class SelectionManager {
 	}
 
 	List<Location> locList = new ArrayList<Location>();
-	
+
 	if (lowLoc.getWorld() != loc.getWorld())
 	    return locList;
 
@@ -371,7 +375,7 @@ public class SelectionManager {
 
 	final List<Location> locList2 = GetLocationsCornersByData(player, loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range);
 
-	Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
 		if (!error)
@@ -390,7 +394,6 @@ public class SelectionManager {
 		return;
 	    }
 	});
-	
 
 	String planerName = player.getName();
 	if (!error && !normalPrintMap.containsKey(planerName))
@@ -403,7 +406,7 @@ public class SelectionManager {
 	else if (error && errorPrintMap.get(planerName) + Residence.getConfigManager().getVisualizerShowFor() < System.currentTimeMillis())
 	    return false;
 
-	int scid = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+	int scid = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    public void run() {
 		if (player.isOnline())
 		    MakeBorders(player, OriginalLow, OriginalHigh, error);
@@ -540,8 +543,8 @@ public class SelectionManager {
 	Location myloc = player.getLocation();
 	Location loc1 = new Location(myloc.getWorld(), myloc.getBlockX() + xsize, myloc.getBlockY() + ysize, myloc.getBlockZ() + zsize);
 	Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
-	placeLoc1(player, loc1);
-	placeLoc2(player, loc2);
+	placeLoc1(player, loc1, false);
+	placeLoc2(player, loc2, true);
 	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectionSuccess"));
 	showSelectionInfo(player);
     }
@@ -705,8 +708,7 @@ public class SelectionManager {
 	if (!ClaimedResidence.CheckAreaSize(player, area, resadmin))
 	    return false;
 
-	playerLoc1.put(player.getName(), area.getHighLoc());
-	playerLoc2.put(player.getName(), area.getLowLoc());
+	updateLocations(player, area.getHighLoc(), area.getLowLoc());
 	return true;
     }
 

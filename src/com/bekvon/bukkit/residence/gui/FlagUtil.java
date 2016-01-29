@@ -13,10 +13,15 @@ import com.bekvon.bukkit.residence.Residence;
 
 public class FlagUtil {
 
-    private static FlagData flagData = new FlagData();
+    private FlagData flagData = new FlagData();
+    private Residence plugin;
 
-    public static void load() {
-	File f = new File(Residence.instance.getDataFolder(), "flags.yml");
+    public FlagUtil(Residence plugin) {
+	this.plugin = plugin;
+    }
+
+    public void load() {
+	File f = new File(plugin.getDataFolder(), "flags.yml");
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
 	conf.options().copyDefaults(true);
@@ -40,11 +45,11 @@ public class FlagUtil {
 	    if (Mat == null)
 		Mat = Material.STONE;
 	    ItemStack item = new ItemStack(Mat, 1, (short) data);
-	    FlagUtil.flagData.addFlagButton(oneFlag.toLowerCase(), item);
+	    flagData.addFlagButton(oneFlag.toLowerCase(), item);
 	}
     }
 
-    public static FlagData getFlagData() {
+    public FlagData getFlagData() {
 	return flagData;
     }
 }

@@ -1,6 +1,3 @@
-/*
- * and open the template in the editor.
- */
 package com.bekvon.bukkit.residence;
 
 import java.io.BufferedReader;
@@ -72,6 +69,7 @@ import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
+import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
@@ -84,6 +82,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -119,7 +118,14 @@ public class Residence extends JavaPlugin {
     protected static Server server;
     protected static HelpEntry helppages;
     protected static Language language;
-    public static Plugin instance;
+    protected static Locale LocaleManager;
+    protected static NewLanguage NewLanguageManager;
+    protected static PlayerManager PlayerManager;
+    protected static FlagUtil FlagUtilManager;
+    protected static ShopSignUtil ShopSignUtilManager;
+    protected static RandomTp RandomTpManager;
+
+    public static Plugin instance2;
     protected boolean firstenable = true;
     protected static EconomyInterface economy;
     public final static int saveVersion = 1;
@@ -134,7 +140,7 @@ public class Residence extends JavaPlugin {
     protected static int autosaveBukkitId = -1;
     protected static VersionChecker versionChecker;
     protected static boolean initsuccess = false;
-    protected Map<String, String> deleteConfirm;
+    public static Map<String, String> deleteConfirm;
     protected static List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian", "Polish", "Lithuanian" };
     public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
@@ -190,7 +196,7 @@ public class Residence extends JavaPlugin {
 	public void run() {
 	    try {
 		if (initsuccess) {
-		    Bukkit.getScheduler().runTaskAsynchronously(Residence.instance, new Runnable() {
+		    Bukkit.getScheduler().runTaskAsynchronously(Residence.this, new Runnable() {
 			@Override
 			public void run() {
 			    try {
@@ -207,9 +213,6 @@ public class Residence extends JavaPlugin {
 	    }
 	}
     };
-
-    public Residence() {
-    }
 
     public void reloadPlugin() {
 	this.onDisable();
@@ -246,7 +249,7 @@ public class Residence extends JavaPlugin {
     public void onEnable() {
 	try {
 
-	    instance = this;
+//	    instance = this;
 	    initsuccess = false;
 	    deleteConfirm = new HashMap<String, String>();
 	    resadminToggle = new ArrayList<String>();
@@ -284,7 +287,7 @@ public class Residence extends JavaPlugin {
 	    FileConfiguration canfig = YamlConfiguration.loadConfiguration(new File(dataFolder, "config.yml"));
 	    FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(dataFolder, "flags.yml"));
 	    FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(dataFolder, "groups.yml"));
-	    cmanager = new ConfigManager(canfig, flags, groups);
+	    cmanager = new ConfigManager(canfig, flags, groups, this);
 	    String multiworld = cmanager.getMultiworldPlugin();
 	    if (multiworld != null) {
 		Plugin plugin = server.getPluginManager().getPlugin(multiworld);
@@ -295,8 +298,8 @@ public class Residence extends JavaPlugin {
 		    }
 		}
 	    }
-
-	    FlagUtil.load();
+	    FlagUtilManager = new FlagUtil(this);
+	    getFlagUtilManager().load();
 
 	    String packageName = getServer().getClass().getPackage().getName();
 
@@ -345,21 +348,24 @@ public class Residence extends JavaPlugin {
 	    chatmanager = new ChatManager();
 	    rentmanager = new RentManager();
 
-	    for (String lang : validLanguages) {
+	    LocaleManager = new Locale(this);
 
-		YmlMaker langFile = new YmlMaker((JavaPlugin) Residence.instance, "Language" + File.separator + lang + ".yml");
+	    PlayerManager = new PlayerManager(this);
+	    ShopSignUtilManager = new ShopSignUtil(this);
+	    RandomTpManager = new RandomTp(this);
+
+	    for (String lang : validLanguages) {
+		YmlMaker langFile = new YmlMaker((JavaPlugin) this, "Language" + File.separator + lang + ".yml");
 		if (langFile != null) {
 		    langFile.saveDefaultConfig();
 		}
 	    }
 
 	    for (String lang : validLanguages) {
-		Locale.LoadLang(lang);
+		getLocaleManager().LoadLang(lang);
 	    }
 
 	    Residence.getConfigManager().UpdateFlagFile();
-
-	    NewLanguage.LanguageReload();
 
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
@@ -451,7 +457,7 @@ public class Residence extends JavaPlugin {
 	    Bukkit.getConsoleSender().sendMessage("[Residence] Player data loaded: " + getOfflinePlayerMap().size());
 
 	    if (rmanager == null) {
-		rmanager = new ResidenceManager();
+		rmanager = new ResidenceManager(this);
 	    }
 	    if (leasemanager == null) {
 		leasemanager = new LeaseManager(rmanager);
@@ -480,12 +486,12 @@ public class Residence extends JavaPlugin {
 		FlagPermissions.initValidFlags();
 		Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
 		if (plugin != null) {
-		    smanager = new WorldEditSelectionManager(server);
+		    smanager = new WorldEditSelectionManager(server, this);
 		    wep = (WorldEditPlugin) plugin;
 		    wepid = ((WorldEditPlugin) Residence.wep).getConfig().getInt("wand-item");
 		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldEdit");
 		} else {
-		    smanager = new SelectionManager(server);
+		    smanager = new SelectionManager(server, this);
 		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldEdit NOT found!");
 		}
 
@@ -498,7 +504,7 @@ public class Residence extends JavaPlugin {
 		}
 
 		blistener = new ResidenceBlockListener();
-		plistener = new ResidencePlayerListener();
+		plistener = new ResidencePlayerListener(this);
 		elistener = new ResidenceEntityListener();
 
 		shlistener = new ShopListener();
@@ -509,6 +515,9 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(elistener, this);
 
 		pm.registerEvents(shlistener, this);
+
+		NewLanguageManager = new NewLanguage(this);
+		getLM().LanguageReload();
 
 		// 1.8 event
 		if (VersionChecker.GetVersion() >= 1800)
@@ -581,8 +590,8 @@ public class Residence extends JavaPlugin {
 	Residence.setSignUtil(this);
 	Residence.getSignUtil().LoadSigns();
 
-	ShopSignUtil.LoadShopVotes();
-	ShopSignUtil.BoardUpdate();
+	getShopSignUtilManager().LoadShopVotes();
+	getShopSignUtilManager().BoardUpdate();
 
 	versionChecker = new VersionChecker(this);
 	versionChecker.VersionCheck(null);
@@ -601,6 +610,10 @@ public class Residence extends JavaPlugin {
 	console.sendMessage("[Residence] " + message);
     }
 
+    public static void sendMessage(Player player, String message) {
+	player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    }
+
     public static boolean validName(String name) {
 	if (name.contains(":") || name.contains(".") || name.contains("|")) {
 	    return false;
@@ -616,12 +629,20 @@ public class Residence extends JavaPlugin {
 	}
     }
 
+    public Residence getPlugin() {
+	return this;
+    }
+
     public static VersionChecker getVersionChecker() {
 	return versionChecker;
     }
 
     public static File getDataLocation() {
 	return dataFolder;
+    }
+
+    public static ShopSignUtil getShopSignUtilManager() {
+	return ShopSignUtilManager;
     }
 
     public static ResidenceManager getResidenceManager() {
@@ -632,8 +653,16 @@ public class Residence extends JavaPlugin {
 	return smanager;
     }
 
+    public static FlagUtil getFlagUtilManager() {
+	return FlagUtilManager;
+    }
+
     public static PermissionManager getPermissionManager() {
 	return gmanager;
+    }
+
+    public static RandomTp getRandomTpManager() {
+	return RandomTpManager;
     }
 
     public static EconomyInterface getEconomyManager() {
@@ -646,6 +675,10 @@ public class Residence extends JavaPlugin {
 
     public static LeaseManager getLeaseManager() {
 	return leasemanager;
+    }
+
+    public static PlayerManager getPlayerManager() {
+	return PlayerManager;
     }
 
     public static HelpEntry getHelpPages() {
@@ -670,6 +703,14 @@ public class Residence extends JavaPlugin {
 
     public static RentManager getRentManager() {
 	return rentmanager;
+    }
+
+    public static Locale getLocaleManager() {
+	return LocaleManager;
+    }
+
+    public static NewLanguage getLM() {
+	return NewLanguageManager;
     }
 
     public static ResidencePlayerListener getPlayerListener() {
@@ -927,7 +968,7 @@ public class Residence extends JavaPlugin {
 		}
 	    }
 
-	    rmanager = ResidenceManager.load(worlds);
+	    rmanager = getResidenceManager().load(worlds);
 
 	    // Getting shop residences
 	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
@@ -1196,6 +1237,15 @@ public class Residence extends JavaPlugin {
 	}
     }
 
+    public static boolean isPlayerExist(Player player, String name, boolean inform) {
+	if (Residence.getPlayerUUID(name) != null)
+	    return true;
+	if (inform)
+	    player.sendMessage(getLM().getMessage("Language.InvalidPlayer"));
+	return false;
+
+    }
+
     public static UUID getPlayerUUID(String playername) {
 //	if (Residence.getConfigManager().isOfflineMode())
 //	    return null;
@@ -1203,7 +1253,6 @@ public class Residence extends JavaPlugin {
 	if (p == null) {
 	    if (getOfflinePlayerMap().containsKey(playername.toLowerCase()))
 		return getOfflinePlayerMap().get(playername.toLowerCase()).getUniqueId();
-
 	} else
 	    return p.getUniqueId();
 	return null;

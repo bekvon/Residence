@@ -10,25 +10,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NewLanguage {
-    public static FileConfiguration enlocale;
-    public static FileConfiguration customlocale;
+    public FileConfiguration enlocale;
+    public FileConfiguration customlocale;
+    private Residence plugin;
 
-    static {
-	customlocale = new YmlMaker((JavaPlugin) Residence.instance, "Language/" + Residence.getConfigManager().language + ".yml").getConfig();
-	enlocale = new YmlMaker((JavaPlugin) Residence.instance, "Language/English.yml").getConfig();
-	if (customlocale == null)
-	    customlocale = enlocale;
-    }
-
-    private NewLanguage() {
+    public NewLanguage(Residence plugin) {
+	this.plugin = plugin;
     }
 
     /**
      * Reloads the config
      */
-    public static void LanguageReload() {
-	customlocale = new YmlMaker((JavaPlugin) Residence.instance, "Language/" + Residence.getConfigManager().language + ".yml").getConfig();
-	enlocale = new YmlMaker((JavaPlugin) Residence.instance, "Language/English.yml").getConfig();
+    public void LanguageReload() {
+	customlocale = new YmlMaker((JavaPlugin) plugin, "Language/" + Residence.getConfigManager().language + ".yml").getConfig();
+	enlocale = new YmlMaker((JavaPlugin) plugin, "Language/English.yml").getConfig();
 	if (customlocale == null)
 	    customlocale = enlocale;
     }
@@ -40,11 +35,8 @@ public class NewLanguage {
      *            - the key of the message
      * @return the message
      */
-    public static String getMessage(String key) {
-	String missing = "Missing locale for " + key;
-	if (customlocale == null || !customlocale.contains(key))
-	    return enlocale.contains(key) == true ? ChatColor.translateAlternateColorCodes('&', enlocale.getString(key)) : missing;
-	return customlocale.contains(key) == true ? ChatColor.translateAlternateColorCodes('&', customlocale.getString(key)) : missing;
+    public String getMessage(String key) {
+	return getMessage(key, "");
     }
 
     /**
@@ -56,11 +48,13 @@ public class NewLanguage {
      *            - the variables separated with %
      * @return the message
      */
-    public static String getMessage(String key, int variables) {
+    public String getMessage(String key, int variables) {
 	return getMessage(key, String.valueOf(variables));
     }
 
-    public static String getMessage(String key, String variables) {
+    public String getMessage(String key, String variables) {
+	if (!key.contains("."))
+	    key = "Language." + key;
 	String missing = "Missing locale for " + key;
 	String message = "";
 	if (customlocale == null || !customlocale.contains(key))
@@ -87,7 +81,7 @@ public class NewLanguage {
      *            - the key of the message
      * @return the message
      */
-    public static String getDefaultMessage(String key) {
+    public String getDefaultMessage(String key) {
 	String missing = "Missing locale for " + key;
 	return enlocale.contains(key) == true ? ChatColor.translateAlternateColorCodes('&', enlocale.getString(key)) : missing;
     }
@@ -99,7 +93,7 @@ public class NewLanguage {
      *            - the key of the message
      * @return the message
      */
-    public static List<String> getMessageList(String key) {
+    public List<String> getMessageList(String key) {
 	String missing = "Missing locale for " + key;
 	if (customlocale.isList(key))
 	    return Locale.ColorsArray(customlocale.getStringList(key), true);
@@ -113,7 +107,7 @@ public class NewLanguage {
      *            - the key of the message
      * @return the message
      */
-    public static Set<String> getKeyList(String key) {
+    public Set<String> getKeyList(String key) {
 	if (customlocale.isConfigurationSection(key))
 	    return customlocale.getConfigurationSection(key).getKeys(false);
 	return enlocale.getConfigurationSection(key).getKeys(false);
@@ -126,7 +120,7 @@ public class NewLanguage {
      *            - the key of the message
      * @return true/false
      */
-    public static boolean containsKey(String key) {
+    public boolean containsKey(String key) {
 	if (customlocale == null || !customlocale.contains(key))
 	    return enlocale.contains(key);
 	return customlocale.contains(key);

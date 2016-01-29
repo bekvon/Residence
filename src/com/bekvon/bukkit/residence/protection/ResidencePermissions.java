@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.protection;
 
 import org.bukkit.ChatColor;
@@ -184,6 +179,12 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setPlayerFlag(Player player, String targetPlayer, String flag, String flagstate, boolean resadmin, boolean Show) {
+
+	if (Residence.getPlayerUUID(targetPlayer) == null) {
+	    player.sendMessage("no player by this name");
+	    return false;
+	}
+
 	if (validFlagGroups.containsKey(flag))
 	    return this.setFlagGroupOnPlayer(player, targetPlayer, flag, flagstate, resadmin);
 	FlagState state = FlagPermissions.stringToFlagState(flagstate);

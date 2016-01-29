@@ -5,7 +5,6 @@
 
 package com.bekvon.bukkit.residence.permissions;
 
-import com.bekvon.bukkit.residence.PlayerManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
@@ -54,7 +53,7 @@ public class PermissionManager {
     }
 
     public PermissionGroup getGroup(Player player) {
-	PermissionGroup group = PlayerManager.getGroup(player.getName());
+	PermissionGroup group = Residence.getPlayerManager().getGroup(player.getName());
 	if (group != null) {
 	    return group;
 	}
@@ -62,7 +61,7 @@ public class PermissionManager {
     }
 
     public PermissionGroup getGroup(String player, String world) {
-	PermissionGroup group = PlayerManager.getGroup(player);
+	PermissionGroup group = Residence.getPlayerManager().getGroup(player);
 	if (group != null) {
 	    return group;
 	}

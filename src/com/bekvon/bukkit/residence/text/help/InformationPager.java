@@ -1,13 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.text.help;
 
 import org.bukkit.ChatColor;
 
-import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import java.util.Arrays;
 import java.util.List;
@@ -41,19 +35,19 @@ public class InformationPager {
 	if (pagecount == 0)
 	    pagecount = 1;
 	if (page > pagecount) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidPage"));
+	    sender.sendMessage(ChatColor.RED + Residence.getLM().getMessage("InvalidPage"));
 	    return;
 	}
-	sender.sendMessage(NewLanguage.getMessage("Language.InformationPage.TopLine").replace("%1", title));
-	sender.sendMessage(NewLanguage.getMessage("Language.InformationPage.Page").replace("%1", Residence.getLanguage().getPhrase("GenericPage", ChatColor.GREEN + String
-	    .format("%d", page) + ChatColor.YELLOW + "|" + ChatColor.GREEN + pagecount + ChatColor.YELLOW)));
+	sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.TopLine", title));
+	sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.Page", Residence.getLM().getMessage("GenericPage", ChatColor.GREEN + String
+	    .format("%d", page) + ChatColor.YELLOW + "%" + ChatColor.GREEN + pagecount + ChatColor.YELLOW)));
 	for (int i = start; i < end; i++) {
 	    if (lines.size() > i)
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));
 	}
 	if (pagecount > page)
-	    sender.sendMessage(NewLanguage.getMessage("Language.InformationPage.NextPage").replace("%1", Residence.getLanguage().getPhrase("NextPage")));
+	    sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.NextPage", Residence.getLM().getMessage("NextPage")));
 	else
-	    sender.sendMessage(NewLanguage.getMessage("Language.InformationPage.NoNextPage"));
+	    sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.NoNextPage"));
     }
 }

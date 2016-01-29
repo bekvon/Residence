@@ -166,10 +166,10 @@ public class HelpEntry {
 	for (HelpEntry entry : subentrys) {
 
 	    if (!name.equalsIgnoreCase("flags")) {
-		if (ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && !resadmin)
+		if (ResidenceCommandListener.getAdminCommands().contains(entry.getName().toLowerCase()) && !resadmin)
 		    continue;
 
-		if (!ResidenceCommandListener.AdminCommands.contains(entry.getName().toLowerCase()) && resadmin)
+		if (!ResidenceCommandListener.getAdminCommands().contains(entry.getName().toLowerCase()) && resadmin)
 		    continue;
 	    } else {
 		if (GlobalFlags.getFlags().containsKey(entry.getName().toLowerCase())) {

@@ -10,7 +10,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
@@ -19,6 +18,12 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class RandomTp {
 
     static int miny = 63;
+
+    private Residence plugin;
+
+    public RandomTp(Residence plugin) {
+	this.plugin = plugin;
+    }
 
     public static Location getRandomlocation(String WorldName) {
 
@@ -100,16 +105,16 @@ public class RandomTp {
 	return loc;
     }
 
-    public static void performDelaydTp(final Location loc, final Player targetPlayer) {
-	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+    public void performDelaydTp(final Location loc, final Player targetPlayer) {
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    public void run() {
-		if (!ResidenceCommandListener.teleportDelayMap.contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
+		if (!ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
 		    return;
-		else if (ResidenceCommandListener.teleportDelayMap.contains(targetPlayer.getName()))
-		    ResidenceCommandListener.teleportDelayMap.remove(targetPlayer.getName());
+		else if (ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()))
+		    ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
 		targetPlayer.teleport(loc);
-		targetPlayer.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.RandomTeleport.TeleportSuccess").replace("%1", String.valueOf(loc.getX()))
-		    .replace("%2", String.valueOf(loc.getY())).replace("%3", String.valueOf(loc.getZ())));
+		targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLM().getMessage("Language.RandomTeleport.TeleportSuccess", loc.getX() + "%" + loc.getY() + "%"
+		    + loc.getZ()));
 		return;
 	    }
 	}, Residence.getConfigManager().getTeleportDelay() * 20L);
@@ -117,7 +122,7 @@ public class RandomTp {
 
     public static void performInstantTp(Location loc, Player targetPlayer) {
 	targetPlayer.teleport(loc);
-	targetPlayer.sendMessage(ChatColor.YELLOW + NewLanguage.getMessage("Language.RandomTeleport.TeleportSuccess").replace("%1", String.valueOf(loc.getX()))
-	    .replace("%2", String.valueOf(loc.getY())).replace("%3", String.valueOf(loc.getZ())));
+	targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLM().getMessage("Language.RandomTeleport.TeleportSuccess", loc.getX() + "%" + loc.getY() + "%" + loc
+	    .getZ()));
     }
 }

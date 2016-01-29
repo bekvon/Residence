@@ -16,8 +16,6 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,11 +30,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-/**
- * 
- * @author Administrator
- * 
- */
 public class ClaimedResidence {
 
     protected ClaimedResidence parent;
@@ -53,13 +46,15 @@ public class ClaimedResidence {
     protected ChatColor ChannelColor = ChatColor.WHITE;
     protected ResidenceItemList ignorelist;
     protected ResidenceItemList blacklist;
+    private Residence plugin;
 
-    private ClaimedResidence() {
+    private ClaimedResidence(Residence plugin) {
 	subzones = new HashMap<>();
 	areas = new HashMap<>();
 	bank = new ResidenceBank(this);
 	blacklist = new ResidenceItemList(this, ListType.BLACKLIST);
 	ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
+	this.plugin = plugin;
     }
 
     public boolean isOwner(String name) {
@@ -74,17 +69,17 @@ public class ClaimedResidence {
 	return parent == null ? false : true;
     }
 
-    public ClaimedResidence(String creationWorld) {
-	this(Residence.getServerLandname(), creationWorld);
+    public ClaimedResidence(String creationWorld, Residence plugin) {
+	this(Residence.getServerLandname(), creationWorld, plugin);
     }
 
-    public ClaimedResidence(String creator, String creationWorld) {
-	this();
+    public ClaimedResidence(String creator, String creationWorld, Residence plugin) {
+	this(plugin);
 	perms = new ResidencePermissions(this, creator, creationWorld);
     }
 
-    public ClaimedResidence(String creator, String creationWorld, ClaimedResidence parentResidence) {
-	this(creator, creationWorld);
+    public ClaimedResidence(String creator, String creationWorld, ClaimedResidence parentResidence, Residence plugin) {
+	this(creator, creationWorld, plugin);
 	parent = parentResidence;
     }
 
@@ -371,33 +366,27 @@ public class ClaimedResidence {
     }
 
     public boolean addSubzone(Player player, String owner, Location loc1, Location loc2, String name, boolean resadmin) {
-	Debug.D("subzone creation");
 	if (!Residence.validName(name)) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
 	    }
 	    return false;
 	}
-	Debug.D("5");
 	if (!(this.containsLoc(loc1) && this.containsLoc(loc2))) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneSelectInside"));
 	    }
 	    return false;
 	}
-	Debug.D("4");
 	if (subzones.containsKey(name)) {
 	    if (player != null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneExists", ChatColor.YELLOW + name));
 	    }
 	    return false;
 	}
-
-	Debug.D("1");
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
 		if (!this.perms.playerHas(player.getName(), "subzone", this.perms.playerHas(player.getName(), "admin", false))) {
-		    Debug.D("no perm");
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		    return false;
 		}
@@ -408,7 +397,6 @@ public class ClaimedResidence {
 		return false;
 	    }
 	}
-	Debug.D("2");
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
 	Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
 	for (Entry<String, ClaimedResidence> resEntry : set) {
@@ -428,10 +416,10 @@ public class ClaimedResidence {
 	}
 	ClaimedResidence newres;
 	if (player != null) {
-	    newres = new ClaimedResidence(owner, perms.getWorld(), this);
+	    newres = new ClaimedResidence(owner, perms.getWorld(), this, plugin);
 	    newres.addArea(player, newArea, name, resadmin);
 	} else {
-	    newres = new ClaimedResidence(owner, perms.getWorld(), this);
+	    newres = new ClaimedResidence(owner, perms.getWorld(), this, plugin);
 	    newres.addArea(newArea, name);
 	}
 	if (newres.getAreaCount() != 0) {
@@ -718,11 +706,6 @@ public class ClaimedResidence {
 	    Block block = newLoc.getBlock();
 	    Block block2 = newLoc.clone().add(0, 1, 0).getBlock();
 	    Block block3 = newLoc.clone().add(0, -1, 0).getBlock();
-
-	    Debug.D(newLoc.getBlockX() + " " + newLoc.getBlockZ() + " " + newLoc.getBlockY() + " " + Residence.getNms().isEmptyBlock(block) + " " + Residence.getNms()
-		.isEmptyBlock(block2) + " "
-		+ Residence.getNms().isEmptyBlock(block3));
-
 	    if (Residence.getNms().isEmptyBlock(block) && Residence.getNms().isEmptyBlock(block2) && !Residence.getNms().isEmptyBlock(block3)) {
 		found = true;
 		break;
@@ -905,11 +888,11 @@ public class ClaimedResidence {
 	    }
 	}
 
-	if (!ResidenceCommandListener.teleportMap.containsKey(targetPlayer.getName()) && !isAdmin) {
+	if (!ResidenceCommandListener.getTeleportMap().containsKey(targetPlayer.getName()) && !isAdmin) {
 	    int distance = isSafeTp(reqPlayer);
 	    if (distance > 6) {
 		reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportConfirm", String.valueOf(distance)));
-		ResidenceCommandListener.teleportMap.put(reqPlayer.getName(), this);
+		ResidenceCommandListener.getTeleportMap().put(reqPlayer.getName(), this);
 		return;
 	    }
 	}
@@ -917,7 +900,7 @@ public class ClaimedResidence {
 	if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !resadmin) {
 	    reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("TeleportStarted", this.getName() + "|" + Residence.getConfigManager()
 		.getTeleportDelay()));
-	    ResidenceCommandListener.teleportDelayMap.add(reqPlayer.getName());
+	    ResidenceCommandListener.getTeleportDelayMap().add(reqPlayer.getName());
 	}
 
 	if (tpLoc != null) {
@@ -929,7 +912,7 @@ public class ClaimedResidence {
 	    CuboidArea area = areas.values().iterator().next();
 	    if (area == null) {
 		reqPlayer.sendMessage(ChatColor.RED + "Could not find area to teleport to...");
-		ResidenceCommandListener.teleportDelayMap.remove(targetPlayer.getName());
+		ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
 		return;
 	    }
 	    final Location targloc = this.getMiddleFreeLoc(area.getHighLoc());
@@ -945,12 +928,12 @@ public class ClaimedResidence {
 	ResidenceTPEvent tpevent = new ResidenceTPEvent(this, targloc, targetPlayer, reqPlayer);
 	Residence.getServ().getPluginManager().callEvent(tpevent);
 	if (!tpevent.isCancelled()) {
-	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.instance, new Runnable() {
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 		public void run() {
-		    if (!ResidenceCommandListener.teleportDelayMap.contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
+		    if (!ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
 			return;
-		    else if (ResidenceCommandListener.teleportDelayMap.contains(targetPlayer.getName()))
-			ResidenceCommandListener.teleportDelayMap.remove(targetPlayer.getName());
+		    else if (ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()))
+			ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
 		    targetPlayer.teleport(targloc);
 		    if (near)
 			targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TeleportNear"));
@@ -983,6 +966,14 @@ public class ClaimedResidence {
 	return null;
     }
 
+    public CuboidArea getCuboidAreabyName(String name) {
+	for (Entry<String, CuboidArea> area : areas.entrySet()) {
+	    if (area.getKey().equals(name))
+		return area.getValue();
+	}
+	return null;
+    }
+
     public void removeArea(String id) {
 	Residence.getResidenceManager().removeChunkList(getName());
 	areas.remove(id);
@@ -990,8 +981,6 @@ public class ClaimedResidence {
     }
 
     public void removeArea(Player player, String id, boolean resadmin) {
-
-	Debug.D("parent " + parent.getName());
 	if (this.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (!areas.containsKey(id)) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaNonExist"));
@@ -1043,8 +1032,8 @@ public class ClaimedResidence {
     }
 
     @SuppressWarnings("unchecked")
-    public static ClaimedResidence load(Map<String, Object> root, ClaimedResidence parent) throws Exception {
-	ClaimedResidence res = new ClaimedResidence();
+    public static ClaimedResidence load(Map<String, Object> root, ClaimedResidence parent, Residence plugin) throws Exception {
+	ClaimedResidence res = new ClaimedResidence(plugin);
 	if (root == null)
 	    throw new Exception("Null residence!");
 
@@ -1081,7 +1070,7 @@ public class ClaimedResidence {
 
 	Map<String, Object> subzonemap = (Map<String, Object>) root.get("Subzones");
 	for (Entry<String, Object> map : subzonemap.entrySet()) {
-	    ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res);
+	    ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res, plugin);
 	    if (Residence.getConfigManager().flagsInherit())
 		subres.getPermissions().setParent(res.getPermissions());
 	    res.subzones.put(map.getKey(), subres);

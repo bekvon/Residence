@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
+import com.bekvon.bukkit.residence.containers.GuiItems;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ParticleEffects;
@@ -157,7 +158,10 @@ public class ConfigManager {
     protected ParticleEffects OverlapFrame;
     protected ParticleEffects OverlapSides;
 
-    public ConfigManager(FileConfiguration config, FileConfiguration flags, FileConfiguration groups) {
+    private Residence plugin;
+
+    public ConfigManager(FileConfiguration config, FileConfiguration flags, FileConfiguration groups, Residence plugin) {
+	this.plugin = plugin;
 	globalCreatorDefaults = new FlagPermissions();
 	globalResidenceDefaults = new FlagPermissions();
 	globalGroupDefaults = new HashMap<String, FlagPermissions>();
@@ -174,7 +178,7 @@ public class ConfigManager {
     }
 
     public void ChangeConfig(String path, Boolean stage) {
-	File f = new File(Residence.instance.getDataFolder(), "config.yml");
+	File f = new File(plugin.getDataFolder(), "config.yml");
 
 	BufferedReader in = null;
 	try {
@@ -265,7 +269,7 @@ public class ConfigManager {
 
     void UpdateFlagFile() {
 
-	File f = new File(Residence.instance.getDataFolder(), "flags.yml");
+	File f = new File(plugin.getDataFolder(), "flags.yml");
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 	Set<String> sections = conf.getConfigurationSection("Global.FlagPermission").getKeys(false);
@@ -274,6 +278,30 @@ public class ConfigManager {
 		continue;
 	    conf.createSection("Global.FlagPermission." + one.toLowerCase());
 	    conf.set("Global.FlagPermission." + one.toLowerCase(), false);
+	}
+
+	if (!conf.isConfigurationSection("Global.FlagGui"))
+	    conf.createSection("Global.FlagGui");
+
+	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
+	Set<String> flagGui = guiSection.getKeys(false);
+	for (String one : Locale.FlagList) {
+	    if (flagGui.contains(one.toLowerCase()))
+		continue;
+
+	    String lowOne = one.toLowerCase();
+	    GuiItems uno = null;
+	    try {
+		uno = GuiItems.valueOf(lowOne);
+	    } catch (IllegalArgumentException e) {
+		continue;
+	    }
+	    if (uno == null)
+		continue;
+
+	    guiSection.createSection(lowOne);
+	    guiSection.set(lowOne + ".Id", uno.getId());
+	    guiSection.set(lowOne + ".Data", uno.getData());
 	}
 
 	try {
@@ -285,7 +313,7 @@ public class ConfigManager {
 
     public void UpdateGroupedFlagsFile() {
 
-	File f = new File(Residence.instance.getDataFolder(), "flags.yml");
+	File f = new File(plugin.getDataFolder(), "flags.yml");
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 	if (!conf.isConfigurationSection("Global.GroupedFlags")) {
@@ -313,7 +341,7 @@ public class ConfigManager {
     @SuppressWarnings("deprecation")
 	void UpdateConfigFile() {
 
-	File f = new File(Residence.instance.getDataFolder(), "config.yml");
+	File f = new File(plugin.getDataFolder(), "config.yml");
 
 	BufferedReader in = null;
 	try {

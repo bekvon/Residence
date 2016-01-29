@@ -21,6 +21,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Locale {
 
     public static ArrayList<String> FlagList = new ArrayList<String>();
+    private Residence plugin;
+
+    public Locale(Residence plugin) {
+	this.plugin = plugin;
+    }
 
     public static String GetConfig(String path, String text, CommentedYamlConfiguration writer, YamlConfiguration conf, Boolean colorize) {
 	text = text.replace("\"", "\'");
@@ -74,9 +79,9 @@ public class Locale {
     }
 
     // Language file
-    public static void LoadLang(String lang) {
+    public void LoadLang(String lang) {
 
-	File f = new File(Residence.instance.getDataFolder(), "Language" + File.separator + lang + ".yml");
+	File f = new File(plugin.getDataFolder(), "Language" + File.separator + lang + ".yml");
 
 	BufferedReader in = null;
 	try {
@@ -118,24 +123,25 @@ public class Locale {
 	GetConfig("Language.NewPlayerInfo",
 	    "&eIf you want to create protected area for your house, please use wooden axe to select opposite sides of your home and execute command &2/res create YourResidenceName",
 	    writer, conf, true);
-	GetConfig("Language.InvalidResidence", "Invalid Residence...", writer, conf, true);
-	GetConfig("Language.InvalidSubzone", "Invalid Subzone...", writer, conf, true);
-	GetConfig("Language.InvalidDirection", "Invalid Direction...", writer, conf, true);
-	GetConfig("Language.InvalidAmount", "Invalid Amount...", writer, conf, true);
-	GetConfig("Language.InvalidCost", "Invalid Cost...", writer, conf, true);
-	GetConfig("Language.InvalidDays", "Invalid number of days...", writer, conf, true);
-	GetConfig("Language.InvalidMaterial", "Invalid Material...", writer, conf, true);
-	GetConfig("Language.InvalidBoolean", "Invalid value, must be true(t) or false(f)", writer, conf, true);
-	GetConfig("Language.InvalidArea", "Invalid Area...", writer, conf, true);
-	GetConfig("Language.InvalidGroup", "Invalid Group...", writer, conf, true);
+	GetConfig("Language.InvalidPlayer", "&cInvalid player name...", writer, conf, true);
+	GetConfig("Language.InvalidResidence", "&cInvalid Residence...", writer, conf, true);
+	GetConfig("Language.InvalidSubzone", "&cInvalid Subzone...", writer, conf, true);
+	GetConfig("Language.InvalidDirection", "&cInvalid Direction...", writer, conf, true);
+	GetConfig("Language.InvalidAmount", "&cInvalid Amount...", writer, conf, true);
+	GetConfig("Language.InvalidCost", "&cInvalid Cost...", writer, conf, true);
+	GetConfig("Language.InvalidDays", "&cInvalid number of days...", writer, conf, true);
+	GetConfig("Language.InvalidMaterial", "&cInvalid Material...", writer, conf, true);
+	GetConfig("Language.InvalidBoolean", "&cInvalid value, must be true(t) or false(f)", writer, conf, true);
+	GetConfig("Language.InvalidArea", "&cInvalid Area...", writer, conf, true);
+	GetConfig("Language.InvalidGroup", "&cInvalid Group...", writer, conf, true);
 	GetConfig("Language.UseNumbers", "&cPlease use numbers...", writer, conf, true);
 	GetConfig("Language.NotOwner", "&cYou are not owner of this residence", writer, conf, true);
 	GetConfig("Language.LookAtSign", "&cYou are not looking at sign", writer, conf, true);
 	writer.addComment("Language.CantPlaceLava", "Replace all text with '' to disable this message");
-	GetConfig("Language.CantPlaceLava", "You can't place lava outside residence and higher than %1 block level", writer, conf, true);
+	GetConfig("Language.CantPlaceLava", "&cYou can't place lava outside residence and higher than %1 block level", writer, conf, true);
 	writer.addComment("Language.CantPlaceWater", "Replace all text with '' to disable this message");
-	GetConfig("Language.CantPlaceWater", "You can't place Water outside residence and higher than %1 block level", writer, conf, true);
-	GetConfig("Language.InvalidMessageType", "Message type must be enter or remove.", writer, conf, true);
+	GetConfig("Language.CantPlaceWater", "&cYou can't place Water outside residence and higher than %1 block level", writer, conf, true);
+	GetConfig("Language.InvalidMessageType", "&cMessage type must be enter or remove.", writer, conf, true);
 	// GetConfig("Language.InvalidList", "Invalid List...", writer,
 	// conf, true);
 	GetConfig("Language.InvalidFlag", "Invalid Flag...", writer, conf, true);
@@ -195,6 +201,7 @@ public class Locale {
 	GetConfig("Language.FlagCheckFalse", "Flag %1 does not apply to player %2 for residence.", writer, conf, true);
 	GetConfig("Language.FlagsCleared", "Flags Cleared.", writer, conf, true);
 	GetConfig("Language.FlagsDefault", "Flags set to default.", writer, conf, true);
+	GetConfig("Language.DefaultUsage", "&eType &6/%1 ? &efor more info", writer, conf, true);
 	GetConfig("Language.Usage", "Command Usage", writer, conf, true);
 	GetConfig("Language.InvalidHelp", "Invalid Help Page...", writer, conf, true);
 	GetConfig("Language.SubCommands", "Sub Commands", writer, conf, true);
@@ -420,8 +427,8 @@ public class Locale {
 	GetConfig("Language.LimitsLeaseTime", "&7- &eLease Time Given on Renew:&3 %1", writer, conf, true);
 	GetConfig("Language.LimitsRenewCost", "&7- &eRenew Cost Per Block:&3 %1", writer, conf, true);
 	GetConfig("Language.LimitsBottom", "----------------------------------------", writer, conf, true);
-	GetConfig("Language.Gui.Set.Title", "&6%1% flags", writer, conf, true);
-	GetConfig("Language.Gui.Pset.Title", "&6%1% %2% flags", writer, conf, true);
+	GetConfig("Language.Gui.Set.Title", "&6%1 flags", writer, conf, true);
+	GetConfig("Language.Gui.Pset.Title", "&6%1 %2 flags", writer, conf, true);
 	GetConfig("Language.Gui.Actions", Arrays.asList("&2Left click to enable", "&cRight click to disable", "&eShift + left click to remove"), writer, conf, true);
 
 	GetConfig("Language.InformationPage.TopLine", "&e---< &a %1 &e >---", writer, conf, true);
@@ -777,6 +784,18 @@ public class Locale {
 	    "allow or deny bucket use", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bucket.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
+	// bucketfill
+	FlagList.add("bucketfill");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bucketfill.Description",
+	    "allow or deny bucket fill", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bucketfill.Info",
+	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
+	// bucketempty
+	FlagList.add("bucketempty");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bucketempty.Description",
+	    "allow or deny bucket empty", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.bucketempty.Info",
+	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// flow
 	FlagList.add("flow");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.flow.Description",
@@ -1061,6 +1080,17 @@ public class Locale {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.rt.Description", "Teleports to random location in world", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.rt.Info",
 	    Arrays.asList("Usage: /res rt", "Teleports you to random location in defined world."), writer, conf, true);
+
+	// res expand
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.expand.Description", "Expands residence in direction you looking", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.expand.Info",
+	    Arrays.asList("Usage: /res expand (residence) [amount]", "Expands residence in direction you looking.", "Residence name is optional"), writer, conf, true);
+
+	// res contract
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.contract.Description", "Contracts residence in direction you looking", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.contract.Info",
+	    Arrays.asList("Usage: /res contract (residence [amount])", "Contracts residence in direction you looking.", "Residence name is optional"), writer, conf,
+	    true);
 
 	// res shop
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.shop.Description", "Manage residence shop", writer, conf, true);

@@ -20,7 +20,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
-import com.bekvon.bukkit.residence.NewLanguage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -212,8 +211,8 @@ public class SignUtil {
 
 	    sign.setLine(1, infoLine);
 	    String shortName = fixResName(landName);
-	    sign.setLine(2, rented ? NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName)
-		: NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
+	    sign.setLine(2, rented ? Residence.getLM().getDefaultMessage("Language.SignRentedResName").replace("%1", shortName)
+		: Residence.getLM().getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
 	    sign.setLine(3, rented ? Residence.getLanguage().getPhrase("SignRentedBottomLine", Residence.getRentManager().getRentingPlayer(landName))
 		: Residence.getLanguage().getPhrase("SignForRentBottomLine"));
 	    sign.update();
@@ -225,7 +224,7 @@ public class SignUtil {
 	    sign.setLine(0, Residence.getLanguage().getPhrase("SignForSaleTopLine"));
 	    String infoLine = Residence.getLanguage().getPhrase("SignForSalePriceLine", String.valueOf(Residence.getTransactionManager().getSaleAmount(landName)));
 	    sign.setLine(1, infoLine);
-	    sign.setLine(2, NewLanguage.getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
+	    sign.setLine(2, Residence.getLM().getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
 	    sign.setLine(3, Residence.getLanguage().getPhrase("SignForSaleBottomLine"));
 	    sign.update();
 	}
