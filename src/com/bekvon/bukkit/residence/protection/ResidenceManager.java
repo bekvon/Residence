@@ -744,6 +744,11 @@ public class ResidenceManager {
     }
 
     public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin) {
+	if (!player.hasPermission("residence.rename")) {
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    return false;
+	}
+
 	if (!Residence.validName(newName)) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
 	    return false;
@@ -757,12 +762,24 @@ public class ResidenceManager {
 	}
 	if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (res.getParent() == null) {
-		if (residences.containsKey(newName)) {
-		    if (player != null)
-			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + newName + ChatColor.RED));
-		    return false;
+		if (Residence.getConfigManager().isResCreateCaseSensitive()) {
+		    if (residences.containsKey(newName)) {
+			if (player != null) {
+			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + newName + ChatColor.RED));
+			}
+			return false;
+		    }
+		} else {
+		    for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
+			if (one.getKey().equalsIgnoreCase(newName)) {
+			    if (player != null) {
+				player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyExists", ChatColor.YELLOW + one.getKey()
+				    + ChatColor.RED));
+			    }
+			    return false;
+			}
+		    }
 		}
-
 		ResidenceRenameEvent resevent = new ResidenceRenameEvent(res, newName, oldName);
 		Residence.getServ().getPluginManager().callEvent(resevent);
 		removeChunkList(oldName);

@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 2.10.0.1
+version: 2.10.1.1
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -44,6 +44,9 @@ permissions:
   residence.admin.move:
     description: Allows to override move flag
     default: op
+  residence.rename:
+    description: Allows you to rename residences
+    default: true
   residence.create:
     description: Allows you to create residences
     default: true
