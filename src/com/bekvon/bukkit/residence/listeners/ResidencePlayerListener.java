@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.listeners;
 
 import java.util.ArrayList;
@@ -41,7 +36,6 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -49,8 +43,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.ItemStack;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -63,10 +55,6 @@ import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.ActionBar;
 
-/**
- * 
- * @author Administrator
- */
 public class ResidencePlayerListener implements Listener {
 
     protected Map<String, String> currentRes;
@@ -377,21 +365,7 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onItemDamage(PlayerItemDamageEvent event) {
-	Player player = event.getPlayer();
-	Location loc = player.getLocation();
-	FlagPermissions perms = Residence.getPermsByLoc(loc);
-	if (perms.has("nodurability", false)) {
-	    ItemStack held = player.getItemInHand();
-	    if (held.getType() != Material.AIR) {
-		held.setDurability(held.getDurability());
-		player.setItemInHand(held);
-		event.setDamage(0);
-		event.setCancelled(true);
-	    }
-	}
-    }
+
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerSpawn(PlayerRespawnEvent event) {
@@ -830,7 +804,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 
-	    if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND) {
+	    if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND && Residence.getConfigManager().isBlockAnyTeleportation()) {
 		if (!res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
 		    String areaname = res.getName();
 		    event.setCancelled(true);
@@ -859,7 +833,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res.getPermissions().has("keepexp", false))
 	    event.setKeepLevel(true);
 
-	if (res.getPermissions().has("respawn", false))
+	if (res.getPermissions().has("respawn", false) && Bukkit.getVersion().toString().contains("Spigot"))
 	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 		public void run() {
 		    try {

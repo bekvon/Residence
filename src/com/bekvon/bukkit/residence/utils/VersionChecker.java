@@ -59,6 +59,7 @@ public class VersionChecker {
 	    public void run() {
 		String currentVersion = plugin.getDescription().getVersion();
 		String newVersion = getNewVersion();
+		Debug.D("new version: " + newVersion);
 		if (newVersion == null || newVersion.equalsIgnoreCase(currentVersion))
 		    return;
 		List<String> msg = Arrays.asList(
@@ -82,7 +83,7 @@ public class VersionChecker {
 	    con.setRequestMethod("POST");
 	    con.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resource).getBytes("UTF-8"));
 	    String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-	    if (version.length() <= 7)
+	    if (version.length() <= 9)
 		return version;
 	} catch (Exception ex) {
 	    plugin.consoleMessage(ChatColor.RED + "Failed to check for " + plugin.getDescription().getName() + " update on spigot web page.");

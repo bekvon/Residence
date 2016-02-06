@@ -47,8 +47,10 @@ import com.bekvon.bukkit.residence.gui.FlagUtil;
 import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
+import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
+import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -107,6 +109,10 @@ public class Residence extends JavaPlugin {
     protected static ResidencePlayerListener plistener;
     protected static ResidenceEntityListener elistener;
     protected static ResidenceSpoutListener slistener;
+
+    protected static ResidenceFixesListener flistener;
+
+    protected static SpigotListener spigotlistener;
     protected static ShopListener shlistener;
     protected static TransactionManager tmanager;
     protected static PermissionListManager pmanager;
@@ -506,15 +512,21 @@ public class Residence extends JavaPlugin {
 		blistener = new ResidenceBlockListener();
 		plistener = new ResidencePlayerListener(this);
 		elistener = new ResidenceEntityListener();
+		flistener = new ResidenceFixesListener();
 
 		shlistener = new ShopListener();
+		spigotlistener = new SpigotListener();
 
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(blistener, this);
 		pm.registerEvents(plistener, this);
 		pm.registerEvents(elistener, this);
+		pm.registerEvents(flistener, this);
 
 		pm.registerEvents(shlistener, this);
+
+		if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
+		    pm.registerEvents(spigotlistener, this);
 
 		NewLanguageManager = new NewLanguage(this);
 		getLM().LanguageReload();

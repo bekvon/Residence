@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -38,6 +39,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -48,6 +50,23 @@ public class ResidenceBlockListener implements Listener {
 
     private List<String> MessageInformed = new ArrayList<String>();
     private List<String> ResCreated = new ArrayList<String>();
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onTreeGrow(StructureGrowEvent event) {
+	ClaimedResidence startRes = Residence.getResidenceManager().getByLoc(event.getLocation());
+	List<BlockState> blocks = event.getBlocks();
+	int i = 0;
+	for (BlockState one : blocks) {
+	    ClaimedResidence targetRes = Residence.getResidenceManager().getByLoc(one.getLocation());
+	    if (startRes == null && targetRes != null ||
+		targetRes != null && startRes != null && !startRes.getName().equals(targetRes.getName()) && !startRes.getOwner().equals(targetRes.getOwner())) {
+		BlockState matas = blocks.get(i);
+		matas.setType(Material.AIR);
+		blocks.set(i, matas);
+	    }
+	    i++;
+	}
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -202,6 +221,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
+
 	Player player = event.getPlayer();
 	if (Residence.isResAdminOn(player)) {
 	    return;
@@ -309,6 +329,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFromTo(BlockFromToEvent event) {
+
 	FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
 	boolean hasflow = perms.has("flow", true);
 	Material mat = event.getBlock().getType();

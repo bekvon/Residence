@@ -16,6 +16,8 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -304,7 +306,9 @@ public class ClaimedResidence {
 	}
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
+		Debug.D("1");
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		Debug.D("2");
 		return false;
 	    }
 	    if (parent != null) {
@@ -318,7 +322,7 @@ public class ClaimedResidence {
 		}
 	    }
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-	    if (!group.canCreateResidences() && !player.hasPermission("residence.create")) {
+	    if (!group.canCreateResidences() && !player.hasPermission("residence.resize")) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		return false;
 	    }

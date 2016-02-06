@@ -31,10 +31,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-/**
- *
- * @author Administrator
- */
 public class ConfigManager {
     protected String defaultGroup;
     protected boolean useLeases;
@@ -53,6 +49,7 @@ public class ConfigManager {
     protected boolean OverridePvp;
     protected boolean ResCreateCaseSensitive;
     protected boolean ResTpCaseSensitive;
+    protected boolean BlockAnyTeleportation;
     protected int infoToolId;
     protected int AutoCleanUpDays;
     protected int selectionToolId;
@@ -138,6 +135,7 @@ public class ConfigManager {
     protected List<String> BlockFallWorlds;
     protected List<String> CleanWorlds;
     protected List<String> FlagsList;
+    protected List<String> NegativePotionEffects;
 
     protected Location KickLocation;
 
@@ -405,6 +403,11 @@ public class ConfigManager {
 	    "Don't disable this if you already have some duplicating residences in your database as this will prevent players from teleporting to one of them");
 	ResTpCaseSensitive = GetConfig("Global.Optimizations.ResTpCaseSensitive", true, writer, conf);
 
+	writer.addComment("Global.Optimizations.BlockAnyTeleportation",
+	    "When this set to true, any teleportation to residence where player dont have tp flag, action will be denyied",
+	    "This can prevent from teleporting players to residence with 3rd party plugins like esentials /tpa");
+	BlockAnyTeleportation = GetConfig("Global.Optimizations.BlockAnyTeleportation", true, writer, conf);
+
 	writer.addComment("Global.Optimizations.MaxResCount", "Set this as low as posible depending of residence.max.res.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
 	MaxResCount = GetConfig("Global.Optimizations.MaxResCount", 30, writer, conf);
@@ -456,6 +459,12 @@ public class ConfigManager {
 	    "Bigger numbers can save some resources");
 	HealInterval = GetConfig("Global.Optimizations.Intervals.Heal", 1, writer, conf);
 	FeedInterval = GetConfig("Global.Optimizations.Intervals.Feed", 5, writer, conf);
+
+	// negative potion effect list
+	writer.addComment("Global.Optimizations.NegativePotionEffects",
+	    "Potions containing one of thos effects will be ignored if residence dont have pvp true flag set");
+	NegativePotionEffects = GetConfig("Global.Optimizations.NegativePotionEffects", Arrays.asList("blindness", "confusion", "harm", "hunger", "poison", "slow",
+	    "slow_digging", "weakness", "wither"), writer, conf, false);
 
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
@@ -967,6 +976,10 @@ public class ConfigManager {
 	return ResTpCaseSensitive;
     }
 
+    public boolean isBlockAnyTeleportation() {
+	return BlockAnyTeleportation;
+    }
+
     public boolean isResCreateCaseSensitive() {
 	return ResCreateCaseSensitive;
     }
@@ -1217,6 +1230,10 @@ public class ConfigManager {
 
     public List<String> getBlockFallWorlds() {
 	return BlockFallWorlds;
+    }
+
+    public List<String> getNegativePotionEffects() {
+	return NegativePotionEffects;
     }
 
     public List<String> getCleanWorlds() {

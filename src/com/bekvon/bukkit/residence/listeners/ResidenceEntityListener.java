@@ -51,6 +51,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.potion.PotionEffect;
 
 /**
  *
@@ -363,7 +364,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakEvent event) {
-	
+
 	if (!(event instanceof HangingBreakByEntityEvent))
 	    return;
 
@@ -511,6 +512,19 @@ public class ResidenceEntityListener implements Listener {
     public void onSplashPotion(PotionSplashEvent event) {
 	if (event.isCancelled())
 	    return;
+
+	boolean harmfull = false;
+	mein: for (PotionEffect one : event.getPotion().getEffects()) {
+	    for (String oneHarm : Residence.getConfigManager().getNegativePotionEffects()) {
+		if (oneHarm.equalsIgnoreCase(one.getType().getName())) {
+		    harmfull = true;
+		    break mein;
+		}
+	    }
+	}
+	if (!harmfull)
+	    return;
+
 	Entity ent = event.getEntity();
 	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has("pvp", true);
 	Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
