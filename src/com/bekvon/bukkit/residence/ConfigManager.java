@@ -494,7 +494,7 @@ public class ConfigManager {
 		for (String one : conf.getConfigurationSection("Global.RandomTeleportation").getKeys(false)) {
 		    String path = "Global.RandomTeleportation." + one + ".";
 
-		    writer.addComment("Global.RandomTeleportation." + one, "World to use this function, set main residence world");
+		    writer.addComment("Global.RandomTeleportation." + one, "World name to use this feature. Add annother one with appropriate name to enable random teleportation");
 
 		    writer.addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
 		    int MaxCoord = GetConfig(path + "MaxCoord", 1000, writer, conf);
@@ -539,12 +539,21 @@ public class ConfigManager {
 	writer.addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = GetConfig("Global.SaveInterval", 10, writer, conf);
 
+	// Auto remove old residences
 	writer.addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
 	    "Players can bypass this wih residence.cleanbypass permission node");
 	AutoCleanUp = GetConfig("Global.AutoCleanUp.Use", false, writer, conf);
 	writer.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
 	AutoCleanUpDays = GetConfig("Global.AutoCleanUp.Days", 60, writer, conf);
 	writer.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
+	AutoCleanUpWorlds = GetConfig("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+	
+	writer.addComment("Global.LWC.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
+	    "Players can bypass this wih residence.cleanbypass permission node");
+	AutoCleanUp = GetConfig("Global.AutoCleanUp.Use", false, writer, conf);
+	writer.addComment("Global.LWC.Days", "For how long player should be offline to delete hes LWC protection on residence removal");
+	AutoCleanUpDays = GetConfig("Global.AutoCleanUp.Days", 60, writer, conf);
+	writer.addComment("Global.LWC.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = GetConfig("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
 
 	// Flow

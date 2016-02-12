@@ -76,6 +76,8 @@ import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
+import com.griefcraft.lwc.LWC;
+import com.griefcraft.lwc.LWCPlugin;
 import com.residence.mcstats.Metrics;
 import com.residence.zip.ZipLibrary;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -159,6 +161,7 @@ public class Residence extends JavaPlugin {
     private static String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
     private static NMS nms;
+    static LWC lwc;
 
     public static NMS getNms() {
 	return nms;
@@ -359,6 +362,10 @@ public class Residence extends JavaPlugin {
 	    PlayerManager = new PlayerManager(this);
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
+
+	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
+	    if (lwcp != null)
+		lwc = ((LWCPlugin) lwcp).getLWC();
 
 	    for (String lang : validLanguages) {
 		YmlMaker langFile = new YmlMaker((JavaPlugin) this, "Language" + File.separator + lang + ".yml");
@@ -647,6 +654,10 @@ public class Residence extends JavaPlugin {
 
     public static VersionChecker getVersionChecker() {
 	return versionChecker;
+    }
+
+    public static LWC getLwc() {
+	return lwc;
     }
 
     public static File getDataLocation() {

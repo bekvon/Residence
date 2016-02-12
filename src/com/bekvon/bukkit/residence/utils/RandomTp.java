@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -79,19 +80,28 @@ public class RandomTp {
 
 	    loc = new Location(world, x, world.getMaxHeight(), z);
 
-	    int from = (int) loc.getY();
-	    for (int i = 0; i < loc.getWorld().getMaxHeight(); i++) {
-		loc.setY(from - i);
+	    int max = loc.getWorld().getMaxHeight();
+	    max = loc.getWorld().getEnvironment() == Environment.NETHER ? 100 : max;
+
+	    for (int i = max; i > 0; i--) {
+		loc.setY(i);
 		Block block = loc.getBlock();
-		if (!Residence.getNms().isEmptyBlock(block)) {
+		Block block2 = loc.clone().add(0, 1, 0).getBlock();
+		Block block3 = loc.clone().add(0, -1, 0).getBlock();
+		if (!Residence.getNms().isEmptyBlock(block3) && Residence.getNms().isEmptyBlock(block) && Residence.getNms().isEmptyBlock(block2)) {
 		    break;
 		}
 	    }
 
-	    if (loc.getBlock().getState().getType() == Material.LAVA || loc.getBlock().getState().getType() == Material.STATIONARY_LAVA)
+	    if (!Residence.getNms().isEmptyBlock(loc.getBlock()))
 		continue;
 
-	    if (loc.getBlock().getState().getType() == Material.WATER || loc.getBlock().getState().getType() == Material.STATIONARY_WATER)
+	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.LAVA || loc.clone().add(0, -1, 0).getBlock().getState()
+		.getType() == Material.STATIONARY_LAVA)
+		continue;
+
+	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.WATER || loc.clone().add(0, -1, 0).getBlock().getState()
+		.getType() == Material.STATIONARY_WATER)
 		continue;
 
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);

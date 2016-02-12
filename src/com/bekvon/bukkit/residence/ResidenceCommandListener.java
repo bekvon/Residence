@@ -125,7 +125,7 @@ public class ResidenceCommandListener extends Residence {
 		}
 	    }
 	    return false;
-	} else if (command.getName().equals("rc")) {	        
+	} else if (command.getName().equals("rc")) {
 	    if (!(sender instanceof Player))
 		return true;
 	    Player player = (Player) sender;
@@ -367,7 +367,63 @@ public class ResidenceCommandListener extends Residence {
 	if (cmd.equals("confirm")) {
 	    return commandResConfirm(args, resadmin, sender, page);
 	}
-
+	
+	// Test code for area regeneration with WE plugin
+//	if (cmd.equals("test")) {
+//	    final long time = System.currentTimeMillis();
+//
+//	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+//
+//	    final CuboidArea area = res.getAreaArray()[0];
+//
+//	    final int startX = area.getLowLoc().getBlockX();
+//	    final int startY = area.getLowLoc().getBlockY();
+//	    final int startZ = area.getLowLoc().getBlockZ();
+//
+//	    final int lX = area.getXSize();
+//	    final int lY = area.getYSize();
+//	    final int lZ = area.getZSize();
+//	    Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), new Runnable() {
+//		@Override
+//		public void run() {
+//		    int i = 0;
+//
+//		    List<Block> blocks = new ArrayList<Block>();
+//
+//		    for (int x = startX; x < startX + lX; x++) {
+//			for (int y = startY; y < startY + lY; y++) {
+//			    for (int z = startZ; z < startZ + lZ; z++) {
+//
+//				Protection prot = Residence.getLwc().getProtectionCache().getProtection(area.getWorld().getName() + ":" + x + ":" + y + ":" + z);
+//
+//				if (prot == null)
+//				    continue;
+//				i++;
+//
+//				Debug.D("" + prot.getOwner() + "  " + prot.getFormattedOwnerPlayerName());
+//				Debug.D("" + prot.getX() + ":" + prot.getY() + ":" + prot.getZ());
+//			    }
+//			}
+//		    }
+//
+//		    Debug.D("baigtas test " + (System.currentTimeMillis() - time) + "   " + i + "   " + blocks.size());
+//
+//		    return;
+//		}
+//	    });
+//	    
+//	    Selection selection = new CuboidSelection(this.getC1().getWorld(),this.getC1(), this.getC2());
+//
+//		CuboidSelection selection = new CuboidSelection(player.getWorld(), area.getLowLoc(), area.getHighLoc());
+//		
+//	        try {
+//	            Region region = selection.getRegionSelector().getRegion();
+//	            region.getWorld().regenerate(region, WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1));
+//	        } catch (IncompleteRegionException e) {
+//	        }      
+//	    
+//	    return true;
+//	}
 	if (cmd.equals("version")) {
 	    sender.sendMessage(ChatColor.GRAY + "------------------------------------");
 	    sender.sendMessage(ChatColor.RED + "This server running " + ChatColor.GOLD + "Residence" + ChatColor.RED + " version: " + ChatColor.BLUE + this

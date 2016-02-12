@@ -28,6 +28,7 @@ public class WorldEditSelectionManager extends SelectionManager {
     public boolean worldEdit(Player player) {
 	WorldEditPlugin wep = (WorldEditPlugin) this.server.getPluginManager().getPlugin("WorldEdit");
 	Selection sel = wep.getSelection(player);
+		
 	if (sel != null) {
 	    Location pos1 = sel.getMinimumPoint();
 	    Location pos2 = sel.getMaximumPoint();
