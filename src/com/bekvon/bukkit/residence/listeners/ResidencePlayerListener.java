@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Damageable;
@@ -335,9 +336,7 @@ public class ResidencePlayerListener implements Listener {
 	lastOutsideLoc.remove(pname);
 	Residence.getChatManager().removeFromChannel(pname);
 	Residence.getPlayerListener().removePlayerResidenceChat(pname);
-
-	Residence.getOfflinePlayerMap().put(pname, event.getPlayer());
-
+	Residence.getOfflinePlayerMap().put(pname, (OfflinePlayer) event.getPlayer());
 	if (AutoSelection.getList().containsKey(pname.toLowerCase()))
 	    AutoSelection.getList().remove(pname);
     }
@@ -364,8 +363,6 @@ public class ResidencePlayerListener implements Listener {
 	    Residence.getVersionChecker().VersionCheck(player);
 	}
     }
-
-
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerSpawn(PlayerRespawnEvent event) {

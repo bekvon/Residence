@@ -672,6 +672,7 @@ public class ResidenceManager {
 	    long time = System.currentTimeMillis();
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
+	    plugin.getLogger().info("Loading " + world.getName() + " data into memory...");
 	    if (reslist != null) {
 		try {
 		    resm.chunkResidences.put(world.getName(), loadMap(world.getName(), reslist, resm));
@@ -681,53 +682,60 @@ public class ResidenceManager {
 			throw (ex);
 		}
 	    }
-	    plugin.getLogger().info("Loading " + world.getName() + " data into memory. (" + (System.currentTimeMillis() - time) + " ms)");
+	    	    
+	    long pass = System.currentTimeMillis() - time;
+	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
+
+	    plugin.getLogger().info("Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
 	}
 	return resm;
     }
 
     public Map<ChunkRef, List<String>> loadMap(String worldName, Map<String, Object> root, ResidenceManager resm) throws Exception {
 	Map<ChunkRef, List<String>> retRes = new HashMap<>();
-	if (root != null) {
-	    int i = 0;
-	    int y = 0;
-	    for (Entry<String, Object> res : root.entrySet()) {
-		if (i == 100 & Residence.getConfigManager().isUUIDConvertion())
-		    Bukkit.getConsoleSender().sendMessage("[Residence] " + worldName + " UUID conversion done: " + y + " of " + root.size());
-		if (i >= 100)
-		    i = 0;
-		i++;
-		y++;
-		try {
-		    @SuppressWarnings("unchecked")
-		    ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null, plugin);
-		    if (residence.getPermissions().getOwnerUUID().toString().equals(Residence.getServerLandUUID()) && !residence.getOwner().equalsIgnoreCase(
-			"Server land") && !residence.getOwner().equalsIgnoreCase(Residence.getServerLandname()))
-			continue;
+	if (root == null)
+	    return retRes;
 
-		    if (residence.getOwner().equalsIgnoreCase("Server land")) {
-			residence.getPermissions().setOwner(Residence.getServerLandname(), false);
-		    }
+	int i = 0;
+	int y = 0;
+	for (Entry<String, Object> res : root.entrySet()) {
+	    if (i == 100 & Residence.getConfigManager().isUUIDConvertion())
+		Bukkit.getConsoleSender().sendMessage("[Residence] " + worldName + " UUID conversion done: " + y + " of " + root.size());
+	    if (i >= 100)
+		i = 0;
+	    i++;
+	    y++;
+	    try {
+		@SuppressWarnings("unchecked")
+		ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null, plugin);
+		if (residence.getPermissions().getOwnerUUID().toString().equals(Residence.getServerLandUUID()) &&
+		    !residence.getOwner().equalsIgnoreCase("Server land") &&
+		    !residence.getOwner().equalsIgnoreCase(Residence.getServerLandname()))
+		    continue;
 
-		    for (ChunkRef chunk : getChunks(residence)) {
-			List<String> ress = new ArrayList<>();
-			if (retRes.containsKey(chunk)) {
-			    ress.addAll(retRes.get(chunk));
-			}
-			ress.add(res.getKey());
-			retRes.put(chunk, ress);
-		    }
+		if (residence.getOwner().equalsIgnoreCase("Server land")) {
+		    residence.getPermissions().setOwner(Residence.getServerLandname(), false);
+		}
 
-		    resm.residences.put(res.getKey(), residence);
-		} catch (Exception ex) {
-		    System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
-		    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
-		    if (Residence.getConfigManager().stopOnSaveError()) {
-			throw (ex);
+		for (ChunkRef chunk : getChunks(residence)) {
+		    List<String> ress = new ArrayList<>();
+		    if (retRes.containsKey(chunk)) {
+			ress.addAll(retRes.get(chunk));
 		    }
+		    ress.add(res.getKey());
+		    retRes.put(chunk, ress);
+		}
+
+		resm.residences.put(res.getKey(), residence);
+	    } catch (Exception ex) {
+		System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
+		Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
+		if (Residence.getConfigManager().stopOnSaveError()) {
+		    throw (ex);
 		}
 	    }
 	}
+
 	return retRes;
     }
 

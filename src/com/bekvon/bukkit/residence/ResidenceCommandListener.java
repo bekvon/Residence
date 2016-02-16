@@ -367,7 +367,7 @@ public class ResidenceCommandListener extends Residence {
 	if (cmd.equals("confirm")) {
 	    return commandResConfirm(args, resadmin, sender, page);
 	}
-	
+
 	// Test code for area regeneration with WE plugin
 //	if (cmd.equals("test")) {
 //	    final long time = System.currentTimeMillis();
@@ -602,27 +602,34 @@ public class ResidenceCommandListener extends Residence {
 	    return false;
 	}
 	if (cmd.equals("padd")) {
+	    String baseCmd = "res";
+	    if (resadmin)
+		baseCmd = "resadmin";
 	    if (args.length == 2) {
 		if (!Residence.isPlayerExist(player, args[1], true))
 		    return false;
-		Bukkit.dispatchCommand(player, "res pset " + args[1] + " trusted true");
+
+		Bukkit.dispatchCommand(player, baseCmd + " pset " + args[1] + " trusted true");
 		return true;
 	    }
 	    if (args.length == 3) {
 		if (!Residence.isPlayerExist(player, args[2], true))
 		    return false;
-		Bukkit.dispatchCommand(player, "res pset " + args[1] + " " + args[2] + " trusted true");
+		Bukkit.dispatchCommand(player, baseCmd + " pset " + args[1] + " " + args[2] + " trusted true");
 		return true;
 	    }
 	    return false;
 	}
 	if (cmd.equals("pdel")) {
+	    String baseCmd = "res";
+	    if (resadmin)
+		baseCmd = "resadmin";
 	    if (args.length == 2) {
-		Bukkit.dispatchCommand(player, "res pset " + args[1] + " trusted remove");
+		Bukkit.dispatchCommand(player, baseCmd + " pset" + args[1] + " trusted remove");
 		return true;
 	    }
 	    if (args.length == 3) {
-		Bukkit.dispatchCommand(player, "res pset " + args[1] + " " + args[2] + " trusted remove");
+		Bukkit.dispatchCommand(player, baseCmd + " pset " + args[1] + " " + args[2] + " trusted remove");
 		return true;
 	    }
 	    return false;

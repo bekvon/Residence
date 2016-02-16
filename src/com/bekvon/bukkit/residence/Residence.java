@@ -455,19 +455,34 @@ public class Residence extends JavaPlugin {
 		}
 	    }
 
-	    Bukkit.getConsoleSender().sendMessage("[Residence] Loading (" + Bukkit.getOfflinePlayers().length + ") player data");
-	    for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-		if (player == null)
-		    continue;
-
-		String name = player.getName();
-		if (name == null)
-		    continue;
-
-		getOfflinePlayerMap().put(name.toLowerCase(), player);
+	    // Only fill if we need to convert player data
+	    if (getConfigManager().isUUIDConvertion()) {
+		Bukkit.getConsoleSender().sendMessage("[Residence] Loading (" + Bukkit.getOfflinePlayers().length + ") player data");
+		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+		    if (player == null)
+			continue;
+		    String name = player.getName();
+		    if (name == null)
+			continue;
+		    getOfflinePlayerMap().put(name.toLowerCase(), player);
+		}
+		Bukkit.getConsoleSender().sendMessage("[Residence] Player data loaded: " + getOfflinePlayerMap().size());
+	    } else {
+		Bukkit.getScheduler().runTaskAsynchronously(Residence.this, new Runnable() {
+		    @Override
+		    public void run() {
+			for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+			    if (player == null)
+				continue;
+			    String name = player.getName();
+			    if (name == null)
+				continue;
+			    getOfflinePlayerMap().put(name.toLowerCase(), player);
+			}
+			return;
+		    }
+		});
 	    }
-
-	    Bukkit.getConsoleSender().sendMessage("[Residence] Player data loaded: " + getOfflinePlayerMap().size());
 
 	    if (rmanager == null) {
 		rmanager = new ResidenceManager(this);
@@ -983,11 +998,15 @@ public class Residence extends JavaPlugin {
 		loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-//		    this.getLogger().info("Loading save data for world " + world.getName() + "...");
+		    this.getLogger().info("Loading save data for world " + world.getName() + "...");
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
 		    worlds.put(world.getName(), yml.getRoot().get("Residences"));
-		    this.getLogger().info("Reading " + world.getName() + " data. (" + (System.currentTimeMillis() - time) + " ms)");
+
+		    int pass = (int) (System.currentTimeMillis() - time);
+		    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
+
+		    this.getLogger().info("Loaded " + world.getName() + " data. (" + PastTime + ")");
 		}
 	    }
 
@@ -1290,7 +1309,10 @@ public class Residence extends JavaPlugin {
 	if (OfflinePlayerList.containsKey(Name.toLowerCase())) {
 	    return getOfflinePlayerMap().get(Name.toLowerCase());
 	}
-	return Bukkit.getOfflinePlayer(Name);
+	OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(Name);
+	if (offPlayer != null)
+	    getOfflinePlayerMap().put(Name.toLowerCase(), offPlayer);
+	return offPlayer;
     }
 
     public static String getPlayerUUIDString(String playername) {
