@@ -1033,21 +1033,34 @@ public class ResidenceCommandListener extends Residence {
 			return true;
 		    }
 		    vote = Residence.getConfigManager().getVoteRangeTo();
-		} else if (!Residence.getConfigManager().isOnlyLike()) {
-
+		} else if (args.length == 4 && !Residence.getConfigManager().isOnlyLike()) {
 		    res = Residence.getResidenceManager().getByName(args[2]);
 		    if (res == null) {
 			player.sendMessage(Residence.getLanguage().getPhrase("InvalidResidence"));
 			return true;
 		    }
-
 		    try {
 			vote = Integer.parseInt(args[3]);
 		    } catch (Exception ex) {
 			player.sendMessage(Residence.getLanguage().getPhrase("UseNumbers"));
 			return true;
 		    }
+		} else if (args.length == 3 && !Residence.getConfigManager().isOnlyLike()) {
+		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    if (res == null) {
+			player.sendMessage(Residence.getLanguage().getPhrase("InvalidResidence"));
+			return true;
+		    }
+		    try {
+			vote = Integer.parseInt(args[3]);
+		    } catch (Exception ex) {
+			player.sendMessage(Residence.getLanguage().getPhrase("UseNumbers"));
+			return true;
+		    }
+		} else {
+		    return false;
 		}
+
 		resName = res.getName();
 
 		if (!res.getPermissions().has("shop", false)) {
