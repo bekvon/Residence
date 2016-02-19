@@ -29,7 +29,7 @@ import com.bekvon.bukkit.residence.Residence;
 public class v1_8 implements NMS {
     @Override
     public List<Block> getPistonRetractBlocks(BlockPistonRetractEvent event) {
-	List<Block> blocks = new ArrayList<Block>();	
+	List<Block> blocks = new ArrayList<Block>();
 	blocks.addAll(event.getBlocks());
 	return blocks;
     }
@@ -124,5 +124,9 @@ public class v1_8 implements NMS {
 	matUseFlagList.put(Material.ACACIA_FENCE_GATE, "door");
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, "door");
 	matUseFlagList.put(Material.IRON_TRAPDOOR, "door");
+    }
+
+    public boolean isPlate(Material mat) {
+	return mat == Material.GOLD_PLATE || mat == Material.IRON_PLATE;
     }
 }

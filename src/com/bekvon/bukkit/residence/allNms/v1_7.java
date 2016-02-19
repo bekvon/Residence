@@ -98,4 +98,8 @@ public class v1_7 implements NMS {
     @Override
     public void addDefaultFlags(Map<Material, String> matUseFlagList) {
     }
+
+    public boolean isPlate(Material mat) {
+	return false;
+    }
 }

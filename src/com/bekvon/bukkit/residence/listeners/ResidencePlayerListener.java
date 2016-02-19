@@ -450,104 +450,148 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlatePress(PlayerInteractEvent event) {
+	if (event.getAction() != Action.PHYSICAL)
+	    return;
+	Block block = event.getClickedBlock();
+	if (block == null)
+	    return;
+	Material mat = block.getType();
+	Player player = event.getPlayer();
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
+	String world = player.getWorld().getName();
+	boolean resadmin = Residence.isResAdminOn(player);
+	if (!resadmin) {
+	    boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
+	    boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
+	    if ((!hasuse && !haspressure || !haspressure) && (mat == Material.STONE_PLATE || mat == Material.WOOD_PLATE || Residence.getNms().isPlate(mat))) {
+		event.setCancelled(true);
+		return;
+	    }
+	}
+	if (!perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true)) && (mat == Material.SOIL
+	    || mat == Material.SOUL_SAND)) {
+	    event.setCancelled(true);
+	    return;
+	}
+	return;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onSelection(PlayerInteractEvent event) {
+	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+	    return;
+
+	Player player = event.getPlayer();
+	@SuppressWarnings("deprecation")
+	int heldItemId = player.getItemInHand().getTypeId();
+
+	if (heldItemId != Residence.getConfigManager().getSelectionTooldID())
+	    return;
+
+	if (Residence.wepid == Residence.getConfigManager().getSelectionTooldID())
+	    return;
+
+	if (player.getGameMode() == GameMode.CREATIVE)
+	    event.setCancelled(true);
+
+	boolean resadmin = Residence.isResAdminOn(player);
+
+	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+	if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group
+	    .canCreateResidences() && !player.isPermissionSet("residence.create") && !player.isPermissionSet("residence.select") || resadmin) {
+
+	    Block block = event.getClickedBlock();
+
+	    if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+		Location loc = block.getLocation();
+		Residence.getSelectionManager().placeLoc1(player, loc, true);
+		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Primary")) + ChatColor.RED
+		    + "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
+		event.setCancelled(true);
+	    } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		Location loc = block.getLocation();
+		Residence.getSelectionManager().placeLoc2(player, loc, true);
+		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Secondary")) + ChatColor.RED
+		    + "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
+		event.setCancelled(true);
+	    }
+
+	    if (Residence.getSelectionManager().hasPlacedBoth(player.getName()))
+		Residence.getSelectionManager().showSelectionInfoInActionBar(player);
+	}
+	return;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onInfoCheck(PlayerInteractEvent event) {
+	if (event.getAction() != Action.LEFT_CLICK_BLOCK)
+	    return;
+	Block block = event.getClickedBlock();
+	if (block == null)
+	    return;
+	Player player = event.getPlayer();
+	@SuppressWarnings("deprecation")
+	int heldItemId = player.getItemInHand().getTypeId();
+
+	if (heldItemId != Residence.getConfigManager().getInfoToolID())
+	    return;
+
+	Location loc = block.getLocation();
+	String res = Residence.getResidenceManager().getNameByLoc(loc);
+	if (res != null)
+	    Residence.getResidenceManager().printAreaInfo(res, player);
+	else
+	    player.sendMessage(Residence.getLanguage().getPhrase("NoResHere"));
+	event.setCancelled(true);
+	return;
+
+    }
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 	Player player = event.getPlayer();
-	Material heldItem = player.getItemInHand().getType();
 	int heldItemId = player.getItemInHand().getTypeId();
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
 
-	int blockId = block.getTypeId();
-
 	Material mat = block.getType();
-	if (!((isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK || Residence.getNms()
-	    .isCanUseEntity_BothClick(mat, block)
-	    || event.getAction() == Action.PHYSICAL)) {
+	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
+	    || Residence.getNms().isCanUseEntity_BothClick(mat, block))) {
 	    if (heldItemId != Residence.getConfigManager().getSelectionTooldID() && heldItemId != Residence.getConfigManager().getInfoToolID() && heldItemId != 351
 		&& heldItemId != 416) {
 		return;
 	    }
 	}
 
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
+	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+	    return;
+
 	String world = player.getWorld().getName();
 	String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
 	boolean resadmin = Residence.isResAdminOn(player);
-	if (event.getAction() == Action.PHYSICAL) {
-	    if (!resadmin) {
-		boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
-		boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
-		if ((!hasuse && !haspressure || !haspressure) && (mat == Material.STONE_PLATE || mat == Material.WOOD_PLATE)) {
-		    event.setCancelled(true);
-		    return;
-		}
-	    }
-	    if (!perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true)) && (mat == Material.SOIL
-		|| mat == Material.SOUL_SAND)) {
-		event.setCancelled(true);
-		return;
-	    }
-	    return;
-	}
+	Material heldItem = player.getItemInHand().getType();
 	if (!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ItemBlacklisted"));
 	    event.setCancelled(true);
 	    return;
 	}
-	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
-	    return;
-
-	if (heldItemId == Residence.getConfigManager().getSelectionTooldID()) {
-	    if (Residence.wepid == Residence.getConfigManager().getSelectionTooldID())
-		return;
-	    if (player.getGameMode() == GameMode.CREATIVE)
-		event.setCancelled(true);
-
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-	    if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group
-		.canCreateResidences() && !player.isPermissionSet("residence.create") && !player.isPermissionSet("residence.select") || resadmin) {
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-		    Location loc = block.getLocation();
-		    Residence.getSelectionManager().placeLoc1(player, loc, true);
-		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Primary")) + ChatColor.RED
-			+ "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
-		    event.setCancelled(true);
-		} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-		    Location loc = block.getLocation();
-		    Residence.getSelectionManager().placeLoc2(player, loc, true);
-		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SelectPoint", Residence.getLanguage().getPhrase("Secondary")) + ChatColor.RED
-			+ "(" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + ")" + ChatColor.GREEN + "!");
-		    event.setCancelled(true);
-		}
-
-		if (Residence.getSelectionManager().hasPlacedBoth(player.getName()))
-		    Residence.getSelectionManager().showSelectionInfoInActionBar(player);
-	    }
-	    return;
-	}
-
-	if (heldItemId == Residence.getConfigManager().getInfoToolID() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
-	    Location loc = block.getLocation();
-	    String res = Residence.getResidenceManager().getNameByLoc(loc);
-	    if (res != null)
-		Residence.getResidenceManager().printAreaInfo(res, player);
-	    else
-		player.sendMessage(Residence.getLanguage().getPhrase("NoResHere"));
-	    event.setCancelled(true);
-	}
 
 	if (resadmin)
 	    return;
 
+	int blockId = block.getTypeId();
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
 	if (heldItem != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 	    if (heldItemId == 351) {
 		if (player.getItemInHand().getData().getData() == 15 && block.getType() == Material.GRASS || player.getItemInHand().getData().getData() == 3
 		    && blockId == 17 && (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15)) {
 		    perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		    if (!perms.playerHas(player.getName(), world, "build", true)) {
+			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
 			event.setCancelled(true);
 			return;
 		    }
@@ -618,13 +662,30 @@ public class ResidencePlayerListener implements Listener {
 	if (ent.getType() != EntityType.VILLAGER)
 	    return;
 
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getPlayer().getLocation());
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
 
 	if (res != null && !res.getPermissions().playerHas(player.getName(), "trade", true)) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "trade"));
 	    event.setCancelled(true);
 	}
+    }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerDyeSheep(PlayerInteractEntityEvent event) {
+	Player player = event.getPlayer();
+	if (Residence.isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getRightClicked();
+	/* Dye */
+	if (ent.getType() != EntityType.SHEEP)
+	    return;
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	if (res != null && !res.getPermissions().playerHas(player.getName(), "dye", true)) {
+	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "dye"));
+	    event.setCancelled(true);
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

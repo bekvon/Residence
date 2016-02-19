@@ -736,6 +736,12 @@ public class Locale {
 	    "allows or denys sheep shear", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.shear.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
+	// dye
+	FlagList.add("dye");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.dye.Description",
+	    "allows or denys sheep dyeing", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.dye.Info",
+	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// leash
 	FlagList.add("leash");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.leash.Description",

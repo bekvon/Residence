@@ -625,7 +625,7 @@ public class ResidenceCommandListener extends Residence {
 	    if (resadmin)
 		baseCmd = "resadmin";
 	    if (args.length == 2) {
-		Bukkit.dispatchCommand(player, baseCmd + " pset" + args[1] + " trusted remove");
+		Bukkit.dispatchCommand(player, baseCmd + " pset " + args[1] + " trusted remove");
 		return true;
 	    }
 	    if (args.length == 3) {

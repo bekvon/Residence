@@ -64,6 +64,7 @@ public enum GuiItems {
     snowtrail(78, 0),
     sanimals(383, 101),
     shear(359, 0),
+    dye(351, 14),
     smonsters(383, 54),
     subzone(160, 7),
     table(58, 0),

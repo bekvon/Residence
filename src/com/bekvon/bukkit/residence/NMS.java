@@ -17,14 +17,16 @@ public interface NMS {
     public boolean isAnimal(Entity ent);
 
     public boolean isArmorStandEntity(EntityType entityType);
-    
+
     public boolean isArmorStandMaterial(Material material);
 
     public boolean isCanUseEntity_BothClick(Material mat, Block block);
-    
+
     public boolean isEmptyBlock(Block block);
 
     public boolean isSpectator(GameMode mode);
-    
+
     public void addDefaultFlags(Map<Material, String> matUseFlagList);
+
+    public boolean isPlate(Material mat);
 }
