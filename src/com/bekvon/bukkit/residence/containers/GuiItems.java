@@ -29,6 +29,7 @@ public enum GuiItems {
     door(324, 0),
     enchant(116, 0),
     explode(407, 0),
+    enderpearl(368, 0),
     feed(364, 0),
     fireball(385, 0),
     firespread(377, 0),

@@ -151,6 +151,8 @@ public class FlagPermissions {
 
 	addFlag("chat");
 	addFlag("dye");
+	
+	addFlag("enderpearl");
 
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");

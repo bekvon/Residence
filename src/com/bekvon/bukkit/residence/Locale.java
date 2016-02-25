@@ -646,6 +646,12 @@ public class Locale {
 	    "allow or disallow teleporting to the residence", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.tp.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
+	// enderpearl
+	FlagList.add("enderpearl");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.enderpearl.Description",
+	    "allow or disallow teleporting to the residence with enderpearl", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.enderpearl.Info",
+	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"), writer, conf, true);
 	// admin
 	FlagList.add("admin");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.admin.Description",

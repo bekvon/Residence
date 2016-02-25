@@ -852,7 +852,7 @@ public class ResidencePlayerListener implements Listener {
 
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
 	if (res != null) {
-	    if (event.getCause() == TeleportCause.ENDER_PEARL || event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
+	    if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 		.getCause() == TeleportCause.PLUGIN) {
 		String areaname = res.getName();
 		if (!res.getPermissions().playerHas(player.getName(), "move", true)) {
@@ -860,8 +860,14 @@ public class ResidencePlayerListener implements Listener {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", areaname));
 		    return;
 		}
+	    } else if (event.getCause() == TeleportCause.ENDER_PEARL) {
+		String areaname = res.getName();
+		if (!res.getPermissions().playerHas(player.getName(), "enderpearl", true)) {
+		    event.setCancelled(true);
+		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceFlagDeny", "enderpearl|" + areaname));
+		    return;
+		}
 	    }
-
 	    if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND && Residence.getConfigManager().isBlockAnyTeleportation()) {
 		if (!res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
 		    String areaname = res.getName();

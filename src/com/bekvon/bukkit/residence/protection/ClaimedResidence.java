@@ -18,6 +18,8 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.Debug;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -1023,13 +1025,14 @@ public class ClaimedResidence {
 	}
 	root.put("Subzones", subzonemap);
 	root.put("Permissions", perms.save());
+	DecimalFormat formatter = new DecimalFormat("#0.00");
 	if (tpLoc != null) {
 	    Map<String, Object> tpmap = new HashMap<>();
-	    tpmap.put("X", tpLoc.getBlockX());
-	    tpmap.put("Y", tpLoc.getBlockY());
-	    tpmap.put("Z", tpLoc.getBlockZ());
-	    tpmap.put("Pitch", tpLoc.getPitch());
-	    tpmap.put("Yaw", tpLoc.getYaw());
+	    tpmap.put("X", Double.valueOf(formatter.format(tpLoc.getX())));
+	    tpmap.put("Y", Double.valueOf(formatter.format(tpLoc.getY())));
+	    tpmap.put("Z", Double.valueOf(formatter.format(tpLoc.getZ())));
+	    tpmap.put("Pitch", Double.valueOf(formatter.format(tpLoc.getPitch())));
+	    tpmap.put("Yaw", Double.valueOf(formatter.format(tpLoc.getYaw())));
 	    root.put("TPLoc", tpmap);
 	}
 	return root;
@@ -1087,12 +1090,12 @@ public class ClaimedResidence {
 	    double yaw = 0.0;
 
 	    if (tploc.containsKey("Yaw"))
-		yaw = (double) tploc.get("Yaw");
+		yaw = Double.valueOf(tploc.get("Yaw").toString());
 
 	    if (tploc.containsKey("Pitch"))
-		pitch = (double) tploc.get("Pitch");
+		pitch = Double.valueOf(tploc.get("Pitch").toString());
 
-	    res.tpLoc = new Location(world, (Integer) tploc.get("X"), (Integer) tploc.get("Y"), (Integer) tploc.get("Z"));
+	    res.tpLoc = new Location(world, Double.valueOf(tploc.get("X").toString()), Double.valueOf(tploc.get("Y").toString()), Double.valueOf(tploc.get("Z").toString()));
 	    res.tpLoc.setPitch((float) pitch);
 	    res.tpLoc.setYaw((float) yaw);
 	}
