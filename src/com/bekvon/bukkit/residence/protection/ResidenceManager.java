@@ -80,45 +80,41 @@ public class ResidenceManager {
 	    return null;
 	}
 	String[] split = name.split("\\.");
-	if (split.length == 1) {
-	    return residences.get(name);
-	}
-	ClaimedResidence res = residences.get(split[0]);
-	for (int i = 1; i < split.length; i++) {
-	    if (res != null) {
-		res = res.getSubzone(split[i]);
-	    } else {
-		return null;
+	if (Residence.getConfigManager().isResCreateCaseSensitive()) {
+	    if (split.length == 1) {
+		return residences.get(name);
 	    }
-	}
-	return res;
-    }
-
-    public ClaimedResidence getByNameNoCase(String name) {
-	if (name == null) {
-	    return null;
-	}
-	String[] split = name.split("\\.");
-	if (split.length == 1) {
+	    ClaimedResidence res = residences.get(split[0]);
+	    for (int i = 1; i < split.length; i++) {
+		if (res != null) {
+		    res = res.getSubzone(split[i]);
+		} else {
+		    return null;
+		}
+	    }
+	    return res;
+	} else {
+	    if (split.length == 1) {
+		for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
+		    if (one.getKey().equalsIgnoreCase(name))
+			return one.getValue();
+		}
+	    }
+	    ClaimedResidence res = null;
 	    for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
-		if (one.getKey().equalsIgnoreCase(name))
-		    return one.getValue();
+		if (one.getKey().equalsIgnoreCase(split[0]))
+		    res = one.getValue();
 	    }
-	}
-	ClaimedResidence res = null;
-	for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
-	    if (one.getKey().equalsIgnoreCase(split[0]))
-		res = one.getValue();
-	}
 
-	for (int i = 1; i < split.length; i++) {
-	    if (res != null) {
-		res = res.getSubzoneNoCase(split[i]);
-	    } else {
-		return null;
+	    for (int i = 1; i < split.length; i++) {
+		if (res != null) {
+		    res = res.getSubzoneNoCase(split[i]);
+		} else {
+		    return null;
+		}
 	    }
+	    return res;
 	}
-	return res;
     }
 
     public String getNameByLoc(Location loc) {

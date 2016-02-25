@@ -1276,10 +1276,6 @@ public class ResidenceCommandListener extends Residence {
 		return false;
 	    }
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
-	    if (Residence.getConfigManager().isResTpCaseSensitive())
-		res = Residence.getResidenceManager().getByName(args[1]);
-	    else
-		res = Residence.getResidenceManager().getByNameNoCase(args[1]);
 
 	    if (res == null) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidResidence"));
@@ -1435,10 +1431,7 @@ public class ResidenceCommandListener extends Residence {
 	if (args.length == 2)
 	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	else if (args.length == 3) {
-	    if (!Residence.getConfigManager().isResTpCaseSensitive())
-		res = Residence.getResidenceManager().getByNameNoCase(args[1]);
-	    else
-		res = Residence.getResidenceManager().getByName(args[1]);
+	    res = Residence.getResidenceManager().getByName(args[1]);
 	} else
 	    return false;
 
@@ -1520,10 +1513,7 @@ public class ResidenceCommandListener extends Residence {
 	if (args.length == 2)
 	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	else if (args.length == 3)
-	    if (!Residence.getConfigManager().isResTpCaseSensitive())
-		res = Residence.getResidenceManager().getByNameNoCase(args[1]);
-	    else
-		res = Residence.getResidenceManager().getByName(args[1]);
+	    res = Residence.getResidenceManager().getByName(args[1]);
 	else
 	    return false;
 	if (res == null) {
@@ -1760,8 +1750,7 @@ public class ResidenceCommandListener extends Residence {
 	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
 	    if (Residence.wg != null && WorldGuardUtil.isSelectionInRegion(player) == null) {
 		Residence.getResidenceManager().addResidence(player, args[1], Residence.smanager.getPlayerLoc1(player.getName()), Residence.smanager.getPlayerLoc2(player
-		    .getName()),
-		    resadmin);
+		    .getName()), resadmin);
 		return true;
 	    } else if (Residence.wg != null && WorldGuardUtil.isSelectionInRegion(player) != null) {
 		ProtectedRegion Region = WorldGuardUtil.isSelectionInRegion(player);

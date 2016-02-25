@@ -34,6 +34,8 @@ public class RentManager {
     }
 
     public RentedLand getRentedLand(String name) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    name = name.toLowerCase();
 	return rentedLand.containsKey(name) ? rentedLand.get(name) : null;
     }
 
@@ -81,6 +83,9 @@ public class RentManager {
 		return;
 	    }
 	}
+
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	if (!rentableLand.containsKey(landName)) {
 	    ResidenceRentEvent revent = new ResidenceRentEvent(res, player, RentEventType.RENTABLE);
 	    Residence.getServ().getPluginManager().callEvent(revent);
@@ -129,10 +134,12 @@ public class RentManager {
 	    String[] split = landName.split("\\.");
 	    if (split.length != 0)
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + split[split.length - 1] + ChatColor.RED
-		    + "|"
-		    + ChatColor.YELLOW + this.getRentingPlayer(landName)));
+		    + "|" + ChatColor.YELLOW + this.getRentingPlayer(landName)));
 	    return;
 	}
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
+
 	RentableLand land = rentableLand.get(landName);
 	if (Residence.getEconomyManager().canAfford(player.getName(), land.cost)) {
 	    ResidenceRentEvent revent = new ResidenceRentEvent(res, player, RentEventType.RENT);
@@ -210,6 +217,8 @@ public class RentManager {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 	    return;
 	}
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	if (rentedLand.containsKey(landName) && !resadmin) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceAlreadyRented", ChatColor.YELLOW + landName + ChatColor.RED
 		+ "|" + ChatColor.YELLOW + rentedLand.get(landName).player) + ChatColor.YELLOW);
@@ -248,30 +257,44 @@ public class RentManager {
     }
 
     public boolean isForRent(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	return rentableLand.containsKey(landName);
     }
 
     public boolean isRented(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	return rentedLand.containsKey(landName);
     }
 
     public String getRentingPlayer(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	return rentedLand.containsKey(landName) ? rentedLand.get(landName).player : null;
     }
 
     public int getCostOfRent(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	return rentableLand.containsKey(landName) ? rentableLand.get(landName).cost : 0;
     }
 
     public boolean getRentableRepeatable(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	return rentableLand.containsKey(landName) ? rentableLand.get(landName).repeatable : false;
     }
 
     public boolean getRentedAutoRepeats(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	return getRentableRepeatable(landName) ? (rentedLand.containsKey(landName) ? rentedLand.get(landName).autoRefresh : false) : false;
     }
 
     public int getRentDays(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    landName = landName.toLowerCase();
 	return rentableLand.containsKey(landName) ? rentableLand.get(landName).days : 0;
     }
 
@@ -400,6 +423,10 @@ public class RentManager {
     }
 
     public void updateRentableName(String oldName, String newName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive()) {
+	    oldName = oldName.toLowerCase();
+	    newName = newName.toLowerCase();
+	}
 	if (rentableLand.containsKey(oldName)) {
 	    rentableLand.put(newName, rentableLand.get(oldName));
 	    rentableLand.remove(oldName);
