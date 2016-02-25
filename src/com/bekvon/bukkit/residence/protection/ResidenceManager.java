@@ -596,23 +596,23 @@ public class ResidenceManager {
 	Residence.sendMessage(player, msg);
 
 	Residence.sendMessage(player, "&6" + lm.getMessage("Flags") + ": &9" + perms.listFlags());
-	Residence.sendMessage(player, "&6" + lm.getMessage("Your") + lm.getMessage("Flags") + ": &2" + perms.listPlayerFlags(player.getName()));
+	Residence.sendMessage(player, "&6" + lm.getMessage("Your") + " " + lm.getMessage("Flags") + ": &2" + perms.listPlayerFlags(player.getName()));
 
 	String groupFlags = perms.listGroupFlags();
 	if (groupFlags.length() > 0)
-	    Residence.sendMessage(player, "&6" + lm.getMessage("Group") + lm.getMessage("Flags") + ": &c" + groupFlags);
+	    Residence.sendMessage(player, "&6" + lm.getMessage("Group") + " " + lm.getMessage("Flags") + ": &c" + groupFlags);
 	if (!Residence.getConfigManager().isShortInfoUse())
-	    Residence.sendMessage(player, "&6" + lm.getMessage("Others") + lm.getMessage("Flags") + ": &c" + perms.listOtherPlayersFlags(player.getName()));
+	    Residence.sendMessage(player, "&6" + lm.getMessage("Others") + " " + lm.getMessage("Flags") + ": &c" + perms.listOtherPlayersFlags(player.getName()));
 	else {
 	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + perms.listOtherPlayersFlagsRaw("&e" +
-		lm.getMessage("Others") + lm.getMessage("Flags") + ": ", player.getName()));
+		lm.getMessage("Others") + " " + lm.getMessage("Flags") + ": ", player.getName()));
 	}
 
 	msg = "";
 	if (aid != null) {
 	    msg += "&e" + lm.getMessage("CurrentArea") + ": &6" + aid + " ";
 	}
-	msg += "&e" + lm.getMessage("Total") + lm.getMessage("Size") + ": &6" + res.getTotalSize();
+	msg += "&e" + lm.getMessage("Total") + " " + lm.getMessage("Size") + ": &6" + res.getTotalSize();
 
 	Residence.sendMessage(player, msg);
 
@@ -682,7 +682,7 @@ public class ResidenceManager {
 			throw (ex);
 		}
 	    }
-	    	    
+
 	    long pass = System.currentTimeMillis() - time;
 	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
