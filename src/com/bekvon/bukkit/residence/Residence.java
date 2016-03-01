@@ -86,7 +86,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
-import net.md_5.bungee.api.ChatColor;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -329,6 +328,7 @@ public class Residence extends JavaPlugin {
 	    } catch (ClassNotFoundException e) {
 		System.out.println("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version);
 		this.setEnabled(false);
+		return;
 	    } catch (InstantiationException e) {
 		e.printStackTrace();
 		this.setEnabled(false);
@@ -467,8 +467,8 @@ public class Residence extends JavaPlugin {
 		    getOfflinePlayerMap().put(name.toLowerCase(), player);
 		}
 		Bukkit.getConsoleSender().sendMessage("[Residence] Player data loaded: " + getOfflinePlayerMap().size());
-	    } else {
-		Bukkit.getScheduler().runTaskAsynchronously(Residence.this, new Runnable() {
+	    } else {		
+		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
 		    @Override
 		    public void run() {
 			for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
@@ -645,7 +645,7 @@ public class Residence extends JavaPlugin {
     }
 
     public static void sendMessage(Player player, String message) {
-	player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+	player.sendMessage(org.bukkit.ChatColor.translateAlternateColorCodes('&', message));
     }
 
     public static boolean validName(String name) {

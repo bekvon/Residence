@@ -337,7 +337,7 @@ public class FlagPermissions {
 	    if (uuids == null) {
 		Set<Entry<String, String>> values = cachedPlayerNameUUIDs.entrySet();
 		for (Entry<String, String> value : values) {
-		    if (value.getValue().equalsIgnoreCase(player)) {
+		    if (value.getValue().equals(player)) {
 			uuids = value.getKey();
 			break;
 		    }
@@ -368,7 +368,7 @@ public class FlagPermissions {
 	    }
 	} else {
 	    for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
-		if (!one.getKey().equalsIgnoreCase(player))
+		if (!one.getKey().equals(player))
 		    continue;
 		flags = one.getValue();
 		break;
@@ -649,14 +649,14 @@ public class FlagPermissions {
 	for (String keyset : playerFlags.keySet()) {
 	    if (keyset.length() != 36) {
 		String uuid = null;
-		if (OwnerName != null && OwnerName.equalsIgnoreCase(keyset) && !owneruuid.equalsIgnoreCase(Residence.getTempUserUUID()))
+		if (OwnerName != null && OwnerName.equals(keyset) && !owneruuid.equals(Residence.getTempUserUUID()))
 		    uuid = owneruuid;
 		else
 		    uuid = Residence.getPlayerUUIDString(keyset);
 		//				if (OwnerName.equals(keyset)) {
 		if (uuid != null)
 		    converts.put(keyset, uuid);
-		else if (OwnerName != null && !OwnerName.equalsIgnoreCase(keyset))
+		else if (OwnerName != null && !OwnerName.equals(keyset))
 		    Toremove.add(keyset);
 		//				}
 	    } else {

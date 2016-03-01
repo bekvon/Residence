@@ -193,7 +193,7 @@ public class ResidenceCommandListener extends Residence {
 			if (res == null)
 			    return false;
 
-			if (!res.getOwner().equals(player.getName()) && !Residence.gmanager.isResidenceAdmin(player)) {
+			if (!res.isOwner(player) && !Residence.gmanager.isResidenceAdmin(player)) {
 			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 			    return true;
 			}
@@ -231,7 +231,7 @@ public class ResidenceCommandListener extends Residence {
 			if (res == null)
 			    return false;
 
-			if (!res.getOwner().equals(player.getName()) && !Residence.gmanager.isResidenceAdmin(player)) {
+			if (!res.isOwner(player) && !Residence.gmanager.isResidenceAdmin(player)) {
 			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 			    return true;
 			}
@@ -933,7 +933,7 @@ public class ResidenceCommandListener extends Residence {
 		if (res == null)
 		    return true;
 
-		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		if (!res.isOwner(player) && !resadmin) {
 		    player.sendMessage(Residence.getLanguage().getPhrase("NonAdmin"));
 		    return true;
 		}
@@ -1194,12 +1194,12 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(targetplayer.getLocation());
 
-	    if (res == null || res != null && !res.getOwner().equals(player.getName()) && !resadmin) {
+	    if (res == null || res != null && !res.isOwner(player) && !resadmin) {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("PlayerNotInResidence"));
 		return true;
 	    }
 
-	    if (res.getOwner().equals(player.getName())) {
+	    if (res.isOwner(player)) {
 		if (res.getPlayersInResidence().contains(targetplayer)) {
 
 		    Location loc = Residence.getConfigManager().getKickLocation();
@@ -2037,7 +2037,7 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 1 && Residence.getConfigManager().useFlagGUI) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
-		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		if (!res.isOwner(player) && !resadmin) {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		    return true;
 		}
@@ -2051,7 +2051,7 @@ public class ResidenceCommandListener extends Residence {
 	} else if (args.length == 2 && Residence.getConfigManager().useFlagGUI) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
-		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		if (!res.isOwner(player) && !resadmin) {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		    return true;
 		}
@@ -2110,7 +2110,7 @@ public class ResidenceCommandListener extends Residence {
 	    if (res != null) {
 		if (!Residence.isPlayerExist(player, args[1], true))
 		    return false;
-		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		if (!res.isOwner(player) && !resadmin) {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		    return true;
 		}
@@ -2127,7 +2127,7 @@ public class ResidenceCommandListener extends Residence {
 	    if (res != null) {
 		if (!Residence.isPlayerExist(player, args[2], true))
 		    return false;
-		if (!res.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+		if (!res.isOwner(player) && !resadmin) {
 		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 		    return true;
 		}
@@ -2410,7 +2410,7 @@ public class ResidenceCommandListener extends Residence {
 		return true;
 	    }
 
-	    if (!CurrentRes.getOwner().equalsIgnoreCase(player.getName()) && !resadmin) {
+	    if (!CurrentRes.isOwner(player) && !resadmin) {
 		player.sendMessage(Residence.getLanguage().getPhrase("NotOwner"));
 		return true;
 	    }

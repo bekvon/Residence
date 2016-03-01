@@ -56,14 +56,6 @@ public class ClaimedResidence {
 	this.plugin = plugin;
     }
 
-    public boolean isOwner(String name) {
-	return perms.getOwner().equalsIgnoreCase(name);
-    }
-
-    public boolean isOwner(Player p) {
-	return perms.getOwnerUUID().equals(p.getUniqueId());
-    }
-
     public boolean isSubzone() {
 	return parent == null ? false : true;
     }
@@ -1090,7 +1082,8 @@ public class ClaimedResidence {
 	    if (tploc.containsKey("Pitch"))
 		pitch = Double.valueOf(tploc.get("Pitch").toString());
 
-	    res.tpLoc = new Location(world, Double.valueOf(tploc.get("X").toString()), Double.valueOf(tploc.get("Y").toString()), Double.valueOf(tploc.get("Z").toString()));
+	    res.tpLoc = new Location(world, Double.valueOf(tploc.get("X").toString()), Double.valueOf(tploc.get("Y").toString()), Double.valueOf(tploc.get("Z")
+		.toString()));
 	    res.tpLoc.setPitch((float) pitch);
 	    res.tpLoc.setYaw((float) yaw);
 	}
@@ -1200,6 +1193,16 @@ public class ClaimedResidence {
 
     public String getOwner() {
 	return perms.getOwner();
+    }
+
+    public boolean isOwner(String name) {
+	return perms.getOwner().equals(name);
+    }
+
+    public boolean isOwner(Player p) {
+	if (Residence.getConfigManager().isOfflineMode())
+	    return isOwner(p.getName());
+	return perms.getOwnerUUID().equals(p.getUniqueId());
     }
 
     public void setChatPrefix(String ChatPrefix) {

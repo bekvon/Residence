@@ -21,21 +21,21 @@ public class PlayerManager {
     }
 
     public void playerJoin(OfflinePlayer player) {
-	ResPlayer resPlayer = players.get(player.getName().toLowerCase());
+	ResPlayer resPlayer = players.get(player.getName());
 	if (resPlayer == null) {
 	    resPlayer = new ResPlayer(player.getName());
 	    resPlayer.recountRes();
-	    players.put(player.getName().toLowerCase(), resPlayer);
+	    players.put(player.getName(), resPlayer);
 	} else
 	    resPlayer.RecalculatePermissions();
 	return;
     }
 
     public ResPlayer playerJoin(String player) {
-	if (!players.containsKey(player.toLowerCase())) {
+	if (!players.containsKey(player)) {
 	    ResPlayer resPlayer = new ResPlayer(player);
 	    resPlayer.recountRes();
-	    players.put(player.toLowerCase(), resPlayer);
+	    players.put(player, resPlayer);
 	    return resPlayer;
 	}
 	return null;
@@ -57,7 +57,7 @@ public class PlayerManager {
     public ArrayList<String> getResidenceList(String player) {
 	ArrayList<String> temp = new ArrayList<String>();
 	playerJoin(player);
-	ResPlayer resPlayer = players.get(player.toLowerCase());
+	ResPlayer resPlayer = players.get(player);
 	if (resPlayer != null) {
 	    for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
 		temp.add(one.getKey());
@@ -70,7 +70,7 @@ public class PlayerManager {
     public ArrayList<String> getResidenceListString(String player, boolean showhidden) {
 	ArrayList<String> temp = new ArrayList<String>();
 	playerJoin(player);
-	ResPlayer resPlayer = players.get(player.toLowerCase());
+	ResPlayer resPlayer = players.get(player);
 	if (resPlayer != null) {
 	    for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
 		if (!showhidden) {
@@ -122,8 +122,8 @@ public class PlayerManager {
 
     public ResPlayer getResPlayer(String player) {
 	ResPlayer resPlayer = null;
-	if (players.containsKey(player.toLowerCase()))
-	    resPlayer = players.get(player.toLowerCase());
+	if (players.containsKey(player))
+	    resPlayer = players.get(player);
 	else {
 	    resPlayer = playerJoin(player);
 	}
@@ -155,7 +155,7 @@ public class PlayerManager {
     }
 
     public void removeResFromPlayer(String player, String residence) {
-	ResPlayer resPlayer = players.get(player.toLowerCase());
+	ResPlayer resPlayer = players.get(player);
 	if (resPlayer != null) {
 	    resPlayer.removeResidence(residence);
 	}

@@ -11,6 +11,8 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
@@ -59,7 +61,7 @@ public class ResidenceBlockListener implements Listener {
 	for (BlockState one : blocks) {
 	    ClaimedResidence targetRes = Residence.getResidenceManager().getByLoc(one.getLocation());
 	    if (startRes == null && targetRes != null ||
-		targetRes != null && startRes != null && !startRes.getName().equals(targetRes.getName()) && !startRes.getOwner().equals(targetRes.getOwner())) {
+		targetRes != null && startRes != null && !startRes.getName().equals(targetRes.getName()) && !startRes.isOwner(targetRes.getOwner())) {
 		BlockState matas = blocks.get(i);
 		matas.setType(Material.AIR);
 		blocks.set(i, matas);
@@ -71,6 +73,8 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
+	Debug.D("destroy event");
+	
 	Player player = event.getPlayer();
 	if (Residence.isResAdminOn(player)) {
 	    return;

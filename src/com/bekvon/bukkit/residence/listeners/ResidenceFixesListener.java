@@ -17,7 +17,7 @@ public class ResidenceFixesListener implements Listener {
     public void onAnvilPlace(PlayerInteractEvent event) {
 	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;
-	ItemStack iih = event.getPlayer().getItemInHand();
+	ItemStack iih = event.getItem();
 	if (iih == null || iih.getType() == Material.AIR || iih.getType() != Material.ANVIL)
 	    return;
 	BlockFace face = event.getBlockFace();

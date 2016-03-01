@@ -532,7 +532,6 @@ public class ResidencePlayerListener implements Listener {
 	if (block == null)
 	    return;
 	Player player = event.getPlayer();
-	@SuppressWarnings("deprecation")
 	int heldItemId = player.getItemInHand().getTypeId();
 
 	if (heldItemId != Residence.getConfigManager().getInfoToolID())
@@ -549,7 +548,6 @@ public class ResidencePlayerListener implements Listener {
 
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 	Player player = event.getPlayer();

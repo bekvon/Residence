@@ -339,7 +339,7 @@ public class ResidenceManager {
     public Map<String, ClaimedResidence> getResidenceMapList(String targetplayer, boolean showhidden) {
 	Map<String, ClaimedResidence> temp = new HashMap<String, ClaimedResidence>();
 	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
-	    if (res.getValue().getPermissions().getOwner().equalsIgnoreCase(targetplayer)) {
+	    if (res.getValue().isOwner(targetplayer)) {
 		boolean hidden = res.getValue().getPermissions().has("hidden", false);
 		if ((showhidden) || (!showhidden && !hidden)) {
 		    temp.put(res.getValue().getName(), res.getValue());
@@ -369,7 +369,7 @@ public class ResidenceManager {
 	ArrayList<String> list, boolean formattedOutput) {
 	boolean hidden = res.getPermissions().has("hidden", false);
 	if ((showhidden) || (!showhidden && !hidden)) {
-	    if (targetplayer == null || res.getPermissions().getOwner().equalsIgnoreCase(targetplayer)) {
+	    if (targetplayer == null || res.getPermissions().getOwner().equals(targetplayer)) {
 		if (formattedOutput) {
 		    list.add(Residence.getLanguage().getPhrase("ResidenceList", parentzone + "|" + resname + "|" + Residence.getLanguage().getPhrase("World") + "|" + res
 			.getWorld()));
@@ -500,7 +500,7 @@ public class ResidenceManager {
 	Iterator<ClaimedResidence> it = resholder.values().iterator();
 	while (it.hasNext()) {
 	    ClaimedResidence res = it.next();
-	    if (res.getOwner().equalsIgnoreCase(owner)) {
+	    if (res.isOwner(owner)) {
 		ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
 		Residence.getServ().getPluginManager().callEvent(resevent);
 		if (resevent.isCancelled())

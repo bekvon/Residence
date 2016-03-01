@@ -138,7 +138,7 @@ public class ResidencePermissions extends FlagPermissions {
 		    return false;
 		}
 		String renter = Residence.getRentManager().getRentingPlayer(resname);
-		if (player.getName().equalsIgnoreCase(renter)) {
+		if (player.getName().equals(renter)) {
 		    return true;
 		} else {
 		    return (playerHas(player.getName(), "admin", false));
@@ -146,9 +146,9 @@ public class ResidencePermissions extends FlagPermissions {
 	    }
 	}
 	if (requireOwner) {
-	    return (this.getOwner().equalsIgnoreCase(player.getName()));
+	    return (this.getOwner().equals(player.getName()));
 	}
-	return (playerHas(player.getName(), "admin", false) || this.getOwner().equalsIgnoreCase(player.getName()));
+	return (playerHas(player.getName(), "admin", false) || this.getOwner().equals(player.getName()));
     }
 
     private boolean checkCanSetFlag(Player player, String flag, FlagState state, boolean globalflag, boolean resadmin) {

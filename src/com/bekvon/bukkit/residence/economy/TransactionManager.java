@@ -86,13 +86,12 @@ public class TransactionManager {
 		return;
 	    }
 	}
-	String pname = player.getName();
 	ClaimedResidence area = manager.getByName(areaname);
 	if (area == null) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidResidence"));
 	    return;
 	}
-	if (!area.getPermissions().getOwner().equals(pname) && !resadmin) {
+	if (!area.isOwner(player) && !resadmin) {
 	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
 	    return;
 	}
@@ -216,7 +215,7 @@ public class TransactionManager {
 		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceNotForSale"));
 		return;
 	    }
-	    if (area.getPermissions().getOwner().equals(player.getName()) || resadmin) {
+	    if (area.isOwner(player)|| resadmin) {
 		removeFromSale(areaname);
 		Residence.getSignUtil().CheckSign(area);
 		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("ResidenceStopSelling"));

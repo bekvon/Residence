@@ -60,7 +60,7 @@ public class WorldItemList extends ItemList {
     public boolean listApplicable(String inworld, String ingroup)
     {
         if (world != null) {
-            if (!world.equalsIgnoreCase(inworld)) {
+            if (!world.equals(inworld)) {
                 return false;
             }
         }
