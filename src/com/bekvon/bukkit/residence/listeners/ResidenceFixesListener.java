@@ -11,10 +11,15 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.bekvon.bukkit.residence.Residence;
+
 public class ResidenceFixesListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onAnvilPlace(PlayerInteractEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
 	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;
 	ItemStack iih = event.getItem();

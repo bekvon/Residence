@@ -5,27 +5,33 @@ import org.bukkit.GameMode;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.event.ResidenceSizeChangeEvent;
+import com.bekvon.bukkit.residence.event.ResidenceSubzoneCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceTPEvent;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -60,6 +66,18 @@ public class ClaimedResidence {
 	return parent == null ? false : true;
     }
 
+    public int getSubzoneDeep() {
+	return getSubzoneDeep(0);
+    }
+
+    public int getSubzoneDeep(int deep) {
+	deep++;
+	if (parent != null) {
+	    return parent.getSubzoneDeep(deep);
+	}
+	return deep;
+    }
+
     public ClaimedResidence(String creationWorld, Residence plugin) {
 	this(Residence.getServerLandname(), creationWorld, plugin);
     }
@@ -81,30 +99,26 @@ public class ClaimedResidence {
     public static boolean CheckAreaSize(Player player, CuboidArea area, boolean resadmin) {
 	if (!resadmin && area.getSize() < Residence.getConfigManager().getMinimalResSize()) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallTotal", String.valueOf(Residence.getConfigManager()
-		    .getMinimalResSize())));
+		player.sendMessage(Residence.getLM().getMessage("Area.ToSmallTotal", Residence.getConfigManager().getMinimalResSize()));
 	    }
 	    return false;
 	}
 
 	if (!resadmin && area.getXSize() < Residence.getConfigManager().getMinimalResX()) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallX", String.valueOf(area.getXSize()) + "|" + String.valueOf(Residence
-		    .getConfigManager().getMinimalResX())));
+		player.sendMessage(Residence.getLM().getMessage("Area.ToSmallX", area.getXSize(), Residence.getConfigManager().getMinimalResX()));
 	    }
 	    return false;
 	}
 	if (!resadmin && area.getYSize() < Residence.getConfigManager().getMinimalResY()) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallY", String.valueOf(area.getYSize()) + "|" + String.valueOf(Residence
-		    .getConfigManager().getMinimalResY())));
+		player.sendMessage(Residence.getLM().getMessage("Area.ToSmallY", area.getYSize(), Residence.getConfigManager().getMinimalResY()));
 	    }
 	    return false;
 	}
 	if (!resadmin && area.getZSize() < Residence.getConfigManager().getMinimalResZ()) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaToSmallZ", String.valueOf(area.getZSize()) + "|" + String.valueOf(Residence
-		    .getConfigManager().getMinimalResZ())));
+		player.sendMessage(Residence.getLM().getMessage("Area.ToSmallZ", area.getZSize(), Residence.getConfigManager().getMinimalResZ()));
 	    }
 	    return false;
 	}
@@ -114,13 +128,13 @@ public class ClaimedResidence {
     public boolean addArea(Player player, CuboidArea area, String name, boolean resadmin) {
 	if (!Residence.validName(name)) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+		player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
 	    }
 	    return false;
 	}
 	if (areas.containsKey(name)) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaExists"));
+		player.sendMessage(Residence.getLM().getMessage("Area.Exists"));
 	    }
 	    return false;
 	}
@@ -141,7 +155,7 @@ public class ClaimedResidence {
 	}
 	if (!area.getWorld().getName().equalsIgnoreCase(perms.getWorld())) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaDiffWorld"));
+		player.sendMessage(Residence.getLM().getMessage("Area.DiffWorld"));
 	    }
 	    return false;
 	}
@@ -149,7 +163,7 @@ public class ClaimedResidence {
 	    String collideResidence = Residence.getResidenceManager().checkAreaCollision(area, this);
 	    if (collideResidence != null) {
 		if (player != null) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaCollision", ChatColor.YELLOW + collideResidence));
+		    player.sendMessage(Residence.getLM().getMessage("Area.Collision", collideResidence));
 		    CuboidArea oldArea = Residence.getResidenceManager().getByName(collideResidence).getAreaArray()[0];
 		    if (oldArea != null) {
 			Residence.getSelectionManager().NewMakeBorders(player, oldArea.lowPoints, oldArea.highPoints, true);
@@ -166,7 +180,7 @@ public class ClaimedResidence {
 		if (res != null && res != this) {
 		    if (res.checkCollision(area)) {
 			if (player != null) {
-			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaSubzoneCollision", ChatColor.YELLOW + sz));
+			    player.sendMessage(Residence.getLM().getMessage("Area.SubzoneCollision", sz));
 			}
 			return false;
 		    }
@@ -175,40 +189,40 @@ public class ClaimedResidence {
 	}
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return false;
 	    }
 	    if (parent != null) {
 		if (!parent.containsLoc(area.getHighLoc()) || !parent.containsLoc(area.getLowLoc())) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaNotWithinParent"));
+		    player.sendMessage(Residence.getLM().getMessage("Area.NotWithinParent"));
 		    return false;
 		}
 		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), "subzone", true)) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ParentNoPermission"));
+		    player.sendMessage(Residence.getLM().getMessage("Residence.ParentNoPermission"));
 		    return false;
 		}
 	    }
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	    if (!this.isSubzone() && !group.canCreateResidences() && !player.hasPermission("residence.create") ||
 		this.isSubzone() && !group.canCreateResidences() && !player.hasPermission("residence.create.subzone")) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return false;
 	    }
 
 	    if (areas.size() >= group.getMaxPhysicalPerResidence()) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaMaxPhysical"));
+		player.sendMessage(Residence.getLM().getMessage("Area.MaxPhysical"));
 		return false;
 	    }
 	    if (!group.inLimits(area)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaSizeLimit"));
+		player.sendMessage(Residence.getLM().getMessage("Area.SizeLimit"));
 		return false;
 	    }
 	    if (group.getMinHeight() > area.getLowLoc().getBlockY()) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaLowLimit", ChatColor.YELLOW + String.format("%d", group.getMinHeight())));
+		player.sendMessage(Residence.getLM().getMessage("Area.LowLimit", String.format("%d", group.getMinHeight())));
 		return false;
 	    }
 	    if (group.getMaxHeight() < area.getHighLoc().getBlockY()) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaHighLimit", ChatColor.YELLOW + String.format("%d", group.getMaxHeight())));
+		player.sendMessage(Residence.getLM().getMessage("Area.HighLimit", String.format("%d", group.getMaxHeight())));
 		return false;
 	    }
 	    if (parent == null && Residence.getConfigManager().enableEconomy()) {
@@ -222,7 +236,7 @@ public class ClaimedResidence {
 	areas.put(name, area);
 	Residence.getResidenceManager().calculateChunks(getName());
 	if (player != null) {
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaCreate", ChatColor.YELLOW + name));
+	    player.sendMessage(Residence.getLM().getMessage("Area.Create", name));
 	}
 	return true;
     }
@@ -234,19 +248,19 @@ public class ClaimedResidence {
     public boolean replaceArea(Player player, CuboidArea newarea, String name, boolean resadmin) {
 	if (!areas.containsKey(name)) {
 	    if (player != null)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaNonExist"));
+		player.sendMessage(Residence.getLM().getMessage("Area.NonExist"));
 	    return false;
 	}
 	CuboidArea oldarea = areas.get(name);
 	if (!newarea.getWorld().getName().equalsIgnoreCase(perms.getWorld())) {
 	    if (player != null)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaDiffWorld"));
+		player.sendMessage(Residence.getLM().getMessage("Area.DiffWorld"));
 	    return false;
 	}
 	if (parent == null) {
 	    String collideResidence = Residence.getResidenceManager().checkAreaCollision(newarea, this);
 	    if (collideResidence != null && player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaCollision", ChatColor.YELLOW + collideResidence));
+		player.sendMessage(Residence.getLM().getMessage("Area.Collision", collideResidence));
 		CuboidArea area = Residence.getResidenceManager().getByName(collideResidence).getAreaArray()[0];
 		Residence.getSelectionManager().NewMakeBorders(player, area.getLowLoc(), area.highPoints, true);
 		return false;
@@ -258,7 +272,7 @@ public class ClaimedResidence {
 		if (res != null && res != this) {
 		    if (res.checkCollision(newarea)) {
 			if (player != null) {
-			    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaSubzoneCollision", ChatColor.YELLOW + sz));
+			    player.sendMessage(Residence.getLM().getMessage("Area.SubzoneCollision", sz));
 			    Residence.getSelectionManager().NewMakeBorders(player, res.getAreaArray()[0].lowPoints, res.getAreaArray()[0].highPoints, true);
 			}
 			return false;
@@ -295,36 +309,34 @@ public class ClaimedResidence {
 	}
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
-		Debug.D("1");
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
-		Debug.D("2");
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return false;
 	    }
 	    if (parent != null) {
 		if (!parent.containsLoc(newarea.getHighLoc()) || !parent.containsLoc(newarea.getLowLoc())) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaNotWithinParent"));
+		    player.sendMessage(Residence.getLM().getMessage("Area.NotWithinParent"));
 		    return false;
 		}
 		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), "subzone", true)) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ParentNoPermission"));
+		    player.sendMessage(Residence.getLM().getMessage("Residence.ParentNoPermission"));
 		    return false;
 		}
 	    }
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	    if (!group.canCreateResidences() && !player.hasPermission("residence.resize")) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return false;
 	    }
 	    if (!group.inLimits(newarea)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaSizeLimit"));
+		player.sendMessage(Residence.getLM().getMessage("Area.SizeLimit"));
 		return false;
 	    }
 	    if (group.getMinHeight() > newarea.getLowLoc().getBlockY()) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaLowLimit", ChatColor.YELLOW + String.format("%d", group.getMinHeight())));
+		player.sendMessage(Residence.getLM().getMessage("Area.LowLimit", String.format("%d", group.getMinHeight())));
 		return false;
 	    }
 	    if (group.getMaxHeight() < newarea.getHighLoc().getBlockY()) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaHighLimit", ChatColor.YELLOW + String.format("%d", group.getMaxHeight())));
+		player.sendMessage(Residence.getLM().getMessage("Area.HighLimit", String.format("%d", group.getMaxHeight())));
 		return false;
 	    }
 	    if (parent == null && Residence.getConfigManager().enableEconomy()) {
@@ -335,14 +347,19 @@ public class ClaimedResidence {
 		    }
 		}
 	    }
-
 	}
+
+	ResidenceSizeChangeEvent resevent = new ResidenceSizeChangeEvent(player, this, oldarea, newarea);
+	Residence.getServ().getPluginManager().callEvent(resevent);
+	if (resevent.isCancelled())
+	    return false;
+
 	Residence.getResidenceManager().removeChunkList(getName());
 	areas.remove(name);
 	areas.put(name, newarea);
 	Residence.getResidenceManager().calculateChunks(getName());
 	if (player != null)
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaUpdate"));
+	    player.sendMessage(Residence.getLM().getMessage("Area.Update"));
 	return true;
     }
 
@@ -361,42 +378,44 @@ public class ClaimedResidence {
     public boolean addSubzone(Player player, String owner, Location loc1, Location loc2, String name, boolean resadmin) {
 	if (!Residence.validName(name)) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+		player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
 	    }
 	    return false;
 	}
 	if (!(this.containsLoc(loc1) && this.containsLoc(loc2))) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneSelectInside"));
+		player.sendMessage(Residence.getLM().getMessage("Subzone.SelectInside"));
 	    }
 	    return false;
 	}
 	if (subzones.containsKey(name)) {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneExists", ChatColor.YELLOW + name));
+		player.sendMessage(Residence.getLM().getMessage("Subzone.Exists", name));
 	    }
 	    return false;
 	}
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
 		if (!this.perms.playerHas(player.getName(), "subzone", this.perms.playerHas(player.getName(), "admin", false))) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		    return false;
 		}
 	    }
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	    if (this.getZoneDepth() >= group.getMaxSubzoneDepth(owner)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneMaxDepth"));
+		player.sendMessage(Residence.getLM().getMessage("Subzone.MaxDepth"));
 		return false;
 	    }
 	}
+
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
+
 	Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
 	for (Entry<String, ClaimedResidence> resEntry : set) {
 	    ClaimedResidence res = resEntry.getValue();
 	    if (res.checkCollision(newArea)) {
 		if (player != null) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneCollide", ChatColor.YELLOW + resEntry.getKey()));
+		    player.sendMessage(Residence.getLM().getMessage("Subzone.Collide", resEntry.getKey()));
 		    if (res.getAreaArray().length > 0) {
 			CuboidArea oldArea = res.getAreaArray()[0];
 			Residence.getSelectionManager().NewMakeBorders(player, oldArea.lowPoints, oldArea.highPoints, true);
@@ -415,6 +434,7 @@ public class ClaimedResidence {
 	    newres = new ClaimedResidence(owner, perms.getWorld(), this, plugin);
 	    newres.addArea(newArea, name);
 	}
+
 	if (newres.getAreaCount() != 0) {
 	    newres.getPermissions().applyDefaultFlags();
 	    if (player != null) {
@@ -425,13 +445,19 @@ public class ClaimedResidence {
 	    if (Residence.getConfigManager().flagsInherit()) {
 		newres.getPermissions().setParent(perms);
 	    }
+
+	    ResidenceSubzoneCreationEvent resevent = new ResidenceSubzoneCreationEvent(player, name, newres, newArea);
+	    Residence.getServ().getPluginManager().callEvent(resevent);
+	    if (resevent.isCancelled())
+		return false;
+
 	    subzones.put(name, newres);
 	    if (player != null)
-		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SubzoneCreate", ChatColor.YELLOW + name));
+		player.sendMessage(Residence.getLM().getMessage("Subzone.Create", name));
 	    return true;
 	} else {
 	    if (player != null) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneCreateFail", ChatColor.YELLOW + name));
+		player.sendMessage(Residence.getLM().getMessage("Subzone.CreateFail", name));
 	    }
 	    return false;
 	}
@@ -583,12 +609,12 @@ public class ClaimedResidence {
     public boolean removeSubzone(Player player, String name, boolean resadmin) {
 	ClaimedResidence res = subzones.get(name);
 	if (player != null && !res.perms.hasResidencePermission(player, true) && !resadmin) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return false;
 	}
 	subzones.remove(name);
 	if (player != null) {
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SubzoneRemove", ChatColor.YELLOW + name + ChatColor.GREEN));
+	    player.sendMessage(Residence.getLM().getMessage("Subzone.Remove", name));
 	}
 	return true;
     }
@@ -659,11 +685,11 @@ public class ClaimedResidence {
 	}
 	PermissionGroup group = Residence.getPermissionManager().getGroup(perms.getOwner(), perms.getWorld());
 	if (!group.canSetEnterLeaveMessages() && !resadmin) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("OwnerNoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.OwnerNoPermission"));
 	    return;
 	}
 	if (!perms.hasResidencePermission(player, false) && !resadmin) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
 	}
 	if (enter) {
@@ -671,10 +697,10 @@ public class ClaimedResidence {
 	} else {
 	    this.setLeaveMessage(message);
 	}
-	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MessageChange"));
+	player.sendMessage(Residence.getLM().getMessage("Residence.MessageChange"));
     }
 
-    public Location getMiddleFreeLoc(Location insideLoc) {
+    public Location getMiddleFreeLoc(Location insideLoc, Player player) {
 	CuboidArea area = this.getAreaByLoc(insideLoc);
 	if (area == null) {
 	    return insideLoc;
@@ -707,45 +733,85 @@ public class ClaimedResidence {
 	if (found) {
 	    return newLoc;
 	} else {
-	    return getOutsideFreeLoc(insideLoc);
+	    return getOutsideFreeLoc(insideLoc, player);
 	}
     }
 
-    @SuppressWarnings("deprecation")
-    public Location getOutsideFreeLoc(Location insideLoc) {
-	int maxIt = 100;
+    public Location getOutsideFreeLoc(Location insideLoc, Player player) {
 	CuboidArea area = this.getAreaByLoc(insideLoc);
 	if (area == null) {
 	    return insideLoc;
 	}
-	Location highLoc = area.getHighLoc();
-	Location newLoc = new Location(highLoc.getWorld(), highLoc.getBlockX(), highLoc.getBlockY(), highLoc.getBlockZ());
+
+	List<RandomLoc> randomLocList = new ArrayList<RandomLoc>();
+
+	for (int z = 0; z < area.getZSize(); z++) {
+	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() - 1, 0, area.getLowLoc().getZ() + z));
+	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + area.getXSize(), 0, area.getLowLoc().getZ() + z));
+	}
+
+	for (int x = -1; x < area.getXSize() + 1; x++) {
+	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ() - 1));
+	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ() + area.getZSize()));
+	}
+
+	Location loc = insideLoc.clone();
+
 	boolean found = false;
 	int it = 0;
+	int maxIt = 30;
 	while (!found && it < maxIt) {
 	    it++;
-	    Location lowLoc;
-	    newLoc.setX(newLoc.getBlockX() + 1);
-	    newLoc.setZ(newLoc.getBlockZ() + 1);
-	    lowLoc = new Location(newLoc.getWorld(), newLoc.getBlockX(), 254, newLoc.getBlockZ());
-	    newLoc.setY(255);
-	    while ((newLoc.getBlock().getTypeId() != 0 || lowLoc.getBlock().getTypeId() == 0) && lowLoc.getBlockY() > -126) {
-		newLoc.setY(newLoc.getY() - 1);
-		lowLoc.setY(lowLoc.getY() - 1);
+
+	    Random ran = new Random(System.currentTimeMillis());
+	    int check = ran.nextInt(randomLocList.size());
+	    RandomLoc place = randomLocList.get(check);
+	    randomLocList.remove(check);
+	    double x = place.getX();
+	    double z = place.getZ();
+
+	    loc.setX(x);
+	    loc.setZ(z);
+	    loc.setY(area.getHighLoc().getBlockY());
+
+	    int max = area.getHighLoc().getBlockY();
+	    max = loc.getWorld().getEnvironment() == Environment.NETHER ? 100 : max;
+
+	    for (int i = max; i > area.getLowLoc().getY(); i--) {
+		loc.setY(i);
+		Block block = loc.getBlock();
+		Block block2 = loc.clone().add(0, 1, 0).getBlock();
+		Block block3 = loc.clone().add(0, -1, 0).getBlock();
+		if (!Residence.getNms().isEmptyBlock(block3) && Residence.getNms().isEmptyBlock(block) && Residence.getNms().isEmptyBlock(block2)) {
+		    break;
+		}
 	    }
-	    if (newLoc.getBlock().getTypeId() == 0 && lowLoc.getBlock().getTypeId() != 0) {
-		found = true;
-	    }
+
+	    if (!Residence.getNms().isEmptyBlock(loc.getBlock()))
+		continue;
+
+	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.LAVA || loc.clone().add(0, -1, 0).getBlock().getState()
+		.getType() == Material.STATIONARY_LAVA)
+		continue;
+
+	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.WATER || loc.clone().add(0, -1, 0).getBlock().getState()
+		.getType() == Material.STATIONARY_WATER)
+		continue;
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+	    if (res != null && player != null && !res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp"))
+		continue;
+
+	    found = true;
+	    loc.setY(loc.getY() + 2);
+	    loc.add(0.5, 0, 0.5);
+	    break;
 	}
-	if (found) {
-	    return newLoc;
-	} else {
-	    World world = Residence.getServ().getWorld(perms.getWorld());
-	    if (world != null) {
-		return world.getSpawnLocation();
-	    }
-	    return insideLoc;
-	}
+
+	if (!found && Residence.getConfigManager().getKickLocation() != null)
+	    return Residence.getConfigManager().getKickLocation();
+
+	return loc;
     }
 
     protected CuboidArea getAreaByLoc(Location loc) {
@@ -767,12 +833,20 @@ public class ClaimedResidence {
 	return list;
     }
 
+    public List<ClaimedResidence> getSubzones() {
+	List<ClaimedResidence> list = new ArrayList<ClaimedResidence>();
+	for (Entry<String, ClaimedResidence> res : subzones.entrySet()) {
+	    list.add(res.getValue());
+	}
+	return list;
+    }
+
     public void printSubzoneList(Player player, int page) {
 	ArrayList<String> temp = new ArrayList<>();
 	for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
-	    temp.add(ChatColor.GREEN + sz.getKey() + ChatColor.YELLOW + " - " + Residence.getLanguage().getPhrase("Owner") + ": " + sz.getValue().getOwner());
+	    temp.add(ChatColor.GREEN + sz.getKey() + ChatColor.YELLOW + " - " + Residence.getLM().getMessage("General.Owner", sz.getValue().getOwner()));
 	}
-	InformationPager.printInfo(player, Residence.getLanguage().getPhrase("Subzones"), temp, page);
+	InformationPager.printInfo(player, Residence.getLM().getMessage("General.Subzones"), temp, page);
     }
 
     public void printAreaList(Player player, int page) {
@@ -780,7 +854,7 @@ public class ClaimedResidence {
 	for (String area : areas.keySet()) {
 	    temp.add(area);
 	}
-	InformationPager.printInfo(player, Residence.getLanguage().getPhrase("PhysicalAreas"), temp, page);
+	InformationPager.printInfo(player, Residence.getLM().getMessage("General.PhysicalAreas"), temp, page);
     }
 
     public void printAdvancedAreaList(Player player, int page) {
@@ -793,7 +867,7 @@ public class ClaimedResidence {
 		.getBlockX() + "," + h.getBlockY() + "," + h.getBlockZ() + ") " + ChatColor.YELLOW + "P2:" + ChatColor.RED + "(" + l.getBlockX() + "," + l.getBlockY()
 		+ "," + l.getBlockZ() + ") " + ChatColor.YELLOW + "(Size:" + ChatColor.RED + a.getSize() + ChatColor.YELLOW + ")" + ChatColor.GREEN + "} ");
 	}
-	InformationPager.printInfo(player, Residence.getLanguage().getPhrase("PhysicalAreas"), temp, page);
+	InformationPager.printInfo(player, Residence.getLM().getMessage("General.PhysicalAreas"), temp, page);
     }
 
     public String[] getAreaList() {
@@ -818,15 +892,15 @@ public class ClaimedResidence {
 
     public void setTpLoc(Player player, boolean resadmin) {
 	if (!this.perms.hasResidencePermission(player, false) && !resadmin) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
 	}
 	if (!this.containsLoc(player.getLocation())) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NotInResidence"));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
 	    return;
 	}
 	tpLoc = player.getLocation();
-	player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SetTeleportLocation"));
+	player.sendMessage(Residence.getLM().getMessage("Residence.SetTeleportLocation"));
     }
 
     public int isSafeTp(Player player) {
@@ -864,19 +938,19 @@ public class ClaimedResidence {
 	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass")) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(reqPlayer);
 	    if (!group.hasTpAccess()) {
-		reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportDeny"));
+		reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportDeny"));
 		return;
 	    }
 	    if (!reqPlayer.equals(targetPlayer)) {
-		reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		reqPlayer.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return;
 	    }
 	    if (!this.perms.playerHas(reqPlayer.getName(), "tp", true)) {
-		reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportNoFlag"));
+		reqPlayer.sendMessage(Residence.getLM().getMessage("Residence.TeleportNoFlag"));
 		return;
 	    }
 	    if (!this.perms.playerHas(reqPlayer.getName(), "move", true)) {
-		reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ResidenceMoveDeny", this.getName()));
+		reqPlayer.sendMessage(Residence.getLM().getMessage("Residence.MoveDeny", this.getName()));
 		return;
 	    }
 	}
@@ -884,15 +958,14 @@ public class ClaimedResidence {
 	if (!ResidenceCommandListener.getTeleportMap().containsKey(targetPlayer.getName()) && !isAdmin) {
 	    int distance = isSafeTp(reqPlayer);
 	    if (distance > 6) {
-		reqPlayer.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("TeleportConfirm", String.valueOf(distance)));
+		reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportConfirm", distance));
 		ResidenceCommandListener.getTeleportMap().put(reqPlayer.getName(), this);
 		return;
 	    }
 	}
 
 	if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !resadmin) {
-	    reqPlayer.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("TeleportStarted", this.getName() + "|" + Residence.getConfigManager()
-		.getTeleportDelay()));
+	    reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportStarted", this.getName(), Residence.getConfigManager().getTeleportDelay()));
 	    ResidenceCommandListener.getTeleportDelayMap().add(reqPlayer.getName());
 	}
 
@@ -908,7 +981,7 @@ public class ClaimedResidence {
 		ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
 		return;
 	    }
-	    final Location targloc = this.getMiddleFreeLoc(area.getHighLoc());
+	    final Location targloc = this.getMiddleFreeLoc(area.getHighLoc(), targetPlayer);
 	    if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
 		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
 	    else
@@ -929,9 +1002,9 @@ public class ClaimedResidence {
 			ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
 		    targetPlayer.teleport(targloc);
 		    if (near)
-			targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TeleportNear"));
+			targetPlayer.sendMessage(Residence.getLM().getMessage("Residence.TeleportNear"));
 		    else
-			targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TeleportSuccess"));
+			targetPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportSuccess"));
 		    return;
 		}
 	    }, Residence.getConfigManager().getTeleportDelay() * 20L);
@@ -944,9 +1017,9 @@ public class ClaimedResidence {
 	if (!tpevent.isCancelled()) {
 	    targetPlayer.teleport(targloc);
 	    if (near)
-		targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TeleportNear"));
+		targetPlayer.sendMessage(Residence.getLM().getMessage("Residence.TeleportNear"));
 	    else
-		targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("TeleportSuccess"));
+		targetPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportSuccess"));
 
 	}
     }
@@ -976,17 +1049,17 @@ public class ClaimedResidence {
     public void removeArea(Player player, String id, boolean resadmin) {
 	if (this.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (!areas.containsKey(id)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaNonExist"));
+		player.sendMessage(Residence.getLM().getMessage("Area.NonExist"));
 		return;
 	    }
 	    if (areas.size() == 1 && !Residence.getConfigManager().allowEmptyResidences()) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaRemoveLast"));
+		player.sendMessage(Residence.getLM().getMessage("Area.RemoveLast"));
 		return;
 	    }
 	    removeArea(id);
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaRemove"));
+	    player.sendMessage(Residence.getLM().getMessage("Area.Remove"));
 	} else {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	}
     }
 
@@ -1110,28 +1183,28 @@ public class ClaimedResidence {
 
     public boolean renameSubzone(Player player, String oldName, String newName, boolean resadmin) {
 	if (!Residence.validName(newName)) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
 	    return false;
 	}
 	ClaimedResidence res = subzones.get(oldName);
 	if (res == null) {
 	    if (player != null)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidSubzone"));
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Subzone"));
 	    return false;
 	}
 	if (player != null && !res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return false;
 	}
 	if (subzones.containsKey(newName)) {
 	    if (player != null)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("SubzoneExists", ChatColor.YELLOW + newName));
+		player.sendMessage(Residence.getLM().getMessage("Subzone.Exists", newName));
 	    return false;
 	}
 	subzones.put(newName, res);
 	subzones.remove(oldName);
 	if (player != null)
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("SubzoneRename", oldName + "|" + newName));
+	    player.sendMessage(Residence.getLM().getMessage("Subzone.Rename", oldName, newName));
 	return true;
     }
 
@@ -1141,28 +1214,28 @@ public class ClaimedResidence {
 
     public boolean renameArea(Player player, String oldName, String newName, boolean resadmin) {
 	if (!Residence.validName(newName)) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidNameCharacters"));
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
 	    return false;
 	}
 	if (player == null || perms.hasResidencePermission(player, true) || resadmin) {
 	    if (areas.containsKey(newName)) {
 		if (player != null)
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaExists"));
+		    player.sendMessage(Residence.getLM().getMessage("Area.Exists"));
 		return false;
 	    }
 	    CuboidArea area = areas.get(oldName);
 	    if (area == null) {
 		if (player != null)
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("AreaInvalidName"));
+		    player.sendMessage(Residence.getLM().getMessage("Area.InvalidName"));
 		return false;
 	    }
 	    areas.put(newName, area);
 	    areas.remove(oldName);
 	    if (player != null)
-		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("AreaRename", oldName + "|" + newName));
+		player.sendMessage(Residence.getLM().getMessage("Area.Rename", oldName, newName));
 	    return true;
 	} else {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return false;
 	}
     }
@@ -1215,6 +1288,10 @@ public class ClaimedResidence {
 
     public void setChannelColor(ChatColor ChannelColor) {
 	this.ChannelColor = ChannelColor;
+    }
+
+    public ChatChannel getChatChannel() {
+	return Residence.getChatManager().getChannel(this.getName());
     }
 
     public ChatColor getChannelColor() {

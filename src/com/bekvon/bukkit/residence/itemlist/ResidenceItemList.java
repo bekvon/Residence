@@ -1,11 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.itemlist;
-
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -14,10 +7,6 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class ResidenceItemList extends ItemList {
     ClaimedResidence res;
 
@@ -34,11 +23,11 @@ public class ResidenceItemList extends ItemList {
 	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	if (resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess())) {
 	    if (super.toggle(mat))
-		player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialAdd", ChatColor.GREEN + mat.toString() + ChatColor.YELLOW + "|" + ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
+		player.sendMessage(Residence.getLM().getMessage("General.ListMaterialAdd", mat.toString(), type.toString().toLowerCase()));
 	    else
-		player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("ListMaterialRemove", ChatColor.GREEN + mat.toString() + ChatColor.YELLOW + "|" + ChatColor.GREEN + type.toString().toLowerCase() + ChatColor.YELLOW));
+		player.sendMessage(Residence.getLM().getMessage("General.ListMaterialRemove", mat.toString(), type.toString().toLowerCase()));
 	} else {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	}
     }
 

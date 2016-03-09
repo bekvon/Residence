@@ -18,10 +18,6 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 
-/**
- * 
- * @author Administrator
- */
 public class FlagPermissions {
 
     protected static ArrayList<String> validFlags = new ArrayList<>();
@@ -33,6 +29,10 @@ public class FlagPermissions {
     protected Map<String, Map<String, Boolean>> groupFlags;
     protected Map<String, Boolean> cuboidFlags = new HashMap<String, Boolean>();
     protected FlagPermissions parent;
+
+    public static enum FlagState {
+	TRUE, FALSE, NEITHER, INVALID
+    }
 
     public static void addMaterialToUseFlag(Material mat, String flag) {
 	matUseFlagList.put(mat, flag);
@@ -151,7 +151,7 @@ public class FlagPermissions {
 
 	addFlag("chat");
 	addFlag("dye");
-	
+
 	addFlag("enderpearl");
 
 	addResidenceOnlyFlag("trample");
@@ -457,11 +457,6 @@ public class FlagPermissions {
 	    }
 	}
 	return true;
-    }
-
-    public static enum FlagState {
-
-	TRUE, FALSE, NEITHER, INVALID
     }
 
     public static FlagState stringToFlagState(String flagstate) {
@@ -788,7 +783,7 @@ public class FlagPermissions {
 			    next = this.cachedPlayerNameUUIDs.get(next);
 		    }
 		    if (!perms.equals("none")) {
-			sbuild.append(next).append("[").append(ChatColor.DARK_AQUA).append(perms).append(ChatColor.RED).append("] ");
+			sbuild.append(next).append(ChatColor.WHITE).append("[").append(perms).append(ChatColor.WHITE).append("] ");
 		    }
 		}
 	    }
@@ -921,10 +916,10 @@ public class FlagPermissions {
     }
 
     public void printFlags(Player player) {
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Flags") + ":" + ChatColor.BLUE + " " + listFlags());
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Your.Flags") + ":" + ChatColor.GREEN + " " + listPlayerFlags(player.getName()));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Group.Flags") + ":" + ChatColor.RED + " " + listGroupFlags());
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("Others.Flags") + ":" + ChatColor.RED + " " + listOtherPlayersFlags(player.getName()));
+	player.sendMessage(Residence.getLM().getMessage("General.Flags", listFlags()));
+	player.sendMessage(Residence.getLM().getMessage("General.YourFlags", listPlayerFlags(player.getName())));
+	player.sendMessage(Residence.getLM().getMessage("General.GroupFlags", listGroupFlags()));
+	player.sendMessage(Residence.getLM().getMessage("General.OthersFlags", listOtherPlayersFlags(player.getName())));
     }
 
     public void copyUserPermissions(String fromUser, String toUser) {

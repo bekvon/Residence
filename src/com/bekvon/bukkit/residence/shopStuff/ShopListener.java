@@ -29,7 +29,9 @@ public class ShopListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSignInteract(PlayerInteractEvent event) {
-
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
 	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;
 
@@ -69,9 +71,9 @@ public class ShopListener implements Listener {
 	    if (Found != null) {
 		Residence.getShopSignUtilManager().GetAllBoards().remove(Found);
 		Residence.getShopSignUtilManager().saveSigns();
-		event.getPlayer().sendMessage(Residence.getLM().getMessage("Language.Shop.DeletedBoard"));
+		event.getPlayer().sendMessage(Residence.getLM().getMessage("Shop.DeletedBoard"));
 	    } else {
-		event.getPlayer().sendMessage(Residence.getLM().getMessage("Language.Shop.IncorrectBoard"));
+		event.getPlayer().sendMessage(Residence.getLM().getMessage("Shop.IncorrectBoard"));
 	    }
 	    Delete.remove(player.getName());
 	    return;
@@ -90,6 +92,7 @@ public class ShopListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onFlagChangeShop(ResidenceFlagChangeEvent event) {
+
 	if (event.isCancelled())
 	    return;
 

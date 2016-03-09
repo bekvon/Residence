@@ -342,15 +342,15 @@ public class ShopSignUtil {
 		    vote = getAverageVote(ShopNames.get(Start - 1));
 
 		    if (Residence.getConfigManager().isOnlyLike()) {
-			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Language.Shop.ListLiked", getLikes(ShopNames.get(Start - 1)));
+			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.ListLiked", getLikes(ShopNames.get(Start - 1)));
 		    } else
-			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Language.Shop.SignLines.4", vote.getVote() + "%" + vote.getAmount());
+			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.SignLines.4", vote.getVote() + "%" + vote.getAmount());
 		}
 
 		if (Shop != null) {
-		    sign.setLine(0, Residence.getLM().getMessage("Language.Shop.SignLines.1", String.valueOf(Start)));
-		    sign.setLine(1, Residence.getLM().getMessage("Language.Shop.SignLines.2", res.getName()));
-		    sign.setLine(2, Residence.getLM().getMessage("Language.Shop.SignLines.3", res.getOwner()));
+		    sign.setLine(0, Residence.getLM().getMessage("Shop.SignLines.1", String.valueOf(Start)));
+		    sign.setLine(1, Residence.getLM().getMessage("Shop.SignLines.2", res.getName()));
+		    sign.setLine(2, Residence.getLM().getMessage("Shop.SignLines.3", res.getOwner()));
 		    sign.setLine(3, votestat);
 		    board.addSignLoc(res.getName(), sign.getLocation());
 		} else {

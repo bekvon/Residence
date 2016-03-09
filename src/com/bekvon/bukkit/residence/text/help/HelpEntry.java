@@ -1,13 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.text.help;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
@@ -31,10 +27,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class HelpEntry {
     protected String name;
     protected String desc;
@@ -73,18 +65,17 @@ public class HelpEntry {
 	path = "/" + path.replace(".", " ") + " ";
 	int pagecount = (int) Math.ceil((double) helplines.size() / (double) linesPerPage);
 	if (page > pagecount || page < 1) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
+	    sender.sendMessage(Residence.getLM().getMessage("Invalid.Help"));
 	    return;
 	}
 
 	String separator = ChatColor.GOLD + "";
 	String simbol = "\u25AC";
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 10; i++) {
 	    separator += simbol;
 	}
 
-	sender.sendMessage(ChatColor.GOLD + separator + " " + Residence.getLanguage().getPhrase("HelpPageHeader", ChatColor.YELLOW + path + ChatColor.GOLD + "|"
-	    + ChatColor.YELLOW + page + ChatColor.GOLD + "|" + ChatColor.YELLOW + pagecount + ChatColor.GOLD) + " " + separator);
+	sender.sendMessage(ChatColor.GOLD + separator + " " + Residence.getLM().getMessage("General.HelpPageHeader", path, page, pagecount) + " " + separator);
 	int start = linesPerPage * (page - 1);
 	int end = start + linesPerPage;
 	for (int i = start; i < end; i++) {
@@ -96,7 +87,7 @@ public class HelpEntry {
 		    String desc = "";
 		    int y = 0;
 		    for (String one : sub.lines) {
-			desc += ChatColor.GOLD + one;
+			desc += ChatColor.YELLOW + one;
 			y++;
 			if (y < sub.lines.length) {
 			    desc += "\n";
@@ -116,7 +107,7 @@ public class HelpEntry {
 			sender.sendMessage(helplines.get(i).getDesc());
 
 		} else
-		    sender.sendMessage(ChatColor.GOLD + " " + helplines.get(i).getDesc());
+		    sender.sendMessage(ChatColor.GREEN + " " + helplines.get(i).getDesc());
 	    }
 	}
 
@@ -130,11 +121,11 @@ public class HelpEntry {
 
 	String baseCmd = resadmin ? "resadmin" : "res";
 	String prevCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + Prevpage : "/" + baseCmd + " ? " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLanguage().getPhrase("PrevInfoPage")
+	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + NextPage : "/" + baseCmd + " ? " + NextPage;
-	String next = " {\"text\":\"" + Residence.getLanguage().getPhrase("NextInfoPage") + " " + separator + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
 	if (sender instanceof Player)
@@ -146,7 +137,7 @@ public class HelpEntry {
 	if (subEntry != null) {
 	    subEntry.printHelp(sender, page, resadmin, path);
 	} else {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidHelp"));
+	    sender.sendMessage(Residence.getLM().getMessage("Invalid.Help"));
 	}
     }
 
@@ -255,56 +246,8 @@ public class HelpEntry {
 	return entry;
     }
 
-//    public static Set<String> getSubCommands(String[] args) {
-//	File langFile = new File(new File(Residence.getDataLocation(), "Language"), "English.yml");
-//
-//	Set<String> subCommands = new HashSet<String>(Arrays.asList(""));
-//
-//	if (langFile.isFile()) {
-//	    FileConfiguration node = new YamlConfiguration();
-//	    try {
-//		node.load(langFile);
-//	    } catch (FileNotFoundException e) {
-//		e.printStackTrace();
-//	    } catch (IOException e) {
-//		e.printStackTrace();
-//	    } catch (InvalidConfigurationException e) {
-//		e.printStackTrace();
-//	    }
-//
-//	    subCommands = node.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands").getKeys(false);
-//	    ConfigurationSection meinPath = node.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands");
-//
-//	    String pathKey = convertArgs(args);
-//	    String key = pathKey + ".SubCommands";
-//
-//	    Debug.D("" + key);
-//	    
-//	    if (key == "") {
-//		return subCommands;
-//	    } else {
-//		if (meinPath.contains(key)) {
-//		    return meinPath.getConfigurationSection(key).getKeys(false);
-//		} else {
-//		    String[] arg = new String[args.length - 1];
-//		    for (int i = 0; i < args.length - 1; i++) {
-//			arg[i] = args[i];
-//		    }
-//		    pathKey = convertArgs(arg);
-//		    key = pathKey + ".SubCommands";
-//		    if (meinPath.contains(key)) {
-//			return meinPath.getConfigurationSection(key).getKeys(false);
-//		    }
-//		}
-//	    }
-//
-//	}
-//	return new HashSet<String>(Arrays.asList("?"));
-//    }
-
     public Set<String> getSubCommands(CommandSender sender, String[] args) {
 	File langFile = new File(new File(Residence.getDataLocation(), "Language"), "English.yml");
-//
 	Set<String> subCommands = new HashSet<String>();
 
 	if (langFile.isFile()) {
@@ -432,6 +375,11 @@ public class HelpEntry {
 		case "[material]":
 		    for (Material one : Material.values()) {
 			subCommands.add(one.name().toLowerCase());
+		    }
+		    break;
+		case "[worldname]":
+		    for (World one : Bukkit.getWorlds()) {
+			subCommands.add(one.getName());
 		    }
 		    break;
 		}

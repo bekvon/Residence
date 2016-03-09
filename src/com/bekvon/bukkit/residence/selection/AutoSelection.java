@@ -17,10 +17,10 @@ public class AutoSelection {
 	if (!list.containsKey(player.getName().toLowerCase())) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player.getName(), player.getLocation().getWorld().getName());
 	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
-	    player.sendMessage(Residence.getLM().getMessage("Language.AutoSelection.Enabled"));
+	    player.sendMessage(Residence.getLM().getMessage("Select.AutoEnabled"));
 	} else {
 	    list.remove(player.getName().toLowerCase());
-	    player.sendMessage(Residence.getLM().getMessage("Language.AutoSelection.Disabled"));
+	    player.sendMessage(Residence.getLM().getMessage("Select.AutoDisabled"));
 	}
     }
 
@@ -35,7 +35,7 @@ public class AutoSelection {
 
 	if (Curenttime > 270) {
 	    list.remove(player.getName().toLowerCase());
-	    player.sendMessage(Residence.getLM().getMessage("Language.AutoSelection.Disabled"));
+	    player.sendMessage(Residence.getLM().getMessage("AutoSelection.Disabled"));
 	    return;
 	}
 

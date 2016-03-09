@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bekvon.bukkit.residence.selection;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -14,10 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class WorldEditSelectionManager extends SelectionManager {
 
     public WorldEditSelectionManager(Server serv, Residence plugin) {
@@ -28,7 +20,7 @@ public class WorldEditSelectionManager extends SelectionManager {
     public boolean worldEdit(Player player) {
 	WorldEditPlugin wep = (WorldEditPlugin) this.server.getPluginManager().getPlugin("WorldEdit");
 	Selection sel = wep.getSelection(player);
-		
+
 	if (sel != null) {
 	    Location pos1 = sel.getMinimumPoint();
 	    Location pos2 = sel.getMaximumPoint();

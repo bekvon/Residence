@@ -15,6 +15,9 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 public class SpigotListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDamage(PlayerItemDamageEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
 	Player player = event.getPlayer();
 	Location loc = player.getLocation();
 	FlagPermissions perms = Residence.getPermsByLoc(loc);

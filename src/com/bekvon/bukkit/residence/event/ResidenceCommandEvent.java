@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.event;
 
 import org.bukkit.command.CommandSender;
@@ -10,10 +5,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-/**
- *
- * @author Administrator
- */
 public class ResidenceCommandEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();

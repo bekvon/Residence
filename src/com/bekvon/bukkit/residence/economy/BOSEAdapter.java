@@ -4,10 +4,6 @@ import com.bekvon.bukkit.residence.Residence;
 
 import cosine.boseconomy.BOSEconomy;
 
-/**
- * 
- * @author Administrator
- */
 public class BOSEAdapter implements EconomyInterface {
 
     BOSEconomy plugin;

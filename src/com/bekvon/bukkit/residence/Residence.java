@@ -33,8 +33,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.dynmap.DynmapAPI;
 
 import com.bekvon.bukkit.residence.chat.ChatManager;
+import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
+import com.bekvon.bukkit.residence.dynmap.DynMapManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
@@ -59,12 +62,14 @@ import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
+import com.bekvon.bukkit.residence.protection.PlayerManager;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
+import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
@@ -74,7 +79,9 @@ import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
+import com.bekvon.bukkit.residence.utils.YmlMaker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
+import com.bekvon.bukkit.residence.api.*;
 import com.earth2me.essentials.Essentials;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
@@ -99,6 +106,8 @@ import org.bukkit.OfflinePlayer;
  */
 public class Residence extends JavaPlugin {
 
+    protected static String ResidenceVersion;
+    protected static List<String> authlist;
     protected static ResidenceManager rmanager;
     protected static SelectionManager smanager;
     protected static PermissionManager gmanager;
@@ -110,6 +119,7 @@ public class Residence extends JavaPlugin {
     protected static ResidencePlayerListener plistener;
     protected static ResidenceEntityListener elistener;
     protected static ResidenceSpoutListener slistener;
+    protected static ResidenceSpout spout;
 
     protected static ResidenceFixesListener flistener;
 
@@ -124,13 +134,13 @@ public class Residence extends JavaPlugin {
     protected static ChatManager chatmanager;
     protected static Server server;
     protected static HelpEntry helppages;
-    protected static Language language;
-    protected static Locale LocaleManager;
-    protected static NewLanguage NewLanguageManager;
+    protected static LocaleManager LocaleManager;
+    protected static Language NewLanguageManager;
     protected static PlayerManager PlayerManager;
     protected static FlagUtil FlagUtilManager;
     protected static ShopSignUtil ShopSignUtilManager;
     protected static RandomTp RandomTpManager;
+    protected static DynMapManager DynManager;
 
     public static Plugin instance2;
     protected boolean firstenable = true;
@@ -148,8 +158,8 @@ public class Residence extends JavaPlugin {
     protected static VersionChecker versionChecker;
     protected static boolean initsuccess = false;
     public static Map<String, String> deleteConfirm;
-    protected static List<String> resadminToggle;
-    private final static String[] validLanguages = { "English", "German", "French", "Hungarian", "Spanish", "Chinese", "Czech", "Brazilian", "Polish", "Lithuanian" };
+    public static List<String> resadminToggle;
+    private final static String[] validLanguages = { "English" };
     public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     public static WorldEditPlugin wep = null;
     public static WorldGuardPlugin wg = null;
@@ -161,6 +171,66 @@ public class Residence extends JavaPlugin {
 
     private static NMS nms;
     static LWC lwc;
+
+    public static HashMap<String, Long> rtMap = new HashMap<String, Long>();
+    public static List<String> teleportDelayMap = new ArrayList<String>();
+    public static HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
+
+    public static HashMap<String, ClaimedResidence> getTeleportMap() {
+	return teleportMap;
+    }
+
+    public static List<String> getTeleportDelayMap() {
+	return teleportDelayMap;
+    }
+
+    public static HashMap<String, Long> getRandomTeleportMap() {
+	return rtMap;
+    }
+
+    // API
+    private static ResidenceApi API = new ResidenceApi();
+    private static MarketBuyInterface MarketBuyAPI = null;
+    private static MarketRentInterface MarketRentAPI = null;
+    private static ResidencePlayerInterface PlayerAPI = null;
+    private static ResidenceInterface ResidenceAPI = null;
+    private static ChatInterface ChatAPI = null;
+
+    public static ResidencePlayerInterface getPlayerManagerAPI() {
+	if (PlayerAPI == null)
+	    PlayerAPI = PlayerManager;
+	return PlayerAPI;
+    }
+
+    public static ResidenceInterface getResidenceManagerAPI() {
+	if (ResidenceAPI == null)
+	    ResidenceAPI = rmanager;
+	return ResidenceAPI;
+    }
+
+    public static MarketRentInterface getMarketRentManagerAPI() {
+	if (MarketRentAPI == null)
+	    MarketRentAPI = rentmanager;
+	return MarketRentAPI;
+    }
+
+    public static MarketBuyInterface getMarketBuyManagerAPI() {
+	if (MarketBuyAPI == null)
+	    MarketBuyAPI = tmanager;
+	return MarketBuyAPI;
+
+    }
+
+    public static ChatInterface getResidenceChatAPI() {
+	if (ChatAPI == null)
+	    ChatAPI = chatmanager;
+	return ChatAPI;
+    }
+
+    public static ResidenceApi getAPI() {
+	return API;
+    }
+    // API end
 
     public static NMS getNms() {
 	return nms;
@@ -242,6 +312,9 @@ public class Residence extends JavaPlugin {
 	if (cmanager.enabledRentSystem()) {
 	    server.getScheduler().cancelTask(rentBukkitId);
 	}
+
+	getDynManager().getMarkerSet().deleteMarkerSet();
+
 	if (initsuccess) {
 	    try {
 		saveYml();
@@ -256,13 +329,15 @@ public class Residence extends JavaPlugin {
     @Override
     public void onEnable() {
 	try {
-
-//	    instance = this;
 	    initsuccess = false;
 	    deleteConfirm = new HashMap<String, String>();
 	    resadminToggle = new ArrayList<String>();
 	    server = this.getServer();
 	    dataFolder = this.getDataFolder();
+
+	    ResidenceVersion = this.getDescription().getVersion();
+	    authlist = this.getDescription().getAuthors();
+
 	    if (!dataFolder.isDirectory()) {
 		dataFolder.mkdirs();
 	    }
@@ -357,11 +432,12 @@ public class Residence extends JavaPlugin {
 	    chatmanager = new ChatManager();
 	    rentmanager = new RentManager();
 
-	    LocaleManager = new Locale(this);
+	    LocaleManager = new LocaleManager(this);
 
 	    PlayerManager = new PlayerManager(this);
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
+	    DynManager = new DynMapManager(this);
 
 	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
 	    if (lwcp != null)
@@ -397,7 +473,6 @@ public class Residence extends JavaPlugin {
 		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
-		    language = Language.parseText(langconfig, "Language");
 		} else {
 		    System.out.println("[Residence] Language file does not exist...");
 		}
@@ -420,7 +495,6 @@ public class Residence extends JavaPlugin {
 		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
-		    language = Language.parseText(langconfig, "Language");
 		} else {
 		    System.out.println("[Residence] Language file does not exist...");
 		}
@@ -467,7 +541,7 @@ public class Residence extends JavaPlugin {
 		    getOfflinePlayerMap().put(name.toLowerCase(), player);
 		}
 		Bukkit.getConsoleSender().sendMessage("[Residence] Player data loaded: " + getOfflinePlayerMap().size());
-	    } else {		
+	    } else {
 		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
 		    @Override
 		    public void run() {
@@ -544,13 +618,20 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(plistener, this);
 		pm.registerEvents(elistener, this);
 		pm.registerEvents(flistener, this);
-
 		pm.registerEvents(shlistener, this);
+
+		// DynMap
+		Plugin dynmap = server.getPluginManager().getPlugin("dynmap");
+		if (dynmap != null && getConfigManager().DynMapUse) {
+		    pm.registerEvents(new DynMapListeners(), this);
+		    getDynManager().api = (DynmapAPI) dynmap;
+		    getDynManager().activate();
+		}
 
 		if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
 		    pm.registerEvents(spigotlistener, this);
 
-		NewLanguageManager = new NewLanguage(this);
+		NewLanguageManager = new Language(this);
 		getLM().LanguageReload();
 
 		// 1.8 event
@@ -565,6 +646,7 @@ public class Residence extends JavaPlugin {
 		if (cmanager.enableSpout()) {
 		    slistener = new ResidenceSpoutListener();
 		    pm.registerEvents(slistener, this);
+		    spout = new ResidenceSpout(this);
 		}
 		firstenable = false;
 	    } else {
@@ -644,10 +726,6 @@ public class Residence extends JavaPlugin {
 	console.sendMessage("[Residence] " + message);
     }
 
-    public static void sendMessage(Player player, String message) {
-	player.sendMessage(org.bukkit.ChatColor.translateAlternateColorCodes('&', message));
-    }
-
     public static boolean validName(String name) {
 	if (name.contains(":") || name.contains(".") || name.contains("|")) {
 	    return false;
@@ -683,6 +761,14 @@ public class Residence extends JavaPlugin {
 	return ShopSignUtilManager;
     }
 
+    public static ResidenceSpout getSpout() {
+	return spout;
+    }
+
+    public static ResidenceSpoutListener getSpoutListener() {
+	return slistener;
+    }
+
     public static ResidenceManager getResidenceManager() {
 	return rmanager;
     }
@@ -697,6 +783,14 @@ public class Residence extends JavaPlugin {
 
     public static PermissionManager getPermissionManager() {
 	return gmanager;
+    }
+
+    public static PermissionListManager getPermissionListManager() {
+	return pmanager;
+    }
+
+    public static DynMapManager getDynManager() {
+	return DynManager;
     }
 
     public static RandomTp getRandomTpManager() {
@@ -743,11 +837,11 @@ public class Residence extends JavaPlugin {
 	return rentmanager;
     }
 
-    public static Locale getLocaleManager() {
+    public static LocaleManager getLocaleManager() {
 	return LocaleManager;
     }
 
-    public static NewLanguage getLM() {
+    public static Language getLM() {
 	return NewLanguageManager;
     }
 
@@ -767,11 +861,16 @@ public class Residence extends JavaPlugin {
 	return chatmanager;
     }
 
-    public static Language getLanguage() {
-	if (language == null) {
-	    language = new Language();
-	}
-	return language;
+    public static WorldEditPlugin getWEplugin() {
+	return wep;
+    }
+
+    public static String getResidenceVersion() {
+	return ResidenceVersion;
+    }
+
+    public static List<String> getAuthors() {
+	return authlist;
     }
 
     public static FlagPermissions getPermsByLoc(Location loc) {
@@ -1283,7 +1382,7 @@ public class Residence extends JavaPlugin {
 	if (Residence.getPlayerUUID(name) != null)
 	    return true;
 	if (inform)
-	    player.sendMessage(getLM().getMessage("Language.InvalidPlayer"));
+	    player.sendMessage(getLM().getMessage("Invalid.Player"));
 	return false;
 
     }
@@ -1350,5 +1449,25 @@ public class Residence extends JavaPlugin {
 	    return p.getName();
 	else
 	    return null;
+    }
+
+    public static boolean isDisabledWorldListener(World world) {
+	return isDisabledWorldListener(world.getName());
+    }
+
+    public static boolean isDisabledWorldListener(String worldname) {
+	if (getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableListeners)
+	    return true;
+	return false;
+    }
+
+    public static boolean isDisabledWorldCommand(World world) {
+	return isDisabledWorldCommand(world.getName());
+    }
+
+    public static boolean isDisabledWorldCommand(String worldname) {
+	if (getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableCommands)
+	    return true;
+	return false;
     }
 }

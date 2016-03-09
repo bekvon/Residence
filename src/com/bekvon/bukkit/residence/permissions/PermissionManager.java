@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -19,10 +14,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-/**
- * 
- * @author Administrator
- */
 public class PermissionManager {
     protected static PermissionsInterface perms;
     protected LinkedHashMap<String, PermissionGroup> groups;

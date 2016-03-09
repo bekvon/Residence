@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.itemlist;
 
 import org.bukkit.ChatColor;
@@ -15,10 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class ItemList {
 
     protected List<Material> list;

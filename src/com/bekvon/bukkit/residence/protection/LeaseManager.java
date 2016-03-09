@@ -1,11 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.protection;
-
-import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
@@ -22,10 +15,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class LeaseManager {
 
     private Map<String, Long> leaseExpireTime;
@@ -60,16 +49,16 @@ public class LeaseManager {
 	if (manager.getByName(area) != null) {
 	    leaseExpireTime.put(area, daysToMs(days) + System.currentTimeMillis());
 	    if (player != null)
-		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("LeaseRenew", getExpireTime(area).toString()));
+		player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenew", getExpireTime(area)));
 	} else {
 	    if (player != null)
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidArea"));
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Area"));
 	}
     }
 
     public void renewArea(String area, Player player) {
 	if (!leaseExpires(area)) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("LeaseNotExpire"));
+	    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseNotExpire"));
 	    return;
 	}
 	PermissionGroup limits = Residence.getPermissionManager().getGroup(player);
@@ -86,18 +75,17 @@ public class LeaseManager {
 		if (econ.canAfford(player.getName(), amount)/*account.hasEnough(amount)*/) {
 		    econ.subtract(player.getName(), amount);
 		    econ.add("Lease Money", amount);
-		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("MoneyCharged", ChatColor.YELLOW + String.format("%d", amount)
-			+ ChatColor.GREEN + "|" + ChatColor.YELLOW + econ.getName() + ChatColor.GREEN));
+		    player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
 		} else {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NotEnoughMoney"));
+		    player.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
 		    return;
 		}
 	    }
 	}
 	if (rem + add > max) {
 	    setExpireTime(player, area, max);
-	    player.sendMessage(ChatColor.GOLD + Residence.getLanguage().getPhrase("LeaseRenewMax"));
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LeaseRenew", ChatColor.GREEN + "" + getExpireTime(area)) + ChatColor.YELLOW);
+	    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenewMax"));
+	    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenew", getExpireTime(area)));
 	    return;
 	}
 	Long get = leaseExpireTime.get(area);
@@ -106,7 +94,7 @@ public class LeaseManager {
 	    leaseExpireTime.put(area, get);
 	} else
 	    leaseExpireTime.put(area, daysToMs(add));
-	player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LeaseRenew", ChatColor.GREEN + "" + getExpireTime(area)));
+	player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenew", getExpireTime(area)));
     }
 
     public int getRenewCost(ClaimedResidence res) {

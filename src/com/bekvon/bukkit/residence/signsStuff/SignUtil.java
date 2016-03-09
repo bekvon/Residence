@@ -66,7 +66,7 @@ public class SignUtil {
 		    ConfigurationSection NameSection = ConfCategory.getConfigurationSection(category);
 		    Signs newTemp = new Signs();
 		    newTemp.setCategory(Integer.valueOf(category));
-		    newTemp.setResidence(NameSection.getString("Residence"));
+		    newTemp.setResidence(NameSection.getString("Residence.Line"));
 		    newTemp.setWorld(NameSection.getString("World"));
 		    newTemp.setX(NameSection.getDouble("X"));
 		    newTemp.setY(NameSection.getDouble("Y"));
@@ -136,6 +136,14 @@ public class SignUtil {
 	return null;
     }
 
+    public void CheckSign(final ClaimedResidence res, int time) {
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+	    public void run() {
+		CheckSign(res);
+	    }
+	}, 5L);
+    }
+
     public void CheckSign(ClaimedResidence res) {
 	List<Signs> signList = new ArrayList<Signs>();
 	signList.addAll(this.getSigns().GetAllSigns());
@@ -188,7 +196,7 @@ public class SignUtil {
 	    if (rentedPlace != null)
 		time = rentedPlace.endTime;
 
-	    SimpleDateFormat formatter = new SimpleDateFormat(Residence.getLanguage().getPhrase("SignDateFormat"));
+	    SimpleDateFormat formatter = new SimpleDateFormat(Residence.getLM().getMessage("Sign.DateFormat"));
 	    formatter.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
 	    Calendar calendar = Calendar.getInstance();
 	    calendar.setTimeInMillis(time);
@@ -199,33 +207,33 @@ public class SignUtil {
 		endDate = "Unknown";
 
 	    if (Residence.getRentManager().getRentedAutoRepeats(landName))
-		endDate = ChatColor.translateAlternateColorCodes('&', Residence.getLanguage().getPhrase("SignRentedAutorenewTrue") + endDate);
+		endDate = Residence.getLM().getMessage("Sign.RentedAutorenewTrue", endDate);
 	    else
-		endDate = ChatColor.translateAlternateColorCodes('&', Residence.getLanguage().getPhrase("SignRentedAutorenewFalse") + endDate);
+		endDate = Residence.getLM().getMessage("Sign.RentedAutorenewFalse", endDate);
 
-	    String TopLine = rented ? endDate : Residence.getLanguage().getPhrase("SignForRentTopLine");
+	    String TopLine = rented ? endDate : Residence.getLM().getMessage("Sign.ForRentTopLine");
 	    sign.setLine(0, TopLine);
 
-	    String infoLine = Residence.getLanguage().getPhrase("SignForRentPriceLine", Residence.getRentManager().getCostOfRent(landName) + "|" + Residence
-		.getRentManager().getRentDays(landName) + "|" + Residence.getRentManager().getRentableRepeatable(landName));
+	    String infoLine = Residence.getLM().getMessage("Sign.ForRentPriceLine", Residence.getRentManager().getCostOfRent(landName), Residence
+		.getRentManager().getRentDays(landName), Residence.getRentManager().getRentableRepeatable(landName));
 
 	    sign.setLine(1, infoLine);
 	    String shortName = fixResName(landName);
-	    sign.setLine(2, rented ? Residence.getLM().getDefaultMessage("Language.SignRentedResName").replace("%1", shortName)
-		: Residence.getLM().getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
-	    sign.setLine(3, rented ? Residence.getLanguage().getPhrase("SignRentedBottomLine", Residence.getRentManager().getRentingPlayer(landName))
-		: Residence.getLanguage().getPhrase("SignForRentBottomLine"));
+	    sign.setLine(2, rented ? Residence.getLM().getMessage("Sign.RentedResName", shortName)
+		: Residence.getLM().getMessage("Sign.RentedResName", shortName));
+	    sign.setLine(3, rented ? Residence.getLM().getMessage("Sign.RentedBottomLine", Residence.getRentManager().getRentingPlayer(landName))
+		: Residence.getLM().getMessage("Sign.ForRentBottomLine"));
 	    sign.update();
 	}
 
 	if (ForSale) {
 	    String shortName = fixResName(landName);
 
-	    sign.setLine(0, Residence.getLanguage().getPhrase("SignForSaleTopLine"));
-	    String infoLine = Residence.getLanguage().getPhrase("SignForSalePriceLine", String.valueOf(Residence.getTransactionManager().getSaleAmount(landName)));
+	    sign.setLine(0, Residence.getLM().getMessage("Sign.ForSaleTopLine"));
+	    String infoLine = Residence.getLM().getMessage("Sign.ForSalePriceLine", Residence.getTransactionManager().getSaleAmount(landName));
 	    sign.setLine(1, infoLine);
-	    sign.setLine(2, Residence.getLM().getDefaultMessage("Language.SignRentedResName").replace("%1", shortName));
-	    sign.setLine(3, Residence.getLanguage().getPhrase("SignForSaleBottomLine"));
+	    sign.setLine(2, Residence.getLM().getMessage("Sign.RentedResName", shortName));
+	    sign.setLine(3, Residence.getLM().getMessage("Sign.ForSaleBottomLine"));
 	    sign.update();
 	}
 

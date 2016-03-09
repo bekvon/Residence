@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.vaultinterface;
 
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
@@ -16,10 +11,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-/**
- * 
- * @author Administrator
- */
 public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInterface {
 
     public static Permission permissions = null;

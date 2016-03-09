@@ -10,10 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class ChatChannel {
 
     protected String channelName;
@@ -50,7 +46,8 @@ public class ChatChannel {
 	for (String member : members) {
 	    Player player = serv.getPlayer(member);
 	    if (player != null)
-		player.sendMessage(cevent.getChatprefix() + " " + Residence.getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent.getChatMessage());
+		player.sendMessage(cevent.getChatprefix() + " " + Residence.getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent
+		    .getChatMessage());
 	}
 	Bukkit.getConsoleSender().sendMessage("ResidentialChat[" + channelName + "] - " + sourcePlayer + ": " + ChatColor.stripColor(cevent.getChatMessage()));
     }

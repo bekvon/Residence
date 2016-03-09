@@ -3,7 +3,6 @@ package com.bekvon.bukkit.residence.utils;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -123,8 +122,7 @@ public class RandomTp {
 		else if (ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()))
 		    ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
 		targetPlayer.teleport(loc);
-		targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLM().getMessage("Language.RandomTeleport.TeleportSuccess", loc.getX() + "%" + loc.getY() + "%"
-		    + loc.getZ()));
+		targetPlayer.sendMessage(Residence.getLM().getMessage("RandomTeleport.TeleportSuccess", loc.getX(), loc.getY(), loc.getZ()));
 		return;
 	    }
 	}, Residence.getConfigManager().getTeleportDelay() * 20L);
@@ -132,7 +130,6 @@ public class RandomTp {
 
     public static void performInstantTp(Location loc, Player targetPlayer) {
 	targetPlayer.teleport(loc);
-	targetPlayer.sendMessage(ChatColor.YELLOW + Residence.getLM().getMessage("Language.RandomTeleport.TeleportSuccess", loc.getX() + "%" + loc.getY() + "%" + loc
-	    .getZ()));
+	targetPlayer.sendMessage(Residence.getLM().getMessage("RandomTeleport.TeleportSuccess", loc.getX(), loc.getY(), loc.getZ()));
     }
 }

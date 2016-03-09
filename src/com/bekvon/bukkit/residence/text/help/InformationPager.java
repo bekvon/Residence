@@ -7,10 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 
-/**
- *
- * @author Administrator
- */
 public class InformationPager {
 
     public static int linesPerPage = 7;
@@ -35,19 +31,19 @@ public class InformationPager {
 	if (pagecount == 0)
 	    pagecount = 1;
 	if (page > pagecount) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLM().getMessage("InvalidPage"));
+	    sender.sendMessage(ChatColor.RED + Residence.getLM().getMessage("Invalid.Page"));
 	    return;
 	}
-	sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.TopLine", title));
-	sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.Page", Residence.getLM().getMessage("GenericPage", ChatColor.GREEN + String
-	    .format("%d", page) + ChatColor.YELLOW + "%" + ChatColor.GREEN + pagecount + ChatColor.YELLOW)));
+	sender.sendMessage(Residence.getLM().getMessage("InformationPage.TopLine", title));
+	sender.sendMessage(Residence.getLM().getMessage("InformationPage.Page", Residence.getLM().getMessage("General.GenericPage", String.format("%d", page),
+	    pagecount)));
 	for (int i = start; i < end; i++) {
 	    if (lines.size() > i)
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));
 	}
 	if (pagecount > page)
-	    sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.NextPage", Residence.getLM().getMessage("NextPage")));
+	    sender.sendMessage(Residence.getLM().getMessage("InformationPage.NextPage", Residence.getLM().getMessage("General.NextPage")));
 	else
-	    sender.sendMessage(Residence.getLM().getMessage("Language.InformationPage.NoNextPage"));
+	    sender.sendMessage(Residence.getLM().getMessage("InformationPage.NoNextPage"));
     }
 }

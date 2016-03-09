@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -19,10 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 
-/**
- * 
- * @author Administrator
- */
 public class CuboidArea {
     protected Location highPoints;
     protected Location lowPoints;

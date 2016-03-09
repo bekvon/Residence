@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.persistance;
 
 import java.io.File;
@@ -19,10 +14,6 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.reader.ReaderException;
 
-/**
- *
- * @author Administrator
- */
 public class YMLSaveHelper {
 
     File f;

@@ -1,18 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.event;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class ResidencePlayerEvent extends ResidenceEvent implements ResidencePlayerEventInterface {
 
     Player p;

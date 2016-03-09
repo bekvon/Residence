@@ -1,6 +1,5 @@
 package com.bekvon.bukkit.residence.utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -21,6 +20,9 @@ public class CrackShot implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(WeaponDamageEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
 	Entity damager = event.getDamager();
 
 	if ((!(damager instanceof Arrow)) && (!(damager instanceof Player))) {
@@ -53,7 +55,7 @@ public class CrackShot implements Listener {
 
 	if (Residence.getNms().isAnimal(entity)) {
 	    if (res != null && !res.getPermissions().playerHas(cause.getName(), "animalkilling", true)) {
-		cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "animalkilling"));
+		cause.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "animalkilling", res.getName()));
 		event.setCancelled(true);
 	    }
 	}
@@ -61,6 +63,9 @@ public class CrackShot implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(WeaponDamageEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
 	if (event.getVictim().getType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event.getVictim().getType()))
 	    return;
 
@@ -83,14 +88,16 @@ public class CrackShot implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
 	if (res != null && !res.getPermissions().playerHas(player.getName(), "container", false)) {
 	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
 	}
 
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(WeaponDamageEntityEvent event) {
-
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
 	if (!(event.getVictim() instanceof Player))
 	    return;
 
@@ -115,7 +122,7 @@ public class CrackShot implements Listener {
 	}
 
 	if (!srcpvp) {
-	    damager.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPVPZone"));
+	    damager.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 	    event.setCancelled(true);
 	    return;
 	}
@@ -123,13 +130,13 @@ public class CrackShot implements Listener {
 	if (area == null) {
 	    /* World PvP */
 	    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-		damager.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("WorldPVPDisabled"));
+		damager.sendMessage(Residence.getLM().getMessage("General.WorldPVPDisabled"));
 		event.setCancelled(true);
 	    }
 	} else {
 	    /* Normal PvP */
 	    if (!area.getPermissions().has("pvp", true)) {
-		damager.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPVPZone"));
+		damager.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 		event.setCancelled(true);
 	    }
 	}

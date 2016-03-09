@@ -19,17 +19,6 @@ public class TabComplete implements TabCompleter {
 	List<String> completionList = new ArrayList<>();
 	Set<String> Commands = Residence.getHelpPages().getSubCommands(sender, args);
 
-//	if (Commands.contains("?")) {
-//	    String com = "";
-//	    for (String one : args) {
-//		com += " " + one;
-//	    }
-//	    Bukkit.dispatchCommand(sender, command.getName() + com + "?");
-//	    Bukkit.getConsoleSender().sendMessage(sender.getName() + " issued server command: " + command.getName() + com + "?");
-//	    Commands.clear();
-//	    Commands.add("");
-//	}
-
 	String PartOfCommand = args[args.length - 1];
 	StringUtil.copyPartialMatches(PartOfCommand, Commands, completionList);
 	Collections.sort(completionList);

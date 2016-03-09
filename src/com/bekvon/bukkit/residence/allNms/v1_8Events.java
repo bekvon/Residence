@@ -1,6 +1,5 @@
 package com.bekvon.bukkit.residence.allNms;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,7 +26,7 @@ public class v1_8Events implements Listener {
 
 	if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "container"));
 	}
     }
 }

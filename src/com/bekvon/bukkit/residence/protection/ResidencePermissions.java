@@ -1,7 +1,5 @@
 package com.bekvon.bukkit.residence.protection;
 
-import org.bukkit.ChatColor;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
@@ -18,10 +16,6 @@ import java.util.Set;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class ResidencePermissions extends FlagPermissions {
 
     protected UUID ownerUUID;
@@ -84,10 +78,10 @@ public class ResidencePermissions extends FlagPermissions {
 	if (player != null) {
 	    if (!resadmin) {
 		if (!Residence.getConfigManager().isOfflineMode() && !player.getUniqueId().toString().equals(ownerUUID.toString())) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		    return;
 		} else if (!player.getName().equals(ownerLastKnownName)) {
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		    return;
 		}
 	    }
@@ -100,7 +94,7 @@ public class ResidencePermissions extends FlagPermissions {
 		this.cuboidFlags.put(flag.getKey(), flag.getValue());
 	    } else {
 		if (player != null)
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW + flag.getKey() + ChatColor.RED));
+		    player.sendMessage(Residence.getLM().getMessage("Flag.SetDeny", flag.getKey()));
 	    }
 	}
 	for (Entry<String, Map<String, Boolean>> plists : list.playerFlags.entrySet()) {
@@ -110,7 +104,7 @@ public class ResidencePermissions extends FlagPermissions {
 		    map.put(flag.getKey(), flag.getValue());
 		} else {
 		    if (player != null)
-			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW + flag.getKey() + ChatColor.RED));
+			player.sendMessage(Residence.getLM().getMessage("Flag.SetDeny", flag.getKey()));
 		}
 	    }
 	}
@@ -122,12 +116,12 @@ public class ResidencePermissions extends FlagPermissions {
 		    this.groupFlags.get(glists.getKey()).put(flag.getKey(), flag.getValue());
 		} else {
 		    if (player != null)
-			player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagSetDeny", ChatColor.YELLOW + flag.getKey() + ChatColor.RED));
+			player.sendMessage(Residence.getLM().getMessage("Flag.SetDeny", flag.getKey()));
 		}
 	    }
 	}
 	if (player != null)
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("PermissionsApply"));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.PermissionsApply"));
     }
 
     public boolean hasResidencePermission(Player player, boolean requireOwner) {
@@ -153,20 +147,20 @@ public class ResidencePermissions extends FlagPermissions {
 
     private boolean checkCanSetFlag(Player player, String flag, FlagState state, boolean globalflag, boolean resadmin) {
 	if (!checkValidFlag(flag, globalflag)) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidFlag"));
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.Flag"));
 	    return false;
 	}
 	if (state == FlagState.INVALID) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidFlagState"));
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.FlagState"));
 	    return false;
 	}
 	if (!resadmin) {
 	    if (!this.hasResidencePermission(player, false)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPermission"));
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return false;
 	    }
 	    if (!hasFlagAccess(this.getOwner(), flag)) {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagSetFailed", flag));
+		player.sendMessage(Residence.getLM().getMessage("Flag.SetFailed", flag));
 		return false;
 	    }
 	}
@@ -195,7 +189,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    if (super.setPlayerFlag(targetPlayer, flag, state)) {
 		if (Show)
-		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet", flag + "|" + residence.getName() + "|" + flagstate));
+		    player.sendMessage(Residence.getLM().getMessage("Flag.Set", flag, residence.getName(), flagstate));
 		return true;
 	    }
 	}
@@ -214,11 +208,11 @@ public class ResidencePermissions extends FlagPermissions {
 		if (fc.isCancelled())
 		    return false;
 		if (super.setGroupFlag(group, flag, state)) {
-		    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet", flag + "|" + residence.getName() + "|" + flagstate));
+		    player.sendMessage(Residence.getLM().getMessage("Flag.Set", flag, residence.getName(), flagstate));
 		    return true;
 		}
 	    } else {
-		player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("InvalidGroup"));
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Group"));
 		return false;
 	    }
 	}
@@ -243,7 +237,7 @@ public class ResidencePermissions extends FlagPermissions {
 			if (!one.getName().equals(this.getOwner()))
 			    size++;
 		    }
-		    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagChangeDeny", flag + "|" + size));
+		    player.sendMessage(Residence.getLM().getMessage("Flag.ChangeDeny", flag, size));
 		    return false;
 		}
 	    }
@@ -255,7 +249,7 @@ public class ResidencePermissions extends FlagPermissions {
 	    if (fc.isCancelled())
 		return false;
 	    if (super.setFlag(flag, state)) {
-		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet", flag + "|" + residence.getName() + "|" + flagstate));
+		player.sendMessage(Residence.getLM().getMessage("Flag.Set", flag, residence.getName(), flagstate));
 		return true;
 	    }
 	}
@@ -270,7 +264,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    }
 	    super.removeAllPlayerFlags(targetPlayer);
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Set"));
 	    return true;
 	}
 	return false;
@@ -284,7 +278,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    }
 	    super.removeAllGroupFlags(group);
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Set"));
 	    return true;
 	}
 	return false;
@@ -320,9 +314,9 @@ public class ResidencePermissions extends FlagPermissions {
     public void applyDefaultFlags(Player player, boolean resadmin) {
 	if (this.hasResidencePermission(player, true) || resadmin) {
 	    this.applyDefaultFlags();
-	    player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("FlagsDefault"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Default"));
 	} else
-	    player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("NoPermission"));
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
     }
 
     public void applyDefaultFlags() {
@@ -517,7 +511,7 @@ public class ResidencePermissions extends FlagPermissions {
 		}
 	    }
 	    if (flagString.length() > 0)
-		player.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("FlagSet", flagString + "|" + target + "|" + state));
+		player.sendMessage(Residence.getLM().getMessage("Flag.Set", flagString, target, state));
 	    return changed;
 	}
 	return false;

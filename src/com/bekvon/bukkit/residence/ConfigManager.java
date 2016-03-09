@@ -125,6 +125,8 @@ public class ConfigManager {
     protected boolean SelectionIgnoreY = false;
     protected boolean NoCostForYBlocks = false;
     protected boolean useVisualizer;
+    protected boolean DisableListeners;
+    protected boolean DisableCommands;
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
     protected List<Integer> customRightClick;
@@ -141,6 +143,8 @@ public class ConfigManager {
 
     protected List<RandomTeleport> RTeleport = new ArrayList<RandomTeleport>();
 
+    protected List<String> DisabledWorldsList = new ArrayList<String>();
+
     protected int rtCooldown;
     protected int rtMaxTries;
 
@@ -155,6 +159,22 @@ public class ConfigManager {
 
     protected ParticleEffects OverlapFrame;
     protected ParticleEffects OverlapSides;
+
+    // DynMap
+    public boolean DynMapUse;
+    public boolean DynMapLayer3dRegions;
+    public int DynMapLayerSubZoneDepth;
+    public String DynMapBorderColor;
+    public double DynMapBorderOpacity;
+    public int DynMapBorderWeight;
+    public String DynMapFillColor;
+    public double DynMapFillOpacity;
+    public String DynMapFillForRent;
+    public String DynMapFillRented;
+    public String DynMapFillForSale;
+    public List<String> DynMapVisibleRegions;
+    public List<String> DynMapHiddenRegions;
+    // DynMap
 
     private Residence plugin;
 
@@ -271,7 +291,7 @@ public class ConfigManager {
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 	Set<String> sections = conf.getConfigurationSection("Global.FlagPermission").getKeys(false);
-	for (String one : Locale.FlagList) {
+	for (String one : LocaleManager.FlagList) {
 	    if (sections.contains(one.toLowerCase()))
 		continue;
 	    conf.createSection("Global.FlagPermission." + one.toLowerCase());
@@ -283,7 +303,7 @@ public class ConfigManager {
 
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
 	Set<String> flagGui = guiSection.getKeys(false);
-	for (String one : Locale.FlagList) {
+	for (String one : LocaleManager.FlagList) {
 	    if (flagGui.contains(one.toLowerCase()))
 		continue;
 
@@ -389,8 +409,16 @@ public class ConfigManager {
 	    "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
 	infoToolId = GetConfig("Global.InfoToolId", Material.STRING.getId(), writer, conf);
 
-	writer.addComment("Global.Optimizations.DefaultWorld", "Name of your mein residence world. Usualy normal starting world 'World'. Capitalization essential");
+	writer.addComment("Global.Optimizations.DefaultWorld", "Name of your main residence world. Usually normal starting world 'World'. Capitalization essential");
 	DefaultWorld = GetConfig("Global.Optimizations.DefaultWorld", defaultWorldName, writer, conf, false);
+
+	writer.addComment("Global.Optimizations.DisabledWorlds.List", "List Of Worlds where this plugin is disabled");
+	DisabledWorldsList = GetConfig("Global.Optimizations.DisabledWorlds.List", new ArrayList<String>(), writer, conf, false);
+
+	writer.addComment("Global.Optimizations.DisabledWorlds.DisableListeners", "Disables all listeners in included worlds");
+	DisableListeners = GetConfig("Global.Optimizations.DisabledWorlds.DisableListeners", true, writer, conf);
+	writer.addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
+	DisableCommands = GetConfig("Global.Optimizations.DisabledWorlds.DisableCommands", true, writer, conf);
 
 	writer.addComment("Global.Optimizations.ResCreateCaseSensitive",
 	    "When its true you can create residences with similar names but different capitalization. An example: Village and village are counted as different residences",
@@ -494,7 +522,8 @@ public class ConfigManager {
 		for (String one : conf.getConfigurationSection("Global.RandomTeleportation").getKeys(false)) {
 		    String path = "Global.RandomTeleportation." + one + ".";
 
-		    writer.addComment("Global.RandomTeleportation." + one, "World name to use this feature. Add annother one with appropriate name to enable random teleportation");
+		    writer.addComment("Global.RandomTeleportation." + one,
+			"World name to use this feature. Add annother one with appropriate name to enable random teleportation");
 
 		    writer.addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
 		    int MaxCoord = GetConfig(path + "MaxCoord", 1000, writer, conf);
@@ -547,7 +576,7 @@ public class ConfigManager {
 	AutoCleanUpDays = GetConfig("Global.AutoCleanUp.Days", 60, writer, conf);
 	writer.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = GetConfig("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
-	
+
 	writer.addComment("Global.LWC.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
 	    "Players can bypass this wih residence.cleanbypass permission node");
 	AutoCleanUp = GetConfig("Global.AutoCleanUp.Use", false, writer, conf);
@@ -809,6 +838,31 @@ public class ConfigManager {
 	    actionBar = false;
 	    ActionBarOnSelection = false;
 	}
+
+	writer.addComment("DynMap.Use", "Enables or disable DynMap Support");
+	DynMapUse = GetConfig("DynMap.Use", false, writer, conf);
+
+	writer.addComment("DynMap.Layer.3dRegions", "Enables 3D zones");
+	DynMapLayer3dRegions = GetConfig("DynMap.Layer.3dRegions", true, writer, conf);
+	writer.addComment("DynMap.Layer.SubZoneDepth", "How deep to go into subzones to show");
+	DynMapLayerSubZoneDepth = GetConfig("DynMap.Layer.SubZoneDepth", 2, writer, conf);
+
+	writer.addComment("DynMap.Border.Color", "Color of border. Pick color for this page http://www.w3schools.com/colors/colors_picker.asp");
+	DynMapBorderColor = GetConfig("DynMap.Border.Color", "#FF0000", writer, conf, false);
+	writer.addComment("DynMap.Border.Opacity", "Transparency. 0.3 means that only 30% of color will be visible");
+	DynMapBorderOpacity = GetConfig("DynMap.Border.Opacity", 0.3, writer, conf);
+	writer.addComment("DynMap.Border.Weight", "Border thickness");
+	DynMapBorderWeight = GetConfig("DynMap.Border.Weight", 3, writer, conf);
+	DynMapFillOpacity = GetConfig("DynMap.Fill.Opacity", 0.3, writer, conf);
+	DynMapFillColor = GetConfig("DynMap.Fill.Color", "#FFFF00", writer, conf, false);
+	DynMapFillForRent = GetConfig("DynMap.Fill.ForRent", "#33cc33", writer, conf, false);
+	DynMapFillRented = GetConfig("DynMap.Fill.Rented", "#99ff33", writer, conf, false);
+	DynMapFillForSale = GetConfig("DynMap.Fill.ForSale", "#0066ff", writer, conf, false);
+
+	writer.addComment("DynMap.VisibleRegions", "Shows only regions on this list");
+	DynMapVisibleRegions = GetConfig("DynMap.VisibleRegions", new ArrayList<String>(), writer, conf, false);
+	writer.addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden ingame");
+	DynMapHiddenRegions = GetConfig("DynMap.HiddenRegions", new ArrayList<String>(), writer, conf, false);
 
 	try {
 	    writer.save(f);
@@ -1283,6 +1337,10 @@ public class ConfigManager {
 
     public int getrtMaxTries() {
 	return rtMaxTries;
+    }
+
+    public boolean useFlagGUI() {
+	return useFlagGUI;
     }
 
     public boolean BounceAnimation() {

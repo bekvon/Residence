@@ -166,9 +166,9 @@ public class SetFlag {
 
 	String title = "";
 	if (targetPlayer == null)
-	    title = Residence.getLM().getMessage("Language.Gui.Set.Title", res.getName());
+	    title = Residence.getLM().getMessage("Gui.Set.Title", res.getName());
 	else
-	    title = Residence.getLM().getMessage("Language.Gui.Pset.Title", targetPlayer + "%" + res.getName());
+	    title = Residence.getLM().getMessage("Gui.Pset.Title", targetPlayer, res.getName());
 
 	if (title.length() > 32) {
 	    title = title.substring(0, Math.min(title.length(), 32));
@@ -242,7 +242,7 @@ public class SetFlag {
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
 
-	    lore.addAll(Residence.getLM().getMessageList("Language.Gui.Actions"));
+	    lore.addAll(Residence.getLM().getMessageList("Gui.Actions"));
 
 	    MiscInfoMeta.setLore(lore);
 
@@ -256,12 +256,12 @@ public class SetFlag {
 
 	ItemMeta meta = Item.getItemMeta();
 	if (page > 1) {
-	    meta.setDisplayName(Residence.getLM().getMessage("Language.PrevInfoPage"));
+	    meta.setDisplayName(Residence.getLM().getMessage("General.PrevInfoPage"));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
 	if (page < pageCount) {
-	    meta.setDisplayName(Residence.getLM().getMessage("Language.NextInfoPage"));
+	    meta.setDisplayName(Residence.getLM().getMessage("General.NextInfoPage"));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(53, Item);
 	}
@@ -312,9 +312,9 @@ public class SetFlag {
 
 	String title = "";
 	if (targetPlayer == null)
-	    title = Residence.getLM().getMessage("Language.Gui.Set.Title", res.getName());
+	    title = Residence.getLM().getMessage("Gui.Set.Title", res.getName());
 	else
-	    title = Residence.getLM().getMessage("Language.Gui.Pset.Title", targetPlayer + "%" + res.getName());
+	    title = Residence.getLM().getMessage("Gui.Pset.Title", targetPlayer, res.getName());
 
 	if (title.length() > 32) {
 	    title = title.substring(0, Math.min(title.length(), 32));
@@ -388,7 +388,7 @@ public class SetFlag {
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
 
-	    lore.addAll(Residence.getLM().getMessageList("Language.Gui.Actions"));
+	    lore.addAll(Residence.getLM().getMessageList("Gui.Actions"));
 
 	    MiscInfoMeta.setLore(lore);
 
@@ -402,12 +402,12 @@ public class SetFlag {
 
 	ItemMeta meta = Item.getItemMeta();
 	if (page > 1) {
-	    meta.setDisplayName(Residence.getLM().getMessage("Language.PrevInfoPage"));
+	    meta.setDisplayName(Residence.getLM().getMessage("General.PrevInfoPage"));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
 	if (page < pageCount) {
-	    meta.setDisplayName(Residence.getLM().getMessage("Language.NextInfoPage"));
+	    meta.setDisplayName(Residence.getLM().getMessage("General.NextInfoPage"));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(53, Item);
 	}

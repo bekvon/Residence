@@ -29,24 +29,30 @@ public class VersionChecker {
 	    try {
 		cleanVersion = Integer.parseInt(version.replace("v", "").replace("V", "").replace("_", "").replace("r", "").replace("R", ""));
 	    } catch (NumberFormatException e) {
-		// Fail save if it for some reason can't translate version to integer
-		if (version.contains("v1_7"))
-		    cleanVersion = 1700;
-		if (version.contains("v1_6"))
-		    cleanVersion = 1600;
-		if (version.contains("v1_5"))
-		    cleanVersion = 1500;
+		// Fail safe if it for some reason can't translate version to integer
 		if (version.contains("v1_4"))
 		    cleanVersion = 1400;
+		if (version.contains("v1_5"))
+		    cleanVersion = 1500;
+		if (version.contains("v1_6"))
+		    cleanVersion = 1600;
+		if (version.contains("v1_7"))
+		    cleanVersion = 1700;
 		if (version.contains("v1_8_R1"))
 		    cleanVersion = 1810;
 		if (version.contains("v1_8_R2"))
 		    cleanVersion = 1820;
 		if (version.contains("v1_8_R3"))
 		    cleanVersion = 1830;
+		if (version.contains("v1_9_R1"))
+		    cleanVersion = 1910;
+		if (version.contains("v1_9_R2"))
+		    cleanVersion = 1920;
 	    }
+	    if (cleanVersion < 100)
+		cleanVersion *= 10;
 	    if (cleanVersion < 1000)
-		cleanVersion = cleanVersion * 10;
+		cleanVersion *= 10;
 	}
 	return cleanVersion;
     }
@@ -59,7 +65,6 @@ public class VersionChecker {
 	    public void run() {
 		String currentVersion = plugin.getDescription().getVersion();
 		String newVersion = getNewVersion();
-		Debug.D("new version: " + newVersion);
 		if (newVersion == null || newVersion.equalsIgnoreCase(currentVersion))
 		    return;
 		List<String> msg = Arrays.asList(

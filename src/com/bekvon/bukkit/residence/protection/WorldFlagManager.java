@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -15,10 +10,6 @@ import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class WorldFlagManager {
     protected Map<String, Map<String, FlagPermissions>> groupperms;
     protected Map<String, FlagPermissions> worldperms;

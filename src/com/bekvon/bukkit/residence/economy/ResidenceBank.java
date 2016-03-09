@@ -1,16 +1,11 @@
 package com.bekvon.bukkit.residence.economy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Player;
 
-/**
- *
- * @author Administrator
- */
 public class ResidenceBank {
     int storedMoney;
     ClaimedResidence res;
@@ -46,37 +41,37 @@ public class ResidenceBank {
 
     public void withdraw(CommandSender sender, int amount, boolean resadmin) {
 	if (!Residence.getConfigManager().enableEconomy()) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("MarketDisabled"));
+	    sender.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
 	}
 	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), "bank", false)) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoBankAccess"));
+	    sender.sendMessage(Residence.getLM().getMessage("Bank.NoAccess"));
 	    return;
 	}
 	if (!hasEnough(amount)) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("BankNoMoney"));
+	    sender.sendMessage(Residence.getLM().getMessage("Bank.NoMoney"));
 	    return;
 	}
 	if (sender instanceof Player && Residence.getEconomyManager().add(sender.getName(), amount) || !(sender instanceof Player)) {
 	    this.subtract(amount);
-	    sender.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("BankWithdraw", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN));
+	    sender.sendMessage(Residence.getLM().getMessage("Bank.Withdraw", String.format("%d", amount)));
 	}
     }
 
     public void deposit(CommandSender sender, int amount, boolean resadmin) {
 	if (!Residence.getConfigManager().enableEconomy()) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("MarketDisabled"));
+	    sender.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
 	}
 	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), "bank", false)) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoBankAccess"));
+	    sender.sendMessage(Residence.getLM().getMessage("Bank.NoAccess"));
 	    return;
 	}
 	if (sender instanceof Player && !Residence.getEconomyManager().canAfford(sender.getName(), amount)) {
-	    sender.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NotEnoughMoney"));
+	    sender.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
 	    return;
 	}
 	if (sender instanceof Player && Residence.getEconomyManager().subtract(sender.getName(), amount) || !(sender instanceof Player)) {
 	    this.add(amount);
-	    sender.sendMessage(ChatColor.GREEN + Residence.getLanguage().getPhrase("BankDeposit", ChatColor.YELLOW + String.format("%d", amount) + ChatColor.GREEN));
+	    sender.sendMessage(Residence.getLM().getMessage("Bank.Deposit", String.format("%d", amount)));
 	}
     }
 }

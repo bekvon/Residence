@@ -3,10 +3,6 @@ package com.bekvon.bukkit.residence.economy.rent;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Administrator
- */
 public class RentableLand {
 
     public int days;

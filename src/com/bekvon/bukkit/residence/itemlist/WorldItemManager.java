@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.itemlist;
 
 import java.util.ArrayList;
@@ -11,10 +6,6 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-/**
- *
- * @author Administrator
- */
 public class WorldItemManager {
     protected List<WorldItemList> lists;
 

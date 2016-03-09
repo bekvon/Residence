@@ -1,11 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -53,14 +47,13 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.potion.PotionEffect;
 
-/**
- *
- * @author Administrator
- */
 public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEndermanChangeBlock(EntityChangeBlockEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
 	if (event.getEntityType() != EntityType.ENDERMAN)
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
@@ -71,6 +64,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onWitherChangeBlock(EntityChangeBlockEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
 	if (event.getEntityType() != EntityType.WITHER)
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
@@ -82,6 +78,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityInteract(EntityInteractEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
 	Block block = event.getBlock();
 	Material mat = block.getType();
 	Entity entity = event.getEntity();
@@ -102,7 +101,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(EntityDamageByEntityEvent event) {
-
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	Entity entity = event.getEntity();
 	if (!Residence.getNms().isAnimal(entity))
 	    return;
@@ -135,13 +136,16 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (!res.getPermissions().playerHas(cause.getName(), "animalkilling", true)) {
-	    cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "AnimalKilling|" + res.getName()));
+	    cause.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "AnimalKilling", res.getName()));
 	    event.setCancelled(true);
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void OnEntityDeath(EntityDeathEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	if (event.getEntity() instanceof Player)
 	    return;
 	Location loc = event.getEntity().getLocation();
@@ -156,7 +160,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(VehicleDestroyEvent event) {
-
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getAttacker().getWorld()))
+	    return;
 	Vehicle vehicle = event.getVehicle();
 
 	Entity damager = event.getAttacker();
@@ -189,14 +195,16 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (!res.getPermissions().playerHas(cause.getName(), "vehicledestroy", true)) {
-	    cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "vehicledestroy|" + res.getName()));
+	    cause.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "vehicledestroy", res.getName()));
 	    event.setCancelled(true);
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void MonsterKilling(EntityDamageByEntityEvent event) {
-
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	Entity entity = event.getEntity();
 	if (!isMonster(entity))
 	    return;
@@ -229,13 +237,16 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (!res.getPermissions().playerHas(cause.getName(), "mobkilling", true)) {
-	    cause.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "MobKilling|" + res.getName()));
+	    cause.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "MobKilling", res.getName()));
 	    event.setCancelled(true);
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalLeash(PlayerLeashEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	Player player = event.getPlayer();
 
 	Entity entity = event.getEntity();
@@ -252,13 +263,16 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (!res.getPermissions().playerHas(player.getName(), "leash", true)) {
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "Leash|" + res.getName()));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Leash", res.getName()));
 	    event.setCancelled(true);
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
 	Entity ent = event.getEntity();
 	if (Residence.getNms().isAnimal(ent)) {
@@ -349,6 +363,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	Player player = event.getPlayer();
 	if (Residence.isResAdminOn(player))
 	    return;
@@ -358,13 +375,15 @@ public class ResidenceEntityListener implements Listener {
 	String world = player.getWorld().getName();
 	if (!perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakEvent event) {
-
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	if (!(event instanceof HangingBreakByEntityEvent))
 	    return;
 
@@ -381,12 +400,15 @@ public class ResidenceEntityListener implements Listener {
 	String world = event.getEntity().getWorld().getName();
 	if (!perms.playerHas(pname, world, "destroy", perms.playerHas(pname, world, "build", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "build"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityCombust(EntityCombustEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
 	if (!perms.has("burn", true)) {
 	    event.setCancelled(true);
@@ -395,6 +417,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	EntityType entity = event.getEntityType();
 	FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
 
@@ -433,6 +458,9 @@ public class ResidenceEntityListener implements Listener {
     @SuppressWarnings("incomplete-switch")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	if (event.isCancelled() || event.getEntity() == null)
 	    return;
 	Boolean cancel = false;
@@ -487,7 +515,7 @@ public class ResidenceEntityListener implements Listener {
 		    preserve.add(block);
 		break;
 	    case ENDER_CRYSTAL:
-		if (!blockperms.has("explode", true))
+		if (!blockperms.has("explode", false))
 		    preserve.add(block);
 		continue;
 	    case SMALL_FIREBALL:
@@ -510,6 +538,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSplashPotion(PotionSplashEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	if (event.isCancelled())
 	    return;
 
@@ -540,7 +571,9 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	if (event.getEntityType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event.getEntityType()))
 	    return;
 
@@ -579,12 +612,15 @@ public class ResidenceEntityListener implements Listener {
 
 	if (!res.getPermissions().playerHas(player.getName(), "container", false)) {
 	    event.setCancelled(true);
-	    player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("FlagDeny", "container"));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
 	Entity ent = event.getEntity();
 	if (ent.hasMetadata("NPC"))
 	    return;
@@ -626,7 +662,7 @@ public class ResidenceEntityListener implements Listener {
 		    attacker = (Player) ((Projectile) damager).getShooter();
 		}
 		if (!srcpvp) {
-		    attacker.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPVPZone"));
+		    attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 		    event.setCancelled(true);
 		    return;
 		}
@@ -634,13 +670,13 @@ public class ResidenceEntityListener implements Listener {
 		if (area == null) {
 		    /* World PvP */
 		    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-			attacker.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("WorldPVPDisabled"));
+			attacker.sendMessage(Residence.getLM().getMessage("General.WorldPVPDisabled"));
 			event.setCancelled(true);
 		    }
 		} else {
 		    /* Normal PvP */
 		    if (!area.getPermissions().has("pvp", true)) {
-			attacker.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("NoPVPZone"));
+			attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 			event.setCancelled(true);
 		    }
 		}

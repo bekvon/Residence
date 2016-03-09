@@ -1,17 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.bekvon.bukkit.residence.itemlist;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-/**
- *
- * @author Administrator
- */
 public class WorldItemList extends ItemList {
 
     protected String world;
