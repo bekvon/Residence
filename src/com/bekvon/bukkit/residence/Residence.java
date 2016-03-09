@@ -313,7 +313,8 @@ public class Residence extends JavaPlugin {
 	    server.getScheduler().cancelTask(rentBukkitId);
 	}
 
-	getDynManager().getMarkerSet().deleteMarkerSet();
+	if (getDynManager() != null)
+	    getDynManager().getMarkerSet().deleteMarkerSet();
 
 	if (initsuccess) {
 	    try {
@@ -437,7 +438,6 @@ public class Residence extends JavaPlugin {
 	    PlayerManager = new PlayerManager(this);
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
-	    DynManager = new DynMapManager(this);
 
 	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
 	    if (lwcp != null)
@@ -620,26 +620,12 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(flistener, this);
 		pm.registerEvents(shlistener, this);
 
-		// DynMap
-		Plugin dynmap = server.getPluginManager().getPlugin("dynmap");
-		if (dynmap != null && getConfigManager().DynMapUse) {
-		    pm.registerEvents(new DynMapListeners(), this);
-		    getDynManager().api = (DynmapAPI) dynmap;
-		    getDynManager().activate();
-		}
-
-		if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
-		    pm.registerEvents(spigotlistener, this);
-
 		NewLanguageManager = new Language(this);
 		getLM().LanguageReload();
 
 		// 1.8 event
 		if (VersionChecker.GetVersion() >= 1800)
 		    pm.registerEvents(new v1_8Events(), this);
-
-		if (getServer().getPluginManager().getPlugin("CrackShot") != null)
-		    pm.registerEvents(new CrackShot(), this);
 
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
 		// Priority.NORMAL, this);
@@ -652,6 +638,22 @@ public class Residence extends JavaPlugin {
 	    } else {
 		plistener.reload();
 	    }
+
+	    if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
+		getServer().getPluginManager().registerEvents(spigotlistener, this);
+
+	    if (getServer().getPluginManager().getPlugin("CrackShot") != null)
+		getServer().getPluginManager().registerEvents(new CrackShot(), this);
+
+	    // DynMap
+	    Plugin dynmap = Bukkit.getPluginManager().getPlugin("dynmap");
+	    if (dynmap != null && getConfigManager().DynMapUse) {
+		DynManager = new DynMapManager(this);
+		getServer().getPluginManager().registerEvents(new DynMapListeners(), this);
+		getDynManager().api = (DynmapAPI) dynmap;
+		getDynManager().activate();
+	    }
+
 	    int autosaveInt = cmanager.getAutoSaveInterval();
 	    if (autosaveInt < 1) {
 		autosaveInt = 1;

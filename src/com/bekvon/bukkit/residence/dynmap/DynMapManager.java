@@ -37,6 +37,8 @@ public class DynMapManager {
     }
 
     public void fireUpdate(final ClaimedResidence res, final int deep) {
+	if (api == null || set == null)
+	    return;
 	if (res == null)
 	    return;
 	final String name = res.getName();
@@ -68,7 +70,8 @@ public class DynMapManager {
 
 	if (Residence.getTransactionManager().isForSale(res.getName()))
 	    v = "<div class=\"regioninfo\"><div class=\"infowindow\">"
-		+ ChatColor.stripColor(Residence.getLM().getMessage("Economy.LandForSale", " ")) + "<span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br /> "
+		+ ChatColor.stripColor(Residence.getLM().getMessage("Economy.LandForSale", " "))
+		+ "<span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br /> "
 		+ ChatColor.stripColor(Residence.getLM().getMessage("General.Owner", "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
 		+ ChatColor.stripColor(Residence.getLM().getMessage("Economy.SellAmount", "")) + "<span style=\"font-weight:bold;\">%price%</span><br /></div></div>";
 

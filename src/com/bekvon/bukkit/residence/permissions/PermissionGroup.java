@@ -309,7 +309,7 @@ public class PermissionGroup {
     }
 
     public void printLimits(Player player, OfflinePlayer target, boolean resadmin) {
-	player.sendMessage(Residence.getLM().getMessage("Seperator"));
+	player.sendMessage(Residence.getLM().getMessage("General.Seperator"));
 	player.sendMessage(Residence.getLM().getMessage("Limits.PGroup", Residence.getPermissionManager().getPermissionsGroup(target.getName(),
 	    Residence.getConfigManager().getDefaultWorld())));
 	player.sendMessage(Residence.getLM().getMessage("Limits.RGroup", groupname));
@@ -336,7 +336,7 @@ public class PermissionGroup {
 	    player.sendMessage(Residence.getLM().getMessage("Limits.Flag", leaseGiveTime));
 	    player.sendMessage(Residence.getLM().getMessage("Limits.Flag", renewcostperarea));
 	}
-	player.sendMessage(Residence.getLM().getMessage("Seperator"));
+	player.sendMessage(Residence.getLM().getMessage("General.Seperator"));
     }
 
 }
