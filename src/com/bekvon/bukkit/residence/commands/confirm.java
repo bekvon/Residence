@@ -26,7 +26,6 @@ public class confirm implements cmd {
 	} else {
 	    Residence.getResidenceManager().removeResidence(player, area, resadmin);
 	    Residence.deleteConfirm.remove(name);
-	    sender.sendMessage(Residence.getLM().getMessage("Residence.Remove", name));
 	}
 
 	return true;

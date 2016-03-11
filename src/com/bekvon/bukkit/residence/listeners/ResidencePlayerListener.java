@@ -44,6 +44,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -537,16 +539,13 @@ public class ResidencePlayerListener implements Listener {
 		Location loc = block.getLocation();
 		Residence.getSelectionManager().placeLoc1(player, loc, true);
 		player.sendMessage(Residence.getLM().getMessage("Select.PrimaryPoint", Residence.getLM().getMessage("General.CoordsTop", loc.getBlockX(), loc.getBlockY(),
-		    loc
-			.getBlockZ())));
+		    loc.getBlockZ())));
 		event.setCancelled(true);
-	    } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+	    } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && Residence.getNms().isMainHand(event)) {
 		Location loc = block.getLocation();
 		Residence.getSelectionManager().placeLoc2(player, loc, true);
 		player.sendMessage(Residence.getLM().getMessage("Select.SecondaryPoint", Residence.getLM().getMessage("General.CoordsBottom", loc.getBlockX(), loc
-		    .getBlockY(),
-		    loc
-			.getBlockZ())));
+		    .getBlockY(), loc.getBlockZ())));
 		event.setCancelled(true);
 	    }
 
@@ -567,7 +566,12 @@ public class ResidencePlayerListener implements Listener {
 	if (block == null)
 	    return;
 	Player player = event.getPlayer();
-	int heldItemId = player.getItemInHand().getTypeId();
+
+	ItemStack item = event.getItem();
+	if (item == null)
+	    return;
+
+	int heldItemId = item.getTypeId();
 
 	if (heldItemId != Residence.getConfigManager().getInfoToolID())
 	    return;

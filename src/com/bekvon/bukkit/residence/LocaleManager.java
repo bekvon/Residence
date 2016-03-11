@@ -161,6 +161,7 @@ public class LocaleManager {
 
 	GetConfig("Language.Select.Points", "&eSelect two points first before using this command!", writer, conf, true);
 	GetConfig("Language.Select.Overlap", "&cSelected points overlap with &6%1 &cregion!", writer, conf, true);
+	GetConfig("Language.Select.WorldGuardOverlap", "&cSelected points overlap with &6%1 &c WorldGuard region!", writer, conf, true);
 	GetConfig("Language.Select.Success", "&eSelection Successful!", writer, conf, true);
 	GetConfig("Language.Select.Fail", "&cInvalid select command...", writer, conf, true);
 	GetConfig("Language.Select.Bedrock", "&eSelection expanded to your lowest allowed limit.", writer, conf, true);

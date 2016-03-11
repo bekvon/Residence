@@ -25,15 +25,18 @@ public class WorldGuardUtil {
 	Location loc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
 
 	String id = "icp__tempregion";
-	BlockVector min = new BlockVector(loc1.getX(), loc1.getY(), loc1.getZ());
-	BlockVector max = new BlockVector(loc2.getX(), loc2.getY(), loc2.getZ());
-	ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
-	RegionManager mgr = Residence.wg.getRegionContainer().get(loc1.getWorld());
-	ApplicableRegionSet regions = mgr.getApplicableRegions(region);
+	try {
+	    BlockVector min = new BlockVector(loc1.getX(), loc1.getY(), loc1.getZ());
+	    BlockVector max = new BlockVector(loc2.getX(), loc2.getY(), loc2.getZ());
+	    ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
+	    RegionManager mgr = Residence.wg.getRegionContainer().get(loc1.getWorld());
+	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 
-	for (ProtectedRegion one : regions) {
-	    if (!player.hasPermission("residence.worldguard." + one.getId()))
-		return one;
+	    for (ProtectedRegion one : regions) {
+		if (!player.hasPermission("residence.worldguard." + one.getId()))
+		    return one;
+	    }
+	} catch (Exception e) {
 	}
 	return null;
     }

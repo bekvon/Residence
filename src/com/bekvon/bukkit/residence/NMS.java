@@ -8,7 +8,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public interface NMS {
 
@@ -29,4 +31,8 @@ public interface NMS {
     public void addDefaultFlags(Map<Material, String> matUseFlagList);
 
     public boolean isPlate(Material mat);
+    
+    public boolean isMainHand(PlayerInteractEvent event);
+    
+    public Block getTargetBlock(Player player, int range);
 }

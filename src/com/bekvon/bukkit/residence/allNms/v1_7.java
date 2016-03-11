@@ -1,9 +1,9 @@
 package com.bekvon.bukkit.residence.allNms;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,12 +16,15 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
 import com.bekvon.bukkit.residence.NMS;
 import com.bekvon.bukkit.residence.Residence;
 
@@ -101,5 +104,15 @@ public class v1_7 implements NMS {
 
     public boolean isPlate(Material mat) {
 	return false;
+    }
+
+    @Override
+    public boolean isMainHand(PlayerInteractEvent event) {
+	return true;
+    }
+
+    @Override
+    public Block getTargetBlock(Player player, int range) {
+	return player.getTargetBlock((HashSet<Byte>) null, range);
     }
 }

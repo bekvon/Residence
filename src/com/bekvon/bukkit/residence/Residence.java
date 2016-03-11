@@ -439,6 +439,11 @@ public class Residence extends JavaPlugin {
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
 
+	    signmanager = new SignUtil(this);
+	    Residence.getSignUtil().LoadSigns();
+
+	    versionChecker = new VersionChecker(this);
+
 	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
 	    if (lwcp != null)
 		lwc = ((LWCPlugin) lwcp).getLWC();
@@ -705,22 +710,14 @@ public class Residence extends JavaPlugin {
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 	}
 
-	Residence.setSignUtil(this);
-	Residence.getSignUtil().LoadSigns();
-
 	getShopSignUtilManager().LoadShopVotes();
 	getShopSignUtilManager().BoardUpdate();
 
-	versionChecker = new VersionChecker(this);
 	versionChecker.VersionCheck(null);
     }
 
     public static SignUtil getSignUtil() {
 	return signmanager;
-    }
-
-    public static void setSignUtil(Residence plugin) {
-	signmanager = new SignUtil(plugin);
     }
 
     public void consoleMessage(String message) {

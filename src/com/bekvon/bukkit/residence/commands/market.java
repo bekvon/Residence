@@ -63,7 +63,7 @@ public class market implements cmd {
 	    if (args.length != 3) {
 		return false;
 	    }
-	    Block block = player.getTargetBlock((Set<Material>) null, 10);
+	    Block block = Residence.getNms().getTargetBlock(player, 10);
 
 	    if (!(block.getState() instanceof Sign)) {
 		player.sendMessage(Residence.getLM().getMessage("Sign.LookAt"));

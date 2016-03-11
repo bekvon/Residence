@@ -34,7 +34,7 @@ public class create implements cmd {
 		return true;
 	    } else if (Residence.getWEplugin() != null && WorldGuardUtil.isSelectionInRegion(player) != null) {
 		ProtectedRegion Region = WorldGuardUtil.isSelectionInRegion(player);
-		player.sendMessage(Residence.getLM().getMessage("Select.Overlap", Region.getId()));
+		player.sendMessage(Residence.getLM().getMessage("Select.WorldGuardOverlap", Region.getId()));
 
 		Location lowLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(), Region
 		    .getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
