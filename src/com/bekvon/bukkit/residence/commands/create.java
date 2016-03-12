@@ -28,36 +28,34 @@ public class create implements cmd {
 	    }
 	}
 	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (Residence.getWEplugin() != null && WorldGuardUtil.isSelectionInRegion(player) == null) {
-		Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
-		    .getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
-		return true;
-	    } else if (Residence.getWEplugin() != null && WorldGuardUtil.isSelectionInRegion(player) != null) {
-		ProtectedRegion Region = WorldGuardUtil.isSelectionInRegion(player);
-		player.sendMessage(Residence.getLM().getMessage("Select.WorldGuardOverlap", Region.getId()));
+	    if (Residence.wg != null) {
+		if (WorldGuardUtil.isSelectionInRegion(player) == null) {
+		    Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
+			.getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
+		    return true;
+		} else {
+		    ProtectedRegion Region = WorldGuardUtil.isSelectionInRegion(player);
+		    player.sendMessage(Residence.getLM().getMessage("Select.WorldGuardOverlap", Region.getId()));
 
-		Location lowLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(), Region
-		    .getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
+		    Location lowLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
+			Region.getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
 
-		Location highLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(), Region
-		    .getMaximumPoint().getBlockY(), Region.getMaximumPoint().getBlockZ());
+		    Location highLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(),
+			Region.getMaximumPoint().getBlockY(), Region.getMaximumPoint().getBlockZ());
 
-		Residence.getSelectionManager().NewMakeBorders(player, lowLoc, highLoc, true);
-		Residence.getSelectionManager().NewMakeBorders(player, Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager()
-		    .getPlayerLoc2(player.getName()), false);
-	    } else if (Residence.getWEplugin() == null) {
+		    Residence.getSelectionManager().NewMakeBorders(player, lowLoc, highLoc, true);
+		    Residence.getSelectionManager().NewMakeBorders(player, Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
+			.getSelectionManager().getPlayerLoc2(player.getName()), false);
+		    return true;
+		}
+	    } else {
 		Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
 		    .getSelectionManager().getPlayerLoc2(player.getName()),
 		    resadmin);
 		return true;
-	    } else {
-		player.sendMessage(Residence.getLM().getMessage("Select.Points"));
-		return true;
 	    }
-	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Select.Points"));
-	    return true;
 	}
+	player.sendMessage(Residence.getLM().getMessage("Select.Points"));
 	return true;
     }
 

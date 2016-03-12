@@ -53,6 +53,10 @@ public class DynMapManager {
     private String formatInfoWindow(String resid, ClaimedResidence res) {
 	if (res == null)
 	    return null;
+	if (res.getName() == null)
+	    return null;
+	if (res.getOwner() == null)
+	    return null;
 	String v =
 	    "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br /> "
 		+ ChatColor.stripColor(Residence.getLM().getMessage("General.Owner", "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
@@ -177,6 +181,11 @@ public class DynMapManager {
     }
 
     private void handleResidence(String resid, ClaimedResidence res, Map<String, AreaMarker> newmap, int depth) {
+
+	if (res == null)
+	    return;
+	if (res.getAreaList().length == 0)
+	    return;
 
 	String id = resid + "%" + depth;
 	if (Residence.getResidenceManager().getByName(resid) == null) {

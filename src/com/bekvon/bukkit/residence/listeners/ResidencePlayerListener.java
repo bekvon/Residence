@@ -98,9 +98,6 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onFlagChangeShopDayNight(ResidenceFlagChangeEvent event) {
-	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
-	    return;
 	if (event.isCancelled())
 	    return;
 
@@ -180,7 +177,7 @@ public class ResidencePlayerListener implements Listener {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
-	if (GUI.size() == 0)
+	if (GUI.isEmpty())
 	    return;
 	HumanEntity player = event.getPlayer();
 	if (!GUI.containsKey(player.getName()))

@@ -603,9 +603,7 @@ public class Residence extends JavaPlugin {
 		}
 
 		Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
-		if (wgplugin == null) {
-		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldGuard NOT found!");
-		} else {
+		if (wgplugin != null) {
 		    wg = (WorldGuardPlugin) wgplugin;
 		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldGuard");
 		}
