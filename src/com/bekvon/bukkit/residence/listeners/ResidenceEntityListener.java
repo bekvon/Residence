@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -21,6 +23,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -45,7 +48,9 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -534,6 +539,54 @@ public class ResidenceEntityListener implements Listener {
 	    event.blockList().remove(block);
 	}
 
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLingeringPotionLaunch(ProjectileLaunchEvent event) {
+
+	ItemStack item = Residence.getNms().getLingeringPotionItem(event.getEntity());
+
+	if (item == null)
+	    return;
+
+	Material lingering = Material.getMaterial("LINGERING_POTION");
+
+	if (lingering == null)
+	    return;
+
+	if (item.getType() != lingering)
+	    return;
+
+	String type = Residence.getNms().getPotionType(item);
+
+	Debug.D("Type: " + type);
+	if (type == null)
+	    return;
+
+	boolean harmfull = false;
+	for (String oneHarm : Residence.getConfigManager().getNegativeLingeringPotionEffects()) {
+	    if (oneHarm.equalsIgnoreCase(type)) {
+		harmfull = true;
+		break;
+	    }
+	}
+
+	if (!harmfull)
+	    return;
+
+	ProjectileSource shooter = event.getEntity().getShooter();
+
+	if (!(shooter instanceof Player))
+	    return;
+
+	Player player = (Player) shooter;
+
+	boolean srcpvp = Residence.getPermsByLoc(player.getLocation()).has("pvp", true);
+
+	if (!srcpvp && !Residence.isResAdminOn(player)) {
+	    event.setCancelled(true);
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "pvp"));
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

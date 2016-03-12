@@ -24,6 +24,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.NMS;
 import com.bekvon.bukkit.residence.Residence;
@@ -111,8 +112,20 @@ public class v1_7 implements NMS {
 	return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Block getTargetBlock(Player player, int range) {
 	return player.getTargetBlock((HashSet<Byte>) null, range);
+    }
+
+    @Override
+    public String getPotionType(ItemStack potion) {
+	return null;
+    }
+
+
+    @Override
+    public ItemStack getLingeringPotionItem(Entity ent) {
+	return null;
     }
 }

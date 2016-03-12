@@ -1,10 +1,7 @@
 package com.bekvon.bukkit.residence.commands;
 
-import java.util.Set;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;

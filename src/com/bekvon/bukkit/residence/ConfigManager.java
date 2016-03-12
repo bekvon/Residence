@@ -138,6 +138,7 @@ public class ConfigManager {
     protected List<String> CleanWorlds;
     protected List<String> FlagsList;
     protected List<String> NegativePotionEffects;
+    protected List<String> NegativeLingeringPotionEffects;
 
     protected Location KickLocation;
 
@@ -493,6 +494,9 @@ public class ConfigManager {
 	    "Potions containing one of thos effects will be ignored if residence dont have pvp true flag set");
 	NegativePotionEffects = GetConfig("Global.Optimizations.NegativePotionEffects", Arrays.asList("blindness", "confusion", "harm", "hunger", "poison", "slow",
 	    "slow_digging", "weakness", "wither"), writer, conf, false);
+	
+	NegativeLingeringPotionEffects = GetConfig("Global.Optimizations.NegativeLingeringPotionEffects", Arrays.asList("slowness", "long_slowness", "harming", "strong_harming", "poison", "long_poison",
+	    "strong_poison", "weakness", "long_weakness"), writer, conf, false);
 
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
@@ -1297,6 +1301,9 @@ public class ConfigManager {
 
     public List<String> getNegativePotionEffects() {
 	return NegativePotionEffects;
+    }
+    public List<String> getNegativeLingeringPotionEffects() {
+	return NegativeLingeringPotionEffects;
     }
 
     public List<String> getCleanWorlds() {

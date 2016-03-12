@@ -8,6 +8,8 @@ import java.util.Set;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftThrownPotion;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
@@ -27,9 +29,10 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-
+import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.residence.NMS;
 import com.bekvon.bukkit.residence.Residence;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
 
 public class v1_9 implements NMS {
     @Override
@@ -143,5 +146,27 @@ public class v1_9 implements NMS {
     @Override
     public Block getTargetBlock(Player player, int range) {
 	return player.getTargetBlock((Set<Material>) null, range);
+    }
+
+    @Override
+    public String getPotionType(ItemStack potion) {
+	net.minecraft.server.v1_9_R1.ItemStack stack = CraftItemStack.asNMSCopy(potion);
+	NBTTagCompound tagCompound = stack.getTag();
+	if (tagCompound == null)
+	    return null;
+	if (tagCompound.getString("Potion").isEmpty())
+	    return null;
+	return tagCompound.getString("Potion").replace("minecraft:", "");
+    }
+
+    @Override
+    public ItemStack getLingeringPotionItem(Entity ent) {
+
+	if (!(ent instanceof CraftThrownPotion))
+	    return null;
+
+	CraftThrownPotion potion = (CraftThrownPotion) ent;
+	
+	return potion.getItem();
     }
 }
