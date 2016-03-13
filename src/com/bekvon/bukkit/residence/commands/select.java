@@ -26,16 +26,16 @@ public class select implements cmd {
 	Player player = (Player) sender;
 	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	if (!group.selectCommandAccess() && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("SelectDiabled"));
+	    player.sendMessage(Residence.getLM().getMessage("Select.Disabled"));
 	    return true;
 	}
 	if (!group.canCreateResidences() && group.getMaxSubzoneDepth(player.getName()) <= 0 && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("SelectDiabled"));
+	    player.sendMessage(Residence.getLM().getMessage("Select.Disabled"));
 	    return true;
 	}
 	if ((!player.hasPermission("residence.create") && player.isPermissionSet("residence.create") && !player.hasPermission("residence.select") && player
 	    .isPermissionSet("residence.select")) && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("SelectDiabled"));
+	    player.sendMessage(Residence.getLM().getMessage("Select.Disabled"));
 	    return true;
 	}
 	if (args.length == 2) {

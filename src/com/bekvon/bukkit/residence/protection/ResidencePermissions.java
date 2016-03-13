@@ -357,10 +357,14 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public void setOwner(String newOwner, boolean resetFlags) {
-	ownerLastKnownName = newOwner;
 
 	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, newOwner);
 	Residence.getServ().getPluginManager().callEvent(ownerchange);
+
+	Residence.getPlayerManager().removeResFromPlayer(ownerLastKnownName, residence.getName());
+	Residence.getPlayerManager().addResidence(newOwner, residence);
+
+	ownerLastKnownName = newOwner;
 
 	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase(Residence.getServerLandname())) {
 	    ownerUUID = UUID.fromString(Residence.getServerLandUUID());// the UUID for server owned land

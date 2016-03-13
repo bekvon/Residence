@@ -177,6 +177,7 @@ public class LocaleManager {
 	GetConfig("Language.Select.TotalSize", "&eSelection total size: &6%1", writer, conf, true);
 	GetConfig("Language.Select.AutoEnabled", "&eAuto selection mode turned &6ON&e. To disable it write &6/res select auto", writer, conf, true);
 	GetConfig("Language.Select.AutoDisabled", "&eAuto selection mode turned &6OFF&e. To enable it again write &6/res select auto", writer, conf, true);
+	GetConfig("Language.Select.Disabled", "&cYou don't have access to selections commands", writer, conf, true);
 
 	GetConfig("Language.Sign.Updated", "&6%1 &esigns updated!", writer, conf, true);
 	GetConfig("Language.Sign.TopLine", "[market]", writer, conf, true);

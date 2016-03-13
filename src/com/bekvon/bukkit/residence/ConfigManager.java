@@ -127,6 +127,10 @@ public class ConfigManager {
     protected boolean useVisualizer;
     protected boolean DisableListeners;
     protected boolean DisableCommands;
+    protected boolean TNTExplodeBelow;
+    protected int TNTExplodeBelowLevel;
+    protected boolean CreeperExplodeBelow;
+    protected int CreeperExplodeBelowLevel;
     protected List<Integer> customContainers;
     protected List<Integer> customBothClick;
     protected List<Integer> customRightClick;
@@ -494,8 +498,9 @@ public class ConfigManager {
 	    "Potions containing one of thos effects will be ignored if residence dont have pvp true flag set");
 	NegativePotionEffects = GetConfig("Global.Optimizations.NegativePotionEffects", Arrays.asList("blindness", "confusion", "harm", "hunger", "poison", "slow",
 	    "slow_digging", "weakness", "wither"), writer, conf, false);
-	
-	NegativeLingeringPotionEffects = GetConfig("Global.Optimizations.NegativeLingeringPotionEffects", Arrays.asList("slowness", "long_slowness", "harming", "strong_harming", "poison", "long_poison",
+
+	NegativeLingeringPotionEffects = GetConfig("Global.Optimizations.NegativeLingeringPotionEffects", Arrays.asList("slowness", "long_slowness", "harming",
+	    "strong_harming", "poison", "long_poison",
 	    "strong_poison", "weakness", "long_weakness"), writer, conf, false);
 
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
@@ -589,6 +594,17 @@ public class ConfigManager {
 	writer.addComment("Global.LWC.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = GetConfig("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
 
+	// TNT explosions below 63
+	writer.addComment("Global.AntiGreef.TNT.ExplodeBelow",
+	    "When set to true will allow tnt and minecart with tnt to explode below 62 (default) level outside of residence",
+	    "This will allow mining with tnt and more vanilla play");
+	TNTExplodeBelow = GetConfig("Global.AntiGreef.TNT.ExplodeBelow", false, writer, conf);
+	TNTExplodeBelowLevel = GetConfig("Global.AntiGreef.TNT.level", 62, writer, conf);
+	// Creeper explosions below 63
+	writer.addComment("Global.AntiGreef.Creeper.ExplodeBelow", "When set to true will allow Creeper explode below 62 (default) level outside of residence",
+	    "This will give more realistic game play");
+	CreeperExplodeBelow = GetConfig("Global.AntiGreef.Creeper.ExplodeBelow", false, writer, conf);
+	CreeperExplodeBelowLevel = GetConfig("Global.AntiGreef.Creeper.level", 62, writer, conf);
 	// Flow
 	writer.addComment("Global.AntiGreef.Flow.Level", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
 	FlowLevel = GetConfig("Global.AntiGreef.Flow.Level", 63, writer, conf);
@@ -889,6 +905,22 @@ public class ConfigManager {
 		}
 	    }
 	}
+    }
+
+    public boolean isTNTExplodeBelow() {
+	return TNTExplodeBelow;
+    }
+
+    public int getTNTExplodeBelowLevel() {
+	return TNTExplodeBelowLevel;
+    }
+
+    public boolean isCreeperExplodeBelow() {
+	return CreeperExplodeBelow;
+    }
+
+    public int getCreeperExplodeBelowLevel() {
+	return CreeperExplodeBelowLevel;
     }
 
     public boolean useVisualizer() {
@@ -1302,6 +1334,7 @@ public class ConfigManager {
     public List<String> getNegativePotionEffects() {
 	return NegativePotionEffects;
     }
+
     public List<String> getNegativeLingeringPotionEffects() {
 	return NegativeLingeringPotionEffects;
     }

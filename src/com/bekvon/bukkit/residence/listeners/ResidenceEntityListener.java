@@ -431,15 +431,41 @@ public class ResidenceEntityListener implements Listener {
 	switch (entity) {
 	case CREEPER:
 	    if (!perms.has("creeper", perms.has("explode", true))) {
-		event.setCancelled(true);
-		event.getEntity().remove();
+		if (Residence.getConfigManager().isCreeperExplodeBelow()) {
+		    if (event.getEntity().getLocation().getBlockY() >= Residence.getConfigManager().getCreeperExplodeBelowLevel()) {
+			event.setCancelled(true);
+			event.getEntity().remove();
+		    } else {
+			ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getEntity().getLocation());
+			if (res != null) {
+			    event.setCancelled(true);
+			    event.getEntity().remove();
+			}
+		    }
+		} else {
+		    event.setCancelled(true);
+		    event.getEntity().remove();
+		}
 	    }
 	    break;
 	case PRIMED_TNT:
 	case MINECART_TNT:
 	    if (!perms.has("tnt", perms.has("explode", true))) {
-		event.setCancelled(true);
-		event.getEntity().remove();
+		if (Residence.getConfigManager().isTNTExplodeBelow()) {
+		    if (event.getEntity().getLocation().getBlockY() >= Residence.getConfigManager().getTNTExplodeBelowLevel()) {
+			event.setCancelled(true);
+			event.getEntity().remove();
+		    } else {
+			ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getEntity().getLocation());
+			if (res != null) {
+			    event.setCancelled(true);
+			    event.getEntity().remove();
+			}
+		    }
+		} else {
+		    event.setCancelled(true);
+		    event.getEntity().remove();
+		}
 	    }
 	    break;
 	case SMALL_FIREBALL:
@@ -476,12 +502,31 @@ public class ResidenceEntityListener implements Listener {
 	switch (entity) {
 	case CREEPER:
 	    if (!perms.has("creeper", perms.has("explode", true)))
-		cancel = true;
+		if (Residence.getConfigManager().isCreeperExplodeBelow()) {
+		    if (event.getEntity().getLocation().getBlockY() >= Residence.getConfigManager().getCreeperExplodeBelowLevel())
+			cancel = true;
+		    else {
+			ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getEntity().getLocation());
+			if (res != null)
+			    cancel = true;
+		    }
+		} else
+		    cancel = true;
 	    break;
 	case PRIMED_TNT:
 	case MINECART_TNT:
-	    if (!perms.has("tnt", perms.has("explode", true)))
-		cancel = true;
+	    if (!perms.has("tnt", perms.has("explode", true))) {
+		if (Residence.getConfigManager().isTNTExplodeBelow()) {
+		    if (event.getEntity().getLocation().getBlockY() >= Residence.getConfigManager().getTNTExplodeBelowLevel())
+			cancel = true;
+		    else {
+			ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getEntity().getLocation());
+			if (res != null)
+			    cancel = true;
+		    }
+		} else
+		    cancel = true;
+	    }
 	    break;
 	case SMALL_FIREBALL:
 	case FIREBALL:
@@ -508,12 +553,31 @@ public class ResidenceEntityListener implements Listener {
 	    switch (entity) {
 	    case CREEPER:
 		if (!blockperms.has("creeper", blockperms.has("explode", true)))
-		    preserve.add(block);
+		    if (Residence.getConfigManager().isCreeperExplodeBelow()) {
+			if (block.getY() >= Residence.getConfigManager().getCreeperExplodeBelowLevel())
+			    preserve.add(block);
+			else {
+			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+			    if (res != null)
+				preserve.add(block);
+			}
+		    } else
+			preserve.add(block);
 		continue;
 	    case PRIMED_TNT:
 	    case MINECART_TNT:
-		if (!blockperms.has("tnt", blockperms.has("explode", true)))
-		    preserve.add(block);
+		if (!blockperms.has("tnt", blockperms.has("explode", true))) {
+		    if (Residence.getConfigManager().isTNTExplodeBelow()) {
+			if (block.getY() >= Residence.getConfigManager().getTNTExplodeBelowLevel())
+			    preserve.add(block);
+			else {
+			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+			    if (res != null)
+				preserve.add(block);
+			}
+		    } else
+			preserve.add(block);
+		}
 		continue;
 	    case ENDER_DRAGON:
 		if (!blockperms.has("dragongrief", false))
