@@ -69,6 +69,7 @@ public class LeaseManager {
 	if (econ != null) {
 	    double cost = limits.getLeaseRenewCost();
 	    ClaimedResidence res = manager.getByName(area);
+	    area = res.getName();
 	    int amount = (int) Math.ceil((double) res.getTotalSize() * cost);
 	    if (cost != 0D) {
 		//Account account = iConomy.getBank().getAccount(player.getName());
@@ -130,6 +131,7 @@ public class LeaseManager {
 		if (res == null) {
 		    it.remove();
 		} else {
+		    resname = res.getName();
 		    boolean renewed = false;
 		    String owner = res.getPermissions().getOwner();
 		    PermissionGroup limits = Residence.getPermissionManager().getGroup(owner, res.getPermissions().getWorld());

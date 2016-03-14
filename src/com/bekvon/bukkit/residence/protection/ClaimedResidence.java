@@ -9,9 +9,12 @@ import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.event.ResidenceAreaAddEvent;
+import com.bekvon.bukkit.residence.event.ResidenceAreaDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceSizeChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceSubzoneCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceTPEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -232,6 +235,12 @@ public class ClaimedResidence {
 		}
 	    }
 	}
+
+	ResidenceAreaAddEvent resevent = new ResidenceAreaAddEvent(player, name, this, area);
+	Residence.getServ().getPluginManager().callEvent(resevent);
+	if (resevent.isCancelled())
+	    return false;
+
 	Residence.getResidenceManager().removeChunkList(getName());
 	areas.put(name, area);
 	Residence.getResidenceManager().calculateChunks(getName());
@@ -641,6 +650,10 @@ public class ClaimedResidence {
 	    i++;
 	}
 	return temp;
+    }
+
+    public Map<String, CuboidArea> getAreaMap() {
+	return areas;
     }
 
     public ResidencePermissions getPermissions() {
@@ -1056,6 +1069,12 @@ public class ClaimedResidence {
 		player.sendMessage(Residence.getLM().getMessage("Area.RemoveLast"));
 		return;
 	    }
+
+	    ResidenceAreaDeleteEvent resevent = new ResidenceAreaDeleteEvent(player, this, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
+	    Residence.getServ().getPluginManager().callEvent(resevent);
+	    if (resevent.isCancelled())
+		return;
+
 	    removeArea(id);
 	    player.sendMessage(Residence.getLM().getMessage("Area.Remove"));
 	} else {

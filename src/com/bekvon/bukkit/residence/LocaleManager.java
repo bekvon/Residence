@@ -146,7 +146,7 @@ public class LocaleManager {
 	GetConfig("Language.Area.InvalidName", "&cInvalid Area Name...", writer, conf, true);
 	GetConfig("Language.Area.ToSmallTotal", "&cSelected area smaller than allowed minimal (&6%1&c)", writer, conf, true);
 	GetConfig("Language.Area.ToSmallX", "&cYour &6X &cselection length (&6%1&c) is too small. &eAllowed &6%2 &eand more.", writer, conf, true);
-	GetConfig("Language.Area.ToSmallY", "&cYour selection height (&6%1&c) is too small. &eAllowed &6%2 and more.", writer, conf, true);
+	GetConfig("Language.Area.ToSmallY", "&cYour selection height (&6%1&c) is too small. &eAllowed &6%2 &eand more.", writer, conf, true);
 	GetConfig("Language.Area.ToSmallZ", "&cYour &6Z &cselection length (&6%1&c) is too small. &eAllowed &6%2 &eand more.", writer, conf, true);
 	GetConfig("Language.Area.Rename", "&eRenamed area &6%1 &eto &6%2", writer, conf, true);
 	GetConfig("Language.Area.Remove", "&eRemoved area &6%1...", writer, conf, true);

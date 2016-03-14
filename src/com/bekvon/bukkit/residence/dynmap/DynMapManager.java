@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
@@ -27,6 +28,7 @@ public class DynMapManager {
     MarkerAPI markerapi;
     MarkerSet set;
     private Map<String, AreaMarker> resareas = new HashMap<String, AreaMarker>();
+    private int schedId = -1;
 
     public DynMapManager(Residence plugin) {
 	this.plugin = plugin;
@@ -36,21 +38,34 @@ public class DynMapManager {
 	return set;
     }
 
-    public void fireUpdate(final ClaimedResidence res, final int deep) {
+    public void fireUpdateAdd(final ClaimedResidence res, final int deep) {
 	if (api == null || set == null)
 	    return;
 	if (res == null)
 	    return;
-	final String name = res.getName();
-	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+
+	if (schedId != -1)
+	    Bukkit.getServer().getScheduler().cancelTask(schedId);
+
+	schedId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 	    public void run() {
-		handleResidence(name, res, resareas, deep);
+		schedId = -1;
+		handleResidenceAdd(res.getName(), res, resareas, deep);
 		return;
 	    }
-	}, 20L);
+	}, 10L);
     }
 
-    private String formatInfoWindow(String resid, ClaimedResidence res) {
+    public void fireUpdateRemove(final ClaimedResidence res, final int deep) {
+	if (api == null || set == null)
+	    return;
+	if (res == null)
+	    return;
+
+	handleResidenceRemove(res.getName(), res, resareas, deep);
+    }
+
+    private String formatInfoWindow(String resid, ClaimedResidence res, String resName) {
 	if (res == null)
 	    return null;
 	if (res.getName() == null)
@@ -79,7 +94,7 @@ public class DynMapManager {
 		+ ChatColor.stripColor(Residence.getLM().getMessage("General.Owner", "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
 		+ ChatColor.stripColor(Residence.getLM().getMessage("Economy.SellAmount", "")) + "<span style=\"font-weight:bold;\">%price%</span><br /></div></div>";
 
-	v = v.replace("%regionname%", res.getName());
+	v = v.replace("%regionname%", resName);
 	v = v.replace("%playerowners%", res.getOwner());
 	String m = res.getEnterMessage();
 	v = v.replace("%entermsg%", (m != null) ? m : "");
@@ -180,65 +195,81 @@ public class DynMapManager {
 	m.setRangeY(as.y, as.y);
     }
 
-    private void handleResidence(String resid, ClaimedResidence res, Map<String, AreaMarker> newmap, int depth) {
+    private void handleResidenceAdd(String resid, ClaimedResidence res, Map<String, AreaMarker> newmap, int depth) {
 
 	if (res == null)
 	    return;
-	if (res.getAreaList().length == 0)
+
+	for (Entry<String, CuboidArea> oneArea : res.getAreaMap().entrySet()) {
+
+	    String id = oneArea.getKey() + "." + resid;
+
+	    String name = res.getName();
+	    double[] x = new double[2];
+	    double[] z = new double[2];
+
+	    String resName = res.getName();
+
+	    if (res.getAreaMap().size() > 1) {
+		resName = res.getName() + " (" + oneArea.getKey() + ")";
+	    }
+
+	    String desc = formatInfoWindow(resid, res, resName);
+
+	    if (!isVisible(resid, res.getWorld()))
+		return;
+
+	    Location l0 = oneArea.getValue().getLowLoc();
+	    Location l1 = oneArea.getValue().getHighLoc();
+
+	    x[0] = l0.getX();
+	    z[0] = l0.getZ();
+	    x[1] = l1.getX() + 1.0;
+	    z[1] = l1.getZ() + 1.0;
+	    AreaMarker marker = null;
+
+	    if (resareas.containsKey(id)) {
+		marker = resareas.get(id);
+		resareas.remove(id);
+		marker.deleteMarker();
+	    }
+
+	    marker = set.createAreaMarker(id, name, true, res.getWorld(), x, z, false);
+	    if (marker == null)
+		return;
+
+	    if (Residence.getConfigManager().DynMapLayer3dRegions)
+		marker.setRangeY(l1.getY() + 1.0, l0.getY());
+
+	    marker.setDescription(desc);
+	    addStyle(resid, marker);
+	    newmap.put(id, marker);
+
+	    if (depth <= Residence.getConfigManager().DynMapLayerSubZoneDepth) {
+		List<ClaimedResidence> subids = res.getSubzones();
+		for (ClaimedResidence one : subids) {
+		    handleResidenceAdd(one.getName(), one, newmap, depth + 1);
+		}
+	    }
+	}
+    }
+
+    private void handleResidenceRemove(String resid, ClaimedResidence res, Map<String, AreaMarker> newmap, int depth) {
+
+	if (res == null)
 	    return;
 
-	String id = resid + "%" + depth;
-	if (Residence.getResidenceManager().getByName(resid) == null) {
+	for (Entry<String, CuboidArea> oneArea : res.getAreaMap().entrySet()) {
+	    String id = oneArea.getKey() + "." + resid;
 	    if (resareas.containsKey(id)) {
 		AreaMarker marker = resareas.remove(id);
 		marker.deleteMarker();
-		return;
 	    }
-	}
-
-	String name = res.getName();
-	double[] x = new double[2];
-	double[] z = new double[2];
-
-	String desc = formatInfoWindow(resid, res);
-
-	if (!isVisible(resid, res.getWorld()))
-	    return;
-
-	Location l0 = res.getAreaArray()[0].getLowLoc();
-	Location l1 = res.getAreaArray()[0].getHighLoc();
-
-	x[0] = l0.getX();
-	z[0] = l0.getZ();
-	x[1] = l1.getX() + 1.0;
-	z[1] = l1.getZ() + 1.0;
-
-	AreaMarker marker = resareas.remove(id);
-	if (Residence.getResidenceManager().getByName(res.getName()) == null) {
-	    marker.deleteMarker();
-	    return;
-	}
-	if (marker == null) {
-	    marker = set.createAreaMarker(id, name, false, res.getWorld(), x, z, false);
-	    if (marker == null)
-		return;
-	} else {
-	    marker.setCornerLocations(x, z);
-	    marker.setLabel(name);
-	}
-
-	if (Residence.getConfigManager().DynMapLayer3dRegions)
-	    marker.setRangeY(l1.getY() + 1.0, l0.getY());
-
-	marker.setDescription(desc);
-	addStyle(resid, marker);
-	newmap.put(id, marker);
-
-	if (depth < Residence.getConfigManager().DynMapLayerSubZoneDepth) {
-	    List<ClaimedResidence> subids = res.getSubzones();
-	    for (ClaimedResidence one : subids) {
-		id = resid + "." + one.getSubzoneDeep();
-		handleResidence(id, one, newmap, depth + 1);
+	    if (depth <= Residence.getConfigManager().DynMapLayerSubZoneDepth + 1) {
+		List<ClaimedResidence> subids = res.getSubzones();
+		for (ClaimedResidence one : subids) {
+		    handleResidenceRemove(one.getName(), one, newmap, depth + 1);
+		}
 	    }
 	}
     }
@@ -270,7 +301,8 @@ public class DynMapManager {
 	Bukkit.getConsoleSender().sendMessage("[Residence] DynMap residence activated!");
 
 	for (Entry<String, ClaimedResidence> one : Residence.getResidenceManager().getResidences().entrySet()) {
-	    Residence.getDynManager().fireUpdate(one.getValue(), one.getValue().getSubzoneDeep());
+	    Residence.getDynManager().fireUpdateAdd(one.getValue(), one.getValue().getSubzoneDeep());
+	    handleResidenceAdd(one.getValue().getName(), one.getValue(), resareas, one.getValue().getSubzoneDeep());
 	}
     }
 }

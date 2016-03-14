@@ -29,6 +29,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceManager implements ResidenceInterface {
     protected Map<String, ClaimedResidence> residences;
@@ -395,89 +396,95 @@ public class ResidenceManager implements ResidenceInterface {
 
     @SuppressWarnings("deprecation")
     public void removeResidence(Player player, String name, boolean resadmin) {
+
+	Debug.D("" + name);
+
 	ClaimedResidence res = this.getByName(name);
-	if (res != null) {
-	    if (player != null && !resadmin) {
-		if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
-		    return;
-		}
-	    }
-	    ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
-	    Residence.getServ().getPluginManager().callEvent(resevent);
-	    if (resevent.isCancelled()) {
+	if (res == null) {
+	    if (player != null)
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    return;
+	}
+
+	name = res.getName();
+
+	if (player != null && !resadmin) {
+	    if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return;
 	    }
-	    ClaimedResidence parent = res.getParent();
-	    if (parent == null) {
-		removeChunkList(name);
-		residences.remove(name);
+	}
 
-		if (Residence.getConfigManager().isUseClean() && Residence.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
-		    CuboidArea area = res.getAreaArray()[0];
+	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
+	Residence.getServ().getPluginManager().callEvent(resevent);
+	if (resevent.isCancelled())
+	    return;
 
-		    Location low = area.getLowLoc();
-		    Location high = area.getHighLoc();
+	ClaimedResidence parent = res.getParent();
+	if (parent == null) {
+	    removeChunkList(name);
+	    residences.remove(name);
 
-		    if (high.getBlockY() > Residence.getConfigManager().getCleanLevel()) {
+	    if (Residence.getConfigManager().isUseClean() && Residence.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
+		CuboidArea area = res.getAreaArray()[0];
 
-			if (low.getBlockY() < Residence.getConfigManager().getCleanLevel())
-			    low.setY(Residence.getConfigManager().getCleanLevel());
+		Location low = area.getLowLoc();
+		Location high = area.getHighLoc();
 
-			World world = low.getWorld();
+		if (high.getBlockY() > Residence.getConfigManager().getCleanLevel()) {
 
-			Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
+		    if (low.getBlockY() < Residence.getConfigManager().getCleanLevel())
+			low.setY(Residence.getConfigManager().getCleanLevel());
 
-			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
-			    temploc.setX(x);
-			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
-				temploc.setY(y);
-				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
-				    temploc.setZ(z);
-				    if (Residence.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
-					temploc.getBlock().setTypeId(0);
-				    }
+		    World world = low.getWorld();
+
+		    Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
+
+		    for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+			temploc.setX(x);
+			for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
+			    temploc.setY(y);
+			    for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+				temploc.setZ(z);
+				if (Residence.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
+				    temploc.getBlock().setTypeId(0);
 				}
 			    }
 			}
 		    }
 		}
-
-		if (player != null) {
-		    player.sendMessage(Residence.getLM().getMessage("Residence.Remove", name));
-		}
-	    } else {
-		String[] split = name.split("\\.");
-		if (player != null) {
-		    parent.removeSubzone(player, split[split.length - 1], true);
-		} else {
-		    parent.removeSubzone(split[split.length - 1]);
-		}
 	    }
 
-	    // Residence.getLeaseManager().removeExpireTime(name); - causing
-	    // concurrent modification exception in lease manager... worked
-	    // around for now
+	    if (player != null)
+		player.sendMessage(Residence.getLM().getMessage("Residence.Remove", name));
 
-	    for (String oneSub : res.getSubzoneList()) {
-		Residence.getPlayerManager().removeResFromPlayer(res.getOwner(), name + "." + oneSub);
-		Residence.getRentManager().removeRentable(name + "." + oneSub);
-		Residence.getTransactionManager().removeFromSale(name + "." + oneSub);
-	    }
-
-	    Residence.getPlayerManager().removeResFromPlayer(res.getOwner(), name);
-
-	    Residence.getRentManager().removeRentable(name);
-	    Residence.getTransactionManager().removeFromSale(name);
-
-	    if (parent == null && Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().useResMoneyBack()) {
-		int chargeamount = (int) Math.ceil((double) res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
-		TransactionManager.giveEconomyMoney(player, chargeamount);
-	    }
 	} else {
+	    String[] split = name.split("\\.");
 	    if (player != null) {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		parent.removeSubzone(player, split[split.length - 1], true);
+	    } else {
+		parent.removeSubzone(split[split.length - 1]);
 	    }
+	}
+
+	// Residence.getLeaseManager().removeExpireTime(name); - causing
+	// concurrent modification exception in lease manager... worked
+	// around for now
+
+	for (String oneSub : res.getSubzoneList()) {
+	    Residence.getPlayerManager().removeResFromPlayer(res.getOwner(), name + "." + oneSub);
+	    Residence.getRentManager().removeRentable(name + "." + oneSub);
+	    Residence.getTransactionManager().removeFromSale(name + "." + oneSub);
+	}
+
+	Residence.getPlayerManager().removeResFromPlayer(res.getOwner(), name);
+
+	Residence.getRentManager().removeRentable(name);
+	Residence.getTransactionManager().removeFromSale(name);
+
+	if (parent == null && Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().useResMoneyBack()) {
+	    int chargeamount = (int) Math.ceil((double) res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
+	    TransactionManager.giveEconomyMoney(player, chargeamount);
 	}
     }
 
@@ -515,7 +522,6 @@ public class ResidenceManager implements ResidenceInterface {
 	int count = getOwnedZoneCount(player);
 	if (count >= target)
 	    return false;
-
 	return true;
     }
 
@@ -525,6 +531,9 @@ public class ResidenceManager implements ResidenceInterface {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
 	}
+
+	areaname = res.getName();
+
 	player.sendMessage(Residence.getLM().getMessage("General.Separator"));
 
 	ResidencePermissions perms = res.getPermissions();
@@ -740,6 +749,9 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	    return false;
 	}
+
+	oldName = res.getName();
+
 	if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (res.getParent() == null) {
 		if (Residence.getConfigManager().isResCreateCaseSensitive()) {
@@ -797,6 +809,9 @@ public class ResidenceManager implements ResidenceInterface {
 	    reqPlayer.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
 	}
+
+	residence = res.getName();
+
 	if (!res.getPermissions().hasResidencePermission(reqPlayer, true) && !resadmin) {
 	    reqPlayer.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;

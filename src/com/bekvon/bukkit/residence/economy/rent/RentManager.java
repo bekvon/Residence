@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.entity.Player;
 
-public class RentManager implements MarketRentInterface{
+public class RentManager implements MarketRentInterface {
     protected Map<String, RentedLand> rentedLand;
     protected Map<String, RentableLand> rentableLand;
 
@@ -67,6 +67,9 @@ public class RentManager implements MarketRentInterface{
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
 	}
+
+	landName = res.getName();
+
 	if (!resadmin) {
 	    if (!res.getPermissions().hasResidencePermission(player, true)) {
 		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
@@ -115,6 +118,9 @@ public class RentManager implements MarketRentInterface{
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
 	}
+
+	landName = res.getName();
+
 	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	if (!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents(player.getName())) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.MaxRent"));
@@ -205,6 +211,9 @@ public class RentManager implements MarketRentInterface{
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
 	}
+
+	landName = res.getName();
+
 	if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
@@ -336,6 +345,9 @@ public class RentManager implements MarketRentInterface{
 	RentableLand land = rentableLand.get(landName);
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	if (land != null && res != null && (res.isOwner(player) || resadmin)) {
+
+	    landName = res.getName();
+
 	    land.repeatable = value;
 	    if (!value && this.isRented(landName))
 		rentedLand.get(landName).autoRefresh = false;

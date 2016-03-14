@@ -86,6 +86,9 @@ public class TransactionManager implements MarketBuyInterface {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
 	}
+
+	areaname = area.getName();
+
 	if (!area.isOwner(player) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
@@ -111,6 +114,9 @@ public class TransactionManager implements MarketBuyInterface {
 	if (area == null) {
 	    return false;
 	}
+
+	areaname = area.getName();
+
 	if (sellAmount.containsKey(areaname)) {
 	    return false;
 	}
@@ -138,6 +144,9 @@ public class TransactionManager implements MarketBuyInterface {
 		sellAmount.remove(areaname);
 		return;
 	    }
+
+	    areaname = res.getName();
+
 	    if (res.getPermissions().getOwner().equals(player.getName())) {
 		player.sendMessage(Residence.getLM().getMessage("Economy.OwnerBuyFail"));
 		return;
@@ -202,6 +211,9 @@ public class TransactionManager implements MarketBuyInterface {
     public void removeFromSale(Player player, String areaname, boolean resadmin) {
 	ClaimedResidence area = manager.getByName(areaname);
 	if (area != null) {
+
+	    areaname = area.getName();
+
 	    if (!isForSale(areaname)) {
 		player.sendMessage(Residence.getLM().getMessage("Residence.NotForSale"));
 		return;
