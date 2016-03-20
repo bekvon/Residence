@@ -20,10 +20,12 @@ import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -758,13 +760,13 @@ public class ClaimedResidence {
 
 	List<RandomLoc> randomLocList = new ArrayList<RandomLoc>();
 
-	for (int z = 0; z < area.getZSize(); z++) {
-	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() - 1, 0, area.getLowLoc().getZ() + z));
+	for (int z = -1; z < area.getZSize() + 1; z++) {
+	    randomLocList.add(new RandomLoc(area.getLowLoc().getX(), 0, area.getLowLoc().getZ() + z));
 	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + area.getXSize(), 0, area.getLowLoc().getZ() + z));
 	}
 
 	for (int x = -1; x < area.getXSize() + 1; x++) {
-	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ() - 1));
+	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ()));
 	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ() + area.getZSize()));
 	}
 
@@ -777,6 +779,8 @@ public class ClaimedResidence {
 	    it++;
 
 	    Random ran = new Random(System.currentTimeMillis());
+	    if (randomLocList.isEmpty())
+		break;
 	    int check = ran.nextInt(randomLocList.size());
 	    RandomLoc place = randomLocList.get(check);
 	    randomLocList.remove(check);
@@ -948,7 +952,7 @@ public class ClaimedResidence {
 
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
 	boolean isAdmin = Residence.isResAdminOn(reqPlayer);
-	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass")) {
+	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass") && !this.isOwner(targetPlayer)) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(reqPlayer);
 	    if (!group.hasTpAccess()) {
 		reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportDeny"));
@@ -1105,8 +1109,10 @@ public class ClaimedResidence {
 	root.put("Subzones", subzonemap);
 	root.put("Permissions", perms.save());
 	DecimalFormat formatter = new DecimalFormat("#0.00");
+	formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.getDefault()));
 	if (tpLoc != null) {
 	    Map<String, Object> tpmap = new HashMap<>();
+
 	    tpmap.put("X", Double.valueOf(formatter.format(tpLoc.getX())));
 	    tpmap.put("Y", Double.valueOf(formatter.format(tpLoc.getY())));
 	    tpmap.put("Z", Double.valueOf(formatter.format(tpLoc.getZ())));

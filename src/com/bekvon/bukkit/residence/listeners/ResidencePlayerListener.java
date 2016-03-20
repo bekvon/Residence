@@ -911,7 +911,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 		.getCause() == TeleportCause.PLUGIN) {
 		String areaname = res.getName();
-		if (!res.getPermissions().playerHas(player.getName(), "move", true)) {
+		if (!res.getPermissions().playerHas(player.getName(), "move", true) && !res.isOwner(player)) {
 		    event.setCancelled(true);
 		    player.sendMessage(Residence.getLM().getMessage("Residence.MoveDeny", areaname));
 		    return;
@@ -925,7 +925,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	    if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND && Residence.getConfigManager().isBlockAnyTeleportation()) {
-		if (!res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
+		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
 		    String areaname = res.getName();
 		    event.setCancelled(true);
 		    player.sendMessage(Residence.getLM().getMessage("General.TeleportDeny", areaname));
@@ -1070,7 +1070,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (move) {
-	    if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player)) {
+	    if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player) && !res.isOwner(player)) {
 		Location lastLoc = lastOutsideLoc.get(pname);
 
 		if (Residence.getConfigManager().BounceAnimation()) {
