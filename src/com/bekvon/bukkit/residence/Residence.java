@@ -52,6 +52,7 @@ import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
+import com.bekvon.bukkit.residence.allNms.v1_9Events;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
@@ -75,6 +76,7 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
@@ -629,6 +631,12 @@ public class Residence extends JavaPlugin {
 		// 1.8 event
 		if (VersionChecker.GetVersion() >= 1800)
 		    pm.registerEvents(new v1_8Events(), this);
+		
+		// 1.9 event
+		if (VersionChecker.GetVersion() >= 1900)
+		    pm.registerEvents(new v1_9Events(), this);
+		
+		Debug.D("Residence version: " + VersionChecker.GetVersion());
 
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
 		// Priority.NORMAL, this);

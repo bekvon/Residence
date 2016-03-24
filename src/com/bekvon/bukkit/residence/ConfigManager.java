@@ -499,9 +499,8 @@ public class ConfigManager {
 	NegativePotionEffects = GetConfig("Global.Optimizations.NegativePotionEffects", Arrays.asList("blindness", "confusion", "harm", "hunger", "poison", "slow",
 	    "slow_digging", "weakness", "wither"), writer, conf, false);
 
-	NegativeLingeringPotionEffects = GetConfig("Global.Optimizations.NegativeLingeringPotionEffects", Arrays.asList("slowness", "long_slowness", "harming",
-	    "strong_harming", "poison", "long_poison",
-	    "strong_poison", "weakness", "long_weakness"), writer, conf, false);
+	NegativeLingeringPotionEffects = GetConfig("Global.Optimizations.NegativeLingeringPotions", Arrays.asList("slowness", "instant_damage", "poison", "slowness"),
+	    writer, conf, false);
 
 	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
