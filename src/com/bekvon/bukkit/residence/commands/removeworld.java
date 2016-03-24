@@ -7,7 +7,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 
-public abstract class removeworld implements cmd {
+public class removeworld implements cmd {
 
     @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {

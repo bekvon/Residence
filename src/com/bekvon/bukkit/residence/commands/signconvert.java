@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 
-public abstract class signconvert implements cmd {
+public class signconvert implements cmd {
 
     @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {

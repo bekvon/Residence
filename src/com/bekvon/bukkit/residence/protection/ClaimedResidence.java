@@ -19,6 +19,8 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -1108,19 +1110,34 @@ public class ClaimedResidence {
 	}
 	root.put("Subzones", subzonemap);
 	root.put("Permissions", perms.save());
-	DecimalFormat formatter = new DecimalFormat("#0.00");
-	formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.getDefault()));
+
 	if (tpLoc != null) {
 	    Map<String, Object> tpmap = new HashMap<>();
-
-	    tpmap.put("X", Double.valueOf(formatter.format(tpLoc.getX())));
-	    tpmap.put("Y", Double.valueOf(formatter.format(tpLoc.getY())));
-	    tpmap.put("Z", Double.valueOf(formatter.format(tpLoc.getZ())));
-	    tpmap.put("Pitch", Double.valueOf(formatter.format(tpLoc.getPitch())));
-	    tpmap.put("Yaw", Double.valueOf(formatter.format(tpLoc.getYaw())));
+	    tpmap.put("X", convertDouble(tpLoc.getX()));
+	    tpmap.put("Y", convertDouble(tpLoc.getY()));
+	    tpmap.put("Z", convertDouble(tpLoc.getZ()));
+	    tpmap.put("Pitch", convertDouble(tpLoc.getPitch()));
+	    tpmap.put("Yaw", convertDouble(tpLoc.getYaw()));
 	    root.put("TPLoc", tpmap);
 	}
 	return root;
+    }
+
+    // Converting double with comman to dots format and striping to 2 numbers after dot
+    private double convertDouble(double d) {
+	return convertDouble(String.valueOf(d));
+    }
+    private double convertDouble(String dString) {
+	DecimalFormat formatter = new DecimalFormat("#0.00");
+	formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.getDefault()));
+	dString = dString.replace(",", ".");
+	Double d = 0D;
+	try {
+	    d = Double.valueOf(dString);
+	    d = Double.valueOf(formatter.format(d));
+	} catch (Exception e) {
+	}
+	return d;
     }
 
     @SuppressWarnings("unchecked")

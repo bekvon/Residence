@@ -75,6 +75,8 @@ public class Language {
      * @return the message
      */
     public String getDefaultMessage(String key) {
+	if (!key.contains("Language.") && !key.contains("CommandHelp."))
+	    key = "Language." + key;
 	String missing = "Missing locale for " + key;
 	return enlocale.contains(key) == true ? ChatColor.translateAlternateColorCodes('&', enlocale.getString(key)) : missing;
     }
@@ -87,6 +89,8 @@ public class Language {
      * @return the message
      */
     public List<String> getMessageList(String key) {
+	if (!key.contains("Language.") && !key.contains("CommandHelp."))
+	    key = "Language." + key;
 	String missing = "Missing locale for " + key;
 	if (customlocale.isList(key))
 	    return LocaleManager.ColorsArray(customlocale.getStringList(key), true);

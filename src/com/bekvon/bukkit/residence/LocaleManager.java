@@ -570,6 +570,12 @@ public class LocaleManager {
 	    "Removes essential flags from player"), writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.pdel.Args", "[residence] [playername]", writer, conf, true);
 
+	// res give
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.give.Description", "Give residence to player.", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.give.Info", Arrays.asList("&eUsage: &6/res give <residence name> [player]",
+	    "Gives your owned residence to target player"), writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.give.Args", "[residence] [playername]", writer, conf, true);
+
 	// res info
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.info.Description", "Show info on a residence.", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.info.Info",
