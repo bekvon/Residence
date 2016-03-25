@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class v1_9Events implements Listener {
 
@@ -43,7 +44,8 @@ public class v1_9Events implements Listener {
 	    event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+//    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler
     public void onLingeringEffectApply(AreaEffectCloudApplyEvent event) {
 
 	// disabling event on world
@@ -51,13 +53,19 @@ public class v1_9Events implements Listener {
 	    return;
 
 	boolean harmfull = false;
-	for (String oneHarm : Residence.getConfigManager().getNegativeLingeringPotionEffects()) {
-	    if (((PotionData) event.getEntity().getBasePotionData()).getType().name().equalsIgnoreCase(oneHarm)) {
-		harmfull = true;
-		break;
+	
+	// Temporally fail safe to avoid console spam for getting base potion data until fix roles out
+	try {
+	    for (String oneHarm : Residence.getConfigManager().getNegativeLingeringPotionEffects()) {
+		if (((PotionData) event.getEntity().getBasePotionData()).getType().name().equalsIgnoreCase(oneHarm)) {
+		    harmfull = true;
+		    break;
+		}
 	    }
+	} catch (Exception e) {
+	    return;
 	}
-
+	
 	if (!harmfull)
 	    return;
 
