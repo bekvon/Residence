@@ -466,6 +466,8 @@ public class LocaleManager {
 	GetConfig("Language.General.LandCost", "&eLand cost: &6%1", writer, conf, true);
 	GetConfig("Language.General.True", "&2True", writer, conf, true);
 	GetConfig("Language.General.False", "&cFalse", writer, conf, true);
+	GetConfig("Language.General.Removed", "&6Removed", writer, conf, true);
+	GetConfig("Language.General.FlagState", "&eFlag state: %1", writer, conf, true);
 	GetConfig("Language.General.Land", "&eLand: &6%1", writer, conf, true);
 	GetConfig("Language.General.Cost", "&eCost: &6%1 &eper &6%2 &edays", writer, conf, true);
 	GetConfig("Language.General.Status", "&eStatus: %1", writer, conf, true);

@@ -338,8 +338,8 @@ Language:
     TotalWorth: '&e总价值: &6%1 &e(&6%2&e)'
     NotOnline: '&e目标玩家不在线.'
     NextPage: '&e下一页'
-    NextInfoPage: '&2|    &e下一页  &2>>>'
-    PrevInfoPage: '&2<<<  &e上一页    &2|'
+    NextInfoPage: '&2| &e下一页 &2>>>'
+    PrevInfoPage: '&2<<< &e上一页 &2|'
     GenericPage: '&e第 &6%1 &e页, 共 &6%2'
     WorldEditNotFound: '&c未检测到 WorldEdit.'
     CoordsTop: '&eX:&6%1 &eY:&6%2 &eZ:&6%3'
@@ -354,6 +354,8 @@ Language:
     LandCost: '&e领地花费: &6%1'
     'True': '&2是'
     'False': '&c否'
+    Removed: '&6未设置'
+    FlagState: '&e权限状态: %1'
     Land: '&e领地: &6%1'
     Cost: '&e花费: 每 &6%2 &e天 &6%1'
     Status: '&e状态: %1'
@@ -463,6 +465,12 @@ CommandHelp:
           Info:
           - '&e用法: &6/res pdel <领地名> [玩家]'
           - 删除玩家的基本权限
+          Args: '[residence] [playername]'
+        give:
+          Description: 给予一名玩家领地.
+          Info:
+          - '&e用法: &6/res give <领地名> [玩家]'
+          - 将你拥有的某个领地赠与某玩家
           Args: '[residence] [playername]'
         info:
           Description: 显示一个领地的信息

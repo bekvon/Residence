@@ -161,7 +161,7 @@ public class Residence extends JavaPlugin {
     protected static boolean initsuccess = false;
     public static Map<String, String> deleteConfirm;
     public static List<String> resadminToggle;
-    private final static String[] validLanguages = { "English" , "Czech", "Chinese"};
+    private final static String[] validLanguages = { "English" , "Czech", "Chinese", "ChineseTW"};
     public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     public static WorldEditPlugin wep = null;
     public static WorldGuardPlugin wg = null;

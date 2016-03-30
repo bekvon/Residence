@@ -19,8 +19,6 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -1127,7 +1125,7 @@ public class ClaimedResidence {
     private double convertDouble(double d) {
 	return convertDouble(String.valueOf(d));
     }
-    private double convertDouble(String dString) {
+    private static double convertDouble(String dString) {
 	DecimalFormat formatter = new DecimalFormat("#0.00");
 	formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.getDefault()));
 	dString = dString.replace(",", ".");
@@ -1139,7 +1137,7 @@ public class ClaimedResidence {
 	}
 	return d;
     }
-
+    
     @SuppressWarnings("unchecked")
     public static ClaimedResidence load(Map<String, Object> root, ClaimedResidence parent, Residence plugin) throws Exception {
 	ClaimedResidence res = new ClaimedResidence(plugin);
@@ -1192,12 +1190,12 @@ public class ClaimedResidence {
 	    double yaw = 0.0;
 
 	    if (tploc.containsKey("Yaw"))
-		yaw = Double.valueOf(tploc.get("Yaw").toString());
+		yaw = convertDouble(tploc.get("Yaw").toString());
 
 	    if (tploc.containsKey("Pitch"))
-		pitch = Double.valueOf(tploc.get("Pitch").toString());
+		pitch = convertDouble(tploc.get("Pitch").toString());
 
-	    res.tpLoc = new Location(world, Double.valueOf(tploc.get("X").toString()), Double.valueOf(tploc.get("Y").toString()), Double.valueOf(tploc.get("Z")
+	    res.tpLoc = new Location(world,convertDouble(tploc.get("X").toString()), convertDouble(tploc.get("Y").toString()), convertDouble(tploc.get("Z")
 		.toString()));
 	    res.tpLoc.setPitch((float) pitch);
 	    res.tpLoc.setYaw((float) yaw);

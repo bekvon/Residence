@@ -227,17 +227,19 @@ public class SetFlag {
 
 	    List<String> lore = new ArrayList<String>();
 
+	    String variable = "";
 	    switch (one.getValue()) {
 	    case 0:
-		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.DARK_RED + "False");
+		variable = Residence.getLM().getMessage("General.False");
 		break;
 	    case 1:
-		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.GREEN + "True");
+		variable = Residence.getLM().getMessage("General.True");
 		break;
 	    case 2:
-		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.RED + "Removed");
+		variable = Residence.getLM().getMessage("General.Removed");
 		break;
 	    }
+	    lore.add(Residence.getLM().getMessage("General.FlagState", variable));
 
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
@@ -373,17 +375,19 @@ public class SetFlag {
 
 	    List<String> lore = new ArrayList<String>();
 
+	    String variable = "";
 	    switch (one.getValue()) {
 	    case 0:
-		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.DARK_RED + "False");
+		variable = Residence.getLM().getMessage("General.False");
 		break;
 	    case 1:
-		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.GREEN + "True");
+		variable = Residence.getLM().getMessage("General.True");
 		break;
 	    case 2:
-		lore.add(ChatColor.GOLD + "Flag state: " + ChatColor.RED + "Removed");
+		variable = Residence.getLM().getMessage("General.Removed");
 		break;
 	    }
+	    lore.add(Residence.getLM().getMessage("General.FlagState", variable));
 
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
