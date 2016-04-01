@@ -14,7 +14,6 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class v1_9Events implements Listener {
 

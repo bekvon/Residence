@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -23,8 +21,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -49,9 +45,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.projectiles.ProjectileSource;
 
 public class ResidenceEntityListener implements Listener {
 

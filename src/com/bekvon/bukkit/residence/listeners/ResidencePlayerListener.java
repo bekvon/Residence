@@ -711,6 +711,32 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerInteractWithHorse(PlayerInteractEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+	Player player = event.getPlayer();
+	if (Residence.isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getRightClicked();
+
+	if (ent.getType() != EntityType.HORSE)
+	    return;
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	if (res == null)
+	    return;
+	if (!res.getPermissions().playerHas(player.getName(), "container", true) && player.isSneaking()) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
+	    event.setCancelled(true);
+	} else if (!res.getPermissions().playerHas(player.getName(), "riding", false)) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "riding", res.getName()));
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDyeSheep(PlayerInteractEntityEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))

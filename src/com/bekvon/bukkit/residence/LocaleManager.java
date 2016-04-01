@@ -1065,6 +1065,12 @@ public class LocaleManager {
 	    "Automaticaly respawns player", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.respawn.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// riding
+	FlagList.add("riding");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.riding.Description",
+	    "Prevent riding a horse", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.riding.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 
 	// Filling with custom flags info
 	Set<String> sec = conf.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands").getKeys(false);

@@ -153,6 +153,9 @@ public class FlagPermissions {
 	addFlag("dye");
 
 	addFlag("enderpearl");
+	
+	// Horse riding
+	addFlag("riding");
 
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
