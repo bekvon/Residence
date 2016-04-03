@@ -1059,6 +1059,12 @@ public class LocaleManager {
 	    "Prevents snowman snow trails", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.snowtrail.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
+	// iceform
+	FlagList.add("iceform");
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.iceform.Description",
+	    "Prevents from ice forming", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.iceform.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"), writer, conf, true);
 	// respawn
 	FlagList.add("respawn");
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.respawn.Description",

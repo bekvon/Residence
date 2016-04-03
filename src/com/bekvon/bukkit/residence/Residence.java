@@ -144,11 +144,10 @@ public class Residence extends JavaPlugin {
     protected static RandomTp RandomTpManager;
     protected static DynMapManager DynManager;
 
-    public static Plugin instance2;
     protected boolean firstenable = true;
     protected static EconomyInterface economy;
     public final static int saveVersion = 1;
-    protected static File dataFolder;
+    public static File dataFolder;
     protected static int leaseBukkitId = -1;
     protected static int rentBukkitId = -1;
     protected static int healBukkitId = -1;
@@ -161,7 +160,7 @@ public class Residence extends JavaPlugin {
     protected static boolean initsuccess = false;
     public static Map<String, String> deleteConfirm;
     public static List<String> resadminToggle;
-    private final static String[] validLanguages = { "English" , "Czech", "Chinese", "ChineseTW"};
+    private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
     public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     public static WorldEditPlugin wep = null;
     public static WorldGuardPlugin wg = null;
@@ -631,11 +630,11 @@ public class Residence extends JavaPlugin {
 		// 1.8 event
 		if (VersionChecker.GetVersion() >= 1800)
 		    pm.registerEvents(new v1_8Events(), this);
-		
+
 		// 1.9 event
 		if (VersionChecker.GetVersion() >= 1900)
 		    pm.registerEvents(new v1_9Events(), this);
-		
+
 		Debug.D("Residence version: " + VersionChecker.GetVersion());
 
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
@@ -820,6 +819,10 @@ public class Residence extends JavaPlugin {
 
     public static HelpEntry getHelpPages() {
 	return helppages;
+    }
+
+    public static void setConfigManager(ConfigManager cm) {
+	cmanager = cm;
     }
 
     public static ConfigManager getConfigManager() {

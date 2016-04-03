@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
@@ -116,6 +118,18 @@ public class ResidenceBlockListener implements Listener {
 	    if (!perms.has("snowtrail", true)) {
 		event.setCancelled(true);
 	    }
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onIceForm(BlockFormEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+
+	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	if (!perms.has("iceform", true)) {
+	    event.setCancelled(true);
 	}
     }
 

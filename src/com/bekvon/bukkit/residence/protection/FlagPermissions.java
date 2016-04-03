@@ -221,8 +221,11 @@ public class FlagPermissions {
 
 	// Auto respawn player
 	addResidenceOnlyFlag("respawn");
+	
+	addResidenceOnlyFlag("iceform");
 
 	addPlayerOrGroupOnlyFlag("admin");
+	
 
 	Residence.getConfigManager().UpdateGroupedFlagsFile();
 
