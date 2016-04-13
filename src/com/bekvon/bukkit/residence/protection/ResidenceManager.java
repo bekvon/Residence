@@ -29,7 +29,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceManager implements ResidenceInterface {
     protected Map<String, ClaimedResidence> residences;
@@ -396,8 +395,6 @@ public class ResidenceManager implements ResidenceInterface {
 
     @SuppressWarnings("deprecation")
     public void removeResidence(Player player, String name, boolean resadmin) {
-
-	Debug.D("" + name);
 
 	ClaimedResidence res = this.getByName(name);
 	if (res == null) {

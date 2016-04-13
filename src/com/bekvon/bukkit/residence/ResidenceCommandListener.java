@@ -26,12 +26,13 @@ public class ResidenceCommandListener extends Residence {
 	if (cevent.isCancelled()) {
 	    return true;
 	}
-	
-	if (sender instanceof Player && !Residence.getPermissionManager().isResidenceAdmin((Player) sender) && Residence.isDisabledWorldCommand(((Player) sender).getWorld())){
+
+	if (sender instanceof Player && !Residence.getPermissionManager().isResidenceAdmin((Player) sender) && Residence.isDisabledWorldCommand(((Player) sender)
+	    .getWorld())) {
 	    sender.sendMessage(Residence.getLM().getMessage("General.DisabledWorld"));
 	    return true;
 	}
-	
+
 	if (command.getName().equals("resreload") && args.length == 0) {
 	    if (sender instanceof Player) {
 		Player player = (Player) sender;
@@ -87,9 +88,6 @@ public class ResidenceCommandListener extends Residence {
 	    } else {
 		resadmin = true;
 	    }
-	    
-	    
-	    
 
 	    if (args.length > 0 && args[args.length - 1].equalsIgnoreCase("?") || args.length > 1 && args[args.length - 2].equals("?")) {
 		return commandHelp(args, resadmin, sender, command);
@@ -106,9 +104,6 @@ public class ResidenceCommandListener extends Residence {
 		    player.sendMessage(Residence.getLM().getMessage("General.AdminOnly"));
 		    return true;
 		}
-	    }
-	    if (args.length == 0) {
-		return false;
 	    }
 	    if (args.length == 0) {
 		args = new String[1];
@@ -128,8 +123,7 @@ public class ResidenceCommandListener extends Residence {
 
 	    cmd cmdClass = getCmdClass(sender, command.getName(), args);
 	    if (cmdClass == null) {
-		sendUsage(sender, command.getName());
-		return true;
+		return commandHelp(new String[] { "?" }, resadmin, sender, command);
 	    }
 
 	    if (!resadmin && Residence.resadminToggle.contains(player.getName())) {
@@ -138,8 +132,15 @@ public class ResidenceCommandListener extends Residence {
 		}
 	    }
 	    boolean respond = cmdClass.perform(args, resadmin, command, sender);
-	    if (!respond)
-		sendUsage(sender, command.getName());
+	    if (!respond) {
+		String[] tempArray = new String[args.length + 1];
+		for (int i = 0; i < args.length; i++) {
+		    tempArray[i] = args[i];
+		}
+		tempArray[args.length] = "?";
+		args = tempArray;
+		return commandHelp(args, resadmin, sender, command);
+	    }
 
 	    return true;
 	}
@@ -165,7 +166,7 @@ public class ResidenceCommandListener extends Residence {
 	return cmdClass;
     }
 
-    private void sendUsage(CommandSender sender, String command) {
+    public void sendUsage(CommandSender sender, String command) {
 	sender.sendMessage(Residence.getLM().getMessage("General.DefaultUsage", command));
     }
 

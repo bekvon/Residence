@@ -45,10 +45,10 @@ public class RandomTp {
 	    rtloc = one;
 	    break;
 	}
-
+	
 	if (rtloc == null)
 	    return null;
-
+	
 	World world = rtloc.getCenter().getWorld();
 
 	if (world == null)

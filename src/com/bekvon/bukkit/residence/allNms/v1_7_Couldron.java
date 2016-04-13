@@ -114,6 +114,12 @@ public class v1_7_Couldron implements NMS {
 
     @SuppressWarnings("deprecation")
     @Override
+    public ItemStack itemInMainHand(Player player) {
+	return player.getInventory().getItemInHand();
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
     public Block getTargetBlock(Player player, int range) {
 	return player.getTargetBlock((HashSet<Byte>) null, range);
     }

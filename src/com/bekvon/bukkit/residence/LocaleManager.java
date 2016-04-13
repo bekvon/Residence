@@ -72,7 +72,7 @@ public class LocaleManager {
 	} catch (InvalidConfigurationException ex) {
 	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Residence] Your locale file for " + language
 		+ " is incorect! Use http://yaml-online-parser.appspot.com/ to find issue.");
-	    return null;	   
+	    return null;
 	}
 
 	return config;
@@ -119,6 +119,7 @@ public class LocaleManager {
 	writer.options().header(header.toString());
 
 	GetConfig("Language.Invalid.Player", "&cInvalid player name...", writer, conf, true);
+	GetConfig("Language.Invalid.World", "&cInvalid world...", writer, conf, true);
 	GetConfig("Language.Invalid.Residence", "&cInvalid Residence...", writer, conf, true);
 	GetConfig("Language.Invalid.Subzone", "&cInvalid Subzone...", writer, conf, true);
 	GetConfig("Language.Invalid.Direction", "&cInvalid Direction...", writer, conf, true);
@@ -410,6 +411,7 @@ public class LocaleManager {
 	GetConfig("Language.RandomTeleport.IncorrectLocation", "&6Could not find correct teleport location, please wait &e%1 &6sec and try again.", writer, conf,
 	    true);
 	GetConfig("Language.RandomTeleport.TeleportStarted", "&eTeleportation started, don't move for next &6%4 &esec.", writer, conf, true);
+	GetConfig("Language.RandomTeleport.WorldList", "&ePossible worlds: &6%1", writer, conf, true);
 
 	GetConfig("Language.General.DisabledWorld", "&cResidence plugin is disabled in this world", writer, conf, true);
 	GetConfig("Language.General.UseNumbers", "&cPlease use numbers...", writer, conf, true);
@@ -1140,7 +1142,8 @@ public class LocaleManager {
 	// res expand
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.expand.Description", "Expands residence in direction you looking", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.expand.Info",
-	    Arrays.asList("&eUsage: &6/res expand (residence) [amount]", "Expands residence in direction you looking.", "Residence name is optional"), writer, conf, true);
+	    Arrays.asList("&eUsage: &6/res expand (residence) [amount]", "Expands residence in direction you looking.", "Residence name is optional"), writer, conf,
+	    true);
 
 	// res contract
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.contract.Description", "Contracts residence in direction you looking", writer, conf, true);
@@ -1431,6 +1434,11 @@ public class LocaleManager {
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.signupdate.Description", "Updated residence signs", writer, conf, true);
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.signupdate.Info",
 	    Arrays.asList("&eUsage: &6/res signupdate"),
+	    writer, conf, true);
+
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.reload.Description", "reload lanf or config files", writer, conf, true);
+	GetConfig("CommandHelp.SubCommands.res.SubCommands.reload.Info",
+	    Arrays.asList("&eUsage: &6/res reload [config/lang]"),
 	    writer, conf, true);
 
 	GetConfig("CommandHelp.SubCommands.res.SubCommands.lists.Description", "Predefined permission lists", writer, conf, true);

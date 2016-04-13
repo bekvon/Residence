@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
@@ -96,7 +94,7 @@ public class ResidenceBlockListener implements Listener {
 
 	boolean hasdestroy = perms.playerHas(pname, player.getWorld().getName(), "destroy", perms.playerHas(pname, player.getWorld().getName(), "build", true));
 	boolean hasContainer = perms.playerHas(pname, player.getWorld().getName(), "container", true);
-	if (!hasdestroy) {
+	if (!hasdestroy && !player.hasPermission("residence.bypass.destroy")) {
 	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "destroy"));
 	    event.setCancelled(true);
 	} else if (!hasContainer && mat == Material.CHEST) {
@@ -125,6 +123,11 @@ public class ResidenceBlockListener implements Listener {
     public void onIceForm(BlockFormEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+
+	Material ice = Material.getMaterial("FROSTED_ICE");
+
+	if (event.getNewState().getType() != Material.ICE && ice != null && ice != event.getNewState().getType())
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
@@ -269,7 +272,7 @@ public class ResidenceBlockListener implements Listener {
 	}
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean hasplace = perms.playerHas(pname, player.getWorld().getName(), "place", perms.playerHas(pname, player.getWorld().getName(), "build", true));
-	if (!hasplace) {
+	if (!hasplace && !player.hasPermission("residence.bypass.build")) {
 	    event.setCancelled(true);
 	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "place"));
 	    return;

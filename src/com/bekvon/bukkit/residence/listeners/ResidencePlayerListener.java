@@ -47,7 +47,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.gui.SetFlag;
@@ -552,6 +551,7 @@ public class ResidencePlayerListener implements Listener {
 	return;
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInfoCheck(PlayerInteractEvent event) {
 	// disabling event on world
@@ -584,13 +584,14 @@ public class ResidencePlayerListener implements Listener {
 
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Player player = event.getPlayer();
-	int heldItemId = player.getItemInHand().getTypeId();
+	int heldItemId = Residence.getNms().itemInMainHand(player).getTypeId();
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
@@ -610,7 +611,7 @@ public class ResidencePlayerListener implements Listener {
 	String world = player.getWorld().getName();
 	String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
 	boolean resadmin = Residence.isResAdminOn(player);
-	Material heldItem = player.getItemInHand().getType();
+	Material heldItem = Residence.getNms().itemInMainHand(player).getType();
 	if (!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
 	    player.sendMessage(Residence.getLM().getMessage("General.ItemBlacklisted"));
 	    event.setCancelled(true);
@@ -624,8 +625,8 @@ public class ResidencePlayerListener implements Listener {
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
 	if (heldItem != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 	    if (heldItemId == 351) {
-		if (player.getItemInHand().getData().getData() == 15 && block.getType() == Material.GRASS || player.getItemInHand().getData().getData() == 3
-		    && blockId == 17 && (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15)) {
+		if (Residence.getNms().itemInMainHand(player).getData().getData() == 15 && block.getType() == Material.GRASS || Residence.getNms().itemInMainHand(player)
+		    .getData().getData() == 3 && blockId == 17 && (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15)) {
 		    perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		    if (!perms.playerHas(player.getName(), world, "build", true)) {
 			player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
@@ -727,10 +728,10 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
 	if (res == null)
 	    return;
-	if (!res.getPermissions().playerHas(player.getName(), "container", true) && player.isSneaking()) {
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "container", true) && player.isSneaking()) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
 	    event.setCancelled(true);
-	} else if (!res.getPermissions().playerHas(player.getName(), "riding", false)) {
+	} else if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "riding", false)) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "riding", res.getName()));
 	    event.setCancelled(true);
 	}
@@ -751,7 +752,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
-	if (res != null && !res.getPermissions().playerHas(player.getName(), "dye", true)) {
+	if (res == null)
+	    return;
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "dye", true)) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "dye", res.getName()));
 	    event.setCancelled(true);
 	}
@@ -775,7 +778,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (!res.getPermissions().playerHas(player.getName(), "shear", true)) {
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "shear", true)) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Shear", res.getName()));
 	    event.setCancelled(true);
 	}
@@ -803,7 +806,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	}
 
-	Material heldItem = player.getItemInHand().getType();
+	Material heldItem = Residence.getNms().itemInMainHand(player).getType();
 
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
 	String world = player.getWorld().getName();
@@ -1024,9 +1027,9 @@ public class ResidencePlayerListener implements Listener {
 	this.lastUpdate.put(name, now);
 
 	handleNewLocation(player, locto, true);
-	if (!ResidenceCommandListener.getTeleportMap().isEmpty() && Residence.getConfigManager().getTeleportDelay() > 0 && ResidenceCommandListener.getTeleportDelayMap()
-	    .contains(player.getName())) {
-	    ResidenceCommandListener.getTeleportMap().remove(player.getName());
+	if (!Residence.getTeleportDelayMap().isEmpty() && Residence.getConfigManager().getTeleportDelay() > 0 && Residence.getTeleportDelayMap().contains(player
+	    .getName())) {
+	    Residence.getTeleportDelayMap().remove(player.getName());
 	    player.sendMessage(Residence.getLM().getMessage("General.TeleportCanceled"));
 	}
     }

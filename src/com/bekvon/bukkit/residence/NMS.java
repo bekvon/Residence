@@ -40,4 +40,6 @@ public interface NMS {
     public ItemStack getLingeringPotionItem(Entity ent);
 
     public String getPotionType(ItemStack potion);
+
+    public ItemStack itemInMainHand(Player player);
 }

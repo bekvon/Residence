@@ -23,6 +23,7 @@ import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SignUtil {
 
@@ -66,7 +67,7 @@ public class SignUtil {
 		    ConfigurationSection NameSection = ConfCategory.getConfigurationSection(category);
 		    Signs newTemp = new Signs();
 		    newTemp.setCategory(Integer.valueOf(category));
-		    newTemp.setResidence(NameSection.getString("Residence.Line"));
+		    newTemp.setResidence(NameSection.getString("Residence"));
 		    newTemp.setWorld(NameSection.getString("World"));
 		    newTemp.setX(NameSection.getDouble("X"));
 		    newTemp.setY(NameSection.getDouble("Y"));
@@ -179,6 +180,9 @@ public class SignUtil {
 	    return false;
 
 	Sign sign = (Sign) block.getState();
+
+	Debug.D(landName + " ForSale " + ForSale);
+	Debug.D(landName + " ForRent " + ForRent);
 
 	if (!ForRent && !ForSale) {
 	    block.breakNaturally();

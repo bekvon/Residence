@@ -142,7 +142,12 @@ public class v1_9 implements NMS {
     public boolean isMainHand(PlayerInteractEvent event) {
 	return event.getHand() == EquipmentSlot.HAND ? true : false;
     }
-
+    
+    @Override
+    public ItemStack itemInMainHand(Player player) {
+	return player.getInventory().getItemInMainHand();
+    }
+    
     @Override
     public Block getTargetBlock(Player player, int range) {
 	return player.getTargetBlock((Set<Material>) null, range);

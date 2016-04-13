@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 
 public class rt implements cmd {
@@ -17,7 +18,7 @@ public class rt implements cmd {
 	    return false;
 
 	Player player = (Player) sender;
-	if (args.length != 1) {
+	if (args.length != 1 && args.length != 2) {
 	    return false;
 	}
 
@@ -35,7 +36,34 @@ public class rt implements cmd {
 	    return true;
 	}
 
-	Location loc = RandomTp.getRandomlocation(player.getLocation().getWorld().getName());
+	String wname = null;
+
+	if (args.length == 2) {
+	    for (RandomTeleport one : Residence.getConfigManager().getRandomTeleport()) {
+		if (!one.getWorld().equalsIgnoreCase(args[1]))
+		    continue;
+		wname = one.getWorld();
+		break;
+	    }
+
+	    if (wname == null) {
+		sender.sendMessage(Residence.getLM().getMessage("Invalid.World"));
+
+		String worlds = "";
+
+		for (RandomTeleport one : Residence.getConfigManager().getRandomTeleport()) {
+		    worlds += one.getWorld() + " ";
+		    break;
+		}
+
+		sender.sendMessage(Residence.getLM().getMessage("RandomTeleport.WorldList", worlds));
+		return true;
+	    }
+	}
+	if (wname == null)
+	    wname = player.getLocation().getWorld().getName();
+
+	Location loc = RandomTp.getRandomlocation(wname);
 	Residence.getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
 
 	if (loc == null) {

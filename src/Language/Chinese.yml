@@ -1,14 +1,13 @@
-# Author / 作者: deluxghost
-# 注意: 如果你想修改这个文件，那么强烈建议您为它准备一份备份，而不是直接修改。
-# 在 Residence 插件更新到新版本时，该文件将会被自动覆盖，你的所有更改将会复原。
-# 如果要更改插件的语言，在 Residence 的 config.yml 文件中将 Language: 选项
-# 更改为该文件的文件名即可。
+# NOTE If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten.  Once you 
+# have a copy of this file, change the Language: option under the Residence config.yml
+# to whatever you named your copy.
 
 Language:
-  # 以下是 Residence 发送给玩家的消息文本, 一些文本中包含形如 %1 的变量, 它们会
-  # 在消息发送时被替换成相应的内容, 请不要修改这些变量.
   Invalid:
     Player: '&c无效的玩家名...'
+    World: '&cInvalid world...'
     Residence: '&c无效的领地...'
     Subzone: '&c无效的领地子区域...'
     Direction: '&c无效的方向...'
@@ -214,7 +213,7 @@ Language:
     North: '&e在北方缩小 &6%1 &e个方块'
     West: '&e在西方缩小 &6%1 &e个方块'
     South: '&e在南方缩小 &6%1 &e个方块'
-    East: '&e在东方缩小 &6%1 &eblocks'
+    East: '&e在东方缩小 &6%1 &e个方块'
     Up: '&e在上方缩小 &6%1 &e个方块'
     Down: '&e在下方缩小 &6%1 &e个方块'
   Shifting:
@@ -304,6 +303,7 @@ Language:
     TeleportSuccess: '&e传送到 X:&6%1&e, Y:&6%2&e, Z:&6%3 &e位置'
     IncorrectLocation: '&6无法找到正确的传送位置, 请等待 &e%1 &6秒后重试.'
     TeleportStarted: '&e传送即将开始, 在 &6%4 &e秒内不要移动.'
+    WorldList: '&e可用世界: &6%1'
   General:
     DisabledWorld: '&c该世界已禁用领地.'
     UseNumbers: '&c请输入数字.'
@@ -338,8 +338,8 @@ Language:
     TotalWorth: '&e总价值: &6%1 &e(&6%2&e)'
     NotOnline: '&e目标玩家不在线.'
     NextPage: '&e下一页'
-    NextInfoPage: '&2| &e下一页 &2>>>'
-    PrevInfoPage: '&2<<< &e上一页 &2|'
+    NextInfoPage: '&2|  &e下一页  &2>>>'
+    PrevInfoPage: '&2<<<  &e上一页  &2|'
     GenericPage: '&e第 &6%1 &e页, 共 &6%2'
     WorldEditNotFound: '&c未检测到 WorldEdit.'
     CoordsTop: '&eX:&6%1 &eY:&6%2 &eZ:&6%3'
@@ -372,6 +372,8 @@ Language:
     Owner: '&e所有者: &6%1'
     World: '&e世界: &6%1'
     Subzones: '&e子区域'
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
     NewPlayerInfo: '&e如果要创建领地以保护房屋, 请用木锄选取保护区的两个对角, 然后执行 &2/res create 领地名称 &e命令.'
 CommandHelp:
   Description: 领地的命令帮助
@@ -801,10 +803,18 @@ CommandHelp:
               Description: 防止雪傀儡留下雪轨迹
               Info:
               - '&e用法: &6/res set <领地> [权限] true/false/remove'
+            iceform:
+              Description: 阻止冰霜行者魔咒发挥作用
+              Info:
+              - '&eUsage: &6/res set <领地> [权限] true/false/remove'
             respawn:
               Description: 自动重生玩家
               Info:
               - '&e用法: &6/res set <领地> [权限] true/false/remove'
+            riding:
+              Description: 阻止骑乘马匹
+              Info:
+              - '&eUsage: &6/res set <领地> [权限] true/false/remove'
         limits:
           Description: 显示你的领地限制
           Info:
@@ -1149,6 +1159,10 @@ CommandHelp:
           Description: 更新领地木牌
           Info:
           - '&e用法: &6/res signupdate'
+        reload:
+          Description: 重载语言或配置文件
+          Info:
+          - '&eUsage: &6/res reload [config/lang]'
         lists:
           Description: 预定义权限列表
           Info:

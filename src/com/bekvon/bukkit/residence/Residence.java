@@ -76,7 +76,6 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.TabComplete;
@@ -135,7 +134,7 @@ public class Residence extends JavaPlugin {
     protected static RentManager rentmanager;
     protected static ChatManager chatmanager;
     protected static Server server;
-    protected static HelpEntry helppages;
+    public static HelpEntry helppages;
     protected static LocaleManager LocaleManager;
     protected static Language NewLanguageManager;
     protected static PlayerManager PlayerManager;
@@ -624,9 +623,6 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(flistener, this);
 		pm.registerEvents(shlistener, this);
 
-		NewLanguageManager = new Language(this);
-		getLM().LanguageReload();
-
 		// 1.8 event
 		if (VersionChecker.GetVersion() >= 1800)
 		    pm.registerEvents(new v1_8Events(), this);
@@ -634,8 +630,6 @@ public class Residence extends JavaPlugin {
 		// 1.9 event
 		if (VersionChecker.GetVersion() >= 1900)
 		    pm.registerEvents(new v1_9Events(), this);
-
-		Debug.D("Residence version: " + VersionChecker.GetVersion());
 
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
 		// Priority.NORMAL, this);
@@ -648,6 +642,9 @@ public class Residence extends JavaPlugin {
 	    } else {
 		plistener.reload();
 	    }
+
+	    NewLanguageManager = new Language(this);
+	    getLM().LanguageReload();
 
 	    if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
 		getServer().getPluginManager().registerEvents(spigotlistener, this);

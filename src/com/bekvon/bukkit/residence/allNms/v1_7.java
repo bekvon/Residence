@@ -114,6 +114,12 @@ public class v1_7 implements NMS {
 
     @SuppressWarnings("deprecation")
     @Override
+    public ItemStack itemInMainHand(Player player) {
+	return player.getInventory().getItemInHand();
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
     public Block getTargetBlock(Player player, int range) {
 	return player.getTargetBlock((HashSet<Byte>) null, range);
     }
@@ -122,7 +128,6 @@ public class v1_7 implements NMS {
     public String getPotionType(ItemStack potion) {
 	return null;
     }
-
 
     @Override
     public ItemStack getLingeringPotionItem(Entity ent) {

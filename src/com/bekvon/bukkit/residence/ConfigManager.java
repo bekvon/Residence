@@ -362,7 +362,7 @@ public class ConfigManager {
     }
 
     @SuppressWarnings("deprecation")
-	void UpdateConfigFile() {
+    public void UpdateConfigFile() {
 
 	File f = new File(plugin.getDataFolder(), "config.yml");
 

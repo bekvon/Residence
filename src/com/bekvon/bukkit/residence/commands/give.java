@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class give implements cmd {
 
@@ -16,8 +15,6 @@ public class give implements cmd {
 	    return false;
 
 	Player player = (Player) sender;
-
-	Debug.D(args.toString());
 
 	if (args.length != 3)
 	    return false;
