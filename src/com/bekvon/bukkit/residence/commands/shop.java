@@ -23,6 +23,7 @@ import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class shop implements cmd {
 
@@ -288,6 +289,7 @@ public class shop implements cmd {
 	    }
 
 	    if (!Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
+		Debug.D("here 2");
 		player.sendMessage(Residence.getLM().getMessage("Select.Points"));
 		return true;
 	    }
@@ -307,6 +309,7 @@ public class shop implements cmd {
 	    Location loc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
 
 	    if (loc1.getBlockY() < loc2.getBlockY()) {
+		Debug.D("here");
 		player.sendMessage(Residence.getLM().getMessage("Shop.InvalidSelection"));
 		return true;
 	    }

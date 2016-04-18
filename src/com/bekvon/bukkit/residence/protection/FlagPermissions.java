@@ -223,6 +223,8 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("respawn");
 	
 	addResidenceOnlyFlag("iceform");
+	
+	addResidenceOnlyFlag("snowball");
 
 	addPlayerOrGroupOnlyFlag("admin");
 	

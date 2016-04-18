@@ -608,7 +608,7 @@ public class Residence extends JavaPlugin {
 		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldGuard");
 		}
 
-		blistener = new ResidenceBlockListener();
+		blistener = new ResidenceBlockListener(this);
 		plistener = new ResidencePlayerListener(this);
 		elistener = new ResidenceEntityListener();
 		flistener = new ResidenceFixesListener();

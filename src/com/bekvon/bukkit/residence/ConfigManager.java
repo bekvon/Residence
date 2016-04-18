@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 import com.bekvon.bukkit.residence.containers.GuiItems;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.ParticleEffects;
@@ -25,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -192,10 +192,6 @@ public class ConfigManager {
 	this.load(flags, groups);
     }
 
-    private synchronized static void copySetting(Configuration reader, Configuration writer, String path) {
-	writer.set(path, reader.get(path));
-    }
-
     public static String Colors(String text) {
 	return ChatColor.translateAlternateColorCodes('&', text);
     }
@@ -228,56 +224,6 @@ public class ConfigManager {
 	    e.printStackTrace();
 	}
 	Residence.getConfigManager().UpdateConfigFile();
-    }
-
-    public static List<Integer> GetConfig(String path, List<Integer> list, CommentedYamlConfiguration writer, YamlConfiguration conf) {
-	conf.addDefault(path, list);
-	copySetting(conf, writer, path);
-	return conf.getIntegerList(path);
-    }
-
-    public static Boolean GetConfig(String path, Boolean text, CommentedYamlConfiguration writer, YamlConfiguration conf) {
-	conf.addDefault(path, text);
-	text = conf.getBoolean(path);
-	copySetting(conf, writer, path);
-	return text;
-    }
-
-    public static int GetConfig(String path, int text, CommentedYamlConfiguration writer, YamlConfiguration conf) {
-	conf.addDefault(path, text);
-	text = conf.getInt(path);
-	copySetting(conf, writer, path);
-	return text;
-    }
-
-    public static Double GetConfig(String path, Double text, CommentedYamlConfiguration writer, YamlConfiguration conf) {
-	conf.addDefault(path, text);
-	text = conf.getDouble(path);
-	copySetting(conf, writer, path);
-	return text;
-    }
-
-    public static String GetConfig(String path, String text, CommentedYamlConfiguration writer, YamlConfiguration conf, Boolean colorize) {
-	conf.addDefault(path, text);
-	text = conf.getString(path);
-	if (colorize)
-	    text = Colors(text);
-	copySetting(conf, writer, path);
-	return text;
-    }
-
-    public static List<String> GetConfig(String path, List<String> text, CommentedYamlConfiguration writer, YamlConfiguration conf, Boolean colorize) {
-	conf.addDefault(path, text);
-	text = ColorsArray(conf.getStringList(path), colorize);
-	copySetting(conf, writer, path);
-	return text;
-    }
-
-    public static List<Integer> GetConfigInt(String path, List<Integer> text, CommentedYamlConfiguration writer, YamlConfiguration conf) {
-	conf.addDefault(path, text);
-	text = conf.getIntegerList(path);
-	copySetting(conf, writer, path);
-	return text;
     }
 
     public static List<String> ColorsArray(List<String> text, Boolean colorize) {
@@ -378,94 +324,95 @@ public class ConfigManager {
 	if (in == null)
 	    return;
 
+	String defaultWorldName = Bukkit.getServer().getWorlds().size() > 0 ? Bukkit.getServer().getWorlds().get(0).getName() : "World";
+
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(in);
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
 	conf.options().copyDefaults(true);
+	ConfigReader c = new ConfigReader(conf, writer);
 
-	String defaultWorldName = Bukkit.getServer().getWorlds().size() > 0 ? Bukkit.getServer().getWorlds().get(0).getName() : "World";
+	c.getW().addComment("Global", "These are Global Settings for Residence.");
 
-	writer.addComment("Global", "These are Global Settings for Residence.");
+	c.getW().addComment("Global.UUIDConvertion", "Starts UUID conversion on plugin startup", "DONT change this if you are not sure what you doing");
+	UUIDConvertion = c.get("Global.UUIDConvertion", true);
 
-	writer.addComment("Global.UUIDConvertion", "Starts UUID conversion on plugin startup", "DONT change this if you are not sure what you doing");
-	UUIDConvertion = GetConfig("Global.UUIDConvertion", true, writer, conf);
-
-	writer.addComment("Global.OfflineMode",
+	c.getW().addComment("Global.OfflineMode",
 	    "If you running offline server, better to check this as true. This will help to solve issues with changing players UUID.");
-	OfflineMode = GetConfig("Global.OfflineMode", false, writer, conf);
+	OfflineMode = c.get("Global.OfflineMode", false);
 
-	writer.addComment("Global.versionCheck", "Players with residence.versioncheck permission node will be noticed about new residence version on login");
-	versionCheck = GetConfig("Global.versionCheck", true, writer, conf);
+	c.getW().addComment("Global.versionCheck", "Players with residence.versioncheck permission node will be noticed about new residence version on login");
+	versionCheck = c.get("Global.versionCheck", true);
 
-	writer.addComment("Global.Language", "This loads the <language>.yml file in the Residence Language folder",
+	c.getW().addComment("Global.Language", "This loads the <language>.yml file in the Residence Language folder",
 	    "All Residence text comes from this file. (NOT DONE YET)");
-	language = GetConfig("Global.Language", "English", writer, conf, false);
+	language = c.get("Global.Language", "English", false);
 
-	writer.addComment("Global.SelectionToolId", "Wooden Hoe is the default selection tool for Residence.",
+	c.getW().addComment("Global.SelectionToolId", "Wooden Hoe is the default selection tool for Residence.",
 	    "You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values");
-	selectionToolId = GetConfig("Global.SelectionToolId", Material.WOOD_AXE.getId(), writer, conf);
+	selectionToolId = c.get("Global.SelectionToolId", Material.WOOD_AXE.getId());
 
-	writer.addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
-	SelectionIgnoreY = GetConfig("Global.Selection.IgnoreY", false, writer, conf);
-	writer.addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
+	c.getW().addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
+	SelectionIgnoreY = c.get("Global.Selection.IgnoreY", false);
+	c.getW().addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
 	    "This will lower residence price by up to 256 times, so ajust block price BEFORE enabling this");
-	NoCostForYBlocks = GetConfig("Global.Selection.NoCostForYBlocks", false, writer, conf);
+	NoCostForYBlocks = c.get("Global.Selection.NoCostForYBlocks", false);
 
-	writer.addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
+	c.getW().addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
 	    "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
-	infoToolId = GetConfig("Global.InfoToolId", Material.STRING.getId(), writer, conf);
+	infoToolId = c.get("Global.InfoToolId", Material.STRING.getId());
 
-	writer.addComment("Global.Optimizations.DefaultWorld", "Name of your main residence world. Usually normal starting world 'World'. Capitalization essential");
-	DefaultWorld = GetConfig("Global.Optimizations.DefaultWorld", defaultWorldName, writer, conf, false);
+	c.getW().addComment("Global.Optimizations.DefaultWorld", "Name of your main residence world. Usually normal starting world 'World'. Capitalization essential");
+	DefaultWorld = c.get("Global.Optimizations.DefaultWorld", defaultWorldName, false);
 
-	writer.addComment("Global.Optimizations.DisabledWorlds.List", "List Of Worlds where this plugin is disabled");
-	DisabledWorldsList = GetConfig("Global.Optimizations.DisabledWorlds.List", new ArrayList<String>(), writer, conf, false);
+	c.getW().addComment("Global.Optimizations.DisabledWorlds.List", "List Of Worlds where this plugin is disabled");
+	DisabledWorldsList = c.get("Global.Optimizations.DisabledWorlds.List", new ArrayList<String>());
 
-	writer.addComment("Global.Optimizations.DisabledWorlds.DisableListeners", "Disables all listeners in included worlds");
-	DisableListeners = GetConfig("Global.Optimizations.DisabledWorlds.DisableListeners", true, writer, conf);
-	writer.addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
-	DisableCommands = GetConfig("Global.Optimizations.DisabledWorlds.DisableCommands", true, writer, conf);
+	c.getW().addComment("Global.Optimizations.DisabledWorlds.DisableListeners", "Disables all listeners in included worlds");
+	DisableListeners = c.get("Global.Optimizations.DisabledWorlds.DisableListeners", true);
+	c.getW().addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
+	DisableCommands = c.get("Global.Optimizations.DisabledWorlds.DisableCommands", true);
 
-	writer.addComment("Global.Optimizations.ResCreateCaseSensitive",
+	c.getW().addComment("Global.Optimizations.ResCreateCaseSensitive",
 	    "When its true you can create residences with similar names but different capitalization. An example: Village and village are counted as different residences",
 	    "When it's set to false you can't create residences with same names but different capitalizations");
-	ResCreateCaseSensitive = GetConfig("Global.Optimizations.ResCreateCaseSensitive", false, writer, conf);
+	ResCreateCaseSensitive = c.get("Global.Optimizations.ResCreateCaseSensitive", false);
 
-	writer.addComment("Global.Optimizations.ResTpCaseSensitive",
+	c.getW().addComment("Global.Optimizations.ResTpCaseSensitive",
 	    "When this set to true, when you are performing /res tp command and providing residence name, it should be exactly same as residence name. So in example Village is not same as village",
 	    "When it's set to false you can teleport to residence with name Village even if you executing command /res tp village",
 	    "Don't disable this if you already have some duplicating residences in your database as this will prevent players from teleporting to one of them");
-	ResTpCaseSensitive = GetConfig("Global.Optimizations.ResTpCaseSensitive", true, writer, conf);
+	ResTpCaseSensitive = c.get("Global.Optimizations.ResTpCaseSensitive", true);
 
-	writer.addComment("Global.Optimizations.BlockAnyTeleportation",
+	c.getW().addComment("Global.Optimizations.BlockAnyTeleportation",
 	    "When this set to true, any teleportation to residence where player dont have tp flag, action will be denyied",
 	    "This can prevent from teleporting players to residence with 3rd party plugins like esentials /tpa");
-	BlockAnyTeleportation = GetConfig("Global.Optimizations.BlockAnyTeleportation", true, writer, conf);
+	BlockAnyTeleportation = c.get("Global.Optimizations.BlockAnyTeleportation", true);
 
-	writer.addComment("Global.Optimizations.MaxResCount", "Set this as low as posible depending of residence.max.res.[number] permission you are using",
+	c.getW().addComment("Global.Optimizations.MaxResCount", "Set this as low as posible depending of residence.max.res.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
-	MaxResCount = GetConfig("Global.Optimizations.MaxResCount", 30, writer, conf);
-	writer.addComment("Global.Optimizations.MaxRentCount", "Set this as low as posible depending of residence.max.rents.[number] permission you are using",
+	MaxResCount = c.get("Global.Optimizations.MaxResCount", 30);
+	c.getW().addComment("Global.Optimizations.MaxRentCount", "Set this as low as posible depending of residence.max.rents.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
-	MaxRentCount = GetConfig("Global.Optimizations.MaxRentCount", 10, writer, conf);
-	writer.addComment("Global.Optimizations.MaxSubzoneCount", "Set this as low as posible depending of residence.max.subzones.[number] permission you are using",
+	MaxRentCount = c.get("Global.Optimizations.MaxRentCount", 10);
+	c.getW().addComment("Global.Optimizations.MaxSubzoneCount", "Set this as low as posible depending of residence.max.subzones.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
-	MaxSubzonesCount = GetConfig("Global.Optimizations.MaxSubzoneCount", 5, writer, conf);
-	writer.addComment("Global.Optimizations.OverridePvp", "By setting this to true, regular pvp flag will be acting as overridepvp flag",
+	MaxSubzonesCount = c.get("Global.Optimizations.MaxSubzoneCount", 5);
+	c.getW().addComment("Global.Optimizations.OverridePvp", "By setting this to true, regular pvp flag will be acting as overridepvp flag",
 	    "Overridepvp flag tries to ignore any pvp protection in that residence by any other plugin");
-	OverridePvp = GetConfig("Global.Optimizations.OverridePvp", false, writer, conf);
+	OverridePvp = c.get("Global.Optimizations.OverridePvp", false);
 
 	// residence kick location
-	writer.addComment("Global.Optimizations.KickLocation.Use",
+	c.getW().addComment("Global.Optimizations.KickLocation.Use",
 	    "By setting this to true, when player kicks another player from residence, he will be teleported to this location instead of getting outside residence");
-	Boolean UseKick = GetConfig("Global.Optimizations.KickLocation.Use", false, writer, conf);
-	String KickLocationWorld = GetConfig("Global.Optimizations.KickLocation.World", defaultWorldName, writer, conf, false);
-	Double KickLocationX = GetConfig("Global.Optimizations.KickLocation.X", 0.5, writer, conf);
-	Double KickLocationY = GetConfig("Global.Optimizations.KickLocation.Y", 63.0, writer, conf);
-	Double KickLocationZ = GetConfig("Global.Optimizations.KickLocation.Z", 0.5, writer, conf);
-	writer.addComment("Global.Optimizations.KickLocation.Pitch", "Less than 0 - head up, more than 0 - head down. Range from -90 to 90");
-	Double KickPitch = GetConfig("Global.Optimizations.KickLocation.Pitch", 0.0, writer, conf);
-	writer.addComment("Global.Optimizations.KickLocation.Yaw", "Head position to left and right. Range from -180 to 180");
-	Double KickYaw = GetConfig("Global.Optimizations.KickLocation.Yaw", 0.0, writer, conf);
+	Boolean UseKick = c.get("Global.Optimizations.KickLocation.Use", false);
+	String KickLocationWorld = c.get("Global.Optimizations.KickLocation.World", defaultWorldName, false);
+	Double KickLocationX = c.get("Global.Optimizations.KickLocation.X", 0.5);
+	Double KickLocationY = c.get("Global.Optimizations.KickLocation.Y", 63.0);
+	Double KickLocationZ = c.get("Global.Optimizations.KickLocation.Z", 0.5);
+	c.getW().addComment("Global.Optimizations.KickLocation.Pitch", "Less than 0 - head up, more than 0 - head down. Range from -90 to 90");
+	Double KickPitch = c.get("Global.Optimizations.KickLocation.Pitch", 0.0);
+	c.getW().addComment("Global.Optimizations.KickLocation.Yaw", "Head position to left and right. Range from -180 to 180");
+	Double KickYaw = c.get("Global.Optimizations.KickLocation.Yaw", 0.0);
 	if (UseKick) {
 	    World world = Bukkit.getWorld(KickLocationWorld);
 	    if (world != null) {
@@ -475,39 +422,39 @@ public class ConfigManager {
 	    }
 	}
 
-	writer.addComment("Global.Optimizations.ShortInfo.Use",
+	c.getW().addComment("Global.Optimizations.ShortInfo.Use",
 	    "By setting this to true, when checking residence info with /res info, you will get only names in list, by hovering on them, you will get flag list");
-	ShortInfoUse = GetConfig("Global.Optimizations.ShortInfo.Use", false, writer, conf);
+	ShortInfoUse = c.get("Global.Optimizations.ShortInfo.Use", false);
 
 	// Vote range
-	writer.addComment("Global.Optimizations.Vote.RangeFrom", "Range players can vote to, by default its from 0 to 10 points");
-	VoteRangeFrom = GetConfig("Global.Optimizations.Vote.RangeFrom", 0, writer, conf);
-	VoteRangeTo = GetConfig("Global.Optimizations.Vote.RangeTo", 10, writer, conf);
+	c.getW().addComment("Global.Optimizations.Vote.RangeFrom", "Range players can vote to, by default its from 0 to 10 points");
+	VoteRangeFrom = c.get("Global.Optimizations.Vote.RangeFrom", 0);
+	VoteRangeTo = c.get("Global.Optimizations.Vote.RangeTo", 10);
 
-	writer.addComment("Global.Optimizations.Vote.OnlyLike", "If this true, players can onli give like for shop instead of point voting");
-	OnlyLike = GetConfig("Global.Optimizations.Vote.OnlyLike", false, writer, conf);
+	c.getW().addComment("Global.Optimizations.Vote.OnlyLike", "If this true, players can onli give like for shop instead of point voting");
+	OnlyLike = c.get("Global.Optimizations.Vote.OnlyLike", false);
 
 	// Healing/Feed interval
-	writer.addComment("Global.Optimizations.Intervals.Heal", "How often in seconds to heal/feed players in residence with appropriate flag",
+	c.getW().addComment("Global.Optimizations.Intervals.Heal", "How often in seconds to heal/feed players in residence with appropriate flag",
 	    "Bigger numbers can save some resources");
-	HealInterval = GetConfig("Global.Optimizations.Intervals.Heal", 1, writer, conf);
-	FeedInterval = GetConfig("Global.Optimizations.Intervals.Feed", 5, writer, conf);
+	HealInterval = c.get("Global.Optimizations.Intervals.Heal", 1);
+	FeedInterval = c.get("Global.Optimizations.Intervals.Feed", 5);
 
 	// negative potion effect list
-	writer.addComment("Global.Optimizations.NegativePotionEffects",
+	c.getW().addComment("Global.Optimizations.NegativePotionEffects",
 	    "Potions containing one of thos effects will be ignored if residence dont have pvp true flag set");
-	NegativePotionEffects = GetConfig("Global.Optimizations.NegativePotionEffects", Arrays.asList("blindness", "confusion", "harm", "hunger", "poison", "slow",
-	    "slow_digging", "weakness", "wither"), writer, conf, false);
+	NegativePotionEffects = c.get("Global.Optimizations.NegativePotionEffects", Arrays.asList("blindness", "confusion", "harm", "hunger", "poison", "slow",
+	    "slow_digging", "weakness", "wither"));
 
-	NegativeLingeringPotionEffects = GetConfig("Global.Optimizations.NegativeLingeringPotions", Arrays.asList("slowness", "instant_damage", "poison", "slowness"),
-	    writer, conf, false);
+	NegativeLingeringPotionEffects = c.get("Global.Optimizations.NegativeLingeringPotions", Arrays.asList("slowness", "instant_damage", "poison",
+	    "slowness"));
 
-	writer.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
+	c.getW().addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
-	minMoveUpdate = GetConfig("Global.MoveCheckInterval", 500, writer, conf);
+	minMoveUpdate = c.get("Global.MoveCheckInterval", 500);
 
-	writer.addComment("Global.Tp.TeleportDelay", "The interval, in seconds, for teleportation.", "Use 0 to disable");
-	TeleportDelay = GetConfig("Global.Tp.TeleportDelay", 3, writer, conf);
+	c.getW().addComment("Global.Tp.TeleportDelay", "The interval, in seconds, for teleportation.", "Use 0 to disable");
+	TeleportDelay = c.get("Global.Tp.TeleportDelay", 3);
 
 	if (conf.contains("Global.RandomTeleportation.WorldName")) {
 
@@ -521,370 +468,371 @@ public class ConfigManager {
 
 	    RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
 
-	    GetConfig("Global.RandomTeleportation." + WorldName + ".MaxCord", MaxCoord, writer, conf);
-	    GetConfig("Global.RandomTeleportation." + WorldName + ".MinCord", MinCord, writer, conf);
-	    GetConfig("Global.RandomTeleportation." + WorldName + ".CenterX", CenterX, writer, conf);
-	    GetConfig("Global.RandomTeleportation." + WorldName + ".CenterZ", CenterZ, writer, conf);
+	    c.get("Global.RandomTeleportation." + WorldName + ".MaxCord", MaxCoord);
+	    c.get("Global.RandomTeleportation." + WorldName + ".MinCord", MinCord);
+	    c.get("Global.RandomTeleportation." + WorldName + ".CenterX", CenterX);
+	    c.get("Global.RandomTeleportation." + WorldName + ".CenterZ", CenterZ);
 	} else {
 	    if (conf.isConfigurationSection("Global.RandomTeleportation"))
 		for (String one : conf.getConfigurationSection("Global.RandomTeleportation").getKeys(false)) {
 		    String path = "Global.RandomTeleportation." + one + ".";
 
-		    writer.addComment("Global.RandomTeleportation." + one,
+		    c.getW().addComment("Global.RandomTeleportation." + one,
 			"World name to use this feature. Add annother one with appropriate name to enable random teleportation");
 
-		    writer.addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
-		    int MaxCoord = GetConfig(path + "MaxCoord", 1000, writer, conf);
-		    writer.addComment(path + "MinCord",
+		    c.getW().addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
+		    int MaxCoord = c.get(path + "MaxCoord", 1000);
+		    c.getW().addComment(path + "MinCord",
 			"If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
-		    int MinCord = GetConfig(path + "MinCord", 500, writer, conf);
-		    int CenterX = GetConfig(path + "CenterX", 0, writer, conf);
-		    int CenterZ = GetConfig(path + "CenterZ", 0, writer, conf);
+		    int MinCord = c.get(path + "MinCord", 500);
+		    int CenterX = c.get(path + "CenterX", 0);
+		    int CenterZ = c.get(path + "CenterZ", 0);
 
 		    RTeleport.add(new RandomTeleport(one, MaxCoord, MinCord, CenterX, CenterZ));
 		}
 	    else {
 		String path = "Global.RandomTeleportation." + defaultWorldName + ".";
 
-		writer.addComment(path + "WorldName", "World to use this function, set main residence world");
-		String WorldName = GetConfig(path + "WorldName", defaultWorldName, writer, conf, false);
+		c.getW().addComment(path + "WorldName", "World to use this function, set main residence world");
+		String WorldName = c.get(path + "WorldName", defaultWorldName, true);
 
-		writer.addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
-		int MaxCoord = GetConfig(path + "MaxCoord", 1000, writer, conf);
-		writer.addComment(path + "MinCord",
+		c.getW().addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
+		int MaxCoord = c.get(path + "MaxCoord", 1000);
+		c.getW().addComment(path + "MinCord",
 		    "If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
-		int MinCord = GetConfig(path + "MinCord", 500, writer, conf);
-		int CenterX = GetConfig(path + "CenterX", 0, writer, conf);
-		int CenterZ = GetConfig(path + "CenterZ", 0, writer, conf);
+		int MinCord = c.get(path + "MinCord", 500);
+		int CenterX = c.get(path + "CenterX", 0);
+		int CenterZ = c.get(path + "CenterZ", 0);
 		RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
 	    }
 	}
 
-	writer.addComment("Global.RandomTeleportation.Cooldown", "How long force player to wait before using command again.");
-	rtCooldown = GetConfig("Global.RandomTeleportation.Cooldown", 5, writer, conf);
+	c.getW().addComment("Global.RandomTeleportation.Cooldown", "How long force player to wait before using command again.");
+	rtCooldown = c.get("Global.RandomTeleportation.Cooldown", 5);
 
-	writer.addComment("Global.RandomTeleportation.MaxTries", "How many times to try find correct location for teleportation.",
+	c.getW().addComment("Global.RandomTeleportation.MaxTries", "How many times to try find correct location for teleportation.",
 	    "Keep it at low number, as player always can try again after delay");
-	rtMaxTries = GetConfig("Global.RandomTeleportation.MaxTries", 20, writer, conf);
+	rtMaxTries = c.get("Global.RandomTeleportation.MaxTries", 20);
 
-	writer.addComment("Global.Size.MinimalSize", "Minimal size of residence in blocks", "1000 is 10x10x10 residence size");
-	MinimalResSize = GetConfig("Global.Size.MinimalSize", 100, writer, conf);
-	MinimalResX = GetConfig("Global.Size.MinimalX", 10, writer, conf);
-	MinimalResY = GetConfig("Global.Size.MinimalY", 10, writer, conf);
-	MinimalResZ = GetConfig("Global.Size.MinimalZ", 10, writer, conf);
+	c.getW().addComment("Global.Size.MinimalSize", "Minimal size of residence in blocks", "1000 is 10x10x10 residence size");
+	MinimalResSize = c.get("Global.Size.MinimalSize", 100);
+	MinimalResX = c.get("Global.Size.MinimalX", 10);
+	MinimalResY = c.get("Global.Size.MinimalY", 10);
+	MinimalResZ = c.get("Global.Size.MinimalZ", 10);
 
-	writer.addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
-	autoSaveInt = GetConfig("Global.SaveInterval", 10, writer, conf);
+	c.getW().addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
+	autoSaveInt = c.get("Global.SaveInterval", 10);
 
 	// Auto remove old residences
-	writer.addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
+	c.getW().addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
 	    "Players can bypass this wih residence.cleanbypass permission node");
-	AutoCleanUp = GetConfig("Global.AutoCleanUp.Use", false, writer, conf);
-	writer.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
-	AutoCleanUpDays = GetConfig("Global.AutoCleanUp.Days", 60, writer, conf);
-	writer.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
-	AutoCleanUpWorlds = GetConfig("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
+	c.getW().addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
+	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
+	c.getW().addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
+	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
-	writer.addComment("Global.LWC.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
+	c.getW().addComment("Global.LWC.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
 	    "Players can bypass this wih residence.cleanbypass permission node");
-	AutoCleanUp = GetConfig("Global.AutoCleanUp.Use", false, writer, conf);
-	writer.addComment("Global.LWC.Days", "For how long player should be offline to delete hes LWC protection on residence removal");
-	AutoCleanUpDays = GetConfig("Global.AutoCleanUp.Days", 60, writer, conf);
-	writer.addComment("Global.LWC.Worlds", "Worlds to be included in check list");
-	AutoCleanUpWorlds = GetConfig("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
+	c.getW().addComment("Global.LWC.Days", "For how long player should be offline to delete hes LWC protection on residence removal");
+	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
+	c.getW().addComment("Global.LWC.Worlds", "Worlds to be included in check list");
+	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
 	// TNT explosions below 63
-	writer.addComment("Global.AntiGreef.TNT.ExplodeBelow",
+	c.getW().addComment("Global.AntiGreef.TNT.ExplodeBelow",
 	    "When set to true will allow tnt and minecart with tnt to explode below 62 (default) level outside of residence",
 	    "This will allow mining with tnt and more vanilla play");
-	TNTExplodeBelow = GetConfig("Global.AntiGreef.TNT.ExplodeBelow", false, writer, conf);
-	TNTExplodeBelowLevel = GetConfig("Global.AntiGreef.TNT.level", 62, writer, conf);
+	TNTExplodeBelow = c.get("Global.AntiGreef.TNT.ExplodeBelow", false);
+	TNTExplodeBelowLevel = c.get("Global.AntiGreef.TNT.level", 62);
 	// Creeper explosions below 63
-	writer.addComment("Global.AntiGreef.Creeper.ExplodeBelow", "When set to true will allow Creeper explode below 62 (default) level outside of residence",
+	c.getW().addComment("Global.AntiGreef.Creeper.ExplodeBelow", "When set to true will allow Creeper explode below 62 (default) level outside of residence",
 	    "This will give more realistic game play");
-	CreeperExplodeBelow = GetConfig("Global.AntiGreef.Creeper.ExplodeBelow", false, writer, conf);
-	CreeperExplodeBelowLevel = GetConfig("Global.AntiGreef.Creeper.level", 62, writer, conf);
+	CreeperExplodeBelow = c.get("Global.AntiGreef.Creeper.ExplodeBelow", false);
+	CreeperExplodeBelowLevel = c.get("Global.AntiGreef.Creeper.level", 62);
 	// Flow
-	writer.addComment("Global.AntiGreef.Flow.Level", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
-	FlowLevel = GetConfig("Global.AntiGreef.Flow.Level", 63, writer, conf);
-	writer.addComment("Global.AntiGreef.Flow.NoLavaFlow", "With this set to true, lava flow outside residence is blocked");
-	NoLava = GetConfig("Global.AntiGreef.Flow.NoLavaFlow", true, writer, conf);
-	writer.addComment("Global.AntiGreef.Flow.NoWaterFlow", "With this set to true, water flow outside residence is blocked");
-	NoWater = GetConfig("Global.AntiGreef.Flow.NoWaterFlow", true, writer, conf);
-	NoFlowWorlds = GetConfig("Global.AntiGreef.Flow.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+	c.getW().addComment("Global.AntiGreef.Flow.Level", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
+	FlowLevel = c.get("Global.AntiGreef.Flow.Level", 63);
+	c.getW().addComment("Global.AntiGreef.Flow.NoLavaFlow", "With this set to true, lava flow outside residence is blocked");
+	NoLava = c.get("Global.AntiGreef.Flow.NoLavaFlow", true);
+	c.getW().addComment("Global.AntiGreef.Flow.NoWaterFlow", "With this set to true, water flow outside residence is blocked");
+	NoWater = c.get("Global.AntiGreef.Flow.NoWaterFlow", true);
+	NoFlowWorlds = c.get("Global.AntiGreef.Flow.Worlds", Arrays.asList(defaultWorldName));
 
 	// Place
-	writer.addComment("Global.AntiGreef.Place.Level", "Level from witch one to start block lava and water place", "This don't have effect in residence area");
-	PlaceLevel = GetConfig("Global.AntiGreef.Place.Level", 63, writer, conf);
-	writer.addComment("Global.AntiGreef.Place.NoLavaPlace", "With this set to true, playrs cant place lava outside residence");
-	NoLavaPlace = GetConfig("Global.AntiGreef.Place.NoLavaPlace", true, writer, conf);
-	writer.addComment("Global.AntiGreef.Place.NoWaterPlace", "With this set to true, playrs cant place water outside residence");
-	NoWaterPlace = GetConfig("Global.AntiGreef.Place.NoWaterPlace", true, writer, conf);
-	NoPlaceWorlds = GetConfig("Global.AntiGreef.Place.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+	c.getW().addComment("Global.AntiGreef.Place.Level", "Level from witch one to start block lava and water place", "This don't have effect in residence area");
+	PlaceLevel = c.get("Global.AntiGreef.Place.Level", 63);
+	c.getW().addComment("Global.AntiGreef.Place.NoLavaPlace", "With this set to true, playrs cant place lava outside residence");
+	NoLavaPlace = c.get("Global.AntiGreef.Place.NoLavaPlace", true);
+	c.getW().addComment("Global.AntiGreef.Place.NoWaterPlace", "With this set to true, playrs cant place water outside residence");
+	NoWaterPlace = c.get("Global.AntiGreef.Place.NoWaterPlace", true);
+	NoPlaceWorlds = c.get("Global.AntiGreef.Place.Worlds", Arrays.asList(defaultWorldName));
 
 	// Sand fall
-	writer.addComment("Global.AntiGreef.BlockFall.Use", "With this set to true, falling blocks will be deleted if they will land in different area");
-	useBlockFall = GetConfig("Global.AntiGreef.BlockFall.Use", true, writer, conf);
-	writer.addComment("Global.AntiGreef.BlockFall.Level", "Level from witch one to start block block's fall", "This don't have effect in residence area or outside");
-	BlockFallLevel = GetConfig("Global.AntiGreef.BlockFall.Level", 62, writer, conf);
-	BlockFallWorlds = GetConfig("Global.AntiGreef.BlockFall.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+	c.getW().addComment("Global.AntiGreef.BlockFall.Use", "With this set to true, falling blocks will be deleted if they will land in different area");
+	useBlockFall = c.get("Global.AntiGreef.BlockFall.Use", true);
+	c.getW().addComment("Global.AntiGreef.BlockFall.Level", "Level from witch one to start block block's fall",
+	    "This don't have effect in residence area or outside");
+	BlockFallLevel = c.get("Global.AntiGreef.BlockFall.Level", 62);
+	BlockFallWorlds = c.get("Global.AntiGreef.BlockFall.Worlds", Arrays.asList(defaultWorldName));
 
 	// Res cleaning
-	writer.addComment("Global.AntiGreef.ResCleaning.Use",
+	c.getW().addComment("Global.AntiGreef.ResCleaning.Use",
 	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
 	    "Effective way to prevent residence creating near greefing target and then remove it");
-	UseClean = GetConfig("Global.AntiGreef.ResCleaning.Use", true, writer, conf);
-	writer.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
-	CleanLevel = GetConfig("Global.AntiGreef.ResCleaning.Level", 63, writer, conf);
-	writer.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
-	CleanBlocks = GetConfigInt("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11), writer, conf);
-	CleanWorlds = GetConfig("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName), writer, conf, false);
+	UseClean = c.get("Global.AntiGreef.ResCleaning.Use", true);
+	c.getW().addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
+	CleanLevel = c.get("Global.AntiGreef.ResCleaning.Level", 63);
+	c.getW().addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
+	CleanBlocks = c.getIntList("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11));
+	CleanWorlds = c.get("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName));
 
-	writer.addComment("Global.AntiGreef.Flags.Prevent",
+	c.getW().addComment("Global.AntiGreef.Flags.Prevent",
 	    "By setting this to true flags from list will be protected from change while there is some one inside residence besides owner",
 	    "Protects in example from people inviting some one and changing pvp flag to true to kill them");
-	PvPFlagPrevent = GetConfig("Global.AntiGreef.Flags.Prevent", true, writer, conf);
-	FlagsList = GetConfig("Global.AntiGreef.Flags.list", Arrays.asList("pvp"), writer, conf, false);
+	PvPFlagPrevent = c.get("Global.AntiGreef.Flags.Prevent", true);
+	FlagsList = c.get("Global.AntiGreef.Flags.list", Arrays.asList("pvp"));
 
-	writer.addComment("Global.DefaultGroup", "The default group to use if Permissions fails to attach or your not using Permissions.");
-	defaultGroup = GetConfig("Global.DefaultGroup", "default", writer, conf, false);
+	c.getW().addComment("Global.DefaultGroup", "The default group to use if Permissions fails to attach or your not using Permissions.");
+	defaultGroup = c.get("Global.DefaultGroup", "default");
 
-	writer.addComment("Global.UseLeaseSystem", "Enable / Disable the Lease System.");
-	useLeases = GetConfig("Global.UseLeaseSystem", false, writer, conf);
+	c.getW().addComment("Global.UseLeaseSystem", "Enable / Disable the Lease System.");
+	useLeases = c.get("Global.UseLeaseSystem", false);
 
-	writer.addComment("Global.DateFormat", "Sets date format when shown in example lease or rent expire date",
+	c.getW().addComment("Global.DateFormat", "Sets date format when shown in example lease or rent expire date",
 	    "How to use it properly, more information can be found at http://www.tutorialspoint.com/java/java_date_time.htm");
-	DateFormat = GetConfig("Global.DateFormat", "E yyyy.MM.dd 'at' hh:mm:ss a zzz", writer, conf, false);
+	DateFormat = c.get("Global.DateFormat", "E yyyy.MM.dd 'at' hh:mm:ss a zzz");
 
-	writer.addComment("Global.TimeZone", "Sets time zone for showing date, usefull when server is in different country then main server player base",
+	c.getW().addComment("Global.TimeZone", "Sets time zone for showing date, usefull when server is in different country then main server player base",
 	    "Full list of posible time zones can be found at http://www.mkyong.com/java/java-display-list-of-timezone-with-gmt/");
-	TimeZone = GetConfig("Global.TimeZone", Calendar.getInstance().getTimeZone().getID(), writer, conf, false);
+	TimeZone = c.get("Global.TimeZone", Calendar.getInstance().getTimeZone().getID());
 
-	writer.addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
-	ResMoneyBack = GetConfig("Global.ResMoneyBack", false, writer, conf);
+	c.getW().addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
+	ResMoneyBack = c.get("Global.ResMoneyBack", false);
 
-	writer.addComment("Global.LeaseCheckInterval", "The interval, in minutes, between residence lease checks (if leases are enabled).");
-	leaseCheckInterval = GetConfig("Global.LeaseCheckInterval", 10, writer, conf);
+	c.getW().addComment("Global.LeaseCheckInterval", "The interval, in minutes, between residence lease checks (if leases are enabled).");
+	leaseCheckInterval = c.get("Global.LeaseCheckInterval", 10);
 
-	writer.addComment("Global.LeaseAutoRenew",
+	c.getW().addComment("Global.LeaseAutoRenew",
 	    "Allows leases to automatically renew so long as the player has the money, if economy is disabled, this setting does nothing.");
-	leaseAutoRenew = GetConfig("Global.LeaseAutoRenew", true, writer, conf);
+	leaseAutoRenew = c.get("Global.LeaseAutoRenew", true);
 
-	writer.addComment("Global.EnablePermissions", "Whether or not to use the Permissions system in conjunction with this config.");
-	GetConfig("Global.EnablePermissions", true, writer, conf);
+	c.getW().addComment("Global.EnablePermissions", "Whether or not to use the Permissions system in conjunction with this config.");
+	c.get("Global.EnablePermissions", true);
 
-	writer.addComment("Global.LegacyPermissions", "Set to true if NOT using Permissions or PermissionsBukkit, or using a really old version of Permissions");
-	legacyperms = GetConfig("Global.LegacyPermissions", false, writer, conf);
+	c.getW().addComment("Global.LegacyPermissions", "Set to true if NOT using Permissions or PermissionsBukkit, or using a really old version of Permissions");
+	legacyperms = c.get("Global.LegacyPermissions", false);
 
-	writer.addComment("Global.EnableEconomy",
+	c.getW().addComment("Global.EnableEconomy",
 	    "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
-	enableEconomy = GetConfig("Global.EnableEconomy", true, writer, conf);
+	enableEconomy = c.get("Global.EnableEconomy", true);
 
-	writer.addComment("Global.EnableRentSystem", "Enables or disables the Rent System");
-	enableRentSystem = GetConfig("Global.EnableRentSystem", true, writer, conf);
+	c.getW().addComment("Global.EnableRentSystem", "Enables or disables the Rent System");
+	enableRentSystem = c.get("Global.EnableRentSystem", true);
 
-	writer.addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
-	rentCheckInterval = GetConfig("Global.RentCheckInterval", 10, writer, conf);
+	c.getW().addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
+	rentCheckInterval = c.get("Global.RentCheckInterval", 10);
 
-	writer.addComment("Global.ResidenceChatEnable", "Enable or disable residence chat channels.");
-	chatEnable = GetConfig("Global.ResidenceChatEnable", true, writer, conf);
+	c.getW().addComment("Global.ResidenceChatEnable", "Enable or disable residence chat channels.");
+	chatEnable = c.get("Global.ResidenceChatEnable", true);
 
-	writer.addComment("Global.ActionBar.General", "True for ActionBar - new component in 1.8", "False for old Messaging in chat enter/leave Residence messages");
-	actionBar = GetConfig("Global.ActionBar.General", true, writer, conf);
-	ActionBarOnSelection = GetConfig("Global.ActionBar.ShowOnSelection", true, writer, conf);
+	c.getW().addComment("Global.ActionBar.General", "True for ActionBar - new component in 1.8", "False for old Messaging in chat enter/leave Residence messages");
+	actionBar = c.get("Global.ActionBar.General", true);
+	ActionBarOnSelection = c.get("Global.ActionBar.ShowOnSelection", true);
 
-	writer.addComment("Global.ResidenceChatColor", "Color of residence chat.");
+	c.getW().addComment("Global.ResidenceChatColor", "Color of residence chat.");
 	try {
-	    chatColor = ChatColor.valueOf(GetConfig("Global.ResidenceChatColor", "DARK_PURPLE", writer, conf, true));
+	    chatColor = ChatColor.valueOf(c.get("Global.ResidenceChatColor", "DARK_PURPLE", true));
 	} catch (Exception ex) {
 	    chatColor = ChatColor.DARK_PURPLE;
 	}
 
-	writer.addComment("Global.ResidenceChatPrefixLenght", "Max lenght of residence chat prefix including color codes");
-	chatPrefixLength = GetConfig("Global.ResidenceChatPrefixLength", 16, writer, conf);
+	c.getW().addComment("Global.ResidenceChatPrefixLenght", "Max lenght of residence chat prefix including color codes");
+	chatPrefixLength = c.get("Global.ResidenceChatPrefixLength", 16);
 
-	writer.addComment("Global.AdminOnlyCommands",
+	c.getW().addComment("Global.AdminOnlyCommands",
 	    "Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.");
-	adminsOnly = GetConfig("Global.AdminOnlyCommands", false, writer, conf);
+	adminsOnly = c.get("Global.AdminOnlyCommands", false);
 
-	writer.addComment("Global.AdminOPs", "Setting this to true makes server OPs admins.");
-	adminOps = GetConfig("Global.AdminOPs", true, writer, conf);
+	c.getW().addComment("Global.AdminOPs", "Setting this to true makes server OPs admins.");
+	adminOps = c.get("Global.AdminOPs", true);
 
-	writer.addComment("Global.AdminFullAccess",
+	c.getW().addComment("Global.AdminFullAccess",
 	    "Setting this to true server administration wont need to use /resadmin command to access admin command if they are op or have residence.admin permission node.");
-	AdminFullAccess = GetConfig("Global.AdminFullAccess", false, writer, conf);
+	AdminFullAccess = c.get("Global.AdminFullAccess", false);
 
-	writer.addComment("Global.MultiWorldPlugin",
+	c.getW().addComment("Global.MultiWorldPlugin",
 	    "This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.",
 	    "The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.");
-	multiworldPlugin = GetConfig("Global.MultiWorldPlugin", "Multiverse-Core", writer, conf, false);
+	multiworldPlugin = c.get("Global.MultiWorldPlugin", "Multiverse-Core");
 
-	writer.addComment("Global.ResidenceFlagsInherit", "Setting this to true causes subzones to inherit flags from their parent zones.");
-	flagsInherit = GetConfig("Global.ResidenceFlagsInherit", true, writer, conf);
+	c.getW().addComment("Global.ResidenceFlagsInherit", "Setting this to true causes subzones to inherit flags from their parent zones.");
+	flagsInherit = c.get("Global.ResidenceFlagsInherit", true);
 
-	writer.addComment("Global.PreventRentModify", "Setting this to false will allow rented residences to be modified by the renting player.");
-	preventBuildInRent = GetConfig("Global.PreventRentModify", true, writer, conf);
+	c.getW().addComment("Global.PreventRentModify", "Setting this to false will allow rented residences to be modified by the renting player.");
+	preventBuildInRent = c.get("Global.PreventRentModify", true);
 
-	writer.addComment("Global.PreventSubZoneRemoval", "Setting this to true will prevent subzone deletion when subzone owner is not same as parent zone owner.");
-	PreventSubZoneRemoval = GetConfig("Global.PreventSubZoneRemoval", true, writer, conf);
+	c.getW().addComment("Global.PreventSubZoneRemoval", "Setting this to true will prevent subzone deletion when subzone owner is not same as parent zone owner.");
+	PreventSubZoneRemoval = c.get("Global.PreventSubZoneRemoval", true);
 
-	writer.addComment("Global.StopOnSaveFault", "Setting this to false will cause residence to continue to load even if a error is detected in the save file.");
-	stopOnSaveError = GetConfig("Global.StopOnSaveFault", true, writer, conf);
+	c.getW().addComment("Global.StopOnSaveFault", "Setting this to false will cause residence to continue to load even if a error is detected in the save file.");
+	stopOnSaveError = c.get("Global.StopOnSaveFault", true);
 
-	writer.addComment(
+	c.getW().addComment(
 	    "This is the residence name filter, that filters out invalid characters.  Google 'Java RegEx' or 'Java Regular Expressions' for more info on how they work.");
-	namefix = GetConfig("Global.ResidenceNameRegex", "[^a-zA-Z0-9\\-\\_]", writer, conf, false);
+	namefix = c.get("Global.ResidenceNameRegex", "[^a-zA-Z0-9\\-\\_]");
 
-	writer.addComment("Global.ShowIntervalMessages",
+	c.getW().addComment("Global.ShowIntervalMessages",
 	    "Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.");
-	showIntervalMessages = GetConfig("Global.ShowIntervalMessages", false, writer, conf);
+	showIntervalMessages = c.get("Global.ShowIntervalMessages", false);
 
-	writer.addComment("Global.ShowNoobMessage", "Setting this to true sends a tutorial message to the new player when he places chest on ground.");
-	ShowNoobMessage = GetConfig("Global.ShowNoobMessage", true, writer, conf);
+	c.getW().addComment("Global.ShowNoobMessage", "Setting this to true sends a tutorial message to the new player when he places chest on ground.");
+	ShowNoobMessage = c.get("Global.ShowNoobMessage", true);
 
-	writer.addComment("Global.NewPlayer", "Setting this to true creates residence around players placed chest if he don't have any.",
+	c.getW().addComment("Global.NewPlayer", "Setting this to true creates residence around players placed chest if he don't have any.",
 	    "Only once every server restart if he still don't have any residence");
-	NewPlayerUse = GetConfig("Global.NewPlayer.Use", false, writer, conf);
-	writer.addComment("Global.NewPlayer.Free", "Setting this to true, residence will be created for free",
+	NewPlayerUse = c.get("Global.NewPlayer.Use", false);
+	c.getW().addComment("Global.NewPlayer.Free", "Setting this to true, residence will be created for free",
 	    "By setting to false, money will be taken from player, if he has them");
-	NewPlayerFree = GetConfig("Global.NewPlayer.Free", true, writer, conf);
-	writer.addComment("Global.NewPlayer.Range", "Range from placed chest o both sides. By setting to 5, residence will be 5+5+1 = 11 blocks wide");
-	NewPlayerRangeX = GetConfig("Global.NewPlayer.Range.X", 5, writer, conf);
-	NewPlayerRangeY = GetConfig("Global.NewPlayer.Range.Y", 5, writer, conf);
-	NewPlayerRangeZ = GetConfig("Global.NewPlayer.Range.Z", 5, writer, conf);
+	NewPlayerFree = c.get("Global.NewPlayer.Free", true);
+	c.getW().addComment("Global.NewPlayer.Range", "Range from placed chest o both sides. By setting to 5, residence will be 5+5+1 = 11 blocks wide");
+	NewPlayerRangeX = c.get("Global.NewPlayer.Range.X", 5);
+	NewPlayerRangeY = c.get("Global.NewPlayer.Range.Y", 5);
+	NewPlayerRangeZ = c.get("Global.NewPlayer.Range.Z", 5);
 
-	writer.addComment("Global.CustomContainers",
+	c.getW().addComment("Global.CustomContainers",
 	    "Experimental - The following settings are lists of block IDs to be used as part of the checks for the 'container' and 'use' flags when using mods.");
-	customContainers = GetConfig("Global.CustomContainers", new ArrayList<Integer>(), writer, conf);
-	customBothClick = GetConfig("Global.CustomBothClick", new ArrayList<Integer>(), writer, conf);
-	customRightClick = GetConfig("Global.CustomRightClick", new ArrayList<Integer>(), writer, conf);
+	customContainers = c.getIntList("Global.CustomContainers", new ArrayList<Integer>());
+	customBothClick = c.getIntList("Global.CustomBothClick", new ArrayList<Integer>());
+	customRightClick = c.getIntList("Global.CustomRightClick", new ArrayList<Integer>());
 
-	writer.addComment("Global.Visualizer.Use", "With this enabled player will see particle effects to mark selection boundries");
-	useVisualizer = GetConfig("Global.Visualizer.Use", true, writer, conf);
-	writer.addComment("Global.Visualizer.Range", "Range in blocks to draw particle effects for player",
+	c.getW().addComment("Global.Visualizer.Use", "With this enabled player will see particle effects to mark selection boundries");
+	useVisualizer = c.get("Global.Visualizer.Use", true);
+	c.getW().addComment("Global.Visualizer.Range", "Range in blocks to draw particle effects for player",
 	    "Keep it no more as 30, as player cant see more than 16 blocks");
-	VisualizerRange = GetConfig("Global.Visualizer.Range", 16, writer, conf);
-	writer.addComment("Global.Visualizer.ShowFor", "For how long in miliseconds (5000 = 5sec) to show particle effects");
-	VisualizerShowFor = GetConfig("Global.Visualizer.ShowFor", 5000, writer, conf);
-	writer.addComment("Global.Visualizer.updateInterval", "How often in miliseconds update particles for player");
-	VisualizerUpdateInterval = GetConfig("Global.Visualizer.updateInterval", 20, writer, conf);
-	writer.addComment("Global.Visualizer.RowSpacing", "Spacing in blocks between particle effects for rows");
-	VisualizerRowSpacing = GetConfig("Global.Visualizer.RowSpacing", 2, writer, conf);
+	VisualizerRange = c.get("Global.Visualizer.Range", 16);
+	c.getW().addComment("Global.Visualizer.ShowFor", "For how long in miliseconds (5000 = 5sec) to show particle effects");
+	VisualizerShowFor = c.get("Global.Visualizer.ShowFor", 5000);
+	c.getW().addComment("Global.Visualizer.updateInterval", "How often in miliseconds update particles for player");
+	VisualizerUpdateInterval = c.get("Global.Visualizer.updateInterval", 20);
+	c.getW().addComment("Global.Visualizer.RowSpacing", "Spacing in blocks between particle effects for rows");
+	VisualizerRowSpacing = c.get("Global.Visualizer.RowSpacing", 2);
 	if (VisualizerRowSpacing < 1)
 	    VisualizerRowSpacing = 1;
-	writer.addComment("Global.Visualizer.CollumnSpacing", "Spacing in blocks between particle effects for collums");
-	VisualizerCollumnSpacing = GetConfig("Global.Visualizer.CollumnSpacing", 2, writer, conf);
+	c.getW().addComment("Global.Visualizer.CollumnSpacing", "Spacing in blocks between particle effects for collums");
+	VisualizerCollumnSpacing = c.get("Global.Visualizer.CollumnSpacing", 2);
 	if (VisualizerCollumnSpacing < 1)
 	    VisualizerCollumnSpacing = 1;
-	writer.addComment("Global.Visualizer.Selected",
+	c.getW().addComment("Global.Visualizer.Selected",
 	    "Particle effect names. Posible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
 	    " smoke, largesmoke, spell, instantSpell, mobSpell, mobSpellAmbient, witchMagic, dripWater, dripLava, angryVillager, happyVillager, townaura",
 	    " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance");
 
-	SelectedFrame = ParticleEffects.fromName(GetConfig("Global.Visualizer.Selected.Frame", "happyVillager", writer, conf, false));
+	SelectedFrame = ParticleEffects.fromName(c.get("Global.Visualizer.Selected.Frame", "happyVillager"));
 	if (SelectedFrame == null) {
 	    SelectedFrame = ParticleEffects.VILLAGER_HAPPY;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 
-	SelectedSides = ParticleEffects.fromName(GetConfig("Global.Visualizer.Selected.Sides", "reddust", writer, conf, false));
+	SelectedSides = ParticleEffects.fromName(c.get("Global.Visualizer.Selected.Sides", "reddust"));
 	if (SelectedSides == null) {
 	    SelectedSides = ParticleEffects.REDSTONE;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
 
-	OverlapFrame = ParticleEffects.fromName(GetConfig("Global.Visualizer.Overlap.Frame", "FLAME", writer, conf, false));
+	OverlapFrame = ParticleEffects.fromName(c.get("Global.Visualizer.Overlap.Frame", "FLAME"));
 	if (OverlapFrame == null) {
 	    OverlapFrame = ParticleEffects.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Overlap Frame with this name, it was set to default");
 	}
 
-	OverlapSides = ParticleEffects.fromName(GetConfig("Global.Visualizer.Overlap.Sides", "FLAME", writer, conf, false));
+	OverlapSides = ParticleEffects.fromName(c.get("Global.Visualizer.Overlap.Sides", "FLAME"));
 	if (OverlapSides == null) {
 	    OverlapSides = ParticleEffects.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
 
-	writer.addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
-	BounceAnimation = GetConfig("Global.BounceAnimation", true, writer, conf);
+	c.getW().addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
+	BounceAnimation = c.get("Global.BounceAnimation", true);
 
-	writer.addComment("Global.GUI.Enabled", "Enable or disable flag GUI");
-	useFlagGUI = GetConfig("Global.GUI.Enabled", true, writer, conf);
+	c.getW().addComment("Global.GUI.Enabled", "Enable or disable flag GUI");
+	useFlagGUI = c.get("Global.GUI.Enabled", true);
 
-	writer.addComment("Global.GUI.setTrue", "Item id and data to use when flag is set to true");
+	c.getW().addComment("Global.GUI.setTrue", "Item id and data to use when flag is set to true");
 
-	int id = GetConfig("Global.GUI.setTrue.Id", 35, writer, conf);
-	int data = GetConfig("Global.GUI.setTrue.Data", 13, writer, conf);
+	int id = c.get("Global.GUI.setTrue.Id", 35);
+	int data = c.get("Global.GUI.setTrue.Data", 13);
 
 	Material Mat = Material.getMaterial(id);
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiTrue = new ItemStack(Mat, 1, (short) data);
 
-	writer.addComment("Global.GUI.setFalse", "Item id and data to use when flag is set to false");
-	id = GetConfig("Global.GUI.setFalse.Id", 35, writer, conf);
-	data = GetConfig("Global.GUI.setFalse.Data", 14, writer, conf);
+	c.getW().addComment("Global.GUI.setFalse", "Item id and data to use when flag is set to false");
+	id = c.get("Global.GUI.setFalse.Id", 35);
+	data = c.get("Global.GUI.setFalse.Data", 14);
 
 	Mat = Material.getMaterial(id);
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiFalse = new ItemStack(Mat, 1, (short) data);
 
-	writer.addComment("Global.GUI.setRemove", "Item id and data to use when flag is set to remove");
-	id = GetConfig("Global.GUI.setRemove.Id", 35, writer, conf);
-	data = GetConfig("Global.GUI.setRemove.Data", 8, writer, conf);
+	c.getW().addComment("Global.GUI.setRemove", "Item id and data to use when flag is set to remove");
+	id = c.get("Global.GUI.setRemove.Id", 35);
+	data = c.get("Global.GUI.setRemove.Data", 8);
 
 	Mat = Material.getMaterial(id);
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiRemove = new ItemStack(Mat, 1, (short) data);
 
-	writer.addComment("Global.AutoMobRemoval", "Default = false. Enabling this, residences with flag nomobs will be cleared from monsters in regular intervals.",
+	c.getW().addComment("Global.AutoMobRemoval", "Default = false. Enabling this, residences with flag nomobs will be cleared from monsters in regular intervals.",
 	    "This is quite heavy on server side, so enable only if you really need this feature");
-	AutoMobRemoval = GetConfig("Global.AutoMobRemoval.Use", false, writer, conf);
-	writer.addComment("Global.AutoMobRemoval.Interval", "How often in seconds to check for monsters in residences. Keep it at reasonable amount");
-	AutoMobRemovalInterval = GetConfig("Global.AutoMobRemoval.Interval", 3, writer, conf);
+	AutoMobRemoval = c.get("Global.AutoMobRemoval.Use", false);
+	c.getW().addComment("Global.AutoMobRemoval.Interval", "How often in seconds to check for monsters in residences. Keep it at reasonable amount");
+	AutoMobRemovalInterval = c.get("Global.AutoMobRemoval.Interval", 3);
 
-	enforceAreaInsideArea = GetConfig("Global.EnforceAreaInsideArea", false, writer, conf);
-	spoutEnable = GetConfig("Global.EnableSpout", false, writer, conf);
-	enableLeaseMoneyAccount = GetConfig("Global.EnableLeaseMoneyAccount", true, writer, conf);
+	enforceAreaInsideArea = c.get("Global.EnforceAreaInsideArea", false);
+	spoutEnable = c.get("Global.EnableSpout", false);
+	enableLeaseMoneyAccount = c.get("Global.EnableLeaseMoneyAccount", true);
 
-	writer.addComment("Global.CouldronCompatability",
+	c.getW().addComment("Global.CouldronCompatability",
 	    "By setting this to true, partial compatability for kCouldron servers will be anabled. Action bar messages and selection visualizer will be disabled automaticaly as off incorrect compatability");
-	CouldronCompatability = GetConfig("Global.CouldronCompatability", false, writer, conf);
+	CouldronCompatability = c.get("Global.CouldronCompatability", false);
 	if (CouldronCompatability) {
 	    useVisualizer = false;
 	    actionBar = false;
 	    ActionBarOnSelection = false;
 	}
 
-	writer.addComment("DynMap.Use", "Enables or disable DynMap Support");
-	DynMapUse = GetConfig("DynMap.Use", false, writer, conf);
+	c.getW().addComment("DynMap.Use", "Enables or disable DynMap Support");
+	DynMapUse = c.get("DynMap.Use", false);
 
-	writer.addComment("DynMap.Layer.3dRegions", "Enables 3D zones");
-	DynMapLayer3dRegions = GetConfig("DynMap.Layer.3dRegions", true, writer, conf);
-	writer.addComment("DynMap.Layer.SubZoneDepth", "How deep to go into subzones to show");
-	DynMapLayerSubZoneDepth = GetConfig("DynMap.Layer.SubZoneDepth", 2, writer, conf);
+	c.getW().addComment("DynMap.Layer.3dRegions", "Enables 3D zones");
+	DynMapLayer3dRegions = c.get("DynMap.Layer.3dRegions", true);
+	c.getW().addComment("DynMap.Layer.SubZoneDepth", "How deep to go into subzones to show");
+	DynMapLayerSubZoneDepth = c.get("DynMap.Layer.SubZoneDepth", 2);
 
-	writer.addComment("DynMap.Border.Color", "Color of border. Pick color for this page http://www.w3schools.com/colors/colors_picker.asp");
-	DynMapBorderColor = GetConfig("DynMap.Border.Color", "#FF0000", writer, conf, false);
-	writer.addComment("DynMap.Border.Opacity", "Transparency. 0.3 means that only 30% of color will be visible");
-	DynMapBorderOpacity = GetConfig("DynMap.Border.Opacity", 0.3, writer, conf);
-	writer.addComment("DynMap.Border.Weight", "Border thickness");
-	DynMapBorderWeight = GetConfig("DynMap.Border.Weight", 3, writer, conf);
-	DynMapFillOpacity = GetConfig("DynMap.Fill.Opacity", 0.3, writer, conf);
-	DynMapFillColor = GetConfig("DynMap.Fill.Color", "#FFFF00", writer, conf, false);
-	DynMapFillForRent = GetConfig("DynMap.Fill.ForRent", "#33cc33", writer, conf, false);
-	DynMapFillRented = GetConfig("DynMap.Fill.Rented", "#99ff33", writer, conf, false);
-	DynMapFillForSale = GetConfig("DynMap.Fill.ForSale", "#0066ff", writer, conf, false);
+	c.getW().addComment("DynMap.Border.Color", "Color of border. Pick color for this page http://www.w3schools.com/colors/colors_picker.asp");
+	DynMapBorderColor = c.get("DynMap.Border.Color", "#FF0000");
+	c.getW().addComment("DynMap.Border.Opacity", "Transparency. 0.3 means that only 30% of color will be visible");
+	DynMapBorderOpacity = c.get("DynMap.Border.Opacity", 0.3);
+	c.getW().addComment("DynMap.Border.Weight", "Border thickness");
+	DynMapBorderWeight = c.get("DynMap.Border.Weight", 3);
+	DynMapFillOpacity = c.get("DynMap.Fill.Opacity", 0.3);
+	DynMapFillColor = c.get("DynMap.Fill.Color", "#FFFF00");
+	DynMapFillForRent = c.get("DynMap.Fill.ForRent", "#33cc33");
+	DynMapFillRented = c.get("DynMap.Fill.Rented", "#99ff33");
+	DynMapFillForSale = c.get("DynMap.Fill.ForSale", "#0066ff");
 
-	writer.addComment("DynMap.VisibleRegions", "Shows only regions on this list");
-	DynMapVisibleRegions = GetConfig("DynMap.VisibleRegions", new ArrayList<String>(), writer, conf, false);
-	writer.addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden ingame");
-	DynMapHiddenRegions = GetConfig("DynMap.HiddenRegions", new ArrayList<String>(), writer, conf, false);
+	c.getW().addComment("DynMap.VisibleRegions", "Shows only regions on this list");
+	DynMapVisibleRegions = c.get("DynMap.VisibleRegions", new ArrayList<String>());
+	c.getW().addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden ingame");
+	DynMapHiddenRegions = c.get("DynMap.HiddenRegions", new ArrayList<String>());
 
 	try {
-	    writer.save(f);
+	    c.getW().save(f);
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}

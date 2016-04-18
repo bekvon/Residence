@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.text;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.utils.YmlMaker;
 
@@ -93,8 +93,8 @@ public class Language {
 	    key = "Language." + key;
 	String missing = "Missing locale for " + key;
 	if (customlocale.isList(key))
-	    return LocaleManager.ColorsArray(customlocale.getStringList(key), true);
-	return enlocale.getStringList(key).size() > 0 ? LocaleManager.ColorsArray(enlocale.getStringList(key), true) : Arrays.asList(missing);
+	    return ColorsArray(customlocale.getStringList(key));
+	return enlocale.getStringList(key).size() > 0 ? ColorsArray(enlocale.getStringList(key)) : Arrays.asList(missing);
     }
 
     /**
@@ -121,5 +121,17 @@ public class Language {
 	if (customlocale == null || !customlocale.contains(key))
 	    return enlocale.contains(key);
 	return customlocale.contains(key);
+    }
+    
+    private static List<String> ColorsArray(List<String> text) {
+	List<String> temp = new ArrayList<String>();
+	for (String part : text) {
+	    temp.add(Colors(part));
+	}
+	return temp;
+    }
+
+    private static String Colors(String text) {
+	return ChatColor.translateAlternateColorCodes('&', text);
     }
 }

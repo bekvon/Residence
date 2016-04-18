@@ -8,8 +8,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
-import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
 
 public class FlagUtil {
 
@@ -25,20 +25,23 @@ public class FlagUtil {
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
 	conf.options().copyDefaults(true);
+
+	ConfigReader c = new ConfigReader(conf, writer);
+
 	Set<String> allFlags = conf.getConfigurationSection("Global.FlagPermission").getKeys(false);
 
 	for (String oneFlag : allFlags) {
-	    if (!conf.contains("Global.FlagGui." + oneFlag))
+	    if (!c.getC().contains("Global.FlagGui." + oneFlag))
 		continue;
 
-	    if (!conf.contains("Global.FlagGui." + oneFlag + ".Id"))
+	    if (!c.getC().contains("Global.FlagGui." + oneFlag + ".Id"))
 		continue;
 
-	    if (!conf.contains("Global.FlagGui." + oneFlag + ".Data"))
+	    if (!c.getC().contains("Global.FlagGui." + oneFlag + ".Data"))
 		continue;
 
-	    int id = ConfigManager.GetConfig("Global.FlagGui." + oneFlag + ".Id", 35, writer, conf);
-	    int data = ConfigManager.GetConfig("Global.FlagGui." + oneFlag + ".Data", 0, writer, conf);
+	    int id = c.get("Global.FlagGui." + oneFlag + ".Id", 35);
+	    int data = c.get("Global.FlagGui." + oneFlag + ".Data", 0);
 
 	    @SuppressWarnings("deprecation")
 	    Material Mat = Material.getMaterial(id);

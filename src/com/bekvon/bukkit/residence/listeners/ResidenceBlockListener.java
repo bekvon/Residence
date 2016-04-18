@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
@@ -34,11 +35,18 @@ import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 public class ResidenceBlockListener implements Listener {
 
     private List<String> MessageInformed = new ArrayList<String>();
     private List<String> ResCreated = new ArrayList<String>();
+
+    private Residence plugin;
+
+    public ResidenceBlockListener(Residence residence) {
+	this.plugin = residence;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onTreeGrow(StructureGrowEvent event) {
@@ -133,6 +141,28 @@ public class ResidenceBlockListener implements Listener {
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has("iceform", true)) {
 	    event.setCancelled(true);
+	}
+    }
+
+    public static final String SourceResidenceName = "SourceResidenceName";
+
+    @EventHandler
+    public void onProjectileHit(EntityChangeBlockEvent event) {
+	if (event.getEntityType() != EntityType.FALLING_BLOCK)
+	    return;
+	Entity ent = event.getEntity();
+	if (!ent.hasMetadata(SourceResidenceName)) {
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	    String resName = res == null ? "NULL" : res.getName();
+	    ent.setMetadata(SourceResidenceName, new FixedMetadataValue(plugin, resName));
+	} else {
+	    String saved = ent.getMetadata(SourceResidenceName).get(0).asString();
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	    String resName = res == null ? "NULL" : res.getName();
+	    if (!saved.equalsIgnoreCase(resName)) {
+		event.setCancelled(true);
+		ent.remove();
+	    }
 	}
     }
 

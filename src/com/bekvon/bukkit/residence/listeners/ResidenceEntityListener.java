@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -745,6 +747,8 @@ public class ResidenceEntityListener implements Listener {
 		srcarea = Residence.getResidenceManager().getByLoc(damager.getLocation());
 	    }
 	    boolean srcpvp = true;
+	    boolean allowSnowBall = false;
+	    boolean isSnowBall = false;
 	    if (srcarea != null) {
 		srcpvp = srcarea.getPermissions().has("pvp", true);
 	    }
@@ -755,9 +759,15 @@ public class ResidenceEntityListener implements Listener {
 		if (damager instanceof Player) {
 		    attacker = (Player) damager;
 		} else if (damager instanceof Projectile) {
+		    Projectile project = (Projectile) damager;
+		    if (project.getType() == EntityType.SNOWBALL && srcarea != null) {
+			isSnowBall = true;
+			allowSnowBall = srcarea.getPermissions().has("snowball", false);
+		    }
 		    attacker = (Player) ((Projectile) damager).getShooter();
 		}
-		if (!srcpvp) {
+		if (!srcpvp && !isSnowBall || !allowSnowBall && isSnowBall) {
+		    Debug.D("heres");
 		    attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 		    event.setCancelled(true);
 		    return;
@@ -771,7 +781,7 @@ public class ResidenceEntityListener implements Listener {
 		    }
 		} else {
 		    /* Normal PvP */
-		    if (!area.getPermissions().has("pvp", true)) {
+		    if (!isSnowBall && !area.getPermissions().has("pvp", true) || isSnowBall && !allowSnowBall) {
 			attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 			event.setCancelled(true);
 		    }
