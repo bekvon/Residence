@@ -44,6 +44,7 @@ public class set implements cmd {
 		}
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.recalculateResidence(res);
+		player.closeInventory();
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
 		player.openInventory(flag.getInventory());
 	    } else
@@ -58,6 +59,7 @@ public class set implements cmd {
 		}
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.recalculateResidence(res);
+		player.closeInventory();
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
 		player.openInventory(flag.getInventory());
 	    } else

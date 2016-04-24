@@ -145,9 +145,6 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onFlagGuiClick(InventoryClickEvent event) {
-	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getWhoClicked().getWorld()))
-	    return;
 	if (GUI.size() == 0)
 	    return;
 
@@ -172,9 +169,6 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onFlagGuiClose(InventoryCloseEvent event) {
-	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
-	    return;
 	if (GUI.isEmpty())
 	    return;
 	HumanEntity player = event.getPlayer();

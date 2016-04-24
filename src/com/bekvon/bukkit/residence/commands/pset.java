@@ -69,6 +69,7 @@ public class pset implements cmd {
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.setTargePlayer(args[1]);
 		flag.recalculatePlayer(res);
+		player.closeInventory();
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
 		player.openInventory(flag.getInventory());
 	    } else
@@ -87,6 +88,7 @@ public class pset implements cmd {
 		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 		flag.setTargePlayer(args[2]);
 		flag.recalculatePlayer(res);
+		player.closeInventory();
 		ResidencePlayerListener.GUI.put(player.getName(), flag);
 		player.openInventory(flag.getInventory());
 	    } else
