@@ -115,7 +115,7 @@ public class market implements cmd {
 		signInfo.setX(loc.getBlockX());
 		signInfo.setY(loc.getBlockY());
 		signInfo.setZ(loc.getBlockZ());
-		signInfo.setLocation(loc);
+		signInfo.updateLocation();
 		Residence.getSignUtil().getSigns().addSign(signInfo);
 		Residence.getSignUtil().saveSigns();
 	    } else {

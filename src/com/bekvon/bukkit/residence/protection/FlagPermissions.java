@@ -223,6 +223,7 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("respawn");
 	
 	addResidenceOnlyFlag("iceform");
+	addResidenceOnlyFlag("icemelt");
 	
 	addResidenceOnlyFlag("snowball");
 

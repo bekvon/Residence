@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -14,6 +16,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -135,11 +138,27 @@ public class ResidenceBlockListener implements Listener {
 
 	Material ice = Material.getMaterial("FROSTED_ICE");
 
-	if (event.getNewState().getType() != Material.ICE && ice != null && ice != event.getNewState().getType())
+	if (event.getNewState().getType() != Material.SNOW && event.getNewState().getType() != Material.ICE && ice != null && ice != event.getNewState().getType())
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has("iceform", true)) {
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onIceMelt(BlockFadeEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+
+	if (event.getNewState().getType() != Material.STATIONARY_WATER && event.getBlock().getState().getType() == Material.SNOW && event.getBlock().getState()
+	    .getType() == Material.SNOW_BLOCK)
+	    return;
+
+	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	if (!perms.has("icemelt", true)) {
 	    event.setCancelled(true);
 	}
     }

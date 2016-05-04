@@ -28,6 +28,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.residence.NMS;
@@ -173,5 +174,12 @@ public class v1_9 implements NMS {
 	CraftThrownPotion potion = (CraftThrownPotion) ent;
 	
 	return potion.getItem();
+    }
+    
+    @Override
+    public boolean isChorusTeleport(TeleportCause tpcause) {
+	if (tpcause == TeleportCause.CHORUS_FRUIT)
+	    return true;
+	return false;
     }
 }

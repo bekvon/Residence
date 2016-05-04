@@ -24,6 +24,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.NMS;
@@ -132,5 +133,9 @@ public class v1_7 implements NMS {
     @Override
     public ItemStack getLingeringPotionItem(Entity ent) {
 	return null;
+    }
+    @Override
+    public boolean isChorusTeleport(TeleportCause tpcause) {	
+	return false;
     }
 }

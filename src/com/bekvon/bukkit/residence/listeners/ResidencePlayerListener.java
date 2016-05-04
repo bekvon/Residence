@@ -291,7 +291,7 @@ public class ResidencePlayerListener implements Listener {
 	    signInfo.setX(loc.getBlockX());
 	    signInfo.setY(loc.getBlockY());
 	    signInfo.setZ(loc.getBlockZ());
-	    signInfo.setLocation(loc);
+	    signInfo.updateLocation();
 	    Residence.getSignUtil().getSigns().addSign(signInfo);
 	    Residence.getSignUtil().saveSigns();
 	}
@@ -931,7 +931,7 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
 	if (res != null) {
 	    if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
-		.getCause() == TeleportCause.PLUGIN) {
+		.getCause() == TeleportCause.PLUGIN || Residence.getNms().isChorusTeleport(event.getCause())) {
 		String areaname = res.getName();
 		if (!res.getPermissions().playerHas(player.getName(), "move", true) && !res.isOwner(player)) {
 		    event.setCancelled(true);

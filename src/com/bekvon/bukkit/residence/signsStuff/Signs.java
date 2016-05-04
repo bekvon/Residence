@@ -18,17 +18,16 @@ public class Signs {
     public Signs() {
     }
 
-    public void setLocation(Location Location) {
-	this.loc = Location;
+    public Location GetLocation() {
+	return this.loc;
     }
 
-    public Location GetLocation() {
+    public void updateLocation() {
 	if (this.loc == null) {
 	    World w = Bukkit.getWorld(this.world);
 	    if (w != null)
 		this.loc = new Location(Bukkit.getWorld(this.world), this.x, this.y, this.z);
 	}
-	return this.loc;
     }
 
     public void setCategory(int Category) {

@@ -1032,6 +1032,12 @@ public class LocaleManager {
 	    "Prevents from ice forming");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.iceform.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
+	// icemelt
+	FlagList.add("icemelt");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.icemelt.Description",
+	    "Prevents ice from melting");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.icemelt.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// respawn
 	FlagList.add("respawn");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.respawn.Description",

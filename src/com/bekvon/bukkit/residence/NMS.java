@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 public interface NMS {
@@ -42,4 +43,6 @@ public interface NMS {
     public String getPotionType(ItemStack potion);
 
     public ItemStack itemInMainHand(Player player);
+    
+    public boolean isChorusTeleport(TeleportCause tpcause);
 }
