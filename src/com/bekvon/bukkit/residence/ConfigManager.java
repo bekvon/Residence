@@ -57,9 +57,12 @@ public class ConfigManager {
     protected boolean AdminFullAccess;
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
+    protected boolean RentInformOnEnding;
     protected boolean leaseAutoRenew;
     protected boolean ShortInfoUse;
     protected boolean OnlyLike;
+    protected int RentInformBefore;
+    protected int RentInformDelay;
     protected int rentCheckInterval;
     protected int chatPrefixLength;
     protected int leaseCheckInterval;
@@ -631,6 +634,13 @@ public class ConfigManager {
 	c.getW().addComment("Global.EnableRentSystem", "Enables or disables the Rent System");
 	enableRentSystem = c.get("Global.EnableRentSystem", true);
 
+	c.getW().addComment("Global.Rent.Inform.OnEnding", "Informs players on rent time ending");
+	RentInformOnEnding = c.get("Global.Rent.Inform.OnEnding", true);
+	c.getW().addComment("Global.Rent.Inform.Before", "Time range in minutes when to start informing about ending rent");
+	RentInformBefore = c.get("Global.Rent.Inform.Before", 1440);
+	c.getW().addComment("Global.Rent.Inform.Delay", "Time range in seconds for how long to wait after player logs in to inform about ending rents");
+	RentInformDelay = c.get("Global.Rent.Inform.Delay", 60);
+
 	c.getW().addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
 	rentCheckInterval = c.get("Global.RentCheckInterval", 10);
 
@@ -852,6 +862,18 @@ public class ConfigManager {
 		}
 	    }
 	}
+    }
+
+    public int getRentInformDelay() {
+	return RentInformDelay;
+    }
+
+    public int getRentInformBefore() {
+	return RentInformBefore;
+    }
+
+    public boolean isRentInformOnEnding() {
+	return RentInformOnEnding;
     }
 
     public boolean isTNTExplodeBelow() {

@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.economy.rent;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -48,6 +49,20 @@ public class RentManager implements MarketRentInterface {
 		}
 		rentedLands.add(Residence.getLM().getMessage("Residence.List", "", oneland.getKey(), world)
 		    + Residence.getLM().getMessage("Rent.Rented"));
+	    }
+	}
+	return rentedLands;
+    }
+
+    public List<String> getRentedLandsList(String playername) {
+	List<String> rentedLands = new ArrayList<String>();
+	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
+	    if (oneland.getValue().player.equals(playername)) {
+		ClaimedResidence res = Residence.getResidenceManager().getByName(oneland.getKey());
+		if (res != null)
+		    res = res.getTopParent();
+
+		rentedLands.add(oneland.getKey());
 	    }
 	}
 	return rentedLands;
@@ -302,40 +317,44 @@ public class RentManager implements MarketRentInterface {
 	while (it.hasNext()) {
 	    Entry<String, RentedLand> next = it.next();
 	    RentedLand land = next.getValue();
-	    if (land.endTime <= System.currentTimeMillis()) {
-		ClaimedResidence res = Residence.getResidenceManager().getByName(next.getKey());
-		if (Residence.getConfigManager().debugEnabled())
-		    System.out.println("Rent Check: " + next.getKey());
-		if (res != null) {
-		    ResidenceRentEvent revent = new ResidenceRentEvent(res, null, RentEventType.RENT_EXPIRE);
-		    Residence.getServ().getPluginManager().callEvent(revent);
-		    if (!revent.isCancelled()) {
-			RentableLand rentable = rentableLand.get(next.getKey());
-			if (!rentable.repeatable) {
-			    rentableLand.remove(next.getKey());
-			    it.remove();
-			    res.getPermissions().applyDefaultFlags();
-			} else if (land.autoRefresh) {
-			    if (!Residence.getEconomyManager().canAfford(land.player, rentable.cost)) {
-				it.remove();
-				res.getPermissions().applyDefaultFlags();
-			    } else {
-				if (!Residence.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost)) {
-				    it.remove();
-				    res.getPermissions().applyDefaultFlags();
-				} else {
-				    land.endTime = System.currentTimeMillis() + this.daysToMs(rentable.days);
-				}
-			    }
-			} else {
-			    res.getPermissions().applyDefaultFlags();
-			    it.remove();
-			}
-		    }
-		} else {
+	    if (land.endTime > System.currentTimeMillis())
+		continue;
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(next.getKey());
+	    if (Residence.getConfigManager().debugEnabled())
+		System.out.println("Rent Check: " + next.getKey());
+	    if (res != null) {
+		ResidenceRentEvent revent = new ResidenceRentEvent(res, null, RentEventType.RENT_EXPIRE);
+		Residence.getServ().getPluginManager().callEvent(revent);
+		if (revent.isCancelled())
+		    continue;
+
+		RentableLand rentable = rentableLand.get(next.getKey());
+		if (!rentable.repeatable) {
 		    rentableLand.remove(next.getKey());
 		    it.remove();
+		    res.getPermissions().applyDefaultFlags();
+		    continue;
 		}
+		if (land.autoRefresh) {
+		    if (!Residence.getEconomyManager().canAfford(land.player, rentable.cost)) {
+			it.remove();
+			res.getPermissions().applyDefaultFlags();
+		    } else {
+			if (!Residence.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost)) {
+			    it.remove();
+			    res.getPermissions().applyDefaultFlags();
+			} else {
+			    land.endTime = System.currentTimeMillis() + this.daysToMs(rentable.days);
+			}
+		    }
+		    continue;
+		}
+		res.getPermissions().applyDefaultFlags();
+		it.remove();
+	    } else {
+		rentableLand.remove(next.getKey());
+		it.remove();
 	    }
 	}
     }
@@ -438,22 +457,83 @@ public class RentManager implements MarketRentInterface {
 	}
     }
 
-    public void printRentableResidences(Player player) {
+    public void printRentableResidences(Player player, int page) {
 	Set<Entry<String, RentableLand>> set = rentableLand.entrySet();
 	player.sendMessage(Residence.getLM().getMessage("Rentable.Land"));
 	StringBuilder sbuild = new StringBuilder();
 	sbuild.append(ChatColor.GREEN);
-	boolean firstadd = true;
+
+	int perpage = 10;
+
+	int pagecount = (int) Math.ceil((double) set.size() / (double) perpage);
+
+	if (page < 1)
+	    page = 1;
+
+	int z = 0;
+
 	for (Entry<String, RentableLand> land : set) {
-	    if (!this.isRented(land.getKey())) {
-		if (!firstadd)
-		    sbuild.append(", ");
-		else
-		    firstadd = false;
-		sbuild.append(land.getKey());
+
+	    z++;
+	    if (z <= (page - 1) * perpage)
+		continue;
+	    if (z > (page - 1) * perpage + perpage)
+		break;
+
+	    boolean rented = isRented(land.getKey());
+
+	    if (!land.getValue().repeatable && rented)
+		continue;
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(land.getKey());
+
+	    String rentedBy = "";
+
+	    String hover = "";
+	    if (rented) {
+		RentedLand rent = rentedLand.get(land.getKey());
+		rentedBy = Residence.getLM().getMessage("Residence.RentedBy", rent.player);
+		hover = GetTime.getTime(rent.endTime);
 	    }
+	    if (res == null)
+		continue;
+
+	    String msg = Residence.getLM().getMessage("Rent.RentList", z, land.getKey(), land.getValue().cost, land.getValue().days, land
+		.getValue().repeatable,
+		res.getOwner(), rentedBy);
+
+	    if (!hover.equalsIgnoreCase(""))
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " {\"text\":\"\",\"extra\":[{\"text\":\"" + msg
+		    + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§2" + hover + "\"}}]}");
+	    else
+		player.sendMessage(msg);
+
 	}
-	player.sendMessage(sbuild.toString());
+
+	String separator = ChatColor.GOLD + "";
+	String simbol = "\u25AC";
+	for (int i = 0; i < 10; i++) {
+	    separator += simbol;
+	}
+
+	if (pagecount == 1)
+	    return;
+
+	int NextPage = page + 1;
+	NextPage = page < pagecount ? NextPage : page;
+	int Prevpage = page - 1;
+	Prevpage = page > 1 ? Prevpage : page;
+
+	String prevCmd = "/res market list sell " + Prevpage;
+	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
+	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
+	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
+	String nextCmd = "/res market list sell " + NextPage;
+	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
+	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
+
+	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + prev + "," + next);
     }
 
     public int getRentCount(String player) {

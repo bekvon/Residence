@@ -1,11 +1,13 @@
 package com.bekvon.bukkit.residence.economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -256,21 +258,59 @@ public class TransactionManager implements MarketBuyInterface {
 	return true;
     }
 
-    public void printForSaleResidences(Player player) {
+    public void printForSaleResidences(Player player, int page) {
 	Set<Entry<String, Integer>> set = sellAmount.entrySet();
 	player.sendMessage(Residence.getLM().getMessage("Economy.LandForSale"));
 	StringBuilder sbuild = new StringBuilder();
 	sbuild.append(ChatColor.GREEN);
-	boolean firstadd = true;
+
+	int perpage = 10;
+
+	int pagecount = (int) Math.ceil((double) set.size() / (double) perpage);
+
+	if (page < 1)
+	    page = 1;
+
+	int z = 0;
 	for (Entry<String, Integer> land : set) {
-	    if (!firstadd) {
-		sbuild.append(", ");
-	    } else {
-		firstadd = false;
-	    }
-	    sbuild.append(land.getKey());
+	    z++;
+	    if (z <= (page - 1) * perpage)
+		continue;
+	    if (z > (page - 1) * perpage + perpage)
+		break;
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(land.getKey());
+
+	    if (res == null)
+		continue;
+
+	    player.sendMessage(Residence.getLM().getMessage("Economy.SellList", z, land.getKey(), land.getValue(), res.getOwner()));
 	}
-	player.sendMessage(sbuild.toString());
+
+	String separator = ChatColor.GOLD + "";
+	String simbol = "\u25AC";
+	for (int i = 0; i < 10; i++) {
+	    separator += simbol;
+	}
+
+	if (pagecount == 1)
+	    return;
+
+	int NextPage = page + 1;
+	NextPage = page < pagecount ? NextPage : page;
+	int Prevpage = page - 1;
+	Prevpage = page > 1 ? Prevpage : page;
+
+	String prevCmd = "/res market list sell " + Prevpage;
+	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
+	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
+	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
+	String nextCmd = "/res market list sell " + NextPage;
+	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
+	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
+
+	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + prev + "," + next);
     }
 
     public void clearSales() {

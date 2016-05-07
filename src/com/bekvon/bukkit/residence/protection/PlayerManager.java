@@ -120,6 +120,10 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return -1;
     }
 
+    public ResidencePlayer getResidencePlayer(Player player) {
+	return getResidencePlayer(player.getName());
+    }
+
     public ResidencePlayer getResidencePlayer(String player) {
 	ResidencePlayer resPlayer = null;
 	if (players.containsKey(player))

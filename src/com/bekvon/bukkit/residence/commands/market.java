@@ -33,30 +33,27 @@ public class market implements cmd {
 	    return false;
 	}
 	String secondCommand = args[1].toLowerCase();
-	if (secondCommand.equals("list")) {
+
+	switch (secondCommand.toLowerCase()) {
+
+	case "list":
 	    return commandResMarketList(args, resadmin, player, page);
-	}
-	if (secondCommand.equals("autorenew")) {
+	case "autorenew":
 	    return commandResMarketAutorenew(args, resadmin, player, page);
-	}
-	if (secondCommand.equals("rentable")) {
+	case "rentable":
 	    return commandResMarketRentable(args, resadmin, player, page);
-	}
-	if (secondCommand.equals("rent")) {
+	case "rent":
 	    return commandResMarketRent(args, resadmin, player, page);
-	}
-	if (secondCommand.equals("release")) {
-	    if (args.length != 3) {
+	case "release":
+	    if (args.length != 3)
 		return false;
-	    }
-	    if (Residence.getRentManager().isRented(args[2])) {
+	    if (Residence.getRentManager().isRented(args[2]))
 		Residence.getRentManager().removeFromForRent(player, args[2], resadmin);
-	    } else {
+	    else
 		Residence.getRentManager().unrent(player, args[2], resadmin);
-	    }
 	    return true;
-	}
-	if (secondCommand.equals("sign")) {
+
+	case "sign":
 	    if (args.length != 3) {
 		return false;
 	    }
@@ -126,8 +123,8 @@ public class market implements cmd {
 	    Residence.getSignUtil().CheckSign(res, 5);
 
 	    return true;
-	}
-	if (secondCommand.equals("info")) {
+
+	case "info":
 	    if (args.length == 2) {
 		String areaname = Residence.getResidenceManager().getNameByLoc(player.getLocation());
 		boolean sell = Residence.getTransactionManager().viewSaleInfo(areaname, player);
@@ -147,25 +144,25 @@ public class market implements cmd {
 		return false;
 	    }
 	    return true;
-	}
-	if (secondCommand.equals("buy")) {
-	    if (args.length != 3) {
+
+	case "buy":
+	    if (args.length != 3)
 		return false;
-	    }
+
 	    Residence.getTransactionManager().buyPlot(args[2], player, resadmin);
 	    return true;
-	}
-	if (secondCommand.equals("unsell")) {
-	    if (args.length != 3) {
+
+	case "unsell":
+	    if (args.length != 3)
 		return false;
-	    }
+
 	    Residence.getTransactionManager().removeFromSale(player, args[2], resadmin);
 	    return true;
-	}
-	if (secondCommand.equals("sell")) {
-	    if (args.length != 4) {
+
+	case "sell":
+	    if (args.length != 4)
 		return false;
-	    }
+
 	    int amount;
 	    try {
 		amount = Integer.parseInt(args[3]);
@@ -175,8 +172,9 @@ public class market implements cmd {
 	    }
 	    Residence.getTransactionManager().putForSale(args[2], player, amount, resadmin);
 	    return true;
+	default:
+	    return false;
 	}
-	return false;
     }
 
     private boolean commandResMarketRent(String[] args, boolean resadmin, Player player, int page) {
@@ -264,11 +262,20 @@ public class market implements cmd {
 	    return true;
 	}
 	player.sendMessage(Residence.getLM().getMessage("General.MarketList"));
-	Residence.getTransactionManager().printForSaleResidences(player);
-	if (Residence.getConfigManager().enabledRentSystem()) {
-	    Residence.getRentManager().printRentableResidences(player);
+	if (args.length < 3)
+	    return false;
+
+	if (args[2].equalsIgnoreCase("sell")) {
+	    Residence.getTransactionManager().printForSaleResidences(player, page);
+	    return true;
 	}
-	return true;
+	if (args[2].equalsIgnoreCase("rent")) {
+	    if (Residence.getConfigManager().enabledRentSystem()) {
+		Residence.getRentManager().printRentableResidences(player, page);
+	    }
+	    return true;
+	}
+	return false;
     }
 
 }

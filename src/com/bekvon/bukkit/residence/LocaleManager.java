@@ -213,6 +213,7 @@ public class LocaleManager {
 	c.get("Language.Residence.RemoveRentable", "&eResidence &6%1 &eis no longer rentable.");
 	c.get("Language.Residence.ForRentSuccess", "&eResidence &6%1 &eis now for rent for &6%2 &eevery &6%3 &edays.");
 	c.get("Language.Residence.RentSuccess", "&eYou have rented Residence &6%1 &efor &6%2 &edays.");
+	c.get("Language.Residence.EndingRent", "&eRent time is ending for &6%1 &eon &6%2");
 	c.get("Language.Residence.AlreadyRented", "&eResidence &6%1 &ehas currently been rented to &6%2");
 	c.get("Language.Residence.AlreadyExists", "&cA residence named &6%1 &calready exists.");
 	c.get("Language.Residence.Create", "&eYou have created residence &6%1&e!");
@@ -255,6 +256,7 @@ public class LocaleManager {
 	c.get("Language.Rent.ModifyDeny", "&cCannot modify a rented residence.");
 	c.get("Language.Rent.Days", "&eRent days: &6%1");
 	c.get("Language.Rent.Rented", " &6(Rented)");
+	c.get("Language.Rent.RentList", " &6%1&e. &6%2 &e(&6%3&e/&6%4&e/&6%5&e) - &6%6 &6%7");
 
 	c.get("Language.Rentable.Land", "&eRentable Land: &6");
 	c.get("Language.Rentable.AutoRenew", "&eRentable Auto Renew: &6%1");
@@ -279,6 +281,7 @@ public class LocaleManager {
 	c.get("Language.Economy.LeaseInfinite", "&eLease time set to infinite...");
 	c.get("Language.Economy.MarketDisabled", "&cEconomy Disabled!");
 	c.get("Language.Economy.SellAmount", "&eSell Amount: &2%1");
+	c.get("Language.Economy.SellList", " &6%1&e. &6%2 &e(&6%3&e) - &6%4");
 	c.get("Language.Economy.LeaseExpire", "&eLease Expire Time: &2%1");
 
 	c.get("Language.Expanding.North", "&eExpanding North &6%1 &eblocks");
@@ -1320,8 +1323,16 @@ public class LocaleManager {
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.Description", "Lists rentable and for sale residences.");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.Info",
-	    Arrays.asList("&eUsage: &6/res market list"));
+	    Arrays.asList("&eUsage: &6/res market list [rent/sell]"));
 
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.rent.Description", "Lists rentable residences.");
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.rent.Info",
+	    Arrays.asList("&eUsage: &6/res market list rent"));
+	
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.sell.Description", "Lists for sale residences.");
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.sell.Info",
+	    Arrays.asList("&eUsage: &6/res market list sell"));
+	
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sell.Description", "Sell a residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sell.Info",
 	    Arrays.asList("&eUsage: &6/res market sell [residence] [amount]", "Puts a residence for sale for [amount] of money.",

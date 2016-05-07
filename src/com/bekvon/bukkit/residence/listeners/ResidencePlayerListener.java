@@ -38,6 +38,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -47,6 +48,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -55,6 +57,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.ActionBar;
+import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
 
@@ -92,6 +95,32 @@ public class ResidencePlayerListener implements Listener {
 	for (Player player : Bukkit.getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+	if (!Residence.getConfigManager().isRentInformOnEnding())
+	    return;
+	final Player player = event.getPlayer();
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    public void run() {
+		if (!player.isOnline())
+		    return;
+		List<String> list = Residence.getRentManager().getRentedLandsList(player.getName());
+		if (list.isEmpty())
+		    return;
+		for (String one : list) {
+		    RentedLand rentedland = Residence.getRentManager().getRentedLand(one);
+		    if (rentedland == null)
+			continue;
+		    if (rentedland.autoRefresh)
+			continue;
+		    if (rentedland.endTime - System.currentTimeMillis() < Residence.getConfigManager().getRentInformBefore() * 60 * 24 * 7) {
+			player.sendMessage(Residence.getLM().getMessage("Residence.EndingRent", one, GetTime.getTime(rentedland.endTime)));
+		    }
+		}
+	    }
+	}, Residence.getConfigManager().getRentInformDelay() * 20L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
