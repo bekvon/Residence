@@ -351,23 +351,26 @@ public class ResidenceBlockListener implements Listener {
 
 	List<Block> blocks = Residence.getNms().getPistonRetractBlocks(event);
 
-	if (event.isSticky()) {
-	    for (Block oneBlock : blocks) {
-		FlagPermissions blockperms = Residence.getPermsByLoc(oneBlock.getLocation());
-		if (!blockperms.has("piston", true)) {
-		    event.setCancelled(true);
-		    return;
-		}
+	if (!event.isSticky())
+	    return;
+	
+	for (Block oneBlock : blocks) {
+	    FlagPermissions blockperms = Residence.getPermsByLoc(oneBlock.getLocation());
+	    if (!blockperms.has("piston", true)) {
+		event.setCancelled(true);
+		return;
 	    }
+	}
 
-	    for (Block block : blocks) {
-		ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(block.getLocation());
-		ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
-		if (blockRes == null && pistonRes != null || blockRes != null && pistonRes == null || blockRes != null && pistonRes != null && !blockRes.getName()
-		    .equalsIgnoreCase(pistonRes.getName())) {
-		    event.setCancelled(true);
-		    return;
-		}
+	ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+
+	for (Block block : blocks) {
+	    ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(block.getLocation());
+	    if (blockRes == null && pistonRes != null ||
+		blockRes != null && pistonRes == null ||
+		blockRes != null && pistonRes != null && !blockRes.getOwner().equalsIgnoreCase(pistonRes.getOwner())) {
+		event.setCancelled(true);
+		return;
 	    }
 	}
 
@@ -390,13 +393,15 @@ public class ResidenceBlockListener implements Listener {
 	    }
 	}
 
+	ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+
 	BlockFace dir = event.getDirection();
 	for (Block block : event.getBlocks()) {
 	    Location loc = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
 	    ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(loc);
-	    ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
-	    if (blockRes == null && pistonRes != null || blockRes != null && pistonRes == null || blockRes != null && pistonRes != null && !blockRes.getName()
-		.equalsIgnoreCase(pistonRes.getName())) {
+	    if (blockRes == null && pistonRes != null ||
+		blockRes != null && pistonRes == null ||
+		blockRes != null && pistonRes != null && !blockRes.getOwner().equalsIgnoreCase(pistonRes.getOwner())) {
 		event.setCancelled(true);
 		return;
 	    }

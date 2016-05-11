@@ -576,13 +576,16 @@ public class ResidenceManager implements ResidenceInterface {
 	String groupFlags = perms.listGroupFlags();
 	if (groupFlags.length() > 0)
 	    player.sendMessage(lm.getMessage("General.GroupFlags", groupFlags));
-	if (!Residence.getConfigManager().isShortInfoUse())
-	    player.sendMessage(lm.getMessage("General.OthersFlags", perms.listOtherPlayersFlags(player.getName())));
-	else {
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + perms.listOtherPlayersFlagsRaw(lm.getMessage("General.OthersFlags",
-		""),
-		player
-		    .getName()));
+	if (!Residence.getConfigManager().isShortInfoUse()) {
+	    String othersFlags = perms.listOtherPlayersFlags(player.getName());
+	    if (!othersFlags.equalsIgnoreCase(""))
+		player.sendMessage(lm.getMessage("General.OthersFlags", othersFlags));
+	} else {
+	    String othersFlags = perms.listOtherPlayersFlags(player.getName());
+	    if (!othersFlags.equalsIgnoreCase(""))
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + perms.listOtherPlayersFlagsRaw(lm.getMessage(
+		    "General.OthersFlags",
+		    ""), player.getName()));
 	}
 
 	msg = "";

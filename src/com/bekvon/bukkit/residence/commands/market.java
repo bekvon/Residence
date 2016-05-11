@@ -45,12 +45,26 @@ public class market implements cmd {
 	case "rent":
 	    return commandResMarketRent(args, resadmin, player, page);
 	case "release":
-	    if (args.length != 3)
+	case "unrent":
+	    if (args.length != 3 && args.length != 2)
 		return false;
-	    if (Residence.getRentManager().isRented(args[2]))
-		Residence.getRentManager().removeFromForRent(player, args[2], resadmin);
+
+	    String area = null;
+
+	    if (args.length == 2)
+		area = Residence.getResidenceManager().getNameByLoc(player.getLocation());
 	    else
-		Residence.getRentManager().unrent(player, args[2], resadmin);
+		area = args[2];
+
+	    if (area == null) {
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		return true;
+	    }
+
+	    if (Residence.getRentManager().isRented(area))
+		Residence.getRentManager().removeFromForRent(player, area, resadmin);
+	    else
+		Residence.getRentManager().unrent(player, area, resadmin);
 	    return true;
 
 	case "sign":
@@ -144,12 +158,25 @@ public class market implements cmd {
 		return false;
 	    }
 	    return true;
-
 	case "buy":
-	    if (args.length != 3)
+	    if (args.length == 2) {
+		String areaname = Residence.getResidenceManager().getNameByLoc(player.getLocation());
+		boolean sell = Residence.getTransactionManager().viewSaleInfo(areaname, player);
+		if (sell) {
+		    Residence.getTransactionManager().buyPlot(areaname, player, resadmin);
+		} else {
+		    sender.sendMessage(Residence.getLM().getMessage("Residence.NotForRentOrSell"));
+		}
+	    } else if (args.length == 3) {
+		boolean sell = Residence.getTransactionManager().viewSaleInfo(args[2], player);
+		if (sell) {
+		    Residence.getTransactionManager().buyPlot(args[2], player, resadmin);
+		} else {
+		    sender.sendMessage(Residence.getLM().getMessage("Residence.NotForRentOrSell"));
+		}
+	    } else {
 		return false;
-
-	    Residence.getTransactionManager().buyPlot(args[2], player, resadmin);
+	    }
 	    return true;
 
 	case "unsell":
@@ -178,11 +205,15 @@ public class market implements cmd {
     }
 
     private boolean commandResMarketRent(String[] args, boolean resadmin, Player player, int page) {
-	if (args.length < 3 || args.length > 4) {
+	if (args.length < 2 || args.length > 4) {
 	    return false;
 	}
 	boolean repeat = false;
+
+	String area = null;
+
 	if (args.length == 4) {
+	    area = args[2];
 	    if (args[3].equalsIgnoreCase("t") || args[3].equalsIgnoreCase("true")) {
 		repeat = true;
 	    } else if (!args[3].equalsIgnoreCase("f") && !args[3].equalsIgnoreCase("false")) {
@@ -190,7 +221,15 @@ public class market implements cmd {
 		return true;
 	    }
 	}
-	Residence.getRentManager().rent(player, args[2], repeat, resadmin);
+
+	if (args.length == 2)
+	    area = Residence.getResidenceManager().getNameByLoc(player.getLocation());
+
+	if (area != null)
+	    Residence.getRentManager().rent(player, area, repeat, resadmin);
+	else
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+
 	return true;
     }
 

@@ -40,16 +40,18 @@ public class RentManager implements MarketRentInterface {
     public List<String> getRentedLands(String playername) {
 	List<String> rentedLands = new ArrayList<String>();
 	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
-	    if (oneland.getValue().player.equals(playername)) {
-		ClaimedResidence res = Residence.getResidenceManager().getByName(oneland.getKey());
-		String world = " ";
-		if (res != null) {
-		    res = res.getTopParent();
-		    world = res.getWorld();
-		}
-		rentedLands.add(Residence.getLM().getMessage("Residence.List", "", oneland.getKey(), world)
-		    + Residence.getLM().getMessage("Rent.Rented"));
+	    if (!oneland.getValue().player.equals(playername))
+		continue;
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(oneland.getKey());
+	    String world = " ";
+	    if (res != null) {
+		res = res.getTopParent();
+		world = res.getWorld();
 	    }
+	    rentedLands.add(Residence.getLM().getMessage("Residence.List", "", oneland.getKey(), world)
+		+ Residence.getLM().getMessage("Rent.Rented"));
+
 	}
 	return rentedLands;
     }
@@ -57,13 +59,14 @@ public class RentManager implements MarketRentInterface {
     public List<String> getRentedLandsList(String playername) {
 	List<String> rentedLands = new ArrayList<String>();
 	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
-	    if (oneland.getValue().player.equals(playername)) {
-		ClaimedResidence res = Residence.getResidenceManager().getByName(oneland.getKey());
-		if (res != null)
-		    res = res.getTopParent();
+	    if (!oneland.getValue().player.equals(playername))
+		continue;
 
-		rentedLands.add(oneland.getKey());
-	    }
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(oneland.getKey());
+	    if (res != null)
+		res = res.getTopParent();
+
+	    rentedLands.add(oneland.getKey());
 	}
 	return rentedLands;
     }
@@ -186,6 +189,9 @@ public class RentManager implements MarketRentInterface {
     }
 
     public void removeFromForRent(Player player, String landName, boolean resadmin) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
+
 	RentedLand rent = rentedLand.get(landName);
 	if (rent == null) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.NotRented"));
@@ -228,13 +234,14 @@ public class RentManager implements MarketRentInterface {
 	}
 
 	landName = res.getName();
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
 
 	if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
 	}
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
-	    landName = landName.toLowerCase();
+
 	if (rentedLand.containsKey(landName) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyRented", landName, rentedLand.get(landName).player));
 	    return;
@@ -260,13 +267,16 @@ public class RentManager implements MarketRentInterface {
     }
 
     public void removeFromRent(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
 	rentedLand.remove(landName);
     }
 
     public void removeRentable(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
 	removeFromRent(landName);
 	rentableLand.remove(landName);
-
 	Residence.getSignUtil().removeSign(landName);
     }
 
@@ -360,6 +370,10 @@ public class RentManager implements MarketRentInterface {
     }
 
     public void setRentRepeatable(Player player, String landName, boolean value, boolean resadmin) {
+
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
+
 	String[] split = landName.split("\\.");
 	RentableLand land = rentableLand.get(landName);
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
@@ -378,6 +392,10 @@ public class RentManager implements MarketRentInterface {
     }
 
     public void setRentedRepeatable(Player player, String landName, boolean value, boolean resadmin) {
+
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
+
 	String[] split = landName.split("\\.");
 	RentedLand land = rentedLand.get(landName);
 	if (land != null && (land.player.equals(player.getName()) || resadmin)) {
@@ -390,6 +408,10 @@ public class RentManager implements MarketRentInterface {
     }
 
     public void printRentInfo(Player player, String landName) {
+
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
+
 	RentableLand rentable = rentableLand.get(landName);
 	RentedLand rented = rentedLand.get(landName);
 	if (rentable != null) {

@@ -7,7 +7,6 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -91,6 +90,9 @@ public class TransactionManager implements MarketBuyInterface {
 
 	areaname = area.getName();
 
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
+	    areaname = areaname.toLowerCase();
+	
 	if (!area.isOwner(player) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
@@ -107,6 +109,7 @@ public class TransactionManager implements MarketBuyInterface {
     }
 
     public boolean putForSale(String areaname, int amount) {
+	
 	if (Residence.getConfigManager().enabledRentSystem()) {
 	    if (Residence.getRentManager().isForRent(areaname)) {
 		return false;
@@ -118,6 +121,9 @@ public class TransactionManager implements MarketBuyInterface {
 	}
 
 	areaname = area.getName();
+
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
+	    areaname = areaname.toLowerCase();
 
 	if (sellAmount.containsKey(areaname)) {
 	    return false;
@@ -148,6 +154,9 @@ public class TransactionManager implements MarketBuyInterface {
 	    }
 
 	    areaname = res.getName();
+
+	    if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
+		areaname = areaname.toLowerCase();
 
 	    if (res.getPermissions().getOwner().equals(player.getName())) {
 		player.sendMessage(Residence.getLM().getMessage("Economy.OwnerBuyFail"));
@@ -233,15 +242,21 @@ public class TransactionManager implements MarketBuyInterface {
     }
 
     public void removeFromSale(String areaname) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
+	    areaname = areaname.toLowerCase();
 	sellAmount.remove(areaname);
 	Residence.getSignUtil().removeSign(areaname);
     }
 
     public boolean isForSale(String areaname) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
+	    areaname = areaname.toLowerCase();
 	return sellAmount.containsKey(areaname);
     }
 
     public boolean viewSaleInfo(String areaname, Player player) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
+	    areaname = areaname.toLowerCase();
 	if (!sellAmount.containsKey(areaname))
 	    return false;
 
@@ -318,8 +333,10 @@ public class TransactionManager implements MarketBuyInterface {
 	System.out.println("[Residence] - ReInit land selling.");
     }
 
-    public int getSaleAmount(String name) {
-	return sellAmount.get(name);
+    public int getSaleAmount(String areaname) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
+	    areaname = areaname.toLowerCase();
+	return sellAmount.get(areaname);
     }
 
     public Map<String, Integer> save() {
