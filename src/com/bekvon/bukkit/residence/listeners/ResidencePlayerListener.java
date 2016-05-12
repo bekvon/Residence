@@ -960,7 +960,7 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
 	if (res != null) {
 	    if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
-		.getCause() == TeleportCause.PLUGIN || Residence.getNms().isChorusTeleport(event.getCause())) {
+		.getCause() == TeleportCause.PLUGIN) {
 		String areaname = res.getName();
 		if (!res.getPermissions().playerHas(player.getName(), "move", true) && !res.isOwner(player)) {
 		    event.setCancelled(true);
@@ -975,7 +975,8 @@ public class ResidencePlayerListener implements Listener {
 		    return;
 		}
 	    }
-	    if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND && Residence.getConfigManager().isBlockAnyTeleportation()) {
+	    if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND && Residence.getConfigManager().isBlockAnyTeleportation()
+		|| Residence.getNms().isChorusTeleport(event.getCause())) {
 		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
 		    String areaname = res.getName();
 		    event.setCancelled(true);
