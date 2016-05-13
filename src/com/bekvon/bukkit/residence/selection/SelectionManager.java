@@ -24,7 +24,6 @@ public class SelectionManager {
     protected Server server;
     private Residence plugin;
 
-    public static Integer id;
     public static HashMap<String, Long> normalPrintMap = new HashMap<String, Long>();
     public static HashMap<String, Long> errorPrintMap = new HashMap<String, Long>();
     public static HashMap<String, Integer> normalIDMap = new HashMap<String, Integer>();
@@ -91,6 +90,14 @@ public class SelectionManager {
 
     public Location getPlayerLoc2(String player) {
 	return playerLoc2.get(player);
+    }
+
+    public CuboidArea getSelectionCuboid(Player player) {
+	return getSelectionCuboid(player.getName());
+    }
+
+    public CuboidArea getSelectionCuboid(String player) {
+	return new CuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
     }
 
     public boolean hasPlacedBoth(String player) {

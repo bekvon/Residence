@@ -87,8 +87,7 @@ public class contract implements cmd {
 		    Residence.getSelectionManager().worldEdit(player);
 		}
 	    }
-	    res.replaceArea(player, new CuboidArea(Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager().getPlayerLoc2(player
-		.getName())), areaName, resadmin);
+	    res.replaceArea(player, Residence.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
 	    return true;
 	} else {
 	    player.sendMessage(Residence.getLM().getMessage("Select.Points"));

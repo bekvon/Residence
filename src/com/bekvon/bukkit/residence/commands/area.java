@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 public class area implements cmd {
 
@@ -43,8 +42,7 @@ public class area implements cmd {
 		if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
 		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
 		    if (res != null) {
-			res.addArea(player, new CuboidArea(Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager().getPlayerLoc2(
-			    player.getName())), args[3], resadmin);
+			res.addArea(player, Residence.getSelectionManager().getSelectionCuboid(player), args[3], resadmin);
 		    } else {
 			player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 		    }
@@ -61,8 +59,7 @@ public class area implements cmd {
 		if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
 		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
 		    if (res != null) {
-			res.replaceArea(player, new CuboidArea(Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager()
-			    .getPlayerLoc2(player.getName())), args[3], resadmin);
+			res.replaceArea(player, Residence.getSelectionManager().getSelectionCuboid(player), args[3], resadmin);
 		    } else {
 			player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 		    }

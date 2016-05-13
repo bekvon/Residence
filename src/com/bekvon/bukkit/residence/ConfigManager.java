@@ -170,6 +170,7 @@ public class ConfigManager {
 
     // DynMap
     public boolean DynMapUse;
+    public boolean DynMapShowFlags;
     public boolean DynMapLayer3dRegions;
     public int DynMapLayerSubZoneDepth;
     public String DynMapBorderColor;
@@ -818,13 +819,15 @@ public class ConfigManager {
 
 	c.getW().addComment("DynMap.Use", "Enables or disable DynMap Support");
 	DynMapUse = c.get("DynMap.Use", false);
+	c.getW().addComment("DynMap.ShowFlags", "Shows or hides residence flags");
+	DynMapShowFlags = c.get("DynMap.ShowFlags", true);
 
 	c.getW().addComment("DynMap.Layer.3dRegions", "Enables 3D zones");
 	DynMapLayer3dRegions = c.get("DynMap.Layer.3dRegions", true);
 	c.getW().addComment("DynMap.Layer.SubZoneDepth", "How deep to go into subzones to show");
 	DynMapLayerSubZoneDepth = c.get("DynMap.Layer.SubZoneDepth", 2);
 
-	c.getW().addComment("DynMap.Border.Color", "Color of border. Pick color for this page http://www.w3schools.com/colors/colors_picker.asp");
+	c.getW().addComment("DynMap.Border.Color", "Color of border. Pick color from this page http://www.w3schools.com/colors/colors_picker.asp");
 	DynMapBorderColor = c.get("DynMap.Border.Color", "#FF0000");
 	c.getW().addComment("DynMap.Border.Opacity", "Transparency. 0.3 means that only 30% of color will be visible");
 	DynMapBorderOpacity = c.get("DynMap.Border.Opacity", 0.3);

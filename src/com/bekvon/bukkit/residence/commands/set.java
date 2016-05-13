@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 import com.bekvon.bukkit.residence.gui.SetFlag;
-import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class set implements cmd {
@@ -35,35 +34,26 @@ public class set implements cmd {
 		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    }
 	    return true;
-	} else if (args.length == 1 && Residence.getConfigManager().useFlagGUI()) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
-	    if (res != null) {
-		if (!res.isOwner(player) && !resadmin) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
-		    return true;
-		}
-		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
-		flag.recalculateResidence(res);
-		player.closeInventory();
-		ResidencePlayerListener.GUI.put(player.getName(), flag);
-		player.openInventory(flag.getInventory());
-	    } else
+	} else if ((args.length == 1 || args.length == 2) && Residence.getConfigManager().useFlagGUI()) {
+	    ClaimedResidence res = null;
+	    if (args.length == 1)
+		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    else
+		res = Residence.getResidenceManager().getByName(args[1]);
+	    if (res == null) {
+
 		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
-	    return true;
-	} else if (args.length == 2 && Residence.getConfigManager().useFlagGUI()) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
-	    if (res != null) {
-		if (!res.isOwner(player) && !resadmin) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
-		    return true;
-		}
-		SetFlag flag = new SetFlag(res.getName(), player, resadmin);
-		flag.recalculateResidence(res);
-		player.closeInventory();
-		ResidencePlayerListener.GUI.put(player.getName(), flag);
-		player.openInventory(flag.getInventory());
-	    } else
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		return true;
+	    }
+	    if (!res.isOwner(player) && !resadmin) {
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		return true;
+	    }
+	    SetFlag flag = new SetFlag(res.getName(), player, resadmin);
+	    flag.recalculateResidence(res);
+	    player.closeInventory();	   
+	    Residence.getPlayerListener().getGUImap().put(player.getName(), flag);
+	    player.openInventory(flag.getInventory());
 	    return true;
 	}
 	return false;

@@ -70,8 +70,9 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean hasApplicableFlag(String player, String flag) {
-	return super.inheritanceIsPlayerSet(player, flag) || super.inheritanceIsGroupSet(Residence.getPermissionManager().getGroupNameByPlayer(player, world), flag)
-	    || super.inheritanceIsSet(flag);
+	return super.inheritanceIsPlayerSet(player, flag) ||
+	    super.inheritanceIsGroupSet(Residence.getPermissionManager().getGroupNameByPlayer(player, world), flag) ||
+	    super.inheritanceIsSet(flag);
     }
 
     public void applyTemplate(Player player, FlagPermissions list, boolean resadmin) {
@@ -159,7 +160,7 @@ public class ResidencePermissions extends FlagPermissions {
 		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return false;
 	    }
-	    if (!hasFlagAccess(this.getOwner(), flag)) {
+	    if (!hasFlagAccess(this.getOwner(), flag) && !player.hasPermission("residence.flag." + flag.toLowerCase())) {
 		player.sendMessage(Residence.getLM().getMessage("Flag.SetFailed", flag));
 		return false;
 	    }

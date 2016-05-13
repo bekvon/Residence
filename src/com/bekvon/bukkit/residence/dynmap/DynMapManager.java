@@ -74,8 +74,11 @@ public class DynMapManager {
 	    return null;
 	String v =
 	    "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br /> "
-		+ ChatColor.stripColor(Residence.getLM().getMessage("General.Owner", "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
-		+ ChatColor.stripColor(Residence.getLM().getMessage("General.Flags", "")) + "<br /><span style=\"font-weight:bold;\">%flags%</span></div></div>";
+		+ ChatColor.stripColor(Residence.getLM().getMessage("General.Owner", "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />";
+
+	if (Residence.getConfigManager().DynMapShowFlags)
+	    v += ChatColor.stripColor(Residence.getLM().getMessage("General.Flags", "")) + "<br /><span style=\"font-weight:bold;\">%flags%</span>";
+	v += "</div></div>";
 
 	if (Residence.getRentManager().isForRent(res.getName()))
 	    v = "<div class=\"regioninfo\"><div class=\"infowindow\">"

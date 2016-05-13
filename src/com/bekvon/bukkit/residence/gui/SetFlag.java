@@ -50,7 +50,7 @@ public class SetFlag {
 	return this.admin;
     }
 
-    public void setTargePlayer(String player) {
+    public void setTargetPlayer(String player) {
 	this.targetPlayer = player;
     }
 

@@ -85,6 +85,10 @@ public class ResidencePlayerListener implements Listener {
 	this.plugin = plugin;
     }
 
+    public Map<String, SetFlag> getGUImap() {
+	return GUI;
+    }
+
     public void reload() {
 	currentRes = new HashMap<String, String>();
 	lastUpdate = new HashMap<String, Long>();
