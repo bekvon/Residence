@@ -153,7 +153,7 @@ public class FlagPermissions {
 	addFlag("dye");
 
 	addFlag("enderpearl");
-	
+
 	// Horse riding
 	addFlag("riding");
 
@@ -221,14 +221,13 @@ public class FlagPermissions {
 
 	// Auto respawn player
 	addResidenceOnlyFlag("respawn");
-	
+
 	addResidenceOnlyFlag("iceform");
 	addResidenceOnlyFlag("icemelt");
-	
+
 	addResidenceOnlyFlag("snowball");
 
 	addPlayerOrGroupOnlyFlag("admin");
-	
 
 	Residence.getConfigManager().UpdateGroupedFlagsFile();
 
@@ -724,10 +723,10 @@ public class FlagPermissions {
 	return FlagPermissions.validAreaFlags;
     }
 
-    public List<String> getPosibleFlags(boolean residence, boolean resadmin) {
+    public List<String> getPosibleFlags(Player player, boolean residence, boolean resadmin) {
 	List<String> flags = new ArrayList<String>();
 	for (Entry<String, Boolean> one : Residence.getPermissionManager().getAllFlags().getFlags().entrySet()) {
-	    if (!one.getValue() && !resadmin)
+	    if (!one.getValue() && !resadmin && !player.hasPermission("residence.flag." + one.getKey().toLowerCase()))
 		continue;
 
 	    if (!residence && !getposibleFlags().contains(one.getKey()))

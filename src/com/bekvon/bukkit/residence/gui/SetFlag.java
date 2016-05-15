@@ -143,7 +143,7 @@ public class SetFlag {
 
     public void recalculateResidence(ClaimedResidence res) {
 
-	List<String> flags = res.getPermissions().getPosibleFlags(true, this.admin);
+	List<String> flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
 	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
 	LinkedHashMap<String, Integer> TempPermMap = new LinkedHashMap<String, Integer>();
 	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
@@ -274,7 +274,7 @@ public class SetFlag {
 
 	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
 
-	List<String> flags = res.getPermissions().getPosibleFlags(false, this.admin);
+	List<String> flags = res.getPermissions().getPosibleFlags(player, false, this.admin);
 	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
 
 	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {

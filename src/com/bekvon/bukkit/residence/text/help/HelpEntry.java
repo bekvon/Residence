@@ -166,7 +166,7 @@ public class HelpEntry {
 	    } else {
 		if (GlobalFlags.getFlags().containsKey(entry.getName().toLowerCase())) {
 		    Boolean state = GlobalFlags.getFlags().get(entry.getName().toLowerCase());
-		    if (!state && !resadmin) {
+		    if (!state && !resadmin && !sender.hasPermission("residence.flag." + entry.getName().toLowerCase())) {
 			continue;
 		    }
 
