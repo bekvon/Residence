@@ -78,6 +78,7 @@ import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
+import com.bekvon.bukkit.residence.utils.Sorting;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.utils.YmlMaker;
@@ -142,6 +143,7 @@ public class Residence extends JavaPlugin {
     protected static ShopSignUtil ShopSignUtilManager;
     protected static RandomTp RandomTpManager;
     protected static DynMapManager DynManager;
+    protected static Sorting SortingManager;
 
     protected boolean firstenable = true;
     protected static EconomyInterface economy;
@@ -646,6 +648,8 @@ public class Residence extends JavaPlugin {
 	    NewLanguageManager = new Language(this);
 	    getLM().LanguageReload();
 
+	    SortingManager = new Sorting();
+
 	    if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
 		getServer().getPluginManager().registerEvents(spigotlistener, this);
 
@@ -792,6 +796,10 @@ public class Residence extends JavaPlugin {
 
     public static DynMapManager getDynManager() {
 	return DynManager;
+    }
+
+    public static Sorting getSortingManager() {
+	return SortingManager;
     }
 
     public static RandomTp getRandomTpManager() {

@@ -178,12 +178,12 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onFlagGuiClick(InventoryClickEvent event) {
-	if (GUI.size() == 0)
+	if (this.getGUImap().size() == 0)
 	    return;
 
 	Player player = (Player) event.getWhoClicked();
 
-	if (!GUI.containsKey(player.getName()))
+	if (!this.getGUImap().containsKey(player.getName()))
 	    return;
 
 	event.setCancelled(true);
@@ -192,7 +192,7 @@ public class ResidencePlayerListener implements Listener {
 	if (slot > 53 || slot < 0)
 	    return;
 
-	SetFlag setFlag = GUI.get(player.getName());
+	SetFlag setFlag = this.getGUImap().get(player.getName());
 	ClickType click = event.getClick();
 	InventoryAction action = event.getAction();
 	setFlag.toggleFlag(slot, click, action);
@@ -202,12 +202,12 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onFlagGuiClose(InventoryCloseEvent event) {
-	if (GUI.isEmpty())
+	if (this.getGUImap().isEmpty())
 	    return;
 	HumanEntity player = event.getPlayer();
-	if (!GUI.containsKey(player.getName()))
+	if (!this.getGUImap().containsKey(player.getName()))
 	    return;
-	GUI.remove(player.getName());
+	this.getGUImap().remove(player.getName());
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -452,6 +452,9 @@ public class ResidencePlayerListener implements Listener {
 	case DIODE:
 	case DIODE_BLOCK_OFF:
 	case DIODE_BLOCK_ON:
+	case REDSTONE_COMPARATOR:
+	case REDSTONE_COMPARATOR_OFF:
+	case REDSTONE_COMPARATOR_ON:
 	case BED_BLOCK:
 	case WORKBENCH:
 	case BREWING_STAND:
@@ -623,6 +626,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Material mat = block.getType();
+
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || Residence.getNms().isCanUseEntity_BothClick(mat, block))) {
 	    if (heldItemId != Residence.getConfigManager().getSelectionTooldID() && heldItemId != Residence.getConfigManager().getInfoToolID() && heldItemId != 351
@@ -758,6 +762,52 @@ public class ResidencePlayerListener implements Listener {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
 	    event.setCancelled(true);
 	} else if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "riding", false)) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "riding", res.getName()));
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerInteractWithMinecartStorage(PlayerInteractEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+	Player player = event.getPlayer();
+	if (Residence.isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getRightClicked();
+
+	if (ent.getType() != EntityType.MINECART_CHEST && ent.getType() != EntityType.MINECART_HOPPER)
+	    return;
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	if (res == null)
+	    return;
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "container", true)) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerInteractWithMinecart(PlayerInteractEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+	Player player = event.getPlayer();
+	if (Residence.isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getRightClicked();
+
+	if (ent.getType() != EntityType.MINECART)
+	    return;
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	if (res == null)
+	    return;
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "riding", false)) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "riding", res.getName()));
 	    event.setCancelled(true);
 	}

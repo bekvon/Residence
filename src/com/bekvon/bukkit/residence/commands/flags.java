@@ -16,7 +16,10 @@ public class flags implements cmd {
 	    }
 	} catch (Exception ex) {
 	}
-	Bukkit.dispatchCommand(sender, "res flags ? " + page);
+	if (resadmin)
+	    Bukkit.dispatchCommand(sender, "resadmin flags ? " + page);
+	else
+	    Bukkit.dispatchCommand(sender, "res flags ? " + page);
 	return true;
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Sorting {
-    public static Map<String, Integer> sortByValueDESC(Map<String, Integer> unsortMap) {
+    public Map<String, Integer> sortByValueDESC(Map<String, Integer> unsortMap) {
 
 	// Convert Map to List
 	List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());
@@ -29,8 +29,8 @@ public class Sorting {
 	}
 	return sortedMap;
     }
-    
-    public static Map<String, Integer> sortByKeyDESC(Map<String, Integer> unsortMap) {
+
+    public Map<String, Integer> sortByKeyDESC(Map<String, Integer> unsortMap) {
 
 	// Convert Map to List
 	List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());
@@ -50,8 +50,8 @@ public class Sorting {
 	}
 	return sortedMap;
     }
-    
-    public static Map<String, Integer> sortByKeyASC(Map<String, Integer> unsortMap) {
+
+    public Map<String, Integer> sortByKeyASC(Map<String, Integer> unsortMap) {
 
 	// Convert Map to List
 	List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());
@@ -71,8 +71,29 @@ public class Sorting {
 	}
 	return sortedMap;
     }
-    
-    public static Map<String, Double> sortDoubleDESC(Map<String, Double> unsortMap) {
+
+    public Map<String, String> sortStringByKeyASC(Map<String, String> unsortMap) {
+
+	// Convert Map to List
+	List<Map.Entry<String, String>> list = new LinkedList<Map.Entry<String, String>>(unsortMap.entrySet());
+
+	// Sort list with comparator, to compare the Map values
+	Collections.sort(list, new Comparator<Map.Entry<String, String>>() {
+	    public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
+		return (o1.getKey()).compareTo(o2.getKey());
+	    }
+	});
+
+	// Convert sorted map back to a Map
+	Map<String, String> sortedMap = new LinkedHashMap<String, String>();
+	for (Iterator<Map.Entry<String, String>> it = list.iterator(); it.hasNext();) {
+	    Map.Entry<String, String> entry = it.next();
+	    sortedMap.put(entry.getKey(), entry.getValue());
+	}
+	return sortedMap;
+    }
+
+    public Map<String, Double> sortDoubleDESC(Map<String, Double> unsortMap) {
 
 	// Convert Map to List
 	List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(unsortMap.entrySet());
@@ -93,8 +114,7 @@ public class Sorting {
 	return sortedMap;
     }
 
-
-    public static Map<String, Integer> sortASC(Map<String, Integer> unsortMap) {
+    public Map<String, Integer> sortASC(Map<String, Integer> unsortMap) {
 
 	// Convert Map to List
 	List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());

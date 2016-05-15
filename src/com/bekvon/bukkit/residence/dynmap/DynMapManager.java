@@ -50,6 +50,7 @@ public class DynMapManager {
 	schedId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
 	    public void run() {
 		schedId = -1;
+
 		handleResidenceAdd(res.getName(), res, resareas, deep);
 		return;
 	    }
@@ -203,6 +204,12 @@ public class DynMapManager {
 	if (res == null)
 	    return;
 
+	boolean hidden = res.getPermissions().has("hidden", false);
+	if (hidden && Residence.getConfigManager().DynMapHideHidden) {
+	    fireUpdateRemove(res, depth);
+	    return;
+	}
+
 	for (Entry<String, CuboidArea> oneArea : res.getAreaMap().entrySet()) {
 
 	    String id = oneArea.getKey() + "." + resid;
@@ -229,6 +236,7 @@ public class DynMapManager {
 	    z[0] = l0.getZ();
 	    x[1] = l1.getX() + 1.0;
 	    z[1] = l1.getZ() + 1.0;
+
 	    AreaMarker marker = null;
 
 	    if (resareas.containsKey(id)) {
@@ -242,7 +250,7 @@ public class DynMapManager {
 		return;
 
 	    if (Residence.getConfigManager().DynMapLayer3dRegions)
-		marker.setRangeY(l1.getY() + 1.0, l0.getY());
+		marker.setRangeY(Math.min(l0.getY(), l1.getY()), Math.max(l0.getY(), l1.getY()));
 
 	    marker.setDescription(desc);
 	    addStyle(resid, marker);

@@ -21,7 +21,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Sorting;
 
 public class SetFlag {
 
@@ -177,7 +176,7 @@ public class SetFlag {
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
 
-	TempPermMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(TempPermMap);
+	TempPermMap = (LinkedHashMap<String, Integer>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
 
 	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
 
@@ -325,7 +324,7 @@ public class SetFlag {
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
 
-	TempPermMap = (LinkedHashMap<String, Integer>) Sorting.sortByKeyASC(TempPermMap);
+	TempPermMap = (LinkedHashMap<String, Integer>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
 
 	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
 

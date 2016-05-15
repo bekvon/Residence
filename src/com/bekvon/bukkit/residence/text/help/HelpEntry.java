@@ -10,14 +10,15 @@ import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.command.CommandSender;
@@ -125,7 +126,8 @@ public class HelpEntry {
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + NextPage : "/" + baseCmd + " ? " + NextPage;
-	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
+	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
 	if (sender instanceof Player)
@@ -148,11 +150,9 @@ public class HelpEntry {
 	    helplines.add(new HelpLines(null, one));
 	}
 
-//	helplines.addAll(Arrays.asList(lines));
-//	if (subentrys.size() > 0)
-//	    helplines.add(ChatColor.LIGHT_PURPLE + "---" + Residence.getLanguage().getPhrase("SubCommands") + "---");
-
 	FlagPermissions GlobalFlags = Residence.getPermissionManager().getAllFlags();
+
+	Map<String, String> unsortMap = new HashMap<String, String>();
 
 	for (HelpEntry entry : subentrys) {
 
@@ -162,17 +162,32 @@ public class HelpEntry {
 
 		if (!ResidenceCommandListener.getAdminCommands().contains(entry.getName().toLowerCase()) && resadmin)
 		    continue;
+
 	    } else {
 		if (GlobalFlags.getFlags().containsKey(entry.getName().toLowerCase())) {
 		    Boolean state = GlobalFlags.getFlags().get(entry.getName().toLowerCase());
 		    if (!state && !resadmin) {
 			continue;
 		    }
+
+		    // adding flag name and description for later sorting
+		    unsortMap.put(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + entry.getDescription());
+		    continue;
 		}
 	    }
 
 	    helplines.add(new HelpLines(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + entry.getDescription()));
 	}
+
+	if (!unsortMap.isEmpty()) {
+	    // Sorting flags help page by alphabet
+	    unsortMap = Residence.getSortingManager().sortStringByKeyASC(unsortMap);
+	    // Converting HashMap to helplines
+	    for (Entry<String, String> one : unsortMap.entrySet()) {
+		helplines.add(new HelpLines(one.getKey(), one.getValue()));
+	    }
+	}
+
 	return helplines;
     }
 

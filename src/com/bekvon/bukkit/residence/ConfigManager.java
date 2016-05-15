@@ -171,6 +171,7 @@ public class ConfigManager {
     // DynMap
     public boolean DynMapUse;
     public boolean DynMapShowFlags;
+    public boolean DynMapHideHidden;
     public boolean DynMapLayer3dRegions;
     public int DynMapLayerSubZoneDepth;
     public String DynMapBorderColor;
@@ -821,6 +822,8 @@ public class ConfigManager {
 	DynMapUse = c.get("DynMap.Use", false);
 	c.getW().addComment("DynMap.ShowFlags", "Shows or hides residence flags");
 	DynMapShowFlags = c.get("DynMap.ShowFlags", true);
+	c.getW().addComment("DynMap.HideHidden", "If set true, residence with hidden flag set to true will be hidden from dynmap");
+	DynMapHideHidden = c.get("DynMap.HideHidden", true);
 
 	c.getW().addComment("DynMap.Layer.3dRegions", "Enables 3D zones");
 	DynMapLayer3dRegions = c.get("DynMap.Layer.3dRegions", true);
