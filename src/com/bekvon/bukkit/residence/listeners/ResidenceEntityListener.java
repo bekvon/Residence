@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -44,7 +42,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.potion.PotionEffect;
@@ -383,6 +380,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
+
 	// disabling event on world
 	Player player = event.getPlayer();
 	if (player == null)
@@ -397,26 +395,24 @@ public class ResidenceEntityListener implements Listener {
 	String world = player.getWorld().getName();
 	if (!perms.playerHas(pname, world, "place", perms.playerHas(pname, world, "build", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "place"));
 	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onHangingBreak(HangingBreakEvent event) {
+    public void onHangingBreak(HangingBreakByEntityEvent event) {
+
 	// disabling event on world
 	Hanging ent = event.getEntity();
 	if (ent == null)
 	    return;
 	if (Residence.isDisabledWorldListener(ent.getWorld()))
 	    return;
-	if (!(event instanceof HangingBreakByEntityEvent))
+
+	if (!(event.getRemover() instanceof Player))
 	    return;
 
-	HangingBreakByEntityEvent evt = (HangingBreakByEntityEvent) event;
-	if (!(evt.getRemover() instanceof Player))
-	    return;
-
-	Player player = (Player) evt.getRemover();
+	Player player = (Player) event.getRemover();
 	if (Residence.isResAdminOn(player))
 	    return;
 
@@ -425,7 +421,7 @@ public class ResidenceEntityListener implements Listener {
 	String world = ent.getWorld().getName();
 	if (!perms.playerHas(pname, world, "destroy", perms.playerHas(pname, world, "build", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "destroy"));
 	}
     }
 
@@ -669,6 +665,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
@@ -685,11 +682,17 @@ public class ResidenceEntityListener implements Listener {
 	} else if ((dmgr instanceof Projectile) && (!(((Projectile) dmgr).getShooter() instanceof Player))) {
 	    Location loc = event.getEntity().getLocation();
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-	    if (res != null && !res.getPermissions().has("container", true)) {
+	    if (res != null && !res.getPermissions().has("destroy", true)) {
+		event.setCancelled(true);
+	    }
+	    return;
+	} else if (dmgr.getType() == EntityType.PRIMED_TNT || dmgr.getType() == EntityType.MINECART_TNT) {
+	    FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+	    boolean destroy = perms.has("explode", false);
+	    if (!destroy) {
 		event.setCancelled(true);
 		return;
-	    } else
-		return;
+	    }
 	}
 
 	Location loc = event.getEntity().getLocation();
@@ -697,7 +700,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (isMonster(dmgr) && !res.getPermissions().has("container", false)) {
+	if (isMonster(dmgr) && !res.getPermissions().has("destroy", false)) {
 	    event.setCancelled(true);
 	    return;
 	}
@@ -708,9 +711,9 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isResAdminOn(player))
 	    return;
 
-	if (!res.getPermissions().playerHas(player.getName(), "container", false)) {
+	if (!res.getPermissions().playerHas(player.getName(), "destroy", false)) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "destroy", res.getName()));
 	}
     }
 
@@ -767,7 +770,6 @@ public class ResidenceEntityListener implements Listener {
 		    attacker = (Player) ((Projectile) damager).getShooter();
 		}
 		if (!srcpvp && !isSnowBall || !allowSnowBall && isSnowBall) {
-		    Debug.D("heres");
 		    attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 		    event.setCancelled(true);
 		    return;

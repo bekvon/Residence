@@ -441,6 +441,7 @@ public class ResidencePlayerListener implements Listener {
 
     @SuppressWarnings("deprecation")
     private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
+
 	switch (mat) {
 	case ITEM_FRAME:
 	case BEACON:
@@ -473,6 +474,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerFireInteract(PlayerInteractEvent event) {
+
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -723,6 +725,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerTradeEntity(PlayerInteractEntityEvent event) {
+
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -865,6 +868,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerItemFrameInteract(PlayerInteractEntityEvent event) {
+
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
