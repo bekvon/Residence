@@ -459,6 +459,8 @@ public class ResidencePlayerListener implements Listener {
 	case WORKBENCH:
 	case BREWING_STAND:
 	case ENCHANTMENT_TABLE:
+	case DAYLIGHT_DETECTOR:
+	case DAYLIGHT_DETECTOR_INVERTED:
 	    return true;
 	default:
 	    return Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));

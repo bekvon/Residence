@@ -261,6 +261,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR, "diode");
 	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_OFF, "diode");
 	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_ON, "diode");
+	addMaterialToUseFlag(Material.DAYLIGHT_DETECTOR, "diode");
 	addMaterialToUseFlag(Material.WORKBENCH, "table");
 	addMaterialToUseFlag(Material.WOODEN_DOOR, "door");
 

@@ -130,6 +130,8 @@ public class v1_8 implements NMS {
 	matUseFlagList.put(Material.ACACIA_FENCE_GATE, "door");
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, "door");
 	matUseFlagList.put(Material.IRON_TRAPDOOR, "door");
+	/* 1.8 day light sensor */
+	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, "diode");
     }
 
     public boolean isPlate(Material mat) {
