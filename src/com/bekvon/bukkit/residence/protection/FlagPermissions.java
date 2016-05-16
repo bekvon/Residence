@@ -170,7 +170,6 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("burn");
 	addResidenceOnlyFlag("tnt");
 	addResidenceOnlyFlag("creeper");
-	addResidenceOnlyFlag("wither");
 	addResidenceOnlyFlag("flow");
 	addResidenceOnlyFlag("healing");
 	addResidenceOnlyFlag("feed");
@@ -184,7 +183,6 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("piston");
 	addResidenceOnlyFlag("spread");
 	addResidenceOnlyFlag("hidden");
-	addResidenceOnlyFlag("witherdamage");
 
 	addResidenceOnlyFlag("day");
 	addResidenceOnlyFlag("night");

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -166,7 +164,7 @@ public class ResidenceBlockListener implements Listener {
     public static final String SourceResidenceName = "SourceResidenceName";
 
     @EventHandler
-    public void onProjectileHit(EntityChangeBlockEvent event) {
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
 	if (event.getEntityType() != EntityType.FALLING_BLOCK)
 	    return;
 	Entity ent = event.getEntity();

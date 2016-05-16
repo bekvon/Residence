@@ -80,7 +80,6 @@ public enum GuiItems {
     trample(3, 0),
     use(70, 0),
     vehicledestroy(328, 0),
-    witherdamage(49, 0),
     waterflow(326, 0);
 
     private int id;

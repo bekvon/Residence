@@ -921,12 +921,12 @@ public class LocaleManager {
 	    "Allows or denys explosions in residences");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.explode.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
-	// witherdamage
-	FlagList.add("witherdamage");
-	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.witherdamage.Description",
-	    "Disables wither damage in residences");
-	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.witherdamage.Info",
-	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
+//	// witherdamage
+//	FlagList.add("witherdamage");
+//	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.witherdamage.Description",
+//	    "Disables wither damage in residences");
+//	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.witherdamage.Info",
+//	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// fireball
 	FlagList.add("fireball");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.fireball.Description",
