@@ -145,6 +145,29 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
+    public void WitherAnimalKilling(EntityDamageByEntityEvent event) {
+	// disabling event on world
+	Entity entity = event.getEntity();
+	if (entity == null)
+	    return;
+	if (Residence.isDisabledWorldListener(entity.getWorld()))
+	    return;
+	if (!Residence.getNms().isAnimal(entity))
+	    return;
+
+	Entity damager = event.getDamager();
+
+	if (damager instanceof Projectile && ((Projectile) damager).getShooter() instanceof Player || damager instanceof Player)
+	    return;
+
+	FlagPermissions perms = Residence.getPermsByLoc(entity.getLocation());
+	if (!perms.has("animalkilling", false)) {
+	    event.setCancelled(true);
+	    return;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
     public void OnEntityDeath(EntityDeathEvent event) {
 	// disabling event on world
 	LivingEntity ent = event.getEntity();
@@ -498,7 +521,7 @@ public class ResidenceEntityListener implements Listener {
 	    }
 	    break;
 	case WITHER_SKULL:
-	    if (!perms.has("witherdamage", perms.has("damage", true))) {
+	    if (!perms.has("witherdamage", perms.has("damage", false))) {
 		event.setCancelled(true);
 		ent.remove();
 	    }

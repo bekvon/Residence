@@ -786,13 +786,22 @@ public class ResidenceManager implements ResidenceInterface {
 		if (Residence.getConfigManager().enabledRentSystem()) {
 		    Residence.getRentManager().updateRentableName(oldName, newName);
 		}
+
+		Residence.getTransactionManager().updateRentableName(oldName, newName);
+
 		if (player != null) {
 		    player.sendMessage(Residence.getLM().getMessage("Residence.Rename", oldName, newName));
 		}
 		return true;
 	    } else {
+
 		String[] oldname = oldName.split("\\.");
 		ClaimedResidence parent = res.getParent();
+
+		if (Residence.getConfigManager().enabledRentSystem()) {
+		    Residence.getRentManager().updateRentableName(oldName, parent.getName() + "." + newName);
+		}
+
 		return parent.renameSubzone(player, oldname[oldname.length - 1], newName, resadmin);
 	    }
 	} else {

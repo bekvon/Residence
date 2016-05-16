@@ -37,6 +37,17 @@ public class TransactionManager implements MarketBuyInterface {
 	player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
 	return true;
     }
+    
+    public void updateRentableName(String oldName, String newName){
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && oldName != null && newName != null) {
+	    oldName = oldName.toLowerCase();
+	    newName = newName.toLowerCase();
+	}
+	if (sellAmount.containsKey(oldName)) {
+	    sellAmount.put(newName, sellAmount.get(oldName));
+	    sellAmount.remove(oldName);
+	}
+    }
 
     public static boolean giveEconomyMoney(Player player, int amount) {
 	if (player == null)
