@@ -489,25 +489,24 @@ public class ResidenceManager implements ResidenceInterface {
 	this.removeAllByOwner(null, owner, residences);
     }
 
-    public void removeAllByOwner(Player player, String owner) {
-	this.removeAllByOwner(player, owner, residences);
+    public void removeAllByOwner(CommandSender sender, String owner) {
+	this.removeAllByOwner(sender, owner, residences);
     }
 
-    private void removeAllByOwner(Player player, String owner, Map<String, ClaimedResidence> resholder) {
-	Iterator<ClaimedResidence> it = resholder.values().iterator();
-	while (it.hasNext()) {
-	    ClaimedResidence res = it.next();
-	    if (res.isOwner(owner)) {
-		ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
-		Residence.getServ().getPluginManager().callEvent(resevent);
-		if (resevent.isCancelled())
-		    return;
-		Residence.getPlayerManager().removeResFromPlayer(player, res.getName());
-		removeChunkList(res.getName());
-		it.remove();
-	    } else {
-		this.removeAllByOwner(player, owner, res.subzones);
-	    }
+    private void removeAllByOwner(CommandSender sender, String owner, Map<String, ClaimedResidence> resholder) {
+	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(owner);
+	for (String oneRes : list) {
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(oneRes);
+	    if (res == null)
+		continue;
+
+	    ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(sender instanceof Player ? (Player) sender : null, res, sender == null ? DeleteCause.OTHER
+		: DeleteCause.PLAYER_DELETE);
+	    Residence.getServ().getPluginManager().callEvent(resevent);
+	    if (resevent.isCancelled())
+		return;
+	    Residence.getPlayerManager().removeResFromPlayer(owner, res.getName());
+	    removeChunkList(res.getName());
 	}
     }
 

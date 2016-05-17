@@ -10,8 +10,11 @@ import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -37,8 +40,8 @@ public class TransactionManager implements MarketBuyInterface {
 	player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
 	return true;
     }
-    
-    public void updateRentableName(String oldName, String newName){
+
+    public void updateRentableName(String oldName, String newName) {
 	if (!Residence.getConfigManager().isResCreateCaseSensitive() && oldName != null && newName != null) {
 	    oldName = oldName.toLowerCase();
 	    newName = newName.toLowerCase();
@@ -103,7 +106,7 @@ public class TransactionManager implements MarketBuyInterface {
 
 	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
 	    areaname = areaname.toLowerCase();
-	
+
 	if (!area.isOwner(player) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
@@ -120,7 +123,7 @@ public class TransactionManager implements MarketBuyInterface {
     }
 
     public boolean putForSale(String areaname, int amount) {
-	
+
 	if (Residence.getConfigManager().enabledRentSystem()) {
 	    if (Residence.getRentManager().isForRent(areaname)) {
 		return false;
@@ -286,6 +289,7 @@ public class TransactionManager implements MarketBuyInterface {
 
     public void printForSaleResidences(Player player, int page) {
 	Set<Entry<String, Integer>> set = sellAmount.entrySet();
+	List<String> toRemove = new ArrayList<String>();
 	player.sendMessage(Residence.getLM().getMessage("Economy.LandForSale"));
 	StringBuilder sbuild = new StringBuilder();
 	sbuild.append(ChatColor.GREEN);
@@ -307,10 +311,17 @@ public class TransactionManager implements MarketBuyInterface {
 
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(land.getKey());
 
-	    if (res == null)
+	    if (res == null) {
+		z--;
+		toRemove.add(land.getKey());
 		continue;
+	    }
 
 	    player.sendMessage(Residence.getLM().getMessage("Economy.SellList", z, land.getKey(), land.getValue(), res.getOwner()));
+	}
+
+	for (String one : toRemove) {
+	    sellAmount.remove(one);
 	}
 
 	String separator = ChatColor.GOLD + "";

@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -50,12 +48,18 @@ import org.bukkit.potion.PotionEffect;
 
 public class ResidenceEntityListener implements Listener {
 
+    Residence plugin;
+
+    public ResidenceEntityListener(Residence plugin) {
+	this.plugin = plugin;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEndermanChangeBlock(EntityChangeBlockEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	if (event.getEntityType() != EntityType.ENDERMAN || event.getEntityType() != EntityType.WITHER)
+	if (event.getEntityType() != EntityType.ENDERMAN)
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has("destroy", true)) {
@@ -414,7 +418,6 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakByEntityEvent event) {
-
 	// disabling event on world
 	Hanging ent = event.getEntity();
 	if (ent == null)
@@ -553,7 +556,6 @@ public class ResidenceEntityListener implements Listener {
 	FlagPermissions perms = Residence.getPermsByLoc(ent.getLocation());
 	FlagPermissions world = Residence.getWorldFlags().getPerms(ent.getWorld().getName());
 
-	Debug.D("explode");
 	switch (entity) {
 	case CREEPER:
 	    if (!perms.has("creeper", perms.has("explode", true)))
@@ -600,7 +602,6 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 	}
 
-	Debug.D("explode2");
 	List<Block> preserve = new ArrayList<Block>();
 	for (Block block : event.blockList()) {
 	    FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
@@ -654,7 +655,6 @@ public class ResidenceEntityListener implements Listener {
 	    }
 	}
 
-	Debug.D("explode 3 " + preserve.size());
 	for (Block block : preserve) {
 	    event.blockList().remove(block);
 	}
@@ -709,11 +709,9 @@ public class ResidenceEntityListener implements Listener {
 	if (dmgr instanceof Player) {
 	    player = (Player) event.getDamager();
 	} else if (dmgr instanceof Projectile && ((Projectile) dmgr).getShooter() instanceof Player) {
-	    Debug.D("player shoter");
 	    player = (Player) ((Projectile) dmgr).getShooter();
 	} else if ((dmgr instanceof Projectile) && (!(((Projectile) dmgr).getShooter() instanceof Player))) {
 
-	    Debug.D("not player shoter");
 	    Location loc = event.getEntity().getLocation();
 	    FlagPermissions perm = Residence.getPermsByLoc(loc);
 

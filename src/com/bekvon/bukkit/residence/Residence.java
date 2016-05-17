@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -612,7 +613,7 @@ public class Residence extends JavaPlugin {
 
 		blistener = new ResidenceBlockListener(this);
 		plistener = new ResidencePlayerListener(this);
-		elistener = new ResidenceEntityListener();
+		elistener = new ResidenceEntityListener(this);
 		flistener = new ResidenceFixesListener();
 
 		shlistener = new ShopListener();
