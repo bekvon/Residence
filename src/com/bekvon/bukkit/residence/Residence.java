@@ -26,7 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -970,6 +970,13 @@ public class Residence extends JavaPlugin {
 	}
     }
 
+    public static boolean isResAdminOn(CommandSender sender) {
+	if (sender instanceof Player)
+	    return isResAdminOn((Player) sender);
+	else
+	    return true;
+    }
+
     public static boolean isResAdminOn(Player player) {
 	if (resadminToggle.contains(player.getName())) {
 	    return true;
@@ -1484,4 +1491,5 @@ public class Residence extends JavaPlugin {
 	    return true;
 	return false;
     }
+
 }

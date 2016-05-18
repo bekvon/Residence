@@ -12,10 +12,10 @@ public class removeall implements cmd {
 	if (args.length != 2 && args.length != 1) {
 	    return false;
 	}
-	
+
 	String target = args.length == 2 ? args[1] : sender.getName();
-	
-	if (resadmin || target.equalsIgnoreCase(sender.getName())) {
+
+	if (resadmin) {
 	    Residence.getResidenceManager().removeAllByOwner(sender, target);
 	    sender.sendMessage(Residence.getLM().getMessage("Residence.RemovePlayersResidences", target));
 	} else {

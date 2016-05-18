@@ -224,6 +224,8 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("icemelt");
 
 	addResidenceOnlyFlag("snowball");
+	
+	addResidenceOnlyFlag("pistonprotection");
 
 	addPlayerOrGroupOnlyFlag("admin");
 

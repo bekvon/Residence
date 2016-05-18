@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -356,25 +354,23 @@ public class ResidenceBlockListener implements Listener {
 	if (!event.isSticky())
 	    return;
 
-	for (Block oneBlock : blocks) {
-	    FlagPermissions blockperms = Residence.getPermsByLoc(oneBlock.getLocation());
-	    if (!blockperms.has("piston", true)) {
-		event.setCancelled(true);
-		return;
-	    }
-	}
-
 	ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
+	BlockFace dir = event.getDirection();
 	for (Block block : blocks) {
-	    ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(block.getLocation());
-	    if (blockRes != null && pistonRes == null ||
-		blockRes != null && pistonRes != null && !blockRes.getOwner().equalsIgnoreCase(pistonRes.getOwner())) {
+	    Location locFrom = block.getLocation();
+	    Location locTo = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
+	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
+	    ClaimedResidence blockTo = Residence.getResidenceManager().getByLoc(locTo);
+	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has("pistonprotection", true)) {
+		event.setCancelled(true);
+		return;
+	    } else if (blockTo != null && blockFrom != null && !blockTo.isOwner(blockFrom.getOwner()) && blockFrom.getPermissions().has(
+		"pistonprotection", true)) {
 		event.setCancelled(true);
 		return;
 	    }
 	}
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -383,29 +379,32 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("piston", true)) {
+	if (!perms.has("piston", false)) {
 	    event.setCancelled(true);
 	    return;
-	}
-	for (Block block : event.getBlocks()) {
-	    FlagPermissions blockpermsfrom = Residence.getPermsByLoc(block.getLocation());
-	    if (!blockpermsfrom.has("piston", true)) {
-		event.setCancelled(true);
-		return;
-	    }
 	}
 
 	ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
 	BlockFace dir = event.getDirection();
 	for (Block block : event.getBlocks()) {
-	    Location loc = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
-	    ClaimedResidence blockRes = Residence.getResidenceManager().getByLoc(loc);
-	    if (blockRes != null && pistonRes == null ||
-		blockRes != null && pistonRes != null && !blockRes.getOwner().equalsIgnoreCase(pistonRes.getOwner())) {
+	    Location locFrom = block.getLocation();
+	    Location locTo = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
+	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
+	    ClaimedResidence blockTo = Residence.getResidenceManager().getByLoc(locTo);
+
+	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has("pistonprotection", true)) {
+		event.setCancelled(true);
+		return;
+	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has("pistonprotection", true)) {
+		event.setCancelled(true);
+		return;
+	    } else if (blockTo != null && blockFrom != null && (pistonRes != null && !blockTo.isOwner(pistonRes.getOwner()) || !blockTo.isOwner(blockFrom.getOwner()))
+		&& blockTo.getPermissions().has("pistonprotection", true)) {
 		event.setCancelled(true);
 		return;
 	    }
+
 	}
 
     }

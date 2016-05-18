@@ -321,13 +321,13 @@ public class SelectionManager {
 	int Range = Residence.getConfigManager().getVisualizerRange();
 
 	Location loc = player.getLocation();
-	loc = loc.add(0, 0.5, 0);
-	double PLLX = loc.getX() - Range;
-	double PLLZ = loc.getZ() - Range;
-	double PLLY = loc.getY() - Range;
-	double PLHX = loc.getX() + Range;
-	double PLHZ = loc.getZ() + Range;
-	double PLHY = loc.getY() + Range;
+//	loc = loc.add(0, 0.5, 0);
+	double PLLX = loc.getBlockX() - Range;
+	double PLLZ = loc.getBlockZ() - Range;
+	double PLLY = loc.getBlockY() - Range;
+	double PLHX = loc.getBlockX() + Range;
+	double PLHZ = loc.getBlockZ() + Range;
+	double PLHY = loc.getBlockY() + Range;
 
 	if (cuboidArea.getLowLoc().getBlockX() < PLLX) {
 	    cuboidArea.getLowLoc().setX(PLLX);

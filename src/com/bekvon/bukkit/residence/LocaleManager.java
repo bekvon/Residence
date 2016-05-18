@@ -813,6 +813,12 @@ public class LocaleManager {
 	    "allow or deny pistons from pushing or pulling blocks in the residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.piston.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
+	// pistonprotection
+	FlagList.add("pistonprotection");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.pistonprotection.Description",
+	    "Enables or disabled piston block move in or out of residence");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.pistonprotection.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// hidden
 	FlagList.add("hidden");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hidden.Description",

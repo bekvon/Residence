@@ -60,6 +60,7 @@ public enum GuiItems {
     overridepvp(267, 0),
     pressure(147, 0),
     piston(33, 0),
+    pistonprotection(29, 0),
     place(169, 0),
     pvp(268, 0),
     redstone(331, 0),

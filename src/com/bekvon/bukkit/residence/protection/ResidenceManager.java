@@ -271,32 +271,32 @@ public class ResidenceManager implements ResidenceInterface {
 	return false;
     }
 
-    public void listResidences(Player player) {
-	this.listResidences(player, player.getName(), 1);
+    public void listResidences(CommandSender sender) {
+	this.listResidences(sender, sender.getName(), 1);
     }
 
-    public void listResidences(Player player, int page) {
-	this.listResidences(player, player.getName(), page);
+    public void listResidences(CommandSender sender, int page) {
+	this.listResidences(sender, sender.getName(), page);
     }
 
-    public void listResidences(Player player, String targetplayer) {
-	this.listResidences(player, targetplayer, 1);
+    public void listResidences(CommandSender sender, String targetplayer) {
+	this.listResidences(sender, targetplayer, 1);
     }
 
-    public void listResidences(Player player, String targetplayer, int page) {
-	this.listResidences(player, targetplayer, page, false);
+    public void listResidences(CommandSender sender, String targetplayer, int page) {
+	this.listResidences(sender, targetplayer, page, false);
     }
 
-    public void listResidences(Player player, int page, boolean showhidden) {
-	this.listResidences(player, player.getName(), page, showhidden);
+    public void listResidences(CommandSender sender, int page, boolean showhidden) {
+	this.listResidences(sender, sender.getName(), page, showhidden);
     }
 
-    public void listResidences(Player player, String targetplayer, int page, boolean showhidden) {
-	this.listResidences(player, targetplayer, page, showhidden, false);
+    public void listResidences(CommandSender sender, String targetplayer, int page, boolean showhidden) {
+	this.listResidences(sender, targetplayer, page, showhidden, false);
     }
 
-    public void listResidences(final Player player, final String targetplayer, final int page, boolean showhidden, boolean showsubzones) {
-	if (showhidden && !Residence.isResAdminOn(player) && !player.getName().equals(targetplayer)) {
+    public void listResidences(final CommandSender sender, final String targetplayer, final int page, boolean showhidden, boolean showsubzones) {
+	if (showhidden && !Residence.isResAdminOn(sender) && !sender.getName().equals(targetplayer)) {
 	    showhidden = false;
 	}
 	final boolean hidden = showhidden;
@@ -305,25 +305,25 @@ public class ResidenceManager implements ResidenceInterface {
 	    public void run() {
 		ArrayList<String> ownedResidences = Residence.getPlayerManager().getResidenceList(targetplayer, hidden);
 		ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer));
-		InformationPager.printInfo(player, Residence.getLM().getMessage("General.Residences") + " - " + targetplayer, ownedResidences, page);
+		InformationPager.printInfo(sender, Residence.getLM().getMessage("General.Residences") + " - " + targetplayer, ownedResidences, page);
 		return;
 	    }
 	});
     }
 
-    public void listAllResidences(Player player, int page) {
-	this.listAllResidences(player, page, false);
+    public void listAllResidences(CommandSender sender, int page) {
+	this.listAllResidences(sender, page, false);
     }
 
-    public void listAllResidences(Player player, int page, boolean showhidden) {
-	this.listAllResidences(player, page, showhidden, false);
+    public void listAllResidences(CommandSender sender, int page, boolean showhidden) {
+	this.listAllResidences(sender, page, showhidden, false);
     }
 
-    public void listAllResidences(Player player, int page, boolean showhidden, boolean showsubzones) {
-	if (showhidden && !Residence.isResAdminOn(player)) {
+    public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean showsubzones) {
+	if (showhidden && !Residence.isResAdminOn(sender)) {
 	    showhidden = false;
 	}
-	InformationPager.printInfo(player, Residence.getLM().getMessage("General.Residences"), this.getResidenceList(null, showhidden, showsubzones, true), page);
+	InformationPager.printInfo(sender, Residence.getLM().getMessage("General.Residences"), this.getResidenceList(null, showhidden, showsubzones, true), page);
     }
 
     public String[] getResidenceList() {
@@ -521,21 +521,22 @@ public class ResidenceManager implements ResidenceInterface {
 	return true;
     }
 
-    public void printAreaInfo(String areaname, Player player) {
+    public void printAreaInfo(String areaname, CommandSender sender) {
 	ClaimedResidence res = this.getByName(areaname);
 	if (res == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
 	}
 
 	areaname = res.getName();
 
-	player.sendMessage(Residence.getLM().getMessage("General.Separator"));
+	sender.sendMessage(Residence.getLM().getMessage("General.Separator"));
 
 	ResidencePermissions perms = res.getPermissions();
 	Language lm = Residence.getLM();
 
-	String aid = res.getAreaIDbyLoc(player.getLocation());
+
+
 	if (Residence.getConfigManager().enableEconomy()) {
 
 	    String msg = "&e" + Residence.getLM().getMessage("Residence.Line", areaname);
@@ -548,17 +549,20 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    msg += lm.getMessage("Bank.Name", res.getBank().getStoredMoney());
 
-	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+	    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	} else {
-	    player.sendMessage(lm.getMessage("Residence.Line", areaname));
+	    sender.sendMessage(lm.getMessage("Residence.Line", areaname));
 	}
 
 	String msg = lm.getMessage("General.World", perms.getWorld());
-
-	if (aid != null) {
+	
+//	String aid = null;
+//	if (sender instanceof Player)
+//	    aid = res.getAreaIDbyLoc(((Player) sender).getLocation());
+//	if (aid != null) {
 
 	    msg += "&6 (&3";
-	    CuboidArea area = res.getAreaByLoc(player.getLocation());
+	    CuboidArea area = res.getAreaArray()[0];
 
 	    msg += lm.getMessage("General.CoordsTop", area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 
@@ -566,46 +570,46 @@ public class ResidenceManager implements ResidenceInterface {
 	    msg += lm.getMessage("General.CoordsBottom", area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
 
 	    msg += "&6)";
-	}
-	player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+//	}
+	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 
-	player.sendMessage(lm.getMessage("General.Flags", perms.listFlags()));
-	player.sendMessage(lm.getMessage("General.YourFlags", perms.listPlayerFlags(player.getName())));
+	sender.sendMessage(lm.getMessage("General.Flags", perms.listFlags()));
+	sender.sendMessage(lm.getMessage("General.YourFlags", perms.listPlayerFlags(sender.getName())));
 
 	String groupFlags = perms.listGroupFlags();
 	if (groupFlags.length() > 0)
-	    player.sendMessage(lm.getMessage("General.GroupFlags", groupFlags));
-	if (!Residence.getConfigManager().isShortInfoUse()) {
-	    String othersFlags = perms.listOtherPlayersFlags(player.getName());
+	    sender.sendMessage(lm.getMessage("General.GroupFlags", groupFlags));
+	if (!Residence.getConfigManager().isShortInfoUse() || !(sender instanceof Player)) {
+	    String othersFlags = perms.listOtherPlayersFlags(sender.getName());
 	    if (!othersFlags.equalsIgnoreCase(""))
-		player.sendMessage(lm.getMessage("General.OthersFlags", othersFlags));
+		sender.sendMessage(lm.getMessage("General.OthersFlags", othersFlags));
 	} else {
-	    String othersFlags = perms.listOtherPlayersFlags(player.getName());
+	    String othersFlags = perms.listOtherPlayersFlags(sender.getName());
 	    if (!othersFlags.equalsIgnoreCase(""))
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + perms.listOtherPlayersFlagsRaw(lm.getMessage(
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + perms.listOtherPlayersFlagsRaw(lm.getMessage(
 		    "General.OthersFlags",
-		    ""), player.getName()));
+		    ""), sender.getName()));
 	}
 
 	msg = "";
-	if (aid != null) {
-	    msg += lm.getMessage("General.CurrentArea", aid) + " ";
-	}
+//	if (aid != null) {
+//	    msg += lm.getMessage("General.CurrentArea", res.getAreaArray().length == 1 ? "main" : res.getare) + " ";
+//	}
 	msg += lm.getMessage("General.TotalSize", res.getTotalSize());
 
-	player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 
 	if (Residence.getEconomyManager() != null) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(res.getOwner(), res.getWorld());
-	    player.sendMessage(lm.getMessage("General.TotalWorth", (int) ((res.getTotalSize() * group.getCostPerBlock())
+	    sender.sendMessage(lm.getMessage("General.TotalWorth", (int) ((res.getTotalSize() * group.getCostPerBlock())
 		* 100) / 100.0, (int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0));
 	}
 	if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
 	    String time = Residence.getLeaseManager().getExpireTime(areaname);
 	    if (time != null)
-		player.sendMessage(lm.getMessage("Economy.LeaseExpire", time));
+		sender.sendMessage(lm.getMessage("Economy.LeaseExpire", time));
 	}
-	player.sendMessage(Residence.getLM().getMessage("General.Separator"));
+	sender.sendMessage(Residence.getLM().getMessage("General.Separator"));
     }
 
     public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea, boolean resadmin) {

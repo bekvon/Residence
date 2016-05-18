@@ -2,8 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 
@@ -11,10 +9,10 @@ public class listall implements cmd {
 
     @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (!(sender instanceof Player))
-	    return false;
-
-	Player player = (Player) sender;
+//	if (!(sender instanceof Player))
+//	    return false;
+//
+//	Player player = (Player) sender;
 	
 	int page = 1;
 	try {
@@ -25,10 +23,10 @@ public class listall implements cmd {
 	}
 	
 	if (args.length == 1) {
-	    Residence.getResidenceManager().listAllResidences(player, 1);
+	    Residence.getResidenceManager().listAllResidences(sender, 1);
 	} else if (args.length == 2) {
 	    try {
-		Residence.getResidenceManager().listAllResidences(player, page);
+		Residence.getResidenceManager().listAllResidences(sender, page);
 	    } catch (Exception ex) {
 	    }
 	} else {
