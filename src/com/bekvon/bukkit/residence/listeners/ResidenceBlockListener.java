@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -379,7 +381,8 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("piston", false)) {
+	if (!perms.has("piston", true)) {
+	    Debug.D("extend first");
 	    event.setCancelled(true);
 	    return;
 	}
@@ -395,12 +398,15 @@ public class ResidenceBlockListener implements Listener {
 
 	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has("pistonprotection", true)) {
 		event.setCancelled(true);
+		Debug.D("extend second");
 		return;
 	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has("pistonprotection", true)) {
 		event.setCancelled(true);
+		Debug.D("extend third");
 		return;
 	    } else if (blockTo != null && blockFrom != null && (pistonRes != null && !blockTo.isOwner(pistonRes.getOwner()) || !blockTo.isOwner(blockFrom.getOwner()))
 		&& blockTo.getPermissions().has("pistonprotection", true)) {
+		Debug.D("extend forth");
 		event.setCancelled(true);
 		return;
 	    }

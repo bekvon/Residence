@@ -496,17 +496,7 @@ public class ResidenceManager implements ResidenceInterface {
     private void removeAllByOwner(CommandSender sender, String owner, Map<String, ClaimedResidence> resholder) {
 	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(owner);
 	for (String oneRes : list) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(oneRes);
-	    if (res == null)
-		continue;
-
-	    ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(sender instanceof Player ? (Player) sender : null, res, sender == null ? DeleteCause.OTHER
-		: DeleteCause.PLAYER_DELETE);
-	    Residence.getServ().getPluginManager().callEvent(resevent);
-	    if (resevent.isCancelled())
-		return;
-	    Residence.getPlayerManager().removeResFromPlayer(owner, res.getName());
-	    removeChunkList(res.getName());
+	    removeResidence(null, oneRes, true);
 	}
     }
 
@@ -535,8 +525,6 @@ public class ResidenceManager implements ResidenceInterface {
 	ResidencePermissions perms = res.getPermissions();
 	Language lm = Residence.getLM();
 
-
-
 	if (Residence.getConfigManager().enableEconomy()) {
 
 	    String msg = "&e" + Residence.getLM().getMessage("Residence.Line", areaname);
@@ -555,21 +543,21 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
 	String msg = lm.getMessage("General.World", perms.getWorld());
-	
+
 //	String aid = null;
 //	if (sender instanceof Player)
 //	    aid = res.getAreaIDbyLoc(((Player) sender).getLocation());
 //	if (aid != null) {
 
-	    msg += "&6 (&3";
-	    CuboidArea area = res.getAreaArray()[0];
+	msg += "&6 (&3";
+	CuboidArea area = res.getAreaArray()[0];
 
-	    msg += lm.getMessage("General.CoordsTop", area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
+	msg += lm.getMessage("General.CoordsTop", area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 
-	    msg += "&6; &3";
-	    msg += lm.getMessage("General.CoordsBottom", area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+	msg += "&6; &3";
+	msg += lm.getMessage("General.CoordsBottom", area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
 
-	    msg += "&6)";
+	msg += "&6)";
 //	}
 	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 
