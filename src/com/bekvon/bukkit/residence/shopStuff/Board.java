@@ -130,7 +130,7 @@ public class Board {
     }
 
     public int GetStartPlace() {
-	return this.StartPlace;
+	return this.StartPlace == 0 ? 0 : (StartPlace - 1);
     }
 
     public void setWorld(String World) {

@@ -120,11 +120,11 @@ public class ShopListener implements Listener {
 	    break;
 	}
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceRename(ResidenceRenameEvent event) {
-	ConcurrentHashMap<String, List<ShopVote>> Votes = Residence.getShopSignUtilManager().GetAllVoteList();		
-	if (Votes.containsKey(event.getOldResidenceName())){	  
+	ConcurrentHashMap<String, List<ShopVote>> Votes = Residence.getShopSignUtilManager().GetAllVoteList();
+	if (Votes.containsKey(event.getOldResidenceName())) {
 	    Residence.getResidenceManager().addShop(event.getNewResidenceName());
 	    Residence.getResidenceManager().removeShop(event.getOldResidenceName());
 	    List<ShopVote> obj = Votes.remove(event.getOldResidenceName());
@@ -132,9 +132,9 @@ public class ShopListener implements Listener {
 	    Residence.getShopSignUtilManager().saveShopVotes();
 	    Residence.getShopSignUtilManager().BoardUpdateDelayed();
 	    Residence.getShopSignUtilManager().saveSigns();
-	}	
+	}
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onFlagChange(ResidenceFlagChangeEvent event) {
 	if (event.isCancelled())

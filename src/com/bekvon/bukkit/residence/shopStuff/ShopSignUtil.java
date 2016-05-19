@@ -325,46 +325,44 @@ public class ShopSignUtil {
 		if (!(block.getState() instanceof Sign))
 		    continue;
 
-		String Shop = null;
-		if (Residence.getResidenceManager().getShops().size() >= Start)
-		    Shop = ShopNames.get(Start - 1);
+		String Shop = "";
+		if (ShopNames.size() > Start)
+		    Shop = ShopNames.get(Start);
 
 		ClaimedResidence res = Residence.getResidenceManager().getByName(Shop);
 
-		if (res == null)
-		    continue;
-
 		Sign sign = (Sign) block.getState();
 
-		Vote vote = null;
-		String votestat = "";
-		if (Residence.getResidenceManager().getShops().size() >= Start) {
-		    vote = getAverageVote(ShopNames.get(Start - 1));
-
-		    if (Residence.getConfigManager().isOnlyLike()) {
-			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.ListLiked", getLikes(ShopNames.get(Start - 1)));
-		    } else
-			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.SignLines.4", vote.getVote() + "%" + vote.getAmount());
-		}
-
-		if (Shop != null) {
-		    sign.setLine(0, Residence.getLM().getMessage("Shop.SignLines.1", String.valueOf(Start)));
-		    sign.setLine(1, Residence.getLM().getMessage("Shop.SignLines.2", res.getName()));
-		    sign.setLine(2, Residence.getLM().getMessage("Shop.SignLines.3", res.getOwner()));
-		    sign.setLine(3, votestat);
-		    board.addSignLoc(res.getName(), sign.getLocation());
-		} else {
+		if (Shop.equalsIgnoreCase("")) {
 		    sign.setLine(0, "");
 		    sign.setLine(1, "");
 		    sign.setLine(2, "");
 		    sign.setLine(3, "");
+		    sign.update();
+		    continue;
 		}
+
+		Vote vote = null;
+		String votestat = "";
+		if (Residence.getResidenceManager().getShops().size() >= Start) {
+		    vote = getAverageVote(ShopNames.get(Start));
+
+		    if (Residence.getConfigManager().isOnlyLike()) {
+			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.ListLiked", getLikes(ShopNames.get(Start)));
+		    } else
+			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.SignLines.4", vote.getVote() + "%" + vote.getAmount());
+		}
+
+		sign.setLine(0, Residence.getLM().getMessage("Shop.SignLines.1", Start + 1));
+		sign.setLine(1, Residence.getLM().getMessage("Shop.SignLines.2", res.getName()));
+		sign.setLine(2, Residence.getLM().getMessage("Shop.SignLines.3", res.getOwner()));
+		sign.setLine(3, votestat);
 		sign.update();
+		board.addSignLoc(res.getName(), sign.getLocation());
 
 		Start++;
 	    }
 	}
-
 	return true;
     }
 }
