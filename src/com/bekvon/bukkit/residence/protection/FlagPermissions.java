@@ -226,6 +226,12 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("snowball");
 	
 	addResidenceOnlyFlag("pistonprotection");
+	
+
+	addResidenceOnlyFlag("sun");
+	addResidenceOnlyFlag("rain");
+	
+	addResidenceOnlyFlag("dryup");
 
 	addPlayerOrGroupOnlyFlag("admin");
 

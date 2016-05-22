@@ -45,4 +45,6 @@ public interface NMS {
     public ItemStack itemInMainHand(Player player);
     
     public boolean isChorusTeleport(TeleportCause tpcause);
+    
+    public boolean isBoat(Material mat);
 }

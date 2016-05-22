@@ -24,7 +24,6 @@ import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SignUtil {
 
@@ -68,13 +67,18 @@ public class SignUtil {
 	    Signs newTemp = new Signs();
 	    newTemp.setCategory(Integer.valueOf(category));
 	    newTemp.setResidence(NameSection.getString("Residence"));
-	    newTemp.setWorld(NameSection.getString("World"));
-	    newTemp.setX(NameSection.getDouble("X"));
-	    newTemp.setY(NameSection.getDouble("Y"));
-	    newTemp.setZ(NameSection.getDouble("Z"));
 
-	    newTemp.GetLocation();
+	    World w = Bukkit.getWorld(NameSection.getString("World"));
 
+	    if (w == null)
+		continue;
+
+	    double x = NameSection.getDouble("X");
+	    double y = NameSection.getDouble("Y");
+	    double z = NameSection.getDouble("Z");
+
+	    Location loc = new Location(w, x, y, z);
+	    newTemp.setLocation(loc);
 	    Signs.addSign(newTemp);
 	}
 	return;
@@ -97,10 +101,10 @@ public class SignUtil {
 	for (Signs one : Signs.GetAllSigns()) {
 	    String path = "Signs." + String.valueOf(one.GetCategory());
 	    writer.set(path + ".Residence", one.GetResidence());
-	    writer.set(path + ".World", one.GetWorld());
-	    writer.set(path + ".X", one.GetX());
-	    writer.set(path + ".Y", one.GetY());
-	    writer.set(path + ".Z", one.GetZ());
+	    writer.set(path + ".World", one.GetLocation().getWorld().getName());
+	    writer.set(path + ".X", one.GetLocation().getBlockX());
+	    writer.set(path + ".Y", one.GetLocation().getBlockY());
+	    writer.set(path + ".Z", one.GetLocation().getBlockZ());
 	}
 
 	try {
@@ -125,11 +129,11 @@ public class SignUtil {
 		continue;
 	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
 		continue;
-	    if (one.GetX() != loc.getX())
+	    if (one.GetLocation().getBlockX() != loc.getBlockX())
 		continue;
-	    if (one.GetY() != loc.getY())
+	    if (one.GetLocation().getBlockY() != loc.getBlockY())
 		continue;
-	    if (one.GetZ() != loc.getZ())
+	    if (one.GetLocation().getBlockZ() != loc.getBlockZ())
 		continue;
 	    return one;
 	}
@@ -191,9 +195,6 @@ public class SignUtil {
 	    return false;
 
 	Sign sign = (Sign) block.getState();
-
-	Debug.D(landName + " ForSale " + ForSale);
-	Debug.D(landName + " ForRent " + ForRent);
 
 	if (!ForRent && !ForSale) {
 	    block.breakNaturally();
@@ -292,7 +293,6 @@ public class SignUtil {
 	    if (world == null)
 		continue;
 
-	    signs.setWorld(world.getName());
 	    int x = 0;
 	    int y = 0;
 	    int z = 0;
@@ -305,19 +305,17 @@ public class SignUtil {
 		continue;
 	    }
 
-	    signs.setX(x);
-	    signs.setY(y);
-	    signs.setZ(z);
+	    signs.setLocation(new Location (world, x,y,z));
 	    boolean found = false;
 
 	    for (Signs onesigns : this.getSigns().GetAllSigns()) {
-		if (!onesigns.GetWorld().equalsIgnoreCase(signs.GetWorld()))
+		if (!onesigns.GetLocation().getWorld().getName().equalsIgnoreCase(signs.GetLocation().getWorld().getName()))
 		    continue;
-		if (onesigns.GetX() != signs.GetX())
+		if (onesigns.GetLocation().getBlockX() != signs.GetLocation().getBlockX())
 		    continue;
-		if (onesigns.GetY() != signs.GetY())
+		if (onesigns.GetLocation().getBlockY() != signs.GetLocation().getBlockY())
 		    continue;
-		if (onesigns.GetZ() != signs.GetZ())
+		if (onesigns.GetLocation().getBlockZ() != signs.GetLocation().getBlockZ())
 		    continue;
 		found = true;
 	    }

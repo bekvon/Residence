@@ -133,7 +133,7 @@ public class v1_9 implements NMS {
 	matUseFlagList.put(Material.ACACIA_FENCE_GATE, "door");
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, "door");
 	matUseFlagList.put(Material.IRON_TRAPDOOR, "door");
-	
+
 	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, "diode");
     }
 
@@ -182,6 +182,21 @@ public class v1_9 implements NMS {
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	if (tpcause == TeleportCause.CHORUS_FRUIT)
 	    return true;
+	return false;
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public boolean isBoat(Material mat) {
+	switch (mat) {
+	case BOAT:
+	case BOAT_ACACIA:
+	case BOAT_BIRCH:
+	case BOAT_DARK_OAK:
+	case BOAT_JUNGLE:
+	case BOAT_SPRUCE:
+	    return true;
+	}
 	return false;
     }
 }

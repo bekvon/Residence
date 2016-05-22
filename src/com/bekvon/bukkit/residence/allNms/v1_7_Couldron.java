@@ -139,4 +139,14 @@ public class v1_7_Couldron implements NMS {
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	return false;
     }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public boolean isBoat(Material mat) {
+	switch (mat) {
+	case BOAT:
+	    return true;
+	}
+	return false;
+    }
 }

@@ -909,6 +909,12 @@ public class LocaleManager {
 	    "Allows or denys crop trampling in residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trample.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"));
+	// dryup
+	FlagList.add("dryup");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.dryup.Description",
+	    "Prevents land from drying up");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.dryup.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// trade
 	FlagList.add("trade");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.trade.Description",
@@ -978,20 +984,32 @@ public class LocaleManager {
 	// shop
 	FlagList.add("shop");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.shop.Description",
-	    "adds residence to special residence shop list");
+	    "Adds residence to special residence shop list");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.shop.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// day
 	FlagList.add("day");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.day.Description",
-	    "sets day time in residence");
+	    "Sets day time in residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.day.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// night
 	FlagList.add("night");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.night.Description",
-	    "sets night time in residence");
+	    "Sets night time in residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.night.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
+	// sun
+	FlagList.add("sun");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.sun.Description",
+	    "Sets weather to sunny in residence");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.sun.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
+	// rain
+	FlagList.add("rain");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.rain.Description",
+	    "Sets weather to rainny in residence");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.rain.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// chat
 	FlagList.add("chat");

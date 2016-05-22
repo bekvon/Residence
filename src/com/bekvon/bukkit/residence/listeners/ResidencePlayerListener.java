@@ -12,6 +12,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Damageable;
@@ -128,7 +129,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onFlagChangeShopDayNight(ResidenceFlagChangeEvent event) {
+    public void onFlagChangeDayNight(ResidenceFlagChangeEvent event) {
 	if (event.isCancelled())
 	    return;
 
@@ -144,6 +145,41 @@ public class ResidencePlayerListener implements Listener {
 	case INVALID:
 	    break;
 	case TRUE:
+	    if (event.getFlag().equalsIgnoreCase("day"))
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setPlayerTime(6000L, false);
+	    if (event.getFlag().equalsIgnoreCase("night"))
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setPlayerTime(14000L, false);
+	    break;
+	default:
+	    break;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeSunRain(ResidenceFlagChangeEvent event) {
+	if (event.isCancelled())
+	    return;
+
+	if (!event.getFlag().equalsIgnoreCase("sun") && !event.getFlag().equalsIgnoreCase("rain"))
+	    return;
+
+	switch (event.getNewState()) {
+	case NEITHER:
+	case FALSE:
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.resetPlayerWeather();
+	    break;
+	case INVALID:
+	    break;
+	case TRUE:
+	    if (event.getFlag().equalsIgnoreCase("sun"))
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setPlayerWeather(WeatherType.CLEAR);
+	    if (event.getFlag().equalsIgnoreCase("rain"))
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setPlayerWeather(WeatherType.DOWNFALL);
 	    break;
 	default:
 	    break;
@@ -231,13 +267,13 @@ public class ResidencePlayerListener implements Listener {
 	Location loc = block.getLocation();
 
 	for (Signs one : Residence.getSignUtil().getSigns().GetAllSigns()) {
-	    if (!one.GetWorld().equalsIgnoreCase(loc.getWorld().getName()))
+	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
 		continue;
-	    if (one.GetX() != loc.getBlockX())
+	    if (one.GetLocation().getBlockX() != loc.getBlockX())
 		continue;
-	    if (one.GetY() != loc.getBlockY())
+	    if (one.GetLocation().getBlockY() != loc.getBlockY())
 		continue;
-	    if (one.GetZ() != loc.getBlockZ())
+	    if (one.GetLocation().getBlockZ() != loc.getBlockZ())
 		continue;
 
 	    String landName = one.GetResidence();
@@ -257,9 +293,9 @@ public class ResidencePlayerListener implements Listener {
 		    boolean stage = true;
 		    if (player.isSneaking())
 			stage = false;
-
 		    Bukkit.dispatchCommand(player, "res market rent " + landName + " " + stage);
 		}
+		break;
 	    }
 	}
     }
@@ -320,11 +356,8 @@ public class ResidencePlayerListener implements Listener {
 	if (ForSale || ForRent) {
 	    signInfo.setCategory(category);
 	    signInfo.setResidence(landName);
-	    signInfo.setWorld(loc.getWorld().getName());
-	    signInfo.setX(loc.getBlockX());
-	    signInfo.setY(loc.getBlockY());
-	    signInfo.setZ(loc.getBlockZ());
-	    signInfo.updateLocation();
+	    signInfo.setLocation(loc);
+//	    signInfo.updateLocation();
 	    Residence.getSignUtil().getSigns().addSign(signInfo);
 	    Residence.getSignUtil().saveSigns();
 	}
@@ -355,13 +388,13 @@ public class ResidencePlayerListener implements Listener {
 
 	for (Signs one : Residence.getSignUtil().getSigns().GetAllSigns()) {
 
-	    if (!one.GetWorld().equalsIgnoreCase(loc.getWorld().getName()))
+	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
 		continue;
-	    if (one.GetX() != loc.getBlockX())
+	    if (one.GetLocation().getBlockX() != loc.getBlockX())
 		continue;
-	    if (one.GetY() != loc.getBlockY())
+	    if (one.GetLocation().getBlockY() != loc.getBlockY())
 		continue;
-	    if (one.GetZ() != loc.getBlockZ())
+	    if (one.GetLocation().getBlockZ() != loc.getBlockZ())
 		continue;
 
 	    Residence.getSignUtil().getSigns().removeSign(one);
@@ -390,7 +423,7 @@ public class ResidencePlayerListener implements Listener {
 	if (Residence.getPermissionManager().isResidenceAdmin(player)) {
 	    Residence.turnResAdminOn(player);
 	}
-	handleNewLocation(player, player.getLocation(), false);
+	handleNewLocation(player, player.getLocation(), true);
 
 	final Player p = player;
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -624,7 +657,9 @@ public class ResidencePlayerListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Player player = event.getPlayer();
-	int heldItemId = Residence.getNms().itemInMainHand(player).getTypeId();
+	ItemStack iih = Residence.getNms().itemInMainHand(player);
+	Material heldItem = iih.getType();
+	int heldItemId = iih.getTypeId();
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
@@ -633,8 +668,8 @@ public class ResidencePlayerListener implements Listener {
 
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || Residence.getNms().isCanUseEntity_BothClick(mat, block))) {
-	    if (heldItemId != Residence.getConfigManager().getSelectionTooldID() && heldItemId != Residence.getConfigManager().getInfoToolID() && heldItemId != 351
-		&& heldItemId != 416) {
+	    if (heldItemId != Residence.getConfigManager().getSelectionTooldID() && heldItemId != Residence.getConfigManager().getInfoToolID()
+		&& heldItem != Material.INK_SACK && !Residence.getNms().isArmorStandMaterial(heldItem) && !Residence.getNms().isBoat(heldItem)) {
 		return;
 	    }
 	}
@@ -645,7 +680,6 @@ public class ResidencePlayerListener implements Listener {
 	String world = player.getWorld().getName();
 	String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
 	boolean resadmin = Residence.isResAdminOn(player);
-	Material heldItem = Residence.getNms().itemInMainHand(player).getType();
 	if (!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
 	    player.sendMessage(Residence.getLM().getMessage("General.ItemBlacklisted"));
 	    event.setCancelled(true);
@@ -658,9 +692,9 @@ public class ResidencePlayerListener implements Listener {
 	int blockId = block.getTypeId();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
 	if (heldItem != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-	    if (heldItemId == 351) {
-		if (Residence.getNms().itemInMainHand(player).getData().getData() == 15 && block.getType() == Material.GRASS || Residence.getNms().itemInMainHand(player)
-		    .getData().getData() == 3 && blockId == 17 && (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15)) {
+	    if (heldItem == Material.INK_SACK) {
+		if (Residence.getNms().itemInMainHand(player).getData().getData() == 15 && block.getType() == Material.GRASS || iih.getData().getData() == 3
+		    && blockId == 17 && (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15)) {
 		    perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		    if (!perms.playerHas(player.getName(), world, "build", true)) {
 			player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
@@ -669,7 +703,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		}
 	    }
-	    if (Residence.getNms().isArmorStandMaterial(heldItem)) {
+	    if (Residence.getNms().isArmorStandMaterial(heldItem) || Residence.getNms().isBoat(heldItem)) {
 		perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		if (!perms.playerHas(player.getName(), world, "build", true)) {
 		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
@@ -1166,8 +1200,11 @@ public class ResidencePlayerListener implements Listener {
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-		if (ResOld.getPermissions().has("night", false) || ResOld.getPermissions().has("day", false))
+		if (ResOld.getPermissions().has("night", true) || ResOld.getPermissions().has("day", true))
 		    player.resetPlayerTime();
+
+		if (ResOld.getPermissions().has("sun", true) || ResOld.getPermissions().has("rain", true))
+		    player.resetPlayerWeather();
 
 		if (leave != null && !leave.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
@@ -1243,6 +1280,11 @@ public class ResidencePlayerListener implements Listener {
 		player.setPlayerTime(6000L, false);
 	    else if (res.getPermissions().has("night", false))
 		player.setPlayerTime(14000L, false);
+
+	    if (res.getPermissions().has("sun", false))
+		player.setPlayerWeather(WeatherType.CLEAR);
+	    else if (res.getPermissions().has("rain", false))
+		player.setPlayerWeather(WeatherType.DOWNFALL);
 	}
 
 	lastOutsideLoc.put(pname, loc);
@@ -1258,6 +1300,9 @@ public class ResidencePlayerListener implements Listener {
 
 		if (ResOld.getPermissions().has("night", false) || ResOld.getPermissions().has("day", false))
 		    player.resetPlayerTime();
+
+		if (ResOld.getPermissions().has("sun", false) || ResOld.getPermissions().has("rain", false))
+		    player.resetPlayerWeather();
 
 		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
 		    if (Residence.getConfigManager().useActionBar()) {

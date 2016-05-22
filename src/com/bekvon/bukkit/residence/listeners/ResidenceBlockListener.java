@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -21,6 +20,7 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -382,7 +382,6 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has("piston", true)) {
-	    Debug.D("extend first");
 	    event.setCancelled(true);
 	    return;
 	}
@@ -398,15 +397,12 @@ public class ResidenceBlockListener implements Listener {
 
 	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has("pistonprotection", true)) {
 		event.setCancelled(true);
-		Debug.D("extend second");
 		return;
 	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has("pistonprotection", true)) {
 		event.setCancelled(true);
-		Debug.D("extend third");
 		return;
 	    } else if (blockTo != null && blockFrom != null && (pistonRes != null && !blockTo.isOwner(pistonRes.getOwner()) || !blockTo.isOwner(blockFrom.getOwner()))
 		&& blockTo.getPermissions().has("pistonprotection", true)) {
-		Debug.D("extend forth");
 		event.setCancelled(true);
 		return;
 	    }
@@ -437,6 +433,44 @@ public class ResidenceBlockListener implements Listener {
 	    if (!perms.has("waterflow", hasflow)) {
 		event.setCancelled(true);
 	    }
+	    return;
+	}
+    }
+
+    @SuppressWarnings({ "deprecation" })
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLandDryFade(BlockFadeEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+
+	Material mat = event.getBlock().getType();
+	if (mat != Material.SOIL)
+	    return;
+
+	FlagPermissions perms = Residence.getPermsByLoc(event.getNewState().getLocation());
+	if (!perms.has("dryup", true)) {
+	    event.getBlock().setData((byte) 7);
+	    event.setCancelled(true);
+	    return;
+	}
+    }
+    
+    @SuppressWarnings("deprecation")
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLandDryPhysics(BlockPhysicsEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+
+	Material mat = event.getBlock().getType();
+	if (mat != Material.SOIL)
+	    return;
+		
+	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	if (!perms.has("dryup", true)) {
+	    event.getBlock().setData((byte) 7);
+	    event.setCancelled(true);
 	    return;
 	}
     }

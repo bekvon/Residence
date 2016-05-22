@@ -77,7 +77,6 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -1141,8 +1140,6 @@ public class Residence extends JavaPlugin {
 		ResidencePermissions perms = one.getValue().getPermissions();
 		if (!perms.has("shop", false))
 		    continue;
-
-		Debug.D("adding shop to list: " + one.getValue().getName());
 
 		rmanager.addShop(one.getValue().getName());
 	    }

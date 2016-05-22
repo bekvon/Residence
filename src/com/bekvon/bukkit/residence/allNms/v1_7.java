@@ -134,8 +134,19 @@ public class v1_7 implements NMS {
     public ItemStack getLingeringPotionItem(Entity ent) {
 	return null;
     }
+
     @Override
-    public boolean isChorusTeleport(TeleportCause tpcause) {	
+    public boolean isChorusTeleport(TeleportCause tpcause) {
+	return false;
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public boolean isBoat(Material mat) {
+	switch (mat) {
+	case BOAT:
+	    return true;
+	}
 	return false;
     }
 }
