@@ -334,11 +334,11 @@ public class HelpEntry {
 			    if (resName != null)
 				subCommands.add(resName);
 			}
-			ArrayList<String> resList = Residence.getResidenceManager().getResidenceList(((Player) sender).getName(), true, false);
+			ArrayList<String> resList = Residence.getResidenceManager().getResidenceList(((Player) sender).getName(), true, false, false);
 			if (resList.size() > 0)
 			    subCommands.addAll(resList);
 		    } else {
-			ArrayList<String> resList = Residence.getResidenceManager().getResidenceList("Server_land", true, false);
+			ArrayList<String> resList = Residence.getResidenceManager().getResidenceList("Server_land", true, false, false);
 			if (resList.size() > 0)
 			    subCommands.addAll(resList);
 		    }

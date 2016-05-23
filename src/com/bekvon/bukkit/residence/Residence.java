@@ -1427,7 +1427,7 @@ public class Residence extends JavaPlugin {
 
     @SuppressWarnings("deprecation")
     public static OfflinePlayer getOfflinePlayer(String Name) {
-	if (OfflinePlayerList.containsKey(Name.toLowerCase())) {
+	if (getOfflinePlayerMap().containsKey(Name.toLowerCase())) {
 	    return getOfflinePlayerMap().get(Name.toLowerCase());
 	}
 	OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(Name);

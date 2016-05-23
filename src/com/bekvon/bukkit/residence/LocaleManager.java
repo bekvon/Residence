@@ -197,6 +197,7 @@ public class LocaleManager {
 	c.get("Language.Subzone.DeleteConfirm", "&eAre you sure you want to delete subzone &6%1&e, use &6/res confirm &eto confirm.");
 	c.get("Language.Subzone.OwnerChange", "&eSubzone &6%1 &eowner changed to &6%2");
 
+	c.get("Language.Residence.Hidden", " &e(&6Hidden&e)");
 	c.get("Language.Residence.Bought", "&eYou bought residence &6%1");
 	c.get("Language.Residence.Buy", "&6%1 &ehas bought residence &6%2 &efrom you.");
 	c.get("Language.Residence.BuyTooBig", "&cThis residence has areas bigger then your allowed max.");

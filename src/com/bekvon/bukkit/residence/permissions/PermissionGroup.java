@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.permissions;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
@@ -308,7 +309,7 @@ public class PermissionGroup {
 	return itemListAccess;
     }
 
-    public void printLimits(Player player, OfflinePlayer target, boolean resadmin) {
+    public void printLimits(CommandSender player, OfflinePlayer target, boolean resadmin) {
 	player.sendMessage(Residence.getLM().getMessage("General.Separator"));
 	player.sendMessage(Residence.getLM().getMessage("Limits.PGroup", Residence.getPermissionManager().getPermissionsGroup(target.getName(),
 	    Residence.getConfigManager().getDefaultWorld())));

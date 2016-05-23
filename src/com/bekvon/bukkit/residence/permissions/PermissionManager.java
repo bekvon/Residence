@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -106,8 +107,8 @@ public class PermissionManager {
 	return perms.getPlayerGroup(player, world).toLowerCase();
     }
 
-    public boolean isResidenceAdmin(Player player) {
-	return (player.hasPermission("residence.admin") || (player.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
+    public boolean isResidenceAdmin(CommandSender sender) {
+	return (sender.hasPermission("residence.admin") || (sender.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
     }
 
     private void checkPermissions() {

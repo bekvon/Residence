@@ -23,10 +23,10 @@ public class listall implements cmd {
 	}
 	
 	if (args.length == 1) {
-	    Residence.getResidenceManager().listAllResidences(sender, 1);
+	    Residence.getResidenceManager().listAllResidences(sender, 1, resadmin);
 	} else if (args.length == 2) {
 	    try {
-		Residence.getResidenceManager().listAllResidences(sender, page);
+		Residence.getResidenceManager().listAllResidences(sender, page, resadmin);
 	    } catch (Exception ex) {
 	    }
 	} else {

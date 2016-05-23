@@ -1,6 +1,8 @@
 package com.bekvon.bukkit.residence.containers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.bukkit.Bukkit;
@@ -151,11 +153,12 @@ public class ResidencePlayer {
 	return currentRes;
     }
 
-    public Map<String, String> getResList() {
-	Map<String, String> temp = new HashMap<String, String>();
+    public List<ClaimedResidence> getResList() {
+	List<ClaimedResidence> temp = new ArrayList<ClaimedResidence>();
 	for (Entry<String, ClaimedResidence> one : this.ResidenceList.entrySet()) {
-	    temp.put(one.getValue().getName(), one.getValue().getWorld());
+	    temp.add(one.getValue());
 	}
 	return temp;
     }
+
 }

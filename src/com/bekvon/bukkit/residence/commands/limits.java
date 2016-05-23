@@ -12,25 +12,22 @@ public class limits implements cmd {
 
     @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (!(sender instanceof Player))
+	if (!(sender instanceof Player) && args.length < 2)
 	    return false;
-
-	Player player = (Player) sender;
 
 	if (args.length != 1 && args.length != 2)
 	    return false;
 	final String[] tempArgs = args;
-	final Player p = player;
 	OfflinePlayer target;
 	boolean rsadm = false;
 	if (tempArgs.length == 1) {
-	    target = p;
+	    target = (Player) sender;
 	    rsadm = true;
 	} else
 	    target = Residence.getOfflinePlayer(tempArgs[1]);
 	if (target == null)
 	    return false;
-	Residence.getPermissionManager().getGroup(target.getName(), Residence.getConfigManager().getDefaultWorld()).printLimits(p, target, rsadm);
+	Residence.getPermissionManager().getGroup(target.getName(), Residence.getConfigManager().getDefaultWorld()).printLimits(sender, target, rsadm);
 	return true;
     }
 }

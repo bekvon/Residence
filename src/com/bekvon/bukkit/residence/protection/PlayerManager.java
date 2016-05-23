@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -60,8 +61,8 @@ public class PlayerManager implements ResidencePlayerInterface {
 	playerJoin(player);
 	ResidencePlayer resPlayer = players.get(player);
 	if (resPlayer != null) {
-	    for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
-		temp.add(one.getKey());
+	    for (ClaimedResidence one : resPlayer.getResList()) {
+		temp.add(one.getName());
 	    }
 	    return temp;
 	}
@@ -69,22 +70,27 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public ArrayList<String> getResidenceList(String player, boolean showhidden) {
+	return getResidenceList(player, showhidden, false);
+    }
+
+    public ArrayList<String> getResidenceList(String player, boolean showhidden, boolean onlyHidden) {
 	ArrayList<String> temp = new ArrayList<String>();
 	playerJoin(player);
 	ResidencePlayer resPlayer = players.get(player);
-	if (resPlayer != null) {
-	    for (Entry<String, String> one : resPlayer.getResList().entrySet()) {
-		if (!showhidden) {
-		    ClaimedResidence res = Residence.getResidenceManager().getByName(one.getKey());
-		    boolean hidden = res.getPermissions().has("hidden", false);
-		    if (hidden)
-			continue;
-		}
-
-		temp.add(Residence.getLM().getMessage("Residence.List", "", one.getKey(), one.getValue()));
-	    }
+	if (resPlayer == null)
 	    return temp;
+	for (ClaimedResidence one : resPlayer.getResList()) {
+	    boolean hidden = one.getPermissions().has("hidden", false);
+	    if (!showhidden && hidden)
+		continue;
+
+	    if (onlyHidden && !hidden)
+		continue;
+
+	    temp.add(Residence.getLM().getMessage("Residence.List", "", one.getName(), one.getWorld()) +
+		(hidden ? Residence.getLM().getMessage("Residence.Hidden") : ""));
 	}
+	Collections.sort(temp, String.CASE_INSENSITIVE_ORDER);
 	return temp;
     }
 

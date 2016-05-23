@@ -38,6 +38,10 @@ public class RentManager implements MarketRentInterface {
     }
 
     public List<String> getRentedLands(String playername) {
+	return getRentedLands(playername, false);
+    }
+
+    public List<String> getRentedLands(String playername, boolean onlyHidden) {
 	List<String> rentedLands = new ArrayList<String>();
 	for (Entry<String, RentedLand> oneland : rentedLand.entrySet()) {
 	    if (!oneland.getValue().player.equals(playername))
@@ -45,10 +49,17 @@ public class RentManager implements MarketRentInterface {
 
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(oneland.getKey());
 	    String world = " ";
-	    if (res != null) {
-		res = res.getTopParent();
-		world = res.getWorld();
-	    }
+	    if (res == null)
+		continue;
+
+	    res = res.getTopParent();
+	    world = res.getWorld();
+
+	    boolean hidden = res.getPermissions().has("hidden", false);
+
+	    if (onlyHidden && !hidden)
+		continue;
+
 	    rentedLands.add(Residence.getLM().getMessage("Residence.List", "", oneland.getKey(), world)
 		+ Residence.getLM().getMessage("Rent.Rented"));
 

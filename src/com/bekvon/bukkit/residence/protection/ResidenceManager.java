@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -279,32 +280,37 @@ public class ResidenceManager implements ResidenceInterface {
 	this.listResidences(sender, sender.getName(), page);
     }
 
-    public void listResidences(CommandSender sender, String targetplayer) {
-	this.listResidences(sender, targetplayer, 1);
+    public void listResidences(CommandSender sender, String targetplayer, boolean showhidden) {
+	this.listResidences(sender, targetplayer, 1, showhidden, false);
     }
 
     public void listResidences(CommandSender sender, String targetplayer, int page) {
-	this.listResidences(sender, targetplayer, page, false);
+	this.listResidences(sender, targetplayer, page, false, false);
     }
 
     public void listResidences(CommandSender sender, int page, boolean showhidden) {
-	this.listResidences(sender, sender.getName(), page, showhidden);
+	this.listResidences(sender, sender.getName(), page, showhidden, false);
     }
 
-    public void listResidences(CommandSender sender, String targetplayer, int page, boolean showhidden) {
-	this.listResidences(sender, targetplayer, page, showhidden, false);
+    public void listResidences(CommandSender sender, int page, boolean showhidden, boolean onlyHidden) {
+	this.listResidences(sender, sender.getName(), page, showhidden, onlyHidden);
     }
 
-    public void listResidences(final CommandSender sender, final String targetplayer, final int page, boolean showhidden, boolean showsubzones) {
-	if (showhidden && !Residence.isResAdminOn(sender) && !sender.getName().equals(targetplayer)) {
+    public void listResidences(CommandSender sender, String string, int page, boolean showhidden) {
+	this.listResidences(sender, sender.getName(), page, showhidden, false);
+    }
+
+    public void listResidences(final CommandSender sender, final String targetplayer, final int page, boolean showhidden, final boolean onlyHidden) {
+	if (showhidden && !Residence.isResAdminOn(sender) && !sender.getName().equalsIgnoreCase(targetplayer)) {
 	    showhidden = false;
-	}
+	} else if (sender.getName().equalsIgnoreCase(targetplayer))
+	    showhidden = true;
 	final boolean hidden = showhidden;
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		ArrayList<String> ownedResidences = Residence.getPlayerManager().getResidenceList(targetplayer, hidden);
-		ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer));
+		ArrayList<String> ownedResidences = Residence.getPlayerManager().getResidenceList(targetplayer, hidden, onlyHidden);
+		ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer, onlyHidden));
 		InformationPager.printInfo(sender, Residence.getLM().getMessage("General.Residences") + " - " + targetplayer, ownedResidences, page);
 		return;
 	    }
@@ -316,14 +322,15 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden) {
-	this.listAllResidences(sender, page, showhidden, false);
+	this.listAllResidences(sender, page, showhidden, false, false);
     }
 
-    public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean showsubzones) {
-	if (showhidden && !Residence.isResAdminOn(sender)) {
-	    showhidden = false;
-	}
-	InformationPager.printInfo(sender, Residence.getLM().getMessage("General.Residences"), this.getResidenceList(null, showhidden, showsubzones, true), page);
+    public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean showsubzones, boolean onlyHidden) {
+//	if (showhidden && !Residence.isResAdminOn(sender)) {
+//	    showhidden = false;
+//	}
+	InformationPager.printInfo(sender, Residence.getLM().getMessage("General.Residences"), this.getResidenceList(null, showhidden, showsubzones, true, onlyHidden),
+	    page);
     }
 
     public String[] getResidenceList() {
@@ -347,32 +354,39 @@ public class ResidenceManager implements ResidenceInterface {
 	return this.getResidenceList(null, showhidden, showsubzones, false);
     }
 
-    public ArrayList<String> getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones) {
-	return this.getResidenceList(targetplayer, showhidden, showsubzones, false);
+    public ArrayList<String> getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, boolean onlyHidden) {
+	return this.getResidenceList(targetplayer, showhidden, showsubzones, false, onlyHidden);
     }
 
-    public ArrayList<String> getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, boolean formattedOutput) {
+    public ArrayList<String> getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, boolean formattedOutput, boolean onlyHidden) {
 	ArrayList<String> list = new ArrayList<>();
 	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
-	    this.getResidenceList(targetplayer, showhidden, showsubzones, "", res.getKey(), res.getValue(), list, formattedOutput);
+	    this.getResidenceList(targetplayer, showhidden, showsubzones, "", res.getKey(), res.getValue(), list, formattedOutput, onlyHidden);
 	}
+	Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 	return list;
     }
 
     private void getResidenceList(String targetplayer, boolean showhidden, boolean showsubzones, String parentzone, String resname, ClaimedResidence res,
-	ArrayList<String> list, boolean formattedOutput) {
+	ArrayList<String> list, boolean formattedOutput, boolean onlyHidden) {
 	boolean hidden = res.getPermissions().has("hidden", false);
+
+	if (onlyHidden && !hidden)
+	    return;
+
 	if ((showhidden) || (!showhidden && !hidden)) {
 	    if (targetplayer == null || res.getPermissions().getOwner().equals(targetplayer)) {
 		if (formattedOutput) {
-		    list.add(Residence.getLM().getMessage("Residence.List", parentzone, resname, res.getWorld()));
+		    list.add(Residence.getLM().getMessage("Residence.List", parentzone, resname, res.getWorld()) +
+			(hidden ? Residence.getLM().getMessage("Residence.Hidden") : ""));
 		} else {
 		    list.add(parentzone + resname);
 		}
 	    }
 	    if (showsubzones) {
 		for (Entry<String, ClaimedResidence> sz : res.subzones.entrySet()) {
-		    this.getResidenceList(targetplayer, showhidden, showsubzones, parentzone + resname + ".", sz.getKey(), sz.getValue(), list, formattedOutput);
+		    this.getResidenceList(targetplayer, showhidden, showsubzones, parentzone + resname + ".", sz.getKey(), sz.getValue(), list, formattedOutput,
+			onlyHidden);
 		}
 	    }
 	}
@@ -965,4 +979,5 @@ public class ResidenceManager implements ResidenceInterface {
 	    return sb.toString();
 	}
     }
+
 }
