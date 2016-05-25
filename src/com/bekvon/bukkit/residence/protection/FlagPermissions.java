@@ -157,6 +157,8 @@ public class FlagPermissions {
 	// Horse riding
 	addFlag("riding");
 
+	addFlag("hook");
+
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
 	addResidenceOnlyFlag("fireball");

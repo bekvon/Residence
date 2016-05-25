@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.permissions;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.PlayerGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.nijikokun.bukkit.Permissions.Permissions;
@@ -8,6 +9,8 @@ import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,6 +23,8 @@ public class PermissionManager {
     protected LinkedHashMap<String, PermissionGroup> groups;
     protected Map<String, String> playersGroup;
     protected FlagPermissions globalFlagPerms;
+
+    protected HashMap<String, PlayerGroup> groupsMap = new HashMap<String, PlayerGroup>();
 
     public PermissionManager(FileConfiguration config, FileConfiguration flags) {
 	try {
@@ -38,6 +43,10 @@ public class PermissionManager {
 
     public FlagPermissions getAllFlags() {
 	return this.globalFlagPerms;
+    }
+
+    public Map<String, String> getPlayersGroups() {
+	return playersGroup;
     }
 
     public Map<String, PermissionGroup> getGroups() {
@@ -73,28 +82,16 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(String player, String world) {
-	player = player.toLowerCase();
-	if (playersGroup.containsKey(player)) {
-	    String group = playersGroup.get(player);
-	    // dead code?
-//	    if (group == null) {
-//		String uuids = Residence.getPlayerUUIDString(player);
-//		if (uuids != null)
-//		    group = playersGroup.get(uuids);
-//	    }
-	    if (group != null) {
-		group = group.toLowerCase();
-		if (group != null && groups.containsKey(group)) {
-		    return group;
-		}
-	    }
+	if (!this.groupsMap.containsKey(player)) {
+	    updateGroupNameForPlayer(Bukkit.getPlayer(player));
 	}
-	String group = this.getPermissionsGroup(player, world);
-	if (group == null || !groups.containsKey(group)) {
-	    return Residence.getConfigManager().getDefaultGroup().toLowerCase();
-	} else {
-	    return group;
+	PlayerGroup PGroup = this.groupsMap.get(player);
+	if (PGroup != null) {
+	    String group = PGroup.getGroup(world);
+	    if (group != null)
+		return group;
 	}
+	return Residence.getConfigManager().getDefaultGroup().toLowerCase();
     }
 
     public String getPermissionsGroup(Player player) {
@@ -105,6 +102,27 @@ public class PermissionManager {
 	if (perms == null)
 	    return Residence.getConfigManager().getDefaultGroup().toLowerCase();
 	return perms.getPlayerGroup(player, world).toLowerCase();
+    }
+
+    public void updateGroupNameForPlayer(Player player) {
+	updateGroupNameForPlayer(player, false);
+    }
+
+    public void updateGroupNameForPlayer(Player player, boolean force) {
+	if (player == null)
+	    return;
+	updateGroupNameForPlayer(player.getName(), player.getWorld().getName(), force);
+    }
+
+    public void updateGroupNameForPlayer(String playerName, String world, boolean force) {
+	PlayerGroup GPlayer;
+	if (!groupsMap.containsKey(playerName)) {
+	    GPlayer = new PlayerGroup(playerName);
+	    groupsMap.put(playerName, GPlayer);
+	} else
+	    GPlayer = groupsMap.get(playerName);
+
+	GPlayer.updateGroup(world, force);
     }
 
     public boolean isResidenceAdmin(CommandSender sender) {

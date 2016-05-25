@@ -13,50 +13,51 @@ public class pset implements cmd {
 
     @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (!(sender instanceof Player))
+	if (!(sender instanceof Player) && args.length != 5 && args.length == 4 && !args[3].equalsIgnoreCase("removeall"))
 	    return false;
 
-	Player player = (Player) sender;
-
 	if (args.length == 3 && args[2].equalsIgnoreCase("removeall")) {
+	    Player player = (Player) sender;
 	    ClaimedResidence area = Residence.getResidenceManager().getByLoc(player.getLocation());
 	    if (area != null) {
-		area.getPermissions().removeAllPlayerFlags(player, args[1], resadmin);
+		area.getPermissions().removeAllPlayerFlags(sender, args[1], resadmin);
 	    } else {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    }
 	    return true;
 	} else if (args.length == 4 && args[3].equalsIgnoreCase("removeall")) {
 	    ClaimedResidence area = Residence.getResidenceManager().getByName(args[1]);
 	    if (area != null) {
-		area.getPermissions().removeAllPlayerFlags(player, args[2], resadmin);
+		area.getPermissions().removeAllPlayerFlags(sender, args[2], resadmin);
 	    } else {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    }
 	    return true;
 	} else if (args.length == 4) {
+	    Player player = (Player) sender;
 	    ClaimedResidence area = Residence.getResidenceManager().getByLoc(player.getLocation());
 
-	    if (!Residence.isPlayerExist(player, args[1], true))
+	    if (!Residence.isPlayerExist(sender, args[1], true))
 		return false;
 
 	    if (area != null) {
-		area.getPermissions().setPlayerFlag(player, args[1], args[2], args[3], resadmin, true);
+		area.getPermissions().setPlayerFlag(sender, args[1], args[2], args[3], resadmin, true);
 	    } else {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    }
 	    return true;
 	} else if (args.length == 5) {
 	    ClaimedResidence area = Residence.getResidenceManager().getByName(args[1]);
-	    if (!Residence.isPlayerExist(player, args[2], true))
+	    if (!Residence.isPlayerExist(sender, args[2], true))
 		return false;
 	    if (area != null) {
-		area.getPermissions().setPlayerFlag(player, args[2], args[3], args[4], resadmin, true);
+		area.getPermissions().setPlayerFlag(sender, args[2], args[3], args[4], resadmin, true);
 	    } else {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    }
 	    return true;
 	} else if ((args.length == 2 || args.length == 3) && Residence.getConfigManager().useFlagGUI()) {
+	    Player player = (Player) sender;
 	    ClaimedResidence res = null;
 	    String targetPlayer = null;
 	    if (args.length == 2) {
@@ -68,14 +69,14 @@ public class pset implements cmd {
 	    }
 
 	    if (res == null) {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 		return true;
 	    }
 
 	    if (!Residence.isPlayerExist(player, targetPlayer, true))
 		return false;
 	    if (!res.isOwner(player) && !resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return true;
 	    }
 	    SetFlag flag = new SetFlag(res.getName(), player, resadmin);

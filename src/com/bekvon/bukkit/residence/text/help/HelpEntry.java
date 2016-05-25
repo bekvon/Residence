@@ -71,7 +71,9 @@ public class HelpEntry {
 	}
 
 	String separator = ChatColor.GOLD + "";
-	String simbol = "\u25AC";
+	String simbol = "-";
+	if (sender instanceof Player)
+	    simbol = "\u25AC";
 	for (int i = 0; i < 10; i++) {
 	    separator += simbol;
 	}

@@ -15,11 +15,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Boat;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,7 +38,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -126,6 +131,22 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	}, Residence.getConfigManager().getRentInformDelay() * 20L);
+    }
+
+    @EventHandler
+    public void onFishingRodUse(PlayerFishEvent event) {
+	Player player = event.getPlayer();
+	if (event.getCaught() instanceof ArmorStand || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
+	    FlagPermissions perm = Residence.getPermsByLoc(event.getCaught().getLocation());
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getCaught().getLocation());
+	    if (!perm.has("hook", false) && res != null && !res.getPermissions().playerHas(player, "hook", true) ||
+		!perm.has("hook", false) && res != null && !res.getPermissions().playerHas(player, "hook", false)) {
+		event.setCancelled(true);
+		if (res != null)
+		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "hook", res.getName()));
+		return;
+	    }
+	}
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -417,6 +438,15 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerJoin(PlayerChangedWorldEvent event) {
+	Player player = event.getPlayer();
+	if (Residence.getPermissionManager().isResidenceAdmin(player)) {
+	    Residence.turnResAdminOn(player);
+	}
+	Residence.getPermissionManager().updateGroupNameForPlayer(player, true);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
 	Player player = event.getPlayer();
 	lastUpdate.put(player.getName(), 0L);
@@ -430,6 +460,7 @@ public class ResidencePlayerListener implements Listener {
 	    @Override
 	    public void run() {
 		Residence.getPlayerManager().playerJoin(p);
+		Residence.getPermissionManager().updateGroupNameForPlayer(p, true);
 		return;
 	    }
 	});

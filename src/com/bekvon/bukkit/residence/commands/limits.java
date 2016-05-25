@@ -27,6 +27,9 @@ public class limits implements cmd {
 	    target = Residence.getOfflinePlayer(tempArgs[1]);
 	if (target == null)
 	    return false;
+	Residence.getPermissionManager().updateGroupNameForPlayer(target.getName(), target.isOnline() ? target.getPlayer().getLocation().getWorld().getName() : Residence
+	    .getConfigManager().getDefaultWorld(), true);
+
 	Residence.getPermissionManager().getGroup(target.getName(), Residence.getConfigManager().getDefaultWorld()).printLimits(sender, target, rsadm);
 	return true;
     }

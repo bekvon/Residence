@@ -44,7 +44,6 @@ public class ResidencePlayer {
 	recountMaxRes();
 	recountMaxRents();
 	recountMaxSubzones();
-	recountGroup();
     }
 
     public void recountMaxRes() {
@@ -86,19 +85,6 @@ public class ResidencePlayer {
 	}
     }
 
-    public void recountGroup() {
-	for (Entry<String, PermissionGroup> one : Residence.getPermissionManager().getGroups().entrySet()) {
-	    if (player != null) {
-		if (this.player.hasPermission("residence.group." + one.getKey()))
-		    this.group = one.getValue();
-	    } else {
-		if (ofPlayer != null)
-		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.group." + one.getKey(), Residence.getConfigManager().getDefaultWorld()))
-			this.group = one.getValue();
-	    }
-	}
-    }
-
     public int getMaxRes() {
 	recountMaxRes();
 	return this.maxRes;
@@ -115,7 +101,14 @@ public class ResidencePlayer {
     }
 
     public PermissionGroup getGroup() {
-	recountGroup();
+	Player player = Bukkit.getPlayer(userName);
+	if (player != null) {
+	    String gp = Residence.getPermissionManager().getGroupNameByPlayer(player.getName(), player.getWorld().getName());
+	    this.group = Residence.getPermissionManager().getGroupByName(gp);
+	} else {
+	    String gp = Residence.getPermissionManager().getGroupNameByPlayer(userName, Residence.getConfigManager().getDefaultWorld());
+	    this.group = Residence.getPermissionManager().getGroupByName(gp);
+	}
 	return this.group;
     }
 

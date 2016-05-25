@@ -174,13 +174,8 @@ public class ResidenceCommandListener extends Residence {
 	if (Residence.helppages == null)
 	    return false;
 
-	String helppath = "res";
-	for (int i = 0; i < args.length; i++) {
-	    if (args[i].equalsIgnoreCase("?")) {
-		break;
-	    }
-	    helppath = helppath + "." + args[i];
-	}
+	String helppath = getHelpPath(args);
+
 	int page = 1;
 	if (!args[args.length - 1].equalsIgnoreCase("?")) {
 	    try {
@@ -192,11 +187,22 @@ public class ResidenceCommandListener extends Residence {
 
 	if (command.getName().equalsIgnoreCase("res"))
 	    resadmin = false;
-
 	if (Residence.helppages.containesEntry(helppath))
 	    Residence.helppages.printHelp(sender, page, helppath, resadmin);
-
 	return true;
+    }
+
+    private String getHelpPath(String[] args) {
+	String helppath = "res";
+	for (int i = 0; i < args.length; i++) {
+	    if (args[i].equalsIgnoreCase("?")) {
+		break;
+	    }
+	    helppath = helppath + "." + args[i];
+	}
+	if (!Residence.helppages.containesEntry(helppath) && args.length > 0)
+	    return getHelpPath(Arrays.copyOf(args, args.length - 1));
+	return helppath;
     }
 
 }

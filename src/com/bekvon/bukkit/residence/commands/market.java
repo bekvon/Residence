@@ -12,7 +12,6 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class market implements cmd {
 
@@ -94,17 +93,10 @@ public class market implements cmd {
 
 	    ClaimedResidence CurrentRes = Residence.getResidenceManager().getByLoc(sign.getLocation());
 
-//	    if (CurrentRes == null) {
-//		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
-//		return true;
-//	    }
-
 	    if (CurrentRes != null && !CurrentRes.isOwner(player) && !resadmin) {
 		player.sendMessage(Residence.getLM().getMessage("Residence.NotOwner"));
 		return true;
 	    }
-
-	    Debug.D(args[2]);
 
 	    final ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
 

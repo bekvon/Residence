@@ -170,6 +170,8 @@ public class LocaleManager {
 	c.get("Language.Flag.CheckTrue", "&eFlag &6%1 &eapplies to player &6%2 &efor residence &6%3&e, value = &6%4");
 	c.get("Language.Flag.CheckFalse", "&eFlag &6%1 &edoes not apply to player &6%2 &efor residence.");
 	c.get("Language.Flag.Cleared", "&eFlags Cleared.");
+	c.get("Language.Flag.RemovedAll", "&eAll flags removed for &6%1 &ein &6%2 &eresidence.");
+	c.get("Language.Flag.RemovedGroup", "&eAll flags removed for &6%1 &egroup in &6%2 &eresidence.");
 	c.get("Language.Flag.Default", "&eFlags set to default.");
 	c.get("Language.Flag.Deny", "&cYou dont have &6%1 &cpermission<s> here.");
 	c.get("Language.Flag.SetDeny", "&cOwner does not have access to flag &6%1");
@@ -729,6 +731,12 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.leash.Description",
 	    "allows or denys aninal leash");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.leash.Info",
+	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"));
+	// hook
+	FlagList.add("hook");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hook.Description",
+	    "allows or denys fishing rod hooking entities");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hook.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"));
 	// healing
 	FlagList.add("healing");

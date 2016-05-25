@@ -1400,11 +1400,11 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    public static boolean isPlayerExist(Player player, String name, boolean inform) {
+    public static boolean isPlayerExist(CommandSender sender, String name, boolean inform) {
 	if (Residence.getPlayerUUID(name) != null)
 	    return true;
 	if (inform)
-	    player.sendMessage(getLM().getMessage("Invalid.Player"));
+	    sender.sendMessage(getLM().getMessage("Invalid.Player"));
 	return false;
 
     }
