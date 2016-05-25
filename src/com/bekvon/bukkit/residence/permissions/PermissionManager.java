@@ -121,7 +121,6 @@ public class PermissionManager {
 	    groupsMap.put(playerName, GPlayer);
 	} else
 	    GPlayer = groupsMap.get(playerName);
-
 	GPlayer.updateGroup(world, force);
     }
 

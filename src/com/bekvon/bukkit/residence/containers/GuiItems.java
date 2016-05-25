@@ -37,6 +37,7 @@ public enum GuiItems {
     firespread(377, 0),
     flow(111, 0),
     hidden(102, 0),
+    hook(346, 0),
     healing(373, 0),
     iceform(79, 0),
     icemelt(79, 0),

@@ -78,8 +78,10 @@ public class PlayerGroup {
 		if (this.player.hasPermission("residence.group." + one.getKey()))
 		    group = one.getKey();
 	    } else {
-		if (ResidenceVaultAdapter.hasPermission((OfflinePlayer) player, "residence.group." + one.getKey(), Residence.getConfigManager().getDefaultWorld()))
-		    group = one.getKey();
+		OfflinePlayer offlineP = Residence.getOfflinePlayer(playerName);
+		if (offlineP != null)
+		    if (ResidenceVaultAdapter.hasPermission(offlineP, "residence.group." + one.getKey(), Residence.getConfigManager().getDefaultWorld()))
+			group = one.getKey();
 	    }
 	}
 	return group;

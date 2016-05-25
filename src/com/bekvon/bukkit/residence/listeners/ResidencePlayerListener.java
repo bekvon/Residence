@@ -460,7 +460,8 @@ public class ResidencePlayerListener implements Listener {
 	    @Override
 	    public void run() {
 		Residence.getPlayerManager().playerJoin(p);
-		Residence.getPermissionManager().updateGroupNameForPlayer(p, true);
+		if (p != null)
+		    Residence.getPermissionManager().updateGroupNameForPlayer(p, true);
 		return;
 	    }
 	});
