@@ -44,6 +44,7 @@ public class PermissionGroup {
     protected int minHeight;
     protected int maxHeight;
     protected int maxRents;
+    protected int MaxRentDays = -1;
     protected int maxRentables;
     protected boolean selectCommandAccess;
     protected boolean itemListAccess;
@@ -86,6 +87,10 @@ public class PermissionGroup {
 	maxLeaseTime = limits.getInt("Lease.MaxDays", 16);
 	leaseGiveTime = limits.getInt("Lease.RenewIncrement", 14);
 	maxRents = limits.getInt("Rent.MaxRents", 0);
+
+	if (limits.contains("Rent.MaxRentDays"))
+	    MaxRentDays = limits.getInt("Rent.MaxRentDays", -1);
+
 	maxRentables = limits.getInt("Rent.MaxRentables", 0);
 	renewcostperarea = limits.getDouble("Economy.RenewCost", 0.02D);
 	canBuy = limits.getBoolean("Economy.CanBuy", false);
@@ -253,6 +258,10 @@ public class PermissionGroup {
 	return maxRents;
     }
 
+    public int getMaxRentDays() {
+	return MaxRentDays;
+    }
+
     public int getMaxRentables() {
 	return maxRentables;
     }
@@ -323,7 +332,8 @@ public class PermissionGroup {
 	player.sendMessage(Residence.getLM().getMessage("Limits.MaxUD", ymax));
 	player.sendMessage(Residence.getLM().getMessage("Limits.MinMax", minHeight, maxHeight));
 	player.sendMessage(Residence.getLM().getMessage("Limits.MaxSub", getMaxSubzoneDepth(target.getName())));
-	player.sendMessage(Residence.getLM().getMessage("Limits.MaxRents", getMaxRents(target.getName())));
+	player.sendMessage(Residence.getLM().getMessage("Limits.MaxRents", getMaxRents(target.getName())) +
+	    (getMaxRentDays() != -1 ? Residence.getLM().getMessage("Limits.MaxRentDays", getMaxRentDays()) : ""));
 	player.sendMessage(Residence.getLM().getMessage("Limits.EnterLeave", messageperms));
 	player.sendMessage(Residence.getLM().getMessage("Limits.NumberOwn", Residence.getResidenceManager().getOwnedZoneCount(target.getName())));
 	if (Residence.getEconomyManager() != null) {

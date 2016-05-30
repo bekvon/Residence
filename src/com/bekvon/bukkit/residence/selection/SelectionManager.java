@@ -5,7 +5,6 @@ import com.bekvon.bukkit.residence.containers.SelectionSides;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.ActionBar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -118,7 +117,7 @@ public class SelectionManager {
 	if (Residence.getConfigManager().enableEconomy())
 	    Message += " " + Residence.getLM().getMessage("General.LandCost", ((int) Math.ceil((double) cuboidArea.getSize() * group.getCostPerBlock())));
 
-	ActionBar.send(player, Message);
+	Residence.getAB().send(player, Message);
 
     }
 

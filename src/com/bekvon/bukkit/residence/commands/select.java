@@ -14,7 +14,6 @@ import com.bekvon.bukkit.residence.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.selection.AutoSelection;
 
 public class select implements cmd {
 
@@ -125,7 +124,7 @@ public class select implements cmd {
 		    return true;
 		}
 	    }
-	    AutoSelection.switchAutoSelection(target);
+	    Residence.getAutoSelectionManager().switchAutoSelection(target);
 	    return true;
 	}
 	if (args.length > 1 && args[1].equals("residence")) {

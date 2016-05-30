@@ -1,12 +1,16 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -78,6 +82,12 @@ public class WorldFlagManager {
 	    for (Entry<String, FlagPermissions> entry : worldperms.entrySet()) {
 		entry.getValue().setParent(globaldefaults);
 	    }
+
+	    if (!groups.isConfigurationSection("Groups")){
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED  + "Your groups.yml file is incorrect!");		
+		return;
+	    }
+
 	    keys = groups.getConfigurationSection("Groups").getKeys(false);
 	    if (keys != null) {
 		for (String key : keys) {

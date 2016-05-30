@@ -38,12 +38,14 @@ public class market implements cmd {
 
 	case "list":
 	    return commandResMarketList(args, resadmin, player, page);
-	case "autorenew":
-	    return commandResMarketAutorenew(args, resadmin, player, page);
+	case "allowrenewing":
+	    return commandResMarketAllowRenewing(args, resadmin, player, page);
+	case "payrent":
+	    return commandResMarketPayRent(args, resadmin, player);
 	case "rentable":
-	    return commandResMarketRentable(args, resadmin, player, page);
+	    return commandResMarketRentable(args, resadmin, player);
 	case "rent":
-	    return commandResMarketRent(args, resadmin, player, page);
+	    return commandResMarketRent(args, resadmin, player);
 	case "release":
 	case "unrent":
 	    if (args.length != 3 && args.length != 2)
@@ -196,11 +198,11 @@ public class market implements cmd {
 	}
     }
 
-    private boolean commandResMarketRent(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResMarketRent(String[] args, boolean resadmin, Player player) {
 	if (args.length < 2 || args.length > 4) {
 	    return false;
 	}
-	boolean repeat = false;
+	boolean repeat = Residence.getConfigManager().isRentPlayerAutoPay();
 
 	String area = null;
 
@@ -208,7 +210,9 @@ public class market implements cmd {
 	    area = args[2];
 	    if (args[3].equalsIgnoreCase("t") || args[3].equalsIgnoreCase("true")) {
 		repeat = true;
-	    } else if (!args[3].equalsIgnoreCase("f") && !args[3].equalsIgnoreCase("false")) {
+	    } else if (args[3].equalsIgnoreCase("f") || args[3].equalsIgnoreCase("false")) {
+		repeat = false;
+	    } else {
 		player.sendMessage(Residence.getLM().getMessage("Invalid.Boolean"));
 		return true;
 	    }
@@ -225,8 +229,30 @@ public class market implements cmd {
 	return true;
     }
 
-    private boolean commandResMarketRentable(String[] args, boolean resadmin, Player player, int page) {
-	if (args.length < 5 || args.length > 6) {
+    private boolean commandResMarketPayRent(String[] args, boolean resadmin, Player player) {
+	if (args.length != 2 && args.length != 3) {
+	    return false;
+	}
+
+	String area = null;
+
+	if (args.length == 2)
+	    area = Residence.getResidenceManager().getNameByLoc(player.getLocation());
+	else {
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+	    if (res != null)
+		area = res.getName();
+	}
+
+	if (area != null)
+	    Residence.getRentManager().payRent(player, area, resadmin);
+	else
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	return true;
+    }
+
+    private boolean commandResMarketRentable(String[] args, boolean resadmin, Player player) {
+	if (args.length < 5 || args.length > 8) {
 	    return false;
 	}
 	if (!Residence.getConfigManager().enabledRentSystem()) {
@@ -247,20 +273,50 @@ public class market implements cmd {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Days"));
 	    return true;
 	}
-	boolean repeat = false;
-	if (args.length == 6) {
-	    if (args[5].equalsIgnoreCase("t") || args[5].equalsIgnoreCase("true")) {
-		repeat = true;
-	    } else if (!args[5].equalsIgnoreCase("f") && !args[5].equalsIgnoreCase("false")) {
+	boolean AllowRenewing = Residence.getConfigManager().isRentAllowRenewing();
+	if (args.length >= 6) {
+	    String ag = args[5];
+	    if (ag.equalsIgnoreCase("t") || ag.equalsIgnoreCase("true")) {
+		AllowRenewing = true;
+	    } else if (ag.equalsIgnoreCase("f") || ag.equalsIgnoreCase("false")) {
+		AllowRenewing = false;
+	    } else {
 		player.sendMessage(Residence.getLM().getMessage("Invalid.Boolean"));
 		return true;
 	    }
 	}
-	Residence.getRentManager().setForRent(player, args[2], cost, days, repeat, resadmin);
+
+	boolean StayInMarket = Residence.getConfigManager().isRentStayInMarket();
+	if (args.length >= 7) {
+	    String ag = args[6];
+	    if (ag.equalsIgnoreCase("t") || ag.equalsIgnoreCase("true")) {
+		StayInMarket = true;
+	    } else if (ag.equalsIgnoreCase("f") || ag.equalsIgnoreCase("false")) {
+		StayInMarket = false;
+	    } else {
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Boolean"));
+		return true;
+	    }
+	}
+
+	boolean AllowAutoPay = Residence.getConfigManager().isRentAllowAutoPay();
+	if (args.length >= 8) {
+	    String ag = args[7];
+	    if (ag.equalsIgnoreCase("t") || ag.equalsIgnoreCase("true")) {
+		AllowAutoPay = true;
+	    } else if (ag.equalsIgnoreCase("f") || ag.equalsIgnoreCase("false")) {
+		AllowAutoPay = false;
+	    } else {
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Boolean"));
+		return true;
+	    }
+	}
+
+	Residence.getRentManager().setForRent(player, args[2], cost, days, AllowRenewing, StayInMarket, AllowAutoPay, resadmin);
 	return true;
     }
 
-    private boolean commandResMarketAutorenew(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResMarketAllowRenewing(String[] args, boolean resadmin, Player player, int page) {
 	if (!Residence.getConfigManager().enableEconomy()) {
 	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
 	    return true;
@@ -268,6 +324,7 @@ public class market implements cmd {
 	if (args.length != 4) {
 	    return false;
 	}
+
 	boolean value;
 	if (args[3].equalsIgnoreCase("true") || args[3].equalsIgnoreCase("t")) {
 	    value = true;
@@ -277,6 +334,14 @@ public class market implements cmd {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Boolean"));
 	    return true;
 	}
+
+	ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+
+	if (res == null) {
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    return true;
+	}
+
 	if (Residence.getRentManager().isRented(args[2]) && Residence.getRentManager().getRentingPlayer(args[2]).equalsIgnoreCase(player.getName())) {
 	    Residence.getRentManager().setRentedRepeatable(player, args[2], value, resadmin);
 	} else if (Residence.getRentManager().isForRent(args[2])) {

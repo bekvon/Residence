@@ -1,4 +1,4 @@
-﻿# NOTE If you want to modify this file, it is HIGHLY recommended that you make a copy
+# NOTE If you want to modify this file, it is HIGHLY recommended that you make a copy
 # of this file and modify that instead. This file will be updated automatically by Residence
 # when a newer version is detected, and your changes will be overwritten.  Once you 
 # have a copy of this file, change the Language: option under the Residence config.yml
@@ -7,6 +7,7 @@
 Language:
   Invalid:
     Player: '&c無效的玩家名...'
+    World: '&c無效的世界...'
     Residence: '&c無效的領地...'
     Subzone: '&c無效的領地子區域...'
     Direction: '&c無效的方向...'
@@ -134,6 +135,7 @@ Language:
     RemoveRentable: '&e領地 &6%1 &e不再可出租.'
     ForRentSuccess: '&e領地 &6%1 &e已被設置為每 &6%3 &e天以 &6%2 &e出租.'
     RentSuccess: '&e你租用了 &6%1 &e領地 &6%2 &e天.'
+    EndingRent: '&eRent time is ending for &6%1 &eon &6%2'
     AlreadyRented: '&e領地 &6%1 &e已出租給 &6%2'
     AlreadyExists: '&c已存在名稱為 &6%1 &c的領地.'
     Create: '&e已創建領地 &6%1&e!'
@@ -176,6 +178,7 @@ Language:
     ModifyDeny: '&c無法修改租用的領地.'
     Days: '&e租用天數: &6%1'
     Rented: ' &6(已出租)'
+    RentList: ' &6%1&e. &6%2 &e(&6%3&e/&6%4&e/&6%5&e) - &6%6 &6%7'
   Rentable:
     Land: '&e出租領地: &6'
     AutoRenew: '&e自動更新租用狀態: &6%1'
@@ -200,6 +203,7 @@ Language:
     LeaseInfinite: '&e出租時間已設置為無限.'
     MarketDisabled: '&c領地經濟已禁用!'
     SellAmount: '&e出售數量: &2%1'
+    SellList: ' &6%1&e. &6%2 &e(&6%3&e) - &6%4'
     LeaseExpire: '&e租約到期時間: &2%1'
   Expanding:
     North: '&e向北方擴展 &6%1 &e個方塊'
@@ -302,6 +306,7 @@ Language:
     TeleportSuccess: '&e傳送到 X:&6%1&e, Y:&6%2&e, Z:&6%3 &e位置'
     IncorrectLocation: '&6無法找到正確的傳送位置, 請等待 &e%1 &6秒後重試.'
     TeleportStarted: '&e傳送即將開始, 在 &6%4 &e秒內不要移動.'
+    WorldList: '&ePossible worlds: &6%1'
   General:
     DisabledWorld: '&c該世界已禁用領地.'
     UseNumbers: '&c請輸入數位.'
@@ -352,6 +357,8 @@ Language:
     LandCost: '&e領地花費: &6%1'
     'True': '&2是'
     'False': '&c否'
+    Removed: '&6Removed'
+    FlagState: '&eFlag state: %1'
     Land: '&e領地: &6%1'
     Cost: '&e花費: 每 &6%2 &e天 &6%1'
     Status: '&e狀態: %1'
@@ -659,6 +666,10 @@ CommandHelp:
               Description: 允許或禁止活塞推拉方塊
               Info:
               - '&e用法: &6/res set <領地> [許可權] true/false/remove'
+            pistonprotection:
+              Description: 允許或禁止活塞將方塊移出或移入領地內
+              Info:
+              - '&eUsage: &6/res set <residence> [flag] true/false/remove'
             hidden:
               Description: 在 list 或 listall 命令中隱藏此領地
               Info:
@@ -731,10 +742,6 @@ CommandHelp:
               Description: 允許或禁止爆炸
               Info:
               - '&e用法: &6/res set <領地> [許可權] true/false/remove'
-            witherdamage:
-              Description: 禁止凋零怪造成傷害
-              Info:
-              - '&e用法: &6/res set <領地> [許可權] true/false/remove'
             fireball:
               Description: 允許或禁止火焰彈
               Info:
@@ -799,8 +806,28 @@ CommandHelp:
               Description: 防止雪人留下雪
               Info:
               - '&e用法: &6/res set <領地> [許可權] true/false/remove'
+            snowball:
+              Description: 防止被雪球擊退
+              Info:
+              - '&eUsage: &6/res set <residence> [flag] true/false/remove'
+            iceform:
+              Description: 防止雪的形成
+              Info:
+              - '&eUsage: &6/res set <residence> [flag] true/false/remove'
+            icemelt:
+              Description: 防止雪融化
+              Info:
+              - '&eUsage: &6/res set <residence> [flag] true/false/remove'
             respawn:
               Description: 自動重生玩家
+              Info:
+              - '&e用法: &6/res set <領地> [許可權] true/false/remove'
+            riding:
+              Description: 防止騎馬
+              Info:
+              - '&eUsage: &6/res set <residence> [flag] true/false/remove'
+            witherdamage:
+              Description: 禁止凋零怪造成傷害
               Info:
               - '&e用法: &6/res set <領地> [許可權] true/false/remove'
         limits:
@@ -1096,6 +1123,15 @@ CommandHelp:
               Description: 顯示可出租與可出售的領地
               Info:
               - '&e用法: &6/res market list'
+              SubCommands:
+                rent:
+                  Description: 列出可以被租的領地.
+                  Info:
+                  - '&e用法: &6/res market list rent'
+                sell:
+                  Description: 列出可以被買的領地.
+                  Info:
+                  - '&e用法: &6/res market list sell'
             sell:
               Description: 出售一個領地
               Info:
@@ -1147,6 +1183,10 @@ CommandHelp:
           Description: 更新領地告示牌
           Info:
           - '&e用法: &6/res signupdate'
+        reload:
+          Description: 重新加載語言或設定檔案
+          Info:
+          - '&e用法: &6/res reload [config/lang]'
         lists:
           Description: 預定義許可權列表
           Info:

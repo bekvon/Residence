@@ -59,6 +59,8 @@ Groups:
            MaxRents: 3
            #determines how many residences can be set for rent by players of this group at once
            MaxRentables: 3
+           # determines max days player can rent residence at once
+           MaxRentDays: 31
        # Options relating to the Residence Economy.
        Economy:
           # Whether or not players in this group can buy other Residences that are for sale.

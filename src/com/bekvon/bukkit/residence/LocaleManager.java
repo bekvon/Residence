@@ -255,6 +255,10 @@ public class LocaleManager {
 	c.get("Language.Rent.Disabled", "&cRent is disabled...");
 	c.get("Language.Rent.DisableRenew", "&eResidence &6%1 &ewill now no longer re-rent upon expire.");
 	c.get("Language.Rent.EnableRenew", "&eResidence &6%1 &ewill now automatically re-rent upon expire.");
+	c.get("Language.Rent.NotByYou", "&cResidence is rented not by you.");
+	c.get("Language.Rent.MaxRentDays", "&cYou cant rent for more than &6%1 &cdays at once.");
+	c.get("Language.Rent.OneTime", "&cCan't extend rent time for this residence.");
+	c.get("Language.Rent.Extended", "&eRent extended for aditional &6%1 &edays for &6%2 &eresidence");
 	c.get("Language.Rent.Expire", "&eRent Expire Time: &6%1");
 	c.get("Language.Rent.ModifyDeny", "&cCannot modify a rented residence.");
 	c.get("Language.Rent.Days", "&eRent days: &6%1");
@@ -319,6 +323,7 @@ public class LocaleManager {
 	c.get("Language.Limits.MinMax", "&7- &eMin/Max Protection Height:&3 %1 to %2");
 	c.get("Language.Limits.MaxSub", "&7- &eMax Subzone Depth:&3 %1");
 	c.get("Language.Limits.MaxRents", "&7- &eMax Rents:&3 %1");
+	c.get("Language.Limits.MaxRentDays", " &eMax Rent days:&3 %1");
 	c.get("Language.Limits.EnterLeave", "&7- &eCan Set Enter/Leave Messages:&3 %1");
 	c.get("Language.Limits.NumberOwn", "&7- &eNumber of Residences you own:&3 %1");
 	c.get("Language.Limits.Cost", "&7- &eResidence Cost Per Block:&3 %1");
@@ -1389,15 +1394,29 @@ public class LocaleManager {
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rent.Description", "ent a residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rent.Info",
-	    Arrays.asList("&eUsage: &6/res market rent [residence] <autorenew>",
+	    Arrays.asList("&eUsage: &6/res market rent [residence] <AutoPay>",
 		"Rents a residence.  Autorenew can be either true or false.  If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it."));
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rent.Args", "[cresidence] [true/false]");
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Description", "Make a residence rentable.");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Info",
-	    Arrays.asList("&eUsage: &6/res market rentable [residence] [cost] [days] <repeat>",
-		"Makes a residence rentable for [cost] money for every [days] number of days.  If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires."));
+	    Arrays.asList("&eUsage: &6/res market rentable [residence] [cost] [days] <AllowRenewing> <StayInMarket> <AllowAutoPay>",
+		"Makes a residence rentable for [cost] money for every [days] number of days.",
+		"If <AllowRenewing> is true, the residence will be able to be rented again before rent expires.",
+		"If <StayInMarket> is true, the residence will stay in market after last renter will be removed.",
+		"If <AllowAutoPay> is true, money for rent will be automaticaly taken from players balance if he chosen that option when renting"));
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Args", "[residence]");
+	
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Description", "Sets residence AllowRenewing to given value");
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Info",
+	    Arrays.asList("&eUsage: &6/res market allowrenewing <residence> [true/false]"));
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Args", "[residence]");
+	
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Description", "Pays rent for defined residence");
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Info",
+	    Arrays.asList("&eUsage: &6/res market payrent <residence>"));
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Args", "[residence]");
+	
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.release.Description", "Remove a residence from rent or rentable.");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.release.Info",

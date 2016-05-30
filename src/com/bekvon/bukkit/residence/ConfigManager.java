@@ -58,6 +58,10 @@ public class ConfigManager {
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
     protected boolean RentInformOnEnding;
+    protected boolean RentAllowRenewing;
+    protected boolean RentStayInMarket;
+    protected boolean RentAllowAutoPay;
+    protected boolean RentPlayerAutoPay;
     protected boolean leaseAutoRenew;
     protected boolean ShortInfoUse;
     protected boolean OnlyLike;
@@ -643,6 +647,13 @@ public class ConfigManager {
 	c.getW().addComment("Global.Rent.Inform.Delay", "Time range in seconds for how long to wait after player logs in to inform about ending rents");
 	RentInformDelay = c.get("Global.Rent.Inform.Delay", 60);
 
+	c.getW().addComment("Global.Rent.DefaultValues.AllowRenewing", "Default values used when putting residence for rent");
+	RentAllowRenewing = c.get("Global.Rent.DefaultValues.AllowRenewing", true);
+	RentStayInMarket = c.get("Global.Rent.DefaultValues.StayInMarket", true);
+	RentAllowAutoPay = c.get("Global.Rent.DefaultValues.AllowAutoPay", true);
+	c.getW().addComment("Global.Rent.DefaultValues.PlayerAutoPay", "If set to true, when player is not defining auto pay on renting, then this value will be used");
+	RentPlayerAutoPay = c.get("Global.Rent.DefaultValues.PlayerAutoPay", true);
+
 	c.getW().addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
 	rentCheckInterval = c.get("Global.RentCheckInterval", 10);
 
@@ -876,6 +887,22 @@ public class ConfigManager {
 
     public int getRentInformBefore() {
 	return RentInformBefore;
+    }
+
+    public boolean isRentAllowAutoPay() {
+	return RentAllowAutoPay;
+    }
+
+    public boolean isRentPlayerAutoPay() {
+	return RentPlayerAutoPay;
+    }
+
+    public boolean isRentStayInMarket() {
+	return RentStayInMarket;
+    }
+
+    public boolean isRentAllowRenewing() {
+	return RentAllowRenewing;
     }
 
     public boolean isRentInformOnEnding() {

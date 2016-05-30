@@ -11,10 +11,6 @@ public class info implements cmd {
 
     @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
-//	if (!(sender instanceof Player))
-//	    return false;
-//
-//	Player player = (Player) sender;
 
 	if (args.length == 1 && sender instanceof Player) {
 	    Player player = (Player) sender;

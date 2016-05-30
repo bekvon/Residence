@@ -22,7 +22,7 @@ public class VersionChecker {
 	this.plugin = plugin;
     }
 
-    public static int GetVersion() {
+    public int GetVersion() {
 	if (cleanVersion == 0) {
 	    String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	    // Translating version to integer for simpler use

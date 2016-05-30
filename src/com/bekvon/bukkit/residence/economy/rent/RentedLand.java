@@ -8,14 +8,14 @@ public class RentedLand {
     public String player;
     public long startTime = 0L;
     public long endTime = 0L;
-    public boolean autoRefresh = true;
+    public boolean AutoPay = true;
 
     public Map<String, Object> save() {
 	Map<String, Object> rentables = new HashMap<>();
 	rentables.put("Player", player);
 	rentables.put("StartTime", startTime);
 	rentables.put("EndTime", endTime);
-	rentables.put("AutoRefresh", autoRefresh);
+	rentables.put("AutoRefresh", AutoPay);
 	return rentables;
     }
 
@@ -24,7 +24,7 @@ public class RentedLand {
 	newland.player = (String) map.get("Player");
 	newland.startTime = (Long) map.get("StartTime");
 	newland.endTime = (Long) map.get("EndTime");
-	newland.autoRefresh = (Boolean) map.get("AutoRefresh");
+	newland.AutoPay = (Boolean) map.get("AutoRefresh");
 	return newland;
     }
 }

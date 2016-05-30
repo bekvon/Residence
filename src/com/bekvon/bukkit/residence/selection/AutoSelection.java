@@ -11,9 +11,9 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 public class AutoSelection {
 
-    private static HashMap<String, AutoSelector> list = new HashMap<String, AutoSelector>();
+    private HashMap<String, AutoSelector> list = new HashMap<String, AutoSelector>();
 
-    public static void switchAutoSelection(Player player) {
+    public void switchAutoSelection(Player player) {
 	if (!list.containsKey(player.getName().toLowerCase())) {
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player.getName(), player.getLocation().getWorld().getName());
 	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
@@ -24,7 +24,7 @@ public class AutoSelection {
 	}
     }
 
-    public static void UpdateSelection(Player player) {
+    public void UpdateSelection(Player player) {
 
 	if (!getList().containsKey(player.getName().toLowerCase()))
 	    return;
@@ -115,7 +115,7 @@ public class AutoSelection {
 	}
     }
 
-    public static HashMap<String, AutoSelector> getList() {
+    public HashMap<String, AutoSelector> getList() {
 	return list;
     }
 }

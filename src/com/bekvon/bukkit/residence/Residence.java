@@ -66,6 +66,7 @@ import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.protection.PlayerManager;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
+import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
@@ -76,6 +77,7 @@ import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
@@ -145,6 +147,8 @@ public class Residence extends JavaPlugin {
     protected static RandomTp RandomTpManager;
     protected static DynMapManager DynManager;
     protected static Sorting SortingManager;
+    protected static ActionBar ABManager;
+    protected static AutoSelection AutoSelectionManager;
 
     protected boolean firstenable = true;
     protected static EconomyInterface economy;
@@ -172,6 +176,7 @@ public class Residence extends JavaPlugin {
     private static String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
     private static String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
+    private static AB ab;
     private static NMS nms;
     static LWC lwc;
 
@@ -237,6 +242,10 @@ public class Residence extends JavaPlugin {
 
     public static NMS getNms() {
 	return nms;
+    }
+
+    public static AB getAB() {
+	return ab;
     }
 
     private Runnable doHeals = new Runnable() {
@@ -403,29 +412,32 @@ public class Residence extends JavaPlugin {
 		} else {
 		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
 		    this.setEnabled(false);
+		    Bukkit.shutdown();
 		}
-	    } catch (ClassNotFoundException e) {
-		System.out.println("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version);
+	    } catch (SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | InstantiationException
+		| ClassNotFoundException e) {
+		System.out.println("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version + " and server will shutdown");
 		this.setEnabled(false);
+		Bukkit.shutdown();
 		return;
-	    } catch (InstantiationException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (IllegalAccessException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (IllegalArgumentException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (InvocationTargetException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (NoSuchMethodException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
-	    } catch (SecurityException e) {
-		e.printStackTrace();
-		this.setEnabled(false);
+	    }
+
+	    ABManager = new ActionBar();
+	    version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{7})")[0];
+	    try {
+		Class<?> nmsClass;
+		nmsClass = Class.forName("com.bekvon.bukkit.residence.actionBarNMS." + version);
+		if (AB.class.isAssignableFrom(nmsClass)) {
+		    ab = (AB) nmsClass.getConstructor().newInstance();
+		} else {
+		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
+		    this.setEnabled(false);
+		    Bukkit.shutdown();
+		}
+	    } catch (SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | InstantiationException
+		| ClassNotFoundException e) {
+		ab = ABManager;
+		return;
 	    }
 
 	    gmanager = new PermissionManager(groups, flags);
@@ -627,11 +639,11 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(shlistener, this);
 
 		// 1.8 event
-		if (VersionChecker.GetVersion() >= 1800)
+		if (getVersionChecker().GetVersion() >= 1800)
 		    pm.registerEvents(new v1_8Events(), this);
 
 		// 1.9 event
-		if (VersionChecker.GetVersion() >= 1900)
+		if (getVersionChecker().GetVersion() >= 1900)
 		    pm.registerEvents(new v1_9Events(), this);
 
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
@@ -650,6 +662,7 @@ public class Residence extends JavaPlugin {
 	    getLM().LanguageReload();
 
 	    SortingManager = new Sorting();
+	    AutoSelectionManager = new AutoSelection();
 
 	    if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
 		getServer().getPluginManager().registerEvents(spigotlistener, this);
@@ -798,6 +811,14 @@ public class Residence extends JavaPlugin {
 
     public static DynMapManager getDynManager() {
 	return DynManager;
+    }
+
+    public static ActionBar getABManager2() {
+	return ABManager;
+    }
+
+    public static AutoSelection getAutoSelectionManager() {
+	return AutoSelectionManager;
     }
 
     public static Sorting getSortingManager() {

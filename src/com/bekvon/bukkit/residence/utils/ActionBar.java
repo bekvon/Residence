@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.utils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,24 +8,28 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
+
+import com.bekvon.bukkit.residence.AB;
 
 /**
 *
 * @author hamzaxx
 */
-public class ActionBar {
-    private static String version = "";
-    private static Object packet;
-    private static Method getHandle;
-    private static Method sendPacket;
-    private static Field playerConnection;
-    private static Class<?> nmsChatSerializer;
-    private static Class<?> nmsIChatBaseComponent;
-    private static Class<?> packetType;
+public class ActionBar implements AB{
+    private String version = "";
+    private Object packet;
+    private Method getHandle;
+    private Method sendPacket;
+    private Field playerConnection;
+    private Class<?> nmsChatSerializer;
+    private Class<?> nmsIChatBaseComponent;
+    private Class<?> packetType;
+    private Constructor<?> constructor;
 
-    static {
+    public ActionBar() {
 	try {
 	    version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	    packetType = Class.forName(getPacketPlayOutChat());
@@ -36,19 +41,31 @@ public class ActionBar {
 	    getHandle = typeCraftPlayer.getMethod("getHandle");
 	    playerConnection = typeNMSPlayer.getField("playerConnection");
 	    sendPacket = typePlayerConnection.getMethod("sendPacket", Class.forName(getPacketClasspath()));
+	    if (!version.contains("1_7")) {
+		constructor = packetType.getConstructor(nmsIChatBaseComponent, byte.class);
+	    } else {
+		constructor = packetType.getConstructor(nmsIChatBaseComponent, int.class);
+	    }
 	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException ex) {
 	    Bukkit.getLogger().log(Level.SEVERE, "Error {0}", ex);
 	}
     }
 
-    public static void send(Player receivingPacket, String msg) {
+    public void send(CommandSender sender, String msg) {
+	if (sender instanceof Player)
+	    send((Player) sender, msg);
+	else
+	    sender.sendMessage(msg);
+    }
+
+    public void send(Player receivingPacket, String msg) {
 	try {
 	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', JSONObject
 		.escape(msg)) + "\"}");
 	    if (!version.contains("1_7")) {
-		packet = packetType.getConstructor(nmsIChatBaseComponent, byte.class).newInstance(serialized, (byte) 2);
+		packet = constructor.newInstance(serialized, (byte) 2);
 	    } else {
-		packet = packetType.getConstructor(nmsIChatBaseComponent, int.class).newInstance(serialized, 2);
+		packet = constructor.newInstance(serialized, 2);
 	    }
 	    Object player = getHandle.invoke(receivingPacket);
 	    Object connection = playerConnection.get(player);
@@ -58,27 +75,27 @@ public class ActionBar {
 	}
     }
 
-    private static String getCraftPlayerClasspath() {
+    private String getCraftPlayerClasspath() {
 	return "org.bukkit.craftbukkit." + version + ".entity.CraftPlayer";
     }
 
-    private static String getPlayerConnectionClasspath() {
+    private String getPlayerConnectionClasspath() {
 	return "net.minecraft.server." + version + ".PlayerConnection";
     }
 
-    private static String getNMSPlayerClasspath() {
+    private String getNMSPlayerClasspath() {
 	return "net.minecraft.server." + version + ".EntityPlayer";
     }
 
-    private static String getPacketClasspath() {
+    private String getPacketClasspath() {
 	return "net.minecraft.server." + version + ".Packet";
     }
 
-    private static String getIChatBaseComponentClasspath() {
+    private String getIChatBaseComponentClasspath() {
 	return "net.minecraft.server." + version + ".IChatBaseComponent";
     }
 
-    private static String getChatSerializerClasspath() {
+    private String getChatSerializerClasspath() {
 	if (version.equals("v1_8_R1") || version.contains("1_7")) {
 	    return "net.minecraft.server." + version + ".ChatSerializer";
 	} else {
@@ -86,7 +103,7 @@ public class ActionBar {
 	}
     }
 
-    private static String getPacketPlayOutChat() {
+    private String getPacketPlayOutChat() {
 	return "net.minecraft.server." + version + ".PacketPlayOutChat";
     }
 }

@@ -27,7 +27,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 
@@ -256,7 +255,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    if (player != null) {
 		Residence.getSelectionManager().NewMakeBorders(player, newArea.getHighLoc(), newArea.getLowLoc(), false);
-		AutoSelection.getList().remove(player.getName().toLowerCase());
+		Residence.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
 
 		player.sendMessage(Residence.getLM().getMessage("Residence.Create", name));
 	    }

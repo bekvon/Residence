@@ -17,7 +17,11 @@ public interface MarketRentInterface {
 
     public List<String> getRentedLands(String playerName);
 
-    public void setForRent(Player player, String landName, int amount, int days, boolean repeatable, boolean resadmin);
+    public void setForRent(Player player, String landName, int amount, int days, boolean AllowRenewing, boolean resadmin);
+
+    public void setForRent(Player player, String landName, int amount, int days, boolean AllowRenewing, boolean StayInMarket, boolean resadmin);
+
+    public void setForRent(Player player, String landName, int amount, int days, boolean AllowRenewing, boolean StayInMarket, boolean AllowAutoPay, boolean resadmin);
 
     public void rent(Player player, String landName, boolean repeat, boolean resadmin);
 

@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
-import com.bekvon.bukkit.residence.utils.RandomTp;
 
 public class rt implements cmd {
 
@@ -63,7 +62,7 @@ public class rt implements cmd {
 	if (wname == null)
 	    wname = player.getLocation().getWorld().getName();
 
-	Location loc = RandomTp.getRandomlocation(wname);
+	Location loc = Residence.getRandomTpManager().getRandomlocation(wname);
 	Residence.getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
 
 	if (loc == null) {
@@ -77,7 +76,7 @@ public class rt implements cmd {
 	    Residence.getTeleportDelayMap().add(player.getName());
 	    Residence.getRandomTpManager().performDelaydTp(loc, player);
 	} else
-	    RandomTp.performInstantTp(loc, player);
+	    Residence.getRandomTpManager().performInstantTp(loc, player);
 
 	return true;
     }

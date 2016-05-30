@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -153,8 +152,8 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
-	if (event.getNewState().getType() != Material.STATIONARY_WATER && event.getBlock().getState().getType() == Material.SNOW && event.getBlock().getState()
-	    .getType() == Material.SNOW_BLOCK)
+	if (event.getNewState().getType() != Material.STATIONARY_WATER && event.getBlock().getState().getType() != Material.SNOW && event.getBlock().getState()
+	    .getType() != Material.SNOW_BLOCK)
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
@@ -455,7 +454,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	}
     }
-    
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLandDryPhysics(BlockPhysicsEvent event) {
@@ -466,7 +465,7 @@ public class ResidenceBlockListener implements Listener {
 	Material mat = event.getBlock().getType();
 	if (mat != Material.SOIL)
 	    return;
-		
+
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has("dryup", true)) {
 	    event.getBlock().setData((byte) 7);

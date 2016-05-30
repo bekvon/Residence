@@ -60,9 +60,7 @@ import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -123,7 +121,7 @@ public class ResidencePlayerListener implements Listener {
 		    RentedLand rentedland = Residence.getRentManager().getRentedLand(one);
 		    if (rentedland == null)
 			continue;
-		    if (rentedland.autoRefresh)
+		    if (rentedland.AutoPay)
 			continue;
 		    if (rentedland.endTime - System.currentTimeMillis() < Residence.getConfigManager().getRentInformBefore() * 60 * 24 * 7) {
 			player.sendMessage(Residence.getLM().getMessage("Residence.EndingRent", one, GetTime.getTime(rentedland.endTime)));
@@ -433,8 +431,8 @@ public class ResidencePlayerListener implements Listener {
 	Residence.getChatManager().removeFromChannel(pname);
 	Residence.getPlayerListener().removePlayerResidenceChat(pname);
 	Residence.getOfflinePlayerMap().put(pname, (OfflinePlayer) event.getPlayer());
-	if (AutoSelection.getList().containsKey(pname.toLowerCase()))
-	    AutoSelection.getList().remove(pname);
+	if (Residence.getAutoSelectionManager().getList().containsKey(pname.toLowerCase()))
+	    Residence.getAutoSelectionManager().getList().remove(pname);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -1213,11 +1211,11 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	if (!AutoSelection.getList().isEmpty()) {
+	if (!Residence.getAutoSelectionManager().getList().isEmpty()) {
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		@Override
 		public void run() {
-		    AutoSelection.UpdateSelection(player);
+		    Residence.getAutoSelectionManager().UpdateSelection(player);
 		    return;
 		}
 	    });
@@ -1240,7 +1238,8 @@ public class ResidencePlayerListener implements Listener {
 
 		if (leave != null && !leave.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
-			ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave)).toString());
+			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
+			    .toString());
 		    } else {
 			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
 		    }
@@ -1268,7 +1267,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 
 		if (Residence.getConfigManager().useActionBar()) {
-		    ActionBar.send(player, Residence.getLM().getMessage("Residence.MoveDeny", orres.getName()));
+		    Residence.getAB().send(player, Residence.getLM().getMessage("Residence.MoveDeny", orres.getName()));
 		} else {
 		    player.sendMessage(Residence.getLM().getMessage("Residence.MoveDeny", orres.getName()));
 		}
@@ -1338,7 +1337,8 @@ public class ResidencePlayerListener implements Listener {
 
 		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
 		    if (Residence.getConfigManager().useActionBar()) {
-			ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave)).toString());
+			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
+			    .toString());
 		    } else {
 			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
 		    }
@@ -1353,7 +1353,7 @@ public class ResidencePlayerListener implements Listener {
 
 	    if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
 		if (Residence.getConfigManager().useActionBar()) {
-		    ActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage)).toString());
+		    Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage)).toString());
 		} else {
 		    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
 		}

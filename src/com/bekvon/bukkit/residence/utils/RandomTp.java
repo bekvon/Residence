@@ -25,7 +25,7 @@ public class RandomTp {
 	this.plugin = plugin;
     }
 
-    public static Location getRandomlocation(String WorldName) {
+    public Location getRandomlocation(String WorldName) {
 
 	Random random = new Random(System.currentTimeMillis());
 
@@ -45,10 +45,10 @@ public class RandomTp {
 	    rtloc = one;
 	    break;
 	}
-	
+
 	if (rtloc == null)
 	    return null;
-	
+
 	World world = rtloc.getCenter().getWorld();
 
 	if (world == null)
@@ -128,7 +128,7 @@ public class RandomTp {
 	}, Residence.getConfigManager().getTeleportDelay() * 20L);
     }
 
-    public static void performInstantTp(Location loc, Player targetPlayer) {
+    public void performInstantTp(Location loc, Player targetPlayer) {
 	targetPlayer.teleport(loc);
 	targetPlayer.sendMessage(Residence.getLM().getMessage("RandomTeleport.TeleportSuccess", loc.getX(), loc.getY(), loc.getZ()));
     }
