@@ -16,13 +16,13 @@ public class info implements cmd {
 	    Player player = (Player) sender;
 	    String area = Residence.getResidenceManager().getNameByLoc(player.getLocation());
 	    if (area != null) {
-		Residence.getResidenceManager().printAreaInfo(area, sender);
+		Residence.getResidenceManager().printAreaInfo(area, sender, resadmin);
 	    } else {
 		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    }
 	    return true;
 	} else if (args.length == 2) {
-	    Residence.getResidenceManager().printAreaInfo(args[1], sender);
+	    Residence.getResidenceManager().printAreaInfo(args[1], sender, resadmin);
 	    return true;
 	}
 	return false;

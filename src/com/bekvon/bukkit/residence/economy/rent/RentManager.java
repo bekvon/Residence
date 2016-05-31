@@ -376,6 +376,12 @@ public class RentManager implements MarketRentInterface {
 	    landName = landName.toLowerCase();
 	return rentableLand.containsKey(landName);
     }
+    
+    public RentableLand getRentableLand(String landName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
+	    landName = landName.toLowerCase();
+	return rentableLand.get(landName);
+    }
 
     public boolean isRented(String landName) {
 	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
@@ -542,7 +548,9 @@ public class RentManager implements MarketRentInterface {
 	    player.sendMessage(Residence.getLM().getMessage("General.Separator"));
 	    player.sendMessage(Residence.getLM().getMessage("General.Land", landName));
 	    player.sendMessage(Residence.getLM().getMessage("General.Cost", rentable.cost, rentable.days));
-	    player.sendMessage(Residence.getLM().getMessage("Rentable.AutoRenew", rentable.AllowRenewing));
+	    player.sendMessage(Residence.getLM().getMessage("Rentable.AllowRenewing", rentable.AllowRenewing));
+	    player.sendMessage(Residence.getLM().getMessage("Rentable.StayInMarket", rentable.StayInMarket));
+	    player.sendMessage(Residence.getLM().getMessage("Rentable.AllowAutoPay", rentable.AllowAutoPay));
 	    if (rented != null) {
 		player.sendMessage(Residence.getLM().getMessage("Residence.RentedBy", rented.player));
 		player.sendMessage(Residence.getLM().getMessage("Rent.Expire", GetTime.getTime(rented.endTime)));

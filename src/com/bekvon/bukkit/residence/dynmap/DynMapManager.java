@@ -88,7 +88,7 @@ public class DynMapManager {
 		+ ChatColor.stripColor(Residence.getLM().getMessage("Residence.RentedBy", "")) + "<span style=\"font-weight:bold;\">%renter%</span><br /> "
 		+ ChatColor.stripColor(Residence.getLM().getMessage("General.LandCost", "")) + "<span style=\"font-weight:bold;\">%rent%</span><br /> "
 		+ ChatColor.stripColor(Residence.getLM().getMessage("Rent.Days", "")) + "<span style=\"font-weight:bold;\">%rentdays%</span><br /> "
-		+ ChatColor.stripColor(Residence.getLM().getMessage("Rentable.AutoRenew", "")) + "<span style=\"font-weight:bold;\">%renew%</span><br /> "
+		+ ChatColor.stripColor(Residence.getLM().getMessage("Rentable.AllowRenewing", "")) + "<span style=\"font-weight:bold;\">%renew%</span><br /> "
 		+ ChatColor.stripColor(Residence.getLM().getMessage("Rent.Expire", "")) + "<span style=\"font-weight:bold;\">%expire%</span></div></div>";
 
 	if (Residence.getTransactionManager().isForSale(res.getName()))

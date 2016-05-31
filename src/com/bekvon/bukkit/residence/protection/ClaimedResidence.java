@@ -22,8 +22,10 @@ import com.bekvon.bukkit.residence.text.help.InformationPager;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -56,6 +58,10 @@ public class ClaimedResidence {
     protected ChatColor ChannelColor = ChatColor.WHITE;
     protected ResidenceItemList ignorelist;
     protected ResidenceItemList blacklist;
+
+    protected List<String> cmdWhiteList = new ArrayList<String>();
+    protected List<String> cmdBlackList = new ArrayList<String>();
+
     private Residence plugin;
 
     private ClaimedResidence(Residence plugin) {
@@ -1109,6 +1115,11 @@ public class ClaimedResidence {
 	root.put("Subzones", subzonemap);
 	root.put("Permissions", perms.save());
 
+	if (!this.cmdBlackList.isEmpty())
+	    root.put("cmdBlackList", this.cmdBlackList);
+	if (!this.cmdWhiteList.isEmpty())
+	    root.put("cmdWhiteList", this.cmdWhiteList);
+
 	if (tpLoc != null) {
 	    Map<String, Object> tpmap = new HashMap<>();
 	    tpmap.put("X", convertDouble(tpLoc.getX()));
@@ -1125,6 +1136,7 @@ public class ClaimedResidence {
     private double convertDouble(double d) {
 	return convertDouble(String.valueOf(d));
     }
+
     private static double convertDouble(String dString) {
 	DecimalFormat formatter = new DecimalFormat("#0.00");
 	formatter.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.getDefault()));
@@ -1137,7 +1149,7 @@ public class ClaimedResidence {
 	}
 	return d;
     }
-    
+
     @SuppressWarnings("unchecked")
     public static ClaimedResidence load(Map<String, Object> root, ClaimedResidence parent, Residence plugin) throws Exception {
 	ClaimedResidence res = new ClaimedResidence(plugin);
@@ -1195,11 +1207,16 @@ public class ClaimedResidence {
 	    if (tploc.containsKey("Pitch"))
 		pitch = convertDouble(tploc.get("Pitch").toString());
 
-	    res.tpLoc = new Location(world,convertDouble(tploc.get("X").toString()), convertDouble(tploc.get("Y").toString()), convertDouble(tploc.get("Z")
+	    res.tpLoc = new Location(world, convertDouble(tploc.get("X").toString()), convertDouble(tploc.get("Y").toString()), convertDouble(tploc.get("Z")
 		.toString()));
 	    res.tpLoc.setPitch((float) pitch);
 	    res.tpLoc.setYaw((float) yaw);
 	}
+
+	if (root.containsKey("cmdBlackList"))
+	    res.cmdBlackList = (List<String>) root.get("cmdBlackList");
+	if (root.containsKey("cmdWhiteList"))
+	    res.cmdWhiteList = (List<String>) root.get("cmdWhiteList");
 
 	if (root.containsKey("ChatPrefix"))
 	    res.ChatPrefix = (String) root.get("ChatPrefix");
@@ -1348,6 +1365,38 @@ public class ClaimedResidence {
 
     public ResidenceItemList getItemIgnoreList() {
 	return ignorelist;
+    }
+
+    public List<String> getCmdBlackList() {
+	return this.cmdBlackList;
+    }
+
+    public List<String> getCmdWhiteList() {
+	return this.cmdWhiteList;
+    }
+
+    public boolean addCmdBlackList(String cmd) {
+	if (cmd.contains("/"))
+	    cmd = cmd.replace("/", "");
+	if (!this.cmdBlackList.contains(cmd.toLowerCase())) {
+	    this.cmdBlackList.add(cmd.toLowerCase());
+	    return true;
+	} else {
+	    this.cmdBlackList.remove(cmd.toLowerCase());
+	    return false;
+	}
+    }
+
+    public boolean addCmdWhiteList(String cmd) {
+	if (cmd.contains("/"))
+	    cmd = cmd.replace("/", "");
+	if (!this.cmdWhiteList.contains(cmd.toLowerCase())) {
+	    this.cmdWhiteList.add(cmd.toLowerCase());
+	    return true;
+	} else {
+	    this.cmdWhiteList.remove(cmd.toLowerCase());
+	    return false;
+	}
     }
 
     public Double getBlockSellPrice() {

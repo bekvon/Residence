@@ -54,6 +54,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.gui.SetFlag;
@@ -224,6 +225,44 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	if (player.hasPermission("residence.flag.command.bypass"))
+	    return;
+
+	String msg = event.getMessage().replace(" ", "_");
+
+	int white = 0;
+	int black = 0;
+
+	for (String oneWhite : res.getCmdWhiteList()) {
+	    if (msg.startsWith("/" + oneWhite)) {
+		if (oneWhite.contains("_") && oneWhite.split("_").length > white)
+		    white = oneWhite.split("_").length;
+		else if (white == 0)
+		    white = 1;
+	    }
+	}
+
+	for (String oneBlack : res.getCmdBlackList()) {
+	    if (msg.startsWith("/" + oneBlack)) {
+		if (msg.contains("_"))
+		    black = oneBlack.split("_").length;
+		else
+		    black = 1;
+		break;
+	    }
+	}
+
+	if (black == 0)
+	    for (String oneBlack : res.getCmdBlackList()) {
+		if (oneBlack.equalsIgnoreCase("*")) {
+		    if (msg.contains("_"))
+			black = msg.split("_").length;
+		    break;
+		}
+	    }
+
+//	Debug.D(white + ":" + black);
+
+	if (white != 0 && white >= black || black == 0)
 	    return;
 
 	event.setCancelled(true);
@@ -672,7 +711,7 @@ public class ResidencePlayerListener implements Listener {
 	Location loc = block.getLocation();
 	String res = Residence.getResidenceManager().getNameByLoc(loc);
 	if (res != null)
-	    Residence.getResidenceManager().printAreaInfo(res, player);
+	    Residence.getResidenceManager().printAreaInfo(res, player, false);
 	else
 	    player.sendMessage(Residence.getLM().getMessage("Residence.NoResHere"));
 	event.setCancelled(true);
@@ -1205,6 +1244,38 @@ public class ResidencePlayerListener implements Listener {
 		currentRes.remove(pname);
 	    } else {
 		if (res != null && ResOld.getName().equals(res.getName())) {
+
+		    if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+			"residence.nofly.bypass")) {
+			Location lc = player.getLocation();
+			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
+			location.setPitch(lc.getPitch());
+			location.setYaw(lc.getYaw());
+			int from = location.getBlockY();
+			int maxH = location.getWorld().getMaxHeight() - 1;
+			for (int i = 0; i < maxH; i++) {
+			    location.setY(from - i);
+			    Block block = location.getBlock();
+			    if (!Residence.getNms().isEmptyBlock(block)) {
+				location.setY(from - i + 1);
+				break;
+			    }
+			    if (location.getBlockY() <= 0) {
+				Location lastLoc = lastOutsideLoc.get(pname);
+				if (lastLoc != null)
+				    player.teleport(lastLoc);
+				else
+				    player.teleport(res.getOutsideFreeLoc(loc, player));
+				player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", orres.getName()));
+				return;
+			    }
+			}
+			player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", orres.getName()));
+			player.teleport(location);
+			player.setFlying(false);
+			player.setAllowFlight(false);
+		    }
+
 		    lastOutsideLoc.put(pname, loc);
 		    return;
 		}
@@ -1352,10 +1423,23 @@ public class ResidencePlayerListener implements Listener {
 	    Residence.getServ().getPluginManager().callEvent(chgEvent);
 
 	    if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
-		if (Residence.getConfigManager().useActionBar()) {
-		    Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage)).toString());
+
+		if (Residence.getConfigManager().isExtraEnterMessage() && !res.isOwner(player)) {
+		    if (Residence.getRentManager().isForRent(areaname) && !Residence.getRentManager().isRented(areaname)) {
+			RentableLand rentable = Residence.getRentManager().getRentableLand(areaname);
+			if (rentable != null)
+			    Residence.getAB().send(player, Residence.getLM().getMessage("Residence.CanBeRented", areaname, rentable.cost, rentable.days));
+		    } else if (Residence.getTransactionManager().isForSale(areaname) && !res.isOwner(player)) {
+			int sale = Residence.getTransactionManager().getSaleAmount(areaname);
+			Residence.getAB().send(player, Residence.getLM().getMessage("Residence.CanBeBought", areaname, sale));
+		    }
 		} else {
-		    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+		    if (Residence.getConfigManager().useActionBar()) {
+			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage))
+			    .toString());
+		    } else {
+			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+		    }
 		}
 	    }
 	}

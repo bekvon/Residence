@@ -226,13 +226,12 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("icemelt");
 
 	addResidenceOnlyFlag("snowball");
-	
+
 	addResidenceOnlyFlag("pistonprotection");
-	
 
 	addResidenceOnlyFlag("sun");
 	addResidenceOnlyFlag("rain");
-	
+
 	addResidenceOnlyFlag("dryup");
 
 	addPlayerOrGroupOnlyFlag("admin");
@@ -690,12 +689,34 @@ public class FlagPermissions {
     }
 
     public String listFlags() {
+	return listFlags(0, 0);
+    }
+
+    public String listFlags(Integer split) {
+	return listFlags(split, 0);
+    }
+
+    public String listFlags(Integer split, Integer totalShow) {
 	StringBuilder sbuild = new StringBuilder();
 	Set<Entry<String, Boolean>> set = cuboidFlags.entrySet();
 	synchronized (set) {
 	    Iterator<Entry<String, Boolean>> it = set.iterator();
+	    int i = 0;
+	    int t = 0;
 	    while (it.hasNext()) {
+		i++;
+		t++;
 		Entry<String, Boolean> next = it.next();
+
+		if (totalShow > 0 && t > totalShow) {
+		    break;
+		}
+
+		if (split > 0 && i >= split) {
+		    i = 0;
+		    sbuild.append("\n");
+		}
+
 		if (next.getValue()) {
 		    sbuild.append("&2").append("+").append(next.getKey());
 		    if (it.hasNext()) {
@@ -707,6 +728,7 @@ public class FlagPermissions {
 			sbuild.append(" ");
 		    }
 		}
+
 	    }
 	}
 	if (sbuild.length() == 0) {
@@ -809,6 +831,88 @@ public class FlagPermissions {
 	    }
 	}
 	return sbuild.toString();
+    }
+
+    public String listPlayersFlags() {
+	StringBuilder sbuild = new StringBuilder();
+	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
+	synchronized (set) {
+	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
+	    while (it.hasNext()) {
+		Entry<String, Map<String, Boolean>> nextEnt = it.next();
+		String next = nextEnt.getKey();
+
+		String perms = printPlayerFlags(nextEnt.getValue());
+		if (next.length() == 36) {
+		    String resolvedName = Residence.getPlayerName(next);
+		    if (resolvedName != null) {
+			this.cachedPlayerNameUUIDs.put(next, resolvedName);
+			next = resolvedName;
+		    } else if (this.cachedPlayerNameUUIDs.containsKey(next))
+			next = this.cachedPlayerNameUUIDs.get(next);
+		}
+
+		if (next.equalsIgnoreCase(Residence.getServerLandname()))
+		    continue;
+
+		if (!perms.equals("none")) {
+		    sbuild.append(next).append(ChatColor.WHITE).append("[").append(perms).append(ChatColor.WHITE).append("] ");
+		}
+	    }
+	}
+	return sbuild.toString();
+    }
+
+    public String listPlayersFlagsRaw(String player, String text) {
+	StringBuilder sbuild = new StringBuilder();
+
+	sbuild.append("[\"\",");
+	sbuild.append("{\"text\":\"" + text + "\"}");
+
+	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
+	synchronized (set) {
+	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
+	    boolean random = true;
+	    while (it.hasNext()) {
+		Entry<String, Map<String, Boolean>> nextEnt = it.next();
+		String next = nextEnt.getKey();
+
+		String perms = printPlayerFlags(nextEnt.getValue());
+		if (next.length() == 36) {
+		    String resolvedName = Residence.getPlayerName(next);
+		    if (resolvedName != null) {
+			this.cachedPlayerNameUUIDs.put(next, resolvedName);
+			next = resolvedName;
+		    } else if (this.cachedPlayerNameUUIDs.containsKey(next))
+			next = this.cachedPlayerNameUUIDs.get(next);
+		}
+
+		if (next.equalsIgnoreCase(Residence.getServerLandname()))
+		    continue;
+
+		if (!perms.equals("none")) {
+		    sbuild.append(",");
+
+		    if (random) {
+			random = false;
+			if (player.equals(next))
+			    next = "&4" + next + "&r";
+			else
+			    next = "&2" + next + "&r";
+		    } else {
+			random = true;
+			if (player.equals(next))
+			    next = "&4" + next + "&r";
+			else
+			    next = "&3" + next + "&r";
+		    }
+		    sbuild.append(ConvertToRaw(next, perms));
+		}
+	    }
+	}
+
+	sbuild.append("]");
+	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
     }
 
     public String listOtherPlayersFlagsRaw(String text, String player) {

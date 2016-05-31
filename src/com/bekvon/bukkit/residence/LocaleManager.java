@@ -252,10 +252,14 @@ public class LocaleManager {
 	c.get("Language.Residence.ChatDisabled", "&eResidence Chat Disabled...");
 	c.get("Language.Residence.DeleteConfirm", "&eAre you sure you want to delete residence &6%1&e, use &6/res confirm &eto confirm.");
 
+	c.get("Language.Residence.CanBeRented", "&6%1&e can be rented for &6%2 &eper &6%3 &edays. &6/res market rent");
+	c.get("Language.Residence.CanBeBought", "&6%1&e can be bought for &6%2&e. &6/res market buy");
+
 	c.get("Language.Rent.Disabled", "&cRent is disabled...");
 	c.get("Language.Rent.DisableRenew", "&eResidence &6%1 &ewill now no longer re-rent upon expire.");
 	c.get("Language.Rent.EnableRenew", "&eResidence &6%1 &ewill now automatically re-rent upon expire.");
 	c.get("Language.Rent.NotByYou", "&cResidence is rented not by you.");
+	c.get("Language.Rent.isForRent", "&2Residence available for renting.");
 	c.get("Language.Rent.MaxRentDays", "&cYou cant rent for more than &6%1 &cdays at once.");
 	c.get("Language.Rent.OneTime", "&cCan't extend rent time for this residence.");
 	c.get("Language.Rent.Extended", "&eRent extended for aditional &6%1 &edays for &6%2 &eresidence");
@@ -265,8 +269,17 @@ public class LocaleManager {
 	c.get("Language.Rent.Rented", " &6(Rented)");
 	c.get("Language.Rent.RentList", " &6%1&e. &6%2 &e(&6%3&e/&6%4&e/&6%5&e) - &6%6 &6%7");
 
+	c.get("Language.command.addedAllow", "&eAdded new allowed command for &6%1 &eresidence");
+	c.get("Language.command.removedAllow", "&eRemoved allowed command for &6%1 &eresidence");
+	c.get("Language.command.addedBlock", "&eAdded new blocked command for &6%1 &eresidence");
+	c.get("Language.command.removedBlock", "&eRemoved blocked command for &6%1 &eresidence");
+	c.get("Language.command.Blocked", "&eBlocked commands: &6%1");
+	c.get("Language.command.Allowed", "&eAllowed commands: &6%1");
+
 	c.get("Language.Rentable.Land", "&eRentable Land: &6");
-	c.get("Language.Rentable.AutoRenew", "&eRentable Auto Renew: &6%1");
+	c.get("Language.Rentable.AllowRenewing", "&eCan Renew: &6%1");
+	c.get("Language.Rentable.StayInMarket", "&eRentable stay in market: &6%1");
+	c.get("Language.Rentable.AllowAutoPay", "&eRentable allows auto pay: &6%1");
 	c.get("Language.Rentable.DisableRenew", "&6%1 &ewill no longer renew rentable status upon expire.");
 	c.get("Language.Rentable.EnableRenew", "&6%1 &ewill now automatically renew rentable status upon expire.");
 
@@ -451,8 +464,8 @@ public class LocaleManager {
 	c.get("Language.General.Status", "&eStatus: %1");
 	c.get("Language.General.Available", "&2Available");
 	c.get("Language.General.Size", " &eSize: &6%1");
-	c.get("Language.General.Flags", "&eFlags: &6%1");
-	c.get("Language.General.YourFlags", "&eYour flags: &6%1");
+	c.get("Language.General.ResidenceFlags", "&eResidence flags: &6%1");
+	c.get("Language.General.PlayersFlags", "&ePlayers flags: &6%1");
 	c.get("Language.General.GroupFlags", "&eGroup flags: &6%1");
 	c.get("Language.General.OthersFlags", "&eOthers flags: &6%1");
 	c.get("Language.General.Moved", "&eMoved...");
@@ -1134,6 +1147,13 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.rc.Info",
 	    Arrays.asList("&eUsage: &6/res rc (residence)", "Teleports you to random location in defined world."));
 
+	// res command
+	c.get("CommandHelp.SubCommands.res.SubCommands.command.Description", "Manages allowed or blocked commands in residence");
+	c.get("CommandHelp.SubCommands.res.SubCommands.command.Info",
+	    Arrays.asList("&eUsage: &6/res command <residence> <allow/block/list> <command>",
+		"Shows list, adds or removes allowed or disabled commands in residence",
+		"Use _ to include command with multiple variables"));
+
 	c.get("CommandHelp.SubCommands.res.SubCommands.rc.SubCommands.leave.Description", "Leaves current residence chat chanel");
 	c.get("CommandHelp.SubCommands.res.SubCommands.rc.SubCommands.leave.Info", Arrays.asList("&eUsage: &6/res rc leave",
 	    "If you are in residence chat cnahel then you will leave it"));
@@ -1366,11 +1386,11 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.rent.Description", "Lists rentable residences.");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.rent.Info",
 	    Arrays.asList("&eUsage: &6/res market list rent"));
-	
+
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.sell.Description", "Lists for sale residences.");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.list.SubCommands.sell.Info",
 	    Arrays.asList("&eUsage: &6/res market list sell"));
-	
+
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sell.Description", "Sell a residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.sell.Info",
 	    Arrays.asList("&eUsage: &6/res market sell [residence] [amount]", "Puts a residence for sale for [amount] of money.",
@@ -1406,17 +1426,16 @@ public class LocaleManager {
 		"If <StayInMarket> is true, the residence will stay in market after last renter will be removed.",
 		"If <AllowAutoPay> is true, money for rent will be automaticaly taken from players balance if he chosen that option when renting"));
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Args", "[residence]");
-	
+
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Description", "Sets residence AllowRenewing to given value");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Info",
 	    Arrays.asList("&eUsage: &6/res market allowrenewing <residence> [true/false]"));
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Args", "[residence]");
-	
+
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Description", "Pays rent for defined residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Info",
 	    Arrays.asList("&eUsage: &6/res market payrent <residence>"));
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Args", "[residence]");
-	
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.release.Description", "Remove a residence from rent or rentable.");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.release.Info",

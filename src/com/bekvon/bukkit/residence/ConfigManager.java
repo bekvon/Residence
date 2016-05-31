@@ -36,6 +36,7 @@ public class ConfigManager {
     protected boolean useLeases;
     protected boolean ResMoneyBack;
     protected boolean enableEconomy;
+    protected boolean ExtraEnterMessage;
     protected boolean adminsOnly;
     protected boolean allowEmptyResidences;
     protected boolean NoLava;
@@ -637,6 +638,10 @@ public class ConfigManager {
 	    "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
 	enableEconomy = c.get("Global.EnableEconomy", true);
 
+	c.getW().addComment("Global.ExtraEnterMessage",
+	    "When enabled extra message will apear in chat if residence is for rent or for sell to inform how he can rent/buy residence with basic information.");
+	ExtraEnterMessage = c.get("Global.ExtraEnterMessage", true);
+
 	c.getW().addComment("Global.EnableRentSystem", "Enables or disables the Rent System");
 	enableRentSystem = c.get("Global.EnableRentSystem", true);
 
@@ -1007,6 +1012,10 @@ public class ConfigManager {
 
     public String getResidenceNameRegex() {
 	return namefix;
+    }
+
+    public boolean isExtraEnterMessage() {
+	return ExtraEnterMessage;
     }
 
     public boolean enableEconomy() {
