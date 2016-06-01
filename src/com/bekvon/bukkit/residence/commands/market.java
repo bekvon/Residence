@@ -38,8 +38,8 @@ public class market implements cmd {
 
 	case "list":
 	    return commandResMarketList(args, resadmin, player, page);
-	case "allowrenewing":
-	    return commandResMarketAllowRenewing(args, resadmin, player, page);
+	case "autopay":
+	    return commandResMarketAutoPay(args, resadmin, player, page);
 	case "payrent":
 	    return commandResMarketPayRent(args, resadmin, player);
 	case "rentable":
@@ -63,7 +63,7 @@ public class market implements cmd {
 		return true;
 	    }
 
-	    if (Residence.getRentManager().isRented(area))
+	    if (!Residence.getRentManager().isRented(area))
 		Residence.getRentManager().removeFromForRent(player, area, resadmin);
 	    else
 		Residence.getRentManager().unrent(player, area, resadmin);
@@ -316,38 +316,47 @@ public class market implements cmd {
 	return true;
     }
 
-    private boolean commandResMarketAllowRenewing(String[] args, boolean resadmin, Player player, int page) {
+    private boolean commandResMarketAutoPay(String[] args, boolean resadmin, Player player, int page) {
 	if (!Residence.getConfigManager().enableEconomy()) {
 	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
 	    return true;
 	}
-	if (args.length != 4) {
+	if (args.length != 3 && args.length != 4) {
 	    return false;
 	}
 
 	boolean value;
-	if (args[3].equalsIgnoreCase("true") || args[3].equalsIgnoreCase("t")) {
+
+	String barg = "";
+	ClaimedResidence res = null;
+	if (args.length == 3) {
+	    barg = args[2];
+	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	} else {
+	    barg = args[3];
+	    res = Residence.getResidenceManager().getByName(args[2]);
+	}
+
+	if (barg.equalsIgnoreCase("true") || barg.equalsIgnoreCase("t")) {
 	    value = true;
-	} else if (args[3].equalsIgnoreCase("false") || args[3].equalsIgnoreCase("f")) {
+	} else if (barg.equalsIgnoreCase("false") || barg.equalsIgnoreCase("f")) {
 	    value = false;
 	} else {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Boolean"));
 	    return true;
 	}
 
-	ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
-
 	if (res == null) {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return true;
 	}
 
-	if (Residence.getRentManager().isRented(args[2]) && Residence.getRentManager().getRentingPlayer(args[2]).equalsIgnoreCase(player.getName())) {
-	    Residence.getRentManager().setRentedRepeatable(player, args[2], value, resadmin);
-	} else if (Residence.getRentManager().isForRent(args[2])) {
-	    Residence.getRentManager().setRentRepeatable(player, args[2], value, resadmin);
+	if (Residence.getRentManager().isRented(res.getName()) && Residence.getRentManager().getRentingPlayer(res.getName()).equalsIgnoreCase(player.getName())) {
+	    Residence.getRentManager().setRentedRepeatable(player, res.getName(), value, resadmin);
+	} else if (Residence.getRentManager().isForRent(res.getName())) {
+	    Residence.getRentManager().setRentRepeatable(player, res.getName(), value, resadmin);
 	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.RentReleaseInvalid", ChatColor.YELLOW + args[2] + ChatColor.RED));
+	    player.sendMessage(Residence.getLM().getMessage("Economy.RentReleaseInvalid", ChatColor.YELLOW + res.getName() + ChatColor.RED));
 	}
 	return true;
     }

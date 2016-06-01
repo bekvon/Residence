@@ -179,6 +179,12 @@ public class RentManager implements MarketRentInterface {
 	    landName = landName.toLowerCase();
 
 	RentableLand land = rentableLand.get(landName);
+
+	if (!land.AllowAutoPay && AutoPay) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.CantAutoPay"));
+	    AutoPay = false;
+	}
+
 	if (Residence.getEconomyManager().canAfford(player.getName(), land.cost)) {
 	    ResidenceRentEvent revent = new ResidenceRentEvent(res, player, RentEventType.RENT);
 	    Residence.getServ().getPluginManager().callEvent(revent);
@@ -278,7 +284,7 @@ public class RentManager implements MarketRentInterface {
 	}
     }
 
-    public void removeFromForRent(Player player, String landName, boolean resadmin) {
+    public void unrent(Player player, String landName, boolean resadmin) {
 	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
 	    landName = landName.toLowerCase();
 
@@ -292,8 +298,9 @@ public class RentManager implements MarketRentInterface {
 	    Residence.getServ().getPluginManager().callEvent(revent);
 	    if (revent.isCancelled())
 		return;
+
 	    rentedLand.remove(landName);
-	    if (!rentableLand.get(landName).AllowRenewing) {
+	    if (!rentableLand.get(landName).AllowRenewing || !rentableLand.get(landName).StayInMarket) {
 		rentableLand.remove(landName);
 	    }
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
@@ -316,7 +323,7 @@ public class RentManager implements MarketRentInterface {
 	return (int) Math.ceil(((((double) ms / 1000D) / 60D) / 60D) / 24D);
     }
 
-    public void unrent(Player player, String landName, boolean resadmin) {
+    public void removeFromForRent(Player player, String landName, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	if (res == null) {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
@@ -332,10 +339,6 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (rentedLand.containsKey(landName) && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyRented", landName, rentedLand.get(landName).player));
-	    return;
-	}
 	if (rentableLand.containsKey(landName)) {
 	    ResidenceRentEvent revent = new ResidenceRentEvent(res, player, RentEventType.UNRENT);
 	    Residence.getServ().getPluginManager().callEvent(revent);
@@ -345,13 +348,12 @@ public class RentManager implements MarketRentInterface {
 	    rentableLand.remove(landName);
 	    if (rentedLand.containsKey(landName)) {
 		rentedLand.remove(landName);
-		if (res != null) {
-		    res.getPermissions().applyDefaultFlags();
-		    Residence.getSignUtil().CheckSign(res);
-		}
+	    }
+	    if (res != null) {
+		res.getPermissions().applyDefaultFlags();
+		Residence.getSignUtil().CheckSign(res);
 	    }
 	    player.sendMessage(Residence.getLM().getMessage("Residence.RemoveRentable", landName));
-
 	} else {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.NotForRent"));
 	}
@@ -376,7 +378,7 @@ public class RentManager implements MarketRentInterface {
 	    landName = landName.toLowerCase();
 	return rentableLand.containsKey(landName);
     }
-    
+
     public RentableLand getRentableLand(String landName) {
 	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
 	    landName = landName.toLowerCase();
@@ -534,6 +536,10 @@ public class RentManager implements MarketRentInterface {
 		player.sendMessage(Residence.getLM().getMessage("Rent.EnableRenew", split[split.length - 1]));
 	    else if (split.length != 0)
 		player.sendMessage(Residence.getLM().getMessage("Rent.DisableRenew", split[split.length - 1]));
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
+	    if (res != null)
+		Residence.getSignUtil().CheckSign(res);
 	}
     }
 

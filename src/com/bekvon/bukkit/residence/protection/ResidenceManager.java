@@ -45,6 +45,13 @@ public class ResidenceManager implements ResidenceInterface {
 	this.plugin = plugin;
     }
 
+    public boolean isOwnerOfLocation(Player player, Location loc) {
+	ClaimedResidence res = getByLoc(loc);
+	if (res != null && res.isOwner(player))
+	    return true;
+	return false;
+    }
+
     public ClaimedResidence getByLoc(Location loc) {
 	if (loc == null)
 	    return null;
@@ -649,8 +656,12 @@ public class ResidenceManager implements ResidenceInterface {
 	    RentedLand rented = Residence.getRentManager().getRentedLand(areaname);
 
 	    StringBuilder rentableString = new StringBuilder();
-	    if (rented != null)
+	    if (rented != null) {
 		rentableString.append(Residence.getLM().getMessage("Rent.Expire", GetTime.getTime(rented.endTime)) + "\n");
+		if (rented.player.equals(sender.getName()) || resadmin)
+		    rentableString.append((rented.AutoPay ? Residence.getLM().getMessage("Rent.AutoPayTurnedOn") : Residence.getLM().getMessage("Rent.AutoPayTurnedOff"))
+			+ "\n");
+	    }
 
 	    if (rentable != null) {
 		rentableString.append(Residence.getLM().getMessage("General.Cost", rentable.cost, rentable.days) + "\n");

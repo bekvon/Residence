@@ -432,6 +432,9 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isResAdminOn(player))
 	    return;
 
+	if (Residence.getResidenceManager().isOwnerOfLocation(player, ent.getLocation()))
+	    return;
+
 	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
 	String world = ent.getWorld().getName();
@@ -745,7 +748,7 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isResAdminOn(player))
 	    return;
 
-	if (!res.getPermissions().playerHas(player.getName(), "destroy", false)) {
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "destroy", false)) {
 	    event.setCancelled(true);
 	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "destroy", res.getName()));
 	}

@@ -218,6 +218,7 @@ public class LocaleManager {
 	c.get("Language.Residence.RentSuccess", "&eYou have rented Residence &6%1 &efor &6%2 &edays.");
 	c.get("Language.Residence.EndingRent", "&eRent time is ending for &6%1 &eon &6%2");
 	c.get("Language.Residence.AlreadyRented", "&eResidence &6%1 &ehas currently been rented to &6%2");
+	c.get("Language.Residence.CantAutoPay", "&eResidence is not allowing auto pay, it will be set to &6false");
 	c.get("Language.Residence.AlreadyExists", "&cA residence named &6%1 &calready exists.");
 	c.get("Language.Residence.Create", "&eYou have created residence &6%1&e!");
 	c.get("Language.Residence.Rename", "&eRenamed Residence &6%1 &eto &6%2");
@@ -264,6 +265,8 @@ public class LocaleManager {
 	c.get("Language.Rent.OneTime", "&cCan't extend rent time for this residence.");
 	c.get("Language.Rent.Extended", "&eRent extended for aditional &6%1 &edays for &6%2 &eresidence");
 	c.get("Language.Rent.Expire", "&eRent Expire Time: &6%1");
+	c.get("Language.Rent.AutoPayTurnedOn", "&eAutoPay is turned &2ON");
+	c.get("Language.Rent.AutoPayTurnedOff", "&eAutoPay is turned &cOFF");
 	c.get("Language.Rent.ModifyDeny", "&cCannot modify a rented residence.");
 	c.get("Language.Rent.Days", "&eRent days: &6%1");
 	c.get("Language.Rent.Rented", " &6(Rented)");
@@ -1427,10 +1430,10 @@ public class LocaleManager {
 		"If <AllowAutoPay> is true, money for rent will be automaticaly taken from players balance if he chosen that option when renting"));
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.rentable.Args", "[residence]");
 
-	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Description", "Sets residence AllowRenewing to given value");
-	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Info",
-	    Arrays.asList("&eUsage: &6/res market allowrenewing <residence> [true/false]"));
-	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.allowrenewing.Args", "[residence]");
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.autopay.Description", "Sets residence AutoPay to given value");
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.autopay.Info",
+	    Arrays.asList("&eUsage: &6/res market autopay <residence> [true/false]"));
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.autopay.Args", "[residence]");
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Description", "Pays rent for defined residence");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Info",
