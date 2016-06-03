@@ -107,6 +107,33 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onResidenceBackup(ResidenceFlagChangeEvent event) {
+	if (!event.getFlag().equalsIgnoreCase("backup"))
+	    return;
+	Player player = event.getPlayer();
+	if (!Residence.getConfigManager().RestoreAfterRentEnds)
+	    return;
+	if (!Residence.getConfigManager().SchematicsSaveOnFlagChange)
+	    return;
+	if (Residence.getSchematicManager() == null)
+	    return;
+	if (player != null && !player.hasPermission("residence.backup"))
+	    event.setCancelled(true);
+	else
+	    Residence.getSchematicManager().save(event.getResidence());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onResidenceBackupRename(ResidenceRenameEvent event) {
+	Residence.getSchematicManager().rename(event.getResidence(), event.getNewResidenceName());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onResidenceDelete(ResidenceDeleteEvent event) {
+	Residence.getSchematicManager().delete(event.getResidence());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerLogin(PlayerLoginEvent event) {
 	if (!Residence.getConfigManager().isRentInformOnEnding())
 	    return;
@@ -309,8 +336,6 @@ public class ResidencePlayerListener implements Listener {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
-	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
-	    return;
 
 	Block block = event.getClickedBlock();
 
@@ -339,21 +364,27 @@ public class ResidencePlayerListener implements Listener {
 	    boolean ForSale = Residence.getTransactionManager().isForSale(landName);
 	    boolean ForRent = Residence.getRentManager().isForRent(landName);
 
-	    if (ForSale) {
-		Bukkit.dispatchCommand(player, "res market buy " + landName);
-		break;
-	    }
-
-	    if (ForRent) {
-		if (Residence.getRentManager().isRented(landName) && player.isSneaking())
-		    Bukkit.dispatchCommand(player, "res market release " + landName);
-		else {
-		    boolean stage = true;
-		    if (player.isSneaking())
-			stage = false;
-		    Bukkit.dispatchCommand(player, "res market rent " + landName + " " + stage);
+	    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (ForSale) {
+		    Bukkit.dispatchCommand(player, "res market buy " + landName);
+		    break;
 		}
-		break;
+
+		if (ForRent) {
+		    if (Residence.getRentManager().isRented(landName) && player.isSneaking())
+			Bukkit.dispatchCommand(player, "res market release " + landName);
+		    else {
+			boolean stage = true;
+			if (player.isSneaking())
+			    stage = false;
+			Bukkit.dispatchCommand(player, "res market rent " + landName + " " + stage);
+		    }
+		    break;
+		}
+	    } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+		if (ForRent && Residence.getRentManager().isRented(landName) && Residence.getRentManager().getRentingPlayer(landName).equals(player.getName())) {
+		    Residence.getRentManager().payRent(player, landName, false);
+		}
 	    }
 	}
     }
@@ -481,6 +512,36 @@ public class ResidencePlayerListener implements Listener {
 	    Residence.turnResAdminOn(player);
 	}
 	Residence.getPermissionManager().updateGroupNameForPlayer(player, true);
+
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(player.getLocation(), player);
+
+	if ((player.getAllowFlight() || player.isFlying()) && perms.has("nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+	    "residence.nofly.bypass")) {
+	    Location lc = player.getLocation();
+	    Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
+	    location.setPitch(lc.getPitch());
+	    location.setYaw(lc.getYaw());
+	    int from = location.getBlockY();
+	    int maxH = location.getWorld().getMaxHeight() - 1;
+	    for (int i = 0; i < maxH; i++) {
+		location.setY(from - i);
+		Block block = location.getBlock();
+		if (!Residence.getNms().isEmptyBlock(block)) {
+		    location.setY(from - i + 1);
+		    break;
+		}
+		if (location.getBlockY() <= 0) {
+		    player.setFlying(false);
+		    player.setAllowFlight(false);
+		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", location.getWorld().getName()));
+		    return;
+		}
+	    }
+	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", location.getWorld().getName()));
+	    player.teleport(location);
+	    player.setFlying(false);
+	    player.setAllowFlight(false);
+	}
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -1294,30 +1355,30 @@ public class ResidencePlayerListener implements Listener {
 
 	if (res == null) {
 	    lastOutsideLoc.put(pname, loc);
-	    if (ResOld != null) {
-		String leave = ResOld.getLeaveMessage();
+	    if (ResOld == null)
+		return;
 
-		// New ResidenceChangeEvent
-		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
-		Residence.getServ().getPluginManager().callEvent(chgEvent);
+	    String leave = ResOld.getLeaveMessage();
 
-		if (ResOld.getPermissions().has("night", true) || ResOld.getPermissions().has("day", true))
-		    player.resetPlayerTime();
+	    // New ResidenceChangeEvent
+	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
+	    Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-		if (ResOld.getPermissions().has("sun", true) || ResOld.getPermissions().has("rain", true))
-		    player.resetPlayerWeather();
+	    if (ResOld.getPermissions().has("night", true) || ResOld.getPermissions().has("day", true))
+		player.resetPlayerTime();
 
-		if (leave != null && !leave.equals("")) {
-		    if (Residence.getConfigManager().useActionBar()) {
-			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
-			    .toString());
-		    } else {
-			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
-		    }
+	    if (ResOld.getPermissions().has("sun", true) || ResOld.getPermissions().has("rain", true))
+		player.resetPlayerWeather();
+
+	    if (leave != null && !leave.equals("")) {
+		if (Residence.getConfigManager().useActionBar()) {
+		    Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
+			.toString());
+		} else {
+		    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
 		}
-		currentRes.remove(pname);
 	    }
-	    return;
+	    currentRes.remove(pname);
 	}
 
 	if (move) {
@@ -1422,8 +1483,7 @@ public class ResidencePlayerListener implements Listener {
 	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(chgFrom, res, player);
 	    Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-	    if (enterMessage != null && !enterMessage.equals("") && !(ResOld != null && res == ResOld.getParent())) {
-
+	    if (!(ResOld != null && res == ResOld.getParent())) {
 		if (Residence.getConfigManager().isExtraEnterMessage() && !res.isOwner(player)) {
 		    if (Residence.getRentManager().isForRent(areaname) && !Residence.getRentManager().isRented(areaname)) {
 			RentableLand rentable = Residence.getRentManager().getRentableLand(areaname);
@@ -1433,7 +1493,7 @@ public class ResidencePlayerListener implements Listener {
 			int sale = Residence.getTransactionManager().getSaleAmount(areaname);
 			Residence.getAB().send(player, Residence.getLM().getMessage("Residence.CanBeBought", areaname, sale));
 		    }
-		} else {
+		} else if (enterMessage != null && !enterMessage.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage))
 			    .toString());

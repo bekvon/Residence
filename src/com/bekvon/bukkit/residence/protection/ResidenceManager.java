@@ -83,11 +83,16 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public ClaimedResidence getByName(String name) {
+	return getByName(name, false);
+    }
+
+    public ClaimedResidence getByName(String name, boolean tp) {
 	if (name == null) {
 	    return null;
 	}
 	String[] split = name.split("\\.");
-	if (Residence.getConfigManager().isResCreateCaseSensitive()) {
+	if (Residence.getConfigManager().isResCreateCaseSensitive() && !tp || 
+	    tp && Residence.getConfigManager().isResTpCaseSensitive()) {
 	    if (split.length == 1) {
 		return residences.get(name);
 	    }
@@ -658,7 +663,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    StringBuilder rentableString = new StringBuilder();
 	    if (rented != null) {
 		rentableString.append(Residence.getLM().getMessage("Rent.Expire", GetTime.getTime(rented.endTime)) + "\n");
-		if (rented.player.equals(sender.getName()) || resadmin)
+		if (rented.player.equals(sender.getName()) || resadmin || res.isOwner(sender.getName()))
 		    rentableString.append((rented.AutoPay ? Residence.getLM().getMessage("Rent.AutoPayTurnedOn") : Residence.getLM().getMessage("Rent.AutoPayTurnedOff"))
 			+ "\n");
 	    }

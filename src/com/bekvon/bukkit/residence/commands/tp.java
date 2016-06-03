@@ -19,7 +19,7 @@ public class tp implements cmd {
 	if (args.length != 2)
 	    return false;
 
-	ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	ClaimedResidence res = Residence.getResidenceManager().getByName(args[1], true);
 
 	if (res == null) {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));

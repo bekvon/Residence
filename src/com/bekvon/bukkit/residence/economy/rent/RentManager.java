@@ -171,8 +171,11 @@ public class RentManager implements MarketRentInterface {
 	}
 	if (this.isRented(landName)) {
 	    String[] split = landName.split("\\.");
-	    if (split.length != 0)
-		player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyRented", split[split.length - 1], this.getRentingPlayer(landName)));
+	    if (split.length != 0) {
+//		player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyRented", split[split.length - 1], this.getRentingPlayer(landName)));
+		printRentInfo(player, landName);
+//		Bukkit.dispatchCommand(player, "res market info " + landName);
+	    }
 	    return;
 	}
 	if (!Residence.getConfigManager().isResCreateCaseSensitive() && landName != null)
@@ -207,6 +210,14 @@ public class RentManager implements MarketRentInterface {
 		res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
 		res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
 		player.sendMessage(Residence.getLM().getMessage("Residence.RentSuccess", landName, land.days));
+
+		if (Residence.getSchematicManager() != null &&
+		    Residence.getConfigManager().RestoreAfterRentEnds &&
+		    !Residence.getConfigManager().SchematicsSaveOnFlagChange &&
+		    res.getPermissions().has("backup", true)) {
+		    Residence.getSchematicManager().save(res);
+		}
+
 	    } else {
 		player.sendMessage(ChatColor.RED + "Error, unable to transfer money...");
 	    }
@@ -305,7 +316,15 @@ public class RentManager implements MarketRentInterface {
 	    }
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	    if (res != null) {
+		boolean backup = res.getPermissions().has("backup", false);
+
 		res.getPermissions().applyDefaultFlags();
+
+		if (Residence.getSchematicManager() != null && Residence.getConfigManager().RestoreAfterRentEnds && backup) {
+		    Residence.getSchematicManager().load(res);
+		    // set true if its already exists
+		    res.getPermissions().setFlag("backup", FlagState.TRUE);
+		}
 		Residence.getSignUtil().CheckSign(res);
 	    }
 	    player.sendMessage(Residence.getLM().getMessage("Residence.Unrent", landName));
@@ -469,9 +488,20 @@ public class RentManager implements MarketRentInterface {
 		}
 		if (!rentable.StayInMarket)
 		    rentableLand.remove(next.getKey());
-		res.getPermissions().applyDefaultFlags();
 		it.remove();
 
+		boolean backup = res.getPermissions().has("backup", false);
+
+		res.getPermissions().applyDefaultFlags();
+
+		if (Residence.getSchematicManager() != null && Residence.getConfigManager().RestoreAfterRentEnds && backup) {
+		    Residence.getSchematicManager().load(res);
+		    Residence.getSignUtil().CheckSign(res);
+		    // set true if its already exists
+		    res.getPermissions().setFlag("backup", FlagState.TRUE);
+		    // To avoid lag spikes on multiple residence restores at once, will limit to one residence at time
+		    break;
+		}
 		Residence.getSignUtil().CheckSign(res);
 	    } else {
 		rentableLand.remove(next.getKey());
@@ -525,6 +555,11 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
+	if (!this.getRentableLand(landName).AllowAutoPay && value) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.CantAutoPay"));
+	    return;
+	}
+
 	if (!land.player.equals(player.getName()) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.NotOwner"));
 	    return;
@@ -559,6 +594,13 @@ public class RentManager implements MarketRentInterface {
 	    player.sendMessage(Residence.getLM().getMessage("Rentable.AllowAutoPay", rentable.AllowAutoPay));
 	    if (rented != null) {
 		player.sendMessage(Residence.getLM().getMessage("Residence.RentedBy", rented.player));
+
+		ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
+
+		if (rented.player.equals(player.getName()) || res != null && res.isOwner(player) || Residence.isResAdminOn(player))
+		    player.sendMessage((rented.AutoPay ? Residence.getLM().getMessage("Rent.AutoPayTurnedOn") : Residence.getLM().getMessage("Rent.AutoPayTurnedOff"))
+			+ "\n");
+
 		player.sendMessage(Residence.getLM().getMessage("Rent.Expire", GetTime.getTime(rented.endTime)));
 	    } else {
 		player.sendMessage(Residence.getLM().getMessage("General.Status", Residence.getLM().getMessage("General.Available")));

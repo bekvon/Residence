@@ -233,6 +233,8 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("rain");
 
 	addResidenceOnlyFlag("dryup");
+	
+	addResidenceOnlyFlag("backup");
 
 	addPlayerOrGroupOnlyFlag("admin");
 

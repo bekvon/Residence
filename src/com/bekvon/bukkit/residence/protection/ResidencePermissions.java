@@ -347,6 +347,7 @@ public class ResidencePermissions extends FlagPermissions {
 		}
 	    }
 	}
+
 	for (Entry<String, Boolean> next : dcflags) {
 	    if (this.checkValidFlag(next.getKey(), false)) {
 		if (next.getValue()) {

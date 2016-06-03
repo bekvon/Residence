@@ -63,12 +63,35 @@ public class market implements cmd {
 		return true;
 	    }
 
+	    Residence.UnrentConfirm.put(player.getName(), area);
+
+	    if (Residence.getRentManager().isRented(area)) {
+		if (resadmin || Residence.isResAdminOn(player))
+		    sender.sendMessage(Residence.getLM().getMessage("Rent.EvictConfirm", area));
+		else if (Residence.getRentManager().getRentingPlayer(area).equalsIgnoreCase(sender.getName()))
+		    sender.sendMessage(Residence.getLM().getMessage("Rent.UnrentConfirm", area));
+		else
+		    Residence.getRentManager().printRentInfo(player, area);
+	    } else
+		sender.sendMessage(Residence.getLM().getMessage("Rent.ReleaseConfirm", area));
+
+	    return true;
+
+	case "confirm":
+
+	    if (!Residence.UnrentConfirm.containsKey(player.getName())) {
+		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		return false;
+	    }
+
+	    area = Residence.UnrentConfirm.remove(player.getName());
+
 	    if (!Residence.getRentManager().isRented(area))
 		Residence.getRentManager().removeFromForRent(player, area, resadmin);
 	    else
 		Residence.getRentManager().unrent(player, area, resadmin);
-	    return true;
 
+	    return true;
 	case "sign":
 	    if (args.length != 3) {
 		return false;

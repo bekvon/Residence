@@ -67,6 +67,7 @@ import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.protection.PlayerManager;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
+import com.bekvon.bukkit.residence.selection.SchematicsManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
@@ -149,6 +150,7 @@ public class Residence extends JavaPlugin {
     protected static Sorting SortingManager;
     protected static ActionBar ABManager;
     protected static AutoSelection AutoSelectionManager;
+    protected static SchematicsManager SchematicManager;
 
     protected boolean firstenable = true;
     protected static EconomyInterface economy;
@@ -165,6 +167,7 @@ public class Residence extends JavaPlugin {
     protected static VersionChecker versionChecker;
     protected static boolean initsuccess = false;
     public static Map<String, String> deleteConfirm;
+    public static Map<String, String> UnrentConfirm = new HashMap<String, String>();
     public static List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
     public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
@@ -664,6 +667,9 @@ public class Residence extends JavaPlugin {
 	    SortingManager = new Sorting();
 	    AutoSelectionManager = new AutoSelection();
 
+	    if (wep != null)
+		SchematicManager = new SchematicsManager();
+
 	    if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
 		getServer().getPluginManager().registerEvents(spigotlistener, this);
 
@@ -815,6 +821,10 @@ public class Residence extends JavaPlugin {
 
     public static ActionBar getABManager2() {
 	return ABManager;
+    }
+
+    public static SchematicsManager getSchematicManager() {
+	return SchematicManager;
     }
 
     public static AutoSelection getAutoSelectionManager() {

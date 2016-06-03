@@ -191,6 +191,11 @@ public class ConfigManager {
     public List<String> DynMapHiddenRegions;
     // DynMap
 
+    // Schematics
+    public boolean RestoreAfterRentEnds;
+    public boolean SchematicsSaveOnFlagChange;
+    // Schematics
+
     private Residence plugin;
 
     public ConfigManager(FileConfiguration config, FileConfiguration flags, FileConfiguration groups, Residence plugin) {
@@ -658,6 +663,16 @@ public class ConfigManager {
 	RentAllowAutoPay = c.get("Global.Rent.DefaultValues.AllowAutoPay", true);
 	c.getW().addComment("Global.Rent.DefaultValues.PlayerAutoPay", "If set to true, when player is not defining auto pay on renting, then this value will be used");
 	RentPlayerAutoPay = c.get("Global.Rent.DefaultValues.PlayerAutoPay", true);
+
+	c.getW().addComment("Global.Rent.Schematics.RestoreAfterRentEnds",
+	    "EXPERIMENTAL!!! If set to true, residence will be restored to state it was when backup flag was set to true",
+	    "For securoty reassons only players with aditional residence.backup permission node can set backup flag");
+	RestoreAfterRentEnds = c.get("Global.Rent.Schematics.RestoreAfterRentEnds", true);
+	c.getW().addComment("Global.Rent.Schematics.SaveOnFlagChange",
+	    "When set to true, area state will be saved only when setting backup to true value",
+	    "When set to false, area state will be saved before each renting to have always up to date area look",
+	    "Keep in mind that when its set to false, there is slightly bigger server load as it has to save area each time when some one rents it");
+	SchematicsSaveOnFlagChange = c.get("Global.Rent.Schematics.SaveOnFlagChange", true);
 
 	c.getW().addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
 	rentCheckInterval = c.get("Global.RentCheckInterval", 10);
