@@ -1355,30 +1355,30 @@ public class ResidencePlayerListener implements Listener {
 
 	if (res == null) {
 	    lastOutsideLoc.put(pname, loc);
-	    if (ResOld == null)
-		return;
+	    if (ResOld != null) {
+		String leave = ResOld.getLeaveMessage();
 
-	    String leave = ResOld.getLeaveMessage();
+		// New ResidenceChangeEvent
+		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
+		Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-	    // New ResidenceChangeEvent
-	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
-	    Residence.getServ().getPluginManager().callEvent(chgEvent);
+		if (ResOld.getPermissions().has("night", true) || ResOld.getPermissions().has("day", true))
+		    player.resetPlayerTime();
 
-	    if (ResOld.getPermissions().has("night", true) || ResOld.getPermissions().has("day", true))
-		player.resetPlayerTime();
+		if (ResOld.getPermissions().has("sun", true) || ResOld.getPermissions().has("rain", true))
+		    player.resetPlayerWeather();
 
-	    if (ResOld.getPermissions().has("sun", true) || ResOld.getPermissions().has("rain", true))
-		player.resetPlayerWeather();
-
-	    if (leave != null && !leave.equals("")) {
-		if (Residence.getConfigManager().useActionBar()) {
-		    Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
-			.toString());
-		} else {
-		    player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+		if (leave != null && !leave.equals("")) {
+		    if (Residence.getConfigManager().useActionBar()) {
+			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
+			    .toString());
+		    } else {
+			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+		    }
 		}
+		currentRes.remove(pname);
 	    }
-	    currentRes.remove(pname);
+	    return;
 	}
 
 	if (move) {
