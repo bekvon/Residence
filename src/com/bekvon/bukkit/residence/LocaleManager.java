@@ -416,6 +416,7 @@ public class LocaleManager {
 	writer.addComment("Language.CantPlaceWater", "Replace all text with '' to disable this message");
 	c.get("Language.General.CantPlaceWater", "&cYou can't place Water outside residence and higher than &6%1 &cblock level");
 	c.get("Language.General.NoPermission", "&cYou dont have permission for this.");
+	c.get("Language.General.NoCmdPermission", "&cYou dont have permission for this command.");
 	c.get("Language.General.DefaultUsage", "&eType &6/%1 ? &efor more info");
 	c.get("Language.General.MaterialGet", "&eThe material name for ID &6%1 &eis &6%2");
 	c.get("Language.General.MarketList", "&e---- &6Market List &e----");

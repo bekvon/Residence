@@ -91,7 +91,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    return null;
 	}
 	String[] split = name.split("\\.");
-	if (Residence.getConfigManager().isResCreateCaseSensitive() && !tp || 
+	if (Residence.getConfigManager().isResCreateCaseSensitive() && !tp ||
 	    tp && Residence.getConfigManager().isResTpCaseSensitive()) {
 	    if (split.length == 1) {
 		return residences.get(name);
@@ -423,6 +423,13 @@ public class ResidenceManager implements ResidenceInterface {
 
     public void removeResidence(String name) {
 	this.removeResidence(null, name, true);
+    }
+
+    public void removeResidence(CommandSender sender, String name, boolean resadmin) {
+	if (sender instanceof Player)
+	    removeResidence((Player) sender, name, resadmin);
+	else
+	    this.removeResidence(null, name, true);
     }
 
     @SuppressWarnings("deprecation")

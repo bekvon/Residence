@@ -9,6 +9,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 
 public class ResidenceCommandListener extends Residence {
@@ -124,6 +127,12 @@ public class ResidenceCommandListener extends Residence {
 	    cmd cmdClass = getCmdClass(sender, command.getName(), args);
 	    if (cmdClass == null) {
 		return commandHelp(new String[] { "?" }, resadmin, sender, command);
+	    }
+
+	    Permission p = new Permission("residence.command." + args[0], PermissionDefault.TRUE);
+	    if (!sender.hasPermission(p)) {
+		sender.sendMessage(Residence.getLM().getMessage("General.NoCmdPermission"));
+		return true;
 	    }
 
 	    if (!resadmin && Residence.resadminToggle.contains(player.getName())) {
