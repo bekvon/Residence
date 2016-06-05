@@ -22,9 +22,13 @@ public class v1_8_R3 implements AB {
 
     @Override
     public void send(Player player, String msg) {
-	CraftPlayer p = (CraftPlayer) player;
-	IChatBaseComponent cbc = ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', msg) + "\"}");
-	PacketPlayOutChat ppoc = new PacketPlayOutChat(cbc, (byte) 2);
-	p.getHandle().playerConnection.sendPacket(ppoc);
+	try {
+	    CraftPlayer p = (CraftPlayer) player;
+	    IChatBaseComponent cbc = ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', msg) + "\"}");
+	    PacketPlayOutChat ppoc = new PacketPlayOutChat(cbc, (byte) 2);
+	    p.getHandle().playerConnection.sendPacket(ppoc);
+	} catch (Exception e) {
+	    player.sendMessage(msg);
+	}
     }
 }
