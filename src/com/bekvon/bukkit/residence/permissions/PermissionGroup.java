@@ -48,6 +48,7 @@ public class PermissionGroup {
     protected int maxRentables;
     protected boolean selectCommandAccess;
     protected boolean itemListAccess;
+    protected int priority = 0;
 
     public PermissionGroup(String name) {
 	flagPerms = new FlagPermissions();
@@ -55,6 +56,14 @@ public class PermissionGroup {
 	residenceDefaultFlags = new HashMap<String, Boolean>();
 	groupDefaultFlags = new HashMap<String, Map<String, Boolean>>();
 	groupname = name;
+    }
+
+    public void setPriority(int number) {
+	this.priority = number;
+    }
+
+    public int getPriority() {
+	return this.priority;
     }
 
     public PermissionGroup(String name, ConfigurationSection node) {
@@ -65,6 +74,12 @@ public class PermissionGroup {
     public PermissionGroup(String name, ConfigurationSection node, FlagPermissions parentFlagPerms) {
 	this(name, node);
 	flagPerms.setParent(parentFlagPerms);
+    }
+    
+    public PermissionGroup(String name, ConfigurationSection node, FlagPermissions parentFlagPerms, int priority) {
+	this(name, node);
+	flagPerms.setParent(parentFlagPerms);
+	this.priority = priority;
     }
 
     private void parseGroup(ConfigurationSection limits) {

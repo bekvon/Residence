@@ -174,9 +174,11 @@ public class PermissionManager {
 	ConfigurationSection nodes = config.getConfigurationSection("Groups");
 	if (nodes != null) {
 	    Set<String> entrys = nodes.getKeys(false);
+	    int i = 0;
 	    for (String key : entrys) {
 		try {
-		    groups.put(key.toLowerCase(), new PermissionGroup(key.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms));
+		    i++;
+		    groups.put(key.toLowerCase(), new PermissionGroup(key.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms, i));
 		    List<String> mirrors = nodes.getConfigurationSection(key).getStringList("Mirror");
 		    for (String group : mirrors) {
 			groups.put(group.toLowerCase(), new PermissionGroup(key.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms));
