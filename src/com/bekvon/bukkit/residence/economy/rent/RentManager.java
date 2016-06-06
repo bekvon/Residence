@@ -23,8 +23,8 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 
 public class RentManager implements MarketRentInterface {
-    protected Map<String, RentedLand> rentedLand;
-    protected Map<String, RentableLand> rentableLand;
+    private Map<String, RentedLand> rentedLand;
+    private Map<String, RentableLand> rentableLand;
 
     public RentManager() {
 	rentedLand = new HashMap<>();
@@ -649,14 +649,63 @@ public class RentManager implements MarketRentInterface {
 	    oldName = oldName.toLowerCase();
 	    newName = newName.toLowerCase();
 	}
-	if (rentableLand.containsKey(oldName)) {
-	    rentableLand.put(newName, rentableLand.get(oldName));
-	    rentableLand.remove(oldName);
+	HashMap<String, RentableLand> toAddRentable = new HashMap<String, RentableLand>();
+	for (Iterator<Entry<String, RentableLand>> it = rentableLand.entrySet().iterator(); it.hasNext();) {
+	    Entry<String, RentableLand> entry = it.next();
+	    String n = entry.getKey();
+	    if (!Residence.getConfigManager().isResCreateCaseSensitive())
+		n = n.toLowerCase();
+
+	    if (n.contains(".") && n.startsWith(oldName + ".") || n.equals(oldName)) {
+		RentableLand land = new RentableLand();
+		land.AllowAutoPay = entry.getValue().AllowAutoPay;
+		land.AllowRenewing = entry.getValue().AllowRenewing;
+		land.cost = entry.getValue().cost;
+		land.days = entry.getValue().days;
+		land.StayInMarket = entry.getValue().StayInMarket;
+
+		String[] split = n.split(oldName);
+		String subname = "";
+		if (split.length > 1)
+		    subname = n.split(oldName)[1];
+		String name = newName + subname;
+//		rentableLand.remove(entry);
+		toAddRentable.put(name, land);
+
+		it.remove();
+	    }
 	}
-	if (rentedLand.containsKey(oldName)) {
-	    rentedLand.put(newName, rentedLand.get(oldName));
-	    rentedLand.remove(oldName);
+	rentableLand.putAll(toAddRentable);
+
+	HashMap<String, RentedLand> toAddRented = new HashMap<String, RentedLand>();
+	for (Iterator<Entry<String, RentedLand>> it = rentedLand.entrySet().iterator(); it.hasNext();) {
+	    Entry<String, RentedLand> entry = it.next();
+	    String n = entry.getKey();
+	    if (!Residence.getConfigManager().isResCreateCaseSensitive())
+		n = n.toLowerCase();
+	    if (n.contains(".") && n.startsWith(oldName + ".") || n.equals(oldName)) {
+		RentedLand rented = entry.getValue();
+		String[] split = n.split(oldName);
+		String subname = "";
+		if (split.length > 1)
+		    subname = n.split(oldName)[1];
+		String name = newName + subname;
+//		rentedLand.remove(entry);
+//		rentedLand.put(name, rented);
+		toAddRented.put(name, rented);
+		it.remove();
+	    }
 	}
+	rentedLand.putAll(toAddRented);
+
+//	if (rentableLand.containsKey(oldName)) {
+//	    rentableLand.put(newName, rentableLand.get(oldName));
+//	    rentableLand.remove(oldName);
+//	}
+//	if (rentedLand.containsKey(oldName)) {
+//	    rentedLand.put(newName, rentedLand.get(oldName));
+//	    rentedLand.remove(oldName);
+//	}
     }
 
     public void printRentableResidences(Player player, int page) {

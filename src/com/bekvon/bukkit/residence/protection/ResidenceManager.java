@@ -883,7 +883,9 @@ public class ResidenceManager implements ResidenceInterface {
 		    Residence.getRentManager().updateRentableName(oldName, newName);
 		}
 
-		Residence.getTransactionManager().updateRentableName(oldName, newName);
+		Residence.getTransactionManager().updateSellName(oldName, newName);
+
+		Residence.getSignUtil().updateSignResName(oldName, newName);
 
 		if (player != null) {
 		    player.sendMessage(Residence.getLM().getMessage("Residence.Rename", oldName, newName));
@@ -898,7 +900,12 @@ public class ResidenceManager implements ResidenceInterface {
 		    Residence.getRentManager().updateRentableName(oldName, parent.getName() + "." + newName);
 		}
 
-		return parent.renameSubzone(player, oldname[oldname.length - 1], newName, resadmin);
+		Residence.getTransactionManager().updateSellName(oldName, parent.getName() + "." + newName);
+		boolean feed = parent.renameSubzone(player, oldname[oldname.length - 1], newName, resadmin);
+
+		Residence.getSignUtil().updateSignResName(oldName, parent.getName() + "." + newName);
+
+		return feed;
 	    }
 	} else {
 	    if (player != null) {

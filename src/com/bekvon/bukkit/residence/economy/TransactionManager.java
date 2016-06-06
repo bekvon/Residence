@@ -14,6 +14,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,14 +42,32 @@ public class TransactionManager implements MarketBuyInterface {
 	return true;
     }
 
-    public void updateRentableName(String oldName, String newName) {
+    public void updateSellName(String oldName, String newName) {
 	if (!Residence.getConfigManager().isResCreateCaseSensitive() && oldName != null && newName != null) {
 	    oldName = oldName.toLowerCase();
 	    newName = newName.toLowerCase();
 	}
-	if (sellAmount.containsKey(oldName)) {
-	    sellAmount.put(newName, sellAmount.get(oldName));
-	    sellAmount.remove(oldName);
+
+	for (Iterator<Map.Entry<String, Integer>> it = sellAmount.entrySet().iterator(); it.hasNext();) {
+	    Map.Entry<String, Integer> entry = it.next();
+
+	    String n = entry.getKey();
+	    if (!Residence.getConfigManager().isResCreateCaseSensitive())
+		n = n.toLowerCase();
+
+	    if (n.contains(".") && n.startsWith(oldName + ".") || n.equals(oldName)) {
+
+		int amount = entry.getValue();
+		String[] split = n.split(oldName);
+		String subname = "";
+		if (split.length > 1)
+		    subname = n.split(oldName)[1];
+		String name = newName + subname;
+		it.remove();
+
+		sellAmount.put(name, amount);
+
+	    }
 	}
     }
 

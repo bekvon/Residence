@@ -287,8 +287,6 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 
-//	Debug.D(white + ":" + black);
-
 	if (white != 0 && white >= black || black == 0)
 	    return;
 
@@ -1484,7 +1482,8 @@ public class ResidencePlayerListener implements Listener {
 	    Residence.getServ().getPluginManager().callEvent(chgEvent);
 
 	    if (!(ResOld != null && res == ResOld.getParent())) {
-		if (Residence.getConfigManager().isExtraEnterMessage() && !res.isOwner(player)) {
+		if (Residence.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (Residence.getRentManager().isForRent(areaname) || Residence
+		    .getTransactionManager().isForSale(areaname))) {
 		    if (Residence.getRentManager().isForRent(areaname) && !Residence.getRentManager().isRented(areaname)) {
 			RentableLand rentable = Residence.getRentManager().getRentableLand(areaname);
 			if (rentable != null)

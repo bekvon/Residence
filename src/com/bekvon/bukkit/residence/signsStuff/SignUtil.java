@@ -145,7 +145,7 @@ public class SignUtil {
 	    public void run() {
 		CheckSign(res);
 	    }
-	}, 5L);
+	}, time * 1L);
     }
 
     public void CheckSign(ClaimedResidence res) {
@@ -170,9 +170,41 @@ public class SignUtil {
 	}
     }
 
+    public void updateSignResName(String oldName, String newName) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive() && oldName != null && newName != null) {
+	    oldName = oldName.toLowerCase();
+	    newName = newName.toLowerCase();
+	}
+	boolean cs = Residence.getConfigManager().isResCreateCaseSensitive();
+	List<Signs> signList = new ArrayList<Signs>();
+	signList.addAll(this.getSigns().GetAllSigns());
+	for (com.bekvon.bukkit.residence.signsStuff.Signs it : signList) {
+	    String n = it.GetResidence();
+	    if (!cs)
+		n = n.toLowerCase();
+
+	    if (n.contains(".") && n.startsWith(oldName + ".") || n.equals(oldName)) {
+		String[] split = n.split(oldName);
+		String subname = "";
+		if (split.length > 1)
+		    subname = n.split(oldName)[1];
+		String name = newName + subname;
+		it.setResidence(name);
+		SignUpdate(it);
+	    }
+	}
+	saveSigns();
+    }
+
     public boolean SignUpdate(Signs Sign) {
 
 	String landName = Sign.GetResidence();
+
+	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
+
+	if (res != null) {
+	    landName = res.getName();
+	}
 
 	boolean ForSale = Residence.getTransactionManager().isForSale(landName);
 	boolean ForRent = Residence.getRentManager().isForRent(landName);
@@ -243,12 +275,22 @@ public class SignUtil {
 
 	if (ForSale) {
 	    String shortName = fixResName(landName);
+	    String secondLine = null;
+	    if (shortName.contains("~")) {
+		String[] lines = fixDoubleResName(landName);
+		shortName = lines[0];
+		secondLine = lines[1];
+	    }
 
 	    sign.setLine(0, Residence.getLM().getMessage("Sign.ForSaleTopLine"));
 	    String infoLine = Residence.getLM().getMessage("Sign.ForSalePriceLine", Residence.getTransactionManager().getSaleAmount(landName));
 	    sign.setLine(1, infoLine);
 	    sign.setLine(2, Residence.getLM().getMessage("Sign.RentedResName", shortName));
-	    sign.setLine(3, Residence.getLM().getMessage("Sign.ForSaleBottomLine"));
+
+	    if (secondLine != null)
+		sign.setLine(3, Residence.getLM().getMessage("Sign.RentedResName", secondLine));
+	    else
+		sign.setLine(3, Residence.getLM().getMessage("Sign.ForSaleBottomLine"));
 	    sign.update();
 	}
 
@@ -305,7 +347,7 @@ public class SignUtil {
 		continue;
 	    }
 
-	    signs.setLocation(new Location (world, x,y,z));
+	    signs.setLocation(new Location(world, x, y, z));
 	    boolean found = false;
 
 	    for (Signs onesigns : this.getSigns().GetAllSigns()) {
@@ -342,12 +384,41 @@ public class SignUtil {
     }
 
     public String fixResName(String name) {
-	if (name.length() > 15)
+	if (name.length() > 15 && !name.contains("."))
 	    name = "~" + name.substring(name.length() - 14);
-	if (name.length() == 15 && name.substring(name.length() - 13).contains(".")) {
-	    String[] temp = name.split("\\.");
-	    name = "~." + temp[temp.length - 1];
+	else if (name.length() > 15 && name.contains(".")) {
+	    String[] splited = name.split("\\.");
+	    name = "";
+	    for (int i = splited.length - 1; i >= 0; i--) {
+		String tempName = name + "." + splited[i];
+		if (tempName.length() < 15)
+		    name = tempName;
+		else
+		    name = "~" + tempName.substring(tempName.length() - 14);
+	    }
 	}
 	return name;
+    }
+
+    public String[] fixDoubleResName(String name) {
+	String SecondLine = name.substring(name.length() - 15);
+	String FirstLine = name.replace(SecondLine, "");
+	if (FirstLine.length() > 15 && !FirstLine.contains("."))
+	    FirstLine = "~" + FirstLine.substring(name.length() - 14);
+	else if (FirstLine.length() > 15 && FirstLine.contains(".")) {
+	    String[] splited = FirstLine.split("\\.");
+	    FirstLine = "";
+	    for (int i = 0; i < splited.length; i++) {
+		String tempName = FirstLine + "." + splited[i];
+		if (tempName.length() < 15)
+		    FirstLine = tempName;
+		else
+		    FirstLine = "~" + tempName.substring(tempName.length() - 14);
+	    }
+	}
+	String[] lines = new String[2];
+	lines[0] = FirstLine;
+	lines[1] = SecondLine;
+	return lines;
     }
 }
