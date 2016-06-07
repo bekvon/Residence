@@ -101,10 +101,6 @@ public class ClaimedResidence {
 	parent = parentResidence;
     }
 
-    public boolean addArea(CuboidArea area, String name) {
-	return addArea(null, area, name, true);
-    }
-
     public static boolean CheckAreaSize(Player player, CuboidArea area, boolean resadmin) {
 	if (!resadmin && area.getSize() < Residence.getConfigManager().getMinimalResSize()) {
 	    if (player != null) {
@@ -134,7 +130,15 @@ public class ClaimedResidence {
 	return true;
     }
 
+    public boolean addArea(CuboidArea area, String name) {
+	return addArea(null, area, name, true);
+    }
+
     public boolean addArea(Player player, CuboidArea area, String name, boolean resadmin) {
+	return addArea(player, area, name, resadmin, true);
+    }
+
+    public boolean addArea(Player player, CuboidArea area, String name, boolean resadmin, boolean chargeMoney) {
 	if (!Residence.validName(name)) {
 	    if (player != null) {
 		player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
@@ -234,7 +238,7 @@ public class ClaimedResidence {
 		player.sendMessage(Residence.getLM().getMessage("Area.HighLimit", String.format("%d", group.getMaxHeight())));
 		return false;
 	    }
-	    if (parent == null && Residence.getConfigManager().enableEconomy()) {
+	    if (chargeMoney && parent == null && Residence.getConfigManager().enableEconomy()) {
 		int chargeamount = (int) Math.ceil((double) area.getSize() * group.getCostPerBlock());
 		if (!TransactionManager.chargeEconomyMoney(player, chargeamount)) {
 		    return false;
@@ -250,9 +254,6 @@ public class ClaimedResidence {
 	Residence.getResidenceManager().removeChunkList(getName());
 	areas.put(name, area);
 	Residence.getResidenceManager().calculateChunks(getName());
-	if (player != null) {
-	    player.sendMessage(Residence.getLM().getMessage("Area.Create", name));
-	}
 	return true;
     }
 
@@ -467,8 +468,10 @@ public class ClaimedResidence {
 		return false;
 
 	    subzones.put(name, newres);
-	    if (player != null)
+	    if (player != null) {
+		player.sendMessage(Residence.getLM().getMessage("Area.Create", name));
 		player.sendMessage(Residence.getLM().getMessage("Subzone.Create", name));
+	    }
 	    return true;
 	} else {
 	    if (player != null) {

@@ -50,8 +50,7 @@ public class create implements cmd {
 		}
 	    } else {
 		Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
-		    .getSelectionManager().getPlayerLoc2(player.getName()),
-		    resadmin);
+		    .getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
 		return true;
 	    }
 	}

@@ -250,40 +250,41 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
 	newRes.BlockSellPrice = group.getSellPerBlock();
+
+	if (!newRes.addArea(player, newArea, "main", resadmin, false))
+	    return false;
+
+	ResidenceCreationEvent resevent = new ResidenceCreationEvent(player, name, newRes, newArea);
+	Residence.getServ().getPluginManager().callEvent(resevent);
+	if (resevent.isCancelled())
+	    return false;
+
+	if (!newRes.isSubzone() && Residence.getConfigManager().enableEconomy()) {
+	    int chargeamount = (int) Math.ceil((double) newArea.getSize() * group.getCostPerBlock());
+	    if (!TransactionManager.chargeEconomyMoney(player, chargeamount))
+		return false;	    
+	}
+
+	residences.put(name, newRes);
+	calculateChunks(name);
+	Residence.getLeaseManager().removeExpireTime(name);
+	Residence.getPlayerManager().addResidence(newRes.getOwner(), newRes);
+
 	if (player != null) {
-	    newRes.addArea(player, newArea, "main", resadmin);
-	} else {
-	    newRes.addArea(newArea, "main");
+	    Residence.getSelectionManager().NewMakeBorders(player, newArea.getHighLoc(), newArea.getLowLoc(), false);
+	    Residence.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
+	    player.sendMessage(Residence.getLM().getMessage("Area.Create", "main"));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.Create", name));
 	}
-	if (newRes.getAreaCount() != 0) {
-
-	    ResidenceCreationEvent resevent = new ResidenceCreationEvent(player, name, newRes, newArea);
-	    Residence.getServ().getPluginManager().callEvent(resevent);
-	    if (resevent.isCancelled())
-		return false;
-
-	    residences.put(name, newRes);
-	    calculateChunks(name);
-	    Residence.getLeaseManager().removeExpireTime(name);
-
-	    Residence.getPlayerManager().addResidence(newRes.getOwner(), newRes);
-
+	if (Residence.getConfigManager().useLeases()) {
 	    if (player != null) {
-		Residence.getSelectionManager().NewMakeBorders(player, newArea.getHighLoc(), newArea.getLowLoc(), false);
-		Residence.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
-
-		player.sendMessage(Residence.getLM().getMessage("Residence.Create", name));
+		Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
+	    } else {
+		Residence.getLeaseManager().setExpireTime(name, group.getLeaseGiveTime());
 	    }
-	    if (Residence.getConfigManager().useLeases()) {
-		if (player != null) {
-		    Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
-		} else {
-		    Residence.getLeaseManager().setExpireTime(name, group.getLeaseGiveTime());
-		}
-	    }
-	    return true;
 	}
-	return false;
+	return true;
+
     }
 
     public void listResidences(CommandSender sender) {

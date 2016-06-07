@@ -42,7 +42,8 @@ public class area implements cmd {
 		if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
 		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
 		    if (res != null) {
-			res.addArea(player, Residence.getSelectionManager().getSelectionCuboid(player), args[3], resadmin);
+			if (res.addArea(player, Residence.getSelectionManager().getSelectionCuboid(player), args[3], resadmin))
+			    player.sendMessage(Residence.getLM().getMessage("Area.Create", args[3]));			
 		    } else {
 			player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 		    }
