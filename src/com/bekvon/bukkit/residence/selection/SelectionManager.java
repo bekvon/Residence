@@ -16,6 +16,8 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 public class SelectionManager {
     protected Map<String, Location> playerLoc1;
@@ -29,6 +31,8 @@ public class SelectionManager {
     public static HashMap<String, Integer> errorIDMap = new HashMap<String, Integer>();
 
     public static final int MIN_HEIGHT = 0;
+
+    Permission p = new Permission("residence.bypass.ignorey", PermissionDefault.FALSE);
 
     public enum Direction {
 	UP, DOWN, PLUSX, PLUSZ, MINUSX, MINUSZ
@@ -45,10 +49,7 @@ public class SelectionManager {
 	if (loc1 != null && loc2 != null) {
 	    playerLoc1.put(player.getName(), loc1);
 	    playerLoc2.put(player.getName(), loc2);
-	    if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName())) {
-		this.qsky(player);
-		this.qbedrock(player);
-	    }
+	    updateForY(player);
 	    this.afterSelectionUpdate(player);
 	}
     }
@@ -56,10 +57,7 @@ public class SelectionManager {
     public void placeLoc1(Player player, Location loc, boolean show) {
 	if (loc != null) {
 	    playerLoc1.put(player.getName(), loc);
-	    if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName())) {
-		this.qsky(player);
-		this.qbedrock(player);
-	    }
+	    updateForY(player);
 	    if (show)
 		this.afterSelectionUpdate(player);
 	}
@@ -68,12 +66,16 @@ public class SelectionManager {
     public void placeLoc2(Player player, Location loc, boolean show) {
 	if (loc != null) {
 	    playerLoc2.put(player.getName(), loc);
-	    if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName())) {
-		this.qsky(player);
-		this.qbedrock(player);
-	    }
+	    updateForY(player);
 	    if (show)
 		this.afterSelectionUpdate(player);
+	}
+    }
+
+    private void updateForY(Player player) {
+	if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName()) && !player.hasPermission(p)) {
+	    this.qsky(player);
+	    this.qbedrock(player);
 	}
     }
 

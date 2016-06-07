@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,8 +16,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
 
@@ -233,7 +237,7 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("rain");
 
 	addResidenceOnlyFlag("dryup");
-	
+
 	addResidenceOnlyFlag("backup");
 
 	addPlayerOrGroupOnlyFlag("admin");
@@ -747,8 +751,11 @@ public class FlagPermissions {
 	return this.getPlayerFlags(player, false);
     }
 
-    public ArrayList<String> getposibleFlags() {
-	return FlagPermissions.validFlags;
+    public Set<String> getposibleFlags() {
+	Set<String> t = new HashSet<String>();
+	t.addAll(FlagPermissions.validFlags);
+	t.addAll(FlagPermissions.validPlayerFlags);
+	return t;
     }
 
     public ArrayList<String> getposibleAreaFlags() {
@@ -758,7 +765,7 @@ public class FlagPermissions {
     public List<String> getPosibleFlags(Player player, boolean residence, boolean resadmin) {
 	List<String> flags = new ArrayList<String>();
 	for (Entry<String, Boolean> one : Residence.getPermissionManager().getAllFlags().getFlags().entrySet()) {
-	    if (!one.getValue() && !resadmin && !player.hasPermission("residence.flag." + one.getKey().toLowerCase()))
+	    if (!one.getValue() && !resadmin && !player.hasPermission(new Permission("residence.flag." + one.getKey().toLowerCase(), PermissionDefault.FALSE)))
 		continue;
 
 	    if (!residence && !getposibleFlags().contains(one.getKey()))

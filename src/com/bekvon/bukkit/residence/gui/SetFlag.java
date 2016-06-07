@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 
 public class SetFlag {
 
@@ -28,7 +29,7 @@ public class SetFlag {
     private Player player;
     private String targetPlayer = null;
     private Inventory inventory;
-    private LinkedHashMap<String, Integer> permMap = new LinkedHashMap<String, Integer>();
+    private LinkedHashMap<String, Object> permMap = new LinkedHashMap<String, Object>();
     private LinkedHashMap<String, List<String>> description = new LinkedHashMap<String, List<String>>();
     private boolean admin = false;
     private int page = 1;
@@ -93,7 +94,7 @@ public class SetFlag {
 
 	String flag = "";
 	int i = 0;
-	for (Entry<String, Integer> one : permMap.entrySet()) {
+	for (Entry<String, Object> one : permMap.entrySet()) {
 	    flag = one.getKey();
 	    if (i == slot) {
 		break;
@@ -141,11 +142,12 @@ public class SetFlag {
 	}
     }
 
+    @SuppressWarnings("incomplete-switch")
     public void recalculateResidence(ClaimedResidence res) {
 
 	List<String> flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
 	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
-	LinkedHashMap<String, Integer> TempPermMap = new LinkedHashMap<String, Integer>();
+	Map<String, Object> TempPermMap = new LinkedHashMap<String, Object>();
 	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
 
 	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {
@@ -158,9 +160,9 @@ public class SetFlag {
 		continue;
 
 	    if (resFlags.containsKey(one.getKey()))
-		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? 1 : 0);
+		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? FlagState.TRUE : FlagState.FALSE);
 	    else
-		TempPermMap.put(one.getKey(), 2);
+		TempPermMap.put(one.getKey(), FlagState.NEITHER);
 	}
 
 	String title = "";
@@ -176,7 +178,10 @@ public class SetFlag {
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
 
-	TempPermMap = (LinkedHashMap<String, Integer>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
+	if (targetPlayer == null)
+	    TempPermMap.remove("admin");
+
+	TempPermMap = (LinkedHashMap<String, Object>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
 
 	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
 
@@ -187,7 +192,7 @@ public class SetFlag {
 
 	int count = -1;
 	permMap.clear();
-	for (Entry<String, Integer> one : TempPermMap.entrySet()) {
+	for (Entry<String, Object> one : TempPermMap.entrySet()) {
 	    count++;
 	    if (count >= end)
 		break;
@@ -196,25 +201,23 @@ public class SetFlag {
 	    permMap.put(one.getKey(), one.getValue());
 	}
 
-	for (Entry<String, Integer> one : permMap.entrySet()) {
+	for (Entry<String, Object> one : permMap.entrySet()) {
 
 	    ItemStack MiscInfo = Residence.getConfigManager().getGuiRemove();
 
-	    switch (one.getValue()) {
-	    case 0:
+	    switch ((FlagState) one.getValue()) {
+	    case FALSE:
 		MiscInfo = Residence.getConfigManager().getGuiFalse();
 		break;
-	    case 1:
+	    case TRUE:
 		MiscInfo = Residence.getConfigManager().getGuiTrue();
-		break;
-	    case 2:
 		break;
 	    }
 
 	    if (flagData.contains(one.getKey()))
 		MiscInfo = flagData.getItem(one.getKey());
 
-	    if (one.getValue() == 1) {
+	    if ((FlagState) one.getValue() == FlagState.TRUE) {
 		ItemMeta im = MiscInfo.getItemMeta();
 		im.addEnchant(Enchantment.LUCK, 1, true);
 		MiscInfo.setItemMeta(im);
@@ -227,14 +230,14 @@ public class SetFlag {
 	    List<String> lore = new ArrayList<String>();
 
 	    String variable = "";
-	    switch (one.getValue()) {
-	    case 0:
+	    switch ((FlagState) one.getValue()) {
+	    case FALSE:
 		variable = Residence.getLM().getMessage("General.False");
 		break;
-	    case 1:
+	    case TRUE:
 		variable = Residence.getLM().getMessage("General.True");
 		break;
-	    case 2:
+	    case NEITHER:
 		variable = Residence.getLM().getMessage("General.Removed");
 		break;
 	    }
@@ -270,6 +273,7 @@ public class SetFlag {
 	this.inventory = GuiInv;
     }
 
+    @SuppressWarnings("incomplete-switch")
     public void recalculatePlayer(ClaimedResidence res) {
 
 	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
@@ -283,7 +287,7 @@ public class SetFlag {
 	}
 
 	if (targetPlayer != null) {
-	    ArrayList<String> PosibleResPFlags = res.getPermissions().getposibleFlags();
+	    Set<String> PosibleResPFlags = res.getPermissions().getposibleFlags();
 	    Map<String, Boolean> temp = new HashMap<String, Boolean>();
 	    for (String one : PosibleResPFlags) {
 		if (globalFlags.containsKey(one))
@@ -299,16 +303,16 @@ public class SetFlag {
 		}
 	}
 
-	LinkedHashMap<String, Integer> TempPermMap = new LinkedHashMap<String, Integer>();
+	LinkedHashMap<String, Object> TempPermMap = new LinkedHashMap<String, Object>();
 
 	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
 	    if (!flags.contains(one.getKey()))
 		continue;
 
 	    if (resFlags.containsKey(one.getKey()))
-		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? 1 : 0);
+		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? FlagState.TRUE : FlagState.FALSE);
 	    else
-		TempPermMap.put(one.getKey(), 2);
+		TempPermMap.put(one.getKey(), FlagState.NEITHER);
 	}
 
 	String title = "";
@@ -324,7 +328,7 @@ public class SetFlag {
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
 
-	TempPermMap = (LinkedHashMap<String, Integer>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
+	TempPermMap = (LinkedHashMap<String, Object>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
 
 	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
 
@@ -335,7 +339,7 @@ public class SetFlag {
 
 	int count = -1;
 	permMap.clear();
-	for (Entry<String, Integer> one : TempPermMap.entrySet()) {
+	for (Entry<String, Object> one : TempPermMap.entrySet()) {
 	    count++;
 	    if (count >= end)
 		break;
@@ -344,25 +348,23 @@ public class SetFlag {
 	    permMap.put(one.getKey(), one.getValue());
 	}
 
-	for (Entry<String, Integer> one : permMap.entrySet()) {
+	for (Entry<String, Object> one : permMap.entrySet()) {
 
 	    ItemStack MiscInfo = Residence.getConfigManager().getGuiRemove();
 
-	    switch (one.getValue()) {
-	    case 0:
+	    switch ((FlagState) one.getValue()) {
+	    case FALSE:
 		MiscInfo = Residence.getConfigManager().getGuiFalse();
 		break;
-	    case 1:
+	    case TRUE:
 		MiscInfo = Residence.getConfigManager().getGuiTrue();
-		break;
-	    case 2:
 		break;
 	    }
 
 	    if (flagData.contains(one.getKey()))
 		MiscInfo = flagData.getItem(one.getKey());
 
-	    if (one.getValue() == 1) {
+	    if ((FlagState) one.getValue() == FlagState.TRUE) {
 		ItemMeta im = MiscInfo.getItemMeta();
 		im.addEnchant(Enchantment.LUCK, 1, true);
 		MiscInfo.setItemMeta(im);
@@ -375,14 +377,14 @@ public class SetFlag {
 	    List<String> lore = new ArrayList<String>();
 
 	    String variable = "";
-	    switch (one.getValue()) {
-	    case 0:
+	    switch ((FlagState) one.getValue()) {
+	    case FALSE:
 		variable = Residence.getLM().getMessage("General.False");
 		break;
-	    case 1:
+	    case TRUE:
 		variable = Residence.getLM().getMessage("General.True");
 		break;
-	    case 2:
+	    case NEITHER:
 		variable = Residence.getLM().getMessage("General.Removed");
 		break;
 	    }

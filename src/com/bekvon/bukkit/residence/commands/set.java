@@ -45,7 +45,7 @@ public class set implements cmd {
 		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 		return true;
 	    }
-	    if (!res.isOwner(player) && !resadmin) {
+	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, "admin", false)) {
 		sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return true;
 	    }

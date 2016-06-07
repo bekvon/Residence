@@ -75,7 +75,7 @@ public class pset implements cmd {
 
 	    if (!Residence.isPlayerExist(player, targetPlayer, true))
 		return false;
-	    if (!res.isOwner(player) && !resadmin) {
+	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, "admin", false)) {
 		sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return true;
 	    }
