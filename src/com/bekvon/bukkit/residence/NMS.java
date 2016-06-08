@@ -38,10 +38,6 @@ public interface NMS {
 
     public Block getTargetBlock(Player player, int range);
 
-    public ItemStack getLingeringPotionItem(Entity ent);
-
-    public String getPotionType(ItemStack potion);
-
     public ItemStack itemInMainHand(Player player);
     
     public boolean isChorusTeleport(TeleportCause tpcause);

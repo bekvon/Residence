@@ -18,7 +18,7 @@ import com.bekvon.bukkit.residence.AB;
 *
 * @author hamzaxx
 */
-public class ActionBar implements AB{
+public class ActionBar implements AB {
     private String version = "";
     private Object packet;
     private Method getHandle;
@@ -28,6 +28,7 @@ public class ActionBar implements AB{
     private Class<?> nmsIChatBaseComponent;
     private Class<?> packetType;
     private Constructor<?> constructor;
+    private boolean simpleMessages = false;
 
     public ActionBar() {
 	try {
@@ -47,7 +48,8 @@ public class ActionBar implements AB{
 		constructor = packetType.getConstructor(nmsIChatBaseComponent, int.class);
 	    }
 	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException ex) {
-	    Bukkit.getLogger().log(Level.SEVERE, "Error {0}", ex);
+	    simpleMessages = true;
+	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully suport action bar messages. They will be shown in chat instead.");
 	}
     }
 
@@ -59,6 +61,10 @@ public class ActionBar implements AB{
     }
 
     public void send(Player receivingPacket, String msg) {
+	if (simpleMessages) {
+	    receivingPacket.sendMessage(msg);
+	    return;
+	}
 	try {
 	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', JSONObject
 		.escape(msg)) + "\"}");
@@ -71,7 +77,8 @@ public class ActionBar implements AB{
 	    Object connection = playerConnection.get(player);
 	    sendPacket.invoke(connection, packet);
 	} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
-	    Bukkit.getLogger().log(Level.SEVERE, "Error {0} " + version, ex);
+	    simpleMessages = true;
+	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully suport action bar messages. They will be shown in chat instead.");
 	}
     }
 

@@ -126,16 +126,6 @@ public class v1_7_Couldron implements NMS {
     }
 
     @Override
-    public String getPotionType(ItemStack potion) {
-	return null;
-    }
-
-    @Override
-    public ItemStack getLingeringPotionItem(Entity ent) {
-	return null;
-    }
-
-    @Override
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	return false;
     }

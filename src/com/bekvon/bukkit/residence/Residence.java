@@ -429,7 +429,9 @@ public class Residence extends JavaPlugin {
 	    version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{7})")[0];
 	    try {
 		Class<?> nmsClass;
+
 		nmsClass = Class.forName("com.bekvon.bukkit.residence.actionBarNMS." + version);
+
 		if (AB.class.isAssignableFrom(nmsClass)) {
 		    ab = (AB) nmsClass.getConstructor().newInstance();
 		} else {
@@ -609,22 +611,9 @@ public class Residence extends JavaPlugin {
 		    return;
 		}
 		FlagPermissions.initValidFlags();
-		Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
-		if (plugin != null) {
-		    smanager = new WorldEditSelectionManager(server, this);
-		    wep = (WorldEditPlugin) plugin;
-		    wepid = ((WorldEditPlugin) Residence.wep).getConfig().getInt("wand-item");
-		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldEdit");
-		} else {
-		    smanager = new SelectionManager(server, this);
-		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldEdit NOT found!");
-		}
 
-		Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
-		if (wgplugin != null) {
-		    wg = (WorldGuardPlugin) wgplugin;
-		    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldGuard");
-		}
+		setWorldEdit();
+		setWorldGuard();
 
 		blistener = new ResidenceBlockListener(this);
 		plistener = new ResidencePlayerListener(this);
@@ -740,7 +729,7 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().LoadSigns();
 	getShopSignUtilManager().BoardUpdate();
 
-	versionChecker.VersionCheck(null);
+	getVersionChecker().VersionCheck(null);
     }
 
     public static SignUtil getSignUtil() {
@@ -764,6 +753,27 @@ public class Residence extends JavaPlugin {
 		return false;
 	    }
 	    return true;
+	}
+    }
+
+    private void setWorldEdit() {
+	Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
+	if (plugin != null) {
+	    smanager = new WorldEditSelectionManager(server, this);
+	    wep = (WorldEditPlugin) plugin;
+	    wepid = ((WorldEditPlugin) Residence.wep).getConfig().getInt("wand-item");
+	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldEdit");
+	} else {
+	    smanager = new SelectionManager(server, this);
+	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldEdit NOT found!");
+	}
+    }
+
+    private void setWorldGuard() {
+	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
+	if (wgplugin != null) {
+	    wg = (WorldGuardPlugin) wgplugin;
+	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldGuard");
 	}
     }
 
