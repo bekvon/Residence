@@ -403,7 +403,8 @@ public class Residence extends JavaPlugin {
 	    String packageName = getServer().getClass().getPackage().getName();
 
 	    String[] packageSplit = packageName.split("\\.");
-	    String version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{4})")[0];
+	    Bukkit.getConsoleSender().sendMessage("version is: " + packageSplit[packageSplit.length - 1]);
+	    String version = packageSplit[packageSplit.length - 1].substring(0,packageSplit[packageSplit.length - 1].length()-3);
 	    try {
 		Class<?> nmsClass;
 		if (Residence.getConfigManager().CouldronCompatability())
@@ -426,7 +427,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    ABManager = new ActionBar();
-	    version = packageSplit[packageSplit.length - 1].split("(?<=\\G.{7})")[0];
+	    version = packageSplit[packageSplit.length - 1];
 	    try {
 		Class<?> nmsClass;
 

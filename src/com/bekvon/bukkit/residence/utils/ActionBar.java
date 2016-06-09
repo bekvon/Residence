@@ -32,7 +32,9 @@ public class ActionBar implements AB {
 
     public ActionBar() {
 	try {
-	    version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+	    String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
+	    version = v[v.length - 1];
+//	    version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	    packetType = Class.forName(getPacketPlayOutChat());
 	    Class<?> typeCraftPlayer = Class.forName(getCraftPlayerClasspath());
 	    Class<?> typeNMSPlayer = Class.forName(getNMSPlayerClasspath());

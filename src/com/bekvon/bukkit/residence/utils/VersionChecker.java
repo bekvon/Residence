@@ -16,7 +16,7 @@ import com.bekvon.bukkit.residence.Residence;
 public class VersionChecker {
     Residence plugin;
     private int resource = 11480;
-    private static int cleanVersion = 0;
+    private int cleanVersion = 0;
 
     public VersionChecker(Residence plugin) {
 	this.plugin = plugin;
@@ -24,10 +24,12 @@ public class VersionChecker {
 
     public int GetVersion() {
 	if (cleanVersion == 0) {
-	    String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+	    String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
+	    String version = v[v.length - 1];
 	    // Translating version to integer for simpler use
 	    try {
 		cleanVersion = Integer.parseInt(version.replace("v", "").replace("V", "").replace("_", "").replace("r", "").replace("R", ""));
+		cleanVersion *= 10;
 	    } catch (NumberFormatException e) {
 		// Fail safe if it for some reason can't translate version to integer
 		if (version.contains("v1_4"))
@@ -48,10 +50,11 @@ public class VersionChecker {
 		    cleanVersion = 1910;
 		if (version.contains("v1_9_R2"))
 		    cleanVersion = 1920;
+		if (version.contains("v1_10_R1"))
+		    cleanVersion = 11010;
 	    }
-	    if (cleanVersion < 100)
-		cleanVersion *= 10;
-	    if (cleanVersion < 1000)
+
+	    if (cleanVersion < 1400)
 		cleanVersion *= 10;
 	}
 	return cleanVersion;

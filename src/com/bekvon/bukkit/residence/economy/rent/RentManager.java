@@ -311,7 +311,7 @@ public class RentManager implements MarketRentInterface {
 		return;
 
 	    rentedLand.remove(landName);
-	    if (!rentableLand.get(landName).AllowRenewing || !rentableLand.get(landName).StayInMarket) {
+	    if (!rentableLand.get(landName).AllowRenewing && !rentableLand.get(landName).StayInMarket) {
 		rentableLand.remove(landName);
 	    }
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
