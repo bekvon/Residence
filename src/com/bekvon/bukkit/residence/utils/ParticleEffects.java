@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.utils.ReflectionUtils.PackageType;
 
 /**
@@ -1388,8 +1389,8 @@ public enum ParticleEffects {
 				return;
 			}
 			try {
-				version = Integer.parseInt(Character.toString(PackageType.getServerVersion().charAt(3)));
-				if (version > 7) {
+				version = Residence.getVersionChecker().GetVersion();
+				if (version > 1700) {
 					enumParticle = PackageType.MINECRAFT_SERVER.getClass("EnumParticle");
 				}
 				Class<?> packetClass = PackageType.MINECRAFT_SERVER.getClass(version < 7 ? "Packet63WorldParticles" : "PacketPlayOutWorldParticles");

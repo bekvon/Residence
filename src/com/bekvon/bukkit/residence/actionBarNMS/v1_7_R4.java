@@ -3,9 +3,9 @@ package com.bekvon.bukkit.residence.actionBarNMS;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.bekvon.bukkit.residence.AB;
+import com.bekvon.bukkit.residence.ABInterface;
 
-public class v1_7_R4 implements AB {
+public class v1_7_R4 implements ABInterface {
 
     @Override
     public void send(CommandSender sender, String msg) {

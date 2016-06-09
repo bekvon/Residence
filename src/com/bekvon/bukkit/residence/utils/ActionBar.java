@@ -12,13 +12,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-import com.bekvon.bukkit.residence.AB;
+import com.bekvon.bukkit.residence.ABInterface;
 
 /**
 *
 * @author hamzaxx
 */
-public class ActionBar implements AB {
+public class ActionBar implements ABInterface {
     private String version = "";
     private Object packet;
     private Method getHandle;

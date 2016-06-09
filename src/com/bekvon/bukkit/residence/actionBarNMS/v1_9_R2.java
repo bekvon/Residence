@@ -4,13 +4,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import com.bekvon.bukkit.residence.AB;
+import com.bekvon.bukkit.residence.ABInterface;
 
 import net.minecraft.server.v1_9_R2.IChatBaseComponent;
 import net.minecraft.server.v1_9_R2.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_9_R2.PacketPlayOutChat;
 
-public class v1_9_R2 implements AB {
+public class v1_9_R2 implements ABInterface {
 
     @Override
     public void send(CommandSender sender, String msg) {

@@ -179,7 +179,7 @@ public class Residence extends JavaPlugin {
     private static String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
     private static String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
-    private static AB ab;
+    private static ABInterface ab;
     private static NMS nms;
     static LWC lwc;
 
@@ -247,7 +247,7 @@ public class Residence extends JavaPlugin {
 	return nms;
     }
 
-    public static AB getAB() {
+    public static ABInterface getAB() {
 	return ab;
     }
 
@@ -401,9 +401,7 @@ public class Residence extends JavaPlugin {
 	    getFlagUtilManager().load();
 
 	    String packageName = getServer().getClass().getPackage().getName();
-
 	    String[] packageSplit = packageName.split("\\.");
-	    Bukkit.getConsoleSender().sendMessage("version is: " + packageSplit[packageSplit.length - 1]);
 	    String version = packageSplit[packageSplit.length - 1].substring(0,packageSplit[packageSplit.length - 1].length()-3);
 	    try {
 		Class<?> nmsClass;
@@ -433,8 +431,8 @@ public class Residence extends JavaPlugin {
 
 		nmsClass = Class.forName("com.bekvon.bukkit.residence.actionBarNMS." + version);
 
-		if (AB.class.isAssignableFrom(nmsClass)) {
-		    ab = (AB) nmsClass.getConstructor().newInstance();
+		if (ABInterface.class.isAssignableFrom(nmsClass)) {
+		    ab = (ABInterface) nmsClass.getConstructor().newInstance();
 		} else {
 		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
 		    this.setEnabled(false);
@@ -638,7 +636,7 @@ public class Residence extends JavaPlugin {
 		// 1.9 event
 		if (getVersionChecker().GetVersion() >= 1900)
 		    pm.registerEvents(new v1_9Events(), this);
-
+		
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
 		// Priority.NORMAL, this);
 		if (cmanager.enableSpout()) {
