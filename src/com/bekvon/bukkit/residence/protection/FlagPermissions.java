@@ -161,7 +161,7 @@ public class FlagPermissions {
 	addFlag("riding");
 
 	addFlag("hook");
-
+	
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
 	addResidenceOnlyFlag("fireball");
@@ -238,6 +238,8 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("dryup");
 
 	addResidenceOnlyFlag("backup");
+	
+	addResidenceOnlyFlag("hotfloor");
 
 	addPlayerOrGroupOnlyFlag("admin");
 

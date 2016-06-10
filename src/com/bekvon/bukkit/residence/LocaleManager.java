@@ -271,7 +271,7 @@ public class LocaleManager {
 	c.get("Language.Rent.Days", "&eRent days: &6%1");
 	c.get("Language.Rent.Rented", " &6(Rented)");
 	c.get("Language.Rent.RentList", " &6%1&e. &6%2 &e(&6%3&e/&6%4&e/&6%5&e) - &6%6 &6%7");
-	
+
 	c.get("Language.Rent.EvictConfirm", "&eWrite &6/res market confirm &eto evict renter from &6%1 &eresidence");
 	c.get("Language.Rent.UnrentConfirm", "&eWrite &6/res market confirm &eto unrent &6%1 &eresidence");
 	c.get("Language.Rent.ReleaseConfirm", "&eWrite &6/res market confirm &eto remove &6%1 &eresidence from market");
@@ -1118,6 +1118,12 @@ public class LocaleManager {
 	    "Prevent riding a horse");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.backup.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
+	// hotfloor
+	FlagList.add("hotfloor");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hotfloor.Description",
+	    "Prevent damage from magma blocks");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hotfloor.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 
 	// Filling with custom flags info
 	Set<String> sec = conf.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands").getKeys(false);
@@ -1450,7 +1456,7 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Info",
 	    Arrays.asList("&eUsage: &6/res market payrent <residence>"));
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.payrent.Args", "[residence]");
-	
+
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.confirm.Description", "Confirms residence unrent/release action");
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.confirm.Info",
 	    Arrays.asList("&eUsage: &6/res market confirm"));

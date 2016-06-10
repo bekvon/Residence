@@ -1,0 +1,29 @@
+package com.bekvon.bukkit.residence.allNms;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import com.bekvon.bukkit.residence.Residence;
+
+public class v1_10Events implements Listener {
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+
+    public void onPlayerFireInteract(EntityDamageEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+
+	if (event.getCause() != DamageCause.HOT_FLOOR)
+	    return;
+
+	Entity ent = event.getEntity();
+
+	if (!Residence.getPermsByLoc(ent.getLocation()).has("hotfloor", true)) {
+	    event.setCancelled(true);
+	    return;
+	}
+    }
+}

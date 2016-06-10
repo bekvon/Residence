@@ -52,6 +52,7 @@ import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
+import com.bekvon.bukkit.residence.allNms.v1_10Events;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
 import com.bekvon.bukkit.residence.allNms.v1_9Events;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
@@ -636,6 +637,10 @@ public class Residence extends JavaPlugin {
 		// 1.9 event
 		if (getVersionChecker().GetVersion() >= 1900)
 		    pm.registerEvents(new v1_9Events(), this);
+		
+		// 1.10 event
+		if (getVersionChecker().GetVersion() >= 11000)
+		    pm.registerEvents(new v1_10Events(), this);
 		
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
 		// Priority.NORMAL, this);
