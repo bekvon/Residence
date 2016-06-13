@@ -56,6 +56,7 @@ public class ClaimedResidence {
     protected ChatColor ChannelColor = ChatColor.WHITE;
     protected ResidenceItemList ignorelist;
     protected ResidenceItemList blacklist;
+    protected boolean mainRes = false;
 
     protected List<String> cmdWhiteList = new ArrayList<String>();
     protected List<String> cmdBlackList = new ArrayList<String>();
@@ -69,6 +70,14 @@ public class ClaimedResidence {
 	blacklist = new ResidenceItemList(this, ListType.BLACKLIST);
 	ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
 	this.plugin = plugin;
+    }
+
+    public boolean isMainResidence() {
+	return mainRes;
+    }
+
+    public void setMainResidence(boolean state) {
+	mainRes = state;
     }
 
     public boolean isSubzone() {
@@ -614,6 +623,10 @@ public class ClaimedResidence {
 	return parent;
     }
 
+    public String getTopParentName() {
+	return this.getTopParent().getName();
+    }
+
     public ClaimedResidence getTopParent() {
 	if (parent == null)
 	    return this;
@@ -1096,6 +1109,8 @@ public class ClaimedResidence {
     public Map<String, Object> save() {
 	Map<String, Object> root = new HashMap<>();
 	Map<String, Object> areamap = new HashMap<>();
+	if (mainRes)
+	    root.put("MainResidence", mainRes);
 	root.put("EnterMessage", enterMessage);
 	root.put("LeaveMessage", leaveMessage);
 	root.put("ShopDescription", ShopDesc);
@@ -1173,6 +1188,9 @@ public class ClaimedResidence {
 
 	Map<String, Object> areamap = (Map<String, Object>) root.get("Areas");
 	res.perms = ResidencePermissions.load(res, (Map<String, Object>) root.get("Permissions"));
+
+	if (root.containsKey("MainResidence"))
+	    res.mainRes = (Boolean) root.get("MainResidence");
 
 	if (root.containsKey("BlockSellPrice"))
 	    res.BlockSellPrice = (Double) root.get("BlockSellPrice");

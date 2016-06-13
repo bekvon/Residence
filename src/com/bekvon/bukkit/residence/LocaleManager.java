@@ -252,6 +252,7 @@ public class LocaleManager {
 	c.get("Language.Residence.ParentNoPermission", "&cYou don't have permission to make changes to the parent zone.");
 	c.get("Language.Residence.ChatDisabled", "&eResidence Chat Disabled...");
 	c.get("Language.Residence.DeleteConfirm", "&eAre you sure you want to delete residence &6%1&e, use &6/res confirm &eto confirm.");
+	c.get("Language.Residence.ChangedMain", "&eChainged main residence to &6%1");
 
 	c.get("Language.Residence.CanBeRented", "&6%1&e can be rented for &6%2 &eper &6%3 &edays. &6/res market rent");
 	c.get("Language.Residence.CanBeBought", "&6%1&e can be bought for &6%2&e. &6/res market buy");
@@ -655,6 +656,12 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.enderpearl.Description",
 	    "allow or disallow teleporting to the residence with enderpearl");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.enderpearl.Info",
+	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"));
+	// chorustp
+	FlagList.add("chorustp");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.chorustp.Description",
+	    "allow or disallow teleporting to the residence with chorus fruit");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.chorustp.Info",
 	    Arrays.asList("&eUsage: &6/res set/pset <residence> [flag] true/false/remove"));
 	// admin
 	FlagList.add("admin");
@@ -1115,7 +1122,7 @@ public class LocaleManager {
 	// backup
 	FlagList.add("backup");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.backup.Description",
-	    "Prevent riding a horse");
+	    "If set to true, restores previous look of area (WordEdit required)");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.backup.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 	// hotfloor
@@ -1244,6 +1251,12 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Description", "Ignore unsafe teleportation warning");
 	c.get("CommandHelp.SubCommands.res.SubCommands.tpconfirm.Info",
 	    Arrays.asList("&eUsage: &6/res tpconfirm", "Teleports you to a residence, when teleportation is unsafe."));
+
+	// res setmain
+	c.get("CommandHelp.SubCommands.res.SubCommands.setmain.Description", "Sets defined residence as main to show up in chat as prefix");
+	c.get("CommandHelp.SubCommands.res.SubCommands.setmain.Info",
+	    Arrays.asList("&eUsage: &6/res setmain (residence)", "Set defined residence as main."));
+	c.get("CommandHelp.SubCommands.res.SubCommands.setmain.Args", "[residence]");
 
 	// res subzone
 	c.get("CommandHelp.SubCommands.res.SubCommands.subzone.Description", "Create subzones in residences.");

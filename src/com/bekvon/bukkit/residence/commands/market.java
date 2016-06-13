@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 
@@ -86,9 +87,14 @@ public class market implements cmd {
 
 	    area = Residence.UnrentConfirm.remove(player.getName());
 
-	    if (!Residence.getRentManager().isRented(area))
+	    if (!Residence.getRentManager().isRented(area)) {
 		Residence.getRentManager().removeFromForRent(player, area, resadmin);
-	    else
+		ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+		ClaimedResidence res = Residence.getResidenceManager().getByName(area);
+		if (rPlayer != null && res != null && rPlayer.getMainResidence() == res) {
+		    rPlayer.setMainResidence(null);
+		}
+	    } else
 		Residence.getRentManager().unrent(player, area, resadmin);
 
 	    return true;

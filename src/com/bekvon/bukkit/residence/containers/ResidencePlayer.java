@@ -22,6 +22,7 @@ public class ResidencePlayer {
     private OfflinePlayer ofPlayer = null;
 
     private Map<String, ClaimedResidence> ResidenceList = new HashMap<String, ClaimedResidence>();
+    private ClaimedResidence mainResidence = null;
     private int currentRes = -1;
 
     private PermissionGroup group = null;
@@ -33,6 +34,39 @@ public class ResidencePlayer {
     public ResidencePlayer(String userName) {
 	this.userName = userName;
 	RecalculatePermissions();
+    }
+
+    public void setMainResidence(ClaimedResidence res) {
+	if (mainResidence != null)
+	    mainResidence.setMainResidence(false);
+	mainResidence = res;
+    }
+
+    public ClaimedResidence getMainResidence() {
+	if (mainResidence == null) {
+	    for (Entry<String, ClaimedResidence> one : ResidenceList.entrySet()) {
+		if (one.getValue() == null)
+		    continue;
+		if (one.getValue().isMainResidence()) {
+		    mainResidence = one.getValue();
+		    return mainResidence;
+		}
+	    }
+	    for (String one : Residence.getRentManager().getRentedLands(this.player.getName())) {
+		ClaimedResidence res = Residence.getResidenceManager().getByName(one);
+		if (res != null) {
+		    mainResidence = res;
+		    return mainResidence;
+		}
+	    }
+	    for (Entry<String, ClaimedResidence> one : ResidenceList.entrySet()) {
+		if (one.getValue() == null)
+		    continue;
+		mainResidence = one.getValue();
+		return mainResidence;
+	    }
+	}
+	return mainResidence;
     }
 
     public void RecalculatePermissions() {

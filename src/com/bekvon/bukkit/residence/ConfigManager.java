@@ -196,6 +196,12 @@ public class ConfigManager {
     public boolean SchematicsSaveOnFlagChange;
     // Schematics
 
+    // Global chat
+    public boolean GlobalChatEnabled;
+    public boolean GlobalChatSelfModify;
+    public String GlobalChatFormat;
+    // Global chat
+
     private Residence plugin;
 
     public ConfigManager(FileConfiguration config, FileConfiguration flags, FileConfiguration groups, Residence plugin) {
@@ -386,6 +392,14 @@ public class ConfigManager {
 	DisableListeners = c.get("Global.Optimizations.DisabledWorlds.DisableListeners", true);
 	c.getW().addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
 	DisableCommands = c.get("Global.Optimizations.DisabledWorlds.DisableCommands", true);
+
+	c.getW().addComment("Global.Optimizations.GlobalChat.Enabled",
+	    "Enables or disables chat modification by including players main residence name");
+	GlobalChatEnabled = c.get("Global.Optimizations.GlobalChat.Enabled", false);
+	c.getW().addComment("Global.Optimizations.GlobalChat.SelfModify",
+	    "Modifys chat to add chat titles.  If you're using a chat manager, you may add the tag {residence} to your chat format and disable this.");
+	GlobalChatSelfModify = c.get("Global.Optimizations.GlobalChat.SelfModify", true);
+	GlobalChatFormat = c.get("Global.Optimizations.GlobalChat.Format", "&c[&e%1&c]", true);
 
 	c.getW().addComment("Global.Optimizations.ResCreateCaseSensitive",
 	    "When its true you can create residences with similar names but different capitalization. An example: Village and village are counted as different residences",
@@ -899,6 +913,18 @@ public class ConfigManager {
 		}
 	    }
 	}
+    }
+
+    public boolean isGlobalChatEnabled() {
+	return GlobalChatEnabled;
+    }
+
+    public boolean isGlobalChatSelfModify() {
+	return GlobalChatSelfModify;
+    }
+
+    public String getGlobalChatFormat() {
+	return GlobalChatFormat;
     }
 
     public int getRentInformDelay() {

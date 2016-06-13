@@ -101,7 +101,11 @@ public class PermissionManager {
     public String getPermissionsGroup(String player, String world) {
 	if (perms == null)
 	    return Residence.getConfigManager().getDefaultGroup().toLowerCase();
-	return perms.getPlayerGroup(player, world).toLowerCase();
+	try {
+	    return perms.getPlayerGroup(player, world).toLowerCase();
+	} catch (Exception e) {
+	    return Residence.getConfigManager().getDefaultGroup().toLowerCase();
+	}
     }
 
     public void updateGroupNameForPlayer(Player player) {

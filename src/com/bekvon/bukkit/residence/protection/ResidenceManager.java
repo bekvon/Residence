@@ -262,7 +262,7 @@ public class ResidenceManager implements ResidenceInterface {
 	if (!newRes.isSubzone() && Residence.getConfigManager().enableEconomy()) {
 	    int chargeamount = (int) Math.ceil((double) newArea.getSize() * group.getCostPerBlock());
 	    if (!TransactionManager.chargeEconomyMoney(player, chargeamount))
-		return false;	    
+		return false;
 	}
 
 	residences.put(name, newRes);
@@ -570,8 +570,8 @@ public class ResidenceManager implements ResidenceInterface {
 	Language lm = Residence.getLM();
 
 	String resNameOwner = "&e" + lm.getMessage("Residence.Line", areaname);
+	resNameOwner += lm.getMessage("General.Owner", perms.getOwner());
 	if (Residence.getConfigManager().enableEconomy()) {
-	    resNameOwner += lm.getMessage("General.Owner", perms.getOwner());
 	    if (res.isOwner(sender.getName()) || !(sender instanceof Player) || resadmin)
 		resNameOwner += lm.getMessage("Bank.Name", res.getBank().getStoredMoney());
 	}

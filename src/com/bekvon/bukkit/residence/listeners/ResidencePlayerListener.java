@@ -54,6 +54,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.*;
@@ -104,6 +105,73 @@ public class ResidencePlayerListener implements Listener {
 	for (Player player : Bukkit.getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
+    }
+
+    // Adding to chat prefix main residence name
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerGlobalChat(AsyncPlayerChatEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+	if (!Residence.getConfigManager().isGlobalChatEnabled())
+	    return;
+	if (!Residence.getConfigManager().isGlobalChatSelfModify())
+	    return;
+	Player player = event.getPlayer();
+
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+
+	if (rPlayer == null)
+	    return;
+
+	if (rPlayer.getResList().size() == 0)
+	    return;
+
+	ClaimedResidence res = rPlayer.getMainResidence();
+
+	if (res == null)
+	    return;
+
+	String honorific = Residence.getConfigManager().getGlobalChatFormat().replace("%1", res.getTopParentName());
+
+	String format = event.getFormat();
+	format = format.replace("%1$s", honorific + "%1$s");
+	event.setFormat(format);
+    }
+
+    // Changing chat prefix variable to job name
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerChatGlobalLow(AsyncPlayerChatEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+	if (!Residence.getConfigManager().isGlobalChatEnabled())
+	    return;
+	if (Residence.getConfigManager().isGlobalChatSelfModify())
+	    return;
+	Player player = event.getPlayer();
+
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+
+	if (rPlayer == null)
+	    return;
+
+	if (rPlayer.getResList().size() == 0)
+	    return;
+
+	ClaimedResidence res = rPlayer.getMainResidence();
+
+	if (res == null)
+	    return;
+
+	String honorific = Residence.getConfigManager().getGlobalChatFormat().replace("%1", res.getTopParentName());
+	if (honorific.equalsIgnoreCase(" "))
+	    honorific = "";
+	String format = event.getFormat();
+	if (!format.contains("{residence}"))
+	    return;
+	format = format.replace("{residence}", honorific);
+	event.setFormat(format);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -1193,16 +1261,23 @@ public class ResidencePlayerListener implements Listener {
 		String areaname = res.getName();
 		if (!res.getPermissions().playerHas(player.getName(), "enderpearl", true)) {
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "enderpearl", areaname));
+		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "EnderPearl", areaname));
 		    return;
 		}
 	    }
-	    if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND && Residence.getConfigManager().isBlockAnyTeleportation()
-		|| Residence.getNms().isChorusTeleport(event.getCause())) {
+	    if ((event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND) && Residence.getConfigManager().isBlockAnyTeleportation()) {
 		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
 		    String areaname = res.getName();
 		    event.setCancelled(true);
 		    player.sendMessage(Residence.getLM().getMessage("General.TeleportDeny", areaname));
+		    return;
+		}
+	    }
+	    if (Residence.getNms().isChorusTeleport(event.getCause())) {
+		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "chorustp", true) && !player.hasPermission("residence.admin.tp")) {
+		    String areaname = res.getName();
+		    event.setCancelled(true);
+		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "ChorusTp", areaname));
 		    return;
 		}
 	    }

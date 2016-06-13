@@ -389,7 +389,7 @@ public class SignUtil {
 	else if (name.length() > 15 && name.contains(".")) {
 	    String[] splited = name.split("\\.");
 	    name = "";
-	    for (int i = splited.length - 1; i >= 0; i--) {
+	    for (int i = 0; i < splited.length ; i++) {
 		String tempName = name + "." + splited[i];
 		if (tempName.length() < 15)
 		    name = tempName;
