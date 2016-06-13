@@ -129,8 +129,8 @@ public class ResidenceCommandListener extends Residence {
 		return commandHelp(new String[] { "?" }, resadmin, sender, command);
 	    }
 
-	    Permission p = new Permission("residence.command." + args[0], PermissionDefault.TRUE);
-	    if (!sender.hasPermission(p)) {
+	    Permission p = new Permission("residence.blockcommand." + args[0], PermissionDefault.FALSE);
+	    if (sender.hasPermission(p)) {
 		sender.sendMessage(Residence.getLM().getMessage("General.NoCmdPermission"));
 		return true;
 	    }
