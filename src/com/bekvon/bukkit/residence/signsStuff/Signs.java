@@ -2,10 +2,12 @@ package com.bekvon.bukkit.residence.signsStuff;
 
 import org.bukkit.Location;
 
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+
 public class Signs {
 
     int Category = 0;
-    String Residence = null;
+    ClaimedResidence Residence = null;
 
     Location loc = null;
 
@@ -28,11 +30,11 @@ public class Signs {
 	return this.Category;
     }
 
-    public void setResidence(String Residence) {
+    public void setResidence(ClaimedResidence Residence) {
 	this.Residence = Residence;
     }
 
-    public String GetResidence() {
+    public ClaimedResidence GetResidence() {
 	return this.Residence;
     }
 

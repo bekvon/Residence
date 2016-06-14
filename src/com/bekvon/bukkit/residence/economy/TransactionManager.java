@@ -12,9 +12,8 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,9 +22,13 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 public class TransactionManager implements MarketBuyInterface {
-    ResidenceManager manager;
-    private Map<String, Integer> sellAmount;
-    PermissionManager gm;
+    ResidenceManager manager5;
+    private Set<ClaimedResidence> sellAmount;
+    PermissionManager gm5;
+
+    public TransactionManager() {
+	sellAmount = new HashSet<ClaimedResidence>();
+    }
 
     public static boolean chargeEconomyMoney(Player player, int amount) {
 	EconomyInterface econ = Residence.getEconomyManager();
@@ -40,35 +43,6 @@ public class TransactionManager implements MarketBuyInterface {
 	econ.subtract(player.getName(), amount);
 	player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
 	return true;
-    }
-
-    public void updateSellName(String oldName, String newName) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && oldName != null && newName != null) {
-	    oldName = oldName.toLowerCase();
-	    newName = newName.toLowerCase();
-	}
-
-	for (Iterator<Map.Entry<String, Integer>> it = sellAmount.entrySet().iterator(); it.hasNext();) {
-	    Map.Entry<String, Integer> entry = it.next();
-
-	    String n = entry.getKey();
-	    if (!Residence.getConfigManager().isResCreateCaseSensitive())
-		n = n.toLowerCase();
-
-	    if (n.contains(".") && n.startsWith(oldName + ".") || n.equals(oldName)) {
-
-		int amount = entry.getValue();
-		String[] split = n.split(oldName);
-		String subname = "";
-		if (split.length > 1)
-		    subname = n.split(oldName)[1];
-		String name = newName + subname;
-		it.remove();
-
-		sellAmount.put(name, amount);
-
-	    }
-	}
     }
 
     public static boolean giveEconomyMoney(Player player, int amount) {
@@ -87,15 +61,20 @@ public class TransactionManager implements MarketBuyInterface {
 	return true;
     }
 
-    public TransactionManager(ResidenceManager m, PermissionManager g) {
-	gm = g;
-	manager = m;
-	sellAmount = Collections.synchronizedMap(new HashMap<String, Integer>());
+    public void putForSale(String areaname, Player player, int amount, boolean resadmin) {
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	putForSale(res, player, amount, resadmin);
     }
 
-    public void putForSale(String areaname, Player player, int amount, boolean resadmin) {
+    public void putForSale(ClaimedResidence res, Player player, int amount, boolean resadmin) {
+
+	if (res == null) {
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    return;
+	}
+
 	if (Residence.getConfigManager().enabledRentSystem()) {
-	    if (Residence.getRentManager().isForRent(areaname)) {
+	    if (res.isForRent()) {
 		player.sendMessage(Residence.getLM().getMessage("Economy.RentSellFail"));
 		return;
 	    }
@@ -115,58 +94,53 @@ public class TransactionManager implements MarketBuyInterface {
 		return;
 	    }
 	}
-	ClaimedResidence area = manager.getByName(areaname);
-	if (area == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
-	    return;
-	}
 
-	areaname = area.getName();
-
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
-	    areaname = areaname.toLowerCase();
-
-	if (!area.isOwner(player) && !resadmin) {
+	if (!res.isOwner(player) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return;
 	}
-	if (sellAmount.containsKey(areaname)) {
+	if (sellAmount.contains(res)) {
 	    player.sendMessage(Residence.getLM().getMessage("Economy.AlreadySellFail"));
 	    return;
 	}
-	sellAmount.put(areaname, amount);
-
-	Residence.getSignUtil().CheckSign(area);
-
-	player.sendMessage(Residence.getLM().getMessage("Residence.ForSale", areaname, amount));
+	res.setSellPrice(amount);
+	sellAmount.add(res);
+	Residence.getSignUtil().CheckSign(res);
+	player.sendMessage(Residence.getLM().getMessage("Residence.ForSale", res.getName(), amount));
     }
 
     public boolean putForSale(String areaname, int amount) {
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	return putForSale(res, amount);
+    }
 
-	if (Residence.getConfigManager().enabledRentSystem()) {
-	    if (Residence.getRentManager().isForRent(areaname)) {
-		return false;
-	    }
-	}
-	ClaimedResidence area = manager.getByName(areaname);
-	if (area == null) {
+    public boolean putForSale(ClaimedResidence res, int amount) {
+	if (res == null)
 	    return false;
-	}
 
-	areaname = area.getName();
-
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
-	    areaname = areaname.toLowerCase();
-
-	if (sellAmount.containsKey(areaname)) {
+	if (Residence.getConfigManager().enabledRentSystem() && res.isForRent())
 	    return false;
-	}
-	sellAmount.put(areaname, amount);
+
+	if (sellAmount.contains(res))
+	    return false;
+
+	res.setSellPrice(amount);
+	sellAmount.add(res);
 	return true;
     }
 
     public void buyPlot(String areaname, Player player, boolean resadmin) {
-	PermissionGroup group = gm.getGroup(player);
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	buyPlot(res, player, resadmin);
+    }
+
+    public void buyPlot(ClaimedResidence res, Player player, boolean resadmin) {
+	if (res == null || !res.isForSell()) {
+	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    return;
+	}
+
+	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	if (!resadmin) {
 	    if (!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager() == null) {
 		player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
@@ -178,126 +152,134 @@ public class TransactionManager implements MarketBuyInterface {
 		return;
 	    }
 	}
-	if (isForSale(areaname)) {
-	    ClaimedResidence res = manager.getByName(areaname);
-	    if (res == null) {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Area"));
-		sellAmount.remove(areaname);
-		return;
-	    }
 
-	    areaname = res.getName();
+	if (res.getPermissions().getOwner().equals(player.getName())) {
+	    player.sendMessage(Residence.getLM().getMessage("Economy.OwnerBuyFail"));
+	    return;
+	}
+	if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= group.getMaxZones(player.getName()) && !resadmin) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.TooMany"));
+	    return;
+	}
+	Server serv = Residence.getServ();
+	int amount = res.getSellPrice();
 
-	    if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
-		areaname = areaname.toLowerCase();
-
-	    if (res.getPermissions().getOwner().equals(player.getName())) {
-		player.sendMessage(Residence.getLM().getMessage("Economy.OwnerBuyFail"));
-		return;
-	    }
-	    if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= group.getMaxZones(player.getName()) && !resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("Residence.TooMany"));
-		return;
-	    }
-	    Server serv = Residence.getServ();
-	    int amount = sellAmount.get(areaname);
-	    if (!resadmin) {
-		if (!group.buyLandIgnoreLimits()) {
-		    CuboidArea[] areas = res.getAreaArray();
-		    for (CuboidArea thisarea : areas) {
-			if (!group.inLimits(thisarea)) {
-			    player.sendMessage(Residence.getLM().getMessage("Residence.BuyTooBig"));
-			    return;
-			}
-		    }
-		}
-	    }
-	    EconomyInterface econ = Residence.getEconomyManager();
-	    if (econ == null) {
-		player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
-		return;
-	    }
-	    String buyerName = player.getName();
-	    String sellerName = res.getPermissions().getOwner();
-	    Player sellerNameFix = Residence.getServ().getPlayer(sellerName);
-	    if (sellerNameFix != null) {
-		sellerName = sellerNameFix.getName();
-	    }
-	    if (econ.canAfford(buyerName, amount)) {
-		if (!econ.transfer(buyerName, sellerName, amount)) {
-		    player.sendMessage(ChatColor.RED + "Error, could not transfer " + amount + " from " + buyerName + " to " + sellerName);
+	if (!resadmin && !group.buyLandIgnoreLimits()) {
+	    CuboidArea[] areas = res.getAreaArray();
+	    for (CuboidArea thisarea : areas) {
+		if (!group.inLimits(thisarea)) {
+		    player.sendMessage(Residence.getLM().getMessage("Residence.BuyTooBig"));
 		    return;
 		}
-		res.getPermissions().setOwner(player.getName(), true);
-		res.getPermissions().applyDefaultFlags();
-		this.removeFromSale(areaname);
+	    }
+	}
 
-		Residence.getSignUtil().CheckSign(res);
+	EconomyInterface econ = Residence.getEconomyManager();
+	if (econ == null) {
+	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+	    return;
+	}
 
-		CuboidArea area = res.getAreaArray()[0];
-		Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
+	String buyerName = player.getName();
+	String sellerName = res.getPermissions().getOwner();
+	Player sellerNameFix = Residence.getServ().getPlayer(sellerName);
+	if (sellerNameFix != null) {
+	    sellerName = sellerNameFix.getName();
+	}
 
-		player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
-		player.sendMessage(Residence.getLM().getMessage("Residence.Bought", areaname));
-		Player seller = serv.getPlayer(sellerName);
-		if (seller != null && seller.isOnline()) {
-		    seller.sendMessage(Residence.getLM().getMessage("Residence.Buy", player.getName(), areaname));
-		    seller.sendMessage(Residence.getLM().getMessage("Economy.MoneyCredit", String.format("%d", amount), econ.getName()));
-		}
-	    } else {
-		player.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
+	if (econ.canAfford(buyerName, amount)) {
+	    if (!econ.transfer(buyerName, sellerName, amount)) {
+		player.sendMessage(ChatColor.RED + "Error, could not transfer " + amount + " from " + buyerName + " to " + sellerName);
+		return;
+	    }
+	    res.getPermissions().setOwner(player.getName(), true);
+	    res.getPermissions().applyDefaultFlags();
+	    removeFromSale(res);
+
+	    Residence.getSignUtil().CheckSign(res);
+
+	    CuboidArea area = res.getAreaArray()[0];
+	    Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
+
+	    player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.Bought", res.getShortName()));
+	    Player seller = serv.getPlayer(sellerName);
+	    if (seller != null && seller.isOnline()) {
+		seller.sendMessage(Residence.getLM().getMessage("Residence.Buy", player.getName(), res.getShortName()));
+		seller.sendMessage(Residence.getLM().getMessage("Economy.MoneyCredit", String.format("%d", amount), econ.getName()));
 	    }
 	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    player.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
 	}
+
     }
 
     public void removeFromSale(Player player, String areaname, boolean resadmin) {
-	ClaimedResidence area = manager.getByName(areaname);
-	if (area != null) {
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	removeFromSale(player, res, resadmin);
+    }
 
-	    areaname = area.getName();
-
-	    if (!isForSale(areaname)) {
-		player.sendMessage(Residence.getLM().getMessage("Residence.NotForSale"));
-		return;
-	    }
-	    if (area.isOwner(player) || resadmin) {
-		removeFromSale(areaname);
-		Residence.getSignUtil().CheckSign(area);
-		player.sendMessage(Residence.getLM().getMessage("Residence.StopSelling"));
-	    } else {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
-	    }
-	} else {
+    public void removeFromSale(Player player, ClaimedResidence res, boolean resadmin) {
+	if (res == null) {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Area"));
+	    return;
+	}
+
+	if (!res.isForSell()) {
+	    player.sendMessage(Residence.getLM().getMessage("Residence.NotForSale"));
+	    return;
+	}
+	if (res.isOwner(player) || resadmin) {
+	    removeFromSale(res);
+	    Residence.getSignUtil().CheckSign(res);
+	    player.sendMessage(Residence.getLM().getMessage("Residence.StopSelling"));
+	} else {
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	}
     }
 
     public void removeFromSale(String areaname) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
-	    areaname = areaname.toLowerCase();
-	sellAmount.remove(areaname);
-	Residence.getSignUtil().removeSign(areaname);
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	removeFromSale(res);
+    }
+
+    public void removeFromSale(ClaimedResidence res) {
+	if (res == null)
+	    return;
+	sellAmount.remove(res);
+	Residence.getSignUtil().removeSign(res);
     }
 
     public boolean isForSale(String areaname) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
-	    areaname = areaname.toLowerCase();
-	return sellAmount.containsKey(areaname);
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	return isForSale(res);
+    }
+
+    public boolean isForSale(ClaimedResidence res) {
+	if (res == null)
+	    return false;
+	return sellAmount.contains(res);
     }
 
     public boolean viewSaleInfo(String areaname, Player player) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
-	    areaname = areaname.toLowerCase();
-	if (!sellAmount.containsKey(areaname))
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	return viewSaleInfo(res, player);
+    }
+
+    public boolean viewSaleInfo(ClaimedResidence res, Player player) {
+
+	if (res == null || !res.isForSell()) {
+	    return false;
+	}
+
+	if (!sellAmount.contains(res))
 	    return false;
 
 	player.sendMessage(Residence.getLM().getMessage("General.Separator"));
-	player.sendMessage(Residence.getLM().getMessage("Area.Name", areaname));
-	player.sendMessage(Residence.getLM().getMessage("Economy.SellAmount", sellAmount.get(areaname)));
+	player.sendMessage(Residence.getLM().getMessage("Area.Name", res.getName()));
+	player.sendMessage(Residence.getLM().getMessage("Economy.SellAmount", res.getSellPrice()));
 	if (Residence.getConfigManager().useLeases()) {
-	    String etime = Residence.getLeaseManager().getExpireTime(areaname);
+	    String etime = Residence.getLeaseManager().getExpireTime(res.getName());
 	    if (etime != null) {
 		player.sendMessage(Residence.getLM().getMessage("Economy.LeaseExpire", etime));
 	    }
@@ -307,39 +289,35 @@ public class TransactionManager implements MarketBuyInterface {
     }
 
     public void printForSaleResidences(Player player, int page) {
-	Set<Entry<String, Integer>> set = sellAmount.entrySet();
-	List<String> toRemove = new ArrayList<String>();
+	List<ClaimedResidence> toRemove = new ArrayList<ClaimedResidence>();
 	player.sendMessage(Residence.getLM().getMessage("Economy.LandForSale"));
 	StringBuilder sbuild = new StringBuilder();
 	sbuild.append(ChatColor.GREEN);
 
 	int perpage = 10;
 
-	int pagecount = (int) Math.ceil((double) set.size() / (double) perpage);
+	int pagecount = (int) Math.ceil((double) sellAmount.size() / (double) perpage);
 
 	if (page < 1)
 	    page = 1;
 
 	int z = 0;
-	for (Entry<String, Integer> land : set) {
+	for (ClaimedResidence res : sellAmount) {
 	    z++;
 	    if (z <= (page - 1) * perpage)
 		continue;
 	    if (z > (page - 1) * perpage + perpage)
 		break;
 
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(land.getKey());
-
 	    if (res == null) {
 		z--;
-		toRemove.add(land.getKey());
+		toRemove.add(res);
 		continue;
 	    }
-
-	    player.sendMessage(Residence.getLM().getMessage("Economy.SellList", z, land.getKey(), land.getValue(), res.getOwner()));
+	    player.sendMessage(Residence.getLM().getMessage("Economy.SellList", z, res.getName(), res.getSellPrice(), res.getOwner()));
 	}
 
-	for (String one : toRemove) {
+	for (ClaimedResidence one : toRemove) {
 	    sellAmount.remove(one);
 	}
 
@@ -370,30 +348,50 @@ public class TransactionManager implements MarketBuyInterface {
     }
 
     public void clearSales() {
+	for (ClaimedResidence res : sellAmount) {
+	    if (res == null)
+		continue;
+	    res.setSellPrice(-1);
+	}
 	sellAmount.clear();
 	System.out.println("[Residence] - ReInit land selling.");
     }
 
     public int getSaleAmount(String areaname) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && areaname != null)
-	    areaname = areaname.toLowerCase();
-	return sellAmount.get(areaname);
+	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	return getSaleAmount(res);
     }
 
-    public Map<String, Integer> save() {
-	return sellAmount;
+    public int getSaleAmount(ClaimedResidence res) {
+	if (res == null)
+	    return -1;
+	return res.getSellPrice();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static TransactionManager load(Map root, PermissionManager p, ResidenceManager r) {
-	TransactionManager tman = new TransactionManager(r, p);
-	if (root != null) {
-	    tman.sellAmount = root;
+    public void load(Map<String, Integer> root) {
+	if (root == null)
+	    return;
+
+	for (Entry<String, Integer> one : root.entrySet()) {
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(one.getKey());
+	    if (res == null)
+		continue;
+	    res.setSellPrice(one.getValue());
+	    sellAmount.add(res);
 	}
-	return tman;
     }
 
     public Map<String, Integer> getBuyableResidences() {
-	return sellAmount;
+	Map<String, Integer> list = new HashMap<String, Integer>();
+	for (ClaimedResidence res : sellAmount) {
+	    if (res == null)
+		continue;
+	    list.put(res.getName(), res.getSellPrice());
+	}
+	return list;
+    }
+
+    public Map<String, Integer> save() {
+	return getBuyableResidences();
     }
 }

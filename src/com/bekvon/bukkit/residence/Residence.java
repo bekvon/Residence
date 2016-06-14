@@ -403,7 +403,7 @@ public class Residence extends JavaPlugin {
 
 	    String packageName = getServer().getClass().getPackage().getName();
 	    String[] packageSplit = packageName.split("\\.");
-	    String version = packageSplit[packageSplit.length - 1].substring(0,packageSplit[packageSplit.length - 1].length()-3);
+	    String version = packageSplit[packageSplit.length - 1].substring(0, packageSplit[packageSplit.length - 1].length() - 3);
 	    try {
 		Class<?> nmsClass;
 		if (Residence.getConfigManager().CouldronCompatability())
@@ -458,9 +458,6 @@ public class Residence extends JavaPlugin {
 	    PlayerManager = new PlayerManager(this);
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
-
-	    signmanager = new SignUtil(this);
-	    Residence.getSignUtil().LoadSigns();
 
 	    versionChecker = new VersionChecker(this);
 
@@ -590,7 +587,7 @@ public class Residence extends JavaPlugin {
 		leasemanager = new LeaseManager(rmanager);
 	    }
 	    if (tmanager == null) {
-		tmanager = new TransactionManager(rmanager, gmanager);
+		tmanager = new TransactionManager();
 	    }
 	    if (pmanager == null) {
 		pmanager = new PermissionListManager();
@@ -602,6 +599,9 @@ public class Residence extends JavaPlugin {
 		this.getLogger().log(Level.SEVERE, "Unable to load save file", e);
 		throw e;
 	    }
+
+	    signmanager = new SignUtil(this);
+	    Residence.getSignUtil().LoadSigns();
 
 	    if (Residence.getConfigManager().isUseResidenceFileClean())
 		FileCleanUp.cleanFiles();
@@ -637,11 +637,11 @@ public class Residence extends JavaPlugin {
 		// 1.9 event
 		if (getVersionChecker().GetVersion() >= 1900)
 		    pm.registerEvents(new v1_9Events(), this);
-		
+
 		// 1.10 event
 		if (getVersionChecker().GetVersion() >= 11000)
 		    pm.registerEvents(new v1_10Events(), this);
-		
+
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
 		// Priority.NORMAL, this);
 		if (cmanager.enableSpout()) {
@@ -732,8 +732,8 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().LoadShopVotes();
 	getShopSignUtilManager().LoadSigns();
 	getShopSignUtilManager().BoardUpdate();
-
 	getVersionChecker().VersionCheck(null);
+
     }
 
     public static SignUtil getSignUtil() {
@@ -1177,7 +1177,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    rmanager = getResidenceManager().load(worlds);
-
+	    
 	    // Getting shop residences
 	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
 	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {
@@ -1197,7 +1197,8 @@ public class Residence extends JavaPlugin {
 	    if (loadFile.isFile()) {
 		yml = new YMLSaveHelper(loadFile);
 		yml.load();
-		tmanager = TransactionManager.load((Map) yml.getRoot().get("Economy"), gmanager, rmanager);
+		tmanager = new TransactionManager();
+		tmanager.load((Map) yml.getRoot().get("Economy"));
 	    }
 	    loadFile = new File(saveFolder, "leases.yml");
 	    if (loadFile.isFile()) {
@@ -1215,7 +1216,8 @@ public class Residence extends JavaPlugin {
 	    if (loadFile.isFile()) {
 		yml = new YMLSaveHelper(loadFile);
 		yml.load();
-		rentmanager = RentManager.load((Map) yml.getRoot().get("RentSystem"));
+//		rentmanager = new RentManager();
+		rentmanager.load((Map) yml.getRoot().get("RentSystem"));
 	    }
 	    // System.out.print("[Residence] Loaded...");
 	    return true;

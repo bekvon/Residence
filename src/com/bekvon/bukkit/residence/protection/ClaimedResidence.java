@@ -9,6 +9,8 @@ import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.economy.rent.RentableLand;
+import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.ResidenceAreaAddEvent;
 import com.bekvon.bukkit.residence.event.ResidenceAreaDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceSizeChangeEvent;
@@ -42,6 +44,7 @@ import org.bukkit.entity.Player;
 
 public class ClaimedResidence {
 
+    private String resName;
     protected ClaimedResidence parent;
     protected Map<String, CuboidArea> areas;
     protected Map<String, ClaimedResidence> subzones;
@@ -61,9 +64,75 @@ public class ClaimedResidence {
     protected List<String> cmdWhiteList = new ArrayList<String>();
     protected List<String> cmdBlackList = new ArrayList<String>();
 
+    protected RentableLand rentableland = null;
+    protected RentedLand rentedland = null;
+
+    protected Integer sellPrice = -1;
+
     private Residence plugin;
 
-    private ClaimedResidence(Residence plugin) {
+    public String getResidenceName() {
+	return resName;
+    }
+
+    public void setName(String name) {
+	if (name.contains("."))
+	    resName = name.split("\\.")[name.split("\\.").length - 1];
+	else
+	    resName = name;
+    }
+
+    public Integer getSellPrice() {
+	return sellPrice;
+    }
+
+    public void setSellPrice(Integer amount) {
+	sellPrice = amount;
+    }
+
+    public boolean isForSell() {
+	return Residence.getTransactionManager().isForSale(this.getName());
+    }
+
+    public boolean isForRent() {
+	return Residence.getRentManager().isForRent(this);
+    }
+
+    public boolean isRented() {
+	return Residence.getRentManager().isRented(this);
+    }
+
+    public void setRentable(RentableLand rl) {
+	this.rentableland = rl;
+    }
+
+    public RentableLand getRentable() {
+	return this.rentableland;
+    }
+
+    public void setRented(RentedLand rl) {
+	this.rentedland = rl;
+    }
+
+    public RentedLand getRentedLand() {
+	return this.rentedland;
+    }
+
+    public ClaimedResidence(String creationWorld, Residence plugin) {
+	this(Residence.getServerLandname(), creationWorld, plugin);
+    }
+
+    public ClaimedResidence(String creator, String creationWorld, Residence plugin) {
+	this(plugin);
+	perms = new ResidencePermissions(this, creator, creationWorld);
+    }
+
+    public ClaimedResidence(String creator, String creationWorld, ClaimedResidence parentResidence, Residence plugin) {
+	this(creator, creationWorld, plugin);
+	parent = parentResidence;
+    }
+
+    public ClaimedResidence(Residence plugin) {
 	subzones = new HashMap<>();
 	areas = new HashMap<>();
 	bank = new ResidenceBank(this);
@@ -94,20 +163,6 @@ public class ClaimedResidence {
 	    return parent.getSubzoneDeep(deep);
 	}
 	return deep;
-    }
-
-    public ClaimedResidence(String creationWorld, Residence plugin) {
-	this(Residence.getServerLandname(), creationWorld, plugin);
-    }
-
-    public ClaimedResidence(String creator, String creationWorld, Residence plugin) {
-	this(plugin);
-	perms = new ResidencePermissions(this, creator, creationWorld);
-    }
-
-    public ClaimedResidence(String creator, String creationWorld, ClaimedResidence parentResidence, Residence plugin) {
-	this(creator, creationWorld, plugin);
-	parent = parentResidence;
     }
 
     public static boolean CheckAreaSize(Player player, CuboidArea area, boolean resadmin) {
@@ -154,7 +209,12 @@ public class ClaimedResidence {
 	    }
 	    return false;
 	}
-	if (areas.containsKey(name)) {
+
+	String NName = name;
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    name = name.toLowerCase();
+
+	if (areas.containsKey(NName)) {
 	    if (player != null) {
 		player.sendMessage(Residence.getLM().getMessage("Area.Exists"));
 	    }
@@ -247,7 +307,7 @@ public class ClaimedResidence {
 		player.sendMessage(Residence.getLM().getMessage("Area.HighLimit", String.format("%d", group.getMaxHeight())));
 		return false;
 	    }
-	    if (chargeMoney && parent == null && Residence.getConfigManager().enableEconomy()) {
+	    if (chargeMoney && parent == null && Residence.getConfigManager().enableEconomy() && !resadmin) {
 		int chargeamount = (int) Math.ceil((double) area.getSize() * group.getCostPerBlock());
 		if (!TransactionManager.chargeEconomyMoney(player, chargeamount)) {
 		    return false;
@@ -255,7 +315,7 @@ public class ClaimedResidence {
 	    }
 	}
 
-	ResidenceAreaAddEvent resevent = new ResidenceAreaAddEvent(player, name, this, area);
+	ResidenceAreaAddEvent resevent = new ResidenceAreaAddEvent(player, NName, this, area);
 	Residence.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())
 	    return false;
@@ -364,7 +424,7 @@ public class ClaimedResidence {
 		player.sendMessage(Residence.getLM().getMessage("Area.HighLimit", String.format("%d", group.getMaxHeight())));
 		return false;
 	    }
-	    if (parent == null && Residence.getConfigManager().enableEconomy()) {
+	    if (parent == null && Residence.getConfigManager().enableEconomy() && !resadmin) {
 		int chargeamount = (int) Math.ceil((double) (newarea.getSize() - oldarea.getSize()) * group.getCostPerBlock());
 		if (chargeamount > 0) {
 		    if (!TransactionManager.chargeEconomyMoney(player, chargeamount)) {
@@ -413,9 +473,14 @@ public class ClaimedResidence {
 	    }
 	    return false;
 	}
+
+	String NName = name;
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    name = name.toLowerCase();
+
 	if (subzones.containsKey(name)) {
 	    if (player != null) {
-		player.sendMessage(Residence.getLM().getMessage("Subzone.Exists", name));
+		player.sendMessage(Residence.getLM().getMessage("Subzone.Exists", NName));
 	    }
 	    return false;
 	}
@@ -454,10 +519,10 @@ public class ClaimedResidence {
 	ClaimedResidence newres;
 	if (player != null) {
 	    newres = new ClaimedResidence(owner, perms.getWorld(), this, plugin);
-	    newres.addArea(player, newArea, name, resadmin);
+	    newres.addArea(player, newArea, NName, resadmin);
 	} else {
 	    newres = new ClaimedResidence(owner, perms.getWorld(), this, plugin);
-	    newres.addArea(newArea, name);
+	    newres.addArea(newArea, NName);
 	}
 
 	if (newres.getAreaCount() != 0) {
@@ -470,6 +535,8 @@ public class ClaimedResidence {
 	    if (Residence.getConfigManager().flagsInherit()) {
 		newres.getPermissions().setParent(perms);
 	    }
+
+	    newres.resName = name;
 
 	    ResidenceSubzoneCreationEvent resevent = new ResidenceSubzoneCreationEvent(player, name, newres, newArea);
 	    Residence.getServ().getPluginManager().callEvent(resevent);
@@ -522,7 +589,6 @@ public class ClaimedResidence {
 	}
 	if (res == null)
 	    return null;
-
 	ClaimedResidence subrez = res.getSubzoneByLoc(loc);
 	if (subrez == null) {
 	    return res;
@@ -531,6 +597,9 @@ public class ClaimedResidence {
     }
 
     public ClaimedResidence getSubzone(String subzonename) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    subzonename = subzonename.toLowerCase();
+
 	if (!subzonename.contains(".")) {
 	    return subzones.get(subzonename);
 	}
@@ -545,39 +614,15 @@ public class ClaimedResidence {
 	return get;
     }
 
-    public ClaimedResidence getSubzoneNoCase(String subzonename) {
-	if (!subzonename.contains(".")) {
-	    for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
-		if (one.getKey().equalsIgnoreCase(subzonename))
-		    return one.getValue();
-	    }
-	}
-	String split[] = subzonename.split("\\.");
-
-	ClaimedResidence get = null;
-	for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
-	    if (one.getKey().equalsIgnoreCase(split[0]))
-		get = one.getValue();
-	}
-
-	for (int i = 1; i < split.length; i++) {
-	    if (get == null) {
-		return null;
-	    }
-	    get = get.getSubzoneNoCase(split[i]);
-	}
-	return get;
-    }
-
     public String getSubzoneNameByRes(ClaimedResidence res) {
 	Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
 	for (Entry<String, ClaimedResidence> entry : set) {
 	    if (entry.getValue() == res) {
-		return entry.getKey();
+		return entry.getValue().getResidenceName();
 	    }
 	    String n = entry.getValue().getSubzoneNameByRes(res);
 	    if (n != null) {
-		return entry.getKey() + "." + n;
+		return entry.getValue().getResidenceName() + "." + n;
 	    }
 	}
 	return null;
@@ -638,6 +683,8 @@ public class ClaimedResidence {
     }
 
     public boolean removeSubzone(Player player, String name, boolean resadmin) {
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    name = name.toLowerCase();
 	ClaimedResidence res = subzones.get(name);
 	if (player != null && !res.perms.hasResidencePermission(player, true) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
@@ -1109,6 +1156,8 @@ public class ClaimedResidence {
     public Map<String, Object> save() {
 	Map<String, Object> root = new HashMap<>();
 	Map<String, Object> areamap = new HashMap<>();
+
+	root.put("CapitalizedName", resName);
 	if (mainRes)
 	    root.put("MainResidence", mainRes);
 	root.put("EnterMessage", enterMessage);
@@ -1172,6 +1221,9 @@ public class ClaimedResidence {
 	if (root == null)
 	    throw new Exception("Null residence!");
 
+	if (root.containsKey("CapitalizedName"))
+	    res.resName = ((String) root.get("CapitalizedName"));
+
 	res.enterMessage = (String) root.get("EnterMessage");
 	res.leaveMessage = (String) root.get("LeaveMessage");
 
@@ -1209,9 +1261,17 @@ public class ClaimedResidence {
 	Map<String, Object> subzonemap = (Map<String, Object>) root.get("Subzones");
 	for (Entry<String, Object> map : subzonemap.entrySet()) {
 	    ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res, plugin);
+
+	    if (subres.getResidenceName() == null)
+		subres.setName(map.getKey());
+
 	    if (Residence.getConfigManager().flagsInherit())
 		subres.getPermissions().setParent(res.getPermissions());
-	    res.subzones.put(map.getKey(), subres);
+
+	    if (Residence.getConfigManager().isResCreateCaseSensitive())
+		res.subzones.put(map.getKey(), subres);
+	    else
+		res.subzones.put(map.getKey().toLowerCase(), subres);
 	}
 
 	res.parent = parent;
@@ -1262,6 +1322,13 @@ public class ClaimedResidence {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
 	    return false;
 	}
+
+	String newN = newName;
+	if (!Residence.getConfigManager().isResCreateCaseSensitive()) {
+	    oldName = oldName.toLowerCase();
+	    newName = newName.toLowerCase();
+	}
+
 	ClaimedResidence res = subzones.get(oldName);
 	if (res == null) {
 	    if (player != null)
@@ -1277,6 +1344,7 @@ public class ClaimedResidence {
 		player.sendMessage(Residence.getLM().getMessage("Subzone.Exists", newName));
 	    return false;
 	}
+	res.setName(newN);
 	subzones.put(newName, res);
 	subzones.remove(oldName);
 	if (player != null)
@@ -1322,6 +1390,15 @@ public class ClaimedResidence {
 
     public String getName() {
 	return Residence.getResidenceManager().getNameByRes(this);
+    }
+
+    public String getShortName() {
+	String name = Residence.getResidenceManager().getNameByRes(this);
+	if (name.contains(".")) {
+	    String[] split = name.split("\\.");
+	    name = split[split.length - 1];
+	}
+	return name;
     }
 
     public void remove() {

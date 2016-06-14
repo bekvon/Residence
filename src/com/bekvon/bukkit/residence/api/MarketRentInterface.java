@@ -1,17 +1,17 @@
 package com.bekvon.bukkit.residence.api;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public interface MarketRentInterface {
-    public Map<String, RentableLand> getRentableResidences();
+    public Set<ClaimedResidence> getRentableResidences();
 
-    public Map<String, RentableLand> getCurrentlyRentedResidences();
+    public Set<ClaimedResidence> getCurrentlyRentedResidences();
 
     public RentedLand getRentedLand(String landName);
 

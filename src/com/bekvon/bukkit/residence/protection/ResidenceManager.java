@@ -66,6 +66,8 @@ public class ResidenceManager implements ResidenceInterface {
 	if (ChunkMap.containsKey(chunk)) {
 	    for (String key : ChunkMap.get(chunk)) {
 		ClaimedResidence entry = residences.get(key);
+		if (entry == null)
+		    continue;
 		if (entry.containsLoc(loc)) {
 		    res = entry;
 		    break;
@@ -107,20 +109,12 @@ public class ResidenceManager implements ResidenceInterface {
 	    return res;
 	} else {
 	    if (split.length == 1) {
-		for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
-		    if (one.getKey().equalsIgnoreCase(name))
-			return one.getValue();
-		}
+		return residences.get(name.toLowerCase());
 	    }
-	    ClaimedResidence res = null;
-	    for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
-		if (one.getKey().equalsIgnoreCase(split[0]))
-		    res = one.getValue();
-	    }
-
+	    ClaimedResidence res = residences.get(split[0].toLowerCase());
 	    for (int i = 1; i < split.length; i++) {
 		if (res != null) {
-		    res = res.getSubzoneNoCase(split[i]);
+		    res = res.getSubzone(split[i].toLowerCase());
 		} else {
 		    return null;
 		}
@@ -146,11 +140,11 @@ public class ResidenceManager implements ResidenceInterface {
 	Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
 	for (Entry<String, ClaimedResidence> check : set) {
 	    if (check.getValue() == res) {
-		return check.getKey();
+		return check.getValue().getResidenceName();
 	    }
 	    String n = check.getValue().getSubzoneNameByRes(res);
 	    if (n != null) {
-		return check.getKey() + "." + n;
+		return check.getValue().getResidenceName() + "." + n;
 	    }
 	}
 	return null;
@@ -230,6 +224,7 @@ public class ResidenceManager implements ResidenceInterface {
 	newRes.getPermissions().applyDefaultFlags();
 	newRes.setEnterMessage(group.getDefaultEnterMessage());
 	newRes.setLeaveMessage(group.getDefaultLeaveMessage());
+	newRes.setName(name);
 
 	if (Residence.getConfigManager().isResCreateCaseSensitive()) {
 	    if (residences.containsKey(name)) {
@@ -239,13 +234,11 @@ public class ResidenceManager implements ResidenceInterface {
 		return false;
 	    }
 	} else {
-	    for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
-		if (one.getKey().equalsIgnoreCase(name)) {
-		    if (player != null) {
-			player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyExists", one.getKey()));
-		    }
-		    return false;
+	    if (residences.containsKey(name.toLowerCase())) {
+		if (player != null) {
+		    player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyExists", name));
 		}
+		return false;
 	    }
 	}
 
@@ -259,13 +252,17 @@ public class ResidenceManager implements ResidenceInterface {
 	if (resevent.isCancelled())
 	    return false;
 
-	if (!newRes.isSubzone() && Residence.getConfigManager().enableEconomy()) {
+	if (!newRes.isSubzone() && Residence.getConfigManager().enableEconomy() && !resadmin) {
 	    int chargeamount = (int) Math.ceil((double) newArea.getSize() * group.getCostPerBlock());
 	    if (!TransactionManager.chargeEconomyMoney(player, chargeamount))
 		return false;
 	}
 
-	residences.put(name, newRes);
+	if (Residence.getConfigManager().isResCreateCaseSensitive())
+	    residences.put(name, newRes);
+	else
+	    residences.put(name.toLowerCase(), newRes);
+
 	calculateChunks(name);
 	Residence.getLeaseManager().removeExpireTime(name);
 	Residence.getPlayerManager().addResidence(newRes.getOwner(), newRes);
@@ -727,13 +724,14 @@ public class ResidenceManager implements ResidenceInterface {
 	for (World world : Residence.getServ().getWorlds()) {
 	    Map<String, Object> resmap = new LinkedHashMap<>();
 	    for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
-		if (res.getValue().getWorld().equals(world.getName())) {
-		    try {
-			resmap.put(res.getKey(), res.getValue().save());
-		    } catch (Exception ex) {
-			System.out.println("[Residence] Failed to save residence (" + res.getKey() + ")!");
-			Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
-		    }
+		if (!res.getValue().getWorld().equals(world.getName()))
+		    continue;
+
+		try {
+		    resmap.put(res.getValue().getShortName(), res.getValue().save());
+		} catch (Exception ex) {
+		    System.out.println("[Residence] Failed to save residence (" + res.getKey() + ")!");
+		    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
 	    worldmap.put(world.getName(), resmap);
@@ -794,17 +792,25 @@ public class ResidenceManager implements ResidenceInterface {
 		if (residence.getOwner().equalsIgnoreCase("Server land")) {
 		    residence.getPermissions().setOwner(Residence.getServerLandname(), false);
 		}
+		String resName = res.getKey();
+
+		if (residence.getResidenceName() == null)
+		    residence.setName(res.getKey());
+
+		if (!Residence.getConfigManager().isResCreateCaseSensitive())
+		    resName = resName.toLowerCase();
 
 		for (ChunkRef chunk : getChunks(residence)) {
 		    List<String> ress = new ArrayList<>();
 		    if (retRes.containsKey(chunk)) {
 			ress.addAll(retRes.get(chunk));
 		    }
-		    ress.add(res.getKey());
+		    ress.add(resName);
 		    retRes.put(chunk, ress);
 		}
 
-		resm.residences.put(res.getKey(), residence);
+		resm.residences.put(resName, residence);
+
 	    } catch (Exception ex) {
 		System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
 		Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -859,34 +865,33 @@ public class ResidenceManager implements ResidenceInterface {
 			return false;
 		    }
 		} else {
-		    for (Entry<String, ClaimedResidence> one : residences.entrySet()) {
-			if (one.getKey().equalsIgnoreCase(newName)) {
-			    if (player != null) {
-				player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyExists", one.getKey()));
-			    }
-			    return false;
+		    if (residences.containsKey(newName.toLowerCase())) {
+			if (player != null) {
+			    player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyExists", newName));
 			}
+			return false;
 		    }
 		}
+
 		ResidenceRenameEvent resevent = new ResidenceRenameEvent(res, newName, oldName);
 		Residence.getServ().getPluginManager().callEvent(resevent);
 		removeChunkList(oldName);
-		residences.put(newName, res);
+		res.setName(newName);
+		if (Residence.getConfigManager().isResCreateCaseSensitive())
+		    residences.put(newName, res);
+		else
+		    residences.put(newName.toLowerCase(), res);
+
 		residences.remove(oldName);
 
-		Residence.getPlayerManager().renameResidence(player.getName(), oldName, newName);
+		Residence.getPlayerManager().renameResidence(player.getName(), res.getName(), newName);
 
 		calculateChunks(newName);
 		if (Residence.getConfigManager().useLeases()) {
 		    Residence.getLeaseManager().updateLeaseName(oldName, newName);
 		}
-		if (Residence.getConfigManager().enabledRentSystem()) {
-		    Residence.getRentManager().updateRentableName(oldName, newName);
-		}
 
-		Residence.getTransactionManager().updateSellName(oldName, newName);
-
-		Residence.getSignUtil().updateSignResName(oldName, newName);
+		Residence.getSignUtil().updateSignResName(res);
 
 		if (player != null) {
 		    player.sendMessage(Residence.getLM().getMessage("Residence.Rename", oldName, newName));
@@ -897,14 +902,9 @@ public class ResidenceManager implements ResidenceInterface {
 		String[] oldname = oldName.split("\\.");
 		ClaimedResidence parent = res.getParent();
 
-		if (Residence.getConfigManager().enabledRentSystem()) {
-		    Residence.getRentManager().updateRentableName(oldName, parent.getName() + "." + newName);
-		}
-
-		Residence.getTransactionManager().updateSellName(oldName, parent.getName() + "." + newName);
 		boolean feed = parent.renameSubzone(player, oldname[oldname.length - 1], newName, resadmin);
 
-		Residence.getSignUtil().updateSignResName(oldName, parent.getName() + "." + newName);
+		Residence.getSignUtil().updateSignResName(res);
 
 		return feed;
 	    }
@@ -992,6 +992,10 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void removeChunkList(String name) {
+	if (name == null)
+	    return;
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    name = name.toLowerCase();
 	ClaimedResidence res = residences.get(name);
 	if (res != null) {
 	    String world = res.getWorld();
@@ -1009,7 +1013,14 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void calculateChunks(String name) {
-	ClaimedResidence res = residences.get(name);
+	ClaimedResidence res = null;
+
+	if (name == null)
+	    return;
+	if (!Residence.getConfigManager().isResCreateCaseSensitive())
+	    name = name.toLowerCase();
+	res = residences.get(name);
+
 	if (res != null) {
 	    String world = res.getWorld();
 	    if (chunkResidences.get(world) == null) {

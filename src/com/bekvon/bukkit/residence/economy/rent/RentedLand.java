@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class RentedLand {
 
-    public String player;
+    public String player = "";
     public long startTime = 0L;
     public long endTime = 0L;
     public boolean AutoPay = true;
@@ -17,14 +17,5 @@ public class RentedLand {
 	rentables.put("EndTime", endTime);
 	rentables.put("AutoRefresh", AutoPay);
 	return rentables;
-    }
-
-    public static RentedLand load(Map<String, Object> map) {
-	RentedLand newland = new RentedLand();
-	newland.player = (String) map.get("Player");
-	newland.startTime = (Long) map.get("StartTime");
-	newland.endTime = (Long) map.get("EndTime");
-	newland.AutoPay = (Boolean) map.get("AutoRefresh");
-	return newland;
     }
 }

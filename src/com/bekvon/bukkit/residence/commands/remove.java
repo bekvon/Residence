@@ -49,17 +49,12 @@ public class remove implements cmd {
 	    Residence.deleteConfirm.remove(senderName);
 
 	String resname = res.getName();
-	String areaname = "";
-	if (res.isSubzone()) {
-	    String[] split = resname.split("\\.");
-	    areaname = split[split.length - 1];
-	}
 
 	if (!Residence.deleteConfirm.containsKey(senderName) || !resname.equalsIgnoreCase(Residence.deleteConfirm.get(senderName))) {
 	    if (res.isSubzone())
-		sender.sendMessage(Residence.getLM().getMessage("Subzone.DeleteConfirm", areaname));
+		sender.sendMessage(Residence.getLM().getMessage("Subzone.DeleteConfirm", res.getShortName()));
 	    else
-		sender.sendMessage(Residence.getLM().getMessage("Residence.DeleteConfirm", resname));
+		sender.sendMessage(Residence.getLM().getMessage("Residence.DeleteConfirm", res.getShortName()));
 	    Residence.deleteConfirm.put(senderName, resname);
 	} else {
 	    Residence.getResidenceManager().removeResidence(sender, resname, resadmin);

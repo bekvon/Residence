@@ -425,11 +425,11 @@ public class ResidencePlayerListener implements Listener {
 	    if (one.GetLocation().getBlockZ() != loc.getBlockZ())
 		continue;
 
-	    String landName = one.GetResidence();
+	    ClaimedResidence res = one.GetResidence();
 
-	    boolean ForSale = Residence.getTransactionManager().isForSale(landName);
-	    boolean ForRent = Residence.getRentManager().isForRent(landName);
-
+	    boolean ForSale = res.isForSell();
+	    boolean ForRent = res.isForRent();
+	    String landName = res.getName();
 	    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 		if (ForSale) {
 		    Bukkit.dispatchCommand(player, "res market buy " + landName);
@@ -437,7 +437,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 
 		if (ForRent) {
-		    if (Residence.getRentManager().isRented(landName) && player.isSneaking())
+		    if (res.isRented() && player.isSneaking())
 			Bukkit.dispatchCommand(player, "res market release " + landName);
 		    else {
 			boolean stage = true;
@@ -448,8 +448,8 @@ public class ResidencePlayerListener implements Listener {
 		    break;
 		}
 	    } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-		if (ForRent && Residence.getRentManager().isRented(landName) && Residence.getRentManager().getRentingPlayer(landName).equals(player.getName())) {
-		    Residence.getRentManager().payRent(player, landName, false);
+		if (ForRent && res.isRented() && Residence.getRentManager().getRentingPlayer(res).equals(player.getName())) {
+		    Residence.getRentManager().payRent(player, res, false);
 		}
 	    }
 	}
@@ -498,8 +498,13 @@ public class ResidencePlayerListener implements Listener {
 	    res = Residence.getResidenceManager().getByLoc(loc);
 	    landName = Residence.getResidenceManager().getNameByLoc(loc);
 	}
+	
+	if (res == null) {
+	    event.getPlayer().sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    return;
+	}
 
-	final ClaimedResidence residence = res;
+	ClaimedResidence residence = res;
 
 	boolean ForSale = Residence.getTransactionManager().isForSale(landName);
 	boolean ForRent = Residence.getRentManager().isForRent(landName);
@@ -510,7 +515,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (ForSale || ForRent) {
 	    signInfo.setCategory(category);
-	    signInfo.setResidence(landName);
+	    signInfo.setResidence(res);
 	    signInfo.setLocation(loc);
 //	    signInfo.updateLocation();
 	    Residence.getSignUtil().getSigns().addSign(signInfo);

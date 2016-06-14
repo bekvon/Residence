@@ -66,7 +66,13 @@ public class SignUtil {
 	    ConfigurationSection NameSection = ConfCategory.getConfigurationSection(category);
 	    Signs newTemp = new Signs();
 	    newTemp.setCategory(Integer.valueOf(category));
-	    newTemp.setResidence(NameSection.getString("Residence"));
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(NameSection.getString("Residence"));
+
+	    if (res == null)
+		continue;
+
+	    newTemp.setResidence(res);
 
 	    World w = Bukkit.getWorld(NameSection.getString("World"));
 
@@ -100,7 +106,7 @@ public class SignUtil {
 
 	for (Signs one : Signs.GetAllSigns()) {
 	    String path = "Signs." + String.valueOf(one.GetCategory());
-	    writer.set(path + ".Residence", one.GetResidence());
+	    writer.set(path + ".Residence", one.GetResidence().getName());
 	    writer.set(path + ".World", one.GetLocation().getWorld().getName());
 	    writer.set(path + ".X", one.GetLocation().getBlockX());
 	    writer.set(path + ".Y", one.GetLocation().getBlockY());
@@ -152,11 +158,16 @@ public class SignUtil {
 	List<Signs> signList = new ArrayList<Signs>();
 	signList.addAll(this.getSigns().GetAllSigns());
 	for (Signs one : signList) {
-	    if (!res.getName().equals(one.GetResidence()))
+	    if (res != one.GetResidence())
 		continue;
 	    this.SignUpdate(one);
 	}
 	saveSigns();
+    }
+
+    public void removeSign(ClaimedResidence res) {
+	if (res != null)
+	    removeSign(res.getName());
     }
 
     public void removeSign(String res) {
@@ -170,44 +181,25 @@ public class SignUtil {
 	}
     }
 
-    public void updateSignResName(String oldName, String newName) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive() && oldName != null && newName != null) {
-	    oldName = oldName.toLowerCase();
-	    newName = newName.toLowerCase();
+    public void updateSignResName(ClaimedResidence res) {
+	for (Signs one : this.getSigns().GetAllSigns()) {
+	    if (res != one.GetResidence())
+		continue;
+	    this.SignUpdate(one);
+	    saveSigns();
+	    break;
 	}
-	boolean cs = Residence.getConfigManager().isResCreateCaseSensitive();
-	List<Signs> signList = new ArrayList<Signs>();
-	signList.addAll(this.getSigns().GetAllSigns());
-	for (com.bekvon.bukkit.residence.signsStuff.Signs it : signList) {
-	    String n = it.GetResidence();
-	    if (!cs)
-		n = n.toLowerCase();
-
-	    if (n.contains(".") && n.startsWith(oldName + ".") || n.equals(oldName)) {
-		String[] split = n.split(oldName);
-		String subname = "";
-		if (split.length > 1)
-		    subname = n.split(oldName)[1];
-		String name = newName + subname;
-		it.setResidence(name);
-		SignUpdate(it);
-	    }
-	}
-	saveSigns();
     }
 
     public boolean SignUpdate(Signs Sign) {
 
-	String landName = Sign.GetResidence();
+	ClaimedResidence res = Sign.GetResidence();
 
-	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
+	if (res == null)
+	    return false;
 
-	if (res != null) {
-	    landName = res.getName();
-	}
-
-	boolean ForSale = Residence.getTransactionManager().isForSale(landName);
-	boolean ForRent = Residence.getRentManager().isForRent(landName);
+	boolean ForSale = res.isForSell();
+	boolean ForRent = res.isForRent();
 
 	Location nloc = Sign.GetLocation();
 
@@ -233,12 +225,12 @@ public class SignUtil {
 	    Signs.removeSign(Sign);
 	    return true;
 	}
-
+	String landName = res.getName();
 	if (ForRent) {
 
-	    boolean rented = Residence.getRentManager().isRented(landName);
+	    boolean rented = res.isRented();
 
-	    RentedLand rentedPlace = Residence.getRentManager().getRentedLand(landName);
+	    RentedLand rentedPlace = res.getRentedLand();
 	    long time = 0L;
 	    if (rentedPlace != null)
 		time = rentedPlace.endTime;
@@ -253,7 +245,7 @@ public class SignUtil {
 	    if (time == 0L)
 		endDate = "Unknown";
 
-	    if (Residence.getRentManager().getRentedAutoRepeats(landName))
+	    if (Residence.getRentManager().getRentedAutoRepeats(res))
 		endDate = Residence.getLM().getMessage("Sign.RentedAutorenewTrue", endDate);
 	    else
 		endDate = Residence.getLM().getMessage("Sign.RentedAutorenewFalse", endDate);
@@ -261,8 +253,8 @@ public class SignUtil {
 	    String TopLine = rented ? endDate : Residence.getLM().getMessage("Sign.ForRentTopLine");
 	    sign.setLine(0, TopLine);
 
-	    String infoLine = Residence.getLM().getMessage("Sign.ForRentPriceLine", Residence.getRentManager().getCostOfRent(landName), Residence
-		.getRentManager().getRentDays(landName), Residence.getRentManager().getRentableRepeatable(landName));
+	    String infoLine = Residence.getLM().getMessage("Sign.ForRentPriceLine", Residence.getRentManager().getCostOfRent(res), Residence
+		.getRentManager().getRentDays(res), Residence.getRentManager().getRentableRepeatable(res));
 
 	    sign.setLine(1, infoLine);
 	    String shortName = fixResName(landName);
@@ -283,7 +275,7 @@ public class SignUtil {
 	    }
 
 	    sign.setLine(0, Residence.getLM().getMessage("Sign.ForSaleTopLine"));
-	    String infoLine = Residence.getLM().getMessage("Sign.ForSalePriceLine", Residence.getTransactionManager().getSaleAmount(landName));
+	    String infoLine = Residence.getLM().getMessage("Sign.ForSalePriceLine", res.getSellPrice());
 	    sign.setLine(1, infoLine);
 	    sign.setLine(2, Residence.getLM().getMessage("Sign.RentedResName", shortName));
 
@@ -324,7 +316,13 @@ public class SignUtil {
 	    Signs signs = new Signs();
 	    String resname = section.getString(one + ".resName");
 	    signs.setCategory(category);
-	    signs.setResidence(resname);
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
+
+	    if (res == null)
+		continue;
+
+	    signs.setResidence(res);
 
 	    List<String> loc = section.getStringList(one + ".loc");
 
@@ -389,7 +387,7 @@ public class SignUtil {
 	else if (name.length() > 15 && name.contains(".")) {
 	    String[] splited = name.split("\\.");
 	    name = "";
-	    for (int i = 0; i < splited.length ; i++) {
+	    for (int i = 0; i < splited.length; i++) {
 		String tempName = name + "." + splited[i];
 		if (tempName.length() < 15)
 		    name = tempName;
