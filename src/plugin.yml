@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 4.1.7.0
+version: 4.2.0.2
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 authors: [bekvon,nate302,t00thpick1]
@@ -97,4 +97,181 @@ permissions:
     default: true
   residence.randomtp:
     description: Allows to use /res rt command
+    default: true
+  residence.command.area:
+    description: Allows to access particular command
+    default: true
+  residence.command.bank:
+    description: Allows to access particular command
+    default: true
+  residence.command.check:
+    description: Allows to access particular command
+    default: true
+  residence.command.clearflags:
+    description: Allows to access particular command
+    default: op
+  residence.command.command:
+    description: Allows to access particular command
+    default: true
+  residence.command.compass:
+    description: Allows to access particular command
+    default: true
+  residence.command.confirm:
+    description: Allows to access particular command
+    default: true
+  residence.command.contract:
+    description: Allows to access particular command
+    default: true
+  residence.command.create:
+    description: Allows to access particular command
+    default: true
+  residence.command.current:
+    description: Allows to access particular command
+    default: true
+  residence.command.expand:
+    description: Allows to access particular command
+    default: true
+  residence.command.flags:
+    description: Allows to access particular command
+    default: true
+  residence.command.give:
+    description: Allows to access particular command
+    default: true
+  residence.command.gset:
+    description: Allows to access particular command
+    default: true
+  residence.command.gui:
+    description: Allows to access particular command
+    default: true
+  residence.command.info:
+    description: Allows to access particular command
+    default: true
+  residence.command.kick:
+    description: Allows to access particular command
+    default: true
+  residence.command.lease:
+    description: Allows to access particular command
+    default: true
+  residence.command.limits:
+    description: Allows to access particular command
+    default: true
+  residence.command.list:
+    description: Allows to access particular command
+    default: true
+  residence.command.listall:
+    description: Allows to access particular command
+    default: true
+  residence.command.listallhidden:
+    description: Allows to access particular command
+    default: op
+  residence.command.listhidden:
+    description: Allows to access particular command
+    default: op
+  residence.command.lists:
+    description: Allows to access particular command
+    default: true
+  residence.command.lset:
+    description: Allows to access particular command
+    default: true
+  residence.command.market:
+    description: Allows to access particular command
+    default: true
+  residence.command.material:
+    description: Allows to access particular command
+    default: true
+  residence.command.message:
+    description: Allows to access particular command
+    default: true
+  residence.command.mirror:
+    description: Allows to access particular command
+    default: true
+  residence.command.padd:
+    description: Allows to access particular command
+    default: true
+  residence.command.pdel:
+    description: Allows to access particular command
+    default: true
+  residence.command.pset:
+    description: Allows to access particular command
+    default: true
+  residence.command.rc:
+    description: Allows to access particular command
+    default: true
+  residence.command.reload:
+    description: Allows to access particular command
+    default: op
+  residence.command.remove:
+    description: Allows to access particular command
+    default: true
+  residence.command.removeall:
+    description: Allows to access particular command
+    default: op
+  residence.command.removeworld:
+    description: Allows to access particular command
+    default: op
+  residence.command.rename:
+    description: Allows to access particular command
+    default: true
+  residence.command.renamearea:
+    description: Allows to access particular command
+    default: true
+  residence.command.resadmin:
+    description: Allows to access particular command
+    default: op
+  residence.command.resbank:
+    description: Allows to access particular command
+    default: true
+  residence.command.reset:
+    description: Allows to access particular command
+    default: true
+  residence.command.rt:
+    description: Allows to access particular command
+    default: true
+  residence.command.select:
+    description: Allows to access particular command
+    default: true
+  residence.command.server:
+    description: Allows to access particular command
+    default: op
+  residence.command.set:
+    description: Allows to access particular command
+    default: true
+  residence.command.setmain:
+    description: Allows to access particular command
+    default: true
+  residence.command.setowner:
+    description: Allows to access particular command
+    default: op
+  residence.command.shop:
+    description: Allows to access particular command
+    default: true
+  residence.command.signconvert:
+    description: Allows to access particular command
+    default: op
+  residence.command.signupdate:
+    description: Allows to access particular command
+    default: op
+  residence.command.sublist:
+    description: Allows to access particular command
+    default: true
+  residence.command.subzone:
+    description: Allows to access particular command
+    default: true
+  residence.command.tool:
+    description: Allows to access particular command
+    default: true
+  residence.command.tp:
+    description: Allows to access particular command
+    default: true
+  residence.command.tpconfirm:
+    description: Allows to access particular command
+    default: true
+  residence.command.tpset:
+    description: Allows to access particular command
+    default: true
+  residence.command.unstuck:
+    description: Allows to access particular command
+    default: true
+  residence.command.version:
+    description: Allows to access particular command
     default: true

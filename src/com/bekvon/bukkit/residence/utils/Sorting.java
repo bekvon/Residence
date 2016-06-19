@@ -2,11 +2,15 @@ package com.bekvon.bukkit.residence.utils;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class Sorting {
     public Map<String, Integer> sortByValueDESC(Map<String, Integer> unsortMap) {
@@ -49,6 +53,25 @@ public class Sorting {
 	    sortedMap.put(entry.getKey(), entry.getValue());
 	}
 	return sortedMap;
+    }
+
+    public List<ClaimedResidence> sortResidences(List<ClaimedResidence> residences) {
+
+	Map<String, Object> map = new HashMap<String, Object>();
+
+	for (ClaimedResidence one : residences) {
+	    map.put(one.getName().toLowerCase(), one);
+	}
+
+	map = sortByKeyASC(map);
+
+	residences.clear();
+
+	for (Entry<String, Object> one : map.entrySet()) {
+	    residences.add((ClaimedResidence) one.getValue());
+	}
+
+	return residences;
     }
 
     public Map<String, Object> sortByKeyASC(Map<String, Object> unsortMap) {

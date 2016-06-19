@@ -663,8 +663,11 @@ public class Residence extends JavaPlugin {
 	    if (wep != null)
 		SchematicManager = new SchematicsManager();
 
-	    if (Bukkit.getVersion().toString().contains("Spigot") || Bukkit.getVersion().toString().contains("spigot"))
+	    try {
+		Class.forName("org.bukkit.event.player.PlayerItemDamageEvent");
 		getServer().getPluginManager().registerEvents(spigotlistener, this);
+	    } catch (Exception e) {
+	    }
 
 	    if (getServer().getPluginManager().getPlugin("CrackShot") != null)
 		getServer().getPluginManager().registerEvents(new CrackShot(), this);
@@ -1177,7 +1180,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    rmanager = getResidenceManager().load(worlds);
-	    
+
 	    // Getting shop residences
 	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
 	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {

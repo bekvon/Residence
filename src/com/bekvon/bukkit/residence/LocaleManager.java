@@ -229,7 +229,7 @@ public class LocaleManager {
 	c.get("Language.Residence.GiveLimits", "&cCannot give residence to target player, because it is outside the target players limits.");
 	c.get("Language.Residence.Give", "&eYou give residence &6%1 &eto player &6%2");
 	c.get("Language.Residence.Recieve", "&eYou have recieved residence &6%1 &efrom player &6%2");
-	c.get("Language.Residence.List", " &a%1%2 &e- &6World&e: &6%3");
+	c.get("Language.Residence.ResList", " &a%1. &e%2 &e- &6%3 &e%4");
 	c.get("Language.Residence.TeleportNear", "&eTeleported to near residence.");
 	c.get("Language.Residence.SetTeleportLocation", "&eTeleport Location Set...");
 	c.get("Language.Residence.PermissionsApply", "&ePermissions applied to residence.");
@@ -481,6 +481,7 @@ public class LocaleManager {
 	c.get("Language.General.Name", "&eName: &6%1");
 	c.get("Language.General.Lists", "&eLists: &6");
 	c.get("Language.General.Residences", "&eResidences&6");
+	c.get("Language.General.CreatedOn", "&eCreated on: &6%1");
 	c.get("Language.General.Owner", "&eOwner: &6%1");
 	c.get("Language.General.World", "&eWorld: &6%1");
 	c.get("Language.General.Subzones", "&eSubzones");

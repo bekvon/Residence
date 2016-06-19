@@ -498,7 +498,7 @@ public class ResidencePlayerListener implements Listener {
 	    res = Residence.getResidenceManager().getByLoc(loc);
 	    landName = Residence.getResidenceManager().getNameByLoc(loc);
 	}
-	
+
 	if (res == null) {
 	    event.getPlayer().sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
 	    return;
@@ -1307,8 +1307,10 @@ public class ResidencePlayerListener implements Listener {
 	if (res.getPermissions().has("keepinv", false))
 	    event.setKeepInventory(true);
 
-	if (res.getPermissions().has("keepexp", false))
+	if (res.getPermissions().has("keepexp", false)) {
 	    event.setKeepLevel(true);
+	    event.setDroppedExp(0);
+	}
 
 	if (res.getPermissions().has("respawn", false) && Bukkit.getVersion().toString().contains("Spigot"))
 	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {

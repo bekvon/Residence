@@ -9,15 +9,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 
 public class ResidenceCommandListener extends Residence {
 
     public static List<String> AdminCommands = Arrays.asList("removeworld", "setowner", "removeall", "signupdate", "listhidden", "listallhidden", "server", "clearflags",
-	"resreload", "resload", "signconvert");
+	"resreload", "resload", "signconvert", "reload");
 
     public static List<String> getAdminCommands() {
 	return AdminCommands;
@@ -129,8 +126,7 @@ public class ResidenceCommandListener extends Residence {
 		return commandHelp(new String[] { "?" }, resadmin, sender, command);
 	    }
 
-	    Permission p = new Permission("residence.blockcommand." + args[0], PermissionDefault.FALSE);
-	    if (sender.hasPermission(p)) {
+	    if (!sender.hasPermission("residence.command." + args[0].toLowerCase())) {
 		sender.sendMessage(Residence.getLM().getMessage("General.NoCmdPermission"));
 		return true;
 	    }
@@ -164,13 +160,8 @@ public class ResidenceCommandListener extends Residence {
 	    if (cmd.class.isAssignableFrom(nmsClass)) {
 		cmdClass = (cmd) nmsClass.getConstructor().newInstance();
 	    }
-	} catch (ClassNotFoundException e) {
-	} catch (InstantiationException e) {
-	} catch (IllegalAccessException e) {
-	} catch (IllegalArgumentException e) {
-	} catch (InvocationTargetException e) {
-	} catch (NoSuchMethodException e) {
-	} catch (SecurityException e) {
+	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+	    | SecurityException e) {
 	}
 	return cmdClass;
     }

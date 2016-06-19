@@ -73,6 +73,34 @@ public class RentManager implements MarketRentInterface {
 	return rentedLands;
     }
 
+    public List<ClaimedResidence> getRents(String playername) {
+	return getRents(playername, false);
+    }
+
+    public List<ClaimedResidence> getRents(String playername, boolean onlyHidden) {
+	List<ClaimedResidence> rentedLands = new ArrayList<ClaimedResidence>();
+	for (ClaimedResidence res : rentedLand) {
+	    if (res == null)
+		continue;
+
+	    if (!res.isRented())
+		continue;
+
+	    if (!res.getRentedLand().player.equalsIgnoreCase(playername))
+		continue;
+
+	    ClaimedResidence topres = res.getTopParent();
+
+	    boolean hidden = topres.getPermissions().has("hidden", false);
+
+	    if (onlyHidden && !hidden)
+		continue;
+
+	    rentedLands.add(res);
+	}
+	return rentedLands;
+    }
+
     public List<String> getRentedLandsList(Player player) {
 	return getRentedLandsList(player.getName());
     }
@@ -84,7 +112,7 @@ public class RentManager implements MarketRentInterface {
 		continue;
 	    if (!res.isRented())
 		continue;
-	    if (!res.getRentedLand().player.equals(playername))
+	    if (!res.getRentedLand().player.equalsIgnoreCase(playername))
 		continue;
 	    rentedLands.add(res.getName());
 	}
@@ -760,11 +788,11 @@ public class RentManager implements MarketRentInterface {
 	int Prevpage = page - 1;
 	Prevpage = page > 1 ? Prevpage : page;
 
-	String prevCmd = "/res market list sell " + Prevpage;
+	String prevCmd = "/res market list rent " + Prevpage;
 	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	String nextCmd = "/res market list sell " + NextPage;
+	String nextCmd = "/res market list rent " + NextPage;
 	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";

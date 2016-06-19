@@ -321,9 +321,9 @@ public class ResidenceManager implements ResidenceInterface {
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		ArrayList<String> ownedResidences = Residence.getPlayerManager().getResidenceList(targetplayer, hidden, onlyHidden);
-		ownedResidences.addAll(Residence.getRentManager().getRentedLands(targetplayer, onlyHidden));
-		InformationPager.printInfo(sender, Residence.getLM().getMessage("General.Residences") + " - " + targetplayer, ownedResidences, page);
+		ArrayList<ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidences(targetplayer, hidden, onlyHidden);
+		ownedResidences.addAll(Residence.getRentManager().getRents(targetplayer, onlyHidden));
+		InformationPager.printListInfo(sender, targetplayer, ownedResidences, page);
 		return;
 	    }
 	});
@@ -457,7 +457,11 @@ public class ResidenceManager implements ResidenceInterface {
 	ClaimedResidence parent = res.getParent();
 	if (parent == null) {
 	    removeChunkList(name);
-	    residences.remove(name);
+
+	    if (Residence.getConfigManager().isResCreateCaseSensitive())
+		residences.remove(name);
+	    else
+		residences.remove(name.toLowerCase());
 
 	    if (Residence.getConfigManager().isUseClean() && Residence.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
 		CuboidArea area = res.getAreaArray()[0];
@@ -583,6 +587,8 @@ public class ResidenceManager implements ResidenceInterface {
 	worldInfo += "&6)";
 	worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
 
+	worldInfo += "\n" + Residence.getLM().getMessage("General.CreatedOn", GetTime.getTime(res.createTime));
+
 	String ResFlagList = perms.listFlags(5);
 	if (!(sender instanceof Player))
 	    ResFlagList = perms.listFlags();
@@ -693,12 +699,20 @@ public class ResidenceManager implements ResidenceInterface {
 	sender.sendMessage(Residence.getLM().getMessage("General.Separator"));
     }
 
-    private String convertToRaw(String preText, String text, String hover) {
+    public String convertToRaw(String preText, String text, String hover) {
+	return convertToRaw(preText, text, hover, null);
+    }
+
+    public String convertToRaw(String preText, String text, String hover, String command) {
 	StringBuilder msg = new StringBuilder();
+	String cmd = "";
+	if (command != null) {
+	    cmd = ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/" + command + "\"}";
+	}
 	msg.append("[\"\",");
 	if (preText != null)
-	    msg.append("{\"text\":\"" + text + "\"}");
-	msg.append("{\"text\":\"" + text + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + hover + "\"}]}}}");
+	    msg.append("{\"text\":\"" + preText + "\"}");
+	msg.append("{\"text\":\"" + text + "\"" + cmd + ",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + hover + "\"}]}}}");
 	msg.append("]");
 	return msg.toString();
     }
@@ -784,6 +798,10 @@ public class ResidenceManager implements ResidenceInterface {
 	    try {
 		@SuppressWarnings("unchecked")
 		ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null, plugin);
+
+		if (residence == null)
+		    continue;
+
 		if (residence.getPermissions().getOwnerUUID().toString().equals(Residence.getServerLandUUID()) &&
 		    !residence.getOwner().equalsIgnoreCase("Server land") &&
 		    !residence.getOwner().equalsIgnoreCase(Residence.getServerLandname()))

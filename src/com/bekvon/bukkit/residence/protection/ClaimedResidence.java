@@ -60,6 +60,7 @@ public class ClaimedResidence {
     protected ResidenceItemList ignorelist;
     protected ResidenceItemList blacklist;
     protected boolean mainRes = false;
+    protected long createTime = 0L;
 
     protected List<String> cmdWhiteList = new ArrayList<String>();
     protected List<String> cmdBlackList = new ArrayList<String>();
@@ -80,6 +81,14 @@ public class ClaimedResidence {
 	    resName = name.split("\\.")[name.split("\\.").length - 1];
 	else
 	    resName = name;
+    }
+
+    public void setCreateTime() {
+	createTime = System.currentTimeMillis();
+    }
+
+    public long getCreateTime() {
+	return createTime;
     }
 
     public Integer getSellPrice() {
@@ -1160,6 +1169,8 @@ public class ClaimedResidence {
 	root.put("CapitalizedName", resName);
 	if (mainRes)
 	    root.put("MainResidence", mainRes);
+	if (createTime != 0L)
+	    root.put("CreatedOn", createTime);
 	root.put("EnterMessage", enterMessage);
 	root.put("LeaveMessage", leaveMessage);
 	root.put("ShopDescription", ShopDesc);
@@ -1224,6 +1235,11 @@ public class ClaimedResidence {
 	if (root.containsKey("CapitalizedName"))
 	    res.resName = ((String) root.get("CapitalizedName"));
 
+	if (root.containsKey("CreatedOn"))
+	    res.createTime = ((Long) root.get("CreatedOn"));
+	else
+	    res.createTime = System.currentTimeMillis();
+
 	res.enterMessage = (String) root.get("EnterMessage");
 	res.leaveMessage = (String) root.get("LeaveMessage");
 
@@ -1240,6 +1256,9 @@ public class ClaimedResidence {
 
 	Map<String, Object> areamap = (Map<String, Object>) root.get("Areas");
 	res.perms = ResidencePermissions.load(res, (Map<String, Object>) root.get("Permissions"));
+
+	if (res.getPermissions().ownerLastKnownName == null)
+	    return null;
 
 	if (root.containsKey("MainResidence"))
 	    res.mainRes = (Boolean) root.get("MainResidence");
@@ -1261,6 +1280,9 @@ public class ClaimedResidence {
 	Map<String, Object> subzonemap = (Map<String, Object>) root.get("Subzones");
 	for (Entry<String, Object> map : subzonemap.entrySet()) {
 	    ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res, plugin);
+
+	    if (subres == null)
+		continue;
 
 	    if (subres.getResidenceName() == null)
 		subres.setName(map.getKey());

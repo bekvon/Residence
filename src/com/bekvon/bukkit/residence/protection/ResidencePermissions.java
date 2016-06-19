@@ -15,6 +15,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -430,6 +432,16 @@ public class ResidencePermissions extends FlagPermissions {
 	    //			String name = Residence.getPlayerName(newperms.ownerUUID); //try to find the current name of the owner
 	    newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName");//otherwise load last known name from file
 
+	    OfflinePlayer p = null;
+	    if (newperms.ownerLastKnownName == null)
+		p = Bukkit.getOfflinePlayer(newperms.ownerUUID);
+
+	    if (p != null)
+		newperms.ownerLastKnownName = p.getName();
+
+	    if (newperms.ownerLastKnownName == null)
+		return newperms;
+	    
 	    if (newperms.ownerLastKnownName.equalsIgnoreCase("Server land") || newperms.ownerLastKnownName.equalsIgnoreCase(Residence.getServerLandname())) {
 		newperms.ownerUUID = UUID.fromString(Residence.getServerLandUUID());//UUID for server land
 		newperms.ownerLastKnownName = Residence.getServerLandname();

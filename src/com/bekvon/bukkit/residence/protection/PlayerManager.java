@@ -22,21 +22,21 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public void playerJoin(OfflinePlayer player) {
-	ResidencePlayer resPlayer = players.get(player.getName());
+	ResidencePlayer resPlayer = players.get(player.getName().toLowerCase());
 	if (resPlayer == null) {
-	    resPlayer = new ResidencePlayer(player.getName());
+	    resPlayer = new ResidencePlayer(player);
 	    resPlayer.recountRes();
-	    players.put(player.getName(), resPlayer);
+	    players.put(player.getName().toLowerCase(), resPlayer);
 	} else
 	    resPlayer.RecalculatePermissions();
 	return;
     }
 
     public ResidencePlayer playerJoin(String player) {
-	if (!players.containsKey(player)) {
+	if (!players.containsKey(player.toLowerCase())) {
 	    ResidencePlayer resPlayer = new ResidencePlayer(player);
 	    resPlayer.recountRes();
-	    players.put(player, resPlayer);
+	    players.put(player.toLowerCase(), resPlayer);
 	    return resPlayer;
 	}
 	return null;
@@ -58,7 +58,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public ArrayList<String> getResidenceList(String player) {
 	ArrayList<String> temp = new ArrayList<String>();
 	playerJoin(player);
-	ResidencePlayer resPlayer = players.get(player);
+	ResidencePlayer resPlayer = players.get(player.toLowerCase());
 	if (resPlayer != null) {
 	    for (ClaimedResidence one : resPlayer.getResList()) {
 		temp.add(one.getName());
@@ -75,7 +75,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public ArrayList<String> getResidenceList(String player, boolean showhidden, boolean onlyHidden) {
 	ArrayList<String> temp = new ArrayList<String>();
 	playerJoin(player);
-	ResidencePlayer resPlayer = players.get(player);
+	ResidencePlayer resPlayer = players.get(player.toLowerCase());
 	if (resPlayer == null)
 	    return temp;
 	for (ClaimedResidence one : resPlayer.getResList()) {
@@ -90,6 +90,27 @@ public class PlayerManager implements ResidencePlayerInterface {
 		(hidden ? Residence.getLM().getMessage("Residence.Hidden") : ""));
 	}
 	Collections.sort(temp, String.CASE_INSENSITIVE_ORDER);
+	return temp;
+    }
+
+    public ArrayList<ClaimedResidence> getResidences(String player, boolean showhidden) {
+	return getResidences(player, showhidden, false);
+    }
+
+    public ArrayList<ClaimedResidence> getResidences(String player, boolean showhidden, boolean onlyHidden) {
+	ArrayList<ClaimedResidence> temp = new ArrayList<ClaimedResidence>();
+	playerJoin(player);
+	ResidencePlayer resPlayer = players.get(player.toLowerCase());
+	if (resPlayer == null)
+	    return temp;
+	for (ClaimedResidence one : resPlayer.getResList()) {
+	    boolean hidden = one.getPermissions().has("hidden", false);
+	    if (!showhidden && hidden)
+		continue;
+	    if (onlyHidden && !hidden)
+		continue;
+	    temp.add(one);
+	}
 	return temp;
     }
 
@@ -131,8 +152,8 @@ public class PlayerManager implements ResidencePlayerInterface {
 
     public ResidencePlayer getResidencePlayer(String player) {
 	ResidencePlayer resPlayer = null;
-	if (players.containsKey(player))
-	    resPlayer = players.get(player);
+	if (players.containsKey(player.toLowerCase()))
+	    resPlayer = players.get(player.toLowerCase());
 	else {
 	    resPlayer = playerJoin(player);
 	}
@@ -164,7 +185,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public void removeResFromPlayer(String player, String residence) {
-	ResidencePlayer resPlayer = players.get(player);
+	ResidencePlayer resPlayer = players.get(player.toLowerCase());
 	if (resPlayer != null) {
 	    resPlayer.removeResidence(residence);
 	}
