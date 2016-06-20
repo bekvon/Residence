@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -188,6 +189,8 @@ public class Residence extends JavaPlugin {
     public static List<String> teleportDelayMap = new ArrayList<String>();
     public static HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
 
+    public static String prefix = ChatColor.GREEN + "[" + ChatColor.GOLD + "Residence" + ChatColor.GREEN + "]" + ChatColor.GRAY;
+
     public static HashMap<String, ClaimedResidence> getTeleportMap() {
 	return teleportMap;
     }
@@ -274,7 +277,7 @@ public class Residence extends JavaPlugin {
 	public void run() {
 	    rentmanager.checkCurrentRents();
 	    if (cmanager.showIntervalMessages()) {
-		System.out.println("[Residence] - Rent Expirations checked!");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - Rent Expirations checked!");
 	    }
 	}
     };
@@ -282,7 +285,7 @@ public class Residence extends JavaPlugin {
 	public void run() {
 	    leasemanager.doExpirations();
 	    if (cmanager.showIntervalMessages()) {
-		System.out.println("[Residence] - Lease Expirations checked!");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - Lease Expirations checked!");
 	    }
 	}
     };
@@ -303,7 +306,7 @@ public class Residence extends JavaPlugin {
 		    });
 		}
 	    } catch (Exception ex) {
-		Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
+		Logger.getLogger("Minecraft").log(Level.SEVERE, Residence.prefix + " SEVERE SAVE ERROR", ex);
 	    }
 	}
     };
@@ -339,7 +342,7 @@ public class Residence extends JavaPlugin {
 	    } catch (Exception ex) {
 		Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
 	    }
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Disabled!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Disabled!");
 	}
     }
 
@@ -393,7 +396,7 @@ public class Residence extends JavaPlugin {
 		Plugin plugin = server.getPluginManager().getPlugin(multiworld);
 		if (plugin != null) {
 		    if (!plugin.isEnabled()) {
-			System.out.println("[Residence] - Enabling multiworld plugin: " + multiworld);
+			Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - Enabling multiworld plugin: " + multiworld);
 			server.getPluginManager().enablePlugin(plugin);
 		    }
 		}
@@ -496,10 +499,11 @@ public class Residence extends JavaPlugin {
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 		} else {
-		    System.out.println("[Residence] Language file does not exist...");
+		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
 		}
 	    } catch (Exception ex) {
-		System.out.println("[Residence] Failed to load language file: " + cmanager.getLanguage() + ".yml setting to default - English");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Failed to load language file: " + cmanager.getLanguage()
+		    + ".yml setting to default - English");
 
 		File langFile = new File(new File(dataFolder, "Language"), "English.yml");
 
@@ -518,17 +522,17 @@ public class Residence extends JavaPlugin {
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 		} else {
-		    System.out.println("[Residence] Language file does not exist...");
+		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
 		}
 	    }
 	    economy = null;
 	    if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
-		System.out.println("[Residence] Scanning for economy systems...");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Scanning for economy systems...");
 		if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
 		    ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
 		    if (vault.economyOK()) {
 			economy = vault;
-			System.out.println("[Residence] Found Vault using economy system: " + vault.getEconomyName());
+			Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault using economy system: " + vault.getEconomyName());
 		    }
 		}
 		if (economy == null) {
@@ -547,13 +551,13 @@ public class Residence extends JavaPlugin {
 		    this.loadIConomy();
 		}
 		if (economy == null) {
-		    System.out.println("[Residence] Unable to find an economy system...");
+		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Unable to find an economy system...");
 		}
 	    }
 
 	    // Only fill if we need to convert player data
 	    if (getConfigManager().isUUIDConvertion()) {
-		Bukkit.getConsoleSender().sendMessage("[Residence] Loading (" + Bukkit.getOfflinePlayers().length + ") player data");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loading (" + Bukkit.getOfflinePlayers().length + ") player data");
 		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
 		    if (player == null)
 			continue;
@@ -562,7 +566,7 @@ public class Residence extends JavaPlugin {
 			continue;
 		    getOfflinePlayerMap().put(name.toLowerCase(), player);
 		}
-		Bukkit.getConsoleSender().sendMessage("[Residence] Player data loaded: " + getOfflinePlayerMap().size());
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Player data loaded: " + getOfflinePlayerMap().size());
 	    } else {
 		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
 		    @Override
@@ -720,7 +724,7 @@ public class Residence extends JavaPlugin {
 	    } catch (IOException e) {
 		// Failed to submit the stats :-(
 	    }
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
 	    initsuccess = true;
 
 	    PlayerManager.fillList();
@@ -728,7 +732,7 @@ public class Residence extends JavaPlugin {
 	} catch (Exception ex) {
 	    initsuccess = false;
 	    getServer().getPluginManager().disablePlugin(this);
-	    System.out.println("[Residence] - FAILED INITIALIZATION! DISABLED! ERROR:");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - FAILED INITIALIZATION! DISABLED! ERROR:");
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 	}
 
@@ -744,8 +748,7 @@ public class Residence extends JavaPlugin {
     }
 
     public void consoleMessage(String message) {
-	ConsoleCommandSender console = Bukkit.getConsoleSender();
-	console.sendMessage("[Residence] " + message);
+	Bukkit.getConsoleSender().sendMessage(Residence.prefix + " " + message);
     }
 
     public static boolean validName(String name) {
@@ -769,10 +772,10 @@ public class Residence extends JavaPlugin {
 	    smanager = new WorldEditSelectionManager(server, this);
 	    wep = (WorldEditPlugin) plugin;
 	    wepid = ((WorldEditPlugin) Residence.wep).getConfig().getInt("wand-item");
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldEdit");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found WorldEdit");
 	} else {
 	    smanager = new SelectionManager(server, this);
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] WorldEdit NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " WorldEdit NOT found!");
 	}
     }
 
@@ -780,7 +783,7 @@ public class Residence extends JavaPlugin {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
 	    wg = (WorldGuardPlugin) wgplugin;
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found WorldGuard");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found WorldGuard");
 	}
     }
 
@@ -965,12 +968,12 @@ public class Residence extends JavaPlugin {
 	    } else if (p.getDescription().getVersion().startsWith("5")) {
 		economy = new IConomy5Adapter();
 	    } else {
-		Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] UNKNOWN iConomy version!");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " UNKNOWN iConomy version!");
 		return;
 	    }
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with iConomy! Version: " + p.getDescription().getVersion());
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with iConomy! Version: " + p.getDescription().getVersion());
 	} else {
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] iConomy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " iConomy NOT found!");
 	}
     }
 
@@ -978,9 +981,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("BOSEconomy");
 	if (p != null) {
 	    economy = new BOSEAdapter((BOSEconomy) p);
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with BOSEconomy!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with BOSEconomy!");
 	} else {
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] BOSEconomy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " BOSEconomy NOT found!");
 	}
     }
 
@@ -988,9 +991,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("Essentials");
 	if (p != null) {
 	    economy = new EssentialsEcoAdapter((Essentials) p);
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with Essentials Economy!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with Essentials Economy!");
 	} else {
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Essentials Economy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Essentials Economy NOT found!");
 	}
     }
 
@@ -998,9 +1001,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("RealPlugin");
 	if (p != null) {
 	    economy = new RealShopEconomy(new RealEconomy((RealPlugin) p));
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Successfully linked with RealShop Economy!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with RealShop Economy!");
 	} else {
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] RealShop Economy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " RealShop Economy NOT found!");
 	}
     }
 
@@ -1009,13 +1012,13 @@ public class Residence extends JavaPlugin {
 	if (p != null) {
 	    ResidenceVaultAdapter vault = new ResidenceVaultAdapter(getServer());
 	    if (vault.economyOK()) {
-		Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault using economy: " + vault.getEconomyName());
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault using economy: " + vault.getEconomyName());
 		economy = vault;
 	    } else {
-		Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Found Vault, but Vault reported no usable economy system...");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault, but Vault reported no usable economy system...");
 	    }
 	} else {
-	    Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Vault NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Vault NOT found!");
 	}
     }
 
@@ -1167,7 +1170,7 @@ public class Residence extends JavaPlugin {
 		loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-		    this.getLogger().info("Loading save data for world " + world.getName() + "...");
+		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loading save data for world " + world.getName() + "...");
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
 		    worlds.put(world.getName(), yml.getRoot().get("Residences"));
@@ -1175,7 +1178,7 @@ public class Residence extends JavaPlugin {
 		    int pass = (int) (System.currentTimeMillis() - time);
 		    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-		    this.getLogger().info("Loaded " + world.getName() + " data. (" + PastTime + ")");
+		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loaded " + world.getName() + " data. (" + PastTime + ")");
 		}
 	    }
 

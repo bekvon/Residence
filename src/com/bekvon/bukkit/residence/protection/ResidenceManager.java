@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,18 +31,19 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidenceManager implements ResidenceInterface {
-    protected Map<String, ClaimedResidence> residences;
+    protected SortedMap<String, ClaimedResidence> residences;
     protected Map<String, Map<ChunkRef, List<String>>> chunkResidences;
     protected List<String> shops = new ArrayList<String>();
     private Residence plugin;
 
     public ResidenceManager(Residence plugin) {
-	residences = new HashMap<>();
+	residences = new TreeMap<>();
 	chunkResidences = new HashMap<>();
 	this.plugin = plugin;
     }
@@ -309,7 +312,7 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void listResidences(CommandSender sender, String string, int page, boolean showhidden) {
-	this.listResidences(sender, sender.getName(), page, showhidden, false);
+	this.listResidences(sender, string, page, showhidden, false);
     }
 
     public void listResidences(final CommandSender sender, final String targetplayer, final int page, boolean showhidden, final boolean onlyHidden) {
@@ -318,15 +321,9 @@ public class ResidenceManager implements ResidenceInterface {
 	} else if (sender.getName().equalsIgnoreCase(targetplayer))
 	    showhidden = true;
 	final boolean hidden = showhidden;
-	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @Override
-	    public void run() {
-		ArrayList<ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidences(targetplayer, hidden, onlyHidden);
-		ownedResidences.addAll(Residence.getRentManager().getRents(targetplayer, onlyHidden));
-		InformationPager.printListInfo(sender, targetplayer, ownedResidences, page);
-		return;
-	    }
-	});
+	ArrayList<ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidences(targetplayer, hidden, onlyHidden);
+	ownedResidences.addAll(Residence.getRentManager().getRents(targetplayer, onlyHidden));
+	InformationPager.printListInfo(sender, targetplayer, ownedResidences, page, showhidden);
     }
 
     public void listAllResidences(CommandSender sender, int page) {
@@ -338,11 +335,17 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean showsubzones, boolean onlyHidden) {
-//	if (showhidden && !Residence.isResAdminOn(sender)) {
-//	    showhidden = false;
-//	}
-	InformationPager.printInfo(sender, Residence.getLM().getMessage("General.Residences"), this.getResidenceList(null, showhidden, showsubzones, true, onlyHidden),
-	    page);
+
+	int perPage = 20;
+	if (sender instanceof Player)
+	    perPage = 6;
+
+	int start = (page - 1) * perPage;
+	int end = start + perPage;
+
+	List<ClaimedResidence> list = getFromAllResidences(showhidden, onlyHidden, start, end);
+
+	InformationPager.printListInfo(sender, null, list, page, showhidden);
     }
 
     public String[] getResidenceList() {
@@ -379,7 +382,25 @@ public class ResidenceManager implements ResidenceInterface {
 	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
 	    this.getResidenceList(targetplayer, showhidden, showsubzones, "", res.getKey(), res.getValue(), list, formattedOutput, onlyHidden);
 	}
-	Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+	return list;
+    }
+
+    public ArrayList<ClaimedResidence> getFromAllResidences(boolean showhidden, boolean onlyHidden, int start, int end) {
+	ArrayList<ClaimedResidence> list = new ArrayList<>();
+	int i = 0;
+	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
+	    boolean hidden = res.getValue().getPermissions().has("hidden", false);
+	    if (onlyHidden && !hidden)
+		continue;
+	    if ((showhidden) || (!showhidden && !hidden)) {
+//		i++;
+//		if (i < start)
+//		    continue;
+//		if (i > end)
+//		    break;
+		list.add(res.getValue());
+	    }
+	}
 	return list;
     }
 
@@ -579,13 +600,16 @@ public class ResidenceManager implements ResidenceInterface {
 	resNameOwner = ChatColor.translateAlternateColorCodes('&', resNameOwner);
 
 	String worldInfo = lm.getMessage("General.World", perms.getWorld());
-	worldInfo += "&6 (&3";
-	CuboidArea area = res.getAreaArray()[0];
-	worldInfo += lm.getMessage("General.CoordsTop", area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
-	worldInfo += "&6; &3";
-	worldInfo += lm.getMessage("General.CoordsBottom", area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
-	worldInfo += "&6)";
-	worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
+
+	if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
+	    worldInfo += "&6 (&3";
+	    CuboidArea area = res.getAreaArray()[0];
+	    worldInfo += lm.getMessage("General.CoordsTop", area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
+	    worldInfo += "&6; &3";
+	    worldInfo += lm.getMessage("General.CoordsBottom", area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+	    worldInfo += "&6)";
+	    worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
+	}
 
 	worldInfo += "\n" + Residence.getLM().getMessage("General.CreatedOn", GetTime.getTime(res.createTime));
 
@@ -744,7 +768,7 @@ public class ResidenceManager implements ResidenceInterface {
 		try {
 		    resmap.put(res.getValue().getShortName(), res.getValue().save());
 		} catch (Exception ex) {
-		    System.out.println("[Residence] Failed to save residence (" + res.getKey() + ")!");
+		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + ChatColor.RED + " Failed to save residence (" + res.getKey() + ")!");
 		    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
@@ -762,12 +786,12 @@ public class ResidenceManager implements ResidenceInterface {
 	    long time = System.currentTimeMillis();
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
-	    plugin.getLogger().info("Loading " + world.getName() + " data into memory...");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loading " + world.getName() + " data into memory...");
 	    if (reslist != null) {
 		try {
 		    resm.chunkResidences.put(world.getName(), loadMap(world.getName(), reslist, resm));
 		} catch (Exception ex) {
-		    System.out.println("Error in loading save file for world: " + world.getName());
+		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + ChatColor.RED + "Error in loading save file for world: " + world.getName());
 		    if (Residence.getConfigManager().stopOnSaveError())
 			throw (ex);
 		}
@@ -776,7 +800,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    long pass = System.currentTimeMillis() - time;
 	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-	    plugin.getLogger().info("Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
 	}
 	return resm;
     }
@@ -790,7 +814,7 @@ public class ResidenceManager implements ResidenceInterface {
 	int y = 0;
 	for (Entry<String, Object> res : root.entrySet()) {
 	    if (i == 100 & Residence.getConfigManager().isUUIDConvertion())
-		Bukkit.getConsoleSender().sendMessage("[Residence] " + worldName + " UUID conversion done: " + y + " of " + root.size());
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " " + worldName + " UUID conversion done: " + y + " of " + root.size());
 	    if (i >= 100)
 		i = 0;
 	    i++;
@@ -830,7 +854,8 @@ public class ResidenceManager implements ResidenceInterface {
 		resm.residences.put(resName, residence);
 
 	    } catch (Exception ex) {
-		System.out.print("[Residence] Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage() + " Error Log:");
+		Bukkit.getConsoleSender().sendMessage(Residence.prefix + ChatColor.RED + " Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage()
+		    + " Error Log:");
 		Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		if (Residence.getConfigManager().stopOnSaveError()) {
 		    throw (ex);

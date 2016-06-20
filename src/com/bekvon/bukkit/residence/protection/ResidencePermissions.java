@@ -68,6 +68,21 @@ public class ResidencePermissions extends FlagPermissions {
 	return super.groupHas(group, flag, def);
     }
 
+    public boolean has(String flag, FlagCombo f) {
+	switch (f) {
+	case FalseOrNone:
+	    return !has(flag, false);
+	case OnlyFalse:
+	    return !has(flag, true);
+	case OnlyTrue:
+	    return has(flag, false);
+	case TrueOrNone:
+	    return has(flag, true);
+	default:
+	    return false;
+	}
+    }
+
     @Override
     public boolean has(String flag, boolean def) {
 	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag, FlagType.RESIDENCE, null, def);
@@ -441,7 +456,7 @@ public class ResidencePermissions extends FlagPermissions {
 
 	    if (newperms.ownerLastKnownName == null)
 		return newperms;
-	    
+
 	    if (newperms.ownerLastKnownName.equalsIgnoreCase("Server land") || newperms.ownerLastKnownName.equalsIgnoreCase(Residence.getServerLandname())) {
 		newperms.ownerUUID = UUID.fromString(Residence.getServerLandUUID());//UUID for server land
 		newperms.ownerLastKnownName = Residence.getServerLandname();

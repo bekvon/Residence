@@ -59,6 +59,6 @@ public class FileCleanUp {
 	    Residence.getResidenceManager().removeResidence(oneName);
 	    i++;
 	}
-	Bukkit.getConsoleSender().sendMessage("[Residence] Auto CleanUp deleted " + i + " residences!");
+	Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Auto CleanUp deleted " + i + " residences!");
     }
 }

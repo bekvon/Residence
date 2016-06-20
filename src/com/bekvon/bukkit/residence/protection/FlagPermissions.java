@@ -33,6 +33,10 @@ public class FlagPermissions {
     protected Map<String, Boolean> cuboidFlags = new HashMap<String, Boolean>();
     protected FlagPermissions parent;
 
+    public static enum FlagCombo {
+	OnlyTrue, OnlyFalse, TrueOrNone, FalseOrNone
+    }
+
     public static enum FlagState {
 	TRUE, FALSE, NEITHER, INVALID
     }
@@ -162,7 +166,7 @@ public class FlagPermissions {
 	addFlag("riding");
 
 	addFlag("hook");
-	
+
 	addResidenceOnlyFlag("trample");
 	addResidenceOnlyFlag("pvp");
 	addResidenceOnlyFlag("fireball");
@@ -239,8 +243,10 @@ public class FlagPermissions {
 	addResidenceOnlyFlag("dryup");
 
 	addResidenceOnlyFlag("backup");
-	
+
 	addResidenceOnlyFlag("hotfloor");
+
+	addResidenceOnlyFlag("coords");
 
 	addPlayerOrGroupOnlyFlag("admin");
 

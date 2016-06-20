@@ -19,6 +19,7 @@ public enum GuiItems {
     cmonsters(383, 50),
     command(137, 0),
     container(342, 0),
+    coords(345, 0),
     craft(58, 50),
     creeper(383, 50),
     dragongrief(3, 0),

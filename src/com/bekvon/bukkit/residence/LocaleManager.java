@@ -229,7 +229,8 @@ public class LocaleManager {
 	c.get("Language.Residence.GiveLimits", "&cCannot give residence to target player, because it is outside the target players limits.");
 	c.get("Language.Residence.Give", "&eYou give residence &6%1 &eto player &6%2");
 	c.get("Language.Residence.Recieve", "&eYou have recieved residence &6%1 &efrom player &6%2");
-	c.get("Language.Residence.ResList", " &a%1. &e%2 &e- &6%3 &e%4");
+	c.get("Language.Residence.ResList", " &a%1. &e%2 &e- &6%3 %4&6%5");
+	c.get("Language.Residence.List", " &a%1. &e%2 &e- &6%3 %4&6%5");
 	c.get("Language.Residence.TeleportNear", "&eTeleported to near residence.");
 	c.get("Language.Residence.SetTeleportLocation", "&eTeleport Location Set...");
 	c.get("Language.Residence.PermissionsApply", "&ePermissions applied to residence.");
@@ -256,6 +257,10 @@ public class LocaleManager {
 
 	c.get("Language.Residence.CanBeRented", "&6%1&e can be rented for &6%2 &eper &6%3 &edays. &6/res market rent");
 	c.get("Language.Residence.CanBeBought", "&6%1&e can be bought for &6%2&e. &6/res market buy");
+	
+	c.get("Language.Residence.IsForRent", "&6(For rent)");
+	c.get("Language.Residence.IsForSale", "&6(For sale)");
+	c.get("Language.Residence.IsRented", "&6(Rented)");
 
 	c.get("Language.Rent.Disabled", "&cRent is disabled...");
 	c.get("Language.Rent.DisableRenew", "&eResidence &6%1 &ewill now no longer re-rent upon expire.");
@@ -452,7 +457,7 @@ public class LocaleManager {
 	c.get("Language.General.NextPage", "&eNext Page");
 	c.get("Language.General.NextInfoPage", "&2| &eNext Page &2>>>");
 	c.get("Language.General.PrevInfoPage", "&2<<< &ePrev Page &2|");
-	c.get("Language.General.GenericPage", "&ePage &6%1 &eof &6%2");
+	c.get("Language.General.GenericPages", "&ePage &6%1 &eof &6%2 &e(&6%3&e)");
 	c.get("Language.General.WorldEditNotFound", "&cWorldEdit was not detected.");
 	c.get("Language.General.CoordsTop", "&eX:&6%1 &eY:&6%2 &eZ:&6%3");
 	c.get("Language.General.CoordsBottom", "&eX:&6%1 &eY:&6%2 &eZ:&6%3");
@@ -1131,6 +1136,12 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hotfloor.Description",
 	    "Prevent damage from magma blocks");
 	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.hotfloor.Info",
+	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
+	// coords
+	FlagList.add("coords");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.coords.Description",
+	    "Hides residence coordinates");
+	c.get("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands.coords.Info",
 	    Arrays.asList("&eUsage: &6/res set <residence> [flag] true/false/remove"));
 
 	// Filling with custom flags info

@@ -56,13 +56,13 @@ public class reload implements cmd {
 		Residence.helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 	    } else {
-		System.out.println("[Residence] Language file does not exist...");
+		System.out.println(Residence.prefix + " Language file does not exist...");
 	    }
-	    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded language file.");
+	    sender.sendMessage(Residence.prefix + " Reloaded language file.");
 	    return true;
 	} else if (args[1].equalsIgnoreCase("config")) {
 	    Residence.getConfigManager().UpdateConfigFile();
-	    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded config file.");
+	    sender.sendMessage(Residence.prefix + " Reloaded config file.");
 	    return true;
 	}
 	return false;

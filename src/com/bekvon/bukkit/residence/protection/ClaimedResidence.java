@@ -40,6 +40,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ClaimedResidence {
@@ -546,6 +547,8 @@ public class ClaimedResidence {
 	    }
 
 	    newres.resName = name;
+
+	    newres.setCreateTime();
 
 	    ResidenceSubzoneCreationEvent resevent = new ResidenceSubzoneCreationEvent(player, name, newres, newArea);
 	    Residence.getServ().getPluginManager().callEvent(resevent);
@@ -1451,6 +1454,15 @@ public class ClaimedResidence {
 	if (Residence.getConfigManager().isOfflineMode())
 	    return isOwner(p.getName());
 	return perms.getOwnerUUID().equals(p.getUniqueId());
+    }
+
+    public boolean isOwner(CommandSender sender) {
+	if (Residence.getConfigManager().isOfflineMode())
+	    return isOwner(sender.getName());
+	if (sender instanceof Player)
+	    return perms.getOwnerUUID().equals(((Player) sender).getUniqueId());
+	else
+	    return true;
     }
 
     public void setChatPrefix(String ChatPrefix) {
