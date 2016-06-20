@@ -17,16 +17,6 @@ import org.bukkit.entity.Player;
 
 public class InformationPager {
 
-    public static int linesPerPage = 7;
-
-    public static int getLinesPerPage() {
-	return linesPerPage;
-    }
-
-    public static void setLinesPerPage(int lines) {
-	linesPerPage = lines;
-    }
-
     public static void printInfo(CommandSender sender, String title, String[] lines, int page) {
 	InformationPager.printInfo(sender, title, Arrays.asList(lines), page);
     }
@@ -72,7 +62,7 @@ public class InformationPager {
 	}
 	if (targetPlayer != null)
 	    sender.sendMessage(Residence.getLM().getMessage("InformationPage.TopLine", Residence.getLM().getMessage("General.Residences") + " - " + targetPlayer));
-	sender.sendMessage(Residence.getLM().getMessage("InformationPage.Page", Residence.getLM().getMessage("General.GenericPage", String.format("%d", page),
+	sender.sendMessage(Residence.getLM().getMessage("InformationPage.Page", Residence.getLM().getMessage("General.GenericPages", String.format("%d", page),
 	    pagecount, lines.size())));
 
 	String cmd = "res";

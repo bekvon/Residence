@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -18,7 +17,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
-import com.bekvon.bukkit.residence.text.help.InformationPager;
 
 public class reload implements cmd {
 
@@ -54,7 +52,6 @@ public class reload implements cmd {
 		    e.printStackTrace();
 		}
 		Residence.helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
-		InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 	    } else {
 		System.out.println(Residence.prefix + " Language file does not exist...");
 	    }

@@ -1,7 +1,6 @@
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -387,17 +386,11 @@ public class ResidenceManager implements ResidenceInterface {
 
     public ArrayList<ClaimedResidence> getFromAllResidences(boolean showhidden, boolean onlyHidden, int start, int end) {
 	ArrayList<ClaimedResidence> list = new ArrayList<>();
-	int i = 0;
 	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
 	    boolean hidden = res.getValue().getPermissions().has("hidden", false);
 	    if (onlyHidden && !hidden)
 		continue;
 	    if ((showhidden) || (!showhidden && !hidden)) {
-//		i++;
-//		if (i < start)
-//		    continue;
-//		if (i > end)
-//		    break;
 		list.add(res.getValue());
 	    }
 	}

@@ -230,7 +230,7 @@ public class LocaleManager {
 	c.get("Language.Residence.Give", "&eYou give residence &6%1 &eto player &6%2");
 	c.get("Language.Residence.Recieve", "&eYou have recieved residence &6%1 &efrom player &6%2");
 	c.get("Language.Residence.ResList", " &a%1. &e%2 &e- &6%3 %4&6%5");
-	c.get("Language.Residence.List", " &a%1. &e%2 &e- &6%3 %4&6%5");
+	c.get("Language.Residence.List", " &e%2 &e- &6%3");
 	c.get("Language.Residence.TeleportNear", "&eTeleported to near residence.");
 	c.get("Language.Residence.SetTeleportLocation", "&eTeleport Location Set...");
 	c.get("Language.Residence.PermissionsApply", "&ePermissions applied to residence.");

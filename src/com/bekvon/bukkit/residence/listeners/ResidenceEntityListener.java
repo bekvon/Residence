@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -742,6 +740,51 @@ public class ResidenceEntityListener implements Listener {
 	    if (!srcpvp || !tgtpvp)
 		event.setIntensity(target, 0);
 	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void PlayerKillingByFlame(EntityCombustByEntityEvent event) {
+	// disabling event on world
+	Entity entity = event.getEntity();
+	if (entity == null)
+	    return;
+	if (Residence.isDisabledWorldListener(entity.getWorld()))
+	    return;
+	if (!(entity instanceof Player))
+	    return;
+
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(entity.getLocation());
+
+	if (res == null)
+	    return;
+
+	Entity damager = event.getCombuster();
+
+	if (!(damager instanceof Arrow) && !(damager instanceof Player))
+	    return;
+
+	if (damager instanceof Arrow && !(((Arrow) damager).getShooter() instanceof Player))
+	    return;
+
+	Player cause = null;
+
+	if (damager instanceof Player) {
+	    cause = (Player) damager;
+	} else {
+	    cause = (Player) ((Arrow) damager).getShooter();
+	}
+
+	if (cause == null)
+	    return;
+
+	if (Residence.isResAdminOn(cause))
+	    return;
+
+	Entity ent = event.getEntity();
+	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has("pvp", true);
+	Boolean tgtpvp = Residence.getPermsByLoc(entity.getLocation()).has("pvp", true);
+	if (!srcpvp || !tgtpvp)
+	    event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

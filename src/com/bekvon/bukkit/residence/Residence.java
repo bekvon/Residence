@@ -28,7 +28,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -79,7 +78,6 @@ import com.bekvon.bukkit.residence.spout.ResidenceSpout;
 import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
-import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
@@ -497,7 +495,6 @@ public class Residence extends JavaPlugin {
 		    FileConfiguration langconfig = new YamlConfiguration();
 		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
-		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 		} else {
 		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
 		}
@@ -520,7 +517,6 @@ public class Residence extends JavaPlugin {
 		    FileConfiguration langconfig = new YamlConfiguration();
 		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
-		    InformationPager.setLinesPerPage(langconfig.getInt("HelpLinesPerPage", 7));
 		} else {
 		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
 		}
