@@ -116,7 +116,7 @@ public class Residence extends JavaPlugin {
     protected static List<String> authlist;
     protected static ResidenceManager rmanager;
     protected static SelectionManager smanager;
-    protected static PermissionManager gmanager;
+    public static PermissionManager gmanager;
     protected static ConfigManager cmanager;
 
     protected static SignUtil signmanager;
@@ -134,8 +134,8 @@ public class Residence extends JavaPlugin {
     protected static TransactionManager tmanager;
     protected static PermissionListManager pmanager;
     protected static LeaseManager leasemanager;
-    protected static WorldItemManager imanager;
-    protected static WorldFlagManager wmanager;
+    public static WorldItemManager imanager;
+    public static WorldFlagManager wmanager;
     protected static RentManager rentmanager;
     protected static ChatManager chatmanager;
     protected static Server server;
@@ -154,7 +154,7 @@ public class Residence extends JavaPlugin {
 
     protected boolean firstenable = true;
     protected static EconomyInterface economy;
-    public final static int saveVersion = 1;
+    private static int saveVersion = 1;
     public static File dataFolder;
     protected static int leaseBukkitId = -1;
     protected static int rentBukkitId = -1;
@@ -385,10 +385,7 @@ public class Residence extends JavaPlugin {
 //		System.out.println("[Residence] Config Invalid, wrote default...");
 //	    }
 
-	    FileConfiguration canfig = YamlConfiguration.loadConfiguration(new File(dataFolder, "config.yml"));
-	    FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(dataFolder, "flags.yml"));
-	    FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(dataFolder, "groups.yml"));
-	    cmanager = new ConfigManager(canfig, flags, groups, this);
+	    cmanager = new ConfigManager(this);
 	    String multiworld = cmanager.getMultiworldPlugin();
 	    if (multiworld != null) {
 		Plugin plugin = server.getPluginManager().getPlugin(multiworld);
@@ -446,10 +443,9 @@ public class Residence extends JavaPlugin {
 		return;
 	    }
 
-	    gmanager = new PermissionManager(groups, flags);
-
-	    imanager = new WorldItemManager(flags);
-	    wmanager = new WorldFlagManager(flags, groups);
+	    gmanager = new PermissionManager();
+	    imanager = new WorldItemManager();
+	    wmanager = new WorldFlagManager();
 
 	    chatmanager = new ChatManager();
 	    rentmanager = new RentManager();
@@ -1169,6 +1165,7 @@ public class Residence extends JavaPlugin {
 		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loading save data for world " + world.getName() + "...");
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
+
 		    worlds.put(world.getName(), yml.getRoot().get("Residences"));
 
 		    int pass = (int) (System.currentTimeMillis() - time);

@@ -221,8 +221,7 @@ public class ClaimedResidence {
 	}
 
 	String NName = name;
-	if (!Residence.getConfigManager().isResCreateCaseSensitive())
-	    name = name.toLowerCase();
+	name = name.toLowerCase();
 
 	if (areas.containsKey(NName)) {
 	    if (player != null) {
@@ -485,8 +484,7 @@ public class ClaimedResidence {
 	}
 
 	String NName = name;
-	if (!Residence.getConfigManager().isResCreateCaseSensitive())
-	    name = name.toLowerCase();
+	name = name.toLowerCase();
 
 	if (subzones.containsKey(name)) {
 	    if (player != null) {
@@ -609,8 +607,7 @@ public class ClaimedResidence {
     }
 
     public ClaimedResidence getSubzone(String subzonename) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive())
-	    subzonename = subzonename.toLowerCase();
+	subzonename = subzonename.toLowerCase();
 
 	if (!subzonename.contains(".")) {
 	    return subzones.get(subzonename);
@@ -695,8 +692,7 @@ public class ClaimedResidence {
     }
 
     public boolean removeSubzone(Player player, String name, boolean resadmin) {
-	if (!Residence.getConfigManager().isResCreateCaseSensitive())
-	    name = name.toLowerCase();
+	name = name.toLowerCase();
 	ClaimedResidence res = subzones.get(name);
 	if (player != null && !res.perms.hasResidencePermission(player, true) && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
@@ -720,6 +716,15 @@ public class ClaimedResidence {
 	    for (CuboidArea entry : set) {
 		size = size + (entry.getXSize() * entry.getZSize());
 	    }
+	return size;
+    }
+
+    public long getXZSize() {
+	Collection<CuboidArea> set = areas.values();
+	long size = 0;
+	for (CuboidArea entry : set) {
+	    size = size + (entry.getXSize() * entry.getZSize());
+	}
 	return size;
     }
 
@@ -1293,10 +1298,7 @@ public class ClaimedResidence {
 	    if (Residence.getConfigManager().flagsInherit())
 		subres.getPermissions().setParent(res.getPermissions());
 
-	    if (Residence.getConfigManager().isResCreateCaseSensitive())
-		res.subzones.put(map.getKey(), subres);
-	    else
-		res.subzones.put(map.getKey().toLowerCase(), subres);
+	    res.subzones.put(map.getKey().toLowerCase(), subres);
 	}
 
 	res.parent = parent;
@@ -1349,10 +1351,8 @@ public class ClaimedResidence {
 	}
 
 	String newN = newName;
-	if (!Residence.getConfigManager().isResCreateCaseSensitive()) {
-	    oldName = oldName.toLowerCase();
-	    newName = newName.toLowerCase();
-	}
+	oldName = oldName.toLowerCase();
+	newName = newName.toLowerCase();
 
 	ClaimedResidence res = subzones.get(oldName);
 	if (res == null) {
@@ -1415,15 +1415,6 @@ public class ClaimedResidence {
 
     public String getName() {
 	return Residence.getResidenceManager().getNameByRes(this);
-    }
-
-    public String getShortName() {
-	String name = Residence.getResidenceManager().getNameByRes(this);
-	if (name.contains(".")) {
-	    String[] split = name.split("\\.");
-	    name = split[split.length - 1];
-	}
-	return name;
     }
 
     public void remove() {

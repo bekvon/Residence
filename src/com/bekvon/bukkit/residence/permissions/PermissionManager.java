@@ -6,6 +6,8 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
+
+import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +17,7 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -26,16 +29,13 @@ public class PermissionManager {
 
     protected HashMap<String, PlayerGroup> groupsMap = new HashMap<String, PlayerGroup>();
 
-    public PermissionManager(FileConfiguration config, FileConfiguration flags) {
+    public PermissionManager() {
 	try {
 	    groups = new LinkedHashMap<String, PermissionGroup>();
 	    playersGroup = Collections.synchronizedMap(new HashMap<String, String>());
 	    globalFlagPerms = new FlagPermissions();
-	    this.readConfig(config, flags);
-	    boolean enable = config.getBoolean("Global.EnablePermissions", true);
-	    if (enable) {
-		this.checkPermissions();
-	    }
+	    this.readConfig();
+	    this.checkPermissions();
 	} catch (Exception ex) {
 	    Logger.getLogger(PermissionManager.class.getName()).log(Level.SEVERE, null, ex);
 	}
@@ -172,10 +172,14 @@ public class PermissionManager {
 	Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Permissions plugin NOT FOUND!");
     }
 
-    private void readConfig(FileConfiguration config, FileConfiguration flags) {
+    private void readConfig() {
+
+	FileConfiguration groupsFile = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
+	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
+	
 	String defaultGroup = Residence.getConfigManager().getDefaultGroup().toLowerCase();
 	globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", flags.getConfigurationSection("Global"));
-	ConfigurationSection nodes = config.getConfigurationSection("Groups");
+	ConfigurationSection nodes = groupsFile.getConfigurationSection("Groups");
 	if (nodes != null) {
 	    Set<String> entrys = nodes.getKeys(false);
 	    int i = 0;
@@ -195,11 +199,11 @@ public class PermissionManager {
 	if (!groups.containsKey(defaultGroup)) {
 	    groups.put(defaultGroup, new PermissionGroup(defaultGroup));
 	}
-	if (config.isConfigurationSection("GroupAssignments")) {
-	    Set<String> keys = config.getConfigurationSection("GroupAssignments").getKeys(false);
+	if (groupsFile.isConfigurationSection("GroupAssignments")) {
+	    Set<String> keys = groupsFile.getConfigurationSection("GroupAssignments").getKeys(false);
 	    if (keys != null) {
 		for (String key : keys) {
-		    playersGroup.put(key.toLowerCase(), config.getString("GroupAssignments." + key, defaultGroup).toLowerCase());
+		    playersGroup.put(key.toLowerCase(), groupsFile.getString("GroupAssignments." + key, defaultGroup).toLowerCase());
 		}
 	    }
 	}

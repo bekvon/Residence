@@ -48,8 +48,6 @@ public class ConfigManager {
     protected boolean UseClean;
     protected boolean PvPFlagPrevent;
     protected boolean OverridePvp;
-    protected boolean ResCreateCaseSensitive;
-    protected boolean ResTpCaseSensitive;
     protected boolean BlockAnyTeleportation;
     protected int infoToolId;
     protected int AutoCleanUpDays;
@@ -204,13 +202,15 @@ public class ConfigManager {
 
     private Residence plugin;
 
-    public ConfigManager(FileConfiguration config, FileConfiguration flags, FileConfiguration groups, Residence plugin) {
+    public ConfigManager(Residence plugin) {
+//	FileConfiguration config = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "config.yml"));
 	this.plugin = plugin;
 	globalCreatorDefaults = new FlagPermissions();
 	globalResidenceDefaults = new FlagPermissions();
 	globalGroupDefaults = new HashMap<String, FlagPermissions>();
 	UpdateConfigFile();
-	this.load(flags, groups);
+	this.loadFlags();
+	this.loadGroups();
     }
 
     public static String Colors(String text) {
@@ -400,17 +400,6 @@ public class ConfigManager {
 	    "Modifys chat to add chat titles.  If you're using a chat manager, you may add the tag {residence} to your chat format and disable this.");
 	GlobalChatSelfModify = c.get("Global.Optimizations.GlobalChat.SelfModify", true);
 	GlobalChatFormat = c.get("Global.Optimizations.GlobalChat.Format", "&c[&e%1&c]", true);
-
-	c.getW().addComment("Global.Optimizations.ResCreateCaseSensitive",
-	    "When its true you can create residences with similar names but different capitalization. An example: Village and village are counted as different residences",
-	    "When it's set to false you can't create residences with same names but different capitalizations");
-	ResCreateCaseSensitive = c.get("Global.Optimizations.ResCreateCaseSensitive", false);
-
-	c.getW().addComment("Global.Optimizations.ResTpCaseSensitive",
-	    "When this set to true, when you are performing /res tp command and providing residence name, it should be exactly same as residence name. So in example Village is not same as village",
-	    "When it's set to false you can teleport to residence with name Village even if you executing command /res tp village",
-	    "Don't disable this if you already have some duplicating residences in your database as this will prevent players from teleporting to one of them");
-	ResTpCaseSensitive = c.get("Global.Optimizations.ResTpCaseSensitive", true);
 
 	c.getW().addComment("Global.Optimizations.BlockAnyTeleportation",
 	    "When this set to true, any teleportation to residence where player dont have tp flag, action will be denyied",
@@ -899,11 +888,14 @@ public class ConfigManager {
 	}
     }
 
-    private void load(FileConfiguration flags, FileConfiguration groups) {
-
+    public void loadFlags() {
+	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
 	globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", flags.getConfigurationSection("Global"));
 	globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", flags.getConfigurationSection("Global"));
+    }
 
+    public void loadGroups() {
+	FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
 	ConfigurationSection node = groups.getConfigurationSection("Global.GroupDefault");
 	if (node != null) {
 	    Set<String> keys = node.getConfigurationSection(defaultGroup).getKeys(false);
@@ -1123,16 +1115,8 @@ public class ConfigManager {
 	return OverridePvp;
     }
 
-    public boolean isResTpCaseSensitive() {
-	return ResTpCaseSensitive;
-    }
-
     public boolean isBlockAnyTeleportation() {
 	return BlockAnyTeleportation;
-    }
-
-    public boolean isResCreateCaseSensitive() {
-	return ResCreateCaseSensitive;
     }
 
     public int getInfoToolID() {

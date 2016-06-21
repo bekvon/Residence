@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class WorldFlagManager {
@@ -23,11 +25,7 @@ public class WorldFlagManager {
 	globaldefaults = new FlagPermissions();
 	worldperms = new HashMap<>();
 	groupperms = new HashMap<>();
-    }
-
-    public WorldFlagManager(FileConfiguration config, FileConfiguration groups) {
-	this();
-	this.parsePerms(config, groups);
+	this.parsePerms();
     }
 
     public FlagPermissions getPerms(Player player) {
@@ -66,16 +64,18 @@ public class WorldFlagManager {
 	return list;
     }
 
-    public final void parsePerms(FileConfiguration config, FileConfiguration groups) {
+    public final void parsePerms() {
 	try {
+	    FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
+	    FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
 
-	    Set<String> keys = config.getConfigurationSection("Global.Flags").getKeys(false);
+	    Set<String> keys = flags.getConfigurationSection("Global.Flags").getKeys(false);
 	    if (keys != null) {
 		for (String key : keys) {
 		    if (key.equalsIgnoreCase("Global")) {
-			globaldefaults = FlagPermissions.parseFromConfigNode(key, config.getConfigurationSection("Global.Flags"));
+			globaldefaults = FlagPermissions.parseFromConfigNode(key, flags.getConfigurationSection("Global.Flags"));
 		    } else {
-			worldperms.put(key.toLowerCase(), FlagPermissions.parseFromConfigNode(key, config.getConfigurationSection("Global.Flags")));
+			worldperms.put(key.toLowerCase(), FlagPermissions.parseFromConfigNode(key, flags.getConfigurationSection("Global.Flags")));
 		    }
 		}
 	    }
@@ -83,8 +83,8 @@ public class WorldFlagManager {
 		entry.getValue().setParent(globaldefaults);
 	    }
 
-	    if (!groups.isConfigurationSection("Groups")){
-		Bukkit.getConsoleSender().sendMessage(ChatColor.RED  + "Your groups.yml file is incorrect!");		
+	    if (!groups.isConfigurationSection("Groups")) {
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your groups.yml file is incorrect!");
 		return;
 	    }
 

@@ -16,6 +16,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
+import com.bekvon.bukkit.residence.permissions.PermissionManager;
+import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 
 public class reload implements cmd {
@@ -60,6 +63,19 @@ public class reload implements cmd {
 	} else if (args[1].equalsIgnoreCase("config")) {
 	    Residence.getConfigManager().UpdateConfigFile();
 	    sender.sendMessage(Residence.prefix + " Reloaded config file.");
+	    return true;
+	} else if (args[1].equalsIgnoreCase("groups")) {
+	    Residence.getConfigManager().loadGroups();
+	    Residence.gmanager = new PermissionManager();
+	    Residence.wmanager = new WorldFlagManager();
+	    sender.sendMessage(Residence.prefix + " Reloaded groups file.");	 
+	    return true;   
+	} else if (args[1].equalsIgnoreCase("flags")) {
+	    Residence.getConfigManager().loadFlags();
+	    Residence.gmanager = new PermissionManager();
+	    Residence.imanager = new WorldItemManager();
+	    Residence.wmanager = new WorldFlagManager();
+	    sender.sendMessage(Residence.prefix + " Reloaded flags file.");	
 	    return true;
 	}
 	return false;

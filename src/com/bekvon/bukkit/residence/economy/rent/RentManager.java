@@ -175,7 +175,7 @@ public class RentManager implements MarketRentInterface {
 	    newrent.AllowAutoPay = AllowAutoPay;
 	    res.setRentable(newrent);
 	    rentableLand.add(res);
-	    player.sendMessage(Residence.getLM().getMessage("Residence.ForRentSuccess", res.getShortName(), amount, days));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.ForRentSuccess", res.getResidenceName(), amount, days));
 	} else {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.AlreadyRent"));
 	}
@@ -409,7 +409,7 @@ public class RentManager implements MarketRentInterface {
 	    res.setRentable(null);
 	    res.getPermissions().applyDefaultFlags();
 	    Residence.getSignUtil().CheckSign(res);
-	    player.sendMessage(Residence.getLM().getMessage("Residence.RemoveRentable", res.getShortName()));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.RemoveRentable", res.getResidenceName()));
 	} else {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.NotForRent"));
 	}
@@ -638,9 +638,9 @@ public class RentManager implements MarketRentInterface {
 	    res.getRentedLand().AutoPay = false;
 
 	if (value)
-	    player.sendMessage(Residence.getLM().getMessage("Rentable.EnableRenew", res.getShortName()));
+	    player.sendMessage(Residence.getLM().getMessage("Rentable.EnableRenew", res.getResidenceName()));
 	else
-	    player.sendMessage(Residence.getLM().getMessage("Rentable.DisableRenew", res.getShortName()));
+	    player.sendMessage(Residence.getLM().getMessage("Rentable.DisableRenew", res.getResidenceName()));
 
     }
 
@@ -679,9 +679,9 @@ public class RentManager implements MarketRentInterface {
 
 	land.AutoPay = value;
 	if (value)
-	    player.sendMessage(Residence.getLM().getMessage("Rent.EnableRenew", res.getShortName()));
+	    player.sendMessage(Residence.getLM().getMessage("Rent.EnableRenew", res.getResidenceName()));
 	else
-	    player.sendMessage(Residence.getLM().getMessage("Rent.DisableRenew", res.getShortName()));
+	    player.sendMessage(Residence.getLM().getMessage("Rent.DisableRenew", res.getResidenceName()));
 
 	if (res != null)
 	    Residence.getSignUtil().CheckSign(res);

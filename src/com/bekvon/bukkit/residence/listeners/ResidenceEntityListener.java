@@ -140,10 +140,13 @@ public class ResidenceEntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKillingByFlame(EntityCombustByEntityEvent event) {
 	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
 	Entity entity = event.getEntity();
 	if (entity == null)
-	    return;
-	if (Residence.isDisabledWorldListener(entity.getWorld()))
 	    return;
 	if (!Residence.getNms().isAnimal(entity))
 	    return;
@@ -183,12 +186,14 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalDamageByMobs(EntityDamageByEntityEvent event) {
-
 	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
 	Entity entity = event.getEntity();
 	if (entity == null)
-	    return;
-	if (Residence.isDisabledWorldListener(entity.getWorld()))
 	    return;
 	if (!Residence.getNms().isAnimal(entity))
 	    return;
@@ -745,10 +750,12 @@ public class ResidenceEntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void PlayerKillingByFlame(EntityCombustByEntityEvent event) {
 	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
 	Entity entity = event.getEntity();
 	if (entity == null)
-	    return;
-	if (Residence.isDisabledWorldListener(entity.getWorld()))
 	    return;
 	if (!(entity instanceof Player))
 	    return;
@@ -787,12 +794,30 @@ public class ResidenceEntityListener implements Listener {
 	    event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-
+    @EventHandler
+    public void OnPlayerDamageByLightning(EntityDamageEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
+	if (event.isCancelled())
+	    return;
+	if (event.getCause() != DamageCause.LIGHTNING)
+	    return;
+	Entity ent = event.getEntity();
+	if (!(ent instanceof Player))
+	    return;
+	if (!Residence.getPermsByLoc(ent.getLocation()).has("pvp", true))
+	    event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
 	if (event.getEntityType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event.getEntityType()))
 	    return;
 

@@ -36,13 +36,13 @@ public class ResidencePlayer {
 	this.userName = player.getName();
 	RecalculatePermissions();
     }
-    
+
     public ResidencePlayer(OfflinePlayer player) {
 	this.ofPlayer = player;
 	this.userName = player.getName();
 	RecalculatePermissions();
     }
-    
+
     public ResidencePlayer(String userName) {
 	this.userName = userName;
 	RecalculatePermissions();
@@ -172,22 +172,18 @@ public class ResidencePlayer {
 
     public void addResidence(ClaimedResidence residence) {
 	String name = residence.getName();
-	if (Residence.getConfigManager().isResCreateCaseSensitive())
-	    name = name.toLowerCase();
+	name = name.toLowerCase();
 	this.ResidenceList.put(name, residence);
     }
 
     public void removeResidence(String residence) {
-	if (Residence.getConfigManager().isResCreateCaseSensitive())
-	    residence = residence.toLowerCase();
+	residence = residence.toLowerCase();
 	this.ResidenceList.remove(residence);
     }
 
     public void renameResidence(String oldResidence, String newResidence) {
-	if (Residence.getConfigManager().isResCreateCaseSensitive()) {
-	    oldResidence = oldResidence.toLowerCase();
-	    newResidence = newResidence.toLowerCase();
-	}
+	oldResidence = oldResidence.toLowerCase();
+	newResidence = newResidence.toLowerCase();
 
 	ClaimedResidence res = ResidenceList.get(oldResidence);
 	if (res != null) {

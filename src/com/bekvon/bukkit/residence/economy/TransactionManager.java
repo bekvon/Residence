@@ -6,8 +6,6 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -22,9 +20,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 public class TransactionManager implements MarketBuyInterface {
-    ResidenceManager manager5;
     private Set<ClaimedResidence> sellAmount;
-    PermissionManager gm5;
 
     public TransactionManager() {
 	sellAmount = new HashSet<ClaimedResidence>();
@@ -202,10 +198,10 @@ public class TransactionManager implements MarketBuyInterface {
 	    Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
 
 	    player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
-	    player.sendMessage(Residence.getLM().getMessage("Residence.Bought", res.getShortName()));
+	    player.sendMessage(Residence.getLM().getMessage("Residence.Bought", res.getResidenceName()));
 	    Player seller = serv.getPlayer(sellerName);
 	    if (seller != null && seller.isOnline()) {
-		seller.sendMessage(Residence.getLM().getMessage("Residence.Buy", player.getName(), res.getShortName()));
+		seller.sendMessage(Residence.getLM().getMessage("Residence.Buy", player.getName(), res.getResidenceName()));
 		seller.sendMessage(Residence.getLM().getMessage("Economy.MoneyCredit", String.format("%d", amount), econ.getName()));
 	    }
 	} else {

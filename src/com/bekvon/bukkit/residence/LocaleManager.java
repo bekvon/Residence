@@ -451,7 +451,7 @@ public class LocaleManager {
 	c.get("Language.General.ListCreate", "&eCreated list &6%1");
 	c.get("Language.General.PhysicalAreas", "&ePhysical Areas");
 	c.get("Language.General.CurrentArea", "&eCurrent Area: &6%1");
-	c.get("Language.General.TotalSize", "&eTotal size: &6%1");
+	c.get("Language.General.TotalResSize", "&eTotal size: &6%1m\u00B3 (%2m\u00B2)");
 	c.get("Language.General.TotalWorth", "&eTotal worth of residence: &6%1 &e(&6%2&e)");
 	c.get("Language.General.NotOnline", "&eTarget player must be online.");
 	c.get("Language.General.NextPage", "&eNext Page");
@@ -1502,7 +1502,7 @@ public class LocaleManager {
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.reload.Description", "reload lanf or config files");
 	c.get("CommandHelp.SubCommands.res.SubCommands.reload.Info",
-	    Arrays.asList("&eUsage: &6/res reload [config/lang]"));
+	    Arrays.asList("&eUsage: &6/res reload [config/lang/groups/flags]"));
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.lists.Description", "Predefined permission lists");
 	c.get("CommandHelp.SubCommands.res.SubCommands.lists.Info",
