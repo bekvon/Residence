@@ -1338,7 +1338,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Location locfrom = event.getFrom();
 	Location locto = event.getTo();
-	if (locfrom.getX() == locto.getX() && locfrom.getY() == locto.getY() && locfrom.getZ() == locto.getZ())
+	if (locfrom.getBlockX() == locto.getBlockX() && locfrom.getBlockY() == locto.getBlockY() && locfrom.getBlockZ() == locto.getBlockZ())
 	    return;
 
 	String name = player.getName();
@@ -1358,6 +1358,8 @@ public class ResidencePlayerListener implements Listener {
 	    .getName())) {
 	    Residence.getTeleportDelayMap().remove(player.getName());
 	    player.sendMessage(Residence.getLM().getMessage("General.TeleportCanceled"));
+	    if (Residence.getConfigManager().isTeleportTitleMessage())
+		Residence.getAB().sendTitle(player, "", "");
 	}
     }
 
@@ -1476,6 +1478,9 @@ public class ResidencePlayerListener implements Listener {
 		    player.teleport(newLoc);
 		} else if (lastLoc != null) {
 		    player.teleport(lastLoc);
+		} else if (lastLoc == null) {
+		    Location newLoc = res.getOutsideFreeLoc(loc, player);
+		    player.teleport(newLoc);
 		}
 
 		if (Residence.getConfigManager().useActionBar()) {

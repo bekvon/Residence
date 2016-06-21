@@ -21,6 +21,7 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -1067,6 +1068,8 @@ public class ClaimedResidence {
 
 	if (Residence.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !resadmin) {
 	    reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportStarted", this.getName(), Residence.getConfigManager().getTeleportDelay()));
+	    if (Residence.getConfigManager().isTeleportTitleMessage())
+		TpTimer(reqPlayer, Residence.getConfigManager().getTeleportDelay());
 	    ResidenceCommandListener.getTeleportDelayMap().add(reqPlayer.getName());
 	}
 
@@ -1087,29 +1090,41 @@ public class ClaimedResidence {
 		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
 	    else
 		performInstantTp(targloc, targetPlayer, reqPlayer, true);
-
 	}
+    }
+
+    public void TpTimer(Player player, int t) {
+	Residence.getAB().sendTitle(player, Residence.getLM().getMessage("General.TeleportTitle"), Residence.getLM().getMessage("General.TeleportTitleTime", t));
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    public void run() {
+		if (!ResidenceCommandListener.getTeleportDelayMap().contains(player.getName()))
+		    return;
+		if (t > 1)
+		    TpTimer(player, t - 1);
+	    }
+	}, 20L);
     }
 
     public void performDelaydTp(final Location targloc, final Player targetPlayer, Player reqPlayer, final boolean near) {
 	ResidenceTPEvent tpevent = new ResidenceTPEvent(this, targloc, targetPlayer, reqPlayer);
 	Residence.getServ().getPluginManager().callEvent(tpevent);
-	if (!tpevent.isCancelled()) {
-	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-		public void run() {
-		    if (!ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
-			return;
-		    else if (ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()))
-			ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
-		    targetPlayer.teleport(targloc);
-		    if (near)
-			targetPlayer.sendMessage(Residence.getLM().getMessage("Residence.TeleportNear"));
-		    else
-			targetPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportSuccess"));
+	if (tpevent.isCancelled())
+	    return;
+
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    public void run() {
+		if (!ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
 		    return;
-		}
-	    }, Residence.getConfigManager().getTeleportDelay() * 20L);
-	}
+		else if (ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()))
+		    ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
+		targetPlayer.teleport(targloc);
+		if (near)
+		    targetPlayer.sendMessage(Residence.getLM().getMessage("Residence.TeleportNear"));
+		else
+		    targetPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportSuccess"));
+		return;
+	    }
+	}, Residence.getConfigManager().getTeleportDelay() * 20L);
     }
 
     private void performInstantTp(final Location targloc, final Player targetPlayer, Player reqPlayer, final boolean near) {

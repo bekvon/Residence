@@ -115,4 +115,9 @@ public class ActionBar implements ABInterface {
     private String getPacketPlayOutChat() {
 	return "net.minecraft.server." + version + ".PacketPlayOutChat";
     }
+
+    @Override
+    public void sendTitle(Player player, Object title, Object subtitle) {
+	return;
+    }
 }

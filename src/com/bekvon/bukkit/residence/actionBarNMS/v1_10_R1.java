@@ -3,12 +3,15 @@ package com.bekvon.bukkit.residence.actionBarNMS;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.ABInterface;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
 import net.minecraft.server.v1_10_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_10_R1.PacketPlayOutTitle.EnumTitleAction;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
+import net.minecraft.server.v1_10_R1.PacketPlayOutTitle;
 
 public class v1_10_R1 implements ABInterface {
 
@@ -29,6 +32,20 @@ public class v1_10_R1 implements ABInterface {
 	    p.getHandle().playerConnection.sendPacket(ppoc);
 	} catch (Exception e) {
 	    player.sendMessage(msg);
+	}
+    }
+    
+    public void sendTitle(Player player, Object title, Object subtitle) {
+	CraftPlayer Cplayer = (CraftPlayer) player;
+	if (title != null) {
+	    PacketPlayOutTitle packetTitle = new PacketPlayOutTitle(EnumTitleAction.TITLE, CraftChatMessage.fromString(ChatColor.translateAlternateColorCodes('&', String
+		.valueOf(title)))[0]);
+	    Cplayer.getHandle().playerConnection.sendPacket(packetTitle);
+	}
+	if (subtitle != null) {
+	    PacketPlayOutTitle packetSubtitle = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, CraftChatMessage.fromString(ChatColor.translateAlternateColorCodes('&',
+		String.valueOf(subtitle)))[0]);
+	    Cplayer.getHandle().playerConnection.sendPacket(packetSubtitle);
 	}
     }
 }

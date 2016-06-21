@@ -257,7 +257,7 @@ public class LocaleManager {
 
 	c.get("Language.Residence.CanBeRented", "&6%1&e can be rented for &6%2 &eper &6%3 &edays. &6/res market rent");
 	c.get("Language.Residence.CanBeBought", "&6%1&e can be bought for &6%2&e. &6/res market buy");
-	
+
 	c.get("Language.Residence.IsForRent", "&6(For rent)");
 	c.get("Language.Residence.IsForSale", "&6(For sale)");
 	c.get("Language.Residence.IsRented", "&6(Rented)");
@@ -440,10 +440,10 @@ public class LocaleManager {
 	c.get("Language.General.TeleportSuccess", "&eTeleported!");
 	c.get("Language.General.TeleportConfirm",
 	    "&cThis teleport is not safe, you will fall for &6%1 &cblocks. Use &6/res tpconfirm &cto perform teleportation anyways.");
-	c.get("Language.General.TeleportStarted",
-	    "&eTeleportation to &6%1 &estarted, don't move for next &6%2 &esec.");
-	c.get("Language.General.TeleportCanceled",
-	    "&eTeleportation canceled!");
+	c.get("Language.General.TeleportStarted", "&eTeleportation to &6%1 &estarted, don't move for next &6%2 &esec.");
+	c.get("Language.General.TeleportTitle", "&eTeleporting!");
+	c.get("Language.General.TeleportTitleTime", "&6%1");
+	c.get("Language.General.TeleportCanceled", "&eTeleportation canceled!");
 	c.get("Language.General.NoTeleportConfirm", "&eThere is no teleports waiting for confirmation!");
 	c.get("Language.General.HelpPageHeader", "&eHelp Pages - &6%1 &e- Page <&6%2 &eof &6%3&e>");
 	c.get("Language.General.ListExists", "&cList already exists...");

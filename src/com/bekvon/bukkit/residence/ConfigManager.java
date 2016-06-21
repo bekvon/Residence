@@ -85,6 +85,7 @@ public class ConfigManager {
     protected int MinimalResY;
     protected int MinimalResZ;
     protected int TeleportDelay;
+    protected boolean TeleportTitleMessage;
     protected int VisualizerRowSpacing;
     protected int VisualizerCollumnSpacing;
     protected boolean flagsInherit;
@@ -473,6 +474,8 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.Tp.TeleportDelay", "The interval, in seconds, for teleportation.", "Use 0 to disable");
 	TeleportDelay = c.get("Global.Tp.TeleportDelay", 3);
+	c.getW().addComment("Global.Tp.TeleportTitleMessage", "Show aditional message in title message area when player is teleporting to residence");
+	TeleportTitleMessage = c.get("Global.Tp.TeleportTitleMessage", true);
 
 	if (conf.contains("Global.RandomTeleportation.WorldName")) {
 
@@ -1017,6 +1020,10 @@ public class ConfigManager {
 
     public int getTeleportDelay() {
 	return TeleportDelay;
+    }
+
+    public boolean isTeleportTitleMessage() {
+	return TeleportTitleMessage;
     }
 
     public boolean useLegacyPermissions() {
