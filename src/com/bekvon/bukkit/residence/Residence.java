@@ -119,6 +119,8 @@ public class Residence extends JavaPlugin {
     public static PermissionManager gmanager;
     protected static ConfigManager cmanager;
 
+    protected static boolean spigotPlatform = false;
+
     protected static SignUtil signmanager;
 
     protected static ResidenceBlockListener blistener;
@@ -188,6 +190,10 @@ public class Residence extends JavaPlugin {
     public static HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
 
     public static String prefix = ChatColor.GREEN + "[" + ChatColor.GOLD + "Residence" + ChatColor.GREEN + "]" + ChatColor.GRAY;
+
+    public static boolean isSpigot() {
+	return spigotPlatform;
+    }
 
     public static HashMap<String, ClaimedResidence> getTeleportMap() {
 	return teleportMap;
@@ -398,6 +404,12 @@ public class Residence extends JavaPlugin {
 	    }
 	    FlagUtilManager = new FlagUtil(this);
 	    getFlagUtilManager().load();
+
+	    try {
+		Class.forName("org.bukkit.entity.Player.Spigot");
+		spigotPlatform = true;
+	    } catch (Exception e) {
+	    }
 
 	    String packageName = getServer().getClass().getPackage().getName();
 	    String[] packageSplit = packageName.split("\\.");

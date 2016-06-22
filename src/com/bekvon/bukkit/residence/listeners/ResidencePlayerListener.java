@@ -1489,9 +1489,9 @@ public class ResidencePlayerListener implements Listener {
 		    player.sendMessage(Residence.getLM().getMessage("Residence.MoveDeny", orres.getName()));
 		}
 		return;
-		// Preventing fly in residence only when player has move permission
 	    }
 
+	    // Preventing fly in residence only when player has move permission
 	    if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 		"residence.nofly.bypass")) {
 		Location lc = player.getLocation();

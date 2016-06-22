@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 
 import com.bekvon.bukkit.residence.containers.GuiItems;
@@ -171,6 +172,12 @@ public class ConfigManager {
 
     protected ParticleEffects OverlapFrame;
     protected ParticleEffects OverlapSides;
+
+    protected Effect SelectedSpigotFrame;
+    protected Effect SelectedSpigotSides;
+
+    protected Effect OverlapSpigotFrame;
+    protected Effect OverlapSpigotSides;
 
     // DynMap
     public boolean DynMapUse;
@@ -778,28 +785,79 @@ public class ConfigManager {
 	    " smoke, largesmoke, spell, instantSpell, mobSpell, mobSpellAmbient, witchMagic, dripWater, dripLava, angryVillager, happyVillager, townaura",
 	    " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance");
 
-	SelectedFrame = ParticleEffects.fromName(c.get("Global.Visualizer.Selected.Frame", "happyVillager"));
+	// Frame
+	String efname = c.get("Global.Visualizer.Selected.Frame", "happyVillager");
+	SelectedFrame = ParticleEffects.fromName(efname);
 	if (SelectedFrame == null) {
 	    SelectedFrame = ParticleEffects.VILLAGER_HAPPY;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
+	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
+	for (Effect one : Effect.values()) {
+	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
+		SelectedSpigotFrame = one;
+		break;
+	    }
+	}
+	if (SelectedSpigotFrame == null) {
+	    SelectedSpigotFrame = Effect.HAPPY_VILLAGER;
+	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	}
 
-	SelectedSides = ParticleEffects.fromName(c.get("Global.Visualizer.Selected.Sides", "reddust"));
+	// Sides
+	efname = c.get("Global.Visualizer.Selected.Sides", "reddust");
+	SelectedSides = ParticleEffects.fromName(efname);
 	if (SelectedSides == null) {
 	    SelectedSides = ParticleEffects.REDSTONE;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
+	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
+	for (Effect one : Effect.values()) {
+	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
+		SelectedSpigotSides = one;
+		break;
+	    }
+	}
+	if (SelectedSpigotSides == null) {
+	    SelectedSpigotSides = Effect.COLOURED_DUST;
+	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	}
 
-	OverlapFrame = ParticleEffects.fromName(c.get("Global.Visualizer.Overlap.Frame", "FLAME"));
+	efname = c.get("Global.Visualizer.Overlap.Frame", "FLAME");
+	OverlapFrame = ParticleEffects.fromName(efname);
 	if (OverlapFrame == null) {
 	    OverlapFrame = ParticleEffects.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Overlap Frame with this name, it was set to default");
 	}
 
-	OverlapSides = ParticleEffects.fromName(c.get("Global.Visualizer.Overlap.Sides", "FLAME"));
+	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
+	for (Effect one : Effect.values()) {
+	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
+		OverlapSpigotFrame = one;
+		break;
+	    }
+	}
+	if (OverlapSpigotFrame == null) {
+	    OverlapSpigotFrame = Effect.FLAME;
+	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	}
+
+	efname = c.get("Global.Visualizer.Overlap.Sides", "FLAME");
+	OverlapSides = ParticleEffects.fromName(efname);
 	if (OverlapSides == null) {
 	    OverlapSides = ParticleEffects.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
+	}
+	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
+	for (Effect one : Effect.values()) {
+	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
+		OverlapSpigotSides = one;
+		break;
+	    }
+	}
+	if (OverlapSpigotSides == null) {
+	    OverlapSpigotSides = Effect.FLAME;
+	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 
 	c.getW().addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
@@ -1016,6 +1074,22 @@ public class ConfigManager {
 
     public ParticleEffects getOverlapSides() {
 	return OverlapSides;
+    }
+    
+    public Effect getSelectedSpigotFrame() {
+	return SelectedSpigotFrame;
+    }
+    
+    public Effect getSelectedSpigotSides() {
+	return SelectedSpigotSides;
+    }
+    
+    public Effect getOverlapSpigotFrame() {
+	return OverlapSpigotFrame;
+    }
+    
+    public Effect getOverlapSpigotSides() {
+	return OverlapSpigotSides;
     }
 
     public int getTeleportDelay() {

@@ -16,6 +16,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Player.Spigot;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -144,20 +145,35 @@ public class SelectionManager {
     public static boolean showParticle(Player player, Location Current, boolean error) {
 	if (!player.getLocation().getWorld().getName().equalsIgnoreCase(Current.getWorld().getName()))
 	    return false;
-	if (!error) {
-	    Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, Current, player);
-	} else
-	    Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, Current, player);
+
+	if (Residence.isSpigot()) {
+	    if (!error) {
+		player.spigot().playEffect(Current, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+	    } else
+		player.spigot().playEffect(Current, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+	} else {
+	    if (!error) {
+		Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, Current, player);
+	    } else
+		Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, Current, player);
+	}
 	return false;
     }
 
     public static boolean showParticleWalls(final Player player, final Location Current, final boolean error) {
 	if (!player.getLocation().getWorld().getName().equalsIgnoreCase(Current.getWorld().getName()))
 	    return false;
-	if (!error)
-	    Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, Current, player);
-	else
-	    Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, Current, player);
+	if (Residence.isSpigot()) {
+	    if (!error) {
+		player.spigot().playEffect(Current, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+	    } else
+		player.spigot().playEffect(Current, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+	} else {
+	    if (!error)
+		Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, Current, player);
+	    else
+		Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, Current, player);
+	}
 	return false;
     }
 

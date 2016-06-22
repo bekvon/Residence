@@ -3,9 +3,9 @@ Global:
     # This loads the <language>.yml file in the Residence Language folder
     # All Residence text comes from this file. (NOT DONE YET)
     Language: English
-    # Wooden Hoe is the default selection tool for Residence.
+    # Stick is the default selection tool for Residence.
     # You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values
-    SelectionToolId: 290
+    SelectionToolId: 280
     # This determins which tool you can use to see info on residences, default is String.
     # Simply equip this tool and hit a location inside the residence and it will display the info for it.
     InfoToolId: 287
