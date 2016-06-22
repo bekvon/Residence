@@ -693,6 +693,8 @@ public class ClaimedResidence {
     }
 
     public boolean removeSubzone(Player player, String name, boolean resadmin) {
+	if (name == null)
+	    return false;
 	name = name.toLowerCase();
 	ClaimedResidence res = subzones.get(name);
 	if (player != null && !res.perms.hasResidencePermission(player, true) && !resadmin) {
@@ -1364,7 +1366,10 @@ public class ClaimedResidence {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
 	    return false;
 	}
-
+	if (oldName == null)
+	    return false;
+	if (newName == null)
+	    return false;
 	String newN = newName;
 	oldName = oldName.toLowerCase();
 	newName = newName.toLowerCase();

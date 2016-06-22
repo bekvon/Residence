@@ -177,11 +177,17 @@ public class ResidencePlayer {
     }
 
     public void removeResidence(String residence) {
+	if (residence == null)
+	    return;
 	residence = residence.toLowerCase();
 	this.ResidenceList.remove(residence);
     }
 
     public void renameResidence(String oldResidence, String newResidence) {
+	if (oldResidence == null)
+	    return;
+	if (newResidence == null)
+	    return;
 	oldResidence = oldResidence.toLowerCase();
 	newResidence = newResidence.toLowerCase();
 
