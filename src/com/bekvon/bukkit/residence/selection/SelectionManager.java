@@ -16,7 +16,6 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Player.Spigot;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
