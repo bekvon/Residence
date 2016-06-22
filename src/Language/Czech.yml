@@ -54,7 +54,7 @@ Language:
     Success: '&eVyber uspesny!'
     Fail: '&cNeplatny vyberovy prikaz...'
     Bedrock: '&eVyber rozsiren na nejnizsi povolenou uroven.'
-    Sky: '&eSVyber rozsiren na nejvyssi povolenou uroven.'
+    Sky: '&eVyber rozsiren na nejvyssi povolenou uroven.'
     Area: '&eVybrana oblast &6%1 &eresidence &6%2'
     Tool: '&e- Vyberovy nastroj: &6%1'
     PrimaryPoint: '&eVybran &6primarni &evyberovy bod %1'
@@ -291,8 +291,7 @@ Language:
     NewBoard: '&6Uspesne pridana nova obchodni tabule'
     DeleteBoard: '&6Klikni pravym klickem na ceduli pro smazani tabule'
     DeletedBoard: '&6Tabule smazana'
-    IncorrectBoard: '&cThis is not sign board, try performing command again and clicking
-      correct sign'
+    IncorrectBoard: '&cToto neni cedulka, zkuste zadat prikaz znovu a kliknete na cedulku'
     InvalidSelection: '&cLeft click with selection tool top left sign and then right
       click bottom right'
     VoteChanged: '&6Vote changed from &e%1 &6to &e%2 &6for &e%3 &6residence'
@@ -307,7 +306,7 @@ Language:
       '2': '&9%1'
       '3': '&4%1'
       '4': '&8%1&e (&8%2&e)'
-      Likes4: '&9Likes: &8%2'
+      Likes4: '&9Libi se: &8%2'
   RandomTeleport:
     TpLimit: '&eNemuzes se teleportovat tak rychle, prosim pockej &6%1 &esekund'
     TeleportSuccess: '&eTeleportovano na souradnice X:&6%1&e, Y:&6%2&e, Z:&6%3'
@@ -385,8 +384,8 @@ Language:
     Subzones: '&eSubzony'
     # The below lines represent various messages residence sends to the players.
     # Note that some messages have variables such as %1 that are inserted at runtime.
-    NewPlayerInfo: '&ePokud si chces ochranit dum, prosim pouzij drevenou motyku k
-      diagonalnimu oznaceni oblastni a napis &2/res create TvujNazevResidence'
+    NewPlayerInfo: '&ePokud si chces ochranit dum, prosim pouzij tycku k
+      diagonalnimu oznaceni oblastni a napis &2/res create VasNazevResidence'
 CommandHelp:
   Description: Napoveda k Residenci
   SubCommands:
@@ -481,11 +480,11 @@ CommandHelp:
           - Removes essential flags from player
           Args: '[residence] [playername]'
         give:
-          Description: Give residence to player.
+          Description: Da hraci residenci.
           Info:
-          - '&eUsage: &6/res give <residence name> [player]'
-          - Gives your owned residence to target player
-          Args: '[residence] [playername]'
+          - '&ePouziti: &6/res give <residence> [hrac]'
+          - Da residenci urcenu hraci
+          Args: '[residence] [hrac]'
         info:
           Description: Zobrazit info o residenci.
           Info:
