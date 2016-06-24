@@ -306,7 +306,7 @@ public class SelectionManager {
 
 	// South - East corner
 	if (Sides.ShowSouthSide() && Sides.ShowEastSide())
-	    locList.addAll(getLocations(lowLoc.clone().add(TX, 0, TZ), loc.clone(), 0D, TY, 0D, Range, true));
+	    locList.addAll(getLocations(lowLoc.clone().add(TX, 0, TZ), loc.clone(), 0D, TY+1, 0D, Range, true));
 
 	// West bottom corner
 	if (Sides.ShowWestSide() && Sides.ShowBottomSide())

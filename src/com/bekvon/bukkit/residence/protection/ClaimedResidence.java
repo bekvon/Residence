@@ -1095,7 +1095,7 @@ public class ClaimedResidence {
 	}
     }
 
-    public void TpTimer(Player player, int t) {
+    public void TpTimer(final Player player, final int t) {
 	Residence.getAB().sendTitle(player, Residence.getLM().getMessage("General.TeleportTitle"), Residence.getLM().getMessage("General.TeleportTitleTime", t));
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    public void run() {

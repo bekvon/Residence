@@ -257,31 +257,31 @@ public class ResidenceManager implements ResidenceInterface {
 	this.listResidences(sender, sender.getName(), 1);
     }
 
-    public void listResidences(CommandSender sender, int page) {
-	this.listResidences(sender, sender.getName(), page);
+    public void listResidences(CommandSender sender, boolean resadmin) {
+	this.listResidences(sender, sender.getName(), 1, false, false, resadmin);
     }
 
     public void listResidences(CommandSender sender, String targetplayer, boolean showhidden) {
-	this.listResidences(sender, targetplayer, 1, showhidden, false);
+	this.listResidences(sender, targetplayer, 1, showhidden, false, showhidden);
     }
 
     public void listResidences(CommandSender sender, String targetplayer, int page) {
-	this.listResidences(sender, targetplayer, page, false, false);
+	this.listResidences(sender, targetplayer, page, false, false, false);
     }
 
     public void listResidences(CommandSender sender, int page, boolean showhidden) {
-	this.listResidences(sender, sender.getName(), page, showhidden, false);
+	this.listResidences(sender, sender.getName(), page, showhidden, false, showhidden);
     }
 
     public void listResidences(CommandSender sender, int page, boolean showhidden, boolean onlyHidden) {
-	this.listResidences(sender, sender.getName(), page, showhidden, onlyHidden);
+	this.listResidences(sender, sender.getName(), page, showhidden, onlyHidden, showhidden);
     }
 
     public void listResidences(CommandSender sender, String string, int page, boolean showhidden) {
-	this.listResidences(sender, string, page, showhidden, false);
+	this.listResidences(sender, string, page, showhidden, false, showhidden);
     }
 
-    public void listResidences(final CommandSender sender, final String targetplayer, final int page, boolean showhidden, final boolean onlyHidden) {
+    public void listResidences(final CommandSender sender, final String targetplayer, final int page, boolean showhidden, final boolean onlyHidden, boolean resadmin) {
 	if (showhidden && !Residence.isResAdminOn(sender) && !sender.getName().equalsIgnoreCase(targetplayer)) {
 	    showhidden = false;
 	} else if (sender.getName().equalsIgnoreCase(targetplayer))
@@ -289,7 +289,7 @@ public class ResidenceManager implements ResidenceInterface {
 	final boolean hidden = showhidden;
 	ArrayList<ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidences(targetplayer, hidden, onlyHidden);
 	ownedResidences.addAll(Residence.getRentManager().getRents(targetplayer, onlyHidden));
-	InformationPager.printListInfo(sender, targetplayer, ownedResidences, page, showhidden);
+	InformationPager.printListInfo(sender, targetplayer, ownedResidences, page, resadmin);
     }
 
     public void listAllResidences(CommandSender sender, int page) {

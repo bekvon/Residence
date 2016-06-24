@@ -28,11 +28,11 @@ public class listhidden implements cmd {
 		Integer.parseInt(args[1]);
 		Residence.getResidenceManager().listResidences(sender, page, true, true);
 	    } catch (Exception ex) {
-		Residence.getResidenceManager().listResidences(sender, args[1], 1, true, true);
+		Residence.getResidenceManager().listResidences(sender, args[1], 1, true, true, resadmin);
 	    }
 	    return true;
 	} else if (args.length == 3) {
-	    Residence.getResidenceManager().listResidences(sender, args[1], page, true, true);
+	    Residence.getResidenceManager().listResidences(sender, args[1], page, true, true, resadmin);
 	    return true;
 	}
 	return false;

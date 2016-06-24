@@ -60,6 +60,10 @@ public class Sorting {
 	Map<String, Object> map = new HashMap<String, Object>();
 
 	for (ClaimedResidence one : residences) {
+	    if (one == null)
+		continue;
+	    if (one.getName() == null)
+		continue;
 	    map.put(one.getName().toLowerCase(), one);
 	}
 

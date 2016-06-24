@@ -20,12 +20,12 @@ public class list implements cmd {
 	}
 
 	if (args.length == 1 && sender instanceof Player) {
-	    Residence.getResidenceManager().listResidences(sender);
+	    Residence.getResidenceManager().listResidences(sender, resadmin);
 	    return true;
 	} else if (args.length == 2) {
 	    try {
 		Integer.parseInt(args[1]);
-		Residence.getResidenceManager().listResidences(sender, page);
+		Residence.getResidenceManager().listResidences(sender, page, resadmin);
 	    } catch (Exception ex) {
 		Residence.getResidenceManager().listResidences(sender, args[1], resadmin);
 	    }

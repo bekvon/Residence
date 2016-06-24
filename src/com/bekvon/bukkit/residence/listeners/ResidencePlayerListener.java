@@ -504,7 +504,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	}
 
-	ClaimedResidence residence = res;
+	final ClaimedResidence residence = res;
 
 	boolean ForSale = Residence.getTransactionManager().isForSale(landName);
 	boolean ForRent = Residence.getRentManager().isForRent(landName);
