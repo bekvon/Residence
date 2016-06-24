@@ -442,28 +442,29 @@ public class ResidenceManager implements ResidenceInterface {
 	    residences.remove(name.toLowerCase());
 
 	    if (Residence.getConfigManager().isUseClean() && Residence.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
-		CuboidArea area = res.getAreaArray()[0];
+		for (CuboidArea area : res.getAreaArray()) {
 
-		Location low = area.getLowLoc();
-		Location high = area.getHighLoc();
+		    Location low = area.getLowLoc();
+		    Location high = area.getHighLoc();
 
-		if (high.getBlockY() > Residence.getConfigManager().getCleanLevel()) {
+		    if (high.getBlockY() > Residence.getConfigManager().getCleanLevel()) {
 
-		    if (low.getBlockY() < Residence.getConfigManager().getCleanLevel())
-			low.setY(Residence.getConfigManager().getCleanLevel());
+			if (low.getBlockY() < Residence.getConfigManager().getCleanLevel())
+			    low.setY(Residence.getConfigManager().getCleanLevel());
 
-		    World world = low.getWorld();
+			World world = low.getWorld();
 
-		    Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
+			Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
 
-		    for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
-			temploc.setX(x);
-			for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
-			    temploc.setY(y);
-			    for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
-				temploc.setZ(z);
-				if (Residence.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
-				    temploc.getBlock().setTypeId(0);
+			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+			    temploc.setX(x);
+			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
+				temploc.setY(y);
+				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+				    temploc.setZ(z);
+				    if (Residence.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
+					temploc.getBlock().setTypeId(0);
+				    }
 				}
 			    }
 			}

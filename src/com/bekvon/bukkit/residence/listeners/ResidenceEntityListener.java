@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -40,6 +42,7 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -595,63 +598,91 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityExplode(EntityExplodeEvent event) {
-	// disabling event on world
-	Entity ent = event.getEntity();
-	if (ent == null)
-	    return;
-	if (Residence.isDisabledWorldListener(ent.getWorld()))
+    public void onBlockExplodeEvent(BlockExplodeEvent event) {
+
+	Location loc = event.getBlock().getLocation();
+
+	if (Residence.isDisabledWorldListener(loc.getWorld()))
 	    return;
 	if (event.isCancelled())
 	    return;
-	Boolean cancel = false;
-	EntityType entity = event.getEntityType();
-	FlagPermissions perms = Residence.getPermsByLoc(ent.getLocation());
-	FlagPermissions world = Residence.getWorldFlags().getPerms(ent.getWorld().getName());
-
-	switch (entity) {
-	case CREEPER:
-	    if (!perms.has("creeper", perms.has("explode", true)))
-		if (Residence.getConfigManager().isCreeperExplodeBelow()) {
-		    if (ent.getLocation().getBlockY() >= Residence.getConfigManager().getCreeperExplodeBelowLevel())
-			cancel = true;
-		    else {
-			ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
-			if (res != null)
-			    cancel = true;
-		    }
-		} else
-		    cancel = true;
-	    break;
-	case PRIMED_TNT:
-	case MINECART_TNT:
-	    if (!perms.has("tnt", perms.has("explode", true))) {
-		if (Residence.getConfigManager().isTNTExplodeBelow()) {
-		    if (ent.getLocation().getBlockY() >= Residence.getConfigManager().getTNTExplodeBelowLevel())
-			cancel = true;
-		    else {
-			ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
-			if (res != null)
-			    cancel = true;
-		    }
-		} else
-		    cancel = true;
+	FlagPermissions world = Residence.getWorldFlags().getPerms(loc.getWorld().getName());
+	List<Block> preserve = new ArrayList<Block>();
+	for (Block block : event.blockList()) {
+	    FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
+	    if (!blockperms.has("explode", world.has("explode", true))) {
+		preserve.add(block);
 	    }
-	    break;
-	case SMALL_FIREBALL:
-	case FIREBALL:
-	    if (!perms.has("fireball", perms.has("explode", true)))
-		cancel = true;
-	    break;
-	default:
-	    if (!perms.has("destroy", world.has("destroy", true)))
-		cancel = true;
-	    break;
+	}
+	for (Block block : preserve) {
+	    event.blockList().remove(block);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent event) {
+	// disabling event on world
+
+	Location loc = event.getLocation();
+	if (Residence.isDisabledWorldListener(loc.getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
+	Entity ent = event.getEntity();
+
+	Boolean cancel = false;
+	FlagPermissions perms = Residence.getPermsByLoc(loc);
+	FlagPermissions world = Residence.getWorldFlags().getPerms(loc.getWorld().getName());
+
+	if (ent != null) {
+	    switch (event.getEntityType()) {
+	    case CREEPER:
+		if (!perms.has("creeper", perms.has("explode", true)))
+		    if (Residence.getConfigManager().isCreeperExplodeBelow()) {
+			if (loc.getBlockY() >= Residence.getConfigManager().getCreeperExplodeBelowLevel())
+			    cancel = true;
+			else {
+			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+			    if (res != null)
+				cancel = true;
+			}
+		    } else
+			cancel = true;
+		break;
+	    case PRIMED_TNT:
+	    case MINECART_TNT:
+		if (!perms.has("tnt", perms.has("explode", true))) {
+		    if (Residence.getConfigManager().isTNTExplodeBelow()) {
+			if (loc.getBlockY() >= Residence.getConfigManager().getTNTExplodeBelowLevel())
+			    cancel = true;
+			else {
+			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+			    if (res != null)
+				cancel = true;
+			}
+		    } else
+			cancel = true;
+		}
+		break;
+	    case SMALL_FIREBALL:
+	    case FIREBALL:
+		if (!perms.has("fireball", perms.has("explode", true)))
+		    cancel = true;
+		break;
+	    default:
+		if (!perms.has("destroy", world.has("destroy", true)))
+		    cancel = true;
+		break;
+	    }
+	} else if (!perms.has("destroy", world.has("destroy", true))) {
+	    cancel = true;
 	}
 
 	if (cancel) {
 	    event.setCancelled(true);
-	    ent.remove();
+	    if (ent != null)
+		ent.remove();
 	    return;
 	}
 
@@ -659,59 +690,65 @@ public class ResidenceEntityListener implements Listener {
 	for (Block block : event.blockList()) {
 	    FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
 
-	    switch (entity) {
-	    case CREEPER:
-		if (!blockperms.has("creeper", blockperms.has("explode", true)))
-		    if (Residence.getConfigManager().isCreeperExplodeBelow()) {
-			if (block.getY() >= Residence.getConfigManager().getCreeperExplodeBelowLevel())
-			    preserve.add(block);
-			else {
-			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-			    if (res != null)
+	    if (ent != null) {
+		switch (event.getEntityType()) {
+		case CREEPER:
+		    if (!blockperms.has("creeper", blockperms.has("explode", true)))
+			if (Residence.getConfigManager().isCreeperExplodeBelow()) {
+			    if (block.getY() >= Residence.getConfigManager().getCreeperExplodeBelowLevel())
 				preserve.add(block);
-			}
-		    } else
-			preserve.add(block);
-		continue;
-	    case PRIMED_TNT:
-	    case MINECART_TNT:
-		if (!blockperms.has("tnt", blockperms.has("explode", true))) {
-		    if (Residence.getConfigManager().isTNTExplodeBelow()) {
-			if (block.getY() >= Residence.getConfigManager().getTNTExplodeBelowLevel())
+			    else {
+				ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+				if (res != null)
+				    preserve.add(block);
+			    }
+			} else
 			    preserve.add(block);
-			else {
-			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-			    if (res != null)
+		    continue;
+		case PRIMED_TNT:
+		case MINECART_TNT:
+		    if (!blockperms.has("tnt", blockperms.has("explode", true))) {
+			if (Residence.getConfigManager().isTNTExplodeBelow()) {
+			    if (block.getY() >= Residence.getConfigManager().getTNTExplodeBelowLevel())
 				preserve.add(block);
-			}
-		    } else
+			    else {
+				ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+				if (res != null)
+				    preserve.add(block);
+			    }
+			} else
+			    preserve.add(block);
+		    }
+		    continue;
+		case ENDER_DRAGON:
+		    if (!blockperms.has("dragongrief", false))
 			preserve.add(block);
+		    break;
+		case ENDER_CRYSTAL:
+		    if (!blockperms.has("explode", false))
+			preserve.add(block);
+		    continue;
+		case SMALL_FIREBALL:
+		case FIREBALL:
+		    if (!blockperms.has("fireball", blockperms.has("explode", true)))
+			preserve.add(block);
+		    continue;
+		default:
+		    if (!blockperms.has("destroy", world.has("destroy", true)))
+			preserve.add(block);
+		    continue;
 		}
-		continue;
-	    case ENDER_DRAGON:
-		if (!blockperms.has("dragongrief", false))
+	    } else {
+		if (!blockperms.has("destroy", world.has("destroy", true))) {
+		    Debug.D("keep block");
 		    preserve.add(block);
-		break;
-	    case ENDER_CRYSTAL:
-		if (!blockperms.has("explode", false))
-		    preserve.add(block);
-		continue;
-	    case SMALL_FIREBALL:
-	    case FIREBALL:
-		if (!blockperms.has("fireball", blockperms.has("explode", true)))
-		    preserve.add(block);
-		continue;
-	    default:
-		if (!blockperms.has("destroy", world.has("destroy", true)))
-		    preserve.add(block);
-		continue;
+		}
 	    }
 	}
 
 	for (Block block : preserve) {
 	    event.blockList().remove(block);
 	}
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

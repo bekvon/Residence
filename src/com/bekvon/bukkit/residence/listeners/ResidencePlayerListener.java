@@ -61,6 +61,7 @@ import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.GetTime;
@@ -1468,7 +1469,9 @@ public class ResidencePlayerListener implements Listener {
 		Location lastLoc = lastOutsideLoc.get(pname);
 
 		if (Residence.getConfigManager().BounceAnimation()) {
-		    Residence.getSelectionManager().MakeBorders(player, res.getAreaArray()[0].getLowLoc(), res.getAreaArray()[0].getHighLoc(), true);
+		    CuboidArea area = res.getAreaByLoc(loc);
+		    if (area != null)
+			Residence.getSelectionManager().MakeBorders(player, area.getLowLoc(), area.getHighLoc(), true);
 		}
 
 		ClaimedResidence preRes = Residence.getResidenceManager().getByLoc(lastLoc);
