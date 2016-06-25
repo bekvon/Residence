@@ -56,21 +56,21 @@ public class lease implements cmd {
 			player.sendMessage(Residence.getLM().getMessage("Economy.LeaseNotExpire"));
 		    }
 		    return true;
-		} else {
-		    String area = Residence.getResidenceManager().getNameByLoc(player.getLocation());
-		    ClaimedResidence res = Residence.getResidenceManager().getByName(area);
-		    if (area == null || res == null) {
-			player.sendMessage(Residence.getLM().getMessage("Invalid.Area"));
-			return true;
-		    }
-		    if (Residence.getLeaseManager().leaseExpires(area)) {
-			int cost = Residence.getLeaseManager().getRenewCost(res);
-			player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenewalCost", area, cost));
-		    } else {
-			player.sendMessage(Residence.getLM().getMessage("Economy.LeaseNotExpire"));
-		    }
+		}
+		String area = Residence.getResidenceManager().getNameByLoc(player.getLocation());
+		ClaimedResidence res = Residence.getResidenceManager().getByName(area);
+		if (area == null || res == null) {
+		    player.sendMessage(Residence.getLM().getMessage("Invalid.Area"));
 		    return true;
 		}
+		if (Residence.getLeaseManager().leaseExpires(area)) {
+		    int cost = Residence.getLeaseManager().getRenewCost(res);
+		    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenewalCost", area, cost));
+		} else {
+		    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseNotExpire"));
+		}
+		return true;
+
 	    }
 	} else if (args.length == 4) {
 	    if (args[1].equals("set")) {
@@ -86,17 +86,16 @@ public class lease implements cmd {
 			player.sendMessage(Residence.getLM().getMessage("Economy.LeaseNotExpire"));
 		    }
 		    return true;
-		} else {
-		    int days;
-		    try {
-			days = Integer.parseInt(args[3]);
-		    } catch (Exception ex) {
-			player.sendMessage(Residence.getLM().getMessage("Invalid.Days"));
-			return true;
-		    }
-		    Residence.getLeaseManager().setExpireTime(player, args[2], days);
+		}
+		int days;
+		try {
+		    days = Integer.parseInt(args[3]);
+		} catch (Exception ex) {
+		    player.sendMessage(Residence.getLM().getMessage("Invalid.Days"));
 		    return true;
 		}
+		Residence.getLeaseManager().setExpireTime(player, args[2], days);
+		return true;
 	    }
 	}
 	return false;

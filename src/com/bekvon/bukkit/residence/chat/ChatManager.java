@@ -17,6 +17,7 @@ public class ChatManager implements ChatInterface {
 	channelmap = new HashMap<String, ChatChannel>();
     }
 
+    @Override
     public boolean setChannel(String player, String resName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(resName);
 	if (res == null)
@@ -24,6 +25,7 @@ public class ChatManager implements ChatInterface {
 	return setChannel(player, res);
     }
 
+    @Override
     public boolean setChannel(String player, ClaimedResidence res) {
 	this.removeFromChannel(player);
 	if (!channelmap.containsKey(res.getName()))
@@ -32,6 +34,7 @@ public class ChatManager implements ChatInterface {
 	return true;
     }
 
+    @Override
     public boolean removeFromChannel(String player) {
 	for (ChatChannel chan : channelmap.values()) {
 	    if (chan.hasMember(player)) {
@@ -42,10 +45,12 @@ public class ChatManager implements ChatInterface {
 	return false;
     }
 
+    @Override
     public ChatChannel getChannel(String channel) {
 	return channelmap.get(channel);
     }
 
+    @Override
     public ChatChannel getPlayerChannel(String player) {
 	for (ChatChannel chan : channelmap.values()) {
 	    if (chan.hasMember(player))

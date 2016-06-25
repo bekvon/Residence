@@ -148,6 +148,7 @@ public class SignUtil {
 
     public void CheckSign(final ClaimedResidence res, int time) {
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+	    @Override
 	    public void run() {
 		CheckSign(res);
 	    }

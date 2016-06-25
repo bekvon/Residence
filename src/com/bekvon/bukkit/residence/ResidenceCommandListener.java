@@ -20,6 +20,7 @@ public class ResidenceCommandListener extends Residence {
 	return AdminCommands;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(), args, sender);
 	Residence.getServ().getPluginManager().callEvent(cevent);
@@ -27,7 +28,7 @@ public class ResidenceCommandListener extends Residence {
 	    return true;
 	}
 
-	if (sender instanceof Player && !Residence.getPermissionManager().isResidenceAdmin((Player) sender) && Residence.isDisabledWorldCommand(((Player) sender)
+	if (sender instanceof Player && !Residence.getPermissionManager().isResidenceAdmin(sender) && Residence.isDisabledWorldCommand(((Player) sender)
 	    .getWorld())) {
 	    sender.sendMessage(Residence.getLM().getMessage("General.DisabledWorld"));
 	    return true;
@@ -49,7 +50,7 @@ public class ResidenceCommandListener extends Residence {
 	    return true;
 	}
 	if (command.getName().equals("resload")) {
-	    if (!(sender instanceof Player) || sender instanceof Player && Residence.gmanager.isResidenceAdmin((Player) sender) && ((Player) sender).hasPermission(
+	    if (!(sender instanceof Player) || sender instanceof Player && Residence.gmanager.isResidenceAdmin(sender) && ((Player) sender).hasPermission(
 		"residence.topadmin")) {
 		try {
 		    this.loadYml();
@@ -63,7 +64,7 @@ public class ResidenceCommandListener extends Residence {
 		sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return true;
 	} else if (command.getName().equals("rc")) {
-	    cmd cmdClass = getCmdClass(sender, "rc", new String[] { "rc" });
+	    cmd cmdClass = getCmdClass(new String[] { "rc" });
 	    if (cmdClass == null) {
 		sendUsage(sender, command.getName());
 		return true;
@@ -75,14 +76,14 @@ public class ResidenceCommandListener extends Residence {
 	} else if (command.getName().equals("res") || command.getName().equals("residence") || command.getName().equals("resadmin")) {
 	    boolean resadmin = false;
 	    if (sender instanceof Player) {
-		if (command.getName().equals("resadmin") && Residence.gmanager.isResidenceAdmin((Player) sender)) {
+		if (command.getName().equals("resadmin") && Residence.gmanager.isResidenceAdmin(sender)) {
 		    resadmin = true;
 		}
-		if (command.getName().equals("resadmin") && !Residence.gmanager.isResidenceAdmin((Player) sender)) {
+		if (command.getName().equals("resadmin") && !Residence.gmanager.isResidenceAdmin(sender)) {
 		    ((Player) sender).sendMessage(Residence.getLM().getMessage("Residence.NonAdmin"));
 		    return true;
 		}
-		if (command.getName().equals("res") && Residence.gmanager.isResidenceAdmin((Player) sender) && Residence.getConfigManager().getAdminFullAccess()) {
+		if (command.getName().equals("res") && Residence.gmanager.isResidenceAdmin(sender) && Residence.getConfigManager().getAdminFullAccess()) {
 		    resadmin = true;
 		}
 	    } else {
@@ -100,7 +101,7 @@ public class ResidenceCommandListener extends Residence {
 		resadmin = true;
 	    }
 	    if (Residence.cmanager.allowAdminsOnly()) {
-		if (!resadmin) {
+		if (!resadmin && player != null) {
 		    player.sendMessage(Residence.getLM().getMessage("General.AdminOnly"));
 		    return true;
 		}
@@ -121,7 +122,7 @@ public class ResidenceCommandListener extends Residence {
 		break;
 	    }
 
-	    cmd cmdClass = getCmdClass(sender, command.getName(), args);
+	    cmd cmdClass = getCmdClass(args);
 	    if (cmdClass == null) {
 		return commandHelp(new String[] { "?" }, resadmin, sender, command);
 	    }
@@ -131,7 +132,7 @@ public class ResidenceCommandListener extends Residence {
 		return true;
 	    }
 
-	    if (!resadmin && Residence.resadminToggle.contains(player.getName())) {
+	    if (!resadmin && player != null && Residence.resadminToggle.contains(player.getName())) {
 		if (!Residence.gmanager.isResidenceAdmin(player)) {
 		    Residence.resadminToggle.remove(player.getName());
 		}
@@ -152,7 +153,7 @@ public class ResidenceCommandListener extends Residence {
 	return this.onCommand(sender, command, label, args);
     }
 
-    private cmd getCmdClass(CommandSender sender, String command, String[] args) {
+    private static cmd getCmdClass(String[] args) {
 	cmd cmdClass = null;
 	try {
 	    Class<?> nmsClass;

@@ -225,6 +225,7 @@ public class Metrics {
 
 		private boolean firstPost = true;
 
+		@Override
 		public void run() {
 		    try {
 			// This has to be synchronized or it can collide with the disable method.
@@ -356,7 +357,8 @@ public class Metrics {
 	String pluginVersion = description.getVersion();
 	String serverVersion = Bukkit.getVersion();
 	int playersOnline = 0;
-	for (@SuppressWarnings("unused") Player one : Bukkit.getOnlinePlayers()) {
+	for (@SuppressWarnings("unused")
+	Player one : Bukkit.getOnlinePlayers()) {
 	    playersOnline++;
 	}
 
@@ -451,18 +453,17 @@ public class Metrics {
 
 	if (response == null || response.startsWith("ERR")) {
 	    throw new IOException(response);//Throw the exception
-	} else {
-	    // Is this the first update this hour?
-	    if (response.contains("OK This is your first update this hour")) {
-		synchronized (graphs) {
-		    final Iterator<Graph> iter = graphs.iterator();
+	}
+	// Is this the first update this hour?
+	if (response.contains("OK This is your first update this hour")) {
+	    synchronized (graphs) {
+		final Iterator<Graph> iter = graphs.iterator();
 
-		    while (iter.hasNext()) {
-			final Graph graph = iter.next();
+		while (iter.hasNext()) {
+		    final Graph graph = iter.next();
 
-			for (Plotter plotter : graph.getPlotters()) {
-			    plotter.reset();
-			}
+		    for (Plotter plotter : graph.getPlotters()) {
+			plotter.reset();
 		    }
 		}
 	    }
@@ -474,7 +475,7 @@ public class Metrics {
     *
     * @return true if mineshafter is installed on the server
     */
-    private boolean isMineshafterPresent() {
+    private static boolean isMineshafterPresent() {
 	try {
 	    Class.forName("mineshafter.MineServer");
 	    return true;

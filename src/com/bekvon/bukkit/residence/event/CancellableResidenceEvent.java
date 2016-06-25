@@ -11,10 +11,12 @@ public class CancellableResidenceEvent extends ResidenceEvent implements Cancell
 	super(eventName, resref);
     }
 
+    @Override
     public boolean isCancelled() {
 	return cancelled;
     }
 
+    @Override
     public void setCancelled(boolean bln) {
 	cancelled = bln;
     }

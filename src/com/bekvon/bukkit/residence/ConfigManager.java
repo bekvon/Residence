@@ -228,18 +228,6 @@ public class ConfigManager {
     public void ChangeConfig(String path, Boolean stage) {
 	File f = new File(plugin.getDataFolder(), "config.yml");
 
-	BufferedReader in = null;
-	try {
-	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
-	} catch (UnsupportedEncodingException e1) {
-	    e1.printStackTrace();
-	} catch (FileNotFoundException e1) {
-	    e1.printStackTrace();
-	}
-
-	if (in == null)
-	    return;
-
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 	if (!conf.isBoolean(path))
@@ -292,7 +280,6 @@ public class ConfigManager {
 	    try {
 		uno = GuiItems.valueOf(lowOne);
 	    } catch (IllegalArgumentException e) {
-		continue;
 	    }
 	    if (uno == null)
 		continue;
@@ -947,6 +934,12 @@ public class ConfigManager {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
+	
+	try {
+	    in.close();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
     }
 
     public void loadFlags() {
@@ -962,7 +955,7 @@ public class ConfigManager {
 	    Set<String> keys = node.getConfigurationSection(defaultGroup).getKeys(false);
 	    if (keys != null) {
 		for (String key : keys) {
-		    globalGroupDefaults.put(key, FlagPermissions.parseFromConfigNodeAsList(key, defaultGroup, "false"));
+		    globalGroupDefaults.put(key, FlagPermissions.parseFromConfigNodeAsList(defaultGroup, "false"));
 		}
 	    }
 	}

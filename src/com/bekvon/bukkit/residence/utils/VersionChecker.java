@@ -65,6 +65,7 @@ public class VersionChecker {
 	    return;
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+	    @Override
 	    public void run() {
 		String currentVersion = plugin.getDescription().getVersion();
 		String newVersion = getNewVersion();

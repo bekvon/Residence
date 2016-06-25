@@ -39,7 +39,7 @@ public class shop implements cmd {
 	    }
 	} catch (Exception ex) {
 	}
-	
+
 	if ((args.length == 2 || args.length == 3 || args.length == 4) && (args[1].equalsIgnoreCase("votes") || args[1].equalsIgnoreCase("likes"))) {
 
 	    int VotePage = 1;
@@ -259,12 +259,11 @@ public class shop implements cmd {
 		if (res == null) {
 		    player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
 		    return true;
-		} else {
-		    for (int i = 2; i < args.length; i++) {
-			desc += args[i];
-			if (i < args.length - 1)
-			    desc += " ";
-		    }
+		}
+		for (int i = 2; i < args.length; i++) {
+		    desc += args[i];
+		    if (i < args.length - 1)
+			desc += " ";
 		}
 	    }
 

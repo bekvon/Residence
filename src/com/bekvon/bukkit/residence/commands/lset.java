@@ -17,7 +17,7 @@ public class lset implements cmd {
 	    return false;
 
 	Player player = (Player) sender;
-	
+
 	ClaimedResidence res = null;
 	Material mat = null;
 	String listtype = null;
@@ -59,17 +59,16 @@ public class lset implements cmd {
 	    }
 	}
 	if (res != null) {
-	    if (listtype.equalsIgnoreCase("blacklist")) {
+	    if (listtype != null && listtype.equalsIgnoreCase("blacklist")) {
 		res.getItemBlacklist().playerListChange(player, mat, resadmin);
-	    } else if (listtype.equalsIgnoreCase("ignorelist")) {
+	    } else if (listtype != null && listtype.equalsIgnoreCase("ignorelist")) {
 		res.getItemIgnoreList().playerListChange(player, mat, resadmin);
 	    } else {
 		player.sendMessage(Residence.getLM().getMessage("Invalid.List"));
 	    }
 	    return true;
-	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
-	    return true;
 	}
+	player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	return true;
     }
 }

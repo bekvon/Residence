@@ -20,6 +20,7 @@ public class Sorting {
 
 	// Sort list with comparator, to compare the Map values
 	Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+	    @Override
 	    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
 		return (o2.getValue()).compareTo(o1.getValue());
 	    }
@@ -41,6 +42,7 @@ public class Sorting {
 
 	// Sort list with comparator, to compare the Map values
 	Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+	    @Override
 	    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
 		return (o2.getKey()).compareTo(o1.getKey());
 	    }
@@ -85,6 +87,7 @@ public class Sorting {
 
 	// Sort list with comparator, to compare the Map values
 	Collections.sort(list, new Comparator<Map.Entry<String, Object>>() {
+	    @Override
 	    public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
 		return (o1.getKey()).compareTo(o2.getKey());
 	    }
@@ -106,6 +109,7 @@ public class Sorting {
 
 	// Sort list with comparator, to compare the Map values
 	Collections.sort(list, new Comparator<Map.Entry<String, String>>() {
+	    @Override
 	    public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
 		return (o1.getKey()).compareTo(o2.getKey());
 	    }
@@ -127,6 +131,7 @@ public class Sorting {
 
 	// Sort list with comparator, to compare the Map values
 	Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+	    @Override
 	    public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
 		return (o2.getValue()).compareTo(o1.getValue());
 	    }
@@ -148,6 +153,7 @@ public class Sorting {
 
 	// Sort list with comparator, to compare the Map values
 	Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+	    @Override
 	    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
 		return (o1.getValue()).compareTo(o2.getValue());
 	    }

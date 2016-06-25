@@ -14,10 +14,12 @@ public class PermissionsBukkitAdapter implements PermissionsInterface {
 	newperms = p;
     }
 
+    @Override
     public String getPlayerGroup(Player player) {
 	return this.getPlayerGroup(player.getName(), player.getWorld().getName());
     }
 
+    @Override
     public String getPlayerGroup(String player, String world) {
 	PermissionManager pmanager = Residence.getPermissionManager();
 	List<Group> groups = newperms.getGroups(player);

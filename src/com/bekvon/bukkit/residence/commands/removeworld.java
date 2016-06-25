@@ -18,9 +18,8 @@ public class removeworld implements cmd {
 	if (sender instanceof ConsoleCommandSender) {
 	    Residence.getResidenceManager().removeAllFromWorld(sender, args[1]);
 	    return true;
-	} else {
-	    sender.sendMessage(ChatColor.RED + "MUST be run from console.");
 	}
+	sender.sendMessage(ChatColor.RED + "MUST be run from console.");
 
 	return true;
     }

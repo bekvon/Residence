@@ -331,7 +331,7 @@ public class FlagPermissions {
 	return list;
     }
 
-    public static FlagPermissions parseFromConfigNodeAsList(String name, String node, String stage) {
+    public static FlagPermissions parseFromConfigNodeAsList(String node, String stage) {
 	FlagPermissions list = new FlagPermissions();
 	if (node.equalsIgnoreCase("true")) {
 	    list.setFlag(node, FlagState.valueOf(stage));
@@ -789,9 +789,8 @@ public class FlagPermissions {
 	Map<String, Boolean> flags = this.getPlayerFlags(player, false);
 	if (flags != null) {
 	    return this.printPlayerFlags(flags);
-	} else {
-	    return "none";
 	}
+	return "none";
     }
 
     protected String printPlayerFlags(Map<String, Boolean> flags) {
@@ -1045,9 +1044,8 @@ public class FlagPermissions {
 		sbuild.append("none");
 	    }
 	    return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
-	} else {
-	    return "none";
 	}
+	return "none";
     }
 
     public void clearFlags() {

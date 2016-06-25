@@ -21,10 +21,10 @@ public class listallhidden implements cmd {
 	    return true;
 	}
 	if (args.length == 1) {
-	    Residence.getResidenceManager().listAllResidences(sender, 1, true, false, true);
+	    Residence.getResidenceManager().listAllResidences(sender, 1, true, true);
 	} else if (args.length == 2) {
 	    try {
-		Residence.getResidenceManager().listAllResidences(sender, page, true, false, true);
+		Residence.getResidenceManager().listAllResidences(sender, page, true, true);
 	    } catch (Exception ex) {
 	    }
 	} else {

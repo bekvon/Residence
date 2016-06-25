@@ -29,7 +29,7 @@ public class ResidenceSpoutListener implements Listener {
 	    ResidencePopup screen = (ResidencePopup) event.getScreen();
 	    PopupType type = PopupType.valueOf(screen.getPopupType());
 	    if (type == PopupType.FLAG_GUI) {
-		ResidencePopup popup = (ResidencePopup) screen;
+		ResidencePopup popup = screen;
 		String flagval = null;
 		String flag = null;
 		String player = null;

@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
@@ -318,7 +317,7 @@ public class ClaimedResidence {
 		return false;
 	    }
 	    if (chargeMoney && parent == null && Residence.getConfigManager().enableEconomy() && !resadmin) {
-		int chargeamount = (int) Math.ceil((double) area.getSize() * group.getCostPerBlock());
+		int chargeamount = (int) Math.ceil(area.getSize() * group.getCostPerBlock());
 		if (!TransactionManager.chargeEconomyMoney(player, chargeamount)) {
 		    return false;
 		}
@@ -435,7 +434,7 @@ public class ClaimedResidence {
 		return false;
 	    }
 	    if (parent == null && Residence.getConfigManager().enableEconomy() && !resadmin) {
-		int chargeamount = (int) Math.ceil((double) (newarea.getSize() - oldarea.getSize()) * group.getCostPerBlock());
+		int chargeamount = (int) Math.ceil((newarea.getSize() - oldarea.getSize()) * group.getCostPerBlock());
 		if (chargeamount > 0) {
 		    if (!TransactionManager.chargeEconomyMoney(player, chargeamount)) {
 			return false;
@@ -465,9 +464,8 @@ public class ClaimedResidence {
     public boolean addSubzone(Player player, Location loc1, Location loc2, String name, boolean resadmin) {
 	if (player == null) {
 	    return this.addSubzone(null, Residence.getServerLandname(), loc1, loc2, name, resadmin);
-	} else {
-	    return this.addSubzone(player, player.getName(), loc1, loc2, name, resadmin);
 	}
+	return this.addSubzone(player, player.getName(), loc1, loc2, name, resadmin);
     }
 
     public boolean addSubzone(Player player, String owner, Location loc1, Location loc2, String name, boolean resadmin) {
@@ -560,12 +558,11 @@ public class ClaimedResidence {
 		player.sendMessage(Residence.getLM().getMessage("Subzone.Create", name));
 	    }
 	    return true;
-	} else {
-	    if (player != null) {
-		player.sendMessage(Residence.getLM().getMessage("Subzone.CreateFail", name));
-	    }
-	    return false;
 	}
+	if (player != null) {
+	    player.sendMessage(Residence.getLM().getMessage("Subzone.CreateFail", name));
+	}
+	return false;
     }
 
     public String getSubzoneNameByLoc(Location loc) {
@@ -810,8 +807,8 @@ public class ClaimedResidence {
 
 	int y = area.getHighLoc().getBlockY();
 
-	int x = area.getLowLoc().getBlockX() + (int) (area.getXSize() / 2);
-	int z = area.getLowLoc().getBlockZ() + (int) (area.getZSize() / 2);
+	int x = area.getLowLoc().getBlockX() + area.getXSize() / 2;
+	int z = area.getLowLoc().getBlockZ() + area.getZSize() / 2;
 
 	Location newLoc = new Location(area.getWorld(), x + 0.5, y, z + 0.5);
 	boolean found = false;
@@ -834,9 +831,8 @@ public class ClaimedResidence {
 	}
 	if (found) {
 	    return newLoc;
-	} else {
-	    return getOutsideFreeLoc(insideLoc, player);
 	}
+	return getOutsideFreeLoc(insideLoc, player);
     }
 
     public Location getOutsideFreeLoc(Location insideLoc, Player player) {
@@ -1059,11 +1055,11 @@ public class ClaimedResidence {
 	    }
 	}
 
-	if (!ResidenceCommandListener.getTeleportMap().containsKey(targetPlayer.getName()) && !isAdmin) {
+	if (!Residence.getTeleportMap().containsKey(targetPlayer.getName()) && !isAdmin) {
 	    int distance = isSafeTp(reqPlayer);
 	    if (distance > 6) {
 		reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportConfirm", distance));
-		ResidenceCommandListener.getTeleportMap().put(reqPlayer.getName(), this);
+		Residence.getTeleportMap().put(reqPlayer.getName(), this);
 		return;
 	    }
 	}
@@ -1072,7 +1068,7 @@ public class ClaimedResidence {
 	    reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportStarted", this.getName(), Residence.getConfigManager().getTeleportDelay()));
 	    if (Residence.getConfigManager().isTeleportTitleMessage())
 		TpTimer(reqPlayer, Residence.getConfigManager().getTeleportDelay());
-	    ResidenceCommandListener.getTeleportDelayMap().add(reqPlayer.getName());
+	    Residence.getTeleportDelayMap().add(reqPlayer.getName());
 	}
 
 	if (tpLoc != null) {
@@ -1084,7 +1080,7 @@ public class ClaimedResidence {
 	    CuboidArea area = areas.values().iterator().next();
 	    if (area == null) {
 		reqPlayer.sendMessage(ChatColor.RED + "Could not find area to teleport to...");
-		ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
+		Residence.getTeleportDelayMap().remove(targetPlayer.getName());
 		return;
 	    }
 	    final Location targloc = this.getMiddleFreeLoc(area.getHighLoc(), targetPlayer);
@@ -1098,8 +1094,9 @@ public class ClaimedResidence {
     public void TpTimer(final Player player, final int t) {
 	Residence.getAB().sendTitle(player, Residence.getLM().getMessage("General.TeleportTitle"), Residence.getLM().getMessage("General.TeleportTitleTime", t));
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
 	    public void run() {
-		if (!ResidenceCommandListener.getTeleportDelayMap().contains(player.getName()))
+		if (!Residence.getTeleportDelayMap().contains(player.getName()))
 		    return;
 		if (t > 1)
 		    TpTimer(player, t - 1);
@@ -1114,11 +1111,12 @@ public class ClaimedResidence {
 	    return;
 
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
 	    public void run() {
-		if (!ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
+		if (!Residence.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
 		    return;
-		else if (ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()))
-		    ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
+		else if (Residence.getTeleportDelayMap().contains(targetPlayer.getName()))
+		    Residence.getTeleportDelayMap().remove(targetPlayer.getName());
 		targetPlayer.teleport(targloc);
 		if (near)
 		    targetPlayer.sendMessage(Residence.getLM().getMessage("Residence.TeleportNear"));
@@ -1181,9 +1179,11 @@ public class ClaimedResidence {
 		return;
 
 	    removeArea(id);
-	    player.sendMessage(Residence.getLM().getMessage("Area.Remove"));
+	    if (player != null)
+		player.sendMessage(Residence.getLM().getMessage("Area.Remove"));
 	} else {
-	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	    if (player != null)
+		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	}
     }
 
@@ -1234,7 +1234,7 @@ public class ClaimedResidence {
     }
 
     // Converting double with comman to dots format and striping to 2 numbers after dot
-    private double convertDouble(double d) {
+    private static double convertDouble(double d) {
 	return convertDouble(String.valueOf(d));
     }
 
@@ -1423,10 +1423,9 @@ public class ClaimedResidence {
 	    if (player != null)
 		player.sendMessage(Residence.getLM().getMessage("Area.Rename", oldName, newName));
 	    return true;
-	} else {
-	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
-	    return false;
 	}
+	player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	return false;
     }
 
     public CuboidArea getArea(String name) {
@@ -1472,8 +1471,7 @@ public class ClaimedResidence {
 	    return isOwner(sender.getName());
 	if (sender instanceof Player)
 	    return perms.getOwnerUUID().equals(((Player) sender).getUniqueId());
-	else
-	    return true;
+	return true;
     }
 
     public void setChatPrefix(String ChatPrefix) {
@@ -1522,10 +1520,9 @@ public class ClaimedResidence {
 	if (!this.cmdBlackList.contains(cmd.toLowerCase())) {
 	    this.cmdBlackList.add(cmd.toLowerCase());
 	    return true;
-	} else {
-	    this.cmdBlackList.remove(cmd.toLowerCase());
-	    return false;
 	}
+	this.cmdBlackList.remove(cmd.toLowerCase());
+	return false;
     }
 
     public boolean addCmdWhiteList(String cmd) {
@@ -1534,10 +1531,9 @@ public class ClaimedResidence {
 	if (!this.cmdWhiteList.contains(cmd.toLowerCase())) {
 	    this.cmdWhiteList.add(cmd.toLowerCase());
 	    return true;
-	} else {
-	    this.cmdWhiteList.remove(cmd.toLowerCase());
-	    return false;
 	}
+	this.cmdWhiteList.remove(cmd.toLowerCase());
+	return false;
     }
 
     public Double getBlockSellPrice() {

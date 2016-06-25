@@ -45,10 +45,9 @@ public class ItemList {
 	if (list.contains(mat)) {
 	    list.remove(mat);
 	    return false;
-	} else {
-	    list.add(mat);
-	    return true;
 	}
+	list.add(mat);
+	return true;
     }
 
     public void remove(Material mat) {

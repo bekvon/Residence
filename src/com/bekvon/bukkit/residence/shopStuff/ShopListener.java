@@ -43,7 +43,7 @@ public class ShopListener implements Listener {
 	if (!(block.getState() instanceof Sign))
 	    return;
 
-	Player player = (Player) event.getPlayer();
+	Player player = event.getPlayer();
 
 	Location loc = block.getLocation();
 

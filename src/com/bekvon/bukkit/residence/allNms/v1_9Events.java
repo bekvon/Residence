@@ -1,7 +1,6 @@
 package com.bekvon.bukkit.residence.allNms;
 
 import java.util.Iterator;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.LingeringPotionSplashEvent;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -52,11 +50,11 @@ public class v1_9Events implements Listener {
 	    return;
 
 	boolean harmfull = false;
-	
+
 	// Temporally fail safe to avoid console spam for getting base potion data until fix roles out
 	try {
 	    for (String oneHarm : Residence.getConfigManager().getNegativeLingeringPotionEffects()) {
-		if (((PotionData) event.getEntity().getBasePotionData()).getType().name().equalsIgnoreCase(oneHarm)) {
+		if (event.getEntity().getBasePotionData().getType().name().equalsIgnoreCase(oneHarm)) {
 		    harmfull = true;
 		    break;
 		}
@@ -64,7 +62,7 @@ public class v1_9Events implements Listener {
 	} catch (Exception e) {
 	    return;
 	}
-	
+
 	if (!harmfull)
 	    return;
 

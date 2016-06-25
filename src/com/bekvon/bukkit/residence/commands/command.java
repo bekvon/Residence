@@ -44,17 +44,17 @@ public class command implements cmd {
 	    return true;
 	}
 
-	if (action.equalsIgnoreCase("allow")) {
+	if (action != null && action.equalsIgnoreCase("allow")) {
 	    if (res.addCmdWhiteList(cmd)) {
 		sender.sendMessage(Residence.getLM().getMessage("command.addedAllow", res.getName()));
 	    } else
 		sender.sendMessage(Residence.getLM().getMessage("command.removedAllow", res.getName()));
-	} else if (action.equalsIgnoreCase("block")) {
+	} else if (action != null && action.equalsIgnoreCase("block")) {
 	    if (res.addCmdBlackList(cmd)) {
 		sender.sendMessage(Residence.getLM().getMessage("command.addedBlock", res.getName()));
 	    } else
 		sender.sendMessage(Residence.getLM().getMessage("command.removedBlock", res.getName()));
-	} else if (action.equalsIgnoreCase("list")) {
+	} else if (action != null && action.equalsIgnoreCase("list")) {
 	    StringBuilder sb = new StringBuilder();
 	    for (int i = 0; i < res.getCmdBlackList().size(); i++) {
 		sb.append("/" + res.getCmdBlackList().get(i).replace("_", " "));

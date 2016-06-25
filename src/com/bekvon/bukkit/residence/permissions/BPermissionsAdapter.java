@@ -12,10 +12,12 @@ public class BPermissionsAdapter implements PermissionsInterface {
     public BPermissionsAdapter() {
     }
 
+    @Override
     public String getPlayerGroup(Player player) {
 	return this.getPlayerGroup(player.getName(), player.getWorld().getName());
     }
 
+    @Override
     public String getPlayerGroup(String player, String world) {
 	String[] groups = ApiLayer.getGroups(world, CalculableType.USER, player);
 	PermissionManager pmanager = Residence.getPermissionManager();

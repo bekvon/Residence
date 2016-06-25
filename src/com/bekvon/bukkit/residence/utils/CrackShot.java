@@ -108,7 +108,7 @@ public class CrackShot implements Listener {
 
 	ClaimedResidence area = Residence.getResidenceManager().getByLoc(victim.getLocation());
 	/* Living Entities */
-	Player damager = (Player) event.getPlayer();
+	Player damager = event.getPlayer();
 	ClaimedResidence srcarea = null;
 
 	if (damager == null)

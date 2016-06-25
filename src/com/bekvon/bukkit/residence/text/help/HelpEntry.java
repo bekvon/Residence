@@ -408,9 +408,7 @@ public class HelpEntry {
 
 	    if (subCommand)
 		return tempmeinPath.getKeys(false);
-	    else {
-		Bukkit.dispatchCommand(sender, command + " ?");
-	    }
+	    Bukkit.dispatchCommand(sender, command + " ?");
 	}
 	return new HashSet<String>(Arrays.asList("?"));
     }

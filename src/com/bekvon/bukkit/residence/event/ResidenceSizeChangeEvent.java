@@ -35,6 +35,7 @@ public class ResidenceSizeChangeEvent extends CancellableResidencePlayerEvent {
 	return resname;
     }
 
+    @Override
     public ClaimedResidence getResidence() {
 	return res;
     }

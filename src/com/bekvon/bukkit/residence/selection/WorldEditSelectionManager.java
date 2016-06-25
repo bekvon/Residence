@@ -38,6 +38,7 @@ public class WorldEditSelectionManager extends SelectionManager {
 	return false;
     }
 
+    @Override
     public boolean worldEditUpdate(Player player) {
 	if (!hasPlacedBoth(player.getName()))
 	    return false;

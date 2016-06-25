@@ -30,9 +30,8 @@ public class server implements cmd {
 	    res.getPermissions().setOwner(Residence.getServerLandname(), false);
 	    player.sendMessage(Residence.getLM().getMessage("Residence.OwnerChange", args[1], Residence.getServerLandname()));
 	    return true;
-	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
-	    return true;
 	}
+	player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	return true;
     }
 }

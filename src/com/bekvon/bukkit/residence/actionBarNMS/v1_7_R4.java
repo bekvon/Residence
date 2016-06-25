@@ -17,6 +17,7 @@ public class v1_7_R4 implements ABInterface {
 	player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
     }
 
+    @Override
     public void sendTitle(Player player, Object title, Object subtitle) {
 	return;
     }

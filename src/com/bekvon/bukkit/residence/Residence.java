@@ -112,6 +112,10 @@ import org.bukkit.OfflinePlayer;
  */
 public class Residence extends JavaPlugin {
 
+    public final static String uid = "%%__USER__%%";
+    final String rid = "%%__RESOURCE__%%";
+    final String nonce = "%%__NONCE__%%";
+
     protected static String ResidenceVersion;
     protected static List<String> authlist;
     protected static ResidenceManager rmanager;
@@ -260,24 +264,28 @@ public class Residence extends JavaPlugin {
     }
 
     private Runnable doHeals = new Runnable() {
+	@Override
 	public void run() {
 	    plistener.doHeals();
 	}
     };
 
     private Runnable doFeed = new Runnable() {
+	@Override
 	public void run() {
 	    plistener.feed();
 	}
     };
 
     private Runnable DespawnMobs = new Runnable() {
+	@Override
 	public void run() {
 	    plistener.DespawnMobs();
 	}
     };
 
     private Runnable rentExpire = new Runnable() {
+	@Override
 	public void run() {
 	    rentmanager.checkCurrentRents();
 	    if (cmanager.showIntervalMessages()) {
@@ -286,6 +294,7 @@ public class Residence extends JavaPlugin {
 	}
     };
     private Runnable leaseExpire = new Runnable() {
+	@Override
 	public void run() {
 	    leasemanager.doExpirations();
 	    if (cmanager.showIntervalMessages()) {
@@ -294,6 +303,7 @@ public class Residence extends JavaPlugin {
 	}
     };
     private Runnable autoSave = new Runnable() {
+	@Override
 	public void run() {
 	    try {
 		if (initsuccess) {
@@ -475,7 +485,7 @@ public class Residence extends JavaPlugin {
 		lwc = ((LWCPlugin) lwcp).getLWC();
 
 	    for (String lang : validLanguages) {
-		YmlMaker langFile = new YmlMaker((JavaPlugin) this, "Language" + File.separator + lang + ".yml");
+		YmlMaker langFile = new YmlMaker(this, "Language" + File.separator + lang + ".yml");
 		if (langFile != null) {
 		    langFile.saveDefaultConfig();
 		}
@@ -506,6 +516,8 @@ public class Residence extends JavaPlugin {
 		} else {
 		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
 		}
+		if (in != null)
+		    in.close();
 	    } catch (Exception ex) {
 		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Failed to load language file: " + cmanager.getLanguage()
 		    + ".yml setting to default - English");
@@ -528,6 +540,8 @@ public class Residence extends JavaPlugin {
 		} else {
 		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
 		}
+		if (in != null)
+		    in.close();
 	    }
 	    economy = null;
 	    if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
@@ -761,13 +775,12 @@ public class Residence extends JavaPlugin {
 	}
 	if (cmanager.getResidenceNameRegex() == null) {
 	    return true;
-	} else {
-	    String namecheck = name.replaceAll(cmanager.getResidenceNameRegex(), "");
-	    if (!name.equals(namecheck)) {
-		return false;
-	    }
-	    return true;
 	}
+	String namecheck = name.replaceAll(cmanager.getResidenceNameRegex(), "");
+	if (!name.equals(namecheck)) {
+	    return false;
+	}
+	return true;
     }
 
     private void setWorldEdit() {
@@ -775,7 +788,7 @@ public class Residence extends JavaPlugin {
 	if (plugin != null) {
 	    smanager = new WorldEditSelectionManager(server, this);
 	    wep = (WorldEditPlugin) plugin;
-	    wepid = ((WorldEditPlugin) Residence.wep).getConfig().getInt("wand-item");
+	    wepid = Residence.wep.getConfig().getInt("wand-item");
 	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found WorldEdit");
 	} else {
 	    smanager = new SelectionManager(server, this);
@@ -783,7 +796,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private void setWorldGuard() {
+    private static void setWorldGuard() {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
 	    try {
@@ -959,21 +972,20 @@ public class Residence extends JavaPlugin {
 	ClaimedResidence res = rmanager.getByLoc(loc);
 	if (res != null) {
 	    return res.getPermissions();
-	} else {
-	    return wmanager.getPerms(loc.getWorld().getName());
 	}
+	return wmanager.getPerms(loc.getWorld().getName());
+
     }
 
     public static FlagPermissions getPermsByLocForPlayer(Location loc, Player player) {
 	ClaimedResidence res = rmanager.getByLoc(loc);
 	if (res != null) {
 	    return res.getPermissions();
-	} else {
-	    if (player != null)
-		return wmanager.getPerms(player);
-	    else
-		return wmanager.getPerms(loc.getWorld().getName());
 	}
+	if (player != null)
+	    return wmanager.getPerms(player);
+
+	return wmanager.getPerms(loc.getWorld().getName());
     }
 
     private void loadIConomy() {
@@ -1041,8 +1053,7 @@ public class Residence extends JavaPlugin {
     public static boolean isResAdminOn(CommandSender sender) {
 	if (sender instanceof Player)
 	    return isResAdminOn((Player) sender);
-	else
-	    return true;
+	return true;
     }
 
     public static boolean isResAdminOn(Player player) {
@@ -1062,7 +1073,7 @@ public class Residence extends JavaPlugin {
 	return false;
     }
 
-    private void saveYml() throws IOException {
+    private static void saveYml() throws IOException {
 	File saveFolder = new File(dataFolder, "Save");
 	File worldFolder = new File(saveFolder, "Worlds");
 	worldFolder.mkdirs();
@@ -1076,7 +1087,7 @@ public class Residence extends JavaPlugin {
 	    World world = server.getWorld(entry.getKey());
 	    if (world != null)
 		yml.getRoot().put("Seed", world.getSeed());
-	    yml.getRoot().put("Residences", (Map<?, ?>) entry.getValue());
+	    yml.getRoot().put("Residences", entry.getValue());
 	    yml.save();
 	    if (ymlSaveLoc.isFile()) {
 		File backupFolder = new File(worldFolder, "Backup");
@@ -1370,7 +1381,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private void remove(File newGroups, List<String> list) throws IOException {
+    private static void remove(File newGroups, List<String> list) throws IOException {
 
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(newGroups);
 	conf.options().copyDefaults(true);
@@ -1385,7 +1396,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private void copy(File source, File target) throws IOException {
+    private static void copy(File source, File target) throws IOException {
 	InputStream in = new FileInputStream(source);
 	OutputStream out = new FileOutputStream(target);
 	byte[] buf = new byte[1024];
@@ -1539,8 +1550,7 @@ public class Residence extends JavaPlugin {
 	    p = Residence.getServ().getOfflinePlayer(uuid);
 	if (p != null)
 	    return p.getName();
-	else
-	    return null;
+	return null;
     }
 
     public static boolean isDisabledWorldListener(World world) {

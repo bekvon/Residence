@@ -55,6 +55,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	});
     }
 
+    @Override
     public ArrayList<String> getResidenceList(String player) {
 	ArrayList<String> temp = new ArrayList<String>();
 	playerJoin(player);
@@ -68,6 +69,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return temp;
     }
 
+    @Override
     public ArrayList<String> getResidenceList(String player, boolean showhidden) {
 	return getResidenceList(player, showhidden, false);
     }
@@ -114,6 +116,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return temp;
     }
 
+    @Override
     public PermissionGroup getGroup(String player) {
 	ResidencePlayer resPlayer = getResidencePlayer(player);
 	if (resPlayer != null) {
@@ -122,6 +125,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return null;
     }
 
+    @Override
     public int getMaxResidences(String player) {
 	ResidencePlayer resPlayer = getResidencePlayer(player);
 	if (resPlayer != null) {
@@ -130,6 +134,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return -1;
     }
 
+    @Override
     public int getMaxSubzones(String player) {
 	ResidencePlayer resPlayer = getResidencePlayer(player);
 	if (resPlayer != null) {
@@ -138,6 +143,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return -1;
     }
 
+    @Override
     public int getMaxRents(String player) {
 	ResidencePlayer resPlayer = getResidencePlayer(player);
 	if (resPlayer != null) {
@@ -150,6 +156,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return getResidencePlayer(player.getName());
     }
 
+    @Override
     public ResidencePlayer getResidencePlayer(String player) {
 	ResidencePlayer resPlayer = null;
 	if (players.containsKey(player.toLowerCase()))

@@ -27,6 +27,7 @@ public class CommentedYamlConfiguration extends YamlConfiguration {
 	comments = new HashMap<String, String>();
     }
 
+    @Override
     public void save(String file) throws IOException {
 	if (file == null) {
 	    throw new IllegalArgumentException("File cannot be null");
@@ -35,6 +36,7 @@ public class CommentedYamlConfiguration extends YamlConfiguration {
 	save(new File(file));
     }
 
+    @Override
     public void save(File file) throws IOException {
 	if (file == null) {
 	    throw new IllegalArgumentException("File cannot be null");

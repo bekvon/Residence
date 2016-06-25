@@ -31,6 +31,7 @@ public class RentManager implements MarketRentInterface {
 	rentableLand = new HashSet<ClaimedResidence>();
     }
 
+    @Override
     public RentedLand getRentedLand(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return getRentedLand(res);
@@ -42,6 +43,7 @@ public class RentManager implements MarketRentInterface {
 	return res.isRented() ? res.getRentedLand() : null;
     }
 
+    @Override
     public List<String> getRentedLands(String playername) {
 	return getRentedLands(playername, false);
     }
@@ -119,14 +121,17 @@ public class RentManager implements MarketRentInterface {
 	return rentedLands;
     }
 
+    @Override
     public void setForRent(Player player, String landName, int amount, int days, boolean AllowRenewing, boolean resadmin) {
 	setForRent(player, landName, amount, days, AllowRenewing, Residence.getConfigManager().isRentStayInMarket(), resadmin);
     }
 
+    @Override
     public void setForRent(Player player, String landName, int amount, int days, boolean AllowRenewing, boolean StayInMarket, boolean resadmin) {
 	setForRent(player, landName, amount, days, AllowRenewing, StayInMarket, Residence.getConfigManager().isRentAllowAutoPay(), resadmin);
     }
 
+    @Override
     public void setForRent(Player player, String landName, int amount, int days, boolean AllowRenewing, boolean StayInMarket, boolean AllowAutoPay, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	setForRent(player, res, amount, days, AllowRenewing, StayInMarket, AllowAutoPay, resadmin);
@@ -181,6 +186,7 @@ public class RentManager implements MarketRentInterface {
 	}
     }
 
+    @Override
     public void rent(Player player, String landName, boolean AutoPay, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	rent(player, res, AutoPay, resadmin);
@@ -303,7 +309,7 @@ public class RentManager implements MarketRentInterface {
 
 	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	if (!resadmin && group.getMaxRentDays() != -1 &&
-	    this.msToDays((rentedLand.endTime - System.currentTimeMillis()) + daysToMs(land.days)) >= group.getMaxRentDays()) {
+	    msToDays((rentedLand.endTime - System.currentTimeMillis()) + daysToMs(land.days)) >= group.getMaxRentDays()) {
 	    player.sendMessage(Residence.getLM().getMessage("Rent.MaxRentDays", group.getMaxRentDays()));
 	    return;
 	}
@@ -328,6 +334,7 @@ public class RentManager implements MarketRentInterface {
 	}
     }
 
+    @Override
     public void unrent(Player player, String landName, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	unrent(player, res, resadmin);
@@ -375,15 +382,16 @@ public class RentManager implements MarketRentInterface {
 	}
     }
 
-    private long daysToMs(int days) {
+    private static long daysToMs(int days) {
 //	return (((long) days) * 1000L);
-	return (((long) days) * 24L * 60L * 60L * 1000L);
+	return ((days) * 24L * 60L * 60L * 1000L);
     }
 
-    private int msToDays(long ms) {
-	return (int) Math.ceil(((((double) ms / 1000D) / 60D) / 60D) / 24D);
+    private static int msToDays(long ms) {
+	return (int) Math.ceil((((ms / 1000D) / 60D) / 60D) / 24D);
     }
 
+    @Override
     public void removeFromForRent(Player player, String landName, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	removeFromForRent(player, res, resadmin);
@@ -415,6 +423,7 @@ public class RentManager implements MarketRentInterface {
 	}
     }
 
+    @Override
     public void removeFromRent(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	removeFromRent(res);
@@ -424,6 +433,7 @@ public class RentManager implements MarketRentInterface {
 	rentedLand.remove(res);
     }
 
+    @Override
     public void removeRentable(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	removeRentable(res);
@@ -437,6 +447,7 @@ public class RentManager implements MarketRentInterface {
 	Residence.getSignUtil().removeSign(res.getName());
     }
 
+    @Override
     public boolean isForRent(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return isForRent(res);
@@ -461,6 +472,7 @@ public class RentManager implements MarketRentInterface {
 	return null;
     }
 
+    @Override
     public boolean isRented(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return isRented(res);
@@ -472,6 +484,7 @@ public class RentManager implements MarketRentInterface {
 	return rentedLand.contains(res);
     }
 
+    @Override
     public String getRentingPlayer(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return getRentingPlayer(res);
@@ -483,6 +496,7 @@ public class RentManager implements MarketRentInterface {
 	return res.isRented() ? res.getRentedLand().player : null;
     }
 
+    @Override
     public int getCostOfRent(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return getCostOfRent(res);
@@ -494,6 +508,7 @@ public class RentManager implements MarketRentInterface {
 	return res.isForRent() ? res.getRentable().cost : 0;
     }
 
+    @Override
     public boolean getRentableRepeatable(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return getRentableRepeatable(res);
@@ -505,6 +520,7 @@ public class RentManager implements MarketRentInterface {
 	return res.isForRent() ? res.getRentable().AllowRenewing : false;
     }
 
+    @Override
     public boolean getRentedAutoRepeats(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return getRentedAutoRepeats(res);
@@ -516,6 +532,7 @@ public class RentManager implements MarketRentInterface {
 	return getRentableRepeatable(res) ? (rentedLand.contains(res) ? res.getRentedLand().AutoPay : false) : false;
     }
 
+    @Override
     public int getRentDays(String landName) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	return getRentDays(res);
@@ -527,6 +544,7 @@ public class RentManager implements MarketRentInterface {
 	return res.isForRent() ? res.getRentable().days : 0;
     }
 
+    @Override
     public void checkCurrentRents() {
 	for (ClaimedResidence res : rentedLand) {
 
@@ -579,7 +597,7 @@ public class RentManager implements MarketRentInterface {
 			res.setRented(null);
 			res.getPermissions().applyDefaultFlags();
 		    } else {
-			land.endTime = System.currentTimeMillis() + this.daysToMs(rentable.days);
+			land.endTime = System.currentTimeMillis() + daysToMs(rentable.days);
 		    }
 		}
 
@@ -609,6 +627,7 @@ public class RentManager implements MarketRentInterface {
 	}
     }
 
+    @Override
     public void setRentRepeatable(Player player, String landName, boolean value, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	setRentRepeatable(player, res, value, resadmin);
@@ -644,6 +663,7 @@ public class RentManager implements MarketRentInterface {
 
     }
 
+    @Override
     public void setRentedRepeatable(Player player, String landName, boolean value, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(landName);
 	setRentedRepeatable(player, res, value, resadmin);
@@ -800,6 +820,7 @@ public class RentManager implements MarketRentInterface {
 	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + prev + "," + next);
     }
 
+    @Override
     public int getRentCount(String player) {
 	int count = 0;
 	for (ClaimedResidence res : rentedLand) {
@@ -809,6 +830,7 @@ public class RentManager implements MarketRentInterface {
 	return count;
     }
 
+    @Override
     public int getRentableCount(String player) {
 	int count = 0;
 	for (ClaimedResidence res : rentableLand) {
@@ -819,10 +841,12 @@ public class RentManager implements MarketRentInterface {
 	return count;
     }
 
+    @Override
     public Set<ClaimedResidence> getRentableResidences() {
 	return rentableLand;
     }
 
+    @Override
     public Set<ClaimedResidence> getCurrentlyRentedResidences() {
 	return rentedLand;
     }
@@ -872,7 +896,7 @@ public class RentManager implements MarketRentInterface {
 	return root;
     }
 
-    private RentableLand loadRentable(Map<String, Object> map) {
+    private static RentableLand loadRentable(Map<String, Object> map) {
 	RentableLand newland = new RentableLand();
 	newland.cost = (Integer) map.get("Cost");
 	newland.days = (Integer) map.get("Days");
@@ -884,7 +908,7 @@ public class RentManager implements MarketRentInterface {
 	return newland;
     }
 
-    private RentedLand loadRented(Map<String, Object> map) {
+    private static RentedLand loadRented(Map<String, Object> map) {
 	RentedLand newland = new RentedLand();
 	newland.player = (String) map.get("Player");
 	newland.startTime = (Long) map.get("StartTime");

@@ -181,7 +181,7 @@ public class SetFlag {
 	if (targetPlayer == null)
 	    TempPermMap.remove("admin");
 
-	TempPermMap = (LinkedHashMap<String, Object>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
+	TempPermMap = Residence.getSortingManager().sortByKeyASC(TempPermMap);
 
 	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
 

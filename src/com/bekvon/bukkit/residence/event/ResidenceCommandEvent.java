@@ -31,10 +31,12 @@ public class ResidenceCommandEvent extends Event implements Cancellable {
         commandsender = sender;
     }
 
+    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
+    @Override
     public void setCancelled(boolean bln) {
         cancelled = bln;
     }

@@ -11,10 +11,12 @@ public class OriginalPermissions implements PermissionsInterface {
 	authority = perms;
     }
 
+    @Override
     public String getPlayerGroup(Player player) {
 	return this.getPlayerGroup(player.getName(), player.getWorld().getName());
     }
 
+    @Override
     public String getPlayerGroup(String player, String world) {
 	String group = authority.getPrimaryGroup(world, player);
 	if (group != null) {

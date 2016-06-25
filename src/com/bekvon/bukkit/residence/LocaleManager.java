@@ -62,6 +62,11 @@ public class LocaleManager {
 	YamlConfiguration conf = loadConfiguration(in, lang);
 
 	if (conf == null) {
+	    try {
+		in.close();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
 	    return;
 	}
 
@@ -1572,6 +1577,10 @@ public class LocaleManager {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-
+	try {
+	    in.close();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
     }
 }

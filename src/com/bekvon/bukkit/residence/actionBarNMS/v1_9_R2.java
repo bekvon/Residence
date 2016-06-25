@@ -35,6 +35,7 @@ public class v1_9_R2 implements ABInterface {
 	}
     }
 
+    @Override
     public void sendTitle(Player player, Object title, Object subtitle) {
 	CraftPlayer Cplayer = (CraftPlayer) player;
 	if (title != null) {

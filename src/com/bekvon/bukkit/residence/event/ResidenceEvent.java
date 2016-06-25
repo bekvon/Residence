@@ -6,31 +6,30 @@ import org.bukkit.event.HandlerList;
 
 public class ResidenceEvent extends Event {
 
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private String message;
-	 
-	public HandlerList getHandlers() {
-	    return handlers;
-	}
-	 
-	public static HandlerList getHandlerList() {
-	    return handlers;
-	}
+
+    @Override
+    public HandlerList getHandlers() {
+	return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+	return handlers;
+    }
 
     ClaimedResidence res;
 
-    public ResidenceEvent(String eventName, ClaimedResidence resref)
-    {
-    	message = eventName;
-        res = resref;
-    }
- 
-    public String getMessage() {
-        return message;
+    public ResidenceEvent(String eventName, ClaimedResidence resref) {
+	message = eventName;
+	res = resref;
     }
 
-    public ClaimedResidence getResidence()
-    {
-        return res;
+    public String getMessage() {
+	return message;
+    }
+
+    public ClaimedResidence getResidence() {
+	return res;
     }
 }

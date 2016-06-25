@@ -42,7 +42,6 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -92,7 +91,7 @@ public class ResidenceEntityListener implements Listener {
 	return (ent instanceof Monster || ent instanceof Slime || ent instanceof Ghast);
     }
 
-    private boolean isTamed(Entity ent) {
+    private static boolean isTamed(Entity ent) {
 	return (ent instanceof Tameable ? ((Tameable) ent).isTamed() : false);
     }
 
@@ -335,7 +334,7 @@ public class ResidenceEntityListener implements Listener {
 
 	Entity entity = event.getEntity();
 
-	if (!Residence.getNms().isAnimal(entity) && !(player instanceof Player))
+	if (!Residence.getNms().isAnimal(entity))
 	    return;
 
 	if (Residence.isResAdminOn(player))
@@ -366,86 +365,87 @@ public class ResidenceEntityListener implements Listener {
 	    if (!perms.has("animals", true)) {
 		event.setCancelled(true);
 		return;
-	    } else
-		switch (event.getSpawnReason()) {
-		case BUILD_WITHER:
-		    break;
-		case BUILD_IRONGOLEM:
-		case BUILD_SNOWMAN:
-		case CUSTOM:
-		case DEFAULT:
-		    if (!perms.has("canimals", true)) {
-			event.setCancelled(true);
-			return;
-		    }
-		    break;
-		case BREEDING:
-		case CHUNK_GEN:
-		case CURED:
-		case DISPENSE_EGG:
-		case EGG:
-		case JOCKEY:
-		case MOUNT:
-		case VILLAGE_INVASION:
-		case VILLAGE_DEFENSE:
-		case NETHER_PORTAL:
-		case OCELOT_BABY:
-		case NATURAL:
-		    if (!perms.has("nanimals", true)) {
-			event.setCancelled(true);
-			return;
-		    }
-		    break;
-		case SPAWNER_EGG:
-		case SPAWNER:
-		    if (!perms.has("sanimals", true)) {
-			event.setCancelled(true);
-			return;
-		    }
-		    break;
-		default:
-		    break;
-		}
-	} else if (isMonster(ent))
+	    }
+	    switch (event.getSpawnReason()) {
+	    case BUILD_WITHER:
+	        break;
+	    case BUILD_IRONGOLEM:
+	    case BUILD_SNOWMAN:
+	    case CUSTOM:
+	    case DEFAULT:
+	        if (!perms.has("canimals", true)) {
+	    	event.setCancelled(true);
+	    	return;
+	        }
+	        break;
+	    case BREEDING:
+	    case CHUNK_GEN:
+	    case CURED:
+	    case DISPENSE_EGG:
+	    case EGG:
+	    case JOCKEY:
+	    case MOUNT:
+	    case VILLAGE_INVASION:
+	    case VILLAGE_DEFENSE:
+	    case NETHER_PORTAL:
+	    case OCELOT_BABY:
+	    case NATURAL:
+	        if (!perms.has("nanimals", true)) {
+	    	event.setCancelled(true);
+	    	return;
+	        }
+	        break;
+	    case SPAWNER_EGG:
+	    case SPAWNER:
+	        if (!perms.has("sanimals", true)) {
+	    	event.setCancelled(true);
+	    	return;
+	        }
+	        break;
+	    default:
+	        break;
+	    }
+	} else if (isMonster(ent)) {
 	    if (!perms.has("monsters", true)) {
 		event.setCancelled(true);
 		return;
-	    } else
-		switch (event.getSpawnReason()) {
-		case BUILD_WITHER:
-		case CUSTOM:
-		case DEFAULT:
-		    if (!perms.has("cmonsters", true)) {
-			event.setCancelled(true);
-			return;
-		    }
-		    break;
-		case CHUNK_GEN:
-		case CURED:
-		case DISPENSE_EGG:
-		case INFECTION:
-		case JOCKEY:
-		case MOUNT:
-		case NETHER_PORTAL:
-		case SILVERFISH_BLOCK:
-		case SLIME_SPLIT:
-		case LIGHTNING:
-		case NATURAL:
-		    if (!perms.has("nmonsters", true)) {
-			event.setCancelled(true);
-			return;
-		    }
-		    break;
-		case SPAWNER_EGG:
-		case SPAWNER:
-		    if (!perms.has("smonsters", true)) {
-			event.setCancelled(true);
-			return;
-		    }
-		    break;
-		default:
-		    break;
-		}
+	    }
+	    switch (event.getSpawnReason()) {
+	    case BUILD_WITHER:
+	    case CUSTOM:
+	    case DEFAULT:
+	        if (!perms.has("cmonsters", true)) {
+	    	event.setCancelled(true);
+	    	return;
+	        }
+	        break;
+	    case CHUNK_GEN:
+	    case CURED:
+	    case DISPENSE_EGG:
+	    case INFECTION:
+	    case JOCKEY:
+	    case MOUNT:
+	    case NETHER_PORTAL:
+	    case SILVERFISH_BLOCK:
+	    case SLIME_SPLIT:
+	    case LIGHTNING:
+	    case NATURAL:
+	        if (!perms.has("nmonsters", true)) {
+	    	event.setCancelled(true);
+	    	return;
+	        }
+	        break;
+	    case SPAWNER_EGG:
+	    case SPAWNER:
+	        if (!perms.has("smonsters", true)) {
+	    	event.setCancelled(true);
+	    	return;
+	        }
+	        break;
+	    default:
+	        break;
+	    }
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -594,28 +594,6 @@ public class ResidenceEntityListener implements Listener {
 		ent.remove();
 	    }
 	    break;
-	}
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockExplodeEvent(BlockExplodeEvent event) {
-
-	Location loc = event.getBlock().getLocation();
-
-	if (Residence.isDisabledWorldListener(loc.getWorld()))
-	    return;
-	if (event.isCancelled())
-	    return;
-	FlagPermissions world = Residence.getWorldFlags().getPerms(loc.getWorld().getName());
-	List<Block> preserve = new ArrayList<Block>();
-	for (Block block : event.blockList()) {
-	    FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	    if (!blockperms.has("explode", world.has("explode", true))) {
-		preserve.add(block);
-	    }
-	}
-	for (Block block : preserve) {
-	    event.blockList().remove(block);
 	}
     }
 
@@ -959,21 +937,25 @@ public class ResidenceEntityListener implements Listener {
 		    attacker = (Player) ((Projectile) damager).getShooter();
 		}
 		if (!srcpvp && !isSnowBall || !allowSnowBall && isSnowBall) {
-		    attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
+		    if (attacker != null)
+			attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 		    event.setCancelled(true);
 		    return;
 		}
 		/* Check for Player vs Player */
 		if (area == null) {
 		    /* World PvP */
-		    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-			attacker.sendMessage(Residence.getLM().getMessage("General.WorldPVPDisabled"));
-			event.setCancelled(true);
-		    }
+		    if (damager != null)
+			if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
+			    if (attacker != null)
+				attacker.sendMessage(Residence.getLM().getMessage("General.WorldPVPDisabled"));
+			    event.setCancelled(true);
+			}
 		} else {
 		    /* Normal PvP */
 		    if (!isSnowBall && !area.getPermissions().has("pvp", true) || isSnowBall && !allowSnowBall) {
-			attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
+			if (attacker != null)
+			    attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
 			event.setCancelled(true);
 		    }
 		}

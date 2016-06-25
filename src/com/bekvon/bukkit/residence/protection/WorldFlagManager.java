@@ -58,8 +58,7 @@ public class WorldFlagManager {
 	if (list == null) {
 	    if (globaldefaults == null)
 		return new FlagPermissions();
-	    else
-		return globaldefaults;
+	    return globaldefaults;
 	}
 	return list;
     }

@@ -92,7 +92,7 @@ public class CuboidArea {
 	return advCuboidCheckCollision(highPoints, lowPoints, area.highPoints, area.lowPoints);
     }
 
-    private boolean advCuboidCheckCollision(Location A1High, Location A1Low, Location A2High, Location A2Low) {
+    private static boolean advCuboidCheckCollision(Location A1High, Location A1Low, Location A2High, Location A2Low) {
 	int A1HX = A1High.getBlockX();
 	int A1LX = A1Low.getBlockX();
 	int A1HY = A1High.getBlockY();
@@ -121,8 +121,8 @@ public class CuboidArea {
 	if (!Residence.getConfigManager().isNoCostForYBlocks()) {
 	    int ysize = (highPoints.getBlockY() - lowPoints.getBlockY()) + 1;
 	    return xsize * ysize * zsize;
-	} else
-	    return xsize * zsize;
+	}
+	return xsize * zsize;
     }
 
     public int getXSize() {
@@ -149,7 +149,7 @@ public class CuboidArea {
 	return highPoints.getWorld();
     }
 
-    public void save(DataOutputStream out, int version) throws IOException {
+    public void save(DataOutputStream out) throws IOException {
 	out.writeUTF(highPoints.getWorld().getName());
 	out.writeInt(highPoints.getBlockX());
 	out.writeInt(highPoints.getBlockY());
@@ -159,7 +159,7 @@ public class CuboidArea {
 	out.writeInt(lowPoints.getBlockZ());
     }
 
-    public static CuboidArea load(DataInputStream in, int version) throws IOException {
+    public static CuboidArea load(DataInputStream in) throws IOException {
 	CuboidArea newArea = new CuboidArea();
 	Server server = Residence.getServ();
 	World world = server.getWorld(in.readUTF());

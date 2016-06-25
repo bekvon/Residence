@@ -70,7 +70,7 @@ public class LeaseManager {
 	    double cost = limits.getLeaseRenewCost();
 	    ClaimedResidence res = manager.getByName(area);
 	    area = res.getName();
-	    int amount = (int) Math.ceil((double) res.getTotalSize() * cost);
+	    int amount = (int) Math.ceil(res.getTotalSize() * cost);
 	    if (cost != 0D) {
 		//Account account = iConomy.getBank().getAccount(player.getName());
 		if (econ.canAfford(player.getName(), amount)/*account.hasEnough(amount)*/) {
@@ -101,16 +101,16 @@ public class LeaseManager {
     public int getRenewCost(ClaimedResidence res) {
 	PermissionGroup limits = Residence.getPermissionManager().getGroup(res.getPermissions().getOwner(), res.getPermissions().getWorld());
 	double cost = limits.getLeaseRenewCost();
-	int amount = (int) Math.ceil((double) res.getTotalSize() * cost);
+	int amount = (int) Math.ceil(res.getTotalSize() * cost);
 	return amount;
     }
 
-    private long daysToMs(int days) {
-	return (((long) days) * 24L * 60L * 60L * 1000L);
+    private static long daysToMs(int days) {
+	return ((days) * 24L * 60L * 60L * 1000L);
     }
 
-    private int msToDays(long ms) {
-	return (int) Math.ceil(((((double) ms / 1000D) / 60D) / 60D) / 24D);
+    private static int msToDays(long ms) {
+	return (int) Math.ceil((((ms / 1000D) / 60D) / 60D) / 24D);
     }
 
     private int daysRemaining(String area) {

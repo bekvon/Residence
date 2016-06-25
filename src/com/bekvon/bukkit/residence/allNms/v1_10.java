@@ -146,6 +146,7 @@ public class v1_10 implements NMS {
 	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, "diode");
     }
 
+    @Override
     public boolean isPlate(Material mat) {
 	return mat == Material.GOLD_PLATE || mat == Material.IRON_PLATE;
     }

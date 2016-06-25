@@ -105,6 +105,7 @@ public class TransactionManager implements MarketBuyInterface {
 	player.sendMessage(Residence.getLM().getMessage("Residence.ForSale", res.getName(), amount));
     }
 
+    @Override
     public boolean putForSale(String areaname, int amount) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
 	return putForSale(res, amount);
@@ -125,6 +126,7 @@ public class TransactionManager implements MarketBuyInterface {
 	return true;
     }
 
+    @Override
     public void buyPlot(String areaname, Player player, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
 	buyPlot(res, player, resadmin);
@@ -234,6 +236,7 @@ public class TransactionManager implements MarketBuyInterface {
 	}
     }
 
+    @Override
     public void removeFromSale(String areaname) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
 	removeFromSale(res);
@@ -246,6 +249,7 @@ public class TransactionManager implements MarketBuyInterface {
 	Residence.getSignUtil().removeSign(res);
     }
 
+    @Override
     public boolean isForSale(String areaname) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
 	return isForSale(res);
@@ -353,6 +357,7 @@ public class TransactionManager implements MarketBuyInterface {
 	System.out.println("[Residence] - ReInit land selling.");
     }
 
+    @Override
     public int getSaleAmount(String areaname) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
 	return getSaleAmount(res);
@@ -377,6 +382,7 @@ public class TransactionManager implements MarketBuyInterface {
 	}
     }
 
+    @Override
     public Map<String, Integer> getBuyableResidences() {
 	Map<String, Integer> list = new HashMap<String, Integer>();
 	for (ClaimedResidence res : sellAmount) {

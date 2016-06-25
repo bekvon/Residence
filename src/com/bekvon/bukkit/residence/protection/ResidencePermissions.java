@@ -160,9 +160,8 @@ public class ResidencePermissions extends FlagPermissions {
 		String renter = Residence.getRentManager().getRentingPlayer(resname);
 		if (sender.getName().equals(renter)) {
 		    return true;
-		} else {
-		    return (playerHas(sender.getName(), "admin", false));
 		}
+		return (playerHas(sender.getName(), "admin", false));
 	    }
 	}
 	if (requireOwner) {
@@ -417,8 +416,7 @@ public class ResidencePermissions extends FlagPermissions {
 	String name = Residence.getPlayerName(ownerUUID);//try to find the owner's name
 	if (name == null)
 	    return ownerLastKnownName;//return last known if we cannot find it
-	else
-	    ownerLastKnownName = name;//update last known if we did find it
+	ownerLastKnownName = name;//update last known if we did find it
 	return name;
     }
 
@@ -512,8 +510,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setFlagGroup(CommandSender sender, String flaggroup, String state, boolean resadmin) {
-	if (ResidencePermissions.validFlagGroups.containsKey(flaggroup)) {
-	    ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(flaggroup);
+	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
+	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
 	    for (String flag : flags) {
 		if (this.setFlag(sender, flag, state, resadmin)) {
@@ -526,8 +524,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setFlagGroupOnGroup(Player player, String flaggroup, String group, String state, boolean resadmin) {
-	if (ResidencePermissions.validFlagGroups.containsKey(flaggroup)) {
-	    ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(flaggroup);
+	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
+	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
 	    for (String flag : flags) {
 		if (this.setGroupFlag(player, group, flag, state, resadmin)) {
@@ -540,8 +538,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setFlagGroupOnPlayer(CommandSender sender, String target, String flaggroup, String state, boolean resadmin) {
-	if (ResidencePermissions.validFlagGroups.containsKey(flaggroup)) {
-	    ArrayList<String> flags = ResidencePermissions.validFlagGroups.get(flaggroup);
+	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
+	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
 	    String flagString = "";
 	    int i = 0;

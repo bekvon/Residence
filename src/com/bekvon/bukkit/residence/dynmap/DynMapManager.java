@@ -48,6 +48,7 @@ public class DynMapManager {
 	    Bukkit.getServer().getScheduler().cancelTask(schedId);
 
 	schedId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+	    @Override
 	    public void run() {
 		schedId = -1;
 
@@ -66,7 +67,7 @@ public class DynMapManager {
 	handleResidenceRemove(res.getName(), res, resareas, deep);
     }
 
-    private String formatInfoWindow(String resid, ClaimedResidence res, String resName) {
+    private static String formatInfoWindow(String resid, ClaimedResidence res, String resName) {
 	if (res == null)
 	    return null;
 	if (res.getName() == null)
@@ -163,7 +164,7 @@ public class DynMapManager {
 	return v;
     }
 
-    private boolean isVisible(String id, String worldname) {
+    private static boolean isVisible(String id, String worldname) {
 	List<String> visible = Residence.getConfigManager().DynMapVisibleRegions;
 	List<String> hidden = Residence.getConfigManager().DynMapHiddenRegions;
 	if (visible != null && visible.size() > 0) {
@@ -178,7 +179,7 @@ public class DynMapManager {
 	return true;
     }
 
-    private void addStyle(String resid, AreaMarker m) {
+    private static void addStyle(String resid, AreaMarker m) {
 	AreaStyle as = new AreaStyle();
 	int sc = 0xFF0000;
 	int fc = 0xFF0000;

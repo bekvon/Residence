@@ -12,10 +12,12 @@ public class ResidencePlayerFlagEvent extends ResidenceFlagEvent implements Resi
 	p = player;
     }
 
+    @Override
     public boolean isPlayer() {
 	return p != null;
     }
 
+    @Override
     public boolean isAdmin() {
 	if (isPlayer()) {
 	    return Residence.getPermissionManager().isResidenceAdmin(p);
@@ -23,6 +25,7 @@ public class ResidencePlayerFlagEvent extends ResidenceFlagEvent implements Resi
 	return true;
     }
 
+    @Override
     public Player getPlayer() {
 	return p;
     }

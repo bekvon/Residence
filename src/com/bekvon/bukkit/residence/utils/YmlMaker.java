@@ -69,23 +69,46 @@ public class YmlMaker {
     }
 
     public void reloadConfig() {
+	InputStreamReader f = null;
 	try {
-	    this.Configuration = loadConfiguration(new InputStreamReader(new FileInputStream(this.ConfigFile), "UTF-8"));
-	} catch (UnsupportedEncodingException e) {
-	    e.printStackTrace();
-	} catch (FileNotFoundException e) {
-	    e.printStackTrace();
+	    f = new InputStreamReader(new FileInputStream(this.ConfigFile), "UTF-8");
+	} catch (UnsupportedEncodingException e1) {
+	    e1.printStackTrace();
+	} catch (FileNotFoundException e1) {
+	    e1.printStackTrace();
 	}
 
-	if (Configuration == null)
+	if (f != null)
+	    this.Configuration = loadConfiguration(f);
+
+	if (Configuration == null) {
+	    if (f != null)
+		try {
+		    f.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	    return;
-	
+	}
+
 	InputStream defConfigStream = this.plugin.getResource(this.fileName);
 	if (defConfigStream != null) {
 	    YamlConfiguration defConfig = loadConfiguration(defConfigStream);
 	    if (defConfig != null)
 		this.Configuration.setDefaults(defConfig);
 	}
+	if (defConfigStream != null)
+	    try {
+		defConfigStream.close();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	if (f != null)
+	    try {
+		f.close();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
     }
 
     public FileConfiguration getConfig() {

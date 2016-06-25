@@ -14,7 +14,7 @@ public class FlagData {
 	this.items.put(flag, item);
     }
 
-    public void removeFlagButton(String flag, ItemStack item) {
+    public void removeFlagButton(String flag) {
 	this.items.remove(flag);
     }
 

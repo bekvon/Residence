@@ -11,11 +11,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
@@ -208,6 +206,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	final Player player = event.getPlayer();
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
 	    public void run() {
 		if (!player.isOnline())
 		    return;
@@ -228,10 +227,17 @@ public class ResidencePlayerListener implements Listener {
 	}, Residence.getConfigManager().getRentInformDelay() * 20L);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onFishingRodUse(PlayerFishEvent event) {
+	if (event == null)
+	    return;
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
 	Player player = event.getPlayer();
-	if (event.getCaught() instanceof ArmorStand || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
+	if (event.getCaught() == null)
+	    return;
+	if (Residence.getNms().isArmorStandEntity(event.getCaught().getType()) || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
 	    FlagPermissions perm = Residence.getPermsByLoc(event.getCaught().getLocation());
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getCaught().getLocation());
 	    if (!perm.has("hook", false) && res != null && !res.getPermissions().playerHas(player, "hook", true) ||
@@ -412,7 +418,7 @@ public class ResidencePlayerListener implements Listener {
 	if (!(block.getState() instanceof Sign))
 	    return;
 
-	Player player = (Player) event.getPlayer();
+	Player player = event.getPlayer();
 
 	Location loc = block.getLocation();
 
@@ -523,6 +529,7 @@ public class ResidencePlayerListener implements Listener {
 	    Residence.getSignUtil().saveSigns();
 	}
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
 	    public void run() {
 		Residence.getSignUtil().CheckSign(residence);
 	    }
@@ -572,7 +579,7 @@ public class ResidencePlayerListener implements Listener {
 	lastOutsideLoc.remove(pname);
 	Residence.getChatManager().removeFromChannel(pname);
 	Residence.getPlayerListener().removePlayerResidenceChat(pname);
-	Residence.getOfflinePlayerMap().put(pname, (OfflinePlayer) event.getPlayer());
+	Residence.getOfflinePlayerMap().put(pname, event.getPlayer());
 	if (Residence.getAutoSelectionManager().getList().containsKey(pname.toLowerCase()))
 	    Residence.getAutoSelectionManager().getList().remove(pname);
     }
@@ -587,8 +594,13 @@ public class ResidencePlayerListener implements Listener {
 
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(player.getLocation(), player);
 
-	if ((player.getAllowFlight() || player.isFlying()) && perms.has("nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has("nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 	    "residence.nofly.bypass")) {
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    if (res != null && res.isOwner(player))
+		break f;
+
 	    Location lc = player.getLocation();
 	    Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
 	    location.setPitch(lc.getPitch());
@@ -669,41 +681,41 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    private boolean isContainer(Material mat, Block block) {
+    private static boolean isContainer(Material mat, Block block) {
 	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals("container") || Residence
 	    .getConfigManager().getCustomContainers().contains(block.getTypeId());
     }
 
     @SuppressWarnings("deprecation")
-    private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
+    private static boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
 
-	switch (mat) {
-	case ITEM_FRAME:
-	case BEACON:
-	case FLOWER_POT:
-	case COMMAND:
-	case ANVIL:
-	case CAKE_BLOCK:
-	case NOTE_BLOCK:
-	case DIODE:
-	case DIODE_BLOCK_OFF:
-	case DIODE_BLOCK_ON:
-	case REDSTONE_COMPARATOR:
-	case REDSTONE_COMPARATOR_OFF:
-	case REDSTONE_COMPARATOR_ON:
-	case BED_BLOCK:
-	case WORKBENCH:
-	case BREWING_STAND:
-	case ENCHANTMENT_TABLE:
-	case DAYLIGHT_DETECTOR:
-	case DAYLIGHT_DETECTOR_INVERTED:
+	switch (mat.name()) {
+	case "ITEM_FRAME":
+	case "BEACON":
+	case "FLOWER_POT":
+	case "COMMAND":
+	case "ANVIL":
+	case "CAKE_BLOCK":
+	case "NOTE_BLOCK":
+	case "DIODE":
+	case "DIODE_BLOCK_OFF":
+	case "DIODE_BLOCK_ON":
+	case "REDSTONE_COMPARATOR":
+	case "REDSTONE_COMPARATOR_OFF":
+	case "REDSTONE_COMPARATOR_ON":
+	case "BED_BLOCK":
+	case "WORKBENCH":
+	case "BREWING_STAND":
+	case "ENCHANTMENT_TABLE":
+	case "DAYLIGHT_DETECTOR":
+	case "DAYLIGHT_DETECTOR_INVERTED":
 	    return true;
 	default:
 	    return Residence.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
 	}
     }
 
-    private boolean isCanUseEntity(Material mat, Block block) {
+    private static boolean isCanUseEntity(Material mat, Block block) {
 	return Residence.getNms().isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
     }
 
@@ -928,11 +940,10 @@ public class ResidencePlayerListener implements Listener {
 		    event.setCancelled(true);
 		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", checkMat.getValue()));
 		    return;
-		} else {
-		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "use"));
-		    return;
 		}
+		event.setCancelled(true);
+		player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "use"));
+		return;
 
 	    }
 	    if (Residence.getConfigManager().getCustomContainers().contains(blockId)) {
@@ -1315,6 +1326,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (res.getPermissions().has("respawn", false) && Bukkit.getVersion().toString().contains("Spigot"))
 	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		@Override
 		public void run() {
 		    try {
 			event.getEntity().spigot().respawn();
@@ -1389,8 +1401,10 @@ public class ResidencePlayerListener implements Listener {
 	    } else {
 		if (res != null && ResOld.getName().equals(res.getName())) {
 
-		    if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+		    f: if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 			"residence.nofly.bypass")) {
+			if (res != null && res.isOwner(player))
+			    break f;
 			Location lc = player.getLocation();
 			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
 			location.setPitch(lc.getPitch());
@@ -1495,8 +1509,10 @@ public class ResidencePlayerListener implements Listener {
 	    }
 
 	    // Preventing fly in residence only when player has move permission
-	    if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+	    f: if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 		"residence.nofly.bypass")) {
+		if (res != null && res.isOwner(player))
+		    break f;
 		Location lc = player.getLocation();
 		Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
 		location.setPitch(lc.getPitch());

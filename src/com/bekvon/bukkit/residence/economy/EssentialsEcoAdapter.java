@@ -24,9 +24,8 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 	try {
 	    if (Economy.playerExists(playerName)) {
 		return Economy.getMoney(playerName);
-	    } else {
-		return 0;
 	    }
+	    return 0;
 	} catch (UserDoesNotExistException ex) {
 	    return 0;
 	}
@@ -57,9 +56,8 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 	    } catch (NoLoanPermittedException ex) {
 		return false;
 	    }
-	} else {
-	    return false;
 	}
+	return false;
     }
 
     @SuppressWarnings("deprecation")
@@ -74,9 +72,8 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 	    } catch (NoLoanPermittedException ex) {
 		return false;
 	    }
-	} else {
-	    return false;
 	}
+	return false;
     }
 
     @SuppressWarnings("deprecation")

@@ -54,6 +54,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return false;
     }
 
+    @Override
     public ClaimedResidence getByLoc(Location loc) {
 	if (loc == null)
 	    return null;
@@ -86,6 +87,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return subres;
     }
 
+    @Override
     public ClaimedResidence getByName(String name) {
 	if (name == null) {
 	    return null;
@@ -105,6 +107,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return res;
     }
 
+    @Override
     public String getNameByLoc(Location loc) {
 	ClaimedResidence res = this.getByLoc(loc);
 	if (res == null)
@@ -118,6 +121,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return name;
     }
 
+    @Override
     public String getNameByRes(ClaimedResidence res) {
 	Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
 	for (Entry<String, ClaimedResidence> check : set) {
@@ -132,6 +136,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return null;
     }
 
+    @Override
     public String getSubzoneNameByRes(ClaimedResidence res) {
 	Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
 	for (Entry<String, ClaimedResidence> check : set) {
@@ -146,30 +151,37 @@ public class ResidenceManager implements ResidenceInterface {
 	return null;
     }
 
+    @Override
     public void addShop(String res) {
 	shops.add(res);
     }
 
+    @Override
     public void removeShop(ClaimedResidence res) {
 	removeShop(res.getName());
     }
 
+    @Override
     public void removeShop(String resName) {
 	shops.remove(resName);
     }
 
+    @Override
     public List<String> getShops() {
 	return shops;
     }
 
+    @Override
     public boolean addResidence(String name, Location loc1, Location loc2) {
 	return this.addResidence(name, Residence.getServerLandname(), loc1, loc2);
     }
 
+    @Override
     public boolean addResidence(String name, String owner, Location loc1, Location loc2) {
 	return this.addResidence(null, owner, name, loc1, loc2, true);
     }
 
+    @Override
     public boolean addResidence(Player player, String name, Location loc1, Location loc2, boolean resadmin) {
 	return this.addResidence(player, player.getName(), name, loc1, loc2, resadmin);
     }
@@ -225,7 +237,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    return false;
 
 	if (!newRes.isSubzone() && Residence.getConfigManager().enableEconomy() && !resadmin) {
-	    int chargeamount = (int) Math.ceil((double) newArea.getSize() * group.getCostPerBlock());
+	    int chargeamount = (int) Math.ceil(newArea.getSize() * group.getCostPerBlock());
 	    if (!TransactionManager.chargeEconomyMoney(player, chargeamount))
 		return false;
 	}
@@ -297,20 +309,11 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden) {
-	this.listAllResidences(sender, page, showhidden, false, false);
+	this.listAllResidences(sender, page, showhidden, false);
     }
 
-    public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean showsubzones, boolean onlyHidden) {
-
-	int perPage = 20;
-	if (sender instanceof Player)
-	    perPage = 6;
-
-	int start = (page - 1) * perPage;
-	int end = start + perPage;
-
-	List<ClaimedResidence> list = getFromAllResidences(showhidden, onlyHidden, start, end);
-
+    public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean onlyHidden) {
+	List<ClaimedResidence> list = getFromAllResidences(showhidden, onlyHidden);
 	InformationPager.printListInfo(sender, null, list, page, showhidden);
     }
 
@@ -351,7 +354,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return list;
     }
 
-    public ArrayList<ClaimedResidence> getFromAllResidences(boolean showhidden, boolean onlyHidden, int start, int end) {
+    public ArrayList<ClaimedResidence> getFromAllResidences(boolean showhidden, boolean onlyHidden) {
 	ArrayList<ClaimedResidence> list = new ArrayList<>();
 	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
 	    boolean hidden = res.getValue().getPermissions().has("hidden", false);
@@ -500,20 +503,12 @@ public class ResidenceManager implements ResidenceInterface {
 	Residence.getTransactionManager().removeFromSale(name);
 
 	if (parent == null && Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().useResMoneyBack()) {
-	    int chargeamount = (int) Math.ceil((double) res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
+	    int chargeamount = (int) Math.ceil(res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
 	    TransactionManager.giveEconomyMoney(player, chargeamount);
 	}
     }
 
     public void removeAllByOwner(String owner) {
-	this.removeAllByOwner(null, owner, residences);
-    }
-
-    public void removeAllByOwner(CommandSender sender, String owner) {
-	this.removeAllByOwner(sender, owner, residences);
-    }
-
-    private void removeAllByOwner(CommandSender sender, String owner, Map<String, ClaimedResidence> resholder) {
 	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(owner);
 	for (String oneRes : list) {
 	    removeResidence(null, oneRes, true);
@@ -816,7 +811,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return retRes;
     }
 
-    private int getNameIncrement(String name, ResidenceManager resm) {
+    private static int getNameIncrement(String name, ResidenceManager resm) {
 	String orName = name;
 	int i = 0;
 	while (i < 1000) {
@@ -891,23 +886,20 @@ public class ResidenceManager implements ResidenceInterface {
 		    player.sendMessage(Residence.getLM().getMessage("Residence.Rename", oldName, newName));
 		}
 		return true;
-	    } else {
-
-		String[] oldname = oldName.split("\\.");
-		ClaimedResidence parent = res.getParent();
-
-		boolean feed = parent.renameSubzone(player, oldname[oldname.length - 1], newName, resadmin);
-
-		Residence.getSignUtil().updateSignResName(res);
-
-		return feed;
 	    }
-	} else {
-	    if (player != null) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
-	    }
-	    return false;
+	    String[] oldname = oldName.split("\\.");
+	    ClaimedResidence parent = res.getParent();
+
+	    boolean feed = parent.renameSubzone(player, oldname[oldname.length - 1], newName, resadmin);
+
+	    Residence.getSignUtil().updateSignResName(res);
+
+	    return feed;
 	}
+	if (player != null) {
+	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	}
+	return false;
     }
 
     public void giveResidence(Player reqPlayer, String targPlayer, String residence, boolean resadmin) {

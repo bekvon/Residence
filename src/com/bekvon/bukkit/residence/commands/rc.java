@@ -14,6 +14,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class rc implements cmd {
 
+    @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return true;
@@ -37,13 +38,12 @@ public class rc implements cmd {
 		}
 		player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
 		return true;
-	    } else {
-		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
-		if (chat != null && chat.getChannelName().equals(res.getName())) {
-		    Residence.getChatManager().removeFromChannel(pname);
-		    Residence.getPlayerListener().removePlayerResidenceChat(player);
-		    return true;
-		}
+	    }
+	    ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+	    if (chat != null && chat.getChannelName().equals(res.getName())) {
+		Residence.getChatManager().removeFromChannel(pname);
+		Residence.getPlayerListener().removePlayerResidenceChat(player);
+		return true;
 	    }
 	    if (!res.getPermissions().playerHas(player.getName(), "chat", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
 		player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "chat", res.getName()));

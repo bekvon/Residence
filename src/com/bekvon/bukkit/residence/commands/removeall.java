@@ -16,7 +16,7 @@ public class removeall implements cmd {
 	String target = args.length == 2 ? args[1] : sender.getName();
 
 	if (resadmin) {
-	    Residence.getResidenceManager().removeAllByOwner(sender, target);
+	    Residence.getResidenceManager().removeAllByOwner(target);
 	    sender.sendMessage(Residence.getLM().getMessage("Residence.RemovePlayersResidences", target));
 	} else {
 	    sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));

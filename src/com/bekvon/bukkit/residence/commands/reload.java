@@ -59,6 +59,12 @@ public class reload implements cmd {
 		System.out.println(Residence.prefix + " Language file does not exist...");
 	    }
 	    sender.sendMessage(Residence.prefix + " Reloaded language file.");
+	    if (in != null)
+		try {
+		    in.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	    return true;
 	} else if (args[1].equalsIgnoreCase("config")) {
 	    Residence.getConfigManager().UpdateConfigFile();
@@ -68,14 +74,14 @@ public class reload implements cmd {
 	    Residence.getConfigManager().loadGroups();
 	    Residence.gmanager = new PermissionManager();
 	    Residence.wmanager = new WorldFlagManager();
-	    sender.sendMessage(Residence.prefix + " Reloaded groups file.");	 
-	    return true;   
+	    sender.sendMessage(Residence.prefix + " Reloaded groups file.");
+	    return true;
 	} else if (args[1].equalsIgnoreCase("flags")) {
 	    Residence.getConfigManager().loadFlags();
 	    Residence.gmanager = new PermissionManager();
 	    Residence.imanager = new WorldItemManager();
 	    Residence.wmanager = new WorldFlagManager();
-	    sender.sendMessage(Residence.prefix + " Reloaded flags file.");	
+	    sender.sendMessage(Residence.prefix + " Reloaded flags file.");
 	    return true;
 	}
 	return false;

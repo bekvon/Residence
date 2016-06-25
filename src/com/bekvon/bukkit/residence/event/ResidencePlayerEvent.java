@@ -8,28 +8,27 @@ public class ResidencePlayerEvent extends ResidenceEvent implements ResidencePla
 
     Player p;
 
-    public ResidencePlayerEvent(String eventName, ClaimedResidence resref, Player player)
-    {
-        super(eventName, resref);
-        res = resref;
-        p = player;
+    public ResidencePlayerEvent(String eventName, ClaimedResidence resref, Player player) {
+	super(eventName, resref);
+	res = resref;
+	p = player;
     }
 
-    public boolean isPlayer()
-    {
-        return p!=null;
+    @Override
+    public boolean isPlayer() {
+	return p != null;
     }
 
-    public boolean isAdmin()
-    {
-        if(isPlayer())
-        {
-            return Residence.getPermissionManager().isResidenceAdmin(p);
-        }
-        return true;
+    @Override
+    public boolean isAdmin() {
+	if (isPlayer()) {
+	    return Residence.getPermissionManager().isResidenceAdmin(p);
+	}
+	return true;
     }
-    public Player getPlayer()
-    {
-        return p;
+
+    @Override
+    public Player getPlayer() {
+	return p;
     }
 }

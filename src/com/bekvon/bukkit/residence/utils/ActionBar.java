@@ -55,6 +55,7 @@ public class ActionBar implements ABInterface {
 	}
     }
 
+    @Override
     public void send(CommandSender sender, String msg) {
 	if (sender instanceof Player)
 	    send((Player) sender, msg);
@@ -62,6 +63,7 @@ public class ActionBar implements ABInterface {
 	    sender.sendMessage(msg);
     }
 
+    @Override
     public void send(Player receivingPacket, String msg) {
 	if (simpleMessages) {
 	    receivingPacket.sendMessage(msg);
@@ -107,9 +109,8 @@ public class ActionBar implements ABInterface {
     private String getChatSerializerClasspath() {
 	if (version.equals("v1_8_R1") || version.contains("1_7")) {
 	    return "net.minecraft.server." + version + ".ChatSerializer";
-	} else {
-	    return "net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer";// 1_8_R2 moved to IChatBaseComponent
 	}
+	return "net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer";// 1_8_R2 moved to IChatBaseComponent
     }
 
     private String getPacketPlayOutChat() {

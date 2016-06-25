@@ -49,8 +49,7 @@ public class ConfigReader {
 	copySetting(path);
 	if (colorize)
 	    return ColorsArray(config.getStringList(path));
-	else
-	    return config.getStringList(path);
+	return config.getStringList(path);
     }
 
     public List<String> get(String path, List<String> list) {
@@ -70,8 +69,7 @@ public class ConfigReader {
 	copySetting(path);
 	if (colorize)
 	    return ChatColor.translateAlternateColorCodes('&', config.getString(path));
-	else
-	    return config.getString(path);
+	return config.getString(path);
     }
 
     public Double get(String path, Double boo) {

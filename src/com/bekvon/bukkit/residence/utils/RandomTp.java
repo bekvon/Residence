@@ -11,7 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -116,11 +115,12 @@ public class RandomTp {
 
     public void performDelaydTp(final Location loc, final Player targetPlayer) {
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
 	    public void run() {
-		if (!ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
+		if (!Residence.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
 		    return;
-		else if (ResidenceCommandListener.getTeleportDelayMap().contains(targetPlayer.getName()))
-		    ResidenceCommandListener.getTeleportDelayMap().remove(targetPlayer.getName());
+		else if (Residence.getTeleportDelayMap().contains(targetPlayer.getName()))
+		    Residence.getTeleportDelayMap().remove(targetPlayer.getName());
 		targetPlayer.teleport(loc);
 		targetPlayer.sendMessage(Residence.getLM().getMessage("RandomTeleport.TeleportSuccess", loc.getX(), loc.getY(), loc.getZ()));
 		return;

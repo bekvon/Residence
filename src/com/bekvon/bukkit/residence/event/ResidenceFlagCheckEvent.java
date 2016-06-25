@@ -6,6 +6,7 @@ import org.bukkit.event.HandlerList;
 public class ResidenceFlagCheckEvent extends ResidenceFlagEvent {
 private static final HandlerList handlers = new HandlerList();
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

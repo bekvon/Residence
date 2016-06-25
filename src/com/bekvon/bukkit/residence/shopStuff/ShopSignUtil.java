@@ -188,7 +188,7 @@ public class ShopSignUtil {
 
 	int likes = 0;
 	for (ShopVote oneVote : votes) {
-	    if (oneVote.getVote() >= (int) (Residence.getConfigManager().getVoteRangeTo() / 2))
+	    if (oneVote.getVote() >= Residence.getConfigManager().getVoteRangeTo() / 2)
 		likes++;
 	}
 
@@ -213,11 +213,12 @@ public class ShopSignUtil {
 	return allvotes;
     }
 
-    private Map<String, Double> sortByComparator(Map<String, Double> allvotes) {
+    private static Map<String, Double> sortByComparator(Map<String, Double> allvotes) {
 
 	List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(allvotes.entrySet());
 
 	Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+	    @Override
 	    public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
 		return (o2.getValue()).compareTo(o1.getValue());
 	    }
@@ -302,6 +303,7 @@ public class ShopSignUtil {
 
     public boolean BoardUpdateDelayed() {
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
 	    public void run() {
 		BoardUpdate();
 		return;

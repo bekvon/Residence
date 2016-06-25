@@ -35,7 +35,7 @@ public class PermissionManager {
 	    playersGroup = Collections.synchronizedMap(new HashMap<String, String>());
 	    globalFlagPerms = new FlagPermissions();
 	    this.readConfig();
-	    this.checkPermissions();
+	    checkPermissions();
 	} catch (Exception ex) {
 	    Logger.getLogger(PermissionManager.class.getName()).log(Level.SEVERE, null, ex);
 	}
@@ -132,7 +132,7 @@ public class PermissionManager {
 	return (sender.hasPermission("residence.admin") || (sender.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
     }
 
-    private void checkPermissions() {
+    private static void checkPermissions() {
 	Server server = Residence.getServ();
 	Plugin p = server.getPluginManager().getPlugin("Vault");
 	if (p != null) {
@@ -141,9 +141,8 @@ public class PermissionManager {
 		perms = vault;
 		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault using permissions plugin:" + vault.getPermissionsName());
 		return;
-	    } else {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault, but Vault reported no usable permissions system...");
 	    }
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault, but Vault reported no usable permissions system...");
 	}
 	p = server.getPluginManager().getPlugin("PermissionsBukkit");
 	if (p != null) {

@@ -33,12 +33,12 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
     }
 
     public ResidenceVaultAdapter(Server s) {
-	this.setupPermissions(s);
-	this.setupEconomy(s);
-	this.setupChat(s);
+	setupPermissions(s);
+	setupEconomy(s);
+	setupChat(s);
     }
 
-    private boolean setupPermissions(Server s) {
+    private static boolean setupPermissions(Server s) {
 	RegisteredServiceProvider<Permission> permissionProvider = s.getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
 	if (permissionProvider != null) {
 	    permissions = permissionProvider.getProvider();
@@ -46,7 +46,7 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 	return (permissions != null);
     }
 
-    private boolean setupChat(Server s) {
+    private static boolean setupChat(Server s) {
 	RegisteredServiceProvider<Chat> chatProvider = s.getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
 	if (chatProvider != null) {
 	    chat = chatProvider.getProvider();
@@ -54,7 +54,7 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 	return (chat != null);
     }
 
-    private boolean setupEconomy(Server s) {
+    private static boolean setupEconomy(Server s) {
 	RegisteredServiceProvider<Economy> economyProvider = s.getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 	if (economyProvider != null) {
 	    economy = economyProvider.getProvider();
@@ -62,23 +62,23 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 	return (economy != null);
     }
 
+    @Override
     public String getPlayerGroup(Player player) {
 	String group = permissions.getPrimaryGroup(player).toLowerCase();
 	if (group == null) {
 	    return group;
-	} else {
-	    return group.toLowerCase();
 	}
+	return group.toLowerCase();
     }
 
+    @Override
     public String getPlayerGroup(String player, String world) {
 	@SuppressWarnings("deprecation")
 	String group = permissions.getPrimaryGroup(world, player);
 	if (group == null) {
 	    return group;
-	} else {
-	    return group.toLowerCase();
 	}
+	return group.toLowerCase();
     }
 
     public static boolean hasPermission(OfflinePlayer player, String perm, String world) {
@@ -117,13 +117,11 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 	if (economy.withdrawPlayer(playerFrom, amount).transactionSuccess()) {
 	    if (economy.depositPlayer(playerTo, amount).transactionSuccess()) {
 		return true;
-	    } else {
-		economy.depositPlayer(playerFrom, amount);
-		return false;
 	    }
-	} else {
+	    economy.depositPlayer(playerFrom, amount);
 	    return false;
 	}
+	return false;
     }
 
     public String getEconomyName() {
@@ -147,6 +145,7 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 	return "";
     }
 
+    @Override
     public String getName() {
 	return "Vault";
     }

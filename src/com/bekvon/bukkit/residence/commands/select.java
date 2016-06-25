@@ -74,8 +74,9 @@ public class select implements cmd {
 		}
 		Location playerLoc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
 		if (playerLoc2 != null) {
-		    player.sendMessage(Residence.getLM().getMessage("Select.Secondary", Residence.getLM().getMessage("General.CoordsBottom", playerLoc2.getBlockX(), playerLoc2
-			.getBlockY(), playerLoc2.getBlockZ())));
+		    player.sendMessage(Residence.getLM().getMessage("Select.Secondary", Residence.getLM().getMessage("General.CoordsBottom", playerLoc2.getBlockX(),
+			playerLoc2
+			    .getBlockY(), playerLoc2.getBlockZ())));
 		}
 		player.sendMessage(Residence.getLM().getMessage("General.Separator"));
 		return true;
@@ -157,14 +158,13 @@ public class select implements cmd {
 		player.sendMessage(Residence.getLM().getMessage("Area.NonExist"));
 	    }
 	    return true;
-	} else {
-	    try {
-		Residence.getSelectionManager().selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-		return true;
-	    } catch (Exception ex) {
-		player.sendMessage(Residence.getLM().getMessage("Select.Fail"));
-		return true;
-	    }
+	}
+	try {
+	    Residence.getSelectionManager().selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+	    return true;
+	} catch (Exception ex) {
+	    player.sendMessage(Residence.getLM().getMessage("Select.Fail"));
+	    return true;
 	}
     }
 

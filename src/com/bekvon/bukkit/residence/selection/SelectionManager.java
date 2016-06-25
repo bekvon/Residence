@@ -117,7 +117,7 @@ public class SelectionManager {
 
 	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	if (Residence.getConfigManager().enableEconomy())
-	    Message += " " + Residence.getLM().getMessage("General.LandCost", ((int) Math.ceil((double) cuboidArea.getSize() * group.getCostPerBlock())));
+	    Message += " " + Residence.getLM().getMessage("General.LandCost", ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
 
 	Residence.getAB().send(player, Message);
 
@@ -131,7 +131,7 @@ public class SelectionManager {
 	    player.sendMessage(Residence.getLM().getMessage("Select.TotalSize", cuboidArea.getSize()));
 	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
 	    if (Residence.getConfigManager().enableEconomy())
-		player.sendMessage(Residence.getLM().getMessage("General.LandCost", ((int) Math.ceil((double) cuboidArea.getSize() * group.getCostPerBlock()))));
+		player.sendMessage(Residence.getLM().getMessage("General.LandCost", ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock()))));
 	    player.sendMessage(ChatColor.YELLOW + "X" + Residence.getLM().getMessage("General.Size", cuboidArea.getXSize()));
 	    player.sendMessage(ChatColor.YELLOW + "Y" + Residence.getLM().getMessage("General.Size", cuboidArea.getYSize()));
 	    player.sendMessage(ChatColor.YELLOW + "Z" + Residence.getLM().getMessage("General.Size", cuboidArea.getZSize()));
@@ -241,7 +241,7 @@ public class SelectionManager {
 	return locList;
     }
 
-    public List<Location> GetLocationsWallsByData(Player player, Location loc, Double TX, Double TY, Double TZ, Location lowLoc, SelectionSides Sides,
+    public List<Location> GetLocationsWallsByData(Location loc, Double TX, Double TY, Double TZ, Location lowLoc, SelectionSides Sides,
 	double Range) {
 	List<Location> locList = new ArrayList<Location>();
 
@@ -272,7 +272,7 @@ public class SelectionManager {
 	return locList;
     }
 
-    public List<Location> GetLocationsCornersByData(Player player, Location loc, Double TX, Double TY, Double TZ, Location lowLoc, SelectionSides Sides,
+    public List<Location> GetLocationsCornersByData(Location loc, Double TX, Double TY, Double TZ, Location lowLoc, SelectionSides Sides,
 	double Range) {
 	List<Location> locList = new ArrayList<Location>();
 
@@ -306,7 +306,7 @@ public class SelectionManager {
 
 	// South - East corner
 	if (Sides.ShowSouthSide() && Sides.ShowEastSide())
-	    locList.addAll(getLocations(lowLoc.clone().add(TX, 0, TZ), loc.clone(), 0D, TY+1, 0D, Range, true));
+	    locList.addAll(getLocations(lowLoc.clone().add(TX, 0, TZ), loc.clone(), 0D, TY + 1, 0D, Range, true));
 
 	// West bottom corner
 	if (Sides.ShowWestSide() && Sides.ShowBottomSide())
@@ -385,9 +385,9 @@ public class SelectionManager {
 	    Bukkit.getScheduler().cancelTask(errorIDMap.get(player.getName()));
 	}
 
-	final List<Location> locList = GetLocationsWallsByData(player, loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range);
+	final List<Location> locList = GetLocationsWallsByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range);
 
-	final List<Location> locList2 = GetLocationsCornersByData(player, loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range);
+	final List<Location> locList2 = GetLocationsCornersByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range);
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
@@ -421,6 +421,7 @@ public class SelectionManager {
 	    return false;
 
 	int scid = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
 	    public void run() {
 		if (player.isOnline())
 		    MakeBorders(player, OriginalLow, OriginalHigh, error);
@@ -568,9 +569,10 @@ public class SelectionManager {
 	    player.sendMessage(Residence.getLM().getMessage("Select.Points"));
 	    return;
 	}
-	Direction d = this.getDirection(player);
+	Direction d = getDirection(player);
 	if (d == null) {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Direction"));
+	    return;
 	}
 	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
 	switch (d) {
@@ -665,9 +667,10 @@ public class SelectionManager {
 	    player.sendMessage(Residence.getLM().getMessage("Select.Points"));
 	    return false;
 	}
-	Direction d = this.getDirection(player);
+	Direction d = getDirection(player);
 	if (d == null) {
 	    player.sendMessage(Residence.getLM().getMessage("Invalid.Direction"));
+	    return false;
 	}
 	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
 	switch (d) {
@@ -726,7 +729,7 @@ public class SelectionManager {
 	return true;
     }
 
-    private Direction getDirection(Player player) {
+    private static Direction getDirection(Player player) {
 
 	int yaw = (int) player.getLocation().getYaw();
 

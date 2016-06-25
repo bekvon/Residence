@@ -91,9 +91,9 @@ public class expand implements cmd {
 
 	    res.replaceArea(player, Residence.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
 	    return true;
-	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Select.Points"));
 	}
+	player.sendMessage(Residence.getLM().getMessage("Select.Points"));
+
 	return false;
     }
 

@@ -38,9 +38,9 @@ public class market implements cmd {
 	switch (secondCommand.toLowerCase()) {
 
 	case "list":
-	    return commandResMarketList(args, resadmin, player, page);
+	    return commandResMarketList(args, player, page);
 	case "autopay":
-	    return commandResMarketAutoPay(args, resadmin, player, page);
+	    return commandResMarketAutoPay(args, resadmin, player);
 	case "payrent":
 	    return commandResMarketPayRent(args, resadmin, player);
 	case "rentable":
@@ -218,7 +218,7 @@ public class market implements cmd {
 	}
     }
 
-    private boolean commandResMarketRent(String[] args, boolean resadmin, Player player) {
+    private static boolean commandResMarketRent(String[] args, boolean resadmin, Player player) {
 	if (args.length < 2 || args.length > 4) {
 	    return false;
 	}
@@ -250,7 +250,7 @@ public class market implements cmd {
 	return true;
     }
 
-    private boolean commandResMarketPayRent(String[] args, boolean resadmin, Player player) {
+    private static boolean commandResMarketPayRent(String[] args, boolean resadmin, Player player) {
 	if (args.length != 2 && args.length != 3) {
 	    return false;
 	}
@@ -269,7 +269,7 @@ public class market implements cmd {
 	return true;
     }
 
-    private boolean commandResMarketRentable(String[] args, boolean resadmin, Player player) {
+    private static boolean commandResMarketRentable(String[] args, boolean resadmin, Player player) {
 	if (args.length < 5 || args.length > 8) {
 	    return false;
 	}
@@ -334,7 +334,7 @@ public class market implements cmd {
 	return true;
     }
 
-    private boolean commandResMarketAutoPay(String[] args, boolean resadmin, Player player, int page) {
+    private static boolean commandResMarketAutoPay(String[] args, boolean resadmin, Player player) {
 	if (!Residence.getConfigManager().enableEconomy()) {
 	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
 	    return true;
@@ -379,7 +379,7 @@ public class market implements cmd {
 	return true;
     }
 
-    private boolean commandResMarketList(String[] args, boolean resadmin, Player player, int page) {
+    private static boolean commandResMarketList(String[] args, Player player, int page) {
 	if (!Residence.getConfigManager().enableEconomy()) {
 	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
 	    return true;
