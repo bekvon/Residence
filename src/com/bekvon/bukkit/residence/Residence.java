@@ -112,10 +112,6 @@ import org.bukkit.OfflinePlayer;
  */
 public class Residence extends JavaPlugin {
 
-    public final static String uid = "%%__USER__%%";
-    final String rid = "%%__RESOURCE__%%";
-    final String nonce = "%%__NONCE__%%";
-
     protected static String ResidenceVersion;
     protected static List<String> authlist;
     protected static ResidenceManager rmanager;
@@ -1486,6 +1482,12 @@ public class Residence extends JavaPlugin {
 	    return true;
 	if (inform)
 	    sender.sendMessage(getLM().getMessage("Invalid.Player"));
+	@SuppressWarnings("unused")
+	String a = "%%__USER__%%";
+	@SuppressWarnings("unused")
+	String b = "%%__RESOURCE__%%";
+	@SuppressWarnings("unused")
+	String c = "%%__NONCE__%%";
 	return false;
 
     }

@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,10 +52,25 @@ public class remove implements cmd {
 	String resname = res.getName();
 
 	if (!Residence.deleteConfirm.containsKey(senderName) || !resname.equalsIgnoreCase(Residence.deleteConfirm.get(senderName))) {
-	    if (res.isSubzone())
-		sender.sendMessage(Residence.getLM().getMessage("Subzone.DeleteConfirm", res.getResidenceName()));
-	    else
-		sender.sendMessage(Residence.getLM().getMessage("Residence.DeleteConfirm", res.getResidenceName()));
+	    String cmd = "res";
+	    if (resadmin)
+		cmd = "resadmin";
+	    if (sender instanceof Player) {
+		String raw = "";
+		if (res.isSubzone()) {
+		    raw = Residence.getResidenceManager().convertToRaw(null, Residence.getLM().getMessage("Subzone.DeleteConfirm", res.getResidenceName()),
+			"Click to confirm remove", cmd + " confirm");
+		} else {
+		    raw = Residence.getResidenceManager().convertToRaw(null, Residence.getLM().getMessage("Residence.DeleteConfirm", res.getResidenceName()),
+			"Click to confirm remove", cmd + " confirm");
+		}
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + raw);
+	    } else {
+		if (res.isSubzone())
+		    sender.sendMessage(Residence.getLM().getMessage("Subzone.DeleteConfirm", res.getResidenceName()));
+		else
+		    sender.sendMessage(Residence.getLM().getMessage("Residence.DeleteConfirm", res.getResidenceName()));
+	    }
 	    Residence.deleteConfirm.put(senderName, resname);
 	} else {
 	    Residence.getResidenceManager().removeResidence(sender, resname, resadmin);

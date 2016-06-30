@@ -351,36 +351,28 @@ public class ResidencePermissions extends FlagPermissions {
 	PermissionManager gm = Residence.getPermissionManager();
 	PermissionGroup group = gm.getGroup(this.getOwner(), world);
 	Set<Entry<String, Boolean>> dflags = group.getDefaultResidenceFlags();
-	Set<Entry<String, Boolean>> dcflags = group.getDefaultCreatorFlags();
+//	Set<Entry<String, Boolean>> dcflags = group.getDefaultCreatorFlags();
 	Set<Entry<String, Map<String, Boolean>>> dgflags = group.getDefaultGroupFlags();
 	this.applyGlobalDefaults();
 	for (Entry<String, Boolean> next : dflags) {
 	    if (this.checkValidFlag(next.getKey(), true)) {
-		if (next.getValue()) {
-		    this.setFlag(next.getKey(), FlagState.TRUE);
-		} else {
-		    this.setFlag(next.getKey(), FlagState.FALSE);
-		}
+		this.setFlag(next.getKey(), next.getValue() ? FlagState.TRUE : FlagState.FALSE);
 	    }
 	}
 
-	for (Entry<String, Boolean> next : dcflags) {
-	    if (this.checkValidFlag(next.getKey(), false)) {
-		if (next.getValue()) {
-		    this.setPlayerFlag(this.getOwner(), next.getKey(), FlagState.TRUE);
-		} else {
-		    this.setPlayerFlag(this.getOwner(), next.getKey(), FlagState.FALSE);
-		}
-	    }
-	}
+//	for (Entry<String, Boolean> next : dcflags) {
+//	    if (this.checkValidFlag(next.getKey(), false)) {
+//		if (next.getValue()) {
+//		    this.setPlayerFlag(this.getOwner(), next.getKey(), FlagState.TRUE);
+//		} else {
+//		    this.setPlayerFlag(this.getOwner(), next.getKey(), FlagState.FALSE);
+//		}
+//	    }
+//	}
 	for (Entry<String, Map<String, Boolean>> entry : dgflags) {
 	    Map<String, Boolean> value = entry.getValue();
 	    for (Entry<String, Boolean> flag : value.entrySet()) {
-		if (flag.getValue()) {
-		    this.setGroupFlag(entry.getKey(), flag.getKey(), FlagState.TRUE);
-		} else {
-		    this.setGroupFlag(entry.getKey(), flag.getKey(), FlagState.FALSE);
-		}
+		this.setGroupFlag(entry.getKey(), flag.getKey(), flag.getValue() ? FlagState.TRUE : FlagState.FALSE);
 	    }
 	}
     }

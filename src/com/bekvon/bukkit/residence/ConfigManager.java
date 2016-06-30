@@ -71,6 +71,20 @@ public class ConfigManager {
     protected int chatPrefixLength;
     protected int leaseCheckInterval;
     protected int autoSaveInt;
+
+    // Backup stuff
+    protected boolean BackupAutoCleanUpUse;
+    protected int BackupAutoCleanUpDays;
+    protected boolean UseZipBackup;
+    protected boolean BackupWorldFiles;
+    protected boolean BackupforsaleFile;
+    protected boolean BackupleasesFile;
+    protected boolean BackuppermlistsFile;
+    protected boolean BackuprentFile;
+    protected boolean BackupflagsFile;
+    protected boolean BackupgroupsFile;
+    protected boolean BackupconfigFile;
+
     protected int FlowLevel;
     protected int PlaceLevel;
     protected int BlockFallLevel;
@@ -538,6 +552,24 @@ public class ConfigManager {
 	c.getW().addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = c.get("Global.SaveInterval", 10);
 
+	c.getW().addComment("Global.Backup.AutoCleanUp.Use",
+	    "Do you want to automaticaly remove backup files from main backup folder if they are older than defined day amount");
+	BackupAutoCleanUpUse = c.get("Global.Backup.AutoCleanUp.Use", false);
+	BackupAutoCleanUpDays = c.get("Global.Backup.AutoCleanUp.Days", 30);
+
+	c.getW().addComment("Global.Backup.UseZip", "Do you want to backup files by creating zip files in main residence folder in backup folder",
+	    "This wont have effect on regular backuped files made in save folder");
+	UseZipBackup = c.get("Global.Backup.UseZip", true);
+
+	BackupWorldFiles = c.get("Global.Backup.IncludeFiles.Worlds", true);
+	BackupforsaleFile = c.get("Global.Backup.IncludeFiles.forsale", true);
+	BackupleasesFile = c.get("Global.Backup.IncludeFiles.leases", true);
+	BackuppermlistsFile = c.get("Global.Backup.IncludeFiles.permlists", true);
+	BackuprentFile = c.get("Global.Backup.IncludeFiles.rent", true);
+	BackupflagsFile = c.get("Global.Backup.IncludeFiles.flags", true);
+	BackupgroupsFile = c.get("Global.Backup.IncludeFiles.groups", true);
+	BackupconfigFile = c.get("Global.Backup.IncludeFiles.config", true);
+
 	// Auto remove old residences
 	c.getW().addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
 	    "Players can bypass this wih residence.cleanbypass permission node");
@@ -547,13 +579,14 @@ public class ConfigManager {
 	c.getW().addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
-	c.getW().addComment("Global.LWC.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
-	    "Players can bypass this wih residence.cleanbypass permission node");
-	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
-	c.getW().addComment("Global.LWC.Days", "For how long player should be offline to delete hes LWC protection on residence removal");
-	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
-	c.getW().addComment("Global.LWC.Worlds", "Worlds to be included in check list");
-	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
+	// Not in use currently
+//	c.getW().addComment("Global.LWC.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
+//	    "Players can bypass this wih residence.cleanbypass permission node");
+//	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
+//	c.getW().addComment("Global.LWC.Days", "For how long player should be offline to delete hes LWC protection on residence removal");
+//	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
+//	c.getW().addComment("Global.LWC.Worlds", "Worlds to be included in check list");
+//	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
 	// TNT explosions below 63
 	c.getW().addComment("Global.AntiGreef.TNT.ExplodeBelow",
@@ -767,10 +800,22 @@ public class ConfigManager {
 	VisualizerCollumnSpacing = c.get("Global.Visualizer.CollumnSpacing", 2);
 	if (VisualizerCollumnSpacing < 1)
 	    VisualizerCollumnSpacing = 1;
+
+	String effectsList = "";
+	for (Effect one : Effect.values()) {
+	    if (one == null)
+		continue;
+	    if (one.name() == null)
+		continue;
+	    effectsList += one.name().toLowerCase() + ", ";
+	}
+
 	c.getW().addComment("Global.Visualizer.Selected",
 	    "Particle effect names. Posible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
 	    " smoke, largesmoke, spell, instantSpell, mobSpell, mobSpellAmbient, witchMagic, dripWater, dripLava, angryVillager, happyVillager, townaura",
-	    " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance");
+	    " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance",
+	    "",
+	    "If using spigot based server different particales can be used:", effectsList);
 
 	// Frame
 	String efname = c.get("Global.Visualizer.Selected.Frame", "happyVillager");
@@ -786,8 +831,11 @@ public class ConfigManager {
 		break;
 	    }
 	}
+
 	if (SelectedSpigotFrame == null) {
-	    SelectedSpigotFrame = Effect.HAPPY_VILLAGER;
+	    SelectedSpigotFrame = Effect.getByName("HAPPY_VILLAGER");
+	    if (SelectedSpigotFrame == null)
+		SelectedSpigotFrame = Effect.values()[0];
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 
@@ -806,7 +854,10 @@ public class ConfigManager {
 	    }
 	}
 	if (SelectedSpigotSides == null) {
-	    SelectedSpigotSides = Effect.COLOURED_DUST;
+	    SelectedSpigotSides = Effect.getByName("COLOURED_DUST");
+	    if (SelectedSpigotSides == null)
+		SelectedSpigotSides = Effect.values()[0];
+
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 
@@ -825,7 +876,9 @@ public class ConfigManager {
 	    }
 	}
 	if (OverlapSpigotFrame == null) {
-	    OverlapSpigotFrame = Effect.FLAME;
+	    OverlapSpigotFrame = Effect.getByName("FLAME");
+	    if (OverlapSpigotFrame == null)
+		OverlapSpigotFrame = Effect.values()[0];
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 
@@ -843,7 +896,9 @@ public class ConfigManager {
 	    }
 	}
 	if (OverlapSpigotSides == null) {
-	    OverlapSpigotSides = Effect.FLAME;
+	    OverlapSpigotSides = Effect.getByName("FLAME");
+	    if (OverlapSpigotSides == null)
+		OverlapSpigotSides = Effect.values()[0];
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 
@@ -934,7 +989,7 @@ public class ConfigManager {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-	
+
 	try {
 	    in.close();
 	} catch (IOException e) {
@@ -1068,19 +1123,19 @@ public class ConfigManager {
     public ParticleEffects getOverlapSides() {
 	return OverlapSides;
     }
-    
+
     public Effect getSelectedSpigotFrame() {
 	return SelectedSpigotFrame;
     }
-    
+
     public Effect getSelectedSpigotSides() {
 	return SelectedSpigotSides;
     }
-    
+
     public Effect getOverlapSpigotFrame() {
 	return OverlapSpigotFrame;
     }
-    
+
     public Effect getOverlapSpigotSides() {
 	return OverlapSpigotSides;
     }
@@ -1240,6 +1295,52 @@ public class ConfigManager {
     public int getAutoSaveInterval() {
 	return autoSaveInt;
     }
+
+    // backup stuff   
+    public boolean BackupAutoCleanUpUse() {
+	return BackupAutoCleanUpUse;
+    }
+
+    public int BackupAutoCleanUpDays() {
+	return BackupAutoCleanUpDays;
+    }
+
+    public boolean UseZipBackup() {
+	return UseZipBackup;
+    }
+
+    public boolean BackupWorldFiles() {
+	return BackupWorldFiles;
+    }
+
+    public boolean BackupforsaleFile() {
+	return BackupforsaleFile;
+    }
+
+    public boolean BackupleasesFile() {
+	return BackupleasesFile;
+    }
+
+    public boolean BackuppermlistsFile() {
+	return BackuppermlistsFile;
+    }
+
+    public boolean BackuprentFile() {
+	return BackuprentFile;
+    }
+
+    public boolean BackupflagsFile() {
+	return BackupflagsFile;
+    }
+
+    public boolean BackupgroupsFile() {
+	return BackupgroupsFile;
+    }
+
+    public boolean BackupconfigFile() {
+	return BackupconfigFile;
+    }
+    // backup stuff
 
     public int getFlowLevel() {
 	return FlowLevel;

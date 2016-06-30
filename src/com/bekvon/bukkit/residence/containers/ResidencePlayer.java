@@ -95,7 +95,7 @@ public class ResidencePlayer {
     public void recountMaxRes() {
 	for (int i = 1; i <= Residence.getConfigManager().getMaxResCount(); i++) {
 	    if (player != null) {
-		if (this.player.isPermissionSet("residence.max.res." + i))
+		if (this.player.hasPermission("residence.max.res." + i))
 		    this.maxRes = i;
 	    } else {
 		if (ofPlayer != null)
@@ -133,6 +133,14 @@ public class ResidencePlayer {
 
     public int getMaxRes() {
 	recountMaxRes();
+	if (this.player != null) {
+	    Residence.getPermissionManager().updateGroupNameForPlayer(this.player.getName(), this.player.isOnline() ? this.player.getPlayer().getLocation().getWorld()
+		.getName() : Residence.getConfigManager().getDefaultWorld(), true);
+	    PermissionGroup g = Residence.getPermissionManager().getGroup(this.player);
+	    if (this.maxRes < g.getMaxZones())
+		return g.getMaxZones();
+	}
+
 	return this.maxRes;
     }
 
@@ -171,6 +179,8 @@ public class ResidencePlayer {
     }
 
     public void addResidence(ClaimedResidence residence) {
+	if (residence == null)
+	    return;
 	String name = residence.getName();
 	name = name.toLowerCase();
 	this.ResidenceList.put(name, residence);

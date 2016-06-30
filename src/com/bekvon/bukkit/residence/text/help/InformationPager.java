@@ -8,7 +8,6 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import java.util.Arrays;
@@ -67,7 +66,6 @@ public class InformationPager {
 	    pagecount, lines.size())));
 
 	String cmd = "res";
-	Debug.D("admin " + resadmin);
 	if (resadmin)
 	    cmd = "resadmin";
 
