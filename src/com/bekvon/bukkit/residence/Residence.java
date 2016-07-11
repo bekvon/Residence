@@ -80,6 +80,7 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -412,7 +413,9 @@ public class Residence extends JavaPlugin {
 	    getFlagUtilManager().load();
 
 	    try {
-		Class.forName("org.bukkit.entity.Player.Spigot");
+		Debug.D("spigot 1 ");
+//		Class.forName("org.bukkit.entity.Player.Spigot");
+		Debug.D("spigot 2 ");
 		spigotPlatform = true;
 	    } catch (Exception e) {
 	    }

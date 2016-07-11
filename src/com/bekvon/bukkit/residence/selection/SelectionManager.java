@@ -392,19 +392,36 @@ public class SelectionManager {
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		if (!error)
-		    for (Location one : locList)
-			Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, one, player);
-		else
-		    for (Location one : locList)
-			Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, one, player);
 
-		if (!error)
-		    for (Location one : locList2)
-			Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, one, player);
-		else
-		    for (Location one : locList2)
-			Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, one, player);
+		if (Residence.isSpigot()) {
+		    if (!error)
+			for (Location one : locList)
+			    player.spigot().playEffect(one, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+		    else
+			for (Location one : locList)
+			    player.spigot().playEffect(one, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+
+		    if (!error)
+			for (Location one : locList2)
+			    player.spigot().playEffect(one, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+		    else
+			for (Location one : locList2)
+			    player.spigot().playEffect(one, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+		} else {
+		    if (!error)
+			for (Location one : locList)
+			    Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, one, player);
+		    else
+			for (Location one : locList)
+			    Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, one, player);
+		    if (!error)
+			for (Location one : locList2)
+			    Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, one, player);
+		    else
+			for (Location one : locList2)
+			    Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, one, player);
+		}
+
 		return;
 	    }
 	});
