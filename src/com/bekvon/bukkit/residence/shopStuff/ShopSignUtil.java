@@ -72,6 +72,15 @@ public class ShopSignUtil {
 	GetAllVoteList().clear();
 	File file = new File(plugin.getDataFolder(), "ShopVotes.yml");
 	YamlConfiguration f = YamlConfiguration.loadConfiguration(file);
+	
+	if (!file.exists()){
+	    try {
+		file.createNewFile();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	    return;
+	}
 
 	if (!f.isConfigurationSection("ShopVotes"))
 	    return;
