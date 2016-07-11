@@ -61,6 +61,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
@@ -1459,10 +1460,10 @@ public class ResidencePlayerListener implements Listener {
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-		if (ResOld.getPermissions().has("night", true) || ResOld.getPermissions().has("day", true))
+		if (ResOld.getPermissions().has("night", FlagCombo.OnlyTrue) || ResOld.getPermissions().has("day",  FlagCombo.OnlyTrue))
 		    player.resetPlayerTime();
 
-		if (ResOld.getPermissions().has("sun", true) || ResOld.getPermissions().has("rain", true))
+		if (ResOld.getPermissions().has("sun",  FlagCombo.OnlyTrue) || ResOld.getPermissions().has("rain",  FlagCombo.OnlyTrue))
 		    player.resetPlayerWeather();
 
 		if (leave != null && !leave.equals("")) {

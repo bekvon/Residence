@@ -33,13 +33,13 @@ public class ResidencePlayer {
 
     public ResidencePlayer(Player player) {
 	this.player = player;
-	this.userName = player.getName();
+	updateName();
 	RecalculatePermissions();
     }
 
     public ResidencePlayer(OfflinePlayer player) {
 	this.ofPlayer = player;
-	this.userName = player.getName();
+	updateName();
 	RecalculatePermissions();
     }
 
@@ -167,11 +167,25 @@ public class ResidencePlayer {
     }
 
     public void recountRes() {
+	updateName();
 	if (this.userName != null) {
 	    ResidenceManager m = Residence.getResidenceManager();
 	    this.ResidenceList = m.getResidenceMapList(this.userName, true);
 	}
 	recountResAmount();
+    }
+
+    private void updateName() {
+	if (this.userName != null)
+	    return;
+	if (player != null) {
+	    this.userName = player.getName();
+	    return;
+	}
+	if (ofPlayer != null) {
+	    this.userName = ofPlayer.getName();
+	    return;
+	}
     }
 
     public void recountResAmount() {
