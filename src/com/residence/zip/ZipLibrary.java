@@ -17,9 +17,9 @@ import org.bukkit.World;
 import com.bekvon.bukkit.residence.Residence;
 
 public class ZipLibrary {
-    private static File BackupDir = new File(Residence.getDataLocation(), "Backup");
+    private File BackupDir = new File(Residence.getDataLocation(), "Backup");
 
-    private static void cleanFiles() {
+    private  void cleanFiles() {
 	int x = Residence.getConfigManager().BackupAutoCleanUpDays() * 60 * 1000 * 24 * 60;
 	Long time = System.currentTimeMillis();
 	for (File file : BackupDir.listFiles()) {
@@ -30,7 +30,7 @@ public class ZipLibrary {
 	}
     }
 
-    public static void backup() throws IOException {
+    public void backup() throws IOException {
 	try {
 	    BackupDir.mkdir();
 	} catch (Exception e) {

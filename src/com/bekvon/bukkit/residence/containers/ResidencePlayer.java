@@ -37,14 +37,11 @@ public class ResidencePlayer {
 	RecalculatePermissions();
     }
 
-    public ResidencePlayer(OfflinePlayer player) {
-	this.ofPlayer = player;
-	updateName();
-	RecalculatePermissions();
-    }
-
     public ResidencePlayer(String userName) {
 	this.userName = userName;
+	ofPlayer = Residence.getOfflinePlayer(userName);
+	if (ofPlayer != null)
+	    this.userName = ofPlayer.getName();
 	RecalculatePermissions();
     }
 
@@ -82,9 +79,11 @@ public class ResidencePlayer {
     }
 
     public void RecalculatePermissions() {
-	this.player = Bukkit.getPlayerExact(userName);
 
 	if (this.player == null)
+	    this.player = Bukkit.getPlayerExact(userName);
+
+	if (this.player == null && ofPlayer == null)
 	    ofPlayer = Residence.getOfflinePlayer(userName);
 
 	recountMaxRes();

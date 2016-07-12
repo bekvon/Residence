@@ -155,6 +155,8 @@ public class Residence extends JavaPlugin {
     protected static AutoSelection AutoSelectionManager;
     protected static SchematicsManager SchematicManager;
 
+    protected static ZipLibrary zip;
+
     protected boolean firstenable = true;
     protected static EconomyInterface economy;
     private static int saveVersion = 1;
@@ -349,7 +351,8 @@ public class Residence extends JavaPlugin {
 	if (initsuccess) {
 	    try {
 		saveYml();
-		ZipLibrary.backup();
+		if (zip != null)
+		    zip.backup();
 	    } catch (Exception ex) {
 		Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
 	    }
@@ -476,6 +479,8 @@ public class Residence extends JavaPlugin {
 	    PlayerManager = new PlayerManager(this);
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
+
+	    zip = new ZipLibrary();
 
 	    versionChecker = new VersionChecker(this);
 

@@ -21,7 +21,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	this.plugin = plugin;
     }
 
-    public void playerJoin(OfflinePlayer player) {
+    public void playerJoin(Player player) {
 	ResidencePlayer resPlayer = players.get(player.getName().toLowerCase());
 	if (resPlayer == null) {
 	    resPlayer = new ResidencePlayer(player);
