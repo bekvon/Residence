@@ -1457,18 +1457,18 @@ public class ClaimedResidence {
     }
 
     public boolean isOwner(String name) {
-	return perms.getOwner().equals(name);
+	return perms.getOwner().equalsIgnoreCase(name);
     }
 
     public boolean isOwner(Player p) {
 	if (Residence.getConfigManager().isOfflineMode())
-	    return isOwner(p.getName());
+	    return perms.getOwner().equals(p.getName());
 	return perms.getOwnerUUID().equals(p.getUniqueId());
     }
 
     public boolean isOwner(CommandSender sender) {
 	if (Residence.getConfigManager().isOfflineMode())
-	    return isOwner(sender.getName());
+	    return perms.getOwner().equals(sender.getName());
 	if (sender instanceof Player)
 	    return perms.getOwnerUUID().equals(((Player) sender).getUniqueId());
 	return true;

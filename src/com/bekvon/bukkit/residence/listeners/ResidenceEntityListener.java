@@ -368,16 +368,16 @@ public class ResidenceEntityListener implements Listener {
 	    }
 	    switch (event.getSpawnReason()) {
 	    case BUILD_WITHER:
-	        break;
+		break;
 	    case BUILD_IRONGOLEM:
 	    case BUILD_SNOWMAN:
 	    case CUSTOM:
 	    case DEFAULT:
-	        if (!perms.has("canimals", true)) {
-	    	event.setCancelled(true);
-	    	return;
-	        }
-	        break;
+		if (!perms.has("canimals", true)) {
+		    event.setCancelled(true);
+		    return;
+		}
+		break;
 	    case BREEDING:
 	    case CHUNK_GEN:
 	    case CURED:
@@ -390,20 +390,20 @@ public class ResidenceEntityListener implements Listener {
 	    case NETHER_PORTAL:
 	    case OCELOT_BABY:
 	    case NATURAL:
-	        if (!perms.has("nanimals", true)) {
-	    	event.setCancelled(true);
-	    	return;
-	        }
-	        break;
+		if (!perms.has("nanimals", true)) {
+		    event.setCancelled(true);
+		    return;
+		}
+		break;
 	    case SPAWNER_EGG:
 	    case SPAWNER:
-	        if (!perms.has("sanimals", true)) {
-	    	event.setCancelled(true);
-	    	return;
-	        }
-	        break;
+		if (!perms.has("sanimals", true)) {
+		    event.setCancelled(true);
+		    return;
+		}
+		break;
 	    default:
-	        break;
+		break;
 	    }
 	} else if (isMonster(ent)) {
 	    if (!perms.has("monsters", true)) {
@@ -414,11 +414,11 @@ public class ResidenceEntityListener implements Listener {
 	    case BUILD_WITHER:
 	    case CUSTOM:
 	    case DEFAULT:
-	        if (!perms.has("cmonsters", true)) {
-	    	event.setCancelled(true);
-	    	return;
-	        }
-	        break;
+		if (!perms.has("cmonsters", true)) {
+		    event.setCancelled(true);
+		    return;
+		}
+		break;
 	    case CHUNK_GEN:
 	    case CURED:
 	    case DISPENSE_EGG:
@@ -430,20 +430,20 @@ public class ResidenceEntityListener implements Listener {
 	    case SLIME_SPLIT:
 	    case LIGHTNING:
 	    case NATURAL:
-	        if (!perms.has("nmonsters", true)) {
-	    	event.setCancelled(true);
-	    	return;
-	        }
-	        break;
+		if (!perms.has("nmonsters", true)) {
+		    event.setCancelled(true);
+		    return;
+		}
+		break;
 	    case SPAWNER_EGG:
 	    case SPAWNER:
-	        if (!perms.has("smonsters", true)) {
-	    	event.setCancelled(true);
-	    	return;
-	        }
-	        break;
+		if (!perms.has("smonsters", true)) {
+		    event.setCancelled(true);
+		    return;
+		}
+		break;
 	    default:
-	        break;
+		break;
 	    }
 	}
     }
@@ -936,6 +936,10 @@ public class ResidenceEntityListener implements Listener {
 		    }
 		    attacker = (Player) ((Projectile) damager).getShooter();
 		}
+
+		if (!(ent instanceof Player))
+		    return;
+
 		if (!srcpvp && !isSnowBall || !allowSnowBall && isSnowBall) {
 		    if (attacker != null)
 			attacker.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));

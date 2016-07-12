@@ -154,8 +154,7 @@ public class ResidencePlayer {
     }
 
     public PermissionGroup getGroup() {
-	Player player = Bukkit.getPlayer(userName);
-	if (player != null) {
+	if (this.player != null) {
 	    String gp = Residence.getPermissionManager().getGroupNameByPlayer(player.getName(), player.getWorld().getName());
 	    this.group = Residence.getPermissionManager().getGroupByName(gp);
 	} else {
