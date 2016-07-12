@@ -225,16 +225,17 @@ public class RentManager implements MarketRentInterface {
 
 	RentableLand land = res.getRentable();
 
-	if (!land.AllowAutoPay && AutoPay) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.CantAutoPay"));
-	    AutoPay = false;
-	}
-
 	if (Residence.getEconomyManager().canAfford(player.getName(), land.cost)) {
 	    ResidenceRentEvent revent = new ResidenceRentEvent(res, player, RentEventType.RENT);
 	    Residence.getServ().getPluginManager().callEvent(revent);
 	    if (revent.isCancelled())
 		return;
+
+	    if (!land.AllowAutoPay && AutoPay) {
+		player.sendMessage(Residence.getLM().getMessage("Residence.CantAutoPay"));
+		AutoPay = false;
+	    }
+
 	    if (Residence.getEconomyManager().transfer(player.getName(), res.getPermissions().getOwner(), land.cost)) {
 		RentedLand newrent = new RentedLand();
 		newrent.player = player.getName();
