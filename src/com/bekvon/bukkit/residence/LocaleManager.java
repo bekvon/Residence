@@ -1421,7 +1421,7 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.SubCommands.mirror.Args", "[residence] [residence]");
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.Description", "Buy, Sell, or Rent Residences");
-	c.get("CommandHelp.SubCommands.res.SubCommands.mirror.Info",
+	c.get("CommandHelp.SubCommands.res.SubCommands.market.Info",
 	    Arrays.asList("&eUsage: &6/res market ? for more Info"));
 
 	c.get("CommandHelp.SubCommands.res.SubCommands.market.SubCommands.Info.Description", "Get economy Info on residence");
