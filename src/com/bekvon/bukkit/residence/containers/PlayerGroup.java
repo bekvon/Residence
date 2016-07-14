@@ -8,9 +8,6 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
@@ -79,7 +76,7 @@ public class PlayerGroup {
 	    finalGroup = posibleGroups.get(0);
 
 	for (int i = 0; i < posibleGroups.size(); i++) {
-	    if (finalGroup == null){
+	    if (finalGroup == null) {
 		finalGroup = posibleGroups.get(i);
 		continue;
 	    }
@@ -99,8 +96,7 @@ public class PlayerGroup {
 	PermissionGroup group = null;
 	for (Entry<String, PermissionGroup> one : Residence.getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
-		Permission p = new Permission("residence.group." + one.getKey(), PermissionDefault.FALSE);
-		if (this.player.hasPermission(p))
+		if (this.player.hasPermission("residence.group." + one.getKey()))
 		    group = one.getValue();
 	    } else {
 		OfflinePlayer offlineP = Residence.getOfflinePlayer(playerName);

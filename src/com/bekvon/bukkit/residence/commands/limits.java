@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 
 public class limits implements cmd {
 
@@ -30,7 +31,8 @@ public class limits implements cmd {
 	Residence.getPermissionManager().updateGroupNameForPlayer(target.getName(), target.isOnline() ? target.getPlayer().getLocation().getWorld().getName() : Residence
 	    .getConfigManager().getDefaultWorld(), true);
 
-	Residence.getPermissionManager().getGroup(target.getName(), Residence.getConfigManager().getDefaultWorld()).printLimits(sender, target, rsadm);
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(target.getName());	
+	rPlayer.getGroup().printLimits(sender, target, rsadm);
 	return true;
     }
 }

@@ -1,11 +1,11 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
-import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -102,23 +102,25 @@ public class ResidencePermissions extends FlagPermissions {
 	if (player != null) {
 	    if (!resadmin) {
 		if (!Residence.getConfigManager().isOfflineMode() && !player.getUniqueId().toString().equals(ownerUUID.toString())) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, "General.NoPermission");
 		    return;
 		} else if (!player.getName().equals(ownerLastKnownName)) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, "General.NoPermission");
 		    return;
 		}
 	    }
 	} else {
 	    resadmin = true;
 	}
-	PermissionGroup group = Residence.getPermissionManager().getGroup(this.getOwner(), world);
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(this.getOwner());
+	PermissionGroup group = rPlayer.getGroup(world);
+
 	for (Entry<String, Boolean> flag : list.cuboidFlags.entrySet()) {
 	    if (group.hasFlagAccess(flag.getKey()) || resadmin) {
 		this.cuboidFlags.put(flag.getKey(), flag.getValue());
 	    } else {
 		if (player != null)
-		    player.sendMessage(Residence.getLM().getMessage("Flag.SetDeny", flag.getKey()));
+		    Residence.msg(player, "Flag.SetDeny", flag.getKey());
 	    }
 	}
 	for (Entry<String, Map<String, Boolean>> plists : list.playerFlags.entrySet()) {
@@ -128,7 +130,7 @@ public class ResidencePermissions extends FlagPermissions {
 		    map.put(flag.getKey(), flag.getValue());
 		} else {
 		    if (player != null)
-			player.sendMessage(Residence.getLM().getMessage("Flag.SetDeny", flag.getKey()));
+			Residence.msg(player, "Flag.SetDeny", flag.getKey());
 		}
 	    }
 	}
@@ -140,12 +142,12 @@ public class ResidencePermissions extends FlagPermissions {
 		    this.groupFlags.get(glists.getKey()).put(flag.getKey(), flag.getValue());
 		} else {
 		    if (player != null)
-			player.sendMessage(Residence.getLM().getMessage("Flag.SetDeny", flag.getKey()));
+			Residence.msg(player, "Flag.SetDeny", flag.getKey());
 		}
 	    }
 	}
 	if (player != null)
-	    player.sendMessage(Residence.getLM().getMessage("Residence.PermissionsApply"));
+	    Residence.msg(player, "Residence.PermissionsApply");
     }
 
     public boolean hasResidencePermission(CommandSender sender, boolean requireOwner) {
@@ -172,20 +174,20 @@ public class ResidencePermissions extends FlagPermissions {
 
     private boolean checkCanSetFlag(CommandSender sender, String flag, FlagState state, boolean globalflag, boolean resadmin) {
 	if (!checkValidFlag(flag, globalflag)) {
-	    sender.sendMessage(Residence.getLM().getMessage("Invalid.Flag"));
+	    Residence.msg(sender, "Invalid.Flag");
 	    return false;
 	}
 	if (state == FlagState.INVALID) {
-	    sender.sendMessage(Residence.getLM().getMessage("Invalid.FlagState"));
+	    Residence.msg(sender, "Invalid.FlagState");
 	    return false;
 	}
 	if (!resadmin) {
 	    if (!this.hasResidencePermission(sender, false)) {
-		sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(sender, "General.NoPermission");
 		return false;
 	    }
 	    if (!hasFlagAccess(this.getOwner(), flag) && !sender.hasPermission("residence.flag." + flag.toLowerCase())) {
-		sender.sendMessage(Residence.getLM().getMessage("Flag.SetFailed", flag));
+		Residence.msg(sender, "Flag.SetFailed", flag);
 		return false;
 	    }
 	}
@@ -193,7 +195,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     private boolean hasFlagAccess(String player, String flag) {
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player, world);
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup(world);
 	return group.hasFlagAccess(flag);
     }
 
@@ -215,7 +218,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    if (super.setPlayerFlag(targetPlayer, flag, state)) {
 		if (Show)
-		    sender.sendMessage(Residence.getLM().getMessage("Flag.Set", flag, residence.getName(), flagstate));
+		    Residence.msg(sender, "Flag.Set", flag, residence.getName(), flagstate);
 		return true;
 	    }
 	}
@@ -234,11 +237,11 @@ public class ResidencePermissions extends FlagPermissions {
 		if (fc.isCancelled())
 		    return false;
 		if (super.setGroupFlag(group, flag, state)) {
-		    player.sendMessage(Residence.getLM().getMessage("Flag.Set", flag, residence.getName(), flagstate));
+		    Residence.msg(player, "Flag.Set", flag, residence.getName(), flagstate);
 		    return true;
 		}
 	    } else {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Group"));
+		Residence.msg(player, "Invalid.Group");
 		return false;
 	    }
 	}
@@ -263,7 +266,7 @@ public class ResidencePermissions extends FlagPermissions {
 			if (!one.getName().equals(this.getOwner()))
 			    size++;
 		    }
-		    sender.sendMessage(Residence.getLM().getMessage("Flag.ChangeDeny", flag, size));
+		    Residence.msg(sender, "Flag.ChangeDeny", flag, size);
 		    return false;
 		}
 	    }
@@ -276,7 +279,7 @@ public class ResidencePermissions extends FlagPermissions {
 	    if (fc.isCancelled())
 		return false;
 	    if (super.setFlag(flag, state)) {
-		sender.sendMessage(Residence.getLM().getMessage("Flag.Set", flag, this.residence.getName(), flagstate));
+		Residence.msg(sender, "Flag.Set", flag, this.residence.getName(), flagstate);
 		return true;
 	    }
 	}
@@ -292,7 +295,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    }
 	    super.removeAllPlayerFlags(targetPlayer);
-	    sender.sendMessage(Residence.getLM().getMessage("Flag.RemovedAll", targetPlayer, this.residence.getName()));
+	    Residence.msg(sender, "Flag.RemovedAll", targetPlayer, this.residence.getName());
 	    return true;
 	}
 	return false;
@@ -306,7 +309,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    }
 	    super.removeAllGroupFlags(group);
-	    player.sendMessage(Residence.getLM().getMessage("Flag.RemovedGroup", group, this.residence.getName()));
+	    Residence.msg(player, "Flag.RemovedGroup", group, this.residence.getName());
 	    return true;
 	}
 	return false;
@@ -342,14 +345,14 @@ public class ResidencePermissions extends FlagPermissions {
     public void applyDefaultFlags(Player player, boolean resadmin) {
 	if (this.hasResidencePermission(player, true) || resadmin) {
 	    this.applyDefaultFlags();
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Default"));
+	    Residence.msg(player, "Flag.Default");
 	} else
-	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	    Residence.msg(player, "General.NoPermission");
     }
 
     public void applyDefaultFlags() {
-	PermissionManager gm = Residence.getPermissionManager();
-	PermissionGroup group = gm.getGroup(this.getOwner(), world);
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(this.getOwner());
+	PermissionGroup group = rPlayer.getGroup(world);
 	Set<Entry<String, Boolean>> dflags = group.getDefaultResidenceFlags();
 //	Set<Entry<String, Boolean>> dcflags = group.getDefaultCreatorFlags();
 	Set<Entry<String, Map<String, Boolean>>> dgflags = group.getDefaultGroupFlags();
@@ -545,7 +548,7 @@ public class ResidencePermissions extends FlagPermissions {
 		}
 	    }
 	    if (flagString.length() > 0)
-		sender.sendMessage(Residence.getLM().getMessage("Flag.Set", flagString, target, state));
+		Residence.msg(sender, "Flag.Set", flagString, target, state);
 	    return changed;
 	}
 	return false;

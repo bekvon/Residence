@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -80,7 +81,9 @@ public class TransactionManager implements MarketBuyInterface {
 		player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
 		return;
 	    }
-	    boolean cansell = Residence.getPermissionManager().getGroup(player).canSellLand() || player.hasPermission("residence.sell");
+
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    boolean cansell = rPlayer.getGroup().canSellLand() || player.hasPermission("residence.sell");
 	    if (!cansell && !resadmin) {
 		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return;
@@ -138,7 +141,8 @@ public class TransactionManager implements MarketBuyInterface {
 	    return;
 	}
 
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
 	if (!resadmin) {
 	    if (!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager() == null) {
 		player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
@@ -155,7 +159,7 @@ public class TransactionManager implements MarketBuyInterface {
 	    player.sendMessage(Residence.getLM().getMessage("Economy.OwnerBuyFail"));
 	    return;
 	}
-	if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= group.getMaxZones(player.getName()) && !resadmin) {
+	if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= rPlayer.getMaxRes() && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.TooMany"));
 	    return;
 	}

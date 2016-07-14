@@ -476,7 +476,7 @@ public class Residence extends JavaPlugin {
 
 	    LocaleManager = new LocaleManager(this);
 
-	    PlayerManager = new PlayerManager(this);
+	    PlayerManager = new PlayerManager();
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
 
@@ -1583,4 +1583,14 @@ public class Residence extends JavaPlugin {
 	return false;
     }
 
+    public static void msg(Player player, String path, Object... variables) {
+	if (player != null)
+	    player.sendMessage(Residence.getLM().getMessage(path, variables));
+    }
+    
+    public static void msg(CommandSender sender, String path, Object... variables) {
+	if (sender != null)
+	    sender.sendMessage(Residence.getLM().getMessage(path, variables));
+    }
+    
 }

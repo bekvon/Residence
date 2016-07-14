@@ -102,6 +102,10 @@ public class ResidencePlayer {
 			this.maxRes = i;
 	    }
 	}
+
+	int m = this.getGroup().getMaxZones();
+	if (this.maxRes < m)
+	    this.maxRes = m;
     }
 
     public void recountMaxRents() {
@@ -115,6 +119,10 @@ public class ResidencePlayer {
 			this.maxRents = i;
 	    }
 	}
+
+	int m = this.getGroup().getMaxRents();
+	if (this.maxRents < m)
+	    this.maxRents = m;
     }
 
     public void recountMaxSubzones() {
@@ -128,6 +136,10 @@ public class ResidencePlayer {
 			this.maxSubzones = i;
 	    }
 	}
+
+	int m = this.getGroup().getMaxSubzoneDepth();
+	if (this.maxSubzones < m)
+	    this.maxSubzones = m;
     }
 
     public int getMaxRes() {
@@ -135,7 +147,7 @@ public class ResidencePlayer {
 	if (this.player != null) {
 	    Residence.getPermissionManager().updateGroupNameForPlayer(this.player.getName(), this.player.isOnline() ? this.player.getPlayer().getLocation().getWorld()
 		.getName() : Residence.getConfigManager().getDefaultWorld(), true);
-	    PermissionGroup g = Residence.getPermissionManager().getGroup(this.player);
+	    PermissionGroup g = getGroup();
 	    if (this.maxRes < g.getMaxZones())
 		return g.getMaxZones();
 	}
@@ -154,13 +166,15 @@ public class ResidencePlayer {
     }
 
     public PermissionGroup getGroup() {
-	if (this.player != null) {
-	    String gp = Residence.getPermissionManager().getGroupNameByPlayer(player.getName(), player.getWorld().getName());
-	    this.group = Residence.getPermissionManager().getGroupByName(gp);
-	} else {
-	    String gp = Residence.getPermissionManager().getGroupNameByPlayer(userName, Residence.getConfigManager().getDefaultWorld());
-	    this.group = Residence.getPermissionManager().getGroupByName(gp);
-	}
+	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getConfigManager().getDefaultWorld());
+    }
+
+    public PermissionGroup getGroup(String world) {
+	String name = userName;
+	if (this.player != null)
+	    name = player.getName();
+	String gp = Residence.getPermissionManager().getGroupNameByPlayer(name, world);
+	this.group = Residence.getPermissionManager().getGroupByName(gp);
 	return this.group;
     }
 
@@ -196,6 +210,7 @@ public class ResidencePlayer {
 	String name = residence.getName();
 	name = name.toLowerCase();
 	this.ResidenceList.put(name, residence);
+	recountResAmount();
     }
 
     public void removeResidence(String residence) {
@@ -203,6 +218,7 @@ public class ResidencePlayer {
 	    return;
 	residence = residence.toLowerCase();
 	this.ResidenceList.remove(residence);
+	recountResAmount();
     }
 
     public void renameResidence(String oldResidence, String newResidence) {

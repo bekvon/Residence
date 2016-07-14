@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketRentInterface;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -160,7 +161,8 @@ public class RentManager implements MarketRentInterface {
 		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return;
 	    }
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    PermissionGroup group = rPlayer.getGroup();
 	    if (this.getRentableCount(player.getName()) >= group.getMaxRentables()) {
 		player.sendMessage(Residence.getLM().getMessage("Residence.MaxRent"));
 		return;
@@ -209,8 +211,8 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-	if (!resadmin && this.getRentCount(player.getName()) >= group.getMaxRents(player.getName())) {
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	if (!resadmin && this.getRentCount(player.getName()) >= rPlayer.getMaxRents()) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.MaxRent"));
 	    return;
 	}
@@ -308,7 +310,8 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
 	if (!resadmin && group.getMaxRentDays() != -1 &&
 	    msToDays((rentedLand.endTime - System.currentTimeMillis()) + daysToMs(land.days)) >= group.getMaxRentDays()) {
 	    player.sendMessage(Residence.getLM().getMessage("Rent.MaxRentDays", group.getMaxRentDays()));

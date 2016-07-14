@@ -6,6 +6,7 @@ import org.bukkit.GameMode;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
@@ -293,10 +294,13 @@ public class ClaimedResidence {
 		    return false;
 		}
 	    }
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+
+	    PermissionGroup group = rPlayer.getGroup();
 	    if (!this.isSubzone() && !group.canCreateResidences() && !player.hasPermission("residence.create") ||
 		this.isSubzone() && !group.canCreateResidences() && !player.hasPermission("residence.create.subzone")) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(player, "General.NoPermission");
 		return false;
 	    }
 
@@ -416,7 +420,8 @@ public class ClaimedResidence {
 		    return false;
 		}
 	    }
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    PermissionGroup group = rPlayer.getGroup();
 	    if (!group.canCreateResidences() && !player.hasPermission("residence.resize")) {
 		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 		return false;
@@ -498,8 +503,7 @@ public class ClaimedResidence {
 		    return false;
 		}
 	    }
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(player);
-	    if (this.getZoneDepth() >= group.getMaxSubzoneDepth(owner)) {
+	    if (this.getZoneDepth() >= Residence.getPlayerManager().getResidencePlayer(owner).getMaxSubzones()) {
 		player.sendMessage(Residence.getLM().getMessage("Subzone.MaxDepth"));
 		return false;
 	    }
@@ -535,7 +539,8 @@ public class ClaimedResidence {
 	if (newres.getAreaCount() != 0) {
 	    newres.getPermissions().applyDefaultFlags();
 	    if (player != null) {
-		PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+		ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+		PermissionGroup group = rPlayer.getGroup();
 		newres.setEnterMessage(group.getDefaultEnterMessage());
 		newres.setLeaveMessage(group.getDefaultLeaveMessage());
 	    }
@@ -782,7 +787,8 @@ public class ClaimedResidence {
 		message = null;
 	    }
 	}
-	PermissionGroup group = Residence.getPermissionManager().getGroup(perms.getOwner(), perms.getWorld());
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
 	if (!group.canSetEnterLeaveMessages() && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("Residence.OwnerNoPermission"));
 	    return;
@@ -1036,7 +1042,8 @@ public class ClaimedResidence {
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
 	boolean isAdmin = Residence.isResAdminOn(reqPlayer);
 	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass") && !this.isOwner(targetPlayer)) {
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(reqPlayer);
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(reqPlayer);
+	    PermissionGroup group = rPlayer.getGroup();
 	    if (!group.hasTpAccess()) {
 		reqPlayer.sendMessage(Residence.getLM().getMessage("General.TeleportDeny"));
 		return;
@@ -1291,7 +1298,8 @@ public class ClaimedResidence {
 	if (root.containsKey("BlockSellPrice"))
 	    res.BlockSellPrice = (Double) root.get("BlockSellPrice");
 	else {
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(res.getOwner(), res.getWorld());
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(res.getOwner());
+	    PermissionGroup group = rPlayer.getGroup(res.getWorld());
 	    res.BlockSellPrice = group.getSellPerBlock();
 	}
 

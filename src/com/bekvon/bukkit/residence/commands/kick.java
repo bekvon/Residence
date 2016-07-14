@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -28,7 +29,10 @@ public class kick implements cmd {
 	    player.sendMessage(Residence.getLM().getMessage("General.NotOnline"));
 	    return true;
 	}
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+
+	PermissionGroup group = rPlayer.getGroup();
 	if (!group.hasKickAccess() && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return true;

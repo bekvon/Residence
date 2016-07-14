@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.AutoSelector;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -15,7 +16,8 @@ public class AutoSelection {
 
     public void switchAutoSelection(Player player) {
 	if (!list.containsKey(player.getName().toLowerCase())) {
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(player.getName(), player.getLocation().getWorld().getName());
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    PermissionGroup group = rPlayer.getGroup(player.getLocation().getWorld().getName());
 	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
 	    player.sendMessage(Residence.getLM().getMessage("Select.AutoEnabled"));
 	} else {

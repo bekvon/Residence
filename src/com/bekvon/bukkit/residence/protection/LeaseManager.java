@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
@@ -61,13 +62,14 @@ public class LeaseManager {
 	    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseNotExpire"));
 	    return;
 	}
-	PermissionGroup limits = Residence.getPermissionManager().getGroup(player);
-	int max = limits.getMaxLeaseTime();
-	int add = limits.getLeaseGiveTime();
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
+	int max = group.getMaxLeaseTime();
+	int add = group.getLeaseGiveTime();
 	int rem = daysRemaining(area);
 	EconomyInterface econ = Residence.getEconomyManager();
 	if (econ != null) {
-	    double cost = limits.getLeaseRenewCost();
+	    double cost = group.getLeaseRenewCost();
 	    ClaimedResidence res = manager.getByName(area);
 	    area = res.getName();
 	    int amount = (int) Math.ceil(res.getTotalSize() * cost);
@@ -99,8 +101,9 @@ public class LeaseManager {
     }
 
     public int getRenewCost(ClaimedResidence res) {
-	PermissionGroup limits = Residence.getPermissionManager().getGroup(res.getPermissions().getOwner(), res.getPermissions().getWorld());
-	double cost = limits.getLeaseRenewCost();
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(res.getPermissions().getOwner());
+	PermissionGroup group = rPlayer.getGroup(res.getPermissions().getWorld());
+	double cost = group.getLeaseRenewCost();
 	int amount = (int) Math.ceil(res.getTotalSize() * cost);
 	return amount;
     }
@@ -134,7 +137,10 @@ public class LeaseManager {
 		    resname = res.getName();
 		    boolean renewed = false;
 		    String owner = res.getPermissions().getOwner();
-		    PermissionGroup limits = Residence.getPermissionManager().getGroup(owner, res.getPermissions().getWorld());
+
+		    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(owner);
+		    PermissionGroup group = rPlayer.getGroup(res.getPermissions().getWorld());
+
 		    int cost = this.getRenewCost(res);
 		    if (Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().autoRenewLeases()) {
 			if (cost == 0) {
@@ -169,7 +175,7 @@ public class LeaseManager {
 			}
 			if (Residence.getConfigManager().debugEnabled())
 			    System.out.println("Lease Renew Old: " + next.getValue());
-			next.setValue(System.currentTimeMillis() + daysToMs(limits.getLeaseGiveTime()));
+			next.setValue(System.currentTimeMillis() + daysToMs(group.getLeaseGiveTime()));
 			if (Residence.getConfigManager().debugEnabled())
 			    System.out.println("Lease Renew New: " + next.getValue());
 		    }
@@ -184,7 +190,8 @@ public class LeaseManager {
 	for (String item : list) {
 	    if (item != null) {
 		ClaimedResidence res = Residence.getResidenceManager().getByName(item);
-		PermissionGroup group = Residence.getPermissionManager().getGroup(res.getPermissions().getOwner(), res.getPermissions().getWorld());
+		ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(res.getPermissions().getOwner());
+		PermissionGroup group = rPlayer.getGroup(res.getPermissions().getWorld());
 		this.setExpireTime(null, item, group.getLeaseGiveTime());
 	    }
 	}

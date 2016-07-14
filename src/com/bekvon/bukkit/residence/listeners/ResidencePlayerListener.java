@@ -639,15 +639,9 @@ public class ResidencePlayerListener implements Listener {
 	handleNewLocation(player, player.getLocation(), true);
 
 	final Player p = player;
-	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @Override
-	    public void run() {
-		Residence.getPlayerManager().playerJoin(p);
-		if (p != null)
-		    Residence.getPermissionManager().updateGroupNameForPlayer(p, true);
-		return;
-	    }
-	});
+	Residence.getPlayerManager().playerJoin(p);
+	if (p != null)
+	    Residence.getPermissionManager().updateGroupNameForPlayer(p, true);
 
 	if (player.hasPermission("residence.versioncheck")) {
 	    Residence.getVersionChecker().VersionCheck(player);
@@ -806,7 +800,8 @@ public class ResidencePlayerListener implements Listener {
 
 	boolean resadmin = Residence.isResAdminOn(player);
 
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
 	if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group
 	    .canCreateResidences() && !player.isPermissionSet("residence.create") && !player.isPermissionSet("residence.select") || resadmin) {
 
@@ -1460,10 +1455,10 @@ public class ResidencePlayerListener implements Listener {
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-		if (ResOld.getPermissions().has("night", FlagCombo.OnlyTrue) || ResOld.getPermissions().has("day",  FlagCombo.OnlyTrue))
+		if (ResOld.getPermissions().has("night", FlagCombo.OnlyTrue) || ResOld.getPermissions().has("day", FlagCombo.OnlyTrue))
 		    player.resetPlayerTime();
 
-		if (ResOld.getPermissions().has("sun",  FlagCombo.OnlyTrue) || ResOld.getPermissions().has("rain",  FlagCombo.OnlyTrue))
+		if (ResOld.getPermissions().has("sun", FlagCombo.OnlyTrue) || ResOld.getPermissions().has("rain", FlagCombo.OnlyTrue))
 		    player.resetPlayerWeather();
 
 		if (leave != null && !leave.equals("")) {

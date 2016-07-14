@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
@@ -188,28 +189,27 @@ public class ResidenceManager implements ResidenceInterface {
 
     public boolean addResidence(Player player, String owner, String name, Location loc1, Location loc2, boolean resadmin) {
 	if (!Residence.validName(name)) {
-	    if (player != null) {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.NameCharacters"));
-	    }
+	    Residence.msg(player, "Invalid.NameCharacters");
 	    return false;
 	}
 	if (loc1 == null || loc2 == null || !loc1.getWorld().getName().equals(loc2.getWorld().getName())) {
-	    if (player != null) {
-		player.sendMessage(Residence.getLM().getMessage("Select.Points"));
-	    }
+	    Residence.msg(player, "Select.Points");
 	    return false;
 	}
-	PermissionGroup group = Residence.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
+
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+
+	PermissionGroup group = rPlayer.getGroup();
+//	PermissionGroup group = Residence.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
 	boolean createpermission = group.canCreateResidences() || (player == null ? true : player.hasPermission("residence.create"));
 	if (!createpermission && !resadmin) {
-	    if (player != null) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
-	    }
+	    Residence.msg(player, "General.NoPermission");
 	    return false;
 	}
+
 	if (player != null) {
-	    if (!hasMaxZones(player.getName(), group.getMaxZones(player.getName())) && !resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("Residence.TooMany"));
+	    if (!hasMaxZones(player.getName(), rPlayer.getMaxRes()) && !resadmin) {
+		Residence.msg(player, "Residence.TooMany");
 		return false;
 	    }
 	}
@@ -604,7 +604,8 @@ public class ResidenceManager implements ResidenceInterface {
 	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 
 	if (Residence.getEconomyManager() != null) {
-	    PermissionGroup group = Residence.getPermissionManager().getGroup(res.getOwner(), res.getWorld());
+	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(res.getOwner());
+	    PermissionGroup group = rPlayer.getGroup(res.getWorld());
 	    sender.sendMessage(lm.getMessage("General.TotalWorth", (int) ((res.getTotalSize() * group.getCostPerBlock())
 		* 100) / 100.0, (int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0));
 	}
@@ -921,18 +922,21 @@ public class ResidenceManager implements ResidenceInterface {
 	    return;
 	}
 	CuboidArea[] areas = res.getAreaArray();
-	PermissionGroup g = Residence.getPermissionManager().getGroup(giveplayer);
-	if (areas.length > g.getMaxPhysicalPerResidence() && !resadmin) {
+
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(giveplayer);
+	PermissionGroup group = rPlayer.getGroup();
+
+	if (areas.length > group.getMaxPhysicalPerResidence() && !resadmin) {
 	    reqPlayer.sendMessage(Residence.getLM().getMessage("Residence.GiveLimits"));
 	    return;
 	}
-	if (!hasMaxZones(giveplayer.getName(), g.getMaxZones(giveplayer.getName())) && !resadmin) {
+	if (!hasMaxZones(giveplayer.getName(), rPlayer.getMaxRes()) && !resadmin) {
 	    reqPlayer.sendMessage(Residence.getLM().getMessage("Residence.GiveLimits"));
 	    return;
 	}
 	if (!resadmin) {
 	    for (CuboidArea area : areas) {
-		if (!g.inLimits(area)) {
+		if (!group.inLimits(area)) {
 		    reqPlayer.sendMessage(Residence.getLM().getMessage("Residence.GiveLimits"));
 		    return;
 		}

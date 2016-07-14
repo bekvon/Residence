@@ -53,21 +53,21 @@ public class PermissionManager {
 	return groups;
     }
 
-    public PermissionGroup getGroup(Player player) {
-	PermissionGroup group = Residence.getPlayerManager().getGroup(player.getName());
-	if (group != null) {
-	    return group;
-	}
-	return groups.get(this.getGroupNameByPlayer(player));
-    }
-
-    public PermissionGroup getGroup(String player, String world) {
-	PermissionGroup group = Residence.getPlayerManager().getGroup(player);
-	if (group != null) {
-	    return group;
-	}
-	return groups.get(this.getGroupNameByPlayer(player, world));
-    }
+//    public PermissionGroup getGroup(Player player) {
+//	PermissionGroup group = Residence.getPlayerManager().getGroup(player.getName());
+//	if (group != null) {
+//	    return group;
+//	}
+//	return groups.get(this.getGroupNameByPlayer(player));
+//    }
+//
+//    public PermissionGroup getGroup(String player, String world) {
+//	PermissionGroup group = Residence.getPlayerManager().getGroup(player);
+//	if (group != null) {
+//	    return group;
+//	}
+//	return groups.get(this.getGroupNameByPlayer(player, world));
+//    }
 
     public PermissionGroup getGroupByName(String group) {
 	group = group.toLowerCase();
@@ -78,7 +78,16 @@ public class PermissionManager {
     }
 
     public String getGroupNameByPlayer(Player player) {
-	return this.getGroupNameByPlayer(player.getName(), player.getWorld().getName());
+	if (!this.groupsMap.containsKey(player.getName())) {
+	    updateGroupNameForPlayer(player);
+	}
+	PlayerGroup PGroup = this.groupsMap.get(player.getName());
+	if (PGroup != null) {
+	    String group = PGroup.getGroup(player.getWorld().getName());
+	    if (group != null)
+		return group;
+	}
+	return Residence.getConfigManager().getDefaultGroup().toLowerCase();
     }
 
     public String getGroupNameByPlayer(String player, String world) {
@@ -175,7 +184,7 @@ public class PermissionManager {
 
 	FileConfiguration groupsFile = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
 	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
-	
+
 	String defaultGroup = Residence.getConfigManager().getDefaultGroup().toLowerCase();
 	globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", flags.getConfigurationSection("Global"));
 	ConfigurationSection nodes = groupsFile.getConfigurationSection("Groups");
@@ -195,6 +204,7 @@ public class PermissionManager {
 		}
 	    }
 	}
+
 	if (!groups.containsKey(defaultGroup)) {
 	    groups.put(defaultGroup, new PermissionGroup(defaultGroup));
 	}

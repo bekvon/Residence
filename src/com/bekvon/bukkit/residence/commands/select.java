@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
@@ -23,12 +24,15 @@ public class select implements cmd {
 	    return false;
 
 	Player player = (Player) sender;
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);	
+	
+	PermissionGroup group = rPlayer.getGroup();
 	if (!group.selectCommandAccess() && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("Select.Disabled"));
 	    return true;
 	}
-	if (!group.canCreateResidences() && group.getMaxSubzoneDepth(player.getName()) <= 0 && !resadmin) {
+	if (!group.canCreateResidences() && rPlayer.getMaxSubzones() <= 0 && !resadmin) {
 	    player.sendMessage(Residence.getLM().getMessage("Select.Disabled"));
 	    return true;
 	}

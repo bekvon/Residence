@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.itemlist;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.Map;
@@ -20,7 +21,9 @@ public class ResidenceItemList extends ItemList {
     }
 
     public void playerListChange(Player player, Material mat, boolean resadmin) {
-	PermissionGroup group = Residence.getPermissionManager().getGroup(player);
+
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
 	if (resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess())) {
 	    if (super.toggle(mat))
 		player.sendMessage(Residence.getLM().getMessage("General.ListMaterialAdd", mat.toString(), type.toString().toLowerCase()));

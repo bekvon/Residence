@@ -15,10 +15,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 
 public class PlayerManager implements ResidencePlayerInterface {
     private ConcurrentHashMap<String, ResidencePlayer> players = new ConcurrentHashMap<String, ResidencePlayer>();
-    private Residence plugin;
-
-    public PlayerManager(Residence plugin) {
-	this.plugin = plugin;
+    public PlayerManager() {
     }
 
     public void playerJoin(Player player) {
@@ -44,15 +41,9 @@ public class PlayerManager implements ResidencePlayerInterface {
 
     public void fillList() {
 	players.clear();
-	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @Override
-	    public void run() {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-		    playerJoin(player);
-		}
-		return;
-	    }
-	});
+	for (Player player : Bukkit.getOnlinePlayers()) {
+	    playerJoin(player);
+	}
     }
 
     @Override
