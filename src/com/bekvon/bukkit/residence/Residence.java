@@ -1585,12 +1585,18 @@ public class Residence extends JavaPlugin {
 
     public static void msg(Player player, String path, Object... variables) {
 	if (player != null)
-	    player.sendMessage(Residence.getLM().getMessage(path, variables));
+	    if (Residence.getLM().containsKey(path))
+		player.sendMessage(Residence.getLM().getMessage(path, variables));
+	    else
+		player.sendMessage(path);
     }
-    
+
     public static void msg(CommandSender sender, String path, Object... variables) {
 	if (sender != null)
-	    sender.sendMessage(Residence.getLM().getMessage(path, variables));
+	    if (Residence.getLM().containsKey(path))
+		sender.sendMessage(Residence.getLM().getMessage(path, variables));
+	    else
+		sender.sendMessage(path);
     }
-    
+
 }

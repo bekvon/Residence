@@ -49,7 +49,7 @@ public class Language {
      *            - the variables separated with %
      * @return the message
      */
-    
+
     public String getMessage(String key, Object... variables) {
 	if (!key.contains("Language.") && !key.contains("CommandHelp."))
 	    key = "Language." + key;
@@ -116,11 +116,13 @@ public class Language {
      * @return true/false
      */
     public boolean containsKey(String key) {
+	if (!key.contains("Language.") && !key.contains("CommandHelp."))
+	    key = "Language." + key;
 	if (customlocale == null || !customlocale.contains(key))
 	    return enlocale.contains(key);
 	return customlocale.contains(key);
     }
-    
+
     private static List<String> ColorsArray(List<String> text) {
 	List<String> temp = new ArrayList<String>();
 	for (String part : text) {

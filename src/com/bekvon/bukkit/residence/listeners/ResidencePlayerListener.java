@@ -198,7 +198,8 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceDelete(ResidenceDeleteEvent event) {
-	Residence.getSchematicManager().delete(event.getResidence());
+	if (event != null && event.getResidence() != null)
+	    Residence.getSchematicManager().delete(event.getResidence());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
