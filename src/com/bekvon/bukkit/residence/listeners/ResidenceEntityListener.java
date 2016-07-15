@@ -471,6 +471,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakByEntityEvent event) {
+	Debug.D("1");
 	// disabling event on world
 	Hanging ent = event.getEntity();
 	if (ent == null)
@@ -500,6 +501,7 @@ public class ResidenceEntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
 
+	Debug.D("2");
 	// disabling event on world
 	Hanging ent = event.getEntity();
 	if (ent == null)
@@ -827,6 +829,8 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+
+	Debug.D("3");
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
@@ -878,9 +882,12 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isResAdminOn(player))
 	    return;
 
-	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "destroy", false)) {
+	String pname = player.getName();
+	FlagPermissions perms = Residence.getPermsByLocForPlayer(loc, player);
+	String world = loc.getWorld().getName();
+	if (!perms.playerHas(pname, world, "destroy", perms.playerHas(pname, world, "build", true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "destroy", res.getName()));
+	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "destroy"));
 	}
     }
 
