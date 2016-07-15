@@ -1,11 +1,12 @@
 package com.bekvon.bukkit.residence.containers;
 
-public enum GuiItems {
+public enum Flags {
     admin(7, 0),
     animalkilling(365, 0),
     animals(383, 90),
     bank(130, 0),
     bed(355, 0),
+    beacon(138, 0),
     brew(379, 0),
     bucket(325, 0),
     bucketempty(325, 0),
@@ -30,6 +31,7 @@ public enum GuiItems {
     dryup(160, 11),
     diode(356, 0),
     door(324, 0),
+    egg(344, 0),
     enchant(116, 0),
     explode(407, 0),
     enderpearl(368, 0),
@@ -91,7 +93,7 @@ public enum GuiItems {
     private int id;
     private int data;
 
-    private GuiItems(int id, int data) {
+    private Flags(int id, int data) {
 	this.id = id;
 	this.data = data;
     }

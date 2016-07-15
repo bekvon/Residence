@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 
-import com.bekvon.bukkit.residence.containers.GuiItems;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -290,9 +290,9 @@ public class ConfigManager {
 		continue;
 
 	    String lowOne = one.toLowerCase();
-	    GuiItems uno = null;
+	    Flags uno = null;
 	    try {
-		uno = GuiItems.valueOf(lowOne);
+		uno = Flags.valueOf(lowOne);
 	    } catch (IllegalArgumentException e) {
 	    }
 	    if (uno == null)

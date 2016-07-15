@@ -20,6 +20,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 
 public class FlagPermissions {
 
@@ -51,6 +52,10 @@ public class FlagPermissions {
 
     public static EnumMap<Material, String> getMaterialUseFlagList() {
 	return (EnumMap<Material, String>) matUseFlagList;
+    }
+
+    public static void addFlag(Flags flag) {
+	addFlag(flag.toString());
     }
 
     public static void addFlag(String flag) {
@@ -114,9 +119,9 @@ public class FlagPermissions {
 	validPlayerFlags.clear();
 	validFlags.clear();
 	validFlagGroups.clear();
-	addFlag("egg");
-	addFlag("note");
-	addFlag("pressure");
+	addFlag(Flags.egg);
+	addFlag(Flags.note);
+	addFlag(Flags.pressure);
 	addFlag("cake");
 	addFlag("lever");
 	addFlag("door");
