@@ -11,6 +11,9 @@ public class setowner implements cmd {
     @Override
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 
+	if (args.length < 3)
+	    return false;
+
 	if (!resadmin) {
 	    sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
 	    return true;
