@@ -6,6 +6,7 @@
 package com.bekvon.bukkit.residence.spout;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.spout.ResidencePopup.PopupType;
 import java.util.HashMap;
@@ -25,9 +26,9 @@ public class ResidenceSpout {
 	this.plugin = plug;
     }
 
-    public void showResidenceFlagGUI(SpoutPlayer p, String resname, boolean resadmin) {
+    public void showResidenceFlagGUI(SpoutPlayer player, String resname, boolean resadmin) {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
-	if (res.getPermissions().hasResidencePermission(p, false)) {
+	if (res.getPermissions().hasResidencePermission(player, false)) {
 
 	    Color fieldcolor = new Color(0F, 0F, 0.3F, 1F);
 	    Color textPrimaryColor = new Color(1F, 1F, 1F, 1F);
@@ -92,10 +93,10 @@ public class ResidenceSpout {
 	    removeallbutton.setHoverColor(hoverColor);
 	    popup.gridAttachWidget("RemoveAllButton", plugin, removeallbutton, 3, 3);
 
-	    screens.put(p, popup);
-	    p.getMainScreen().attachPopupScreen(popup);
+	    screens.put(player, popup);
+	    player.getMainScreen().attachPopupScreen(popup);
 	} else {
-	    p.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	    Residence.msg(player, lm.General_NoPermission);
 	}
     }
 }

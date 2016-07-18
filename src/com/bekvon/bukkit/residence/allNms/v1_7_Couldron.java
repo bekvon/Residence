@@ -27,8 +27,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.residence.NMS;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.NMS;
 
 public class v1_7_Couldron implements NMS {
     @Override

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 
 public class v1_10Events implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -21,7 +22,7 @@ public class v1_10Events implements Listener {
 
 	Entity ent = event.getEntity();
 
-	if (!Residence.getPermsByLoc(ent.getLocation()).has("hotfloor", true)) {
+	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.hotfloor, true)) {
 	    event.setCancelled(true);
 	    return;
 	}

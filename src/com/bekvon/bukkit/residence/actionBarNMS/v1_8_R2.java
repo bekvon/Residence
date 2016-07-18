@@ -5,7 +5,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R2.util.CraftChatMessage;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import com.bekvon.bukkit.residence.ABInterface;
+
+import com.bekvon.bukkit.residence.containers.ABInterface;
 
 import net.minecraft.server.v1_8_R2.PacketPlayOutTitle;
 import net.minecraft.server.v1_8_R2.PacketPlayOutTitle.EnumTitleAction;

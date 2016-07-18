@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
@@ -27,6 +31,7 @@ import com.bekvon.bukkit.residence.shopStuff.Vote;
 public class shop implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
@@ -48,7 +53,7 @@ public class shop implements cmd {
 	    if (args.length == 2) {
 		res = Residence.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+		    Residence.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 	    } else if (args.length == 3) {
@@ -58,11 +63,11 @@ public class shop implements cmd {
 			VotePage = Integer.parseInt(args[2]);
 			res = Residence.getResidenceManager().getByLoc(player.getLocation());
 			if (res == null) {
-			    player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+			    Residence.msg(player, lm.Residence_NotIn);
 			    return true;
 			}
 		    } catch (Exception ex) {
-			player.sendMessage(Residence.getLM().getMessage("General.UseNumbers"));
+			Residence.msg(player, lm.General_UseNumbers);
 			return true;
 		    }
 		}
@@ -70,19 +75,19 @@ public class shop implements cmd {
 	    } else if (args.length == 4) {
 		res = Residence.getResidenceManager().getByName(args[2]);
 		if (res == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+		    Residence.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 		try {
 		    VotePage = Integer.parseInt(args[3]);
 		} catch (Exception ex) {
-		    player.sendMessage(Residence.getLM().getMessage("General.UseNumbers"));
+		    Residence.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
 	    }
 
 	    if (res == null) {
-		player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+		Residence.msg(player, lm.Residence_NotIn);
 		return true;
 	    }
 
@@ -100,11 +105,11 @@ public class shop implements cmd {
 	    }
 	    int pagecount = (int) Math.ceil((double) VoteList.size() / (double) 10);
 	    if (page > pagecount || page < 1) {
-		sender.sendMessage(Residence.getLM().getMessage("Shop.NoVotes"));
+		Residence.msg(sender, lm.Shop_NoVotes);
 		return true;
 	    }
 
-	    player.sendMessage(Residence.getLM().getMessage("Shop.VotesTopLine", separator, res.getName(), VotePage, pagecount, separator));
+	    Residence.msg(player, lm.Shop_VotesTopLine, separator, res.getName(), VotePage, pagecount, separator);
 
 	    int start = VotePage * 10 - 9;
 	    int end = VotePage * 10 + 1;
@@ -124,7 +129,7 @@ public class shop implements cmd {
 		ft.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
 		String timeString = ft.format(dNow);
 
-		String message = Residence.getLM().getMessage("Shop.VotesList", i, one.getName(), (Residence.getConfigManager().isOnlyLike()
+		String message = Residence.msg(lm.Shop_VotesList, i, one.getName(), (Residence.getConfigManager().isOnlyLike()
 		    ? "" : one.getVote()), timeString);
 		player.sendMessage(message);
 		i++;
@@ -139,11 +144,11 @@ public class shop implements cmd {
 	    Prevpage = page > 1 ? Prevpage : page;
 
 	    String prevCmd = "/res shop votes " + res.getName() + " " + Prevpage;
-	    String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
+	    String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	    String nextCmd = "/res shop votes " + res.getName() + " " + NextPage;
-	    String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
+	    String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
@@ -159,7 +164,7 @@ public class shop implements cmd {
 		try {
 		    Shoppage = Integer.parseInt(args[2]);
 		} catch (Exception ex) {
-		    player.sendMessage(Residence.getLM().getMessage("General.UseNumbers"));
+		    Residence.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
 	    }
@@ -173,11 +178,11 @@ public class shop implements cmd {
 	    }
 	    int pagecount = (int) Math.ceil((double) ShopList.size() / (double) 10);
 	    if (page > pagecount || page < 1) {
-		sender.sendMessage(Residence.getLM().getMessage("Shop.NoVotes"));
+		Residence.msg(sender, lm.Shop_NoVotes);
 		return true;
 	    }
 
-	    player.sendMessage(Residence.getLM().getMessage("Shop.ListTopLine", separator, Shoppage, pagecount, separator));
+	    Residence.msg(player, lm.Shop_ListTopLine, separator, Shoppage, pagecount, separator);
 
 	    int start = Shoppage * 10 - 9;
 	    int end = Shoppage * 10 + 1;
@@ -196,16 +201,16 @@ public class shop implements cmd {
 		String votestat = "";
 
 		if (Residence.getConfigManager().isOnlyLike()) {
-		    votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.ListLiked", Residence.getShopSignUtilManager().getLikes(one
+		    votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListLiked, Residence.getShopSignUtilManager().getLikes(one
 			.getKey()));
 		} else
-		    votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.ListVoted", vote.getVote(), vote.getAmount());
+		    votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListVoted, vote.getVote(), vote.getAmount());
 		ClaimedResidence res = Residence.getResidenceManager().getByName(one.getKey());
 		String owner = Residence.getResidenceManager().getByName(one.getKey()).getOwner();
-		String message = Residence.getLM().getMessage("Shop.List", i, one.getKey(), owner, votestat);
+		String message = Residence.msg(lm.Shop_List, i, one.getKey(), owner, votestat);
 
-		String desc = res.getShopDesc() == null ? Residence.getLM().getMessage("Shop.NoDesc") : Residence.getLM().getMessage(
-		    "Shop.Desc", ChatColor.translateAlternateColorCodes('&', res.getShopDesc().replace("/n", "\n")));
+		String desc = res.getShopDesc() == null ? Residence.msg(lm.Shop_NoDesc) : Residence.msg(
+		    lm.Shop_Desc, ChatColor.translateAlternateColorCodes('&', res.getShopDesc().replace("/n", "\n")));
 
 		String prev = "[\"\",{\"text\":\"" + " " + message
 		    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/res tp " + one.getKey()
@@ -225,11 +230,11 @@ public class shop implements cmd {
 	    Prevpage = page > 1 ? Prevpage : page;
 
 	    String prevCmd = "/res shop list " + Prevpage;
-	    String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
+	    String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	    String nextCmd = "/res shop list " + NextPage;
-	    String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
+	    String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
@@ -241,12 +246,12 @@ public class shop implements cmd {
 	if (args.length == 2 && args[1].equalsIgnoreCase("DeleteBoard")) {
 
 	    if (!resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(player, lm.General_NoPermission);
 		return true;
 	    }
 
 	    ShopListener.Delete.add(player.getName());
-	    player.sendMessage(Residence.getLM().getMessage("Shop.DeleteBoard"));
+	    Residence.msg(player, lm.Shop_DeleteBoard);
 	    return true;
 	}
 	if (args.length > 2 && args[1].equalsIgnoreCase("setdesc")) {
@@ -257,7 +262,7 @@ public class shop implements cmd {
 	    if (args.length >= 2) {
 		res = Residence.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+		    Residence.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 		for (int i = 2; i < args.length; i++) {
@@ -271,23 +276,23 @@ public class shop implements cmd {
 		return true;
 
 	    if (!res.isOwner(player) && !resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("Residence.NonAdmin"));
+		Residence.msg(player, lm.Residence_NonAdmin);
 		return true;
 	    }
 
 	    res.setShopDesc(desc);
-	    player.sendMessage(Residence.getLM().getMessage("Shop.DescChange", ChatColor.translateAlternateColorCodes('&', desc)));
+	    Residence.msg(player, lm.Shop_DescChange, ChatColor.translateAlternateColorCodes('&', desc));
 	    return true;
 	}
 	if (args.length == 3 && args[1].equalsIgnoreCase("createboard")) {
 
 	    if (!resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(player, lm.General_NoPermission);
 		return true;
 	    }
 
 	    if (!Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-		player.sendMessage(Residence.getLM().getMessage("Select.Points"));
+		Residence.msg(player, lm.Select_Points);
 		return true;
 	    }
 
@@ -295,7 +300,7 @@ public class shop implements cmd {
 	    try {
 		place = Integer.parseInt(args[2]);
 	    } catch (Exception ex) {
-		player.sendMessage(Residence.getLM().getMessage("General.UseNumbers"));
+		Residence.msg(player, lm.General_UseNumbers);
 		return true;
 	    }
 
@@ -306,7 +311,7 @@ public class shop implements cmd {
 	    Location loc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
 
 	    if (loc1.getBlockY() < loc2.getBlockY()) {
-		player.sendMessage(Residence.getLM().getMessage("Shop.InvalidSelection"));
+		Residence.msg(player, lm.Shop_InvalidSelection);
 		return true;
 	    }
 
@@ -326,7 +331,7 @@ public class shop implements cmd {
 	    newTemp.GetLocations();
 
 	    Residence.getShopSignUtilManager().addBoard(newTemp);
-	    player.sendMessage(Residence.getLM().getMessage("Shop.NewBoard"));
+	    Residence.msg(player, lm.Shop_NewBoard);
 
 	    Residence.getShopSignUtilManager().BoardUpdate();
 	    Residence.getShopSignUtilManager().saveSigns();
@@ -344,7 +349,7 @@ public class shop implements cmd {
 
 		    res = Residence.getResidenceManager().getByName(args[2]);
 		    if (res == null) {
-			player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+			Residence.msg(player, lm.Invalid_Residence);
 			return true;
 		    }
 		    vote = Residence.getConfigManager().getVoteRangeTo();
@@ -352,46 +357,46 @@ public class shop implements cmd {
 		} else {
 		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
 		    if (res == null) {
-			player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+			Residence.msg(player, lm.Residence_NotIn);
 			return true;
 		    }
 
 		    try {
 			vote = Integer.parseInt(args[2]);
 		    } catch (Exception ex) {
-			player.sendMessage(Residence.getLM().getMessage("General.UseNumbers"));
+			Residence.msg(player, lm.General_UseNumbers);
 			return true;
 		    }
 		}
 	    } else if (args.length == 2 && Residence.getConfigManager().isOnlyLike()) {
 		res = Residence.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+		    Residence.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 		vote = Residence.getConfigManager().getVoteRangeTo();
 	    } else if (args.length == 4 && !Residence.getConfigManager().isOnlyLike()) {
 		res = Residence.getResidenceManager().getByName(args[2]);
 		if (res == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		    Residence.msg(player, lm.Invalid_Residence);
 		    return true;
 		}
 		try {
 		    vote = Integer.parseInt(args[3]);
 		} catch (Exception ex) {
-		    player.sendMessage(Residence.getLM().getMessage("General.UseNumbers"));
+		    Residence.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
 	    } else if (args.length == 3 && !Residence.getConfigManager().isOnlyLike()) {
 		res = Residence.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		    Residence.msg(player, lm.Invalid_Residence);
 		    return true;
 		}
 		try {
 		    vote = Integer.parseInt(args[3]);
 		} catch (Exception ex) {
-		    player.sendMessage(Residence.getLM().getMessage("General.UseNumbers"));
+		    Residence.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
 	    } else {
@@ -401,13 +406,13 @@ public class shop implements cmd {
 	    resName = res.getName();
 
 	    if (!res.getPermissions().has("shop", false)) {
-		player.sendMessage(Residence.getLM().getMessage("Shop.CantVote"));
+		Residence.msg(player, lm.Shop_CantVote);
 		return true;
 	    }
 
 	    if (vote < Residence.getConfigManager().getVoteRangeFrom() || vote > Residence.getConfigManager().getVoteRangeTo()) {
-		player.sendMessage(Residence.getLM().getMessage("Shop.VotedRange", Residence.getConfigManager().getVoteRangeFrom(), Residence
-		    .getConfigManager().getVoteRangeTo()));
+		Residence.msg(player, lm.Shop_VotedRange, Residence.getConfigManager().getVoteRangeFrom(), Residence
+		    .getConfigManager().getVoteRangeTo());
 		return true;
 	    }
 
@@ -420,11 +425,11 @@ public class shop implements cmd {
 		    if (OneVote.getName().equalsIgnoreCase(player.getName())) {
 
 			if (Residence.getConfigManager().isOnlyLike()) {
-			    player.sendMessage(Residence.getLM().getMessage("Shop.AlreadyLiked", resName));
+			    Residence.msg(player, lm.Shop_AlreadyLiked, resName);
 			    return true;
 			}
 
-			player.sendMessage(Residence.getLM().getMessage("Shop.VoteChanged", OneVote.getVote(), vote, resName));
+			Residence.msg(player, lm.Shop_VoteChanged, OneVote.getVote(), vote, resName);
 			OneVote.setVote(vote);
 			OneVote.setTime(System.currentTimeMillis());
 			found = true;
@@ -436,9 +441,9 @@ public class shop implements cmd {
 		    list.add(newVote);
 
 		    if (Residence.getConfigManager().isOnlyLike())
-			player.sendMessage(Residence.getLM().getMessage("Shop.Liked", resName));
+			Residence.msg(player, lm.Shop_Liked, resName);
 		    else
-			player.sendMessage(Residence.getLM().getMessage("Shop.Voted", vote, resName));
+			Residence.msg(player, lm.Shop_Voted, vote, resName);
 		}
 	    } else {
 		List<ShopVote> list = new ArrayList<ShopVote>();
@@ -446,14 +451,51 @@ public class shop implements cmd {
 		list.add(newVote);
 		VoteList.put(resName, list);
 		if (Residence.getConfigManager().isOnlyLike())
-		    player.sendMessage(Residence.getLM().getMessage("Shop.Liked", resName));
+		    Residence.msg(player, lm.Shop_Liked, resName);
 		else
-		    player.sendMessage(Residence.getLM().getMessage("Shop.Voted", vote, resName));
+		    Residence.msg(player, lm.Shop_Voted, vote, resName);
 	    }
 	    Residence.getShopSignUtilManager().saveShopVotes();
 	    Residence.getShopSignUtilManager().BoardUpdate();
 	    return true;
 	}
 	return false;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "Manage residence shop");
+	c.get(path + "Info", Arrays.asList("Manages residence shop feature"));
+
+	// Sub commands
+	path += "SubCommands.";
+	c.get(path + "list.Description", "Shows list of res shops");
+	c.get(path + "list.Info", Arrays.asList("&eUsage: &6/res shop list", "Shows full list of all residences with shop flag"));
+
+	c.get(path + "vote.Description", "Vote for residence shop");
+	c.get(path + "vote.Info", Arrays.asList("&eUsage: &6/res shop vote <residence> [amount]", "Votes for current or defined residence"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "vote"), Arrays.asList("[residence]"));
+
+	c.get(path + "like.Description", "Give like for residence shop");
+	c.get(path + "like.Info", Arrays.asList("&eUsage: &6/res shop like <residence>", "Gives like for residence shop"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "like"), Arrays.asList("[residenceshop]"));
+
+	c.get(path + "votes.Description", "Shows res shop votes");
+	c.get(path + "votes.Info", Arrays.asList("&eUsage: &6/res shop votes <residence> <page>", "Shows full vote list of current or defined residence shop"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "votes"), Arrays.asList("[residenceshop]"));
+
+	c.get(path + "likes.Description", "Shows res shop likes");
+	c.get(path + "likes.Info", Arrays.asList("&eUsage: &6/res shop likes <residence> <page>", "Shows full like list of current or defined residence shop"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "likes"), Arrays.asList("[residenceshop]"));
+
+	c.get(path + "setdesc.Description", "Sets residence shop description");
+	c.get(path + "setdesc.Info", Arrays.asList("&eUsage: &6/res shop setdesc [text]", "Sets residence shop description. Color code supported. For new line use /n"));
+
+	c.get(path + "createboard.Description", "Create res shop board");
+	c.get(path + "createboard.Info", Arrays.asList("&eUsage: &6/res shop createboard [place]",
+	    "Creates res shop board from selected area. Place - position from which to start filling board"));
+
+	c.get(path + "deleteboard.Description", "Deletes res shop board");
+	c.get(path + "deleteboard.Info", Arrays.asList("&eUsage: &6/res shop deleteboard", "Deletes res shop board bi right clicking on one of signs"));
     }
 }

@@ -21,6 +21,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.lm;
 
 public class FlagPermissions {
 
@@ -42,6 +43,10 @@ public class FlagPermissions {
 	TRUE, FALSE, NEITHER, INVALID
     }
 
+    public static void addMaterialToUseFlag(Material mat, Flags flag) {
+	addMaterialToUseFlag(mat, flag.name());
+    }
+
     public static void addMaterialToUseFlag(Material mat, String flag) {
 	matUseFlagList.put(mat, flag);
     }
@@ -55,7 +60,7 @@ public class FlagPermissions {
     }
 
     public static void addFlag(Flags flag) {
-	addFlag(flag.toString());
+	addFlag(flag.name());
     }
 
     public static void addFlag(String flag) {
@@ -68,6 +73,10 @@ public class FlagPermissions {
 	}
     }
 
+    public static void addPlayerOrGroupOnlyFlag(Flags flag) {
+	addPlayerOrGroupOnlyFlag(flag.name());
+    }
+
     public static void addPlayerOrGroupOnlyFlag(String flag) {
 	flag = flag.toLowerCase();
 	if (!validPlayerFlags.contains(flag)) {
@@ -76,6 +85,10 @@ public class FlagPermissions {
 	if (validFlagGroups.containsKey(flag)) {
 	    validFlagGroups.remove(flag);
 	}
+    }
+
+    public static void addResidenceOnlyFlag(Flags flag) {
+	addResidenceOnlyFlag(flag.name());
     }
 
     public static void addResidenceOnlyFlag(String flag) {
@@ -119,141 +132,22 @@ public class FlagPermissions {
 	validPlayerFlags.clear();
 	validFlags.clear();
 	validFlagGroups.clear();
-	addFlag(Flags.egg);
-	addFlag(Flags.note);
-	addFlag(Flags.pressure);
-	addFlag("cake");
-	addFlag("lever");
-	addFlag("door");
-	addFlag("button");
-	addFlag("table");
-	addFlag("brew");
-	addFlag("bed");
-	addFlag("commandblock");
-	addFlag("anvil");
-	addFlag("flowerpot");
-	addFlag("enchant");
-	addFlag("diode");
-	addFlag("use");
-	addFlag("move");
-	addFlag("build");
-	addFlag("tp");
-	addFlag("ignite");
-	addFlag("container");
-	addFlag("subzone");
-	addFlag("destroy");
-	addFlag("place");
-	addFlag("bucket");
-	addFlag("bucketfill");
-	addFlag("bucketempty");
-	addFlag("bank");
-	addFlag("beacon");
 
-	/* New flags */
-	addFlag("animalkilling");
-	addFlag("mobkilling");
-	addFlag("vehicledestroy");
-	addFlag("trade");
-
-	addFlag("leash");
-	addFlag("shear");
-	addFlag("nofly");
-
-	addFlag("command");
-
-	addFlag("chat");
-	addFlag("dye");
-
-	addFlag("enderpearl");
-	addFlag("chorustp");
-
-	// Horse riding
-	addFlag("riding");
-
-	addFlag("hook");
-
-	addResidenceOnlyFlag("trample");
-	addResidenceOnlyFlag("pvp");
-	addResidenceOnlyFlag("fireball");
-	addResidenceOnlyFlag("explode");
-	addResidenceOnlyFlag("damage");
-	addResidenceOnlyFlag("monsters");
-	addResidenceOnlyFlag("cmonsters");
-	addResidenceOnlyFlag("smonsters");
-	addResidenceOnlyFlag("nmonsters");
-	addResidenceOnlyFlag("firespread");
-	addResidenceOnlyFlag("burn");
-	addResidenceOnlyFlag("tnt");
-	addResidenceOnlyFlag("creeper");
-	addResidenceOnlyFlag("flow");
-	addResidenceOnlyFlag("healing");
-	addResidenceOnlyFlag("feed");
-	addResidenceOnlyFlag("animals");
-	addResidenceOnlyFlag("canimals");
-	addResidenceOnlyFlag("sanimals");
-	addResidenceOnlyFlag("nanimals");
-	addResidenceOnlyFlag("lavaflow");
-	addResidenceOnlyFlag("waterflow");
-	addResidenceOnlyFlag("physics");
-	addResidenceOnlyFlag("piston");
-	addResidenceOnlyFlag("spread");
-	addResidenceOnlyFlag("hidden");
-
-	addResidenceOnlyFlag("day");
-	addResidenceOnlyFlag("night");
-
-	// prevents from mobs entering residence
-	addResidenceOnlyFlag("nomobs");
-
-	// Players will suffer damage even if another plugin tries to block it
-	addResidenceOnlyFlag("overridepvp");
-
-	// Players will keep hes inventory on death
-	addResidenceOnlyFlag("keepinv");
-
-	// Players will keep hes exp on death
-	addResidenceOnlyFlag("keepexp");
-
-	// Players will keep hes exp on death
-	addResidenceOnlyFlag("mobitemdrop");
-
-	// Players will keep hes exp on death
-	addResidenceOnlyFlag("mobexpdrop");
-
-	// Players will not lose item durability
-	addResidenceOnlyFlag("nodurability");
-
-	// Special flag for making residence as shop
-	addResidenceOnlyFlag("shop");
-
-	// Prevent ender dragon block grief
-	addResidenceOnlyFlag("dragongrief");
-
-	// Prevent snowman snow trail
-	addResidenceOnlyFlag("snowtrail");
-
-	// Auto respawn player
-	addResidenceOnlyFlag("respawn");
-
-	addResidenceOnlyFlag("iceform");
-	addResidenceOnlyFlag("icemelt");
-
-	addResidenceOnlyFlag("snowball");
-
-	addResidenceOnlyFlag("pistonprotection");
-
-	addResidenceOnlyFlag("sun");
-	addResidenceOnlyFlag("rain");
-
-	addResidenceOnlyFlag("dryup");
-
-	addResidenceOnlyFlag("backup");
-
-	addResidenceOnlyFlag("hotfloor");
-
-	addResidenceOnlyFlag("coords");
-
-	addPlayerOrGroupOnlyFlag("admin");
+	for (Flags flag : Flags.values()) {
+	    switch (flag.getFlagMode()) {
+	    case Both:
+		addFlag(flag);
+		break;
+	    case Player:
+		addPlayerOrGroupOnlyFlag(flag);
+		break;
+	    case Residence:
+		addResidenceOnlyFlag(flag);
+		break;
+	    default:
+		break;
+	    }
+	}
 
 	Residence.getConfigManager().UpdateGroupedFlagsFile();
 
@@ -280,57 +174,65 @@ public class FlagPermissions {
 //	addFlagToFlagGroup("fire", "ignite");
 //	addFlagToFlagGroup("fire", "firespread");
 
-	addMaterialToUseFlag(Material.DIODE, "diode");
-	addMaterialToUseFlag(Material.DIODE_BLOCK_OFF, "diode");
-	addMaterialToUseFlag(Material.DIODE_BLOCK_ON, "diode");
-	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR, "diode");
-	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_OFF, "diode");
-	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_ON, "diode");
-	addMaterialToUseFlag(Material.DAYLIGHT_DETECTOR, "diode");
-	addMaterialToUseFlag(Material.WORKBENCH, "table");
-	addMaterialToUseFlag(Material.WOODEN_DOOR, "door");
+	addMaterialToUseFlag(Material.DIODE, Flags.diode);
+	addMaterialToUseFlag(Material.DIODE_BLOCK_OFF, Flags.diode);
+	addMaterialToUseFlag(Material.DIODE_BLOCK_ON, Flags.diode);
+	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR, Flags.diode);
+	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_OFF, Flags.diode);
+	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_ON, Flags.diode);
+	addMaterialToUseFlag(Material.DAYLIGHT_DETECTOR, Flags.diode);
+	addMaterialToUseFlag(Material.WORKBENCH, Flags.table);
+	addMaterialToUseFlag(Material.WOODEN_DOOR, Flags.door);
 
 	Residence.getNms().addDefaultFlags(matUseFlagList);
 
-	addMaterialToUseFlag(Material.FENCE_GATE, "door");
-	addMaterialToUseFlag(Material.NETHER_FENCE, "door");
-	addMaterialToUseFlag(Material.TRAP_DOOR, "door");
-	addMaterialToUseFlag(Material.ENCHANTMENT_TABLE, "enchant");
-	addMaterialToUseFlag(Material.STONE_BUTTON, "button");
-	addMaterialToUseFlag(Material.LEVER, "lever");
-	addMaterialToUseFlag(Material.BED_BLOCK, "bed");
-	addMaterialToUseFlag(Material.BREWING_STAND, "brew");
-	addMaterialToUseFlag(Material.CAKE, "cake");
-	addMaterialToUseFlag(Material.NOTE_BLOCK, "note");
-	addMaterialToUseFlag(Material.DRAGON_EGG, "egg");
-	addMaterialToUseFlag(Material.COMMAND, "commandblock");
-	addMaterialToUseFlag(Material.WOOD_BUTTON, "button");
-	addMaterialToUseFlag(Material.ANVIL, "anvil");
-	addMaterialToUseFlag(Material.FLOWER_POT, "flowerpot");
-	addMaterialToUseFlag(Material.BEACON, "beacon");
-	addMaterialToUseFlag(Material.JUKEBOX, "container");
-	addMaterialToUseFlag(Material.CHEST, "container");
-	addMaterialToUseFlag(Material.TRAPPED_CHEST, "container");
-	addMaterialToUseFlag(Material.HOPPER, "container");
-	addMaterialToUseFlag(Material.DROPPER, "container");
-	addMaterialToUseFlag(Material.FURNACE, "container");
-	addMaterialToUseFlag(Material.BURNING_FURNACE, "container");
-	addMaterialToUseFlag(Material.DISPENSER, "container");
-	addMaterialToUseFlag(Material.CAKE_BLOCK, "cake");
+	addMaterialToUseFlag(Material.FENCE_GATE, Flags.door);
+	addMaterialToUseFlag(Material.NETHER_FENCE, Flags.door);
+	addMaterialToUseFlag(Material.TRAP_DOOR, Flags.door);
+	addMaterialToUseFlag(Material.ENCHANTMENT_TABLE, Flags.enchant);
+	addMaterialToUseFlag(Material.STONE_BUTTON, Flags.button);
+	addMaterialToUseFlag(Material.LEVER, Flags.lever);
+	addMaterialToUseFlag(Material.BED_BLOCK, Flags.bed);
+	addMaterialToUseFlag(Material.BREWING_STAND, Flags.brew);
+	addMaterialToUseFlag(Material.CAKE, Flags.cake);
+	addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
+	addMaterialToUseFlag(Material.DRAGON_EGG, Flags.egg);
+	addMaterialToUseFlag(Material.COMMAND, Flags.commandblock);
+	addMaterialToUseFlag(Material.WOOD_BUTTON, Flags.button);
+	addMaterialToUseFlag(Material.ANVIL, Flags.anvil);
+	addMaterialToUseFlag(Material.FLOWER_POT, Flags.flowerpot);
+	addMaterialToUseFlag(Material.BEACON, Flags.beacon);
+	addMaterialToUseFlag(Material.JUKEBOX, Flags.container);
+	addMaterialToUseFlag(Material.CHEST, Flags.container);
+	addMaterialToUseFlag(Material.TRAPPED_CHEST, Flags.container);
+	addMaterialToUseFlag(Material.HOPPER, Flags.container);
+	addMaterialToUseFlag(Material.DROPPER, Flags.container);
+	addMaterialToUseFlag(Material.FURNACE, Flags.container);
+	addMaterialToUseFlag(Material.BURNING_FURNACE, Flags.container);
+	addMaterialToUseFlag(Material.DISPENSER, Flags.container);
+	addMaterialToUseFlag(Material.CAKE_BLOCK, Flags.cake);
     }
 
     public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node) {
 	FlagPermissions list = new FlagPermissions();
+
+	if (!node.isConfigurationSection(name))
+	    return list;
+
 	Set<String> keys = node.getConfigurationSection(name).getKeys(false);
-	if (keys != null) {
-	    for (String key : keys) {
-		boolean state = node.getBoolean(name + "." + key, false);
-		key = key.toLowerCase();
-		if (state) {
-		    list.setFlag(key, FlagState.TRUE);
-		} else {
-		    list.setFlag(key, FlagState.FALSE);
-		}
+	if (keys == null)
+	    return list;
+
+	for (String key : keys) {
+	    boolean state = node.getBoolean(name + "." + key, false);
+	    key = key.toLowerCase();
+	    Flags f = Flags.getFlag(key);
+	    if (f != null)
+		f.setEnabled(state);
+	    if (state) {
+		list.setFlag(key, FlagState.TRUE);
+	    } else {
+		list.setFlag(key, FlagState.FALSE);
 	    }
 	}
 	return list;
@@ -509,6 +411,10 @@ public class FlagPermissions {
 	}
     }
 
+    public boolean playerHas(String player, String world, Flags flag, boolean def) {
+	return playerHas(player, world, flag.getName(), def);
+    }
+
     public boolean playerHas(String player, String world, String flag, boolean def) {
 	String group = Residence.getPermissionManager().getGroupNameByPlayer(player, world);
 	return this.playerCheck(player, flag, this.groupCheck(group, flag, this.has(flag, def)));
@@ -542,6 +448,10 @@ public class FlagPermissions {
 	    return parent.groupCheck(group, flag, def);
 	}
 	return def;
+    }
+
+    public boolean has(Flags flag, boolean def) {
+	return has(flag.getName(), def);
     }
 
     public boolean has(String flag, boolean def) {
@@ -1060,10 +970,10 @@ public class FlagPermissions {
     }
 
     public void printFlags(Player player) {
-	player.sendMessage(Residence.getLM().getMessage("General.Flags", listFlags()));
-	player.sendMessage(Residence.getLM().getMessage("General.YourFlags", listPlayerFlags(player.getName())));
-	player.sendMessage(Residence.getLM().getMessage("General.GroupFlags", listGroupFlags()));
-	player.sendMessage(Residence.getLM().getMessage("General.OthersFlags", listOtherPlayersFlags(player.getName())));
+	Residence.msg(player, lm.General_ResidenceFlags, listFlags());
+	Residence.msg(player, lm.General_PlayersFlags, listPlayerFlags(player.getName()));
+	Residence.msg(player, lm.General_GroupFlags, listGroupFlags());
+	Residence.msg(player, lm.General_OthersFlags, listOtherPlayersFlags(player.getName()));
     }
 
     public void copyUserPermissions(String fromUser, String toUser) {

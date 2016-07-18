@@ -1,16 +1,22 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class subzone implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
@@ -37,21 +43,29 @@ public class subzone implements cmd {
 	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(parent);
 	    if (res == null) {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		Residence.msg(player, lm.Invalid_Residence);
 		return true;
 	    }
 
 	    if (!player.hasPermission("residence.create.subzone") && !resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("Subzone.CantCreate"));
+		Residence.msg(player, lm.Subzone_CantCreate);
 		return false;
 	    }
 
 	    res.addSubzone(player, Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager().getPlayerLoc2(player.getName()),
 		zname, resadmin);
 	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Select.Points"));
+	    Residence.msg(player, lm.Select_Points);
 	}
 	return true;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "Create subzones in residences.");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res subzone <residence> [subzone name]",
+	    "If residence name is left off, will attempt to use residence your standing in."));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 
 }

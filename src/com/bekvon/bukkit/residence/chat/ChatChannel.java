@@ -45,9 +45,9 @@ public class ChatChannel {
 	    return;
 	for (String member : members) {
 	    Player player = serv.getPlayer(member);
-	    if (player != null)
-		player.sendMessage(cevent.getChatprefix() + " " + Residence.getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent
-		    .getChatMessage());
+
+	    Residence.msg(player, cevent.getChatprefix() + " " + Residence.getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent
+		.getChatMessage());
 	}
 	Bukkit.getConsoleSender().sendMessage("ResidentialChat[" + channelName + "] - " + sourcePlayer + ": " + ChatColor.stripColor(cevent.getChatMessage()));
     }

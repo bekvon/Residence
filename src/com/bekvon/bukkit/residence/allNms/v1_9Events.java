@@ -12,6 +12,7 @@ import org.bukkit.event.entity.LingeringPotionSplashEvent;
 import org.bukkit.potion.PotionEffect;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 
 public class v1_9Events implements Listener {
 
@@ -36,7 +37,7 @@ public class v1_9Events implements Listener {
 	    return;
 
 	Entity ent = event.getEntity();
-	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has("pvp", true);
+	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has(Flags.pvp, true);
 	if (!srcpvp)
 	    event.setCancelled(true);
     }
@@ -67,13 +68,13 @@ public class v1_9Events implements Listener {
 	    return;
 
 	Entity ent = event.getEntity();
-	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has("pvp", true);
+	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has(Flags.pvp, true);
 	Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
 	while (it.hasNext()) {
 	    LivingEntity target = it.next();
 	    if (!(target instanceof Player))
 		continue;
-	    Boolean tgtpvp = Residence.getPermsByLoc(target.getLocation()).has("pvp", true);
+	    Boolean tgtpvp = Residence.getPermsByLoc(target.getLocation()).has(Flags.pvp, true);
 	    if (!srcpvp || !tgtpvp) {
 		event.getAffectedEntities().remove(target);
 		event.getEntity().remove();

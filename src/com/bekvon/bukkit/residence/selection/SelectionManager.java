@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence.selection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
@@ -114,12 +115,12 @@ public class SelectionManager {
 	String pname = player.getName();
 	CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
 
-	String Message = Residence.getLM().getMessage("Select.TotalSize", cuboidArea.getSize());
+	String Message = Residence.msg(lm.Select_TotalSize, cuboidArea.getSize());
 
 	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (Residence.getConfigManager().enableEconomy())
-	    Message += " " + Residence.getLM().getMessage("General.LandCost", ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
+	    Message += " " + Residence.msg(lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
 
 	Residence.getAB().send(player, Message);
 
@@ -128,22 +129,22 @@ public class SelectionManager {
     public void showSelectionInfo(Player player) {
 	String pname = player.getName();
 	if (hasPlacedBoth(pname)) {
-	    Residence.msg(player, "General.Separator");
+	    Residence.msg(player, lm.General_Separator);
 	    CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
-	    Residence.msg(player, "Select.TotalSize", cuboidArea.getSize());
+	    Residence.msg(player, lm.Select_TotalSize, cuboidArea.getSize());
 
 	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
 
 	    if (Residence.getConfigManager().enableEconomy())
-		Residence.msg(player, "General.LandCost", ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
-	    player.sendMessage(ChatColor.YELLOW + "X" + Residence.getLM().getMessage("General.Size", cuboidArea.getXSize()));
-	    player.sendMessage(ChatColor.YELLOW + "Y" + Residence.getLM().getMessage("General.Size", cuboidArea.getYSize()));
-	    player.sendMessage(ChatColor.YELLOW + "Z" + Residence.getLM().getMessage("General.Size", cuboidArea.getZSize()));
-	    Residence.msg(player, "General.Separator");
+		Residence.msg(player, lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
+	    player.sendMessage(ChatColor.YELLOW + "X" + Residence.msg(lm.General_Size, cuboidArea.getXSize()));
+	    player.sendMessage(ChatColor.YELLOW + "Y" + Residence.msg(lm.General_Size, cuboidArea.getYSize()));
+	    player.sendMessage(ChatColor.YELLOW + "Z" + Residence.msg(lm.General_Size, cuboidArea.getZSize()));
+	    Residence.msg(player, lm.General_Separator);
 	    NewMakeBorders(player, getPlayerLoc1(pname), getPlayerLoc2(pname), false);
 	} else
-	    Residence.msg(player, "Select.Points");
+	    Residence.msg(player, lm.Select_Points);
     }
 
     public static boolean showParticle(Player player, Location Current, boolean error) {
@@ -463,7 +464,7 @@ public class SelectionManager {
 	    this.sky(player, resadmin);
 	    this.bedrock(player, resadmin);
 	} else {
-	    Residence.msg(player, "Select.Points");
+	    Residence.msg(player, lm.Select_Points);
 	}
     }
 
@@ -513,9 +514,9 @@ public class SelectionManager {
 		}
 		playerLoc2.get(player.getName()).setY(newy);
 	    }
-	    Residence.msg(player, "Select.Sky");
+	    Residence.msg(player, lm.Select_Sky);
 	} else {
-	    Residence.msg(player, "Select.Points");
+	    Residence.msg(player, lm.Select_Points);
 	}
     }
 
@@ -544,9 +545,9 @@ public class SelectionManager {
 		}
 		playerLoc2.get(player.getName()).setY(newy);
 	    }
-	    Residence.msg(player, "Select.Bedrock");
+	    Residence.msg(player, lm.Select_Bedrock);
 	} else {
-	    Residence.msg(player, "Select.Points");
+	    Residence.msg(player, lm.Select_Points);
 	}
     }
 
@@ -565,16 +566,16 @@ public class SelectionManager {
 	int ymax = player.getLocation().getWorld().getMaxHeight() - 1;
 	playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
 	playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax, ymax, zmax));
-	Residence.msg(player, "Select.Success");
+	Residence.msg(player, lm.Select_Success);
     }
 
     public boolean worldEdit(Player player) {
-	Residence.msg(player, "General.WorldEditNotFound");
+	Residence.msg(player, lm.General_WorldEditNotFound);
 	return false;
     }
 
     public boolean worldEditUpdate(Player player) {
-	Residence.msg(player, "General.WorldEditNotFound");
+	Residence.msg(player, lm.General_WorldEditNotFound);
 	return false;
     }
 
@@ -584,18 +585,18 @@ public class SelectionManager {
 	Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
 	placeLoc1(player, loc1, false);
 	placeLoc2(player, loc2, true);
-	Residence.msg(player, "Select.Success");
+	Residence.msg(player, lm.Select_Success);
 	showSelectionInfo(player);
     }
 
     public void modify(Player player, boolean shift, double amount) {
 	if (!hasPlacedBoth(player.getName())) {
-	    Residence.msg(player, "Select.Points");
+	    Residence.msg(player, lm.Select_Points);
 	    return;
 	}
 	Direction d = getDirection(player);
 	if (d == null) {
-	    Residence.msg(player, "Invalid.Direction");
+	    Residence.msg(player, lm.Invalid_Direction);
 	    return;
 	}
 	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
@@ -604,7 +605,7 @@ public class SelectionManager {
 	    double oldy = area.getLowLoc().getBlockY();
 	    oldy = oldy - amount;
 	    if (oldy < MIN_HEIGHT) {
-		Residence.msg(player, "Select.TooLow");
+		Residence.msg(player, lm.Select_TooLow);
 		oldy = MIN_HEIGHT;
 	    }
 	    area.getLowLoc().setY(oldy);
@@ -612,9 +613,9 @@ public class SelectionManager {
 		double oldy2 = area.getHighLoc().getBlockY();
 		oldy2 = oldy2 - amount;
 		area.getHighLoc().setY(oldy2);
-		Residence.msg(player, "Shifting.Down", amount);
+		Residence.msg(player, lm.Shifting_Down, amount);
 	    } else
-		Residence.msg(player, "Expanding.Down", amount);
+		Residence.msg(player, lm.Expanding_Down, amount);
 	    break;
 	case MINUSX:
 	    double oldx = area.getLowLoc().getBlockX();
@@ -624,9 +625,9 @@ public class SelectionManager {
 		double oldx2 = area.getHighLoc().getBlockX();
 		oldx2 = oldx2 - amount;
 		area.getHighLoc().setX(oldx2);
-		Residence.msg(player, "Shifting.West", amount);
+		Residence.msg(player, lm.Shifting_West, amount);
 	    } else
-		Residence.msg(player, "Expanding.West", amount);
+		Residence.msg(player, lm.Expanding_West, amount);
 	    break;
 	case MINUSZ:
 	    double oldz = area.getLowLoc().getBlockZ();
@@ -636,9 +637,9 @@ public class SelectionManager {
 		double oldz2 = area.getHighLoc().getBlockZ();
 		oldz2 = oldz2 - amount;
 		area.getHighLoc().setZ(oldz2);
-		Residence.msg(player, "Shifting.North", amount);
+		Residence.msg(player, lm.Shifting_North, amount);
 	    } else
-		Residence.msg(player, "Expanding.North", amount);
+		Residence.msg(player, lm.Expanding_North, amount);
 	    break;
 	case PLUSX:
 	    oldx = area.getHighLoc().getBlockX();
@@ -648,9 +649,9 @@ public class SelectionManager {
 		double oldx2 = area.getLowLoc().getBlockX();
 		oldx2 = oldx2 + amount;
 		area.getLowLoc().setX(oldx2);
-		Residence.msg(player, "Shifting.East", amount);
+		Residence.msg(player, lm.Shifting_East, amount);
 	    } else
-		Residence.msg(player, "Expanding.East", amount);
+		Residence.msg(player, lm.Expanding_East, amount);
 	    break;
 	case PLUSZ:
 	    oldz = area.getHighLoc().getBlockZ();
@@ -660,15 +661,15 @@ public class SelectionManager {
 		double oldz2 = area.getLowLoc().getBlockZ();
 		oldz2 = oldz2 + amount;
 		area.getLowLoc().setZ(oldz2);
-		Residence.msg(player, "Shifting.South", amount);
+		Residence.msg(player, lm.Shifting_South, amount);
 	    } else
-		Residence.msg(player, "Expanding.South", amount);
+		Residence.msg(player, lm.Expanding_South, amount);
 	    break;
 	case UP:
 	    oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy + amount;
 	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
-		Residence.msg(player, "Select.TooHigh");
+		Residence.msg(player, lm.Select_TooHigh);
 		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
@@ -676,9 +677,9 @@ public class SelectionManager {
 		double oldy2 = area.getLowLoc().getBlockY();
 		oldy2 = oldy2 + amount;
 		area.getLowLoc().setY(oldy2);
-		Residence.msg(player, "Shifting.Up", amount);
+		Residence.msg(player, lm.Shifting_Up, amount);
 	    } else
-		Residence.msg(player, "Expanding.Up", amount);
+		Residence.msg(player, lm.Expanding_Up, amount);
 	    break;
 	default:
 	    break;
@@ -688,12 +689,12 @@ public class SelectionManager {
 
     public boolean contract(Player player, double amount, boolean resadmin) {
 	if (!hasPlacedBoth(player.getName())) {
-	    Residence.msg(player, "Select.Points");
+	    Residence.msg(player, lm.Select_Points);
 	    return false;
 	}
 	Direction d = getDirection(player);
 	if (d == null) {
-	    Residence.msg(player, "Invalid.Direction");
+	    Residence.msg(player, lm.Invalid_Direction);
 	    return false;
 	}
 	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
@@ -702,45 +703,45 @@ public class SelectionManager {
 	    double oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy - amount;
 	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
-		Residence.msg(player, "Select.TooHigh");
+		Residence.msg(player, lm.Select_TooHigh);
 		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
-	    Residence.msg(player, "Contracting.Down", amount);
+	    Residence.msg(player, lm.Contracting_Down, amount);
 	    break;
 	case MINUSX:
 	    double oldx = area.getHighLoc().getBlockX();
 	    oldx = oldx - amount;
 	    area.getHighLoc().setX(oldx);
-	    Residence.msg(player, "Contracting.West", amount);
+	    Residence.msg(player, lm.Contracting_West, amount);
 	    break;
 	case MINUSZ:
 	    double oldz = area.getHighLoc().getBlockZ();
 	    oldz = oldz - amount;
 	    area.getHighLoc().setZ(oldz);
-	    Residence.msg(player, "Contracting.North", amount);
+	    Residence.msg(player, lm.Contracting_North, amount);
 	    break;
 	case PLUSX:
 	    oldx = area.getLowLoc().getBlockX();
 	    oldx = oldx + amount;
 	    area.getLowLoc().setX(oldx);
-	    Residence.msg(player, "Contracting.East", amount);
+	    Residence.msg(player, lm.Contracting_East, amount);
 	    break;
 	case PLUSZ:
 	    oldz = area.getLowLoc().getBlockZ();
 	    oldz = oldz + amount;
 	    area.getLowLoc().setZ(oldz);
-	    Residence.msg(player, "Contracting.South", amount);
+	    Residence.msg(player, lm.Contracting_South, amount);
 	    break;
 	case UP:
 	    oldy = area.getLowLoc().getBlockY();
 	    oldy = oldy + amount;
 	    if (oldy < MIN_HEIGHT) {
-		Residence.msg(player, "Select.TooLow");
+		Residence.msg(player, lm.Select_TooLow);
 		oldy = MIN_HEIGHT;
 	    }
 	    area.getLowLoc().setY(oldy);
-	    Residence.msg(player, "Contracting.Up", amount);
+	    Residence.msg(player, lm.Contracting_Up, amount);
 	    break;
 	default:
 	    break;

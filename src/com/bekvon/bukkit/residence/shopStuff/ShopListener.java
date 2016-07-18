@@ -17,6 +17,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
@@ -71,9 +72,9 @@ public class ShopListener implements Listener {
 	    if (Found != null) {
 		Residence.getShopSignUtilManager().GetAllBoards().remove(Found);
 		Residence.getShopSignUtilManager().saveSigns();
-		event.getPlayer().sendMessage(Residence.getLM().getMessage("Shop.DeletedBoard"));
+		Residence.msg(player, lm.Shop_DeletedBoard);
 	    } else {
-		event.getPlayer().sendMessage(Residence.getLM().getMessage("Shop.IncorrectBoard"));
+		Residence.msg(player, lm.Shop_IncorrectBoard);
 	    }
 	    Delete.remove(player.getName());
 	    return;
@@ -157,8 +158,7 @@ public class ShopListener implements Listener {
 
 	event.setCancelled(true);
 
-	if (event.getPlayer() != null)
-	    event.getPlayer().sendMessage(ChatColor.YELLOW + "Can't change while shop flag is set to true");
+	Residence.msg(event.getPlayer(), ChatColor.YELLOW + "Can't change while shop flag is set to true");
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

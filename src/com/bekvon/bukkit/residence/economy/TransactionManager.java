@@ -7,6 +7,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -30,15 +31,15 @@ public class TransactionManager implements MarketBuyInterface {
     public static boolean chargeEconomyMoney(Player player, int amount) {
 	EconomyInterface econ = Residence.getEconomyManager();
 	if (econ == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+	    Residence.msg(player, lm.Economy_MarketDisabled);
 	    return false;
 	}
 	if (!econ.canAfford(player.getName(), amount)) {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
+	    Residence.msg(player, lm.Economy_NotEnoughMoney);
 	    return false;
 	}
 	econ.subtract(player.getName(), amount);
-	player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
+	Residence.msg(player, lm.Economy_MoneyCharged, String.format("%d", amount), econ.getName());
 	return true;
     }
 
@@ -49,12 +50,12 @@ public class TransactionManager implements MarketBuyInterface {
 	    return true;
 	EconomyInterface econ = Residence.getEconomyManager();
 	if (econ == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+	    Residence.msg(player, lm.Economy_MarketDisabled);
 	    return false;
 	}
 
 	econ.add(player.getName(), amount);
-	player.sendMessage(Residence.getLM().getMessage("Economy.MoneyAdded", String.format("%d", amount), econ.getName()));
+	Residence.msg(player, lm.Economy_MoneyAdded, String.format("%d", amount), econ.getName());
 	return true;
     }
 
@@ -66,46 +67,46 @@ public class TransactionManager implements MarketBuyInterface {
     public void putForSale(ClaimedResidence res, Player player, int amount, boolean resadmin) {
 
 	if (res == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    Residence.msg(player, lm.Invalid_Residence);
 	    return;
 	}
 
 	if (Residence.getConfigManager().enabledRentSystem()) {
 	    if (res.isForRent()) {
-		player.sendMessage(Residence.getLM().getMessage("Economy.RentSellFail"));
+		Residence.msg(player, lm.Economy_RentSellFail);
 		return;
 	    }
 	}
 	if (!resadmin) {
 	    if (!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager() == null) {
-		player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+		Residence.msg(player, lm.Economy_MarketDisabled);
 		return;
 	    }
 
 	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
 	    boolean cansell = rPlayer.getGroup().canSellLand() || player.hasPermission("residence.sell");
 	    if (!cansell && !resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(player, lm.General_NoPermission);
 		return;
 	    }
 	    if (amount <= 0) {
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Amount"));
+		Residence.msg(player, lm.Invalid_Amount);
 		return;
 	    }
 	}
 
 	if (!res.isOwner(player) && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	    Residence.msg(player, lm.General_NoPermission);
 	    return;
 	}
 	if (sellAmount.contains(res)) {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.AlreadySellFail"));
+	    Residence.msg(player, lm.Economy_AlreadySellFail);
 	    return;
 	}
 	res.setSellPrice(amount);
 	sellAmount.add(res);
 	Residence.getSignUtil().CheckSign(res);
-	player.sendMessage(Residence.getLM().getMessage("Residence.ForSale", res.getName(), amount));
+	Residence.msg(player, lm.Residence_ForSale, res.getName(), amount);
     }
 
     @Override
@@ -137,7 +138,7 @@ public class TransactionManager implements MarketBuyInterface {
 
     public void buyPlot(ClaimedResidence res, Player player, boolean resadmin) {
 	if (res == null || !res.isForSell()) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    Residence.msg(player, lm.Invalid_Residence);
 	    return;
 	}
 
@@ -145,22 +146,22 @@ public class TransactionManager implements MarketBuyInterface {
 	PermissionGroup group = rPlayer.getGroup();
 	if (!resadmin) {
 	    if (!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager() == null) {
-		player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+		Residence.msg(player, lm.Economy_MarketDisabled);
 		return;
 	    }
 	    boolean canbuy = group.canBuyLand() || player.hasPermission("residence.buy");
 	    if (!canbuy && !resadmin) {
-		player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(player, lm.General_NoPermission);
 		return;
 	    }
 	}
 
 	if (res.getPermissions().getOwner().equals(player.getName())) {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.OwnerBuyFail"));
+	    Residence.msg(player, lm.Economy_OwnerBuyFail);
 	    return;
 	}
 	if (Residence.getResidenceManager().getOwnedZoneCount(player.getName()) >= rPlayer.getMaxRes() && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.TooMany"));
+	    Residence.msg(player, lm.Residence_TooMany);
 	    return;
 	}
 	Server serv = Residence.getServ();
@@ -170,7 +171,7 @@ public class TransactionManager implements MarketBuyInterface {
 	    CuboidArea[] areas = res.getAreaArray();
 	    for (CuboidArea thisarea : areas) {
 		if (!group.inLimits(thisarea)) {
-		    player.sendMessage(Residence.getLM().getMessage("Residence.BuyTooBig"));
+		    Residence.msg(player, lm.Residence_BuyTooBig);
 		    return;
 		}
 	    }
@@ -178,7 +179,7 @@ public class TransactionManager implements MarketBuyInterface {
 
 	EconomyInterface econ = Residence.getEconomyManager();
 	if (econ == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+	    Residence.msg(player, lm.Economy_MarketDisabled);
 	    return;
 	}
 
@@ -203,15 +204,15 @@ public class TransactionManager implements MarketBuyInterface {
 	    CuboidArea area = res.getAreaArray()[0];
 	    Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
 
-	    player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
-	    player.sendMessage(Residence.getLM().getMessage("Residence.Bought", res.getResidenceName()));
+	    Residence.msg(player, lm.Economy_MoneyCharged, String.format("%d", amount), econ.getName());
+	    Residence.msg(player, lm.Residence_Bought, res.getResidenceName());
 	    Player seller = serv.getPlayer(sellerName);
 	    if (seller != null && seller.isOnline()) {
-		seller.sendMessage(Residence.getLM().getMessage("Residence.Buy", player.getName(), res.getResidenceName()));
-		seller.sendMessage(Residence.getLM().getMessage("Economy.MoneyCredit", String.format("%d", amount), econ.getName()));
+		seller.sendMessage(Residence.msg(lm.Residence_Buy, player.getName(), res.getResidenceName()));
+		seller.sendMessage(Residence.msg(lm.Economy_MoneyCredit, String.format("%d", amount), econ.getName()));
 	    }
 	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
+	    Residence.msg(player, lm.Economy_NotEnoughMoney);
 	}
 
     }
@@ -223,20 +224,20 @@ public class TransactionManager implements MarketBuyInterface {
 
     public void removeFromSale(Player player, ClaimedResidence res, boolean resadmin) {
 	if (res == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Area"));
+	    Residence.msg(player, lm.Invalid_Area);
 	    return;
 	}
 
 	if (!res.isForSell()) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.NotForSale"));
+	    Residence.msg(player, lm.Residence_NotForSale);
 	    return;
 	}
 	if (res.isOwner(player) || resadmin) {
 	    removeFromSale(res);
 	    Residence.getSignUtil().CheckSign(res);
-	    player.sendMessage(Residence.getLM().getMessage("Residence.StopSelling"));
+	    Residence.msg(player, lm.Residence_StopSelling);
 	} else {
-	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	    Residence.msg(player, lm.General_NoPermission);
 	}
     }
 
@@ -279,22 +280,22 @@ public class TransactionManager implements MarketBuyInterface {
 	if (!sellAmount.contains(res))
 	    return false;
 
-	player.sendMessage(Residence.getLM().getMessage("General.Separator"));
-	player.sendMessage(Residence.getLM().getMessage("Area.Name", res.getName()));
-	player.sendMessage(Residence.getLM().getMessage("Economy.SellAmount", res.getSellPrice()));
+	Residence.msg(player, lm.General_Separator);
+	Residence.msg(player, lm.Area_Name, res.getName());
+	Residence.msg(player, lm.Economy_SellAmount, res.getSellPrice());
 	if (Residence.getConfigManager().useLeases()) {
 	    String etime = Residence.getLeaseManager().getExpireTime(res.getName());
 	    if (etime != null) {
-		player.sendMessage(Residence.getLM().getMessage("Economy.LeaseExpire", etime));
+		Residence.msg(player, lm.Economy_LeaseExpire, etime);
 	    }
 	}
-	player.sendMessage(Residence.getLM().getMessage("General.Separator"));
+	Residence.msg(player, lm.General_Separator);
 	return true;
     }
 
     public void printForSaleResidences(Player player, int page) {
 	List<ClaimedResidence> toRemove = new ArrayList<ClaimedResidence>();
-	player.sendMessage(Residence.getLM().getMessage("Economy.LandForSale"));
+	Residence.msg(player, lm.Economy_LandForSale);
 	StringBuilder sbuild = new StringBuilder();
 	sbuild.append(ChatColor.GREEN);
 
@@ -318,7 +319,7 @@ public class TransactionManager implements MarketBuyInterface {
 		toRemove.add(res);
 		continue;
 	    }
-	    player.sendMessage(Residence.getLM().getMessage("Economy.SellList", z, res.getName(), res.getSellPrice(), res.getOwner()));
+	    Residence.msg(player, lm.Economy_SellList, z, res.getName(), res.getSellPrice(), res.getOwner());
 	}
 
 	for (ClaimedResidence one : toRemove) {
@@ -340,11 +341,11 @@ public class TransactionManager implements MarketBuyInterface {
 	Prevpage = page > 1 ? Prevpage : page;
 
 	String prevCmd = "/res market list sell " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
+	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = "/res market list sell " + NextPage;
-	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
+	String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 

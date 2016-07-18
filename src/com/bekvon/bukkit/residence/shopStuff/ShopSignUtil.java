@@ -22,6 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class ShopSignUtil {
@@ -359,14 +360,14 @@ public class ShopSignUtil {
 		    vote = getAverageVote(ShopNames.get(Start));
 
 		    if (Residence.getConfigManager().isOnlyLike()) {
-			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.ListLiked", getLikes(ShopNames.get(Start)));
+			votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListLiked, getLikes(ShopNames.get(Start)));
 		    } else
-			votestat = vote.getAmount() == 0 ? "" : Residence.getLM().getMessage("Shop.SignLines.4", vote.getVote() + "%" + vote.getAmount());
+			votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_SignLines_4, vote.getVote() + "%" + vote.getAmount());
 		}
 
-		sign.setLine(0, Residence.getLM().getMessage("Shop.SignLines.1", Start + 1));
-		sign.setLine(1, Residence.getLM().getMessage("Shop.SignLines.2", res.getName()));
-		sign.setLine(2, Residence.getLM().getMessage("Shop.SignLines.3", res.getOwner()));
+		sign.setLine(0, Residence.msg(lm.Shop_SignLines_1, Start + 1));
+		sign.setLine(1, Residence.msg(lm.Shop_SignLines_2, res.getName()));
+		sign.setLine(2, Residence.msg(lm.Shop_SignLines_3, res.getOwner()));
 		sign.setLine(3, votestat);
 		sign.update();
 		board.addSignLoc(res.getName(), sign.getLocation());

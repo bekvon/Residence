@@ -11,6 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
@@ -54,8 +56,8 @@ public class CrackShot implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(entity.getLocation());
 
 	if (Residence.getNms().isAnimal(entity)) {
-	    if (res != null && !res.getPermissions().playerHas(cause.getName(), "animalkilling", true)) {
-		cause.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "animalkilling", res.getName()));
+	    if (res != null && !res.getPermissions().playerHas(cause.getName(), Flags.animalkilling, true)) {
+		cause.sendMessage(Residence.msg(lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName()));
 		event.setCancelled(true);
 	    }
 	}
@@ -86,9 +88,9 @@ public class CrackShot implements Listener {
 	// Note: Location of entity, not player; otherwise player could stand outside of res and still damage
 	Location loc = event.getVictim().getLocation();
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-	if (res != null && !res.getPermissions().playerHas(player.getName(), "container", false)) {
+	if (res != null && !res.getPermissions().playerHas(player.getName(), Flags.container, false)) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
 	}
 
     }
@@ -118,25 +120,25 @@ public class CrackShot implements Listener {
 
 	boolean srcpvp = true;
 	if (srcarea != null) {
-	    srcpvp = srcarea.getPermissions().has("pvp", true);
+	    srcpvp = srcarea.getPermissions().has(Flags.pvp, true);
 	}
 
 	if (!srcpvp) {
-	    damager.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
+	    damager.sendMessage(Residence.msg(lm.General_NoPVPZone));
 	    event.setCancelled(true);
 	    return;
 	}
 	/* Check for Player vs Player */
 	if (area == null) {
 	    /* World PvP */
-	    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("pvp", true)) {
-		damager.sendMessage(Residence.getLM().getMessage("General.WorldPVPDisabled"));
+	    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has(Flags.pvp, true)) {
+		damager.sendMessage(Residence.msg(lm.General_WorldPVPDisabled));
 		event.setCancelled(true);
 	    }
 	} else {
 	    /* Normal PvP */
-	    if (!area.getPermissions().has("pvp", true)) {
-		damager.sendMessage(Residence.getLM().getMessage("General.NoPVPZone"));
+	    if (!area.getPermissions().has(Flags.pvp, true)) {
+		damager.sendMessage(Residence.msg(lm.General_NoPVPZone));
 		event.setCancelled(true);
 	    }
 	}

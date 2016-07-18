@@ -25,6 +25,8 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import org.bukkit.Location;
@@ -92,7 +94,7 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.getConfigManager().enabledRentSystem() && res != null) {
 	    String resname = res.getName();
 	    if (Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname)) {
-		player.sendMessage(Residence.getLM().getMessage("Rent.ModifyDeny"));
+		Residence.msg(player, lm.Rent_ModifyDeny);
 		event.setCancelled(true);
 		return;
 	    }
@@ -102,13 +104,13 @@ public class ResidenceBlockListener implements Listener {
 	if (res != null && res.getItemIgnoreList().isListed(mat))
 	    return;
 
-	boolean hasdestroy = perms.playerHas(pname, player.getWorld().getName(), "destroy", perms.playerHas(pname, player.getWorld().getName(), "build", true));
-	boolean hasContainer = perms.playerHas(pname, player.getWorld().getName(), "container", true);
+	boolean hasdestroy = perms.playerHas(pname, player.getWorld().getName(), Flags.destroy, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true));
+	boolean hasContainer = perms.playerHas(pname, player.getWorld().getName(), Flags.container, true);
 	if (!hasdestroy && !player.hasPermission("residence.bypass.destroy")) {
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "destroy"));
+	    Residence.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
 	} else if (!hasContainer && mat == Material.CHEST) {
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "container"));
+	    Residence.msg(player, lm.Flag_Deny, Flags.container);
 	    event.setCancelled(true);
 	}
     }
@@ -123,7 +125,7 @@ public class ResidenceBlockListener implements Listener {
 
 	if (((EntityBlockFormEvent) event).getEntity() instanceof Snowman) {
 	    FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	    if (!perms.has("snowtrail", true)) {
+	    if (!perms.has(Flags.snowtrail, true)) {
 		event.setCancelled(true);
 	    }
 	}
@@ -141,7 +143,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("iceform", true)) {
+	if (!perms.has(Flags.iceform, true)) {
 	    event.setCancelled(true);
 	}
     }
@@ -157,7 +159,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("icemelt", true)) {
+	if (!perms.has(Flags.icemelt, true)) {
 	    event.setCancelled(true);
 	}
     }
@@ -247,7 +249,7 @@ public class ResidenceBlockListener implements Listener {
 	if (MessageInformed.contains(player.getName()))
 	    return;
 
-	player.sendMessage(Residence.getLM().getMessage("General.NewPlayerInfo"));
+	Residence.msg(player, lm.General_NewPlayerInfo);
 
 	MessageInformed.add(player.getName());
     }
@@ -307,22 +309,22 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.getConfigManager().enabledRentSystem() && res != null) {
 	    String resname = res.getName();
 	    if (Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname)) {
-		player.sendMessage(Residence.getLM().getMessage("Rent.ModifyDeny"));
+		Residence.msg(player, lm.Rent_ModifyDeny);
 		event.setCancelled(true);
 		return;
 	    }
 	}
 	String pname = player.getName();
 	if (res != null && !res.getItemBlacklist().isAllowed(mat)) {
-	    player.sendMessage(Residence.getLM().getMessage("General.ItemBlacklisted"));
+	    Residence.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
 	}
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
-	boolean hasplace = perms.playerHas(pname, player.getWorld().getName(), "place", perms.playerHas(pname, player.getWorld().getName(), "build", true));
+	boolean hasplace = perms.playerHas(pname, world, Flags.place, perms.playerHas(pname, world, Flags.build, true));
 	if (!hasplace && !player.hasPermission("residence.bypass.build")) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "place"));
+	    Residence.msg(player, lm.Flag_Deny, Flags.place.getName());
 	    return;
 	}
     }
@@ -334,7 +336,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	Location loc = event.getBlock().getLocation();
 	FlagPermissions perms = Residence.getPermsByLoc(loc);
-	if (!perms.has("spread", true)) {
+	if (!perms.has(Flags.spread, true)) {
 	    event.setCancelled(true);
 	}
     }
@@ -345,7 +347,7 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("piston", true)) {
+	if (!perms.has(Flags.piston, true)) {
 	    event.setCancelled(true);
 	    return;
 	}
@@ -363,11 +365,11 @@ public class ResidenceBlockListener implements Listener {
 	    Location locTo = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
 	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
 	    ClaimedResidence blockTo = Residence.getResidenceManager().getByLoc(locTo);
-	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has("pistonprotection", true)) {
+	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, true)) {
 		event.setCancelled(true);
 		return;
 	    } else if (blockTo != null && blockFrom != null && !blockTo.isOwner(blockFrom.getOwner()) && blockFrom.getPermissions().has(
-		"pistonprotection", true)) {
+		Flags.pistonprotection, true)) {
 		event.setCancelled(true);
 		return;
 	    }
@@ -380,7 +382,7 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("piston", true)) {
+	if (!perms.has(Flags.piston, true)) {
 	    event.setCancelled(true);
 	    return;
 	}
@@ -394,14 +396,14 @@ public class ResidenceBlockListener implements Listener {
 	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
 	    ClaimedResidence blockTo = Residence.getResidenceManager().getByLoc(locTo);
 
-	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has("pistonprotection", true)) {
+	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, true)) {
 		event.setCancelled(true);
 		return;
-	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has("pistonprotection", true)) {
+	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has(Flags.pistonprotection, true)) {
 		event.setCancelled(true);
 		return;
 	    } else if (blockTo != null && blockFrom != null && (pistonRes != null && !blockTo.isOwner(pistonRes.getOwner()) || !blockTo.isOwner(blockFrom.getOwner()))
-		&& blockTo.getPermissions().has("pistonprotection", true)) {
+		&& blockTo.getPermissions().has(Flags.pistonprotection, true)) {
 		event.setCancelled(true);
 		return;
 	    }
@@ -423,13 +425,13 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	}
 	if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
-	    if (!perms.has("lavaflow", hasflow)) {
+	    if (!perms.has(Flags.lavaflow, hasflow)) {
 		event.setCancelled(true);
 	    }
 	    return;
 	}
 	if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
-	    if (!perms.has("waterflow", hasflow)) {
+	    if (!perms.has(Flags.waterflow, hasflow)) {
 		event.setCancelled(true);
 	    }
 	    return;
@@ -448,7 +450,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(event.getNewState().getLocation());
-	if (!perms.has("dryup", true)) {
+	if (!perms.has(Flags.dryup, true)) {
 	    event.getBlock().setData((byte) 7);
 	    event.setCancelled(true);
 	    return;
@@ -467,7 +469,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("dryup", true)) {
+	if (!perms.has(Flags.dryup, true)) {
 	    event.getBlock().setData((byte) 7);
 	    event.setCancelled(true);
 	    return;
@@ -548,7 +550,7 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has("firespread", true))
+	if (!perms.has(Flags.firespread, true))
 	    event.setCancelled(true);
     }
 
@@ -560,18 +562,18 @@ public class ResidenceBlockListener implements Listener {
 	IgniteCause cause = event.getCause();
 	if (cause == IgniteCause.SPREAD) {
 	    FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	    if (!perms.has("firespread", true))
+	    if (!perms.has(Flags.firespread, true))
 		event.setCancelled(true);
 	} else if (cause == IgniteCause.FLINT_AND_STEEL) {
 	    Player player = event.getPlayer();
 	    FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(), player);
-	    if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), "ignite", true) && !Residence.isResAdminOn(player)) {
+	    if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), Flags.ignite, true) && !Residence.isResAdminOn(player)) {
 		event.setCancelled(true);
-		player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "ignite"));
+		Residence.msg(player, lm.Flag_Deny, Flags.ignite.getName());
 	    }
 	} else {
 	    FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
-	    if (!perms.has("ignite", true)) {
+	    if (!perms.has(Flags.ignite, true)) {
 		event.setCancelled(true);
 	    }
 	}

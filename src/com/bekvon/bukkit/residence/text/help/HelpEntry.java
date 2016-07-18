@@ -8,6 +8,7 @@ import org.bukkit.World;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.HelpLines;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import java.io.File;
@@ -66,7 +67,7 @@ public class HelpEntry {
 	path = "/" + path.replace(".", " ") + " ";
 	int pagecount = (int) Math.ceil((double) helplines.size() / (double) linesPerPage);
 	if (page > pagecount || page < 1) {
-	    sender.sendMessage(Residence.getLM().getMessage("Invalid.Help"));
+	    Residence.msg(sender, lm.Invalid_Help);
 	    return;
 	}
 
@@ -78,7 +79,7 @@ public class HelpEntry {
 	    separator += simbol;
 	}
 
-	sender.sendMessage(ChatColor.GOLD + separator + " " + Residence.getLM().getMessage("General.HelpPageHeader", path, page, pagecount) + " " + separator);
+	sender.sendMessage(ChatColor.GOLD + separator + " " + Residence.msg(lm.General_HelpPageHeader, path, page, pagecount) + " " + separator);
 	int start = linesPerPage * (page - 1);
 	int end = start + linesPerPage;
 	for (int i = start; i < end; i++) {
@@ -124,11 +125,11 @@ public class HelpEntry {
 
 	String baseCmd = resadmin ? "resadmin" : "res";
 	String prevCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + Prevpage : "/" + baseCmd + " ? " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getLM().getMessage("General.PrevInfoPage")
+	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + NextPage : "/" + baseCmd + " ? " + NextPage;
-	String next = " {\"text\":\"" + Residence.getLM().getMessage("General.NextInfoPage") + " " + separator
+	String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
@@ -141,7 +142,7 @@ public class HelpEntry {
 	if (subEntry != null) {
 	    subEntry.printHelp(sender, page, resadmin, path);
 	} else {
-	    sender.sendMessage(Residence.getLM().getMessage("Invalid.Help"));
+	    Residence.msg(sender, lm.Invalid_Help);
 	}
     }
 

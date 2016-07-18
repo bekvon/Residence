@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 
@@ -124,7 +125,7 @@ public class SetFlag {
     private void fillFlagDescriptions() {
 	Set<String> list = Residence.getLM().getKeyList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands");
 	for (String onelist : list) {
-	    String onelisttemp = Residence.getLM().getMessage("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
+	    String onelisttemp = Residence.msg("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
 	    List<String> lore = new ArrayList<String>();
 	    int i = 0;
 	    String sentence = "";
@@ -167,9 +168,9 @@ public class SetFlag {
 
 	String title = "";
 	if (targetPlayer == null)
-	    title = Residence.getLM().getMessage("Gui.Set.Title", res.getName());
+	    title = Residence.msg(lm.Gui_Set_Title, res.getName());
 	else
-	    title = Residence.getLM().getMessage("Gui.Pset.Title", targetPlayer, res.getName());
+	    title = Residence.msg(lm.Gui_Pset_Title, targetPlayer, res.getName());
 
 	if (title.length() > 32) {
 	    title = title.substring(0, Math.min(title.length(), 32));
@@ -232,21 +233,21 @@ public class SetFlag {
 	    String variable = "";
 	    switch ((FlagState) one.getValue()) {
 	    case FALSE:
-		variable = Residence.getLM().getMessage("General.False");
+		variable = Residence.msg(lm.General_False);
 		break;
 	    case TRUE:
-		variable = Residence.getLM().getMessage("General.True");
+		variable = Residence.msg(lm.General_True);
 		break;
 	    case NEITHER:
-		variable = Residence.getLM().getMessage("General.Removed");
+		variable = Residence.msg(lm.General_Removed);
 		break;
 	    }
-	    lore.add(Residence.getLM().getMessage("General.FlagState", variable));
+	    lore.add(Residence.msg(lm.General_FlagState, variable));
 
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
 
-	    lore.addAll(Residence.getLM().getMessageList("Gui.Actions"));
+	    lore.addAll(Residence.msgL(lm.Gui_Actions));
 
 	    MiscInfoMeta.setLore(lore);
 
@@ -260,12 +261,12 @@ public class SetFlag {
 
 	ItemMeta meta = Item.getItemMeta();
 	if (page > 1) {
-	    meta.setDisplayName(Residence.getLM().getMessage("General.PrevInfoPage"));
+	    meta.setDisplayName(Residence.msg(lm.General_PrevInfoPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
 	if (page < pageCount) {
-	    meta.setDisplayName(Residence.getLM().getMessage("General.NextInfoPage"));
+	    meta.setDisplayName(Residence.msg(lm.General_NextInfoPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(53, Item);
 	}
@@ -317,9 +318,9 @@ public class SetFlag {
 
 	String title = "";
 	if (targetPlayer == null)
-	    title = Residence.getLM().getMessage("Gui.Set.Title", res.getName());
+	    title = Residence.msg(lm.Gui_Set_Title, res.getName());
 	else
-	    title = Residence.getLM().getMessage("Gui.Pset.Title", targetPlayer, res.getName());
+	    title = Residence.msg(lm.Gui_Pset_Title, targetPlayer, res.getName());
 
 	if (title.length() > 32) {
 	    title = title.substring(0, Math.min(title.length(), 32));
@@ -379,21 +380,21 @@ public class SetFlag {
 	    String variable = "";
 	    switch ((FlagState) one.getValue()) {
 	    case FALSE:
-		variable = Residence.getLM().getMessage("General.False");
+		variable = Residence.msg(lm.General_False);
 		break;
 	    case TRUE:
-		variable = Residence.getLM().getMessage("General.True");
+		variable = Residence.msg(lm.General_True);
 		break;
 	    case NEITHER:
-		variable = Residence.getLM().getMessage("General.Removed");
+		variable = Residence.msg(lm.General_Removed);
 		break;
 	    }
-	    lore.add(Residence.getLM().getMessage("General.FlagState", variable));
+	    lore.add(Residence.msg(lm.General_FlagState, variable));
 
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
 
-	    lore.addAll(Residence.getLM().getMessageList("Gui.Actions"));
+	    lore.addAll(Residence.msgL(lm.Gui_Actions));
 
 	    MiscInfoMeta.setLore(lore);
 
@@ -407,12 +408,12 @@ public class SetFlag {
 
 	ItemMeta meta = Item.getItemMeta();
 	if (page > 1) {
-	    meta.setDisplayName(Residence.getLM().getMessage("General.PrevInfoPage"));
+	    meta.setDisplayName(Residence.msg(lm.General_PrevInfoPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
 	if (page < pageCount) {
-	    meta.setDisplayName(Residence.getLM().getMessage("General.NextInfoPage"));
+	    meta.setDisplayName(Residence.msg(lm.General_NextInfoPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(53, Item);
 	}

@@ -1,4 +1,4 @@
-package com.bekvon.bukkit.residence;
+package com.bekvon.bukkit.residence.containers;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
@@ -50,16 +51,16 @@ public class LeaseManager {
 	if (manager.getByName(area) != null) {
 	    leaseExpireTime.put(area, daysToMs(days) + System.currentTimeMillis());
 	    if (player != null)
-		player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenew", getExpireTime(area)));
+		Residence.msg(player, lm.Economy_LeaseRenew, getExpireTime(area));
 	} else {
 	    if (player != null)
-		player.sendMessage(Residence.getLM().getMessage("Invalid.Area"));
+		Residence.msg(player, lm.Invalid_Area);
 	}
     }
 
     public void renewArea(String area, Player player) {
 	if (!leaseExpires(area)) {
-	    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseNotExpire"));
+	    Residence.msg(player, lm.Economy_LeaseNotExpire);
 	    return;
 	}
 	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
@@ -78,17 +79,17 @@ public class LeaseManager {
 		if (econ.canAfford(player.getName(), amount)/*account.hasEnough(amount)*/) {
 		    econ.subtract(player.getName(), amount);
 		    econ.add("Lease Money", amount);
-		    player.sendMessage(Residence.getLM().getMessage("Economy.MoneyCharged", String.format("%d", amount), econ.getName()));
+		    Residence.msg(player, lm.Economy_MoneyCharged, String.format("%d", amount), econ.getName());
 		} else {
-		    player.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
+		    Residence.msg(player, lm.Economy_NotEnoughMoney);
 		    return;
 		}
 	    }
 	}
 	if (rem + add > max) {
 	    setExpireTime(player, area, max);
-	    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenewMax"));
-	    player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenew", getExpireTime(area)));
+	    Residence.msg(player, lm.Economy_LeaseRenewMax);
+	    Residence.msg(player, lm.Economy_LeaseRenew, getExpireTime(area));
 	    return;
 	}
 	Long get = leaseExpireTime.get(area);
@@ -97,7 +98,7 @@ public class LeaseManager {
 	    leaseExpireTime.put(area, get);
 	} else
 	    leaseExpireTime.put(area, daysToMs(add));
-	player.sendMessage(Residence.getLM().getMessage("Economy.LeaseRenew", getExpireTime(area)));
+	Residence.msg(player, lm.Economy_LeaseRenew, getExpireTime(area));
     }
 
     public int getRenewCost(ClaimedResidence res) {

@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
@@ -339,34 +340,34 @@ public class PermissionGroup {
 	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(target.getName());
 	PermissionGroup group = rPlayer.getGroup();
 
-	Residence.msg(player, "General.Separator");
-	Residence.msg(player, "Limits.PGroup", Residence.getPermissionManager().getPermissionsGroup(target.getName(),
+	Residence.msg(player, lm.General_Separator);
+	Residence.msg(player, lm.Limits_PGroup, Residence.getPermissionManager().getPermissionsGroup(target.getName(),
 	    target.isOnline() ? Bukkit.getPlayer(target.getName()).getName() : Residence.getConfigManager().getDefaultWorld()));
-	Residence.msg(player, "Limits.RGroup", group.getGroupName());
+	Residence.msg(player, lm.Limits_RGroup, group.getGroupName());
 	if (target.isOnline() && resadmin)
-	    Residence.msg(player, "Limits.Admin", Residence.getPermissionManager().isResidenceAdmin(player));
-	Residence.msg(player, "Limits.CanCreate", group.canCreateResidences());
-	Residence.msg(player, "Limits.MaxRes", rPlayer.getMaxRes());
-	Residence.msg(player, "Limits.MaxEW", group.xmax);
-	Residence.msg(player, "Limits.MaxNS", group.zmax);
-	Residence.msg(player, "Limits.MaxUD", group.ymax);
-	Residence.msg(player, "Limits.MinMax", group.minHeight, group.maxHeight);
-	Residence.msg(player, "Limits.MaxSub", rPlayer.getMaxSubzones());
-	Residence.msg(player, "Limits.MaxRents", rPlayer.getMaxRents() + (getMaxRentDays() != -1 ? Residence.getLM().getMessage("Limits.MaxRentDays", getMaxRentDays())
+	    Residence.msg(player, lm.Limits_Admin, Residence.getPermissionManager().isResidenceAdmin(player));
+	Residence.msg(player, lm.Limits_CanCreate, group.canCreateResidences());
+	Residence.msg(player, lm.Limits_MaxRes, rPlayer.getMaxRes());
+	Residence.msg(player, lm.Limits_MaxEW, group.xmax);
+	Residence.msg(player, lm.Limits_MaxNS, group.zmax);
+	Residence.msg(player, lm.Limits_MaxUD, group.ymax);
+	Residence.msg(player, lm.Limits_MinMax, group.minHeight, group.maxHeight);
+	Residence.msg(player, lm.Limits_MaxSub, rPlayer.getMaxSubzones());
+	Residence.msg(player, lm.Limits_MaxRents, rPlayer.getMaxRents() + (getMaxRentDays() != -1 ? Residence.msg(lm.Limits_MaxRentDays, getMaxRentDays())
 	    : ""));
-	Residence.msg(player, "Limits.EnterLeave", group.messageperms);
-	Residence.msg(player, "Limits.NumberOwn", rPlayer.getResAmount());
+	Residence.msg(player, lm.Limits_EnterLeave, group.messageperms);
+	Residence.msg(player, lm.Limits_NumberOwn, rPlayer.getResAmount());
 	if (Residence.getEconomyManager() != null) {
-	    Residence.msg(player, "Limits.Cost", group.costperarea);
-	    Residence.msg(player, "Limits.Sell", group.sellperarea);
+	    Residence.msg(player, lm.Limits_Cost, group.costperarea);
+	    Residence.msg(player, lm.Limits_Sell, group.sellperarea);
 	}
-	Residence.msg(player, "Limits.Flag", group.flagPerms.listFlags());
+	Residence.msg(player, lm.Limits_Flag, group.flagPerms.listFlags());
 	if (Residence.getConfigManager().useLeases()) {
-	    Residence.msg(player, "Limits.Flag", group.maxLeaseTime);
-	    Residence.msg(player, "Limits.Flag", group.leaseGiveTime);
-	    Residence.msg(player, "Limits.Flag", group.renewcostperarea);
+	    Residence.msg(player, lm.Limits_Flag, group.maxLeaseTime);
+	    Residence.msg(player, lm.Limits_Flag, group.leaseGiveTime);
+	    Residence.msg(player, lm.Limits_Flag, group.renewcostperarea);
 	}
-	Residence.msg(player, "General.Separator");
+	Residence.msg(player, lm.General_Separator);
     }
 
 }

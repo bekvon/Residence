@@ -22,6 +22,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
@@ -236,7 +237,7 @@ public class SignUtil {
 	    if (rentedPlace != null)
 		time = rentedPlace.endTime;
 
-	    SimpleDateFormat formatter = new SimpleDateFormat(Residence.getLM().getMessage("Sign.DateFormat"));
+	    SimpleDateFormat formatter = new SimpleDateFormat(Residence.msg(lm.Sign_DateFormat));
 	    formatter.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
 	    Calendar calendar = Calendar.getInstance();
 	    calendar.setTimeInMillis(time);
@@ -247,22 +248,22 @@ public class SignUtil {
 		endDate = "Unknown";
 
 	    if (Residence.getRentManager().getRentedAutoRepeats(res))
-		endDate = Residence.getLM().getMessage("Sign.RentedAutorenewTrue", endDate);
+		endDate = Residence.msg(lm.Sign_RentedAutorenewTrue, endDate);
 	    else
-		endDate = Residence.getLM().getMessage("Sign.RentedAutorenewFalse", endDate);
+		endDate = Residence.msg(lm.Sign_RentedAutorenewFalse, endDate);
 
-	    String TopLine = rented ? endDate : Residence.getLM().getMessage("Sign.ForRentTopLine");
+	    String TopLine = rented ? endDate : Residence.msg(lm.Sign_ForRentTopLine);
 	    sign.setLine(0, TopLine);
 
-	    String infoLine = Residence.getLM().getMessage("Sign.ForRentPriceLine", Residence.getRentManager().getCostOfRent(res), Residence
+	    String infoLine = Residence.msg(lm.Sign_ForRentPriceLine, Residence.getRentManager().getCostOfRent(res), Residence
 		.getRentManager().getRentDays(res), Residence.getRentManager().getRentableRepeatable(res));
 
 	    sign.setLine(1, infoLine);
 	    String shortName = fixResName(landName);
-	    sign.setLine(2, rented ? Residence.getLM().getMessage("Sign.RentedResName", shortName)
-		: Residence.getLM().getMessage("Sign.RentedResName", shortName));
-	    sign.setLine(3, rented ? Residence.getLM().getMessage("Sign.RentedBottomLine", Residence.getRentManager().getRentingPlayer(landName))
-		: Residence.getLM().getMessage("Sign.ForRentBottomLine"));
+	    sign.setLine(2, rented ? Residence.msg(lm.Sign_RentedResName, shortName)
+		: Residence.msg(lm.Sign_RentedResName, shortName));
+	    sign.setLine(3, rented ? Residence.msg(lm.Sign_RentedBottomLine, Residence.getRentManager().getRentingPlayer(landName))
+		: Residence.msg(lm.Sign_ForRentBottomLine));
 	    sign.update();
 	}
 
@@ -275,15 +276,15 @@ public class SignUtil {
 		secondLine = lines[1];
 	    }
 
-	    sign.setLine(0, Residence.getLM().getMessage("Sign.ForSaleTopLine"));
-	    String infoLine = Residence.getLM().getMessage("Sign.ForSalePriceLine", res.getSellPrice());
+	    sign.setLine(0, Residence.msg(lm.Sign_ForSaleTopLine));
+	    String infoLine = Residence.msg(lm.Sign_ForSalePriceLine, res.getSellPrice());
 	    sign.setLine(1, infoLine);
-	    sign.setLine(2, Residence.getLM().getMessage("Sign.RentedResName", shortName));
+	    sign.setLine(2, Residence.msg(lm.Sign_RentedResName, shortName));
 
 	    if (secondLine != null)
-		sign.setLine(3, Residence.getLM().getMessage("Sign.RentedResName", secondLine));
+		sign.setLine(3, Residence.msg(lm.Sign_RentedResName, secondLine));
 	    else
-		sign.setLine(3, Residence.getLM().getMessage("Sign.ForSaleBottomLine"));
+		sign.setLine(3, Residence.msg(lm.Sign_ForSaleBottomLine));
 	    sign.update();
 	}
 

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 
 public class PlayerManager implements ResidencePlayerInterface {
@@ -79,8 +80,8 @@ public class PlayerManager implements ResidencePlayerInterface {
 	    if (onlyHidden && !hidden)
 		continue;
 
-	    temp.add(Residence.getLM().getMessage("Residence.List", "", one.getName(), one.getWorld()) +
-		(hidden ? Residence.getLM().getMessage("Residence.Hidden") : ""));
+	    temp.add(Residence.msg(lm.Residence_List, "", one.getName(), one.getWorld()) +
+		(hidden ? Residence.msg(lm.Residence_Hidden) : ""));
 	}
 	Collections.sort(temp, String.CASE_INSENSITIVE_ORDER);
 	return temp;

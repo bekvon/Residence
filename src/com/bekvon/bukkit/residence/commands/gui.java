@@ -6,11 +6,14 @@ import org.bukkit.entity.Player;
 import org.getspout.spoutapi.SpoutManager;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
 
 public class gui implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
@@ -26,5 +29,9 @@ public class gui implements cmd {
 	}
 
 	return true;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
     }
 }

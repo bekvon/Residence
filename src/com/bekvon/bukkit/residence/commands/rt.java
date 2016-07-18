@@ -1,17 +1,23 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 
 public class rt implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
@@ -25,13 +31,13 @@ public class rt implements cmd {
 	if (Residence.getRandomTeleportMap().containsKey(player.getName()) && !resadmin) {
 	    if (Residence.getRandomTeleportMap().get(player.getName()) + (sec * 1000) > System.currentTimeMillis()) {
 		int left = (int) (sec - ((System.currentTimeMillis() - Residence.getRandomTeleportMap().get(player.getName())) / 1000));
-		player.sendMessage(Residence.getLM().getMessage("RandomTeleport.TpLimit", left));
+		Residence.msg(player, lm.RandomTeleport_TpLimit, left);
 		return true;
 	    }
 	}
 
 	if (!player.hasPermission("residence.randomtp") && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+	    Residence.msg(player, lm.General_NoPermission);
 	    return true;
 	}
 
@@ -46,7 +52,7 @@ public class rt implements cmd {
 	    }
 
 	    if (wname == null) {
-		sender.sendMessage(Residence.getLM().getMessage("Invalid.World"));
+		Residence.msg(sender, lm.Invalid_World);
 
 		String worlds = "";
 
@@ -55,7 +61,7 @@ public class rt implements cmd {
 		    break;
 		}
 
-		sender.sendMessage(Residence.getLM().getMessage("RandomTeleport.WorldList", worlds));
+		Residence.msg(sender, lm.RandomTeleport_WorldList, worlds);
 		return true;
 	    }
 	}
@@ -66,18 +72,24 @@ public class rt implements cmd {
 	Residence.getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
 
 	if (loc == null) {
-	    player.sendMessage(Residence.getLM().getMessage("RandomTeleport.IncorrectLocation", sec));
+	    Residence.msg(player, lm.RandomTeleport_IncorrectLocation, sec);
 	    return true;
 	}
 
 	if (Residence.getConfigManager().getTeleportDelay() > 0 && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("RandomTeleport.TeleportStarted", loc.getX(), loc.getY(), loc
-		.getZ(), Residence.getConfigManager().getTeleportDelay()));
+	    Residence.msg(player, lm.RandomTeleport_TeleportStarted, loc.getX(), loc.getY(), loc
+		.getZ(), Residence.getConfigManager().getTeleportDelay());
 	    Residence.getTeleportDelayMap().add(player.getName());
 	    Residence.getRandomTpManager().performDelaydTp(loc, player);
 	} else
 	    Residence.getRandomTpManager().performInstantTp(loc, player);
 
 	return true;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "Teleports to random location in world");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rt", "Teleports you to random location in defined world."));
     }
 }

@@ -1,18 +1,24 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class create implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
@@ -35,7 +41,7 @@ public class create implements cmd {
 		    return true;
 		}
 		ProtectedRegion Region = WorldGuardUtil.isSelectionInRegion(player);
-		player.sendMessage(Residence.getLM().getMessage("Select.WorldGuardOverlap", Region.getId()));
+		Residence.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
 
 		Location lowLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
 		    Region.getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
@@ -52,8 +58,14 @@ public class create implements cmd {
 		.getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
 	    return true;
 	}
-	player.sendMessage(Residence.getLM().getMessage("Select.Points"));
+	Residence.msg(player, lm.Select_Points);
 	return true;
     }
 
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	// Main command
+	c.get(path + "Description", "Create Residences");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res create <residence name>"));
+    }
 }

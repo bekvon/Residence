@@ -8,20 +8,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class rc implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return true;
 	Player player = (Player) sender;
 	String pname = player.getName();
 	if (!Residence.getConfigManager().chatEnabled()) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.ChatDisabled"));
+	    Residence.msg(player, lm.Residence_ChatDisabled);
 	    return false;
 	}
 	if (args.length > 0)
@@ -36,7 +41,7 @@ public class rc implements cmd {
 		    Residence.getPlayerListener().removePlayerResidenceChat(player);
 		    return true;
 		}
-		player.sendMessage(Residence.getLM().getMessage("Residence.NotIn"));
+		Residence.msg(player, lm.Residence_NotIn);
 		return true;
 	    }
 	    ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
@@ -45,8 +50,8 @@ public class rc implements cmd {
 		Residence.getPlayerListener().removePlayerResidenceChat(player);
 		return true;
 	    }
-	    if (!res.getPermissions().playerHas(player.getName(), "chat", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "chat", res.getName()));
+	    if (!res.getPermissions().playerHas(player.getName(), Flags.chat, true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+		Residence.msg(player, lm.Residence_FlagDeny, Flags.chat, res.getName());
 		return false;
 	    }
 
@@ -61,12 +66,12 @@ public class rc implements cmd {
 	    }
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[0]);
 	    if (res == null) {
-		player.sendMessage(Residence.getLM().getMessage("Chat.InvalidChannel"));
+		Residence.msg(player, lm.Chat_InvalidChannel);
 		return true;
 	    }
 
 	    if (!res.getPermissions().playerHas(player.getName(), "chat", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "chat", res.getName()));
+		Residence.msg(player, lm.Residence_FlagDeny, "chat", res.getName());
 		return false;
 	    }
 	    Residence.getPlayerListener().tooglePlayerResidenceChat(player, res.getName());
@@ -79,7 +84,7 @@ public class rc implements cmd {
 		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
 
 		if (chat == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Chat.JoinFirst"));
+		    Residence.msg(player, lm.Chat_JoinFirst);
 		    return true;
 		}
 
@@ -89,12 +94,12 @@ public class rc implements cmd {
 		    return false;
 
 		if (!res.isOwner(player) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
 		if (!player.hasPermission("residence.chatcolor")) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
@@ -104,20 +109,20 @@ public class rc implements cmd {
 		    posibleColor = "&" + posibleColor;
 
 		if (posibleColor.length() != 2 || ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', posibleColor)).length() != 0) {
-		    player.sendMessage(Residence.getLM().getMessage("Chat.InvalidColor"));
+		    Residence.msg(player, lm.Chat_InvalidColor);
 		    return true;
 		}
 
 		ChatColor color = ChatColor.getByChar(posibleColor.replace("&", ""));
 		res.setChannelColor(color);
 		chat.setChannelColor(color);
-		player.sendMessage(Residence.getLM().getMessage("Chat.ChangedColor", color.name()));
+		Residence.msg(player, lm.Chat_ChangedColor, color.name());
 		return true;
 	    } else if (args[0].equalsIgnoreCase("setprefix")) {
 		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
 
 		if (chat == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Chat.JoinFirst"));
+		    Residence.msg(player, lm.Chat_JoinFirst);
 		    return true;
 		}
 
@@ -127,32 +132,32 @@ public class rc implements cmd {
 		    return false;
 
 		if (!res.isOwner(player) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
 		if (!player.hasPermission("residence.chatprefix")) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
 		String prefix = args[1];
 
 		if (prefix.length() > Residence.getConfigManager().getChatPrefixLength()) {
-		    player.sendMessage(Residence.getLM().getMessage("Chat.InvalidPrefixLength", Residence.getConfigManager()
-			.getChatPrefixLength()));
+		    Residence.msg(player, lm.Chat_InvalidPrefixLength, Residence.getConfigManager()
+			.getChatPrefixLength());
 		    return true;
 		}
 
 		res.setChatPrefix(prefix);
 		chat.setChatPrefix(prefix);
-		player.sendMessage(Residence.getLM().getMessage("Chat.ChangedPrefix", ChatColor.translateAlternateColorCodes('&', prefix)));
+		Residence.msg(player, lm.Chat_ChangedPrefix, ChatColor.translateAlternateColorCodes('&', prefix));
 		return true;
 	    } else if (args[0].equalsIgnoreCase("kick")) {
 		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
 
 		if (chat == null) {
-		    player.sendMessage(Residence.getLM().getMessage("Chat.JoinFirst"));
+		    Residence.msg(player, lm.Chat_JoinFirst);
 		    return true;
 		}
 
@@ -162,27 +167,47 @@ public class rc implements cmd {
 		    return false;
 
 		if (!res.getOwner().equals(player.getName()) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
 		if (!player.hasPermission("residence.chatkick")) {
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
 		String targetName = args[1];
 		if (!chat.hasMember(targetName)) {
-		    player.sendMessage(Residence.getLM().getMessage("Chat.NotInChannel"));
+		    Residence.msg(player, lm.Chat_NotInChannel);
 		    return false;
 		}
 
 		chat.leave(targetName);
 		Residence.getPlayerListener().removePlayerResidenceChat(targetName);
-		player.sendMessage(Residence.getLM().getMessage("Chat.Kicked", targetName, chat.getChannelName()));
+		Residence.msg(player, lm.Chat_Kicked, targetName, chat.getChannelName());
 		return true;
 	    }
 	}
 	return true;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "Joins current or defined residence chat chanel");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rc (residence)", "Teleports you to random location in defined world."));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+
+	path += "SubCommands.";
+	c.get(path + "leave.Description", "Leaves current residence chat chanel");
+	c.get(path + "leave.Info", Arrays.asList("&eUsage: &6/res rc leave", "If you are in residence chat cnahel then you will leave it"));
+
+	c.get(path + "setcolor.Description", "Sets residence chat chanel text color");
+	c.get(path + "setcolor.Info", Arrays.asList("&eUsage: &6/res rc setcolor [colorCode]", "Sets residence chat chanel text color"));
+
+	c.get(path + "setprefix.Description", "Sets residence chat chanel prefix");
+	c.get(path + "setprefix.Info", Arrays.asList("&eUsage: &6/res rc setprefix [newName]", "Sets residence chat chanel prefix"));
+
+	c.get(path + "kick.Description", "Kicks player from chanel");
+	c.get(path + "kick.Info", Arrays.asList("&eUsage: &6/res rc kick [player]", "Kicks player from chanel"));
     }
 }

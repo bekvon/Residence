@@ -37,6 +37,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
 
 import com.bekvon.bukkit.residence.chat.ChatManager;
+import com.bekvon.bukkit.residence.containers.ABInterface;
+import com.bekvon.bukkit.residence.containers.NMS;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
 import com.bekvon.bukkit.residence.dynmap.DynMapManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
@@ -154,6 +158,8 @@ public class Residence extends JavaPlugin {
     protected static ActionBar ABManager;
     protected static AutoSelection AutoSelectionManager;
     protected static SchematicsManager SchematicManager;
+
+    protected static CommandFiller cmdFiller;
 
     protected static ZipLibrary zip;
 
@@ -371,6 +377,9 @@ public class Residence extends JavaPlugin {
 
 	    ResidenceVersion = this.getDescription().getVersion();
 	    authlist = this.getDescription().getAuthors();
+
+	    cmdFiller = new CommandFiller();
+	    cmdFiller.fillCommands();
 
 	    if (!dataFolder.isDirectory()) {
 		dataFolder.mkdirs();
@@ -848,6 +857,10 @@ public class Residence extends JavaPlugin {
 	return slistener;
     }
 
+    public static CommandFiller getCommandFiller() {
+	return cmdFiller;
+    }
+
     public static ResidenceManager getResidenceManager() {
 	return rmanager;
     }
@@ -1257,6 +1270,13 @@ public class Residence extends JavaPlugin {
 //		rentmanager = new RentManager();
 		rentmanager.load((Map) yml.getRoot().get("RentSystem"));
 	    }
+
+	    for (Player one : Bukkit.getOnlinePlayers()) {
+		ResidencePlayer rplayer = Residence.getPlayerManager().getResidencePlayer(one);
+		if (rplayer != null)
+		    rplayer.recountRes();
+	    }
+
 	    // System.out.print("[Residence] Loaded...");
 	    return true;
 	} catch (Exception ex) {
@@ -1489,7 +1509,7 @@ public class Residence extends JavaPlugin {
 	if (Residence.getPlayerUUID(name) != null)
 	    return true;
 	if (inform)
-	    sender.sendMessage(getLM().getMessage("Invalid.Player"));
+	    sender.sendMessage(msg(lm.Invalid_Player));
 	@SuppressWarnings("unused")
 	String a = "%%__USER__%%";
 	@SuppressWarnings("unused")
@@ -1583,20 +1603,42 @@ public class Residence extends JavaPlugin {
 	return false;
     }
 
-    public static void msg(Player player, String path, Object... variables) {
-	if (player != null)
-	    if (Residence.getLM().containsKey(path))
-		player.sendMessage(Residence.getLM().getMessage(path, variables));
-	    else
-		player.sendMessage(path);
+//    public static void msg(Player player, String path, Object... variables) {
+//	if (player != null)
+//	    if (Residence.getLM().containsKey(path))
+//		player.sendMessage(Residence.getLM().getMessage(path, variables));
+//	    else
+//		player.sendMessage(path);
+//    }
+
+    public static String msg(String path) {
+	return Residence.getLM().getMessage(path);
     }
 
-    public static void msg(CommandSender sender, String path, Object... variables) {
+    public static void msg(CommandSender sender, String text) {
 	if (sender != null)
-	    if (Residence.getLM().containsKey(path))
-		sender.sendMessage(Residence.getLM().getMessage(path, variables));
+	    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
+    }
+
+    public static void msg(Player player, String text) {
+	if (player != null)
+	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
+    }
+
+    public static void msg(CommandSender sender, lm lm, Object... variables) {
+	if (sender != null)
+	    if (Residence.getLM().containsKey(lm.getPath()))
+		sender.sendMessage(Residence.getLM().getMessage(lm, variables));
 	    else
-		sender.sendMessage(path);
+		sender.sendMessage(lm.getPath());
+    }
+
+    public static List<String> msgL(lm lm) {
+	return Residence.getLM().getMessageList(lm);
+    }
+
+    public static String msg(lm lm, Object... variables) {
+	return Residence.getLM().getMessage(lm, variables);
     }
 
 }

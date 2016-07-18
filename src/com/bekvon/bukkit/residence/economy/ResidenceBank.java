@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence.economy;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Player;
 
@@ -41,37 +42,37 @@ public class ResidenceBank {
 
     public void withdraw(CommandSender sender, int amount, boolean resadmin) {
 	if (!Residence.getConfigManager().enableEconomy()) {
-	    sender.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+	    Residence.msg(sender, lm.Economy_MarketDisabled);
 	}
 	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), "bank", false)) {
-	    sender.sendMessage(Residence.getLM().getMessage("Bank.NoAccess"));
+	    Residence.msg(sender, lm.Bank_NoAccess);
 	    return;
 	}
 	if (!hasEnough(amount)) {
-	    sender.sendMessage(Residence.getLM().getMessage("Bank.NoMoney"));
+	    Residence.msg(sender, lm.Bank_NoMoney);
 	    return;
 	}
 	if (sender instanceof Player && Residence.getEconomyManager().add(sender.getName(), amount) || !(sender instanceof Player)) {
 	    this.subtract(amount);
-	    sender.sendMessage(Residence.getLM().getMessage("Bank.Withdraw", String.format("%d", amount)));
+	    Residence.msg(sender, lm.Bank_Withdraw, String.format("%d", amount));
 	}
     }
 
     public void deposit(CommandSender sender, int amount, boolean resadmin) {
 	if (!Residence.getConfigManager().enableEconomy()) {
-	    sender.sendMessage(Residence.getLM().getMessage("Economy.MarketDisabled"));
+	    Residence.msg(sender, lm.Economy_MarketDisabled);
 	}
 	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), "bank", false)) {
-	    sender.sendMessage(Residence.getLM().getMessage("Bank.NoAccess"));
+	    Residence.msg(sender, lm.Bank_NoAccess);
 	    return;
 	}
 	if (sender instanceof Player && !Residence.getEconomyManager().canAfford(sender.getName(), amount)) {
-	    sender.sendMessage(Residence.getLM().getMessage("Economy.NotEnoughMoney"));
+	    Residence.msg(sender, lm.Economy_NotEnoughMoney);
 	    return;
 	}
 	if (sender instanceof Player && Residence.getEconomyManager().subtract(sender.getName(), amount) || !(sender instanceof Player)) {
 	    this.add(amount);
-	    sender.sendMessage(Residence.getLM().getMessage("Bank.Deposit", String.format("%d", amount)));
+	    Residence.msg(sender, lm.Bank_Deposit, String.format("%d", amount));
 	}
     }
 }

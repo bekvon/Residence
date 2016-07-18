@@ -1,15 +1,20 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
 
 public class list implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	int page = 1;
 	try {
@@ -35,5 +40,15 @@ public class list implements cmd {
 	    return true;
 	}
 	return false;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "List Residences");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res list <player> <page>",
+	    "Lists all the residences a player owns (except hidden ones).",
+	    "If listing your own residences, shows hidden ones as well.",
+	    "To list everyones residences, use /res listall."));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
     }
 }

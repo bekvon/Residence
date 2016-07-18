@@ -28,6 +28,9 @@ public class FlagUtil {
 
 	ConfigReader c = new ConfigReader(conf, writer);
 
+	if (!conf.isConfigurationSection("Global.FlagPermission"))
+	    return;
+
 	Set<String> allFlags = conf.getConfigurationSection("Global.FlagPermission").getKeys(false);
 
 	for (String oneFlag : allFlags) {

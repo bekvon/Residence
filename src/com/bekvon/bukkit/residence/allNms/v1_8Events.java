@@ -14,6 +14,8 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
 public class v1_8Events implements Listener {
@@ -30,12 +32,11 @@ public class v1_8Events implements Listener {
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
 	String world = player.getWorld().getName();
 
-	if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
+	if (!perms.playerHas(player.getName(), world, Flags.container, perms.playerHas(player.getName(), world, Flags.use, true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "container"));
+	    Residence.msg(player, lm.Flag_Deny, Flags.container.getName());
 	}
     }
-
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockExplodeEvent(BlockExplodeEvent event) {
@@ -50,7 +51,7 @@ public class v1_8Events implements Listener {
 	List<Block> preserve = new ArrayList<Block>();
 	for (Block block : event.blockList()) {
 	    FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
-	    if (!blockperms.has("explode", world.has("explode", true))) {
+	    if (!blockperms.has(Flags.explode, world.has(Flags.explode, true))) {
 		preserve.add(block);
 	    }
 	}

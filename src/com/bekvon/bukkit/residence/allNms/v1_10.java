@@ -30,7 +30,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import com.bekvon.bukkit.residence.NMS;
+
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.NMS;
 import com.bekvon.bukkit.residence.Residence;
 
 public class v1_10 implements NMS {
@@ -130,20 +132,20 @@ public class v1_10 implements NMS {
     @Override
     public void addDefaultFlags(Map<Material, String> matUseFlagList) {
 	/* 1.8 Doors */
-	matUseFlagList.put(Material.SPRUCE_DOOR, "door");
-	matUseFlagList.put(Material.BIRCH_DOOR, "door");
-	matUseFlagList.put(Material.JUNGLE_DOOR, "door");
-	matUseFlagList.put(Material.ACACIA_DOOR, "door");
-	matUseFlagList.put(Material.DARK_OAK_DOOR, "door");
+	matUseFlagList.put(Material.SPRUCE_DOOR, Flags.door.getName());
+	matUseFlagList.put(Material.BIRCH_DOOR, Flags.door.getName());
+	matUseFlagList.put(Material.JUNGLE_DOOR, Flags.door.getName());
+	matUseFlagList.put(Material.ACACIA_DOOR, Flags.door.getName());
+	matUseFlagList.put(Material.DARK_OAK_DOOR, Flags.door.getName());
 	/* 1.8 Fence Gates */
-	matUseFlagList.put(Material.SPRUCE_FENCE_GATE, "door");
-	matUseFlagList.put(Material.BIRCH_FENCE_GATE, "door");
-	matUseFlagList.put(Material.JUNGLE_FENCE_GATE, "door");
-	matUseFlagList.put(Material.ACACIA_FENCE_GATE, "door");
-	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, "door");
-	matUseFlagList.put(Material.IRON_TRAPDOOR, "door");
+	matUseFlagList.put(Material.SPRUCE_FENCE_GATE, Flags.door.getName());
+	matUseFlagList.put(Material.BIRCH_FENCE_GATE, Flags.door.getName());
+	matUseFlagList.put(Material.JUNGLE_FENCE_GATE, Flags.door.getName());
+	matUseFlagList.put(Material.ACACIA_FENCE_GATE, Flags.door.getName());
+	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door.getName());
+	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door.getName());
 
-	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, "diode");
+	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, Flags.diode.getName());
     }
 
     @Override

@@ -1,15 +1,21 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
 
 public class pdel implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
@@ -28,6 +34,14 @@ public class pdel implements cmd {
 	    return true;
 	}
 	return false;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	// Main command
+	c.get(path + "Description", "Remove player from residence.");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res pdel <residence name> [player]", "Removes essential flags from player"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[playername]"));
     }
 
 }

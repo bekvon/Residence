@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class RandomTp {
@@ -122,7 +123,7 @@ public class RandomTp {
 		else if (Residence.getTeleportDelayMap().contains(targetPlayer.getName()))
 		    Residence.getTeleportDelayMap().remove(targetPlayer.getName());
 		targetPlayer.teleport(loc);
-		targetPlayer.sendMessage(Residence.getLM().getMessage("RandomTeleport.TeleportSuccess", loc.getX(), loc.getY(), loc.getZ()));
+		Residence.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
 		return;
 	    }
 	}, Residence.getConfigManager().getTeleportDelay() * 20L);
@@ -130,6 +131,6 @@ public class RandomTp {
 
     public void performInstantTp(Location loc, Player targetPlayer) {
 	targetPlayer.teleport(loc);
-	targetPlayer.sendMessage(Residence.getLM().getMessage("RandomTeleport.TeleportSuccess", loc.getX(), loc.getY(), loc.getZ()));
+	Residence.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
     }
 }

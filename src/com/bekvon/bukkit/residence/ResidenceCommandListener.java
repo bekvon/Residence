@@ -9,6 +9,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 
 public class ResidenceCommandListener extends Residence {
@@ -30,7 +33,7 @@ public class ResidenceCommandListener extends Residence {
 
 	if (sender instanceof Player && !Residence.getPermissionManager().isResidenceAdmin(sender) && Residence.isDisabledWorldCommand(((Player) sender)
 	    .getWorld())) {
-	    sender.sendMessage(Residence.getLM().getMessage("General.DisabledWorld"));
+	    Residence.msg(sender, lm.General_DisabledWorld);
 	    return true;
 	}
 
@@ -42,7 +45,7 @@ public class ResidenceCommandListener extends Residence {
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded config.");
 		    System.out.println("[Residence] Reloaded by " + player.getName() + ".");
 		} else
-		    player.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		    Residence.msg(player, lm.General_NoPermission);
 	    } else {
 		this.reloadPlugin();
 		System.out.println("[Residence] Reloaded by console.");
@@ -61,7 +64,7 @@ public class ResidenceCommandListener extends Residence {
 		    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    } else
-		sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(sender, lm.General_NoPermission);
 	    return true;
 	} else if (command.getName().equals("rc")) {
 	    cmd cmdClass = getCmdClass(new String[] { "rc" });
@@ -80,7 +83,7 @@ public class ResidenceCommandListener extends Residence {
 		    resadmin = true;
 		}
 		if (command.getName().equals("resadmin") && !Residence.gmanager.isResidenceAdmin(sender)) {
-		    ((Player) sender).sendMessage(Residence.getLM().getMessage("Residence.NonAdmin"));
+		    ((Player) sender).sendMessage(Residence.msg(lm.Residence_NonAdmin));
 		    return true;
 		}
 		if (command.getName().equals("res") && Residence.gmanager.isResidenceAdmin(sender) && Residence.getConfigManager().getAdminFullAccess()) {
@@ -102,7 +105,7 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    if (Residence.cmanager.allowAdminsOnly()) {
 		if (!resadmin && player != null) {
-		    player.sendMessage(Residence.getLM().getMessage("General.AdminOnly"));
+		    Residence.msg(player, lm.General_AdminOnly);
 		    return true;
 		}
 	    }
@@ -128,7 +131,7 @@ public class ResidenceCommandListener extends Residence {
 	    }
 
 	    if (!sender.hasPermission("residence.command." + args[0].toLowerCase()) && !resadmin) {
-		sender.sendMessage(Residence.getLM().getMessage("General.NoCmdPermission"));
+		Residence.msg(sender, lm.General_NoCmdPermission);
 		return true;
 	    }
 
@@ -168,7 +171,7 @@ public class ResidenceCommandListener extends Residence {
     }
 
     public void sendUsage(CommandSender sender, String command) {
-	sender.sendMessage(Residence.getLM().getMessage("General.DefaultUsage", command));
+	Residence.msg(sender, lm.General_DefaultUsage, command);
     }
 
     private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender, Command command) {
@@ -182,7 +185,7 @@ public class ResidenceCommandListener extends Residence {
 	    try {
 		page = Integer.parseInt(args[args.length - 1]);
 	    } catch (Exception ex) {
-		sender.sendMessage(Residence.getLM().getMessage("General.InvalidHelp"));
+		Residence.msg(sender, lm.General_InvalidHelp);
 	    }
 	}
 

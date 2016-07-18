@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.AutoSelector;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -19,10 +20,10 @@ public class AutoSelection {
 	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup(player.getLocation().getWorld().getName());
 	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
-	    player.sendMessage(Residence.getLM().getMessage("Select.AutoEnabled"));
+	    Residence.msg(player, lm.Select_AutoEnabled);
 	} else {
 	    list.remove(player.getName().toLowerCase());
-	    player.sendMessage(Residence.getLM().getMessage("Select.AutoDisabled"));
+	    Residence.msg(player, lm.Select_AutoDisabled);
 	}
     }
 
@@ -37,7 +38,7 @@ public class AutoSelection {
 
 	if (Curenttime > 270) {
 	    list.remove(player.getName().toLowerCase());
-	    player.sendMessage(Residence.getLM().getMessage("AutoSelection.Disabled"));
+	    Residence.msg(player, lm.Select_AutoDisabled);
 	    return;
 	}
 

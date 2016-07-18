@@ -1,17 +1,23 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 public class contract implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
@@ -25,17 +31,17 @@ public class contract implements cmd {
 	else
 	    return false;
 	if (res == null) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    Residence.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
 
 	if (res.isSubzone() && !player.hasPermission("residence.contract.subzone") && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("Subzone.CantContract"));
+	    Residence.msg(player, lm.Subzone_CantContract);
 	    return false;
 	}
 
 	if (!res.isSubzone() && !player.hasPermission("residence.contract") && !resadmin) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.CantContractResidence"));
+	    Residence.msg(player, lm.Residence_CantContractResidence);
 	    return false;
 	}
 
@@ -54,9 +60,9 @@ public class contract implements cmd {
 	if (area != null) {
 	    Residence.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
 	    Residence.getSelectionManager().placeLoc2(player, area.getLowLoc(), false);
-	    player.sendMessage(Residence.getLM().getMessage("Select.Area", areaName, resName));
+	    Residence.msg(player, lm.Select_Area, areaName, resName);
 	} else {
-	    player.sendMessage(Residence.getLM().getMessage("Area.NonExist"));
+	    Residence.msg(player, lm.Area_NonExist);
 	    return true;
 	}
 	int amount = -1;
@@ -66,12 +72,12 @@ public class contract implements cmd {
 	    else if (args.length == 3)
 		amount = Integer.parseInt(args[2]);
 	} catch (Exception ex) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Amount"));
+	    Residence.msg(player, lm.Invalid_Amount);
 	    return true;
 	}
 
 	if (amount > 1000) {
-	    player.sendMessage(Residence.getLM().getMessage("Invalid.Amount"));
+	    Residence.msg(player, lm.Invalid_Amount);
 	    return true;
 	}
 
@@ -90,9 +96,16 @@ public class contract implements cmd {
 	    res.replaceArea(player, Residence.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
 	    return true;
 	}
-	player.sendMessage(Residence.getLM().getMessage("Select.Points"));
+	Residence.msg(player, lm.Select_Points);
 
 	return false;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "Contracts residence in direction you looking");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res contract (residence) [amount]", "Contracts residence in direction you looking.",
+	    "Residence name is optional"));
     }
 
 }

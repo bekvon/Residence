@@ -1,4 +1,4 @@
-package com.bekvon.bukkit.residence;
+package com.bekvon.bukkit.residence.containers;
 
 import java.util.List;
 import java.util.Map;

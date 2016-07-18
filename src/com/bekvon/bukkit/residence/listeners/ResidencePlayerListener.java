@@ -52,7 +52,9 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.*;
@@ -176,7 +178,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceBackup(ResidenceFlagChangeEvent event) {
-	if (!event.getFlag().equalsIgnoreCase("backup"))
+	if (!event.getFlag().equalsIgnoreCase(Flags.backup.getName()))
 	    return;
 	Player player = event.getPlayer();
 	if (!Residence.getConfigManager().RestoreAfterRentEnds)
@@ -222,7 +224,7 @@ public class ResidencePlayerListener implements Listener {
 		    if (rentedland.AutoPay)
 			continue;
 		    if (rentedland.endTime - System.currentTimeMillis() < Residence.getConfigManager().getRentInformBefore() * 60 * 24 * 7) {
-			player.sendMessage(Residence.getLM().getMessage("Residence.EndingRent", one, GetTime.getTime(rentedland.endTime)));
+			Residence.msg(player, lm.Residence_EndingRent, one, GetTime.getTime(rentedland.endTime));
 		    }
 		}
 	    }
@@ -242,11 +244,11 @@ public class ResidencePlayerListener implements Listener {
 	if (Residence.getNms().isArmorStandEntity(event.getCaught().getType()) || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
 	    FlagPermissions perm = Residence.getPermsByLoc(event.getCaught().getLocation());
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getCaught().getLocation());
-	    if (!perm.has("hook", false) && res != null && !res.getPermissions().playerHas(player, "hook", true) ||
-		!perm.has("hook", false) && res != null && !res.getPermissions().playerHas(player, "hook", false)) {
+	    if (!perm.has(Flags.hook, false) && res != null && !res.getPermissions().playerHas(player, Flags.hook, true) ||
+		!perm.has(Flags.hook, false) && res != null && !res.getPermissions().playerHas(player, Flags.hook, false)) {
 		event.setCancelled(true);
 		if (res != null)
-		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "hook", res.getName()));
+		    Residence.msg(player, lm.Residence_FlagDeny, Flags.hook.getName(), res.getName());
 		return;
 	    }
 	}
@@ -269,10 +271,10 @@ public class ResidencePlayerListener implements Listener {
 	case INVALID:
 	    break;
 	case TRUE:
-	    if (event.getFlag().equalsIgnoreCase("day"))
+	    if (event.getFlag().equalsIgnoreCase(Flags.day.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setPlayerTime(6000L, false);
-	    if (event.getFlag().equalsIgnoreCase("night"))
+	    if (event.getFlag().equalsIgnoreCase(Flags.night.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setPlayerTime(14000L, false);
 	    break;
@@ -286,7 +288,7 @@ public class ResidencePlayerListener implements Listener {
 	if (event.isCancelled())
 	    return;
 
-	if (!event.getFlag().equalsIgnoreCase("sun") && !event.getFlag().equalsIgnoreCase("rain"))
+	if (!event.getFlag().equalsIgnoreCase(Flags.sun.getName()) && !event.getFlag().equalsIgnoreCase(Flags.rain.getName()))
 	    return;
 
 	switch (event.getNewState()) {
@@ -298,10 +300,10 @@ public class ResidencePlayerListener implements Listener {
 	case INVALID:
 	    break;
 	case TRUE:
-	    if (event.getFlag().equalsIgnoreCase("sun"))
+	    if (event.getFlag().equalsIgnoreCase(Flags.sun.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setPlayerWeather(WeatherType.CLEAR);
-	    if (event.getFlag().equalsIgnoreCase("rain"))
+	    if (event.getFlag().equalsIgnoreCase(Flags.rain.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setPlayerWeather(WeatherType.DOWNFALL);
 	    break;
@@ -322,7 +324,7 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
 	if (res == null)
 	    return;
-	if (res.getPermissions().playerHas(player.getName(), "command", true))
+	if (res.getPermissions().playerHas(player.getName(), Flags.command, true))
 	    return;
 
 	if (Residence.getPermissionManager().isResidenceAdmin(player))
@@ -368,7 +370,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	event.setCancelled(true);
-	player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "command", res.getName()));
+	Residence.msg(player, lm.Residence_FlagDeny, Flags.command.getName(), res.getName());
 
     }
 
@@ -476,7 +478,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Sign sign = (Sign) block.getState();
 
-	if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase(Residence.getLM().getMessage("Sign.TopLine")))
+	if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase(Residence.msg(lm.Sign_TopLine)))
 	    return;
 
 	Signs signInfo = new Signs();
@@ -484,6 +486,8 @@ public class ResidencePlayerListener implements Listener {
 	Location loc = sign.getLocation();
 
 	String landName = null;
+
+	Player player = event.getPlayer();
 
 	ClaimedResidence res = null;
 	if (!event.getLine(1).equalsIgnoreCase("")) {
@@ -497,7 +501,7 @@ public class ResidencePlayerListener implements Listener {
 	    res = Residence.getResidenceManager().getByName(resname);
 
 	    if (res == null) {
-		event.getPlayer().sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		Residence.msg(player, lm.Invalid_Residence);
 		return;
 	    }
 
@@ -509,7 +513,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (res == null) {
-	    event.getPlayer().sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+	    Residence.msg(player, lm.Invalid_Residence);
 	    return;
 	}
 
@@ -596,7 +600,7 @@ public class ResidencePlayerListener implements Listener {
 
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(player.getLocation(), player);
 
-	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has("nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 	    "residence.nofly.bypass")) {
 
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
@@ -619,11 +623,11 @@ public class ResidencePlayerListener implements Listener {
 		if (location.getBlockY() <= 0) {
 		    player.setFlying(false);
 		    player.setAllowFlight(false);
-		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", location.getWorld().getName()));
+		    Residence.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), location.getWorld().getName());
 		    return;
 		}
 	    }
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", location.getWorld().getName()));
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), location.getWorld().getName());
 	    player.teleport(location);
 	    player.setFlying(false);
 	    player.setAllowFlight(false);
@@ -661,18 +665,18 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null) {
 	    return;
 	}
-	if (res.getPermissions().playerHas(player.getName(), "move", true)) {
+	if (res.getPermissions().playerHas(player, Flags.move, true)) {
 	    return;
 	}
 	if (bed) {
 	    loc = player.getWorld().getSpawnLocation();
 	}
 	res = Residence.getResidenceManager().getByLoc(loc);
-	if (res != null && !res.getPermissions().playerHas(player.getName(), "move", true)) {
+	if (res != null && !res.getPermissions().playerHas(player.getName(), Flags.move, true)) {
 	    loc = res.getOutsideFreeLoc(loc, player);
 	}
 
-	player.sendMessage(Residence.getLM().getMessage("General.NoSpawn"));
+	Residence.msg(player, lm.General_NoSpawn);
 	event.setRespawnLocation(loc);
     }
 
@@ -737,11 +741,11 @@ public class ResidencePlayerListener implements Listener {
 	Player player = event.getPlayer();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
 	if (relativeBlock.getType() == Material.FIRE) {
-	    boolean hasplace = perms.playerHas(player.getName(), player.getWorld().getName(), "place", perms.playerHas(player.getName(), player.getWorld().getName(),
-		"build", true));
+	    boolean hasplace = perms.playerHas(player.getName(), player.getWorld().getName(), Flags.place, perms.playerHas(player.getName(), player.getWorld().getName(),
+		Flags.build, true));
 	    if (!hasplace) {
 		event.setCancelled(true);
-		player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
+		Residence.msg(player, lm.Flag_Deny, Flags.build.getName());
 		return;
 	    }
 	}
@@ -763,14 +767,14 @@ public class ResidencePlayerListener implements Listener {
 	String world = player.getWorld().getName();
 	boolean resadmin = Residence.isResAdminOn(player);
 	if (!resadmin) {
-	    boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
-	    boolean haspressure = perms.playerHas(player.getName(), world, "pressure", hasuse);
+	    boolean hasuse = perms.playerHas(player.getName(), world, Flags.use, true);
+	    boolean haspressure = perms.playerHas(player.getName(), world, Flags.pressure, hasuse);
 	    if ((!hasuse && !haspressure || !haspressure) && (mat == Material.STONE_PLATE || mat == Material.WOOD_PLATE || Residence.getNms().isPlate(mat))) {
 		event.setCancelled(true);
 		return;
 	    }
 	}
-	if (!perms.playerHas(player.getName(), world, "trample", perms.playerHas(player.getName(), world, "build", true)) && (mat == Material.SOIL
+	if (!perms.playerHas(player.getName(), world, Flags.trample, perms.playerHas(player.getName(), world, Flags.build, true)) && (mat == Material.SOIL
 	    || mat == Material.SOUL_SAND)) {
 	    event.setCancelled(true);
 	    return;
@@ -811,14 +815,14 @@ public class ResidencePlayerListener implements Listener {
 	    if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 		Location loc = block.getLocation();
 		Residence.getSelectionManager().placeLoc1(player, loc, true);
-		player.sendMessage(Residence.getLM().getMessage("Select.PrimaryPoint", Residence.getLM().getMessage("General.CoordsTop", loc.getBlockX(), loc.getBlockY(),
-		    loc.getBlockZ())));
+		Residence.msg(player, lm.Select_PrimaryPoint, Residence.msg(lm.General_CoordsTop, loc.getBlockX(), loc.getBlockY(),
+		    loc.getBlockZ()));
 		event.setCancelled(true);
 	    } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && Residence.getNms().isMainHand(event)) {
 		Location loc = block.getLocation();
 		Residence.getSelectionManager().placeLoc2(player, loc, true);
-		player.sendMessage(Residence.getLM().getMessage("Select.SecondaryPoint", Residence.getLM().getMessage("General.CoordsBottom", loc.getBlockX(), loc
-		    .getBlockY(), loc.getBlockZ())));
+		Residence.msg(player, lm.Select_SecondaryPoint, Residence.msg(lm.General_CoordsBottom, loc.getBlockX(), loc
+		    .getBlockY(), loc.getBlockZ()));
 		event.setCancelled(true);
 	    }
 
@@ -855,7 +859,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res != null)
 	    Residence.getResidenceManager().printAreaInfo(res, player, false);
 	else
-	    player.sendMessage(Residence.getLM().getMessage("Residence.NoResHere"));
+	    Residence.msg(player, lm.Residence_NoResHere);
 	event.setCancelled(true);
 	return;
 
@@ -892,7 +896,7 @@ public class ResidencePlayerListener implements Listener {
 	String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
 	boolean resadmin = Residence.isResAdminOn(player);
 	if (!resadmin && !Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
-	    player.sendMessage(Residence.getLM().getMessage("General.ItemBlacklisted"));
+	    Residence.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
 	}
@@ -907,8 +911,8 @@ public class ResidencePlayerListener implements Listener {
 		if (Residence.getNms().itemInMainHand(player).getData().getData() == 15 && block.getType() == Material.GRASS || iih.getData().getData() == 3
 		    && blockId == 17 && (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15)) {
 		    perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
-		    if (!perms.playerHas(player.getName(), world, "build", true)) {
-			player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
+		    if (!perms.playerHas(player.getName(), world, Flags.build, true)) {
+			Residence.msg(player, lm.Flag_Deny, Flags.build.getName());
 			event.setCancelled(true);
 			return;
 		    }
@@ -916,8 +920,8 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	    if (Residence.getNms().isArmorStandMaterial(heldItem) || Residence.getNms().isBoat(heldItem)) {
 		perms = Residence.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
-		if (!perms.playerHas(player.getName(), world, "build", true)) {
-		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "build"));
+		if (!perms.playerHas(player.getName(), world, Flags.build, true)) {
+		    Residence.msg(player, lm.Flag_Deny, Flags.build.getName());
 		    event.setCancelled(true);
 		    return;
 		}
@@ -925,7 +929,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
-	    boolean hasuse = perms.playerHas(player.getName(), world, "use", true);
+	    boolean hasuse = perms.playerHas(player.getName(), world, Flags.use, true);
 	    for (Entry<Material, String> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 		if (mat != checkMat.getKey())
 		    continue;
@@ -933,34 +937,34 @@ public class ResidencePlayerListener implements Listener {
 		if (perms.playerHas(player.getName(), world, checkMat.getValue(), hasuse))
 		    continue;
 
-		if (hasuse || checkMat.getValue().equals("container")) {
+		if (hasuse || checkMat.getValue().equals(Flags.container.getName())) {
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", checkMat.getValue()));
+		    Residence.msg(player, lm.Flag_Deny, checkMat.getValue());
 		    return;
 		}
 		event.setCancelled(true);
-		player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "use"));
+		Residence.msg(player, lm.Flag_Deny, Flags.use);
 		return;
 
 	    }
 	    if (Residence.getConfigManager().getCustomContainers().contains(blockId)) {
-		if (!perms.playerHas(player.getName(), world, "container", hasuse)) {
+		if (!perms.playerHas(player.getName(), world, Flags.container, hasuse)) {
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "container"));
+		    Residence.msg(player, lm.Flag_Deny, Flags.container.getName());
 		    return;
 		}
 	    }
 	    if (Residence.getConfigManager().getCustomBothClick().contains(blockId)) {
 		if (!hasuse) {
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "use"));
+		    Residence.msg(player, lm.Flag_Deny, Flags.use.getName());
 		    return;
 		}
 	    }
 	    if (Residence.getConfigManager().getCustomRightClick().contains(blockId) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 		if (!hasuse) {
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "use"));
+		    Residence.msg(player, lm.Flag_Deny, Flags.use.getName());
 		    return;
 		}
 	    }
@@ -984,8 +988,8 @@ public class ResidencePlayerListener implements Listener {
 
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
 
-	if (res != null && !res.getPermissions().playerHas(player.getName(), "trade", true)) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "trade", res.getName()));
+	if (res != null && !res.getPermissions().playerHas(player.getName(), Flags.trade, true)) {
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.trade.getName(), res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -1007,11 +1011,11 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
 	if (res == null)
 	    return;
-	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "container", true) && player.isSneaking()) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.container, true) && player.isSneaking()) {
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
 	    event.setCancelled(true);
-	} else if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "riding", false)) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "riding", res.getName()));
+	} else if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.riding, false)) {
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.riding.getName(), res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -1033,8 +1037,8 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
 	if (res == null)
 	    return;
-	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "container", true)) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "container", res.getName()));
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.container, true)) {
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -1056,8 +1060,8 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
 	if (res == null)
 	    return;
-	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "riding", false)) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "riding", res.getName()));
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.riding, false)) {
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.riding.getName(), res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -1079,8 +1083,8 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
 	if (res == null)
 	    return;
-	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "dye", true)) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "dye", res.getName()));
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.dye, true)) {
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.dye.getName(), res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -1103,8 +1107,8 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "shear", true)) {
-	    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Shear", res.getName()));
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.shear, true)) {
+	    Residence.msg(player, lm.Residence_FlagDeny, Flags.shear.getName(), res.getName());
 	    event.setCancelled(true);
 	}
 
@@ -1138,13 +1142,13 @@ public class ResidencePlayerListener implements Listener {
 	String world = player.getWorld().getName();
 	String permgroup = Residence.getPermissionManager().getGroupNameByPlayer(player);
 	if (!Residence.getItemManager().isAllowed(heldItem, permgroup, world)) {
-	    player.sendMessage(Residence.getLM().getMessage("General.ItemBlacklisted"));
+	    Residence.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
 	}
-	if (!perms.playerHas(player.getName(), world, "container", perms.playerHas(player.getName(), world, "use", true))) {
+	if (!perms.playerHas(player.getName(), world, Flags.container, perms.playerHas(player.getName(), world, Flags.use, true))) {
 	    event.setCancelled(true);
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "container"));
+	    Residence.msg(player, lm.Flag_Deny, Flags.container.getName());
 	}
     }
 
@@ -1163,14 +1167,14 @@ public class ResidencePlayerListener implements Listener {
 	if (res != null) {
 	    if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
 		if (Residence.getRentManager().isRented(res.getName())) {
-		    player.sendMessage(Residence.getLM().getMessage("Rent.ModifyDeny"));
+		    Residence.msg(player, lm.Rent_ModifyDeny);
 		    event.setCancelled(true);
 		    return;
 		}
 	    }
 
 	    Material mat = event.getBucket();
-	    if ((!res.getPermissions().playerHas(player.getName(), "bucket", true) && !res.getPermissions().playerHas(player.getName(), "bucketempty", true))
+	    if ((!res.getPermissions().playerHas(player.getName(), Flags.bucket, true) && !res.getPermissions().playerHas(player.getName(), Flags.bucketempty, true))
 		&& Residence.getConfigManager().getNoPlaceWorlds().contains(loc.getWorld().getName())) {
 		if (mat == Material.LAVA_BUCKET) {
 		    event.setCancelled(true);
@@ -1185,9 +1189,9 @@ public class ResidencePlayerListener implements Listener {
 
 	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(loc, player);
-	if (!perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true)) &&
-	    !perms.playerHas(pname, player.getWorld().getName(), "bucketempty", perms.playerHas(pname, player.getWorld().getName(), "build", true))) {
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "bucket"));
+	if (!perms.playerHas(pname, player.getWorld().getName(), Flags.bucket, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true)) &&
+	    !perms.playerHas(pname, player.getWorld().getName(), Flags.bucketempty, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true))) {
+	    Residence.msg(player, lm.Flag_Deny, Flags.bucket.getName());
 	    event.setCancelled(true);
 	    return;
 	}
@@ -1197,8 +1201,8 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null && Residence.getConfigManager().isNoLavaPlace() && loc.getBlockY() >= level - 1 && Residence.getConfigManager()
 	    .getNoPlaceWorlds().contains(loc.getWorld().getName())) {
 	    if (mat == Material.LAVA_BUCKET) {
-		if (!Residence.getLM().getMessage("General.CantPlaceLava").equalsIgnoreCase(""))
-		    player.sendMessage(Residence.getLM().getMessage("General.CantPlaceLava", level));
+		if (!Residence.msg(lm.General_CantPlaceLava).equalsIgnoreCase(""))
+		    Residence.msg(player, lm.General_CantPlaceLava, level);
 		event.setCancelled(true);
 		return;
 	    }
@@ -1207,8 +1211,8 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null && Residence.getConfigManager().isNoWaterPlace() && loc.getBlockY() >= level - 1 && Residence.getConfigManager()
 	    .getNoPlaceWorlds().contains(loc.getWorld().getName()))
 	    if (mat == Material.WATER_BUCKET) {
-		if (!Residence.getLM().getMessage("General.CantPlaceWater").equalsIgnoreCase(""))
-		    player.sendMessage(Residence.getLM().getMessage("General.CantPlaceWater", level));
+		if (!Residence.msg(lm.General_CantPlaceWater).equalsIgnoreCase(""))
+		    Residence.msg(player, lm.General_CantPlaceWater, level);
 		event.setCancelled(true);
 		return;
 	    }
@@ -1227,7 +1231,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res != null) {
 	    if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
 		if (Residence.getRentManager().isRented(res.getName())) {
-		    player.sendMessage(Residence.getLM().getMessage("Rent.ModifyDeny"));
+		    Residence.msg(player, lm.Rent_ModifyDeny);
 		    event.setCancelled(true);
 		    return;
 		}
@@ -1236,10 +1240,11 @@ public class ResidencePlayerListener implements Listener {
 
 	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
-	boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), "bucket", perms.playerHas(pname, player.getWorld().getName(), "build", true));
-	boolean hasbucketfill = perms.playerHas(pname, player.getWorld().getName(), "bucketfill", perms.playerHas(pname, player.getWorld().getName(), "build", true));
+	boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), Flags.bucket, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true));
+	boolean hasbucketfill = perms.playerHas(pname, player.getWorld().getName(), Flags.bucketfill, perms.playerHas(pname, player.getWorld().getName(), Flags.build,
+	    true));
 	if (!hasbucket && !hasbucketfill) {
-	    player.sendMessage(Residence.getLM().getMessage("Flag.Deny", "bucket"));
+	    Residence.msg(player, lm.Flag_Deny, Flags.bucket.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -1266,32 +1271,32 @@ public class ResidencePlayerListener implements Listener {
 	    if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 		.getCause() == TeleportCause.PLUGIN) {
 		String areaname = res.getName();
-		if (!res.getPermissions().playerHas(player.getName(), "move", true) && !res.isOwner(player)) {
+		if (!res.getPermissions().playerHas(player.getName(), Flags.move, true) && !res.isOwner(player)) {
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Residence.MoveDeny", areaname));
+		    Residence.msg(player, lm.Residence_MoveDeny, areaname);
 		    return;
 		}
 	    } else if (event.getCause() == TeleportCause.ENDER_PEARL) {
 		String areaname = res.getName();
-		if (!res.getPermissions().playerHas(player.getName(), "enderpearl", true)) {
+		if (!res.getPermissions().playerHas(player.getName(), Flags.enderpearl, true)) {
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "EnderPearl", areaname));
+		    Residence.msg(player, lm.Residence_FlagDeny, Flags.enderpearl.getName(), areaname);
 		    return;
 		}
 	    }
 	    if ((event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND) && Residence.getConfigManager().isBlockAnyTeleportation()) {
-		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp")) {
+		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.tp, true) && !player.hasPermission("residence.admin.tp")) {
 		    String areaname = res.getName();
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("General.TeleportDeny", areaname));
+		    Residence.msg(player, lm.General_TeleportDeny, areaname);
 		    return;
 		}
 	    }
 	    if (Residence.getNms().isChorusTeleport(event.getCause())) {
-		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), "chorustp", true) && !player.hasPermission("residence.admin.tp")) {
+		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.chorustp, true) && !player.hasPermission("residence.admin.tp")) {
 		    String areaname = res.getName();
 		    event.setCancelled(true);
-		    player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "ChorusTp", areaname));
+		    Residence.msg(player, lm.Residence_FlagDeny, Flags.chorustp.getName(), areaname);
 		    return;
 		}
 	    }
@@ -1313,15 +1318,15 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (res.getPermissions().has("keepinv", false))
+	if (res.getPermissions().has(Flags.keepinv, false))
 	    event.setKeepInventory(true);
 
-	if (res.getPermissions().has("keepexp", false)) {
+	if (res.getPermissions().has(Flags.keepexp, false)) {
 	    event.setKeepLevel(true);
 	    event.setDroppedExp(0);
 	}
 
-	if (res.getPermissions().has("respawn", false) && Bukkit.getVersion().toString().contains("Spigot"))
+	if (res.getPermissions().has(Flags.respawn, false) && Bukkit.getVersion().toString().contains("Spigot"))
 	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 		@Override
 		public void run() {
@@ -1367,7 +1372,7 @@ public class ResidencePlayerListener implements Listener {
 	if (!Residence.getTeleportDelayMap().isEmpty() && Residence.getConfigManager().getTeleportDelay() > 0 && Residence.getTeleportDelayMap().contains(player
 	    .getName())) {
 	    Residence.getTeleportDelayMap().remove(player.getName());
-	    player.sendMessage(Residence.getLM().getMessage("General.TeleportCanceled"));
+	    Residence.msg(player, lm.General_TeleportCanceled);
 	    if (Residence.getConfigManager().isTeleportTitleMessage())
 		Residence.getAB().sendTitle(player, "", "");
 	}
@@ -1398,7 +1403,7 @@ public class ResidencePlayerListener implements Listener {
 	    } else {
 		if (res != null && ResOld.getName().equals(res.getName())) {
 
-		    f: if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+		    f: if (player.isFlying() && res.getPermissions().playerHas(pname, Flags.nofly, false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 			"residence.nofly.bypass")) {
 			if (res != null && res.isOwner(player))
 			    break f;
@@ -1421,11 +1426,11 @@ public class ResidencePlayerListener implements Listener {
 				    player.teleport(lastLoc);
 				else
 				    player.teleport(res.getOutsideFreeLoc(loc, player));
-				player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", orres.getName()));
+				Residence.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
 				return;
 			    }
 			}
-			player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", orres.getName()));
+			Residence.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
 			player.teleport(location);
 			player.setFlying(false);
 			player.setAllowFlight(false);
@@ -1456,10 +1461,10 @@ public class ResidencePlayerListener implements Listener {
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-		if (ResOld.getPermissions().has("night", FlagCombo.OnlyTrue) || ResOld.getPermissions().has("day", FlagCombo.OnlyTrue))
+		if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		    player.resetPlayerTime();
 
-		if (ResOld.getPermissions().has("sun", FlagCombo.OnlyTrue) || ResOld.getPermissions().has("rain", FlagCombo.OnlyTrue))
+		if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		    player.resetPlayerWeather();
 
 		if (leave != null && !leave.equals("")) {
@@ -1467,7 +1472,7 @@ public class ResidencePlayerListener implements Listener {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
 			    .toString());
 		    } else {
-			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+			Residence.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
 		    }
 		}
 		currentRes.remove(pname);
@@ -1498,15 +1503,15 @@ public class ResidencePlayerListener implements Listener {
 		}
 
 		if (Residence.getConfigManager().useActionBar()) {
-		    Residence.getAB().send(player, Residence.getLM().getMessage("Residence.MoveDeny", orres.getName()));
+		    Residence.getAB().send(player, Residence.msg(lm.Residence_MoveDeny, orres.getName()));
 		} else {
-		    player.sendMessage(Residence.getLM().getMessage("Residence.MoveDeny", orres.getName()));
+		    Residence.msg(player, lm.Residence_MoveDeny, orres.getName());
 		}
 		return;
 	    }
 
 	    // Preventing fly in residence only when player has move permission
-	    f: if (player.isFlying() && res.getPermissions().playerHas(pname, "nofly", false) && !Residence.isResAdminOn(player) && !player.hasPermission(
+	    f: if (player.isFlying() && res.getPermissions().playerHas(pname, Flags.nofly, false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 		"residence.nofly.bypass")) {
 		if (res != null && res.isOwner(player))
 		    break f;
@@ -1530,24 +1535,24 @@ public class ResidencePlayerListener implements Listener {
 			else
 			    player.teleport(res.getOutsideFreeLoc(loc, player));
 
-			player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", orres.getName()));
+			Residence.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
 			return;
 		    }
 		}
-		player.sendMessage(Residence.getLM().getMessage("Residence.FlagDeny", "Fly", orres.getName()));
+		Residence.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
 		player.teleport(location);
 		player.setFlying(false);
 		player.setAllowFlight(false);
 	    }
 
-	    if (res.getPermissions().has("day", false))
+	    if (res.getPermissions().has(Flags.day, false))
 		player.setPlayerTime(6000L, false);
-	    else if (res.getPermissions().has("night", false))
+	    else if (res.getPermissions().has(Flags.night, false))
 		player.setPlayerTime(14000L, false);
 
-	    if (res.getPermissions().has("sun", false))
+	    if (res.getPermissions().has(Flags.sun, false))
 		player.setPlayerWeather(WeatherType.CLEAR);
-	    else if (res.getPermissions().has("rain", false))
+	    else if (res.getPermissions().has(Flags.rain, false))
 		player.setPlayerWeather(WeatherType.DOWNFALL);
 	}
 
@@ -1562,10 +1567,10 @@ public class ResidencePlayerListener implements Listener {
 		String leave = ResOld.getLeaveMessage();
 		chgFrom = ResOld;
 
-		if (ResOld.getPermissions().has("night", false) || ResOld.getPermissions().has("day", false))
+		if (ResOld.getPermissions().has(Flags.night, false) || ResOld.getPermissions().has(Flags.day, false))
 		    player.resetPlayerTime();
 
-		if (ResOld.getPermissions().has("sun", false) || ResOld.getPermissions().has("rain", false))
+		if (ResOld.getPermissions().has(Flags.sun, false) || ResOld.getPermissions().has(Flags.rain, false))
 		    player.resetPlayerWeather();
 
 		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
@@ -1573,7 +1578,7 @@ public class ResidencePlayerListener implements Listener {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
 			    .toString());
 		    } else {
-			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+			Residence.msg(player,ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
 		    }
 		}
 	    }
@@ -1590,17 +1595,17 @@ public class ResidencePlayerListener implements Listener {
 		    if (Residence.getRentManager().isForRent(areaname) && !Residence.getRentManager().isRented(areaname)) {
 			RentableLand rentable = Residence.getRentManager().getRentableLand(areaname);
 			if (rentable != null)
-			    Residence.getAB().send(player, Residence.getLM().getMessage("Residence.CanBeRented", areaname, rentable.cost, rentable.days));
+			    Residence.getAB().send(player, Residence.msg(lm.Residence_CanBeRented, areaname, rentable.cost, rentable.days));
 		    } else if (Residence.getTransactionManager().isForSale(areaname) && !res.isOwner(player)) {
 			int sale = Residence.getTransactionManager().getSaleAmount(areaname);
-			Residence.getAB().send(player, Residence.getLM().getMessage("Residence.CanBeBought", areaname, sale));
+			Residence.getAB().send(player, Residence.msg(lm.Residence_CanBeBought, areaname, sale));
 		    }
 		} else if (enterMessage != null && !enterMessage.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage))
 			    .toString());
 		    } else {
-			player.sendMessage(ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
+			Residence.msg(player, ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
 		    }
 		}
 	    }
@@ -1629,7 +1634,7 @@ public class ResidencePlayerListener implements Listener {
 
 		res = Residence.getResidenceManager().getByName(resname);
 
-		if (!res.getPermissions().has("healing", false))
+		if (!res.getPermissions().has(Flags.healing, false))
 		    continue;
 
 		Damageable damage = player;
@@ -1652,7 +1657,7 @@ public class ResidencePlayerListener implements Listener {
 
 		ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
 
-		if (!res.getPermissions().has("feed", false))
+		if (!res.getPermissions().has(Flags.feed, false))
 		    continue;
 
 		int food = player.getFoodLevel();
@@ -1675,7 +1680,7 @@ public class ResidencePlayerListener implements Listener {
 		ClaimedResidence res = null;
 		res = Residence.getResidenceManager().getByName(resname);
 
-		if (!res.getPermissions().has("nomobs", false))
+		if (!res.getPermissions().has(Flags.nomobs, false))
 		    continue;
 
 		List<Entity> entities = Bukkit.getServer().getWorld(res.getWorld()).getEntities();
@@ -1711,20 +1716,20 @@ public class ResidencePlayerListener implements Listener {
     public void tooglePlayerResidenceChat(Player player, String residence) {
 	String pname = player.getName();
 	playerToggleChat.add(pname);
-	player.sendMessage(Residence.getLM().getMessage("Chat.ChatChannelChange", residence));
+	Residence.msg(player, lm.Chat_ChatChannelChange, residence);
     }
 
     public void removePlayerResidenceChat(String pname) {
 	playerToggleChat.remove(pname);
 	Player player = Bukkit.getPlayer(pname);
 	if (player != null)
-	    player.sendMessage(Residence.getLM().getMessage("Chat.ChatChannelLeave"));
+	    Residence.msg(player, lm.Chat_ChatChannelLeave);
     }
 
     public void removePlayerResidenceChat(Player player) {
 	String pname = player.getName();
 	playerToggleChat.remove(pname);
-	player.sendMessage(Residence.getLM().getMessage("Chat.ChatChannelLeave"));
+	Residence.msg(player, lm.Chat_ChatChannelLeave);
     }
 
     public String getCurrentResidenceName(String player) {

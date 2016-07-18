@@ -272,35 +272,19 @@ public class ConfigManager {
 	File f = new File(plugin.getDataFolder(), "flags.yml");
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
-	Set<String> sections = conf.getConfigurationSection("Global.FlagPermission").getKeys(false);
-	for (String one : LocaleManager.FlagList) {
-	    if (sections.contains(one.toLowerCase()))
-		continue;
-	    conf.createSection("Global.FlagPermission." + one.toLowerCase());
-	    conf.set("Global.FlagPermission." + one.toLowerCase(), false);
+	for (Flags fl : Flags.values()) {
+	    conf.createSection("Global.FlagPermission." + fl.getName());
+	    conf.set("Global.FlagPermission." + fl.getName(), fl.isEnabled());
 	}
 
 	if (!conf.isConfigurationSection("Global.FlagGui"))
 	    conf.createSection("Global.FlagGui");
 
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
-	Set<String> flagGui = guiSection.getKeys(false);
-	for (String one : LocaleManager.FlagList) {
-	    if (flagGui.contains(one.toLowerCase()))
-		continue;
 
-	    String lowOne = one.toLowerCase();
-	    Flags uno = null;
-	    try {
-		uno = Flags.valueOf(lowOne);
-	    } catch (IllegalArgumentException e) {
-	    }
-	    if (uno == null)
-		continue;
-
-	    guiSection.createSection(lowOne);
-	    guiSection.set(lowOne + ".Id", uno.getId());
-	    guiSection.set(lowOne + ".Data", uno.getData());
+	for (Flags fl : Flags.values()) {
+	    guiSection.set(fl.getName() + ".Id", fl.getId());
+	    guiSection.set(fl.getName() + ".Data", fl.getData());
 	}
 
 	try {
@@ -317,11 +301,13 @@ public class ConfigManager {
 
 	if (!conf.isConfigurationSection("Global.GroupedFlags")) {
 	    conf.createSection("Global.GroupedFlags");
-	    conf.set("Global.GroupedFlags.redstone", Arrays.asList("note", "pressure", "lever", "button", "diode"));
-	    conf.set("Global.GroupedFlags.craft", Arrays.asList("brew", "table", "enchant"));
-	    conf.set("Global.GroupedFlags.trusted", Arrays.asList("use", "tp", "build", "container", "bucket", "move", "leash", "animalkilling", "mobkilling", "shear",
-		"chat"));
-	    conf.set("Global.GroupedFlags.fire", Arrays.asList("ignite", "firespread"));
+	    conf.set("Global.GroupedFlags.redstone", Arrays.asList(Flags.note.getName(), Flags.pressure.getName(), Flags.lever.getName(), Flags.button.getName(),
+		Flags.diode.getName()));
+	    conf.set("Global.GroupedFlags.craft", Arrays.asList(Flags.brew.getName(), Flags.table.getName(), Flags.enchant.getName()));
+	    conf.set("Global.GroupedFlags.trusted", Arrays.asList(Flags.use.getName(), Flags.tp.getName(), Flags.build.getName(), Flags.container.getName(), Flags.bucket
+		.getName(), Flags.move.getName(), Flags.leash.getName(), Flags.animalkilling.getName(), Flags.mobkilling.getName(), Flags.shear.getName(), Flags.chat
+		    .getName()));
+	    conf.set("Global.GroupedFlags.fire", Arrays.asList(Flags.ignite.getName(), Flags.firespread.getName()));
 
 	    try {
 		conf.save(f);

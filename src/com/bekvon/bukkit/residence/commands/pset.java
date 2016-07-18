@@ -1,17 +1,23 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.cmd;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class pset implements cmd {
 
     @Override
+    @CommandAnnotation(true)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player) && args.length != 5 && args.length == 4 && !args[3].equalsIgnoreCase("removeall"))
 	    return false;
@@ -22,7 +28,7 @@ public class pset implements cmd {
 	    if (area != null) {
 		area.getPermissions().removeAllPlayerFlags(sender, args[1], resadmin);
 	    } else {
-		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		Residence.msg(sender, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if (args.length == 4 && args[3].equalsIgnoreCase("removeall")) {
@@ -30,7 +36,7 @@ public class pset implements cmd {
 	    if (area != null) {
 		area.getPermissions().removeAllPlayerFlags(sender, args[2], resadmin);
 	    } else {
-		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		Residence.msg(sender, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if (args.length == 4) {
@@ -43,7 +49,7 @@ public class pset implements cmd {
 	    if (area != null) {
 		area.getPermissions().setPlayerFlag(sender, args[1], args[2], args[3], resadmin, true);
 	    } else {
-		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		Residence.msg(sender, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if (args.length == 5) {
@@ -53,7 +59,7 @@ public class pset implements cmd {
 	    if (area != null) {
 		area.getPermissions().setPlayerFlag(sender, args[2], args[3], args[4], resadmin, true);
 	    } else {
-		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		Residence.msg(sender, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if ((args.length == 2 || args.length == 3) && Residence.getConfigManager().useFlagGUI()) {
@@ -69,14 +75,14 @@ public class pset implements cmd {
 	    }
 
 	    if (res == null) {
-		sender.sendMessage(Residence.getLM().getMessage("Invalid.Residence"));
+		Residence.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
 
 	    if (!Residence.isPlayerExist(player, targetPlayer, true))
 		return false;
 	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, "admin", false)) {
-		sender.sendMessage(Residence.getLM().getMessage("General.NoPermission"));
+		Residence.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
 	    SetFlag flag = new SetFlag(res.getName(), player, resadmin);
@@ -89,5 +95,14 @@ public class pset implements cmd {
 	    return true;
 	}
 	return false;
+    }
+
+    @Override
+    public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "Set flags on a specific player for a Residence.");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res pset <residence> [player] [flag] [true/false/remove]",
+	    "&eUsage: &6/res pset <residence> [player] removeall", "To see a list of flags, use /res flags ?"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[playername]", "[flag]",
+	    "[true%%false%%remove]"));
     }
 }

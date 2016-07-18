@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-import com.bekvon.bukkit.residence.ABInterface;
+import com.bekvon.bukkit.residence.containers.ABInterface;
 
 /**
 *
