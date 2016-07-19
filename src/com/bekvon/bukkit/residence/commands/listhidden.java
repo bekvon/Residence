@@ -13,7 +13,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 public class listhidden implements cmd {
 
     @Override
-    @CommandAnnotation(false)
+    @CommandAnnotation(simple = false, priority = 4800)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	int page = 1;
 	try {

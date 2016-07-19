@@ -15,7 +15,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 public class confirm implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 2400)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	Player player = null;
 	String name = "Console";

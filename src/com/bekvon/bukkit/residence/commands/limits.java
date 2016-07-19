@@ -16,7 +16,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 public class limits implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 900)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player) && args.length < 2)
 	    return false;

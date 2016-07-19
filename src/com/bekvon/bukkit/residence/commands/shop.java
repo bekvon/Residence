@@ -31,7 +31,7 @@ import com.bekvon.bukkit.residence.shopStuff.Vote;
 public class shop implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 1700)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

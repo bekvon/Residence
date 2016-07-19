@@ -28,7 +28,7 @@ import com.bekvon.bukkit.residence.text.help.HelpEntry;
 public class reload implements cmd {
 
     @Override
-    @CommandAnnotation(false)
+    @CommandAnnotation(simple = false, priority = 5800)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!resadmin && !sender.isOp()) {
 	    Residence.msg(sender, lm.General_NoPermission);

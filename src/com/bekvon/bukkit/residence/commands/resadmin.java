@@ -15,7 +15,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 public class resadmin implements cmd {
 
     @Override
-    @CommandAnnotation(false)
+    @CommandAnnotation(simple = false, priority = 5300)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

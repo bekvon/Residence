@@ -22,7 +22,7 @@ import com.bekvon.bukkit.residence.signsStuff.Signs;
 public class market implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 2600)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

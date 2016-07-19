@@ -16,7 +16,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 public class lists implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 4900)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

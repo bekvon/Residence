@@ -14,7 +14,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 public class rename implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 2700)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

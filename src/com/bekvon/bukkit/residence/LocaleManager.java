@@ -19,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.bekvon.bukkit.residence.containers.CommandStatus;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -113,7 +114,7 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.Description", "Main Residence Command");
 	c.get("CommandHelp.SubCommands.res.Info", Arrays.asList("&2Use &6/res [command] ? <page> &2to view more help Information."));
 
-	for (Entry<String, Boolean> cmo : Residence.getCommandFiller().CommandList.entrySet()) {
+	for (Entry<String, CommandStatus> cmo : Residence.getCommandFiller().CommandList.entrySet()) {
 	    String path = Residence.getLocaleManager().path + cmo.getKey() + ".";
 	    try {
 		Class<?> cl = Class.forName(Residence.getCommandFiller().packagePath + "." + cmo.getKey());

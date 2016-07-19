@@ -473,7 +473,6 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakByEntityEvent event) {
-	Debug.D("1");
 	// disabling event on world
 	Hanging ent = event.getEntity();
 	if (ent == null)
@@ -502,8 +501,6 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
-
-	Debug.D("2");
 	// disabling event on world
 	Hanging ent = event.getEntity();
 	if (ent == null)
@@ -831,7 +828,6 @@ public class ResidenceEntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
 
-	Debug.D("3");
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;

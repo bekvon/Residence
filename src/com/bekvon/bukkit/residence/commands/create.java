@@ -18,7 +18,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 public class create implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 100)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

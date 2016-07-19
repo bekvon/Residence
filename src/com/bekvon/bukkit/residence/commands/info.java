@@ -16,7 +16,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class info implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 600)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length == 1 && sender instanceof Player) {

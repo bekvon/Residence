@@ -15,7 +15,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 public class signconvert implements cmd {
 
     @Override
-    @CommandAnnotation(false)
+    @CommandAnnotation(simple = false, priority = 5600)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length != 0)

@@ -14,7 +14,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class setowner implements cmd {
 
     @Override
-    @CommandAnnotation(false)
+    @CommandAnnotation(simple = false, priority = 5500)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length < 3)

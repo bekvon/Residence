@@ -13,7 +13,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 public class removeall implements cmd {
 
     @Override
-    @CommandAnnotation(false)
+    @CommandAnnotation(simple = false, priority = 5100)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (args.length != 2 && args.length != 1) {
 	    return false;

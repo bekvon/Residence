@@ -381,6 +381,8 @@ public class Residence extends JavaPlugin {
 	    cmdFiller = new CommandFiller();
 	    cmdFiller.fillCommands();
 
+	    SortingManager = new Sorting();
+	    
 	    if (!dataFolder.isDirectory()) {
 		dataFolder.mkdirs();
 	    }
@@ -425,9 +427,7 @@ public class Residence extends JavaPlugin {
 	    getFlagUtilManager().load();
 
 	    try {
-		Debug.D("spigot 1 ");
-//		Class.forName("org.bukkit.entity.Player.Spigot");
-		Debug.D("spigot 2 ");
+		Class.forName("org.bukkit.entity.Player.Spigot");
 		spigotPlatform = true;
 	    } catch (Exception e) {
 	    }
@@ -692,7 +692,6 @@ public class Residence extends JavaPlugin {
 	    NewLanguageManager = new Language(this);
 	    getLM().LanguageReload();
 
-	    SortingManager = new Sorting();
 	    AutoSelectionManager = new AutoSelection();
 
 	    if (wep != null)
@@ -765,6 +764,7 @@ public class Residence extends JavaPlugin {
 	    getServer().getPluginManager().disablePlugin(this);
 	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - FAILED INITIALIZATION! DISABLED! ERROR:");
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+	    Bukkit.getServer().shutdown();
 	}
 
 	getShopSignUtilManager().LoadShopVotes();
@@ -858,6 +858,10 @@ public class Residence extends JavaPlugin {
     }
 
     public static CommandFiller getCommandFiller() {
+	if (cmdFiller == null) {
+	    cmdFiller = new CommandFiller();
+	    cmdFiller.fillCommands();
+	}
 	return cmdFiller;
     }
 

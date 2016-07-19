@@ -16,7 +16,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class resbank implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 1800)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length != 3 && args.length != 4) {

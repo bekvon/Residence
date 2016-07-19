@@ -11,6 +11,8 @@ import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -238,6 +240,7 @@ public class HelpEntry {
 	String thisname = split[split.length - 1];
 	HelpEntry entry = new HelpEntry(thisname);
 	ConfigurationSection keysnode = node.getConfigurationSection(key);
+
 	Set<String> keys = null;
 	if (keysnode != null)
 	    keys = keysnode.getKeys(false);
@@ -256,6 +259,12 @@ public class HelpEntry {
 	    }
 	    if (keys.contains("SubCommands")) {
 		Set<String> subcommandkeys = node.getConfigurationSection(key + ".SubCommands").getKeys(false);
+		if (key.equalsIgnoreCase("CommandHelp.SubCommands.res")) {
+		    subcommandkeys.clear();
+		    for (String one : Residence.getCommandFiller().getCommands()) {
+			subcommandkeys.add(one);
+		    }
+		}
 		for (String subkey : subcommandkeys) {
 		    entry.subentrys.add(HelpEntry.parseHelp(node, key + ".SubCommands." + subkey));
 		}

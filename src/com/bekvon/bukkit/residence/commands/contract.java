@@ -17,7 +17,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 public class contract implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 1900)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

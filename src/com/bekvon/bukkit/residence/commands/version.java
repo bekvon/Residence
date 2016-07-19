@@ -13,7 +13,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 public class version implements cmd {
 
     @Override
-    @CommandAnnotation(false)
+    @CommandAnnotation(simple = false, priority = 5900)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	sender.sendMessage(ChatColor.GRAY + "------------------------------------");
 	sender.sendMessage(ChatColor.RED + "This server running " + ChatColor.GOLD + "Residence" + ChatColor.RED + " version: " + ChatColor.BLUE + Residence

@@ -14,7 +14,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 public class list implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 300)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	int page = 1;
 	try {

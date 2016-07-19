@@ -13,14 +13,46 @@ import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.bukkit.Bukkit;
+
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.CommandStatus;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class CommandFiller {
 
     public final String packagePath = "com.bekvon.bukkit.residence.commands";
-    public Map<String, Boolean> CommandList = new HashMap<String, Boolean>();
+    public Map<String, CommandStatus> CommandList = new HashMap<String, CommandStatus>();
 
-    public Map<String, Boolean> fillCommands() {
+    public List<String> getCommands(Boolean simple) {
+	Map<String, Integer> cmd = new HashMap<String, Integer>();
+	for (Entry<String, CommandStatus> one : CommandList.entrySet()) {
+	    if (simple && !one.getValue().getSimple() || !simple && one.getValue().getSimple())
+		continue;
+	    cmd.put(one.getKey(), one.getValue().getPriority());
+	}
+	cmd = Residence.getSortingManager().sortByValueASC(cmd);
+	List<String> cmdList = new ArrayList<String>();
+	for (Entry<String, Integer> one : cmd.entrySet()) {
+	    cmdList.add(one.getKey());
+	}
+	return cmdList;
+    }
+
+    public List<String> getCommands() {
+	Map<String, Integer> cmd = new HashMap<String, Integer>();
+	for (Entry<String, CommandStatus> one : CommandList.entrySet()) {
+	    cmd.put(one.getKey(), one.getValue().getPriority());
+	}
+	cmd = Residence.getSortingManager().sortByValueASC(cmd);
+	List<String> cmdList = new ArrayList<String>();
+	for (Entry<String, Integer> one : cmd.entrySet()) {
+	    cmdList.add(one.getKey());
+	}
+	return cmdList;
+    }
+
+    public Map<String, CommandStatus> fillCommands() {
 	List<String> lm = new ArrayList<String>();
 	HashMap<String, Class<?>> classes = new HashMap<String, Class<?>>();
 	try {
@@ -36,16 +68,25 @@ public class CommandFiller {
 	}
 
 	for (Entry<String, Class<?>> OneClass : classes.entrySet()) {
+	    boolean found = false;
 	    for (Method met : OneClass.getValue().getMethods()) {
 		if (!met.isAnnotationPresent(CommandAnnotation.class))
 		    continue;
+
+		found = true;
+		Boolean simple = met.getAnnotation(CommandAnnotation.class).simple();
+		int Priority = met.getAnnotation(CommandAnnotation.class).priority();
+
 		String cmd = OneClass.getKey();
-//		if (hidenCommands.contains(cmd.toLowerCase()))
-//		    continue;
-		CommandList.put(cmd, met.getAnnotation(CommandAnnotation.class).value());
+		CommandList.put(cmd, new CommandStatus(simple, Priority));
 		break;
 	    }
+	    if (!found) {
+		CommandList.put(OneClass.getKey(), new CommandStatus(true, 1000));
+	    }
 	}
+
+	Bukkit.getConsoleSender().sendMessage("Loaded commands: " + CommandList.size());
 	return CommandList;
     }
 

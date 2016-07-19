@@ -15,7 +15,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class reset implements cmd {
 
     @Override
-    @CommandAnnotation(true)
+    @CommandAnnotation(simple = true, priority = 4400)
     public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;

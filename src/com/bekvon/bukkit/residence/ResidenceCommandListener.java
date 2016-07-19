@@ -13,14 +13,15 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceCommandListener extends Residence {
 
-    public static List<String> AdminCommands = Arrays.asList("removeworld", "setowner", "removeall", "signupdate", "listhidden", "listallhidden", "server", "clearflags",
-	"resreload", "resload", "signconvert", "reload");
+//    public static List<String> AdminCommands = Arrays.asList("removeworld", "setowner", "removeall", "signupdate", "listhidden", "listallhidden", "server", "clearflags",
+//	"resreload", "resload", "signconvert", "reload");
 
     public static List<String> getAdminCommands() {
-	return AdminCommands;
+	return Residence.getCommandFiller().getCommands(false);
     }
 
     @Override
