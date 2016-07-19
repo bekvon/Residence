@@ -7,6 +7,7 @@ import org.bukkit.World;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -318,98 +319,91 @@ public class HelpEntry {
 		tempmeinPath = tempmeinPath.getConfigurationSection(args[i]);
 	    }
 
-	    String Args = (tempmeinPath.isString("Args") ? tempmeinPath.getString("Args") : null);
-
 	    List<String> ArgsList = new ArrayList<String>();
 
-	    if (Args != null)
-		if (Args.contains(" "))
-		    ArgsList.addAll(Arrays.asList(Args.split(" ")));
-		else
-		    ArgsList.add(Args);
+	    int ii = 0;
+	    for (Entry<List<String>, List<String>> one : Residence.getLocaleManager().CommandTab.entrySet()) {
+
+		List<String> list = one.getKey();
+
+		if (list.size() > ii && args.length > ii && list.get(ii).equalsIgnoreCase(args[ii])) {
+		    ArgsList = one.getValue();
+		    break;
+		}
+		i++;
+	    }
 
 	    String NeededArg = null;
 	    if (neededArgPlace < ArgsList.size() && neededArgPlace >= 0)
 		NeededArg = ArgsList.get(neededArgPlace);
 
-	    if (NeededArg != null)
-		switch (NeededArg) {
-		case "[playername]":
-		    for (Player one : Bukkit.getOnlinePlayers())
-			subCommands.add(one.getName());
-		    break;
-		case "[residence]":
-		    if (sender instanceof Player) {
-			ClaimedResidence res = Residence.getResidenceManager().getByLoc(((Player) sender).getLocation());
-			if (res != null) {
-			    String resName = res.getName();
-			    if (resName != null)
-				subCommands.add(resName);
+	    if (NeededArg != null) {
+
+		List<String> list = new ArrayList<String>();
+
+		if (NeededArg.contains("%%")) {
+		    list.addAll(Arrays.asList(NeededArg.split("%%")));
+		} else
+		    list.add(NeededArg);
+
+		for (String oneArg : list) {
+		    switch (oneArg) {
+		    case "[playername]":
+			for (Player one : Bukkit.getOnlinePlayers())
+			    subCommands.add(one.getName());
+			break;
+		    case "[residence]":
+			if (sender instanceof Player) {
+			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(((Player) sender).getLocation());
+			    if (res != null) {
+				String resName = res.getName();
+				if (resName != null)
+				    subCommands.add(resName);
+			    }
+			    List<ClaimedResidence> resList = Residence.getPlayerManager().getResidencePlayer(((Player) sender)).getResList();
+			    for (ClaimedResidence oneRes : resList) {
+				subCommands.add(oneRes.getName());
+			    }
+			} else {
+			    ArrayList<String> resList = Residence.getResidenceManager().getResidenceList(Residence.getServerLandname(), true, false, false);
+			    if (resList.size() > 0)
+				subCommands.addAll(resList);
 			}
-			ArrayList<String> resList = Residence.getResidenceManager().getResidenceList(((Player) sender).getName(), true, false, false);
-			if (resList.size() > 0)
-			    subCommands.addAll(resList);
-		    } else {
-			ArrayList<String> resList = Residence.getResidenceManager().getResidenceList("Server_land", true, false, false);
-			if (resList.size() > 0)
-			    subCommands.addAll(resList);
-		    }
-		    break;
-		case "[cresidence]":
-		    if (sender instanceof Player) {
-			ClaimedResidence res = Residence.getResidenceManager().getByLoc(((Player) sender).getLocation());
-			if (res != null) {
-			    String resName = res.getName();
-			    if (resName != null)
-				subCommands.add(resName);
+			break;
+		    case "[cresidence]":
+			if (sender instanceof Player) {
+			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(((Player) sender).getLocation());
+			    if (res != null) {
+				String resName = res.getName();
+				if (resName != null)
+				    subCommands.add(resName);
+			    }
 			}
+			break;
+		    case "[residenceshop]":
+			subCommands.addAll(Residence.getResidenceManager().getShops());
+			break;
+		    case "[flag]":
+			for (Flags one : Flags.values()) {
+			    subCommands.add(one.getName());
+			}
+			break;
+		    case "[material]":
+			for (Material one : Material.values()) {
+			    subCommands.add(one.name().toLowerCase());
+			}
+			break;
+		    case "[worldname]":
+			for (World one : Bukkit.getWorlds()) {
+			    subCommands.add(one.getName());
+			}
+			break;
+		    default:
+			subCommands.add(oneArg);
+			break;
 		    }
-		    break;
-		case "[residenceshop]":
-		    subCommands.addAll(Residence.getResidenceManager().getShops());
-		    break;
-		case "[flag]":
-		    FlagPermissions GlobalFlags = Residence.getPermissionManager().getAllFlags();
-		    for (Entry<String, Boolean> one : GlobalFlags.getFlags().entrySet()) {
-			subCommands.add(one.getKey());
-		    }
-		    break;
-		case "[deposit/withdraw]":
-		    subCommands.add("deposit");
-		    subCommands.add("withdraw");
-		    break;
-		case "[enter/leave]":
-		    subCommands.add("enter");
-		    subCommands.add("leave");
-		    break;
-		case "[renew/cost]":
-		    subCommands.add("renew");
-		    subCommands.add("cost");
-		    break;
-		case "[true/false]":
-		    subCommands.add("true");
-		    subCommands.add("false");
-		    break;
-		case "[true/false/remove]":
-		    subCommands.add("true");
-		    subCommands.add("false");
-		    subCommands.add("remove");
-		    break;
-		case "[blacklist/ignorelist]":
-		    subCommands.add("blacklist");
-		    subCommands.add("ignorelist");
-		    break;
-		case "[material]":
-		    for (Material one : Material.values()) {
-			subCommands.add(one.name().toLowerCase());
-		    }
-		    break;
-		case "[worldname]":
-		    for (World one : Bukkit.getWorlds()) {
-			subCommands.add(one.getName());
-		    }
-		    break;
 		}
+	    }
 
 	    String command = tempmeinPath.getCurrentPath().replace("CommandHelp.SubCommands.", "").replace(".SubCommands.", " ");
 	    if (subCommands.size() > 0) {

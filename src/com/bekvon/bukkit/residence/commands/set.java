@@ -69,6 +69,6 @@ public class set implements cmd {
 	c.get(path + "Description", "Set general flags on a Residence");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res set <residence> [flag] [true/false/remove]",
 	    "To see a list of flags, use /res flags ?", "These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[flag]", "[true%%false%%remove]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[flag]", "[flag]%%true%%false%%remove", "true%%false%%remove"));
     }
 }

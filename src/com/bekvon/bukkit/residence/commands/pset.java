@@ -102,7 +102,7 @@ public class pset implements cmd {
 	c.get(path + "Description", "Set flags on a specific player for a Residence.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res pset <residence> [player] [flag] [true/false/remove]",
 	    "&eUsage: &6/res pset <residence> [player] removeall", "To see a list of flags, use /res flags ?"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[playername]", "[flag]",
-	    "[true%%false%%remove]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[playername]", "[playername]%%[flag]", "[flag]%%true%%false%%remove",
+	    "true%%false%%remove"));
     }
 }
