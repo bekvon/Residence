@@ -209,5 +209,6 @@ public class rc implements cmd {
 
 	c.get(path + "kick.Description", "Kicks player from chanel");
 	c.get(path + "kick.Info", Arrays.asList("&eUsage: &6/res rc kick [player]", "Kicks player from chanel"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "kick"), Arrays.asList("[playername]"));
     }
 }

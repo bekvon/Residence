@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -13,15 +14,15 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceCommandListener extends Residence {
 
-//    public static List<String> AdminCommands = Arrays.asList("removeworld", "setowner", "removeall", "signupdate", "listhidden", "listallhidden", "server", "clearflags",
-//	"resreload", "resload", "signconvert", "reload");
+    private static List<String> AdminCommands = new ArrayList<String>();
 
     public static List<String> getAdminCommands() {
-	return Residence.getCommandFiller().getCommands(false);
+	if (AdminCommands.size() == 0)
+	    AdminCommands = Residence.getCommandFiller().getCommands(false);
+	return AdminCommands;
     }
 
     @Override

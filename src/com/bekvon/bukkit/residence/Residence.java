@@ -38,6 +38,7 @@ import org.dynmap.DynmapAPI;
 
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.containers.ABInterface;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.NMS;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -84,7 +85,6 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -382,7 +382,7 @@ public class Residence extends JavaPlugin {
 	    cmdFiller.fillCommands();
 
 	    SortingManager = new Sorting();
-	    
+
 	    if (!dataFolder.isDirectory()) {
 		dataFolder.mkdirs();
 	    }
@@ -1238,7 +1238,7 @@ public class Residence extends JavaPlugin {
 	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {
 
 		ResidencePermissions perms = one.getValue().getPermissions();
-		if (!perms.has("shop", false))
+		if (!perms.has(Flags.shop, false))
 		    continue;
 
 		rmanager.addShop(one.getValue().getName());

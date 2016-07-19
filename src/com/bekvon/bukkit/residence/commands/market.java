@@ -421,6 +421,7 @@ public class market implements cmd {
 
 	c.get(path + "list.Description", "Lists rentable and for sale residences.");
 	c.get(path + "list.Info", Arrays.asList("&eUsage: &6/res market list [rent/sell]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "list"), Arrays.asList("rent%%sell"));
 
 	c.get(path + "list.SubCommands.rent.Description", "Lists rentable residences.");
 	c.get(path + "list.SubCommands.rent.Info", Arrays.asList("&eUsage: &6/res market list rent"));
@@ -448,7 +449,7 @@ public class market implements cmd {
 	c.get(path + "rent.Description", "ent a residence");
 	c.get(path + "rent.Info", Arrays.asList("&eUsage: &6/res market rent [residence] <AutoPay>",
 	    "Rents a residence.  Autorenew can be either true or false.  If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "rent"), Arrays.asList("[cresidence]", "[true%%false]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "rent"), Arrays.asList("[cresidence]", "true%%false"));
 
 	c.get(path + "rentable.Description", "Make a residence rentable.");
 	c.get(path + "rentable.Info", Arrays.asList("&eUsage: &6/res market rentable [residence] [cost] [days] <AllowRenewing> <StayInMarket> <AllowAutoPay>",
@@ -456,12 +457,12 @@ public class market implements cmd {
 	    "If <AllowRenewing> is true, the residence will be able to be rented again before rent expires.",
 	    "If <StayInMarket> is true, the residence will stay in market after last renter will be removed.",
 	    "If <AllowAutoPay> is true, money for rent will be automaticaly taken from players balance if he chosen that option when renting"));
-	c.get(path + "rentable.Args", "[residence]");
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "rentable"), Arrays.asList("[residence]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "rentable"), Arrays.asList("[residence]", "1000", "7", "true", "true",
+	    "true"));
 
 	c.get(path + "autopay.Description", "Sets residence AutoPay to given value");
 	c.get(path + "autopay.Info", Arrays.asList("&eUsage: &6/res market autopay <residence> [true/false]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "autopay"), Arrays.asList("[residence]", "[true%%false]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "autopay"), Arrays.asList("[residence]%%true%%false", "true%%false"));
 
 	c.get(path + "payrent.Description", "Pays rent for defined residence");
 	c.get(path + "payrent.Info", Arrays.asList("&eUsage: &6/res market payrent <residence>"));

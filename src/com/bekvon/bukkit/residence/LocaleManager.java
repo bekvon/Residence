@@ -53,7 +53,6 @@ public class LocaleManager {
     }
 
     // Language file
-    @SuppressWarnings("unchecked")
     public void LoadLang(String lang) {
 
 	File f = new File(plugin.getDataFolder(), "Language" + File.separator + lang + ".yml");
@@ -101,8 +100,15 @@ public class LocaleManager {
 	for (lm lm : lm.values()) {
 	    if (lm.getText() instanceof String)
 		c.get(lm.getPath(), String.valueOf(lm.getText()));
-	    else if (lm.getText() instanceof ArrayList<?>)
-		c.get(lm.getPath(), (ArrayList<String>) lm.getText());
+	    else if (lm.getText() instanceof ArrayList<?>) {
+		List<String> result = new ArrayList<String>();
+		for (Object obj : (ArrayList<?>) lm.getText()) {
+		    if (obj instanceof String) {
+			result.add((String) obj);
+		    }
+		}
+		c.get(lm.getPath(), result);
+	    }
 
 	    if (lm.getComments() != null)
 		writer.addComment(lm.getPath(), lm.getComments());

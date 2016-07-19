@@ -13,11 +13,8 @@ import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bukkit.Bukkit;
-
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.CommandStatus;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class CommandFiller {
 
@@ -85,8 +82,6 @@ public class CommandFiller {
 		CommandList.put(OneClass.getKey(), new CommandStatus(true, 1000));
 	    }
 	}
-
-	Bukkit.getConsoleSender().sendMessage("Loaded commands: " + CommandList.size());
 	return CommandList;
     }
 

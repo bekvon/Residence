@@ -61,6 +61,6 @@ public class bank implements cmd {
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res bank [deposit/withdraw] <residence> [amount]",
 	    "You must be standing in a Residence or provide residence name",
 	    "You must have the +bank flag."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[deposit%%withdraw]", "[residence]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("deposit%%withdraw", "[residence]"));
     }
 }

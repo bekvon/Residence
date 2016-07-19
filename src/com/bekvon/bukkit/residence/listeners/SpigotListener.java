@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
 public class SpigotListener implements Listener {
@@ -22,7 +23,7 @@ public class SpigotListener implements Listener {
 	Player player = event.getPlayer();
 	Location loc = player.getLocation();
 	FlagPermissions perms = Residence.getPermsByLoc(loc);
-	if (perms.has("nodurability", false)) {
+	if (perms.has(Flags.nodurability, false)) {
 	    ItemStack held = Residence.getNms().itemInMainHand(player);
 	    if (held.getType() != Material.AIR) {
 		held.setDurability(held.getDurability());

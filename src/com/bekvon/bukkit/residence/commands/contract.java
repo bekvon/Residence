@@ -106,6 +106,7 @@ public class contract implements cmd {
 	c.get(path + "Description", "Contracts residence in direction you looking");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res contract (residence) [amount]", "Contracts residence in direction you looking.",
 	    "Residence name is optional"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%1", "1"));
     }
 
 }

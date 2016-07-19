@@ -259,7 +259,7 @@ public class ResidencePlayerListener implements Listener {
 	if (event.isCancelled())
 	    return;
 
-	if (!event.getFlag().equalsIgnoreCase("day") && !event.getFlag().equalsIgnoreCase("night"))
+	if (!event.getFlag().equalsIgnoreCase(Flags.day.getName()) && !event.getFlag().equalsIgnoreCase(Flags.night.getName()))
 	    return;
 
 	switch (event.getNewState()) {
@@ -682,7 +682,7 @@ public class ResidencePlayerListener implements Listener {
 
     @SuppressWarnings("deprecation")
     private static boolean isContainer(Material mat, Block block) {
-	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals("container") || Residence
+	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals(Flags.container.getName()) || Residence
 	    .getConfigManager().getCustomContainers().contains(block.getTypeId());
     }
 
@@ -1481,7 +1481,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (move) {
-	    if (!res.getPermissions().playerHas(pname, "move", true) && !Residence.isResAdminOn(player) && !res.isOwner(player)) {
+	    if (!res.getPermissions().playerHas(pname, Flags.move, true) && !Residence.isResAdminOn(player) && !res.isOwner(player)) {
 		Location lastLoc = lastOutsideLoc.get(pname);
 
 		if (Residence.getConfigManager().BounceAnimation()) {
@@ -1492,7 +1492,7 @@ public class ResidencePlayerListener implements Listener {
 
 		ClaimedResidence preRes = Residence.getResidenceManager().getByLoc(lastLoc);
 
-		if (preRes != null && !preRes.getPermissions().playerHas(pname, "tp", true) && !player.hasPermission("residence.admin.tp")) {
+		if (preRes != null && !preRes.getPermissions().playerHas(pname, Flags.tp, true) && !player.hasPermission("residence.admin.tp")) {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.teleport(newLoc);
 		} else if (lastLoc != null) {

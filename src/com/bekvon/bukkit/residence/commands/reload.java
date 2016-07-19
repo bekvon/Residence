@@ -96,6 +96,6 @@ public class reload implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "reload lanf or config files");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res reload [config/lang/groups/flags]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[config%%lang%%groups%%flags]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("config%%lang%%groups%%flags"));
     }
 }

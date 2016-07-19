@@ -12,8 +12,6 @@ import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -274,6 +272,7 @@ public class HelpEntry {
 	return entry;
     }
 
+    @SuppressWarnings("deprecation")
     public Set<String> getSubCommands(CommandSender sender, String[] args) {
 	File langFile = new File(new File(Residence.getDataLocation(), "Language"), "English.yml");
 	Set<String> subCommands = new HashSet<String>();
@@ -323,12 +322,9 @@ public class HelpEntry {
 
 	    int ii = 0;
 	    for (Entry<List<String>, List<String>> one : Residence.getLocaleManager().CommandTab.entrySet()) {
-
 		List<String> list = one.getKey();
-
 		if (list.size() > ii && args.length > ii && list.get(ii).equalsIgnoreCase(args[ii])) {
 		    ArgsList = one.getValue();
-		    break;
 		}
 		i++;
 	    }
@@ -391,6 +387,11 @@ public class HelpEntry {
 		    case "[material]":
 			for (Material one : Material.values()) {
 			    subCommands.add(one.name().toLowerCase());
+			}
+			break;
+		    case "[materialId]":
+			for (Material one : Material.values()) {
+			    subCommands.add(String.valueOf(one.getId()));
 			}
 			break;
 		    case "[worldname]":

@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.containers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public enum lm {
@@ -280,7 +281,7 @@ public enum lm {
 
     Gui_Set_Title("&6%1 flags"),
     Gui_Pset_Title("&6%1 %2 flags"),
-    Gui_Actions(Arrays.asList("&2Left click to enable", "&cRight click to disable", "&eShift + left click to remove")),
+    Gui_Actions(new ArrayList<String>(Arrays.asList("&2Left click to enable", "&cRight click to disable", "&eShift + left click to remove"))),
 
     InformationPage_TopLine("&e---< &a %1 &e >---"),
     InformationPage_Page("&e-----< &6%1 &e>-----"),

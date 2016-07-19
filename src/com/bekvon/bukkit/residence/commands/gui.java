@@ -1,5 +1,7 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,5 +35,7 @@ public class gui implements cmd {
 
     @Override
     public void getLocale(ConfigReader c, String path) {
+	c.get(path + "Description", "Opens gui (Spout only)");
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res gui <residence>"));
     }
 }

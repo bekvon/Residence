@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
@@ -276,8 +277,10 @@ public class SetFlag {
 
     @SuppressWarnings("incomplete-switch")
     public void recalculatePlayer(ClaimedResidence res) {
-
-	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
+	Map<String, Boolean> globalFlags = new HashMap<String, Boolean>();
+	for (Flags oneFlag : Flags.values()) {
+	    globalFlags.put(oneFlag.getName(), oneFlag.isEnabled());
+	}
 
 	List<String> flags = res.getPermissions().getPosibleFlags(player, false, this.admin);
 	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();

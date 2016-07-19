@@ -112,7 +112,7 @@ public class lease implements cmd {
 	c.get(path + "Description", "Manage residence leases");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res lease [renew/cost] [residence]",
 	    "/res lease cost will show the cost of renewing a residence lease.", "/res lease renew will renew the residence provided you have enough money."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[renew%%cost]", "[residence]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("renew%%cost", "[residence]"));
 
 	// Sub commands
 	path += "SubCommands.";

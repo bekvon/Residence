@@ -418,7 +418,7 @@ public class ResidenceBlockListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
-	boolean hasflow = perms.has("flow", true);
+	boolean hasflow = perms.has(Flags.flow, true);
 	Material mat = event.getBlock().getType();
 	if (!hasflow) {
 	    event.setCancelled(true);

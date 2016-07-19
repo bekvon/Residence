@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -906,7 +904,7 @@ public class ResidenceEntityListener implements Listener {
 	    Entity damager = attackevent.getDamager();
 
 	    if (area != null && ent instanceof Player && damager instanceof Player) {
-		if (area.getPermissions().has("overridepvp", false) || Residence.getConfigManager().isOverridePvp() && area.getPermissions().has(Flags.pvp, false)) {
+		if (area.getPermissions().has(Flags.overridepvp, false) || Residence.getConfigManager().isOverridePvp() && area.getPermissions().has(Flags.pvp, false)) {
 		    Player player = (Player) event.getEntity();
 		    Damageable damage = player;
 		    damage.damage(event.getDamage());

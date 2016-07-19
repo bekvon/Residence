@@ -90,6 +90,7 @@ public class rt implements cmd {
     @Override
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Teleports to random location in world");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rt", "Teleports you to random location in defined world."));
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rt (worldname)", "Teleports you to random location in defined world."));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]"));
     }
 }

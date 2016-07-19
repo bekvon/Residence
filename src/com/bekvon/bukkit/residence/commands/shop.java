@@ -474,7 +474,7 @@ public class shop implements cmd {
 
 	c.get(path + "vote.Description", "Vote for residence shop");
 	c.get(path + "vote.Info", Arrays.asList("&eUsage: &6/res shop vote <residence> [amount]", "Votes for current or defined residence"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "vote"), Arrays.asList("[residence]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "vote"), Arrays.asList("[residence]", "10"));
 
 	c.get(path + "like.Description", "Give like for residence shop");
 	c.get(path + "like.Info", Arrays.asList("&eUsage: &6/res shop like <residence>", "Gives like for residence shop"));
@@ -494,6 +494,7 @@ public class shop implements cmd {
 	c.get(path + "createboard.Description", "Create res shop board");
 	c.get(path + "createboard.Info", Arrays.asList("&eUsage: &6/res shop createboard [place]",
 	    "Creates res shop board from selected area. Place - position from which to start filling board"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "createboard"), Arrays.asList("1"));
 
 	c.get(path + "deleteboard.Description", "Deletes res shop board");
 	c.get(path + "deleteboard.Info", Arrays.asList("&eUsage: &6/res shop deleteboard", "Deletes res shop board bi right clicking on one of signs"));
