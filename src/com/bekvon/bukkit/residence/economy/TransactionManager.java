@@ -170,7 +170,8 @@ public class TransactionManager implements MarketBuyInterface {
 	if (!resadmin && !group.buyLandIgnoreLimits()) {
 	    CuboidArea[] areas = res.getAreaArray();
 	    for (CuboidArea thisarea : areas) {
-		if (!group.inLimits(thisarea)) {
+		if (!res.isSubzone() && !res.isSmallerThanMax(player, thisarea, resadmin) || res.isSubzone() && !res.isSmallerThanMaxSubzone(player, thisarea,
+		    resadmin)) {
 		    Residence.msg(player, lm.Residence_BuyTooBig);
 		    return;
 		}

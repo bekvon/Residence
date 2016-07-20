@@ -928,7 +928,7 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 	if (!resadmin) {
 	    for (CuboidArea area : areas) {
-		if (!group.inLimits(area)) {
+		if (!res.isSubzone() && !res.isSmallerThanMax(giveplayer, area, resadmin) || res.isSubzone() && !res.isSmallerThanMaxSubzone(giveplayer, area, resadmin)) {
 		    Residence.msg(reqPlayer, lm.Residence_GiveLimits);
 		    return;
 		}

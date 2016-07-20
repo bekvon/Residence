@@ -5,7 +5,6 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -687,7 +686,11 @@ public class SelectionManager {
 	updateLocations(player, area.getHighLoc(), area.getLowLoc());
     }
 
-    public boolean contract(Player player, double amount, boolean resadmin) {
+    public boolean contract(Player player, double amount) {
+	return contract(player, amount, false);
+    }
+
+    public boolean contract(Player player, double amount, @SuppressWarnings("unused") boolean resadmin) {
 	if (!hasPlacedBoth(player.getName())) {
 	    Residence.msg(player, lm.Select_Points);
 	    return false;
@@ -747,8 +750,8 @@ public class SelectionManager {
 	    break;
 	}
 
-	if (!ClaimedResidence.CheckAreaSize(player, area, resadmin))
-	    return false;
+//	if (!ClaimedResidence.isBiggerThanMinSubzone(player, area, resadmin))
+//	    return false;
 
 	updateLocations(player, area.getHighLoc(), area.getLowLoc());
 	return true;

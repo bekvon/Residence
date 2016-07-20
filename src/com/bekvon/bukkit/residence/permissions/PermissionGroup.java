@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import java.util.HashMap;
@@ -21,6 +20,19 @@ public class PermissionGroup {
     protected int xmax;
     protected int ymax;
     protected int zmax;
+
+    protected int xmin;
+    protected int ymin;
+    protected int zmin;
+
+    protected int Subzonexmax;
+    protected int Subzoneymax;
+    protected int Subzonezmax;
+
+    protected int Subzonexmin;
+    protected int Subzoneymin;
+    protected int Subzonezmin;
+
     protected int resmax;
     protected double costperarea;
     protected double sellperarea = 0;
@@ -92,13 +104,39 @@ public class PermissionGroup {
 	cancreate = limits.getBoolean("Residence.CanCreate", false);
 	resmax = limits.getInt("Residence.MaxResidences", 0);
 	maxPhysical = limits.getInt("Residence.MaxAreasPerResidence", 2);
+
 	xmax = limits.getInt("Residence.MaxEastWest", 0);
+	xmin = limits.getInt("Residence.MinEastWest", 0);
+	xmin = xmin > xmax ? xmax : xmin;
+
 	ymax = limits.getInt("Residence.MaxUpDown", 0);
+	ymin = limits.getInt("Residence.MinUpDown", 0);
+	ymin = ymin > ymax ? ymax : ymin;
+
 	zmax = limits.getInt("Residence.MaxNorthSouth", 0);
+	zmin = limits.getInt("Residence.MinNorthSouth", 0);
+	zmin = zmin > zmax ? zmax : zmin;
+
 	minHeight = limits.getInt("Residence.MinHeight", 0);
 	maxHeight = limits.getInt("Residence.MaxHeight", 255);
 	tpaccess = limits.getBoolean("Residence.CanTeleport", false);
 	subzonedepth = limits.getInt("Residence.SubzoneDepth", 0);
+
+	Subzonexmax = limits.getInt("Residence.SubzoneMaxEastWest", xmax);
+	Subzonexmax = xmax < Subzonexmax ? xmax : Subzonexmax;
+	Subzonexmin = limits.getInt("Residence.SubzoneMinEastWest", 0);
+	Subzonexmin = Subzonexmin > Subzonexmax ? Subzonexmax : Subzonexmin;
+
+	Subzoneymax = limits.getInt("Residence.SubzoneMaxUpDown", ymax);
+	Subzoneymax = ymax < Subzoneymax ? ymax : Subzoneymax;
+	Subzoneymin = limits.getInt("Residence.SubzoneMinUpDown", 0);
+	Subzoneymin = Subzoneymin > Subzoneymax ? Subzoneymax : Subzoneymin;
+
+	Subzonezmax = limits.getInt("Residence.SubzoneMaxNorthSouth", zmax);
+	Subzonezmax = zmax < Subzonezmax ? zmax : Subzonezmax;
+	Subzonezmin = limits.getInt("Residence.SubzoneMinNorthSouth", 0);
+	Subzonezmin = Subzonezmin > Subzonezmax ? Subzonezmax : Subzonezmin;
+
 	messageperms = limits.getBoolean("Messaging.CanChange", false);
 	defaultEnterMessage = limits.getString("Messaging.DefaultEnter", null);
 	defaultLeaveMessage = limits.getString("Messaging.DefaultLeave", null);
@@ -199,6 +237,42 @@ public class PermissionGroup {
 	return zmax;
     }
 
+    public int getMinX() {
+	return xmin;
+    }
+
+    public int getMinY() {
+	return ymin;
+    }
+
+    public int getMinZ() {
+	return zmin;
+    }
+
+    public int getSubzoneMaxX() {
+	return Subzonexmax;
+    }
+
+    public int getSubzoneMaxY() {
+	return Subzoneymax;
+    }
+
+    public int getSubzoneMaxZ() {
+	return Subzonezmax;
+    }
+
+    public int getSubzoneMinX() {
+	return Subzonexmin;
+    }
+
+    public int getSubzoneMinY() {
+	return Subzoneymin;
+    }
+
+    public int getSubzoneMinZ() {
+	return Subzonezmin;
+    }
+
     public int getMinHeight() {
 	return minHeight;
     }
@@ -210,13 +284,6 @@ public class PermissionGroup {
     public int getMaxZones() {
 	return resmax;
     }
-
-//    public int getMaxZones() {
-//	int max = Residence.getPlayerManager().getMaxResidences(player);
-//	if (max != -1)
-//	    return max;
-//	return resmax;
-//    }
 
     public double getCostPerBlock() {
 	return costperarea;
@@ -231,9 +298,6 @@ public class PermissionGroup {
     }
 
     public int getMaxSubzoneDepth() {
-//	int max = Residence.getPlayerManager().getMaxSubzones(player);
-//	if (max != -1)
-//	    return max;
 	return subzonedepth;
     }
 
@@ -270,9 +334,6 @@ public class PermissionGroup {
     }
 
     public int getMaxRents() {
-//	int max = Residence.getPlayerManager().getMaxRents(player);
-//	if (max != -1)
-//	    return max;
 	return maxRents;
     }
 
@@ -320,12 +381,19 @@ public class PermissionGroup {
 	return flagPerms.has(flag, false);
     }
 
-    public boolean inLimits(CuboidArea area) {
-	if (area.getXSize() > xmax || area.getYSize() > ymax || area.getZSize() > zmax) {
-	    return false;
-	}
-	return true;
-    }
+//    public boolean inLimits(CuboidArea area) {
+//	if (area.getXSize() > xmax || area.getYSize() > ymax || area.getZSize() > zmax) {
+//	    return false;
+//	}
+//	return true;
+//    }
+//
+//    public boolean inLimitsSubzone(CuboidArea area) {
+//	if (area.getXSize() > Subzonexmax || area.getYSize() > Subzoneymax || area.getZSize() > Subzonezmax) {
+//	    return false;
+//	}
+//	return true;
+//    }
 
     public boolean selectCommandAccess() {
 	return selectCommandAccess;

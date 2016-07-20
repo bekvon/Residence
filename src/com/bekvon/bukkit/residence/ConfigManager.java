@@ -95,10 +95,6 @@ public class ConfigManager {
     protected int VisualizerRange;
     protected int VisualizerShowFor;
     protected int VisualizerUpdateInterval;
-    protected int MinimalResSize;
-    protected int MinimalResX;
-    protected int MinimalResY;
-    protected int MinimalResZ;
     protected int TeleportDelay;
     protected boolean TeleportTitleMessage;
     protected int VisualizerRowSpacing;
@@ -528,12 +524,6 @@ public class ConfigManager {
 	c.getW().addComment("Global.RandomTeleportation.MaxTries", "How many times to try find correct location for teleportation.",
 	    "Keep it at low number, as player always can try again after delay");
 	rtMaxTries = c.get("Global.RandomTeleportation.MaxTries", 20);
-
-	c.getW().addComment("Global.Size.MinimalSize", "Minimal size of residence in blocks", "1000 is 10x10x10 residence size");
-	MinimalResSize = c.get("Global.Size.MinimalSize", 100);
-	MinimalResX = c.get("Global.Size.MinimalX", 10);
-	MinimalResY = c.get("Global.Size.MinimalY", 10);
-	MinimalResZ = c.get("Global.Size.MinimalZ", 10);
 
 	c.getW().addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = c.get("Global.SaveInterval", 10);
@@ -1143,22 +1133,6 @@ public class ConfigManager {
 
     public boolean useLegacyPermissions() {
 	return legacyperms;
-    }
-
-    public int getMinimalResSize() {
-	return MinimalResSize;
-    }
-
-    public int getMinimalResX() {
-	return MinimalResX;
-    }
-
-    public int getMinimalResY() {
-	return MinimalResY;
-    }
-
-    public int getMinimalResZ() {
-	return MinimalResZ;
     }
 
     public String getDefaultGroup() {

@@ -84,7 +84,7 @@ public class contract implements cmd {
 	if (amount < 0)
 	    amount = 1;
 
-	if (!Residence.getSelectionManager().contract(player, amount, resadmin))
+	if (!Residence.getSelectionManager().contract(player, amount))
 	    return true;
 
 	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {

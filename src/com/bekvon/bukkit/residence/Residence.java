@@ -758,7 +758,7 @@ public class Residence extends JavaPlugin {
 	    } catch (IOException e) {
 		// Failed to submit the stats :-(
 	    }
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
+	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Enabled! Version " + this.getDescription().getVersion() + " by Zrips");
 	    initsuccess = true;
 
 	    PlayerManager.fillList();

@@ -22,7 +22,6 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -177,30 +176,81 @@ public class ClaimedResidence {
 	return deep;
     }
 
-    public static boolean CheckAreaSize(Player player, CuboidArea area, boolean resadmin) {
-	if (!resadmin && area.getSize() < Residence.getConfigManager().getMinimalResSize()) {
-	    if (player != null) {
-		Residence.msg(player, lm.Area_ToSmallTotal, Residence.getConfigManager().getMinimalResSize());
-	    }
+    public boolean isBiggerThanMin(Player player, CuboidArea area, boolean resadmin) {
+	if (resadmin)
+	    return true;
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
+	if (area.getXSize() < group.getMinX()) {
+	    Residence.msg(player, lm.Area_ToSmallX, area.getXSize(), group.getMinX());
 	    return false;
 	}
+	if (area.getYSize() < group.getMinY()) {
+	    Residence.msg(player, lm.Area_ToSmallY, area.getYSize(), group.getMinY());
+	    return false;
+	}
+	if (area.getZSize() < group.getMinZ()) {
+	    Residence.msg(player, lm.Area_ToSmallZ, area.getZSize(), group.getMinZ());
+	    return false;
+	}
+	return true;
+    }
 
-	if (!resadmin && area.getXSize() < Residence.getConfigManager().getMinimalResX()) {
-	    if (player != null) {
-		Residence.msg(player, lm.Area_ToSmallX, area.getXSize(), Residence.getConfigManager().getMinimalResX());
-	    }
+    public boolean isBiggerThanMinSubzone(Player player, CuboidArea area, boolean resadmin) {
+	if (resadmin)
+	    return true;
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
+	if (area.getXSize() < group.getSubzoneMinX()) {
+	    Residence.msg(player, lm.Area_ToSmallX, area.getXSize(), group.getSubzoneMinX());
 	    return false;
 	}
-	if (!resadmin && area.getYSize() < Residence.getConfigManager().getMinimalResY()) {
-	    if (player != null) {
-		Residence.msg(player, lm.Area_ToSmallY, area.getYSize(), Residence.getConfigManager().getMinimalResY());
-	    }
+	if (area.getYSize() < group.getSubzoneMinY()) {
+	    Residence.msg(player, lm.Area_ToSmallY, area.getYSize(), group.getSubzoneMinY());
 	    return false;
 	}
-	if (!resadmin && area.getZSize() < Residence.getConfigManager().getMinimalResZ()) {
-	    if (player != null) {
-		Residence.msg(player, lm.Area_ToSmallZ, area.getZSize(), Residence.getConfigManager().getMinimalResZ());
-	    }
+	if (area.getZSize() < group.getSubzoneMinZ()) {
+	    Residence.msg(player, lm.Area_ToSmallZ, area.getZSize(), group.getSubzoneMinZ());
+	    return false;
+	}
+	return true;
+    }
+
+    public boolean isSmallerThanMax(Player player, CuboidArea area, boolean resadmin) {
+	if (resadmin)
+	    return true;
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
+	if (area.getXSize() > group.getMaxX()) {
+	    Residence.msg(player, lm.Area_ToBigX, area.getXSize(), group.getMaxX());
+	    return false;
+	}
+	if (area.getYSize() > group.getMaxY()) {
+	    Residence.msg(player, lm.Area_ToBigY, area.getYSize(), group.getMaxY());
+	    return false;
+	}
+	if (area.getZSize() > group.getMaxZ()) {
+	    Residence.msg(player, lm.Area_ToBigZ, area.getZSize(), group.getMaxZ());
+	    return false;
+	}
+	return true;
+    }
+
+    public boolean isSmallerThanMaxSubzone(Player player, CuboidArea area, boolean resadmin) {
+	if (resadmin)
+	    return true;
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
+	if (area.getXSize() > group.getSubzoneMaxX()) {
+	    Residence.msg(player, lm.Area_ToBigX, area.getXSize(), group.getSubzoneMaxX());
+	    return false;
+	}
+	if (area.getYSize() > group.getSubzoneMaxY()) {
+	    Residence.msg(player, lm.Area_ToBigY, area.getYSize(), group.getSubzoneMaxY());
+	    return false;
+	}
+	if (area.getZSize() > group.getSubzoneMaxZ()) {
+	    Residence.msg(player, lm.Area_ToBigZ, area.getZSize(), group.getSubzoneMaxZ());
 	    return false;
 	}
 	return true;
@@ -232,7 +282,7 @@ public class ClaimedResidence {
 	    return false;
 	}
 
-	if (!CheckAreaSize(player, area, resadmin))
+	if (this.isSubzone() && !isBiggerThanMinSubzone(player, area, resadmin) || !this.isSubzone() && !isBiggerThanMin(player, area, resadmin))
 	    return false;
 
 	if (!resadmin && Residence.getConfigManager().getEnforceAreaInsideArea() && this.getParent() == null) {
@@ -309,7 +359,7 @@ public class ClaimedResidence {
 		Residence.msg(player, lm.Area_MaxPhysical);
 		return false;
 	    }
-	    if (!group.inLimits(area)) {
+	    if (!this.isSubzone() && !isSmallerThanMax(player, area, resadmin) || this.isSubzone() && !isSmallerThanMaxSubzone(player, area, resadmin)) {
 		Residence.msg(player, lm.Area_SizeLimit);
 		return false;
 	    }
@@ -427,7 +477,8 @@ public class ClaimedResidence {
 		Residence.msg(player, lm.General_NoPermission);
 		return false;
 	    }
-	    if (!group.inLimits(newarea)) {
+	    if (oldarea.getSize() < newarea.getSize() && (!this.isSubzone() && !isSmallerThanMaxSubzone(player, newarea, resadmin) || this.isSubzone()
+		&& !isSmallerThanMaxSubzone(player, newarea, resadmin))) {
 		Residence.msg(player, lm.Area_SizeLimit);
 		return false;
 	    }
