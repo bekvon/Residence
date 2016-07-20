@@ -806,7 +806,27 @@ public class ResidenceEntityListener implements Listener {
 	if (!srcpvp || !tgtpvp)
 	    event.setCancelled(true);
     }
+    
+    @EventHandler
+    public void OnArmorStandFlameDamage(EntityDamageEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+	if (event.getCause() != DamageCause.FIRE_TICK)
+	    return;
+	Entity ent = event.getEntity();
+	
+	if (!Residence.getNms().isArmorStandEntity(ent.getType()))
+	    return;
 
+	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)){
+	    event.setCancelled(true);
+	    ent.setFireTicks(0);
+	}
+    }
+    
     @EventHandler
     public void OnPlayerDamageByLightning(EntityDamageEvent event) {
 	// disabling event on world
@@ -825,7 +845,6 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;

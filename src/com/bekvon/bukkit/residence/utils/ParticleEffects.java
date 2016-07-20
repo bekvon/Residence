@@ -1309,7 +1309,7 @@ public enum ParticleEffects {
      * @since 1.5
      */
     public static final class ParticlePacket {
-	private static int version;
+	private static int version = 7;
 	private static Class<?> enumParticle;
 	private static Constructor<?> packetConstructor;
 	private static Method getHandle;
@@ -1398,7 +1398,11 @@ public enum ParticleEffects {
 		return;
 	    }
 	    try {
-		version = Integer.parseInt(Character.toString(ReflectionUtils.PackageType.getServerVersion().charAt(3)));
+		version = Integer.parseInt(ReflectionUtils.PackageType.getServerVersion().split("_")[1]);
+	    } catch (Exception exception) {
+		throw new VersionIncompatibleException("Your current bukkit version seems to be incompatible with this library", exception);
+	    }
+	    try {
 		if (version > 7) {
 		    enumParticle = PackageType.MINECRAFT_SERVER.getClass("EnumParticle");
 		}

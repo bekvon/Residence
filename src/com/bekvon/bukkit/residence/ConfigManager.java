@@ -818,12 +818,13 @@ public class ConfigManager {
 	    }
 	}
 
-	if (SelectedSpigotFrame == null) {
-	    SelectedSpigotFrame = Effect.getByName("HAPPY_VILLAGER");
-	    if (SelectedSpigotFrame == null)
-		SelectedSpigotFrame = Effect.values()[0];
-	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	}
+	if (Residence.isSpigot())
+	    if (SelectedSpigotFrame == null) {
+		SelectedSpigotFrame = Effect.getByName("HAPPY_VILLAGER");
+		if (SelectedSpigotFrame == null)
+		    SelectedSpigotFrame = Effect.values()[0];
+		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	    }
 
 	// Sides
 	efname = c.get("Global.Visualizer.Selected.Sides", "reddust");
@@ -839,13 +840,15 @@ public class ConfigManager {
 		break;
 	    }
 	}
-	if (SelectedSpigotSides == null) {
-	    SelectedSpigotSides = Effect.getByName("COLOURED_DUST");
-	    if (SelectedSpigotSides == null)
-		SelectedSpigotSides = Effect.values()[0];
 
-	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	}
+	if (Residence.isSpigot())
+	    if (SelectedSpigotSides == null) {
+		SelectedSpigotSides = Effect.getByName("COLOURED_DUST");
+		if (SelectedSpigotSides == null)
+		    SelectedSpigotSides = Effect.values()[0];
+
+		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	    }
 
 	efname = c.get("Global.Visualizer.Overlap.Frame", "FLAME");
 	OverlapFrame = ParticleEffects.fromName(efname);
@@ -861,12 +864,14 @@ public class ConfigManager {
 		break;
 	    }
 	}
-	if (OverlapSpigotFrame == null) {
-	    OverlapSpigotFrame = Effect.getByName("FLAME");
-	    if (OverlapSpigotFrame == null)
-		OverlapSpigotFrame = Effect.values()[0];
-	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	}
+
+	if (Residence.isSpigot())
+	    if (OverlapSpigotFrame == null) {
+		OverlapSpigotFrame = Effect.getByName("FLAME");
+		if (OverlapSpigotFrame == null)
+		    OverlapSpigotFrame = Effect.values()[0];
+		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	    }
 
 	efname = c.get("Global.Visualizer.Overlap.Sides", "FLAME");
 	OverlapSides = ParticleEffects.fromName(efname);
@@ -881,12 +886,14 @@ public class ConfigManager {
 		break;
 	    }
 	}
-	if (OverlapSpigotSides == null) {
-	    OverlapSpigotSides = Effect.getByName("FLAME");
-	    if (OverlapSpigotSides == null)
-		OverlapSpigotSides = Effect.values()[0];
-	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	}
+
+	if (Residence.isSpigot())
+	    if (OverlapSpigotSides == null) {
+		OverlapSpigotSides = Effect.getByName("FLAME");
+		if (OverlapSpigotSides == null)
+		    OverlapSpigotSides = Effect.values()[0];
+		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	    }
 
 	c.getW().addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
 	BounceAnimation = c.get("Global.BounceAnimation", true);

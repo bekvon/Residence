@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -427,8 +428,11 @@ public class Residence extends JavaPlugin {
 	    getFlagUtilManager().load();
 
 	    try {
-		Class.forName("org.bukkit.entity.Player.Spigot");
-		spigotPlatform = true;
+		Class<?> c = Class.forName("org.bukkit.entity.Player");
+		for (Method one : c.getDeclaredMethods()) {
+		    if (one.getName().equalsIgnoreCase("Spigot"))
+			spigotPlatform = true;
+		}
 	    } catch (Exception e) {
 	    }
 
