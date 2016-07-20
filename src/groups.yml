@@ -15,10 +15,16 @@ Groups:
            MaxAreasPerResidence: 2
            # The maximum number of blocks a Residence can be, East to West (X).
            MaxEastWest: 16
+           # The minimum number of blocks a Residence can be, East to West (X).
+           MinEastWest: 3
            # The maximum number of blocks a Residence can be, North to South (Z).
            MaxNorthSouth: 16
+           # The minimum number of blocks a Residence can be, North to South (Z).
+           MinNorthSouth: 3
            # The maximum number of blocks a Residence can be, High to Low (Y).
            MaxUpDown: 256
+           # The minimum number of blocks a Residence can be, High to Low (Y).
+           MinUpDown: 3
            # The lowest altitude this group is allowed to protect.
            MinHeight: 0
            # The highest altitude this group is allowed to protect.
@@ -27,6 +33,18 @@ Groups:
             # A subzone within a subzone within the Residence zone would be a depth of 2.
             # Set to 0 to disable subzones.
            SubzoneDepth: 3
+           # (Optional) The maximum number of blocks a Residence Subzone can be, East to West (X).
+           SubzoneMaxEastWest: 16
+           # (Optional) The minimum number of blocks a Residence Subzone can be, East to West (X).
+           SubzoneMinEastWest: 3
+           # (Optional) The maximum number of blocks a Residence Subzone can be, North to South (Z).
+           SubzoneMaxNorthSouth: 16
+           # (Optional) The minimum number of blocks a Residence Subzone can be, North to South (Z).
+           SubzoneMinNorthSouth: 3
+           # (Optional) The maximum number of blocks a Residence Subzone can be, High to Low (Y).
+           SubzoneMaxUpDown: 256
+           # (Optional) The minimum number of blocks a Residence Subzone can be, High to Low (Y).
+           SubzoneMinUpDown: 3
            # Whether or not to allow teleporting to Residences.
            CanTeleport: true
            # Allow or Disallow the use of /res unstuck, to get yourself out of a residence if stuck in one somehow
@@ -70,9 +88,11 @@ Groups:
           # Whether or not to ignore the Residence size/count limits when buying a residence.
           IgnoreLimits: false
           # The cost, per block, of making a new Residence or adding a area to it.
-          BuyCost: 0.05
+          BuyCost: 0.5
+          # The cost, per block, player will be getting back when removing residence.
+          SellCost: 0.25
           # The cost, per block, of renewing a Residence lease (if the lease system is enabled).
-          RenewCost: 0.02
+          RenewCost: 0.2
        # Flags are checked in the order:
        # 1: Player
        # 2: Group
