@@ -16,7 +16,9 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,6 +37,9 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.GetTime;
+import com.griefcraft.cache.ProtectionCache;
+import com.griefcraft.lwc.LWC;
+import com.griefcraft.model.Protection;
 
 public class ResidenceManager implements ResidenceInterface {
     protected SortedMap<String, ClaimedResidence> residences;
@@ -431,6 +436,14 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
+	if (Residence.getConfigManager().isRentPreventRemoval() && !resadmin) {
+	    ClaimedResidence rented = res.getRentedSubzone();
+	    if (rented != null) {
+		Residence.msg(player, lm.Residence_CantRemove, res.getName(), rented.getName(), rented.getRentedLand().player);
+		return;
+	    }
+	}
+
 	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
 	Residence.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())
@@ -473,6 +486,9 @@ public class ResidenceManager implements ResidenceInterface {
 		}
 	    }
 
+	    if (Residence.getConfigManager().isRemoveLwcOnDelete())
+		removeLwcFromResidence(player, res);
+
 	    Residence.msg(player, lm.Residence_Remove, name);
 
 	} else {
@@ -503,6 +519,51 @@ public class ResidenceManager implements ResidenceInterface {
 	    int chargeamount = (int) Math.ceil(res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
 	    TransactionManager.giveEconomyMoney(player, chargeamount);
 	}
+    }
+
+    public void removeLwcFromResidence(final Player player, final ClaimedResidence res) {
+	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+	    @Override
+	    public void run() {
+		long time = System.currentTimeMillis();
+		LWC lwc = Residence.getLwc();
+		if (lwc == null)
+		    return;
+		if (res == null)
+		    return;
+		int i = 0;
+
+		ProtectionCache cache = lwc.getProtectionCache();
+
+		List<Material> list = Residence.getConfigManager().getLwcMatList();
+
+		try {
+		    for (CuboidArea area : res.getAreaArray()) {
+			Location low = area.getLowLoc();
+			Location high = area.getHighLoc();
+			World world = low.getWorld();
+			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
+				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+				    Block b = world.getBlockAt(x, y, z);
+				    if (!list.contains(b.getType()))
+					continue;
+				    Protection prot = cache.getProtection(b);
+				    if (prot == null)
+					continue;
+				    prot.remove();
+				    i++;
+				}
+			    }
+			}
+		    }
+		} catch (Exception e) {
+		}
+		if (i > 0)
+		    Residence.msg(player, lm.Residence_LwcRemoved, i, System.currentTimeMillis() - time);
+		return;
+	    }
+	});
     }
 
     public void removeAllByOwner(String owner) {
@@ -587,7 +648,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    sender.sendMessage(Residence.msg(lm.General_PlayersFlags, perms.listPlayersFlags()));
 	else if (Residence.getConfigManager().isShortInfoUse() || sender instanceof Player) {
 	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + perms.listPlayersFlagsRaw(sender.getName(), Residence.msg(
-		"General.PlayersFlags")));
+		lm.General_PlayersFlags, "")));
 	}
 
 	String groupFlags = perms.listGroupFlags();
@@ -928,7 +989,8 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 	if (!resadmin) {
 	    for (CuboidArea area : areas) {
-		if (!res.isSubzone() && !res.isSmallerThanMax(giveplayer, area, resadmin) || res.isSubzone() && !res.isSmallerThanMaxSubzone(giveplayer, area, resadmin)) {
+		if (!res.isSubzone() && !res.isSmallerThanMax(giveplayer, area, resadmin) || res.isSubzone() && !res.isSmallerThanMaxSubzone(giveplayer, area,
+		    resadmin)) {
 		    Residence.msg(reqPlayer, lm.Residence_GiveLimits);
 		    return;
 		}

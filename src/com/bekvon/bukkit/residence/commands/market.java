@@ -245,7 +245,7 @@ public class market implements cmd {
 
 	if (args.length == 2)
 	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
-	else if (args.length == 4)
+	else if (args.length > 2)
 	    res = Residence.getResidenceManager().getByName(args[2]);
 
 	if (res != null)

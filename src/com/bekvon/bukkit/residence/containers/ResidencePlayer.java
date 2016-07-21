@@ -23,7 +23,6 @@ public class ResidencePlayer {
 
     private Map<String, ClaimedResidence> ResidenceList = new HashMap<String, ClaimedResidence>();
     private ClaimedResidence mainResidence = null;
-    private int currentRes = -1;
 
     private PermissionGroup group = null;
 
@@ -184,7 +183,6 @@ public class ResidencePlayer {
 	    ResidenceManager m = Residence.getResidenceManager();
 	    this.ResidenceList = m.getResidenceMapList(this.userName, true);
 	}
-	recountResAmount();
     }
 
     private void updateName() {
@@ -200,17 +198,12 @@ public class ResidencePlayer {
 	}
     }
 
-    public void recountResAmount() {
-	this.currentRes = this.ResidenceList.size();
-    }
-
     public void addResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
 	String name = residence.getName();
 	name = name.toLowerCase();
 	this.ResidenceList.put(name, residence);
-	recountResAmount();
     }
 
     public void removeResidence(String residence) {
@@ -218,7 +211,6 @@ public class ResidencePlayer {
 	    return;
 	residence = residence.toLowerCase();
 	this.ResidenceList.remove(residence);
-	recountResAmount();
     }
 
     public void renameResidence(String oldResidence, String newResidence) {
@@ -237,9 +229,7 @@ public class ResidencePlayer {
     }
 
     public int getResAmount() {
-	if (currentRes == -1)
-	    recountResAmount();
-	return currentRes;
+	return ResidenceList.size();
     }
 
     public List<ClaimedResidence> getResList() {

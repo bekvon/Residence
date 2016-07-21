@@ -46,6 +46,11 @@ public class ConfigManager {
     protected boolean useBlockFall;
     protected boolean NoWaterPlace;
     protected boolean AutoCleanUp;
+    protected boolean SellSubzone;
+    protected boolean LwcOnDelete;
+    protected boolean LwcOnBuy;
+    protected boolean LwcOnUnrent;
+    protected List<Material> LwcMatList = new ArrayList<Material>();
     protected boolean UseClean;
     protected boolean PvPFlagPrevent;
     protected boolean OverridePvp;
@@ -57,6 +62,7 @@ public class ConfigManager {
     protected boolean AdminFullAccess;
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
+    protected boolean RentPreventRemoval;
     protected boolean RentInformOnEnding;
     protected boolean RentAllowRenewing;
     protected boolean RentStayInMarket;
@@ -555,14 +561,21 @@ public class ConfigManager {
 	c.getW().addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
-	// Not in use currently
-//	c.getW().addComment("Global.LWC.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
-//	    "Players can bypass this wih residence.cleanbypass permission node");
-//	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
-//	c.getW().addComment("Global.LWC.Days", "For how long player should be offline to delete hes LWC protection on residence removal");
-//	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
-//	c.getW().addComment("Global.LWC.Worlds", "Worlds to be included in check list");
-//	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
+	c.getW().addComment("Global.Lwc.OnDelete", "Removes lwc protection from all defined objects when removing residence");
+	LwcOnDelete = c.get("Global.Lwc.OnDelete", true);
+	c.getW().addComment("Global.Lwc.OnBuy", "Removes lwc protection from all defined objects when buying residence");
+	LwcOnBuy = c.get("Global.Lwc.OnBuy", true);
+	c.getW().addComment("Global.Lwc.OnUnrent", "Removes lwc protection from all defined objects when unrenting residence");
+	LwcOnUnrent = c.get("Global.Lwc.OnUnrent", true);
+
+	c.getW().addComment("Global.Lwc.MaterialList", "List of blocks you want to remove protection from");
+	for (String oneName : c.get("Global.Lwc.MaterialList", Arrays.asList("CHEST", "TRAPPED_CHEST", "furnace", "dispenser"))) {
+	    Material mat = Material.getMaterial(oneName.toUpperCase());
+	    if (mat != null)
+		LwcMatList.add(mat);
+	    else
+		Bukkit.getConsoleSender().sendMessage("Incorrect Lwc material name for " + oneName);
+	}
 
 	// TNT explosions below 63
 	c.getW().addComment("Global.AntiGreef.TNT.ExplodeBelow",
@@ -656,9 +669,14 @@ public class ConfigManager {
 	    "When enabled extra message will apear in chat if residence is for rent or for sell to inform how he can rent/buy residence with basic information.");
 	ExtraEnterMessage = c.get("Global.ExtraEnterMessage", true);
 
+	c.getW().addComment("Global.Sell.Subzone", "If set to true, this will allow to sell subzones. Its recommended to keep it false tho");
+	SellSubzone = c.get("Global.Sell.Subzone", false);
+
 	c.getW().addComment("Global.EnableRentSystem", "Enables or disables the Rent System");
 	enableRentSystem = c.get("Global.EnableRentSystem", true);
 
+	c.getW().addComment("Global.Rent.PreventRemoval", "Prevents residence/subzone removal if its subzone is still rented by some one");
+	RentPreventRemoval = c.get("Global.Rent.PreventRemoval", true);
 	c.getW().addComment("Global.Rent.Inform.OnEnding", "Informs players on rent time ending");
 	RentInformOnEnding = c.get("Global.Rent.Inform.OnEnding", true);
 	c.getW().addComment("Global.Rent.Inform.Before", "Time range in minutes when to start informing about ending rent");
@@ -1031,8 +1049,16 @@ public class ConfigManager {
 	return RentStayInMarket;
     }
 
+    public boolean isSellSubzone() {
+	return SellSubzone;
+    }
+
     public boolean isRentAllowRenewing() {
 	return RentAllowRenewing;
+    }
+
+    public boolean isRentPreventRemoval() {
+	return RentPreventRemoval;
     }
 
     public boolean isRentInformOnEnding() {
@@ -1189,6 +1215,22 @@ public class ConfigManager {
 
     public boolean isNoWaterPlace() {
 	return NoWaterPlace;
+    }
+
+    public List<Material> getLwcMatList() {
+	return LwcMatList;
+    }
+
+    public boolean isRemoveLwcOnUnrent() {
+	return LwcOnUnrent;
+    }
+
+    public boolean isRemoveLwcOnBuy() {
+	return LwcOnBuy;
+    }
+
+    public boolean isRemoveLwcOnDelete() {
+	return LwcOnDelete;
     }
 
     public boolean isUseResidenceFileClean() {

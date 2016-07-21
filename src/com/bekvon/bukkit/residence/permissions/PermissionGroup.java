@@ -416,15 +416,15 @@ public class PermissionGroup {
 	    Residence.msg(player, lm.Limits_Admin, Residence.getPermissionManager().isResidenceAdmin(player));
 	Residence.msg(player, lm.Limits_CanCreate, group.canCreateResidences());
 	Residence.msg(player, lm.Limits_MaxRes, rPlayer.getMaxRes());
-	Residence.msg(player, lm.Limits_MaxEW, group.xmax);
-	Residence.msg(player, lm.Limits_MaxNS, group.zmax);
-	Residence.msg(player, lm.Limits_MaxUD, group.ymax);
+	Residence.msg(player, lm.Limits_NumberOwn, rPlayer.getResAmount());
+	Residence.msg(player, lm.Limits_MaxEW, group.xmin + "-" + group.xmax);
+	Residence.msg(player, lm.Limits_MaxNS, group.zmin + "-" + group.zmax);
+	Residence.msg(player, lm.Limits_MaxUD, group.ymin + "-" + group.ymax);
 	Residence.msg(player, lm.Limits_MinMax, group.minHeight, group.maxHeight);
 	Residence.msg(player, lm.Limits_MaxSub, rPlayer.getMaxSubzones());
 	Residence.msg(player, lm.Limits_MaxRents, rPlayer.getMaxRents() + (getMaxRentDays() != -1 ? Residence.msg(lm.Limits_MaxRentDays, getMaxRentDays())
 	    : ""));
 	Residence.msg(player, lm.Limits_EnterLeave, group.messageperms);
-	Residence.msg(player, lm.Limits_NumberOwn, rPlayer.getResAmount());
 	if (Residence.getEconomyManager() != null) {
 	    Residence.msg(player, lm.Limits_Cost, group.costperarea);
 	    Residence.msg(player, lm.Limits_Sell, group.sellperarea);

@@ -152,8 +152,13 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (res.isForSell()) {
+	if (res.isForSell() && !resadmin) {
 	    Residence.msg(player, lm.Economy_SellRentFail);
+	    return;
+	}
+
+	if (res.isParentForSell() && !resadmin) {
+	    Residence.msg(player, lm.Economy_ParentSellRentFail);
 	    return;
 	}
 
@@ -371,6 +376,9 @@ public class RentManager implements MarketRentInterface {
 	    }
 
 	    boolean backup = res.getPermissions().has("backup", false);
+
+	    if (Residence.getConfigManager().isRemoveLwcOnUnrent())
+		Residence.getResidenceManager().removeLwcFromResidence(player, res);
 
 	    res.getPermissions().applyDefaultFlags();
 

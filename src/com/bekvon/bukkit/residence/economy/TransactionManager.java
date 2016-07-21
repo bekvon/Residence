@@ -72,11 +72,29 @@ public class TransactionManager implements MarketBuyInterface {
 	}
 
 	if (Residence.getConfigManager().enabledRentSystem()) {
-	    if (res.isForRent()) {
-		Residence.msg(player, lm.Economy_RentSellFail);
+	    if (!resadmin) {
+		if (res.isForRent()) {
+		    Residence.msg(player, lm.Economy_RentSellFail);
+		    return;
+		}
+		if (res.isSubzoneForRent()) {
+		    Residence.msg(player, lm.Economy_SubzoneRentSellFail);
+		    return;
+		}
+		if (res.isParentForRent()) {
+		    Residence.msg(player, lm.Economy_ParentRentSellFail);
+		    return;
+		}
+	    }
+	}
+
+	if (!Residence.getConfigManager().isSellSubzone()) {
+	    if (res.isSubzone()) {
+		Residence.msg(player, lm.Economy_SubzoneSellFail);
 		return;
 	    }
 	}
+
 	if (!resadmin) {
 	    if (!Residence.getConfigManager().enableEconomy() || Residence.getEconomyManager() == null) {
 		Residence.msg(player, lm.Economy_MarketDisabled);
@@ -119,7 +137,7 @@ public class TransactionManager implements MarketBuyInterface {
 	if (res == null)
 	    return false;
 
-	if (Residence.getConfigManager().enabledRentSystem() && res.isForRent())
+	if (Residence.getConfigManager().enabledRentSystem() && (res.isForRent() || res.isSubzoneForRent() || res.isParentForRent()))
 	    return false;
 
 	if (sellAmount.contains(res))
@@ -199,6 +217,9 @@ public class TransactionManager implements MarketBuyInterface {
 	    res.getPermissions().setOwner(player.getName(), true);
 	    res.getPermissions().applyDefaultFlags();
 	    removeFromSale(res);
+
+	    if (Residence.getConfigManager().isRemoveLwcOnBuy())
+		Residence.getResidenceManager().removeLwcFromResidence(player, res);
 
 	    Residence.getSignUtil().CheckSign(res);
 

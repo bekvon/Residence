@@ -109,6 +109,48 @@ public class ClaimedResidence {
 	return Residence.getRentManager().isForRent(this);
     }
 
+    public boolean isSubzoneForRent() {
+	for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
+	    if (one.getValue().isForRent())
+		return true;
+	    if (one.getValue().isSubzoneForRent())
+		return true;
+	}
+	return false;
+    }
+    
+    public boolean isSubzoneRented() {
+	for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
+	    if (one.getValue().isRented())
+		return true;
+	    if (one.getValue().isSubzoneRented())
+		return true;
+	}
+	return false;
+    }
+    
+    public ClaimedResidence getRentedSubzone() {
+	for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
+	    if (one.getValue().isRented())
+		return one.getValue();
+	    if (one.getValue().getRentedSubzone() != null)
+		return one.getValue().getRentedSubzone();
+	}
+	return null;
+    }
+    
+    public boolean isParentForRent() {
+	if (this.getParent() != null)
+	    return this.getParent().isForRent() ? true : this.getParent().isParentForRent();
+	return false;
+    }
+
+    public boolean isParentForSell() {
+	if (this.getParent() != null)
+	    return this.getParent().isForSell() ? true : this.getParent().isParentForSell();
+	return false;
+    }
+
     public boolean isRented() {
 	return Residence.getRentManager().isRented(this);
     }

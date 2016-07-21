@@ -15,15 +15,15 @@ Groups:
            MaxAreasPerResidence: 2
            # The maximum number of blocks a Residence can be, East to West (X).
            MaxEastWest: 16
-           # The minimum number of blocks a Residence can be, East to West (X).
+           # (Optional) The minimum number of blocks a Residence can be, East to West (X).
            MinEastWest: 3
            # The maximum number of blocks a Residence can be, North to South (Z).
            MaxNorthSouth: 16
-           # The minimum number of blocks a Residence can be, North to South (Z).
+           # (Optional) The minimum number of blocks a Residence can be, North to South (Z).
            MinNorthSouth: 3
            # The maximum number of blocks a Residence can be, High to Low (Y).
            MaxUpDown: 256
-           # The minimum number of blocks a Residence can be, High to Low (Y).
+           # (Optional) The minimum number of blocks a Residence can be, High to Low (Y).
            MinUpDown: 3
            # The lowest altitude this group is allowed to protect.
            MinHeight: 0
