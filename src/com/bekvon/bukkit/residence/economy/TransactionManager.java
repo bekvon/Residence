@@ -28,18 +28,21 @@ public class TransactionManager implements MarketBuyInterface {
 	sellAmount = new HashSet<ClaimedResidence>();
     }
 
-    public static boolean chargeEconomyMoney(Player player, int amount) {
+    public static boolean chargeEconomyMoney(Player player, double chargeamount) {
 	EconomyInterface econ = Residence.getEconomyManager();
 	if (econ == null) {
 	    Residence.msg(player, lm.Economy_MarketDisabled);
 	    return false;
 	}
-	if (!econ.canAfford(player.getName(), amount)) {
+	if (!econ.canAfford(player.getName(), chargeamount)) {
 	    Residence.msg(player, lm.Economy_NotEnoughMoney);
 	    return false;
 	}
-	econ.subtract(player.getName(), amount);
-	Residence.msg(player, lm.Economy_MoneyCharged, String.format("%d", amount), econ.getName());
+	econ.subtract(player.getName(), chargeamount);
+	try {
+	    Residence.msg(player, lm.Economy_MoneyCharged, chargeamount, econ.getName());
+	} catch (Exception e) {
+	}
 	return true;
     }
 

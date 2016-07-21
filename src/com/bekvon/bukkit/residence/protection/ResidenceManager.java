@@ -241,7 +241,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    return false;
 
 	if (!newRes.isSubzone() && Residence.getConfigManager().enableEconomy() && !resadmin) {
-	    int chargeamount = (int) Math.ceil(newArea.getSize() * group.getCostPerBlock());
+	    double chargeamount = Math.ceil(newArea.getSize() * group.getCostPerBlock());
 	    if (!TransactionManager.chargeEconomyMoney(player, chargeamount))
 		return false;
 	}
