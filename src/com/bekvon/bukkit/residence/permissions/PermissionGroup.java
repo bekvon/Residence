@@ -431,9 +431,9 @@ public class PermissionGroup {
 	}
 	Residence.msg(player, lm.Limits_Flag, group.flagPerms.listFlags());
 	if (Residence.getConfigManager().useLeases()) {
-	    Residence.msg(player, lm.Limits_Flag, group.maxLeaseTime);
-	    Residence.msg(player, lm.Limits_Flag, group.leaseGiveTime);
-	    Residence.msg(player, lm.Limits_Flag, group.renewcostperarea);
+	    Residence.msg(player, lm.Limits_MaxDays, group.maxLeaseTime);
+	    Residence.msg(player, lm.Limits_LeaseTime, group.leaseGiveTime);
+	    Residence.msg(player, lm.Limits_RenewCost, group.renewcostperarea);
 	}
 	Residence.msg(player, lm.General_Separator);
     }
