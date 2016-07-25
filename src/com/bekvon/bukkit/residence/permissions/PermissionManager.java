@@ -90,11 +90,15 @@ public class PermissionManager {
 	return Residence.getConfigManager().getDefaultGroup().toLowerCase();
     }
 
-    public String getGroupNameByPlayer(String player, String world) {
-	if (!this.groupsMap.containsKey(player)) {
-	    updateGroupNameForPlayer(Bukkit.getPlayer(player));
+    public String getGroupNameByPlayer(String playerName, String world) {
+	if (!this.groupsMap.containsKey(playerName)) {
+	    Player player = Bukkit.getPlayer(playerName);
+	    if (player != null)
+		updateGroupNameForPlayer(player);
+	    else
+		updateGroupNameForPlayer(playerName, world, false);
 	}
-	PlayerGroup PGroup = this.groupsMap.get(player);
+	PlayerGroup PGroup = this.groupsMap.get(playerName);
 	if (PGroup != null) {
 	    String group = PGroup.getGroup(world);
 	    if (group != null)

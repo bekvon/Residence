@@ -118,7 +118,7 @@ public class ClaimedResidence {
 	}
 	return false;
     }
-    
+
     public boolean isSubzoneRented() {
 	for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
 	    if (one.getValue().isRented())
@@ -128,7 +128,7 @@ public class ClaimedResidence {
 	}
 	return false;
     }
-    
+
     public ClaimedResidence getRentedSubzone() {
 	for (Entry<String, ClaimedResidence> one : subzones.entrySet()) {
 	    if (one.getValue().isRented())
@@ -138,7 +138,7 @@ public class ClaimedResidence {
 	}
 	return null;
     }
-    
+
     public boolean isParentForRent() {
 	if (this.getParent() != null)
 	    return this.getParent().isForRent() ? true : this.getParent().isParentForRent();
@@ -1392,9 +1392,7 @@ public class ClaimedResidence {
 	if (root.containsKey("BlockSellPrice"))
 	    res.BlockSellPrice = (Double) root.get("BlockSellPrice");
 	else {
-	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(res.getOwner());
-	    PermissionGroup group = rPlayer.getGroup(res.getWorld());
-	    res.BlockSellPrice = group.getSellPerBlock();
+	    res.BlockSellPrice = res.getOwnerGroup().getSellPerBlock();
 	}
 
 	World world = Residence.getServ().getWorld(res.perms.getWorld());
@@ -1552,6 +1550,14 @@ public class ClaimedResidence {
 
     public String getWorld() {
 	return perms.getWorld();
+    }
+
+    public ResidencePlayer getRPlayer() {
+	return Residence.getPlayerManager().getResidencePlayer(this.getPermissions().getOwner());
+    }
+
+    public PermissionGroup getOwnerGroup() {
+	return getRPlayer().getGroup(getPermissions().getWorld());
     }
 
     public String getOwner() {

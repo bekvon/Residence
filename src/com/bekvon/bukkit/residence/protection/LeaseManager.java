@@ -102,9 +102,7 @@ public class LeaseManager {
     }
 
     public int getRenewCost(ClaimedResidence res) {
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(res.getPermissions().getOwner());
-	PermissionGroup group = rPlayer.getGroup(res.getPermissions().getWorld());
-	double cost = group.getLeaseRenewCost();
+	double cost = res.getOwnerGroup().getLeaseRenewCost();
 	int amount = (int) Math.ceil(res.getTotalSize() * cost);
 	return amount;
     }
@@ -139,8 +137,7 @@ public class LeaseManager {
 		    boolean renewed = false;
 		    String owner = res.getPermissions().getOwner();
 
-		    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(owner);
-		    PermissionGroup group = rPlayer.getGroup(res.getPermissions().getWorld());
+		    PermissionGroup group = res.getOwnerGroup();
 
 		    int cost = this.getRenewCost(res);
 		    if (Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().autoRenewLeases()) {
@@ -191,9 +188,8 @@ public class LeaseManager {
 	for (String item : list) {
 	    if (item != null) {
 		ClaimedResidence res = Residence.getResidenceManager().getByName(item);
-		ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(res.getPermissions().getOwner());
-		PermissionGroup group = rPlayer.getGroup(res.getPermissions().getWorld());
-		this.setExpireTime(null, item, group.getLeaseGiveTime());
+		if (res != null)
+		    this.setExpireTime(null, item, res.getOwnerGroup().getLeaseGiveTime());
 	    }
 	}
 	System.out.println("[Residence] - Set default leases.");
