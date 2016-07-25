@@ -574,14 +574,12 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public int getOwnedZoneCount(String player) {
-	return Residence.getPlayerManager().getResidenceList(player).size();
+	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	return rPlayer.getResAmount();
     }
 
     public boolean hasMaxZones(String player, int target) {
-	int count = getOwnedZoneCount(player);
-	if (count >= target)
-	    return false;
-	return true;
+	return getOwnedZoneCount(player) < target;
     }
 
     public void printAreaInfo(String areaname, CommandSender sender) {
