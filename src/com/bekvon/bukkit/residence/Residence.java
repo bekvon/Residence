@@ -893,10 +893,6 @@ public class Residence extends JavaPlugin {
 	return DynManager;
     }
 
-    public static ActionBar getABManager2() {
-	return ABManager;
-    }
-
     public static SchematicsManager getSchematicManager() {
 	return SchematicManager;
     }

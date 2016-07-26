@@ -44,6 +44,7 @@ public enum Flags {
     firespread(377, 0, FlagMode.Residence, "Allows or denys fire spread", true),
     flow(111, 0, FlagMode.Residence, "Allows or denys liquid flow", true),
     flowerpot(390, 0, FlagMode.Both, "Allows or denys interaction with flower pot", true),
+    glow(169, 0, FlagMode.Residence, "Players will start glowing when entering residence", true),
     hotfloor(213, 0, FlagMode.Residence, "Prevent damage from magma blocks", true),
     hidden(102, 0, FlagMode.Residence, "Hides residence from list or listall commands", false),
     hook(346, 0, FlagMode.Both, "Allows or denys fishing rod hooking entities", true),

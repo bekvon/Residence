@@ -259,7 +259,9 @@ public class ResidencePlayerListener implements Listener {
 	if (event.isCancelled())
 	    return;
 
-	if (!event.getFlag().equalsIgnoreCase(Flags.day.getName()) && !event.getFlag().equalsIgnoreCase(Flags.night.getName()))
+	if (!event.getFlag().equalsIgnoreCase(Flags.day.getName()) &&
+	    !event.getFlag().equalsIgnoreCase(Flags.night.getName()) &&
+	    !event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
 	    return;
 
 	switch (event.getNewState()) {
@@ -267,6 +269,9 @@ public class ResidencePlayerListener implements Listener {
 	case FALSE:
 	    for (Player one : event.getResidence().getPlayersInResidence())
 		one.resetPlayerTime();
+	    if (Residence.getVersionChecker().GetVersion() > 1900 && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setGlowing(false);
 	    break;
 	case INVALID:
 	    break;
@@ -277,6 +282,9 @@ public class ResidencePlayerListener implements Listener {
 	    if (event.getFlag().equalsIgnoreCase(Flags.night.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setPlayerTime(14000L, false);
+	    if (Residence.getVersionChecker().GetVersion() > 1900 && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setGlowing(true);
 	    break;
 	default:
 	    break;
@@ -682,8 +690,9 @@ public class ResidencePlayerListener implements Listener {
 
     @SuppressWarnings("deprecation")
     private static boolean isContainer(Material mat, Block block) {
-	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals(Flags.container.getName()) || Residence
-	    .getConfigManager().getCustomContainers().contains(block.getTypeId());
+	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals(Flags.container.getName())
+	    || Residence
+		.getConfigManager().getCustomContainers().contains(block.getTypeId());
     }
 
     @SuppressWarnings("deprecation")
@@ -1466,7 +1475,10 @@ public class ResidencePlayerListener implements Listener {
 
 		if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		    player.resetPlayerWeather();
-
+		
+		if (Residence.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+		    player.setGlowing(false);
+		
 		if (leave != null && !leave.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
@@ -1545,6 +1557,9 @@ public class ResidencePlayerListener implements Listener {
 		player.setAllowFlight(false);
 	    }
 
+	    if (Residence.getVersionChecker().GetVersion() > 1900 && res.getPermissions().has(Flags.glow, false))
+		player.setGlowing(true);
+	    
 	    if (res.getPermissions().has(Flags.day, false))
 		player.setPlayerTime(6000L, false);
 	    else if (res.getPermissions().has(Flags.night, false))
@@ -1572,13 +1587,16 @@ public class ResidencePlayerListener implements Listener {
 
 		if (ResOld.getPermissions().has(Flags.sun, false) || ResOld.getPermissions().has(Flags.rain, false))
 		    player.resetPlayerWeather();
-
+		
+		if (Residence.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, false))
+		    player.setGlowing(false);
+		
 		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
 			    .toString());
 		    } else {
-			Residence.msg(player,ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+			Residence.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
 		    }
 		}
 	    }
