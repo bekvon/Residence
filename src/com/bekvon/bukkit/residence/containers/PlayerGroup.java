@@ -93,6 +93,7 @@ public class PlayerGroup {
     }
 
     private PermissionGroup getPermissionGroup() {
+	this.player = Bukkit.getPlayer(playerName);
 	PermissionGroup group = null;
 	for (Entry<String, PermissionGroup> one : Residence.getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {

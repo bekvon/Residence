@@ -84,7 +84,11 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
     public static boolean hasPermission(OfflinePlayer player, String perm, String world) {
 	if (permissions == null)
 	    return false;
-	return permissions.playerHas(world, player, perm);
+	try {
+	    return permissions.playerHas(world, player, perm);
+	} catch (Exception e) {
+	    return false;
+	}
     }
 
     @SuppressWarnings("deprecation")

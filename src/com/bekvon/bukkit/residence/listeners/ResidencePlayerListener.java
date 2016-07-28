@@ -65,6 +65,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -606,6 +607,9 @@ public class ResidencePlayerListener implements Listener {
 	}
 	Residence.getPermissionManager().updateGroupNameForPlayer(player, true);
 
+
+	Debug.D(player.getWorld().getName());
+	
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(player.getLocation(), player);
 
 	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !Residence.isResAdminOn(player) && !player.hasPermission(
