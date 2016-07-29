@@ -38,7 +38,9 @@ public class ResidencePlayer {
 
     public ResidencePlayer(String userName) {
 	this.userName = userName;
-	ofPlayer = Residence.getOfflinePlayer(userName);
+	player = Bukkit.getPlayer(userName);
+	if (player == null)
+	    ofPlayer = Residence.getOfflinePlayer(userName);
 	if (ofPlayer != null)
 	    this.userName = ofPlayer.getName();
 	RecalculatePermissions();
@@ -85,12 +87,16 @@ public class ResidencePlayer {
 	if (this.player == null && ofPlayer == null)
 	    ofPlayer = Residence.getOfflinePlayer(userName);
 
+	getGroup();
 	recountMaxRes();
 	recountMaxRents();
 	recountMaxSubzones();
     }
 
     public void recountMaxRes() {
+	updateName();
+	if (this.group != null)
+	    this.maxRes = this.group.getMaxZones();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxResCount(); i++) {
 	    if (player != null) {
 		if (this.player.hasPermission("residence.max.res." + i))
@@ -101,13 +107,10 @@ public class ResidencePlayer {
 			this.maxRes = i;
 	    }
 	}
-
-	int m = this.getGroup().getMaxZones();
-	if (this.maxRes < m)
-	    this.maxRes = m;
     }
 
     public void recountMaxRents() {
+	updateName();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxRentCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.rents." + i))
@@ -125,6 +128,7 @@ public class ResidencePlayer {
     }
 
     public void recountMaxSubzones() {
+	updateName();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxSubzonesCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.subzones." + i))
@@ -142,15 +146,14 @@ public class ResidencePlayer {
     }
 
     public int getMaxRes() {
+	updateName();
 	recountMaxRes();
-	if (this.player != null) {
-	    Residence.getPermissionManager().updateGroupNameForPlayer(this.player.getName(), this.player.isOnline() ? this.player.getPlayer().getLocation().getWorld()
-		.getName() : Residence.getConfigManager().getDefaultWorld(), true);
-	    PermissionGroup g = getGroup();
-	    if (this.maxRes < g.getMaxZones())
-		return g.getMaxZones();
+	Residence.getPermissionManager().updateGroupNameForPlayer(this.userName, this.player != null && this.player.isOnline() ? this.player.getPlayer().getLocation()
+	    .getWorld().getName() : Residence.getConfigManager().getDefaultWorld(), true);
+	PermissionGroup g = getGroup();
+	if (this.maxRes < g.getMaxZones()) {
+	    return g.getMaxZones();
 	}
-
 	return this.maxRes;
     }
 
@@ -172,6 +175,7 @@ public class ResidencePlayer {
 	String name = userName;
 	if (this.player != null)
 	    name = player.getName();
+
 	String gp = Residence.getPermissionManager().getGroupNameByPlayer(name, world);
 	this.group = Residence.getPermissionManager().getGroupByName(gp);
 	return this.group;

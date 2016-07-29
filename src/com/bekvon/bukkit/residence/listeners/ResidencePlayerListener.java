@@ -65,7 +65,6 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -607,9 +606,6 @@ public class ResidencePlayerListener implements Listener {
 	}
 	Residence.getPermissionManager().updateGroupNameForPlayer(player, true);
 
-
-	Debug.D(player.getWorld().getName());
-	
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(player.getLocation(), player);
 
 	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !Residence.isResAdminOn(player) && !player.hasPermission(
@@ -1479,10 +1475,10 @@ public class ResidencePlayerListener implements Listener {
 
 		if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		    player.resetPlayerWeather();
-		
+
 		if (Residence.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(false);
-		
+
 		if (leave != null && !leave.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
@@ -1497,7 +1493,9 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (move) {
-	    if (!res.getPermissions().playerHas(pname, Flags.move, true) && !Residence.isResAdminOn(player) && !res.isOwner(player)) {
+	    if (!res.getPermissions().playerHas(pname, Flags.move, true) && !Residence.isResAdminOn(player) && !res.isOwner(player) && !player.hasPermission(
+		"residence.admin.move")) {
+
 		Location lastLoc = lastOutsideLoc.get(pname);
 
 		if (Residence.getConfigManager().BounceAnimation()) {
@@ -1563,7 +1561,7 @@ public class ResidencePlayerListener implements Listener {
 
 	    if (Residence.getVersionChecker().GetVersion() > 1900 && res.getPermissions().has(Flags.glow, false))
 		player.setGlowing(true);
-	    
+
 	    if (res.getPermissions().has(Flags.day, false))
 		player.setPlayerTime(6000L, false);
 	    else if (res.getPermissions().has(Flags.night, false))
@@ -1591,10 +1589,10 @@ public class ResidencePlayerListener implements Listener {
 
 		if (ResOld.getPermissions().has(Flags.sun, false) || ResOld.getPermissions().has(Flags.rain, false))
 		    player.resetPlayerWeather();
-		
+
 		if (Residence.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, false))
 		    player.setGlowing(false);
-		
+
 		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))

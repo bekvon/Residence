@@ -410,7 +410,7 @@ public class PermissionGroup {
 
 	Residence.msg(player, lm.General_Separator);
 	Residence.msg(player, lm.Limits_PGroup, Residence.getPermissionManager().getPermissionsGroup(target.getName(),
-	    target.isOnline() ? Bukkit.getPlayer(target.getName()).getName() : Residence.getConfigManager().getDefaultWorld()));
+	    target.isOnline() ? Bukkit.getPlayer(target.getName()).getWorld().getName() : Residence.getConfigManager().getDefaultWorld()));
 	Residence.msg(player, lm.Limits_RGroup, group.getGroupName());
 	if (target.isOnline() && resadmin)
 	    Residence.msg(player, lm.Limits_Admin, Residence.getPermissionManager().isResidenceAdmin(player));

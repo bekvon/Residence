@@ -212,12 +212,11 @@ public class ResidenceManager implements ResidenceInterface {
 	    return false;
 	}
 
-	if (player != null) {
-	    if (!hasMaxZones(player.getName(), rPlayer.getMaxRes()) && !resadmin) {
-		Residence.msg(player, lm.Residence_TooMany);
-		return false;
-	    }
+	if (rPlayer.getResAmount() >= rPlayer.getMaxRes() && !resadmin) {
+	    Residence.msg(player, lm.Residence_TooMany);
+	    return false;
 	}
+
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
 	ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName(), plugin);
 	newRes.getPermissions().applyDefaultFlags();

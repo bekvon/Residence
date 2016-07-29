@@ -1545,7 +1545,12 @@ public class Residence extends JavaPlugin {
 	if (getOfflinePlayerMap().containsKey(Name.toLowerCase())) {
 	    return getOfflinePlayerMap().get(Name.toLowerCase());
 	}
-	OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(Name);
+	Player player = Bukkit.getPlayer(Name);
+	OfflinePlayer offPlayer = null;
+	if (player != null)
+	    offPlayer = player;
+	if (offPlayer == null)
+	    offPlayer = Bukkit.getOfflinePlayer(Name);
 	if (offPlayer != null)
 	    getOfflinePlayerMap().put(Name.toLowerCase(), offPlayer);
 	return offPlayer;

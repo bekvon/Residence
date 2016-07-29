@@ -16,6 +16,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 
 public class PlayerManager implements ResidencePlayerInterface {
     private ConcurrentHashMap<String, ResidencePlayer> players = new ConcurrentHashMap<String, ResidencePlayer>();
+
     public PlayerManager() {
     }
 
@@ -151,9 +152,9 @@ public class PlayerManager implements ResidencePlayerInterface {
     @Override
     public ResidencePlayer getResidencePlayer(String player) {
 	ResidencePlayer resPlayer = null;
-	if (players.containsKey(player.toLowerCase()))
+	if (players.containsKey(player.toLowerCase())) {
 	    resPlayer = players.get(player.toLowerCase());
-	else {
+	} else {
 	    resPlayer = playerJoin(player);
 	}
 	return resPlayer;

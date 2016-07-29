@@ -54,10 +54,8 @@ public class PlayerGroup {
 	    if (group != null) {
 		group = group.toLowerCase();
 		if (group != null && Residence.getPermissionManager().getGroups().containsKey(group)) {
-
 		    PermissionGroup g = Residence.getPermissionManager().getGroups().get(group);
 		    posibleGroups.add(g);
-
 		    this.groups.put(world, group);
 		}
 	    }
@@ -65,9 +63,10 @@ public class PlayerGroup {
 
 	posibleGroups.add(getPermissionGroup());
 
-	group = Residence.getPermissionManager().getPermissionsGroup(playerName.toLowerCase(), world);
+	group = Residence.getPermissionManager().getPermissionsGroup(playerName, world);
 
 	PermissionGroup g = Residence.getPermissionManager().getGroupByName(group);
+
 	if (g != null)
 	    posibleGroups.add(g);
 
@@ -93,8 +92,9 @@ public class PlayerGroup {
     }
 
     private PermissionGroup getPermissionGroup() {
-	this.player = Bukkit.getPlayer(playerName);
-	PermissionGroup group = null;
+	if (this.player == null)
+	    this.player = Bukkit.getPlayer(playerName);
+	PermissionGroup group = Residence.getPermissionManager().getGroupByName(Residence.getConfigManager().getDefaultGroup());
 	for (Entry<String, PermissionGroup> one : Residence.getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
 		if (this.player.hasPermission("residence.group." + one.getKey()))
