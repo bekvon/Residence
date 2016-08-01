@@ -86,6 +86,7 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -1625,21 +1626,27 @@ public class Residence extends JavaPlugin {
     }
 
     public static void msg(CommandSender sender, String text) {
-	if (sender != null)
+	if (sender != null && text.length() > 0)
 	    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 
     public static void msg(Player player, String text) {
-	if (player != null)
+	if (player != null && text.length() > 0)
 	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 
     public static void msg(CommandSender sender, lm lm, Object... variables) {
+	Debug.D("msg");
 	if (sender != null)
-	    if (Residence.getLM().containsKey(lm.getPath()))
-		sender.sendMessage(Residence.getLM().getMessage(lm, variables));
-	    else
-		sender.sendMessage(lm.getPath());
+	    if (Residence.getLM().containsKey(lm.getPath())) {
+		String msg = Residence.getLM().getMessage(lm, variables);
+		if (msg.length() > 0)
+		    sender.sendMessage(msg);
+	    } else {
+		String msg = lm.getPath();
+		if (msg.length() > 0)
+		    sender.sendMessage(lm.getPath());
+	    }
     }
 
     public static List<String> msgL(lm lm) {

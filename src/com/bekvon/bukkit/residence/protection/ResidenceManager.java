@@ -330,7 +330,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    if (res.getValue().isOwner(targetplayer)) {
 		boolean hidden = res.getValue().getPermissions().has("hidden", false);
 		if ((showhidden) || (!showhidden && !hidden)) {
-		    temp.put(res.getValue().getName(), res.getValue());
+		    temp.put(res.getValue().getName().toLowerCase(), res.getValue());
 		}
 	    }
 	}
@@ -510,7 +510,6 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
 	Residence.getPlayerManager().removeResFromPlayer(res.getOwner(), name);
-
 	Residence.getRentManager().removeRentable(name);
 	Residence.getTransactionManager().removeFromSale(name);
 

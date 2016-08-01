@@ -70,7 +70,8 @@ public class remove implements cmd {
 		    raw = Residence.getResidenceManager().convertToRaw(null, Residence.msg(lm.Residence_DeleteConfirm, res.getResidenceName()),
 			"Click to confirm", cmd + " confirm");
 		}
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + raw);
+		if (Residence.msg(lm.Subzone_DeleteConfirm, res.getResidenceName()).length() > 0)
+		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + raw);
 	    } else {
 		if (res.isSubzone())
 		    Residence.msg(sender, lm.Subzone_DeleteConfirm, res.getResidenceName());

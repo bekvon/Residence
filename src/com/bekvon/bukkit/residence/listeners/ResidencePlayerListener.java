@@ -1276,40 +1276,37 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-	if (res != null) {
-	    if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
-		.getCause() == TeleportCause.PLUGIN) {
-		String areaname = res.getName();
-		if (!res.getPermissions().playerHas(player.getName(), Flags.move, true) && !res.isOwner(player)) {
-		    event.setCancelled(true);
-		    Residence.msg(player, lm.Residence_MoveDeny, areaname);
-		    return;
-		}
-	    } else if (event.getCause() == TeleportCause.ENDER_PEARL) {
-		String areaname = res.getName();
-		if (!res.getPermissions().playerHas(player.getName(), Flags.enderpearl, true)) {
-		    event.setCancelled(true);
-		    Residence.msg(player, lm.Residence_FlagDeny, Flags.enderpearl.getName(), areaname);
-		    return;
-		}
+	if (res == null)
+	    return;
+	if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
+	    .getCause() == TeleportCause.PLUGIN) {
+	    if (!res.getPermissions().playerHas(player.getName(), Flags.move, true) && !res.isOwner(player)) {
+		event.setCancelled(true);
+		Residence.msg(player, lm.Residence_MoveDeny, res.getName());
+		return;
 	    }
-	    if ((event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND) && Residence.getConfigManager().isBlockAnyTeleportation()) {
-		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.tp, true) && !player.hasPermission("residence.admin.tp")) {
-		    String areaname = res.getName();
-		    event.setCancelled(true);
-		    Residence.msg(player, lm.General_TeleportDeny, areaname);
-		    return;
-		}
-	    }
-	    if (Residence.getNms().isChorusTeleport(event.getCause())) {
-		if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.chorustp, true) && !player.hasPermission("residence.admin.tp")) {
-		    String areaname = res.getName();
-		    event.setCancelled(true);
-		    Residence.msg(player, lm.Residence_FlagDeny, Flags.chorustp.getName(), areaname);
-		    return;
-		}
+	} else if (event.getCause() == TeleportCause.ENDER_PEARL) {
+	    if (!res.getPermissions().playerHas(player, Flags.enderpearl, true)) {
+		event.setCancelled(true);
+		Residence.msg(player, lm.Residence_FlagDeny, Flags.enderpearl.getName(), res.getName());
+		return;
 	    }
 	}
+	if ((event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND) && Residence.getConfigManager().isBlockAnyTeleportation()) {
+	    if (!res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.tp, true) && !player.hasPermission("residence.admin.tp")) {
+		event.setCancelled(true);
+		Residence.msg(player, lm.General_TeleportDeny, res.getName());
+		return;
+	    }
+	}
+	if (Residence.getNms().isChorusTeleport(event.getCause())) {
+	    if (!res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.chorustp, true) && !player.hasPermission("residence.admin.tp")) {
+		event.setCancelled(true);
+		Residence.msg(player, lm.Residence_FlagDeny, Flags.chorustp.getName(), res.getName());
+		return;
+	    }
+	}
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
