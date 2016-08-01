@@ -86,7 +86,6 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -1636,7 +1635,6 @@ public class Residence extends JavaPlugin {
     }
 
     public static void msg(CommandSender sender, lm lm, Object... variables) {
-	Debug.D("msg");
 	if (sender != null)
 	    if (Residence.getLM().containsKey(lm.getPath())) {
 		String msg = Residence.getLM().getMessage(lm, variables);

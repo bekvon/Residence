@@ -125,6 +125,9 @@ permissions:
   residence.command.create:
     description: Allows to access particular command
     default: true
+  residence.command.auto:
+    description: Allows to create max residence
+    default: true
   residence.command.current:
     description: Allows to access particular command
     default: true

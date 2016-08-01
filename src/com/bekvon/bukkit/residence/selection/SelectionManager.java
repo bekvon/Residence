@@ -86,8 +86,16 @@ public class SelectionManager {
 	}
     }
 
+    public Location getPlayerLoc1(Player player) {
+	return getPlayerLoc1(player.getName());
+    }
+
     public Location getPlayerLoc1(String player) {
 	return playerLoc1.get(player);
+    }
+
+    public Location getPlayerLoc2(Player player) {
+	return getPlayerLoc2(player.getName());
     }
 
     public Location getPlayerLoc2(String player) {
