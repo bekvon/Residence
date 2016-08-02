@@ -27,6 +27,9 @@ public class RandomTp {
 
     public Location getRandomlocation(String WorldName) {
 
+	if (WorldName == null)
+	    return null;
+
 	Random random = new Random(System.currentTimeMillis());
 
 	boolean ok = false;
@@ -63,7 +66,7 @@ public class RandomTp {
 
 	Location loc = null;
 
-	while (!ok) {
+	c: while (!ok) {
 	    tries++;
 	    if (tries > maxtries)
 		return null;
@@ -79,8 +82,12 @@ public class RandomTp {
 
 	    loc = new Location(world, x, world.getMaxHeight(), z);
 
+	    int dir = random.nextInt(359);
+
 	    int max = loc.getWorld().getMaxHeight();
 	    max = loc.getWorld().getEnvironment() == Environment.NETHER ? 100 : max;
+
+	    loc.setYaw(dir);
 
 	    for (int i = max; i > 0; i--) {
 		loc.setY(i);
@@ -89,6 +96,10 @@ public class RandomTp {
 		Block block3 = loc.clone().add(0, -1, 0).getBlock();
 		if (!Residence.getNms().isEmptyBlock(block3) && Residence.getNms().isEmptyBlock(block) && Residence.getNms().isEmptyBlock(block2)) {
 		    break;
+		}
+		if (i <= 3) {
+		    loc = null;
+		    continue c;
 		}
 	    }
 
