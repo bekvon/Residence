@@ -559,7 +559,9 @@ public class RentManager implements MarketRentInterface {
 
     @Override
     public void checkCurrentRents() {
-	for (ClaimedResidence res : rentedLand) {
+	Set<ClaimedResidence> t = new HashSet<ClaimedResidence>();
+	t.addAll(rentedLand);
+	for (ClaimedResidence res : t) {
 
 	    if (res == null)
 		continue;
