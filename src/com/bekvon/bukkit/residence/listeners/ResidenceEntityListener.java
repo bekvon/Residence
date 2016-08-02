@@ -589,8 +589,10 @@ public class ResidenceEntityListener implements Listener {
 	    break;
 	default:
 	    if (!perms.has(Flags.destroy, true)) {
-		event.setCancelled(true);
-		ent.remove();
+		if (entity != EntityType.ENDER_CRYSTAL) {
+		    event.setCancelled(true);
+		    ent.remove();
+		}
 	    }
 	    break;
 	}
@@ -806,7 +808,7 @@ public class ResidenceEntityListener implements Listener {
 	if (!srcpvp || !tgtpvp)
 	    event.setCancelled(true);
     }
-    
+
     @EventHandler
     public void OnArmorStandFlameDamage(EntityDamageEvent event) {
 	// disabling event on world
@@ -817,16 +819,16 @@ public class ResidenceEntityListener implements Listener {
 	if (event.getCause() != DamageCause.FIRE_TICK)
 	    return;
 	Entity ent = event.getEntity();
-	
+
 	if (!Residence.getNms().isArmorStandEntity(ent.getType()))
 	    return;
 
-	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)){
+	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)) {
 	    event.setCancelled(true);
 	    ent.setFireTicks(0);
 	}
     }
-    
+
     @EventHandler
     public void OnPlayerDamageByLightning(EntityDamageEvent event) {
 	// disabling event on world
@@ -844,6 +846,28 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityDamageByFireballEvent(EntityDamageByEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
+	Entity dmgr = event.getDamager();
+
+	if (dmgr.getType() != EntityType.SMALL_FIREBALL && dmgr.getType() != EntityType.FIREBALL)
+	    return;
+
+	if (dmgr.getType() == EntityType.FIREBALL || dmgr.getType() == EntityType.SMALL_FIREBALL) {
+	    FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+	    if (!perms.has(Flags.fireball, false)) {
+		event.setCancelled(true);
+		return;
+	    }
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
@@ -851,7 +875,8 @@ public class ResidenceEntityListener implements Listener {
 	if (event.isCancelled())
 	    return;
 
-	if (event.getEntityType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event.getEntityType()))
+	if (event.getEntityType() != EntityType.ENDER_CRYSTAL && event.getEntityType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event
+	    .getEntityType()))
 	    return;
 
 	Entity dmgr = event.getDamager();
