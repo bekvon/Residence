@@ -519,7 +519,7 @@ public class ClaimedResidence {
 		Residence.msg(player, lm.General_NoPermission);
 		return false;
 	    }
-	    if (oldarea.getSize() < newarea.getSize() && (!this.isSubzone() && !isSmallerThanMaxSubzone(player, newarea, resadmin) || this.isSubzone()
+	    if (oldarea.getSize() < newarea.getSize() && (!this.isSubzone() && !isSmallerThanMax(player, newarea, resadmin) || this.isSubzone()
 		&& !isSmallerThanMaxSubzone(player, newarea, resadmin))) {
 		Residence.msg(player, lm.Area_SizeLimit);
 		return false;
