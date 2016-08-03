@@ -41,33 +41,39 @@ public class rt implements cmd {
 		    wname = one.getWorld();
 		    continue c;
 		}
-
 		Player p = Bukkit.getPlayer(args[i]);
 		if (p != null)
 		    tPlayer = p;
-
 	    }
 	}
-	
-	if (wname == null && tPlayer == null) {
+
+	if (args.length > 1 && wname == null && tPlayer == null) {
 	    Residence.msg(sender, lm.Invalid_World);
-
 	    String worlds = "";
-
 	    for (RandomTeleport one : Residence.getConfigManager().getRandomTeleport()) {
 		worlds += one.getWorld() + " ";
 		break;
 	    }
-
 	    Residence.msg(sender, lm.RandomTeleport_WorldList, worlds);
 	    return true;
 	}
+	
+	if (tPlayer == null && sender instanceof Player)
+	    tPlayer = (Player) sender;
 
 	if (wname == null && tPlayer != null)
 	    wname = tPlayer.getLocation().getWorld().getName();
 
-	if (tPlayer == null && sender instanceof Player)
-	    tPlayer = (Player) sender;
+	if (wname == null && tPlayer == null) {
+	    Residence.msg(sender, lm.Invalid_World);
+	    String worlds = "";
+	    for (RandomTeleport one : Residence.getConfigManager().getRandomTeleport()) {
+		worlds += one.getWorld() + " ";
+		break;
+	    }
+	    Residence.msg(sender, lm.RandomTeleport_WorldList, worlds);
+	    return true;
+	}
 
 	if (tPlayer == null)
 	    return false;
