@@ -70,14 +70,14 @@ public class market implements cmd {
 		return true;
 	    }
 
-	    Residence.UnrentConfirm.put(player.getName(), res.getName());
-
 	    if (res.isRented()) {
-		if (resadmin || Residence.isResAdminOn(player))
+		if (resadmin || Residence.isResAdminOn(player) || player.hasPermission("residence.market.evict")) {
+		    Residence.UnrentConfirm.put(player.getName(), res.getName());
 		    Residence.msg(sender, lm.Rent_EvictConfirm, res.getName());
-		else if (Residence.getRentManager().getRentingPlayer(res).equalsIgnoreCase(sender.getName()))
+		} else if (Residence.getRentManager().getRentingPlayer(res).equalsIgnoreCase(sender.getName())) {
+		    Residence.UnrentConfirm.put(player.getName(), res.getName());
 		    Residence.msg(sender, lm.Rent_UnrentConfirm, res.getName());
-		else
+		} else
 		    Residence.getRentManager().printRentInfo(player, res);
 	    } else
 		Residence.msg(sender, lm.Rent_ReleaseConfirm, res.getName());
