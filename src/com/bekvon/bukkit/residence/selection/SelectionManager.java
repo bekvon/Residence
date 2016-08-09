@@ -3,9 +3,12 @@ package com.bekvon.bukkit.residence.selection;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
+import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,10 +29,7 @@ public class SelectionManager {
     protected Server server;
     private Residence plugin;
 
-    public static HashMap<String, Long> normalPrintMap = new HashMap<String, Long>();
-    public static HashMap<String, Long> errorPrintMap = new HashMap<String, Long>();
-    public static HashMap<String, Integer> normalIDMap = new HashMap<String, Integer>();
-    public static HashMap<String, Integer> errorIDMap = new HashMap<String, Integer>();
+    private HashMap<String, Visualizer> vMap = new HashMap<String, Visualizer>();
 
     public static final int MIN_HEIGHT = 0;
 
@@ -55,6 +55,10 @@ public class SelectionManager {
 	}
     }
 
+    public void placeLoc1(Player player, Location loc) {
+	placeLoc1(player, loc, false);
+    }
+
     public void placeLoc1(Player player, Location loc, boolean show) {
 	if (loc != null) {
 	    playerLoc1.put(player.getName(), loc);
@@ -62,6 +66,10 @@ public class SelectionManager {
 	    if (show)
 		this.afterSelectionUpdate(player);
 	}
+    }
+
+    public void placeLoc2(Player player, Location loc) {
+	placeLoc2(player, loc, false);
     }
 
     public void placeLoc2(Player player, Location loc, boolean show) {
@@ -82,7 +90,9 @@ public class SelectionManager {
 
     public void afterSelectionUpdate(Player player) {
 	if (hasPlacedBoth(player.getName())) {
-	    NewMakeBorders(player, getPlayerLoc1(player.getName()), getPlayerLoc2(player.getName()), false);
+	    Visualizer v = new Visualizer(player);
+	    v.setAreas(this.getSelectionCuboid(player));
+	    this.showBounds(player, v);
 	}
     }
 
@@ -149,59 +159,24 @@ public class SelectionManager {
 	    player.sendMessage(ChatColor.YELLOW + "Y" + Residence.msg(lm.General_Size, cuboidArea.getYSize()));
 	    player.sendMessage(ChatColor.YELLOW + "Z" + Residence.msg(lm.General_Size, cuboidArea.getZSize()));
 	    Residence.msg(player, lm.General_Separator);
-	    NewMakeBorders(player, getPlayerLoc1(pname), getPlayerLoc2(pname), false);
+	    Visualizer v = new Visualizer(player);
+	    v.setAreas(this.getSelectionCuboid(player));
+	    this.showBounds(player, v);
 	} else
 	    Residence.msg(player, lm.Select_Points);
     }
 
-    public static boolean showParticle(Player player, Location Current, boolean error) {
-	if (!player.getLocation().getWorld().getName().equalsIgnoreCase(Current.getWorld().getName()))
-	    return false;
-
-	if (Residence.isSpigot()) {
-	    if (!error) {
-		player.spigot().playEffect(Current, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-	    } else
-		player.spigot().playEffect(Current, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-	} else {
-	    if (!error) {
-		Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, Current, player);
-	    } else
-		Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, Current, player);
-	}
-	return false;
-    }
-
-    public static boolean showParticleWalls(final Player player, final Location Current, final boolean error) {
-	if (!player.getLocation().getWorld().getName().equalsIgnoreCase(Current.getWorld().getName()))
-	    return false;
-	if (Residence.isSpigot()) {
-	    if (!error) {
-		player.spigot().playEffect(Current, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-	    } else
-		player.spigot().playEffect(Current, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-	} else {
-	    if (!error)
-		Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, Current, player);
-	    else
-		Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, Current, player);
-	}
-	return false;
-    }
-
-    public void NewMakeBorders(final Player player, final Location OriginalLow, final Location OriginalHigh, final boolean error) {
-
+    public void showBounds(final Player player, final Visualizer v) {
 	if (!Residence.getConfigManager().useVisualizer())
 	    return;
-
-	if (!error)
-	    normalPrintMap.put(player.getName(), System.currentTimeMillis());
-	else
-	    errorPrintMap.put(player.getName(), System.currentTimeMillis());
+	vMap.put(player.getName(), v);
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		MakeBorders(player, OriginalLow, OriginalHigh, error);
+		if (!v.getAreas().isEmpty())
+		    MakeBorders(player, false);
+		if (!v.getErrorAreas().isEmpty())
+		    MakeBorders(player, true);
 		return;
 	    }
 	});
@@ -340,128 +315,203 @@ public class SelectionManager {
 	return locList;
     }
 
-    public boolean MakeBorders(final Player player, final Location OriginalLow, final Location OriginalHigh, final boolean error) {
+    public boolean MakeBorders(final Player player, final boolean error) {
 
-	CuboidArea cuboidArea = new CuboidArea(OriginalLow, OriginalHigh);
-	cuboidArea.getHighLoc().add(1, 1, 1);
+	final Visualizer v = vMap.get(player.getName());
 
-	SelectionSides Sides = new SelectionSides();
+	if (v == null)
+	    return false;
 
-	int Range = Residence.getConfigManager().getVisualizerRange();
+	List<CuboidArea> areas = null;
+
+	if (!error)
+	    areas = v.getAreas();
+	else
+	    areas = v.getErrorAreas();
 
 	Location loc = player.getLocation();
-//	loc = loc.add(0, 0.5, 0);
-	double PLLX = loc.getBlockX() - Range;
-	double PLLZ = loc.getBlockZ() - Range;
-	double PLLY = loc.getBlockY() - Range;
-	double PLHX = loc.getBlockX() + Range;
-	double PLHZ = loc.getBlockZ() + Range;
-	double PLHY = loc.getBlockY() + Range;
+	int Range = Residence.getConfigManager().getVisualizerRange();
 
-	if (cuboidArea.getLowLoc().getBlockX() < PLLX) {
-	    cuboidArea.getLowLoc().setX(PLLX);
-	    Sides.setWestSide(false);
+	final List<Location> locList = new ArrayList<Location>();
+	final List<Location> locList2 = new ArrayList<Location>();
+
+	final boolean same = v.isSameLoc();
+	if (!same) {
+	    for (CuboidArea area : areas) {
+		if (area == null)
+		    continue;
+		CuboidArea cuboidArea = new CuboidArea(area.getLowLoc(), area.getHighLoc());
+		cuboidArea.getHighLoc().add(1, 1, 1);
+
+		SelectionSides Sides = new SelectionSides();
+
+		double PLLX = loc.getBlockX() - Range;
+		double PLLZ = loc.getBlockZ() - Range;
+		double PLLY = loc.getBlockY() - Range;
+		double PLHX = loc.getBlockX() + Range;
+		double PLHZ = loc.getBlockZ() + Range;
+		double PLHY = loc.getBlockY() + Range;
+
+		if (cuboidArea.getLowLoc().getBlockX() < PLLX) {
+		    cuboidArea.getLowLoc().setX(PLLX);
+		    Sides.setWestSide(false);
+		}
+
+		if (cuboidArea.getHighLoc().getBlockX() > PLHX) {
+		    cuboidArea.getHighLoc().setX(PLHX);
+		    Sides.setEastSide(false);
+		}
+
+		if (cuboidArea.getLowLoc().getBlockZ() < PLLZ) {
+		    cuboidArea.getLowLoc().setZ(PLLZ);
+		    Sides.setNorthSide(false);
+		}
+
+		if (cuboidArea.getHighLoc().getBlockZ() > PLHZ) {
+		    cuboidArea.getHighLoc().setZ(PLHZ);
+		    Sides.setSouthSide(false);
+		}
+
+		if (cuboidArea.getLowLoc().getBlockY() < PLLY) {
+		    cuboidArea.getLowLoc().setY(PLLY);
+		    Sides.setBottomSide(false);
+		}
+
+		if (cuboidArea.getHighLoc().getBlockY() > PLHY) {
+		    cuboidArea.getHighLoc().setY(PLHY);
+		    Sides.setTopSide(false);
+		}
+
+		double TX = cuboidArea.getXSize() - 1;
+		double TY = cuboidArea.getYSize() - 1;
+		double TZ = cuboidArea.getZSize() - 1;
+
+		if (!error && v.getId() != -1) {
+		    Bukkit.getScheduler().cancelTask(v.getId());
+		} else if (error && v.getErrorId() != -1) {
+		    Bukkit.getScheduler().cancelTask(v.getErrorId());
+		}
+
+		locList.addAll(GetLocationsWallsByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range));
+		locList2.addAll(GetLocationsCornersByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range));
+	    }
+	    v.setLoc(player.getLocation());
+	} else {
+	    locList.addAll(v.getLocations());
+	    locList2.addAll(v.getErrorLocations());
 	}
-
-	if (cuboidArea.getHighLoc().getBlockX() > PLHX) {
-	    cuboidArea.getHighLoc().setX(PLHX);
-	    Sides.setEastSide(false);
-	}
-
-	if (cuboidArea.getLowLoc().getBlockZ() < PLLZ) {
-	    cuboidArea.getLowLoc().setZ(PLLZ);
-	    Sides.setNorthSide(false);
-	}
-
-	if (cuboidArea.getHighLoc().getBlockZ() > PLHZ) {
-	    cuboidArea.getHighLoc().setZ(PLHZ);
-	    Sides.setSouthSide(false);
-	}
-
-	if (cuboidArea.getLowLoc().getBlockY() < PLLY) {
-	    cuboidArea.getLowLoc().setY(PLLY);
-	    Sides.setBottomSide(false);
-	}
-
-	if (cuboidArea.getHighLoc().getBlockY() > PLHY) {
-	    cuboidArea.getHighLoc().setY(PLHY);
-	    Sides.setTopSide(false);
-	}
-
-	double TX = cuboidArea.getXSize() - 1;
-	double TY = cuboidArea.getYSize() - 1;
-	double TZ = cuboidArea.getZSize() - 1;
-
-	if (!error && normalIDMap.containsKey(player.getName())) {
-	    Bukkit.getScheduler().cancelTask(normalIDMap.get(player.getName()));
-	} else if (error && errorIDMap.containsKey(player.getName())) {
-	    Bukkit.getScheduler().cancelTask(errorIDMap.get(player.getName()));
-	}
-
-	final List<Location> locList = GetLocationsWallsByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range);
-
-	final List<Location> locList2 = GetLocationsCornersByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range);
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
 
-		if (Residence.isSpigot()) {
+		int size = locList.size();
+		int errorSize = locList2.size();
+
+		int timesMore = 1;
+		int errorTimesMore = 1;
+
+		if (size > Residence.getConfigManager().getVisualizerSidesCap() && !same) {
+		    timesMore = size / Residence.getConfigManager().getVisualizerSidesCap() + 1;
+		}
+		if (errorSize > Residence.getConfigManager().getVisualizerFrameCap() && !same) {
+		    errorTimesMore = errorSize / Residence.getConfigManager().getVisualizerFrameCap() + 1;
+		}
+
+		List<Location> trimed = new ArrayList<Location>();
+		List<Location> errorTrimed = new ArrayList<Location>();
+
+		boolean spigot = Residence.isSpigot();
+
+		if (spigot) {
 		    if (!error)
-			for (Location one : locList)
-			    player.spigot().playEffect(one, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+			for (int i = 0; i < locList.size(); i += timesMore) {
+			    Location l = locList.get(i);
+			    player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				trimed.add(l);
+			}
 		    else
-			for (Location one : locList)
-			    player.spigot().playEffect(one, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+			for (int i = 0; i < locList.size(); i += timesMore) {
+			    Location l = locList.get(i);
+			    player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				trimed.add(l);
+			}
 
 		    if (!error)
-			for (Location one : locList2)
-			    player.spigot().playEffect(one, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+			    Location l = locList2.get(i);
+			    player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				errorTrimed.add(l);
+			}
 		    else
-			for (Location one : locList2)
-			    player.spigot().playEffect(one, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+			    Location l = locList2.get(i);
+			    player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				errorTrimed.add(l);
+			}
 		} else {
 		    if (!error)
-			for (Location one : locList)
-			    Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, one, player);
+			for (int i = 0; i < locList.size(); i += timesMore) {
+			    Location l = locList.get(i);
+			    Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
+			    if (!same)
+				trimed.add(l);
+			}
 		    else
-			for (Location one : locList)
-			    Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, one, player);
+			for (int i = 0; i < locList.size(); i += timesMore) {
+			    Location l = locList.get(i);
+			    Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
+			    if (!same)
+				trimed.add(l);
+			}
 		    if (!error)
-			for (Location one : locList2)
-			    Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, one, player);
+			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+			    Location l = locList2.get(i);
+			    Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
+			    if (!same)
+				errorTrimed.add(l);
+			}
 		    else
-			for (Location one : locList2)
-			    Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, one, player);
+			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+			    Location l = locList2.get(i);
+			    Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
+			    if (!same)
+				errorTrimed.add(l);
+			}
+		}
+
+		if (!same) {
+		    v.setLocations(trimed);
+		    v.setErrorLocations(errorTrimed);
 		}
 
 		return;
 	    }
 	});
 
-	String planerName = player.getName();
-	if (!error && !normalPrintMap.containsKey(planerName))
-	    return false;
-	else if (error && !errorPrintMap.containsKey(planerName))
-	    return false;
+	if (v.isOnce())
+	    return true;
 
-	if (!error && normalPrintMap.get(planerName) + Residence.getConfigManager().getVisualizerShowFor() < System.currentTimeMillis())
-	    return false;
-	else if (error && errorPrintMap.get(planerName) + Residence.getConfigManager().getVisualizerShowFor() < System.currentTimeMillis())
+	if (v.getStart() + Residence.getConfigManager().getVisualizerShowFor() < System.currentTimeMillis())
 	    return false;
 
 	int scid = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		if (player.isOnline())
-		    MakeBorders(player, OriginalLow, OriginalHigh, error);
+		if (player.isOnline()) {
+		    MakeBorders(player, error);
+		}
 		return;
 	    }
 	}, Residence.getConfigManager().getVisualizerUpdateInterval() * 1L);
 	if (!error)
-	    normalIDMap.put(planerName, scid);
+	    v.setId(scid);
 	else
-	    errorIDMap.put(planerName, scid);
+	    v.setErrorId(scid);
 
 	return true;
     }

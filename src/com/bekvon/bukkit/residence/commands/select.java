@@ -160,7 +160,7 @@ public class select implements cmd {
 		area = res.getArea(areaName);
 	    }
 	    if (area != null) {
-		Residence.getSelectionManager().placeLoc1(player, area.getHighLoc(), true);
+		Residence.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
 		Residence.getSelectionManager().placeLoc2(player, area.getLowLoc(), true);
 		Residence.msg(player, lm.Select_Area, areaName, resName);
 	    } else {

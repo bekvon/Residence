@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
@@ -36,7 +37,6 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
@@ -253,7 +253,9 @@ public class ResidenceManager implements ResidenceInterface {
 	Residence.getPlayerManager().addResidence(newRes.getOwner(), newRes);
 
 	if (player != null) {
-	    Residence.getSelectionManager().NewMakeBorders(player, newArea.getHighLoc(), newArea.getLowLoc(), false);
+	    Visualizer v = new Visualizer(player);
+	    v.setAreas(newArea);	    
+	    Residence.getSelectionManager().showBounds(player, v);
 	    Residence.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
 	    Residence.msg(player, lm.Area_Create, "main");
 	    Residence.msg(player, lm.Residence_Create, name);

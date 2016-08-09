@@ -54,6 +54,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
@@ -61,7 +62,6 @@ import com.bekvon.bukkit.residence.event.*;
 import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
@@ -1507,9 +1507,10 @@ public class ResidencePlayerListener implements Listener {
 		Location lastLoc = lastOutsideLoc.get(pname);
 
 		if (Residence.getConfigManager().BounceAnimation()) {
-		    CuboidArea area = res.getAreaByLoc(loc);
-		    if (area != null)
-			Residence.getSelectionManager().MakeBorders(player, area.getLowLoc(), area.getHighLoc(), true);
+		    Visualizer v = new Visualizer(player);
+		    v.setErrorAreas(res.getAreaByLoc(player.getLocation()));
+		    v.setOnce(true);
+		    Residence.getSelectionManager().showBounds(player, v);
 		}
 
 		ClaimedResidence preRes = Residence.getResidenceManager().getByLoc(lastLoc);

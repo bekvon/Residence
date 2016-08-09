@@ -24,6 +24,8 @@ public class list implements cmd {
 	c: for (int i = 1; i < args.length; i++) {
 	    try {
 		page = Integer.parseInt(args[i]);
+		if (page < 1)
+		    page = 1;
 		continue;
 	    } catch (Exception ex) {
 	    }
@@ -50,10 +52,10 @@ public class list implements cmd {
     @Override
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "List Residences");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res list <player> <page>",
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res list <player> <page> <worldName>",
 	    "Lists all the residences a player owns (except hidden ones).",
 	    "If listing your own residences, shows hidden ones as well.",
 	    "To list everyones residences, use /res listall."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]", "[worldname]"));
     }
 }

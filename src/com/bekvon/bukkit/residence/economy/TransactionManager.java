@@ -7,6 +7,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -226,8 +227,9 @@ public class TransactionManager implements MarketBuyInterface {
 
 	    Residence.getSignUtil().CheckSign(res);
 
-	    CuboidArea area = res.getAreaArray()[0];
-	    Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
+	    Visualizer v = new Visualizer(player);
+	    v.setAreas(res);
+	    Residence.getSelectionManager().showBounds(player, v);
 
 	    Residence.msg(player, lm.Economy_MoneyCharged, String.format("%d", amount), econ.getName());
 	    Residence.msg(player, lm.Residence_Bought, res.getResidenceName());

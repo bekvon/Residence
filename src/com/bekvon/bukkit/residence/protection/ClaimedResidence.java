@@ -7,6 +7,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
@@ -346,15 +347,14 @@ public class ClaimedResidence {
 	}
 	if (parent == null) {
 	    String collideResidence = Residence.getResidenceManager().checkAreaCollision(area, this);
-	    if (collideResidence != null) {
+	    ClaimedResidence cRes = Residence.getResidenceManager().getByName(collideResidence);
+	    if (cRes != null) {
 		if (player != null) {
-		    Residence.msg(player, lm.Area_Collision, collideResidence);
-		    CuboidArea oldArea = Residence.getResidenceManager().getByName(collideResidence).getAreaArray()[0];
-		    if (oldArea != null) {
-			Residence.getSelectionManager().NewMakeBorders(player, oldArea.lowPoints, oldArea.highPoints, true);
-
-			Residence.getSelectionManager().NewMakeBorders(player, area.lowPoints, area.highPoints, false);
-		    }
+		    Residence.msg(player, lm.Area_Collision, cRes.getName());
+		    Visualizer v = new Visualizer(player);
+		    v.setAreas(area);
+		    v.setErrorAreas(cRes);
+		    Residence.getSelectionManager().showBounds(player, v);
 		}
 		return false;
 	    }
@@ -450,10 +450,13 @@ public class ClaimedResidence {
 	}
 	if (parent == null) {
 	    String collideResidence = Residence.getResidenceManager().checkAreaCollision(newarea, this);
-	    if (collideResidence != null && player != null) {
-		Residence.msg(player, lm.Area_Collision, collideResidence);
-		CuboidArea area = Residence.getResidenceManager().getByName(collideResidence).getAreaArray()[0];
-		Residence.getSelectionManager().NewMakeBorders(player, area.getLowLoc(), area.highPoints, true);
+	    ClaimedResidence cRes = Residence.getResidenceManager().getByName(collideResidence);
+	    if (cRes != null && player != null) {
+		Residence.msg(player, lm.Area_Collision, cRes.getName());
+		Visualizer v = new Visualizer(player);
+		v.setAreas(this.getAreaArray());
+		v.setErrorAreas(cRes.getAreaArray());
+		Residence.getSelectionManager().showBounds(player, v);
 		return false;
 	    }
 	} else {
@@ -464,7 +467,9 @@ public class ClaimedResidence {
 		    if (res.checkCollision(newarea)) {
 			if (player != null) {
 			    Residence.msg(player, lm.Area_SubzoneCollision, sz);
-			    Residence.getSelectionManager().NewMakeBorders(player, res.getAreaArray()[0].lowPoints, res.getAreaArray()[0].highPoints, true);
+			    Visualizer v = new Visualizer(player);
+			    v.setErrorAreas(res.getAreaArray());
+			    Residence.getSelectionManager().showBounds(player, v);
 			}
 			return false;
 		    }
@@ -613,8 +618,10 @@ public class ClaimedResidence {
 		    Residence.msg(player, lm.Subzone_Collide, resEntry.getKey());
 		    if (res.getAreaArray().length > 0) {
 			CuboidArea oldArea = res.getAreaArray()[0];
-			Residence.getSelectionManager().NewMakeBorders(player, oldArea.lowPoints, oldArea.highPoints, true);
-			Residence.getSelectionManager().NewMakeBorders(player, newArea.lowPoints, newArea.highPoints, false);
+			Visualizer v = new Visualizer(player);
+			v.setAreas(newArea);
+			v.setErrorAreas(oldArea);
+			Residence.getSelectionManager().showBounds(player, v);
 		    }
 
 		}

@@ -19,7 +19,7 @@ public class CuboidArea {
     protected Location lowPoints;
     protected String worldName;
 
-    protected CuboidArea() {
+    public CuboidArea() {
     }
 
     public CuboidArea(Location startLoc, Location endLoc) {

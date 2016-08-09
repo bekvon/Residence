@@ -7,12 +7,12 @@ import org.bukkit.World;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketRentInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
@@ -262,8 +262,9 @@ public class RentManager implements MarketRentInterface {
 
 		Residence.getSignUtil().CheckSign(res);
 
-		CuboidArea area = res.getAreaArray()[0];
-		Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
+		Visualizer v = new Visualizer(player);
+		v.setAreas(res);
+		Residence.getSelectionManager().showBounds(player, v);
 
 		res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
 		res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
@@ -339,8 +340,11 @@ public class RentManager implements MarketRentInterface {
 	    if (Residence.getEconomyManager().transfer(player.getName(), res.getPermissions().getOwner(), land.cost)) {
 		rentedLand.endTime = rentedLand.endTime + daysToMs(land.days);
 		Residence.getSignUtil().CheckSign(res);
-		CuboidArea area = res.getAreaArray()[0];
-		Residence.getSelectionManager().NewMakeBorders(player, area.getHighLoc(), area.getLowLoc(), false);
+
+		Visualizer v = new Visualizer(player);
+		v.setAreas(res);
+		Residence.getSelectionManager().showBounds(player, v);
+
 		Residence.msg(player, lm.Rent_Extended, land.days, res.getName());
 		Residence.msg(player, lm.Rent_Expire, GetTime.getTime(rentedLand.endTime));
 	    } else {

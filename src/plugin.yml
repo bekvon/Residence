@@ -98,6 +98,9 @@ permissions:
   residence.randomtp:
     description: Allows to use /res rt command
     default: true
+  residence.command.show:
+    description: Allows to access particular command
+    default: true
   residence.command.area:
     description: Allows to access particular command
     default: true

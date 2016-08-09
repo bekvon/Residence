@@ -105,6 +105,8 @@ public class ConfigManager {
     protected boolean TeleportTitleMessage;
     protected int VisualizerRowSpacing;
     protected int VisualizerCollumnSpacing;
+    private int VisualizerFrameCap;
+    private int VisualizerSidesCap;
     protected boolean flagsInherit;
     protected ChatColor chatColor;
     protected boolean chatEnable;
@@ -794,6 +796,16 @@ public class ConfigManager {
 	VisualizerCollumnSpacing = c.get("Global.Visualizer.CollumnSpacing", 2);
 	if (VisualizerCollumnSpacing < 1)
 	    VisualizerCollumnSpacing = 1;
+	
+	c.getW().addComment("Global.Visualizer.FrameCap", "Maximum amount of frame particles to show for one player");
+	VisualizerFrameCap = c.get("Global.Visualizer.FrameCap", 2000);
+	if (VisualizerFrameCap < 1)
+	    VisualizerFrameCap = 1;
+	
+	c.getW().addComment("Global.Visualizer.SidesCap", "Maximum amount of sides particles to show for one player");
+	VisualizerSidesCap = c.get("Global.Visualizer.SidesCap", 2000);
+	if (VisualizerSidesCap < 1)
+	    VisualizerSidesCap = 1;
 
 	String effectsList = "";
 	for (Effect one : Effect.values()) {
@@ -1605,5 +1617,13 @@ public class ConfigManager {
 
     public boolean BounceAnimation() {
 	return BounceAnimation;
+    }
+
+    public int getVisualizerFrameCap() {
+	return VisualizerFrameCap;
+    }
+
+    public int getVisualizerSidesCap() {
+	return VisualizerSidesCap;
     }
 }

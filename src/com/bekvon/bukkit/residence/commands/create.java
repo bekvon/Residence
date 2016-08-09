@@ -10,8 +10,10 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -49,9 +51,11 @@ public class create implements cmd {
 		Location highLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(),
 		    Region.getMaximumPoint().getBlockY(), Region.getMaximumPoint().getBlockZ());
 
-		Residence.getSelectionManager().NewMakeBorders(player, lowLoc, highLoc, true);
-		Residence.getSelectionManager().NewMakeBorders(player, Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
-		    .getSelectionManager().getPlayerLoc2(player.getName()), false);
+		Visualizer v = new Visualizer(player);
+		v.setAreas(Residence.getSelectionManager().getSelectionCuboid(player));
+		v.setErrorAreas(new CuboidArea(lowLoc, highLoc));
+
+		Residence.getSelectionManager().showBounds(player, v);
 		return true;
 	    }
 	    Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence

@@ -25,6 +25,8 @@ public class listall implements cmd {
 	c : for (int i = 1; i < args.length; i++) {
 	    try {
 		page = Integer.parseInt(args[i]);
+		if (page < 1)
+		    page = 1;
 		continue;
 	    } catch (Exception ex) {
 	    }
