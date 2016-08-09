@@ -373,7 +373,7 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (resadmin || rent.player.equals(player.getName())) {
+	if (resadmin || rent.player.equals(player.getName()) || res.isOwner(player) && player.hasPermission("residence.market.evict")) {
 	    ResidenceRentEvent revent = new ResidenceRentEvent(res, player, RentEventType.UNRENTABLE);
 	    Residence.getServ().getPluginManager().callEvent(revent);
 	    if (revent.isCancelled())

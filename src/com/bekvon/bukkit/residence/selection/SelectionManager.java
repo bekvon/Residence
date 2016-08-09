@@ -7,8 +7,6 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

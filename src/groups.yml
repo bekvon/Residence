@@ -1,6 +1,6 @@
 # These groups correspond to the Permissions groups defined in your '<worldname>.yml'
 Groups:
-    Default: #group name
+    Default: #group name, DONT remove this group
        # Information about the Residence zone that the player can define.
        #Uncomment the lines below to mirror this config to other groups.
        #Mirror:
@@ -121,6 +121,40 @@ Groups:
                      #build: false
                 WorldNameHere: #or you can apply them by each individual world
                      #build: false
+    NextGroup: #group name, player should have residence.group.nextgroup permission node to have access to this residence group
+       Residence:
+           CanCreate: true
+           MaxResidences: 4
+           MaxAreasPerResidence: 2
+           MaxEastWest: 20
+           MaxNorthSouth: 20
+           MaxUpDown: 20
+           MinHeight: 0
+           MaxHeight: 255
+           SubzoneDepth: 3
+           CanTeleport: true
+           Unstuck: true
+           Kick: true
+           SelectCommandAccess: true
+           ItemListAccess: true
+       Messaging:
+           CanChange: true
+           DefaultEnter: Welcome %player to %residence, owned by %owner.
+           DefaultLeave: Now leaving %residence.
+       Lease:
+          MaxDays: 16
+          RenewIncrement: 14
+       Rent:
+           MaxRents: 3
+           MaxRentables: 3
+           MaxRentDays: 31
+       Economy:
+          CanBuy: true
+          CanSell: false
+          IgnoreLimits: false
+          BuyCost: 0.7
+          SellCost: 0.3
+          RenewCost: 0.3
 
 # You can manually specify the group a player is in below, this overrides their permissions group.
 GroupAssignments:
