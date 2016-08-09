@@ -12,6 +12,8 @@ import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -165,6 +167,9 @@ public class HelpEntry {
 		    continue;
 
 		if (!ResidenceCommandListener.getAdminCommands().contains(entry.getName().toLowerCase()) && resadmin)
+		    continue;
+
+		if (!sender.hasPermission("residence.command." + entry.getName().toLowerCase()))
 		    continue;
 
 	    } else {
