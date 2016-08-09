@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.economy.rent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketRentInterface;
@@ -82,6 +83,10 @@ public class RentManager implements MarketRentInterface {
     }
 
     public List<ClaimedResidence> getRents(String playername, boolean onlyHidden) {
+	return getRents(playername, onlyHidden, null);
+    }
+
+    public List<ClaimedResidence> getRents(String playername, boolean onlyHidden, World world) {
 	List<ClaimedResidence> rentedLands = new ArrayList<ClaimedResidence>();
 	for (ClaimedResidence res : rentedLand) {
 	    if (res == null)
@@ -100,6 +105,8 @@ public class RentManager implements MarketRentInterface {
 	    if (onlyHidden && !hidden)
 		continue;
 
+	    if (world != null && !world.getName().equalsIgnoreCase(res.getWorld()))
+		continue;
 	    rentedLands.add(res);
 	}
 	return rentedLands;

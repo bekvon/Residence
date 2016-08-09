@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -93,6 +94,10 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public ArrayList<ClaimedResidence> getResidences(String player, boolean showhidden, boolean onlyHidden) {
+	return getResidences(player, showhidden, onlyHidden, null);
+    }
+
+    public ArrayList<ClaimedResidence> getResidences(String player, boolean showhidden, boolean onlyHidden, World world) {
 	ArrayList<ClaimedResidence> temp = new ArrayList<ClaimedResidence>();
 	playerJoin(player);
 	ResidencePlayer resPlayer = players.get(player.toLowerCase());
@@ -103,6 +108,8 @@ public class PlayerManager implements ResidencePlayerInterface {
 	    if (!showhidden && hidden)
 		continue;
 	    if (onlyHidden && !hidden)
+		continue;
+	    if (world != null && !world.getName().equalsIgnoreCase(one.getWorld()))
 		continue;
 	    temp.add(one);
 	}

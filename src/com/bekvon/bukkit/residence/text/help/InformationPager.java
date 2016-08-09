@@ -54,7 +54,15 @@ public class InformationPager {
 	    perPage = 6;
 	int start = (page - 1) * perPage;
 	int end = start + perPage;
+
 	int pagecount = (int) Math.ceil((double) lines.size() / (double) perPage);
+	if (page == -1) {
+	    start = 0;
+	    end = lines.size();
+	    page = 1;
+	    pagecount = 1;
+	}
+
 	if (pagecount == 0)
 	    pagecount = 1;
 	if (page > pagecount) {
