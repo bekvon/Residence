@@ -23,6 +23,8 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -610,20 +612,21 @@ public class ClaimedResidence {
 
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
 
+	Debug.D("s2");
 	Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
 	for (Entry<String, ClaimedResidence> resEntry : set) {
 	    ClaimedResidence res = resEntry.getValue();
 	    if (res.checkCollision(newArea)) {
 		if (player != null) {
 		    Residence.msg(player, lm.Subzone_Collide, resEntry.getKey());
-		    if (res.getAreaArray().length > 0) {
-			CuboidArea oldArea = res.getAreaArray()[0];
+//		    if (res.getAreaArray().length > 0) {
+//			CuboidArea oldArea = res.getAreaArray()[0];
 			Visualizer v = new Visualizer(player);
 			v.setAreas(newArea);
-			v.setErrorAreas(oldArea);
+			v.setErrorAreas(res);
+			Debug.D("s");
 			Residence.getSelectionManager().showBounds(player, v);
-		    }
-
+//		    }
 		}
 		return false;
 	    }

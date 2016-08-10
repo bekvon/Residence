@@ -7,6 +7,7 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -395,8 +396,13 @@ public class SelectionManager {
 	    }
 	    v.setLoc(player.getLocation());
 	} else {
-	    locList.addAll(v.getLocations());
-	    locList2.addAll(v.getErrorLocations());
+	    if (error) {
+		locList.addAll(v.getErrorLocations());
+		locList2.addAll(v.getErrorLocations2());
+	    } else {
+		locList.addAll(v.getLocations());
+		locList2.addAll(v.getLocations2());
+	    }
 	}
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -417,7 +423,7 @@ public class SelectionManager {
 		}
 
 		List<Location> trimed = new ArrayList<Location>();
-		List<Location> errorTrimed = new ArrayList<Location>();
+		List<Location> trimed2 = new ArrayList<Location>();
 
 		boolean spigot = Residence.isSpigot();
 
@@ -442,14 +448,14 @@ public class SelectionManager {
 			    Location l = locList2.get(i);
 			    player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
 			    if (!same)
-				errorTrimed.add(l);
+				trimed2.add(l);
 			}
 		    else
 			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
 			    Location l = locList2.get(i);
 			    player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
 			    if (!same)
-				errorTrimed.add(l);
+				trimed2.add(l);
 			}
 		} else {
 		    if (!error)
@@ -471,20 +477,25 @@ public class SelectionManager {
 			    Location l = locList2.get(i);
 			    Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
 			    if (!same)
-				errorTrimed.add(l);
+				trimed2.add(l);
 			}
 		    else
 			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
 			    Location l = locList2.get(i);
 			    Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
 			    if (!same)
-				errorTrimed.add(l);
+				trimed2.add(l);
 			}
 		}
 
 		if (!same) {
-		    v.setLocations(trimed);
-		    v.setErrorLocations(errorTrimed);
+		    if (error) {
+			v.setErrorLocations(trimed);
+			v.setErrorLocations2(trimed2);
+		    } else {
+			v.setLocations(trimed);
+			v.setLocations2(trimed2);
+		    }
 		}
 
 		return;

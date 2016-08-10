@@ -21,6 +21,8 @@ public class Visualizer {
 
     private List<Location> locations = new ArrayList<Location>();
     private List<Location> errorLocations = new ArrayList<Location>();
+    private List<Location> locations2 = new ArrayList<Location>();
+    private List<Location> errorLocations2 = new ArrayList<Location>();
     private Location loc = null;
 
     public Visualizer(Player player) {
@@ -33,9 +35,11 @@ public class Visualizer {
 	    return false;
 	if (loc.getWorld() != player.getWorld())
 	    return false;
-	if (loc.distance(player.getLocation()) > 5){
+	if (!errorAreas.isEmpty() && errorLocations.isEmpty())
 	    return false;
-	}
+	if (loc.distance(player.getLocation()) > 5)
+	    return false;
+
 	return true;
     }
 
@@ -129,12 +133,28 @@ public class Visualizer {
 	this.locations = locations;
     }
 
+    public List<Location> getLocations2() {
+	return locations2;
+    }
+
+    public void setLocations2(List<Location> locations) {
+	this.locations2 = locations;
+    }
+
     public List<Location> getErrorLocations() {
 	return errorLocations;
     }
 
     public void setErrorLocations(List<Location> errorLocations) {
 	this.errorLocations = errorLocations;
+    }
+
+    public List<Location> getErrorLocations2() {
+	return errorLocations2;
+    }
+
+    public void setErrorLocations2(List<Location> errorLocations) {
+	this.errorLocations2 = errorLocations;
     }
 
     public Location getLoc() {
