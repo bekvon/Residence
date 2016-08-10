@@ -9,21 +9,26 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class InformationPager {
+    Residence plugin;
 
-    public static void printInfo(CommandSender sender, String title, String[] lines, int page) {
-	InformationPager.printInfo(sender, title, Arrays.asList(lines), page);
+    public InformationPager(Residence plugin) {
+	this.plugin = plugin;
     }
 
-    public static void printInfo(CommandSender sender, String title, List<String> lines, int page) {
+    public void printInfo(CommandSender sender, String title, String[] lines, int page) {
+	printInfo(sender, title, Arrays.asList(lines), page);
+    }
+
+    public void printInfo(CommandSender sender, String title, List<String> lines, int page) {
 	int perPage = 6;
 	int start = (page - 1) * perPage;
 	int end = start + perPage;
@@ -47,7 +52,7 @@ public class InformationPager {
 	    Residence.msg(sender, lm.InformationPage_NoNextPage);
     }
 
-    public static void printListInfo(CommandSender sender, String targetPlayer, List<ClaimedResidence> lines, int page, boolean resadmin) {
+    public void printListInfo(CommandSender sender, String targetPlayer, List<ClaimedResidence> lines, int page, boolean resadmin) {
 	if (targetPlayer != null)
 	    lines = Residence.getSortingManager().sortResidences(lines);
 	int perPage = 20;
@@ -79,7 +84,7 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
-	String mm = "";
+	List<String> linesForConsole = new ArrayList<String>();
 	for (int i = start; i < end; i++) {
 	    if (lines.size() <= i)
 		break;
@@ -137,19 +142,36 @@ public class InformationPager {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + Residence.getResidenceManager().convertToRaw(null, msg,
 		    StringB.toString(), cmd + " tp " + res.getName()));
 	    else {
-		sender.sendMessage(i + "");
-		mm += msg + " " + StringB.toString().replace("\n", "") + " \n";
+		linesForConsole.add(msg + " " + StringB.toString().replace("\n", ""));
 	    }
 	}
 	if (!(sender instanceof Player))
-	    sender.sendMessage("\n" + mm);
+	    printListWithDelay(sender, linesForConsole);
+
 	if (targetPlayer != null)
 	    ShowPagination(sender.getName(), pagecount, page, cmd + " list " + targetPlayer);
 	else
 	    ShowPagination(sender.getName(), pagecount, page, cmd + " listall");
     }
 
-    public static void ShowPagination(String target, int pageCount, int CurrentPage, String cmd) {
+    private void printListWithDelay(final CommandSender sender, final List<String> linesForConsole) {
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
+	    public void run() {
+		for (int i = 0; i < 20; i++) {
+		    if (linesForConsole.size() > 0) {
+			sender.sendMessage(linesForConsole.get(0));
+			linesForConsole.remove(0);
+		    }
+		}
+		printListWithDelay(sender, linesForConsole);
+		return;
+	    }
+	}, 1L);
+
+    }
+
+    public void ShowPagination(String target, int pageCount, int CurrentPage, String cmd) {
 	if (target.equalsIgnoreCase("console"))
 	    return;
 	String separator = ChatColor.GOLD + "";

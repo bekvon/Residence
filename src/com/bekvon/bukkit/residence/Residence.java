@@ -61,6 +61,12 @@ import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
 import com.bekvon.bukkit.residence.allNms.v1_10Events;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
 import com.bekvon.bukkit.residence.allNms.v1_9Events;
+import com.bekvon.bukkit.residence.api.ChatInterface;
+import com.bekvon.bukkit.residence.api.MarketBuyInterface;
+import com.bekvon.bukkit.residence.api.MarketRentInterface;
+import com.bekvon.bukkit.residence.api.ResidenceApi;
+import com.bekvon.bukkit.residence.api.ResidenceInterface;
+import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
@@ -93,7 +99,7 @@ import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.utils.YmlMaker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
-import com.bekvon.bukkit.residence.api.*;
+import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.earth2me.essentials.Essentials;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
@@ -159,6 +165,7 @@ public class Residence extends JavaPlugin {
     protected static ActionBar ABManager;
     protected static AutoSelection AutoSelectionManager;
     protected static SchematicsManager SchematicManager;
+    private static InformationPager InformationPagerManager;
 
     protected static CommandFiller cmdFiller;
 
@@ -492,6 +499,8 @@ public class Residence extends JavaPlugin {
 	    PlayerManager = new PlayerManager();
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
+	    
+	    InformationPagerManager = new InformationPager(this);
 
 	    zip = new ZipLibrary();
 
@@ -1655,4 +1664,7 @@ public class Residence extends JavaPlugin {
 	return Residence.getLM().getMessage(lm, variables);
     }
 
+    public static InformationPager getInfoPageManager() {
+	return InformationPagerManager;
+    }
 }

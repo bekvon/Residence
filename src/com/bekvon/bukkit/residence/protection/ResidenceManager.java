@@ -314,7 +314,7 @@ public class ResidenceManager implements ResidenceInterface {
 	boolean hidden = showhidden;
 	ArrayList<ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidences(targetplayer, hidden, onlyHidden, world);
 	ownedResidences.addAll(Residence.getRentManager().getRents(targetplayer, onlyHidden, world));
-	InformationPager.printListInfo(sender, targetplayer, ownedResidences, page, resadmin);
+	Residence.getInfoPageManager().printListInfo(sender, targetplayer, ownedResidences, page, resadmin);
     }
 
     public void listAllResidences(CommandSender sender, int page) {
@@ -323,7 +323,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden, World world) {
 	List<ClaimedResidence> list = getFromAllResidences(showhidden, false, world);
-	InformationPager.printListInfo(sender, null, list, page, showhidden);
+	Residence.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
     }
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden) {
@@ -332,7 +332,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean onlyHidden) {
 	List<ClaimedResidence> list = getFromAllResidences(showhidden, onlyHidden, null);
-	InformationPager.printListInfo(sender, null, list, page, showhidden);
+	Residence.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
     }
 
     public String[] getResidenceList() {

@@ -1053,7 +1053,7 @@ public class ClaimedResidence {
 	for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
 	    temp.add(ChatColor.GREEN + sz.getKey() + ChatColor.YELLOW + " - " + Residence.msg(lm.General_Owner, sz.getValue().getOwner()));
 	}
-	InformationPager.printInfo(player, Residence.msg(lm.General_Subzones), temp, page);
+	Residence.getInfoPageManager().printInfo(player, Residence.msg(lm.General_Subzones), temp, page);
     }
 
     public void printAreaList(Player player, int page) {
@@ -1061,7 +1061,7 @@ public class ClaimedResidence {
 	for (String area : areas.keySet()) {
 	    temp.add(area);
 	}
-	InformationPager.printInfo(player, Residence.msg(lm.General_PhysicalAreas), temp, page);
+	Residence.getInfoPageManager().printInfo(player, Residence.msg(lm.General_PhysicalAreas), temp, page);
     }
 
     public void printAdvancedAreaList(Player player, int page) {
@@ -1074,7 +1074,7 @@ public class ClaimedResidence {
 		.getBlockX() + "," + h.getBlockY() + "," + h.getBlockZ() + ") " + ChatColor.YELLOW + "P2:" + ChatColor.RED + "(" + l.getBlockX() + "," + l.getBlockY()
 		+ "," + l.getBlockZ() + ") " + ChatColor.YELLOW + "(Size:" + ChatColor.RED + a.getSize() + ChatColor.YELLOW + ")" + ChatColor.GREEN + "} ");
 	}
-	InformationPager.printInfo(player, Residence.msg(lm.General_PhysicalAreas), temp, page);
+	Residence.getInfoPageManager().printInfo(player, Residence.msg(lm.General_PhysicalAreas), temp, page);
     }
 
     public String[] getAreaList() {
