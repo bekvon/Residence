@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceCommandListener extends Residence {
 

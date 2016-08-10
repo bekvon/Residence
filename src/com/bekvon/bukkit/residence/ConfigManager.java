@@ -169,6 +169,8 @@ public class ConfigManager {
     protected List<String> FlagsList;
     protected List<String> NegativePotionEffects;
     protected List<String> NegativeLingeringPotionEffects;
+    private Double WalkSpeed1;
+    private Double WalkSpeed2;
 
     protected Location KickLocation;
 
@@ -465,6 +467,17 @@ public class ConfigManager {
 
 	NegativeLingeringPotionEffects = c.get("Global.Optimizations.NegativeLingeringPotions", Arrays.asList("slowness", "instant_damage", "poison",
 	    "slowness"));
+
+	c.getW().addComment("Global.Optimizations.WalkSpeed",
+	    "Defines speed for particular wspeed1 and wspeed2 flags. It can be from 0 up to 5");
+	WalkSpeed1 = c.get("Global.Optimizations.WalkSpeed.1", 0.5D);
+	WalkSpeed1 = WalkSpeed1 < 0 ? 0 : WalkSpeed1;
+	WalkSpeed1 = WalkSpeed1 > 5 ? 5 : WalkSpeed1;
+	WalkSpeed1 = WalkSpeed1 / 5.0;
+	WalkSpeed2 = c.get("Global.Optimizations.WalkSpeed.2", 2D);
+	WalkSpeed2 = WalkSpeed2 < 0 ? 0 : WalkSpeed2;
+	WalkSpeed2 = WalkSpeed2 > 5 ? 5 : WalkSpeed2;
+	WalkSpeed2 = WalkSpeed2 / 5.0;
 
 	c.getW().addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
 	    "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
@@ -796,12 +809,12 @@ public class ConfigManager {
 	VisualizerCollumnSpacing = c.get("Global.Visualizer.CollumnSpacing", 2);
 	if (VisualizerCollumnSpacing < 1)
 	    VisualizerCollumnSpacing = 1;
-	
+
 	c.getW().addComment("Global.Visualizer.FrameCap", "Maximum amount of frame particles to show for one player");
 	VisualizerFrameCap = c.get("Global.Visualizer.FrameCap", 2000);
 	if (VisualizerFrameCap < 1)
 	    VisualizerFrameCap = 1;
-	
+
 	c.getW().addComment("Global.Visualizer.SidesCap", "Maximum amount of sides particles to show for one player");
 	VisualizerSidesCap = c.get("Global.Visualizer.SidesCap", 2000);
 	if (VisualizerSidesCap < 1)
@@ -1625,5 +1638,13 @@ public class ConfigManager {
 
     public int getVisualizerSidesCap() {
 	return VisualizerSidesCap;
+    }
+
+    public Double getWalkSpeed1() {
+	return WalkSpeed1;
+    }
+
+    public Double getWalkSpeed2() {
+	return WalkSpeed2;
     }
 }

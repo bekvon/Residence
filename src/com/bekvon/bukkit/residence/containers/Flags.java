@@ -96,7 +96,9 @@ public enum Flags {
     trusted(1, 0, FlagMode.Group, "Gives build, use, move, container and tp flags", true),
     use(70, 0, FlagMode.Both, "Allows or denys use of doors, lever, buttons, etc...", true),
     vehicledestroy(328, 0, FlagMode.Both, "Allows or denys vehicle destroy", true),
-    waterflow(326, 0, FlagMode.Residence, "Allows or denys water flow, overrides flow", true);
+    waterflow(326, 0, FlagMode.Residence, "Allows or denys water flow, overrides flow", true),
+    wspeed1(373, 0, FlagMode.Residence, "Change players walk speed in residence to %1", true),
+    wspeed2(373, 0, FlagMode.Residence, "Change players walk speed in residence to %1", true);
 
     private int id;
     private int data;

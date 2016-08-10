@@ -224,6 +224,7 @@ public class ResidenceManager implements ResidenceInterface {
 	newRes.setEnterMessage(group.getDefaultEnterMessage());
 	newRes.setLeaveMessage(group.getDefaultLeaveMessage());
 	newRes.setName(name);
+	newRes.setCreateTime();
 
 	if (residences.containsKey(name.toLowerCase())) {
 	    Residence.msg(player, lm.Residence_AlreadyExists, residences.get(name.toLowerCase()).getResidenceName());
@@ -254,7 +255,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (player != null) {
 	    Visualizer v = new Visualizer(player);
-	    v.setAreas(newArea);	    
+	    v.setAreas(newArea);
 	    Residence.getSelectionManager().showBounds(player, v);
 	    Residence.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
 	    Residence.msg(player, lm.Area_Create, "main");

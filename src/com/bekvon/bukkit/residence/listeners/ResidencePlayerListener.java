@@ -64,6 +64,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
@@ -260,8 +261,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	if (!event.getFlag().equalsIgnoreCase(Flags.day.getName()) &&
-	    !event.getFlag().equalsIgnoreCase(Flags.night.getName()) &&
-	    !event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
+	    !event.getFlag().equalsIgnoreCase(Flags.night.getName()))
 	    return;
 
 	switch (event.getNewState()) {
@@ -269,9 +269,6 @@ public class ResidencePlayerListener implements Listener {
 	case FALSE:
 	    for (Player one : event.getResidence().getPlayersInResidence())
 		one.resetPlayerTime();
-	    if (Residence.getVersionChecker().GetVersion() > 1900 && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
-		for (Player one : event.getResidence().getPlayersInResidence())
-		    one.setGlowing(false);
 	    break;
 	case INVALID:
 	    break;
@@ -282,9 +279,69 @@ public class ResidencePlayerListener implements Listener {
 	    if (event.getFlag().equalsIgnoreCase(Flags.night.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setPlayerTime(14000L, false);
+	    break;
+	default:
+	    break;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeGlow(ResidenceFlagChangeEvent event) {
+	if (event.isCancelled())
+	    return;
+
+	if (!event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
+	    return;
+
+	switch (event.getNewState()) {
+	case NEITHER:
+	case FALSE:
 	    if (Residence.getVersionChecker().GetVersion() > 1900 && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
-		    one.setGlowing(true);
+		    one.setGlowing(false);
+	    break;
+	case INVALID:
+	    break;
+	case TRUE:
+	    if (event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
+		if (Residence.getVersionChecker().GetVersion() > 1900)
+		    for (Player one : event.getResidence().getPlayersInResidence())
+			one.setGlowing(true);
+	    break;
+	default:
+	    break;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeWSpeed(ResidenceFlagChangeEvent event) {
+	if (event.isCancelled())
+	    return;
+
+	if (!event.getFlag().equalsIgnoreCase(Flags.wspeed1.getName()) &&
+	    !event.getFlag().equalsIgnoreCase(Flags.wspeed2.getName()))
+	    return;
+
+	switch (event.getNewState()) {
+	case NEITHER:
+	case FALSE:
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.setWalkSpeed(0.2F);
+	    break;
+	case INVALID:
+	    break;
+	case TRUE:
+	    if (event.getFlag().equalsIgnoreCase(Flags.wspeed1.getName())) {
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setWalkSpeed(Residence.getConfigManager().getWalkSpeed1().floatValue());
+		if (event.getResidence().getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+		    event.getResidence().getPermissions().setFlag(Flags.wspeed2.getName(), FlagState.NEITHER);
+	    } else if (event.getFlag().equalsIgnoreCase(Flags.wspeed2.getName())) {
+		for (Player one : event.getResidence().getPlayersInResidence())
+		    one.setWalkSpeed(Residence.getConfigManager().getWalkSpeed2().floatValue());
+		if (event.getResidence().getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
+		    event.getResidence().getPermissions().setFlag(Flags.wspeed1.getName(), FlagState.NEITHER);
+	    }
 	    break;
 	default:
 	    break;
@@ -1481,6 +1538,9 @@ public class ResidencePlayerListener implements Listener {
 		if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		    player.resetPlayerTime();
 
+		if (ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+		    player.setWalkSpeed(0.2F);
+
 		if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		    player.resetPlayerWeather();
 
@@ -1568,18 +1628,6 @@ public class ResidencePlayerListener implements Listener {
 		player.setAllowFlight(false);
 	    }
 
-	    if (Residence.getVersionChecker().GetVersion() > 1900 && res.getPermissions().has(Flags.glow, false))
-		player.setGlowing(true);
-
-	    if (res.getPermissions().has(Flags.day, false))
-		player.setPlayerTime(6000L, false);
-	    else if (res.getPermissions().has(Flags.night, false))
-		player.setPlayerTime(14000L, false);
-
-	    if (res.getPermissions().has(Flags.sun, false))
-		player.setPlayerWeather(WeatherType.CLEAR);
-	    else if (res.getPermissions().has(Flags.rain, false))
-		player.setPlayerWeather(WeatherType.DOWNFALL);
 	}
 
 	lastOutsideLoc.put(pname, loc);
@@ -1595,6 +1643,9 @@ public class ResidencePlayerListener implements Listener {
 
 		if (ResOld.getPermissions().has(Flags.night, false) || ResOld.getPermissions().has(Flags.day, false))
 		    player.resetPlayerTime();
+
+		if (ResOld.getPermissions().has(Flags.wspeed1, false) || ResOld.getPermissions().has(Flags.wspeed2, false))
+		    player.setWalkSpeed(0.2F);
 
 		if (ResOld.getPermissions().has(Flags.sun, false) || ResOld.getPermissions().has(Flags.rain, false))
 		    player.resetPlayerWeather();
@@ -1637,6 +1688,25 @@ public class ResidencePlayerListener implements Listener {
 			Residence.msg(player, ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
 		    }
 		}
+		
+
+		    if (Residence.getVersionChecker().GetVersion() > 1900 && res.getPermissions().has(Flags.glow, false))
+			player.setGlowing(true);
+
+		    if (res.getPermissions().has(Flags.day, false))
+			player.setPlayerTime(6000L, false);
+		    else if (res.getPermissions().has(Flags.night, false))
+			player.setPlayerTime(14000L, false);
+
+		    if (res.getPermissions().has(Flags.wspeed1, false))
+			player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed1().floatValue());
+		    else if (res.getPermissions().has(Flags.wspeed2, false))
+			player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed2().floatValue());
+
+		    if (res.getPermissions().has(Flags.sun, false))
+			player.setPlayerWeather(WeatherType.CLEAR);
+		    else if (res.getPermissions().has(Flags.rain, false))
+			player.setPlayerWeather(WeatherType.DOWNFALL);
 	    }
 	}
     }

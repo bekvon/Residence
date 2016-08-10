@@ -9,6 +9,7 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import java.util.Arrays;
@@ -78,6 +79,7 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
+	String mm = "";
 	for (int i = start; i < end; i++) {
 	    if (lines.size() <= i)
 		break;
@@ -134,9 +136,13 @@ public class InformationPager {
 	    if (sender instanceof Player)
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + Residence.getResidenceManager().convertToRaw(null, msg,
 		    StringB.toString(), cmd + " tp " + res.getName()));
-	    else
-		sender.sendMessage(msg + " " + StringB.toString().replace("\n", ""));
+	    else {
+		sender.sendMessage(i + "");
+		mm += msg + " " + StringB.toString().replace("\n", "") + " \n";
+	    }
 	}
+	if (!(sender instanceof Player))
+	    sender.sendMessage("\n" + mm);
 	if (targetPlayer != null)
 	    ShowPagination(sender.getName(), pagecount, page, cmd + " list " + targetPlayer);
 	else

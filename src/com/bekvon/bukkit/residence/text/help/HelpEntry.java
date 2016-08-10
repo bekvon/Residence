@@ -12,8 +12,6 @@ import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -179,8 +177,19 @@ public class HelpEntry {
 			continue;
 		    }
 
+		    String desc = entry.getDescription();
+
+		    switch (entry.getName().toLowerCase()) {
+		    case "wspeed1":
+			desc = desc.replace("%1", Residence.getConfigManager().getWalkSpeed1() + "");
+			break;
+		    case "wspeed2":
+			desc = desc.replace("%1", Residence.getConfigManager().getWalkSpeed2() + "");
+			break;
+		    }
+
 		    // adding flag name and description for later sorting
-		    unsortMap.put(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + entry.getDescription());
+		    unsortMap.put(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + desc);
 		    continue;
 		}
 	    }
