@@ -1414,6 +1414,91 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onResidenceChange(ResidenceChangedEvent event) {
+	ClaimedResidence res = event.getTo();
+	ClaimedResidence ResOld = event.getFrom();
+	Player player = event.getPlayer();
+
+	if (res == null && ResOld != null) {
+	    if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+		player.resetPlayerTime();
+
+	    if (ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+		player.setWalkSpeed(0.2F);
+
+	    if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+		player.resetPlayerWeather();
+
+	    if (Residence.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+		player.setGlowing(false);
+	}
+
+	if (res != null && ResOld != null && res != ResOld) {
+	    if (Residence.getVersionChecker().GetVersion() > 1900) {
+		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+		    player.setGlowing(true);
+		else if (ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+		    player.setGlowing(false);
+	    }
+
+	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+		player.setPlayerTime(6000L, false);
+	    else if (ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+		player.resetPlayerTime();
+
+	    if (res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+		player.setPlayerTime(14000L, false);
+	    else if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+		player.resetPlayerTime();
+
+	    if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
+		player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed1().floatValue());
+	    else if (ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
+		player.setWalkSpeed(0.2F);
+
+	    if (res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue)) {
+		player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed2().floatValue());
+	    } else if (ResOld.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+		player.setWalkSpeed(0.2F);
+
+	    if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue)) {
+		player.setPlayerWeather(WeatherType.CLEAR);
+	    } else if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue))
+		player.resetPlayerWeather();
+
+	    if (res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue)) {
+		player.setPlayerWeather(WeatherType.DOWNFALL);
+	    } else if (ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+		player.resetPlayerWeather();
+	}
+
+	if (res != null && ResOld == null) {
+	    if (Residence.getVersionChecker().GetVersion() > 1900) {
+		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+		    player.setGlowing(true);
+	    }
+
+	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+		player.setPlayerTime(6000L, false);
+
+	    if (res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+		player.setPlayerTime(14000L, false);
+
+	    if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
+		player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed1().floatValue());
+
+	    if (res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+		player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed2().floatValue());
+
+	    if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue))
+		player.setPlayerWeather(WeatherType.CLEAR);
+
+	    if (res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+		player.setPlayerWeather(WeatherType.DOWNFALL);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
@@ -1535,18 +1620,6 @@ public class ResidencePlayerListener implements Listener {
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		Residence.getServ().getPluginManager().callEvent(chgEvent);
 
-		if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
-		    player.resetPlayerTime();
-
-		if (ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
-		    player.setWalkSpeed(0.2F);
-
-		if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
-		    player.resetPlayerWeather();
-
-		if (Residence.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
-		    player.setGlowing(false);
-
 		if (leave != null && !leave.equals("")) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
@@ -1568,7 +1641,7 @@ public class ResidencePlayerListener implements Listener {
 
 		if (Residence.getConfigManager().BounceAnimation()) {
 		    Visualizer v = new Visualizer(player);
-		    v.setErrorAreas(res.getAreaByLoc(player.getLocation()));
+		    v.setErrorAreas(res);
 		    v.setOnce(true);
 		    Residence.getSelectionManager().showBounds(player, v);
 		}
@@ -1627,7 +1700,6 @@ public class ResidencePlayerListener implements Listener {
 		player.setFlying(false);
 		player.setAllowFlight(false);
 	    }
-
 	}
 
 	lastOutsideLoc.put(pname, loc);
@@ -1640,19 +1712,6 @@ public class ResidencePlayerListener implements Listener {
 	    if (ResOld != res && ResOld != null) {
 		String leave = ResOld.getLeaveMessage();
 		chgFrom = ResOld;
-
-		if (ResOld.getPermissions().has(Flags.night, false) || ResOld.getPermissions().has(Flags.day, false))
-		    player.resetPlayerTime();
-
-		if (ResOld.getPermissions().has(Flags.wspeed1, false) || ResOld.getPermissions().has(Flags.wspeed2, false))
-		    player.setWalkSpeed(0.2F);
-
-		if (ResOld.getPermissions().has(Flags.sun, false) || ResOld.getPermissions().has(Flags.rain, false))
-		    player.resetPlayerWeather();
-
-		if (Residence.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, false))
-		    player.setGlowing(false);
-
 		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
 		    if (Residence.getConfigManager().useActionBar()) {
 			Residence.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
@@ -1688,25 +1747,6 @@ public class ResidencePlayerListener implements Listener {
 			Residence.msg(player, ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
 		    }
 		}
-		
-
-		    if (Residence.getVersionChecker().GetVersion() > 1900 && res.getPermissions().has(Flags.glow, false))
-			player.setGlowing(true);
-
-		    if (res.getPermissions().has(Flags.day, false))
-			player.setPlayerTime(6000L, false);
-		    else if (res.getPermissions().has(Flags.night, false))
-			player.setPlayerTime(14000L, false);
-
-		    if (res.getPermissions().has(Flags.wspeed1, false))
-			player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed1().floatValue());
-		    else if (res.getPermissions().has(Flags.wspeed2, false))
-			player.setWalkSpeed(Residence.getConfigManager().getWalkSpeed2().floatValue());
-
-		    if (res.getPermissions().has(Flags.sun, false))
-			player.setPlayerWeather(WeatherType.CLEAR);
-		    else if (res.getPermissions().has(Flags.rain, false))
-			player.setPlayerWeather(WeatherType.DOWNFALL);
 	    }
 	}
     }

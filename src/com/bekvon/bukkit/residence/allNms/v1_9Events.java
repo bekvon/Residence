@@ -42,8 +42,7 @@ public class v1_9Events implements Listener {
 	    event.setCancelled(true);
     }
 
-//    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLingeringEffectApply(AreaEffectCloudApplyEvent event) {
 
 	// disabling event on world
