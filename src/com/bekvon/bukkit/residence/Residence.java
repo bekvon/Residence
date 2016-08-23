@@ -499,7 +499,7 @@ public class Residence extends JavaPlugin {
 	    PlayerManager = new PlayerManager();
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
-	    
+
 	    InformationPagerManager = new InformationPager(this);
 
 	    zip = new ZipLibrary();
@@ -707,8 +707,7 @@ public class Residence extends JavaPlugin {
 
 	    AutoSelectionManager = new AutoSelection();
 
-	    if (wep != null)
-		SchematicManager = new SchematicsManager();
+	    SchematicManager = new SchematicsManager();
 
 	    try {
 		Class.forName("org.bukkit.event.player.PlayerItemDamageEvent");
