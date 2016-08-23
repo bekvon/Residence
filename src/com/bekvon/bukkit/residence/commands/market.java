@@ -79,8 +79,10 @@ public class market implements cmd {
 		    Residence.msg(sender, lm.Rent_UnrentConfirm, res.getName());
 		} else
 		    Residence.getRentManager().printRentInfo(player, res);
-	    } else
+	    } else {
+		Residence.UnrentConfirm.put(player.getName(), res.getName());
 		Residence.msg(sender, lm.Rent_ReleaseConfirm, res.getName());
+	    }
 
 	    return true;
 
