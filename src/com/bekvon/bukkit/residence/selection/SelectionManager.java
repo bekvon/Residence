@@ -425,67 +425,71 @@ public class SelectionManager {
 		List<Location> trimed = new ArrayList<Location>();
 		List<Location> trimed2 = new ArrayList<Location>();
 
-		boolean spigot = Residence.isSpigot();
+		try {
+		    boolean spigot = Residence.isSpigot();
 
-		if (spigot) {
-		    if (!error)
-			for (int i = 0; i < locList.size(); i += timesMore) {
-			    Location l = locList.get(i);
-			    player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-			    if (!same)
-				trimed.add(l);
-			}
-		    else
-			for (int i = 0; i < locList.size(); i += timesMore) {
-			    Location l = locList.get(i);
-			    player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-			    if (!same)
-				trimed.add(l);
-			}
+		    if (spigot) {
+			if (!error)
+			    for (int i = 0; i < locList.size(); i += timesMore) {
+				Location l = locList.get(i);
+				player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+				if (!same)
+				    trimed.add(l);
+			    }
+			else
+			    for (int i = 0; i < locList.size(); i += timesMore) {
+				Location l = locList.get(i);
+				player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+				if (!same)
+				    trimed.add(l);
+			    }
 
-		    if (!error)
-			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-			    Location l = locList2.get(i);
-			    player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-			    if (!same)
-				trimed2.add(l);
-			}
-		    else
-			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-			    Location l = locList2.get(i);
-			    player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-			    if (!same)
-				trimed2.add(l);
-			}
-		} else {
-		    if (!error)
-			for (int i = 0; i < locList.size(); i += timesMore) {
-			    Location l = locList.get(i);
-			    Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
-			    if (!same)
-				trimed.add(l);
-			}
-		    else
-			for (int i = 0; i < locList.size(); i += timesMore) {
-			    Location l = locList.get(i);
-			    Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
-			    if (!same)
-				trimed.add(l);
-			}
-		    if (!error)
-			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-			    Location l = locList2.get(i);
-			    Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
-			    if (!same)
-				trimed2.add(l);
-			}
-		    else
-			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-			    Location l = locList2.get(i);
-			    Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
-			    if (!same)
-				trimed2.add(l);
-			}
+			if (!error)
+			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+				Location l = locList2.get(i);
+				player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+				if (!same)
+				    trimed2.add(l);
+			    }
+			else
+			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+				Location l = locList2.get(i);
+				player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+				if (!same)
+				    trimed2.add(l);
+			    }
+		    } else {
+			if (!error)
+			    for (int i = 0; i < locList.size(); i += timesMore) {
+				Location l = locList.get(i);
+				Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
+				if (!same)
+				    trimed.add(l);
+			    }
+			else
+			    for (int i = 0; i < locList.size(); i += timesMore) {
+				Location l = locList.get(i);
+				Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
+				if (!same)
+				    trimed.add(l);
+			    }
+			if (!error)
+			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+				Location l = locList2.get(i);
+				Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
+				if (!same)
+				    trimed2.add(l);
+			    }
+			else
+			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+				Location l = locList2.get(i);
+				Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
+				if (!same)
+				    trimed2.add(l);
+			    }
+		    }
+		} catch (Exception e) {
+		    return;
 		}
 
 		if (!same) {

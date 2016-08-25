@@ -707,7 +707,8 @@ public class Residence extends JavaPlugin {
 
 	    AutoSelectionManager = new AutoSelection();
 
-	    SchematicManager = new SchematicsManager();
+	    if (wep != null)
+		SchematicManager = new SchematicsManager();
 
 	    try {
 		Class.forName("org.bukkit.event.player.PlayerItemDamageEvent");

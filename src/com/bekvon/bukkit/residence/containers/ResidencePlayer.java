@@ -98,13 +98,12 @@ public class ResidencePlayer {
 	if (this.group != null)
 	    this.maxRes = this.group.getMaxZones();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxResCount(); i++) {
-	    if (player != null) {
+	    if (player != null && player.isOnline()) {
 		if (this.player.hasPermission("residence.max.res." + i))
 		    this.maxRes = i;
-	    } else {
-		if (ofPlayer != null)
-		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res." + i, Residence.getConfigManager().getDefaultWorld()))
-			this.maxRes = i;
+	    } else if (ofPlayer != null) {
+		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res." + i, Residence.getConfigManager().getDefaultWorld()))
+		    this.maxRes = i;
 	    }
 	}
     }
@@ -147,9 +146,9 @@ public class ResidencePlayer {
 
     public int getMaxRes() {
 	updateName();
-	recountMaxRes();
 	Residence.getPermissionManager().updateGroupNameForPlayer(this.userName, this.player != null && this.player.isOnline() ? this.player.getPlayer().getLocation()
 	    .getWorld().getName() : Residence.getConfigManager().getDefaultWorld(), true);
+	recountMaxRes();
 	PermissionGroup g = getGroup();
 	if (this.maxRes < g.getMaxZones()) {
 	    return g.getMaxZones();

@@ -196,11 +196,15 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceBackupRename(ResidenceRenameEvent event) {
+	if (Residence.getSchematicManager() == null)
+	    return;
 	Residence.getSchematicManager().rename(event.getResidence(), event.getNewResidenceName());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceDelete(ResidenceDeleteEvent event) {
+	if (Residence.getSchematicManager() == null)
+	    return;
 	Residence.getSchematicManager().delete(event.getResidence());
     }
 

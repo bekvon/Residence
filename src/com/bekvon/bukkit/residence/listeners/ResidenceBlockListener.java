@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -36,6 +37,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +52,48 @@ public class ResidenceBlockListener implements Listener {
 
     public ResidenceBlockListener(Residence residence) {
 	this.plugin = residence;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlantGrow(BlockGrowEvent event) {
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	if (!perms.has(Flags.grow, true)) {
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onVineGrow(BlockSpreadEvent event) {
+	if (event.getSource().getType() != Material.VINE)
+	    return;
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	if (!perms.has(Flags.grow, true)) {
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onleaveDecay(LeavesDecayEvent event) {
+	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	if (!perms.has(Flags.decay, true)) {
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onTreeGrowt(StructureGrowEvent event) {
+	if (Residence.isDisabledWorldListener(event.getWorld()))
+	    return;
+	FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
+	if (!perms.has(Flags.grow, true)) {
+	    event.setCancelled(true);
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
