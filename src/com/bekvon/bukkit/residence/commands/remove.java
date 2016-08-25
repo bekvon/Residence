@@ -10,9 +10,11 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 public class remove implements cmd {
 
@@ -42,8 +44,17 @@ public class remove implements cmd {
 	    sender.hasPermission("residence.delete.subzone") &&
 	    !resadmin &&
 	    Residence.getConfigManager().isPreventSubZoneRemoval() &&
-	    !res.getParent().isOwner(senderName)) {
+	    !res.getParent().isOwner(senderName) &&
+	    !res.getPermissions().playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue)) {
 	    Residence.msg(sender, lm.Subzone_CantDeleteNotOwnerOfParent);
+	    return true;
+	}
+
+	if (!res.isSubzone() &&
+	    sender.hasPermission("residence.delete") &&
+	    !resadmin &&
+	    !res.isOwner(senderName)) {
+	    Residence.msg(sender, lm.Residence_CantDeleteResidence);
 	    return true;
 	}
 

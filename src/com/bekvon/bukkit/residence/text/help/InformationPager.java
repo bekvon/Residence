@@ -9,6 +9,7 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import java.util.ArrayList;
@@ -84,12 +85,23 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
-	List<String> linesForConsole = new ArrayList<String>();
-	for (int i = start; i < end; i++) {
-	    if (lines.size() <= i)
-		break;
+	lines = lines.subList(start, end);
 
-	    ClaimedResidence res = lines.get(i);
+	Debug.D("Line Amount " + lines.size());
+
+	if (!(sender instanceof Player)) {
+	    printListWithDelay(sender, lines, start, resadmin);
+	    return;
+	}
+
+	List<String> linesForConsole = new ArrayList<String>();
+	int i = start;
+	for (ClaimedResidence res : lines) {
+	    i++;
+//	    if (lines.size() <= i)
+//		break;
+
+//	    ClaimedResidence res = lines.get(i);
 	    StringBuilder StringB = new StringBuilder();
 	    StringB.append(" " + Residence.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
@@ -145,8 +157,6 @@ public class InformationPager {
 		linesForConsole.add(msg + " " + StringB.toString().replace("\n", ""));
 	    }
 	}
-	if (!(sender instanceof Player))
-	    printListWithDelay(sender, linesForConsole);
 
 	if (targetPlayer != null)
 	    ShowPagination(sender.getName(), pagecount, page, cmd + " list " + targetPlayer);
@@ -154,20 +164,75 @@ public class InformationPager {
 	    ShowPagination(sender.getName(), pagecount, page, cmd + " listall");
     }
 
-    private void printListWithDelay(final CommandSender sender, final List<String> linesForConsole) {
+    private void printListWithDelay(final CommandSender sender, final List<ClaimedResidence> lines, final int start, final boolean resadmin) {
+
+	for (int i = 0; i < 100; i++) {
+	    if (lines.size() <= i)
+		break;
+
+	    ClaimedResidence res = lines.get(i);
+	    StringBuilder StringB = new StringBuilder();
+	    StringB.append(" " + Residence.msg(lm.General_Owner, res.getOwner()));
+	    String worldInfo = "";
+
+	    if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
+		worldInfo += "&6 (&3";
+		CuboidArea area = res.getAreaArray()[0];
+		worldInfo += Residence.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
+		    .getBlockZ());
+		worldInfo += "&6; &3";
+		worldInfo += Residence.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
+		    .getBlockZ());
+		worldInfo += "&6)";
+		worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
+		StringB.append("\n" + worldInfo);
+	    }
+
+	    StringB.append("\n " + Residence.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
+
+	    String ExtraString = "";
+	    if (res.isForRent()) {
+		if (res.isRented()) {
+		    ExtraString = " " + Residence.msg(lm.Residence_IsRented);
+		    StringB.append("\n " + Residence.msg(lm.Residence_RentedBy, res.getRentedLand().player));
+		} else {
+		    ExtraString = " " + Residence.msg(lm.Residence_IsForRent);
+		}
+		RentableLand rentable = res.getRentable();
+		StringB.append("\n " + Residence.msg(lm.General_Cost, rentable.cost, rentable.days));
+		StringB.append("\n " + Residence.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
+		StringB.append("\n " + Residence.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
+		StringB.append("\n " + Residence.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+	    }
+
+	    if (res.isForSell()) {
+		ExtraString = " " + Residence.msg(lm.Residence_IsForSale);
+		StringB.append("\n " + Residence.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
+	    }
+
+	    String msg = Residence.msg(lm.Residence_ResList, (start + i + 1), res.getName(), res.getWorld(), "", ExtraString);
+
+	    msg = ChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
+	    msg = msg.replaceAll("\\s{2}", " ");
+	    sender.sendMessage(msg);
+	}
+
+	final List<ClaimedResidence> tlines = new ArrayList<ClaimedResidence>();
+
+	if (lines.size() > 100)
+	    tlines.addAll(lines.subList(100, lines.size()));
+
+	if (tlines.isEmpty()) {
+	    return;
+	}
+
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		for (int i = 0; i < 20; i++) {
-		    if (linesForConsole.size() > 0) {
-			sender.sendMessage(linesForConsole.get(0));
-			linesForConsole.remove(0);
-		    }
-		}
-		printListWithDelay(sender, linesForConsole);
+		printListWithDelay(sender, tlines, start + 100, resadmin);
 		return;
 	    }
-	}, 1L);
+	}, 5L);
 
     }
 

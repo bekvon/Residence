@@ -59,6 +59,25 @@ public class ResidencePermissions extends FlagPermissions {
 	return this.playerHas(player, world, flag, def);
     }
 
+    public boolean playerHas(Player player, Flags flag, FlagCombo f) {
+	return playerHas(player.getName(), flag, f);
+    }
+
+    public boolean playerHas(String player, Flags flag, FlagCombo f) {
+	switch (f) {
+	case FalseOrNone:
+	    return !this.playerHas(player, world, flag, false);
+	case OnlyFalse:
+	    return !this.playerHas(player, world, flag, true);
+	case OnlyTrue:
+	    return this.playerHas(player, world, flag, false);
+	case TrueOrNone:
+	    return this.playerHas(player, world, flag, true);
+	default:
+	    return false;
+	}
+    }
+
     @Override
     public boolean playerHas(String player, String world, String flag, boolean def) {
 	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag, FlagType.PLAYER, player, def);
@@ -172,6 +191,12 @@ public class ResidencePermissions extends FlagPermissions {
     public boolean hasResidencePermission(CommandSender sender, boolean requireOwner) {
 	if (!(sender instanceof Player))
 	    return true;
+
+	ClaimedResidence par = this.residence.getParent();
+	if (par != null)
+	    if (par.getPermissions().playerHas(sender.getName(), Flags.admin, true))
+		return true;
+
 	if (Residence.getConfigManager().enabledRentSystem()) {
 	    String resname = residence.getName();
 	    if (Residence.getRentManager().isRented(resname)) {
