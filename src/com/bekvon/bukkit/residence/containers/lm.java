@@ -296,6 +296,9 @@ public enum lm {
     InformationPage_Page("&e-----< &6%1 &e>-----"),
     InformationPage_NextPage("&e-----< &6%1 &e>-----"),
     InformationPage_NoNextPage("&e-----------------------"),
+    InformationPage_GeneralList("&2 %1 &6- &e%2"),
+    InformationPage_FlagsList("&2 %1 &6- &e%2"),
+    InformationPage_Separator("&6\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC"),
 
     Chat_ChatChannelChange("&eChanged residence chat channel to &6%1!"),
     Chat_ChatChannelLeave("&eLeft residence chat"),

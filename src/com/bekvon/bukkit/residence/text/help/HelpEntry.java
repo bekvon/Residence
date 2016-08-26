@@ -72,15 +72,11 @@ public class HelpEntry {
 	    return;
 	}
 
-	String separator = ChatColor.GOLD + "";
-	String simbol = "-";
-	if (sender instanceof Player)
-	    simbol = "\u25AC";
-	for (int i = 0; i < 10; i++) {
-	    separator += simbol;
-	}
+	String separator = Residence.msg(lm.InformationPage_Separator);
+	if (!(sender instanceof Player))
+	    separator = "----------";
 
-	sender.sendMessage(ChatColor.GOLD + separator + " " + Residence.msg(lm.General_HelpPageHeader, path, page, pagecount) + " " + separator);
+	sender.sendMessage(separator + " " + Residence.msg(lm.General_HelpPageHeader, path, page, pagecount) + " " + separator);
 	int start = linesPerPage * (page - 1);
 	int end = start + linesPerPage;
 	for (int i = start; i < end; i++) {
@@ -92,7 +88,7 @@ public class HelpEntry {
 		    String desc = "";
 		    int y = 0;
 		    for (String one : sub.lines) {
-			desc += ChatColor.YELLOW + one;
+			desc +=  one;
 			y++;
 			if (y < sub.lines.length) {
 			    desc += "\n";
@@ -102,7 +98,7 @@ public class HelpEntry {
 		    if (resadmin)
 			path = path.replace("/res ", "/resadmin ");
 
-		    String msg = "[\"\",{\"text\":\"" + ChatColor.GOLD + " " + helplines.get(i).getDesc()
+		    String msg = "[\"\",{\"text\":\"" +  helplines.get(i).getDesc()
 			+ "\",\"color\":\"gold\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + path + helplines.get(i).getCommand()
 			+ " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
 
@@ -112,7 +108,7 @@ public class HelpEntry {
 			sender.sendMessage(helplines.get(i).getDesc());
 
 		} else
-		    sender.sendMessage(ChatColor.GREEN + " " + helplines.get(i).getDesc());
+		    sender.sendMessage(helplines.get(i).getDesc());
 	    }
 	}
 
@@ -189,12 +185,12 @@ public class HelpEntry {
 		    }
 
 		    // adding flag name and description for later sorting
-		    unsortMap.put(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + desc);
+		    unsortMap.put(entry.getName(), Residence.msg(lm.InformationPage_FlagsList, entry.getName(), desc));
 		    continue;
 		}
 	    }
 
-	    helplines.add(new HelpLines(entry.getName(), ChatColor.GREEN + entry.getName() + ChatColor.GOLD + " - " + entry.getDescription()));
+	    helplines.add(new HelpLines(entry.getName(), Residence.msg(lm.InformationPage_GeneralList, entry.getName(), entry.getDescription())));
 	}
 
 	if (!unsortMap.isEmpty()) {
