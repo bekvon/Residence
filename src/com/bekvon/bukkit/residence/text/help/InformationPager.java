@@ -9,7 +9,6 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import java.util.ArrayList;
@@ -85,9 +84,9 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
+	if (lines.size() < end)
+	    end = lines.size();
 	lines = lines.subList(start, end);
-
-	Debug.D("Line Amount " + lines.size());
 
 	if (!(sender instanceof Player)) {
 	    printListWithDelay(sender, lines, start, resadmin);
@@ -95,7 +94,7 @@ public class InformationPager {
 	}
 
 	List<String> linesForConsole = new ArrayList<String>();
-	int i = start;
+	int i = start - 1;
 	for (ClaimedResidence res : lines) {
 	    i++;
 //	    if (lines.size() <= i)

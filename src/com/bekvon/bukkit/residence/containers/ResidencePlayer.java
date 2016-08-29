@@ -204,9 +204,7 @@ public class ResidencePlayer {
     public void addResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
-	String name = residence.getName();
-	name = name.toLowerCase();
-	this.ResidenceList.put(name, residence);
+	this.ResidenceList.put(residence.getName().toLowerCase(), residence);
     }
 
     public void removeResidence(String residence) {
@@ -222,12 +220,11 @@ public class ResidencePlayer {
 	if (newResidence == null)
 	    return;
 	oldResidence = oldResidence.toLowerCase();
-	newResidence = newResidence.toLowerCase();
 
 	ClaimedResidence res = ResidenceList.get(oldResidence);
 	if (res != null) {
 	    removeResidence(oldResidence);
-	    ResidenceList.put(newResidence, res);
+	    ResidenceList.put(newResidence.toLowerCase(), res);
 	}
     }
 

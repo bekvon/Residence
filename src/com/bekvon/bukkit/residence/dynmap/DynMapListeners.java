@@ -49,6 +49,7 @@ public class DynMapListeners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceRename(ResidenceRenameEvent event) {
+	Residence.getDynManager().handleResidenceRemove(event.getOldResidenceName(), event.getResidence(), event.getResidence().getSubzoneDeep());
 	Residence.getDynManager().fireUpdateAdd(event.getResidence(), event.getResidence().getSubzoneDeep());
     }
 

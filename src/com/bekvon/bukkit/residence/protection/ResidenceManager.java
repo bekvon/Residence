@@ -937,7 +937,7 @@ public class ResidenceManager implements ResidenceInterface {
 		residences.put(newName.toLowerCase(), res);
 		residences.remove(oldName.toLowerCase());
 
-		Residence.getPlayerManager().renameResidence(player.getName(), res.getName(), newName);
+		Residence.getPlayerManager().renameResidence(player.getName(), oldName, newName);
 
 		calculateChunks(newName);
 		if (Residence.getConfigManager().useLeases()) {

@@ -53,7 +53,7 @@ public class DynMapManager {
 	    public void run() {
 		schedId = -1;
 
-		handleResidenceAdd(res.getName(), res, resareas, deep);
+		handleResidenceAdd(res.getName(), res, deep);
 		return;
 	    }
 	}, 10L);
@@ -65,7 +65,7 @@ public class DynMapManager {
 	if (res == null)
 	    return;
 
-	handleResidenceRemove(res.getName(), res, resareas, deep);
+	handleResidenceRemove(res.getName(), res, deep);
     }
 
     private static String formatInfoWindow(String resid, ClaimedResidence res, String resName) {
@@ -201,7 +201,7 @@ public class DynMapManager {
 	m.setRangeY(as.y, as.y);
     }
 
-    private void handleResidenceAdd(String resid, ClaimedResidence res, Map<String, AreaMarker> newmap, int depth) {
+    private void handleResidenceAdd(String resid, ClaimedResidence res, int depth) {
 
 	if (res == null)
 	    return;
@@ -256,19 +256,21 @@ public class DynMapManager {
 
 	    marker.setDescription(desc);
 	    addStyle(resid, marker);
-	    newmap.put(id, marker);
+	    resareas.put(id, marker);
 
 	    if (depth <= Residence.getConfigManager().DynMapLayerSubZoneDepth) {
 		List<ClaimedResidence> subids = res.getSubzones();
 		for (ClaimedResidence one : subids) {
-		    handleResidenceAdd(one.getName(), one, newmap, depth + 1);
+		    handleResidenceAdd(one.getName(), one, depth + 1);
 		}
 	    }
 	}
     }
 
-    private void handleResidenceRemove(String resid, ClaimedResidence res, Map<String, AreaMarker> newmap, int depth) {
+    public void handleResidenceRemove(String resid, ClaimedResidence res, int depth) {
 
+	if (resid == null)
+	    return;
 	if (res == null)
 	    return;
 
@@ -281,7 +283,7 @@ public class DynMapManager {
 	    if (depth <= Residence.getConfigManager().DynMapLayerSubZoneDepth + 1) {
 		List<ClaimedResidence> subids = res.getSubzones();
 		for (ClaimedResidence one : subids) {
-		    handleResidenceRemove(one.getName(), one, newmap, depth + 1);
+		    handleResidenceRemove(one.getName(), one, depth + 1);
 		}
 	    }
 	}
@@ -315,7 +317,7 @@ public class DynMapManager {
 
 	for (Entry<String, ClaimedResidence> one : Residence.getResidenceManager().getResidences().entrySet()) {
 	    Residence.getDynManager().fireUpdateAdd(one.getValue(), one.getValue().getSubzoneDeep());
-	    handleResidenceAdd(one.getValue().getName(), one.getValue(), resareas, one.getValue().getSubzoneDeep());
+	    handleResidenceAdd(one.getValue().getName(), one.getValue(), one.getValue().getSubzoneDeep());
 	}
     }
 }
