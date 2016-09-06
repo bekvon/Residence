@@ -88,7 +88,7 @@ public class HelpEntry {
 		    String desc = "";
 		    int y = 0;
 		    for (String one : sub.lines) {
-			desc +=  one;
+			desc += one;
 			y++;
 			if (y < sub.lines.length) {
 			    desc += "\n";
@@ -98,7 +98,7 @@ public class HelpEntry {
 		    if (resadmin)
 			path = path.replace("/res ", "/resadmin ");
 
-		    String msg = "[\"\",{\"text\":\"" +  helplines.get(i).getDesc()
+		    String msg = "[\"\",{\"text\":\"" + helplines.get(i).getDesc()
 			+ "\",\"color\":\"gold\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + path + helplines.get(i).getCommand()
 			+ " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
 
@@ -387,7 +387,9 @@ public class HelpEntry {
 			}
 			break;
 		    case "[residenceshop]":
-			subCommands.addAll(Residence.getResidenceManager().getShops());
+			for (ClaimedResidence one : Residence.getResidenceManager().getShops()) {
+			    subCommands.add(one.getName());
+			}
 			break;
 		    case "[flag]":
 			for (Flags one : Flags.values()) {

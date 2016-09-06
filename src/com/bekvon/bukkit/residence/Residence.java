@@ -73,6 +73,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
@@ -1245,12 +1246,7 @@ public class Residence extends JavaPlugin {
 	    // Getting shop residences
 	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
 	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {
-
-		ResidencePermissions perms = one.getValue().getPermissions();
-		if (!perms.has(Flags.shop, false))
-		    continue;
-
-		rmanager.addShop(one.getValue().getName());
+		addShops(one.getValue());
 	    }
 
 	    if (Residence.getConfigManager().isUUIDConvertion()) {
@@ -1295,6 +1291,15 @@ public class Residence extends JavaPlugin {
 	} catch (Exception ex) {
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 	    throw ex;
+	}
+    }
+
+    private void addShops(ClaimedResidence res) {
+	ResidencePermissions perms = res.getPermissions();
+	if (perms.has(Flags.shop, FlagCombo.OnlyTrue, false))
+	    rmanager.addShop(res);
+	for (ClaimedResidence one : res.getSubzones()) {
+	    addShops(one);
 	}
     }
 

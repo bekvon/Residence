@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -36,6 +37,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
@@ -44,7 +46,7 @@ import com.griefcraft.model.Protection;
 public class ResidenceManager implements ResidenceInterface {
     protected SortedMap<String, ClaimedResidence> residences;
     protected Map<String, Map<ChunkRef, List<String>>> chunkResidences;
-    protected List<String> shops = new ArrayList<String>();
+    protected List<ClaimedResidence> shops = new ArrayList<ClaimedResidence>();
     private Residence plugin;
 
     public ResidenceManager(Residence plugin) {
@@ -158,22 +160,31 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     @Override
-    public void addShop(String res) {
+    public void addShop(String resName) {
+	ClaimedResidence res = getByName(resName);
+	if (res != null)
+	    shops.add(res);
+    }
+
+    @Override
+    public void addShop(ClaimedResidence res) {
 	shops.add(res);
     }
 
     @Override
     public void removeShop(ClaimedResidence res) {
-	removeShop(res.getName());
+	removeShop(res);
     }
 
     @Override
     public void removeShop(String resName) {
-	shops.remove(resName);
+	ClaimedResidence res = getByName(resName);
+	if (res != null)
+	    shops.remove(res);
     }
 
     @Override
-    public List<String> getShops() {
+    public List<ClaimedResidence> getShops() {
 	return shops;
     }
 

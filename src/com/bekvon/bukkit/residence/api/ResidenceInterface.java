@@ -18,13 +18,15 @@ public interface ResidenceInterface {
 
     public String getSubzoneNameByRes(ClaimedResidence res);
 
+    public void addShop(ClaimedResidence res);
+
     public void addShop(String res);
 
     public void removeShop(ClaimedResidence res);
 
     public void removeShop(String res);
 
-    public List<String> getShops();
+    public List<ClaimedResidence> getShops();
 
     public boolean addResidence(String name, Location loc1, Location loc2);
 

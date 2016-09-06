@@ -99,19 +99,27 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean has(Flags flag, FlagCombo f) {
-	return has(flag.getName(), f);
+	return has(flag, f, true);
+    }
+
+    public boolean has(Flags flag, FlagCombo f, boolean checkParent) {
+	return has(flag.getName(), f, checkParent);
     }
 
     public boolean has(String flag, FlagCombo f) {
+	return has(flag, f, true);
+    }
+
+    public boolean has(String flag, FlagCombo f, boolean checkParent) {
 	switch (f) {
 	case FalseOrNone:
-	    return !has(flag, false);
+	    return !has(flag, false, checkParent);
 	case OnlyFalse:
-	    return !has(flag, true);
+	    return !has(flag, true, checkParent);
 	case OnlyTrue:
-	    return has(flag, false);
+	    return has(flag, false, checkParent);
 	case TrueOrNone:
-	    return has(flag, true);
+	    return has(flag, true, checkParent);
 	default:
 	    return false;
 	}
@@ -124,11 +132,16 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean has(String flag, boolean def) {
+	return has(flag, def, true);
+    }
+
+    @Override
+    public boolean has(String flag, boolean def, boolean checkParent) {
 	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag, FlagType.RESIDENCE, null, def);
 	Residence.getServ().getPluginManager().callEvent(fc);
 	if (fc.isOverriden())
 	    return fc.getOverrideValue();
-	return super.has(flag, def);
+	return super.has(flag, def, checkParent);
     }
 
     public boolean hasApplicableFlag(String player, String flag) {

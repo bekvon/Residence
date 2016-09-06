@@ -1,15 +1,23 @@
 package com.bekvon.bukkit.residence.shopStuff;
 
+import java.util.UUID;
+
 public class ShopVote {
 
     String name = null;
+    private UUID uuid = null;
     int vote = -1;
     long time = 0L;
 
-    public ShopVote(String name, int vote, long time) {
+    public ShopVote(String name, UUID uuid, int vote, long time) {
 	this.name = name;
+	this.uuid = uuid;
 	this.vote = vote;
 	this.time = time;
+    }
+
+    public void setName(String name) {
+	this.name = name;
     }
 
     public String getName() {
@@ -32,5 +40,13 @@ public class ShopVote {
 
     public void setTime(long time) {
 	this.time = time;
+    }
+
+    public UUID getUuid() {
+	return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+	this.uuid = uuid;
     }
 }

@@ -22,7 +22,6 @@ import org.bukkit.permissions.PermissionDefault;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 public class FlagPermissions {
 
@@ -471,10 +470,14 @@ public class FlagPermissions {
     }
 
     public boolean has(String flag, boolean def) {
+	return has(flag, def, true);
+    }
+
+    public boolean has(String flag, boolean def, boolean checkParent) {
 	if (cuboidFlags.containsKey(flag)) {
 	    return cuboidFlags.get(flag);
 	}
-	if (parent != null) {
+	if (checkParent && parent != null) {
 	    return parent.has(flag, def);
 	}
 	return def;

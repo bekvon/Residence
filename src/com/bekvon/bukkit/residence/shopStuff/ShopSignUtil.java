@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
@@ -24,6 +25,7 @@ import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ShopSignUtil {
 
@@ -36,20 +38,16 @@ public class ShopSignUtil {
 	this.plugin = plugin;
     }
 
-    public void setVoteList(ConcurrentHashMap<String, List<ShopVote>> VoteList) {
-	this.VoteList = VoteList;
-    }
-
     public ConcurrentHashMap<String, List<ShopVote>> GetAllVoteList() {
 	return VoteList;
     }
 
     public void removeVoteList(String resName) {
-	VoteList.remove(resName);
+	VoteList.remove(resName.toLowerCase());
     }
 
     public void addVote(String ResName, List<ShopVote> ShopVote) {
-	VoteList.put(ResName, ShopVote);
+	VoteList.put(ResName.toLowerCase(), ShopVote);
     }
 
     public void setAllSigns(List<Board> AllBoards) {
@@ -73,8 +71,8 @@ public class ShopSignUtil {
 	GetAllVoteList().clear();
 	File file = new File(plugin.getDataFolder(), "ShopVotes.yml");
 	YamlConfiguration f = YamlConfiguration.loadConfiguration(file);
-	
-	if (!file.exists()){
+
+	if (!file.exists()) {
 	    try {
 		file.createNewFile();
 	    } catch (IOException e) {
@@ -92,13 +90,25 @@ public class ShopSignUtil {
 	    return;
 
 	for (String category : categoriesList) {
+		Debug.D(category);
 	    List<String> List = ConfCategory.getStringList(category);
 	    List<ShopVote> VoteList = new ArrayList<ShopVote>();
 	    for (String oneEntry : List) {
+		Debug.D(category);
 		if (!oneEntry.contains("%"))
 		    continue;
 
 		String name = oneEntry.split("%")[0];
+		UUID uuid = null;
+
+		if (name.contains(":")) {
+		    try {
+			uuid = UUID.fromString(name.split(":")[1]);
+		    } catch (Exception e) {
+		    }
+		    name = name.split(":")[0];
+		}
+
 		int vote = -1;
 
 		try {
@@ -124,10 +134,12 @@ public class ShopSignUtil {
 			time = System.currentTimeMillis();
 		    }
 
-		VoteList.add(new ShopVote(name, vote, time));
+		VoteList.add(new ShopVote(name, uuid, vote, time));
+
+		Debug.D(category + "  " + name + "");
 
 	    }
-	    addVote(category, VoteList);
+	    addVote(category.replace("_", "."), VoteList);
 	}
 	return;
     }
@@ -150,12 +162,12 @@ public class ShopSignUtil {
 	    if (one.getKey() == null || one.getKey().equalsIgnoreCase(""))
 		continue;
 
-	    String path = "ShopVotes." + one.getKey();
+	    String path = "ShopVotes." + one.getKey().replace(".", "_");
 
 	    List<String> list = new ArrayList<String>();
 
 	    for (ShopVote oneVote : one.getValue()) {
-		list.add(oneVote.getName() + "%" + oneVote.getVote() + "!" + oneVote.getTime());
+		list.add(oneVote.getName() + ":" + oneVote.getUuid().toString() + "%" + oneVote.getVote() + "!" + oneVote.getTime());
 	    }
 	    writer.set(path, list);
 	}
@@ -173,10 +185,10 @@ public class ShopSignUtil {
 
 	ConcurrentHashMap<String, List<ShopVote>> allvotes = GetAllVoteList();
 
-	if (!allvotes.containsKey(resName))
+	if (!allvotes.containsKey(resName.toLowerCase()))
 	    return new Vote(Residence.getConfigManager().getVoteRangeTo() / 2, 0);
 
-	List<ShopVote> votes = allvotes.get(resName);
+	List<ShopVote> votes = allvotes.get(resName.toLowerCase());
 
 	double total = 0;
 	for (ShopVote oneVote : votes) {
@@ -209,13 +221,13 @@ public class ShopSignUtil {
 
 	Map<String, Double> allvotes = new HashMap<String, Double>();
 
-	List<String> shops = Residence.getResidenceManager().getShops();
+	List<ClaimedResidence> shops = Residence.getResidenceManager().getShops();
 
-	for (String one : shops) {
+	for (ClaimedResidence one : shops) {
 	    if (Residence.getConfigManager().isOnlyLike())
-		allvotes.put(one, (double) getLikes(one));
+		allvotes.put(one.getName(), (double) getLikes(one.getName()));
 	    else
-		allvotes.put(one, getAverageVote(one).getVote());
+		allvotes.put(one.getName(), getAverageVote(one.getName()).getVote());
 	}
 
 	allvotes = sortByComparator(allvotes);

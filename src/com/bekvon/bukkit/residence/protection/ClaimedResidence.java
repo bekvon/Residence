@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
@@ -22,6 +23,9 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;

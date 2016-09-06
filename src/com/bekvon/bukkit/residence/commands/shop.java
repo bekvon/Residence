@@ -94,8 +94,8 @@ public class shop implements cmd {
 	    Map<String, List<ShopVote>> ShopList = Residence.getShopSignUtilManager().GetAllVoteList();
 
 	    List<ShopVote> VoteList = new ArrayList<ShopVote>();
-	    if (ShopList.containsKey(res.getName())) {
-		VoteList = ShopList.get(res.getName());
+	    if (ShopList.containsKey(res.getName().toLowerCase())) {
+		VoteList = ShopList.get(res.getName().toLowerCase());
 	    }
 
 	    String separator = ChatColor.GOLD + "";
@@ -418,28 +418,26 @@ public class shop implements cmd {
 
 	    ConcurrentHashMap<String, List<ShopVote>> VoteList = Residence.getShopSignUtilManager().GetAllVoteList();
 
-	    if (VoteList.containsKey(resName)) {
-		List<ShopVote> list = VoteList.get(resName);
+	    if (VoteList.containsKey(resName.toLowerCase())) {
+		List<ShopVote> list = VoteList.get(resName.toLowerCase());
 		boolean found = false;
 		for (ShopVote OneVote : list) {
-		    if (OneVote.getName().equalsIgnoreCase(player.getName())) {
-
+		    if (OneVote.getName().equalsIgnoreCase(player.getName()) || OneVote.getUuid() != null && OneVote.getUuid() == player.getUniqueId()) {
 			if (Residence.getConfigManager().isOnlyLike()) {
 			    Residence.msg(player, lm.Shop_AlreadyLiked, resName);
 			    return true;
 			}
-
 			Residence.msg(player, lm.Shop_VoteChanged, OneVote.getVote(), vote, resName);
 			OneVote.setVote(vote);
+			OneVote.setName(player.getName());
 			OneVote.setTime(System.currentTimeMillis());
 			found = true;
 			break;
 		    }
 		}
 		if (!found) {
-		    ShopVote newVote = new ShopVote(player.getName(), vote, System.currentTimeMillis());
+		    ShopVote newVote = new ShopVote(player.getName(), player.getUniqueId(), vote, System.currentTimeMillis());
 		    list.add(newVote);
-
 		    if (Residence.getConfigManager().isOnlyLike())
 			Residence.msg(player, lm.Shop_Liked, resName);
 		    else
@@ -447,7 +445,7 @@ public class shop implements cmd {
 		}
 	    } else {
 		List<ShopVote> list = new ArrayList<ShopVote>();
-		ShopVote newVote = new ShopVote(player.getName(), vote, System.currentTimeMillis());
+		ShopVote newVote = new ShopVote(player.getName(), player.getUniqueId(), vote, System.currentTimeMillis());
 		list.add(newVote);
 		VoteList.put(resName, list);
 		if (Residence.getConfigManager().isOnlyLike())
