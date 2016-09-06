@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -998,13 +999,25 @@ public class ResidenceEntityListener implements Listener {
 			    if (attacker != null)
 				Residence.msg(attacker, lm.General_WorldPVPDisabled);
 			    event.setCancelled(true);
+			    return;
 			}
+
+		    /* Attacking from safe zone */
+		    if (attacker != null) {
+			FlagPermissions aPerm = Residence.getPermsByLoc(attacker.getLocation());
+			if (aPerm.has(Flags.pvp, FlagCombo.FalseOrNone)) {
+			    Residence.msg(attacker, lm.General_NoPVPZone);
+			    event.setCancelled(true);
+			    return;
+			}
+		    }
 		} else {
 		    /* Normal PvP */
 		    if (!isSnowBall && !area.getPermissions().has(Flags.pvp, true) || isSnowBall && !allowSnowBall) {
 			if (attacker != null)
 			    Residence.msg(attacker, lm.General_NoPVPZone);
 			event.setCancelled(true);
+			return;
 		    }
 		}
 		return;
