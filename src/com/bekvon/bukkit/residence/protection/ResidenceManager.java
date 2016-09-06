@@ -178,9 +178,12 @@ public class ResidenceManager implements ResidenceInterface {
 
     @Override
     public void removeShop(String resName) {
-	ClaimedResidence res = getByName(resName);
-	if (res != null)
-	    shops.remove(res);
+	for (ClaimedResidence one : shops) {
+	    if (one.getName().equalsIgnoreCase(resName)) {
+		shops.remove(one);
+		break;
+	    }
+	}
     }
 
     @Override

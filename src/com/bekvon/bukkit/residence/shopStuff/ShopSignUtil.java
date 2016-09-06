@@ -11,10 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -25,29 +22,15 @@ import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ShopSignUtil {
 
-    ConcurrentHashMap<String, List<ShopVote>> VoteList = new ConcurrentHashMap<String, List<ShopVote>>();
     List<Board> AllBoards = new ArrayList<Board>();
 
     private Residence plugin;
 
     public ShopSignUtil(Residence plugin) {
 	this.plugin = plugin;
-    }
-
-    public ConcurrentHashMap<String, List<ShopVote>> GetAllVoteList() {
-	return VoteList;
-    }
-
-    public void removeVoteList(String resName) {
-	VoteList.remove(resName.toLowerCase());
-    }
-
-    public void addVote(String ResName, List<ShopVote> ShopVote) {
-	VoteList.put(ResName.toLowerCase(), ShopVote);
     }
 
     public void setAllSigns(List<Board> AllBoards) {
@@ -68,7 +51,6 @@ public class ShopSignUtil {
 
     // Res Shop vote file
     public void LoadShopVotes() {
-	GetAllVoteList().clear();
 	File file = new File(plugin.getDataFolder(), "ShopVotes.yml");
 	YamlConfiguration f = YamlConfiguration.loadConfiguration(file);
 
@@ -90,11 +72,9 @@ public class ShopSignUtil {
 	    return;
 
 	for (String category : categoriesList) {
-		Debug.D(category);
 	    List<String> List = ConfCategory.getStringList(category);
 	    List<ShopVote> VoteList = new ArrayList<ShopVote>();
 	    for (String oneEntry : List) {
-		Debug.D(category);
 		if (!oneEntry.contains("%"))
 		    continue;
 
@@ -136,10 +116,14 @@ public class ShopSignUtil {
 
 		VoteList.add(new ShopVote(name, uuid, vote, time));
 
-		Debug.D(category + "  " + name + "");
-
 	    }
-	    addVote(category.replace("_", "."), VoteList);
+
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(category.replace("_", "."));
+
+	    if (res == null)
+		continue;
+	    res.clearShopVotes();
+	    res.addShopVote(VoteList);
 	}
 	return;
     }
@@ -157,16 +141,16 @@ public class ShopSignUtil {
 	if (!conf.isConfigurationSection("ShopVotes"))
 	    conf.createSection("ShopVotes");
 
-	for (Entry<String, List<ShopVote>> one : GetAllVoteList().entrySet()) {
+	for (ClaimedResidence res : Residence.getResidenceManager().getShops()) {
 
-	    if (one.getKey() == null || one.getKey().equalsIgnoreCase(""))
+	    if (res == null || res.GetShopVotes().isEmpty())
 		continue;
 
-	    String path = "ShopVotes." + one.getKey().replace(".", "_");
+	    String path = "ShopVotes." + res.getName().replace(".", "_");
 
 	    List<String> list = new ArrayList<String>();
 
-	    for (ShopVote oneVote : one.getValue()) {
+	    for (ShopVote oneVote : res.GetShopVotes()) {
 		list.add(oneVote.getName() + ":" + oneVote.getUuid().toString() + "%" + oneVote.getVote() + "!" + oneVote.getTime());
 	    }
 	    writer.set(path, list);
@@ -182,13 +166,16 @@ public class ShopSignUtil {
 
     // Res Shop vote file
     public Vote getAverageVote(String resName) {
+	ClaimedResidence res = Residence.getResidenceManager().getByName(resName);
+	return getAverageVote(res);
+    }
 
-	ConcurrentHashMap<String, List<ShopVote>> allvotes = GetAllVoteList();
+    public Vote getAverageVote(ClaimedResidence res) {
 
-	if (!allvotes.containsKey(resName.toLowerCase()))
+	if (res == null || res.GetShopVotes().isEmpty())
 	    return new Vote(Residence.getConfigManager().getVoteRangeTo() / 2, 0);
 
-	List<ShopVote> votes = allvotes.get(resName.toLowerCase());
+	List<ShopVote> votes = res.GetShopVotes();
 
 	double total = 0;
 	for (ShopVote oneVote : votes) {
@@ -202,11 +189,15 @@ public class ShopSignUtil {
 
     // Res Shop vote file
     public int getLikes(String resName) {
-	ConcurrentHashMap<String, List<ShopVote>> allvotes = GetAllVoteList();
-	if (!allvotes.containsKey(resName))
+	ClaimedResidence res = Residence.getResidenceManager().getByName(resName);
+	return getLikes(res);
+    }
+
+    public int getLikes(ClaimedResidence res) {
+	if (res == null || res.GetShopVotes().isEmpty())
 	    return 0;
 
-	List<ShopVote> votes = allvotes.get(resName);
+	List<ShopVote> votes = res.GetShopVotes();
 
 	int likes = 0;
 	for (ShopVote oneVote : votes) {
@@ -225,9 +216,9 @@ public class ShopSignUtil {
 
 	for (ClaimedResidence one : shops) {
 	    if (Residence.getConfigManager().isOnlyLike())
-		allvotes.put(one.getName(), (double) getLikes(one.getName()));
+		allvotes.put(one.getName(), (double) getLikes(one));
 	    else
-		allvotes.put(one.getName(), getAverageVote(one.getName()).getVote());
+		allvotes.put(one.getName(), getAverageVote(one).getVote());
 	}
 
 	allvotes = sortByComparator(allvotes);

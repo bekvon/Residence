@@ -91,12 +91,7 @@ public class shop implements cmd {
 		return true;
 	    }
 
-	    Map<String, List<ShopVote>> ShopList = Residence.getShopSignUtilManager().GetAllVoteList();
-
-	    List<ShopVote> VoteList = new ArrayList<ShopVote>();
-	    if (ShopList.containsKey(res.getName().toLowerCase())) {
-		VoteList = ShopList.get(res.getName().toLowerCase());
-	    }
+	    List<ShopVote> VoteList = res.GetShopVotes();
 
 	    String separator = ChatColor.GOLD + "";
 	    String simbol = "\u25AC";
@@ -201,8 +196,7 @@ public class shop implements cmd {
 		String votestat = "";
 
 		if (Residence.getConfigManager().isOnlyLike()) {
-		    votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListLiked, Residence.getShopSignUtilManager().getLikes(one
-			.getKey()));
+		    votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListLiked, Residence.getShopSignUtilManager().getLikes(one.getKey()));
 		} else
 		    votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListVoted, vote.getVote(), vote.getAmount());
 		ClaimedResidence res = Residence.getResidenceManager().getByName(one.getKey());
@@ -416,10 +410,10 @@ public class shop implements cmd {
 		return true;
 	    }
 
-	    ConcurrentHashMap<String, List<ShopVote>> VoteList = Residence.getShopSignUtilManager().GetAllVoteList();
+//	    ConcurrentHashMap<String, List<ShopVote>> VoteList = Residence.getShopSignUtilManager().GetAllVoteList();
 
-	    if (VoteList.containsKey(resName.toLowerCase())) {
-		List<ShopVote> list = VoteList.get(resName.toLowerCase());
+	    if (!res.GetShopVotes().isEmpty()) {
+		List<ShopVote> list = res.GetShopVotes();
 		boolean found = false;
 		for (ShopVote OneVote : list) {
 		    if (OneVote.getName().equalsIgnoreCase(player.getName()) || OneVote.getUuid() != null && OneVote.getUuid() == player.getUniqueId()) {
@@ -444,10 +438,8 @@ public class shop implements cmd {
 			Residence.msg(player, lm.Shop_Voted, vote, resName);
 		}
 	    } else {
-		List<ShopVote> list = new ArrayList<ShopVote>();
 		ShopVote newVote = new ShopVote(player.getName(), player.getUniqueId(), vote, System.currentTimeMillis());
-		list.add(newVote);
-		VoteList.put(resName, list);
+		res.addShopVote(newVote);
 		if (Residence.getConfigManager().isOnlyLike())
 		    Residence.msg(player, lm.Shop_Liked, resName);
 		else

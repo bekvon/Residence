@@ -5,7 +5,6 @@ import org.bukkit.GameMode;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
@@ -23,9 +22,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
-
+import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -70,6 +67,8 @@ public class ClaimedResidence {
 
     protected List<String> cmdWhiteList = new ArrayList<String>();
     protected List<String> cmdBlackList = new ArrayList<String>();
+
+    List<ShopVote> ShopVoteList = new ArrayList<ShopVote>();
 
     protected RentableLand rentableland = null;
     protected RentedLand rentedland = null;
@@ -1662,5 +1661,21 @@ public class ClaimedResidence {
 	    }
 	}
 	return within;
+    }
+
+    public List<ShopVote> GetShopVotes() {
+	return ShopVoteList;
+    }
+
+    public void clearShopVotes() {
+	ShopVoteList.clear();
+    }
+
+    public void addShopVote(List<ShopVote> ShopVotes) {
+	ShopVoteList.addAll(ShopVotes);
+    }
+
+    public void addShopVote(ShopVote ShopVote) {
+	ShopVoteList.add(ShopVote);
     }
 }
