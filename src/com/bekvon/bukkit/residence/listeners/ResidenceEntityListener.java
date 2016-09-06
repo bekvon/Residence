@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -51,6 +52,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -822,13 +824,30 @@ public class ResidenceEntityListener implements Listener {
 	if (event.getCause() != DamageCause.FIRE_TICK)
 	    return;
 	Entity ent = event.getEntity();
-
 	if (!Residence.getNms().isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
 	    return;
 
 	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)) {
 	    event.setCancelled(true);
 	    ent.setFireTicks(0);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockCatchingFire(ProjectileHitEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (!(event.getEntity() instanceof Arrow))
+	    return;
+	Arrow arrow = (Arrow) event.getEntity();
+	ClaimedResidence res = Residence.getResidenceManager().getByLoc(arrow.getLocation());
+	ProjectileSource shooter = arrow.getShooter();
+	if (shooter instanceof Player) {
+	    Player player = (Player) shooter;
+	    if (!res.getPermissions().playerHas(player, Flags.build, FlagCombo.OnlyTrue)) {
+		arrow.setFireTicks(0);
+	    }
 	}
     }
 
