@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -403,20 +406,18 @@ public class ResidenceBlockListener implements Listener {
 
 	ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
-	BlockFace dir = event.getDirection();
 	for (Block block : blocks) {
 	    Location locFrom = block.getLocation();
-	    Location locTo = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
 	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
-	    ClaimedResidence blockTo = Residence.getResidenceManager().getByLoc(locTo);
-	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, true)) {
-		event.setCancelled(true);
-		return;
-	    } else if (blockTo != null && blockFrom != null && !blockTo.isOwner(blockFrom.getOwner()) && blockFrom.getPermissions().has(
-		Flags.pistonprotection, true)) {
-		event.setCancelled(true);
-		return;
-	    }
+	    if (blockFrom == null)
+		continue;
+	    if (blockFrom == pistonRes || blockFrom == null && pistonRes != null)
+		continue;
+	    if (blockFrom != null && pistonRes != null && blockFrom.isOwner(pistonRes.getOwner()))
+		continue;
+	    if (blockFrom.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyFalse))
+		continue;
+	    event.setCancelled(true);
 	}
     }
 
