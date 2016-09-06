@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -822,7 +823,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 	Entity ent = event.getEntity();
 
-	if (!Residence.getNms().isArmorStandEntity(ent.getType()))
+	if (!Residence.getNms().isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
 	    return;
 
 	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)) {
@@ -964,6 +965,7 @@ public class ResidenceEntityListener implements Listener {
 	    boolean srcpvp = true;
 	    boolean allowSnowBall = false;
 	    boolean isSnowBall = false;
+	    boolean isOnFire = false;
 	    if (srcarea != null) {
 		srcpvp = srcarea.getPermissions().has(Flags.pvp, true);
 	    }
@@ -979,6 +981,9 @@ public class ResidenceEntityListener implements Listener {
 			isSnowBall = true;
 			allowSnowBall = srcarea.getPermissions().has(Flags.snowball, false);
 		    }
+		    if (project.getFireTicks() > 0)
+			isOnFire = true;
+
 		    attacker = (Player) ((Projectile) damager).getShooter();
 		}
 
@@ -988,9 +993,12 @@ public class ResidenceEntityListener implements Listener {
 		if (!srcpvp && !isSnowBall || !allowSnowBall && isSnowBall) {
 		    if (attacker != null)
 			Residence.msg(attacker, lm.General_NoPVPZone);
+		    if (isOnFire)
+			ent.setFireTicks(0);
 		    event.setCancelled(true);
 		    return;
 		}
+
 		/* Check for Player vs Player */
 		if (area == null) {
 		    /* World PvP */
@@ -998,6 +1006,8 @@ public class ResidenceEntityListener implements Listener {
 			if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has(Flags.pvp, true)) {
 			    if (attacker != null)
 				Residence.msg(attacker, lm.General_WorldPVPDisabled);
+			    if (isOnFire)
+				ent.setFireTicks(0);
 			    event.setCancelled(true);
 			    return;
 			}
@@ -1007,6 +1017,8 @@ public class ResidenceEntityListener implements Listener {
 			FlagPermissions aPerm = Residence.getPermsByLoc(attacker.getLocation());
 			if (aPerm.has(Flags.pvp, FlagCombo.FalseOrNone)) {
 			    Residence.msg(attacker, lm.General_NoPVPZone);
+			    if (isOnFire)
+				ent.setFireTicks(0);
 			    event.setCancelled(true);
 			    return;
 			}
@@ -1016,6 +1028,8 @@ public class ResidenceEntityListener implements Listener {
 		    if (!isSnowBall && !area.getPermissions().has(Flags.pvp, true) || isSnowBall && !allowSnowBall) {
 			if (attacker != null)
 			    Residence.msg(attacker, lm.General_NoPVPZone);
+			if (isOnFire)
+			    ent.setFireTicks(0);
 			event.setCancelled(true);
 			return;
 		    }

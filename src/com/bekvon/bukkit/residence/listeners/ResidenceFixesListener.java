@@ -32,7 +32,7 @@ public class ResidenceFixesListener implements Listener {
 	Location loc = new Location(bclicked.getWorld(), bclicked.getX() + face.getModX(), bclicked.getY() + face.getModY(),
 	    bclicked.getZ() + face.getModZ());
 	Block block = loc.getBlock();
-	if (block == null || block.getType() == Material.AIR || block.getType() != Material.SKULL)
+	if (block == null || block.getType() == Material.AIR || block.getType() != Material.SKULL && block.getType() != Material.FLOWER_POT)
 	    return;
 	event.setCancelled(true);
     }

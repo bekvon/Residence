@@ -1008,7 +1008,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
-	    boolean hasuse = perms.playerHas(player.getName(), world, Flags.use, true);	    	    
+	    boolean hasuse = perms.playerHas(player.getName(), world, Flags.use, true);
 	    for (Entry<Material, String> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 		if (mat != checkMat.getKey())
 		    continue;
