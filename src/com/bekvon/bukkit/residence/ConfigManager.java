@@ -9,6 +9,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.ParticleEffects;
 
 import java.io.BufferedReader;
@@ -279,6 +280,10 @@ public class ConfigManager {
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
 	for (Flags fl : Flags.values()) {
+	    if (conf.isBoolean("Global.FlagPermission." + fl.getName()))
+		continue;
+	    
+	    Debug.D("non existen section " + fl.getName());
 	    conf.createSection("Global.FlagPermission." + fl.getName());
 	    conf.set("Global.FlagPermission." + fl.getName(), fl.isEnabled());
 	}
