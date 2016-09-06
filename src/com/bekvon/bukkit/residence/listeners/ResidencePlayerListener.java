@@ -753,8 +753,7 @@ public class ResidencePlayerListener implements Listener {
     @SuppressWarnings("deprecation")
     private static boolean isContainer(Material mat, Block block) {
 	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals(Flags.container.getName())
-	    || Residence
-		.getConfigManager().getCustomContainers().contains(block.getTypeId());
+	    || Residence.getConfigManager().getCustomContainers().contains(block.getTypeId());
     }
 
     @SuppressWarnings("deprecation")
@@ -1009,7 +1008,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
-	    boolean hasuse = perms.playerHas(player.getName(), world, Flags.use, true);
+	    boolean hasuse = perms.playerHas(player.getName(), world, Flags.use, true);	    	    
 	    for (Entry<Material, String> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 		if (mat != checkMat.getKey())
 		    continue;

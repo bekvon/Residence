@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -887,13 +888,10 @@ public class ResidenceEntityListener implements Listener {
 	} else if (dmgr instanceof Projectile && ((Projectile) dmgr).getShooter() instanceof Player) {
 	    player = (Player) ((Projectile) dmgr).getShooter();
 	} else if ((dmgr instanceof Projectile) && (!(((Projectile) dmgr).getShooter() instanceof Player))) {
-
 	    Location loc = event.getEntity().getLocation();
 	    FlagPermissions perm = Residence.getPermsByLoc(loc);
-
-	    if (!perm.has(Flags.destroy, true)) {
+	    if (perm.has(Flags.destroy, FlagCombo.FalseOrNone))
 		event.setCancelled(true);
-	    }
 	    return;
 	} else if (dmgr.getType() == EntityType.PRIMED_TNT || dmgr.getType() == EntityType.MINECART_TNT || dmgr.getType() == EntityType.WITHER_SKULL || dmgr
 	    .getType() == EntityType.WITHER) {

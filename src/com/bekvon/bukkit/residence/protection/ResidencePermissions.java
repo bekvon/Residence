@@ -97,6 +97,7 @@ public class ResidencePermissions extends FlagPermissions {
 	return super.groupHas(group, flag, def);
     }
 
+    @Override
     public boolean has(Flags flag, FlagCombo f) {
 	return has(flag.getName(), f);
     }

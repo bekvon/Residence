@@ -22,6 +22,7 @@ import org.bukkit.permissions.PermissionDefault;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 public class FlagPermissions {
 
@@ -448,6 +449,21 @@ public class FlagPermissions {
 	    return parent.groupCheck(group, flag, def);
 	}
 	return def;
+    }
+
+    public boolean has(Flags flag, FlagCombo f) {
+	switch (f) {
+	case FalseOrNone:
+	    return !has(flag, false);
+	case OnlyFalse:
+	    return !has(flag, true);
+	case OnlyTrue:
+	    return has(flag, false);
+	case TrueOrNone:
+	    return has(flag, true);
+	default:
+	    return false;
+	}
     }
 
     public boolean has(Flags flag, boolean def) {
