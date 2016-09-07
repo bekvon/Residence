@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -40,6 +39,7 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Hanging;
@@ -50,6 +50,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
@@ -60,6 +61,26 @@ public class ResidenceEntityListener implements Listener {
 
     public ResidenceEntityListener(Residence plugin) {
 	this.plugin = plugin;
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onMinecartHopperItemMove(InventoryMoveItemEvent event) {
+	if (!(event.getInitiator().getHolder() instanceof HopperMinecart))
+	    return;
+	HopperMinecart hopper = (HopperMinecart) event.getInitiator().getHolder();
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(hopper.getWorld()))
+	    return;
+	Block block = hopper.getLocation().getBlock();
+	switch (block.getType()) {
+	case ACTIVATOR_RAIL:
+	case DETECTOR_RAIL:
+	case POWERED_RAIL:
+	case RAILS:
+	    return;
+	}
+	event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
