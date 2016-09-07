@@ -862,14 +862,11 @@ public class ResidenceEntityListener implements Listener {
 	if (!(event.getEntity() instanceof Arrow))
 	    return;
 	Arrow arrow = (Arrow) event.getEntity();
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(arrow.getLocation());
-	ProjectileSource shooter = arrow.getShooter();
-	if (shooter instanceof Player) {
-	    Player player = (Player) shooter;
-	    if (!res.getPermissions().playerHas(player, Flags.build, FlagCombo.OnlyTrue)) {
-		arrow.setFireTicks(0);
-	    }
-	}
+
+	FlagPermissions perms = Residence.getPermsByLoc(arrow.getLocation());
+
+	if (!perms.has(Flags.pvp, FlagCombo.OnlyTrue))
+	    arrow.setFireTicks(0);
     }
 
     @EventHandler
