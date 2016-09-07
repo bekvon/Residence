@@ -44,7 +44,7 @@ public class remove implements cmd {
 	    sender.hasPermission("residence.delete.subzone") &&
 	    !resadmin &&
 	    Residence.getConfigManager().isPreventSubZoneRemoval() &&
-	    !res.getParent().isOwner(senderName) &&
+	    !res.getParent().isOwner(sender) &&
 	    !res.getPermissions().playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue)) {
 	    Residence.msg(sender, lm.Subzone_CantDeleteNotOwnerOfParent);
 	    return true;
@@ -53,7 +53,7 @@ public class remove implements cmd {
 	if (!res.isSubzone() &&
 	    sender.hasPermission("residence.delete") &&
 	    !resadmin &&
-	    !res.isOwner(senderName)) {
+	    !res.isOwner(sender)) {
 	    Residence.msg(sender, lm.Residence_CantDeleteResidence);
 	    return true;
 	}

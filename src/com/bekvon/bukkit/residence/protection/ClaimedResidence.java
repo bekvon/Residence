@@ -1570,6 +1570,9 @@ public class ClaimedResidence {
     }
 
     public boolean isOwner(String name) {
+	Player player = Bukkit.getPlayer(name);
+	if (player != null)
+	    return isOwner(player);
 	return perms.getOwner().equalsIgnoreCase(name);
     }
 

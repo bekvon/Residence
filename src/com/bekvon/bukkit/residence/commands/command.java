@@ -45,7 +45,7 @@ public class command implements cmd {
 	    return true;
 	}
 
-	if (!res.isOwner(sender.getName()) && !resadmin) {
+	if (!res.isOwner(sender) && !resadmin) {
 	    Residence.msg(sender, lm.Residence_NotOwner);
 	    return true;
 	}

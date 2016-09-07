@@ -24,7 +24,6 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
-import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -37,7 +36,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
@@ -630,7 +628,7 @@ public class ResidenceManager implements ResidenceInterface {
 	String resNameOwner = "&e" + Residence.msg(lm.Residence_Line, areaname);
 	resNameOwner += Residence.msg(lm.General_Owner, perms.getOwner());
 	if (Residence.getConfigManager().enableEconomy()) {
-	    if (res.isOwner(sender.getName()) || !(sender instanceof Player) || resadmin)
+	    if (res.isOwner(sender) || !(sender instanceof Player) || resadmin)
 		resNameOwner += Residence.msg(lm.Bank_Name, res.getBank().getStoredMoney());
 	}
 	resNameOwner = ChatColor.translateAlternateColorCodes('&', resNameOwner);
@@ -720,7 +718,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    StringBuilder rentableString = new StringBuilder();
 	    if (rented != null) {
 		rentableString.append(Residence.msg(lm.Rent_Expire, GetTime.getTime(rented.endTime)) + "\n");
-		if (rented.player.equals(sender.getName()) || resadmin || res.isOwner(sender.getName()))
+		if (rented.player.equals(sender.getName()) || resadmin || res.isOwner(sender))
 		    rentableString.append((rented.AutoPay ? Residence.msg(lm.Rent_AutoPayTurnedOn) : Residence.msg(lm.Rent_AutoPayTurnedOff))
 			+ "\n");
 	    }
