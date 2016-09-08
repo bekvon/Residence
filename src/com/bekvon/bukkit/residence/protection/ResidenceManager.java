@@ -171,7 +171,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     @Override
     public void removeShop(ClaimedResidence res) {
-	removeShop(res);
+	shops.remove(res);
     }
 
     @Override

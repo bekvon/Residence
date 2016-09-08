@@ -66,6 +66,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -108,6 +109,25 @@ public class ResidencePlayerListener implements Listener {
 	for (Player player : Bukkit.getOnlinePlayers()) {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
+    }
+
+    @EventHandler
+    public void onJump(PlayerMoveEvent event) {
+	Player player = event.getPlayer();
+	if (player.isFlying())
+	    return;
+
+	if (event.getTo().getY() - event.getFrom().getY() != 0.41999998688697815D)
+	    return;
+
+	FlagPermissions perms = Residence.getPermsByLoc(player.getLocation());
+//	Debug.D("jump");
+
+	if (perms.has(Flags.jump2, FlagCombo.OnlyTrue))
+	    player.setVelocity(player.getVelocity().add(player.getVelocity().multiply(0.3)));
+	else if (perms.has(Flags.jump3, FlagCombo.OnlyTrue))
+	    player.setVelocity(player.getVelocity().add(player.getVelocity().multiply(0.6)));
+
     }
 
     // Adding to chat prefix main residence name
@@ -344,6 +364,34 @@ public class ResidencePlayerListener implements Listener {
 		    one.setWalkSpeed(Residence.getConfigManager().getWalkSpeed2().floatValue());
 		if (event.getResidence().getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
 		    event.getResidence().getPermissions().setFlag(Flags.wspeed1.getName(), FlagState.NEITHER);
+	    }
+	    break;
+	default:
+	    break;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeJump(ResidenceFlagChangeEvent event) {
+	if (event.isCancelled())
+	    return;
+
+	if (!event.getFlag().equalsIgnoreCase(Flags.jump2.getName()) &&
+	    !event.getFlag().equalsIgnoreCase(Flags.jump3.getName()))
+	    return;
+
+	switch (event.getNewState()) {
+	case NEITHER:
+	case FALSE:
+	case INVALID:
+	    break;
+	case TRUE:
+	    if (event.getFlag().equalsIgnoreCase(Flags.jump2.getName())) {
+		if (event.getResidence().getPermissions().has(Flags.jump3, FlagCombo.OnlyTrue))
+		    event.getResidence().getPermissions().setFlag(Flags.jump3.getName(), FlagState.NEITHER);
+	    } else if (event.getFlag().equalsIgnoreCase(Flags.jump3.getName())) {
+		if (event.getResidence().getPermissions().has(Flags.jump2, FlagCombo.OnlyTrue))
+		    event.getResidence().getPermissions().setFlag(Flags.jump2.getName(), FlagState.NEITHER);
 	    }
 	    break;
 	default:

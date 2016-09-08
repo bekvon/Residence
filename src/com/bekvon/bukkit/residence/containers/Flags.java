@@ -54,6 +54,8 @@ public enum Flags {
     iceform(79, 0, FlagMode.Residence, "Prevents from ice forming", true),
     icemelt(79, 0, FlagMode.Residence, "Prevents ice from melting", true),
     ignite(259, 0, FlagMode.Both, "Allows or denys fire ignition", true),
+    jump2(165, 0, FlagMode.Residence, "Allows to jump 2 blocks high", false),
+    jump3(165, 0, FlagMode.Residence, "Allows to jump 3 blocks high", false),
     keepinv(298, 0, FlagMode.Residence, "Players keeps inventory after death", false),
     keepexp(322, 0, FlagMode.Residence, "Players keeps exp after death", false),
     lavaflow(327, 0, FlagMode.Residence, "Allows or denys lava flow, overrides flow", true),

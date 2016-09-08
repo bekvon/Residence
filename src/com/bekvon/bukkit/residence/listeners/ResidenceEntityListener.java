@@ -53,7 +53,6 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.projectiles.ProjectileSource;
 
 public class ResidenceEntityListener implements Listener {
 
