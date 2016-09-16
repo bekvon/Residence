@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
@@ -47,6 +48,19 @@ public class ShopSignUtil {
 
     public void addBoard(Board Board) {
 	AllBoards.add(Board);
+    }
+
+    public boolean exist(Board board) {
+	List<Location> loc2 = board.GetLocations();
+	for (Board one : AllBoards) {
+	    List<Location> loc1 = one.GetLocations();
+	    for (Location oneL : loc1) {
+		if (!loc2.contains(oneL))
+		    continue;
+		return true;
+	    }
+	}
+	return false;
     }
 
     // Res Shop vote file
@@ -261,18 +275,17 @@ public class ShopSignUtil {
 	    ConfigurationSection NameSection = ConfCategory.getConfigurationSection(category);
 	    Board newTemp = new Board();
 	    newTemp.setStartPlace(NameSection.getInt("StartPlace"));
-	    newTemp.setWorld(NameSection.getString("World"));
-	    newTemp.setTX(NameSection.getInt("TX"));
-	    newTemp.setTY(NameSection.getInt("TY"));
-	    newTemp.setTZ(NameSection.getInt("TZ"));
-	    newTemp.setBX(NameSection.getInt("BX"));
-	    newTemp.setBY(NameSection.getInt("BY"));
-	    newTemp.setBZ(NameSection.getInt("BZ"));
 
-	    newTemp.GetTopLocation();
-	    newTemp.GetBottomLocation();
+	    World w = Bukkit.getWorld(NameSection.getString("World"));
 
-	    newTemp.GetLocations();
+	    if (w == null)
+		continue;
+
+	    Location loc1 = new Location(w, NameSection.getInt("TX"), NameSection.getInt("TY"), NameSection.getInt("TZ"));
+	    Location loc2 = new Location(w, NameSection.getInt("BX"), NameSection.getInt("BY"), NameSection.getInt("BZ"));
+
+	    newTemp.setTopLoc(loc1);
+	    newTemp.setBottomLoc(loc2);
 
 	    addBoard(newTemp);
 	}
@@ -298,12 +311,12 @@ public class ShopSignUtil {
 	    String path = "ShopSigns." + cat;
 	    writer.set(path + ".StartPlace", one.GetStartPlace());
 	    writer.set(path + ".World", one.GetWorld());
-	    writer.set(path + ".TX", one.GetTopLocation().getBlockX());
-	    writer.set(path + ".TY", one.GetTopLocation().getBlockY());
-	    writer.set(path + ".TZ", one.GetTopLocation().getBlockZ());
-	    writer.set(path + ".BX", one.GetBottomLocation().getBlockX());
-	    writer.set(path + ".BY", one.GetBottomLocation().getBlockY());
-	    writer.set(path + ".BZ", one.GetBottomLocation().getBlockZ());
+	    writer.set(path + ".TX", one.getTopLoc().getBlockX());
+	    writer.set(path + ".TY", one.getTopLoc().getBlockY());
+	    writer.set(path + ".TZ", one.getTopLoc().getBlockZ());
+	    writer.set(path + ".BX", one.getBottomLoc().getBlockX());
+	    writer.set(path + ".BY", one.getBottomLoc().getBlockY());
+	    writer.set(path + ".BZ", one.getBottomLoc().getBlockZ());
 	}
 
 	try {
@@ -365,7 +378,7 @@ public class ShopSignUtil {
 		    if (Residence.getConfigManager().isOnlyLike()) {
 			votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListLiked, getLikes(ShopNames.get(Start)));
 		    } else
-			votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_SignLines_4, vote.getVote() + "%" + vote.getAmount());
+			votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_SignLines_4, vote.getVote() , vote.getAmount());
 		}
 
 		sign.setLine(0, Residence.msg(lm.Shop_SignLines_1, Start + 1));

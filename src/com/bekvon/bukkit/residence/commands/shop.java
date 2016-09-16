@@ -237,7 +237,7 @@ public class shop implements cmd {
 	if (args.length == 2 && args[1].equalsIgnoreCase("DeleteBoard")) {
 
 	    if (!resadmin) {
-		Residence.msg(player, lm.General_NoPermission);
+		Residence.msg(player, lm.General_AdminOnly);
 		return true;
 	    }
 
@@ -278,7 +278,7 @@ public class shop implements cmd {
 	if (args.length == 3 && args[1].equalsIgnoreCase("createboard")) {
 
 	    if (!resadmin) {
-		Residence.msg(player, lm.General_NoPermission);
+		Residence.msg(player, lm.General_AdminOnly);
 		return true;
 	    }
 
@@ -308,18 +308,13 @@ public class shop implements cmd {
 
 	    Board newTemp = new Board();
 	    newTemp.setStartPlace(place);
-	    newTemp.setWorld(loc1.getWorld().getName());
-	    newTemp.setTX(loc1.getBlockX());
-	    newTemp.setTY(loc1.getBlockY());
-	    newTemp.setTZ(loc1.getBlockZ());
-	    newTemp.setBX(loc2.getBlockX());
-	    newTemp.setBY(loc2.getBlockY());
-	    newTemp.setBZ(loc2.getBlockZ());
-
-	    newTemp.GetTopLocation();
-	    newTemp.GetBottomLocation();
-
-	    newTemp.GetLocations();
+	    newTemp.setTopLoc(loc1);
+	    newTemp.setBottomLoc(loc2);
+	    
+	    if (Residence.getShopSignUtilManager().exist(newTemp)){
+		sender.sendMessage(Residence.msg(lm.Shop_BoardExist));
+		return true;
+	    }
 
 	    Residence.getShopSignUtilManager().addBoard(newTemp);
 	    Residence.msg(player, lm.Shop_NewBoard);

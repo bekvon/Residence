@@ -324,6 +324,7 @@ public enum lm {
     Shop_Desc("&6Description:\n%1"),
     Shop_DescChange("&6Description changed to: %1"),
     Shop_NewBoard("&6Successfully added new shop sign board"),
+    Shop_BoardExist("&cShop board already exists in this location"),
     Shop_DeleteBoard("&6Right click sign of board you want to delete"),
     Shop_DeletedBoard("&6Sign board removed"),
     Shop_IncorrectBoard("&cThis is not sign board, try performing command again and clicking correct sign"),
