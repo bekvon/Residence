@@ -13,6 +13,7 @@ import org.bukkit.potion.PotionEffect;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 public class v1_9Events implements Listener {
 
@@ -37,7 +38,7 @@ public class v1_9Events implements Listener {
 	    return;
 
 	Entity ent = event.getEntity();
-	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has(Flags.pvp, true);
+	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has(Flags.pvp, FlagCombo.TrueOrNone);
 	if (!srcpvp)
 	    event.setCancelled(true);
     }

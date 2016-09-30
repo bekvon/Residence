@@ -22,6 +22,7 @@ import org.bukkit.permissions.PermissionDefault;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
 
@@ -410,13 +411,13 @@ public class FlagPermissions {
 	    return FlagState.INVALID;
 	}
     }
-    
+
     public boolean playerHas(Player player, Flags flag, boolean def) {
 	if (player == null)
 	    return false;
 	return playerHas(player.getName(), player.getWorld().getName(), flag.getName(), def);
     }
-    
+
     public boolean playerHas(String player, String world, Flags flag, boolean def) {
 	return playerHas(player, world, flag.getName(), def);
     }
