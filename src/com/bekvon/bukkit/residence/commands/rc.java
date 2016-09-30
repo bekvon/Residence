@@ -70,8 +70,8 @@ public class rc implements cmd {
 		return true;
 	    }
 
-	    if (!res.getPermissions().playerHas(player.getName(), "chat", true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		Residence.msg(player, lm.Residence_FlagDeny, "chat", res.getName());
+	    if (!res.getPermissions().playerHas(player.getName(), Flags.chat, true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
+		Residence.msg(player, lm.Residence_FlagDeny, Flags.chat.getName(), res.getName());
 		return false;
 	    }
 	    Residence.getPlayerListener().tooglePlayerResidenceChat(player, res.getName());

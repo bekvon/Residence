@@ -409,9 +409,9 @@ public class ResidenceBlockListener implements Listener {
 	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
 	    if (blockFrom == null)
 		continue;
-	    if (blockFrom == pistonRes || blockFrom == null && pistonRes != null)
+	    if (blockFrom == pistonRes)
 		continue;
-	    if (blockFrom != null && pistonRes != null && blockFrom.isOwner(pistonRes.getOwner()))
+	    if (pistonRes != null && blockFrom.isOwner(pistonRes.getOwner()))
 		continue;
 	    if (blockFrom.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyFalse))
 		continue;

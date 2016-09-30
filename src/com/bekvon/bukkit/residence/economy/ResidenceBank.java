@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence.economy;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.entity.Player;
@@ -44,7 +45,7 @@ public class ResidenceBank {
 	if (!Residence.getConfigManager().enableEconomy()) {
 	    Residence.msg(sender, lm.Economy_MarketDisabled);
 	}
-	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), "bank", false)) {
+	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), Flags.bank, false)) {
 	    Residence.msg(sender, lm.Bank_NoAccess);
 	    return;
 	}
@@ -62,7 +63,7 @@ public class ResidenceBank {
 	if (!Residence.getConfigManager().enableEconomy()) {
 	    Residence.msg(sender, lm.Economy_MarketDisabled);
 	}
-	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), "bank", false)) {
+	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), Flags.bank, false)) {
 	    Residence.msg(sender, lm.Bank_NoAccess);
 	    return;
 	}

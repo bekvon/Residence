@@ -47,6 +47,7 @@ public class ResidencePermissions extends FlagPermissions {
 	return playerHas(player, flag.getName(), def);
     }
 
+    @Deprecated
     public boolean playerHas(Player player, String flag, boolean def) {
 	return this.playerHas(player.getName(), world, flag, def);
     }
@@ -55,6 +56,7 @@ public class ResidencePermissions extends FlagPermissions {
 	return playerHas(player, flag.getName(), def);
     }
 
+    @Deprecated
     public boolean playerHas(String player, String flag, boolean def) {
 	return this.playerHas(player, world, flag, def);
     }
@@ -221,13 +223,13 @@ public class ResidencePermissions extends FlagPermissions {
 		if (sender.getName().equals(renter)) {
 		    return true;
 		}
-		return (playerHas(sender.getName(), "admin", false));
+		return (playerHas(sender.getName(), Flags.admin, false));
 	    }
 	}
 	if (requireOwner) {
 	    return (this.getOwner().equals(sender.getName()));
 	}
-	return (playerHas(sender.getName(), "admin", false) || this.getOwner().equals(sender.getName()));
+	return (playerHas(sender.getName(), Flags.admin, false) || this.getOwner().equals(sender.getName()));
     }
 
     private boolean checkCanSetFlag(CommandSender sender, String flag, FlagState state, boolean globalflag, boolean resadmin) {

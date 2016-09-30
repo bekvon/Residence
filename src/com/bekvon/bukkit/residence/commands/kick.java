@@ -45,7 +45,7 @@ public class kick implements cmd {
 	}
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(targetplayer.getLocation());
 
-	if (res == null || res != null && !res.isOwner(player) && !resadmin) {
+	if (res == null || !res.isOwner(player) && !resadmin) {
 	    Residence.msg(player, lm.Residence_PlayerNotIn);
 	    return true;
 	}

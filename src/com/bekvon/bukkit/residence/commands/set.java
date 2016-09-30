@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.gui.SetFlag;
@@ -24,20 +25,28 @@ public class set implements cmd {
 
 	if (args.length == 3) {
 	    Player player = (Player) sender;
-	    String area = Residence.getResidenceManager().getNameByLoc(player.getLocation());
-	    if (area != null) {
-		Residence.getResidenceManager().getByName(area).getPermissions().setFlag(sender, args[1], args[2], resadmin);
-	    } else {
+	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    if (res == null) {
 		Residence.msg(sender, lm.Invalid_Residence);
+		return true;
 	    }
+	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
+		Residence.msg(sender, lm.General_NoPermission);
+		return true;
+	    }
+	    res.getPermissions().setFlag(sender, args[1], args[2], resadmin);
 	    return true;
 	} else if (args.length == 4) {
-	    ClaimedResidence area = Residence.getResidenceManager().getByName(args[1]);
-	    if (area != null) {
-		area.getPermissions().setFlag(sender, args[2], args[3], resadmin);
-	    } else {
+	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	    if (res == null) {
 		Residence.msg(sender, lm.Invalid_Residence);
+		return true;
 	    }
+	    if (!res.isOwner(sender) && !resadmin && sender instanceof Player && !res.getPermissions().playerHas((Player) sender, Flags.admin, false)) {
+		Residence.msg(sender, lm.General_NoPermission);
+		return true;
+	    }
+	    res.getPermissions().setFlag(sender, args[2], args[3], resadmin);
 	    return true;
 	} else if ((args.length == 1 || args.length == 2) && Residence.getConfigManager().useFlagGUI()) {
 	    Player player = (Player) sender;
@@ -50,7 +59,7 @@ public class set implements cmd {
 		Residence.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
-	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, "admin", false)) {
+	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
 		Residence.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
@@ -69,6 +78,7 @@ public class set implements cmd {
 	c.get(path + "Description", "Set general flags on a Residence");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res set <residence> [flag] [true/false/remove]",
 	    "To see a list of flags, use /res flags ?", "These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[flag]", "[flag]%%true%%false%%remove", "true%%false%%remove"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[flag]", "[flag]%%true%%false%%remove",
+	    "true%%false%%remove"));
     }
 }

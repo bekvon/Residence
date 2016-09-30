@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -143,8 +144,8 @@ public class InformationPager {
 	    String tpFlag = "";
 	    String moveFlag = "";
 	    if (sender instanceof Player && !res.isOwner(sender)) {
-		tpFlag = res.getPermissions().playerHas((Player) sender, "tp", true) ? ChatColor.DARK_GREEN + "T" : ChatColor.DARK_RED + "T";
-		moveFlag = res.getPermissions().playerHas(sender.getName(), "move", true) ? ChatColor.DARK_GREEN + "M" : ChatColor.DARK_RED + "M";
+		tpFlag = res.getPermissions().playerHas((Player) sender, Flags.tp, true) ? ChatColor.DARK_GREEN + "T" : ChatColor.DARK_RED + "T";
+		moveFlag = res.getPermissions().playerHas(sender.getName(), Flags.move, true) ? ChatColor.DARK_GREEN + "M" : ChatColor.DARK_RED + "M";
 	    }
 
 	    String msg = Residence.msg(lm.Residence_ResList, (i + 1), res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);

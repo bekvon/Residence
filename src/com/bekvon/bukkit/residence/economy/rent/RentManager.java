@@ -673,7 +673,7 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (land == null || res == null || !res.isOwner(player) && !resadmin) {
+	if (land == null || !res.isOwner(player) && !resadmin) {
 	    Residence.msg(player, lm.Residence_NotOwner);
 	    return;
 	}
@@ -729,8 +729,7 @@ public class RentManager implements MarketRentInterface {
 	else
 	    Residence.msg(player, lm.Rent_DisableRenew, res.getResidenceName());
 
-	if (res != null)
-	    Residence.getSignUtil().CheckSign(res);
+	Residence.getSignUtil().CheckSign(res);
     }
 
     public void printRentInfo(Player player, String landName) {
@@ -757,7 +756,7 @@ public class RentManager implements MarketRentInterface {
 	    if (rented != null) {
 		Residence.msg(player, lm.Residence_RentedBy, rented.player);
 
-		if (rented.player.equals(player.getName()) || res != null && res.isOwner(player) || Residence.isResAdminOn(player))
+		if (rented.player.equals(player.getName()) || res.isOwner(player) || Residence.isResAdminOn(player))
 		    player.sendMessage((rented.AutoPay ? Residence.msg(lm.Rent_AutoPayTurnedOn) : Residence.msg(lm.Rent_AutoPayTurnedOff))
 			+ "\n");
 		Residence.msg(player, lm.Rent_Expire, GetTime.getTime(rented.endTime));

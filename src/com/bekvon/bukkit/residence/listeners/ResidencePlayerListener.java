@@ -66,7 +66,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -761,10 +760,8 @@ public class ResidencePlayerListener implements Listener {
 	}
 	handleNewLocation(player, player.getLocation(), true);
 
-	final Player p = player;
-	Residence.getPlayerManager().playerJoin(p);
-	if (p != null)
-	    Residence.getPermissionManager().updateGroupNameForPlayer(p, true);
+	Residence.getPlayerManager().playerJoin(player);
+	Residence.getPermissionManager().updateGroupNameForPlayer(player, true);
 
 	if (player.hasPermission("residence.versioncheck")) {
 	    Residence.getVersionChecker().VersionCheck(player);
@@ -1614,7 +1611,7 @@ public class ResidencePlayerListener implements Listener {
 
 		    f: if (player.isFlying() && res.getPermissions().playerHas(pname, Flags.nofly, false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 			"residence.nofly.bypass")) {
-			if (res != null && res.isOwner(player))
+			if (res.isOwner(player))
 			    break f;
 			Location lc = player.getLocation();
 			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
@@ -1703,7 +1700,7 @@ public class ResidencePlayerListener implements Listener {
 		    player.teleport(newLoc);
 		} else if (lastLoc != null) {
 		    player.teleport(lastLoc);
-		} else if (lastLoc == null) {
+		} else {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.teleport(newLoc);
 		}
@@ -1719,7 +1716,7 @@ public class ResidencePlayerListener implements Listener {
 	    // Preventing fly in residence only when player has move permission
 	    f: if (player.isFlying() && res.getPermissions().playerHas(pname, Flags.nofly, false) && !Residence.isResAdminOn(player) && !player.hasPermission(
 		"residence.nofly.bypass")) {
-		if (res != null && res.isOwner(player))
+		if (res.isOwner(player))
 		    break f;
 		Location lc = player.getLocation();
 		Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());

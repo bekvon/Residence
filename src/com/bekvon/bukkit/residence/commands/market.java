@@ -101,7 +101,7 @@ public class market implements cmd {
 	    if (!res.isRented()) {
 		Residence.getRentManager().removeFromForRent(player, res, resadmin);
 		ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
-		if (rPlayer != null && res != null && rPlayer.getMainResidence() == res) {
+		if (rPlayer != null && rPlayer.getMainResidence() == res) {
 		    rPlayer.setMainResidence(null);
 		}
 	    } else

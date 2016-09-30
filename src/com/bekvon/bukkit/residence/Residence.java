@@ -513,9 +513,7 @@ public class Residence extends JavaPlugin {
 
 	    for (String lang : validLanguages) {
 		YmlMaker langFile = new YmlMaker(this, "Language" + File.separator + lang + ".yml");
-		if (langFile != null) {
-		    langFile.saveDefaultConfig();
-		}
+		langFile.saveDefaultConfig();
 	    }
 
 	    for (String lang : validLanguages) {

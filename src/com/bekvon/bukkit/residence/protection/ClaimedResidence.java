@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
@@ -384,7 +385,7 @@ public class ClaimedResidence {
 		    Residence.msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
-		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), "subzone", true)) {
+		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), Flags.subzone, true)) {
 		    Residence.msg(player, lm.Residence_ParentNoPermission);
 		    return false;
 		}
@@ -515,7 +516,7 @@ public class ClaimedResidence {
 		    Residence.msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
-		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), "subzone", true)) {
+		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), Flags.subzone, true)) {
 		    Residence.msg(player, lm.Residence_ParentNoPermission);
 		    return false;
 		}
@@ -599,7 +600,7 @@ public class ClaimedResidence {
 	}
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
-		if (!this.perms.playerHas(player.getName(), "subzone", this.perms.playerHas(player.getName(), "admin", false))) {
+		if (!this.perms.playerHas(player.getName(), Flags.subzone, this.perms.playerHas(player.getName(), Flags.admin, false))) {
 		    Residence.msg(player, lm.General_NoPermission);
 		    return false;
 		}
@@ -1004,7 +1005,7 @@ public class ClaimedResidence {
 		continue;
 
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-	    if (res != null && player != null && !res.getPermissions().playerHas(player.getName(), "tp", true) && !player.hasPermission("residence.admin.tp"))
+	    if (res != null && player != null && !res.getPermissions().playerHas(player.getName(), Flags.tp, true) && !player.hasPermission("residence.admin.tp"))
 		continue;
 
 	    found = true;
@@ -1151,11 +1152,11 @@ public class ClaimedResidence {
 		Residence.msg(reqPlayer, lm.General_NoPermission);
 		return;
 	    }
-	    if (!this.perms.playerHas(reqPlayer.getName(), "tp", true)) {
+	    if (!this.perms.playerHas(reqPlayer.getName(), Flags.tp, true)) {
 		Residence.msg(reqPlayer, lm.Residence_TeleportNoFlag);
 		return;
 	    }
-	    if (!this.perms.playerHas(reqPlayer.getName(), "move", true)) {
+	    if (!this.perms.playerHas(reqPlayer.getName(), Flags.move, true)) {
 		Residence.msg(reqPlayer, lm.Residence_MoveDeny, this.getName());
 		return;
 	    }
