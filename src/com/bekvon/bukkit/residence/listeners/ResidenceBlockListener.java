@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -413,9 +415,10 @@ public class ResidenceBlockListener implements Listener {
 		continue;
 	    if (pistonRes != null && blockFrom.isOwner(pistonRes.getOwner()))
 		continue;
-	    if (blockFrom.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyFalse))
+	    if (!blockFrom.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue))
 		continue;
 	    event.setCancelled(true);
+	    break;
 	}
     }
 
@@ -439,14 +442,14 @@ public class ResidenceBlockListener implements Listener {
 	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
 	    ClaimedResidence blockTo = Residence.getResidenceManager().getByLoc(locTo);
 
-	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, true)) {
+	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue)) {
 		event.setCancelled(true);
 		return;
-	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has(Flags.pistonprotection, true)) {
+	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue)) {
 		event.setCancelled(true);
 		return;
 	    } else if (blockTo != null && blockFrom != null && (pistonRes != null && !blockTo.isOwner(pistonRes.getOwner()) || !blockTo.isOwner(blockFrom.getOwner()))
-		&& blockTo.getPermissions().has(Flags.pistonprotection, true)) {
+		&& blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue)) {
 		event.setCancelled(true);
 		return;
 	    }
