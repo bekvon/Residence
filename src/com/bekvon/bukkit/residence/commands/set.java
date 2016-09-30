@@ -42,7 +42,7 @@ public class set implements cmd {
 		Residence.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
-	    if (!res.isOwner(sender) && !resadmin && sender instanceof Player && !res.getPermissions().playerHas((Player) sender, Flags.admin, false)) {
+	    if (!res.isOwner(sender) && !resadmin && !res.getPermissions().playerHas(sender, Flags.admin, false)) {
 		Residence.msg(sender, lm.General_NoPermission);
 		return true;
 	    }

@@ -833,7 +833,25 @@ public class ResidenceEntityListener implements Listener {
 	if (!srcpvp || !tgtpvp)
 	    event.setCancelled(true);
     }
+    
+    @EventHandler
+    public void OnFallDamage(EntityDamageEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+	if (event.getCause() != DamageCause.FALL)
+	    return;
+	Entity ent = event.getEntity();
+	if (!(ent instanceof Player))
+	    return;
 
+	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.falldamage, FlagCombo.TrueOrNone)) {
+	    event.setCancelled(true);
+	}
+    }
+    
     @EventHandler
     public void OnArmorStandFlameDamage(EntityDamageEvent event) {
 	// disabling event on world

@@ -47,31 +47,33 @@ public class pset implements cmd {
 	    if (!Residence.isPlayerExist(sender, args[1], true))
 		return false;
 
-	    if (res != null) {
-		if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
-		    Residence.msg(sender, lm.General_NoPermission);
-		    return true;
-		}
-		res.getPermissions().setPlayerFlag(sender, args[1], args[2], args[3], resadmin, true);
-	    } else {
+	    if (res == null) {
 		Residence.msg(sender, lm.Invalid_Residence);
+		return true;
 	    }
+
+	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
+		Residence.msg(sender, lm.General_NoPermission);
+		return true;
+	    }
+	    res.getPermissions().setPlayerFlag(sender, args[1], args[2], args[3], resadmin, true);
+
 	    return true;
 	} else if (args.length == 5) {
 	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
 	    if (!Residence.isPlayerExist(sender, args[2], true))
 		return false;
-	    
+
 	    if (res == null) {
 		Residence.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
-	    
-	    if (!res.isOwner(sender) && !resadmin && sender instanceof Player && !res.getPermissions().playerHas((Player) sender, Flags.admin, false)) {
+
+	    if (!res.isOwner(sender) && !resadmin && !res.getPermissions().playerHas(sender, Flags.admin, false)) {
 		Residence.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
-	    
+
 	    res.getPermissions().setPlayerFlag(sender, args[2], args[3], args[4], resadmin, true);
 	    return true;
 	} else if ((args.length == 2 || args.length == 3) && Residence.getConfigManager().useFlagGUI()) {

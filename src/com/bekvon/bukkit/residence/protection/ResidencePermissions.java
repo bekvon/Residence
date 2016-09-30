@@ -43,6 +43,12 @@ public class ResidencePermissions extends FlagPermissions {
 	world = inworld;
     }
 
+    public boolean playerHas(CommandSender sender, Flags flag, boolean def) {
+	if (sender instanceof Player)
+	    return playerHas((Player) sender, flag, def);
+	return true;
+    }
+
     public boolean playerHas(Player player, Flags flag, boolean def) {
 	return playerHas(player, flag.getName(), def);
     }
