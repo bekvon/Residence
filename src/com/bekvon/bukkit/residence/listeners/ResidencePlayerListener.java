@@ -1137,7 +1137,7 @@ public class ResidencePlayerListener implements Listener {
 	if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.container, true) && player.isSneaking()) {
 	    Residence.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
 	    event.setCancelled(true);
-	} else if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.riding, false)) {
+	} else if (!res.isOwner(player) && !res.getPermissions().playerHas(player.getName(), Flags.riding, FlagCombo.TrueOrNone)) {
 	    Residence.msg(player, lm.Residence_FlagDeny, Flags.riding.getName(), res.getName());
 	    event.setCancelled(true);
 	}
