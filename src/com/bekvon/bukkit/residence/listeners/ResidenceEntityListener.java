@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -607,7 +609,7 @@ public class ResidenceEntityListener implements Listener {
 	    break;
 	case SMALL_FIREBALL:
 	case FIREBALL:
-	    if (!perms.has(Flags.fireball, perms.has(Flags.explode, true))) {
+	    if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.fireball, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
 		ent.remove();
 	    }
@@ -671,7 +673,7 @@ public class ResidenceEntityListener implements Listener {
 		break;
 	    case SMALL_FIREBALL:
 	    case FIREBALL:
-		if (!perms.has(Flags.fireball, perms.has(Flags.explode, true)))
+		if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.fireball, FlagCombo.OnlyFalse))
 		    cancel = true;
 		break;
 	    default:
@@ -734,7 +736,7 @@ public class ResidenceEntityListener implements Listener {
 		    continue;
 		case SMALL_FIREBALL:
 		case FIREBALL:
-		    if (!blockperms.has(Flags.fireball, blockperms.has(Flags.explode, true)))
+		    if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.fireball, FlagCombo.OnlyFalse))
 			preserve.add(block);
 		    continue;
 		default:
@@ -833,7 +835,7 @@ public class ResidenceEntityListener implements Listener {
 	if (!srcpvp || !tgtpvp)
 	    event.setCancelled(true);
     }
-    
+
     @EventHandler
     public void OnFallDamage(EntityDamageEvent event) {
 	// disabling event on world
@@ -851,7 +853,7 @@ public class ResidenceEntityListener implements Listener {
 	    event.setCancelled(true);
 	}
     }
-    
+
     @EventHandler
     public void OnArmorStandFlameDamage(EntityDamageEvent event) {
 	// disabling event on world
@@ -911,16 +913,13 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	Entity dmgr = event.getDamager();
-
 	if (dmgr.getType() != EntityType.SMALL_FIREBALL && dmgr.getType() != EntityType.FIREBALL)
 	    return;
 
-	if (dmgr.getType() == EntityType.FIREBALL || dmgr.getType() == EntityType.SMALL_FIREBALL) {
-	    FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
-	    if (!perms.has(Flags.fireball, false)) {
-		event.setCancelled(true);
-		return;
-	    }
+	FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+	if (perms.has(Flags.fireball, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	    return;
 	}
     }
 
