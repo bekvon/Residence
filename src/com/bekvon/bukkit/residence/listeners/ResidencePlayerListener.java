@@ -66,6 +66,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1254,7 +1255,6 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Hanging hanging = (Hanging) ent;
-
 	if (hanging.getType() != EntityType.ITEM_FRAME) {
 	    return;
 	}
@@ -1297,24 +1297,19 @@ public class ResidencePlayerListener implements Listener {
 	    }
 
 	    Material mat = event.getBucket();
-	    if ((!res.getPermissions().playerHas(player.getName(), Flags.bucket, true) && !res.getPermissions().playerHas(player.getName(), Flags.bucketempty, true))
+	    if ((!res.getPermissions().playerHas(player.getName(), Flags.build, true))
 		&& Residence.getConfigManager().getNoPlaceWorlds().contains(loc.getWorld().getName())) {
-		if (mat == Material.LAVA_BUCKET) {
-		    event.setCancelled(true);
-		    return;
-		}
-		if (mat == Material.WATER_BUCKET) {
+		if (mat == Material.LAVA_BUCKET || mat == Material.WATER_BUCKET) {
+		    Residence.msg(player, lm.Flag_Deny, Flags.build);
 		    event.setCancelled(true);
 		    return;
 		}
 	    }
 	}
 
-	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(loc, player);
-	if (!perms.playerHas(pname, player.getWorld().getName(), Flags.bucket, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true)) &&
-	    !perms.playerHas(pname, player.getWorld().getName(), Flags.bucketempty, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true))) {
-	    Residence.msg(player, lm.Flag_Deny, Flags.bucket.getName());
+	if (!perms.playerHas(player, Flags.build, true)) {
+	    Residence.msg(player, lm.Flag_Deny, Flags.build.getName());
 	    event.setCancelled(true);
 	    return;
 	}
@@ -1361,13 +1356,10 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
-	boolean hasbucket = perms.playerHas(pname, player.getWorld().getName(), Flags.bucket, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true));
-	boolean hasbucketfill = perms.playerHas(pname, player.getWorld().getName(), Flags.bucketfill, perms.playerHas(pname, player.getWorld().getName(), Flags.build,
-	    true));
-	if (!hasbucket && !hasbucketfill) {
-	    Residence.msg(player, lm.Flag_Deny, Flags.bucket.getName());
+	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));	
+	if (!hasdestroy) {
+	    Residence.msg(player, lm.Flag_Deny, Flags.destroy.getName());
 	    event.setCancelled(true);
 	}
     }

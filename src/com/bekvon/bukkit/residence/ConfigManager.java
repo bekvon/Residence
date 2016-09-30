@@ -282,7 +282,7 @@ public class ConfigManager {
 	for (Flags fl : Flags.values()) {
 	    if (conf.isBoolean("Global.FlagPermission." + fl.getName()))
 		continue;
-	    
+
 	    Debug.D("non existen section " + fl.getName());
 	    conf.createSection("Global.FlagPermission." + fl.getName());
 	    conf.set("Global.FlagPermission." + fl.getName(), fl.isEnabled());
@@ -312,13 +312,30 @@ public class ConfigManager {
 
 	if (!conf.isConfigurationSection("Global.GroupedFlags")) {
 	    conf.createSection("Global.GroupedFlags");
-	    conf.set("Global.GroupedFlags.redstone", Arrays.asList(Flags.note.getName(), Flags.pressure.getName(), Flags.lever.getName(), Flags.button.getName(),
+	    conf.set("Global.GroupedFlags.redstone", Arrays.asList(
+		Flags.note.getName(), 
+		Flags.pressure.getName(), 
+		Flags.lever.getName(), 
+		Flags.button.getName(),
 		Flags.diode.getName()));
-	    conf.set("Global.GroupedFlags.craft", Arrays.asList(Flags.brew.getName(), Flags.table.getName(), Flags.enchant.getName()));
-	    conf.set("Global.GroupedFlags.trusted", Arrays.asList(Flags.use.getName(), Flags.tp.getName(), Flags.build.getName(), Flags.container.getName(), Flags.bucket
-		.getName(), Flags.move.getName(), Flags.leash.getName(), Flags.animalkilling.getName(), Flags.mobkilling.getName(), Flags.shear.getName(), Flags.chat
-		    .getName()));
-	    conf.set("Global.GroupedFlags.fire", Arrays.asList(Flags.ignite.getName(), Flags.firespread.getName()));
+	    conf.set("Global.GroupedFlags.craft", Arrays.asList(
+		Flags.brew.getName(), 
+		Flags.table.getName(), 
+		Flags.enchant.getName()));
+	    conf.set("Global.GroupedFlags.trusted", Arrays.asList(
+		Flags.use.getName(),
+		Flags.tp.getName(),
+		Flags.build.getName(),
+		Flags.container.getName(),
+		Flags.move.getName(),
+		Flags.leash.getName(),
+		Flags.animalkilling.getName(),
+		Flags.mobkilling.getName(),
+		Flags.shear.getName(),
+		Flags.chat.getName()));
+	    conf.set("Global.GroupedFlags.fire", Arrays.asList(
+		Flags.ignite.getName(), 
+		Flags.firespread.getName()));
 
 	    try {
 		conf.save(f);
