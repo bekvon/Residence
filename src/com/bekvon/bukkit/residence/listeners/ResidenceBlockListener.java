@@ -460,13 +460,23 @@ public class ResidenceBlockListener implements Listener {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
+
+	ClaimedResidence fromRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+	ClaimedResidence toRes = Residence.getResidenceManager().getByLoc(event.getToBlock().getLocation());
+
 	FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
-	boolean hasflow = perms.has(Flags.flow, true);
+	boolean hasflow = perms.has(Flags.flow, FlagCombo.TrueOrNone);
 	Material mat = event.getBlock().getType();
-	if (!hasflow) {
+	if (fromRes == null && toRes != null || fromRes != null && toRes != null && !fromRes.equals(toRes) && !fromRes.isOwner(toRes.getOwner())) {
 	    event.setCancelled(true);
 	    return;
 	}
+
+	if (perms.has(Flags.flow, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	    return;
+	}
+	
 	if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
 	    if (!perms.has(Flags.lavaflow, hasflow)) {
 		event.setCancelled(true);
