@@ -66,7 +66,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -121,8 +120,6 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLoc(player.getLocation());
-//	Debug.D("jump");
-
 	if (perms.has(Flags.jump2, FlagCombo.OnlyTrue))
 	    player.setVelocity(player.getVelocity().add(player.getVelocity().multiply(0.3)));
 	else if (perms.has(Flags.jump3, FlagCombo.OnlyTrue))

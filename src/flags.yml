@@ -225,20 +225,22 @@ Global:
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
+        destroy: false
         use: false
         container: false
         pvp: false
         tnt: false
         creeper: false
-        flow: false
-        piston: false
         ignite: false
         firespread: false
         vehicledestroy: false
         animalkilling: false
+        hook: false
         shear: false
         leash: false
-        tp: false
+        pistonprotection: true
+        tp: true
+        explode: false
     # These are default flags applied to the residence creator of any group.
     CreatorDefault:
         build: true

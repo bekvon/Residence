@@ -456,13 +456,6 @@ public class ResidenceManager implements ResidenceInterface {
 
 	name = res.getName();
 
-	if (player != null && !resadmin) {
-	    if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin) {
-		Residence.msg(player, lm.General_NoPermission);
-		return;
-	    }
-	}
-
 	if (Residence.getConfigManager().isRentPreventRemoval() && !resadmin) {
 	    ClaimedResidence rented = res.getRentedSubzone();
 	    if (rented != null) {
@@ -470,7 +463,14 @@ public class ResidenceManager implements ResidenceInterface {
 		return;
 	    }
 	}
-
+	
+	if (player != null && !resadmin) {
+	    if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin && res.getParent() != null && !res.getParent().isOwner(player)) {
+		Residence.msg(player, lm.General_NoPermission);
+		return;
+	    }
+	}
+	
 	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
 	Residence.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())

@@ -8,8 +8,6 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -944,14 +942,13 @@ public class ResidenceEntityListener implements Listener {
 	} else if ((dmgr instanceof Projectile) && (!(((Projectile) dmgr).getShooter() instanceof Player))) {
 	    Location loc = event.getEntity().getLocation();
 	    FlagPermissions perm = Residence.getPermsByLoc(loc);
-	    if (perm.has(Flags.destroy, FlagCombo.FalseOrNone))
+	    if (perm.has(Flags.destroy, FlagCombo.OnlyFalse))
 		event.setCancelled(true);
 	    return;
 	} else if (dmgr.getType() == EntityType.PRIMED_TNT || dmgr.getType() == EntityType.MINECART_TNT || dmgr.getType() == EntityType.WITHER_SKULL || dmgr
 	    .getType() == EntityType.WITHER) {
 	    FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
-	    boolean destroy = perms.has(Flags.explode, false);
-	    if (!destroy) {
+	    if (perms.has(Flags.explode, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
 		return;
 	    }
