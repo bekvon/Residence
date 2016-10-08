@@ -1354,7 +1354,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlockClicked().getLocation(), player);
-	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));	
+	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
 	if (!hasdestroy) {
 	    Residence.msg(player, lm.Flag_Deny, Flags.destroy.getName());
 	    event.setCancelled(true);
@@ -1555,10 +1555,11 @@ public class ResidencePlayerListener implements Listener {
 	if (name == null)
 	    return;
 
-	long last = lastUpdate.get(name);
+	Long last = lastUpdate.get(name);
 	long now = System.currentTimeMillis();
-	if (now - last < Residence.getConfigManager().getMinMoveUpdateInterval())
-	    return;
+	if (last != null)
+	    if (now - last < Residence.getConfigManager().getMinMoveUpdateInterval())
+		return;
 
 	this.lastUpdate.put(name, now);
 

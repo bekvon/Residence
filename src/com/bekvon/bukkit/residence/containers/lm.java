@@ -177,7 +177,7 @@ public enum lm {
     Residence_ParentNoPermission("&cYou don't have permission to make changes to the parent zone."),
     Residence_ChatDisabled("&eResidence Chat Disabled..."),
     Residence_DeleteConfirm("&eAre you sure you want to delete residence &6%1&e, use &6/res confirm &eto confirm."),
-    Residence_ChangedMain("&eChainged main residence to &6%1"),
+    Residence_ChangedMain("&eChanged main residence to &6%1"),
     Residence_LwcRemoved("&eRemoved &6%1 &eLwc protections in &6%2ms"),
 
     Residence_CanBeRented("&6%1&e can be rented for &6%2 &eper &6%3 &edays. &6/res market rent"),
