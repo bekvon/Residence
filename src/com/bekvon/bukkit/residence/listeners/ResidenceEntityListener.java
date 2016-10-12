@@ -8,11 +8,14 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
@@ -373,6 +376,25 @@ public class ResidenceEntityListener implements Listener {
 	if (!res.getPermissions().playerHas(player.getName(), Flags.leash, true)) {
 	    Residence.msg(player, lm.Residence_FlagDeny, Flags.leash, res.getName());
 	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onWitherSpawn(CreatureSpawnEvent event) {
+	// disabling event on world
+	Entity ent = event.getEntity();
+	if (ent == null)
+	    return;
+	if (Residence.isDisabledWorldListener(ent.getWorld()))
+	    return;
+
+	if (ent.getType() != EntityType.WITHER)
+	    return;
+
+	FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
+	if (perms.has(Flags.witherspawn, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	    return;
 	}
     }
 
@@ -1016,7 +1038,7 @@ public class ResidenceEntityListener implements Listener {
 	    boolean isSnowBall = false;
 	    boolean isOnFire = false;
 	    if (srcarea != null) {
-		srcpvp = srcarea.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone, false);		
+		srcpvp = srcarea.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone, false);
 	    }
 	    ent = attackevent.getEntity();
 	    if ((ent instanceof Player || tamedAnimal) && (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager)

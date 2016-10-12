@@ -655,7 +655,7 @@ public class FlagPermissions {
 	Set<Entry<String, Boolean>> set = cuboidFlags.entrySet();
 	synchronized (set) {
 	    Iterator<Entry<String, Boolean>> it = set.iterator();
-	    int i = 0;
+	    int i = -1;
 	    int t = 0;
 	    while (it.hasNext()) {
 		i++;
