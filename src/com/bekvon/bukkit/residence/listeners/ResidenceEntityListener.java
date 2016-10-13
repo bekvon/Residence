@@ -1050,7 +1050,7 @@ public class ResidenceEntityListener implements Listener {
 		    Projectile project = (Projectile) damager;
 		    if (project.getType() == EntityType.SNOWBALL && srcarea != null) {
 			isSnowBall = true;
-			allowSnowBall = srcarea.getPermissions().has(Flags.snowball, false);
+			allowSnowBall = srcarea.getPermissions().has(Flags.snowball, FlagCombo.TrueOrNone);
 		    }
 		    if (project.getFireTicks() > 0)
 			isOnFire = true;
