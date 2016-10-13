@@ -636,7 +636,7 @@ public class ResidenceEntityListener implements Listener {
 	    }
 	    break;
 	default:
-	    if (!perms.has(Flags.destroy, true)) {
+	    if (!perms.has(Flags.destroy, FlagCombo.OnlyFalse)) {
 		if (entity != EntityType.ENDER_CRYSTAL) {
 		    event.setCancelled(true);
 		    ent.remove();
@@ -752,7 +752,7 @@ public class ResidenceEntityListener implements Listener {
 			preserve.add(block);
 		    break;
 		case ENDER_CRYSTAL:
-		    if (!blockperms.has(Flags.explode, false))
+		    if (blockperms.has(Flags.explode, FlagCombo.OnlyFalse))
 			preserve.add(block);
 		    continue;
 		case SMALL_FIREBALL:
