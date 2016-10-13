@@ -761,7 +761,7 @@ public class ResidenceEntityListener implements Listener {
 			preserve.add(block);
 		    continue;
 		default:
-		    if (!blockperms.has(Flags.destroy, world.has(Flags.destroy, true)))
+		    if (blockperms.has(Flags.destroy, FlagCombo.OnlyFalse))
 			preserve.add(block);
 		    continue;
 		}
@@ -775,6 +775,25 @@ public class ResidenceEntityListener implements Listener {
 	for (Block block : preserve) {
 	    event.blockList().remove(block);
 	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onSplashPotion(EntityChangeBlockEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
+	Entity ent = event.getEntity();
+
+	if (ent.getType() != EntityType.WITHER)
+	    return;
+
+	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.destroy, FlagCombo.OnlyFalse))
+	    return;
+
+	event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
