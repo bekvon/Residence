@@ -265,7 +265,7 @@ public class ResidencePlayerListener implements Listener {
 	if (Residence.getNms().isArmorStandEntity(event.getCaught().getType()) || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
 	    FlagPermissions perm = Residence.getPermsByLoc(event.getCaught().getLocation());
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getCaught().getLocation());
-	    if (!perm.has(Flags.hook, FlagCombo.OnlyFalse) && res == null || res != null && !res.getPermissions().playerHas(player, Flags.hook, FlagCombo.OnlyTrue)) {
+	    if (perm.has(Flags.hook, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
 		if (res != null)
 		    Residence.msg(player, lm.Residence_FlagDeny, Flags.hook.getName(), res.getName());
