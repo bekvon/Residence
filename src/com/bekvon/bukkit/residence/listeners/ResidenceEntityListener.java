@@ -46,6 +46,7 @@ import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Hanging;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -512,7 +513,7 @@ public class ResidenceEntityListener implements Listener {
 	String world = player.getWorld().getName();
 	if (!perms.playerHas(pname, world, Flags.place, perms.playerHas(pname, world, Flags.build, true))) {
 	    event.setCancelled(true);
-	    Residence.msg(player, lm.Flag_Deny, Flags.place.getName());
+	    Residence.msg(player, lm.Flag_Deny, Flags.place);
 	}
     }
 
@@ -540,7 +541,7 @@ public class ResidenceEntityListener implements Listener {
 	String world = ent.getWorld().getName();
 	if (!perms.playerHas(pname, world, Flags.destroy, perms.playerHas(pname, world, Flags.build, true))) {
 	    event.setCancelled(true);
-	    Residence.msg(player, lm.Flag_Deny, Flags.destroy.getName());
+	    Residence.msg(player, lm.Flag_Deny, Flags.destroy);
 	}
     }
 
@@ -992,11 +993,22 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isResAdminOn(player))
 	    return;
 
-	String pname = player.getName();
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(loc, player);
-	String world = loc.getWorld().getName();
-	if (!perms.playerHas(pname, world, Flags.destroy, perms.playerHas(pname, world, Flags.build, true))) {
+
+	if (event.getEntityType() == EntityType.ITEM_FRAME) {
+	    ItemFrame it = (ItemFrame) event.getEntity();
+	    if (it.getItem() != null) {
+		if (!perms.playerHas(player, Flags.container, true)) {
+		    event.setCancelled(true);
+		    Residence.msg(player, lm.Flag_Deny, Flags.container);
+		}
+		return;
+	    }
+	}
+
+	if (!perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true))) {
 	    event.setCancelled(true);
+	    Debug.D("this one");
 	    Residence.msg(player, lm.Flag_Deny, Flags.destroy.getName());
 	}
     }
