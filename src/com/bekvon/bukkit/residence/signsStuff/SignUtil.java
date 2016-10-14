@@ -228,6 +228,9 @@ public class SignUtil {
 	    return true;
 	}
 	String landName = res.getName();
+
+	if (landName == null)
+	    return false;
 	if (ForRent) {
 
 	    boolean rented = res.isRented();
