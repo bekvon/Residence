@@ -1303,24 +1303,43 @@ public class ClaimedResidence {
 	    root.put("MainResidence", mainRes);
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
-	root.put("EnterMessage", enterMessage);
-	root.put("LeaveMessage", leaveMessage);
-	root.put("ShopDescription", ShopDesc);
-	root.put("StoredMoney", bank.getStoredMoney());
-	root.put("BlockSellPrice", BlockSellPrice);
-	root.put("ChatPrefix", ChatPrefix);
-	root.put("ChannelColor", ChannelColor.name());
-	root.put("BlackList", blacklist.save());
-	root.put("IgnoreList", ignorelist.save());
+
+	PermissionGroup group = this.getOwnerGroup();
+
+	if (enterMessage != null && group != null && !enterMessage.equals(group.getDefaultEnterMessage()))
+	    root.put("EnterMessage", enterMessage);
+	if (enterMessage != null && group != null && !leaveMessage.equals(group.getDefaultLeaveMessage()))
+	    root.put("LeaveMessage", leaveMessage);
+	if (ShopDesc != null)
+	    root.put("ShopDescription", ShopDesc);
+	if (bank.getStoredMoney() != 0)
+	    root.put("StoredMoney", bank.getStoredMoney());
+	if (BlockSellPrice != 0D)
+	    root.put("BlockSellPrice", BlockSellPrice);
+
+	if (!ChatPrefix.equals(""))
+	    root.put("ChatPrefix", ChatPrefix);
+	if (!ChannelColor.name().equals(Residence.getConfigManager().getChatColor().name()) && !ChannelColor.name().equals("WHITE")) {
+	    root.put("ChannelColor", ChannelColor.name());
+	}
+
+	Map<String, Object> map = blacklist.save();
+	if (!map.isEmpty())
+	    root.put("BlackList", map);
+	map = ignorelist.save();
+	if (!map.isEmpty())
+	    root.put("IgnoreList", map);
 	for (Entry<String, CuboidArea> entry : areas.entrySet()) {
 	    areamap.put(entry.getKey(), entry.getValue().save());
 	}
+
 	root.put("Areas", areamap);
 	Map<String, Object> subzonemap = new HashMap<>();
 	for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
 	    subzonemap.put(sz.getKey(), sz.getValue().save());
 	}
-	root.put("Subzones", subzonemap);
+	if (!subzonemap.isEmpty())
+	    root.put("Subzones", subzonemap);
 	root.put("Permissions", perms.save());
 
 	if (!this.cmdBlackList.isEmpty())
@@ -1359,7 +1378,7 @@ public class ClaimedResidence {
     }
 
     @SuppressWarnings("unchecked")
-    public static ClaimedResidence load(Map<String, Object> root, ClaimedResidence parent, Residence plugin) throws Exception {
+    public static ClaimedResidence load(String worldName, Map<String, Object> root, ClaimedResidence parent, Residence plugin) throws Exception {
 	ClaimedResidence res = new ClaimedResidence(plugin);
 	if (root == null)
 	    throw new Exception("Null residence!");
@@ -1371,9 +1390,6 @@ public class ClaimedResidence {
 	    res.createTime = ((Long) root.get("CreatedOn"));
 	else
 	    res.createTime = System.currentTimeMillis();
-
-	res.enterMessage = (String) root.get("EnterMessage");
-	res.leaveMessage = (String) root.get("LeaveMessage");
 
 	if (root.containsKey("ShopDescription"))
 	    res.setShopDesc((String) root.get("ShopDescription"));
@@ -1387,7 +1403,7 @@ public class ClaimedResidence {
 	    res.ignorelist = ResidenceItemList.load(res, (Map<String, Object>) root.get("IgnoreList"));
 
 	Map<String, Object> areamap = (Map<String, Object>) root.get("Areas");
-	res.perms = ResidencePermissions.load(res, (Map<String, Object>) root.get("Permissions"));
+	res.perms = ResidencePermissions.load(worldName, res, (Map<String, Object>) root.get("Permissions"));
 
 	if (res.getPermissions().ownerLastKnownName == null)
 	    return null;
@@ -1398,7 +1414,7 @@ public class ClaimedResidence {
 	if (root.containsKey("BlockSellPrice"))
 	    res.BlockSellPrice = (Double) root.get("BlockSellPrice");
 	else {
-	    res.BlockSellPrice = res.getOwnerGroup().getSellPerBlock();
+	    res.BlockSellPrice = 0D;
 	}
 
 	World world = Residence.getServ().getWorld(res.perms.getWorld());
@@ -1408,21 +1424,35 @@ public class ClaimedResidence {
 	    res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(), world));
 	}
 
-	Map<String, Object> subzonemap = (Map<String, Object>) root.get("Subzones");
-	for (Entry<String, Object> map : subzonemap.entrySet()) {
-	    ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res, plugin);
+	if (root.containsKey("Subzones")) {
+	    Map<String, Object> subzonemap = (Map<String, Object>) root.get("Subzones");
+	    for (Entry<String, Object> map : subzonemap.entrySet()) {
+		ClaimedResidence subres = ClaimedResidence.load(worldName, (Map<String, Object>) map.getValue(), res, plugin);
 
-	    if (subres == null)
-		continue;
+		if (subres == null)
+		    continue;
 
-	    if (subres.getResidenceName() == null)
-		subres.setName(map.getKey());
+		if (subres.getResidenceName() == null)
+		    subres.setName(map.getKey());
 
-	    if (Residence.getConfigManager().flagsInherit())
-		subres.getPermissions().setParent(res.getPermissions());
+		if (Residence.getConfigManager().flagsInherit())
+		    subres.getPermissions().setParent(res.getPermissions());
 
-	    res.subzones.put(map.getKey().toLowerCase(), subres);
+		res.subzones.put(map.getKey().toLowerCase(), subres);
+	    }
 	}
+
+	PermissionGroup group = res.getOwnerGroup();
+
+	if (root.containsKey("EnterMessage"))
+	    res.enterMessage = (String) root.get("EnterMessage");
+	else if (group != null)
+	    res.enterMessage = res.getOwnerGroup().getDefaultEnterMessage();
+
+	if (root.containsKey("LeaveMessage"))
+	    res.leaveMessage = (String) root.get("LeaveMessage");
+	else if (group != null)
+	    res.leaveMessage = res.getOwnerGroup().getDefaultLeaveMessage();
 
 	res.parent = parent;
 	Map<String, Object> tploc = (Map<String, Object>) root.get("TPLoc");

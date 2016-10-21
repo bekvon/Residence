@@ -240,4 +240,8 @@ public class ResidencePlayer {
 	return temp;
     }
 
+    public Map<String, ClaimedResidence> getResidenceMap() {
+	return this.ResidenceList;
+    }
+
 }

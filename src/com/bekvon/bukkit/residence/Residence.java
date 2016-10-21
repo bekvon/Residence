@@ -191,6 +191,7 @@ public class Residence extends JavaPlugin {
     public static List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
     public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
+    private static Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
     public static WorldEditPlugin wep = null;
     public static WorldGuardPlugin wg = null;
     public static int wepid;
@@ -371,6 +372,20 @@ public class Residence extends JavaPlugin {
 	    } catch (Exception ex) {
 		Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
 	    }
+
+//	    File file = new File(this.getDataFolder(), "uuids.yml");
+//	    YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
+//	    if (!conf.isConfigurationSection("UUIDS"))
+//		conf.createSection("UUIDS");
+//	    for (Entry<UUID, String> one : getCachedPlayerNameUUIDs().entrySet()) {
+//		conf.set("UUIDS." + one.getKey().toString(), one.getValue());
+//	    }
+//	    try {
+//		conf.save(file);
+//	    } catch (IOException e) {
+//		e.printStackTrace();
+//	    }
+
 	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Disabled!");
 	}
     }
@@ -403,6 +418,12 @@ public class Residence extends JavaPlugin {
 	    if (!new File(dataFolder, "config.yml").isFile()) {
 		this.writeDefaultConfigFromJar();
 	    }
+
+	    if (!new File(dataFolder, "uuids.yml").isFile()) {
+		File file = new File(this.getDataFolder(), "uuids.yml");
+		file.createNewFile();
+	    }
+
 	    if (!new File(dataFolder, "flags.yml").isFile()) {
 		this.writeDefaultFlagsFromJar();
 	    }
@@ -608,6 +629,7 @@ public class Residence extends JavaPlugin {
 		    if (name == null)
 			continue;
 		    getOfflinePlayerMap().put(name.toLowerCase(), player);
+		    getCachedPlayerNameUUIDs().put(player.getUniqueId(), player.getName());
 		}
 		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Player data loaded: " + getOfflinePlayerMap().size());
 	    } else {
@@ -621,6 +643,7 @@ public class Residence extends JavaPlugin {
 			    if (name == null)
 				continue;
 			    getOfflinePlayerMap().put(name.toLowerCase(), player);
+			    getCachedPlayerNameUUIDs().put(player.getUniqueId(), player.getName());
 			}
 			return;
 		    }
@@ -1669,5 +1692,17 @@ public class Residence extends JavaPlugin {
 
     public static InformationPager getInfoPageManager() {
 	return InformationPagerManager;
+    }
+
+    public static Map<UUID, String> getCachedPlayerNameUUIDs() {
+	return cachedPlayerNameUUIDs;
+    }
+
+    public static void addCachedPlayerNameUUIDs(UUID uuid, String name) {
+	cachedPlayerNameUUIDs.put(uuid, name);
+    }
+
+    public static void addCachedPlayerNameUUIDs(Map<UUID, String> cachedPlayerNameUUIDs2) {
+	cachedPlayerNameUUIDs.putAll(cachedPlayerNameUUIDs2);
     }
 }

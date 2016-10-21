@@ -144,6 +144,8 @@ public class ItemList {
 
     public Map<String, Object> save() {
 	Map<String, Object> saveMap = new LinkedHashMap<String, Object>();
+	if (list.isEmpty())
+	    return saveMap;
 	saveMap.put("Type", type.toString());
 	List<String> saveList = new ArrayList<String>();
 	for (Material mat : list) {

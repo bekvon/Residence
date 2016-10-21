@@ -494,11 +494,11 @@ public class ResidencePermissions extends FlagPermissions {
 	Map<String, Object> root = super.save();
 	root.put("OwnerUUID", ownerUUID.toString());
 	root.put("OwnerLastKnownName", ownerLastKnownName);
-	root.put("World", world);
+//	root.put("World", world);
 	return root;
     }
 
-    public static ResidencePermissions load(ClaimedResidence res, Map<String, Object> root) throws Exception {
+    public static ResidencePermissions load(String worldName, ClaimedResidence res, Map<String, Object> root) throws Exception {
 	ResidencePermissions newperms = new ResidencePermissions(res);
 	//newperms.owner = (String) root.get("Owner");
 	if (root.containsKey("OwnerUUID")) {
@@ -536,8 +536,9 @@ public class ResidencePermissions extends FlagPermissions {
 	    newperms.ownerUUID = UUID.fromString(Residence.getServerLandUUID());//cant determine owner name or UUID... setting zero UUID which is server land
 	    newperms.ownerLastKnownName = Residence.getServerLandname();
 	}
-	newperms.world = (String) root.get("World");
-	FlagPermissions.load(root, newperms);
+	newperms.world = worldName;
+	FlagPermissions.load(root, newperms);	  
+	
 	if (newperms.getOwner() == null || newperms.world == null || newperms.playerFlags == null || newperms.groupFlags == null || newperms.cuboidFlags == null)
 	    throw new Exception("Invalid Residence Permissions...");
 	return newperms;

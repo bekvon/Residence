@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
+
 import org.bukkit.entity.Player;
 
 public class RentManager implements MarketRentInterface {
@@ -108,6 +110,32 @@ public class RentManager implements MarketRentInterface {
 	    if (world != null && !world.getName().equalsIgnoreCase(res.getWorld()))
 		continue;
 	    rentedLands.add(res);
+	}
+	return rentedLands;
+    }
+
+    public TreeMap<String, ClaimedResidence> getRentsMap(String playername, boolean onlyHidden, World world) {
+	TreeMap<String, ClaimedResidence> rentedLands = new TreeMap<String, ClaimedResidence>();
+	for (ClaimedResidence res : rentedLand) {
+	    if (res == null)
+		continue;
+
+	    if (!res.isRented())
+		continue;
+
+	    if (!res.getRentedLand().player.equalsIgnoreCase(playername))
+		continue;
+
+	    ClaimedResidence topres = res.getTopParent();
+
+	    boolean hidden = topres.getPermissions().has("hidden", false);
+
+	    if (onlyHidden && !hidden)
+		continue;
+
+	    if (world != null && !world.getName().equalsIgnoreCase(res.getWorld()))
+		continue;
+	    rentedLands.put(res.getName(), res);
 	}
 	return rentedLands;
     }

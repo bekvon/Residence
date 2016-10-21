@@ -2,6 +2,8 @@ package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
@@ -11,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -112,6 +115,25 @@ public class PlayerManager implements ResidencePlayerInterface {
 	    if (world != null && !world.getName().equalsIgnoreCase(one.getWorld()))
 		continue;
 	    temp.add(one);
+	}
+	return temp;
+    }
+    
+    public TreeMap<String, ClaimedResidence> getResidencesMap(String player, boolean showhidden, boolean onlyHidden, World world) {
+	TreeMap<String, ClaimedResidence> temp = new TreeMap<String, ClaimedResidence>();
+	playerJoin(player);
+	ResidencePlayer resPlayer = players.get(player.toLowerCase());
+	if (resPlayer == null)
+	    return temp;
+	for (Entry<String, ClaimedResidence> one : resPlayer.getResidenceMap().entrySet()) {
+	    boolean hidden = one.getValue().getPermissions().has(Flags.hidden, false);
+	    if (!showhidden && hidden)
+		continue;
+	    if (onlyHidden && !hidden)
+		continue;
+	    if (world != null && !world.getName().equalsIgnoreCase(one.getValue().getWorld()))
+		continue;
+	    temp.put(one.getKey(), one.getValue());
 	}
 	return temp;
     }

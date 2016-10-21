@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class Sorting {
-    
+
     public Map<String, Integer> sortByValueASC(Map<String, Integer> unsortMap) {
 
 	// Convert Map to List
@@ -35,7 +35,7 @@ public class Sorting {
 	}
 	return sortedMap;
     }
-    
+
     public Map<String, Integer> sortByValueDESC(Map<String, Integer> unsortMap) {
 
 	// Convert Map to List
@@ -81,9 +81,7 @@ public class Sorting {
     }
 
     public List<ClaimedResidence> sortResidences(List<ClaimedResidence> residences) {
-
 	Map<String, Object> map = new HashMap<String, Object>();
-
 	for (ClaimedResidence one : residences) {
 	    if (one == null)
 		continue;
@@ -91,15 +89,11 @@ public class Sorting {
 		continue;
 	    map.put(one.getName().toLowerCase(), one);
 	}
-
 	map = sortByKeyASC(map);
-
 	residences.clear();
-
 	for (Entry<String, Object> one : map.entrySet()) {
 	    residences.add((ClaimedResidence) one.getValue());
 	}
-
 	return residences;
     }
 

@@ -323,8 +323,8 @@ public class ResidenceManager implements ResidenceInterface {
 	} else if (sender.getName().equalsIgnoreCase(targetplayer))
 	    showhidden = true;
 	boolean hidden = showhidden;
-	ArrayList<ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidences(targetplayer, hidden, onlyHidden, world);
-	ownedResidences.addAll(Residence.getRentManager().getRents(targetplayer, onlyHidden, world));
+	TreeMap<String, ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidencesMap(targetplayer, hidden, onlyHidden, world);
+	ownedResidences.putAll(Residence.getRentManager().getRentsMap(targetplayer, onlyHidden, world));
 	Residence.getInfoPageManager().printListInfo(sender, targetplayer, ownedResidences, page, resadmin);
     }
 
@@ -333,7 +333,7 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden, World world) {
-	List<ClaimedResidence> list = getFromAllResidences(showhidden, false, world);
+	TreeMap<String, ClaimedResidence> list = getFromAllResidencesMap(showhidden, false, world);
 	Residence.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
     }
 
@@ -342,7 +342,7 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean onlyHidden) {
-	List<ClaimedResidence> list = getFromAllResidences(showhidden, onlyHidden, null);
+	TreeMap<String, ClaimedResidence> list = getFromAllResidencesMap(showhidden, onlyHidden, null);
 	Residence.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
     }
 
@@ -393,6 +393,21 @@ public class ResidenceManager implements ResidenceInterface {
 		continue;
 	    if ((showhidden) || (!showhidden && !hidden)) {
 		list.add(res.getValue());
+	    }
+	}
+	return list;
+    }
+
+    public TreeMap<String, ClaimedResidence> getFromAllResidencesMap(boolean showhidden, boolean onlyHidden, World world) {
+	TreeMap<String, ClaimedResidence> list = new TreeMap<String, ClaimedResidence>();
+	for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
+	    boolean hidden = res.getValue().getPermissions().has("hidden", false);
+	    if (onlyHidden && !hidden)
+		continue;
+	    if (world != null && !world.getName().equalsIgnoreCase(res.getValue().getWorld()))
+		continue;
+	    if ((showhidden) || (!showhidden && !hidden)) {
+		list.put(res.getKey(), res.getValue());
 	    }
 	}
 	return list;
@@ -463,14 +478,14 @@ public class ResidenceManager implements ResidenceInterface {
 		return;
 	    }
 	}
-	
+
 	if (player != null && !resadmin) {
 	    if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin && res.getParent() != null && !res.getParent().isOwner(player)) {
 		Residence.msg(player, lm.General_NoPermission);
 		return;
 	    }
 	}
-	
+
 	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
 	Residence.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())
@@ -841,7 +856,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    y++;
 	    try {
 		@SuppressWarnings("unchecked")
-		ClaimedResidence residence = ClaimedResidence.load((Map<String, Object>) res.getValue(), null, plugin);
+		ClaimedResidence residence = ClaimedResidence.load(worldName, (Map<String, Object>) res.getValue(), null, plugin);
 
 		if (residence == null)
 		    continue;

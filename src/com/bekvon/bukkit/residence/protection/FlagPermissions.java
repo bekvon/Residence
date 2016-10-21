@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,11 +30,19 @@ public class FlagPermissions {
     protected static ArrayList<String> validPlayerFlags = new ArrayList<>();
     protected static ArrayList<String> validAreaFlags = new ArrayList<>();
     final static Map<Material, String> matUseFlagList = new EnumMap<>(Material.class);
-    protected Map<String, String> cachedPlayerNameUUIDs;
-    protected Map<String, Map<String, Boolean>> playerFlags;
-    protected Map<String, Map<String, Boolean>> groupFlags;
+    protected Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
+    protected Map<String, Map<String, Boolean>> playerFlags = new HashMap<String, Map<String, Boolean>>();
+    protected Map<String, Map<String, Boolean>> groupFlags = new HashMap<String, Map<String, Boolean>>();
     protected Map<String, Boolean> cuboidFlags = new HashMap<String, Boolean>();
     protected FlagPermissions parent;
+    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<>();
+
+    public FlagPermissions() {
+	cuboidFlags = Collections.synchronizedMap(new HashMap<String, Boolean>());
+	playerFlags = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
+	groupFlags = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
+	cachedPlayerNameUUIDs = Collections.synchronizedMap(new HashMap<UUID, String>());
+    }
 
     public static enum FlagCombo {
 	OnlyTrue, OnlyFalse, TrueOrNone, FalseOrNone
@@ -100,8 +109,6 @@ public class FlagPermissions {
 	    validFlagGroups.remove(flag);
 	}
     }
-
-    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<>();
 
     public static void addFlagToFlagGroup(String group, String flag) {
 	if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {
@@ -249,58 +256,54 @@ public class FlagPermissions {
 	return list;
     }
 
-    public FlagPermissions() {
-	cuboidFlags = Collections.synchronizedMap(new HashMap<String, Boolean>());
-	playerFlags = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
-	groupFlags = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
-	cachedPlayerNameUUIDs = Collections.synchronizedMap(new HashMap<String, String>());
-    }
-
     protected Map<String, Boolean> getPlayerFlags(String player, boolean allowCreate)//this function works with uuid in string format as well, instead of player name
     {
 
-	//player = player.toLowerCase(); <- Why its toLowerCase when its can be UUID when capitalization is required
-	String uuids;
 	Map<String, Boolean> flags = null;
 
 	if (!Residence.getConfigManager().isOfflineMode()) {
+	    UUID uuid = null;
 	    if (player.length() == 36) {
-		uuids = player;
-		String resolvedName = Residence.getPlayerName(uuids);
+		try {
+		    uuid = UUID.fromString(player);
+		} catch (Exception e) {
+
+		}
+		String resolvedName = Residence.getPlayerName(uuid);
 		if (resolvedName != null)
 		    player = resolvedName;
-		else if (cachedPlayerNameUUIDs.containsKey(player))
-		    player = cachedPlayerNameUUIDs.get(player);
+		else if (cachedPlayerNameUUIDs.containsKey(uuid))
+		    player = cachedPlayerNameUUIDs.get(uuid);
 	    } else
-		uuids = Residence.getPlayerUUIDString(player);
+		uuid = Residence.getPlayerUUID(player);
 
-	    if (uuids == null) {
-		Set<Entry<String, String>> values = cachedPlayerNameUUIDs.entrySet();
-		for (Entry<String, String> value : values) {
+	    if (uuid == null) {
+		Set<Entry<UUID, String>> values = cachedPlayerNameUUIDs.entrySet();
+		for (Entry<UUID, String> value : values) {
 		    if (value.getValue().equals(player)) {
-			uuids = value.getKey();
+			uuid = value.getKey();
 			break;
 		    }
 		}
 	    }
 
-	    if (uuids != null)
-		flags = playerFlags.get(uuids);
+	    if (uuid != null)
+		flags = playerFlags.get(uuid.toString());
 	    if (flags == null) {
 		flags = playerFlags.get(player);
-		if (uuids != null && flags != null) {
+		if (uuid != null && flags != null) {
 		    flags = playerFlags.remove(player);
-		    playerFlags.put(uuids, flags);
-		    cachedPlayerNameUUIDs.put(uuids, player);
+		    playerFlags.put(uuid.toString(), flags);
+		    cachedPlayerNameUUIDs.put(uuid, player);
 		}
 	    } else
-		cachedPlayerNameUUIDs.put(uuids, player);
+		cachedPlayerNameUUIDs.put(uuid, player);
 
 	    if (flags == null && allowCreate) {
-		if (uuids != null) {
+		if (uuid != null) {
 		    flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
-		    playerFlags.put(uuids, flags);
-		    cachedPlayerNameUUIDs.put(uuids, player);
+		    playerFlags.put(uuid.toString(), flags);
+		    cachedPlayerNameUUIDs.put(uuid, player);
 		} else {
 		    flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
 		    playerFlags.put(player, flags);
@@ -308,8 +311,14 @@ public class FlagPermissions {
 	    }
 	} else {
 	    for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
-		if (!one.getKey().equals(player))
+		if (!one.getKey().equalsIgnoreCase(player))
 		    continue;
+
+		// Updating players name to correct capitalization
+		if (!one.getKey().equals(player)) {
+		    Map<String, Boolean> r = playerFlags.remove(one.getKey());
+		    playerFlags.put(player, r);
+		}
 		flags = one.getValue();
 		break;
 	    }
@@ -343,18 +352,19 @@ public class FlagPermissions {
 	// player = player.toLowerCase();
 
 	if (!Residence.getConfigManager().isOfflineMode()) {
-	    String uuids = Residence.getPlayerUUIDString(player);
-	    if (uuids == null)
-		for (Entry<String, String> entry : cachedPlayerNameUUIDs.entrySet())
+	    UUID uuid = Residence.getPlayerUUID(player);
+	    if (uuid == null)
+		for (Entry<UUID, String> entry : cachedPlayerNameUUIDs.entrySet())
 		    if (entry.getValue().equals(player)) {
-			uuids = entry.getKey();
+			uuid = entry.getKey();
 			break;
 		    }
 
-	    if (uuids != null) {
-		playerFlags.remove(uuids);
-		cachedPlayerNameUUIDs.remove(uuids);
+	    if (uuid != null) {
+		playerFlags.remove(uuid.toString());
+		cachedPlayerNameUUIDs.remove(uuid);
 	    }
+	    return;
 	}
 	playerFlags.remove(player);
 	cachedPlayerNameUUIDs.remove(player);
@@ -548,11 +558,33 @@ public class FlagPermissions {
 
     public Map<String, Object> save() {
 	Map<String, Object> root = new LinkedHashMap<>();
-	root.put("LastKnownPlayerNames", cachedPlayerNameUUIDs);
+//	root.put("LastKnownPlayerNames", cachedPlayerNameUUIDs);
+
+	// Putting uuid's to main cache for later save
+	Residence.addCachedPlayerNameUUIDs(cachedPlayerNameUUIDs);
+
 	root.put("PlayerFlags", playerFlags);
-	root.put("GroupFlags", groupFlags);
-	root.put("AreaFlags", cuboidFlags);
+	if (!groupFlags.isEmpty())
+	    root.put("GroupFlags", groupFlags);
+
+	if (!isDefaultFlags(cuboidFlags))
+	    root.put("AreaFlags", cuboidFlags);
+
 	return root;
+    }
+
+    private static boolean isDefaultFlags(Map<String, Boolean> flags) {
+	FlagPermissions gf = Residence.getConfigManager().getGlobalResidenceDefaultFlags();
+	if (gf != null) {
+	    Map<String, Boolean> dFlags = gf.getFlags();
+	    if (dFlags.size() != flags.size())
+		return false;
+	    for (Entry<String, Boolean> one : dFlags.entrySet()) {
+		if (!flags.containsKey(one.getKey()))
+		    return false;
+	    }
+	}
+	return true;
     }
 
     public static FlagPermissions load(Map<String, Object> root) throws Exception {
@@ -564,9 +596,31 @@ public class FlagPermissions {
     protected static FlagPermissions load(Map<String, Object> root, FlagPermissions newperms) throws Exception {
 	if (root.containsKey("LastKnownPlayerNames"))
 	    newperms.cachedPlayerNameUUIDs = (Map) root.get("LastKnownPlayerNames");
-	newperms.playerFlags = (Map) root.get("PlayerFlags");
-	newperms.groupFlags = (Map) root.get("GroupFlags");
-	newperms.cuboidFlags = (Map) root.get("AreaFlags");
+
+	if (root.containsKey("PlayerFlags"))
+	    newperms.playerFlags = (Map) root.get("PlayerFlags");
+
+	for (Entry<String, Map<String, Boolean>> one : newperms.playerFlags.entrySet()) {
+	    if (one.getKey().length() != 32)
+		continue;
+
+	    try {
+		UUID uuid = UUID.fromString(one.getKey());
+		String name = Residence.getCachedPlayerNameUUIDs().get(uuid);
+		newperms.cachedPlayerNameUUIDs.put(uuid, name);
+	    } catch (Exception e) {
+		continue;
+	    }
+
+	}
+
+	if (root.containsKey("GroupFlags"))
+	    newperms.groupFlags = (Map) root.get("GroupFlags");
+
+	if (root.containsKey("AreaFlags"))
+	    newperms.cuboidFlags = (Map) root.get("AreaFlags");
+	else
+	    newperms.cuboidFlags = Residence.getConfigManager().getGlobalResidenceDefaultFlags().getFlags();
 
 	String ownerName = null;
 	String uuid = null;
@@ -629,8 +683,13 @@ public class FlagPermissions {
 		//				}
 	    } else {
 		String pname = Residence.getPlayerName(keyset);
-		if (pname != null)
-		    this.cachedPlayerNameUUIDs.put(keyset, pname);
+		if (pname != null) {
+		    try {
+			UUID uuid = UUID.fromString(keyset);
+			this.cachedPlayerNameUUIDs.put(uuid, pname);
+		    } catch (Exception e) {
+		    }
+		}
 	    }
 	}
 	for (String one : Toremove) {
@@ -638,8 +697,13 @@ public class FlagPermissions {
 	}
 	for (Entry<String, String> convert : converts.entrySet()) {
 	    playerFlags.put(convert.getValue(), playerFlags.remove(convert.getKey()));
-	    cachedPlayerNameUUIDs.put(convert.getValue(), convert.getKey());
+	    try {
+		UUID uuid = UUID.fromString(convert.getValue());
+		cachedPlayerNameUUIDs.put(uuid, convert.getKey());
+	    } catch (Exception e) {
+	    }
 	}
+
     }
 
     public String listFlags() {
@@ -735,6 +799,8 @@ public class FlagPermissions {
 
     protected String printPlayerFlags(Map<String, Boolean> flags) {
 	StringBuilder sbuild = new StringBuilder();
+	if (flags == null)
+	    return "none";
 	Set<Entry<String, Boolean>> set = flags.entrySet();
 	synchronized (flags) {
 	    Iterator<Entry<String, Boolean>> it = set.iterator();
@@ -775,7 +841,11 @@ public class FlagPermissions {
 		    if (next.length() == 36) {
 			String resolvedName = Residence.getPlayerName(next);
 			if (resolvedName != null) {
-			    this.cachedPlayerNameUUIDs.put(next, resolvedName);
+			    try {
+				UUID uuid = UUID.fromString(next);
+				this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
+			    } catch (Exception e) {
+			    }
 			    next = resolvedName;
 			} else if (this.cachedPlayerNameUUIDs.containsKey(next))
 			    next = this.cachedPlayerNameUUIDs.get(next);
@@ -802,7 +872,11 @@ public class FlagPermissions {
 		if (next.length() == 36) {
 		    String resolvedName = Residence.getPlayerName(next);
 		    if (resolvedName != null) {
-			this.cachedPlayerNameUUIDs.put(next, resolvedName);
+			try {
+			    UUID uuid = UUID.fromString(next);
+			    this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
+			} catch (Exception e) {
+			}
 			next = resolvedName;
 		    } else if (this.cachedPlayerNameUUIDs.containsKey(next))
 			next = this.cachedPlayerNameUUIDs.get(next);
@@ -837,7 +911,11 @@ public class FlagPermissions {
 		if (next.length() == 36) {
 		    String resolvedName = Residence.getPlayerName(next);
 		    if (resolvedName != null) {
-			this.cachedPlayerNameUUIDs.put(next, resolvedName);
+			try {
+			    UUID uuid = UUID.fromString(next);
+			    this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
+			} catch (Exception e) {
+			}
 			next = resolvedName;
 		    } else if (this.cachedPlayerNameUUIDs.containsKey(next))
 			next = this.cachedPlayerNameUUIDs.get(next);
@@ -892,7 +970,11 @@ public class FlagPermissions {
 		    if (next.length() == 36) {
 			String resolvedName = Residence.getPlayerName(next);
 			if (resolvedName != null) {
-			    this.cachedPlayerNameUUIDs.put(next, resolvedName);
+			    try {
+				UUID uuid = UUID.fromString(next);
+				this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
+			    } catch (Exception e) {
+			    }
 			    next = resolvedName;
 			} else if (this.cachedPlayerNameUUIDs.containsKey(next))
 			    next = this.cachedPlayerNameUUIDs.get(next);

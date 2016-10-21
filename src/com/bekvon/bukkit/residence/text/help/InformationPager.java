@@ -15,6 +15,9 @@ import com.bekvon.bukkit.residence.utils.GetTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -53,19 +56,18 @@ public class InformationPager {
 	    Residence.msg(sender, lm.InformationPage_NoNextPage);
     }
 
-    public void printListInfo(CommandSender sender, String targetPlayer, List<ClaimedResidence> lines, int page, boolean resadmin) {
-	if (targetPlayer != null)
-	    lines = Residence.getSortingManager().sortResidences(lines);
+    public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin) {
+
 	int perPage = 20;
 	if (sender instanceof Player)
 	    perPage = 6;
 	int start = (page - 1) * perPage;
 	int end = start + perPage;
 
-	int pagecount = (int) Math.ceil((double) lines.size() / (double) perPage);
+	int pagecount = (int) Math.ceil((double) ownedResidences.size() / (double) perPage);
 	if (page == -1) {
 	    start = 0;
-	    end = lines.size();
+	    end = ownedResidences.size();
 	    page = 1;
 	    pagecount = 1;
 	}
@@ -79,29 +81,34 @@ public class InformationPager {
 	if (targetPlayer != null)
 	    Residence.msg(sender, lm.InformationPage_TopLine, Residence.msg(lm.General_Residences) + " - " + targetPlayer);
 	Residence.msg(sender, lm.InformationPage_Page, Residence.msg(lm.General_GenericPages, String.format("%d", page),
-	    pagecount, lines.size()));
+	    pagecount, ownedResidences.size()));
 
 	String cmd = "res";
 	if (resadmin)
 	    cmd = "resadmin";
 
-	if (lines.size() < end)
-	    end = lines.size();
-	lines = lines.subList(start, end);
+	if (ownedResidences.size() < end)
+	    end = ownedResidences.size();
 
 	if (!(sender instanceof Player)) {
-	    printListWithDelay(sender, lines, start, resadmin);
+	    printListWithDelay(sender, ownedResidences, start, resadmin);
 	    return;
 	}
 
 	List<String> linesForConsole = new ArrayList<String>();
-	int i = start - 1;
-	for (ClaimedResidence res : lines) {
-	    i++;
-//	    if (lines.size() <= i)
-//		break;
+	int y = 0;
 
-//	    ClaimedResidence res = lines.get(i);
+	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
+	    y++;
+	    if (ownedResidences.size() < y)
+		break;
+
+	    if (y <= start)
+		continue;
+	    if (y > end)
+		break;
+
+	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
 	    StringB.append(" " + Residence.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
@@ -148,7 +155,7 @@ public class InformationPager {
 		moveFlag = res.getPermissions().playerHas(sender.getName(), Flags.move, true) ? ChatColor.DARK_GREEN + "M" : ChatColor.DARK_RED + "M";
 	    }
 
-	    String msg = Residence.msg(lm.Residence_ResList, (i + 1), res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
+	    String msg = Residence.msg(lm.Residence_ResList, y, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
 
 	    if (sender instanceof Player)
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + Residence.getResidenceManager().convertToRaw(null, msg,
@@ -164,13 +171,17 @@ public class InformationPager {
 	    ShowPagination(sender.getName(), pagecount, page, cmd + " listall");
     }
 
-    private void printListWithDelay(final CommandSender sender, final List<ClaimedResidence> lines, final int start, final boolean resadmin) {
+    private void printListWithDelay(final CommandSender sender, final TreeMap<String, ClaimedResidence> ownedResidences, final int start, final boolean resadmin) {
 
-	for (int i = 0; i < 100; i++) {
-	    if (lines.size() <= i)
+	int i = 0;
+	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
+	    i++;
+	    if (i >= 100)
+		break;
+	    if (ownedResidences.size() <= i)
 		break;
 
-	    ClaimedResidence res = lines.get(i);
+	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
 	    StringB.append(" " + Residence.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
@@ -217,19 +228,22 @@ public class InformationPager {
 	    sender.sendMessage(msg);
 	}
 
-	final List<ClaimedResidence> tlines = new ArrayList<ClaimedResidence>();
+	if (ownedResidences.size() > 100) {
+	    i = 0;
+	    while (i < 100) {
+		i++;
+		ownedResidences.remove(ownedResidences.firstKey());
+	    }
+	}
 
-	if (lines.size() > 100)
-	    tlines.addAll(lines.subList(100, lines.size()));
-
-	if (tlines.isEmpty()) {
+	if (ownedResidences.isEmpty()) {
 	    return;
 	}
 
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		printListWithDelay(sender, tlines, start + 100, resadmin);
+		printListWithDelay(sender, ownedResidences, start + 100, resadmin);
 		return;
 	    }
 	}, 5L);

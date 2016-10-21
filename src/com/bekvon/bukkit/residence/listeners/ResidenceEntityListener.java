@@ -8,14 +8,12 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
@@ -1027,7 +1025,6 @@ public class ResidenceEntityListener implements Listener {
 
 	if (!perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true))) {
 	    event.setCancelled(true);
-	    Debug.D("this one");
 	    Residence.msg(player, lm.Flag_Deny, Flags.destroy.getName());
 	}
     }
