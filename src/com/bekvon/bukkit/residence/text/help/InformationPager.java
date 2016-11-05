@@ -173,10 +173,10 @@ public class InformationPager {
 
     private void printListWithDelay(final CommandSender sender, final TreeMap<String, ClaimedResidence> ownedResidences, final int start, final boolean resadmin) {
 
-	int i = 0;
+	int i = start;
 	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
 	    i++;
-	    if (i >= 100)
+	    if (i >= start + 100)
 		break;
 	    if (ownedResidences.size() <= i)
 		break;
@@ -221,20 +221,20 @@ public class InformationPager {
 		StringB.append("\n " + Residence.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
 	    }
 
-	    String msg = Residence.msg(lm.Residence_ResList, (start + i + 1), res.getName(), res.getWorld(), "", ExtraString);
+	    String msg = Residence.msg(lm.Residence_ResList, (i + 1), res.getName(), res.getWorld(), "", ExtraString);
 
 	    msg = ChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
 	    msg = msg.replaceAll("\\s{2}", " ");
 	    sender.sendMessage(msg);
 	}
 
-	if (ownedResidences.size() > 100) {
-	    i = 0;
-	    while (i < 100) {
-		i++;
-		ownedResidences.remove(ownedResidences.firstKey());
-	    }
-	}
+//	if (ownedResidences.size() > 100) {
+//	    i = 0;
+//	    while (i < 100) {
+//		i++;
+//		ownedResidences.remove(ownedResidences.firstKey());
+//	    }
+//	}
 
 	if (ownedResidences.isEmpty()) {
 	    return;
