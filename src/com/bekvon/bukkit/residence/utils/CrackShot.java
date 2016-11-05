@@ -14,6 +14,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 public class CrackShot implements Listener {
@@ -56,7 +57,7 @@ public class CrackShot implements Listener {
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(entity.getLocation());
 
 	if (Residence.getNms().isAnimal(entity)) {
-	    if (res != null && !res.getPermissions().playerHas(cause.getName(), Flags.animalkilling, true)) {
+	    if (res != null && res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
 		cause.sendMessage(Residence.msg(lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName()));
 		event.setCancelled(true);
 	    }
@@ -88,7 +89,7 @@ public class CrackShot implements Listener {
 	// Note: Location of entity, not player; otherwise player could stand outside of res and still damage
 	Location loc = event.getVictim().getLocation();
 	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-	if (res != null && !res.getPermissions().playerHas(player.getName(), Flags.container, false)) {
+	if (res != null && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
 	    event.setCancelled(true);
 	    Residence.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
 	}

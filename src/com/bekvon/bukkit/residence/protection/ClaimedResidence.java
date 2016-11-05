@@ -23,6 +23,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -385,7 +386,7 @@ public class ClaimedResidence {
 		    Residence.msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
-		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), Flags.subzone, true)) {
+		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player, Flags.subzone, FlagCombo.OnlyTrue)) {
 		    Residence.msg(player, lm.Residence_ParentNoPermission);
 		    return false;
 		}
@@ -516,7 +517,7 @@ public class ClaimedResidence {
 		    Residence.msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
-		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player.getName(), Flags.subzone, true)) {
+		if (!parent.getPermissions().hasResidencePermission(player, true) && !parent.getPermissions().playerHas(player, Flags.subzone, FlagCombo.OnlyTrue)) {
 		    Residence.msg(player, lm.Residence_ParentNoPermission);
 		    return false;
 		}
@@ -600,7 +601,7 @@ public class ClaimedResidence {
 	}
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
-		if (!this.perms.playerHas(player.getName(), Flags.subzone, this.perms.playerHas(player.getName(), Flags.admin, false))) {
+		if (!this.perms.playerHas(player.getName(), Flags.subzone, this.perms.playerHas(player, Flags.admin, false))) {
 		    Residence.msg(player, lm.General_NoPermission);
 		    return false;
 		}
@@ -1005,7 +1006,7 @@ public class ClaimedResidence {
 		continue;
 
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
-	    if (res != null && player != null && !res.getPermissions().playerHas(player.getName(), Flags.tp, true) && !player.hasPermission("residence.admin.tp"))
+	    if (res != null && player != null && !res.getPermissions().playerHas(player, Flags.tp, FlagCombo.TrueOrNone) && !player.hasPermission("residence.admin.tp"))
 		continue;
 
 	    found = true;
@@ -1152,11 +1153,11 @@ public class ClaimedResidence {
 		Residence.msg(reqPlayer, lm.General_NoPermission);
 		return;
 	    }
-	    if (!this.perms.playerHas(reqPlayer.getName(), Flags.tp, true)) {
+	    if (!this.perms.playerHas(reqPlayer, Flags.tp, FlagCombo.TrueOrNone)) {
 		Residence.msg(reqPlayer, lm.Residence_TeleportNoFlag);
 		return;
 	    }
-	    if (!this.perms.playerHas(reqPlayer.getName(), Flags.move, true)) {
+	    if (!this.perms.playerHas(reqPlayer, Flags.move, FlagCombo.TrueOrNone)) {
 		Residence.msg(reqPlayer, lm.Residence_MoveDeny, this.getName());
 		return;
 	    }

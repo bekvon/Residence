@@ -160,7 +160,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (!res.getPermissions().playerHas(cause.getName(), Flags.animalkilling, true)) {
+	if (res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
 	    Residence.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -207,7 +207,7 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isResAdminOn(cause))
 	    return;
 
-	if (!res.getPermissions().playerHas(cause.getName(), Flags.animalkilling, true)) {
+	if (res.getPermissions().playerHas(cause.getName(), Flags.animalkilling, FlagCombo.OnlyFalse)) {
 	    Residence.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -302,7 +302,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (!res.getPermissions().playerHas(cause.getName(), Flags.vehicledestroy, true)) {
+	if (res.getPermissions().playerHas(cause.getName(), Flags.vehicledestroy, FlagCombo.OnlyFalse)) {
 	    Residence.msg(cause, lm.Residence_FlagDeny, Flags.vehicledestroy.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -346,7 +346,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (!res.getPermissions().playerHas(cause.getName(), Flags.mobkilling, true)) {
+	if (res.getPermissions().playerHas(cause.getName(), Flags.mobkilling, FlagCombo.OnlyFalse)) {
 	    Residence.msg(cause, lm.Residence_FlagDeny, Flags.mobkilling.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -372,7 +372,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (!res.getPermissions().playerHas(player.getName(), Flags.leash, true)) {
+	if (res.getPermissions().playerHas(player.getName(), Flags.leash, FlagCombo.OnlyFalse)) {
 	    Residence.msg(player, lm.Residence_FlagDeny, Flags.leash, res.getName());
 	    event.setCancelled(true);
 	}

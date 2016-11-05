@@ -9,6 +9,8 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,6 +51,7 @@ public class ResidencePermissions extends FlagPermissions {
 	return true;
     }
 
+    @Override
     public boolean playerHas(Player player, Flags flag, boolean def) {
 	return playerHas(player, flag.getName(), def);
     }
@@ -92,7 +95,7 @@ public class ResidencePermissions extends FlagPermissions {
 
 	Residence.getServ().getPluginManager().callEvent(fc);
 	if (fc.isOverriden())
-	    return fc.getOverrideValue();
+	    return fc.getOverrideValue();	
 	return super.playerHas(player, world, flag, def);
     }
 
@@ -213,29 +216,36 @@ public class ResidencePermissions extends FlagPermissions {
     public boolean hasResidencePermission(CommandSender sender, boolean requireOwner) {
 	if (!(sender instanceof Player))
 	    return true;
+	Debug.D(1);
 
 	ClaimedResidence par = this.residence.getParent();
 	if (par != null)
-	    if (par.getPermissions().playerHas(sender.getName(), Flags.admin, true))
+	    if (par.getPermissions().playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue))
 		return true;
 
+	Debug.D(2);
 	if (Residence.getConfigManager().enabledRentSystem()) {
 	    String resname = residence.getName();
 	    if (Residence.getRentManager().isRented(resname)) {
 		if (requireOwner) {
+			Debug.D(3);
 		    return false;
 		}
 		String renter = Residence.getRentManager().getRentingPlayer(resname);
 		if (sender.getName().equals(renter)) {
+			Debug.D(6);
 		    return true;
 		}
-		return (playerHas(sender.getName(), Flags.admin, false));
+		Debug.D(7);
+		return (playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue));
 	    }
 	}
 	if (requireOwner) {
+		Debug.D(4);
 	    return (this.getOwner().equals(sender.getName()));
 	}
-	return (playerHas(sender.getName(), Flags.admin, false) || this.getOwner().equals(sender.getName()));
+	Debug.D(8);
+	return (playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue) || this.getOwner().equals(sender.getName()));
     }
 
     private boolean checkCanSetFlag(CommandSender sender, String flag, FlagState state, boolean globalflag, boolean resadmin) {
