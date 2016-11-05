@@ -1306,10 +1306,16 @@ public class ClaimedResidence {
 
 	PermissionGroup group = this.getOwnerGroup();
 
-	if (enterMessage != null && group != null && !enterMessage.equals(group.getDefaultEnterMessage()))
-	    root.put("EnterMessage", enterMessage);
-	if (enterMessage != null && group != null && !leaveMessage.equals(group.getDefaultLeaveMessage()))
-	    root.put("LeaveMessage", leaveMessage);
+	if (enterMessage != null)
+	    if (group == null || group.getDefaultEnterMessage() == null || !enterMessage.equals(group.getDefaultEnterMessage())) {
+		root.put("EnterMessage", enterMessage);
+	    }
+
+	if (leaveMessage != null)
+	    if (group == null || group.getDefaultLeaveMessage() == null || !leaveMessage.equals(group.getDefaultLeaveMessage())) {
+		root.put("LeaveMessage", leaveMessage);
+	    }
+
 	if (ShopDesc != null)
 	    root.put("ShopDescription", ShopDesc);
 	if (bank.getStoredMoney() != 0)
