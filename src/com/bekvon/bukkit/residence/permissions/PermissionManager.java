@@ -96,7 +96,7 @@ public class PermissionManager {
 	    if (player != null)
 		updateGroupNameForPlayer(player);
 	    else
-		updateGroupNameForPlayer(playerName, world, false);
+		updateGroupNameForPlayer(playerName, world, true);
 	}
 	PlayerGroup PGroup = this.groupsMap.get(playerName);
 	if (PGroup != null) {

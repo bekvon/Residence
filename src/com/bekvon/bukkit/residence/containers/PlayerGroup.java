@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class PlayerGroup {
