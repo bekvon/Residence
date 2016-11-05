@@ -361,7 +361,7 @@ public class Residence extends JavaPlugin {
 	    server.getScheduler().cancelTask(rentBukkitId);
 	}
 
-	if (getDynManager() != null)
+	if (getDynManager() != null && getDynManager().getMarkerSet() != null)
 	    getDynManager().getMarkerSet().deleteMarkerSet();
 
 	if (initsuccess) {

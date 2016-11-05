@@ -947,11 +947,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    Residence.msg(player, lm.Invalid_Residence);
 	    return false;
 	}
-
-	oldName = res.getName();
-	
-	Debug.D("has permission: "+res.getPermissions().hasResidencePermission(player, true));
-
+	oldName = res.getName();	
 	if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (res.getParent() == null) {
 		if (residences.containsKey(newName.toLowerCase())) {

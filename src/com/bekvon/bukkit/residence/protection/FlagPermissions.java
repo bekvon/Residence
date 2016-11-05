@@ -314,7 +314,6 @@ public class FlagPermissions {
 	    for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
 		if (!one.getKey().equalsIgnoreCase(player))
 		    continue;
-
 		// Updating players name to correct capitalization
 		if (!one.getKey().equals(player)) {
 		    Map<String, Boolean> r = playerFlags.remove(one.getKey());
