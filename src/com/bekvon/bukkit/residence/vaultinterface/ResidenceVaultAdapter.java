@@ -74,7 +74,6 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 
     @Override
     public String getPlayerGroup(String player, String world) {
-	Bukkit.getConsoleSender().sendMessage("getting roup");
 	OfflinePlayer off = Bukkit.getOfflinePlayer(player);
 //	@SuppressWarnings("deprecation")
 	if (off == null)
