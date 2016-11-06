@@ -859,6 +859,7 @@ public class ResidenceManager implements ResidenceInterface {
 		@SuppressWarnings("unchecked")
 		ClaimedResidence residence = ClaimedResidence.load(worldName, (Map<String, Object>) res.getValue(), null, plugin);
 
+		
 		if (residence == null)
 		    continue;
 

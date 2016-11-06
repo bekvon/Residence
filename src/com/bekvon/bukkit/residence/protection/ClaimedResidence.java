@@ -1305,17 +1305,11 @@ public class ClaimedResidence {
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
 
-	PermissionGroup group = this.getOwnerGroup();
-
 	if (enterMessage != null)
-	    if (group == null || group.getDefaultEnterMessage() == null || !enterMessage.equals(group.getDefaultEnterMessage())) {
-		root.put("EnterMessage", enterMessage);
-	    }
+	    root.put("EnterMessage", enterMessage);
 
 	if (leaveMessage != null)
-	    if (group == null || group.getDefaultLeaveMessage() == null || !leaveMessage.equals(group.getDefaultLeaveMessage())) {
-		root.put("LeaveMessage", leaveMessage);
-	    }
+	    root.put("LeaveMessage", leaveMessage);
 
 	if (ShopDesc != null)
 	    root.put("ShopDescription", ShopDesc);
@@ -1449,17 +1443,11 @@ public class ClaimedResidence {
 	    }
 	}
 
-	PermissionGroup group = res.getOwnerGroup();
-
 	if (root.containsKey("EnterMessage"))
 	    res.enterMessage = (String) root.get("EnterMessage");
-	else if (group != null)
-	    res.enterMessage = res.getOwnerGroup().getDefaultEnterMessage();
 
 	if (root.containsKey("LeaveMessage"))
 	    res.leaveMessage = (String) root.get("LeaveMessage");
-	else if (group != null)
-	    res.leaveMessage = res.getOwnerGroup().getDefaultLeaveMessage();
 
 	res.parent = parent;
 	Map<String, Object> tploc = (Map<String, Object>) root.get("TPLoc");

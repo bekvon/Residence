@@ -7,6 +7,8 @@ import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
+import net.milkbowl.vault.Vault;
+
 import java.io.File;
 import java.util.*;
 import java.util.logging.Level;

@@ -6,6 +6,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -73,8 +74,12 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 
     @Override
     public String getPlayerGroup(String player, String world) {
-	@SuppressWarnings("deprecation")
-	String group = permissions.getPrimaryGroup(world, player);
+	Bukkit.getConsoleSender().sendMessage("getting roup");
+	OfflinePlayer off = Bukkit.getOfflinePlayer(player);
+//	@SuppressWarnings("deprecation")
+	if (off == null)
+	    return null;
+	String group = permissions.getPrimaryGroup(world, off);
 	if (group == null) {
 	    return group;
 	}
