@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -419,7 +420,7 @@ public class ResidenceEntityListener implements Listener {
 	    case BUILD_SNOWMAN:
 	    case CUSTOM:
 	    case DEFAULT:
-		if (!perms.has(Flags.canimals, true)) {
+		if (!perms.has(Flags.canimals, FlagCombo.OnlyFalse)) {
 		    event.setCancelled(true);
 		    return;
 		}
@@ -452,7 +453,7 @@ public class ResidenceEntityListener implements Listener {
 		break;
 	    }
 	} else if (isMonster(ent)) {
-	    if (!perms.has(Flags.monsters, true)) {
+	    if (perms.has(Flags.monsters, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
 		return;
 	    }
@@ -634,11 +635,9 @@ public class ResidenceEntityListener implements Listener {
 	    }
 	    break;
 	default:
-	    if (!perms.has(Flags.destroy, FlagCombo.OnlyFalse)) {
-		if (entity != EntityType.ENDER_CRYSTAL) {
-		    event.setCancelled(true);
-		    ent.remove();
-		}
+	    if (perms.has(Flags.destroy, FlagCombo.OnlyFalse)) {		
+		event.setCancelled(true);
+		ent.remove();
 	    }
 	    break;
 	}
