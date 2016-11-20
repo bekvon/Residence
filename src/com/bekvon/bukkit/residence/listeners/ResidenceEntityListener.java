@@ -407,7 +407,6 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isDisabledWorldListener(ent.getWorld()))
 	    return;
 	FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
-
 	if (Residence.getNms().isAnimal(ent)) {
 	    if (!perms.has(Flags.animals, true)) {
 		event.setCancelled(true);
@@ -420,7 +419,7 @@ public class ResidenceEntityListener implements Listener {
 	    case BUILD_SNOWMAN:
 	    case CUSTOM:
 	    case DEFAULT:
-		if (!perms.has(Flags.canimals, FlagCombo.OnlyFalse)) {
+		if (perms.has(Flags.canimals, FlagCombo.OnlyFalse)) {
 		    event.setCancelled(true);
 		    return;
 		}
@@ -437,14 +436,14 @@ public class ResidenceEntityListener implements Listener {
 	    case NETHER_PORTAL:
 	    case OCELOT_BABY:
 	    case NATURAL:
-		if (!perms.has(Flags.nanimals, true)) {
+		if (perms.has(Flags.nanimals, FlagCombo.OnlyFalse)) {
 		    event.setCancelled(true);
 		    return;
 		}
 		break;
 	    case SPAWNER_EGG:
 	    case SPAWNER:
-		if (!perms.has(Flags.sanimals, true)) {
+		if (perms.has(Flags.sanimals, FlagCombo.OnlyFalse)) {
 		    event.setCancelled(true);
 		    return;
 		}
@@ -461,7 +460,7 @@ public class ResidenceEntityListener implements Listener {
 	    case BUILD_WITHER:
 	    case CUSTOM:
 	    case DEFAULT:
-		if (!perms.has(Flags.cmonsters, true)) {
+		if (perms.has(Flags.cmonsters, FlagCombo.OnlyFalse)) {
 		    event.setCancelled(true);
 		    return;
 		}
@@ -477,14 +476,14 @@ public class ResidenceEntityListener implements Listener {
 	    case SLIME_SPLIT:
 	    case LIGHTNING:
 	    case NATURAL:
-		if (!perms.has(Flags.nmonsters, true)) {
+		if (perms.has(Flags.nmonsters, FlagCombo.OnlyFalse)) {
 		    event.setCancelled(true);
 		    return;
 		}
 		break;
 	    case SPAWNER_EGG:
 	    case SPAWNER:
-		if (!perms.has(Flags.smonsters, true)) {
+		if (perms.has(Flags.smonsters, FlagCombo.OnlyFalse)) {
 		    event.setCancelled(true);
 		    return;
 		}
@@ -635,7 +634,7 @@ public class ResidenceEntityListener implements Listener {
 	    }
 	    break;
 	default:
-	    if (perms.has(Flags.destroy, FlagCombo.OnlyFalse)) {		
+	    if (perms.has(Flags.destroy, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
 		ent.remove();
 	    }
