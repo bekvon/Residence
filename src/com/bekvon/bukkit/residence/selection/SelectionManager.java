@@ -168,6 +168,13 @@ public class SelectionManager {
     public void showBounds(final Player player, final Visualizer v) {
 	if (!Residence.getConfigManager().useVisualizer())
 	    return;
+	Visualizer tv = vMap.get(player.getName());
+	if (tv != null) {
+	    if (tv.getId() != -1)
+		Bukkit.getScheduler().cancelTask(tv.getId());
+	    if (tv.getErrorId() != -1)
+		Bukkit.getScheduler().cancelTask(tv.getErrorId());
+	}
 	vMap.put(player.getName(), v);
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
