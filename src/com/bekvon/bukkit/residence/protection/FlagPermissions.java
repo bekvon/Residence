@@ -567,26 +567,9 @@ public class FlagPermissions {
 	if (!groupFlags.isEmpty())
 	    root.put("GroupFlags", groupFlags);
 
-	if (!isDefaultFlags(cuboidFlags))
-	    root.put("AreaFlags", cuboidFlags);
+	root.put("AreaFlags", cuboidFlags);
 
 	return root;
-    }
-
-    private static boolean isDefaultFlags(Map<String, Boolean> flags) {
-	FlagPermissions gf = Residence.getConfigManager().getGlobalResidenceDefaultFlags();
-	if (gf != null) {
-	    Map<String, Boolean> dFlags = gf.getFlags();
-	    if (dFlags.isEmpty())
-		return false;
-	    if (dFlags.size() != flags.size())
-		return false;
-	    for (Entry<String, Boolean> one : dFlags.entrySet()) {
-		if (!flags.containsKey(one.getKey()) || flags.get(one.getKey()) != one.getValue())
-		    return false;
-	    }
-	}
-	return true;
     }
 
     public static FlagPermissions load(Map<String, Object> root) throws Exception {
