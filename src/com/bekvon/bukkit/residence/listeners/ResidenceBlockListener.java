@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -223,6 +225,10 @@ public class ResidenceBlockListener implements Listener {
 	} else {
 	    String saved = ent.getMetadata(SourceResidenceName).get(0).asString();
 	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+
+	    if (res != null && res.getPermissions().has(Flags.fallinprotection, FlagCombo.OnlyFalse))
+		return;
+
 	    String resName = res == null ? "NULL" : res.getName();
 	    if (!saved.equalsIgnoreCase(resName)) {
 		event.setCancelled(true);
@@ -262,8 +268,11 @@ public class ResidenceBlockListener implements Listener {
 	    loc.setY(i);
 	    if (loc.getBlock().getType() != Material.AIR) {
 		ClaimedResidence targetRes = Residence.getResidenceManager().getByLoc(loc);
-		if (res == null && targetRes != null || res != null && targetRes == null || res != null && targetRes != null && !res.getName()
-		    .equals(targetRes.getName())) {
+		if (targetRes == null)
+		    continue;
+		if (res != null && !res.getName().equals(targetRes.getName())) {
+		    if (targetRes.getPermissions().has(Flags.fallinprotection, FlagCombo.OnlyFalse))
+			continue;
 		    event.setCancelled(true);
 		    block.setType(Material.AIR);
 		}

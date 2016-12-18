@@ -37,6 +37,7 @@ public enum Flags {
     enchant(116, 0, FlagMode.Both, "Allows or denys players to use enchanting tables", true),
     explode(407, 0, FlagMode.Residence, "Allows or denys explosions in residences", true),
     enderpearl(368, 0, FlagMode.Both, "Allow or disallow teleporting to the residence with enderpearl", true),
+    fallinprotection(12, 0, FlagMode.Residence, "Protects from blocks falling into residence", true),
     falldamage(301, 0, FlagMode.Residence, "Protects players from fall damage", true),
     feed(364, 0, FlagMode.Residence, "Setting to true makes the residence feed its occupants", true),
     fireball(385, 0, FlagMode.Residence, "Allows or denys fire balls in residences", true),
