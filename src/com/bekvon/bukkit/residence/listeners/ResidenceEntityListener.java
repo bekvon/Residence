@@ -633,6 +633,13 @@ public class ResidenceEntityListener implements Listener {
 		ent.remove();
 	    }
 	    break;
+	case WITHER:
+	case WITHER_SKULL:
+	    if (perms.has(Flags.witherdestruction, FlagCombo.OnlyFalse)) {
+		event.setCancelled(true);
+		ent.remove();
+	    }
+	    break;
 	default:
 	    if (perms.has(Flags.destroy, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
@@ -645,7 +652,6 @@ public class ResidenceEntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
 	// disabling event on world
-
 	Location loc = event.getLocation();
 	if (Residence.isDisabledWorldListener(loc.getWorld()))
 	    return;
@@ -691,6 +697,11 @@ public class ResidenceEntityListener implements Listener {
 	    case SMALL_FIREBALL:
 	    case FIREBALL:
 		if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.fireball, FlagCombo.OnlyFalse))
+		    cancel = true;
+		break;
+	    case WITHER:
+	    case WITHER_SKULL:
+		if (perms.has(Flags.witherdestruction, FlagCombo.OnlyFalse))
 		    cancel = true;
 		break;
 	    default:
@@ -753,9 +764,14 @@ public class ResidenceEntityListener implements Listener {
 		    continue;
 		case SMALL_FIREBALL:
 		case FIREBALL:
-		    if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.fireball, FlagCombo.OnlyFalse))
+		    if (blockperms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.fireball, FlagCombo.OnlyFalse))
 			preserve.add(block);
 		    continue;
+		case WITHER:
+		case WITHER_SKULL:
+		    if (blockperms.has(Flags.witherdestruction, FlagCombo.OnlyFalse))
+			preserve.add(block);		    
+		    break;
 		default:
 		    if (blockperms.has(Flags.destroy, FlagCombo.OnlyFalse))
 			preserve.add(block);
@@ -786,7 +802,7 @@ public class ResidenceEntityListener implements Listener {
 	if (ent.getType() != EntityType.WITHER)
 	    return;
 
-	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.destroy, FlagCombo.OnlyFalse))
+	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.witherdestruction, FlagCombo.OnlyFalse))
 	    return;
 
 	event.setCancelled(true);
@@ -959,6 +975,25 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityDamageByWitherEvent(EntityDamageByEntityEvent event) {
+	// disabling event on world
+	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
+	Entity dmgr = event.getDamager();
+	if (dmgr.getType() != EntityType.WITHER && dmgr.getType() != EntityType.WITHER_SKULL)
+	    return;
+
+	FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+	if (perms.has(Flags.witherdamage, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	    return;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
 	// disabling event on world
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
@@ -983,10 +1018,15 @@ public class ResidenceEntityListener implements Listener {
 	    if (perm.has(Flags.destroy, FlagCombo.OnlyFalse))
 		event.setCancelled(true);
 	    return;
-	} else if (dmgr.getType() == EntityType.PRIMED_TNT || dmgr.getType() == EntityType.MINECART_TNT || dmgr.getType() == EntityType.WITHER_SKULL || dmgr
-	    .getType() == EntityType.WITHER) {
+	} else if (dmgr.getType() == EntityType.PRIMED_TNT || dmgr.getType() == EntityType.MINECART_TNT) {
 	    FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
 	    if (perms.has(Flags.explode, FlagCombo.OnlyFalse)) {
+		event.setCancelled(true);
+		return;
+	    }
+	} else if (dmgr.getType() == EntityType.WITHER_SKULL || dmgr.getType() == EntityType.WITHER) {
+	    FlagPermissions perms = Residence.getPermsByLoc(event.getEntity().getLocation());
+	    if (perms.has(Flags.witherdamage, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
 		return;
 	    }

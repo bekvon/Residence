@@ -101,6 +101,8 @@ public enum Flags {
     use(70, 0, FlagMode.Both, "Allows or denys use of doors, lever, buttons, etc...", true),
     vehicledestroy(328, 0, FlagMode.Both, "Allows or denys vehicle destroy", true),
     witherspawn(397, 1, FlagMode.Residence, "Allows or denys wither spawning", true),
+    witherdamage(397, 1, FlagMode.Residence, "Allows or denys wither damage", true),
+    witherdestruction(397, 1, FlagMode.Residence, "Allows or denys wither block damage", true),
     waterflow(326, 0, FlagMode.Residence, "Allows or denys water flow, overrides flow", true),
     wspeed1(373, 0, FlagMode.Residence, "Change players walk speed in residence to %1", true),
     wspeed2(373, 0, FlagMode.Residence, "Change players walk speed in residence to %1", true);
