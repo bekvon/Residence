@@ -20,6 +20,7 @@ import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
@@ -298,6 +299,13 @@ public class shop implements cmd {
 	    if (place < 1)
 		place = 1;
 
+	    CuboidArea cuboid = Residence.getSelectionManager().getSelectionCuboid(player);
+
+	    if (cuboid.getXSize() > 16 || cuboid.getYSize() > 16 || cuboid.getZSize() > 16) {
+		Residence.msg(player, lm.Shop_ToBigSelection);
+		return true;
+	    }
+
 	    Location loc1 = Residence.getSelectionManager().getPlayerLoc1(player.getName());
 	    Location loc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
 
@@ -310,8 +318,8 @@ public class shop implements cmd {
 	    newTemp.setStartPlace(place);
 	    newTemp.setTopLoc(loc1);
 	    newTemp.setBottomLoc(loc2);
-	    
-	    if (Residence.getShopSignUtilManager().exist(newTemp)){
+
+	    if (Residence.getShopSignUtilManager().exist(newTemp)) {
 		sender.sendMessage(Residence.msg(lm.Shop_BoardExist));
 		return true;
 	    }
