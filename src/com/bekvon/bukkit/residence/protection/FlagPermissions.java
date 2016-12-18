@@ -567,7 +567,8 @@ public class FlagPermissions {
 	if (!groupFlags.isEmpty())
 	    root.put("GroupFlags", groupFlags);
 
-	root.put("AreaFlags", cuboidFlags);
+	// Cloning map to fix issue for yml anchors being created
+	root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
 
 	return root;
     }
@@ -602,9 +603,9 @@ public class FlagPermissions {
 	if (root.containsKey("GroupFlags"))
 	    newperms.groupFlags = (Map) root.get("GroupFlags");
 
-	if (root.containsKey("AreaFlags"))
+	if (root.containsKey("AreaFlags")) {
 	    newperms.cuboidFlags = (Map) root.get("AreaFlags");
-	else
+	} else
 	    newperms.cuboidFlags = Residence.getConfigManager().getGlobalResidenceDefaultFlags().getFlags();
 
 	String ownerName = null;

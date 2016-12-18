@@ -38,6 +38,7 @@ public class PermissionGroup {
     protected double sellperarea = 0;
     protected boolean tpaccess;
     protected int subzonedepth;
+    protected int maxSubzones;
     protected FlagPermissions flagPerms;
     protected Map<String, Boolean> creatorDefaultFlags;
     protected Map<String, Map<String, Boolean>> groupDefaultFlags;
@@ -120,6 +121,9 @@ public class PermissionGroup {
 	minHeight = limits.getInt("Residence.MinHeight", 0);
 	maxHeight = limits.getInt("Residence.MaxHeight", 255);
 	tpaccess = limits.getBoolean("Residence.CanTeleport", false);
+
+	maxSubzones = limits.getInt("Residence.MaxSubzonesInArea", 3);
+
 	subzonedepth = limits.getInt("Residence.SubzoneDepth", 0);
 
 	Subzonexmax = limits.getInt("Residence.SubzoneMaxEastWest", xmax);
@@ -301,6 +305,10 @@ public class PermissionGroup {
 	return subzonedepth;
     }
 
+    public int getMaxSubzones() {
+	return maxSubzones;
+    }
+
     public boolean canSetEnterLeaveMessages() {
 	return messageperms;
     }
@@ -421,7 +429,8 @@ public class PermissionGroup {
 	Residence.msg(player, lm.Limits_MaxNS, group.zmin + "-" + group.zmax);
 	Residence.msg(player, lm.Limits_MaxUD, group.ymin + "-" + group.ymax);
 	Residence.msg(player, lm.Limits_MinMax, group.minHeight, group.maxHeight);
-	Residence.msg(player, lm.Limits_MaxSub, rPlayer.getMaxSubzones());
+	Residence.msg(player, lm.Limits_MaxSubzones, rPlayer.getMaxSubzones());
+	Residence.msg(player, lm.Limits_MaxSubDepth, rPlayer.getMaxSubzoneDepth());
 	Residence.msg(player, lm.Limits_MaxRents, rPlayer.getMaxRents() + (getMaxRentDays() != -1 ? Residence.msg(lm.Limits_MaxRentDays, getMaxRentDays())
 	    : ""));
 	Residence.msg(player, lm.Limits_EnterLeave, group.messageperms);

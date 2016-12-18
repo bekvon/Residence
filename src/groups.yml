@@ -29,6 +29,8 @@ Groups:
            MinHeight: 0
            # The highest altitude this group is allowed to protect.
            MaxHeight: 255
+            # The maximum amount of subzones can current area have.
+           MaxSubzonesInArea: 3
             # The maximum recursive depth that subzones can go.
             # A subzone within a subzone within the Residence zone would be a depth of 2.
             # Set to 0 to disable subzones.

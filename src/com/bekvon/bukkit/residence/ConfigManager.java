@@ -117,6 +117,7 @@ public class ConfigManager {
     protected int MaxResCount;
     protected int MaxRentCount;
     protected int MaxSubzonesCount;
+    protected int MaxSubzoneDepthCount;
     protected int VoteRangeFrom;
     protected int HealInterval;
     protected int FeedInterval;
@@ -310,14 +311,14 @@ public class ConfigManager {
 	if (!conf.isConfigurationSection("Global.GroupedFlags")) {
 	    conf.createSection("Global.GroupedFlags");
 	    conf.set("Global.GroupedFlags.redstone", Arrays.asList(
-		Flags.note.getName(), 
-		Flags.pressure.getName(), 
-		Flags.lever.getName(), 
+		Flags.note.getName(),
+		Flags.pressure.getName(),
+		Flags.lever.getName(),
 		Flags.button.getName(),
 		Flags.diode.getName()));
 	    conf.set("Global.GroupedFlags.craft", Arrays.asList(
-		Flags.brew.getName(), 
-		Flags.table.getName(), 
+		Flags.brew.getName(),
+		Flags.table.getName(),
 		Flags.enchant.getName()));
 	    conf.set("Global.GroupedFlags.trusted", Arrays.asList(
 		Flags.use.getName(),
@@ -331,7 +332,7 @@ public class ConfigManager {
 		Flags.shear.getName(),
 		Flags.chat.getName()));
 	    conf.set("Global.GroupedFlags.fire", Arrays.asList(
-		Flags.ignite.getName(), 
+		Flags.ignite.getName(),
 		Flags.firespread.getName()));
 
 	    try {
@@ -435,6 +436,10 @@ public class ConfigManager {
 	c.getW().addComment("Global.Optimizations.MaxSubzoneCount", "Set this as low as posible depending of residence.max.subzones.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
 	MaxSubzonesCount = c.get("Global.Optimizations.MaxSubzoneCount", 5);
+	c.getW().addComment("Global.Optimizations.MaxSubzoneDepthCount", "Set this as low as posible depending of residence.max.subzonedepth.[number] permission you are using",
+	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
+	MaxSubzoneDepthCount = c.get("Global.Optimizations.MaxSubzoneDepthCount", 5);
+
 	c.getW().addComment("Global.Optimizations.OverridePvp", "By setting this to true, regular pvp flag will be acting as overridepvp flag",
 	    "Overridepvp flag tries to ignore any pvp protection in that residence by any other plugin");
 	OverridePvp = c.get("Global.Optimizations.OverridePvp", false);
@@ -1445,6 +1450,10 @@ public class ConfigManager {
 
     public int getMaxSubzonesCount() {
 	return MaxSubzonesCount;
+    }
+
+    public int getMaxSubzoneDepthCount() {
+	return MaxSubzoneDepthCount;
     }
 
     public int getVoteRangeFrom() {

@@ -25,6 +25,8 @@ import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -606,7 +608,13 @@ public class ClaimedResidence {
 		    return false;
 		}
 	    }
-	    if (this.getZoneDepth() >= Residence.getPlayerManager().getResidencePlayer(owner).getMaxSubzones()) {
+
+	    if (this.getSubzoneList().length >= Residence.getPlayerManager().getResidencePlayer(owner).getMaxSubzones()) {
+		Residence.msg(player, lm.Subzone_MaxAmount);
+		return false;
+	    }
+
+	    if (this.getZoneDepth() >= Residence.getPlayerManager().getResidencePlayer(owner).getMaxSubzoneDepth()) {
 		Residence.msg(player, lm.Subzone_MaxDepth);
 		return false;
 	    }
@@ -1404,6 +1412,9 @@ public class ClaimedResidence {
 	    res.ignorelist = ResidenceItemList.load(res, (Map<String, Object>) root.get("IgnoreList"));
 
 	Map<String, Object> areamap = (Map<String, Object>) root.get("Areas");
+
+	if (res.resName.equalsIgnoreCase("test"))
+	    Debug.D("loading: " + res.resName);
 	res.perms = ResidencePermissions.load(worldName, res, (Map<String, Object>) root.get("Permissions"));
 
 	if (res.getPermissions().ownerLastKnownName == null)

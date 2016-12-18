@@ -95,7 +95,7 @@ public class ResidencePermissions extends FlagPermissions {
 
 	Residence.getServ().getPluginManager().callEvent(fc);
 	if (fc.isOverriden())
-	    return fc.getOverrideValue();	
+	    return fc.getOverrideValue();
 	return super.playerHas(player, world, flag, def);
     }
 
@@ -540,8 +540,8 @@ public class ResidencePermissions extends FlagPermissions {
 	    newperms.ownerLastKnownName = Residence.getServerLandname();
 	}
 	newperms.world = worldName;
-	FlagPermissions.load(root, newperms);	  
-	
+	FlagPermissions.load(root, newperms);
+
 	if (newperms.getOwner() == null || newperms.world == null || newperms.playerFlags == null || newperms.groupFlags == null || newperms.cuboidFlags == null)
 	    throw new Exception("Invalid Residence Permissions...");
 	return newperms;

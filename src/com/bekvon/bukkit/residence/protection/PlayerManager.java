@@ -164,7 +164,16 @@ public class PlayerManager implements ResidencePlayerInterface {
 	}
 	return -1;
     }
-
+    
+    @Override
+    public int getMaxSubzoneDepth(String player) {
+	ResidencePlayer resPlayer = getResidencePlayer(player);
+	if (resPlayer != null) {
+	    return resPlayer.getMaxSubzoneDepth();
+	}
+	return -1;
+    }
+    
     @Override
     public int getMaxRents(String player) {
 	ResidencePlayer resPlayer = getResidencePlayer(player);
