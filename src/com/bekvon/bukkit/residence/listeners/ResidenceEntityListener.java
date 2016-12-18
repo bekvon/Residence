@@ -41,6 +41,7 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.Witch;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Ghast;
@@ -56,6 +57,7 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -770,7 +772,7 @@ public class ResidenceEntityListener implements Listener {
 		case WITHER:
 		case WITHER_SKULL:
 		    if (blockperms.has(Flags.witherdestruction, FlagCombo.OnlyFalse))
-			preserve.add(block);		    
+			preserve.add(block);
 		    break;
 		default:
 		    if (blockperms.has(Flags.destroy, FlagCombo.OnlyFalse))
@@ -814,6 +816,11 @@ public class ResidenceEntityListener implements Listener {
 	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
 	if (event.isCancelled())
+	    return;
+
+	ProjectileSource shooter = event.getPotion().getShooter();
+
+	if (shooter instanceof Witch)
 	    return;
 
 	boolean harmfull = false;
