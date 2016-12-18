@@ -55,6 +55,8 @@ public class RentManager implements MarketRentInterface {
 
     public List<String> getRentedLands(String playername, boolean onlyHidden) {
 	List<String> rentedLands = new ArrayList<String>();
+	if (playername == null)
+	    return rentedLands;
 	for (ClaimedResidence res : rentedLand) {
 	    if (res == null)
 		continue;

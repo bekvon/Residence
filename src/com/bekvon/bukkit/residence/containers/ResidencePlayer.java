@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -20,6 +22,7 @@ public class ResidencePlayer {
     private String userName = null;
     private Player player = null;
     private OfflinePlayer ofPlayer = null;
+    private UUID uuid = null;
 
     private Map<String, ClaimedResidence> ResidenceList = new HashMap<String, ClaimedResidence>();
     private ClaimedResidence mainResidence = null;
@@ -33,17 +36,14 @@ public class ResidencePlayer {
 
     public ResidencePlayer(Player player) {
 	this.player = player;
+	this.uuid = player.getUniqueId();
 	updateName();
 	RecalculatePermissions();
     }
 
     public ResidencePlayer(String userName) {
 	this.userName = userName;
-	player = Bukkit.getPlayer(userName);
-	if (player == null)
-	    ofPlayer = Residence.getOfflinePlayer(userName);
-	if (ofPlayer != null)
-	    this.userName = ofPlayer.getName();
+	updateName();
 	RecalculatePermissions();
     }
 
@@ -63,7 +63,7 @@ public class ResidencePlayer {
 		    return mainResidence;
 		}
 	    }
-	    for (String one : Residence.getRentManager().getRentedLands(this.player.getName())) {
+	    for (String one : Residence.getRentManager().getRentedLands(this.userName)) {
 		ClaimedResidence res = Residence.getResidenceManager().getByName(one);
 		if (res != null) {
 		    mainResidence = res;
@@ -82,8 +82,8 @@ public class ResidencePlayer {
 
     public void RecalculatePermissions() {
 
-	if (this.player == null)
-	    this.player = Bukkit.getPlayerExact(userName);
+	if (uuid != null && Bukkit.getPlayer(uuid) != null)
+	    this.player = Bukkit.getPlayer(uuid);
 
 	if (this.player == null && ofPlayer == null)
 	    ofPlayer = Residence.getOfflinePlayer(userName);
@@ -144,7 +144,7 @@ public class ResidencePlayer {
 			this.maxSubzones = i;
 	    }
 	}
-	
+
 	int m = this.getGroup().getMaxSubzones();
 	if (this.maxSubzones < m)
 	    this.maxSubzones = m;
@@ -154,7 +154,7 @@ public class ResidencePlayer {
 	recountMaxSubzones();
 	return this.maxSubzones;
     }
-    
+
     public void recountMaxSubzoneDepth() {
 	updateName();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxSubzoneDepthCount(); i++) {
@@ -167,7 +167,7 @@ public class ResidencePlayer {
 			this.maxSubzoneDepth = i;
 	    }
 	}
-	
+
 	int m = this.getGroup().getMaxSubzoneDepth();
 	if (this.maxSubzoneDepth < m)
 	    this.maxSubzoneDepth = m;
@@ -213,14 +213,23 @@ public class ResidencePlayer {
     }
 
     private void updateName() {
-	if (this.userName != null)
+	if (this.uuid != null && Bukkit.getPlayer(this.uuid) != null) {
+	    player = Bukkit.getPlayer(this.uuid);
+	    this.userName = player.getName();
 	    return;
+	}
+	if (this.userName != null) {
+	    player = Bukkit.getPlayer(this.userName);
+	    return;
+	}
 	if (player != null) {
 	    this.userName = player.getName();
+	    this.uuid = player.getUniqueId();
 	    return;
 	}
 	if (ofPlayer != null) {
 	    this.userName = ofPlayer.getName();
+	    this.uuid = ofPlayer.getUniqueId();
 	    return;
 	}
     }
