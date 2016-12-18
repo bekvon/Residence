@@ -88,8 +88,8 @@ public class contract implements cmd {
 	    return true;
 
 	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (Residence.getWEplugin() != null) {
-		if (Residence.wepid == Residence.getConfigManager().getSelectionTooldID()) {
+	    if (Residence.getWorldEdit() != null) {
+		if (Residence.getWepid() == Residence.getConfigManager().getSelectionTooldID()) {
 		    Residence.getSelectionManager().worldEdit(player);
 		}
 	    }

@@ -89,8 +89,8 @@ public class expand implements cmd {
 	Residence.getSelectionManager().modify(player, false, amount);
 
 	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (Residence.wep != null) {
-		if (Residence.wepid == Residence.getConfigManager().getSelectionTooldID()) {
+	    if (Residence.getWorldEdit() != null) {
+		if (Residence.getWepid() == Residence.getConfigManager().getSelectionTooldID()) {
 		    Residence.getSelectionManager().worldEdit(player);
 		}
 	    }

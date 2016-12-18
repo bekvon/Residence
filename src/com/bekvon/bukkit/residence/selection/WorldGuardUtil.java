@@ -5,19 +5,18 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class WorldGuardUtil {
-    public static ProtectedRegion isSelectionInRegion(Player player) {
+    public ProtectedRegion isSelectionInRegion(Player player) {
 
-	if (Residence.wg == null)
+	if (Residence.getWorldGuard() == null)
 	    return null;
 
-	if (Residence.wep == null)
+	if (Residence.getWorldEdit() == null)
 	    return null;
 
 	if (!Residence.getSelectionManager().hasPlacedBoth(player.getName()))
@@ -30,8 +29,9 @@ public class WorldGuardUtil {
 	    BlockVector min = new BlockVector(loc1.getX(), loc1.getY(), loc1.getZ());
 	    BlockVector max = new BlockVector(loc2.getX(), loc2.getY(), loc2.getZ());
 	    ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
-	    RegionContainer cn = Residence.wg.getRegionContainer();
-	    RegionManager mgr = cn.get(loc1.getWorld());
+
+	    RegionManager mgr = Residence.getWorldGuard().getRegionManager(loc1.getWorld());
+
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 
 	    for (ProtectedRegion one : regions) {

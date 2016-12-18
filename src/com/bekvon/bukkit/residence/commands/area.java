@@ -40,8 +40,8 @@ public class area implements cmd {
 		}
 		return true;
 	    } else if (args[1].equals("add")) {
-		if (Residence.getWEplugin() != null) {
-		    if (Residence.getWEplugin().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
+		if (Residence.getWorldEdit() != null) {
+		    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
 			Residence.getSelectionManager().worldEdit(player);
 		    }
 		}
@@ -58,8 +58,8 @@ public class area implements cmd {
 		}
 		return true;
 	    } else if (args[1].equals("replace")) {
-		if (Residence.getWEplugin() != null) {
-		    if (Residence.getWEplugin().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
+		if (Residence.getWorldEdit() != null) {
+		    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
 			Residence.getSelectionManager().worldEdit(player);
 		    }
 		}

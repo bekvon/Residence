@@ -35,8 +35,8 @@ public class subzone implements cmd {
 	    zname = args[2];
 	}
 
-	if (Residence.getWEplugin() != null) {
-	    if (Residence.getWEplugin().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
+	if (Residence.getWorldEdit() != null) {
+	    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
 		Residence.getSelectionManager().worldEdit(player);
 	    }
 	}

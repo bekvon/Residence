@@ -914,7 +914,7 @@ public class ResidencePlayerListener implements Listener {
 	if (heldItemId != Residence.getConfigManager().getSelectionTooldID())
 	    return;
 
-	if (Residence.wepid == Residence.getConfigManager().getSelectionTooldID())
+	if (Residence.getWepid() == Residence.getConfigManager().getSelectionTooldID())
 	    return;
 
 	if (player.getGameMode() == GameMode.CREATIVE)

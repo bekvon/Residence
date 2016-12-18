@@ -19,7 +19,7 @@ import com.sk89q.worldedit.schematic.SchematicFormat;
 @SuppressWarnings("deprecation")
 public class SchematicsManager {
     public boolean save(ClaimedResidence res) {
-	if (Residence.getWEplugin() == null)
+	if (Residence.getWorldEdit() == null)
 	    return false;
 	if (res == null)
 	    return false;
@@ -66,7 +66,7 @@ public class SchematicsManager {
 
     public boolean load(ClaimedResidence res) {
 
-	if (Residence.getWEplugin() == null)
+	if (Residence.getWorldEdit() == null)
 	    return false;
 
 	if (res == null)
@@ -117,7 +117,7 @@ public class SchematicsManager {
     }
 
     public boolean delete(ClaimedResidence res) {
-	if (Residence.getWEplugin() == null)
+	if (Residence.getWorldEdit() == null)
 	    return false;
 	if (res == null)
 	    return false;
@@ -130,7 +130,7 @@ public class SchematicsManager {
     }
 
     public boolean rename(ClaimedResidence res, String newName) {
-	if (Residence.getWEplugin() == null)
+	if (Residence.getWorldEdit() == null)
 	    return false;
 	if (res == null)
 	    return false;

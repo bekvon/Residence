@@ -14,7 +14,6 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class create implements cmd {
@@ -30,19 +29,19 @@ public class create implements cmd {
 	    return false;
 	}
 
-	if (Residence.getWEplugin() != null) {
-	    if (Residence.getWEplugin().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
+	if (Residence.getWorldEdit() != null) {
+	    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
 		Residence.getSelectionManager().worldEdit(player);
 	    }
 	}
 	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (Residence.wg != null) {
-		if (WorldGuardUtil.isSelectionInRegion(player) == null) {
+	    if (Residence.getWorldGuard() != null) {
+		if (Residence.getWorldGuardUtil().isSelectionInRegion(player) == null) {
 		    Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
 			.getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
 		    return true;
 		}
-		ProtectedRegion Region = WorldGuardUtil.isSelectionInRegion(player);
+		ProtectedRegion Region = Residence.getWorldGuardUtil().isSelectionInRegion(player);
 		Residence.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
 
 		Location lowLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),

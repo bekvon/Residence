@@ -84,6 +84,7 @@ import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.SchematicsManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
+import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
@@ -167,6 +168,7 @@ public class Residence extends JavaPlugin {
     protected static AutoSelection AutoSelectionManager;
     protected static SchematicsManager SchematicManager;
     private static InformationPager InformationPagerManager;
+    private static WorldGuardUtil worldGuardUtil;
 
     protected static CommandFiller cmdFiller;
 
@@ -192,9 +194,9 @@ public class Residence extends JavaPlugin {
     private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
     public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private static Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
-    public static WorldEditPlugin wep = null;
-    public static WorldGuardPlugin wg = null;
-    public static int wepid;
+    private static WorldEditPlugin wep = null;
+    private static WorldGuardPlugin wg = null;
+    private static int wepid;
 
     private static String ServerLandname = "Server_Land";
     private static String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
@@ -835,8 +837,8 @@ public class Residence extends JavaPlugin {
 	Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
 	if (plugin != null) {
 	    smanager = new WorldEditSelectionManager(server, this);
-	    wep = (WorldEditPlugin) plugin;
-	    wepid = Residence.wep.getConfig().getInt("wand-item");
+	    this.wep = (WorldEditPlugin) plugin;
+	    wepid = this.getWorldEdit().getConfig().getInt("wand-item");
 	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found WorldEdit");
 	} else {
 	    smanager = new SelectionManager(server, this);
@@ -844,12 +846,11 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private static void setWorldGuard() {
+    private void setWorldGuard() {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
 	    try {
 		Class.forName("com.sk89q.worldedit.BlockVector");
-		Class.forName("com.sk89q.worldguard.bukkit.RegionContainer");
 		Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet");
 		Class.forName("com.sk89q.worldguard.protection.managers.RegionManager");
 		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion");
@@ -1006,10 +1007,6 @@ public class Residence extends JavaPlugin {
 
     public static ChatManager getChatManager() {
 	return chatmanager;
-    }
-
-    public static WorldEditPlugin getWEplugin() {
-	return wep;
     }
 
     public static String getResidenceVersion() {
@@ -1705,4 +1702,23 @@ public class Residence extends JavaPlugin {
     public static void addCachedPlayerNameUUIDs(Map<UUID, String> cachedPlayerNameUUIDs2) {
 	cachedPlayerNameUUIDs.putAll(cachedPlayerNameUUIDs2);
     }
+
+    public static WorldEditPlugin getWorldEdit() {
+	return wep;
+    }
+
+    public static WorldGuardPlugin getWorldGuard() {
+	return wg;
+    }
+
+    public static int getWepid() {
+	return wepid;
+    }
+
+    public static WorldGuardUtil getWorldGuardUtil() {
+	if (worldGuardUtil == null)
+	    worldGuardUtil = new WorldGuardUtil();
+	return worldGuardUtil;
+    }
+
 }
