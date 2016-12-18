@@ -41,6 +41,7 @@ public enum Flags {
     feed(364, 0, FlagMode.Residence, "Setting to true makes the residence feed its occupants", true),
     fireball(385, 0, FlagMode.Residence, "Allows or denys fire balls in residences", true),
     firespread(377, 0, FlagMode.Residence, "Allows or denys fire spread", true),
+    flowinprotection(333, 0, FlagMode.Residence, "Allows or denys liquid flow into residence", true),
     flow(111, 0, FlagMode.Residence, "Allows or denys liquid flow", true),
     flowerpot(390, 0, FlagMode.Both, "Allows or denys interaction with flower pot", true),
     grow(295, 0, FlagMode.Residence, "Allows or denys plant growing", true),
