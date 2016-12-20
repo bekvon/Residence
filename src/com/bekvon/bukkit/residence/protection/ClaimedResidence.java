@@ -1412,9 +1412,7 @@ public class ClaimedResidence {
 	    res.ignorelist = ResidenceItemList.load(res, (Map<String, Object>) root.get("IgnoreList"));
 
 	Map<String, Object> areamap = (Map<String, Object>) root.get("Areas");
-
-	if (res.resName.equalsIgnoreCase("test"))
-	    Debug.D("loading: " + res.resName);
+	
 	res.perms = ResidencePermissions.load(worldName, res, (Map<String, Object>) root.get("Permissions"));
 
 	if (res.getPermissions().ownerLastKnownName == null)
