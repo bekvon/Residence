@@ -148,6 +148,25 @@ public class v1_11 implements NMS {
 	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door.getName());
 
 	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, Flags.diode.getName());
+	
+
+	/* 1.11 Shulker Box */
+	matUseFlagList.put(Material.BLACK_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.BLUE_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.BROWN_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.CYAN_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.GRAY_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.GREEN_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.LIGHT_BLUE_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.LIME_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.MAGENTA_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.ORANGE_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.PINK_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.PURPLE_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.RED_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.SILVER_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.WHITE_SHULKER_BOX, Flags.container.getName());
+	matUseFlagList.put(Material.YELLOW_SHULKER_BOX, Flags.container.getName());
     }
 
     @Override
