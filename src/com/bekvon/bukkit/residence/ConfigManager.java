@@ -391,7 +391,7 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.SelectionToolId", "Wooden Hoe is the default selection tool for Residence.",
 	    "You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values");
-	selectionToolId = c.get("Global.SelectionToolId", Material.WOOD_AXE.getId());
+	selectionToolId = c.get("Global.SelectionToolId", Material.WOOD_HOE.getId());
 
 	c.getW().addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
 	SelectionIgnoreY = c.get("Global.Selection.IgnoreY", false);
