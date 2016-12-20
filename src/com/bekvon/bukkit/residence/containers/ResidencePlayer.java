@@ -35,15 +35,17 @@ public class ResidencePlayer {
     private int maxSubzoneDepth = -1;
 
     public ResidencePlayer(Player player) {
-	this.player = player;
-	this.uuid = player.getUniqueId();
-	updateName();
-	RecalculatePermissions();
+	if (player == null)
+	    return;
+	Residence.getOfflinePlayerMap().put(player.getName(), player);
+	Residence.addCachedPlayerNameUUIDs(player.getUniqueId(), player.getName());
+	this.updatePlayer(player);
+	this.RecalculatePermissions();
     }
 
     public ResidencePlayer(String userName) {
 	this.userName = userName;
-	updateName();
+	updatePlayer();
 	RecalculatePermissions();
     }
 
@@ -81,13 +83,6 @@ public class ResidencePlayer {
     }
 
     public void RecalculatePermissions() {
-
-	if (uuid != null && Bukkit.getPlayer(uuid) != null)
-	    this.player = Bukkit.getPlayer(uuid);
-
-	if (this.player == null && ofPlayer == null)
-	    ofPlayer = Residence.getOfflinePlayer(userName);
-
 	getGroup();
 	recountMaxRes();
 	recountMaxRents();
@@ -95,7 +90,6 @@ public class ResidencePlayer {
     }
 
     public void recountMaxRes() {
-	updateName();
 	if (this.group != null)
 	    this.maxRes = this.group.getMaxZones();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxResCount(); i++) {
@@ -110,7 +104,6 @@ public class ResidencePlayer {
     }
 
     public void recountMaxRents() {
-	updateName();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxRentCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.rents." + i))
@@ -133,7 +126,6 @@ public class ResidencePlayer {
     }
 
     public void recountMaxSubzones() {
-	updateName();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxSubzonesCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.subzones." + i))
@@ -156,7 +148,6 @@ public class ResidencePlayer {
     }
 
     public void recountMaxSubzoneDepth() {
-	updateName();
 	for (int i = 1; i <= Residence.getConfigManager().getMaxSubzoneDepthCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.subzonedepth." + i))
@@ -179,7 +170,6 @@ public class ResidencePlayer {
     }
 
     public int getMaxRes() {
-	updateName();
 	Residence.getPermissionManager().updateGroupNameForPlayer(this.userName, this.player != null && this.player.isOnline() ? this.player.getPlayer().getLocation()
 	    .getWorld().getName() : Residence.getConfigManager().getDefaultWorld(), true);
 	recountMaxRes();
@@ -195,38 +185,46 @@ public class ResidencePlayer {
     }
 
     public PermissionGroup getGroup(String world) {
-	String name = userName;
-	if (this.player != null)
-	    name = player.getName();
-
-	String gp = Residence.getPermissionManager().getGroupNameByPlayer(name, world);
+	String gp = Residence.getPermissionManager().getGroupNameByPlayer(this.userName, world);
 	this.group = Residence.getPermissionManager().getGroupByName(gp);
 	return this.group;
     }
 
     public void recountRes() {
-	updateName();
 	if (this.userName != null) {
 	    ResidenceManager m = Residence.getResidenceManager();
 	    this.ResidenceList = m.getResidenceMapList(this.userName, true);
 	}
     }
 
-    private void updateName() {
+    public ResidencePlayer updatePlayer(Player player) {
+	this.player = player;
+	this.uuid = player.getUniqueId();
+	this.userName = player.getName();
+	this.ofPlayer = player;
+	return this;
+    }
+
+    private void updatePlayer() {
+	if (player != null && player.isOnline())
+	    return;
 	if (this.uuid != null && Bukkit.getPlayer(this.uuid) != null) {
 	    player = Bukkit.getPlayer(this.uuid);
 	    this.userName = player.getName();
 	    return;
 	}
+
 	if (this.userName != null) {
 	    player = Bukkit.getPlayer(this.userName);
-	    return;
 	}
 	if (player != null) {
 	    this.userName = player.getName();
 	    this.uuid = player.getUniqueId();
+	    this.ofPlayer = player;
 	    return;
 	}
+	if (this.player == null && ofPlayer == null)
+	    ofPlayer = Residence.getOfflinePlayer(userName);
 	if (ofPlayer != null) {
 	    this.userName = ofPlayer.getName();
 	    this.uuid = ofPlayer.getUniqueId();

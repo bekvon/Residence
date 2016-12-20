@@ -192,7 +192,7 @@ public class Residence extends JavaPlugin {
     public static Map<String, String> UnrentConfirm = new HashMap<String, String>();
     public static List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
-    public static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
+    private static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private static Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
     private static WorldEditPlugin wep = null;
     private static WorldGuardPlugin wg = null;

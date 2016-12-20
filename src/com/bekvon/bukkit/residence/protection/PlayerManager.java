@@ -30,8 +30,10 @@ public class PlayerManager implements ResidencePlayerInterface {
 	    resPlayer = new ResidencePlayer(player);
 	    resPlayer.recountRes();
 	    players.put(player.getName().toLowerCase(), resPlayer);
-	} else
+	} else {
+	    resPlayer.updatePlayer(player);
 	    resPlayer.RecalculatePermissions();
+	}
 	return;
     }
 
@@ -118,7 +120,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	}
 	return temp;
     }
-    
+
     public TreeMap<String, ClaimedResidence> getResidencesMap(String player, boolean showhidden, boolean onlyHidden, World world) {
 	TreeMap<String, ClaimedResidence> temp = new TreeMap<String, ClaimedResidence>();
 	playerJoin(player);
@@ -164,7 +166,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	}
 	return -1;
     }
-    
+
     @Override
     public int getMaxSubzoneDepth(String player) {
 	ResidencePlayer resPlayer = getResidencePlayer(player);
@@ -173,7 +175,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	}
 	return -1;
     }
-    
+
     @Override
     public int getMaxRents(String player) {
 	ResidencePlayer resPlayer = getResidencePlayer(player);
