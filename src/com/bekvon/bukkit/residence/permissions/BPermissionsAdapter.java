@@ -20,7 +20,7 @@ public class BPermissionsAdapter implements PermissionsInterface {
     @Override
     public String getPlayerGroup(String player, String world) {
 	String[] groups = ApiLayer.getGroups(world, CalculableType.USER, player);
-	PermissionManager pmanager = Residence.getPermissionManager();
+	PermissionManager pmanager = Residence.getInstance().getPermissionManager();
 	for (String group : groups) {
 	    if (pmanager.hasGroup(group)) {
 		return group.toLowerCase();

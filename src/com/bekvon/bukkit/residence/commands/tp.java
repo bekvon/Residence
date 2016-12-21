@@ -40,6 +40,6 @@ public class tp implements cmd {
 	c.get(path + "Description", "Teleport to a residence");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res tp [residence]", "Teleports you to a residence, you must have +tp flag access or be the owner.",
 	    "Your permission group must also be allowed to teleport by the server admin."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

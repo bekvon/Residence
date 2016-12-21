@@ -103,7 +103,7 @@ public class expand implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Expands residence in direction you looking");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res expand (residence) [amount]", "Expands residence in direction you looking.", "Residence name is optional"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%1", "1"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%1", "1"));
     }
 
 }

@@ -22,7 +22,7 @@ public class AutoSelection {
 
     public void switchAutoSelection(Player player) {
 	if (!list.containsKey(player.getName().toLowerCase())) {
-	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup(player.getWorld().getName());
 	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
 	    plugin.msg(player, lm.Select_AutoEnabled);

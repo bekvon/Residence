@@ -33,6 +33,6 @@ public class removeworld implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Removes all residences from particular world");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res removeworld [worldName]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]"));
     }
 }

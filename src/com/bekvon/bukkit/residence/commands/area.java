@@ -103,24 +103,24 @@ public class area implements cmd {
 	path += "SubCommands.";
 	c.get(path + "list.Description", "List physical areas in a residence");
 	c.get(path + "list.Info", Arrays.asList("&eUsage: &6/res area list [residence] <page>"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "list"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "list"), Arrays.asList("[residence]"));
 
 	c.get(path + "listall.Description", "List coordinates and other Info for areas");
 	c.get(path + "listall.Info", Arrays.asList("&eUsage: &6/res area listall [residence] <page>"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "listall"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "listall"), Arrays.asList("[residence]"));
 
 	c.get(path + "add.Description", "Add physical areas to a residence");
 	c.get(path + "add.Info", Arrays.asList("&eUsage: &6/res area add [residence] [areaID]", "You must first select two points first."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "add"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "add"), Arrays.asList("[residence]"));
 
 	c.get(path + "remove.Description", "Remove physical areas from a residence");
 	c.get(path + "remove.Info", Arrays.asList("&eUsage: &6/res area remove [residence] [areaID]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "remove"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "remove"), Arrays.asList("[residence]"));
 
 	c.get(path + "replace.Description", "Replace physical areas in a residence");
 	c.get(path + "replace.Info", Arrays.asList("&eUsage: &6/res area replace [residence] [areaID]",
 	    "You must first select two points first.", "Replacing a area will charge the difference in size if the new area is bigger."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "replace"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "replace"), Arrays.asList("[residence]"));
 
     }
 }

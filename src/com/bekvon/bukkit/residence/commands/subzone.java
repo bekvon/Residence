@@ -64,7 +64,7 @@ public class subzone implements cmd {
 	c.get(path + "Description", "Create subzones in residences.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res subzone <residence> [subzone name]",
 	    "If residence name is left off, will attempt to use residence your standing in."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 
 }

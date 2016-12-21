@@ -111,6 +111,6 @@ public class rt implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Teleports to random location in world");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rt (worldname) (playerName)", "Teleports you to random location in defined world."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]", "[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]", "[playername]"));
     }
 }

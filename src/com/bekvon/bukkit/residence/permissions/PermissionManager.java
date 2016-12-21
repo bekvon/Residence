@@ -148,48 +148,48 @@ public class PermissionManager {
     }
 
     private void checkPermissions() {
-	Server server = Residence.getServ();
+	Server server = plugin.getServ();
 	Plugin p = server.getPluginManager().getPlugin("Vault");
 	if (p != null) {
 	    ResidenceVaultAdapter vault = new ResidenceVaultAdapter(server);
 	    if (vault.permissionsOK()) {
 		perms = vault;
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault using permissions plugin:" + vault.getPermissionsName());
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found Vault using permissions plugin:" + vault.getPermissionsName());
 		return;
 	    }
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault, but Vault reported no usable permissions system...");
+	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found Vault, but Vault reported no usable permissions system...");
 	}
 	p = server.getPluginManager().getPlugin("PermissionsBukkit");
 	if (p != null) {
 	    perms = new PermissionsBukkitAdapter((PermissionsPlugin) p);
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found PermissionsBukkit Plugin!");
+	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found PermissionsBukkit Plugin!");
 	    return;
 	}
 	p = server.getPluginManager().getPlugin("bPermissions");
 	if (p != null) {
 	    perms = new BPermissionsAdapter();
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found bPermissions Plugin!");
+	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found bPermissions Plugin!");
 	    return;
 	}
 	p = server.getPluginManager().getPlugin("Permissions");
 	if (p != null) {
 	    if (plugin.getConfigManager().useLegacyPermissions()) {
 		perms = new LegacyPermissions(((Permissions) p).getHandler());
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Permissions Plugin!");
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + "Permissions running in Legacy mode!");
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found Permissions Plugin!");
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + "Permissions running in Legacy mode!");
 	    } else {
 		perms = new OriginalPermissions(((Permissions) p).getHandler());
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Permissions Plugin!");
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found Permissions Plugin!");
 	    }
 	    return;
 	}
-	Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Permissions plugin NOT FOUND!");
+	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Permissions plugin NOT FOUND!");
     }
 
     private void readConfig() {
 
-	FileConfiguration groupsFile = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
-	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
+	FileConfiguration groupsFile = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "groups.yml"));
+	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
 
 	String defaultGroup = plugin.getConfigManager().getDefaultGroup().toLowerCase();
 	globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", flags.getConfigurationSection("Global"));
@@ -206,7 +206,7 @@ public class PermissionManager {
 			groups.put(group.toLowerCase(), new PermissionGroup(key.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms));
 		    }
 		} catch (Exception ex) {
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Error parsing group from config:" + key + " Exception:" + ex);
+		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Error parsing group from config:" + key + " Exception:" + ex);
 		}
 	    }
 	}

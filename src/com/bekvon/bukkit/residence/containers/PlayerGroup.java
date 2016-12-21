@@ -10,7 +10,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class PlayerGroup {
@@ -50,12 +49,12 @@ public class PlayerGroup {
 	this.lastCheck = System.currentTimeMillis();
 	List<PermissionGroup> posibleGroups = new ArrayList<PermissionGroup>();
 	String group;
-	if (Residence.getPermissionManager().getPlayersGroups().containsKey(playerName.toLowerCase())) {
-	    group = Residence.getPermissionManager().getPlayersGroups().get(playerName.toLowerCase());
+	if (Residence.getInstance().getPermissionManager().getPlayersGroups().containsKey(playerName.toLowerCase())) {
+	    group = Residence.getInstance().getPermissionManager().getPlayersGroups().get(playerName.toLowerCase());
 	    if (group != null) {
 		group = group.toLowerCase();
-		if (group != null && Residence.getPermissionManager().getGroups().containsKey(group)) {
-		    PermissionGroup g = Residence.getPermissionManager().getGroups().get(group);
+		if (group != null && Residence.getInstance().getPermissionManager().getGroups().containsKey(group)) {
+		    PermissionGroup g = Residence.getInstance().getPermissionManager().getGroups().get(group);
 		    posibleGroups.add(g);
 		    this.groups.put(world, group);
 		}
@@ -64,9 +63,9 @@ public class PlayerGroup {
 
 	posibleGroups.add(getPermissionGroup());
 
-	group = Residence.getPermissionManager().getPermissionsGroup(playerName, world);
+	group = Residence.getInstance().getPermissionManager().getPermissionsGroup(playerName, world);
 
-	PermissionGroup g = Residence.getPermissionManager().getGroupByName(group);
+	PermissionGroup g = Residence.getInstance().getPermissionManager().getGroupByName(group);
 
 	if (g != null)
 	    posibleGroups.add(g);
@@ -85,7 +84,7 @@ public class PlayerGroup {
 		finalGroup = posibleGroups.get(i);
 	}
 
-	if (finalGroup == null || !Residence.getPermissionManager().getGroups().containsValue(finalGroup)) {
+	if (finalGroup == null || !Residence.getInstance().getPermissionManager().getGroups().containsValue(finalGroup)) {
 	    this.groups.put(world, Residence.getInstance().getConfigManager().getDefaultGroup().toLowerCase());
 	} else {
 	    this.groups.put(world, finalGroup.getGroupName());
@@ -95,13 +94,13 @@ public class PlayerGroup {
     private PermissionGroup getPermissionGroup() {
 	if (this.player == null)
 	    this.player = Bukkit.getPlayer(playerName);
-	PermissionGroup group = Residence.getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup());
-	for (Entry<String, PermissionGroup> one : Residence.getPermissionManager().getGroups().entrySet()) {
+	PermissionGroup group = Residence.getInstance().getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup());
+	for (Entry<String, PermissionGroup> one : Residence.getInstance().getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
 		if (this.player.hasPermission("residence.group." + one.getKey()))
 		    group = one.getValue();
 	    } else {
-		OfflinePlayer offlineP = Residence.getOfflinePlayer(playerName);
+		OfflinePlayer offlineP = Residence.getInstance().getOfflinePlayer(playerName);
 		if (offlineP != null)
 		    if (ResidenceVaultAdapter.hasPermission(offlineP, "residence.group." + one.getKey(), Residence.getInstance().getConfigManager().getDefaultWorld()))
 			group = one.getValue();

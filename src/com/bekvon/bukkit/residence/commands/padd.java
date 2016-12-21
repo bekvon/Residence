@@ -44,6 +44,6 @@ public class padd implements cmd {
 	// Main command
 	c.get(path + "Description", "Add player to residence.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res padd <residence name> [player]", "Adds essential flags for player"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[playername]", "[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[playername]", "[playername]"));
     }
 }

@@ -194,7 +194,7 @@ public class select implements cmd {
 
 	c.get(path + "auto.Description", "Turns on auto selection tool");
 	c.get(path + "auto.Info", Arrays.asList("&eUsage: &6/res select auto [playername]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "auto"), Arrays.asList("[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "auto"), Arrays.asList("[playername]"));
 
 	c.get(path + "cost.Description", "Display selection cost");
 	c.get(path + "cost.Info", Arrays.asList("&eUsage: &6/res select cost"));
@@ -219,7 +219,7 @@ public class select implements cmd {
 
 	c.get(path + "residence.Description", "Select a existing area in a residence.");
 	c.get(path + "residence.Info", Arrays.asList("&eUsage: &6/res select residence <residence>", "Selects a existing area in a residence."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "residence"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "residence"), Arrays.asList("[residence]"));
 
 	c.get(path + "worldedit.Description", "Set selection using the current WorldEdit selection.");
 	c.get(path + "worldedit.Info", Arrays.asList("&eUsage: &6/res select worldedit", "Sets selection area using the current WorldEdit selection."));

@@ -124,9 +124,9 @@ public class SetFlag {
     }
 
     private void fillFlagDescriptions() {
-	Set<String> list = Residence.getLM().getKeyList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands");
+	Set<String> list = Residence.getInstance().getLM().getKeyList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands");
 	for (String onelist : list) {
-	    String onelisttemp = Residence.msg("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
+	    String onelisttemp = Residence.getInstance().msg("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
 	    List<String> lore = new ArrayList<String>();
 	    int i = 0;
 	    String sentence = "";
@@ -150,7 +150,7 @@ public class SetFlag {
 	List<String> flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
 	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
 	Map<String, Object> TempPermMap = new LinkedHashMap<String, Object>();
-	Map<String, Boolean> globalFlags = Residence.getPermissionManager().getAllFlags().getFlags();
+	Map<String, Boolean> globalFlags = Residence.getInstance().getPermissionManager().getAllFlags().getFlags();
 
 	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {
 	    if (flags.contains(one.getKey()))
@@ -183,9 +183,9 @@ public class SetFlag {
 	if (targetPlayer == null)
 	    TempPermMap.remove("admin");
 
-	TempPermMap = Residence.getSortingManager().sortByKeyASC(TempPermMap);
+	TempPermMap = Residence.getInstance().getSortingManager().sortByKeyASC(TempPermMap);
 
-	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
+	FlagData flagData = Residence.getInstance().getFlagUtilManager().getFlagData();
 
 	pageCount = (int) Math.ceil((double) TempPermMap.size() / (double) 45);
 
@@ -248,7 +248,7 @@ public class SetFlag {
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
 
-	    lore.addAll(Residence.msgL(lm.Gui_Actions));
+	    lore.addAll(Residence.getInstance().msgL(lm.Gui_Actions));
 
 	    MiscInfoMeta.setLore(lore);
 
@@ -332,9 +332,9 @@ public class SetFlag {
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
 
-	TempPermMap = (LinkedHashMap<String, Object>) Residence.getSortingManager().sortByKeyASC(TempPermMap);
+	TempPermMap = (LinkedHashMap<String, Object>) Residence.getInstance().getSortingManager().sortByKeyASC(TempPermMap);
 
-	FlagData flagData = Residence.getFlagUtilManager().getFlagData();
+	FlagData flagData = Residence.getInstance().getFlagUtilManager().getFlagData();
 
 	pageCount = (int) Math.ceil((double) TempPermMap.size() / (double) 45);
 
@@ -397,7 +397,7 @@ public class SetFlag {
 	    if (description.containsKey(one.getKey()))
 		lore.addAll(description.get(one.getKey()));
 
-	    lore.addAll(Residence.msgL(lm.Gui_Actions));
+	    lore.addAll(Residence.getInstance().msgL(lm.Gui_Actions));
 
 	    MiscInfoMeta.setLore(lore);
 

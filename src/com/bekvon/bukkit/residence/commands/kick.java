@@ -36,7 +36,7 @@ public class kick implements cmd {
 	    return true;
 	}
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	PermissionGroup group = rPlayer.getGroup();
 	if (!group.hasKickAccess() && !resadmin) {
@@ -68,6 +68,6 @@ public class kick implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Kicks player from residence.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res kick <player>", "You must be the owner or an admin to do this.", "Player should be online."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
     }
 }

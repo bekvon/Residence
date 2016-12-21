@@ -49,7 +49,7 @@ public class CrackShot implements Listener {
 	if (cause == null)
 	    return;
 
-	if (Residence.isResAdminOn(cause)) {
+	if (plugin.isResAdminOn(cause)) {
 	    return;
 	}
 
@@ -86,7 +86,7 @@ public class CrackShot implements Listener {
 		return;
 	}
 
-	if (Residence.isResAdminOn(player))
+	if (plugin.isResAdminOn(player))
 	    return;
 
 	// Note: Location of entity, not player; otherwise player could stand outside of res and still damage

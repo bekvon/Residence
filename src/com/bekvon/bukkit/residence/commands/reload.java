@@ -61,9 +61,9 @@ public class reload implements cmd {
 		}
 		plugin.helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 	    } else {
-		System.out.println(plugin.prefix + " Language file does not exist...");
+		System.out.println(plugin.getPrefix() + " Language file does not exist...");
 	    }
-	    sender.sendMessage(plugin.prefix + " Reloaded language file.");
+	    sender.sendMessage(plugin.getPrefix() + " Reloaded language file.");
 	    if (in != null)
 		try {
 		    in.close();
@@ -73,20 +73,20 @@ public class reload implements cmd {
 	    return true;
 	} else if (args[1].equalsIgnoreCase("config")) {
 	    plugin.getConfigManager().UpdateConfigFile();
-	    sender.sendMessage(plugin.prefix + " Reloaded config file.");
+	    sender.sendMessage(plugin.getPrefix() + " Reloaded config file.");
 	    return true;
 	} else if (args[1].equalsIgnoreCase("groups")) {
 	    plugin.getConfigManager().loadGroups();
 	    plugin.gmanager = new PermissionManager(plugin);
-	    plugin.wmanager = new WorldFlagManager();
-	    sender.sendMessage(plugin.prefix + " Reloaded groups file.");
+	    plugin.wmanager = new WorldFlagManager(plugin);
+	    sender.sendMessage(plugin.getPrefix() + " Reloaded groups file.");
 	    return true;
 	} else if (args[1].equalsIgnoreCase("flags")) {
 	    plugin.getConfigManager().loadFlags();
 	    plugin.gmanager = new PermissionManager(plugin);
-	    plugin.imanager = new WorldItemManager();
-	    plugin.wmanager = new WorldFlagManager();
-	    sender.sendMessage(plugin.prefix + " Reloaded flags file.");
+	    plugin.imanager = new WorldItemManager(plugin);
+	    plugin.wmanager = new WorldFlagManager(plugin);
+	    sender.sendMessage(plugin.getPrefix() + " Reloaded flags file.");
 	    return true;
 	}
 	return false;
@@ -96,6 +96,6 @@ public class reload implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "reload lanf or config files");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res reload [config/lang/groups/flags]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("config%%lang%%groups%%flags"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("config%%lang%%groups%%flags"));
     }
 }

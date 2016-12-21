@@ -37,6 +37,6 @@ public class resadmin implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Enabled or disable residence admin");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res resadmin [on/off]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("on%%off"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("on%%off"));
     }
 }

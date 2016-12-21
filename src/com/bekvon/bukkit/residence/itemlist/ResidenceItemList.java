@@ -25,7 +25,7 @@ public class ResidenceItemList extends ItemList {
 
     public void playerListChange(Player player, Material mat, boolean resadmin) {
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess())) {
 	    if (super.toggle(mat))

@@ -10,7 +10,7 @@ public class BOSEAdapter implements EconomyInterface {
 
     public BOSEAdapter(BOSEconomy p) {
 	plugin = p;
-	String serverland = Residence.getServerLandname();
+	String serverland = Residence.getInstance().getServerLandname();
 	if (!plugin.playerRegistered(serverland, false)) {
 	    plugin.registerPlayer(serverland);
 	}

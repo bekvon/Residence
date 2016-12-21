@@ -41,7 +41,7 @@ public class pdel implements cmd {
 	// Main command
 	c.get(path + "Description", "Remove player from residence.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res pdel <residence name> [player]", "Removes essential flags from player"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[playername]", "[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[playername]", "[playername]"));
     }
 
 }

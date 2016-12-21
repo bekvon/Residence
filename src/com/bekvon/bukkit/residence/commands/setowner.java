@@ -49,7 +49,7 @@ public class setowner implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Change owner of a residence.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/resadmin setowner [residence] [player]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]"));
     }
 
 }

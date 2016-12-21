@@ -46,6 +46,6 @@ public class gset implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Set flags on a specific group for a Residence.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res gset <residence> [group] [flag] [true/false/remove]", "To see a list of flags, use /res flags ?"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

@@ -66,7 +66,7 @@ public class LeaseManager {
 	    plugin.msg(player, lm.Economy_LeaseNotExpire);
 	    return;
 	}
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	int max = group.getMaxLeaseTime();
 	int add = group.getLeaseGiveTime();
@@ -162,7 +162,7 @@ public class LeaseManager {
 		    if (!renewed) {
 			if (!plugin.getConfigManager().enabledRentSystem() || !plugin.getRentManager().isRented(resname)) {
 			    ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, res, DeleteCause.LEASE_EXPIRE);
-			    Residence.getServ().getPluginManager().callEvent(resevent);
+			    plugin.getServ().getPluginManager().callEvent(resevent);
 			    if (!resevent.isCancelled()) {
 				manager.removeResidence(next.getKey());
 				it.remove();

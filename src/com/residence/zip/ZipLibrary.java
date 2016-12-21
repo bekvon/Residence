@@ -17,12 +17,11 @@ import org.bukkit.World;
 import com.bekvon.bukkit.residence.Residence;
 
 public class ZipLibrary {
-    private File BackupDir = new File(Residence.getDataLocation(), "Backup");
     private Residence plugin;
+    private File BackupDir = new File(Residence.getInstance().getDataLocation(), "Backup");
 
     public ZipLibrary(Residence residence) {
-	this.plugin = residence;
-	
+	this.plugin = residence;	
     }
 
     private  void cleanFiles() {
@@ -53,7 +52,7 @@ public class ZipLibrary {
 	// Create the Source List, and add directories/etc to the file.
 	List<File> sources = new ArrayList<File>();
 
-	File saveFolder = new File(Residence.getDataLocation(), "Save");
+	File saveFolder = new File(plugin.getDataLocation(), "Save");
 	File worldFolder = new File(saveFolder, "Worlds");
 
 	if (!saveFolder.isDirectory()) {
@@ -62,7 +61,7 @@ public class ZipLibrary {
 
 	File saveFile;
 	if (plugin.getConfigManager().BackupWorldFiles())
-	    for (World world : Residence.getServ().getWorlds()) {
+	    for (World world : plugin.getServ().getWorlds()) {
 		saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");
 		if (saveFile.isFile()) {
 		    sources.add(saveFile);
@@ -79,11 +78,11 @@ public class ZipLibrary {
 	    sources.add(new File(saveFolder, "rent.yml"));
 
 	if (plugin.getConfigManager().BackupflagsFile())
-	    sources.add(new File(Residence.getDataLocation(), "flags.yml"));
+	    sources.add(new File(plugin.getDataLocation(), "flags.yml"));
 	if (plugin.getConfigManager().BackupgroupsFile())
-	    sources.add(new File(Residence.getDataLocation(), "groups.yml"));
+	    sources.add(new File(plugin.getDataLocation(), "groups.yml"));
 	if (plugin.getConfigManager().BackupconfigFile())
-	    sources.add(new File(Residence.getDataLocation(), "config.yml"));
+	    sources.add(new File(plugin.getDataLocation(), "config.yml"));
 
 	if (plugin.getConfigManager().UseZipBackup())
 	    packZip(fileZip, sources);

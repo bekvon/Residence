@@ -22,14 +22,14 @@ public class v1_8Events implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractAtArmoStand(PlayerInteractAtEntityEvent event) {
 	Player player = event.getPlayer();
-	if (Residence.isResAdminOn(player))
+	if (Residence.getInstance().isResAdminOn(player))
 	    return;
 
 	Entity ent = event.getRightClicked();
 	if (!Residence.getInstance().getNms().isArmorStandEntity(ent.getType()))
 	    return;
 
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
+	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
 	String world = player.getWorld().getName();
 
 	if (!perms.playerHas(player.getName(), world, Flags.container, perms.playerHas(player.getName(), world, Flags.use, true))) {
@@ -50,7 +50,7 @@ public class v1_8Events implements Listener {
 	FlagPermissions world = Residence.getInstance().getWorldFlags().getPerms(loc.getWorld().getName());
 	List<Block> preserve = new ArrayList<Block>();
 	for (Block block : event.blockList()) {
-	    FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());
+	    FlagPermissions blockperms = Residence.getInstance().getPermsByLoc(block.getLocation());
 	    if (!blockperms.has(Flags.explode, world.has(Flags.explode, true))) {
 		preserve.add(block);
 	    }

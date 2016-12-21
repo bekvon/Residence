@@ -22,7 +22,7 @@ public class v1_10Events implements Listener {
 
 	Entity ent = event.getEntity();
 
-	if (!Residence.getPermsByLoc(ent.getLocation()).has(Flags.hotfloor, true)) {
+	if (!Residence.getInstance().getPermsByLoc(ent.getLocation()).has(Flags.hotfloor, true)) {
 	    event.setCancelled(true);
 	    return;
 	}

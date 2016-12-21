@@ -413,15 +413,15 @@ public class PermissionGroup {
 
     public void printLimits(CommandSender player, OfflinePlayer target, boolean resadmin) {
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(target.getName());
+	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(target.getName());
 	PermissionGroup group = rPlayer.getGroup();
 
 	Residence.getInstance().msg(player, lm.General_Separator);
-	Residence.getInstance().msg(player, lm.Limits_PGroup, Residence.getPermissionManager().getPermissionsGroup(target.getName(),
+	Residence.getInstance().msg(player, lm.Limits_PGroup, Residence.getInstance().getPermissionManager().getPermissionsGroup(target.getName(),
 	    target.isOnline() ? Bukkit.getPlayer(target.getName()).getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld()));
 	Residence.getInstance().msg(player, lm.Limits_RGroup, group.getGroupName());
 	if (target.isOnline() && resadmin)
-	    Residence.getInstance().msg(player, lm.Limits_Admin, Residence.getPermissionManager().isResidenceAdmin(player));
+	    Residence.getInstance().msg(player, lm.Limits_Admin, Residence.getInstance().getPermissionManager().isResidenceAdmin(player));
 	Residence.getInstance().msg(player, lm.Limits_CanCreate, group.canCreateResidences());
 	Residence.getInstance().msg(player, lm.Limits_MaxRes, rPlayer.getMaxRes());
 	Residence.getInstance().msg(player, lm.Limits_NumberOwn, rPlayer.getResAmount());

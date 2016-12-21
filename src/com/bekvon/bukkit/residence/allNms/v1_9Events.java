@@ -38,7 +38,7 @@ public class v1_9Events implements Listener {
 	    return;
 
 	Entity ent = event.getEntity();
-	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has(Flags.pvp, FlagCombo.TrueOrNone);
+	boolean srcpvp = Residence.getInstance().getPermsByLoc(ent.getLocation()).has(Flags.pvp, FlagCombo.TrueOrNone);
 	if (!srcpvp)
 	    event.setCancelled(true);
     }
@@ -68,13 +68,13 @@ public class v1_9Events implements Listener {
 	    return;
 
 	Entity ent = event.getEntity();
-	boolean srcpvp = Residence.getPermsByLoc(ent.getLocation()).has(Flags.pvp, true);
+	boolean srcpvp = Residence.getInstance().getPermsByLoc(ent.getLocation()).has(Flags.pvp, true);
 	Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
 	while (it.hasNext()) {
 	    LivingEntity target = it.next();
 	    if (!(target instanceof Player))
 		continue;
-	    Boolean tgtpvp = Residence.getPermsByLoc(target.getLocation()).has(Flags.pvp, true);
+	    Boolean tgtpvp = Residence.getInstance().getPermsByLoc(target.getLocation()).has(Flags.pvp, true);
 	    if (!srcpvp || !tgtpvp) {
 		event.getAffectedEntities().remove(target);
 		event.getEntity().remove();

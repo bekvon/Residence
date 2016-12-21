@@ -128,97 +128,97 @@ import org.bukkit.OfflinePlayer;
 public class Residence extends JavaPlugin {
 
     private static Residence instance;
-    protected static String ResidenceVersion;
-    protected static List<String> authlist;
-    protected static ResidenceManager rmanager;
-    protected static SelectionManager smanager;
-    public static PermissionManager gmanager;
-    protected static ConfigManager cmanager;
+    protected String ResidenceVersion;
+    protected List<String> authlist;
+    protected ResidenceManager rmanager;
+    protected SelectionManager smanager;
+    public PermissionManager gmanager;
+    protected ConfigManager cmanager;
 
-    protected static boolean spigotPlatform = false;
+    protected boolean spigotPlatform = false;
 
-    protected static SignUtil signmanager;
+    protected SignUtil signmanager;
 
-    protected static ResidenceBlockListener blistener;
-    protected static ResidencePlayerListener plistener;
-    protected static ResidenceEntityListener elistener;
-    protected static ResidenceSpoutListener slistener;
-    protected static ResidenceSpout spout;
+    protected ResidenceBlockListener blistener;
+    protected ResidencePlayerListener plistener;
+    protected ResidenceEntityListener elistener;
+    protected ResidenceSpoutListener slistener;
+    protected ResidenceSpout spout;
 
-    protected static ResidenceFixesListener flistener;
+    protected ResidenceFixesListener flistener;
 
-    protected static SpigotListener spigotlistener;
-    protected static ShopListener shlistener;
-    protected static TransactionManager tmanager;
-    protected static PermissionListManager pmanager;
-    protected static LeaseManager leasemanager;
-    public static WorldItemManager imanager;
-    public static WorldFlagManager wmanager;
-    protected static RentManager rentmanager;
-    protected static ChatManager chatmanager;
-    protected static Server server;
-    public static HelpEntry helppages;
-    protected static LocaleManager LocaleManager;
-    protected static Language NewLanguageManager;
-    protected static PlayerManager PlayerManager;
-    protected static FlagUtil FlagUtilManager;
-    protected static ShopSignUtil ShopSignUtilManager;
-    protected static RandomTp RandomTpManager;
-    protected static DynMapManager DynManager;
-    protected static Sorting SortingManager;
-    protected static ActionBar ABManager;
-    protected static AutoSelection AutoSelectionManager;
-    protected static SchematicsManager SchematicManager;
-    private static InformationPager InformationPagerManager;
-    private static WorldGuardUtil worldGuardUtil;
+    protected SpigotListener spigotlistener;
+    protected ShopListener shlistener;
+    protected TransactionManager tmanager;
+    protected PermissionListManager pmanager;
+    protected LeaseManager leasemanager;
+    public WorldItemManager imanager;
+    public WorldFlagManager wmanager;
+    protected RentManager rentmanager;
+    protected ChatManager chatmanager;
+    protected Server server;
+    public HelpEntry helppages;
+    protected LocaleManager LocaleManager;
+    protected Language NewLanguageManager;
+    protected PlayerManager PlayerManager;
+    protected FlagUtil FlagUtilManager;
+    protected ShopSignUtil ShopSignUtilManager;
+    protected RandomTp RandomTpManager;
+    protected DynMapManager DynManager;
+    protected Sorting SortingManager;
+    protected ActionBar ABManager;
+    protected AutoSelection AutoSelectionManager;
+    protected SchematicsManager SchematicManager;
+    private InformationPager InformationPagerManager;
+    private WorldGuardUtil worldGuardUtil;
 
-    protected static CommandFiller cmdFiller;
+    protected CommandFiller cmdFiller;
 
-    protected static ZipLibrary zip;
+    protected ZipLibrary zip;
 
     protected boolean firstenable = true;
-    protected static EconomyInterface economy;
-    private static int saveVersion = 1;
-    public static File dataFolder;
-    protected static int leaseBukkitId = -1;
-    protected static int rentBukkitId = -1;
-    protected static int healBukkitId = -1;
-    protected static int feedBukkitId = -1;
+    protected EconomyInterface economy;
+    private int saveVersion = 1;
+    public File dataFolder;
+    protected int leaseBukkitId = -1;
+    protected int rentBukkitId = -1;
+    protected int healBukkitId = -1;
+    protected int feedBukkitId = -1;
 
-    protected static int DespawnMobsBukkitId = -1;
+    protected int DespawnMobsBukkitId = -1;
 
-    protected static int autosaveBukkitId = -1;
-    protected static VersionChecker versionChecker;
-    protected static boolean initsuccess = false;
+    protected int autosaveBukkitId = -1;
+    protected VersionChecker versionChecker;
+    protected boolean initsuccess = false;
     public Map<String, String> deleteConfirm;
-    public static Map<String, String> UnrentConfirm = new HashMap<String, String>();
-    public static List<String> resadminToggle;
+    public Map<String, String> UnrentConfirm = new HashMap<String, String>();
+    public List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
-    private static ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
-    private static Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
-    private static WorldEditPlugin wep = null;
-    private static WorldGuardPlugin wg = null;
-    private static int wepid;
+    private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
+    private Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
+    private WorldEditPlugin wep = null;
+    private WorldGuardPlugin wg = null;
+    private int wepid;
 
-    private static String ServerLandname = "Server_Land";
-    private static String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
-    private static String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
+    private String ServerLandname = "Server_Land";
+    private String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
+    private String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
-    private static ABInterface ab;
-    private static NMS nms;
-    static LWC lwc;
+    private ABInterface ab;
+    private NMS nms;
+    private LWC lwc;
 
-    public static HashMap<String, Long> rtMap = new HashMap<String, Long>();
-    public static List<String> teleportDelayMap = new ArrayList<String>();
-    public static HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
+    public HashMap<String, Long> rtMap = new HashMap<String, Long>();
+    public List<String> teleportDelayMap = new ArrayList<String>();
+    public HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
 
-    public static String prefix = ChatColor.GREEN + "[" + ChatColor.GOLD + "Residence" + ChatColor.GREEN + "]" + ChatColor.GRAY;
+    private String prefix = ChatColor.GREEN + "[" + ChatColor.GOLD + "Residence" + ChatColor.GREEN + "]" + ChatColor.GRAY;
 
-    public static boolean isSpigot() {
+    public boolean isSpigot() {
 	return spigotPlatform;
     }
 
-    public static HashMap<String, ClaimedResidence> getTeleportMap() {
+    public HashMap<String, ClaimedResidence> getTeleportMap() {
 	return teleportMap;
     }
 
@@ -231,45 +231,45 @@ public class Residence extends JavaPlugin {
     }
 
     // API
-    private static ResidenceApi API = new ResidenceApi();
-    private static MarketBuyInterface MarketBuyAPI = null;
-    private static MarketRentInterface MarketRentAPI = null;
-    private static ResidencePlayerInterface PlayerAPI = null;
-    private static ResidenceInterface ResidenceAPI = null;
-    private static ChatInterface ChatAPI = null;
+    private ResidenceApi API = new ResidenceApi();
+    private MarketBuyInterface MarketBuyAPI = null;
+    private MarketRentInterface MarketRentAPI = null;
+    private ResidencePlayerInterface PlayerAPI = null;
+    private ResidenceInterface ResidenceAPI = null;
+    private ChatInterface ChatAPI = null;
 
-    public static ResidencePlayerInterface getPlayerManagerAPI() {
+    public ResidencePlayerInterface getPlayerManagerAPI() {
 	if (PlayerAPI == null)
 	    PlayerAPI = PlayerManager;
 	return PlayerAPI;
     }
 
-    public static ResidenceInterface getResidenceManagerAPI() {
+    public ResidenceInterface getResidenceManagerAPI() {
 	if (ResidenceAPI == null)
 	    ResidenceAPI = rmanager;
 	return ResidenceAPI;
     }
 
-    public static MarketRentInterface getMarketRentManagerAPI() {
+    public MarketRentInterface getMarketRentManagerAPI() {
 	if (MarketRentAPI == null)
 	    MarketRentAPI = rentmanager;
 	return MarketRentAPI;
     }
 
-    public static MarketBuyInterface getMarketBuyManagerAPI() {
+    public MarketBuyInterface getMarketBuyManagerAPI() {
 	if (MarketBuyAPI == null)
 	    MarketBuyAPI = tmanager;
 	return MarketBuyAPI;
 
     }
 
-    public static ChatInterface getResidenceChatAPI() {
+    public ChatInterface getResidenceChatAPI() {
 	if (ChatAPI == null)
 	    ChatAPI = chatmanager;
 	return ChatAPI;
     }
 
-    public static ResidenceApi getAPI() {
+    public ResidenceApi getAPI() {
 	return API;
     }
     // API end
@@ -278,7 +278,7 @@ public class Residence extends JavaPlugin {
 	return nms;
     }
 
-    public static ABInterface getAB() {
+    public ABInterface getAB() {
 	return ab;
     }
 
@@ -308,7 +308,7 @@ public class Residence extends JavaPlugin {
 	public void run() {
 	    rentmanager.checkCurrentRents();
 	    if (cmanager.showIntervalMessages()) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - Rent Expirations checked!");
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " - Rent Expirations checked!");
 	    }
 	}
     };
@@ -317,7 +317,7 @@ public class Residence extends JavaPlugin {
 	public void run() {
 	    leasemanager.doExpirations();
 	    if (cmanager.showIntervalMessages()) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - Lease Expirations checked!");
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " - Lease Expirations checked!");
 	    }
 	}
     };
@@ -339,7 +339,7 @@ public class Residence extends JavaPlugin {
 		    });
 		}
 	    } catch (Exception ex) {
-		Logger.getLogger("Minecraft").log(Level.SEVERE, Residence.prefix + " SEVERE SAVE ERROR", ex);
+		Logger.getLogger("Minecraft").log(Level.SEVERE, getPrefix() + " SEVERE SAVE ERROR", ex);
 	    }
 	}
     };
@@ -390,7 +390,7 @@ public class Residence extends JavaPlugin {
 //		e.printStackTrace();
 //	    }
 
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Disabled!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Disabled!");
 	}
     }
 
@@ -453,7 +453,7 @@ public class Residence extends JavaPlugin {
 		Plugin plugin = server.getPluginManager().getPlugin(multiworld);
 		if (plugin != null) {
 		    if (!plugin.isEnabled()) {
-			Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - Enabling multiworld plugin: " + multiworld);
+			Bukkit.getConsoleSender().sendMessage(getPrefix() + " - Enabling multiworld plugin: " + multiworld);
 			server.getPluginManager().enablePlugin(plugin);
 		    }
 		}
@@ -515,8 +515,8 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    gmanager = new PermissionManager(this);
-	    imanager = new WorldItemManager();
-	    wmanager = new WorldFlagManager();
+	    imanager = new WorldItemManager(this);
+	    wmanager = new WorldFlagManager(this);
 
 	    chatmanager = new ChatManager();
 	    rentmanager = new RentManager(this);
@@ -565,12 +565,12 @@ public class Residence extends JavaPlugin {
 		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		} else {
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
+		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Language file does not exist...");
 		}
 		if (in != null)
 		    in.close();
 	    } catch (Exception ex) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Failed to load language file: " + cmanager.getLanguage()
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Failed to load language file: " + cmanager.getLanguage()
 		    + ".yml setting to default - English");
 
 		File langFile = new File(new File(dataFolder, "Language"), "English.yml");
@@ -589,19 +589,19 @@ public class Residence extends JavaPlugin {
 		    langconfig.load(in);
 		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 		} else {
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Language file does not exist...");
+		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Language file does not exist...");
 		}
 		if (in != null)
 		    in.close();
 	    }
 	    economy = null;
 	    if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Scanning for economy systems...");
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Scanning for economy systems...");
 		if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
 		    ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
 		    if (vault.economyOK()) {
 			economy = vault;
-			Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault using economy system: " + vault.getEconomyName());
+			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found Vault using economy system: " + vault.getEconomyName());
 		    }
 		}
 		if (economy == null) {
@@ -620,13 +620,13 @@ public class Residence extends JavaPlugin {
 		    this.loadIConomy();
 		}
 		if (economy == null) {
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Unable to find an economy system...");
+		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Unable to find an economy system...");
 		}
 	    }
 
 	    // Only fill if we need to convert player data
 	    if (getConfigManager().isUUIDConvertion()) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loading (" + Bukkit.getOfflinePlayers().length + ") player data");
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading (" + Bukkit.getOfflinePlayers().length + ") player data");
 		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
 		    if (player == null)
 			continue;
@@ -636,7 +636,7 @@ public class Residence extends JavaPlugin {
 		    getOfflinePlayerMap().put(name.toLowerCase(), player);
 		    getCachedPlayerNameUUIDs().put(player.getUniqueId(), player.getName());
 		}
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Player data loaded: " + getOfflinePlayerMap().size());
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Player data loaded: " + getOfflinePlayerMap().size());
 	    } else {
 		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
 		    @Override
@@ -679,7 +679,7 @@ public class Residence extends JavaPlugin {
 	    getSignUtil().LoadSigns();
 
 	    if (getConfigManager().isUseResidenceFileClean())
-		FileCleanUp.cleanFiles();
+		(new FileCleanUp(this)).cleanFiles();
 
 	    if (firstenable) {
 		if (!this.isEnabled()) {
@@ -750,7 +750,7 @@ public class Residence extends JavaPlugin {
 	    Plugin dynmap = Bukkit.getPluginManager().getPlugin("dynmap");
 	    if (dynmap != null && getConfigManager().DynMapUse) {
 		DynManager = new DynMapManager(this);
-		getServer().getPluginManager().registerEvents(new DynMapListeners(), this);
+		getServer().getPluginManager().registerEvents(new DynMapListeners(this), this);
 		getDynManager().api = (DynmapAPI) dynmap;
 		getDynManager().activate();
 	    }
@@ -784,7 +784,7 @@ public class Residence extends JavaPlugin {
 		rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
 	    }
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-		if (Residence.getPermissionManager().isResidenceAdmin(player)) {
+		if (getPermissionManager().isResidenceAdmin(player)) {
 		    turnResAdminOn(player);
 		}
 	    }
@@ -794,7 +794,7 @@ public class Residence extends JavaPlugin {
 	    } catch (IOException e) {
 		// Failed to submit the stats :-(
 	    }
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Enabled! Version " + this.getDescription().getVersion() + " by Zrips");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Enabled! Version " + this.getDescription().getVersion() + " by Zrips");
 	    initsuccess = true;
 
 	    PlayerManager.fillList();
@@ -802,7 +802,7 @@ public class Residence extends JavaPlugin {
 	} catch (Exception ex) {
 	    initsuccess = false;
 	    getServer().getPluginManager().disablePlugin(this);
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " - FAILED INITIALIZATION! DISABLED! ERROR:");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " - FAILED INITIALIZATION! DISABLED! ERROR:");
 	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 	    Bukkit.getServer().shutdown();
 	}
@@ -814,15 +814,15 @@ public class Residence extends JavaPlugin {
 
     }
 
-    public static SignUtil getSignUtil() {
+    public SignUtil getSignUtil() {
 	return signmanager;
     }
 
     public void consoleMessage(String message) {
-	Bukkit.getConsoleSender().sendMessage(Residence.prefix + " " + message);
+	Bukkit.getConsoleSender().sendMessage(getPrefix() + " " + message);
     }
 
-    public static boolean validName(String name) {
+    public boolean validName(String name) {
 	if (name.contains(":") || name.contains(".") || name.contains("|")) {
 	    return false;
 	}
@@ -842,14 +842,14 @@ public class Residence extends JavaPlugin {
 	    smanager = new WorldEditSelectionManager(server, this);
 	    this.wep = (WorldEditPlugin) plugin;
 	    wepid = this.getWorldEdit().getConfig().getInt("wand-item");
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found WorldEdit");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit");
 	} else {
 	    smanager = new SelectionManager(server, this);
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " WorldEdit NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " WorldEdit NOT found!");
 	}
     }
 
-    private static void setWorldGuard() {
+    private void setWorldGuard() {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
 	    try {
@@ -859,12 +859,12 @@ public class Residence extends JavaPlugin {
 		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion");
 		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedRegion");
 	    } catch (Exception e) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + ChatColor.RED
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + ChatColor.RED
 		    + " Found WorldGuard, but its not supported by Residence plugin. Please update WorldGuard to latest version");
 		return;
 	    }
 	    wg = (WorldGuardPlugin) wgplugin;
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found WorldGuard");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard");
 	}
     }
 
@@ -872,15 +872,15 @@ public class Residence extends JavaPlugin {
 	return this;
     }
 
-    public static VersionChecker getVersionChecker() {
+    public VersionChecker getVersionChecker() {
 	return versionChecker;
     }
 
-    public static LWC getLwc() {
+    public LWC getLwc() {
 	return lwc;
     }
 
-    public static File getDataLocation() {
+    public File getDataLocation() {
 	return dataFolder;
     }
 
@@ -888,15 +888,15 @@ public class Residence extends JavaPlugin {
 	return ShopSignUtilManager;
     }
 
-    public static ResidenceSpout getSpout() {
+    public ResidenceSpout getSpout() {
 	return spout;
     }
 
-    public static ResidenceSpoutListener getSpoutListener() {
+    public ResidenceSpoutListener getSpoutListener() {
 	return slistener;
     }
 
-    public static CommandFiller getCommandFiller() {
+    public CommandFiller getCommandFiller() {
 	if (cmdFiller == null) {
 	    cmdFiller = new CommandFiller();
 	    cmdFiller.fillCommands();
@@ -912,19 +912,19 @@ public class Residence extends JavaPlugin {
 	return smanager;
     }
 
-    public static FlagUtil getFlagUtilManager() {
+    public FlagUtil getFlagUtilManager() {
 	return FlagUtilManager;
     }
 
-    public static PermissionManager getPermissionManager() {
+    public PermissionManager getPermissionManager() {
 	return gmanager;
     }
 
-    public static PermissionListManager getPermissionListManager() {
+    public PermissionListManager getPermissionListManager() {
 	return pmanager;
     }
 
-    public static DynMapManager getDynManager() {
+    public DynMapManager getDynManager() {
 	return DynManager;
     }
 
@@ -936,7 +936,7 @@ public class Residence extends JavaPlugin {
 	return AutoSelectionManager;
     }
 
-    public static Sorting getSortingManager() {
+    public Sorting getSortingManager() {
 	return SortingManager;
     }
 
@@ -948,23 +948,23 @@ public class Residence extends JavaPlugin {
 	return economy;
     }
 
-    public static Server getServ() {
+    public Server getServ() {
 	return server;
     }
 
-    public static LeaseManager getLeaseManager() {
+    public LeaseManager getLeaseManager() {
 	return leasemanager;
     }
 
-    public static PlayerManager getPlayerManager() {
+    public PlayerManager getPlayerManager() {
 	return PlayerManager;
     }
 
-    public static HelpEntry getHelpPages() {
+    public HelpEntry getHelpPages() {
 	return helppages;
     }
 
-    public static void setConfigManager(ConfigManager cm) {
+    public void setConfigManager(ConfigManager cm) {
 	cmanager = cm;
     }
 
@@ -972,11 +972,11 @@ public class Residence extends JavaPlugin {
 	return cmanager;
     }
 
-    public static TransactionManager getTransactionManager() {
+    public TransactionManager getTransactionManager() {
 	return tmanager;
     }
 
-    public static WorldItemManager getItemManager() {
+    public WorldItemManager getItemManager() {
 	return imanager;
     }
 
@@ -988,27 +988,27 @@ public class Residence extends JavaPlugin {
 	return rentmanager;
     }
 
-    public static LocaleManager getLocaleManager() {
+    public LocaleManager getLocaleManager() {
 	return LocaleManager;
     }
 
-    public static Language getLM() {
+    public Language getLM() {
 	return NewLanguageManager;
     }
 
-    public static ResidencePlayerListener getPlayerListener() {
+    public ResidencePlayerListener getPlayerListener() {
 	return plistener;
     }
 
-    public static ResidenceBlockListener getBlockListener() {
+    public ResidenceBlockListener getBlockListener() {
 	return blistener;
     }
 
-    public static ResidenceEntityListener getEntityListener() {
+    public ResidenceEntityListener getEntityListener() {
 	return elistener;
     }
 
-    public static ChatManager getChatManager() {
+    public ChatManager getChatManager() {
 	return chatmanager;
     }
 
@@ -1016,11 +1016,11 @@ public class Residence extends JavaPlugin {
 	return ResidenceVersion;
     }
 
-    public static List<String> getAuthors() {
+    public List<String> getAuthors() {
 	return authlist;
     }
 
-    public static FlagPermissions getPermsByLoc(Location loc) {
+    public FlagPermissions getPermsByLoc(Location loc) {
 	ClaimedResidence res = rmanager.getByLoc(loc);
 	if (res != null) {
 	    return res.getPermissions();
@@ -1029,7 +1029,7 @@ public class Residence extends JavaPlugin {
 
     }
 
-    public static FlagPermissions getPermsByLocForPlayer(Location loc, Player player) {
+    public FlagPermissions getPermsByLocForPlayer(Location loc, Player player) {
 	ClaimedResidence res = rmanager.getByLoc(loc);
 	if (res != null) {
 	    return res.getPermissions();
@@ -1048,12 +1048,12 @@ public class Residence extends JavaPlugin {
 	    } else if (p.getDescription().getVersion().startsWith("5")) {
 		economy = new IConomy5Adapter();
 	    } else {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " UNKNOWN iConomy version!");
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " UNKNOWN iConomy version!");
 		return;
 	    }
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with iConomy! Version: " + p.getDescription().getVersion());
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with iConomy! Version: " + p.getDescription().getVersion());
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " iConomy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " iConomy NOT found!");
 	}
     }
 
@@ -1061,9 +1061,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("BOSEconomy");
 	if (p != null) {
 	    economy = new BOSEAdapter((BOSEconomy) p);
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with BOSEconomy!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with BOSEconomy!");
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " BOSEconomy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " BOSEconomy NOT found!");
 	}
     }
 
@@ -1071,9 +1071,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("Essentials");
 	if (p != null) {
 	    economy = new EssentialsEcoAdapter((Essentials) p);
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with Essentials Economy!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with Essentials Economy!");
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Essentials Economy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Essentials Economy NOT found!");
 	}
     }
 
@@ -1081,9 +1081,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("RealPlugin");
 	if (p != null) {
 	    economy = new RealShopEconomy(new RealEconomy((RealPlugin) p));
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Successfully linked with RealShop Economy!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with RealShop Economy!");
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " RealShop Economy NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " RealShop Economy NOT found!");
 	}
     }
 
@@ -1092,40 +1092,40 @@ public class Residence extends JavaPlugin {
 	if (p != null) {
 	    ResidenceVaultAdapter vault = new ResidenceVaultAdapter(getServer());
 	    if (vault.economyOK()) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault using economy: " + vault.getEconomyName());
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found Vault using economy: " + vault.getEconomyName());
 		economy = vault;
 	    } else {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Vault, but Vault reported no usable economy system...");
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found Vault, but Vault reported no usable economy system...");
 	    }
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Vault NOT found!");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Vault NOT found!");
 	}
     }
 
-    public static boolean isResAdminOn(CommandSender sender) {
+    public boolean isResAdminOn(CommandSender sender) {
 	if (sender instanceof Player)
 	    return isResAdminOn((Player) sender);
 	return true;
     }
 
-    public static boolean isResAdminOn(Player player) {
+    public boolean isResAdminOn(Player player) {
 	if (resadminToggle.contains(player.getName())) {
 	    return true;
 	}
 	return false;
     }
 
-    public static void turnResAdminOn(Player player) {
+    public void turnResAdminOn(Player player) {
 	resadminToggle.add(player.getName());
     }
 
-    public static boolean isResAdminOn(String player) {
+    public boolean isResAdminOn(String player) {
 	if (resadminToggle.contains(player))
 	    return true;
 	return false;
     }
 
-    private static void saveYml() throws IOException {
+    private void saveYml() throws IOException {
 	File saveFolder = new File(dataFolder, "Save");
 	File worldFolder = new File(saveFolder, "Worlds");
 	worldFolder.mkdirs();
@@ -1249,7 +1249,7 @@ public class Residence extends JavaPlugin {
 		loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loading save data for world " + world.getName() + "...");
+		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + world.getName() + "...");
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
 
@@ -1258,7 +1258,7 @@ public class Residence extends JavaPlugin {
 		    int pass = (int) (System.currentTimeMillis() - time);
 		    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loaded " + world.getName() + " data. (" + PastTime + ")");
+		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + world.getName() + " data. (" + PastTime + ")");
 		}
 	    }
 
@@ -1302,7 +1302,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    for (Player one : Bukkit.getOnlinePlayers()) {
-		ResidencePlayer rplayer = Residence.getPlayerManager().getResidencePlayer(one);
+		ResidencePlayer rplayer = getPlayerManager().getResidencePlayer(one);
 		if (rplayer != null)
 		    rplayer.recountRes();
 	    }
@@ -1545,7 +1545,7 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isPlayerExist(CommandSender sender, String name, boolean inform) {
-	if (Residence.getPlayerUUID(name) != null)
+	if (getPlayerUUID(name) != null)
 	    return true;
 	if (inform)
 	    sender.sendMessage(msg(lm.Invalid_Player));
@@ -1559,10 +1559,10 @@ public class Residence extends JavaPlugin {
 
     }
 
-    public static UUID getPlayerUUID(String playername) {
+    public UUID getPlayerUUID(String playername) {
 //	if (Residence.getConfigManager().isOfflineMode())
 //	    return null;
-	Player p = Residence.getServ().getPlayer(playername);
+	Player p = getServ().getPlayer(playername);
 	if (p == null) {
 	    if (getOfflinePlayerMap().containsKey(playername.toLowerCase()))
 		return getOfflinePlayerMap().get(playername.toLowerCase()).getUniqueId();
@@ -1571,12 +1571,12 @@ public class Residence extends JavaPlugin {
 	return null;
     }
 
-    public static ConcurrentHashMap<String, OfflinePlayer> getOfflinePlayerMap() {
+    public ConcurrentHashMap<String, OfflinePlayer> getOfflinePlayerMap() {
 	return OfflinePlayerList;
     }
 
     @SuppressWarnings("deprecation")
-    public static OfflinePlayer getOfflinePlayer(String Name) {
+    public OfflinePlayer getOfflinePlayer(String Name) {
 	if (getOfflinePlayerMap().containsKey(Name.toLowerCase())) {
 	    return getOfflinePlayerMap().get(Name.toLowerCase());
 	}
@@ -1591,37 +1591,37 @@ public class Residence extends JavaPlugin {
 	return offPlayer;
     }
 
-    public static String getPlayerUUIDString(String playername) {
-	UUID playerUUID = Residence.getPlayerUUID(playername);
+    public String getPlayerUUIDString(String playername) {
+	UUID playerUUID = getPlayerUUID(playername);
 	if (playerUUID != null)
 	    return playerUUID.toString();
 	return null;
     }
 
-    public static String getPlayerName(String uuid) {
+    public String getPlayerName(String uuid) {
 	try {
-	    return Residence.getPlayerName(UUID.fromString(uuid));
+	    return getPlayerName(UUID.fromString(uuid));
 	} catch (IllegalArgumentException ex) {
 	}
 	return null;
     }
 
-    public static String getServerLandname() {
+    public String getServerLandname() {
 	return ServerLandname;
     }
 
-    public static String getServerLandUUID() {
+    public String getServerLandUUID() {
 	return ServerLandUUID;
     }
 
-    public static String getTempUserUUID() {
+    public String getTempUserUUID() {
 	return TempUserUUID;
     }
 
-    public static String getPlayerName(UUID uuid) {
-	OfflinePlayer p = Residence.getServ().getPlayer(uuid);
+    public String getPlayerName(UUID uuid) {
+	OfflinePlayer p = getServ().getPlayer(uuid);
 	if (p == null)
-	    p = Residence.getServ().getOfflinePlayer(uuid);
+	    p = getServ().getOfflinePlayer(uuid);
 	if (p != null)
 	    return p.getName();
 	return null;
@@ -1655,24 +1655,24 @@ public class Residence extends JavaPlugin {
 //		player.sendMessage(path);
 //    }
 
-    public static String msg(String path) {
-	return Residence.getLM().getMessage(path);
+    public String msg(String path) {
+	return getLM().getMessage(path);
     }
 
-    public static void msg(CommandSender sender, String text) {
+    public void msg(CommandSender sender, String text) {
 	if (sender != null && text.length() > 0)
 	    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 
-    public static void msg(Player player, String text) {
+    public void msg(Player player, String text) {
 	if (player != null && text.length() > 0)
 	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 
     public void msg(CommandSender sender, lm lm, Object... variables) {
 	if (sender != null)
-	    if (Residence.getLM().containsKey(lm.getPath())) {
-		String msg = Residence.getLM().getMessage(lm, variables);
+	    if (getLM().containsKey(lm.getPath())) {
+		String msg = getLM().getMessage(lm, variables);
 		if (msg.length() > 0)
 		    sender.sendMessage(msg);
 	    } else {
@@ -1682,27 +1682,27 @@ public class Residence extends JavaPlugin {
 	    }
     }
 
-    public static List<String> msgL(lm lm) {
-	return Residence.getLM().getMessageList(lm);
+    public List<String> msgL(lm lm) {
+	return getLM().getMessageList(lm);
     }
 
     public String msg(lm lm, Object... variables) {
-	return Residence.getLM().getMessage(lm, variables);
+	return getLM().getMessage(lm, variables);
     }
 
-    public static InformationPager getInfoPageManager() {
+    public InformationPager getInfoPageManager() {
 	return InformationPagerManager;
     }
 
-    public static Map<UUID, String> getCachedPlayerNameUUIDs() {
+    public Map<UUID, String> getCachedPlayerNameUUIDs() {
 	return cachedPlayerNameUUIDs;
     }
 
-    public static void addCachedPlayerNameUUIDs(UUID uuid, String name) {
+    public void addCachedPlayerNameUUIDs(UUID uuid, String name) {
 	cachedPlayerNameUUIDs.put(uuid, name);
     }
 
-    public static void addCachedPlayerNameUUIDs(Map<UUID, String> cachedPlayerNameUUIDs2) {
+    public void addCachedPlayerNameUUIDs(Map<UUID, String> cachedPlayerNameUUIDs2) {
 	cachedPlayerNameUUIDs.putAll(cachedPlayerNameUUIDs2);
     }
 
@@ -1710,7 +1710,7 @@ public class Residence extends JavaPlugin {
 	return wep;
     }
 
-    public static WorldGuardPlugin getWorldGuard() {
+    public WorldGuardPlugin getWorldGuard() {
 	return wg;
     }
 
@@ -1722,6 +1722,10 @@ public class Residence extends JavaPlugin {
 	if (worldGuardUtil == null)
 	    worldGuardUtil = new WorldGuardUtil(this);
 	return worldGuardUtil;
+    }
+
+    public boolean hasPermission(CommandSender sender, String permision, boolean output) {
+	return hasPermission(sender, permision, output, null);
     }
 
     public boolean hasPermission(CommandSender sender, String permision) {
@@ -1740,18 +1744,16 @@ public class Residence extends JavaPlugin {
 	if (sender instanceof ConsoleCommandSender) {
 	    return true;
 	} else if (sender instanceof Player) {
-	    Player player = (Player) sender;
-	    if (player.hasPermission(permision)) {
+	    if (sender.hasPermission(permision))
 		return true;
-	    }
 	    if (output) {
 		String outMsg = getLM().getMessage(lm.General_NoPermission);
 		if (message != null)
 		    outMsg = message;
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " {\"text\":\"\",\"extra\":[{\"text\":\"" + outMsg
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " {\"text\":\"\",\"extra\":[{\"text\":\"" + outMsg
 		    + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§2" + permision + "\"}}]}");
 		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-		console.sendMessage(getLM().getMessage(lm.General_NoPermission));
+		console.sendMessage(ChatColor.RED + sender.getName() + " No permission -> " + permision);
 	    }
 	}
 	return false;
@@ -1759,5 +1761,9 @@ public class Residence extends JavaPlugin {
 
     public static Residence getInstance() {
 	return instance;
+    }
+
+    public String getPrefix() {
+	return prefix;
     }
 }

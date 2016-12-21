@@ -97,6 +97,6 @@ public class remove implements cmd {
 	// Main command
 	c.get(path + "Description", "Remove residences.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res remove <residence name>"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

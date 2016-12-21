@@ -17,7 +17,7 @@ public class TabComplete implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 	List<String> completionList = new ArrayList<>();
-	Set<String> Commands = Residence.getHelpPages().getSubCommands(sender, args);
+	Set<String> Commands = Residence.getInstance().getHelpPages().getSubCommands(sender, args);
 
 	String PartOfCommand = args[args.length - 1];
 	StringUtil.copyPartialMatches(PartOfCommand, Commands, completionList);

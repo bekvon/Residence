@@ -32,6 +32,6 @@ public class give implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Give residence to player.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res give <residence name> [player]", "Gives your owned residence to target player"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[playername]"));
     }
 }

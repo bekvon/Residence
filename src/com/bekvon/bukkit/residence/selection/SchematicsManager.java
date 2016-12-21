@@ -22,7 +22,6 @@ public class SchematicsManager {
 
     public SchematicsManager(Residence residence) {
 	this.plugin = residence;
-	// TODO Auto-generated constructor stub
     }
 
     public boolean save(ClaimedResidence res) {
@@ -48,20 +47,20 @@ public class SchematicsManager {
 	clipboard.setOrigin(origin);
 	clipboard.copy(editSession);
 
-	File dir = new File(Residence.getDataLocation(), "Schematics");
+	File dir = new File(plugin.getDataLocation(), "Schematics");
 	if (!dir.exists())
 	    try {
 		dir.mkdir();
 	    } catch (SecurityException se) {
 	    }
-	dir = new File(Residence.getDataLocation(), "Schematics" + File.separator + res.getWorld());
+	dir = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld());
 	if (!dir.exists())
 	    try {
 		dir.mkdir();
 	    } catch (SecurityException se) {
 	    }
 	
-	File file = new File(Residence.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
+	File file = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
 	try {
 	    SchematicFormat.MCEDIT.save(clipboard, file);
 	} catch (com.sk89q.worldedit.world.DataException | IOException e) {
@@ -85,7 +84,7 @@ public class SchematicsManager {
 	    return false;
 
 	EditSession es = new EditSession(new BukkitWorld(bworld), Integer.MAX_VALUE);
-	File file = new File(Residence.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
+	File file = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
 
 	if (!file.exists())
 	    return false;
@@ -129,7 +128,7 @@ public class SchematicsManager {
 	if (res == null)
 	    return false;
 
-	File file = new File(Residence.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
+	File file = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
 	if (!file.exists())
 	    return false;
 
@@ -142,12 +141,12 @@ public class SchematicsManager {
 	if (res == null)
 	    return false;
 
-	File oldFile = new File(Residence.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
+	File oldFile = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
 
 	if (!oldFile.exists())
 	    return false;
 
-	File newFile = new File(Residence.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + newName + ".schematic");
+	File newFile = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + newName + ".schematic");
 	return oldFile.renameTo(newFile);
     }
 }

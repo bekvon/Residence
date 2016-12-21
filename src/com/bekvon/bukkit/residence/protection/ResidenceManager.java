@@ -27,7 +27,6 @@ import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
@@ -36,7 +35,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
@@ -192,7 +190,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     @Override
     public boolean addResidence(String name, Location loc1, Location loc2) {
-	return this.addResidence(name, Residence.getServerLandname(), loc1, loc2);
+	return this.addResidence(name, plugin.getServerLandname(), loc1, loc2);
     }
 
     @Override
@@ -219,8 +217,12 @@ public class ResidenceManager implements ResidenceInterface {
 
 	PermissionGroup group = rPlayer.getGroup();
 //	PermissionGroup group = plugin.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
-	if ( !resadmin && !(group.canCreateResidences() && (player == null ? true : plugin.hasPermission(player, "residence.create")))) {
+	if (!resadmin && !group.canCreateResidences()) {
 	    plugin.msg(player, lm.General_NoPermission);
+	    return false;
+	}
+
+	if (!resadmin && !(player == null ? true : plugin.hasPermission(player, "residence.create"))) {
 	    return false;
 	}
 
@@ -803,7 +805,7 @@ public class ResidenceManager implements ResidenceInterface {
 		try {
 		    resmap.put(res.getValue().getResidenceName(), res.getValue().save());
 		} catch (Exception ex) {
-		    Bukkit.getConsoleSender().sendMessage(plugin.prefix + ChatColor.RED + " Failed to save residence (" + res.getKey() + ")!");
+		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + " Failed to save residence (" + res.getKey() + ")!");
 		    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
@@ -821,12 +823,12 @@ public class ResidenceManager implements ResidenceInterface {
 	    long time = System.currentTimeMillis();
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
-	    Bukkit.getConsoleSender().sendMessage(plugin.prefix + " Loading " + world.getName() + " data into memory...");
+	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + world.getName() + " data into memory...");
 	    if (reslist != null) {
 		try {
 		    resm.chunkResidences.put(world.getName(), loadMap(world.getName(), reslist, resm));
 		} catch (Exception ex) {
-		    Bukkit.getConsoleSender().sendMessage(plugin.prefix + ChatColor.RED + "Error in loading save file for world: " + world.getName());
+		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + "Error in loading save file for world: " + world.getName());
 		    if (plugin.getConfigManager().stopOnSaveError())
 			throw (ex);
 		}
@@ -835,7 +837,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    long pass = System.currentTimeMillis() - time;
 	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-	    Bukkit.getConsoleSender().sendMessage(plugin.prefix + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
+	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
 	}
 	return resm;
     }
@@ -849,7 +851,7 @@ public class ResidenceManager implements ResidenceInterface {
 	int y = 0;
 	for (Entry<String, Object> res : root.entrySet()) {
 	    if (i == 100 & plugin.getConfigManager().isUUIDConvertion())
-		Bukkit.getConsoleSender().sendMessage(plugin.prefix + " " + worldName + " UUID conversion done: " + y + " of " + root.size());
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " " + worldName + " UUID conversion done: " + y + " of " + root.size());
 	    if (i >= 100)
 		i = 0;
 	    i++;
@@ -858,7 +860,6 @@ public class ResidenceManager implements ResidenceInterface {
 		@SuppressWarnings("unchecked")
 		ClaimedResidence residence = ClaimedResidence.load(worldName, (Map<String, Object>) res.getValue(), null, plugin);
 
-		
 		if (residence == null)
 		    continue;
 
@@ -895,7 +896,7 @@ public class ResidenceManager implements ResidenceInterface {
 		resm.residences.put(resName, residence);
 
 	    } catch (Exception ex) {
-		Bukkit.getConsoleSender().sendMessage(plugin.prefix + ChatColor.RED + " Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage()
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + " Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage()
 		    + " Error Log:");
 		Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		if (plugin.getConfigManager().stopOnSaveError()) {
@@ -946,7 +947,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return false;
 	}
-	oldName = res.getName();	
+	oldName = res.getName();
 	if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (res.getParent() == null) {
 		if (residences.containsKey(newName.toLowerCase())) {

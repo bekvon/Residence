@@ -21,7 +21,7 @@ public class ResidenceCommandListener extends Residence {
 
     public static List<String> getAdminCommands() {
 	if (AdminCommands.size() == 0)
-	    AdminCommands = Residence.getCommandFiller().getCommands(false);
+	    AdminCommands = Residence.getInstance().getCommandFiller().getCommands(false);
 	return AdminCommands;
     }
 
@@ -63,7 +63,7 @@ public class ResidenceCommandListener extends Residence {
 		} catch (Exception ex) {
 		    sender.sendMessage(ChatColor.RED + "[Residence] Unable to reload the save file, exception occured!");
 		    sender.sendMessage(ChatColor.RED + ex.getMessage());
-		    Logger.getLogger(this.getInstance().getClass().getName()).log(Level.SEVERE, null, ex);
+		    Logger.getLogger(getInstance().getClass().getName()).log(Level.SEVERE, null, ex);
 		}
 	    } else
 		msg(sender, lm.General_NoPermission);
@@ -74,7 +74,7 @@ public class ResidenceCommandListener extends Residence {
 		sendUsage(sender, command.getName());
 		return true;
 	    }
-	    boolean respond = cmdClass.perform(this.getInstance(), args, false, command, sender);
+	    boolean respond = cmdClass.perform(getInstance(), args, false, command, sender);
 	    if (!respond)
 		sendUsage(sender, command.getName());
 	    return true;
@@ -140,7 +140,7 @@ public class ResidenceCommandListener extends Residence {
 		    resadminToggle.remove(player.getName());
 		}
 	    }
-	    boolean respond = cmdClass.perform(this.getInstance(), args, resadmin, command, sender);
+	    boolean respond = cmdClass.perform(getInstance(), args, resadmin, command, sender);
 	    if (!respond) {
 		String[] tempArray = new String[args.length + 1];
 		for (int i = 0; i < args.length; i++) {

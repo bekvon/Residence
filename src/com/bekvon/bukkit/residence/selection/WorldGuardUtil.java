@@ -19,7 +19,7 @@ public class WorldGuardUtil {
 
     public ProtectedRegion isSelectionInRegion(Player player) {
 
-	if (Residence.getWorldGuard() == null)
+	if (plugin.getWorldGuard() == null)
 	    return null;
 
 	if (plugin.getWorldEdit() == null)
@@ -36,7 +36,7 @@ public class WorldGuardUtil {
 	    BlockVector max = new BlockVector(loc2.getX(), loc2.getY(), loc2.getZ());
 	    ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
 
-	    RegionManager mgr = Residence.getWorldGuard().getRegionManager(loc1.getWorld());
+	    RegionManager mgr = plugin.getWorldGuard().getRegionManager(loc1.getWorld());
 
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 

@@ -52,6 +52,6 @@ public class listall implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "List All Residences");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res listall <page> <worldName> <-a>", "Lists all residences"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]"));
     }
 }

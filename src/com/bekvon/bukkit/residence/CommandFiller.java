@@ -28,7 +28,7 @@ public class CommandFiller {
 		continue;
 	    cmd.put(one.getKey(), one.getValue().getPriority());
 	}
-	cmd = Residence.getSortingManager().sortByValueASC(cmd);
+	cmd = Residence.getInstance().getSortingManager().sortByValueASC(cmd);
 	List<String> cmdList = new ArrayList<String>();
 	for (Entry<String, Integer> one : cmd.entrySet()) {
 	    cmdList.add(one.getKey());
@@ -41,7 +41,7 @@ public class CommandFiller {
 	for (Entry<String, CommandStatus> one : CommandList.entrySet()) {
 	    cmd.put(one.getKey(), one.getValue().getPriority());
 	}
-	cmd = Residence.getSortingManager().sortByValueASC(cmd);
+	cmd = Residence.getInstance().getSortingManager().sortByValueASC(cmd);
 	List<String> cmdList = new ArrayList<String>();
 	for (Entry<String, Integer> one : cmd.entrySet()) {
 	    cmdList.add(one.getKey());

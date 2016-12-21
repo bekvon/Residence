@@ -13,7 +13,7 @@ public class ChatManager implements ChatInterface {
     protected Server server;
 
     public ChatManager() {
-	server = Residence.getServ();
+	server = Residence.getInstance().getServ();
 	channelmap = new HashMap<String, ChatChannel>();
     }
 

@@ -46,6 +46,6 @@ public class server implements cmd {
 
 	c.get(path + "Description", "Make land server owned.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/resadmin server [residence]", "Make a residence server owned."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]"));
     }
 }

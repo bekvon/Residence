@@ -5,22 +5,22 @@ import com.bekvon.bukkit.residence.Residence;
 public class ResidenceApi {
 
     public static MarketBuyInterface getMarketBuyManager() {
-	return Residence.getMarketBuyManagerAPI();
+	return Residence.getInstance().getMarketBuyManagerAPI();
     }
 
     public static MarketRentInterface getMarketRentManager() {
-	return Residence.getMarketRentManagerAPI();
+	return Residence.getInstance().getMarketRentManagerAPI();
     }
 
     public static ResidencePlayerInterface getPlayerManager() {
-	return Residence.getPlayerManagerAPI();
+	return Residence.getInstance().getPlayerManagerAPI();
     }
 
     public static ChatInterface getChatManager() {
-	return Residence.getResidenceChatAPI();
+	return Residence.getInstance().getResidenceChatAPI();
     }
 
     public static ResidenceInterface getResidenceManager() {
-	return Residence.getResidenceManagerAPI();
+	return Residence.getInstance().getResidenceManagerAPI();
     }
 }

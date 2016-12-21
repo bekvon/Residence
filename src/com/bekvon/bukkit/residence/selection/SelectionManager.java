@@ -133,12 +133,12 @@ public class SelectionManager {
 
 	String Message = plugin.msg(lm.Select_TotalSize, cuboidArea.getSize());
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (plugin.getConfigManager().enableEconomy())
 	    Message += " " + plugin.msg(lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
 
-	Residence.getAB().send(player, Message);
+	plugin.getAB().send(player, Message);
 
     }
 
@@ -149,7 +149,7 @@ public class SelectionManager {
 	    CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
 	    plugin.msg(player, lm.Select_TotalSize, cuboidArea.getSize());
 
-	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
 
 	    if (plugin.getConfigManager().enableEconomy())
@@ -413,6 +413,7 @@ public class SelectionManager {
 	}
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+	    @SuppressWarnings("deprecation")
 	    @Override
 	    public void run() {
 
@@ -433,7 +434,7 @@ public class SelectionManager {
 		List<Location> trimed2 = new ArrayList<Location>();
 
 		try {
-		    boolean spigot = Residence.isSpigot();
+		    boolean spigot = plugin.isSpigot();
 
 		    if (spigot) {
 			if (!error)
@@ -569,7 +570,7 @@ public class SelectionManager {
 
     public void sky(Player player, boolean resadmin) {
 	if (hasPlacedBoth(player.getName())) {
-	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
 	    int y1 = playerLoc1.get(player.getName()).getBlockY();
 	    int y2 = playerLoc2.get(player.getName()).getBlockY();
@@ -599,7 +600,7 @@ public class SelectionManager {
 
     public void bedrock(Player player, boolean resadmin) {
 	if (hasPlacedBoth(player.getName())) {
-	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
 	    int y1 = playerLoc1.get(player.getName()).getBlockY();
 	    int y2 = playerLoc2.get(player.getName()).getBlockY();

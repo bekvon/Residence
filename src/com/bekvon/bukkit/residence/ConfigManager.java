@@ -875,7 +875,7 @@ public class ConfigManager {
 	    }
 	}
 
-	if (Residence.isSpigot())
+	if (plugin.isSpigot())
 	    if (SelectedSpigotFrame == null) {
 		SelectedSpigotFrame = Effect.getByName("HAPPY_VILLAGER");
 		if (SelectedSpigotFrame == null)
@@ -898,7 +898,7 @@ public class ConfigManager {
 	    }
 	}
 
-	if (Residence.isSpigot())
+	if (plugin.isSpigot())
 	    if (SelectedSpigotSides == null) {
 		SelectedSpigotSides = Effect.getByName("COLOURED_DUST");
 		if (SelectedSpigotSides == null)
@@ -922,7 +922,7 @@ public class ConfigManager {
 	    }
 	}
 
-	if (Residence.isSpigot())
+	if (plugin.isSpigot())
 	    if (OverlapSpigotFrame == null) {
 		OverlapSpigotFrame = Effect.getByName("FLAME");
 		if (OverlapSpigotFrame == null)
@@ -944,7 +944,7 @@ public class ConfigManager {
 	    }
 	}
 
-	if (Residence.isSpigot())
+	if (plugin.isSpigot())
 	    if (OverlapSpigotSides == null) {
 		OverlapSpigotSides = Effect.getByName("FLAME");
 		if (OverlapSpigotSides == null)
@@ -1048,13 +1048,13 @@ public class ConfigManager {
     }
 
     public void loadFlags() {
-	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
+	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
 	globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", flags.getConfigurationSection("Global"));
 	globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", flags.getConfigurationSection("Global"));
     }
 
     public void loadGroups() {
-	FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
+	FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "groups.yml"));
 	ConfigurationSection node = groups.getConfigurationSection("Global.GroupDefault");
 	if (node != null) {
 	    Set<String> keys = node.getConfigurationSection(defaultGroup).getKeys(false);

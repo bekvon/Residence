@@ -35,7 +35,7 @@ public class removeall implements cmd {
 	c.get(path + "Description", "Remove all residences owned by a player.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res removeall [owner]",
 	    "Removes all residences owned by a specific player.'", "Requires /resadmin if you use it on anyone besides yourself."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
     }
 
 }

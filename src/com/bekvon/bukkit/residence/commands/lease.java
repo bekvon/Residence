@@ -112,25 +112,25 @@ public class lease implements cmd {
 	c.get(path + "Description", "Manage residence leases");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res lease [renew/cost] [residence]",
 	    "/res lease cost will show the cost of renewing a residence lease.", "/res lease renew will renew the residence provided you have enough money."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("renew%%cost", "[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("renew%%cost", "[residence]"));
 
 	// Sub commands
 	path += "SubCommands.";
 	c.get(path + "set.Description", "Set the lease time");
 	c.get(path + "set.Info", Arrays.asList("&eUsage: &6/resadmin lease set [residence] [#days/infinite]",
 	    "Sets the lease time to a specified number of days, or infinite."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "set"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "set"), Arrays.asList("[residence]"));
 
 	c.get(path + "renew.Description", "Renew the lease time");
 	c.get(path + "renew.Info", Arrays.asList("&eUsage: &6/resadmin lease renew <residence>", "Renews the lease time for current or specified residence."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "renew"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "renew"), Arrays.asList("[residence]"));
 
 	c.get(path + "expires.Description", "Lease end date");
 	c.get(path + "expires.Info", Arrays.asList("&eUsage: &6/resadmin lease expires <residence>", "Shows when expires residence lease time."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "expires"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "expires"), Arrays.asList("[residence]"));
 
 	c.get(path + "cost.Description", "Shows renew cost");
 	c.get(path + "cost.Info", Arrays.asList("&eUsage: &6/resadmin lease cost <residence>", "Shows how much money you need to renew residence lease."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "cost"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "cost"), Arrays.asList("[residence]"));
     }
 }

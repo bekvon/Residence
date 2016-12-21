@@ -22,7 +22,7 @@ public class ResidencePlayerEvent extends ResidenceEvent implements ResidencePla
     @Override
     public boolean isAdmin() {
 	if (isPlayer()) {
-	    return Residence.getPermissionManager().isResidenceAdmin(p);
+	    return Residence.getInstance().getPermissionManager().isResidenceAdmin(p);
 	}
 	return true;
     }

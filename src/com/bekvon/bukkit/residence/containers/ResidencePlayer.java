@@ -37,8 +37,8 @@ public class ResidencePlayer {
     public ResidencePlayer(Player player) {
 	if (player == null)
 	    return;
-	Residence.getOfflinePlayerMap().put(player.getName(), player);
-	Residence.addCachedPlayerNameUUIDs(player.getUniqueId(), player.getName());
+	Residence.getInstance().getOfflinePlayerMap().put(player.getName(), player);
+	Residence.getInstance().addCachedPlayerNameUUIDs(player.getUniqueId(), player.getName());
 	this.updatePlayer(player);
 	this.RecalculatePermissions();
     }
@@ -170,7 +170,7 @@ public class ResidencePlayer {
     }
 
     public int getMaxRes() {
-	Residence.getPermissionManager().updateGroupNameForPlayer(this.userName, this.player != null && this.player.isOnline() ? this.player.getPlayer().getLocation()
+	Residence.getInstance().getPermissionManager().updateGroupNameForPlayer(this.userName, this.player != null && this.player.isOnline() ? this.player.getPlayer().getLocation()
 	    .getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), true);
 	recountMaxRes();
 	PermissionGroup g = getGroup();
@@ -185,8 +185,8 @@ public class ResidencePlayer {
     }
 
     public PermissionGroup getGroup(String world) {
-	String gp = Residence.getPermissionManager().getGroupNameByPlayer(this.userName, world);
-	this.group = Residence.getPermissionManager().getGroupByName(gp);
+	String gp = Residence.getInstance().getPermissionManager().getGroupNameByPlayer(this.userName, world);
+	this.group = Residence.getInstance().getPermissionManager().getGroupByName(gp);
 	return this.group;
     }
 
@@ -224,7 +224,7 @@ public class ResidencePlayer {
 	    return;
 	}
 	if (this.player == null && ofPlayer == null)
-	    ofPlayer = Residence.getOfflinePlayer(userName);
+	    ofPlayer = Residence.getInstance().getOfflinePlayer(userName);
 	if (ofPlayer != null) {
 	    this.userName = ofPlayer.getName();
 	    this.uuid = ofPlayer.getUniqueId();

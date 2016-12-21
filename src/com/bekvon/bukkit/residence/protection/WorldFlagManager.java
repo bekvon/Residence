@@ -20,8 +20,10 @@ public class WorldFlagManager {
     protected Map<String, Map<String, FlagPermissions>> groupperms;
     protected Map<String, FlagPermissions> worldperms;
     protected FlagPermissions globaldefaults;
+    private Residence plugin;
 
-    public WorldFlagManager() {
+    public WorldFlagManager(Residence plugin) {
+	this.plugin = plugin;
 	globaldefaults = new FlagPermissions();
 	worldperms = new HashMap<>();
 	groupperms = new HashMap<>();
@@ -29,7 +31,7 @@ public class WorldFlagManager {
     }
 
     public FlagPermissions getPerms(Player player) {
-	return this.getPerms(player.getWorld().getName(), Residence.getPermissionManager().getGroupNameByPlayer(player));
+	return this.getPerms(player.getWorld().getName(), plugin.getPermissionManager().getGroupNameByPlayer(player));
     }
 
     public FlagPermissions getPerms(String world, String group) {
@@ -65,8 +67,8 @@ public class WorldFlagManager {
 
     public final void parsePerms() {
 	try {
-	    FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
-	    FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
+	    FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
+	    FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "groups.yml"));
 
 	    Set<String> keys = flags.getConfigurationSection("Global.Flags").getKeys(false);
 	    if (keys != null) {

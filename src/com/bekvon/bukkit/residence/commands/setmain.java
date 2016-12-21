@@ -60,6 +60,6 @@ public class setmain implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Sets defined residence as main to show up in chat as prefix");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res setmain (residence)", "Set defined residence as main."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

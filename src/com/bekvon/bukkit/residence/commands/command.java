@@ -89,7 +89,7 @@ public class command implements cmd {
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res command <residence> <allow/block/list> <command>",
 	    "Shows list, adds or removes allowed or disabled commands in residence",
 	    "Use _ to include command with multiple variables"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%allow%%block%%list",
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%allow%%block%%list",
 	    "allow%%block%%list"));
     }
 }

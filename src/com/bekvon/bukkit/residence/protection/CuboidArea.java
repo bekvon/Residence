@@ -161,7 +161,7 @@ public class CuboidArea {
 
     public CuboidArea load(DataInputStream in) throws IOException {
 	CuboidArea newArea = new CuboidArea();
-	Server server = Residence.getServ();
+	Server server = Residence.getInstance().getServ();
 	World world = server.getWorld(in.readUTF());
 	int highx = in.readInt();
 	int highy = in.readInt();

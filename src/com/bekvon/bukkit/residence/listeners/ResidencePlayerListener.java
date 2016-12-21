@@ -77,7 +77,7 @@ public class ResidencePlayerListener implements Listener {
     protected boolean chatenabled;
     protected List<String> playerToggleChat = new ArrayList<String>();
 
-    public static Map<String, SetFlag> GUI = new HashMap<String, SetFlag>();
+    public Map<String, SetFlag> GUI = new HashMap<String, SetFlag>();
 
     private Residence plugin;
 
@@ -1765,7 +1765,7 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.getServ().getPluginManager().callEvent(chgEvent);
 
 	    if (!(ResOld != null && res == ResOld.getParent())) {
-		if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(areaname) || Residence
+		if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(areaname) || plugin
 		    .getTransactionManager().isForSale(areaname))) {
 		    if (plugin.getRentManager().isForRent(areaname) && !plugin.getRentManager().isRented(areaname)) {
 			RentableLand rentable = plugin.getRentManager().getRentableLand(areaname);
@@ -1798,6 +1798,7 @@ public class ResidencePlayerListener implements Listener {
 	return message;
     }
 
+    @SuppressWarnings("deprecation")
     public void doHeals() {
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {

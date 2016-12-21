@@ -23,7 +23,6 @@ import org.bukkit.permissions.PermissionDefault;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
 
@@ -270,13 +269,13 @@ public class FlagPermissions {
 		} catch (Exception e) {
 
 		}
-		String resolvedName = Residence.getPlayerName(uuid);
+		String resolvedName = Residence.getInstance().getPlayerName(uuid);
 		if (resolvedName != null)
 		    player = resolvedName;
 		else if (cachedPlayerNameUUIDs.containsKey(uuid))
 		    player = cachedPlayerNameUUIDs.get(uuid);
 	    } else
-		uuid = Residence.getPlayerUUID(player);
+		uuid = Residence.getInstance().getPlayerUUID(player);
 
 	    if (uuid == null) {
 		Set<Entry<UUID, String>> values = cachedPlayerNameUUIDs.entrySet();
@@ -352,7 +351,7 @@ public class FlagPermissions {
 	// player = player.toLowerCase();
 
 	if (!Residence.getInstance().getConfigManager().isOfflineMode()) {
-	    UUID uuid = Residence.getPlayerUUID(player);
+	    UUID uuid = Residence.getInstance().getPlayerUUID(player);
 	    if (uuid == null)
 		for (Entry<UUID, String> entry : cachedPlayerNameUUIDs.entrySet())
 		    if (entry.getValue().equals(player)) {
@@ -432,7 +431,7 @@ public class FlagPermissions {
     }
 
     public boolean playerHas(String player, String world, String flag, boolean def) {
-	String group = Residence.getPermissionManager().getGroupNameByPlayer(player, world);
+	String group = Residence.getInstance().getPermissionManager().getGroupNameByPlayer(player, world);
 	return this.playerCheck(player, flag, this.groupCheck(group, flag, this.has(flag, def)));
     }
 
@@ -561,7 +560,7 @@ public class FlagPermissions {
 //	root.put("LastKnownPlayerNames", cachedPlayerNameUUIDs);
 
 	// Putting uuid's to main cache for later save
-	Residence.addCachedPlayerNameUUIDs(cachedPlayerNameUUIDs);
+	Residence.getInstance().addCachedPlayerNameUUIDs(cachedPlayerNameUUIDs);
 
 	root.put("PlayerFlags", playerFlags);
 	if (!groupFlags.isEmpty())
@@ -592,7 +591,7 @@ public class FlagPermissions {
 
 	    try {
 		UUID uuid = UUID.fromString(one.getKey());
-		String name = Residence.getCachedPlayerNameUUIDs().get(uuid);
+		String name = Residence.getInstance().getCachedPlayerNameUUIDs().get(uuid);
 		newperms.cachedPlayerNameUUIDs.put(uuid, name);
 	    } catch (Exception e) {
 		continue;
@@ -629,10 +628,10 @@ public class FlagPermissions {
 	for (String keyset : playerFlags.keySet()) {
 	    if (keyset.length() == 36) {
 		String uuid = keyset;
-		if (uuid.equalsIgnoreCase(Residence.getServerLandUUID()))
-		    converts.put(uuid, Residence.getServerLandname());
+		if (uuid.equalsIgnoreCase(Residence.getInstance().getServerLandUUID()))
+		    converts.put(uuid, Residence.getInstance().getServerLandname());
 		else {
-		    String name = Residence.getPlayerName(uuid);
+		    String name = Residence.getInstance().getPlayerName(uuid);
 		    if (name != null)
 			converts.put(uuid, name);
 		}
@@ -657,10 +656,10 @@ public class FlagPermissions {
 	for (String keyset : playerFlags.keySet()) {
 	    if (keyset.length() != 36) {
 		String uuid = null;
-		if (OwnerName != null && OwnerName.equals(keyset) && !owneruuid.equals(Residence.getTempUserUUID()))
+		if (OwnerName != null && OwnerName.equals(keyset) && !owneruuid.equals(Residence.getInstance().getTempUserUUID()))
 		    uuid = owneruuid;
 		else
-		    uuid = Residence.getPlayerUUIDString(keyset);
+		    uuid = Residence.getInstance().getPlayerUUIDString(keyset);
 		//				if (OwnerName.equals(keyset)) {
 		if (uuid != null)
 		    converts.put(keyset, uuid);
@@ -668,7 +667,7 @@ public class FlagPermissions {
 		    Toremove.add(keyset);
 		//				}
 	    } else {
-		String pname = Residence.getPlayerName(keyset);
+		String pname = Residence.getInstance().getPlayerName(keyset);
 		if (pname != null) {
 		    try {
 			UUID uuid = UUID.fromString(keyset);
@@ -762,7 +761,7 @@ public class FlagPermissions {
 
     public List<String> getPosibleFlags(Player player, boolean residence, boolean resadmin) {
 	List<String> flags = new ArrayList<String>();
-	for (Entry<String, Boolean> one : Residence.getPermissionManager().getAllFlags().getFlags().entrySet()) {
+	for (Entry<String, Boolean> one : Residence.getInstance().getPermissionManager().getAllFlags().getFlags().entrySet()) {
 	    if (!one.getValue() && !resadmin && !player.hasPermission(new Permission("residence.flag." + one.getKey().toLowerCase(), PermissionDefault.FALSE)))
 		continue;
 
@@ -813,7 +812,7 @@ public class FlagPermissions {
 
     public String listOtherPlayersFlags(String player) {
 //	player = player.toLowerCase();
-	String uuids = Residence.getPlayerUUIDString(player);
+	String uuids = Residence.getInstance().getPlayerUUIDString(player);
 	StringBuilder sbuild = new StringBuilder();
 	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
 	synchronized (set) {
@@ -825,7 +824,7 @@ public class FlagPermissions {
 		    .equals(player)) {
 		    String perms = printPlayerFlags(nextEnt.getValue());
 		    if (next.length() == 36) {
-			String resolvedName = Residence.getPlayerName(next);
+			String resolvedName = Residence.getInstance().getPlayerName(next);
 			if (resolvedName != null) {
 			    try {
 				UUID uuid = UUID.fromString(next);
@@ -856,7 +855,7 @@ public class FlagPermissions {
 
 		String perms = printPlayerFlags(nextEnt.getValue());
 		if (next.length() == 36) {
-		    String resolvedName = Residence.getPlayerName(next);
+		    String resolvedName = Residence.getInstance().getPlayerName(next);
 		    if (resolvedName != null) {
 			try {
 			    UUID uuid = UUID.fromString(next);
@@ -868,7 +867,7 @@ public class FlagPermissions {
 			next = this.cachedPlayerNameUUIDs.get(next);
 		}
 
-		if (next.equalsIgnoreCase(Residence.getServerLandname()))
+		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandname()))
 		    continue;
 
 		if (!perms.equals("none")) {
@@ -895,7 +894,7 @@ public class FlagPermissions {
 
 		String perms = printPlayerFlags(nextEnt.getValue());
 		if (next.length() == 36) {
-		    String resolvedName = Residence.getPlayerName(next);
+		    String resolvedName = Residence.getInstance().getPlayerName(next);
 		    if (resolvedName != null) {
 			try {
 			    UUID uuid = UUID.fromString(next);
@@ -907,7 +906,7 @@ public class FlagPermissions {
 			next = this.cachedPlayerNameUUIDs.get(next);
 		}
 
-		if (next.equalsIgnoreCase(Residence.getServerLandname()))
+		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandname()))
 		    continue;
 
 		if (!perms.equals("none")) {
@@ -937,7 +936,7 @@ public class FlagPermissions {
 
     public String listOtherPlayersFlagsRaw(String text, String player) {
 //	player = player.toLowerCase();
-	String uuids = Residence.getPlayerUUIDString(player);
+	String uuids = Residence.getInstance().getPlayerUUIDString(player);
 	StringBuilder sbuild = new StringBuilder();
 
 	sbuild.append("[\"\",");
@@ -954,7 +953,7 @@ public class FlagPermissions {
 		    .equals(player)) {
 		    String perms = printPlayerFlags(nextEnt.getValue());
 		    if (next.length() == 36) {
-			String resolvedName = Residence.getPlayerName(next);
+			String resolvedName = Residence.getInstance().getPlayerName(next);
 			if (resolvedName != null) {
 			    try {
 				UUID uuid = UUID.fromString(next);

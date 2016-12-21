@@ -13,9 +13,15 @@ import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class FileCleanUp {
 
-    public static void cleanFiles() {
+    private Residence plugin;
 
-	ArrayList<String> resNameList = Residence.getInstance().getResidenceManager().getResidenceList(false, false);
+    public FileCleanUp(Residence plugin) {
+	this.plugin = plugin;
+    }
+
+    public void cleanFiles() {
+
+	ArrayList<String> resNameList = plugin.getResidenceManager().getResidenceList(false, false);
 	int i = 0;
 
 	OfflinePlayer[] offplayer = Bukkit.getOfflinePlayers();
@@ -26,11 +32,11 @@ public class FileCleanUp {
 	    playermap.put(one.getUniqueId(), one);
 	}
 
-	int interval = Residence.getInstance().getConfigManager().getResidenceFileCleanDays();
+	int interval = plugin.getConfigManager().getResidenceFileCleanDays();
 	long time = System.currentTimeMillis();
 
 	for (String oneName : resNameList) {
-	    ClaimedResidence res = Residence.getInstance().getResidenceManager().getByName(oneName);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(oneName);
 	    if (res == null)
 		continue;
 
@@ -42,10 +48,10 @@ public class FileCleanUp {
 	    if (player == null)
 		continue;
 
-	    if (!Residence.getInstance().getConfigManager().getCleanWorlds().contains(res.getWorld()))
+	    if (!plugin.getConfigManager().getCleanWorlds().contains(res.getWorld()))
 		continue;
 
-	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(Residence.getServerLandname()))
+	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandname()))
 		continue;
 
 	    long lastPlayed = player.getLastPlayed();
@@ -56,9 +62,9 @@ public class FileCleanUp {
 	    if (ResidenceVaultAdapter.hasPermission(player, "residence.cleanbypass", res.getWorld()))
 		continue;
 
-	    Residence.getInstance().getResidenceManager().removeResidence(oneName);
+	    plugin.getResidenceManager().removeResidence(oneName);
 	    i++;
 	}
-	Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Auto CleanUp deleted " + i + " residences!");
+	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Auto CleanUp deleted " + i + " residences!");
     }
 }

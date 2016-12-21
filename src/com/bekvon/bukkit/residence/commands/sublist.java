@@ -50,7 +50,7 @@ public class sublist implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "List Residence Subzones");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res sublist <residence> <page>", "List subzones within a residence."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 
 }

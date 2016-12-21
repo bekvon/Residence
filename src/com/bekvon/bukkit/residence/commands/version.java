@@ -21,7 +21,7 @@ public class version implements cmd {
 	sender.sendMessage(ChatColor.GREEN + "Updated to 1.8 by: " + ChatColor.YELLOW + "DartCZ");
 	sender.sendMessage(ChatColor.GREEN + "Currently maintained by: " + ChatColor.YELLOW + "Zrips");
 	String names = null;
-	for (String auth : Residence.getAuthors()) {
+	for (String auth : plugin.getAuthors()) {
 	    if (names == null)
 		names = auth;
 	    else

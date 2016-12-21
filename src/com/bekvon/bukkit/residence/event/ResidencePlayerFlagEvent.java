@@ -20,7 +20,7 @@ public class ResidencePlayerFlagEvent extends ResidenceFlagEvent implements Resi
     @Override
     public boolean isAdmin() {
 	if (isPlayer()) {
-	    return Residence.getPermissionManager().isResidenceAdmin(p);
+	    return Residence.getInstance().getPermissionManager().isResidenceAdmin(p);
 	}
 	return true;
     }

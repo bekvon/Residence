@@ -12,8 +12,10 @@ import com.bekvon.bukkit.residence.Residence;
 
 public class WorldItemManager {
     protected List<WorldItemList> lists;
+    private Residence plugin;
 
-    public WorldItemManager() {
+    public WorldItemManager(Residence plugin) {
+	this.plugin = plugin;
 	lists = new ArrayList<WorldItemList>();
 	this.readLists();
     }
@@ -37,7 +39,7 @@ public class WorldItemManager {
     }
 
     private void readLists() {
-	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
+	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
 	Set<String> keys = flags.getConfigurationSection("ItemList").getKeys(false);
 	if (keys != null) {
 	    for (String key : keys) {

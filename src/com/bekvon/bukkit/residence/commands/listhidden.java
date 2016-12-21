@@ -48,6 +48,6 @@ public class listhidden implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "List Hidden Residences");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res listhidden <player> <page>", "Lists hidden residences for a player."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
     }
 }

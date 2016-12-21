@@ -35,6 +35,6 @@ public class reset implements cmd {
 	c.get(path + "Description", "Reset residence to default flags.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res reset <residence>",
 	    "Resets the flags on a residence to their default.  You must be the owner or an admin to do this."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

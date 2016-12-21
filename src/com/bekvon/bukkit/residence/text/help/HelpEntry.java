@@ -150,7 +150,7 @@ public class HelpEntry {
 	    helplines.add(new HelpLines(null, one));
 	}
 
-	FlagPermissions GlobalFlags = Residence.getPermissionManager().getAllFlags();
+	FlagPermissions GlobalFlags = Residence.getInstance().getPermissionManager().getAllFlags();
 
 	Map<String, String> unsortMap = new HashMap<String, String>();
 
@@ -195,7 +195,7 @@ public class HelpEntry {
 
 	if (!unsortMap.isEmpty()) {
 	    // Sorting flags help page by alphabet
-	    unsortMap = Residence.getSortingManager().sortStringByKeyASC(unsortMap);
+	    unsortMap = Residence.getInstance().getSortingManager().sortStringByKeyASC(unsortMap);
 	    // Converting HashMap to helplines
 	    for (Entry<String, String> one : unsortMap.entrySet()) {
 		helplines.add(new HelpLines(one.getKey(), one.getValue()));
@@ -270,7 +270,7 @@ public class HelpEntry {
 		Set<String> subcommandkeys = node.getConfigurationSection(key + ".SubCommands").getKeys(false);
 		if (key.equalsIgnoreCase("CommandHelp.SubCommands.res")) {
 		    subcommandkeys.clear();
-		    for (String one : Residence.getCommandFiller().getCommands()) {
+		    for (String one : Residence.getInstance().getCommandFiller().getCommands()) {
 			subcommandkeys.add(one);
 		    }
 		}
@@ -284,7 +284,7 @@ public class HelpEntry {
 
     @SuppressWarnings("deprecation")
     public Set<String> getSubCommands(CommandSender sender, String[] args) {
-	File langFile = new File(new File(Residence.getDataLocation(), "Language"), "English.yml");
+	File langFile = new File(new File(Residence.getInstance().getDataLocation(), "Language"), "English.yml");
 	Set<String> subCommands = new HashSet<String>();
 
 	if (langFile.isFile()) {
@@ -331,7 +331,7 @@ public class HelpEntry {
 	    List<String> ArgsList = new ArrayList<String>();
 
 	    int ii = 0;
-	    for (Entry<List<String>, List<String>> one : Residence.getLocaleManager().CommandTab.entrySet()) {
+	    for (Entry<List<String>, List<String>> one : Residence.getInstance().getLocaleManager().CommandTab.entrySet()) {
 		List<String> list = one.getKey();
 		if (list.size() > ii && args.length > ii && list.get(ii).equalsIgnoreCase(args[ii])) {
 		    ArgsList = one.getValue();
@@ -366,12 +366,12 @@ public class HelpEntry {
 				if (resName != null)
 				    subCommands.add(resName);
 			    }
-			    List<ClaimedResidence> resList = Residence.getPlayerManager().getResidencePlayer(((Player) sender)).getResList();
+			    List<ClaimedResidence> resList = Residence.getInstance().getPlayerManager().getResidencePlayer(((Player) sender)).getResList();
 			    for (ClaimedResidence oneRes : resList) {
 				subCommands.add(oneRes.getName());
 			    }
 			} else {
-			    ArrayList<String> resList = Residence.getInstance().getResidenceManager().getResidenceList(Residence.getServerLandname(), true, false, false);
+			    ArrayList<String> resList = Residence.getInstance().getResidenceManager().getResidenceList(Residence.getInstance().getServerLandname(), true, false, false);
 			    if (resList.size() > 0)
 				subCommands.addAll(resList);
 			}

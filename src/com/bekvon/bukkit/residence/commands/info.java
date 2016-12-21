@@ -39,6 +39,6 @@ public class info implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Show info on a residence.");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res info <residence>", "Leave off <residence> to display info for the residence your currently in."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

@@ -26,7 +26,6 @@ import com.bekvon.bukkit.residence.containers.lm;
 
 public class LocaleManager {
 
-    public static ArrayList<String> FlagList = new ArrayList<String>();
     public HashMap<List<String>, List<String>> CommandTab = new HashMap<List<String>, List<String>>();
     private Residence plugin;
 
@@ -120,10 +119,10 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.Description", "Main Residence Command");
 	c.get("CommandHelp.SubCommands.res.Info", Arrays.asList("&2Use &6/res [command] ? <page> &2to view more help Information."));
 
-	for (Entry<String, CommandStatus> cmo : Residence.getCommandFiller().CommandList.entrySet()) {
-	    String path = Residence.getLocaleManager().path + cmo.getKey() + ".";
+	for (Entry<String, CommandStatus> cmo : plugin.getCommandFiller().CommandList.entrySet()) {
+	    String path = plugin.getLocaleManager().path + cmo.getKey() + ".";
 	    try {
-		Class<?> cl = Class.forName(Residence.getCommandFiller().packagePath + "." + cmo.getKey());
+		Class<?> cl = Class.forName(plugin.getCommandFiller().packagePath + "." + cmo.getKey());
 		if (cmd.class.isAssignableFrom(cl)) {
 		    cmd cm = (cmd) cl.getConstructor().newInstance();
 		    cm.getLocale(c, path);

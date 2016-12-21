@@ -32,6 +32,6 @@ public class mirror implements cmd {
 	c.get(path + "Description", "Mirrors Flags");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res mirror [Source Residence] [Target Residence]",
 	    "Mirrors flags from one residence to another.  You must be owner of both or a admin to do this."));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[residence]"));
     }
 }

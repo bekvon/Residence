@@ -37,6 +37,6 @@ public class renamearea implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Rename area name for residence");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res removeworld [residence] [oldAreaName] [newAreaName]"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

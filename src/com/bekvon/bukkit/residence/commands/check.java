@@ -47,6 +47,6 @@ public class check implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Check flag state for you");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res check [residence] [flag] (playername)"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[flag]" ,"[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[flag]" ,"[playername]"));
     }
 }
