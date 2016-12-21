@@ -27,7 +27,7 @@ public class ResidenceSpout {
     }
 
     public void showResidenceFlagGUI(SpoutPlayer player, String resname, boolean resadmin) {
-	ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(resname);
 	if (res.getPermissions().hasResidencePermission(player, false)) {
 
 	    Color fieldcolor = new Color(0F, 0F, 0.3F, 1F);
@@ -96,7 +96,7 @@ public class ResidenceSpout {
 	    screens.put(player, popup);
 	    player.getMainScreen().attachPopupScreen(popup);
 	} else {
-	    Residence.msg(player, lm.General_NoPermission);
+	    plugin.msg(player, lm.General_NoPermission);
 	}
     }
 }

@@ -15,7 +15,7 @@ public class flags implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1200)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	int page = 1;
 	try {
 	    if (args.length > 0) {

@@ -16,7 +16,7 @@ public class reset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4400)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -25,7 +25,7 @@ public class reset implements cmd {
 	if (args.length != 2)
 	    return false;
 
-	ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 	res.getPermissions().applyDefaultFlags(player, resadmin);
 	return true;
     }

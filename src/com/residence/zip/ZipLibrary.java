@@ -18,9 +18,15 @@ import com.bekvon.bukkit.residence.Residence;
 
 public class ZipLibrary {
     private File BackupDir = new File(Residence.getDataLocation(), "Backup");
+    private Residence plugin;
+
+    public ZipLibrary(Residence residence) {
+	this.plugin = residence;
+	
+    }
 
     private  void cleanFiles() {
-	int x = Residence.getConfigManager().BackupAutoCleanUpDays() * 60 * 1000 * 24 * 60;
+	int x = plugin.getConfigManager().BackupAutoCleanUpDays() * 60 * 1000 * 24 * 60;
 	Long time = System.currentTimeMillis();
 	for (File file : BackupDir.listFiles()) {
 	    long diff = time - file.lastModified();
@@ -37,7 +43,7 @@ public class ZipLibrary {
 	    e.printStackTrace();
 	    return;
 	}
-	if (Residence.getConfigManager().BackupAutoCleanUpUse())
+	if (plugin.getConfigManager().BackupAutoCleanUpUse())
 	    cleanFiles();
 	// Generate the proper date for the backup filename
 	Date date = new Date();
@@ -55,7 +61,7 @@ public class ZipLibrary {
 	}
 
 	File saveFile;
-	if (Residence.getConfigManager().BackupWorldFiles())
+	if (plugin.getConfigManager().BackupWorldFiles())
 	    for (World world : Residence.getServ().getWorlds()) {
 		saveFile = new File(worldFolder, "res_" + world.getName() + ".yml");
 		if (saveFile.isFile()) {
@@ -63,23 +69,23 @@ public class ZipLibrary {
 		}
 	    }
 
-	if (Residence.getConfigManager().BackupforsaleFile())
+	if (plugin.getConfigManager().BackupforsaleFile())
 	    sources.add(new File(saveFolder, "forsale.yml"));
-	if (Residence.getConfigManager().BackupleasesFile())
+	if (plugin.getConfigManager().BackupleasesFile())
 	    sources.add(new File(saveFolder, "leases.yml"));
-	if (Residence.getConfigManager().BackuppermlistsFile())
+	if (plugin.getConfigManager().BackuppermlistsFile())
 	    sources.add(new File(saveFolder, "permlists.yml"));
-	if (Residence.getConfigManager().BackuprentFile())
+	if (plugin.getConfigManager().BackuprentFile())
 	    sources.add(new File(saveFolder, "rent.yml"));
 
-	if (Residence.getConfigManager().BackupflagsFile())
+	if (plugin.getConfigManager().BackupflagsFile())
 	    sources.add(new File(Residence.getDataLocation(), "flags.yml"));
-	if (Residence.getConfigManager().BackupgroupsFile())
+	if (plugin.getConfigManager().BackupgroupsFile())
 	    sources.add(new File(Residence.getDataLocation(), "groups.yml"));
-	if (Residence.getConfigManager().BackupconfigFile())
+	if (plugin.getConfigManager().BackupconfigFile())
 	    sources.add(new File(Residence.getDataLocation(), "config.yml"));
 
-	if (Residence.getConfigManager().UseZipBackup())
+	if (plugin.getConfigManager().UseZipBackup())
 	    packZip(fileZip, sources);
     }
 

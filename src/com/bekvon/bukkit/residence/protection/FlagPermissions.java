@@ -157,7 +157,7 @@ public class FlagPermissions {
 	    }
 	}
 
-	Residence.getConfigManager().UpdateGroupedFlagsFile();
+	Residence.getInstance().getConfigManager().UpdateGroupedFlagsFile();
 
 	// All these flags are moved to flags.yml as of 2.9.11.0 version for option to customize them
 //	addFlagToFlagGroup("redstone", "note");
@@ -192,7 +192,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.WORKBENCH, Flags.table);
 	addMaterialToUseFlag(Material.WOODEN_DOOR, Flags.door);
 
-	Residence.getNms().addDefaultFlags(matUseFlagList);
+	Residence.getInstance().getNms().addDefaultFlags(matUseFlagList);
 
 	addMaterialToUseFlag(Material.FENCE_GATE, Flags.door);
 	addMaterialToUseFlag(Material.NETHER_FENCE, Flags.door);
@@ -262,7 +262,7 @@ public class FlagPermissions {
 
 	Map<String, Boolean> flags = null;
 
-	if (!Residence.getConfigManager().isOfflineMode()) {
+	if (!Residence.getInstance().getConfigManager().isOfflineMode()) {
 	    UUID uuid = null;
 	    if (player.length() == 36) {
 		try {
@@ -351,7 +351,7 @@ public class FlagPermissions {
     public void removeAllPlayerFlags(String player) {//this function works with uuid in string format as well, instead of player name
 	// player = player.toLowerCase();
 
-	if (!Residence.getConfigManager().isOfflineMode()) {
+	if (!Residence.getInstance().getConfigManager().isOfflineMode()) {
 	    UUID uuid = Residence.getPlayerUUID(player);
 	    if (uuid == null)
 		for (Entry<UUID, String> entry : cachedPlayerNameUUIDs.entrySet())
@@ -606,7 +606,7 @@ public class FlagPermissions {
 	if (root.containsKey("AreaFlags")) {
 	    newperms.cuboidFlags = (Map) root.get("AreaFlags");
 	} else
-	    newperms.cuboidFlags = Residence.getConfigManager().getGlobalResidenceDefaultFlags().getFlags();
+	    newperms.cuboidFlags = Residence.getInstance().getConfigManager().getGlobalResidenceDefaultFlags().getFlags();
 
 	String ownerName = null;
 	String uuid = null;
@@ -616,7 +616,7 @@ public class FlagPermissions {
 	    uuid = (String) root.get("OwnerUUID");
 	}
 
-	if (Residence.getConfigManager().isOfflineMode())
+	if (Residence.getInstance().getConfigManager().isOfflineMode())
 	    newperms.convertFlagsUUIDsToPlayerNames();
 	else
 	    newperms.convertPlayerNamesToUUIDs(ownerName, uuid);
@@ -821,7 +821,7 @@ public class FlagPermissions {
 	    while (it.hasNext()) {
 		Entry<String, Map<String, Boolean>> nextEnt = it.next();
 		String next = nextEnt.getKey();
-		if (!Residence.getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getConfigManager().isOfflineMode() && !next
+		if (!Residence.getInstance().getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getInstance().getConfigManager().isOfflineMode() && !next
 		    .equals(player)) {
 		    String perms = printPlayerFlags(nextEnt.getValue());
 		    if (next.length() == 36) {
@@ -950,7 +950,7 @@ public class FlagPermissions {
 	    while (it.hasNext()) {
 		Entry<String, Map<String, Boolean>> nextEnt = it.next();
 		String next = nextEnt.getKey();
-		if (!Residence.getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getConfigManager().isOfflineMode() && !next
+		if (!Residence.getInstance().getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getInstance().getConfigManager().isOfflineMode() && !next
 		    .equals(player)) {
 		    String perms = printPlayerFlags(nextEnt.getValue());
 		    if (next.length() == 36) {
@@ -1063,10 +1063,10 @@ public class FlagPermissions {
     }
 
     public void printFlags(Player player) {
-	Residence.msg(player, lm.General_ResidenceFlags, listFlags());
-	Residence.msg(player, lm.General_PlayersFlags, listPlayerFlags(player.getName()));
-	Residence.msg(player, lm.General_GroupFlags, listGroupFlags());
-	Residence.msg(player, lm.General_OthersFlags, listOtherPlayersFlags(player.getName()));
+	Residence.getInstance().msg(player, lm.General_ResidenceFlags, listFlags());
+	Residence.getInstance().msg(player, lm.General_PlayersFlags, listPlayerFlags(player.getName()));
+	Residence.getInstance().msg(player, lm.General_GroupFlags, listGroupFlags());
+	Residence.getInstance().msg(player, lm.General_OthersFlags, listOtherPlayersFlags(player.getName()));
     }
 
     public void copyUserPermissions(String fromUser, String toUser) {

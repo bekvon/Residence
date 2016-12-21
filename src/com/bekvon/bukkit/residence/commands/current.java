@@ -16,7 +16,7 @@ public class current implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3100)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -25,11 +25,11 @@ public class current implements cmd {
 	if (args.length != 1)
 	    return false;
 
-	String res = Residence.getResidenceManager().getNameByLoc(player.getLocation());
+	String res = plugin.getResidenceManager().getNameByLoc(player.getLocation());
 	if (res == null) {
-	    Residence.msg(player, lm.Residence_NotIn);
+	    plugin.msg(player, lm.Residence_NotIn);
 	} else {
-	    Residence.msg(player, lm.Residence_In, res);
+	    plugin.msg(player, lm.Residence_In, res);
 	}
 	return true;
     }

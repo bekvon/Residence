@@ -16,18 +16,18 @@ public class gui implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4600)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
-	if (Residence.getSpoutListener() == null)
+	if (plugin.getSpoutListener() == null)
 	    return true;
 
 	if (args.length == 1) {
-	    Residence.getSpout().showResidenceFlagGUI(SpoutManager.getPlayer(player), Residence.getResidenceManager().getNameByLoc(player.getLocation()), resadmin);
+	    plugin.getSpout().showResidenceFlagGUI(SpoutManager.getPlayer(player), plugin.getResidenceManager().getNameByLoc(player.getLocation()), resadmin);
 	} else if (args.length == 2) {
-	    Residence.getSpout().showResidenceFlagGUI(SpoutManager.getPlayer(player), args[1], resadmin);
+	    plugin.getSpout().showResidenceFlagGUI(SpoutManager.getPlayer(player), args[1], resadmin);
 	}
 
 	return true;

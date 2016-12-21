@@ -18,7 +18,7 @@ public class lset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 5000)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -29,38 +29,38 @@ public class lset implements cmd {
 	String listtype = null;
 	boolean showinfo = false;
 	if (args.length == 2 && args[1].equals("info")) {
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    showinfo = true;
 	} else if (args.length == 3 && args[2].equals("info")) {
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	    showinfo = true;
 	}
 	if (showinfo) {
 	    if (res == null) {
-		Residence.msg(player, lm.Invalid_Residence);
+		plugin.msg(player, lm.Invalid_Residence);
 		return true;
 	    }
-	    Residence.msg(player, lm.General_Blacklist);
+	    plugin.msg(player, lm.General_Blacklist);
 	    res.getItemBlacklist().printList(player);
-	    Residence.msg(player, lm.General_Ignorelist);
+	    plugin.msg(player, lm.General_Ignorelist);
 	    res.getItemIgnoreList().printList(player);
 	    return true;
 	} else if (args.length == 4) {
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	    listtype = args[2];
 	    try {
 		mat = Material.valueOf(args[3].toUpperCase());
 	    } catch (Exception ex) {
-		Residence.msg(player, lm.Invalid_Material);
+		plugin.msg(player, lm.Invalid_Material);
 		return true;
 	    }
 	} else if (args.length == 3) {
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    listtype = args[1];
 	    try {
 		mat = Material.valueOf(args[2].toUpperCase());
 	    } catch (Exception ex) {
-		Residence.msg(player, lm.Invalid_Material);
+		plugin.msg(player, lm.Invalid_Material);
 		return true;
 	    }
 	}
@@ -70,11 +70,11 @@ public class lset implements cmd {
 	    } else if (listtype != null && listtype.equalsIgnoreCase("ignorelist")) {
 		res.getItemIgnoreList().playerListChange(player, mat, resadmin);
 	    } else {
-		Residence.msg(player, lm.Invalid_List);
+		plugin.msg(player, lm.Invalid_List);
 	    }
 	    return true;
 	}
-	Residence.msg(player, lm.Invalid_Residence);
+	plugin.msg(player, lm.Invalid_Residence);
 	return true;
     }
 

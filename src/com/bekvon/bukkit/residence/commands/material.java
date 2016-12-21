@@ -18,7 +18,7 @@ public class material implements cmd {
     @SuppressWarnings("deprecation")
     @Override
     @CommandAnnotation(simple = true, priority = 4300)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -27,9 +27,9 @@ public class material implements cmd {
 	    return false;
 	}
 	try {
-	    Residence.msg(player, lm.General_MaterialGet, args[1], Material.getMaterial(Integer.parseInt(args[1])).name());
+	    plugin.msg(player, lm.General_MaterialGet, args[1], Material.getMaterial(Integer.parseInt(args[1])).name());
 	} catch (Exception ex) {
-	    Residence.msg(player, lm.Invalid_Material);
+	    plugin.msg(player, lm.Invalid_Material);
 	}
 	return true;
     }

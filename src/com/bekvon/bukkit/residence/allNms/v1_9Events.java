@@ -20,14 +20,14 @@ public class v1_9Events implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLingeringSplashPotion(LingeringPotionSplashEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	if (Residence.getInstance().isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
 	if (event.isCancelled())
 	    return;
 
 	boolean harmfull = false;
 	mein: for (PotionEffect one : event.getEntity().getEffects()) {
-	    for (String oneHarm : Residence.getConfigManager().getNegativePotionEffects()) {
+	    for (String oneHarm : Residence.getInstance().getConfigManager().getNegativePotionEffects()) {
 		if (oneHarm.equalsIgnoreCase(one.getType().getName())) {
 		    harmfull = true;
 		    break mein;
@@ -47,14 +47,14 @@ public class v1_9Events implements Listener {
     public void onLingeringEffectApply(AreaEffectCloudApplyEvent event) {
 
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	if (Residence.getInstance().isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
 
 	boolean harmfull = false;
 
 	// Temporally fail safe to avoid console spam for getting base potion data until fix roles out
 	try {
-	    for (String oneHarm : Residence.getConfigManager().getNegativeLingeringPotionEffects()) {
+	    for (String oneHarm : Residence.getInstance().getConfigManager().getNegativeLingeringPotionEffects()) {
 		if (event.getEntity().getBasePotionData().getType().name().equalsIgnoreCase(oneHarm)) {
 		    harmfull = true;
 		    break;

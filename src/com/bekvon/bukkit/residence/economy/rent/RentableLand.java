@@ -9,9 +9,9 @@ public class RentableLand {
 
     public int days = 0;
     public int cost = Integer.MAX_VALUE;
-    public boolean AllowRenewing = Residence.getConfigManager().isRentAllowRenewing();
-    public boolean StayInMarket = Residence.getConfigManager().isRentStayInMarket();
-    public boolean AllowAutoPay = Residence.getConfigManager().isRentAllowAutoPay();
+    public boolean AllowRenewing = Residence.getInstance().getConfigManager().isRentAllowRenewing();
+    public boolean StayInMarket = Residence.getInstance().getConfigManager().isRentStayInMarket();
+    public boolean AllowAutoPay = Residence.getInstance().getConfigManager().isRentAllowAutoPay();
 
     public RentableLand() {
     }

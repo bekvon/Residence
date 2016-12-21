@@ -59,9 +59,9 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlantGrow(BlockGrowEvent event) {
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.grow, true)) {
 	    event.setCancelled(true);
 	}
@@ -71,9 +71,9 @@ public class ResidenceBlockListener implements Listener {
     public void onVineGrow(BlockSpreadEvent event) {
 	if (event.getSource().getType() != Material.VINE)
 	    return;
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.grow, true)) {
 	    event.setCancelled(true);
 	}
@@ -81,9 +81,9 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onleaveDecay(LeavesDecayEvent event) {
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.decay, true)) {
 	    event.setCancelled(true);
 	}
@@ -91,9 +91,9 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onTreeGrowt(StructureGrowEvent event) {
-	if (Residence.isDisabledWorldListener(event.getWorld()))
+	if (plugin.isDisabledWorldListener(event.getWorld()))
 	    return;
-	FlagPermissions perms = Residence.getPermsByLoc(event.getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getLocation());
 	if (!perms.has(Flags.grow, true)) {
 	    event.setCancelled(true);
 	}
@@ -102,14 +102,14 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onTreeGrow(StructureGrowEvent event) {
 
-	if (Residence.isDisabledWorldListener(event.getWorld()))
+	if (plugin.isDisabledWorldListener(event.getWorld()))
 	    return;
 
-	ClaimedResidence startRes = Residence.getResidenceManager().getByLoc(event.getLocation());
+	ClaimedResidence startRes = plugin.getResidenceManager().getByLoc(event.getLocation());
 	List<BlockState> blocks = event.getBlocks();
 	int i = 0;
 	for (BlockState one : blocks) {
-	    ClaimedResidence targetRes = Residence.getResidenceManager().getByLoc(one.getLocation());
+	    ClaimedResidence targetRes = plugin.getResidenceManager().getByLoc(one.getLocation());
 	    if (startRes == null && targetRes != null ||
 		targetRes != null && startRes != null && !startRes.getName().equals(targetRes.getName()) && !startRes.isOwner(targetRes.getOwner())) {
 		BlockState matas = blocks.get(i);
@@ -123,30 +123,30 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	Player player = event.getPlayer();
-	if (Residence.isResAdminOn(player)) {
+	if (plugin.isResAdminOn(player)) {
 	    return;
 	}
 
 	Block block = event.getBlock();
 	Material mat = block.getType();
 	String world = block.getWorld().getName();
-	String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
-	if (Residence.getItemManager().isIgnored(mat, group, world)) {
+	String group = plugin.getPermissionManager().getGroupNameByPlayer(player);
+	if (plugin.getItemManager().isIgnored(mat, group, world)) {
 	    return;
 	}
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-	if (Residence.getConfigManager().enabledRentSystem() && res != null) {
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+	if (plugin.getConfigManager().enabledRentSystem() && res != null) {
 	    String resname = res.getName();
-	    if (Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname)) {
-		Residence.msg(player, lm.Rent_ModifyDeny);
+	    if (plugin.getConfigManager().preventRentModify() && plugin.getRentManager().isRented(resname)) {
+		plugin.msg(player, lm.Rent_ModifyDeny);
 		event.setCancelled(true);
 		return;
 	    }
 	}
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
+	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	String pname = player.getName();
 	if (res != null && res.getItemIgnoreList().isListed(mat))
 	    return;
@@ -154,10 +154,10 @@ public class ResidenceBlockListener implements Listener {
 	boolean hasdestroy = perms.playerHas(pname, player.getWorld().getName(), Flags.destroy, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true));
 	boolean hasContainer = perms.playerHas(pname, player.getWorld().getName(), Flags.container, true);
 	if (!hasdestroy && !player.hasPermission("residence.bypass.destroy")) {
-	    Residence.msg(player, lm.Flag_Deny, Flags.destroy);
+	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
 	} else if (!hasContainer && mat == Material.CHEST) {
-	    Residence.msg(player, lm.Flag_Deny, Flags.container);
+	    plugin.msg(player, lm.Flag_Deny, Flags.container);
 	    event.setCancelled(true);
 	}
     }
@@ -165,13 +165,13 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockForm(BlockFormEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	if (!(event instanceof EntityBlockFormEvent))
 	    return;
 
 	if (((EntityBlockFormEvent) event).getEntity() instanceof Snowman) {
-	    FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	    FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	    if (!perms.has(Flags.snowtrail, true)) {
 		event.setCancelled(true);
 	    }
@@ -181,7 +181,7 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onIceForm(BlockFormEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
 	Material ice = Material.getMaterial("FROSTED_ICE");
@@ -189,7 +189,7 @@ public class ResidenceBlockListener implements Listener {
 	if (event.getNewState().getType() != Material.SNOW && event.getNewState().getType() != Material.ICE && ice != null && ice != event.getNewState().getType())
 	    return;
 
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.iceform, true)) {
 	    event.setCancelled(true);
 	}
@@ -198,14 +198,14 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onIceMelt(BlockFadeEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
 	if (event.getNewState().getType() != Material.STATIONARY_WATER && event.getBlock().getState().getType() != Material.SNOW && event.getBlock().getState()
 	    .getType() != Material.SNOW_BLOCK)
 	    return;
 
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.icemelt, true)) {
 	    event.setCancelled(true);
 	}
@@ -219,12 +219,12 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	Entity ent = event.getEntity();
 	if (!ent.hasMetadata(SourceResidenceName)) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
 	    String resName = res == null ? "NULL" : res.getName();
 	    ent.setMetadata(SourceResidenceName, new FixedMetadataValue(plugin, resName));
 	} else {
 	    String saved = ent.getMetadata(SourceResidenceName).get(0).asString();
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(ent.getLocation());
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
 
 	    if (res != null && res.getPermissions().has(Flags.fallinprotection, FlagCombo.OnlyFalse))
 		return;
@@ -240,9 +240,9 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFall(EntityChangeBlockEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	if (!Residence.getConfigManager().isBlockFall())
+	if (!plugin.getConfigManager().isBlockFall())
 	    return;
 
 	if ((event.getEntityType() != EntityType.FALLING_BLOCK))
@@ -256,18 +256,18 @@ public class ResidenceBlockListener implements Listener {
 	if (block == null)
 	    return;
 
-	if (!Residence.getConfigManager().getBlockFallWorlds().contains(block.getLocation().getWorld().getName()))
+	if (!plugin.getConfigManager().getBlockFallWorlds().contains(block.getLocation().getWorld().getName()))
 	    return;
 
-	if (block.getY() <= Residence.getConfigManager().getBlockFallLevel())
+	if (block.getY() <= plugin.getConfigManager().getBlockFallLevel())
 	    return;
 
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 	Location loc = new Location(block.getLocation().getWorld(), block.getX(), block.getY(), block.getZ());
-	for (int i = loc.getBlockY() - 1; i >= Residence.getConfigManager().getBlockFallLevel() - 1; i--) {
+	for (int i = loc.getBlockY() - 1; i >= plugin.getConfigManager().getBlockFallLevel() - 1; i--) {
 	    loc.setY(i);
 	    if (loc.getBlock().getType() != Material.AIR) {
-		ClaimedResidence targetRes = Residence.getResidenceManager().getByLoc(loc);
+		ClaimedResidence targetRes = plugin.getResidenceManager().getByLoc(loc);
 		if (targetRes == null)
 		    continue;
 		if (res != null && !res.getName().equals(targetRes.getName())) {
@@ -284,26 +284,26 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChestPlace(BlockPlaceEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	if (!Residence.getConfigManager().ShowNoobMessage())
+	if (!plugin.getConfigManager().ShowNoobMessage())
 	    return;
 
 	Player player = event.getPlayer();
-	if (Residence.isResAdminOn(player))
+	if (plugin.isResAdminOn(player))
 	    return;
 	Block block = event.getBlock();
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
-	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(player.getName());
+	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(player.getName());
 	if (list.size() != 0)
 	    return;
 
 	if (MessageInformed.contains(player.getName()))
 	    return;
 
-	Residence.msg(player, lm.General_NewPlayerInfo);
+	plugin.msg(player, lm.General_NewPlayerInfo);
 
 	MessageInformed.add(player.getName());
     }
@@ -311,19 +311,19 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChestPlaceCreateRes(BlockPlaceEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	if (!Residence.getConfigManager().isNewPlayerUse())
+	if (!plugin.getConfigManager().isNewPlayerUse())
 	    return;
 
 	Player player = event.getPlayer();
-	if (Residence.isResAdminOn(player))
+	if (plugin.isResAdminOn(player))
 	    return;
 	Block block = event.getBlock();
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
-	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(player.getName());
+	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(player.getName());
 	if (list.size() != 0)
 	    return;
 
@@ -332,13 +332,13 @@ public class ResidenceBlockListener implements Listener {
 
 	Location loc = block.getLocation();
 
-	Residence.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), loc.getBlockX() - Residence.getConfigManager().getNewPlayerRangeX(), loc
-	    .getBlockY() - Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() - Residence.getConfigManager().getNewPlayerRangeZ()), true);
-	Residence.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), loc.getBlockX() + Residence.getConfigManager().getNewPlayerRangeX(), loc
-	    .getBlockY() + Residence.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() + Residence.getConfigManager().getNewPlayerRangeZ()), true);
+	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), loc.getBlockX() - plugin.getConfigManager().getNewPlayerRangeX(), loc
+	    .getBlockY() - plugin.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() - plugin.getConfigManager().getNewPlayerRangeZ()), true);
+	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), loc.getBlockX() + plugin.getConfigManager().getNewPlayerRangeX(), loc
+	    .getBlockY() + plugin.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() + plugin.getConfigManager().getNewPlayerRangeZ()), true);
 
-	boolean created = Residence.getResidenceManager().addResidence(player, player.getName(), Residence.getSelectionManager().getPlayerLoc1(player.getName()),
-	    Residence.getSelectionManager().getPlayerLoc2(player.getName()), Residence.getConfigManager().isNewPlayerFree());
+	boolean created = plugin.getResidenceManager().addResidence(player, player.getName(), plugin.getSelectionManager().getPlayerLoc1(player.getName()),
+	    plugin.getSelectionManager().getPlayerLoc2(player.getName()), plugin.getConfigManager().isNewPlayerFree());
 	if (created)
 	    ResCreated.add(player.getName());
     }
@@ -346,39 +346,39 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	Player player = event.getPlayer();
-	if (Residence.isResAdminOn(player)) {
+	if (plugin.isResAdminOn(player)) {
 	    return;
 	}
 	Block block = event.getBlock();
 	Material mat = block.getType();
 	String world = block.getWorld().getName();
-	String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
-	if (Residence.getItemManager().isIgnored(mat, group, world)) {
+	String group = plugin.getPermissionManager().getGroupNameByPlayer(player);
+	if (plugin.getItemManager().isIgnored(mat, group, world)) {
 	    return;
 	}
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(block.getLocation());
-	if (Residence.getConfigManager().enabledRentSystem() && res != null) {
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+	if (plugin.getConfigManager().enabledRentSystem() && res != null) {
 	    String resname = res.getName();
-	    if (Residence.getConfigManager().preventRentModify() && Residence.getRentManager().isRented(resname)) {
-		Residence.msg(player, lm.Rent_ModifyDeny);
+	    if (plugin.getConfigManager().preventRentModify() && plugin.getRentManager().isRented(resname)) {
+		plugin.msg(player, lm.Rent_ModifyDeny);
 		event.setCancelled(true);
 		return;
 	    }
 	}
 	String pname = player.getName();
 	if (res != null && !res.getItemBlacklist().isAllowed(mat)) {
-	    Residence.msg(player, lm.General_ItemBlacklisted);
+	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
 	}
-	FlagPermissions perms = Residence.getPermsByLocForPlayer(block.getLocation(), player);
+	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean hasplace = perms.playerHas(pname, world, Flags.place, perms.playerHas(pname, world, Flags.build, true));
 	if (!hasplace && !player.hasPermission("residence.bypass.build")) {
 	    event.setCancelled(true);
-	    Residence.msg(player, lm.Flag_Deny, Flags.place.getName());
+	    plugin.msg(player, lm.Flag_Deny, Flags.place.getName());
 	    return;
 	}
     }
@@ -386,10 +386,10 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockSpread(BlockSpreadEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	Location loc = event.getBlock().getLocation();
-	FlagPermissions perms = Residence.getPermsByLoc(loc);
+	FlagPermissions perms = plugin.getPermsByLoc(loc);
 	if (!perms.has(Flags.spread, true)) {
 	    event.setCancelled(true);
 	}
@@ -398,24 +398,24 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.piston, true)) {
 	    event.setCancelled(true);
 	    return;
 	}
 
-	List<Block> blocks = Residence.getNms().getPistonRetractBlocks(event);
+	List<Block> blocks = plugin.getNms().getPistonRetractBlocks(event);
 
 	if (!event.isSticky())
 	    return;
 
-	ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+	ClaimedResidence pistonRes = plugin.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
 	for (Block block : blocks) {
 	    Location locFrom = block.getLocation();
-	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
+	    ClaimedResidence blockFrom = plugin.getResidenceManager().getByLoc(locFrom);
 	    if (blockFrom == null)
 		continue;
 	    if (blockFrom == pistonRes)
@@ -432,22 +432,22 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.piston, true)) {
 	    event.setCancelled(true);
 	    return;
 	}
 
-	ClaimedResidence pistonRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+	ClaimedResidence pistonRes = plugin.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
 	BlockFace dir = event.getDirection();
 	for (Block block : event.getBlocks()) {
 	    Location locFrom = block.getLocation();
 	    Location locTo = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
-	    ClaimedResidence blockFrom = Residence.getResidenceManager().getByLoc(locFrom);
-	    ClaimedResidence blockTo = Residence.getResidenceManager().getByLoc(locTo);
+	    ClaimedResidence blockFrom = plugin.getResidenceManager().getByLoc(locFrom);
+	    ClaimedResidence blockTo = plugin.getResidenceManager().getByLoc(locTo);
 
 	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue)) {
 		event.setCancelled(true);
@@ -468,13 +468,13 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFromTo(BlockFromToEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
-	ClaimedResidence fromRes = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
-	ClaimedResidence toRes = Residence.getResidenceManager().getByLoc(event.getToBlock().getLocation());
+	ClaimedResidence fromRes = plugin.getResidenceManager().getByLoc(event.getBlock().getLocation());
+	ClaimedResidence toRes = plugin.getResidenceManager().getByLoc(event.getToBlock().getLocation());
 
-	FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getToBlock().getLocation());
 	boolean hasflow = perms.has(Flags.flow, FlagCombo.TrueOrNone);
 	Material mat = event.getBlock().getType();
 
@@ -507,14 +507,14 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLandDryFade(BlockFadeEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
 	Material mat = event.getBlock().getType();
 	if (mat != Material.SOIL)
 	    return;
 
-	FlagPermissions perms = Residence.getPermsByLoc(event.getNewState().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getNewState().getLocation());
 	if (!perms.has(Flags.dryup, true)) {
 	    event.getBlock().setData((byte) 7);
 	    event.setCancelled(true);
@@ -526,14 +526,14 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLandDryPhysics(BlockPhysicsEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
 	Material mat = event.getBlock().getType();
 	if (mat != Material.SOIL)
 	    return;
 
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.dryup, true)) {
 	    event.getBlock().setData((byte) 7);
 	    event.setCancelled(true);
@@ -544,32 +544,32 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDispense(BlockDispenseEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	if (event.isCancelled())
 	    return;
 
 	Location location = new Location(event.getBlock().getWorld(), event.getVelocity().getBlockX(), event.getVelocity().getBlockY(), event.getVelocity().getBlockZ());
 
-	ClaimedResidence targetres = Residence.getResidenceManager().getByLoc(location);
+	ClaimedResidence targetres = plugin.getResidenceManager().getByLoc(location);
 
-	if (targetres == null && location.getBlockY() >= Residence.getConfigManager().getPlaceLevel() && Residence.getConfigManager().getNoPlaceWorlds().contains(location
+	if (targetres == null && location.getBlockY() >= plugin.getConfigManager().getPlaceLevel() && plugin.getConfigManager().getNoPlaceWorlds().contains(location
 	    .getWorld().getName())) {
 	    ItemStack mat = event.getItem();
-	    if (Residence.getConfigManager().isNoLavaPlace())
+	    if (plugin.getConfigManager().isNoLavaPlace())
 		if (mat.getType() == Material.LAVA_BUCKET) {
 		    event.setCancelled(true);
 		    return;
 		}
 
-	    if (Residence.getConfigManager().isNoWaterPlace())
+	    if (plugin.getConfigManager().isNoWaterPlace())
 		if (mat.getType() == Material.WATER_BUCKET) {
 		    event.setCancelled(true);
 		    return;
 		}
 	}
 
-	ClaimedResidence sourceres = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
+	ClaimedResidence sourceres = plugin.getResidenceManager().getByLoc(event.getBlock().getLocation());
 
 	if ((sourceres == null && targetres != null || sourceres != null && targetres == null || sourceres != null && targetres != null && !sourceres.getName().equals(
 	    targetres.getName())) && (event.getItem().getType() == Material.LAVA_BUCKET || event.getItem().getType() == Material.WATER_BUCKET)) {
@@ -580,29 +580,29 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLavaWaterFlow(BlockFromToEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	Material mat = event.getBlock().getType();
 
 	Location location = event.getToBlock().getLocation();
-	if (!Residence.getConfigManager().getNoFlowWorlds().contains(location.getWorld().getName()))
+	if (!plugin.getConfigManager().getNoFlowWorlds().contains(location.getWorld().getName()))
 	    return;
 
-	if (location.getBlockY() < Residence.getConfigManager().getFlowLevel())
+	if (location.getBlockY() < plugin.getConfigManager().getFlowLevel())
 	    return;
 
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(location);
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(location);
 
 	if (res != null)
 	    return;
 
-	if (Residence.getConfigManager().isNoLava())
+	if (plugin.getConfigManager().isNoLava())
 	    if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
 		event.setCancelled(true);
 		return;
 	    }
 
-	if (Residence.getConfigManager().isNoWater())
+	if (plugin.getConfigManager().isNoWater())
 	    if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
 		event.setCancelled(true);
 		return;
@@ -612,9 +612,9 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
-	FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.firespread, true))
 	    event.setCancelled(true);
     }
@@ -622,22 +622,22 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getBlock().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	IgniteCause cause = event.getCause();
 	if (cause == IgniteCause.SPREAD) {
-	    FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	    FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	    if (!perms.has(Flags.firespread, true))
 		event.setCancelled(true);
 	} else if (cause == IgniteCause.FLINT_AND_STEEL) {
 	    Player player = event.getPlayer();
-	    FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(), player);
-	    if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), Flags.ignite, true) && !Residence.isResAdminOn(player)) {
+	    FlagPermissions perms = plugin.getPermsByLocForPlayer(event.getBlock().getLocation(), player);
+	    if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), Flags.ignite, true) && !plugin.isResAdminOn(player)) {
 		event.setCancelled(true);
-		Residence.msg(player, lm.Flag_Deny, Flags.ignite.getName());
+		plugin.msg(player, lm.Flag_Deny, Flags.ignite.getName());
 	    }
 	} else {
-	    FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
+	    FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	    if (!perms.has(Flags.ignite, true)) {
 		event.setCancelled(true);
 	    }

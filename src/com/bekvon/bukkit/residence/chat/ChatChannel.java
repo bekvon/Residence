@@ -38,7 +38,7 @@ public class ChatChannel {
 
     public void chat(String sourcePlayer, String message) {
 	Server serv = Residence.getServ();
-	ResidenceChatEvent cevent = new ResidenceChatEvent(Residence.getResidenceManager().getByName(channelName), serv.getPlayer(sourcePlayer), this.ChatPrefix, message,
+	ResidenceChatEvent cevent = new ResidenceChatEvent(Residence.getInstance().getResidenceManager().getByName(channelName), serv.getPlayer(sourcePlayer), this.ChatPrefix, message,
 	    this.ChannelColor);
 	Residence.getServ().getPluginManager().callEvent(cevent);
 	if (cevent.isCancelled())
@@ -46,7 +46,7 @@ public class ChatChannel {
 	for (String member : members) {
 	    Player player = serv.getPlayer(member);
 
-	    Residence.msg(player, cevent.getChatprefix() + " " + Residence.getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent
+	    Residence.msg(player, cevent.getChatprefix() + " " + Residence.getInstance().getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent
 		.getChatMessage());
 	}
 	Bukkit.getConsoleSender().sendMessage("ResidentialChat[" + channelName + "] - " + sourcePlayer + ": " + ChatColor.stripColor(cevent.getChatMessage()));

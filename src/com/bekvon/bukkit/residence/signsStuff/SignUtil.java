@@ -68,7 +68,7 @@ public class SignUtil {
 	    Signs newTemp = new Signs();
 	    newTemp.setCategory(Integer.valueOf(category));
 
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(NameSection.getString("Residence"));
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(NameSection.getString("Residence"));
 
 	    if (res == null)
 		continue;
@@ -240,8 +240,8 @@ public class SignUtil {
 	    if (rentedPlace != null)
 		time = rentedPlace.endTime;
 
-	    SimpleDateFormat formatter = new SimpleDateFormat(Residence.msg(lm.Sign_DateFormat));
-	    formatter.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
+	    SimpleDateFormat formatter = new SimpleDateFormat(plugin.msg(lm.Sign_DateFormat));
+	    formatter.setTimeZone(TimeZone.getTimeZone(plugin.getConfigManager().getTimeZone()));
 	    Calendar calendar = Calendar.getInstance();
 	    calendar.setTimeInMillis(time);
 	    String timeString = formatter.format(calendar.getTime());
@@ -250,23 +250,23 @@ public class SignUtil {
 	    if (time == 0L)
 		endDate = "Unknown";
 
-	    if (Residence.getRentManager().getRentedAutoRepeats(res))
-		endDate = Residence.msg(lm.Sign_RentedAutorenewTrue, endDate);
+	    if (plugin.getRentManager().getRentedAutoRepeats(res))
+		endDate = plugin.msg(lm.Sign_RentedAutorenewTrue, endDate);
 	    else
-		endDate = Residence.msg(lm.Sign_RentedAutorenewFalse, endDate);
+		endDate = plugin.msg(lm.Sign_RentedAutorenewFalse, endDate);
 
-	    String TopLine = rented ? endDate : Residence.msg(lm.Sign_ForRentTopLine);
+	    String TopLine = rented ? endDate : plugin.msg(lm.Sign_ForRentTopLine);
 	    sign.setLine(0, TopLine);
 
-	    String infoLine = Residence.msg(lm.Sign_ForRentPriceLine, Residence.getRentManager().getCostOfRent(res), Residence
-		.getRentManager().getRentDays(res), Residence.getRentManager().getRentableRepeatable(res));
+	    String infoLine = plugin.msg(lm.Sign_ForRentPriceLine, plugin.getRentManager().getCostOfRent(res), plugin
+		.getRentManager().getRentDays(res), plugin.getRentManager().getRentableRepeatable(res));
 
 	    sign.setLine(1, infoLine);
 	    String shortName = fixResName(landName);
-	    sign.setLine(2, rented ? Residence.msg(lm.Sign_RentedResName, shortName)
-		: Residence.msg(lm.Sign_RentedResName, shortName));
-	    sign.setLine(3, rented ? Residence.msg(lm.Sign_RentedBottomLine, Residence.getRentManager().getRentingPlayer(landName))
-		: Residence.msg(lm.Sign_ForRentBottomLine));
+	    sign.setLine(2, rented ? plugin.msg(lm.Sign_RentedResName, shortName)
+		: plugin.msg(lm.Sign_RentedResName, shortName));
+	    sign.setLine(3, rented ? plugin.msg(lm.Sign_RentedBottomLine, plugin.getRentManager().getRentingPlayer(landName))
+		: plugin.msg(lm.Sign_ForRentBottomLine));
 	    sign.update();
 	}
 
@@ -279,15 +279,15 @@ public class SignUtil {
 		secondLine = lines[1];
 	    }
 
-	    sign.setLine(0, Residence.msg(lm.Sign_ForSaleTopLine));
-	    String infoLine = Residence.msg(lm.Sign_ForSalePriceLine, res.getSellPrice());
+	    sign.setLine(0, plugin.msg(lm.Sign_ForSaleTopLine));
+	    String infoLine = plugin.msg(lm.Sign_ForSalePriceLine, res.getSellPrice());
 	    sign.setLine(1, infoLine);
-	    sign.setLine(2, Residence.msg(lm.Sign_RentedResName, shortName));
+	    sign.setLine(2, plugin.msg(lm.Sign_RentedResName, shortName));
 
 	    if (secondLine != null)
-		sign.setLine(3, Residence.msg(lm.Sign_RentedResName, secondLine));
+		sign.setLine(3, plugin.msg(lm.Sign_RentedResName, secondLine));
 	    else
-		sign.setLine(3, Residence.msg(lm.Sign_ForSaleBottomLine));
+		sign.setLine(3, plugin.msg(lm.Sign_ForSaleBottomLine));
 	    sign.update();
 	}
 
@@ -322,7 +322,7 @@ public class SignUtil {
 	    String resname = section.getString(one + ".resName");
 	    signs.setCategory(category);
 
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(resname);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(resname);
 
 	    if (res == null)
 		continue;

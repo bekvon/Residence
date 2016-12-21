@@ -14,16 +14,21 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 public class AutoSelection {
 
     private HashMap<String, AutoSelector> list = new HashMap<String, AutoSelector>();
+    private Residence plugin;
+
+    public AutoSelection(Residence residence) {
+	this.plugin = residence;
+    }
 
     public void switchAutoSelection(Player player) {
 	if (!list.containsKey(player.getName().toLowerCase())) {
 	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup(player.getWorld().getName());
 	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
-	    Residence.msg(player, lm.Select_AutoEnabled);
+	    plugin.msg(player, lm.Select_AutoEnabled);
 	} else {
 	    list.remove(player.getName().toLowerCase());
-	    Residence.msg(player, lm.Select_AutoDisabled);
+	    plugin.msg(player, lm.Select_AutoDisabled);
 	}
     }
 
@@ -38,7 +43,7 @@ public class AutoSelection {
 
 	if (Curenttime > 270) {
 	    list.remove(player.getName().toLowerCase());
-	    Residence.msg(player, lm.Select_AutoDisabled);
+	    plugin.msg(player, lm.Select_AutoDisabled);
 	    return;
 	}
 
@@ -46,17 +51,17 @@ public class AutoSelection {
 
 	Location cloc = player.getLocation();
 
-	Location loc1 = Residence.getSelectionManager().getPlayerLoc1(name);
-	Location loc2 = Residence.getSelectionManager().getPlayerLoc2(name);
+	Location loc1 = plugin.getSelectionManager().getPlayerLoc1(name);
+	Location loc2 = plugin.getSelectionManager().getPlayerLoc2(name);
 
 	if (loc1 == null) {
-	    Residence.getSelectionManager().placeLoc1(player, cloc, false);
+	    plugin.getSelectionManager().placeLoc1(player, cloc, false);
 	    loc1 = player.getLocation();
 	    return;
 	}
 
 	if (loc2 == null) {
-	    Residence.getSelectionManager().placeLoc2(player, cloc, true);
+	    plugin.getSelectionManager().placeLoc2(player, cloc, true);
 	    loc2 = player.getLocation();
 	    return;
 	}
@@ -103,7 +108,7 @@ public class AutoSelection {
 	    return;
 	}
 
-	if (area.getYSize() > group.getMaxY() && !Residence.getConfigManager().isSelectionIgnoreY()) {
+	if (area.getYSize() > group.getMaxY() && !plugin.getConfigManager().isSelectionIgnoreY()) {
 	    return;
 	}
 
@@ -112,9 +117,9 @@ public class AutoSelection {
 	}
 
 	if (changed) {
-	    Residence.getSelectionManager().placeLoc1(player, hloc, false);
-	    Residence.getSelectionManager().placeLoc2(player, lloc, true);
-	    Residence.getSelectionManager().showSelectionInfoInActionBar(player);
+	    plugin.getSelectionManager().placeLoc1(player, hloc, false);
+	    plugin.getSelectionManager().placeLoc2(player, lloc, true);
+	    plugin.getSelectionManager().showSelectionInfoInActionBar(player);
 	}
     }
 

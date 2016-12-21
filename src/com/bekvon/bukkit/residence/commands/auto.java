@@ -18,7 +18,7 @@ public class auto implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 150)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -42,7 +42,7 @@ public class auto implements cmd {
 	    }
 	}
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	PermissionGroup group = rPlayer.getGroup();
 
@@ -94,8 +94,8 @@ public class auto implements cmd {
 	if (maxZ - minZ + 1 < Z)
 	    maxZ++;
 
-	Residence.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
-	Residence.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
+	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
+	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
 	
 	player.performCommand("res create " + resName);
 	return true;

@@ -19,9 +19,6 @@ public class CuboidArea {
     protected Location lowPoints;
     protected String worldName;
 
-    public CuboidArea() {
-    }
-
     public CuboidArea(Location startLoc, Location endLoc) {
 	int highx, highy, highz, lowx, lowy, lowz;
 	if (startLoc.getBlockX() > endLoc.getBlockX()) {
@@ -48,6 +45,9 @@ public class CuboidArea {
 	highPoints = new Location(startLoc.getWorld(), highx, highy, highz);
 	lowPoints = new Location(startLoc.getWorld(), lowx, lowy, lowz);
 	worldName = startLoc.getWorld().getName();
+    }
+
+    public CuboidArea() {
     }
 
     public boolean isAreaWithinArea(CuboidArea area) {
@@ -118,7 +118,7 @@ public class CuboidArea {
     public long getSize() {
 	int xsize = (highPoints.getBlockX() - lowPoints.getBlockX()) + 1;
 	int zsize = (highPoints.getBlockZ() - lowPoints.getBlockZ()) + 1;
-	if (!Residence.getConfigManager().isNoCostForYBlocks()) {
+	if (!Residence.getInstance().getConfigManager().isNoCostForYBlocks()) {
 	    int ysize = (highPoints.getBlockY() - lowPoints.getBlockY()) + 1;
 	    return xsize * ysize * zsize;
 	}
@@ -159,7 +159,7 @@ public class CuboidArea {
 	out.writeInt(lowPoints.getBlockZ());
     }
 
-    public static CuboidArea load(DataInputStream in) throws IOException {
+    public CuboidArea load(DataInputStream in) throws IOException {
 	CuboidArea newArea = new CuboidArea();
 	Server server = Residence.getServ();
 	World world = server.getWorld(in.readUTF());

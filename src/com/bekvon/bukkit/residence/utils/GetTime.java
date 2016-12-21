@@ -9,8 +9,8 @@ import com.bekvon.bukkit.residence.Residence;
 public class GetTime {
     public static String getTime(Long time) {
 	Date dNow = new Date(time);
-	SimpleDateFormat ft = new SimpleDateFormat(Residence.getConfigManager().getDateFormat());
-	ft.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
+	SimpleDateFormat ft = new SimpleDateFormat(Residence.getInstance().getConfigManager().getDateFormat());
+	ft.setTimeZone(TimeZone.getTimeZone(Residence.getInstance().getConfigManager().getTimeZone()));
 	return ft.format(dNow);
     }
 }

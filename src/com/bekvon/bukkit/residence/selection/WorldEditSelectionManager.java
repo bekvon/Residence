@@ -43,7 +43,7 @@ public class WorldEditSelectionManager extends SelectionManager {
 	if (!hasPlacedBoth(player.getName()))
 	    return false;
 	CuboidSelection selection = new CuboidSelection(player.getWorld(), getPlayerLoc1(player.getName()), getPlayerLoc2(player.getName()));
-	Residence.getWorldEdit().setSelection(player, selection);
+	plugin.getWorldEdit().setSelection(player, selection);
 	return true;
     }
 

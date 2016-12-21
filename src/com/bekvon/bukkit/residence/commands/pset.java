@@ -19,84 +19,84 @@ public class pset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 800)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player) && args.length != 5 && args.length == 4 && !args[3].equalsIgnoreCase("removeall"))
 	    return false;
 
 	if (args.length == 3 && args[2].equalsIgnoreCase("removeall")) {
 	    Player player = (Player) sender;
-	    ClaimedResidence area = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    ClaimedResidence area = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (area != null) {
 		area.getPermissions().removeAllPlayerFlags(sender, args[1], resadmin);
 	    } else {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if (args.length == 4 && args[3].equalsIgnoreCase("removeall")) {
-	    ClaimedResidence area = Residence.getResidenceManager().getByName(args[1]);
+	    ClaimedResidence area = plugin.getResidenceManager().getByName(args[1]);
 	    if (area != null) {
 		area.getPermissions().removeAllPlayerFlags(sender, args[2], resadmin);
 	    } else {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if (args.length == 4) {
 	    Player player = (Player) sender;
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 
-	    if (!Residence.isPlayerExist(sender, args[1], true))
+	    if (!plugin.isPlayerExist(sender, args[1], true))
 		return false;
 
 	    if (res == null) {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
 
 	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
-		Residence.msg(sender, lm.General_NoPermission);
+		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
 	    res.getPermissions().setPlayerFlag(sender, args[1], args[2], args[3], resadmin, true);
 
 	    return true;
 	} else if (args.length == 5) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
-	    if (!Residence.isPlayerExist(sender, args[2], true))
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
+	    if (!plugin.isPlayerExist(sender, args[2], true))
 		return false;
 
 	    if (res == null) {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
 
 	    if (!res.isOwner(sender) && !resadmin && !res.getPermissions().playerHas(sender, Flags.admin, false)) {
-		Residence.msg(sender, lm.General_NoPermission);
+		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
 
 	    res.getPermissions().setPlayerFlag(sender, args[2], args[3], args[4], resadmin, true);
 	    return true;
-	} else if ((args.length == 2 || args.length == 3) && Residence.getConfigManager().useFlagGUI()) {
+	} else if ((args.length == 2 || args.length == 3) && plugin.getConfigManager().useFlagGUI()) {
 	    Player player = (Player) sender;
 	    ClaimedResidence res = null;
 	    String targetPlayer = null;
 	    if (args.length == 2) {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		targetPlayer = args[1];
 	    } else {
-		res = Residence.getResidenceManager().getByName(args[1]);
+		res = plugin.getResidenceManager().getByName(args[1]);
 		targetPlayer = args[2];
 	    }
 
 	    if (res == null) {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
 
-	    if (!Residence.isPlayerExist(player, targetPlayer, true))
+	    if (!plugin.isPlayerExist(player, targetPlayer, true))
 		return false;
 	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
-		Residence.msg(sender, lm.General_NoPermission);
+		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
 	    SetFlag flag = new SetFlag(res.getName(), player, resadmin);

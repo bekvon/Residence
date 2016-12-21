@@ -14,7 +14,7 @@ public class listallhidden implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 4700)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	int page = 1;
 	try {
 	    if (args.length > 0) {
@@ -23,14 +23,14 @@ public class listallhidden implements cmd {
 	} catch (Exception ex) {
 	}
 	if (!resadmin) {
-	    Residence.msg(sender, lm.General_NoPermission);
+	    plugin.msg(sender, lm.General_NoPermission);
 	    return true;
 	}
 	if (args.length == 1) {
-	    Residence.getResidenceManager().listAllResidences(sender, 1, true, true);
+	    plugin.getResidenceManager().listAllResidences(sender, 1, true, true);
 	} else if (args.length == 2) {
 	    try {
-		Residence.getResidenceManager().listAllResidences(sender, page, true, true);
+		plugin.getResidenceManager().listAllResidences(sender, page, true, true);
 	    } catch (Exception ex) {
 	    }
 	} else {

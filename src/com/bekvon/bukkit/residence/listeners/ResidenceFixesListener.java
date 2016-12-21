@@ -18,7 +18,7 @@ public class ResidenceFixesListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onAnvilPlace(PlayerInteractEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	if (Residence.getInstance().isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;

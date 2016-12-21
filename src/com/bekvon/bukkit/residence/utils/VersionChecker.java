@@ -61,7 +61,7 @@ public class VersionChecker {
     }
 
     public void VersionCheck(final Player player) {
-	if (!Residence.getConfigManager().versionCheck())
+	if (!plugin.getConfigManager().versionCheck())
 	    return;
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {

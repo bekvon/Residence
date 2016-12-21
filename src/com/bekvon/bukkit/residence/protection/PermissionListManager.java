@@ -15,8 +15,10 @@ import org.bukkit.entity.Player;
 public class PermissionListManager {
 
     private final Map<String, Map<String, FlagPermissions>> lists;
+    private Residence plugin;
 
-    public PermissionListManager() {
+    public PermissionListManager(Residence residence) {
+	this.plugin = residence;
 	lists = Collections.synchronizedMap(new HashMap<String, Map<String, FlagPermissions>>());
     }
 
@@ -38,36 +40,36 @@ public class PermissionListManager {
 	if (perms == null) {
 	    perms = new FlagPermissions();
 	    get.put(listname, perms);
-	    Residence.msg(player, lm.General_ListCreate, listname);
+	    plugin.msg(player, lm.General_ListCreate, listname);
 	} else {
-	    Residence.msg(player,lm.General_ListExists);
+	    plugin.msg(player,lm.General_ListExists);
 	}
     }
 
     public void removeList(Player player, String listname) {
 	Map<String, FlagPermissions> get = lists.get(player.getName());
 	if (get == null) {
-	    Residence.msg(player, lm.Invalid_List);
+	    plugin.msg(player, lm.Invalid_List);
 	    return;
 	}
 	FlagPermissions list = get.get(listname);
 	if (list == null) {
-	    Residence.msg(player, lm.Invalid_List);
+	    plugin.msg(player, lm.Invalid_List);
 	    return;
 	}
 	get.remove(listname);
-	Residence.msg(player, lm.General_ListRemoved);
+	plugin.msg(player, lm.General_ListRemoved);
     }
 
     public void applyListToResidence(Player player, String listname, String areaname, boolean resadmin) {
 	FlagPermissions list = this.getList(player.getName(), listname);
 	if (list == null) {
-	    Residence.msg(player, lm.Invalid_List);
+	    plugin.msg(player, lm.Invalid_List);
 	    return;
 	}
-	ClaimedResidence res = Residence.getResidenceManager().getByName(areaname);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(areaname);
 	if (res == null) {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	    return;
 	}
 	res.getPermissions().applyTemplate(player, list, resadmin);
@@ -76,11 +78,11 @@ public class PermissionListManager {
     public void printList(Player player, String listname) {
 	FlagPermissions list = this.getList(player.getName(), listname);
 	if (list == null) {
-	    Residence.msg(player, lm.Invalid_List);
+	    plugin.msg(player, lm.Invalid_List);
 	    return;
 	}
 	player.sendMessage(ChatColor.LIGHT_PURPLE + "------Permission Template------");
-	Residence.msg(player, lm.General_Name, listname);
+	plugin.msg(player, lm.General_Name, listname);
 	list.printFlags(player);
     }
 
@@ -99,9 +101,9 @@ public class PermissionListManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static PermissionListManager load(Map<String, Object> root) {
+    public PermissionListManager load(Map<String, Object> root) {
 
-	PermissionListManager p = new PermissionListManager();
+	PermissionListManager p = new PermissionListManager(plugin);
 	if (root != null) {
 	    for (Entry<String, Object> players : root.entrySet()) {
 		try {
@@ -122,7 +124,7 @@ public class PermissionListManager {
     public void printLists(Player player) {
 	StringBuilder sbuild = new StringBuilder();
 	Map<String, FlagPermissions> get = lists.get(player.getName());
-	sbuild.append(Residence.msg(lm.General_Lists));
+	sbuild.append(plugin.msg(lm.General_Lists));
 	if (get != null) {
 	    for (Entry<String, FlagPermissions> thislist : get.entrySet()) {
 		sbuild.append(thislist.getKey()).append(" ");

@@ -17,27 +17,27 @@ public class server implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5400)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
 
 	if (!resadmin) {
-	    Residence.msg(player, lm.General_NoPermission);
+	    plugin.msg(player, lm.General_NoPermission);
 	    return true;
 	}
 	if (args.length == 2) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res == null) {
-		Residence.msg(player, lm.Invalid_Residence);
+		plugin.msg(player, lm.Invalid_Residence);
 		return true;
 	    }
-	    res.getPermissions().setOwner(Residence.getServerLandname(), false);
-	    Residence.msg(player, lm.Residence_OwnerChange, args[1], Residence.getServerLandname());
+	    res.getPermissions().setOwner(plugin.getServerLandname(), false);
+	    plugin.msg(player, lm.Residence_OwnerChange, args[1], plugin.getServerLandname());
 	    return true;
 	}
-	Residence.msg(player, lm.Invalid_Residence);
+	plugin.msg(player, lm.Invalid_Residence);
 	return true;
     }
 

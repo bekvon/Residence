@@ -261,7 +261,7 @@ public class ConfigManager {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-	Residence.getConfigManager().UpdateConfigFile();
+	plugin.getConfigManager().UpdateConfigFile();
     }
 
     public static List<String> ColorsArray(List<String> text, Boolean colorize) {
@@ -1223,7 +1223,7 @@ public class ConfigManager {
     }
 
     public boolean enableEconomy() {
-	return enableEconomy && Residence.getEconomyManager() != null;
+	return enableEconomy && plugin.getEconomyManager() != null;
     }
 
     public boolean enabledRentSystem() {

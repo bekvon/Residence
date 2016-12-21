@@ -44,38 +44,38 @@ public class ResidenceBank {
     }
 
     public void withdraw(CommandSender sender, int amount, boolean resadmin) {
-	if (!Residence.getConfigManager().enableEconomy()) {
-	    Residence.msg(sender, lm.Economy_MarketDisabled);
+	if (!Residence.getInstance().getConfigManager().enableEconomy()) {
+	    Residence.getInstance().msg(sender, lm.Economy_MarketDisabled);
 	}
 	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), Flags.bank, FlagCombo.OnlyTrue)) {
-	    Residence.msg(sender, lm.Bank_NoAccess);
+	    Residence.getInstance().msg(sender, lm.Bank_NoAccess);
 	    return;
 	}
 	if (!hasEnough(amount)) {
-	    Residence.msg(sender, lm.Bank_NoMoney);
+	    Residence.getInstance().msg(sender, lm.Bank_NoMoney);
 	    return;
 	}
-	if (sender instanceof Player && Residence.getEconomyManager().add(sender.getName(), amount) || !(sender instanceof Player)) {
+	if (sender instanceof Player && Residence.getInstance().getEconomyManager().add(sender.getName(), amount) || !(sender instanceof Player)) {
 	    this.subtract(amount);
-	    Residence.msg(sender, lm.Bank_Withdraw, String.format("%d", amount));
+	    Residence.getInstance().msg(sender, lm.Bank_Withdraw, String.format("%d", amount));
 	}
     }
 
     public void deposit(CommandSender sender, int amount, boolean resadmin) {
-	if (!Residence.getConfigManager().enableEconomy()) {
-	    Residence.msg(sender, lm.Economy_MarketDisabled);
+	if (!Residence.getInstance().getConfigManager().enableEconomy()) {
+	    Residence.getInstance().msg(sender, lm.Economy_MarketDisabled);
 	}
 	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), Flags.bank, FlagCombo.OnlyTrue)) {
-	    Residence.msg(sender, lm.Bank_NoAccess);
+	    Residence.getInstance().msg(sender, lm.Bank_NoAccess);
 	    return;
 	}
-	if (sender instanceof Player && !Residence.getEconomyManager().canAfford(sender.getName(), amount)) {
-	    Residence.msg(sender, lm.Economy_NotEnoughMoney);
+	if (sender instanceof Player && !Residence.getInstance().getEconomyManager().canAfford(sender.getName(), amount)) {
+	    Residence.getInstance().msg(sender, lm.Economy_NotEnoughMoney);
 	    return;
 	}
-	if (sender instanceof Player && Residence.getEconomyManager().subtract(sender.getName(), amount) || !(sender instanceof Player)) {
+	if (sender instanceof Player && Residence.getInstance().getEconomyManager().subtract(sender.getName(), amount) || !(sender instanceof Player)) {
 	    this.add(amount);
-	    Residence.msg(sender, lm.Bank_Deposit, String.format("%d", amount));
+	    Residence.getInstance().msg(sender, lm.Bank_Deposit, String.format("%d", amount));
 	}
     }
 }

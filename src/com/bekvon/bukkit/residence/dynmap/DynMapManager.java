@@ -68,7 +68,7 @@ public class DynMapManager {
 	handleResidenceRemove(res.getName(), res, deep);
     }
 
-    private static String formatInfoWindow(String resid, ClaimedResidence res, String resName) {
+    private String formatInfoWindow(String resid, ClaimedResidence res, String resName) {
 	if (res == null)
 	    return null;
 	if (res.getName() == null)
@@ -77,28 +77,28 @@ public class DynMapManager {
 	    return null;
 	String v =
 	    "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br /> "
-		+ ChatColor.stripColor(Residence.msg(lm.General_Owner, "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />";
+		+ ChatColor.stripColor(plugin.msg(lm.General_Owner, "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />";
 
-	if (Residence.getConfigManager().DynMapShowFlags)
-	    v += ChatColor.stripColor(Residence.msg(lm.General_ResidenceFlags, "")) + "<br /><span style=\"font-weight:bold;\">%flags%</span>";
+	if (plugin.getConfigManager().DynMapShowFlags)
+	    v += ChatColor.stripColor(plugin.msg(lm.General_ResidenceFlags, "")) + "<br /><span style=\"font-weight:bold;\">%flags%</span>";
 	v += "</div></div>";
 
-	if (Residence.getRentManager().isForRent(res.getName()))
+	if (plugin.getRentManager().isForRent(res.getName()))
 	    v = "<div class=\"regioninfo\"><div class=\"infowindow\">"
-		+ ChatColor.stripColor(Residence.msg(lm.Rentable_Land, "")) + "<span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br />"
-		+ ChatColor.stripColor(Residence.msg(lm.General_Owner, "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
-		+ ChatColor.stripColor(Residence.msg(lm.Residence_RentedBy, "")) + "<span style=\"font-weight:bold;\">%renter%</span><br /> "
-		+ ChatColor.stripColor(Residence.msg(lm.General_LandCost, "")) + "<span style=\"font-weight:bold;\">%rent%</span><br /> "
-		+ ChatColor.stripColor(Residence.msg(lm.Rent_Days, "")) + "<span style=\"font-weight:bold;\">%rentdays%</span><br /> "
-		+ ChatColor.stripColor(Residence.msg(lm.Rentable_AllowRenewing, "")) + "<span style=\"font-weight:bold;\">%renew%</span><br /> "
-		+ ChatColor.stripColor(Residence.msg(lm.Rent_Expire, "")) + "<span style=\"font-weight:bold;\">%expire%</span></div></div>";
+		+ ChatColor.stripColor(plugin.msg(lm.Rentable_Land, "")) + "<span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br />"
+		+ ChatColor.stripColor(plugin.msg(lm.General_Owner, "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
+		+ ChatColor.stripColor(plugin.msg(lm.Residence_RentedBy, "")) + "<span style=\"font-weight:bold;\">%renter%</span><br /> "
+		+ ChatColor.stripColor(plugin.msg(lm.General_LandCost, "")) + "<span style=\"font-weight:bold;\">%rent%</span><br /> "
+		+ ChatColor.stripColor(plugin.msg(lm.Rent_Days, "")) + "<span style=\"font-weight:bold;\">%rentdays%</span><br /> "
+		+ ChatColor.stripColor(plugin.msg(lm.Rentable_AllowRenewing, "")) + "<span style=\"font-weight:bold;\">%renew%</span><br /> "
+		+ ChatColor.stripColor(plugin.msg(lm.Rent_Expire, "")) + "<span style=\"font-weight:bold;\">%expire%</span></div></div>";
 
-	if (Residence.getTransactionManager().isForSale(res.getName()))
+	if (plugin.getTransactionManager().isForSale(res.getName()))
 	    v = "<div class=\"regioninfo\"><div class=\"infowindow\">"
-		+ ChatColor.stripColor(Residence.msg(lm.Economy_LandForSale, " "))
+		+ ChatColor.stripColor(plugin.msg(lm.Economy_LandForSale, " "))
 		+ "<span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br /> "
-		+ ChatColor.stripColor(Residence.msg(lm.General_Owner, "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
-		+ ChatColor.stripColor(Residence.msg(lm.Economy_SellAmount, "")) + "<span style=\"font-weight:bold;\">%price%</span><br /></div></div>";
+		+ ChatColor.stripColor(plugin.msg(lm.General_Owner, "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />"
+		+ ChatColor.stripColor(plugin.msg(lm.Economy_SellAmount, "")) + "<span style=\"font-weight:bold;\">%price%</span><br /></div></div>";
 
 	v = v.replace("%regionname%", resName);
 	v = v.replace("%playerowners%", res.getOwner());
@@ -110,7 +110,7 @@ public class DynMapManager {
 	String flgs = "";
 
 	// remake
-	Map<String, Boolean> all = Residence.getPermissionManager().getAllFlags().getFlags();
+	Map<String, Boolean> all = plugin.getPermissionManager().getAllFlags().getFlags();
 	String[] FLAGS = new String[all.size()];
 	int ii = 0;
 	for (Entry<String, Boolean> one : all.entrySet()) {
@@ -129,8 +129,8 @@ public class DynMapManager {
 		v = v.replace("%flag." + FLAGS[i] + "%", "");
 	}
 	v = v.replace("%flags%", flgs);
-	RentManager rentmgr = Residence.getRentManager();
-	TransactionManager transmgr = Residence.getTransactionManager();
+	RentManager rentmgr = plugin.getRentManager();
+	TransactionManager transmgr = plugin.getTransactionManager();
 
 	if (rentmgr.isForRent(res.getName())) {
 	    boolean isrented = rentmgr.isRented(resid);
@@ -165,9 +165,9 @@ public class DynMapManager {
 	return v;
     }
 
-    private static boolean isVisible(String id, String worldname) {
-	List<String> visible = Residence.getConfigManager().DynMapVisibleRegions;
-	List<String> hidden = Residence.getConfigManager().DynMapHiddenRegions;
+    private boolean isVisible(String id, String worldname) {
+	List<String> visible = plugin.getConfigManager().DynMapVisibleRegions;
+	List<String> hidden = plugin.getConfigManager().DynMapHiddenRegions;
 	if (visible != null && visible.size() > 0) {
 	    if ((visible.contains(id) == false) && (visible.contains("world:" + worldname) == false)) {
 		return false;
@@ -180,17 +180,17 @@ public class DynMapManager {
 	return true;
     }
 
-    private static void addStyle(String resid, AreaMarker m) {
+    private void addStyle(String resid, AreaMarker m) {
 	AreaStyle as = new AreaStyle();
 	int sc = 0xFF0000;
 	int fc = 0xFF0000;
 	try {
 	    sc = Integer.parseInt(as.strokecolor.substring(1), 16);
-	    if (Residence.getRentManager().isForRent(resid) && !Residence.getRentManager().isRented(resid))
+	    if (plugin.getRentManager().isForRent(resid) && !plugin.getRentManager().isRented(resid))
 		fc = Integer.parseInt(as.forrentstrokecolor.substring(1), 16);
-	    else if (Residence.getRentManager().isForRent(resid) && Residence.getRentManager().isRented(resid))
+	    else if (plugin.getRentManager().isForRent(resid) && plugin.getRentManager().isRented(resid))
 		fc = Integer.parseInt(as.rentedstrokecolor.substring(1), 16);
-	    else if (Residence.getTransactionManager().isForSale(resid))
+	    else if (plugin.getTransactionManager().isForSale(resid))
 		fc = Integer.parseInt(as.forsalestrokecolor.substring(1), 16);
 	    else
 		fc = Integer.parseInt(as.fillcolor.substring(1), 16);
@@ -207,7 +207,7 @@ public class DynMapManager {
 	    return;
 
 	boolean hidden = res.getPermissions().has("hidden", false);
-	if (hidden && Residence.getConfigManager().DynMapHideHidden) {
+	if (hidden && plugin.getConfigManager().DynMapHideHidden) {
 	    fireUpdateRemove(res, depth);
 	    return;
 	}
@@ -251,14 +251,14 @@ public class DynMapManager {
 	    if (marker == null)
 		return;
 
-	    if (Residence.getConfigManager().DynMapLayer3dRegions)
+	    if (plugin.getConfigManager().DynMapLayer3dRegions)
 		marker.setRangeY(Math.min(l0.getY(), l1.getY()), Math.max(l0.getY(), l1.getY()));
 
 	    marker.setDescription(desc);
 	    addStyle(resid, marker);
 	    resareas.put(id, marker);
 
-	    if (depth <= Residence.getConfigManager().DynMapLayerSubZoneDepth) {
+	    if (depth <= plugin.getConfigManager().DynMapLayerSubZoneDepth) {
 		List<ClaimedResidence> subids = res.getSubzones();
 		for (ClaimedResidence one : subids) {
 		    handleResidenceAdd(one.getName(), one, depth + 1);
@@ -280,7 +280,7 @@ public class DynMapManager {
 		AreaMarker marker = resareas.remove(id);
 		marker.deleteMarker();
 	    }
-	    if (depth <= Residence.getConfigManager().DynMapLayerSubZoneDepth + 1) {
+	    if (depth <= plugin.getConfigManager().DynMapLayerSubZoneDepth + 1) {
 		List<ClaimedResidence> subids = res.getSubzones();
 		for (ClaimedResidence one : subids) {
 		    handleResidenceRemove(one.getName(), one, depth + 1);
@@ -315,8 +315,8 @@ public class DynMapManager {
 
 	Bukkit.getConsoleSender().sendMessage("[Residence] DynMap residence activated!");
 
-	for (Entry<String, ClaimedResidence> one : Residence.getResidenceManager().getResidences().entrySet()) {
-	    Residence.getDynManager().fireUpdateAdd(one.getValue(), one.getValue().getSubzoneDeep());
+	for (Entry<String, ClaimedResidence> one : plugin.getResidenceManager().getResidences().entrySet()) {
+	    plugin.getDynManager().fireUpdateAdd(one.getValue(), one.getValue().getSubzoneDeep());
 	    handleResidenceAdd(one.getValue().getName(), one.getValue(), one.getValue().getSubzoneDeep());
 	}
     }

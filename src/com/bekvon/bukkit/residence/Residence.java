@@ -29,6 +29,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -126,6 +127,7 @@ import org.bukkit.OfflinePlayer;
  */
 public class Residence extends JavaPlugin {
 
+    private static Residence instance;
     protected static String ResidenceVersion;
     protected static List<String> authlist;
     protected static ResidenceManager rmanager;
@@ -188,7 +190,7 @@ public class Residence extends JavaPlugin {
     protected static int autosaveBukkitId = -1;
     protected static VersionChecker versionChecker;
     protected static boolean initsuccess = false;
-    public static Map<String, String> deleteConfirm;
+    public Map<String, String> deleteConfirm;
     public static Map<String, String> UnrentConfirm = new HashMap<String, String>();
     public static List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
@@ -220,11 +222,11 @@ public class Residence extends JavaPlugin {
 	return teleportMap;
     }
 
-    public static List<String> getTeleportDelayMap() {
+    public List<String> getTeleportDelayMap() {
 	return teleportDelayMap;
     }
 
-    public static HashMap<String, Long> getRandomTeleportMap() {
+    public HashMap<String, Long> getRandomTeleportMap() {
 	return rtMap;
     }
 
@@ -272,7 +274,7 @@ public class Residence extends JavaPlugin {
     }
     // API end
 
-    public static NMS getNms() {
+    public NMS getNms() {
 	return nms;
     }
 
@@ -395,6 +397,7 @@ public class Residence extends JavaPlugin {
     @Override
     public void onEnable() {
 	try {
+	    instance = this;
 	    initsuccess = false;
 	    deleteConfirm = new HashMap<String, String>();
 	    resadminToggle = new ArrayList<String>();
@@ -472,7 +475,7 @@ public class Residence extends JavaPlugin {
 	    String version = packageSplit[packageSplit.length - 1].substring(0, packageSplit[packageSplit.length - 1].length() - 3);
 	    try {
 		Class<?> nmsClass;
-		if (Residence.getConfigManager().CouldronCompatability())
+		if (getConfigManager().CouldronCompatability())
 		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms.v1_7_Couldron");
 		else
 		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + version);
@@ -511,22 +514,22 @@ public class Residence extends JavaPlugin {
 		return;
 	    }
 
-	    gmanager = new PermissionManager();
+	    gmanager = new PermissionManager(this);
 	    imanager = new WorldItemManager();
 	    wmanager = new WorldFlagManager();
 
 	    chatmanager = new ChatManager();
-	    rentmanager = new RentManager();
+	    rentmanager = new RentManager(this);
 
 	    LocaleManager = new LocaleManager(this);
 
-	    PlayerManager = new PlayerManager();
+	    PlayerManager = new PlayerManager(this);
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
 
 	    InformationPagerManager = new InformationPager(this);
 
-	    zip = new ZipLibrary();
+	    zip = new ZipLibrary(this);
 
 	    versionChecker = new VersionChecker(this);
 
@@ -543,7 +546,7 @@ public class Residence extends JavaPlugin {
 		getLocaleManager().LoadLang(lang);
 	    }
 
-	    Residence.getConfigManager().UpdateFlagFile();
+	    getConfigManager().UpdateFlagFile();
 
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
@@ -656,13 +659,13 @@ public class Residence extends JavaPlugin {
 		rmanager = new ResidenceManager(this);
 	    }
 	    if (leasemanager == null) {
-		leasemanager = new LeaseManager(rmanager);
+		leasemanager = new LeaseManager(this, rmanager);
 	    }
 	    if (tmanager == null) {
-		tmanager = new TransactionManager();
+		tmanager = new TransactionManager(this);
 	    }
 	    if (pmanager == null) {
-		pmanager = new PermissionListManager();
+		pmanager = new PermissionListManager(this);
 	    }
 
 	    try {
@@ -673,9 +676,9 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    signmanager = new SignUtil(this);
-	    Residence.getSignUtil().LoadSigns();
+	    getSignUtil().LoadSigns();
 
-	    if (Residence.getConfigManager().isUseResidenceFileClean())
+	    if (getConfigManager().isUseResidenceFileClean())
 		FileCleanUp.cleanFiles();
 
 	    if (firstenable) {
@@ -692,7 +695,7 @@ public class Residence extends JavaPlugin {
 		elistener = new ResidenceEntityListener(this);
 		flistener = new ResidenceFixesListener();
 
-		shlistener = new ShopListener();
+		shlistener = new ShopListener(this);
 		spigotlistener = new SpigotListener();
 
 		PluginManager pm = getServer().getPluginManager();
@@ -717,7 +720,7 @@ public class Residence extends JavaPlugin {
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
 		// Priority.NORMAL, this);
 		if (cmanager.enableSpout()) {
-		    slistener = new ResidenceSpoutListener();
+		    slistener = new ResidenceSpoutListener(this);
 		    pm.registerEvents(slistener, this);
 		    spout = new ResidenceSpout(this);
 		}
@@ -729,10 +732,10 @@ public class Residence extends JavaPlugin {
 	    NewLanguageManager = new Language(this);
 	    getLM().LanguageReload();
 
-	    AutoSelectionManager = new AutoSelection();
+	    AutoSelectionManager = new AutoSelection(this);
 
 	    if (wep != null)
-		SchematicManager = new SchematicsManager();
+		SchematicManager = new SchematicsManager(this);
 
 	    try {
 		Class.forName("org.bukkit.event.player.PlayerItemDamageEvent");
@@ -741,7 +744,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    if (getServer().getPluginManager().getPlugin("CrackShot") != null)
-		getServer().getPluginManager().registerEvents(new CrackShot(), this);
+		getServer().getPluginManager().registerEvents(new CrackShot(this), this);
 
 	    // DynMap
 	    Plugin dynmap = Bukkit.getPluginManager().getPlugin("dynmap");
@@ -758,11 +761,11 @@ public class Residence extends JavaPlugin {
 	    }
 	    autosaveInt = autosaveInt * 60 * 20;
 	    autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
-	    healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, Residence.getConfigManager().getHealInterval() * 20);
-	    feedBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doFeed, 20, Residence.getConfigManager().getFeedInterval() * 20);
-	    if (Residence.getConfigManager().AutoMobRemoval())
-		DespawnMobsBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, DespawnMobs, 20 * Residence.getConfigManager().AutoMobRemovalInterval(), 20
-		    * Residence.getConfigManager().AutoMobRemovalInterval());
+	    healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, getConfigManager().getHealInterval() * 20);
+	    feedBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doFeed, 20, getConfigManager().getFeedInterval() * 20);
+	    if (getConfigManager().AutoMobRemoval())
+		DespawnMobsBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, DespawnMobs, 20 * getConfigManager().AutoMobRemovalInterval(), 20
+		    * getConfigManager().AutoMobRemovalInterval());
 
 	    if (cmanager.useLeases()) {
 		int leaseInterval = cmanager.getLeaseCheckInterval();
@@ -846,7 +849,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private void setWorldGuard() {
+    private static void setWorldGuard() {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
 	    try {
@@ -881,7 +884,7 @@ public class Residence extends JavaPlugin {
 	return dataFolder;
     }
 
-    public static ShopSignUtil getShopSignUtilManager() {
+    public ShopSignUtil getShopSignUtilManager() {
 	return ShopSignUtilManager;
     }
 
@@ -901,11 +904,11 @@ public class Residence extends JavaPlugin {
 	return cmdFiller;
     }
 
-    public static ResidenceManager getResidenceManager() {
+    public ResidenceManager getResidenceManager() {
 	return rmanager;
     }
 
-    public static SelectionManager getSelectionManager() {
+    public SelectionManager getSelectionManager() {
 	return smanager;
     }
 
@@ -925,11 +928,11 @@ public class Residence extends JavaPlugin {
 	return DynManager;
     }
 
-    public static SchematicsManager getSchematicManager() {
+    public SchematicsManager getSchematicManager() {
 	return SchematicManager;
     }
 
-    public static AutoSelection getAutoSelectionManager() {
+    public AutoSelection getAutoSelectionManager() {
 	return AutoSelectionManager;
     }
 
@@ -937,11 +940,11 @@ public class Residence extends JavaPlugin {
 	return SortingManager;
     }
 
-    public static RandomTp getRandomTpManager() {
+    public RandomTp getRandomTpManager() {
 	return RandomTpManager;
     }
 
-    public static EconomyInterface getEconomyManager() {
+    public EconomyInterface getEconomyManager() {
 	return economy;
     }
 
@@ -965,7 +968,7 @@ public class Residence extends JavaPlugin {
 	cmanager = cm;
     }
 
-    public static ConfigManager getConfigManager() {
+    public ConfigManager getConfigManager() {
 	return cmanager;
     }
 
@@ -977,11 +980,11 @@ public class Residence extends JavaPlugin {
 	return imanager;
     }
 
-    public static WorldFlagManager getWorldFlags() {
+    public WorldFlagManager getWorldFlags() {
 	return wmanager;
     }
 
-    public static RentManager getRentManager() {
+    public RentManager getRentManager() {
 	return rentmanager;
     }
 
@@ -1009,7 +1012,7 @@ public class Residence extends JavaPlugin {
 	return chatmanager;
     }
 
-    public static String getResidenceVersion() {
+    public String getResidenceVersion() {
 	return ResidenceVersion;
     }
 
@@ -1267,28 +1270,28 @@ public class Residence extends JavaPlugin {
 		addShops(one.getValue());
 	    }
 
-	    if (Residence.getConfigManager().isUUIDConvertion()) {
-		Residence.getConfigManager().ChangeConfig("Global.UUIDConvertion", false);
+	    if (getConfigManager().isUUIDConvertion()) {
+		getConfigManager().ChangeConfig("Global.UUIDConvertion", false);
 	    }
 
 	    loadFile = new File(saveFolder, "forsale.yml");
 	    if (loadFile.isFile()) {
 		yml = new YMLSaveHelper(loadFile);
 		yml.load();
-		tmanager = new TransactionManager();
+		tmanager = new TransactionManager(this);
 		tmanager.load((Map) yml.getRoot().get("Economy"));
 	    }
 	    loadFile = new File(saveFolder, "leases.yml");
 	    if (loadFile.isFile()) {
 		yml = new YMLSaveHelper(loadFile);
 		yml.load();
-		leasemanager = LeaseManager.load((Map) yml.getRoot().get("Leases"), rmanager);
+		leasemanager = getLeaseManager().load((Map) yml.getRoot().get("Leases"), rmanager);
 	    }
 	    loadFile = new File(saveFolder, "permlists.yml");
 	    if (loadFile.isFile()) {
 		yml = new YMLSaveHelper(loadFile);
 		yml.load();
-		pmanager = PermissionListManager.load((Map) yml.getRoot().get("PermissionLists"));
+		pmanager = getPermissionListManager().load((Map) yml.getRoot().get("PermissionLists"));
 	    }
 	    loadFile = new File(saveFolder, "rent.yml");
 	    if (loadFile.isFile()) {
@@ -1541,7 +1544,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    public static boolean isPlayerExist(CommandSender sender, String name, boolean inform) {
+    public boolean isPlayerExist(CommandSender sender, String name, boolean inform) {
 	if (Residence.getPlayerUUID(name) != null)
 	    return true;
 	if (inform)
@@ -1624,21 +1627,21 @@ public class Residence extends JavaPlugin {
 	return null;
     }
 
-    public static boolean isDisabledWorldListener(World world) {
+    public boolean isDisabledWorldListener(World world) {
 	return isDisabledWorldListener(world.getName());
     }
 
-    public static boolean isDisabledWorldListener(String worldname) {
+    public boolean isDisabledWorldListener(String worldname) {
 	if (getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableListeners)
 	    return true;
 	return false;
     }
 
-    public static boolean isDisabledWorldCommand(World world) {
+    public boolean isDisabledWorldCommand(World world) {
 	return isDisabledWorldCommand(world.getName());
     }
 
-    public static boolean isDisabledWorldCommand(String worldname) {
+    public boolean isDisabledWorldCommand(String worldname) {
 	if (getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableCommands)
 	    return true;
 	return false;
@@ -1666,7 +1669,7 @@ public class Residence extends JavaPlugin {
 	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 
-    public static void msg(CommandSender sender, lm lm, Object... variables) {
+    public void msg(CommandSender sender, lm lm, Object... variables) {
 	if (sender != null)
 	    if (Residence.getLM().containsKey(lm.getPath())) {
 		String msg = Residence.getLM().getMessage(lm, variables);
@@ -1683,7 +1686,7 @@ public class Residence extends JavaPlugin {
 	return Residence.getLM().getMessageList(lm);
     }
 
-    public static String msg(lm lm, Object... variables) {
+    public String msg(lm lm, Object... variables) {
 	return Residence.getLM().getMessage(lm, variables);
     }
 
@@ -1703,7 +1706,7 @@ public class Residence extends JavaPlugin {
 	cachedPlayerNameUUIDs.putAll(cachedPlayerNameUUIDs2);
     }
 
-    public static WorldEditPlugin getWorldEdit() {
+    public WorldEditPlugin getWorldEdit() {
 	return wep;
     }
 
@@ -1711,14 +1714,50 @@ public class Residence extends JavaPlugin {
 	return wg;
     }
 
-    public static int getWepid() {
+    public int getWepid() {
 	return wepid;
     }
 
-    public static WorldGuardUtil getWorldGuardUtil() {
+    public WorldGuardUtil getWorldGuardUtil() {
 	if (worldGuardUtil == null)
-	    worldGuardUtil = new WorldGuardUtil();
+	    worldGuardUtil = new WorldGuardUtil(this);
 	return worldGuardUtil;
     }
 
+    public boolean hasPermission(CommandSender sender, String permision) {
+	return hasPermission(sender, permision, true, null);
+    }
+
+    public boolean hasPermission(CommandSender sender, String permision, String message) {
+	return hasPermission(sender, permision, true, message);
+    }
+
+    public boolean hasPermission(CommandSender sender, String permision, lm message) {
+	return hasPermission(sender, permision, true, getLM().getMessage(message));
+    }
+
+    public boolean hasPermission(CommandSender sender, String permision, Boolean output, String message) {
+	if (sender instanceof ConsoleCommandSender) {
+	    return true;
+	} else if (sender instanceof Player) {
+	    Player player = (Player) sender;
+	    if (player.hasPermission(permision)) {
+		return true;
+	    }
+	    if (output) {
+		String outMsg = getLM().getMessage(lm.General_NoPermission);
+		if (message != null)
+		    outMsg = message;
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " {\"text\":\"\",\"extra\":[{\"text\":\"" + outMsg
+		    + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§2" + permision + "\"}}]}");
+		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+		console.sendMessage(getLM().getMessage(lm.General_NoPermission));
+	    }
+	}
+	return false;
+    }
+
+    public static Residence getInstance() {
+	return instance;
+    }
 }

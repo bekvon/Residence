@@ -17,7 +17,7 @@ public class compass implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3200)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -25,26 +25,24 @@ public class compass implements cmd {
 
 	if (args.length != 2) {
 	    player.setCompassTarget(player.getWorld().getSpawnLocation());
-	    Residence.msg(player, lm.General_CompassTargetReset);
+	    plugin.msg(player, lm.General_CompassTargetReset);
 	    return true;
 	}
 
-	if (!player.hasPermission("residence.compass")) {
-	    Residence.msg(player, lm.General_NoPermission);
-	    return true;
-	}
+	if (!plugin.hasPermission(player, "residence.compass"))
+	    return true;	
 
-	if (Residence.getResidenceManager().getByName(args[1]) != null) {
-	    if (Residence.getResidenceManager().getByName(args[1]).getWorld().equalsIgnoreCase(player.getWorld().getName())) {
-		Location low = Residence.getResidenceManager().getByName(args[1]).getArea("main").getLowLoc();
-		Location high = Residence.getResidenceManager().getByName(args[1]).getArea("main").getHighLoc();
+	if (plugin.getResidenceManager().getByName(args[1]) != null) {
+	    if (plugin.getResidenceManager().getByName(args[1]).getWorld().equalsIgnoreCase(player.getWorld().getName())) {
+		Location low = plugin.getResidenceManager().getByName(args[1]).getArea("main").getLowLoc();
+		Location high = plugin.getResidenceManager().getByName(args[1]).getArea("main").getHighLoc();
 		Location mid = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2, (low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high
 		    .getBlockZ()) / 2);
 		player.setCompassTarget(mid);
-		Residence.msg(player, lm.General_CompassTargetSet, args[1]);
+		plugin.msg(player, lm.General_CompassTargetSet, args[1]);
 	    }
 	} else {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	}
 	return true;
     }

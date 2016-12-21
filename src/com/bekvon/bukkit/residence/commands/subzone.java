@@ -17,7 +17,7 @@ public class subzone implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2100)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -28,34 +28,33 @@ public class subzone implements cmd {
 	String zname;
 	String parent;
 	if (args.length == 2) {
-	    parent = Residence.getResidenceManager().getNameByLoc(player.getLocation());
+	    parent = plugin.getResidenceManager().getNameByLoc(player.getLocation());
 	    zname = args[1];
 	} else {
 	    parent = args[1];
 	    zname = args[2];
 	}
 
-	if (Residence.getWorldEdit() != null) {
-	    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
-		Residence.getSelectionManager().worldEdit(player);
+	if (plugin.getWorldEdit() != null) {
+	    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTooldID()) {
+		plugin.getSelectionManager().worldEdit(player);
 	    }
 	}
-	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(parent);
+	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(parent);
 	    if (res == null) {
-		Residence.msg(player, lm.Invalid_Residence);
+		plugin.msg(player, lm.Invalid_Residence);
 		return true;
 	    }
 
-	    if (!player.hasPermission("residence.create.subzone") && !resadmin) {
-		Residence.msg(player, lm.Subzone_CantCreate);
-		return false;
+	    if (!resadmin && !plugin.hasPermission(player, "residence.create.subzone", lm.Subzone_CantCreate)) {
+		return true;
 	    }
 
-	    res.addSubzone(player, Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence.getSelectionManager().getPlayerLoc2(player.getName()),
+	    res.addSubzone(player, plugin.getSelectionManager().getPlayerLoc1(player.getName()), plugin.getSelectionManager().getPlayerLoc2(player.getName()),
 		zname, resadmin);
 	} else {
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
 	}
 	return true;
     }

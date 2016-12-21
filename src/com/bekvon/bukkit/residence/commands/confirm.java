@@ -16,7 +16,7 @@ public class confirm implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2400)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	Player player = null;
 	String name = "Console";
 	if (sender instanceof Player) {
@@ -26,12 +26,12 @@ public class confirm implements cmd {
 	if (args.length != 1)
 	    return true;
 
-	String area = Residence.deleteConfirm.get(name);
+	String area = plugin.deleteConfirm.get(name);
 	if (area == null) {
-	    Residence.msg(sender, lm.Invalid_Residence);
+	    plugin.msg(sender, lm.Invalid_Residence);
 	} else {
-	    Residence.getResidenceManager().removeResidence(player, area, resadmin);
-	    Residence.deleteConfirm.remove(name);
+	    plugin.getResidenceManager().removeResidence(player, area, resadmin);
+	    plugin.deleteConfirm.remove(name);
 	}
 
 	return true;

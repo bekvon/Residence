@@ -21,7 +21,7 @@ public class kick implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2200)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -32,7 +32,7 @@ public class kick implements cmd {
 
 	Player targetplayer = Bukkit.getPlayer(args[1]);
 	if (targetplayer == null) {
-	    Residence.msg(player, lm.General_NotOnline);
+	    plugin.msg(player, lm.General_NotOnline);
 	    return true;
 	}
 
@@ -40,13 +40,13 @@ public class kick implements cmd {
 
 	PermissionGroup group = rPlayer.getGroup();
 	if (!group.hasKickAccess() && !resadmin) {
-	    Residence.msg(player, lm.General_NoPermission);
+	    plugin.msg(player, lm.General_NoPermission);
 	    return true;
 	}
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(targetplayer.getLocation());
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(targetplayer.getLocation());
 
 	if (res == null || !res.isOwner(player) && !resadmin) {
-	    Residence.msg(player, lm.Residence_PlayerNotIn);
+	    plugin.msg(player, lm.Residence_PlayerNotIn);
 	    return true;
 	}
 
@@ -54,12 +54,12 @@ public class kick implements cmd {
 	    return false;
 
 	if (res.getPlayersInResidence().contains(targetplayer)) {
-	    Location loc = Residence.getConfigManager().getKickLocation();
+	    Location loc = plugin.getConfigManager().getKickLocation();
 	    if (loc != null)
 		targetplayer.teleport(loc);
 	    else
 		targetplayer.teleport(res.getOutsideFreeLoc(player.getLocation(), player));
-	    Residence.msg(targetplayer, lm.Residence_Kicked);
+	    plugin.msg(targetplayer, lm.Residence_Kicked);
 	}
 	return true;
     }

@@ -18,13 +18,13 @@ public class SpigotListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDamage(PlayerItemDamageEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	if (Residence.getInstance().isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Player player = event.getPlayer();
 	Location loc = player.getLocation();
-	FlagPermissions perms = Residence.getPermsByLoc(loc);
+	FlagPermissions perms = Residence.getInstance().getPermsByLoc(loc);
 	if (perms.has(Flags.nodurability, false)) {
-	    ItemStack held = Residence.getNms().itemInMainHand(player);
+	    ItemStack held = Residence.getInstance().getNms().itemInMainHand(player);
 	    if (held.getType() != Material.AIR) {
 		held.setDurability(held.getDurability());
 		player.setItemInHand(held);

@@ -15,32 +15,32 @@ public class setowner implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5500)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length < 3)
 	    return false;
 
 	if (!resadmin) {
-	    Residence.msg(sender, lm.General_NoPermission);
+	    plugin.msg(sender, lm.General_NoPermission);
 	    return true;
 	}
 
-	ClaimedResidence area = Residence.getResidenceManager().getByName(args[1]);
+	ClaimedResidence area = plugin.getResidenceManager().getByName(args[1]);
 	if (area != null) {
 	    area.getPermissions().setOwner(args[2], true);
-	    if (Residence.getRentManager().isForRent(area.getName()))
-		Residence.getRentManager().removeRentable(area.getName());
-	    if (Residence.getTransactionManager().isForSale(area.getName()))
-		Residence.getTransactionManager().removeFromSale(area.getName());
+	    if (plugin.getRentManager().isForRent(area.getName()))
+		plugin.getRentManager().removeRentable(area.getName());
+	    if (plugin.getTransactionManager().isForSale(area.getName()))
+		plugin.getTransactionManager().removeFromSale(area.getName());
 	    area.getPermissions().applyDefaultFlags();
 
 	    if (area.getParent() == null) {
-		Residence.msg(sender, lm.Residence_OwnerChange, args[1], args[2]);
+		plugin.msg(sender, lm.Residence_OwnerChange, args[1], args[2]);
 	    } else {
-		Residence.msg(sender, lm.Subzone_OwnerChange, args[1].split("\\.")[args[1].split("\\.").length - 1], args[2]);
+		plugin.msg(sender, lm.Subzone_OwnerChange, args[1].split("\\.")[args[1].split("\\.").length - 1], args[2]);
 	    }
 	} else {
-	    Residence.msg(sender, lm.Invalid_Residence);
+	    plugin.msg(sender, lm.Invalid_Residence);
 	}
 	return true;
     }

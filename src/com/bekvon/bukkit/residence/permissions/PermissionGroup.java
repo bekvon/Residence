@@ -416,35 +416,35 @@ public class PermissionGroup {
 	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(target.getName());
 	PermissionGroup group = rPlayer.getGroup();
 
-	Residence.msg(player, lm.General_Separator);
-	Residence.msg(player, lm.Limits_PGroup, Residence.getPermissionManager().getPermissionsGroup(target.getName(),
-	    target.isOnline() ? Bukkit.getPlayer(target.getName()).getWorld().getName() : Residence.getConfigManager().getDefaultWorld()));
-	Residence.msg(player, lm.Limits_RGroup, group.getGroupName());
+	Residence.getInstance().msg(player, lm.General_Separator);
+	Residence.getInstance().msg(player, lm.Limits_PGroup, Residence.getPermissionManager().getPermissionsGroup(target.getName(),
+	    target.isOnline() ? Bukkit.getPlayer(target.getName()).getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld()));
+	Residence.getInstance().msg(player, lm.Limits_RGroup, group.getGroupName());
 	if (target.isOnline() && resadmin)
-	    Residence.msg(player, lm.Limits_Admin, Residence.getPermissionManager().isResidenceAdmin(player));
-	Residence.msg(player, lm.Limits_CanCreate, group.canCreateResidences());
-	Residence.msg(player, lm.Limits_MaxRes, rPlayer.getMaxRes());
-	Residence.msg(player, lm.Limits_NumberOwn, rPlayer.getResAmount());
-	Residence.msg(player, lm.Limits_MaxEW, group.xmin + "-" + group.xmax);
-	Residence.msg(player, lm.Limits_MaxNS, group.zmin + "-" + group.zmax);
-	Residence.msg(player, lm.Limits_MaxUD, group.ymin + "-" + group.ymax);
-	Residence.msg(player, lm.Limits_MinMax, group.minHeight, group.maxHeight);
-	Residence.msg(player, lm.Limits_MaxSubzones, rPlayer.getMaxSubzones());
-	Residence.msg(player, lm.Limits_MaxSubDepth, rPlayer.getMaxSubzoneDepth());
-	Residence.msg(player, lm.Limits_MaxRents, rPlayer.getMaxRents() + (getMaxRentDays() != -1 ? Residence.msg(lm.Limits_MaxRentDays, getMaxRentDays())
+	    Residence.getInstance().msg(player, lm.Limits_Admin, Residence.getPermissionManager().isResidenceAdmin(player));
+	Residence.getInstance().msg(player, lm.Limits_CanCreate, group.canCreateResidences());
+	Residence.getInstance().msg(player, lm.Limits_MaxRes, rPlayer.getMaxRes());
+	Residence.getInstance().msg(player, lm.Limits_NumberOwn, rPlayer.getResAmount());
+	Residence.getInstance().msg(player, lm.Limits_MaxEW, group.xmin + "-" + group.xmax);
+	Residence.getInstance().msg(player, lm.Limits_MaxNS, group.zmin + "-" + group.zmax);
+	Residence.getInstance().msg(player, lm.Limits_MaxUD, group.ymin + "-" + group.ymax);
+	Residence.getInstance().msg(player, lm.Limits_MinMax, group.minHeight, group.maxHeight);
+	Residence.getInstance().msg(player, lm.Limits_MaxSubzones, rPlayer.getMaxSubzones());
+	Residence.getInstance().msg(player, lm.Limits_MaxSubDepth, rPlayer.getMaxSubzoneDepth());
+	Residence.getInstance().msg(player, lm.Limits_MaxRents, rPlayer.getMaxRents() + (getMaxRentDays() != -1 ? Residence.getInstance().msg(lm.Limits_MaxRentDays, getMaxRentDays())
 	    : ""));
-	Residence.msg(player, lm.Limits_EnterLeave, group.messageperms);
-	if (Residence.getEconomyManager() != null) {
-	    Residence.msg(player, lm.Limits_Cost, group.costperarea);
-	    Residence.msg(player, lm.Limits_Sell, group.sellperarea);
+	Residence.getInstance().msg(player, lm.Limits_EnterLeave, group.messageperms);
+	if (Residence.getInstance().getEconomyManager() != null) {
+	    Residence.getInstance().msg(player, lm.Limits_Cost, group.costperarea);
+	    Residence.getInstance().msg(player, lm.Limits_Sell, group.sellperarea);
 	}
-	Residence.msg(player, lm.Limits_Flag, group.flagPerms.listFlags());
-	if (Residence.getConfigManager().useLeases()) {
-	    Residence.msg(player, lm.Limits_MaxDays, group.maxLeaseTime);
-	    Residence.msg(player, lm.Limits_LeaseTime, group.leaseGiveTime);
-	    Residence.msg(player, lm.Limits_RenewCost, group.renewcostperarea);
+	Residence.getInstance().msg(player, lm.Limits_Flag, group.flagPerms.listFlags());
+	if (Residence.getInstance().getConfigManager().useLeases()) {
+	    Residence.getInstance().msg(player, lm.Limits_MaxDays, group.maxLeaseTime);
+	    Residence.getInstance().msg(player, lm.Limits_LeaseTime, group.leaseGiveTime);
+	    Residence.getInstance().msg(player, lm.Limits_RenewCost, group.renewcostperarea);
 	}
-	Residence.msg(player, lm.General_Separator);
+	Residence.getInstance().msg(player, lm.General_Separator);
     }
 
 }

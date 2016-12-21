@@ -10,13 +10,12 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
-import com.bekvon.bukkit.residence.containers.lm;
 
 public class list implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 300)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	int page = 1;
 	World world = null;
 	String target = null;
@@ -38,13 +37,11 @@ public class list implements cmd {
 	    }
 	    target = args[i];
 	}
-	
-	if (target != null && !sender.getName().equalsIgnoreCase(target) && !sender.hasPermission("residence.command.list.others")){
-	    Residence.msg(sender, lm.General_NoPermission);
-	    return true;
-	}
 
-	Residence.getResidenceManager().listResidences(sender, target, page, false, false, resadmin, world);
+	if (target != null && !sender.getName().equalsIgnoreCase(target) && !plugin.hasPermission(sender, "residence.command.list.others"))
+	    return true;
+
+	plugin.getResidenceManager().listResidences(sender, target, page, false, false, resadmin, world);
 
 	return true;
     }

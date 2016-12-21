@@ -20,88 +20,86 @@ public class rc implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1100)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return true;
 	Player player = (Player) sender;
 	String pname = player.getName();
-	if (!Residence.getConfigManager().chatEnabled()) {
-	    Residence.msg(player, lm.Residence_ChatDisabled);
+	if (!plugin.getConfigManager().chatEnabled()) {
+	    plugin.msg(player, lm.Residence_ChatDisabled);
 	    return false;
 	}
 	if (args.length > 0)
 	    args = Arrays.copyOfRange(args, 1, args.length);
 
 	if (args.length == 0) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res == null) {
-		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+		ChatChannel chat = plugin.getChatManager().getPlayerChannel(pname);
 		if (chat != null) {
-		    Residence.getChatManager().removeFromChannel(pname);
-		    Residence.getPlayerListener().removePlayerResidenceChat(player);
+		    plugin.getChatManager().removeFromChannel(pname);
+		    plugin.getPlayerListener().removePlayerResidenceChat(player);
 		    return true;
 		}
-		Residence.msg(player, lm.Residence_NotIn);
+		plugin.msg(player, lm.Residence_NotIn);
 		return true;
 	    }
-	    ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+	    ChatChannel chat = plugin.getChatManager().getPlayerChannel(pname);
 	    if (chat != null && chat.getChannelName().equals(res.getName())) {
-		Residence.getChatManager().removeFromChannel(pname);
-		Residence.getPlayerListener().removePlayerResidenceChat(player);
+		plugin.getChatManager().removeFromChannel(pname);
+		plugin.getPlayerListener().removePlayerResidenceChat(player);
 		return true;
 	    }
-	    if (!res.getPermissions().playerHas(player.getName(), Flags.chat, true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		Residence.msg(player, lm.Residence_FlagDeny, Flags.chat, res.getName());
+	    if (!res.getPermissions().playerHas(player.getName(), Flags.chat, true) && !plugin.getPermissionManager().isResidenceAdmin(player)) {
+		plugin.msg(player, lm.Residence_FlagDeny, Flags.chat, res.getName());
 		return false;
 	    }
 
-	    Residence.getPlayerListener().tooglePlayerResidenceChat(player, res.getName());
-	    Residence.getChatManager().setChannel(pname, res);
+	    plugin.getPlayerListener().tooglePlayerResidenceChat(player, res.getName());
+	    plugin.getChatManager().setChannel(pname, res);
 	    return true;
 	} else if (args.length == 1) {
 	    if (args[0].equalsIgnoreCase("l") || args[0].equalsIgnoreCase("leave")) {
-		Residence.getChatManager().removeFromChannel(pname);
-		Residence.getPlayerListener().removePlayerResidenceChat(player);
+		plugin.getChatManager().removeFromChannel(pname);
+		plugin.getPlayerListener().removePlayerResidenceChat(player);
 		return true;
 	    }
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[0]);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 	    if (res == null) {
-		Residence.msg(player, lm.Chat_InvalidChannel);
+		plugin.msg(player, lm.Chat_InvalidChannel);
 		return true;
 	    }
 
-	    if (!res.getPermissions().playerHas(player.getName(), Flags.chat, true) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		Residence.msg(player, lm.Residence_FlagDeny, Flags.chat.getName(), res.getName());
+	    if (!res.getPermissions().playerHas(player.getName(), Flags.chat, true) && !plugin.getPermissionManager().isResidenceAdmin(player)) {
+		plugin.msg(player, lm.Residence_FlagDeny, Flags.chat.getName(), res.getName());
 		return false;
 	    }
-	    Residence.getPlayerListener().tooglePlayerResidenceChat(player, res.getName());
-	    Residence.getChatManager().setChannel(pname, res);
+	    plugin.getPlayerListener().tooglePlayerResidenceChat(player, res.getName());
+	    plugin.getChatManager().setChannel(pname, res);
 
 	    return true;
 	} else if (args.length == 2) {
 	    if (args[0].equalsIgnoreCase("setcolor")) {
 
-		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+		ChatChannel chat = plugin.getChatManager().getPlayerChannel(pname);
 
 		if (chat == null) {
-		    Residence.msg(player, lm.Chat_JoinFirst);
+		    plugin.msg(player, lm.Chat_JoinFirst);
 		    return true;
 		}
 
-		ClaimedResidence res = Residence.getResidenceManager().getByName(chat.getChannelName());
+		ClaimedResidence res = plugin.getResidenceManager().getByName(chat.getChannelName());
 
 		if (res == null)
 		    return false;
 
-		if (!res.isOwner(player) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!res.isOwner(player) && !plugin.getPermissionManager().isResidenceAdmin(player)) {
+		    plugin.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
-		if (!player.hasPermission("residence.chatcolor")) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!plugin.hasPermission(player, "residence.chatcolor"))
 		    return true;
-		}
 
 		String posibleColor = args[1];
 
@@ -109,82 +107,78 @@ public class rc implements cmd {
 		    posibleColor = "&" + posibleColor;
 
 		if (posibleColor.length() != 2 || ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', posibleColor)).length() != 0) {
-		    Residence.msg(player, lm.Chat_InvalidColor);
+		    plugin.msg(player, lm.Chat_InvalidColor);
 		    return true;
 		}
 
 		ChatColor color = ChatColor.getByChar(posibleColor.replace("&", ""));
 		res.setChannelColor(color);
 		chat.setChannelColor(color);
-		Residence.msg(player, lm.Chat_ChangedColor, color.name());
+		plugin.msg(player, lm.Chat_ChangedColor, color.name());
 		return true;
 	    } else if (args[0].equalsIgnoreCase("setprefix")) {
-		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+		ChatChannel chat = plugin.getChatManager().getPlayerChannel(pname);
 
 		if (chat == null) {
-		    Residence.msg(player, lm.Chat_JoinFirst);
+		    plugin.msg(player, lm.Chat_JoinFirst);
 		    return true;
 		}
 
-		ClaimedResidence res = Residence.getResidenceManager().getByName(chat.getChannelName());
+		ClaimedResidence res = plugin.getResidenceManager().getByName(chat.getChannelName());
 
 		if (res == null)
 		    return false;
 
-		if (!res.isOwner(player) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!res.isOwner(player) && !plugin.getPermissionManager().isResidenceAdmin(player)) {
+		    plugin.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
-		if (!player.hasPermission("residence.chatprefix")) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!plugin.hasPermission(player, "residence.chatprefix"))
 		    return true;
-		}
 
 		String prefix = args[1];
 
-		if (prefix.length() > Residence.getConfigManager().getChatPrefixLength()) {
-		    Residence.msg(player, lm.Chat_InvalidPrefixLength, Residence.getConfigManager()
+		if (prefix.length() > plugin.getConfigManager().getChatPrefixLength()) {
+		    plugin.msg(player, lm.Chat_InvalidPrefixLength, plugin.getConfigManager()
 			.getChatPrefixLength());
 		    return true;
 		}
 
 		res.setChatPrefix(prefix);
 		chat.setChatPrefix(prefix);
-		Residence.msg(player, lm.Chat_ChangedPrefix, ChatColor.translateAlternateColorCodes('&', prefix));
+		plugin.msg(player, lm.Chat_ChangedPrefix, ChatColor.translateAlternateColorCodes('&', prefix));
 		return true;
 	    } else if (args[0].equalsIgnoreCase("kick")) {
-		ChatChannel chat = Residence.getChatManager().getPlayerChannel(pname);
+		ChatChannel chat = plugin.getChatManager().getPlayerChannel(pname);
 
 		if (chat == null) {
-		    Residence.msg(player, lm.Chat_JoinFirst);
+		    plugin.msg(player, lm.Chat_JoinFirst);
 		    return true;
 		}
 
-		ClaimedResidence res = Residence.getResidenceManager().getByName(chat.getChannelName());
+		ClaimedResidence res = plugin.getResidenceManager().getByName(chat.getChannelName());
 
 		if (res == null)
 		    return false;
 
-		if (!res.getOwner().equals(player.getName()) && !Residence.getPermissionManager().isResidenceAdmin(player)) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!res.getOwner().equals(player.getName()) && !plugin.getPermissionManager().isResidenceAdmin(player)) {
+		    plugin.msg(player, lm.General_NoPermission);
 		    return true;
 		}
 
-		if (!player.hasPermission("residence.chatkick")) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!plugin.hasPermission(player, "residence.chatkick"))
 		    return true;
-		}
 
 		String targetName = args[1];
 		if (!chat.hasMember(targetName)) {
-		    Residence.msg(player, lm.Chat_NotInChannel);
+		    plugin.msg(player, lm.Chat_NotInChannel);
 		    return false;
 		}
 
 		chat.leave(targetName);
-		Residence.getPlayerListener().removePlayerResidenceChat(targetName);
-		Residence.msg(player, lm.Chat_Kicked, targetName, chat.getChannelName());
+		plugin.getPlayerListener().removePlayerResidenceChat(targetName);
+		plugin.msg(player, lm.Chat_Kicked, targetName, chat.getChannelName());
 		return true;
 	    }
 	}

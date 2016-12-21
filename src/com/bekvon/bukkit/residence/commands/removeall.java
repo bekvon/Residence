@@ -14,7 +14,7 @@ public class removeall implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5100)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (args.length != 2 && args.length != 1) {
 	    return false;
 	}
@@ -22,10 +22,10 @@ public class removeall implements cmd {
 	String target = args.length == 2 ? args[1] : sender.getName();
 
 	if (resadmin) {
-	    Residence.getResidenceManager().removeAllByOwner(target);
-	    Residence.msg(sender, lm.Residence_RemovePlayersResidences, target);
+	    plugin.getResidenceManager().removeAllByOwner(target);
+	    plugin.msg(sender, lm.Residence_RemovePlayersResidences, target);
 	} else {
-	    Residence.msg(sender, lm.General_NoPermission);
+	    plugin.msg(sender, lm.General_NoPermission);
 	}
 	return true;
     }

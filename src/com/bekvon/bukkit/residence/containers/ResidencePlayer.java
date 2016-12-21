@@ -65,8 +65,8 @@ public class ResidencePlayer {
 		    return mainResidence;
 		}
 	    }
-	    for (String one : Residence.getRentManager().getRentedLands(this.userName)) {
-		ClaimedResidence res = Residence.getResidenceManager().getByName(one);
+	    for (String one : Residence.getInstance().getRentManager().getRentedLands(this.userName)) {
+		ClaimedResidence res = Residence.getInstance().getResidenceManager().getByName(one);
 		if (res != null) {
 		    mainResidence = res;
 		    return mainResidence;
@@ -92,25 +92,25 @@ public class ResidencePlayer {
     public void recountMaxRes() {
 	if (this.group != null)
 	    this.maxRes = this.group.getMaxZones();
-	for (int i = 1; i <= Residence.getConfigManager().getMaxResCount(); i++) {
+	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxResCount(); i++) {
 	    if (player != null && player.isOnline()) {
 		if (this.player.hasPermission("residence.max.res." + i))
 		    this.maxRes = i;
 	    } else if (ofPlayer != null) {
-		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res." + i, Residence.getConfigManager().getDefaultWorld()))
+		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res." + i, Residence.getInstance().getConfigManager().getDefaultWorld()))
 		    this.maxRes = i;
 	    }
 	}
     }
 
     public void recountMaxRents() {
-	for (int i = 1; i <= Residence.getConfigManager().getMaxRentCount(); i++) {
+	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxRentCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.rents." + i))
 		    this.maxRents = i;
 	    } else {
 		if (ofPlayer != null)
-		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.rents." + i, Residence.getConfigManager().getDefaultWorld()))
+		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.rents." + i, Residence.getInstance().getConfigManager().getDefaultWorld()))
 			this.maxRents = i;
 	    }
 	}
@@ -126,13 +126,13 @@ public class ResidencePlayer {
     }
 
     public void recountMaxSubzones() {
-	for (int i = 1; i <= Residence.getConfigManager().getMaxSubzonesCount(); i++) {
+	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxSubzonesCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.subzones." + i))
 		    this.maxSubzones = i;
 	    } else {
 		if (ofPlayer != null)
-		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzones." + i, Residence.getConfigManager().getDefaultWorld()))
+		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzones." + i, Residence.getInstance().getConfigManager().getDefaultWorld()))
 			this.maxSubzones = i;
 	    }
 	}
@@ -148,13 +148,13 @@ public class ResidencePlayer {
     }
 
     public void recountMaxSubzoneDepth() {
-	for (int i = 1; i <= Residence.getConfigManager().getMaxSubzoneDepthCount(); i++) {
+	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxSubzoneDepthCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.subzonedepth." + i))
 		    this.maxSubzoneDepth = i;
 	    } else {
 		if (ofPlayer != null)
-		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzonedepth." + i, Residence.getConfigManager().getDefaultWorld()))
+		    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzonedepth." + i, Residence.getInstance().getConfigManager().getDefaultWorld()))
 			this.maxSubzoneDepth = i;
 	    }
 	}
@@ -171,7 +171,7 @@ public class ResidencePlayer {
 
     public int getMaxRes() {
 	Residence.getPermissionManager().updateGroupNameForPlayer(this.userName, this.player != null && this.player.isOnline() ? this.player.getPlayer().getLocation()
-	    .getWorld().getName() : Residence.getConfigManager().getDefaultWorld(), true);
+	    .getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), true);
 	recountMaxRes();
 	PermissionGroup g = getGroup();
 	if (this.maxRes < g.getMaxZones()) {
@@ -181,7 +181,7 @@ public class ResidencePlayer {
     }
 
     public PermissionGroup getGroup() {
-	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getConfigManager().getDefaultWorld());
+	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld());
     }
 
     public PermissionGroup getGroup(String world) {
@@ -192,7 +192,7 @@ public class ResidencePlayer {
 
     public void recountRes() {
 	if (this.userName != null) {
-	    ResidenceManager m = Residence.getResidenceManager();
+	    ResidenceManager m = Residence.getInstance().getResidenceManager();
 	    this.ResidenceList = m.getResidenceMapList(this.userName, true);
 	}
     }

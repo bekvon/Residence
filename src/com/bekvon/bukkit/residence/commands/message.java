@@ -17,7 +17,7 @@ public class message implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1000)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -31,40 +31,40 @@ public class message implements cmd {
 	}
 	if (args[1].equals("enter")) {
 	    enter = true;
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    start = 2;
 	} else if (args[1].equals("leave")) {
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    start = 2;
 	} else if (args[1].equals("remove")) {
 	    if (args.length > 2 && args[2].equals("enter")) {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res != null) {
 		    res.setEnterLeaveMessage(player, null, true, resadmin);
 		} else {
-		    Residence.msg(player, lm.Invalid_Residence);
+		    plugin.msg(player, lm.Invalid_Residence);
 		}
 		return true;
 	    } else if (args.length > 2 && args[2].equals("leave")) {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res != null) {
 		    res.setEnterLeaveMessage(player, null, false, resadmin);
 		} else {
-		    Residence.msg(player, lm.Invalid_Residence);
+		    plugin.msg(player, lm.Invalid_Residence);
 		}
 		return true;
 	    }
-	    Residence.msg(player, lm.Invalid_MessageType);
+	    plugin.msg(player, lm.Invalid_MessageType);
 	    return true;
 	} else if (args.length > 2 && args[2].equals("enter")) {
 	    enter = true;
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	    start = 3;
 	} else if (args.length > 2 && args[2].equals("leave")) {
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	    start = 3;
 	} else if (args.length > 2 && args[2].equals("remove")) {
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	    if (args.length != 4) {
 		return false;
 	    }
@@ -79,10 +79,10 @@ public class message implements cmd {
 		}
 		return true;
 	    }
-	    Residence.msg(player, lm.Invalid_MessageType);
+	    plugin.msg(player, lm.Invalid_MessageType);
 	    return true;
 	} else {
-	    Residence.msg(player, lm.Invalid_MessageType);
+	    plugin.msg(player, lm.Invalid_MessageType);
 	    return true;
 	}
 	if (start == 0) {
@@ -95,7 +95,7 @@ public class message implements cmd {
 	if (res != null) {
 	    res.setEnterLeaveMessage(player, message, enter, resadmin);
 	} else {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	}
 	return true;
     }

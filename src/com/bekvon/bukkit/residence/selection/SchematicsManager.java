@@ -18,8 +18,15 @@ import com.sk89q.worldedit.schematic.SchematicFormat;
 
 @SuppressWarnings("deprecation")
 public class SchematicsManager {
+    private Residence plugin;
+
+    public SchematicsManager(Residence residence) {
+	this.plugin = residence;
+	// TODO Auto-generated constructor stub
+    }
+
     public boolean save(ClaimedResidence res) {
-	if (Residence.getWorldEdit() == null)
+	if (plugin.getWorldEdit() == null)
 	    return false;
 	if (res == null)
 	    return false;
@@ -66,7 +73,7 @@ public class SchematicsManager {
 
     public boolean load(ClaimedResidence res) {
 
-	if (Residence.getWorldEdit() == null)
+	if (plugin.getWorldEdit() == null)
 	    return false;
 
 	if (res == null)
@@ -96,8 +103,8 @@ public class SchematicsManager {
 	if (cc == null)
 	    return false;
 	Vector or = cc.getOrigin();
-	ClaimedResidence r1 = Residence.getResidenceManager().getByLoc(new Location(bworld, or.getBlockX(), or.getBlockY(), or.getBlockZ()));
-	ClaimedResidence r2 = Residence.getResidenceManager().getByLoc(new Location(bworld, or.getBlockX() + cc.getWidth() - 1, or.getBlockY() + cc.getHeight() - 1, or
+	ClaimedResidence r1 = plugin.getResidenceManager().getByLoc(new Location(bworld, or.getBlockX(), or.getBlockY(), or.getBlockZ()));
+	ClaimedResidence r2 = plugin.getResidenceManager().getByLoc(new Location(bworld, or.getBlockX() + cc.getWidth() - 1, or.getBlockY() + cc.getHeight() - 1, or
 	    .getBlockZ() + cc.getLength() - 1));
 	if (r1 == null || r2 == null)
 	    return false;
@@ -117,7 +124,7 @@ public class SchematicsManager {
     }
 
     public boolean delete(ClaimedResidence res) {
-	if (Residence.getWorldEdit() == null)
+	if (plugin.getWorldEdit() == null)
 	    return false;
 	if (res == null)
 	    return false;
@@ -130,7 +137,7 @@ public class SchematicsManager {
     }
 
     public boolean rename(ClaimedResidence res, String newName) {
-	if (Residence.getWorldEdit() == null)
+	if (plugin.getWorldEdit() == null)
 	    return false;
 	if (res == null)
 	    return false;

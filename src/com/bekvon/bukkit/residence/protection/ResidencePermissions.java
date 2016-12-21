@@ -164,11 +164,11 @@ public class ResidencePermissions extends FlagPermissions {
     public void applyTemplate(Player player, FlagPermissions list, boolean resadmin) {
 	if (player != null) {
 	    if (!resadmin) {
-		if (!Residence.getConfigManager().isOfflineMode() && !player.getUniqueId().toString().equals(ownerUUID.toString())) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!Residence.getInstance().getConfigManager().isOfflineMode() && !player.getUniqueId().toString().equals(ownerUUID.toString())) {
+		    Residence.getInstance().msg(player, lm.General_NoPermission);
 		    return;
 		} else if (!player.getName().equals(ownerLastKnownName)) {
-		    Residence.msg(player, lm.General_NoPermission);
+		    Residence.getInstance().msg(player, lm.General_NoPermission);
 		    return;
 		}
 	    }
@@ -183,7 +183,7 @@ public class ResidencePermissions extends FlagPermissions {
 		this.cuboidFlags.put(flag.getKey(), flag.getValue());
 	    } else {
 		if (player != null)
-		    Residence.msg(player, lm.Flag_SetDeny, flag.getKey());
+		    Residence.getInstance().msg(player, lm.Flag_SetDeny, flag.getKey());
 	    }
 	}
 	for (Entry<String, Map<String, Boolean>> plists : list.playerFlags.entrySet()) {
@@ -193,7 +193,7 @@ public class ResidencePermissions extends FlagPermissions {
 		    map.put(flag.getKey(), flag.getValue());
 		} else {
 		    if (player != null)
-			Residence.msg(player, lm.Flag_SetDeny, flag.getKey());
+			Residence.getInstance().msg(player, lm.Flag_SetDeny, flag.getKey());
 		}
 	    }
 	}
@@ -205,12 +205,12 @@ public class ResidencePermissions extends FlagPermissions {
 		    this.groupFlags.get(glists.getKey()).put(flag.getKey(), flag.getValue());
 		} else {
 		    if (player != null)
-			Residence.msg(player, lm.Flag_SetDeny, flag.getKey());
+			Residence.getInstance().msg(player, lm.Flag_SetDeny, flag.getKey());
 		}
 	    }
 	}
 	if (player != null)
-	    Residence.msg(player, lm.Residence_PermissionsApply);
+	    Residence.getInstance().msg(player, lm.Residence_PermissionsApply);
     }
 
     public boolean hasResidencePermission(CommandSender sender, boolean requireOwner) {
@@ -222,13 +222,13 @@ public class ResidencePermissions extends FlagPermissions {
 	    if (par.getPermissions().playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue))
 		return true;
 
-	if (Residence.getConfigManager().enabledRentSystem()) {
+	if (Residence.getInstance().getConfigManager().enabledRentSystem()) {
 	    String resname = residence.getName();
-	    if (Residence.getRentManager().isRented(resname)) {
+	    if (Residence.getInstance().getRentManager().isRented(resname)) {
 		if (requireOwner) {
 		    return false;
 		}
-		String renter = Residence.getRentManager().getRentingPlayer(resname);
+		String renter = Residence.getInstance().getRentManager().getRentingPlayer(resname);
 		if (sender.getName().equals(renter)) {
 		    return true;
 		}
@@ -243,20 +243,20 @@ public class ResidencePermissions extends FlagPermissions {
 
     private boolean checkCanSetFlag(CommandSender sender, String flag, FlagState state, boolean globalflag, boolean resadmin) {
 	if (!checkValidFlag(flag, globalflag)) {
-	    Residence.msg(sender, lm.Invalid_Flag);
+	    Residence.getInstance().msg(sender, lm.Invalid_Flag);
 	    return false;
 	}
 	if (state == FlagState.INVALID) {
-	    Residence.msg(sender, lm.Invalid_FlagState);
+	    Residence.getInstance().msg(sender, lm.Invalid_FlagState);
 	    return false;
 	}
 	if (!resadmin) {
 	    if (!this.hasResidencePermission(sender, false)) {
-		Residence.msg(sender, lm.General_NoPermission);
+		Residence.getInstance().msg(sender, lm.General_NoPermission);
 		return false;
 	    }
 	    if (!hasFlagAccess(this.getOwner(), flag) && !sender.hasPermission("residence.flag." + flag.toLowerCase())) {
-		Residence.msg(sender, lm.Flag_SetFailed, flag);
+		Residence.getInstance().msg(sender, lm.Flag_SetFailed, flag);
 		return false;
 	    }
 	}
@@ -287,7 +287,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    if (super.setPlayerFlag(targetPlayer, flag, state)) {
 		if (Show)
-		    Residence.msg(sender, lm.Flag_Set, flag, residence.getName(), flagstate);
+		    Residence.getInstance().msg(sender, lm.Flag_Set, flag, residence.getName(), flagstate);
 		return true;
 	    }
 	}
@@ -306,11 +306,11 @@ public class ResidencePermissions extends FlagPermissions {
 		if (fc.isCancelled())
 		    return false;
 		if (super.setGroupFlag(group, flag, state)) {
-		    Residence.msg(player, lm.Flag_Set, flag, residence.getName(), flagstate);
+		    Residence.getInstance().msg(player, lm.Flag_Set, flag, residence.getName(), flagstate);
 		    return true;
 		}
 	    } else {
-		Residence.msg(player, lm.Invalid_Group);
+		Residence.getInstance().msg(player, lm.Invalid_Group);
 		return false;
 	    }
 	}
@@ -323,8 +323,8 @@ public class ResidencePermissions extends FlagPermissions {
 
 	FlagState state = FlagPermissions.stringToFlagState(flagstate);
 
-	if (Residence.getConfigManager().isPvPFlagPrevent()) {
-	    for (String oneFlag : Residence.getConfigManager().getProtectedFlagsList()) {
+	if (Residence.getInstance().getConfigManager().isPvPFlagPrevent()) {
+	    for (String oneFlag : Residence.getInstance().getConfigManager().getProtectedFlagsList()) {
 		if (!flag.equalsIgnoreCase(oneFlag))
 		    continue;
 
@@ -335,7 +335,7 @@ public class ResidencePermissions extends FlagPermissions {
 			if (!one.getName().equals(this.getOwner()))
 			    size++;
 		    }
-		    Residence.msg(sender, lm.Flag_ChangeDeny, flag, size);
+		    Residence.getInstance().msg(sender, lm.Flag_ChangeDeny, flag, size);
 		    return false;
 		}
 	    }
@@ -348,7 +348,7 @@ public class ResidencePermissions extends FlagPermissions {
 	    if (fc.isCancelled())
 		return false;
 	    if (super.setFlag(flag, state)) {
-		Residence.msg(sender, lm.Flag_Set, flag, this.residence.getName(), flagstate);
+		Residence.getInstance().msg(sender, lm.Flag_Set, flag, this.residence.getName(), flagstate);
 		return true;
 	    }
 	}
@@ -364,7 +364,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    }
 	    super.removeAllPlayerFlags(targetPlayer);
-	    Residence.msg(sender, lm.Flag_RemovedAll, targetPlayer, this.residence.getName());
+	    Residence.getInstance().msg(sender, lm.Flag_RemovedAll, targetPlayer, this.residence.getName());
 	    return true;
 	}
 	return false;
@@ -378,7 +378,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return false;
 	    }
 	    super.removeAllGroupFlags(group);
-	    Residence.msg(player, lm.Flag_RemovedGroup, group, this.residence.getName());
+	    Residence.getInstance().msg(player, lm.Flag_RemovedGroup, group, this.residence.getName());
 	    return true;
 	}
 	return false;
@@ -414,9 +414,9 @@ public class ResidencePermissions extends FlagPermissions {
     public void applyDefaultFlags(Player player, boolean resadmin) {
 	if (this.hasResidencePermission(player, true) || resadmin) {
 	    this.applyDefaultFlags();
-	    Residence.msg(player, lm.Flag_Default);
+	    Residence.getInstance().msg(player, lm.Flag_Default);
 	} else
-	    Residence.msg(player, lm.General_NoPermission);
+	    Residence.getInstance().msg(player, lm.General_NoPermission);
     }
 
     public void applyDefaultFlags() {
@@ -473,7 +473,7 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public String getOwner() {
-	if (Residence.getConfigManager().isOfflineMode())
+	if (Residence.getInstance().getConfigManager().isOfflineMode())
 	    return ownerLastKnownName;
 	if (ownerUUID.toString().equals(Residence.getServerLandUUID())) //check for server land
 	    return Residence.getServerLandname();
@@ -549,9 +549,9 @@ public class ResidencePermissions extends FlagPermissions {
 
     public void applyGlobalDefaults() {
 	this.clearFlags();
-	FlagPermissions gRD = Residence.getConfigManager().getGlobalResidenceDefaultFlags();
-	FlagPermissions gCD = Residence.getConfigManager().getGlobalCreatorDefaultFlags();
-	Map<String, FlagPermissions> gGD = Residence.getConfigManager().getGlobalGroupDefaultFlags();
+	FlagPermissions gRD = Residence.getInstance().getConfigManager().getGlobalResidenceDefaultFlags();
+	FlagPermissions gCD = Residence.getInstance().getConfigManager().getGlobalCreatorDefaultFlags();
+	Map<String, FlagPermissions> gGD = Residence.getInstance().getConfigManager().getGlobalGroupDefaultFlags();
 	for (Entry<String, Boolean> entry : gRD.cuboidFlags.entrySet()) {
 	    if (entry.getValue())
 		this.setFlag(entry.getKey(), FlagState.TRUE);
@@ -618,7 +618,7 @@ public class ResidencePermissions extends FlagPermissions {
 		}
 	    }
 	    if (flagString.length() > 0)
-		Residence.msg(sender, lm.Flag_Set, flagString, target, state);
+		Residence.getInstance().msg(sender, lm.Flag_Set, flagString, target, state);
 	    return changed;
 	}
 	return false;

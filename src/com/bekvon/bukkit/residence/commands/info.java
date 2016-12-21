@@ -17,19 +17,19 @@ public class info implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 600)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length == 1 && sender instanceof Player) {
 	    Player player = (Player) sender;
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
-		Residence.getResidenceManager().printAreaInfo(res.getName(), sender, resadmin);
+		plugin.getResidenceManager().printAreaInfo(res.getName(), sender, resadmin);
 	    } else {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if (args.length == 2) {
-	    Residence.getResidenceManager().printAreaInfo(args[1], sender, resadmin);
+	    plugin.getResidenceManager().printAreaInfo(args[1], sender, resadmin);
 	    return true;
 	}
 	return false;

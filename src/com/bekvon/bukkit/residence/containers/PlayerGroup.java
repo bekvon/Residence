@@ -86,7 +86,7 @@ public class PlayerGroup {
 	}
 
 	if (finalGroup == null || !Residence.getPermissionManager().getGroups().containsValue(finalGroup)) {
-	    this.groups.put(world, Residence.getConfigManager().getDefaultGroup().toLowerCase());
+	    this.groups.put(world, Residence.getInstance().getConfigManager().getDefaultGroup().toLowerCase());
 	} else {
 	    this.groups.put(world, finalGroup.getGroupName());
 	}
@@ -95,7 +95,7 @@ public class PlayerGroup {
     private PermissionGroup getPermissionGroup() {
 	if (this.player == null)
 	    this.player = Bukkit.getPlayer(playerName);
-	PermissionGroup group = Residence.getPermissionManager().getGroupByName(Residence.getConfigManager().getDefaultGroup());
+	PermissionGroup group = Residence.getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup());
 	for (Entry<String, PermissionGroup> one : Residence.getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
 		if (this.player.hasPermission("residence.group." + one.getKey()))
@@ -103,7 +103,7 @@ public class PlayerGroup {
 	    } else {
 		OfflinePlayer offlineP = Residence.getOfflinePlayer(playerName);
 		if (offlineP != null)
-		    if (ResidenceVaultAdapter.hasPermission(offlineP, "residence.group." + one.getKey(), Residence.getConfigManager().getDefaultWorld()))
+		    if (ResidenceVaultAdapter.hasPermission(offlineP, "residence.group." + one.getKey(), Residence.getInstance().getConfigManager().getDefaultWorld()))
 			group = one.getValue();
 	    }
 	}

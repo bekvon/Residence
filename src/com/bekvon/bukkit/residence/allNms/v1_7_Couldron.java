@@ -69,7 +69,7 @@ public class v1_7_Couldron implements NMS {
 	case DRAGON_EGG:
 	    return true;
 	default:
-	    return Residence.getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
+	    return Residence.getInstance().getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
 	}
     }
 

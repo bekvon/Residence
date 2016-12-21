@@ -18,32 +18,29 @@ public class contract implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1900)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
 	ClaimedResidence res = null;
 	if (args.length == 2)
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	else if (args.length == 3)
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	else
 	    return false;
 	if (res == null) {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
 
-	if (res.isSubzone() && !player.hasPermission("residence.contract.subzone") && !resadmin) {
-	    Residence.msg(player, lm.Subzone_CantContract);
-	    return false;
-	}
+	if (res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.contract.subzone", lm.Subzone_CantContract))
+	    return true;
+	
 
-	if (!res.isSubzone() && !player.hasPermission("residence.contract") && !resadmin) {
-	    Residence.msg(player, lm.Residence_CantContractResidence);
-	    return false;
-	}
+	if (!res.isSubzone()  && !resadmin && !plugin.hasPermission(player, "residence.contract", lm.Residence_CantContractResidence))
+	    return true;	
 
 	String resName = res.getName();
 	CuboidArea area = null;
@@ -53,16 +50,16 @@ public class contract implements cmd {
 	    areaName = res.getAreaIDbyLoc(player.getLocation());
 	    area = res.getArea(areaName);
 	} else if (args.length == 3) {
-	    areaName = res.isSubzone() ? Residence.getResidenceManager().getSubzoneNameByRes(res) : "main";
+	    areaName = res.isSubzone() ? plugin.getResidenceManager().getSubzoneNameByRes(res) : "main";
 	    area = res.getCuboidAreabyName(areaName);
 	}
 
 	if (area != null) {
-	    Residence.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
-	    Residence.getSelectionManager().placeLoc2(player, area.getLowLoc(), false);
-	    Residence.msg(player, lm.Select_Area, areaName, resName);
+	    plugin.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
+	    plugin.getSelectionManager().placeLoc2(player, area.getLowLoc(), false);
+	    plugin.msg(player, lm.Select_Area, areaName, resName);
 	} else {
-	    Residence.msg(player, lm.Area_NonExist);
+	    plugin.msg(player, lm.Area_NonExist);
 	    return true;
 	}
 	int amount = -1;
@@ -72,31 +69,26 @@ public class contract implements cmd {
 	    else if (args.length == 3)
 		amount = Integer.parseInt(args[2]);
 	} catch (Exception ex) {
-	    Residence.msg(player, lm.Invalid_Amount);
+	    plugin.msg(player, lm.Invalid_Amount);
 	    return true;
 	}
 
 	if (amount > 1000) {
-	    Residence.msg(player, lm.Invalid_Amount);
+	    plugin.msg(player, lm.Invalid_Amount);
 	    return true;
 	}
 
 	if (amount < 0)
 	    amount = 1;
 
-	if (!Residence.getSelectionManager().contract(player, amount))
+	if (!plugin.getSelectionManager().contract(player, amount))
 	    return true;
 
-	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (Residence.getWorldEdit() != null) {
-		if (Residence.getWepid() == Residence.getConfigManager().getSelectionTooldID()) {
-		    Residence.getSelectionManager().worldEdit(player);
-		}
-	    }
-	    res.replaceArea(player, Residence.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
+	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+	    res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
 	    return true;
 	}
-	Residence.msg(player, lm.Select_Points);
+	plugin.msg(player, lm.Select_Points);
 
 	return false;
     }

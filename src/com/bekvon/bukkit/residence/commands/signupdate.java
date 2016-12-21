@@ -14,14 +14,14 @@ public class signupdate implements cmd {
     
     @Override
     @CommandAnnotation(simple = false, priority = 5700)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (args.length == 1) {
 	    if (!resadmin) {
-		Residence.msg(sender, lm.General_NoPermission);
+		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
-	    int number = Residence.getSignUtil().updateAllSigns();
-	    Residence.msg(sender, lm.Sign_Updated, number);
+	    int number = plugin.getSignUtil().updateAllSigns();
+	    plugin.msg(sender, lm.Sign_Updated, number);
 	    return true;
 	}
 	return false;

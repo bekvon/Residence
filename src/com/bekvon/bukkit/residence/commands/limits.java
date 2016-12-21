@@ -17,7 +17,7 @@ public class limits implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 900)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player) && args.length < 2)
 	    return false;
 
@@ -30,13 +30,13 @@ public class limits implements cmd {
 	    target = (Player) sender;
 	    rsadm = true;
 	} else
-	    target = Residence.getOfflinePlayer(tempArgs[1]);
+	    target = plugin.getOfflinePlayer(tempArgs[1]);
 	if (target == null)
 	    return false;
-	Residence.getPermissionManager().updateGroupNameForPlayer(target.getName(), target.isOnline() ? target.getPlayer().getLocation().getWorld().getName() : Residence
+	plugin.getPermissionManager().updateGroupNameForPlayer(target.getName(), target.isOnline() ? target.getPlayer().getLocation().getWorld().getName() : plugin
 	    .getConfigManager().getDefaultWorld(), true);
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(target.getName());
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(target.getName());
 	rPlayer.getGroup().printLimits(sender, target, rsadm);
 	return true;
     }

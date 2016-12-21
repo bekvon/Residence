@@ -16,19 +16,19 @@ public class signconvert implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5600)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length != 0)
 	    return false;
 
 	if (sender instanceof Player) {
 	    Player player = (Player) sender;
-	    if (Residence.getPermissionManager().isResidenceAdmin(player)) {
-		Residence.getSignUtil().convertSigns(sender);
+	    if (plugin.getPermissionManager().isResidenceAdmin(player)) {
+		plugin.getSignUtil().convertSigns(sender);
 	    } else
-		Residence.msg(player, lm.General_NoPermission);
+		plugin.msg(player, lm.General_NoPermission);
 	} else {
-	    Residence.getSignUtil().convertSigns(sender);
+	    plugin.getSignUtil().convertSigns(sender);
 	}
 	return true;
     }

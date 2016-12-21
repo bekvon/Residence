@@ -16,7 +16,7 @@ public class tpconfirm implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1500)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -24,11 +24,11 @@ public class tpconfirm implements cmd {
 	if (args.length != 1) {
 	    return false;
 	}
-	if (Residence.getTeleportMap().containsKey(player.getName())) {
-	    Residence.getTeleportMap().get(player.getName()).tpToResidence(player, player, resadmin);
-	    Residence.getTeleportMap().remove(player.getName());
+	if (plugin.getTeleportMap().containsKey(player.getName())) {
+	    plugin.getTeleportMap().get(player.getName()).tpToResidence(player, player, resadmin);
+	    plugin.getTeleportMap().remove(player.getName());
 	} else
-	    Residence.msg(player, lm.General_NoTeleportConfirm);
+	    plugin.msg(player, lm.General_NoTeleportConfirm);
 	return true;
     }
 

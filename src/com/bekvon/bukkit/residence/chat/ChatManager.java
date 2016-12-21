@@ -19,7 +19,7 @@ public class ChatManager implements ChatInterface {
 
     @Override
     public boolean setChannel(String player, String resName) {
-	ClaimedResidence res = Residence.getResidenceManager().getByName(resName);
+	ClaimedResidence res = Residence.getInstance().getResidenceManager().getByName(resName);
 	if (res == null)
 	    return false;
 	return setChannel(player, res);

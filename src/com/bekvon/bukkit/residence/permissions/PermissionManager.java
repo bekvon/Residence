@@ -28,8 +28,10 @@ public class PermissionManager {
     protected FlagPermissions globalFlagPerms;
 
     protected HashMap<String, PlayerGroup> groupsMap = new HashMap<String, PlayerGroup>();
+    private Residence plugin;
 
-    public PermissionManager() {
+    public PermissionManager(Residence plugin) {
+	this.plugin = plugin;
 	try {
 	    groups = new LinkedHashMap<String, PermissionGroup>();
 	    playersGroup = Collections.synchronizedMap(new HashMap<String, String>());
@@ -72,7 +74,7 @@ public class PermissionManager {
     public PermissionGroup getGroupByName(String group) {
 	group = group.toLowerCase();
 	if (!groups.containsKey(group)) {
-	    return groups.get(Residence.getConfigManager().getDefaultGroup());
+	    return groups.get(plugin.getConfigManager().getDefaultGroup());
 	}
 	return groups.get(group);
     }
@@ -87,7 +89,7 @@ public class PermissionManager {
 	    if (group != null)
 		return group;
 	}
-	return Residence.getConfigManager().getDefaultGroup().toLowerCase();
+	return plugin.getConfigManager().getDefaultGroup().toLowerCase();
     }
 
     public String getGroupNameByPlayer(String playerName, String world) {
@@ -104,7 +106,7 @@ public class PermissionManager {
 	    if (group != null)
 		return group;
 	}
-	return Residence.getConfigManager().getDefaultGroup().toLowerCase();
+	return plugin.getConfigManager().getDefaultGroup().toLowerCase();
     }
 
     public String getPermissionsGroup(Player player) {
@@ -113,11 +115,11 @@ public class PermissionManager {
 
     public String getPermissionsGroup(String player, String world) {
 	if (perms == null)
-	    return Residence.getConfigManager().getDefaultGroup().toLowerCase();
+	    return plugin.getConfigManager().getDefaultGroup().toLowerCase();
 	try {
 	    return perms.getPlayerGroup(player, world).toLowerCase();
 	} catch (Exception e) {
-	    return Residence.getConfigManager().getDefaultGroup().toLowerCase();
+	    return plugin.getConfigManager().getDefaultGroup().toLowerCase();
 	}
     }
 
@@ -142,10 +144,10 @@ public class PermissionManager {
     }
 
     public boolean isResidenceAdmin(CommandSender sender) {
-	return (sender.hasPermission("residence.admin") || (sender.isOp() && Residence.getConfigManager().getOpsAreAdmins()));
+	return (sender.hasPermission("residence.admin") || (sender.isOp() && plugin.getConfigManager().getOpsAreAdmins()));
     }
 
-    private static void checkPermissions() {
+    private void checkPermissions() {
 	Server server = Residence.getServ();
 	Plugin p = server.getPluginManager().getPlugin("Vault");
 	if (p != null) {
@@ -171,7 +173,7 @@ public class PermissionManager {
 	}
 	p = server.getPluginManager().getPlugin("Permissions");
 	if (p != null) {
-	    if (Residence.getConfigManager().useLegacyPermissions()) {
+	    if (plugin.getConfigManager().useLegacyPermissions()) {
 		perms = new LegacyPermissions(((Permissions) p).getHandler());
 		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Found Permissions Plugin!");
 		Bukkit.getConsoleSender().sendMessage(Residence.prefix + "Permissions running in Legacy mode!");
@@ -189,7 +191,7 @@ public class PermissionManager {
 	FileConfiguration groupsFile = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "groups.yml"));
 	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "flags.yml"));
 
-	String defaultGroup = Residence.getConfigManager().getDefaultGroup().toLowerCase();
+	String defaultGroup = plugin.getConfigManager().getDefaultGroup().toLowerCase();
 	globalFlagPerms = FlagPermissions.parseFromConfigNode("FlagPermission", flags.getConfigurationSection("Global"));
 	ConfigurationSection nodes = groupsFile.getConfigurationSection("Groups");
 	if (nodes != null) {

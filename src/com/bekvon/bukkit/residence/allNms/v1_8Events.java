@@ -26,7 +26,7 @@ public class v1_8Events implements Listener {
 	    return;
 
 	Entity ent = event.getRightClicked();
-	if (!Residence.getNms().isArmorStandEntity(ent.getType()))
+	if (!Residence.getInstance().getNms().isArmorStandEntity(ent.getType()))
 	    return;
 
 	FlagPermissions perms = Residence.getPermsByLocForPlayer(ent.getLocation(), player);
@@ -34,7 +34,7 @@ public class v1_8Events implements Listener {
 
 	if (!perms.playerHas(player.getName(), world, Flags.container, perms.playerHas(player.getName(), world, Flags.use, true))) {
 	    event.setCancelled(true);
-	    Residence.msg(player, lm.Flag_Deny, Flags.container.getName());
+	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.container.getName());
 	}
     }
 
@@ -43,11 +43,11 @@ public class v1_8Events implements Listener {
 
 	Location loc = event.getBlock().getLocation();
 
-	if (Residence.isDisabledWorldListener(loc.getWorld()))
+	if (Residence.getInstance().isDisabledWorldListener(loc.getWorld()))
 	    return;
 	if (event.isCancelled())
 	    return;
-	FlagPermissions world = Residence.getWorldFlags().getPerms(loc.getWorld().getName());
+	FlagPermissions world = Residence.getInstance().getWorldFlags().getPerms(loc.getWorld().getName());
 	List<Block> preserve = new ArrayList<Block>();
 	for (Block block : event.blockList()) {
 	    FlagPermissions blockperms = Residence.getPermsByLoc(block.getLocation());

@@ -15,7 +15,7 @@ public class FileCleanUp {
 
     public static void cleanFiles() {
 
-	ArrayList<String> resNameList = Residence.getResidenceManager().getResidenceList(false, false);
+	ArrayList<String> resNameList = Residence.getInstance().getResidenceManager().getResidenceList(false, false);
 	int i = 0;
 
 	OfflinePlayer[] offplayer = Bukkit.getOfflinePlayers();
@@ -26,11 +26,11 @@ public class FileCleanUp {
 	    playermap.put(one.getUniqueId(), one);
 	}
 
-	int interval = Residence.getConfigManager().getResidenceFileCleanDays();
+	int interval = Residence.getInstance().getConfigManager().getResidenceFileCleanDays();
 	long time = System.currentTimeMillis();
 
 	for (String oneName : resNameList) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(oneName);
+	    ClaimedResidence res = Residence.getInstance().getResidenceManager().getByName(oneName);
 	    if (res == null)
 		continue;
 
@@ -42,7 +42,7 @@ public class FileCleanUp {
 	    if (player == null)
 		continue;
 
-	    if (!Residence.getConfigManager().getCleanWorlds().contains(res.getWorld()))
+	    if (!Residence.getInstance().getConfigManager().getCleanWorlds().contains(res.getWorld()))
 		continue;
 
 	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(Residence.getServerLandname()))
@@ -56,7 +56,7 @@ public class FileCleanUp {
 	    if (ResidenceVaultAdapter.hasPermission(player, "residence.cleanbypass", res.getWorld()))
 		continue;
 
-	    Residence.getResidenceManager().removeResidence(oneName);
+	    Residence.getInstance().getResidenceManager().removeResidence(oneName);
 	    i++;
 	}
 	Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Auto CleanUp deleted " + i + " residences!");

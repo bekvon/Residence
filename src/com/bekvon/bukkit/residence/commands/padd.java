@@ -15,7 +15,7 @@ public class padd implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 400)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -25,13 +25,13 @@ public class padd implements cmd {
 	if (resadmin)
 	    baseCmd = "resadmin";
 	if (args.length == 2) {
-	    if (!Residence.isPlayerExist(player, args[1], true))
+	    if (!plugin.isPlayerExist(player, args[1], true))
 		return false;
 	    player.performCommand(baseCmd + " pset " + args[1] + " trusted true");
 	    return true;
 	}
 	if (args.length == 3) {
-	    if (!Residence.isPlayerExist(player, args[2], true))
+	    if (!plugin.isPlayerExist(player, args[2], true))
 		return false;
 	    player.performCommand(baseCmd + " pset " + args[1] + " " + args[2] + " trusted true");
 	    return true;

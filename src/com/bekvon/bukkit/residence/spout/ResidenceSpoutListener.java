@@ -18,11 +18,16 @@ import org.getspout.spoutapi.gui.GenericTextField;
 public class ResidenceSpoutListener implements Listener {
 
     protected HashMap<Player, GenericPopup> popups;
+    private Residence plugin;
+
+    public ResidenceSpoutListener(Residence residence) {
+	this.plugin = residence;	
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onButtonClick(ButtonClickEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Player p = event.getPlayer();
 	if (event.getScreen() instanceof ResidencePopup) {
@@ -52,7 +57,7 @@ public class ResidenceSpoutListener implements Listener {
 		player = ((GenericTextField) popup.getWidget("PlayerName")).getText();
 		group = ((GenericTextField) popup.getWidget("GroupName")).getText();
 		flag = ((GenericTextField) popup.getWidget("FlagName")).getText();
-		res = Residence.getResidenceManager().getByName(((GenericLabel) popup.getWidget("ResidenceName")).getText());
+		res = plugin.getResidenceManager().getByName(((GenericLabel) popup.getWidget("ResidenceName")).getText());
 		if (res == null || flagval == null || flagval.equalsIgnoreCase("") || ((flag == null || flag.equalsIgnoreCase("")) && !flagval.equalsIgnoreCase(
 		    "removeall")))
 		    return;

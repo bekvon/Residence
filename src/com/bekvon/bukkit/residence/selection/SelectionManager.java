@@ -26,7 +26,7 @@ public class SelectionManager {
     protected Map<String, Location> playerLoc1;
     protected Map<String, Location> playerLoc2;
     protected Server server;
-    private Residence plugin;
+    protected Residence plugin;
 
     private HashMap<String, Visualizer> vMap = new HashMap<String, Visualizer>();
 
@@ -81,7 +81,7 @@ public class SelectionManager {
     }
 
     private void updateForY(Player player) {
-	if (Residence.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName()) && !player.hasPermission(p)) {
+	if (plugin.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName()) && !player.hasPermission(p)) {
 	    this.qsky(player);
 	    this.qbedrock(player);
 	}
@@ -125,18 +125,18 @@ public class SelectionManager {
 
     public void showSelectionInfoInActionBar(Player player) {
 
-	if (!Residence.getConfigManager().useActionBarOnSelection())
+	if (!plugin.getConfigManager().useActionBarOnSelection())
 	    return;
 
 	String pname = player.getName();
 	CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
 
-	String Message = Residence.msg(lm.Select_TotalSize, cuboidArea.getSize());
+	String Message = plugin.msg(lm.Select_TotalSize, cuboidArea.getSize());
 
 	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
-	if (Residence.getConfigManager().enableEconomy())
-	    Message += " " + Residence.msg(lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
+	if (plugin.getConfigManager().enableEconomy())
+	    Message += " " + plugin.msg(lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
 
 	Residence.getAB().send(player, Message);
 
@@ -145,28 +145,28 @@ public class SelectionManager {
     public void showSelectionInfo(Player player) {
 	String pname = player.getName();
 	if (hasPlacedBoth(pname)) {
-	    Residence.msg(player, lm.General_Separator);
+	    plugin.msg(player, lm.General_Separator);
 	    CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
-	    Residence.msg(player, lm.Select_TotalSize, cuboidArea.getSize());
+	    plugin.msg(player, lm.Select_TotalSize, cuboidArea.getSize());
 
 	    ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
 
-	    if (Residence.getConfigManager().enableEconomy())
-		Residence.msg(player, lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
-	    player.sendMessage(ChatColor.YELLOW + "X" + Residence.msg(lm.General_Size, cuboidArea.getXSize()));
-	    player.sendMessage(ChatColor.YELLOW + "Y" + Residence.msg(lm.General_Size, cuboidArea.getYSize()));
-	    player.sendMessage(ChatColor.YELLOW + "Z" + Residence.msg(lm.General_Size, cuboidArea.getZSize()));
-	    Residence.msg(player, lm.General_Separator);
+	    if (plugin.getConfigManager().enableEconomy())
+		plugin.msg(player, lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
+	    player.sendMessage(ChatColor.YELLOW + "X" + plugin.msg(lm.General_Size, cuboidArea.getXSize()));
+	    player.sendMessage(ChatColor.YELLOW + "Y" + plugin.msg(lm.General_Size, cuboidArea.getYSize()));
+	    player.sendMessage(ChatColor.YELLOW + "Z" + plugin.msg(lm.General_Size, cuboidArea.getZSize()));
+	    plugin.msg(player, lm.General_Separator);
 	    Visualizer v = new Visualizer(player);
 	    v.setAreas(this.getSelectionCuboid(player));
 	    this.showBounds(player, v);
 	} else
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
     }
 
     public void showBounds(final Player player, final Visualizer v) {
-	if (!Residence.getConfigManager().useVisualizer())
+	if (!plugin.getConfigManager().useVisualizer())
 	    return;
 	Visualizer tv = vMap.get(player.getName());
 	if (tv != null) {
@@ -190,8 +190,8 @@ public class SelectionManager {
 
     public List<Location> getLocations(Location lowLoc, Location loc, Double TX, Double TY, Double TZ, Double Range, boolean StartFromZero) {
 
-	double eachCollumn = Residence.getConfigManager().getVisualizerRowSpacing();
-	double eachRow = Residence.getConfigManager().getVisualizerCollumnSpacing();
+	double eachCollumn = plugin.getConfigManager().getVisualizerRowSpacing();
+	double eachRow = plugin.getConfigManager().getVisualizerCollumnSpacing();
 
 	if (TX == 0D)
 	    TX = eachCollumn + eachCollumn * 0.1;
@@ -336,7 +336,7 @@ public class SelectionManager {
 	    areas = v.getErrorAreas();
 
 	Location loc = player.getLocation();
-	int Range = Residence.getConfigManager().getVisualizerRange();
+	int Range = plugin.getConfigManager().getVisualizerRange();
 
 	final List<Location> locList = new ArrayList<Location>();
 	final List<Location> locList2 = new ArrayList<Location>();
@@ -422,11 +422,11 @@ public class SelectionManager {
 		int timesMore = 1;
 		int errorTimesMore = 1;
 
-		if (size > Residence.getConfigManager().getVisualizerSidesCap() && !same) {
-		    timesMore = size / Residence.getConfigManager().getVisualizerSidesCap() + 1;
+		if (size > plugin.getConfigManager().getVisualizerSidesCap() && !same) {
+		    timesMore = size / plugin.getConfigManager().getVisualizerSidesCap() + 1;
 		}
-		if (errorSize > Residence.getConfigManager().getVisualizerFrameCap() && !same) {
-		    errorTimesMore = errorSize / Residence.getConfigManager().getVisualizerFrameCap() + 1;
+		if (errorSize > plugin.getConfigManager().getVisualizerFrameCap() && !same) {
+		    errorTimesMore = errorSize / plugin.getConfigManager().getVisualizerFrameCap() + 1;
 		}
 
 		List<Location> trimed = new ArrayList<Location>();
@@ -439,14 +439,14 @@ public class SelectionManager {
 			if (!error)
 			    for (int i = 0; i < locList.size(); i += timesMore) {
 				Location l = locList.get(i);
-				player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+				player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
 				if (!same)
 				    trimed.add(l);
 			    }
 			else
 			    for (int i = 0; i < locList.size(); i += timesMore) {
 				Location l = locList.get(i);
-				player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+				player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
 				if (!same)
 				    trimed.add(l);
 			    }
@@ -454,14 +454,14 @@ public class SelectionManager {
 			if (!error)
 			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
 				Location l = locList2.get(i);
-				player.spigot().playEffect(l, Residence.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+				player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
 				if (!same)
 				    trimed2.add(l);
 			    }
 			else
 			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
 				Location l = locList2.get(i);
-				player.spigot().playEffect(l, Residence.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+				player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
 				if (!same)
 				    trimed2.add(l);
 			    }
@@ -469,28 +469,28 @@ public class SelectionManager {
 			if (!error)
 			    for (int i = 0; i < locList.size(); i += timesMore) {
 				Location l = locList.get(i);
-				Residence.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
+				plugin.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
 				if (!same)
 				    trimed.add(l);
 			    }
 			else
 			    for (int i = 0; i < locList.size(); i += timesMore) {
 				Location l = locList.get(i);
-				Residence.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
+				plugin.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
 				if (!same)
 				    trimed.add(l);
 			    }
 			if (!error)
 			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
 				Location l = locList2.get(i);
-				Residence.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
+				plugin.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
 				if (!same)
 				    trimed2.add(l);
 			    }
 			else
 			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
 				Location l = locList2.get(i);
-				Residence.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
+				plugin.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
 				if (!same)
 				    trimed2.add(l);
 			    }
@@ -516,7 +516,7 @@ public class SelectionManager {
 	if (v.isOnce())
 	    return true;
 
-	if (v.getStart() + Residence.getConfigManager().getVisualizerShowFor() < System.currentTimeMillis())
+	if (v.getStart() + plugin.getConfigManager().getVisualizerShowFor() < System.currentTimeMillis())
 	    return false;
 
 	int scid = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -527,7 +527,7 @@ public class SelectionManager {
 		}
 		return;
 	    }
-	}, Residence.getConfigManager().getVisualizerUpdateInterval() * 1L);
+	}, plugin.getConfigManager().getVisualizerUpdateInterval() * 1L);
 	if (!error)
 	    v.setId(scid);
 	else
@@ -541,7 +541,7 @@ public class SelectionManager {
 	    this.sky(player, resadmin);
 	    this.bedrock(player, resadmin);
 	} else {
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
 	}
     }
 
@@ -591,9 +591,9 @@ public class SelectionManager {
 		}
 		playerLoc2.get(player.getName()).setY(newy);
 	    }
-	    Residence.msg(player, lm.Select_Sky);
+	    plugin.msg(player, lm.Select_Sky);
 	} else {
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
 	}
     }
 
@@ -622,9 +622,9 @@ public class SelectionManager {
 		}
 		playerLoc2.get(player.getName()).setY(newy);
 	    }
-	    Residence.msg(player, lm.Select_Bedrock);
+	    plugin.msg(player, lm.Select_Bedrock);
 	} else {
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
 	}
     }
 
@@ -643,16 +643,16 @@ public class SelectionManager {
 	int ymax = player.getLocation().getWorld().getMaxHeight() - 1;
 	playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
 	playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax, ymax, zmax));
-	Residence.msg(player, lm.Select_Success);
+	plugin.msg(player, lm.Select_Success);
     }
 
     public boolean worldEdit(Player player) {
-	Residence.msg(player, lm.General_WorldEditNotFound);
+	plugin.msg(player, lm.General_WorldEditNotFound);
 	return false;
     }
 
     public boolean worldEditUpdate(Player player) {
-	Residence.msg(player, lm.General_WorldEditNotFound);
+	plugin.msg(player, lm.General_WorldEditNotFound);
 	return false;
     }
 
@@ -662,18 +662,18 @@ public class SelectionManager {
 	Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
 	placeLoc1(player, loc1, false);
 	placeLoc2(player, loc2, true);
-	Residence.msg(player, lm.Select_Success);
+	plugin.msg(player, lm.Select_Success);
 	showSelectionInfo(player);
     }
 
     public void modify(Player player, boolean shift, double amount) {
 	if (!hasPlacedBoth(player.getName())) {
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
 	    return;
 	}
 	Direction d = getDirection(player);
 	if (d == null) {
-	    Residence.msg(player, lm.Invalid_Direction);
+	    plugin.msg(player, lm.Invalid_Direction);
 	    return;
 	}
 	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
@@ -682,7 +682,7 @@ public class SelectionManager {
 	    double oldy = area.getLowLoc().getBlockY();
 	    oldy = oldy - amount;
 	    if (oldy < MIN_HEIGHT) {
-		Residence.msg(player, lm.Select_TooLow);
+		plugin.msg(player, lm.Select_TooLow);
 		oldy = MIN_HEIGHT;
 	    }
 	    area.getLowLoc().setY(oldy);
@@ -690,9 +690,9 @@ public class SelectionManager {
 		double oldy2 = area.getHighLoc().getBlockY();
 		oldy2 = oldy2 - amount;
 		area.getHighLoc().setY(oldy2);
-		Residence.msg(player, lm.Shifting_Down, amount);
+		plugin.msg(player, lm.Shifting_Down, amount);
 	    } else
-		Residence.msg(player, lm.Expanding_Down, amount);
+		plugin.msg(player, lm.Expanding_Down, amount);
 	    break;
 	case MINUSX:
 	    double oldx = area.getLowLoc().getBlockX();
@@ -702,9 +702,9 @@ public class SelectionManager {
 		double oldx2 = area.getHighLoc().getBlockX();
 		oldx2 = oldx2 - amount;
 		area.getHighLoc().setX(oldx2);
-		Residence.msg(player, lm.Shifting_West, amount);
+		plugin.msg(player, lm.Shifting_West, amount);
 	    } else
-		Residence.msg(player, lm.Expanding_West, amount);
+		plugin.msg(player, lm.Expanding_West, amount);
 	    break;
 	case MINUSZ:
 	    double oldz = area.getLowLoc().getBlockZ();
@@ -714,9 +714,9 @@ public class SelectionManager {
 		double oldz2 = area.getHighLoc().getBlockZ();
 		oldz2 = oldz2 - amount;
 		area.getHighLoc().setZ(oldz2);
-		Residence.msg(player, lm.Shifting_North, amount);
+		plugin.msg(player, lm.Shifting_North, amount);
 	    } else
-		Residence.msg(player, lm.Expanding_North, amount);
+		plugin.msg(player, lm.Expanding_North, amount);
 	    break;
 	case PLUSX:
 	    oldx = area.getHighLoc().getBlockX();
@@ -726,9 +726,9 @@ public class SelectionManager {
 		double oldx2 = area.getLowLoc().getBlockX();
 		oldx2 = oldx2 + amount;
 		area.getLowLoc().setX(oldx2);
-		Residence.msg(player, lm.Shifting_East, amount);
+		plugin.msg(player, lm.Shifting_East, amount);
 	    } else
-		Residence.msg(player, lm.Expanding_East, amount);
+		plugin.msg(player, lm.Expanding_East, amount);
 	    break;
 	case PLUSZ:
 	    oldz = area.getHighLoc().getBlockZ();
@@ -738,15 +738,15 @@ public class SelectionManager {
 		double oldz2 = area.getLowLoc().getBlockZ();
 		oldz2 = oldz2 + amount;
 		area.getLowLoc().setZ(oldz2);
-		Residence.msg(player, lm.Shifting_South, amount);
+		plugin.msg(player, lm.Shifting_South, amount);
 	    } else
-		Residence.msg(player, lm.Expanding_South, amount);
+		plugin.msg(player, lm.Expanding_South, amount);
 	    break;
 	case UP:
 	    oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy + amount;
 	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
-		Residence.msg(player, lm.Select_TooHigh);
+		plugin.msg(player, lm.Select_TooHigh);
 		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
@@ -754,9 +754,9 @@ public class SelectionManager {
 		double oldy2 = area.getLowLoc().getBlockY();
 		oldy2 = oldy2 + amount;
 		area.getLowLoc().setY(oldy2);
-		Residence.msg(player, lm.Shifting_Up, amount);
+		plugin.msg(player, lm.Shifting_Up, amount);
 	    } else
-		Residence.msg(player, lm.Expanding_Up, amount);
+		plugin.msg(player, lm.Expanding_Up, amount);
 	    break;
 	default:
 	    break;
@@ -770,12 +770,12 @@ public class SelectionManager {
 
     public boolean contract(Player player, double amount, @SuppressWarnings("unused") boolean resadmin) {
 	if (!hasPlacedBoth(player.getName())) {
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
 	    return false;
 	}
 	Direction d = getDirection(player);
 	if (d == null) {
-	    Residence.msg(player, lm.Invalid_Direction);
+	    plugin.msg(player, lm.Invalid_Direction);
 	    return false;
 	}
 	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
@@ -784,45 +784,45 @@ public class SelectionManager {
 	    double oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy - amount;
 	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
-		Residence.msg(player, lm.Select_TooHigh);
+		plugin.msg(player, lm.Select_TooHigh);
 		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
-	    Residence.msg(player, lm.Contracting_Down, amount);
+	    plugin.msg(player, lm.Contracting_Down, amount);
 	    break;
 	case MINUSX:
 	    double oldx = area.getHighLoc().getBlockX();
 	    oldx = oldx - amount;
 	    area.getHighLoc().setX(oldx);
-	    Residence.msg(player, lm.Contracting_West, amount);
+	    plugin.msg(player, lm.Contracting_West, amount);
 	    break;
 	case MINUSZ:
 	    double oldz = area.getHighLoc().getBlockZ();
 	    oldz = oldz - amount;
 	    area.getHighLoc().setZ(oldz);
-	    Residence.msg(player, lm.Contracting_North, amount);
+	    plugin.msg(player, lm.Contracting_North, amount);
 	    break;
 	case PLUSX:
 	    oldx = area.getLowLoc().getBlockX();
 	    oldx = oldx + amount;
 	    area.getLowLoc().setX(oldx);
-	    Residence.msg(player, lm.Contracting_East, amount);
+	    plugin.msg(player, lm.Contracting_East, amount);
 	    break;
 	case PLUSZ:
 	    oldz = area.getLowLoc().getBlockZ();
 	    oldz = oldz + amount;
 	    area.getLowLoc().setZ(oldz);
-	    Residence.msg(player, lm.Contracting_South, amount);
+	    plugin.msg(player, lm.Contracting_South, amount);
 	    break;
 	case UP:
 	    oldy = area.getLowLoc().getBlockY();
 	    oldy = oldy + amount;
 	    if (oldy < MIN_HEIGHT) {
-		Residence.msg(player, lm.Select_TooLow);
+		plugin.msg(player, lm.Select_TooLow);
 		oldy = MIN_HEIGHT;
 	    }
 	    area.getLowLoc().setY(oldy);
-	    Residence.msg(player, lm.Contracting_Up, amount);
+	    plugin.msg(player, lm.Contracting_Up, amount);
 	    break;
 	default:
 	    break;

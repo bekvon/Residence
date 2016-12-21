@@ -17,7 +17,7 @@ public class listall implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4200)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	int page = 1;
 	World world = null;
@@ -44,7 +44,7 @@ public class listall implements cmd {
 	    }
 	}
 
-	Residence.getResidenceManager().listAllResidences(sender, page, resadmin, world);
+	plugin.getResidenceManager().listAllResidences(sender, page, resadmin, world);
 	return true;
     }
 

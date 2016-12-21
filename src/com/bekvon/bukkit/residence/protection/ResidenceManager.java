@@ -206,27 +206,26 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public boolean addResidence(Player player, String owner, String name, Location loc1, Location loc2, boolean resadmin) {
-	if (!Residence.validName(name)) {
-	    Residence.msg(player, lm.Invalid_NameCharacters);
+	if (!plugin.validName(name)) {
+	    plugin.msg(player, lm.Invalid_NameCharacters);
 	    return false;
 	}
 	if (loc1 == null || loc2 == null || !loc1.getWorld().getName().equals(loc2.getWorld().getName())) {
-	    Residence.msg(player, lm.Select_Points);
+	    plugin.msg(player, lm.Select_Points);
 	    return false;
 	}
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	PermissionGroup group = rPlayer.getGroup();
-//	PermissionGroup group = Residence.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
-	boolean createpermission = group.canCreateResidences() && (player == null ? true : player.hasPermission("residence.create"));
-	if (!createpermission && !resadmin) {
-	    Residence.msg(player, lm.General_NoPermission);
+//	PermissionGroup group = plugin.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
+	if ( !resadmin && !(group.canCreateResidences() && (player == null ? true : plugin.hasPermission(player, "residence.create")))) {
+	    plugin.msg(player, lm.General_NoPermission);
 	    return false;
 	}
 
 	if (rPlayer.getResAmount() >= rPlayer.getMaxRes() && !resadmin) {
-	    Residence.msg(player, lm.Residence_TooMany);
+	    plugin.msg(player, lm.Residence_TooMany);
 	    return false;
 	}
 
@@ -239,7 +238,7 @@ public class ResidenceManager implements ResidenceInterface {
 	newRes.setCreateTime();
 
 	if (residences.containsKey(name.toLowerCase())) {
-	    Residence.msg(player, lm.Residence_AlreadyExists, residences.get(name.toLowerCase()).getResidenceName());
+	    plugin.msg(player, lm.Residence_AlreadyExists, residences.get(name.toLowerCase()).getResidenceName());
 	    return false;
 	}
 
@@ -249,35 +248,35 @@ public class ResidenceManager implements ResidenceInterface {
 	    return false;
 
 	ResidenceCreationEvent resevent = new ResidenceCreationEvent(player, name, newRes, newArea);
-	Residence.getServ().getPluginManager().callEvent(resevent);
+	plugin.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())
 	    return false;
 
-	if (!newRes.isSubzone() && Residence.getConfigManager().enableEconomy() && !resadmin) {
+	if (!newRes.isSubzone() && plugin.getConfigManager().enableEconomy() && !resadmin) {
 	    double chargeamount = Math.ceil(newArea.getSize() * group.getCostPerBlock());
-	    if (!TransactionManager.chargeEconomyMoney(player, chargeamount))
+	    if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount))
 		return false;
 	}
 
 	residences.put(name.toLowerCase(), newRes);
 
 	calculateChunks(name);
-	Residence.getLeaseManager().removeExpireTime(name);
-	Residence.getPlayerManager().addResidence(newRes.getOwner(), newRes);
+	plugin.getLeaseManager().removeExpireTime(name);
+	plugin.getPlayerManager().addResidence(newRes.getOwner(), newRes);
 
 	if (player != null) {
 	    Visualizer v = new Visualizer(player);
 	    v.setAreas(newArea);
-	    Residence.getSelectionManager().showBounds(player, v);
-	    Residence.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
-	    Residence.msg(player, lm.Area_Create, "main");
-	    Residence.msg(player, lm.Residence_Create, name);
+	    plugin.getSelectionManager().showBounds(player, v);
+	    plugin.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
+	    plugin.msg(player, lm.Area_Create, "main");
+	    plugin.msg(player, lm.Residence_Create, name);
 	}
-	if (Residence.getConfigManager().useLeases()) {
+	if (plugin.getConfigManager().useLeases()) {
 	    if (player != null) {
-		Residence.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
+		plugin.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
 	    } else {
-		Residence.getLeaseManager().setExpireTime(name, group.getLeaseGiveTime());
+		plugin.getLeaseManager().setExpireTime(name, group.getLeaseGiveTime());
 	    }
 	}
 	return true;
@@ -319,14 +318,14 @@ public class ResidenceManager implements ResidenceInterface {
     public void listResidences(CommandSender sender, String targetplayer, int page, boolean showhidden, boolean onlyHidden, boolean resadmin, World world) {
 	if (targetplayer == null)
 	    targetplayer = sender.getName();
-	if (showhidden && !Residence.isResAdminOn(sender) && !sender.getName().equalsIgnoreCase(targetplayer)) {
+	if (showhidden && !plugin.isResAdminOn(sender) && !sender.getName().equalsIgnoreCase(targetplayer)) {
 	    showhidden = false;
 	} else if (sender.getName().equalsIgnoreCase(targetplayer))
 	    showhidden = true;
 	boolean hidden = showhidden;
-	TreeMap<String, ClaimedResidence> ownedResidences = Residence.getPlayerManager().getResidencesMap(targetplayer, hidden, onlyHidden, world);
-	ownedResidences.putAll(Residence.getRentManager().getRentsMap(targetplayer, onlyHidden, world));
-	Residence.getInfoPageManager().printListInfo(sender, targetplayer, ownedResidences, page, resadmin);
+	TreeMap<String, ClaimedResidence> ownedResidences = plugin.getPlayerManager().getResidencesMap(targetplayer, hidden, onlyHidden, world);
+	ownedResidences.putAll(plugin.getRentManager().getRentsMap(targetplayer, onlyHidden, world));
+	plugin.getInfoPageManager().printListInfo(sender, targetplayer, ownedResidences, page, resadmin);
     }
 
     public void listAllResidences(CommandSender sender, int page) {
@@ -335,7 +334,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden, World world) {
 	TreeMap<String, ClaimedResidence> list = getFromAllResidencesMap(showhidden, false, world);
-	Residence.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
+	plugin.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
     }
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden) {
@@ -344,7 +343,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     public void listAllResidences(CommandSender sender, int page, boolean showhidden, boolean onlyHidden) {
 	TreeMap<String, ClaimedResidence> list = getFromAllResidencesMap(showhidden, onlyHidden, null);
-	Residence.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
+	plugin.getInfoPageManager().printListInfo(sender, null, list, page, showhidden);
     }
 
     public String[] getResidenceList() {
@@ -424,8 +423,8 @@ public class ResidenceManager implements ResidenceInterface {
 	if ((showhidden) || (!showhidden && !hidden)) {
 	    if (targetplayer == null || res.getPermissions().getOwner().equals(targetplayer)) {
 		if (formattedOutput) {
-		    list.add(Residence.msg(lm.Residence_List, parentzone, resname, res.getWorld()) +
-			(hidden ? Residence.msg(lm.Residence_Hidden) : ""));
+		    list.add(plugin.msg(lm.Residence_List, parentzone, resname, res.getWorld()) +
+			(hidden ? plugin.msg(lm.Residence_Hidden) : ""));
 		} else {
 		    list.add(parentzone + resname);
 		}
@@ -466,29 +465,29 @@ public class ResidenceManager implements ResidenceInterface {
 
 	ClaimedResidence res = this.getByName(name);
 	if (res == null) {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	    return;
 	}
 
 	name = res.getName();
 
-	if (Residence.getConfigManager().isRentPreventRemoval() && !resadmin) {
+	if (plugin.getConfigManager().isRentPreventRemoval() && !resadmin) {
 	    ClaimedResidence rented = res.getRentedSubzone();
 	    if (rented != null) {
-		Residence.msg(player, lm.Residence_CantRemove, res.getName(), rented.getName(), rented.getRentedLand().player);
+		plugin.msg(player, lm.Residence_CantRemove, res.getName(), rented.getName(), rented.getRentedLand().player);
 		return;
 	    }
 	}
 
 	if (player != null && !resadmin) {
 	    if (!res.getPermissions().hasResidencePermission(player, true) && !resadmin && res.getParent() != null && !res.getParent().isOwner(player)) {
-		Residence.msg(player, lm.General_NoPermission);
+		plugin.msg(player, lm.General_NoPermission);
 		return;
 	    }
 	}
 
 	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
-	Residence.getServ().getPluginManager().callEvent(resevent);
+	plugin.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())
 	    return;
 
@@ -498,16 +497,16 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    residences.remove(name.toLowerCase());
 
-	    if (Residence.getConfigManager().isUseClean() && Residence.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
+	    if (plugin.getConfigManager().isUseClean() && plugin.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
 		for (CuboidArea area : res.getAreaArray()) {
 
 		    Location low = area.getLowLoc();
 		    Location high = area.getHighLoc();
 
-		    if (high.getBlockY() > Residence.getConfigManager().getCleanLevel()) {
+		    if (high.getBlockY() > plugin.getConfigManager().getCleanLevel()) {
 
-			if (low.getBlockY() < Residence.getConfigManager().getCleanLevel())
-			    low.setY(Residence.getConfigManager().getCleanLevel());
+			if (low.getBlockY() < plugin.getConfigManager().getCleanLevel())
+			    low.setY(plugin.getConfigManager().getCleanLevel());
 
 			World world = low.getWorld();
 
@@ -519,7 +518,7 @@ public class ResidenceManager implements ResidenceInterface {
 				temploc.setY(y);
 				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
 				    temploc.setZ(z);
-				    if (Residence.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
+				    if (plugin.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
 					temploc.getBlock().setTypeId(0);
 				    }
 				}
@@ -529,10 +528,10 @@ public class ResidenceManager implements ResidenceInterface {
 		}
 	    }
 
-	    if (Residence.getConfigManager().isRemoveLwcOnDelete())
+	    if (plugin.getConfigManager().isRemoveLwcOnDelete())
 		removeLwcFromResidence(player, res);
 
-	    Residence.msg(player, lm.Residence_Remove, name);
+	    plugin.msg(player, lm.Residence_Remove, name);
 
 	} else {
 	    String[] split = name.split("\\.");
@@ -543,23 +542,23 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
-	// Residence.getLeaseManager().removeExpireTime(name); - causing
+	// plugin.getLeaseManager().removeExpireTime(name); - causing
 	// concurrent modification exception in lease manager... worked
 	// around for now
 
 	for (String oneSub : res.getSubzoneList()) {
-	    Residence.getPlayerManager().removeResFromPlayer(res.getOwner(), name + "." + oneSub);
-	    Residence.getRentManager().removeRentable(name + "." + oneSub);
-	    Residence.getTransactionManager().removeFromSale(name + "." + oneSub);
+	    plugin.getPlayerManager().removeResFromPlayer(res.getOwner(), name + "." + oneSub);
+	    plugin.getRentManager().removeRentable(name + "." + oneSub);
+	    plugin.getTransactionManager().removeFromSale(name + "." + oneSub);
 	}
 
-	Residence.getPlayerManager().removeResFromPlayer(res.getOwner(), name);
-	Residence.getRentManager().removeRentable(name);
-	Residence.getTransactionManager().removeFromSale(name);
+	plugin.getPlayerManager().removeResFromPlayer(res.getOwner(), name);
+	plugin.getRentManager().removeRentable(name);
+	plugin.getTransactionManager().removeFromSale(name);
 
-	if (parent == null && Residence.getConfigManager().enableEconomy() && Residence.getConfigManager().useResMoneyBack()) {
+	if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {
 	    int chargeamount = (int) Math.ceil(res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
-	    TransactionManager.giveEconomyMoney(player, chargeamount);
+	    plugin.getTransactionManager().giveEconomyMoney(player, chargeamount);
 	}
     }
 
@@ -568,7 +567,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    @Override
 	    public void run() {
 		long time = System.currentTimeMillis();
-		LWC lwc = Residence.getLwc();
+		LWC lwc = plugin.getLwc();
 		if (lwc == null)
 		    return;
 		if (res == null)
@@ -577,7 +576,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 		ProtectionCache cache = lwc.getProtectionCache();
 
-		List<Material> list = Residence.getConfigManager().getLwcMatList();
+		List<Material> list = plugin.getConfigManager().getLwcMatList();
 
 		try {
 		    for (CuboidArea area : res.getAreaArray()) {
@@ -602,21 +601,21 @@ public class ResidenceManager implements ResidenceInterface {
 		} catch (Exception e) {
 		}
 		if (i > 0)
-		    Residence.msg(player, lm.Residence_LwcRemoved, i, System.currentTimeMillis() - time);
+		    plugin.msg(player, lm.Residence_LwcRemoved, i, System.currentTimeMillis() - time);
 		return;
 	    }
 	});
     }
 
     public void removeAllByOwner(String owner) {
-	ArrayList<String> list = Residence.getPlayerManager().getResidenceList(owner);
+	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(owner);
 	for (String oneRes : list) {
 	    removeResidence(null, oneRes, true);
 	}
     }
 
     public int getOwnedZoneCount(String player) {
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	return rPlayer.getResAmount();
     }
 
@@ -631,45 +630,45 @@ public class ResidenceManager implements ResidenceInterface {
     public void printAreaInfo(String areaname, CommandSender sender, boolean resadmin) {
 	ClaimedResidence res = this.getByName(areaname);
 	if (res == null) {
-	    Residence.msg(sender, lm.Invalid_Residence);
+	    plugin.msg(sender, lm.Invalid_Residence);
 	    return;
 	}
 
 	areaname = res.getName();
 
-	Residence.msg(sender, lm.General_Separator);
+	plugin.msg(sender, lm.General_Separator);
 
 	ResidencePermissions perms = res.getPermissions();
 
-	String resNameOwner = "&e" + Residence.msg(lm.Residence_Line, areaname);
-	resNameOwner += Residence.msg(lm.General_Owner, perms.getOwner());
-	if (Residence.getConfigManager().enableEconomy()) {
+	String resNameOwner = "&e" + plugin.msg(lm.Residence_Line, areaname);
+	resNameOwner += plugin.msg(lm.General_Owner, perms.getOwner());
+	if (plugin.getConfigManager().enableEconomy()) {
 	    if (res.isOwner(sender) || !(sender instanceof Player) || resadmin)
-		resNameOwner += Residence.msg(lm.Bank_Name, res.getBank().getStoredMoney());
+		resNameOwner += plugin.msg(lm.Bank_Name, res.getBank().getStoredMoney());
 	}
 	resNameOwner = ChatColor.translateAlternateColorCodes('&', resNameOwner);
 
-	String worldInfo = Residence.msg(lm.General_World, perms.getWorld());
+	String worldInfo = plugin.msg(lm.General_World, perms.getWorld());
 
 	if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
 	    worldInfo += "&6 (&3";
 	    CuboidArea area = res.getAreaArray()[0];
-	    worldInfo += Residence.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
+	    worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 	    worldInfo += "&6; &3";
-	    worldInfo += Residence.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+	    worldInfo += plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
 	    worldInfo += "&6)";
 	    worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
 	}
 
-	worldInfo += "\n" + Residence.msg(lm.General_CreatedOn, GetTime.getTime(res.createTime));
+	worldInfo += "\n" + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.createTime));
 
 	String ResFlagList = perms.listFlags(5);
 	if (!(sender instanceof Player))
 	    ResFlagList = perms.listFlags();
-	String ResFlagMsg = Residence.msg(lm.General_ResidenceFlags, ResFlagList);
+	String ResFlagMsg = plugin.msg(lm.General_ResidenceFlags, ResFlagList);
 
 	if (perms.getFlags().size() > 2 && sender instanceof Player) {
-	    ResFlagMsg = Residence.msg(lm.General_ResidenceFlags, perms.listFlags(5, 3)) + "...";
+	    ResFlagMsg = plugin.msg(lm.General_ResidenceFlags, perms.listFlags(5, 3)) + "...";
 	}
 
 	if (sender instanceof Player) {
@@ -679,84 +678,84 @@ public class ResidenceManager implements ResidenceInterface {
 	    raw = convertToRaw(null, ResFlagMsg, ResFlagList);
 	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + raw);
 	} else {
-	    Residence.msg(sender, resNameOwner);
-	    Residence.msg(sender, worldInfo);
-	    Residence.msg(sender, ResFlagMsg);
+	    plugin.msg(sender, resNameOwner);
+	    plugin.msg(sender, worldInfo);
+	    plugin.msg(sender, ResFlagMsg);
 	}
 
-	if (!Residence.getConfigManager().isShortInfoUse() || !(sender instanceof Player))
-	    sender.sendMessage(Residence.msg(lm.General_PlayersFlags, perms.listPlayersFlags()));
-	else if (Residence.getConfigManager().isShortInfoUse() || sender instanceof Player) {
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + perms.listPlayersFlagsRaw(sender.getName(), Residence.msg(
+	if (!plugin.getConfigManager().isShortInfoUse() || !(sender instanceof Player))
+	    sender.sendMessage(plugin.msg(lm.General_PlayersFlags, perms.listPlayersFlags()));
+	else if (plugin.getConfigManager().isShortInfoUse() || sender instanceof Player) {
+	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + perms.listPlayersFlagsRaw(sender.getName(), plugin.msg(
 		lm.General_PlayersFlags, "")));
 	}
 
 	String groupFlags = perms.listGroupFlags();
 	if (groupFlags.length() > 0)
-	    Residence.msg(sender, lm.General_GroupFlags, groupFlags);
+	    plugin.msg(sender, lm.General_GroupFlags, groupFlags);
 
 	String msg = "";
-	msg += Residence.msg(lm.General_TotalResSize, res.getTotalSize(), res.getXZSize());
+	msg += plugin.msg(lm.General_TotalResSize, res.getTotalSize(), res.getXZSize());
 
-	Residence.msg(sender, ChatColor.translateAlternateColorCodes('&', msg));
+	plugin.msg(sender, ChatColor.translateAlternateColorCodes('&', msg));
 
-	if (Residence.getEconomyManager() != null) {
-	    Residence.msg(sender, lm.General_TotalWorth, (int) ((res.getTotalSize() * res.getOwnerGroup().getCostPerBlock())
+	if (plugin.getEconomyManager() != null) {
+	    plugin.msg(sender, lm.General_TotalWorth, (int) ((res.getTotalSize() * res.getOwnerGroup().getCostPerBlock())
 		* 100) / 100.0, (int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0);
 	}
-	if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
-	    String time = Residence.getLeaseManager().getExpireTime(areaname);
+	if (plugin.getConfigManager().useLeases() && plugin.getLeaseManager().leaseExpires(areaname)) {
+	    String time = plugin.getLeaseManager().getExpireTime(areaname);
 	    if (time != null)
-		Residence.msg(sender, lm.Economy_LeaseExpire, time);
+		plugin.msg(sender, lm.Economy_LeaseExpire, time);
 	}
 
-	if (Residence.getConfigManager().enabledRentSystem() && Residence.getRentManager().isForRent(areaname) && !Residence.getRentManager().isRented(areaname)) {
-	    String forRentMsg = Residence.msg(lm.Rent_isForRent);
+	if (plugin.getConfigManager().enabledRentSystem() && plugin.getRentManager().isForRent(areaname) && !plugin.getRentManager().isRented(areaname)) {
+	    String forRentMsg = plugin.msg(lm.Rent_isForRent);
 
-	    RentableLand rentable = Residence.getRentManager().getRentableLand(areaname);
+	    RentableLand rentable = plugin.getRentManager().getRentableLand(areaname);
 	    StringBuilder rentableString = new StringBuilder();
 	    if (rentable != null) {
-		rentableString.append(Residence.msg(lm.General_Cost, rentable.cost, rentable.days) + "\n");
-		rentableString.append(Residence.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing) + "\n");
-		rentableString.append(Residence.msg(lm.Rentable_StayInMarket, rentable.StayInMarket) + "\n");
-		rentableString.append(Residence.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+		rentableString.append(plugin.msg(lm.General_Cost, rentable.cost, rentable.days) + "\n");
+		rentableString.append(plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing) + "\n");
+		rentableString.append(plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket) + "\n");
+		rentableString.append(plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
 	    if (sender instanceof Player)
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + convertToRaw(null, forRentMsg, rentableString.toString()));
 	    else
-		Residence.msg(sender, forRentMsg);
-	} else if (Residence.getConfigManager().enabledRentSystem() && Residence.getRentManager().isRented(areaname)) {
-	    String RentedMsg = Residence.msg(lm.Residence_RentedBy, Residence.getRentManager().getRentingPlayer(areaname));
+		plugin.msg(sender, forRentMsg);
+	} else if (plugin.getConfigManager().enabledRentSystem() && plugin.getRentManager().isRented(areaname)) {
+	    String RentedMsg = plugin.msg(lm.Residence_RentedBy, plugin.getRentManager().getRentingPlayer(areaname));
 
-	    RentableLand rentable = Residence.getRentManager().getRentableLand(areaname);
-	    RentedLand rented = Residence.getRentManager().getRentedLand(areaname);
+	    RentableLand rentable = plugin.getRentManager().getRentableLand(areaname);
+	    RentedLand rented = plugin.getRentManager().getRentedLand(areaname);
 
 	    StringBuilder rentableString = new StringBuilder();
 	    if (rented != null) {
-		rentableString.append(Residence.msg(lm.Rent_Expire, GetTime.getTime(rented.endTime)) + "\n");
+		rentableString.append(plugin.msg(lm.Rent_Expire, GetTime.getTime(rented.endTime)) + "\n");
 		if (rented.player.equals(sender.getName()) || resadmin || res.isOwner(sender))
-		    rentableString.append((rented.AutoPay ? Residence.msg(lm.Rent_AutoPayTurnedOn) : Residence.msg(lm.Rent_AutoPayTurnedOff))
+		    rentableString.append((rented.AutoPay ? plugin.msg(lm.Rent_AutoPayTurnedOn) : plugin.msg(lm.Rent_AutoPayTurnedOff))
 			+ "\n");
 	    }
 
 	    if (rentable != null) {
-		rentableString.append(Residence.msg(lm.General_Cost, rentable.cost, rentable.days) + "\n");
-		rentableString.append(Residence.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing) + "\n");
-		rentableString.append(Residence.msg(lm.Rentable_StayInMarket, rentable.StayInMarket) + "\n");
-		rentableString.append(Residence.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+		rentableString.append(plugin.msg(lm.General_Cost, rentable.cost, rentable.days) + "\n");
+		rentableString.append(plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing) + "\n");
+		rentableString.append(plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket) + "\n");
+		rentableString.append(plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
 
 	    if (sender instanceof Player)
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + convertToRaw(null, RentedMsg, rentableString.toString()));
 	    else
-		Residence.msg(sender, RentedMsg);
-	} else if (Residence.getTransactionManager().isForSale(areaname)) {
-	    int amount = Residence.getTransactionManager().getSaleAmount(areaname);
-	    String SellMsg = Residence.msg(lm.Economy_LandForSale) + " " + amount;
-	    Residence.msg(sender, SellMsg);
+		plugin.msg(sender, RentedMsg);
+	} else if (plugin.getTransactionManager().isForSale(areaname)) {
+	    int amount = plugin.getTransactionManager().getSaleAmount(areaname);
+	    String SellMsg = plugin.msg(lm.Economy_LandForSale) + " " + amount;
+	    plugin.msg(sender, SellMsg);
 	}
 
-	Residence.msg(sender, lm.General_Separator);
+	plugin.msg(sender, lm.General_Separator);
     }
 
     public String convertToRaw(String preText, String text, String hover) {
@@ -781,12 +780,12 @@ public class ResidenceManager implements ResidenceInterface {
 	ClaimedResidence reciever = this.getByName(targetArea);
 	ClaimedResidence source = this.getByName(sourceArea);
 	if (source == null || reciever == null) {
-	    Residence.msg(reqPlayer, lm.Invalid_Residence);
+	    plugin.msg(reqPlayer, lm.Invalid_Residence);
 	    return;
 	}
 	if (!resadmin) {
 	    if (!reciever.getPermissions().hasResidencePermission(reqPlayer, true) || !source.getPermissions().hasResidencePermission(reqPlayer, true)) {
-		Residence.msg(reqPlayer, lm.General_NoPermission);
+		plugin.msg(reqPlayer, lm.General_NoPermission);
 		return;
 	    }
 	}
@@ -795,7 +794,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     public Map<String, Object> save() {
 	Map<String, Object> worldmap = new LinkedHashMap<>();
-	for (World world : Residence.getServ().getWorlds()) {
+	for (World world : plugin.getServ().getWorlds()) {
 	    Map<String, Object> resmap = new LinkedHashMap<>();
 	    for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
 		if (!res.getValue().getWorld().equals(world.getName()))
@@ -804,7 +803,7 @@ public class ResidenceManager implements ResidenceInterface {
 		try {
 		    resmap.put(res.getValue().getResidenceName(), res.getValue().save());
 		} catch (Exception ex) {
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + ChatColor.RED + " Failed to save residence (" + res.getKey() + ")!");
+		    Bukkit.getConsoleSender().sendMessage(plugin.prefix + ChatColor.RED + " Failed to save residence (" + res.getKey() + ")!");
 		    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
@@ -818,17 +817,17 @@ public class ResidenceManager implements ResidenceInterface {
 	if (root == null)
 	    return resm;
 
-	for (World world : Residence.getServ().getWorlds()) {
+	for (World world : plugin.getServ().getWorlds()) {
 	    long time = System.currentTimeMillis();
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loading " + world.getName() + " data into memory...");
+	    Bukkit.getConsoleSender().sendMessage(plugin.prefix + " Loading " + world.getName() + " data into memory...");
 	    if (reslist != null) {
 		try {
 		    resm.chunkResidences.put(world.getName(), loadMap(world.getName(), reslist, resm));
 		} catch (Exception ex) {
-		    Bukkit.getConsoleSender().sendMessage(Residence.prefix + ChatColor.RED + "Error in loading save file for world: " + world.getName());
-		    if (Residence.getConfigManager().stopOnSaveError())
+		    Bukkit.getConsoleSender().sendMessage(plugin.prefix + ChatColor.RED + "Error in loading save file for world: " + world.getName());
+		    if (plugin.getConfigManager().stopOnSaveError())
 			throw (ex);
 		}
 	    }
@@ -836,7 +835,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    long pass = System.currentTimeMillis() - time;
 	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-	    Bukkit.getConsoleSender().sendMessage(Residence.prefix + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
+	    Bukkit.getConsoleSender().sendMessage(plugin.prefix + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
 	}
 	return resm;
     }
@@ -849,8 +848,8 @@ public class ResidenceManager implements ResidenceInterface {
 	int i = 0;
 	int y = 0;
 	for (Entry<String, Object> res : root.entrySet()) {
-	    if (i == 100 & Residence.getConfigManager().isUUIDConvertion())
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + " " + worldName + " UUID conversion done: " + y + " of " + root.size());
+	    if (i == 100 & plugin.getConfigManager().isUUIDConvertion())
+		Bukkit.getConsoleSender().sendMessage(plugin.prefix + " " + worldName + " UUID conversion done: " + y + " of " + root.size());
 	    if (i >= 100)
 		i = 0;
 	    i++;
@@ -863,13 +862,13 @@ public class ResidenceManager implements ResidenceInterface {
 		if (residence == null)
 		    continue;
 
-		if (residence.getPermissions().getOwnerUUID().toString().equals(Residence.getServerLandUUID()) &&
+		if (residence.getPermissions().getOwnerUUID().toString().equals(plugin.getServerLandUUID()) &&
 		    !residence.getOwner().equalsIgnoreCase("Server land") &&
-		    !residence.getOwner().equalsIgnoreCase(Residence.getServerLandname()))
+		    !residence.getOwner().equalsIgnoreCase(plugin.getServerLandname()))
 		    continue;
 
 		if (residence.getOwner().equalsIgnoreCase("Server land")) {
-		    residence.getPermissions().setOwner(Residence.getServerLandname(), false);
+		    residence.getPermissions().setOwner(plugin.getServerLandname(), false);
 		}
 		String resName = res.getKey().toLowerCase();
 
@@ -896,10 +895,10 @@ public class ResidenceManager implements ResidenceInterface {
 		resm.residences.put(resName, residence);
 
 	    } catch (Exception ex) {
-		Bukkit.getConsoleSender().sendMessage(Residence.prefix + ChatColor.RED + " Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage()
+		Bukkit.getConsoleSender().sendMessage(plugin.prefix + ChatColor.RED + " Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage()
 		    + " Error Log:");
 		Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
-		if (Residence.getConfigManager().stopOnSaveError()) {
+		if (plugin.getConfigManager().stopOnSaveError()) {
 		    throw (ex);
 		}
 	    }
@@ -934,46 +933,45 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin) {
-	if (!player.hasPermission("residence.rename")) {
-	    Residence.msg(player, lm.General_NoPermission);
+	if (!plugin.hasPermission(player, "residence.rename")) {
 	    return false;
 	}
 
-	if (!Residence.validName(newName)) {
-	    Residence.msg(player, lm.Invalid_NameCharacters);
+	if (!plugin.validName(newName)) {
+	    plugin.msg(player, lm.Invalid_NameCharacters);
 	    return false;
 	}
 	ClaimedResidence res = this.getByName(oldName);
 	if (res == null) {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	    return false;
 	}
 	oldName = res.getName();	
 	if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (res.getParent() == null) {
 		if (residences.containsKey(newName.toLowerCase())) {
-		    Residence.msg(player, lm.Residence_AlreadyExists, newName);
+		    plugin.msg(player, lm.Residence_AlreadyExists, newName);
 		    return false;
 		}
 
 		ResidenceRenameEvent resevent = new ResidenceRenameEvent(res, newName, oldName);
-		Residence.getServ().getPluginManager().callEvent(resevent);
+		plugin.getServ().getPluginManager().callEvent(resevent);
 		removeChunkList(oldName);
 		res.setName(newName);
 
 		residences.put(newName.toLowerCase(), res);
 		residences.remove(oldName.toLowerCase());
 
-		Residence.getPlayerManager().renameResidence(player.getName(), oldName, newName);
+		plugin.getPlayerManager().renameResidence(player.getName(), oldName, newName);
 
 		calculateChunks(newName);
-		if (Residence.getConfigManager().useLeases()) {
-		    Residence.getLeaseManager().updateLeaseName(oldName, newName);
+		if (plugin.getConfigManager().useLeases()) {
+		    plugin.getLeaseManager().updateLeaseName(oldName, newName);
 		}
 
-		Residence.getSignUtil().updateSignResName(res);
+		plugin.getSignUtil().updateSignResName(res);
 
-		Residence.msg(player, lm.Residence_Rename, oldName, newName);
+		plugin.msg(player, lm.Residence_Rename, oldName, newName);
 
 		return true;
 	    }
@@ -982,12 +980,12 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    boolean feed = parent.renameSubzone(player, oldname[oldname.length - 1], newName, resadmin);
 
-	    Residence.getSignUtil().updateSignResName(res);
+	    plugin.getSignUtil().updateSignResName(res);
 
 	    return feed;
 	}
 
-	Residence.msg(player, lm.General_NoPermission);
+	plugin.msg(player, lm.General_NoPermission);
 
 	return false;
     }
@@ -995,51 +993,51 @@ public class ResidenceManager implements ResidenceInterface {
     public void giveResidence(Player reqPlayer, String targPlayer, String residence, boolean resadmin) {
 	ClaimedResidence res = getByName(residence);
 	if (res == null) {
-	    Residence.msg(reqPlayer, lm.Invalid_Residence);
+	    plugin.msg(reqPlayer, lm.Invalid_Residence);
 	    return;
 	}
 
 	residence = res.getName();
 
 	if (!res.getPermissions().hasResidencePermission(reqPlayer, true) && !resadmin) {
-	    Residence.msg(reqPlayer, lm.General_NoPermission);
+	    plugin.msg(reqPlayer, lm.General_NoPermission);
 	    return;
 	}
-	Player giveplayer = Residence.getServ().getPlayer(targPlayer);
+	Player giveplayer = plugin.getServ().getPlayer(targPlayer);
 	if (giveplayer == null || !giveplayer.isOnline()) {
-	    Residence.msg(reqPlayer, lm.General_NotOnline);
+	    plugin.msg(reqPlayer, lm.General_NotOnline);
 	    return;
 	}
 	CuboidArea[] areas = res.getAreaArray();
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(giveplayer);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(giveplayer);
 	PermissionGroup group = rPlayer.getGroup();
 
 	if (areas.length > group.getMaxPhysicalPerResidence() && !resadmin) {
-	    Residence.msg(reqPlayer, lm.Residence_GiveLimits);
+	    plugin.msg(reqPlayer, lm.Residence_GiveLimits);
 	    return;
 	}
 	if (!hasMaxZones(giveplayer.getName(), rPlayer.getMaxRes()) && !resadmin) {
-	    Residence.msg(reqPlayer, lm.Residence_GiveLimits);
+	    plugin.msg(reqPlayer, lm.Residence_GiveLimits);
 	    return;
 	}
 	if (!resadmin) {
 	    for (CuboidArea area : areas) {
 		if (!res.isSubzone() && !res.isSmallerThanMax(giveplayer, area, resadmin) || res.isSubzone() && !res.isSmallerThanMaxSubzone(giveplayer, area,
 		    resadmin)) {
-		    Residence.msg(reqPlayer, lm.Residence_GiveLimits);
+		    plugin.msg(reqPlayer, lm.Residence_GiveLimits);
 		    return;
 		}
 	    }
 	}
 
-	Residence.getPlayerManager().removeResFromPlayer(reqPlayer, residence);
-	Residence.getPlayerManager().addResidence(targPlayer, res);
+	plugin.getPlayerManager().removeResFromPlayer(reqPlayer, residence);
+	plugin.getPlayerManager().addResidence(targPlayer, res);
 
 	res.getPermissions().setOwner(giveplayer.getName(), true);
 	// Fix phrases here
-	Residence.msg(reqPlayer, lm.Residence_Give, residence, giveplayer.getName());
-	Residence.msg(giveplayer, lm.Residence_Recieve, residence, reqPlayer.getName());
+	plugin.msg(reqPlayer, lm.Residence_Give, residence, giveplayer.getName());
+	plugin.msg(giveplayer, lm.Residence_Recieve, residence, reqPlayer.getName());
     }
 
     public void removeAllFromWorld(CommandSender sender, String world) {
@@ -1060,7 +1058,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    sender.sendMessage(ChatColor.RED + "Removed " + ChatColor.YELLOW + count + ChatColor.RED + " residences in world: " + ChatColor.YELLOW + world);
 	}
 
-	Residence.getPlayerManager().fillList();
+	plugin.getPlayerManager().fillList();
     }
 
     public int getResidenceCount() {

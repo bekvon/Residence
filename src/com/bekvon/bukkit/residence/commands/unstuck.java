@@ -19,7 +19,7 @@ public class unstuck implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4000)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -28,17 +28,17 @@ public class unstuck implements cmd {
 	if (args.length != 1)
 	    return false;
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (!group.hasUnstuckAccess()) {
-	    Residence.msg(player, lm.General_NoPermission);
+	    plugin.msg(player, lm.General_NoPermission);
 	    return true;
 	}
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	if (res == null) {
-	    Residence.msg(player, lm.Residence_NotIn);
+	    plugin.msg(player, lm.Residence_NotIn);
 	} else {
-	    Residence.msg(player, lm.General_Moved);
+	    plugin.msg(player, lm.General_Moved);
 	    player.teleport(res.getOutsideFreeLoc(player.getLocation(), player));
 	}
 	return true;

@@ -17,22 +17,22 @@ public class clearflags implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 3600)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
 
 	if (!resadmin) {
-	    Residence.msg(player, lm.General_NoPermission);
+	    plugin.msg(player, lm.General_NoPermission);
 	    return true;
 	}
-	ClaimedResidence area = Residence.getResidenceManager().getByName(args[1]);
+	ClaimedResidence area = plugin.getResidenceManager().getByName(args[1]);
 	if (area != null) {
 	    area.getPermissions().clearFlags();
-	    Residence.msg(player, lm.Flag_Cleared);
+	    plugin.msg(player, lm.Flag_Cleared);
 	} else {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	}
 	return true;
     }

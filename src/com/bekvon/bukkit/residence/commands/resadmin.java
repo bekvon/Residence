@@ -16,7 +16,7 @@ public class resadmin implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5300)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 	if (args.length != 2)
@@ -24,11 +24,11 @@ public class resadmin implements cmd {
 
 	Player player = (Player) sender;
 	if (args[1].equals("on")) {
-	    Residence.resadminToggle.add(player.getName());
-	    Residence.msg(player, lm.General_AdminToggleTurnOn);
+	    plugin.resadminToggle.add(player.getName());
+	    plugin.msg(player, lm.General_AdminToggleTurnOn);
 	} else if (args[1].equals("off")) {
-	    Residence.resadminToggle.remove(player.getName());
-	    Residence.msg(player, lm.General_AdminToggleTurnOff);
+	    plugin.resadminToggle.remove(player.getName());
+	    plugin.msg(player, lm.General_AdminToggleTurnOff);
 	}
 	return true;
     }

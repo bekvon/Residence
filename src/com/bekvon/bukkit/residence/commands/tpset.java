@@ -17,16 +17,16 @@ public class tpset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 200)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	if (res != null) {
 	    res.setTpLoc(player, resadmin);
 	} else {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	}
 	return true;
     }

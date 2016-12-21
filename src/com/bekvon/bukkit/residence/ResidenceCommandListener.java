@@ -28,26 +28,26 @@ public class ResidenceCommandListener extends Residence {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(), args, sender);
-	Residence.getServ().getPluginManager().callEvent(cevent);
+	getServ().getPluginManager().callEvent(cevent);
 	if (cevent.isCancelled()) {
 	    return true;
 	}
 
-	if (sender instanceof Player && !Residence.getPermissionManager().isResidenceAdmin(sender) && Residence.isDisabledWorldCommand(((Player) sender)
+	if (sender instanceof Player && !getPermissionManager().isResidenceAdmin(sender) && isDisabledWorldCommand(((Player) sender)
 	    .getWorld())) {
-	    Residence.msg(sender, lm.General_DisabledWorld);
+	    this.msg(sender, lm.General_DisabledWorld);
 	    return true;
 	}
 
 	if (command.getName().equals("resreload") && args.length == 0) {
 	    if (sender instanceof Player) {
 		Player player = (Player) sender;
-		if (Residence.getPermissionManager().isResidenceAdmin(player) && player.hasPermission("residence.topadmin")) {
+		if (getPermissionManager().isResidenceAdmin(player) && player.hasPermission("residence.topadmin")) {
 		    this.reloadPlugin();
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded config.");
 		    System.out.println("[Residence] Reloaded by " + player.getName() + ".");
 		} else
-		    Residence.msg(player, lm.General_NoPermission);
+		    this.msg(player, lm.General_NoPermission);
 	    } else {
 		this.reloadPlugin();
 		System.out.println("[Residence] Reloaded by console.");
@@ -55,7 +55,7 @@ public class ResidenceCommandListener extends Residence {
 	    return true;
 	}
 	if (command.getName().equals("resload")) {
-	    if (!(sender instanceof Player) || sender instanceof Player && Residence.gmanager.isResidenceAdmin(sender) && ((Player) sender).hasPermission(
+	    if (!(sender instanceof Player) || sender instanceof Player && getPermissionManager().isResidenceAdmin(sender) && ((Player) sender).hasPermission(
 		"residence.topadmin")) {
 		try {
 		    this.loadYml();
@@ -63,10 +63,10 @@ public class ResidenceCommandListener extends Residence {
 		} catch (Exception ex) {
 		    sender.sendMessage(ChatColor.RED + "[Residence] Unable to reload the save file, exception occured!");
 		    sender.sendMessage(ChatColor.RED + ex.getMessage());
-		    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+		    Logger.getLogger(this.getInstance().getClass().getName()).log(Level.SEVERE, null, ex);
 		}
 	    } else
-		Residence.msg(sender, lm.General_NoPermission);
+		msg(sender, lm.General_NoPermission);
 	    return true;
 	} else if (command.getName().equals("rc")) {
 	    cmd cmdClass = getCmdClass(new String[] { "rc" });
@@ -74,21 +74,21 @@ public class ResidenceCommandListener extends Residence {
 		sendUsage(sender, command.getName());
 		return true;
 	    }
-	    boolean respond = cmdClass.perform(args, false, command, sender);
+	    boolean respond = cmdClass.perform(this.getInstance(), args, false, command, sender);
 	    if (!respond)
 		sendUsage(sender, command.getName());
 	    return true;
 	} else if (command.getName().equals("res") || command.getName().equals("residence") || command.getName().equals("resadmin")) {
 	    boolean resadmin = false;
 	    if (sender instanceof Player) {
-		if (command.getName().equals("resadmin") && Residence.gmanager.isResidenceAdmin(sender)) {
+		if (command.getName().equals("resadmin") && getPermissionManager().isResidenceAdmin(sender)) {
 		    resadmin = true;
 		}
-		if (command.getName().equals("resadmin") && !Residence.gmanager.isResidenceAdmin(sender)) {
-		    ((Player) sender).sendMessage(Residence.msg(lm.Residence_NonAdmin));
+		if (command.getName().equals("resadmin") && !getPermissionManager().isResidenceAdmin(sender)) {
+		    ((Player) sender).sendMessage(msg(lm.Residence_NonAdmin));
 		    return true;
 		}
-		if (command.getName().equals("res") && Residence.gmanager.isResidenceAdmin(sender) && Residence.getConfigManager().getAdminFullAccess()) {
+		if (command.getName().equals("res") && getPermissionManager().isResidenceAdmin(sender) && getConfigManager().getAdminFullAccess()) {
 		    resadmin = true;
 		}
 	    } else {
@@ -105,9 +105,9 @@ public class ResidenceCommandListener extends Residence {
 	    } else {
 		resadmin = true;
 	    }
-	    if (Residence.cmanager.allowAdminsOnly()) {
+	    if (getConfigManager().allowAdminsOnly()) {
 		if (!resadmin && player != null) {
-		    Residence.msg(player, lm.General_AdminOnly);
+		    msg(player, lm.General_AdminOnly);
 		    return true;
 		}
 	    }
@@ -132,17 +132,15 @@ public class ResidenceCommandListener extends Residence {
 		return commandHelp(new String[] { "?" }, resadmin, sender, command);
 	    }
 
-	    if (!sender.hasPermission("residence.command." + args[0].toLowerCase()) && !resadmin) {
-		Residence.msg(sender, lm.General_NoCmdPermission);
+	    if (!resadmin && !this.hasPermission(sender, "residence.command." + args[0].toLowerCase()))
 		return true;
-	    }
 
-	    if (!resadmin && player != null && Residence.resadminToggle.contains(player.getName())) {
-		if (!Residence.gmanager.isResidenceAdmin(player)) {
-		    Residence.resadminToggle.remove(player.getName());
+	    if (!resadmin && player != null && resadminToggle.contains(player.getName())) {
+		if (!getPermissionManager().isResidenceAdmin(player)) {
+		    resadminToggle.remove(player.getName());
 		}
 	    }
-	    boolean respond = cmdClass.perform(args, resadmin, command, sender);
+	    boolean respond = cmdClass.perform(this.getInstance(), args, resadmin, command, sender);
 	    if (!respond) {
 		String[] tempArray = new String[args.length + 1];
 		for (int i = 0; i < args.length; i++) {
@@ -173,11 +171,11 @@ public class ResidenceCommandListener extends Residence {
     }
 
     public void sendUsage(CommandSender sender, String command) {
-	Residence.msg(sender, lm.General_DefaultUsage, command);
+	msg(sender, lm.General_DefaultUsage, command);
     }
 
     private boolean commandHelp(String[] args, boolean resadmin, CommandSender sender, Command command) {
-	if (Residence.helppages == null)
+	if (getHelpPages() == null)
 	    return false;
 
 	String helppath = getHelpPath(args);
@@ -187,14 +185,14 @@ public class ResidenceCommandListener extends Residence {
 	    try {
 		page = Integer.parseInt(args[args.length - 1]);
 	    } catch (Exception ex) {
-		Residence.msg(sender, lm.General_InvalidHelp);
+		msg(sender, lm.General_InvalidHelp);
 	    }
 	}
 
 	if (command.getName().equalsIgnoreCase("res"))
 	    resadmin = false;
-	if (Residence.helppages.containesEntry(helppath))
-	    Residence.helppages.printHelp(sender, page, helppath, resadmin);
+	if (getHelpPages().containesEntry(helppath))
+	    getHelpPages().printHelp(sender, page, helppath, resadmin);
 	return true;
     }
 
@@ -206,7 +204,7 @@ public class ResidenceCommandListener extends Residence {
 	    }
 	    helppath = helppath + "." + args[i];
 	}
-	if (!Residence.helppages.containesEntry(helppath) && args.length > 0)
+	if (!getHelpPages().containesEntry(helppath) && args.length > 0)
 	    return getHelpPath(Arrays.copyOf(args, args.length - 1));
 	return helppath;
     }

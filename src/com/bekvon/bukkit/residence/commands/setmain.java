@@ -18,7 +18,7 @@ public class setmain implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2900)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (!(sender instanceof Player))
 	    return false;
@@ -31,25 +31,25 @@ public class setmain implements cmd {
 	ClaimedResidence res = null;
 
 	if (args.length == 1)
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	else
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 
 	if (res == null) {
-	    Residence.msg(sender, lm.Invalid_Residence);
+	    plugin.msg(sender, lm.Invalid_Residence);
 	    return false;
 	}
 
 	if (res.isOwner(player)) {
 	    res.setMainResidence(res.isMainResidence() ? false : true);
-	} else if (Residence.getRentManager().isRented(res.getName()) && !Residence.getRentManager().getRentingPlayer(res.getName()).equalsIgnoreCase(player.getName())) {
-	    Residence.msg(sender, lm.Invalid_Residence);
+	} else if (plugin.getRentManager().isRented(res.getName()) && !plugin.getRentManager().getRentingPlayer(res.getName()).equalsIgnoreCase(player.getName())) {
+	    plugin.msg(sender, lm.Invalid_Residence);
 	    return false;
 	}
 
-	Residence.msg(player, lm.Residence_ChangedMain, res.getTopParentName());
+	plugin.msg(player, lm.Residence_ChangedMain, res.getTopParentName());
 
-	ResidencePlayer rplayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rplayer = plugin.getPlayerManager().getResidencePlayer(player);
 	if (rplayer != null)
 	    rplayer.setMainResidence(res);
 

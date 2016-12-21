@@ -15,13 +15,13 @@ public class removeworld implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5200)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 
 	if (args.length != 2)
 	    return false;
 
 	if (sender instanceof ConsoleCommandSender) {
-	    Residence.getResidenceManager().removeAllFromWorld(sender, args[1]);
+	    plugin.getResidenceManager().removeAllFromWorld(sender, args[1]);
 	    return true;
 	}
 	sender.sendMessage(ChatColor.RED + "MUST be run from console.");

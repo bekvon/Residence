@@ -18,13 +18,16 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 public class CrackShot implements Listener {
-    public CrackShot() {
+    private Residence plugin;
+
+    public CrackShot(Residence plugin) {
+	this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(WeaponDamageEntityEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Entity damager = event.getDamager();
 
@@ -54,11 +57,11 @@ public class CrackShot implements Listener {
 	    return;
 
 	Entity entity = event.getVictim();
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(entity.getLocation());
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(entity.getLocation());
 
-	if (Residence.getNms().isAnimal(entity)) {
+	if (plugin.getNms().isAnimal(entity)) {
 	    if (res != null && res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
-		cause.sendMessage(Residence.msg(lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName()));
+		cause.sendMessage(plugin.msg(lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName()));
 		event.setCancelled(true);
 	    }
 	}
@@ -67,9 +70,9 @@ public class CrackShot implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(WeaponDamageEntityEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
-	if (event.getVictim().getType() != EntityType.ITEM_FRAME && !Residence.getNms().isArmorStandEntity(event.getVictim().getType()))
+	if (event.getVictim().getType() != EntityType.ITEM_FRAME && !plugin.getNms().isArmorStandEntity(event.getVictim().getType()))
 	    return;
 
 	Entity dmgr = event.getDamager();
@@ -88,10 +91,10 @@ public class CrackShot implements Listener {
 
 	// Note: Location of entity, not player; otherwise player could stand outside of res and still damage
 	Location loc = event.getVictim().getLocation();
-	ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 	if (res != null && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
 	    event.setCancelled(true);
-	    Residence.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
+	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
 	}
 
     }
@@ -99,7 +102,7 @@ public class CrackShot implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(WeaponDamageEntityEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getPlayer().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	if (!(event.getVictim() instanceof Player))
 	    return;
@@ -109,7 +112,7 @@ public class CrackShot implements Listener {
 	    return;
 	}
 
-	ClaimedResidence area = Residence.getResidenceManager().getByLoc(victim.getLocation());
+	ClaimedResidence area = plugin.getResidenceManager().getByLoc(victim.getLocation());
 	/* Living Entities */
 	Player damager = event.getPlayer();
 	ClaimedResidence srcarea = null;
@@ -117,7 +120,7 @@ public class CrackShot implements Listener {
 	if (damager == null)
 	    return;
 
-	srcarea = Residence.getResidenceManager().getByLoc(damager.getLocation());
+	srcarea = plugin.getResidenceManager().getByLoc(damager.getLocation());
 
 	boolean srcpvp = true;
 	if (srcarea != null) {
@@ -125,21 +128,21 @@ public class CrackShot implements Listener {
 	}
 
 	if (!srcpvp) {
-	    damager.sendMessage(Residence.msg(lm.General_NoPVPZone));
+	    damager.sendMessage(plugin.msg(lm.General_NoPVPZone));
 	    event.setCancelled(true);
 	    return;
 	}
 	/* Check for Player vs Player */
 	if (area == null) {
 	    /* World PvP */
-	    if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has(Flags.pvp, true)) {
-		damager.sendMessage(Residence.msg(lm.General_WorldPVPDisabled));
+	    if (!plugin.getWorldFlags().getPerms(damager.getWorld().getName()).has(Flags.pvp, true)) {
+		damager.sendMessage(plugin.msg(lm.General_WorldPVPDisabled));
 		event.setCancelled(true);
 	    }
 	} else {
 	    /* Normal PvP */
 	    if (!area.getPermissions().has(Flags.pvp, true)) {
-		damager.sendMessage(Residence.msg(lm.General_NoPVPZone));
+		damager.sendMessage(plugin.msg(lm.General_NoPVPZone));
 		event.setCancelled(true);
 	    }
 	}

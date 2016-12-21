@@ -24,41 +24,41 @@ public class select implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1300)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
 
-	ResidencePlayer rPlayer = Residence.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	PermissionGroup group = rPlayer.getGroup();
 	if (!group.selectCommandAccess() && !resadmin) {
-	    Residence.msg(player, lm.Select_Disabled);
+	    plugin.msg(player, lm.Select_Disabled);
 	    return true;
 	}
 	if (!group.canCreateResidences() && rPlayer.getMaxSubzones() <= 0 && !resadmin) {
-	    Residence.msg(player, lm.Select_Disabled);
+	    plugin.msg(player, lm.Select_Disabled);
 	    return true;
 	}
 	if ((!player.hasPermission("residence.create") && player.isPermissionSet("residence.create") && !player.hasPermission("residence.select") && player
 	    .isPermissionSet("residence.select")) && !resadmin) {
-	    Residence.msg(player, lm.Select_Disabled);
+	    plugin.msg(player, lm.Select_Disabled);
 	    return true;
 	}
 	if (args.length == 2) {
 	    if (args[1].equals("size") || args[1].equals("cost")) {
-		if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
+		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
 		    try {
-			Residence.getSelectionManager().showSelectionInfo(player);
+			plugin.getSelectionManager().showSelectionInfo(player);
 			return true;
 		    } catch (Exception ex) {
 			Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
 			return true;
 		    }
-		} else if (Residence.getSelectionManager().worldEdit(player)) {
+		} else if (plugin.getSelectionManager().worldEdit(player)) {
 		    try {
-			Residence.getSelectionManager().showSelectionInfo(player);
+			plugin.getSelectionManager().showSelectionInfo(player);
 			return true;
 		    } catch (Exception ex) {
 			Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
@@ -66,35 +66,35 @@ public class select implements cmd {
 		    }
 		}
 	    } else if (args[1].equals("vert")) {
-		Residence.getSelectionManager().vert(player, resadmin);
+		plugin.getSelectionManager().vert(player, resadmin);
 		return true;
 	    } else if (args[1].equals("sky")) {
-		Residence.getSelectionManager().sky(player, resadmin);
+		plugin.getSelectionManager().sky(player, resadmin);
 		return true;
 	    } else if (args[1].equals("bedrock")) {
-		Residence.getSelectionManager().bedrock(player, resadmin);
+		plugin.getSelectionManager().bedrock(player, resadmin);
 		return true;
 	    } else if (args[1].equals("coords")) {
-		Residence.msg(player, lm.General_Separator);
-		Location playerLoc1 = Residence.getSelectionManager().getPlayerLoc1(player.getName());
+		plugin.msg(player, lm.General_Separator);
+		Location playerLoc1 = plugin.getSelectionManager().getPlayerLoc1(player.getName());
 		if (playerLoc1 != null) {
-		    Residence.msg(player, lm.Select_Primary, Residence.msg(lm.General_CoordsTop, playerLoc1.getBlockX(), playerLoc1
+		    plugin.msg(player, lm.Select_Primary, plugin.msg(lm.General_CoordsTop, playerLoc1.getBlockX(), playerLoc1
 			.getBlockY(), playerLoc1.getBlockZ()));
 		}
-		Location playerLoc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
+		Location playerLoc2 = plugin.getSelectionManager().getPlayerLoc2(player.getName());
 		if (playerLoc2 != null) {
-		    Residence.msg(player, lm.Select_Secondary, Residence.msg(lm.General_CoordsBottom, playerLoc2.getBlockX(),
+		    plugin.msg(player, lm.Select_Secondary, plugin.msg(lm.General_CoordsBottom, playerLoc2.getBlockX(),
 			playerLoc2
 			    .getBlockY(), playerLoc2.getBlockZ()));
 		}
-		Residence.msg(player, lm.General_Separator);
+		plugin.msg(player, lm.General_Separator);
 		return true;
 	    } else if (args[1].equals("chunk")) {
-		Residence.getSelectionManager().selectChunk(player);
+		plugin.getSelectionManager().selectChunk(player);
 		return true;
 	    } else if (args[1].equals("worldedit")) {
-		if (Residence.getSelectionManager().worldEdit(player)) {
-		    Residence.msg(player, lm.Select_Success);
+		if (plugin.getSelectionManager().worldEdit(player)) {
+		    plugin.msg(player, lm.Select_Success);
 		}
 		return true;
 	    }
@@ -104,37 +104,36 @@ public class select implements cmd {
 		try {
 		    amount = Integer.parseInt(args[2]);
 		} catch (Exception ex) {
-		    Residence.msg(player, lm.Invalid_Amount);
+		    plugin.msg(player, lm.Invalid_Amount);
 		    return true;
 		}
-		Residence.getSelectionManager().modify(player, false, amount);
+		plugin.getSelectionManager().modify(player, false, amount);
 		return true;
 	    } else if (args[1].equals("shift")) {
 		int amount;
 		try {
 		    amount = Integer.parseInt(args[2]);
 		} catch (Exception ex) {
-		    Residence.msg(player, lm.Invalid_Amount);
+		    plugin.msg(player, lm.Invalid_Amount);
 		    return true;
 		}
-		Residence.getSelectionManager().modify(player, true, amount);
+		plugin.getSelectionManager().modify(player, true, amount);
 		return true;
 	    }
 	}
 	if ((args.length == 2 || args.length == 3) && args[1].equals("auto")) {
 	    Player target = player;
 	    if (args.length == 3) {
-		if (!player.hasPermission("residence.select.auto.others")) {
-		    Residence.msg(player, lm.General_NoPermission);
+		if (!plugin.hasPermission(player, "residence.select.auto.others")) {
 		    return true;
 		}
 		target = Bukkit.getPlayer(args[2]);
 		if (target == null) {
-		    Residence.msg(player, lm.General_NotOnline);
+		    plugin.msg(player, lm.General_NotOnline);
 		    return true;
 		}
 	    }
-	    Residence.getAutoSelectionManager().switchAutoSelection(target);
+	    plugin.getAutoSelectionManager().switchAutoSelection(target);
 	    return true;
 	}
 	if (args.length > 1 && args[1].equals("residence")) {
@@ -142,12 +141,12 @@ public class select implements cmd {
 	    String areaName;
 	    ClaimedResidence res = null;
 	    if (args.length > 2) {
-		res = Residence.getResidenceManager().getByName(args[2]);
+		res = plugin.getResidenceManager().getByName(args[2]);
 	    } else {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    }
 	    if (res == null) {
-		Residence.msg(player, lm.Invalid_Residence);
+		plugin.msg(player, lm.Invalid_Residence);
 		return true;
 	    }
 	    resName = res.getName();
@@ -160,19 +159,19 @@ public class select implements cmd {
 		area = res.getArea(areaName);
 	    }
 	    if (area != null) {
-		Residence.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
-		Residence.getSelectionManager().placeLoc2(player, area.getLowLoc(), true);
-		Residence.msg(player, lm.Select_Area, areaName, resName);
+		plugin.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
+		plugin.getSelectionManager().placeLoc2(player, area.getLowLoc(), true);
+		plugin.msg(player, lm.Select_Area, areaName, resName);
 	    } else {
-		Residence.msg(player, lm.Area_NonExist);
+		plugin.msg(player, lm.Area_NonExist);
 	    }
 	    return true;
 	}
 	try {
-	    Residence.getSelectionManager().selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+	    plugin.getSelectionManager().selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 	    return true;
 	} catch (Exception ex) {
-	    Residence.msg(player, lm.Select_Fail);
+	    plugin.msg(player, lm.Select_Fail);
 	    return true;
 	}
     }

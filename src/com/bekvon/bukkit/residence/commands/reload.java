@@ -29,9 +29,9 @@ public class reload implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5800)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!resadmin && !sender.isOp()) {
-	    Residence.msg(sender, lm.General_NoPermission);
+	    plugin.msg(sender, lm.General_NoPermission);
 	    return true;
 	}
 
@@ -40,8 +40,8 @@ public class reload implements cmd {
 	}
 
 	if (args[1].equalsIgnoreCase("lang")) {
-	    Residence.getLM().LanguageReload();
-	    File langFile = new File(new File(Residence.dataFolder, "Language"), Residence.getConfigManager().getLanguage() + ".yml");
+	    plugin.getLM().LanguageReload();
+	    File langFile = new File(new File(plugin.dataFolder, "Language"), plugin.getConfigManager().getLanguage() + ".yml");
 	    BufferedReader in = null;
 	    try {
 		in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
@@ -59,11 +59,11 @@ public class reload implements cmd {
 		} catch (InvalidConfigurationException e) {
 		    e.printStackTrace();
 		}
-		Residence.helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
+		plugin.helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
 	    } else {
-		System.out.println(Residence.prefix + " Language file does not exist...");
+		System.out.println(plugin.prefix + " Language file does not exist...");
 	    }
-	    sender.sendMessage(Residence.prefix + " Reloaded language file.");
+	    sender.sendMessage(plugin.prefix + " Reloaded language file.");
 	    if (in != null)
 		try {
 		    in.close();
@@ -72,21 +72,21 @@ public class reload implements cmd {
 		}
 	    return true;
 	} else if (args[1].equalsIgnoreCase("config")) {
-	    Residence.getConfigManager().UpdateConfigFile();
-	    sender.sendMessage(Residence.prefix + " Reloaded config file.");
+	    plugin.getConfigManager().UpdateConfigFile();
+	    sender.sendMessage(plugin.prefix + " Reloaded config file.");
 	    return true;
 	} else if (args[1].equalsIgnoreCase("groups")) {
-	    Residence.getConfigManager().loadGroups();
-	    Residence.gmanager = new PermissionManager();
-	    Residence.wmanager = new WorldFlagManager();
-	    sender.sendMessage(Residence.prefix + " Reloaded groups file.");
+	    plugin.getConfigManager().loadGroups();
+	    plugin.gmanager = new PermissionManager(plugin);
+	    plugin.wmanager = new WorldFlagManager();
+	    sender.sendMessage(plugin.prefix + " Reloaded groups file.");
 	    return true;
 	} else if (args[1].equalsIgnoreCase("flags")) {
-	    Residence.getConfigManager().loadFlags();
-	    Residence.gmanager = new PermissionManager();
-	    Residence.imanager = new WorldItemManager();
-	    Residence.wmanager = new WorldFlagManager();
-	    sender.sendMessage(Residence.prefix + " Reloaded flags file.");
+	    plugin.getConfigManager().loadFlags();
+	    plugin.gmanager = new PermissionManager(plugin);
+	    plugin.imanager = new WorldItemManager();
+	    plugin.wmanager = new WorldFlagManager();
+	    sender.sendMessage(plugin.prefix + " Reloaded flags file.");
 	    return true;
 	}
 	return false;

@@ -40,20 +40,20 @@ public class InformationPager {
 	if (pagecount == 0)
 	    pagecount = 1;
 	if (page > pagecount) {
-	    sender.sendMessage(ChatColor.RED + Residence.msg(lm.Invalid_Page));
+	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
 	}
-	Residence.msg(sender, lm.InformationPage_TopLine, title);
-	Residence.msg(sender, lm.InformationPage_Page, Residence.msg(lm.General_GenericPages, String.format("%d", page),
+	plugin.msg(sender, lm.InformationPage_TopLine, title);
+	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),
 	    pagecount, lines.size()));
 	for (int i = start; i < end; i++) {
 	    if (lines.size() > i)
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));
 	}
 	if (pagecount > page)
-	    Residence.msg(sender, lm.InformationPage_NextPage, Residence.msg(lm.General_NextPage));
+	    plugin.msg(sender, lm.InformationPage_NextPage, plugin.msg(lm.General_NextPage));
 	else
-	    Residence.msg(sender, lm.InformationPage_NoNextPage);
+	    plugin.msg(sender, lm.InformationPage_NoNextPage);
     }
 
     public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin) {
@@ -75,12 +75,12 @@ public class InformationPager {
 	if (pagecount == 0)
 	    pagecount = 1;
 	if (page > pagecount) {
-	    sender.sendMessage(ChatColor.RED + Residence.msg(lm.Invalid_Page));
+	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
 	}
 	if (targetPlayer != null)
-	    Residence.msg(sender, lm.InformationPage_TopLine, Residence.msg(lm.General_Residences) + " - " + targetPlayer);
-	Residence.msg(sender, lm.InformationPage_Page, Residence.msg(lm.General_GenericPages, String.format("%d", page),
+	    plugin.msg(sender, lm.InformationPage_TopLine, plugin.msg(lm.General_Residences) + " - " + targetPlayer);
+	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),
 	    pagecount, ownedResidences.size()));
 
 	String cmd = "res";
@@ -110,42 +110,42 @@ public class InformationPager {
 
 	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
-	    StringB.append(" " + Residence.msg(lm.General_Owner, res.getOwner()));
+	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
 
 	    if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
 		worldInfo += "&6 (&3";
 		CuboidArea area = res.getAreaArray()[0];
-		worldInfo += Residence.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
+		worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
 		    .getBlockZ());
 		worldInfo += "&6; &3";
-		worldInfo += Residence.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
+		worldInfo += plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
 		    .getBlockZ());
 		worldInfo += "&6)";
 		worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
 		StringB.append("\n" + worldInfo);
 	    }
 
-	    StringB.append("\n " + Residence.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
+	    StringB.append("\n " + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
 
 	    String ExtraString = "";
 	    if (res.isForRent()) {
 		if (res.isRented()) {
-		    ExtraString = " " + Residence.msg(lm.Residence_IsRented);
-		    StringB.append("\n " + Residence.msg(lm.Residence_RentedBy, res.getRentedLand().player));
+		    ExtraString = " " + plugin.msg(lm.Residence_IsRented);
+		    StringB.append("\n " + plugin.msg(lm.Residence_RentedBy, res.getRentedLand().player));
 		} else {
-		    ExtraString = " " + Residence.msg(lm.Residence_IsForRent);
+		    ExtraString = " " + plugin.msg(lm.Residence_IsForRent);
 		}
 		RentableLand rentable = res.getRentable();
-		StringB.append("\n " + Residence.msg(lm.General_Cost, rentable.cost, rentable.days));
-		StringB.append("\n " + Residence.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
-		StringB.append("\n " + Residence.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
-		StringB.append("\n " + Residence.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+		StringB.append("\n " + plugin.msg(lm.General_Cost, rentable.cost, rentable.days));
+		StringB.append("\n " + plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
+		StringB.append("\n " + plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
+		StringB.append("\n " + plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
 
 	    if (res.isForSell()) {
-		ExtraString = " " + Residence.msg(lm.Residence_IsForSale);
-		StringB.append("\n " + Residence.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
+		ExtraString = " " + plugin.msg(lm.Residence_IsForSale);
+		StringB.append("\n " + plugin.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
 	    }
 
 	    String tpFlag = "";
@@ -155,10 +155,10 @@ public class InformationPager {
 		moveFlag = res.getPermissions().playerHas(sender.getName(), Flags.move, true) ? ChatColor.DARK_GREEN + "M" : ChatColor.DARK_RED + "M";
 	    }
 
-	    String msg = Residence.msg(lm.Residence_ResList, y, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
+	    String msg = plugin.msg(lm.Residence_ResList, y, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
 
 	    if (sender instanceof Player)
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + Residence.getResidenceManager().convertToRaw(null, msg,
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + plugin.getResidenceManager().convertToRaw(null, msg,
 		    StringB.toString(), cmd + " tp " + res.getName()));
 	    else {
 		linesForConsole.add(msg + " " + StringB.toString().replace("\n", ""));
@@ -183,45 +183,45 @@ public class InformationPager {
 
 	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
-	    StringB.append(" " + Residence.msg(lm.General_Owner, res.getOwner()));
+	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
 
 	    if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
 		worldInfo += "&6 (&3";
 		CuboidArea area = res.getAreaArray()[0];
-		worldInfo += Residence.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
+		worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
 		    .getBlockZ());
 		worldInfo += "&6; &3";
-		worldInfo += Residence.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
+		worldInfo += plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
 		    .getBlockZ());
 		worldInfo += "&6)";
 		worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
 		StringB.append("\n" + worldInfo);
 	    }
 
-	    StringB.append("\n " + Residence.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
+	    StringB.append("\n " + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
 
 	    String ExtraString = "";
 	    if (res.isForRent()) {
 		if (res.isRented()) {
-		    ExtraString = " " + Residence.msg(lm.Residence_IsRented);
-		    StringB.append("\n " + Residence.msg(lm.Residence_RentedBy, res.getRentedLand().player));
+		    ExtraString = " " + plugin.msg(lm.Residence_IsRented);
+		    StringB.append("\n " + plugin.msg(lm.Residence_RentedBy, res.getRentedLand().player));
 		} else {
-		    ExtraString = " " + Residence.msg(lm.Residence_IsForRent);
+		    ExtraString = " " + plugin.msg(lm.Residence_IsForRent);
 		}
 		RentableLand rentable = res.getRentable();
-		StringB.append("\n " + Residence.msg(lm.General_Cost, rentable.cost, rentable.days));
-		StringB.append("\n " + Residence.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
-		StringB.append("\n " + Residence.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
-		StringB.append("\n " + Residence.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+		StringB.append("\n " + plugin.msg(lm.General_Cost, rentable.cost, rentable.days));
+		StringB.append("\n " + plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
+		StringB.append("\n " + plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
+		StringB.append("\n " + plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
 
 	    if (res.isForSell()) {
-		ExtraString = " " + Residence.msg(lm.Residence_IsForSale);
-		StringB.append("\n " + Residence.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
+		ExtraString = " " + plugin.msg(lm.Residence_IsForSale);
+		StringB.append("\n " + plugin.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
 	    }
 
-	    String msg = Residence.msg(lm.Residence_ResList, (i + 1), res.getName(), res.getWorld(), "", ExtraString);
+	    String msg = plugin.msg(lm.Residence_ResList, (i + 1), res.getName(), res.getWorld(), "", ExtraString);
 
 	    msg = ChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
 	    msg = msg.replaceAll("\\s{2}", " ");
@@ -268,19 +268,19 @@ public class InformationPager {
 	Prevpage = CurrentPage > 1 ? Prevpage : CurrentPage;
 
 	String prevCmd = "/" + cmd + " " + Prevpage;
-	String prev = "\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
+	String prev = "\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = "/" + cmd + " " + NextPage;
-	String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
+	String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}";
 
 	if (CurrentPage >= pageCount)
-	    next = "{\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator + "\"}";
+	    next = "{\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator + "\"}";
 
 	if (CurrentPage <= 1)
-	    prev = "{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage) + "\"}";
+	    prev = "{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage) + "\"}";
 
 	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + target + " [" + prev + "," + next + "]");
     }

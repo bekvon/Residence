@@ -20,7 +20,7 @@ public class create implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 100)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -29,39 +29,39 @@ public class create implements cmd {
 	    return false;
 	}
 
-	if (Residence.getWorldEdit() != null) {
-	    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
-		Residence.getSelectionManager().worldEdit(player);
+	if (plugin.getWorldEdit() != null) {
+	    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTooldID()) {
+		plugin.getSelectionManager().worldEdit(player);
 	    }
 	}
-	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (Residence.getWorldGuard() != null) {
-		if (Residence.getWorldGuardUtil().isSelectionInRegion(player) == null) {
-		    Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
+	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+	    if (plugin.getWorldGuard() != null) {
+		if (plugin.getWorldGuardUtil().isSelectionInRegion(player) == null) {
+		    plugin.getResidenceManager().addResidence(player, args[1], plugin.getSelectionManager().getPlayerLoc1(player.getName()), plugin
 			.getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
 		    return true;
 		}
-		ProtectedRegion Region = Residence.getWorldGuardUtil().isSelectionInRegion(player);
-		Residence.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
+		ProtectedRegion Region = plugin.getWorldGuardUtil().isSelectionInRegion(player);
+		plugin.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
 
-		Location lowLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
+		Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
 		    Region.getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
 
-		Location highLoc = new Location(Residence.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(),
+		Location highLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(),
 		    Region.getMaximumPoint().getBlockY(), Region.getMaximumPoint().getBlockZ());
 
 		Visualizer v = new Visualizer(player);
-		v.setAreas(Residence.getSelectionManager().getSelectionCuboid(player));
+		v.setAreas(plugin.getSelectionManager().getSelectionCuboid(player));
 		v.setErrorAreas(new CuboidArea(lowLoc, highLoc));
 
-		Residence.getSelectionManager().showBounds(player, v);
+		plugin.getSelectionManager().showBounds(player, v);
 		return true;
 	    }
-	    Residence.getResidenceManager().addResidence(player, args[1], Residence.getSelectionManager().getPlayerLoc1(player.getName()), Residence
+	    plugin.getResidenceManager().addResidence(player, args[1], plugin.getSelectionManager().getPlayerLoc1(player.getName()), plugin
 		.getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
 	    return true;
 	}
-	Residence.msg(player, lm.Select_Points);
+	plugin.msg(player, lm.Select_Points);
 	return true;
     }
 

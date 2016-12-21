@@ -11,18 +11,24 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class WorldGuardUtil {
+    private Residence plugin;
+
+    public WorldGuardUtil(Residence residence) {
+	this.plugin = residence;
+    }
+
     public ProtectedRegion isSelectionInRegion(Player player) {
 
 	if (Residence.getWorldGuard() == null)
 	    return null;
 
-	if (Residence.getWorldEdit() == null)
+	if (plugin.getWorldEdit() == null)
 	    return null;
 
-	if (!Residence.getSelectionManager().hasPlacedBoth(player.getName()))
+	if (!plugin.getSelectionManager().hasPlacedBoth(player.getName()))
 	    return null;
-	Location loc1 = Residence.getSelectionManager().getPlayerLoc1(player.getName());
-	Location loc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
+	Location loc1 = plugin.getSelectionManager().getPlayerLoc1(player.getName());
+	Location loc2 = plugin.getSelectionManager().getPlayerLoc2(player.getName());
 
 	String id = "icp__tempregion";
 	try {

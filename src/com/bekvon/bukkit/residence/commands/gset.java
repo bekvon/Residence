@@ -17,25 +17,25 @@ public class gset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4500)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
 	if (args.length == 4) {
-	    ClaimedResidence area = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    ClaimedResidence area = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (area != null) {
 		area.getPermissions().setGroupFlag(player, args[1], args[2], args[3], resadmin);
 	    } else {
-		Residence.msg(player, lm.Invalid_Area);
+		plugin.msg(player, lm.Invalid_Area);
 	    }
 	    return true;
 	} else if (args.length == 5) {
-	    ClaimedResidence area = Residence.getResidenceManager().getByName(args[1]);
+	    ClaimedResidence area = plugin.getResidenceManager().getByName(args[1]);
 	    if (area != null) {
 		area.getPermissions().setGroupFlag(player, args[2], args[3], args[4], resadmin);
 	    } else {
-		Residence.msg(player, lm.Invalid_Residence);
+		plugin.msg(player, lm.Invalid_Residence);
 	    }
 	    return true;
 	}

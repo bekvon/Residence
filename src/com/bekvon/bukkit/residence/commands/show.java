@@ -18,7 +18,7 @@ public class show implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3300)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -27,19 +27,19 @@ public class show implements cmd {
 	ClaimedResidence res = null;
 
 	if (args.length == 2) {
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	} else {
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	}
 
 	if (res == null) {
-	    Residence.msg(sender, lm.Invalid_Residence);
+	    plugin.msg(sender, lm.Invalid_Residence);
 	    return true;
 	}
 
 	Visualizer v = new Visualizer(player);
 	v.setAreas(res.getAreaArray());
-	Residence.getSelectionManager().showBounds(player, v);
+	plugin.getSelectionManager().showBounds(player, v);
 
 	return true;
     }

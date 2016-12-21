@@ -332,6 +332,7 @@ public enum lm {
     Shop_IncorrectBoard("&cThis is not sign board, try performing command again and clicking correct sign"),
     Shop_InvalidSelection("&cLeft click with selection tool top left sign and then right click bottom right"),
     Shop_ToBigSelection("&cYour selection is too big, max allowed is 16 blocks"),
+    Shop_ToDeapSelection("&cYour selection is too deap, max allowed is 16x16x1 blocks"),
     Shop_VoteChanged("&6Vote changed from &e%1 &6to &e%2 &6for &e%3 &6residence"),
     Shop_Voted("&6You voted, and gave &e%1 &6votes to &e%2 &6residence"),
     Shop_Liked("&6You liked &e%1 &6residence"),

@@ -25,7 +25,7 @@ public class Language {
      * Reloads the config
      */
     public void LanguageReload() {
-	customlocale = new YmlMaker(plugin, "Language/" + Residence.getConfigManager().getLanguage() + ".yml").getConfig();
+	customlocale = new YmlMaker(plugin, "Language/" + plugin.getConfigManager().getLanguage() + ".yml").getConfig();
 	enlocale = new YmlMaker(plugin, "Language/English.yml").getConfig();
 	if (customlocale == null)
 	    customlocale = enlocale;

@@ -30,7 +30,7 @@ public class shop implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1700)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -49,43 +49,43 @@ public class shop implements cmd {
 
 	    ClaimedResidence res = null;
 	    if (args.length == 2) {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    Residence.msg(player, lm.Residence_NotIn);
+		    plugin.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 	    } else if (args.length == 3) {
-		res = Residence.getResidenceManager().getByName(args[2]);
+		res = plugin.getResidenceManager().getByName(args[2]);
 		if (res == null) {
 		    try {
 			VotePage = Integer.parseInt(args[2]);
-			res = Residence.getResidenceManager().getByLoc(player.getLocation());
+			res = plugin.getResidenceManager().getByLoc(player.getLocation());
 			if (res == null) {
-			    Residence.msg(player, lm.Residence_NotIn);
+			    plugin.msg(player, lm.Residence_NotIn);
 			    return true;
 			}
 		    } catch (Exception ex) {
-			Residence.msg(player, lm.General_UseNumbers);
+			plugin.msg(player, lm.General_UseNumbers);
 			return true;
 		    }
 		}
 
 	    } else if (args.length == 4) {
-		res = Residence.getResidenceManager().getByName(args[2]);
+		res = plugin.getResidenceManager().getByName(args[2]);
 		if (res == null) {
-		    Residence.msg(player, lm.Residence_NotIn);
+		    plugin.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 		try {
 		    VotePage = Integer.parseInt(args[3]);
 		} catch (Exception ex) {
-		    Residence.msg(player, lm.General_UseNumbers);
+		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
 	    }
 
 	    if (res == null) {
-		Residence.msg(player, lm.Residence_NotIn);
+		plugin.msg(player, lm.Residence_NotIn);
 		return true;
 	    }
 
@@ -98,11 +98,11 @@ public class shop implements cmd {
 	    }
 	    int pagecount = (int) Math.ceil((double) VoteList.size() / (double) 10);
 	    if (page > pagecount || page < 1) {
-		Residence.msg(sender, lm.Shop_NoVotes);
+		plugin.msg(sender, lm.Shop_NoVotes);
 		return true;
 	    }
 
-	    Residence.msg(player, lm.Shop_VotesTopLine, separator, res.getName(), VotePage, pagecount, separator);
+	    plugin.msg(player, lm.Shop_VotesTopLine, separator, res.getName(), VotePage, pagecount, separator);
 
 	    int start = VotePage * 10 - 9;
 	    int end = VotePage * 10 + 1;
@@ -119,10 +119,10 @@ public class shop implements cmd {
 
 		Date dNow = new Date(one.getTime());
 		SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
-		ft.setTimeZone(TimeZone.getTimeZone(Residence.getConfigManager().getTimeZone()));
+		ft.setTimeZone(TimeZone.getTimeZone(plugin.getConfigManager().getTimeZone()));
 		String timeString = ft.format(dNow);
 
-		String message = Residence.msg(lm.Shop_VotesList, i, one.getName(), (Residence.getConfigManager().isOnlyLike()
+		String message = plugin.msg(lm.Shop_VotesList, i, one.getName(), (plugin.getConfigManager().isOnlyLike()
 		    ? "" : one.getVote()), timeString);
 		player.sendMessage(message);
 		i++;
@@ -137,11 +137,11 @@ public class shop implements cmd {
 	    Prevpage = page > 1 ? Prevpage : page;
 
 	    String prevCmd = "/res shop votes " + res.getName() + " " + Prevpage;
-	    String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
+	    String prev = "[\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	    String nextCmd = "/res shop votes " + res.getName() + " " + NextPage;
-	    String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
+	    String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
@@ -157,12 +157,12 @@ public class shop implements cmd {
 		try {
 		    Shoppage = Integer.parseInt(args[2]);
 		} catch (Exception ex) {
-		    Residence.msg(player, lm.General_UseNumbers);
+		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
 	    }
 
-	    Map<String, Double> ShopList = Residence.getShopSignUtilManager().getSortedShopList();
+	    Map<String, Double> ShopList = plugin.getShopSignUtilManager().getSortedShopList();
 
 	    String separator = ChatColor.GOLD + "";
 	    String simbol = "\u25AC";
@@ -171,11 +171,11 @@ public class shop implements cmd {
 	    }
 	    int pagecount = (int) Math.ceil((double) ShopList.size() / (double) 10);
 	    if (page > pagecount || page < 1) {
-		Residence.msg(sender, lm.Shop_NoVotes);
+		plugin.msg(sender, lm.Shop_NoVotes);
 		return true;
 	    }
 
-	    Residence.msg(player, lm.Shop_ListTopLine, separator, Shoppage, pagecount, separator);
+	    plugin.msg(player, lm.Shop_ListTopLine, separator, Shoppage, pagecount, separator);
 
 	    int start = Shoppage * 10 - 9;
 	    int end = Shoppage * 10 + 1;
@@ -190,18 +190,18 @@ public class shop implements cmd {
 		if (position >= end)
 		    break;
 
-		Vote vote = Residence.getShopSignUtilManager().getAverageVote(one.getKey());
+		Vote vote = plugin.getShopSignUtilManager().getAverageVote(one.getKey());
 		String votestat = "";
 
-		if (Residence.getConfigManager().isOnlyLike()) {
-		    votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListLiked, Residence.getShopSignUtilManager().getLikes(one.getKey()));
+		if (plugin.getConfigManager().isOnlyLike()) {
+		    votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_ListLiked, plugin.getShopSignUtilManager().getLikes(one.getKey()));
 		} else
-		    votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListVoted, vote.getVote(), vote.getAmount());
-		ClaimedResidence res = Residence.getResidenceManager().getByName(one.getKey());
-		String owner = Residence.getResidenceManager().getByName(one.getKey()).getOwner();
-		String message = Residence.msg(lm.Shop_List, i, one.getKey(), owner, votestat);
+		    votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_ListVoted, vote.getVote(), vote.getAmount());
+		ClaimedResidence res = plugin.getResidenceManager().getByName(one.getKey());
+		String owner = plugin.getResidenceManager().getByName(one.getKey()).getOwner();
+		String message = plugin.msg(lm.Shop_List, i, one.getKey(), owner, votestat);
 
-		String desc = res.getShopDesc() == null ? Residence.msg(lm.Shop_NoDesc) : Residence.msg(
+		String desc = res.getShopDesc() == null ? plugin.msg(lm.Shop_NoDesc) : plugin.msg(
 		    lm.Shop_Desc, ChatColor.translateAlternateColorCodes('&', res.getShopDesc().replace("/n", "\n")));
 
 		String prev = "[\"\",{\"text\":\"" + " " + message
@@ -222,11 +222,11 @@ public class shop implements cmd {
 	    Prevpage = page > 1 ? Prevpage : page;
 
 	    String prevCmd = "/res shop list " + Prevpage;
-	    String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
+	    String prev = "[\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	    String nextCmd = "/res shop list " + NextPage;
-	    String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
+	    String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
 		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
 		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
@@ -238,12 +238,12 @@ public class shop implements cmd {
 	if (args.length == 2 && args[1].equalsIgnoreCase("DeleteBoard")) {
 
 	    if (!resadmin) {
-		Residence.msg(player, lm.General_AdminOnly);
+		plugin.msg(player, lm.General_AdminOnly);
 		return true;
 	    }
 
 	    ShopListener.Delete.add(player.getName());
-	    Residence.msg(player, lm.Shop_DeleteBoard);
+	    plugin.msg(player, lm.Shop_DeleteBoard);
 	    return true;
 	}
 	if (args.length > 2 && args[1].equalsIgnoreCase("setdesc")) {
@@ -252,9 +252,9 @@ public class shop implements cmd {
 
 	    String desc = "";
 	    if (args.length >= 2) {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    Residence.msg(player, lm.Residence_NotIn);
+		    plugin.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 		for (int i = 2; i < args.length; i++) {
@@ -268,23 +268,23 @@ public class shop implements cmd {
 		return true;
 
 	    if (!res.isOwner(player) && !resadmin) {
-		Residence.msg(player, lm.Residence_NonAdmin);
+		plugin.msg(player, lm.Residence_NonAdmin);
 		return true;
 	    }
 
 	    res.setShopDesc(desc);
-	    Residence.msg(player, lm.Shop_DescChange, ChatColor.translateAlternateColorCodes('&', desc));
+	    plugin.msg(player, lm.Shop_DescChange, ChatColor.translateAlternateColorCodes('&', desc));
 	    return true;
 	}
 	if (args.length == 3 && args[1].equalsIgnoreCase("createboard")) {
 
 	    if (!resadmin) {
-		Residence.msg(player, lm.General_AdminOnly);
+		plugin.msg(player, lm.General_AdminOnly);
 		return true;
 	    }
 
-	    if (!Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-		Residence.msg(player, lm.Select_Points);
+	    if (!plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+		plugin.msg(player, lm.Select_Points);
 		return true;
 	    }
 
@@ -292,25 +292,30 @@ public class shop implements cmd {
 	    try {
 		place = Integer.parseInt(args[2]);
 	    } catch (Exception ex) {
-		Residence.msg(player, lm.General_UseNumbers);
+		plugin.msg(player, lm.General_UseNumbers);
 		return true;
 	    }
 
 	    if (place < 1)
 		place = 1;
 
-	    CuboidArea cuboid = Residence.getSelectionManager().getSelectionCuboid(player);
+	    CuboidArea cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
 	    if (cuboid.getXSize() > 16 || cuboid.getYSize() > 16 || cuboid.getZSize() > 16) {
-		Residence.msg(player, lm.Shop_ToBigSelection);
+		plugin.msg(player, lm.Shop_ToBigSelection);
 		return true;
 	    }
 
-	    Location loc1 = Residence.getSelectionManager().getPlayerLoc1(player.getName());
-	    Location loc2 = Residence.getSelectionManager().getPlayerLoc2(player.getName());
+	    if (cuboid.getXSize() != 1 || cuboid.getZSize() != 1) {
+		plugin.msg(player, lm.Shop_ToDeapSelection);
+		return true;
+	    }
+
+	    Location loc1 = plugin.getSelectionManager().getPlayerLoc1(player.getName());
+	    Location loc2 = plugin.getSelectionManager().getPlayerLoc2(player.getName());
 
 	    if (loc1.getBlockY() < loc2.getBlockY()) {
-		Residence.msg(player, lm.Shop_InvalidSelection);
+		plugin.msg(player, lm.Shop_InvalidSelection);
 		return true;
 	    }
 
@@ -319,16 +324,16 @@ public class shop implements cmd {
 	    newTemp.setTopLoc(loc1);
 	    newTemp.setBottomLoc(loc2);
 
-	    if (Residence.getShopSignUtilManager().exist(newTemp)) {
-		sender.sendMessage(Residence.msg(lm.Shop_BoardExist));
+	    if (plugin.getShopSignUtilManager().exist(newTemp)) {
+		sender.sendMessage(plugin.msg(lm.Shop_BoardExist));
 		return true;
 	    }
 
-	    Residence.getShopSignUtilManager().addBoard(newTemp);
-	    Residence.msg(player, lm.Shop_NewBoard);
+	    plugin.getShopSignUtilManager().addBoard(newTemp);
+	    plugin.msg(player, lm.Shop_NewBoard);
 
-	    Residence.getShopSignUtilManager().BoardUpdate();
-	    Residence.getShopSignUtilManager().saveSigns();
+	    plugin.getShopSignUtilManager().BoardUpdate();
+	    plugin.getShopSignUtilManager().saveSigns();
 
 	    return true;
 
@@ -339,58 +344,58 @@ public class shop implements cmd {
 	    ClaimedResidence res = null;
 	    if (args.length == 3) {
 
-		if (Residence.getConfigManager().isOnlyLike()) {
+		if (plugin.getConfigManager().isOnlyLike()) {
 
-		    res = Residence.getResidenceManager().getByName(args[2]);
+		    res = plugin.getResidenceManager().getByName(args[2]);
 		    if (res == null) {
-			Residence.msg(player, lm.Invalid_Residence);
+			plugin.msg(player, lm.Invalid_Residence);
 			return true;
 		    }
-		    vote = Residence.getConfigManager().getVoteRangeTo();
+		    vote = plugin.getConfigManager().getVoteRangeTo();
 
 		} else {
-		    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		    if (res == null) {
-			Residence.msg(player, lm.Residence_NotIn);
+			plugin.msg(player, lm.Residence_NotIn);
 			return true;
 		    }
 
 		    try {
 			vote = Integer.parseInt(args[2]);
 		    } catch (Exception ex) {
-			Residence.msg(player, lm.General_UseNumbers);
+			plugin.msg(player, lm.General_UseNumbers);
 			return true;
 		    }
 		}
-	    } else if (args.length == 2 && Residence.getConfigManager().isOnlyLike()) {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    } else if (args.length == 2 && plugin.getConfigManager().isOnlyLike()) {
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    Residence.msg(player, lm.Residence_NotIn);
+		    plugin.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
-		vote = Residence.getConfigManager().getVoteRangeTo();
-	    } else if (args.length == 4 && !Residence.getConfigManager().isOnlyLike()) {
-		res = Residence.getResidenceManager().getByName(args[2]);
+		vote = plugin.getConfigManager().getVoteRangeTo();
+	    } else if (args.length == 4 && !plugin.getConfigManager().isOnlyLike()) {
+		res = plugin.getResidenceManager().getByName(args[2]);
 		if (res == null) {
-		    Residence.msg(player, lm.Invalid_Residence);
+		    plugin.msg(player, lm.Invalid_Residence);
 		    return true;
 		}
 		try {
 		    vote = Integer.parseInt(args[3]);
 		} catch (Exception ex) {
-		    Residence.msg(player, lm.General_UseNumbers);
+		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
-	    } else if (args.length == 3 && !Residence.getConfigManager().isOnlyLike()) {
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    } else if (args.length == 3 && !plugin.getConfigManager().isOnlyLike()) {
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
-		    Residence.msg(player, lm.Invalid_Residence);
+		    plugin.msg(player, lm.Invalid_Residence);
 		    return true;
 		}
 		try {
 		    vote = Integer.parseInt(args[3]);
 		} catch (Exception ex) {
-		    Residence.msg(player, lm.General_UseNumbers);
+		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
 	    } else {
@@ -400,28 +405,27 @@ public class shop implements cmd {
 	    resName = res.getName();
 
 	    if (!res.getPermissions().has("shop", false)) {
-		Residence.msg(player, lm.Shop_CantVote);
+		plugin.msg(player, lm.Shop_CantVote);
 		return true;
 	    }
 
-	    if (vote < Residence.getConfigManager().getVoteRangeFrom() || vote > Residence.getConfigManager().getVoteRangeTo()) {
-		Residence.msg(player, lm.Shop_VotedRange, Residence.getConfigManager().getVoteRangeFrom(), Residence
-		    .getConfigManager().getVoteRangeTo());
+	    if (vote < plugin.getConfigManager().getVoteRangeFrom() || vote > plugin.getConfigManager().getVoteRangeTo()) {
+		plugin.msg(player, lm.Shop_VotedRange, plugin.getConfigManager().getVoteRangeFrom(), plugin.getConfigManager().getVoteRangeTo());
 		return true;
 	    }
 
-//	    ConcurrentHashMap<String, List<ShopVote>> VoteList = Residence.getShopSignUtilManager().GetAllVoteList();
+//	    ConcurrentHashMap<String, List<ShopVote>> VoteList = plugin.getShopSignUtilManager().GetAllVoteList();
 
 	    if (!res.GetShopVotes().isEmpty()) {
 		List<ShopVote> list = res.GetShopVotes();
 		boolean found = false;
 		for (ShopVote OneVote : list) {
 		    if (OneVote.getName().equalsIgnoreCase(player.getName()) || OneVote.getUuid() != null && OneVote.getUuid() == player.getUniqueId()) {
-			if (Residence.getConfigManager().isOnlyLike()) {
-			    Residence.msg(player, lm.Shop_AlreadyLiked, resName);
+			if (plugin.getConfigManager().isOnlyLike()) {
+			    plugin.msg(player, lm.Shop_AlreadyLiked, resName);
 			    return true;
 			}
-			Residence.msg(player, lm.Shop_VoteChanged, OneVote.getVote(), vote, resName);
+			plugin.msg(player, lm.Shop_VoteChanged, OneVote.getVote(), vote, resName);
 			OneVote.setVote(vote);
 			OneVote.setName(player.getName());
 			OneVote.setTime(System.currentTimeMillis());
@@ -432,21 +436,21 @@ public class shop implements cmd {
 		if (!found) {
 		    ShopVote newVote = new ShopVote(player.getName(), player.getUniqueId(), vote, System.currentTimeMillis());
 		    list.add(newVote);
-		    if (Residence.getConfigManager().isOnlyLike())
-			Residence.msg(player, lm.Shop_Liked, resName);
+		    if (plugin.getConfigManager().isOnlyLike())
+			plugin.msg(player, lm.Shop_Liked, resName);
 		    else
-			Residence.msg(player, lm.Shop_Voted, vote, resName);
+			plugin.msg(player, lm.Shop_Voted, vote, resName);
 		}
 	    } else {
 		ShopVote newVote = new ShopVote(player.getName(), player.getUniqueId(), vote, System.currentTimeMillis());
 		res.addShopVote(newVote);
-		if (Residence.getConfigManager().isOnlyLike())
-		    Residence.msg(player, lm.Shop_Liked, resName);
+		if (plugin.getConfigManager().isOnlyLike())
+		    plugin.msg(player, lm.Shop_Liked, resName);
 		else
-		    Residence.msg(player, lm.Shop_Voted, vote, resName);
+		    plugin.msg(player, lm.Shop_Voted, vote, resName);
 	    }
-	    Residence.getShopSignUtilManager().saveShopVotes();
-	    Residence.getShopSignUtilManager().BoardUpdate();
+	    plugin.getShopSignUtilManager().saveShopVotes();
+	    plugin.getShopSignUtilManager().BoardUpdate();
 	    return true;
 	}
 	return false;

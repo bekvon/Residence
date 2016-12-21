@@ -17,7 +17,7 @@ public class renamearea implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2800)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -25,9 +25,9 @@ public class renamearea implements cmd {
 	if (args.length != 4)
 	    return false;
 
-	ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 	if (res == null)
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	else
 	    res.renameArea(player, args[2], args[3], resadmin);
 	return true;

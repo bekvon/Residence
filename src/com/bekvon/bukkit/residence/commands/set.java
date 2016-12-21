@@ -19,54 +19,54 @@ public class set implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 700)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player) && args.length != 4)
 	    return false;
 
 	if (args.length == 3) {
 	    Player player = (Player) sender;
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res == null) {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
 	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
-		Residence.msg(sender, lm.General_NoPermission);
+		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
 	    res.getPermissions().setFlag(sender, args[1], args[2], resadmin);
 	    return true;
 	} else if (args.length == 4) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[1]);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res == null) {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
 	    if (!res.isOwner(sender) && !resadmin && !res.getPermissions().playerHas(sender, Flags.admin, false)) {
-		Residence.msg(sender, lm.General_NoPermission);
+		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
 	    res.getPermissions().setFlag(sender, args[2], args[3], resadmin);
 	    return true;
-	} else if ((args.length == 1 || args.length == 2) && Residence.getConfigManager().useFlagGUI()) {
+	} else if ((args.length == 1 || args.length == 2) && plugin.getConfigManager().useFlagGUI()) {
 	    Player player = (Player) sender;
 	    ClaimedResidence res = null;
 	    if (args.length == 1)
-		res = Residence.getResidenceManager().getByLoc(player.getLocation());
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    else
-		res = Residence.getResidenceManager().getByName(args[1]);
+		res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res == null) {
-		Residence.msg(sender, lm.Invalid_Residence);
+		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
 	    }
 	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
-		Residence.msg(sender, lm.General_NoPermission);
+		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
 	    SetFlag flag = new SetFlag(res.getName(), player, resadmin);
 	    flag.recalculateResidence(res);
 	    player.closeInventory();
-	    Residence.getPlayerListener().getGUImap().put(player.getName(), flag);
+	    plugin.getPlayerListener().getGUImap().put(player.getName(), flag);
 	    player.openInventory(flag.getInventory());
 	    return true;
 	}

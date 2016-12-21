@@ -18,16 +18,16 @@ public class tool implements cmd {
     @SuppressWarnings("deprecation")
     @Override
     @CommandAnnotation(simple = true, priority = 1600)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
 
-	Residence.msg(player, lm.General_Separator);
-	Residence.msg(player, lm.Select_Tool, Material.getMaterial(Residence.getConfigManager().getSelectionTooldID()));
-	Residence.msg(player, lm.General_InfoTool, Material.getMaterial(Residence.getConfigManager().getInfoToolID()));
-	Residence.msg(player, lm.General_Separator);
+	plugin.msg(player, lm.General_Separator);
+	plugin.msg(player, lm.Select_Tool, Material.getMaterial(plugin.getConfigManager().getSelectionTooldID()));
+	plugin.msg(player, lm.General_InfoTool, Material.getMaterial(plugin.getConfigManager().getInfoToolID()));
+	plugin.msg(player, lm.General_Separator);
 	return true;
     }
 

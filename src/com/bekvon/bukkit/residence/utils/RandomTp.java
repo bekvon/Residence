@@ -40,7 +40,7 @@ public class RandomTp {
 
 	RandomTeleport rtloc = null;
 
-	for (RandomTeleport one : Residence.getConfigManager().getRandomTeleport()) {
+	for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
 
 	    if (!one.getWorld().equalsIgnoreCase(WorldName))
 		continue;
@@ -59,7 +59,7 @@ public class RandomTp {
 
 	int inerrange = rtloc.getMinCord();
 	int outerrange = rtloc.getMaxCord();
-	int maxtries = Residence.getConfigManager().getrtMaxTries();
+	int maxtries = plugin.getConfigManager().getrtMaxTries();
 
 	int centerX = rtloc.getCenter().getBlockX();
 	int centerY = rtloc.getCenter().getBlockZ();
@@ -94,7 +94,7 @@ public class RandomTp {
 		Block block = loc.getBlock();
 		Block block2 = loc.clone().add(0, 1, 0).getBlock();
 		Block block3 = loc.clone().add(0, -1, 0).getBlock();
-		if (!Residence.getNms().isEmptyBlock(block3) && Residence.getNms().isEmptyBlock(block) && Residence.getNms().isEmptyBlock(block2)) {
+		if (!plugin.getNms().isEmptyBlock(block3) && plugin.getNms().isEmptyBlock(block) && plugin.getNms().isEmptyBlock(block2)) {
 		    break;
 		}
 		if (i <= 3) {
@@ -103,7 +103,7 @@ public class RandomTp {
 		}
 	    }
 
-	    if (!Residence.getNms().isEmptyBlock(loc.getBlock()))
+	    if (!plugin.getNms().isEmptyBlock(loc.getBlock()))
 		continue;
 
 	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.LAVA || loc.clone().add(0, -1, 0).getBlock().getState()
@@ -114,7 +114,7 @@ public class RandomTp {
 		.getType() == Material.STATIONARY_WATER)
 		continue;
 
-	    ClaimedResidence res = Residence.getResidenceManager().getByLoc(loc);
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 
 	    if (res != null)
 		continue;
@@ -129,19 +129,19 @@ public class RandomTp {
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		if (!Residence.getTeleportDelayMap().contains(targetPlayer.getName()) && Residence.getConfigManager().getTeleportDelay() > 0)
+		if (!plugin.getTeleportDelayMap().contains(targetPlayer.getName()) && plugin.getConfigManager().getTeleportDelay() > 0)
 		    return;
-		else if (Residence.getTeleportDelayMap().contains(targetPlayer.getName()))
-		    Residence.getTeleportDelayMap().remove(targetPlayer.getName());
+		else if (plugin.getTeleportDelayMap().contains(targetPlayer.getName()))
+		    plugin.getTeleportDelayMap().remove(targetPlayer.getName());
 		targetPlayer.teleport(loc);
-		Residence.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
+		plugin.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
 		return;
 	    }
-	}, Residence.getConfigManager().getTeleportDelay() * 20L);
+	}, plugin.getConfigManager().getTeleportDelay() * 20L);
     }
 
     public void performInstantTp(Location loc, Player targetPlayer) {
 	targetPlayer.teleport(loc);
-	Residence.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
+	plugin.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
     }
 }

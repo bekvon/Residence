@@ -14,14 +14,14 @@ class AreaStyle {
     int y;
 
     AreaStyle() {
-	strokecolor = Residence.getConfigManager().DynMapBorderColor;
-	forrentstrokecolor = Residence.getConfigManager().DynMapFillForRent;
-	rentedstrokecolor = Residence.getConfigManager().DynMapFillRented;
-	forsalestrokecolor = Residence.getConfigManager().DynMapFillForSale;
-	strokeopacity = Residence.getConfigManager().DynMapBorderOpacity;
-	strokeweight = Residence.getConfigManager().DynMapBorderWeight;
-	fillcolor = Residence.getConfigManager().DynMapFillColor;
-	fillopacity = Residence.getConfigManager().DynMapFillOpacity;
+	strokecolor = Residence.getInstance().getConfigManager().DynMapBorderColor;
+	forrentstrokecolor = Residence.getInstance().getConfigManager().DynMapFillForRent;
+	rentedstrokecolor = Residence.getInstance().getConfigManager().DynMapFillRented;
+	forsalestrokecolor = Residence.getInstance().getConfigManager().DynMapFillForSale;
+	strokeopacity = Residence.getInstance().getConfigManager().DynMapBorderOpacity;
+	strokeweight = Residence.getInstance().getConfigManager().DynMapBorderWeight;
+	fillcolor = Residence.getInstance().getConfigManager().DynMapFillColor;
+	fillopacity = Residence.getInstance().getConfigManager().DynMapFillOpacity;
 	y = 64;
     }
 }

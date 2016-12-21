@@ -11,13 +11,15 @@ import org.bukkit.entity.Player;
 
 public class ResidenceItemList extends ItemList {
     ClaimedResidence res;
+    private Residence plugin;
 
     public ResidenceItemList(ClaimedResidence parent, ListType type) {
 	super(type);
 	res = parent;
     }
 
-    private ResidenceItemList() {
+    private ResidenceItemList(Residence plugin) {
+	this.plugin = plugin;
 
     }
 
@@ -27,16 +29,16 @@ public class ResidenceItemList extends ItemList {
 	PermissionGroup group = rPlayer.getGroup();
 	if (resadmin || (res.getPermissions().hasResidencePermission(player, true) && group.itemListAccess())) {
 	    if (super.toggle(mat))
-		Residence.msg(player, lm.General_ListMaterialAdd, mat.toString(), type.toString().toLowerCase());
+		plugin.msg(player, lm.General_ListMaterialAdd, mat.toString(), type.toString().toLowerCase());
 	    else
-		Residence.msg(player, lm.General_ListMaterialRemove, mat.toString(), type.toString().toLowerCase());
+		plugin.msg(player, lm.General_ListMaterialRemove, mat.toString(), type.toString().toLowerCase());
 	} else {
-	    Residence.msg(player, lm.General_NoPermission);
+	    plugin.msg(player, lm.General_NoPermission);
 	}
     }
 
-    public static ResidenceItemList load(ClaimedResidence parent, Map<String, Object> map) {
-	ResidenceItemList newlist = new ResidenceItemList();
+    public static ResidenceItemList load(Residence plugin, ClaimedResidence parent, Map<String, Object> map) {
+	ResidenceItemList newlist = new ResidenceItemList(plugin);
 	newlist.res = parent;
 	return (ResidenceItemList) ItemList.load(map, newlist);
     }

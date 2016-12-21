@@ -68,15 +68,15 @@ public class HelpEntry {
 	path = "/" + path.replace(".", " ") + " ";
 	int pagecount = (int) Math.ceil((double) helplines.size() / (double) linesPerPage);
 	if (page > pagecount || page < 1) {
-	    Residence.msg(sender, lm.Invalid_Help);
+	    Residence.getInstance().msg(sender, lm.Invalid_Help);
 	    return;
 	}
 
-	String separator = Residence.msg(lm.InformationPage_Separator);
+	String separator = Residence.getInstance().msg(lm.InformationPage_Separator);
 	if (!(sender instanceof Player))
 	    separator = "----------";
 
-	sender.sendMessage(separator + " " + Residence.msg(lm.General_HelpPageHeader, path, page, pagecount) + " " + separator);
+	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pagecount) + " " + separator);
 	int start = linesPerPage * (page - 1);
 	int end = start + linesPerPage;
 	for (int i = start; i < end; i++) {
@@ -122,11 +122,11 @@ public class HelpEntry {
 
 	String baseCmd = resadmin ? "resadmin" : "res";
 	String prevCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + Prevpage : "/" + baseCmd + " ? " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.msg(lm.General_PrevInfoPage)
+	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getInstance().msg(lm.General_PrevInfoPage)
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
 	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
 	String nextCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + NextPage : "/" + baseCmd + " ? " + NextPage;
-	String next = " {\"text\":\"" + Residence.msg(lm.General_NextInfoPage) + " " + separator
+	String next = " {\"text\":\"" + Residence.getInstance().msg(lm.General_NextInfoPage) + " " + separator
 	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
 	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
 
@@ -139,7 +139,7 @@ public class HelpEntry {
 	if (subEntry != null) {
 	    subEntry.printHelp(sender, page, resadmin, path);
 	} else {
-	    Residence.msg(sender, lm.Invalid_Help);
+	    Residence.getInstance().msg(sender, lm.Invalid_Help);
 	}
     }
 
@@ -177,20 +177,20 @@ public class HelpEntry {
 
 		    switch (entry.getName().toLowerCase()) {
 		    case "wspeed1":
-			desc = desc.replace("%1", Residence.getConfigManager().getWalkSpeed1() + "");
+			desc = desc.replace("%1", Residence.getInstance().getConfigManager().getWalkSpeed1() + "");
 			break;
 		    case "wspeed2":
-			desc = desc.replace("%1", Residence.getConfigManager().getWalkSpeed2() + "");
+			desc = desc.replace("%1", Residence.getInstance().getConfigManager().getWalkSpeed2() + "");
 			break;
 		    }
 
 		    // adding flag name and description for later sorting
-		    unsortMap.put(entry.getName(), Residence.msg(lm.InformationPage_FlagsList, entry.getName(), desc));
+		    unsortMap.put(entry.getName(), Residence.getInstance().msg(lm.InformationPage_FlagsList, entry.getName(), desc));
 		    continue;
 		}
 	    }
 
-	    helplines.add(new HelpLines(entry.getName(), Residence.msg(lm.InformationPage_GeneralList, entry.getName(), entry.getDescription())));
+	    helplines.add(new HelpLines(entry.getName(), Residence.getInstance().msg(lm.InformationPage_GeneralList, entry.getName(), entry.getDescription())));
 	}
 
 	if (!unsortMap.isEmpty()) {
@@ -360,7 +360,7 @@ public class HelpEntry {
 			break;
 		    case "[residence]":
 			if (sender instanceof Player) {
-			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(((Player) sender).getLocation());
+			    ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(((Player) sender).getLocation());
 			    if (res != null) {
 				String resName = res.getName();
 				if (resName != null)
@@ -371,14 +371,14 @@ public class HelpEntry {
 				subCommands.add(oneRes.getName());
 			    }
 			} else {
-			    ArrayList<String> resList = Residence.getResidenceManager().getResidenceList(Residence.getServerLandname(), true, false, false);
+			    ArrayList<String> resList = Residence.getInstance().getResidenceManager().getResidenceList(Residence.getServerLandname(), true, false, false);
 			    if (resList.size() > 0)
 				subCommands.addAll(resList);
 			}
 			break;
 		    case "[cresidence]":
 			if (sender instanceof Player) {
-			    ClaimedResidence res = Residence.getResidenceManager().getByLoc(((Player) sender).getLocation());
+			    ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(((Player) sender).getLocation());
 			    if (res != null) {
 				String resName = res.getName();
 				if (resName != null)
@@ -387,7 +387,7 @@ public class HelpEntry {
 			}
 			break;
 		    case "[residenceshop]":
-			for (ClaimedResidence one : Residence.getResidenceManager().getShops()) {
+			for (ClaimedResidence one : Residence.getInstance().getResidenceManager().getShops()) {
 			    subCommands.add(one.getName());
 			}
 			break;

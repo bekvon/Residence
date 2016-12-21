@@ -14,7 +14,7 @@ public class v1_10Events implements Listener {
 
     public void onPlayerFireInteract(EntityDamageEvent event) {
 	// disabling event on world
-	if (Residence.isDisabledWorldListener(event.getEntity().getWorld()))
+	if (Residence.getInstance().isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
 
 	if (event.getCause() != DamageCause.HOT_FLOOR)

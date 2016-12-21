@@ -15,7 +15,7 @@ public class mirror implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3700)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -23,7 +23,7 @@ public class mirror implements cmd {
 	if (args.length != 3)
 	    return false;
 
-	Residence.getResidenceManager().mirrorPerms(player, args[2], args[1], resadmin);
+	plugin.getResidenceManager().mirrorPerms(player, args[2], args[1], resadmin);
 	return true;
     }
 

@@ -132,7 +132,7 @@ public class ShopSignUtil {
 
 	    }
 
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(category.replace("_", "."));
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(category.replace("_", "."));
 
 	    if (res == null)
 		continue;
@@ -155,7 +155,7 @@ public class ShopSignUtil {
 	if (!conf.isConfigurationSection("ShopVotes"))
 	    conf.createSection("ShopVotes");
 
-	for (ClaimedResidence res : Residence.getResidenceManager().getShops()) {
+	for (ClaimedResidence res : plugin.getResidenceManager().getShops()) {
 
 	    if (res == null || res.GetShopVotes().isEmpty())
 		continue;
@@ -180,14 +180,14 @@ public class ShopSignUtil {
 
     // Res Shop vote file
     public Vote getAverageVote(String resName) {
-	ClaimedResidence res = Residence.getResidenceManager().getByName(resName);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(resName);
 	return getAverageVote(res);
     }
 
     public Vote getAverageVote(ClaimedResidence res) {
 
 	if (res == null || res.GetShopVotes().isEmpty())
-	    return new Vote(Residence.getConfigManager().getVoteRangeTo() / 2, 0);
+	    return new Vote(plugin.getConfigManager().getVoteRangeTo() / 2, 0);
 
 	List<ShopVote> votes = res.GetShopVotes();
 
@@ -203,7 +203,7 @@ public class ShopSignUtil {
 
     // Res Shop vote file
     public int getLikes(String resName) {
-	ClaimedResidence res = Residence.getResidenceManager().getByName(resName);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(resName);
 	return getLikes(res);
     }
 
@@ -215,7 +215,7 @@ public class ShopSignUtil {
 
 	int likes = 0;
 	for (ShopVote oneVote : votes) {
-	    if (oneVote.getVote() >= Residence.getConfigManager().getVoteRangeTo() / 2)
+	    if (oneVote.getVote() >= plugin.getConfigManager().getVoteRangeTo() / 2)
 		likes++;
 	}
 
@@ -226,10 +226,10 @@ public class ShopSignUtil {
 
 	Map<String, Double> allvotes = new HashMap<String, Double>();
 
-	List<ClaimedResidence> shops = Residence.getResidenceManager().getShops();
+	List<ClaimedResidence> shops = plugin.getResidenceManager().getShops();
 
 	for (ClaimedResidence one : shops) {
-	    if (Residence.getConfigManager().isOnlyLike())
+	    if (plugin.getConfigManager().isOnlyLike())
 		allvotes.put(one.getName(), (double) getLikes(one));
 	    else
 		allvotes.put(one.getName(), getAverageVote(one).getVote());
@@ -357,7 +357,7 @@ public class ShopSignUtil {
 		if (ShopNames.size() > Start)
 		    Shop = ShopNames.get(Start);
 
-		ClaimedResidence res = Residence.getResidenceManager().getByName(Shop);
+		ClaimedResidence res = plugin.getResidenceManager().getByName(Shop);
 
 		Sign sign = (Sign) block.getState();
 
@@ -372,18 +372,18 @@ public class ShopSignUtil {
 
 		Vote vote = null;
 		String votestat = "";
-		if (Residence.getResidenceManager().getShops().size() >= Start) {
+		if (plugin.getResidenceManager().getShops().size() >= Start) {
 		    vote = getAverageVote(ShopNames.get(Start));
 
-		    if (Residence.getConfigManager().isOnlyLike()) {
-			votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_ListLiked, getLikes(ShopNames.get(Start)));
+		    if (plugin.getConfigManager().isOnlyLike()) {
+			votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_ListLiked, getLikes(ShopNames.get(Start)));
 		    } else
-			votestat = vote.getAmount() == 0 ? "" : Residence.msg(lm.Shop_SignLines_4, vote.getVote() , vote.getAmount());
+			votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_SignLines_4, vote.getVote() , vote.getAmount());
 		}
 
-		sign.setLine(0, Residence.msg(lm.Shop_SignLines_1, Start + 1));
-		sign.setLine(1, Residence.msg(lm.Shop_SignLines_2, res.getName()));
-		sign.setLine(2, Residence.msg(lm.Shop_SignLines_3, res.getOwner()));
+		sign.setLine(0, plugin.msg(lm.Shop_SignLines_1, Start + 1));
+		sign.setLine(1, plugin.msg(lm.Shop_SignLines_2, res.getName()));
+		sign.setLine(2, plugin.msg(lm.Shop_SignLines_3, res.getOwner()));
 		sign.setLine(3, votestat);
 		sign.update();
 		board.addSignLoc(res.getName(), sign.getLocation());

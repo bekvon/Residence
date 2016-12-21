@@ -17,7 +17,7 @@ public class area implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3300)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -32,64 +32,64 @@ public class area implements cmd {
 
 	if (args.length == 4) {
 	    if (args[1].equals("remove")) {
-		ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+		ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
 		if (res != null) {
 		    res.removeArea(player, args[3], resadmin);
 		} else {
-		    Residence.msg(player, lm.Invalid_Residence);
+		    plugin.msg(player, lm.Invalid_Residence);
 		}
 		return true;
 	    } else if (args[1].equals("add")) {
-		if (Residence.getWorldEdit() != null) {
-		    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
-			Residence.getSelectionManager().worldEdit(player);
+		if (plugin.getWorldEdit() != null) {
+		    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTooldID()) {
+			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
-		if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
 		    if (res != null) {
-			if (res.addArea(player, Residence.getSelectionManager().getSelectionCuboid(player), args[3], resadmin))
-			    Residence.msg(player, lm.Area_Create, args[3]);
+			if (res.addArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[3], resadmin))
+			    plugin.msg(player, lm.Area_Create, args[3]);
 		    } else {
-			Residence.msg(player, lm.Invalid_Residence);
+			plugin.msg(player, lm.Invalid_Residence);
 		    }
 		} else {
-		    Residence.msg(player, lm.Select_Points);
+		    plugin.msg(player, lm.Select_Points);
 		}
 		return true;
 	    } else if (args[1].equals("replace")) {
-		if (Residence.getWorldEdit() != null) {
-		    if (Residence.getWorldEdit().getConfig().getInt("wand-item") == Residence.getConfigManager().getSelectionTooldID()) {
-			Residence.getSelectionManager().worldEdit(player);
+		if (plugin.getWorldEdit() != null) {
+		    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTooldID()) {
+			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
-		if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-		    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
 		    if (res != null) {
-			res.replaceArea(player, Residence.getSelectionManager().getSelectionCuboid(player), args[3], resadmin);
+			res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[3], resadmin);
 		    } else {
-			Residence.msg(player, lm.Invalid_Residence);
+			plugin.msg(player, lm.Invalid_Residence);
 		    }
 		} else {
-		    Residence.msg(player, lm.Select_Points);
+		    plugin.msg(player, lm.Select_Points);
 		}
 		return true;
 	    }
 	}
 	if ((args.length == 3 || args.length == 4) && args[1].equals("list")) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
 	    if (res != null) {
 		res.printAreaList(player, page);
 	    } else {
-		Residence.msg(player, lm.Invalid_Residence);
+		plugin.msg(player, lm.Invalid_Residence);
 	    }
 	    return true;
 	} else if ((args.length == 3 || args.length == 4) && args[1].equals("listall")) {
-	    ClaimedResidence res = Residence.getResidenceManager().getByName(args[2]);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
 	    if (res != null) {
 		res.printAdvancedAreaList(player, page);
 	    } else {
-		Residence.msg(player, lm.Invalid_Residence);
+		plugin.msg(player, lm.Invalid_Residence);
 	    }
 	    return true;
 	}

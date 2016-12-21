@@ -18,7 +18,7 @@ public class expand implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2000)
-    public boolean perform(String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -26,26 +26,22 @@ public class expand implements cmd {
 
 	ClaimedResidence res = null;
 	if (args.length == 2)
-	    res = Residence.getResidenceManager().getByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	else if (args.length == 3) {
-	    res = Residence.getResidenceManager().getByName(args[1]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	} else
 	    return false;
 
 	if (res == null) {
-	    Residence.msg(player, lm.Invalid_Residence);
+	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
 
-	if (res.isSubzone() && !player.hasPermission("residence.expand.subzone") && !resadmin) {
-	    Residence.msg(player, lm.Subzone_CantExpand);
-	    return false;
-	}
+	if (res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.expand.subzone", lm.Subzone_CantExpand))
+	    return true;
 
-	if (!res.isSubzone() && !player.hasPermission("residence.expand") && !resadmin) {
-	    Residence.msg(player, lm.Residence_CantExpandResidence);
-	    return false;
-	}
+	if (!res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.expand", lm.Residence_CantExpandResidence))
+	    return true;
 
 	String resName = res.getName();
 	CuboidArea area = null;
@@ -55,16 +51,16 @@ public class expand implements cmd {
 	    areaName = res.getAreaIDbyLoc(player.getLocation());
 	    area = res.getArea(areaName);
 	} else if (args.length == 3) {
-	    areaName = res.isSubzone() ? Residence.getResidenceManager().getSubzoneNameByRes(res) : "main";
+	    areaName = res.isSubzone() ? plugin.getResidenceManager().getSubzoneNameByRes(res) : "main";
 	    area = res.getCuboidAreabyName(areaName);
 	}
 
 	if (area != null) {
-	    Residence.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
-	    Residence.getSelectionManager().placeLoc2(player, area.getLowLoc(), false);
-	    Residence.msg(player, lm.Select_Area, areaName, resName);
+	    plugin.getSelectionManager().placeLoc1(player, area.getHighLoc(), false);
+	    plugin.getSelectionManager().placeLoc2(player, area.getLowLoc(), false);
+	    plugin.msg(player, lm.Select_Area, areaName, resName);
 	} else {
-	    Residence.msg(player, lm.Area_NonExist);
+	    plugin.msg(player, lm.Area_NonExist);
 	    return true;
 	}
 	int amount = -1;
@@ -74,31 +70,31 @@ public class expand implements cmd {
 	    else if (args.length == 3)
 		amount = Integer.parseInt(args[2]);
 	} catch (Exception ex) {
-	    Residence.msg(player, lm.Invalid_Amount);
+	    plugin.msg(player, lm.Invalid_Amount);
 	    return true;
 	}
 
 	if (amount > 1000) {
-	    Residence.msg(player, lm.Invalid_Amount);
+	    plugin.msg(player, lm.Invalid_Amount);
 	    return true;
 	}
 
 	if (amount < 0)
 	    amount = 1;
 
-	Residence.getSelectionManager().modify(player, false, amount);
+	plugin.getSelectionManager().modify(player, false, amount);
 
-	if (Residence.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (Residence.getWorldEdit() != null) {
-		if (Residence.getWepid() == Residence.getConfigManager().getSelectionTooldID()) {
-		    Residence.getSelectionManager().worldEdit(player);
+	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+	    if (plugin.getWorldEdit() != null) {
+		if (plugin.getWepid() == plugin.getConfigManager().getSelectionTooldID()) {
+		    plugin.getSelectionManager().worldEdit(player);
 		}
 	    }
 
-	    res.replaceArea(player, Residence.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
+	    res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
 	    return true;
 	}
-	Residence.msg(player, lm.Select_Points);
+	plugin.msg(player, lm.Select_Points);
 
 	return false;
     }
@@ -107,7 +103,7 @@ public class expand implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Expands residence in direction you looking");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res expand (residence) [amount]", "Expands residence in direction you looking.", "Residence name is optional"));
-	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%1","1"));
+	Residence.getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%1", "1"));
     }
 
 }
