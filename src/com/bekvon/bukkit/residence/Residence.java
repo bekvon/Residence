@@ -1741,6 +1741,8 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean hasPermission(CommandSender sender, String permision, Boolean output, String message) {
+	if (sender == null)
+	    return false;
 	if (sender instanceof ConsoleCommandSender) {
 	    return true;
 	} else if (sender instanceof Player) {

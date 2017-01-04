@@ -217,12 +217,12 @@ public class ResidenceManager implements ResidenceInterface {
 
 	PermissionGroup group = rPlayer.getGroup();
 //	PermissionGroup group = plugin.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
-	if (!resadmin && !group.canCreateResidences()) {
+	if (!resadmin && !group.canCreateResidences() && !plugin.hasPermission(player, "residence.create", false)) {
 	    plugin.msg(player, lm.General_NoPermission);
 	    return false;
 	}
 
-	if (!resadmin && !(player == null ? true : plugin.hasPermission(player, "residence.create"))) {
+	if (!resadmin && !plugin.hasPermission(player, "residence.create")) {
 	    return false;
 	}
 

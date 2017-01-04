@@ -1090,7 +1090,7 @@ public class ResidenceEntityListener implements Listener {
 
 	    if (area != null && ent instanceof Player && damager instanceof Player) {
 		if (area.getPermissions().has(Flags.overridepvp, false) || plugin.getConfigManager().isOverridePvp() && area.getPermissions().has(Flags.pvp,
-		    FlagCombo.OnlyFalse, false)) {
+		    FlagCombo.OnlyFalse)) {
 		    Player player = (Player) event.getEntity();
 		    Damageable damage = player;
 		    damage.damage(event.getDamage());
@@ -1109,7 +1109,7 @@ public class ResidenceEntityListener implements Listener {
 	    boolean isSnowBall = false;
 	    boolean isOnFire = false;
 	    if (srcarea != null) {
-		srcpvp = srcarea.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone, false);
+		srcpvp = srcarea.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone);
 	    }
 	    ent = attackevent.getEntity();
 	    if ((ent instanceof Player || tamedAnimal) && (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager)
@@ -1167,7 +1167,7 @@ public class ResidenceEntityListener implements Listener {
 		    }
 		} else {
 		    /* Normal PvP */
-		    if (!isSnowBall && !area.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone, false) || isSnowBall && !allowSnowBall) {
+		    if (!isSnowBall && !area.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone) || isSnowBall && !allowSnowBall) {
 			if (attacker != null)
 			    plugin.msg(attacker, lm.General_NoPVPZone);
 			if (isOnFire)
