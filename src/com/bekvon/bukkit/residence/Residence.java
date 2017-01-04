@@ -193,7 +193,7 @@ public class Residence extends JavaPlugin {
     public Map<String, String> deleteConfirm;
     public Map<String, String> UnrentConfirm = new HashMap<String, String>();
     public List<String> resadminToggle;
-    private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW" };
+    private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW", "French" };
     private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
     private WorldEditPlugin wep = null;
