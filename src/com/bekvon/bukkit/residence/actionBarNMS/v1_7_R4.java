@@ -10,11 +10,15 @@ public class v1_7_R4 implements ABInterface {
 
     @Override
     public void send(CommandSender sender, String msg) {
+	if (msg.isEmpty())
+	    return;
 	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
     }
 
     @Override
     public void send(Player player, String msg) {
+	if (msg.isEmpty())
+	    return;
 	player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
     }
 

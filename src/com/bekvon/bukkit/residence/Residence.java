@@ -1669,7 +1669,30 @@ public class Residence extends JavaPlugin {
 	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 
+//    private boolean isWorldOk(CommandSender sender) {
+//	if (!this.getConfigManager().DisableNoFlagMessageUse)
+//	    return true;
+//
+//	if (sender.hasPermission("residence.checkbadflags"))
+//	    return true;
+//	
+//	if (!(sender instanceof Player))
+//	    return true;
+//
+//	Player player = (Player) sender;
+//	String world = player.getWorld().getName();
+//	
+//	for (String one : this.getConfigManager().DisableNoFlagMessageWorlds) {
+//	    if (one.equalsIgnoreCase(world))
+//		return false;
+//	}
+//	return true;
+//    }
+
     public void msg(CommandSender sender, lm lm, Object... variables) {
+//	if (!isWorldOk(sender))
+//	    return;
+
 	if (sender != null)
 	    if (getLM().containsKey(lm.getPath())) {
 		String msg = getLM().getMessage(lm, variables);

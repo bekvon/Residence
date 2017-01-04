@@ -18,6 +18,8 @@ public class v1_10_R1 implements ABInterface {
 
     @Override
     public void send(CommandSender sender, String msg) {
+	if (msg.isEmpty())
+	    return;
 	if (sender instanceof Player)
 	    send((Player) sender, msg);
 	else
@@ -26,6 +28,8 @@ public class v1_10_R1 implements ABInterface {
 
     @Override
     public void send(Player player, String msg) {
+	if (msg.isEmpty())
+	    return;
 	try {
 	    CraftPlayer p = (CraftPlayer) player;
 	    IChatBaseComponent cbc = ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', msg) + "\"}");

@@ -154,6 +154,10 @@ public class ConfigManager {
     protected boolean useVisualizer;
     protected boolean DisableListeners;
     protected boolean DisableCommands;
+
+//    protected boolean DisableNoFlagMessageUse;
+//    protected List<String> DisableNoFlagMessageWorlds = new ArrayList<String>();
+
     protected boolean TNTExplodeBelow;
     protected int TNTExplodeBelowLevel;
     protected boolean CreeperExplodeBelow;
@@ -174,6 +178,7 @@ public class ConfigManager {
     private Double WalkSpeed2;
 
     protected Location KickLocation;
+    protected Location FlyLandLocation;
 
     protected List<RandomTeleport> RTeleport = new ArrayList<RandomTeleport>();
 
@@ -414,6 +419,12 @@ public class ConfigManager {
 	c.getW().addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
 	DisableCommands = c.get("Global.Optimizations.DisabledWorlds.DisableCommands", true);
 
+//	c.getW().addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
+//	    "You can bypass this with residence.checkbadflags permission node");
+//	DisableNoFlagMessageUse = c.get("Global.Optimizations.DisabledNoFlagMessage.Use", false);
+//	c.getW().addComment("Global.Optimizations.DisabledNoFlagMessage.Worlds", "List Of Worlds where player wont get error messages");
+//	DisableNoFlagMessageWorlds = c.get("Global.Optimizations.DisabledNoFlagMessage.Worlds", Arrays.asList(Bukkit.getWorlds().get(0).getName()));
+
 	c.getW().addComment("Global.Optimizations.GlobalChat.Enabled",
 	    "Enables or disables chat modification by including players main residence name");
 	GlobalChatEnabled = c.get("Global.Optimizations.GlobalChat.Enabled", false);
@@ -448,7 +459,7 @@ public class ConfigManager {
 	c.getW().addComment("Global.Optimizations.KickLocation.Use",
 	    "By setting this to true, when player kicks another player from residence, he will be teleported to this location instead of getting outside residence");
 	Boolean UseKick = c.get("Global.Optimizations.KickLocation.Use", false);
-	String KickLocationWorld = c.get("Global.Optimizations.KickLocation.World", defaultWorldName, false);
+	String KickLocationWorld = c.get("Global.Optimizations.KickLocation.World", defaultWorldName);
 	Double KickLocationX = c.get("Global.Optimizations.KickLocation.X", 0.5);
 	Double KickLocationY = c.get("Global.Optimizations.KickLocation.Y", 63.0);
 	Double KickLocationZ = c.get("Global.Optimizations.KickLocation.Z", 0.5);
@@ -463,6 +474,22 @@ public class ConfigManager {
 		KickLocation.setPitch(KickPitch.floatValue());
 		KickLocation.setYaw(KickYaw.floatValue());
 	    }
+	}
+
+	c.getW().addComment("Global.Optimizations.FlyLandLocation.World", "Used when players fly state is being turned to false because of fly flag and there is no solid land where to land for player");
+	String FlyLocationWorld = c.get("Global.Optimizations.FlyLandLocation.World", defaultWorldName);
+	Double FlyLocationX = c.get("Global.Optimizations.FlyLandLocation.X", 0.5);
+	Double FlyLocationY = c.get("Global.Optimizations.FlyLandLocation.Y", 63.0);
+	Double FlyLocationZ = c.get("Global.Optimizations.FlyLandLocation.Z", 0.5);
+	c.getW().addComment("Global.Optimizations.FlyLandLocation.Pitch", "Less than 0 - head up, more than 0 - head down. Range from -90 to 90");
+	Double FlyPitch = c.get("Global.Optimizations.FlyLandLocation.Pitch", 0.0);
+	c.getW().addComment("Global.Optimizations.FlyLandLocation.Yaw", "Head position to left and right. Range from -180 to 180");
+	Double FlyYaw = c.get("Global.Optimizations.FlyLandLocation.Yaw", 0.0);
+	World world = Bukkit.getWorld(FlyLocationWorld);
+	if (world != null) {
+	    FlyLandLocation = new Location(world, FlyLocationX, FlyLocationY, FlyLocationZ);
+	    FlyLandLocation.setPitch(FlyPitch.floatValue());
+	    FlyLandLocation.setYaw(FlyYaw.floatValue());
 	}
 
 	c.getW().addComment("Global.Optimizations.ShortInfo.Use",
@@ -1646,6 +1673,10 @@ public class ConfigManager {
 
     public Location getKickLocation() {
 	return KickLocation;
+    }
+
+    public Location getFlyLandLocation() {
+	return FlyLandLocation;
     }
 
     public int getrtMaxTries() {

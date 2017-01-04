@@ -70,6 +70,7 @@ public enum Flags {
     nmonsters(383, 51, FlagMode.Residence, "Allows or denys natural monster spawns", true),
     night(35, 15, FlagMode.Residence, "Sets night time in residence", true),
     nofly(171, 1, FlagMode.Both, "Allows or denys fly in residence", false),
+    fly(171, 1, FlagMode.Both, "Toggles fly for players in residence", false),
     nomobs(166, 0, FlagMode.Residence, "Prevents monsters from entering residence", true),
     note(25, 0, FlagMode.Both, "Allows or denys players to use note blocks", true),
     nodurability(145, 0, FlagMode.Residence, "Prevents item durability loss", false),

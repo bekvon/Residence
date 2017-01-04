@@ -1448,6 +1448,49 @@ public class ResidencePlayerListener implements Listener {
 	    }, 1L);
     }
 
+    private static Location getSafeLocation(Location loc) {
+
+	int curY = loc.getBlockY();
+
+	for (int i = 0; i <= curY; i++) {
+	    Block block = loc.clone().add(0, -i, 0).getBlock();
+	    if (!block.isEmpty() && block.getLocation().clone().add(0, 1, 0).getBlock().isEmpty() && block.getLocation().clone().add(0, 2, 0).getBlock().isEmpty())
+		return loc.clone().add(0, -i + 1, 0);
+	}
+
+	for (int i = 0; i <= loc.getWorld().getMaxHeight() - curY; i++) {
+	    Block block = loc.clone().add(0, i, 0).getBlock();
+	    if (!block.isEmpty() && block.getLocation().clone().add(0, 1, 0).getBlock().isEmpty() && block.getLocation().clone().add(0, 2, 0).getBlock().isEmpty())
+		return loc.clone().add(0, i + 1, 0);
+	}
+
+	return null;
+    }
+
+    private void fly(Player player, boolean state) {
+	if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE)
+	    return;
+	if (player.hasPermission("residence.flybypass"))
+	    return;
+	if (!state) {
+	    player.setFlying(state);
+	    player.setAllowFlight(state);
+	    Location loc = getSafeLocation(player.getLocation());
+	    if (loc == null) {
+		// get defined land location in case no safe landing spot are found
+		loc = plugin.getConfigManager().getFlyLandLocation();
+		if (loc == null) {
+		    // get main world spawn location in case valid location is not found
+		    loc = Bukkit.getWorlds().get(0).getSpawnLocation();
+		}
+	    }
+	    if (loc != null)
+		player.teleport(loc);
+	} else {
+	    player.setAllowFlight(state);
+	}
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceChange(ResidenceChangedEvent event) {
 	ClaimedResidence res = event.getTo();
@@ -1464,6 +1507,9 @@ public class ResidencePlayerListener implements Listener {
 	    if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		player.resetPlayerWeather();
 
+	    if (ResOld.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+		fly(player, false);
+
 	    if (plugin.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		player.setGlowing(false);
 	}
@@ -1475,6 +1521,11 @@ public class ResidencePlayerListener implements Listener {
 		else if (ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(false);
 	    }
+
+	    if (res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+		fly(player, true);
+	    else if (ResOld.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+		fly(player, false);
 
 	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		player.setPlayerTime(6000L, false);
@@ -1512,6 +1563,9 @@ public class ResidencePlayerListener implements Listener {
 		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(true);
 	    }
+
+	    if (res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+		fly(player, true);
 
 	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		player.setPlayerTime(6000L, false);
