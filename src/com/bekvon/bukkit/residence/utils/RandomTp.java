@@ -59,6 +59,8 @@ public class RandomTp {
 
 	int inerrange = rtloc.getMinCord();
 	int outerrange = rtloc.getMaxCord();
+	if (outerrange < 1)
+	    outerrange = 1;
 	int maxtries = plugin.getConfigManager().getrtMaxTries();
 
 	int centerX = rtloc.getCenter().getBlockX();
