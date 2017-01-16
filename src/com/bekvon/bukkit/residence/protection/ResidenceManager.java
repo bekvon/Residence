@@ -63,6 +63,10 @@ public class ResidenceManager implements ResidenceInterface {
     public ClaimedResidence getByLoc(Location loc) {
 	if (loc == null)
 	    return null;
+	if (loc.getWorld() == null)
+	    return null;
+	if (loc.getWorld().getName() == null)
+	    return null;
 	ClaimedResidence res = null;
 	String world = loc.getWorld().getName();
 	ChunkRef chunk = new ChunkRef(loc);
