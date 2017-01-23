@@ -1,8 +1,6 @@
 package com.bekvon.bukkit.residence.selection;
 
 import java.io.File;
-import java.io.IOException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -63,9 +61,10 @@ public class SchematicsManager {
 	File file = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
 	try {
 	    SchematicFormat.MCEDIT.save(clipboard, file);
-	} catch (com.sk89q.worldedit.world.DataException | IOException e) {
+	} catch (Exception e) {
 	    return false;
 	}
+	
 	editSession.flushQueue();
 	return true;
     }
@@ -92,9 +91,7 @@ public class SchematicsManager {
 	CuboidClipboard cc = null;
 	try {
 	    cc = CuboidClipboard.loadSchematic(file);
-	} catch (com.sk89q.worldedit.world.DataException e1) {
-	    e1.printStackTrace();
-	} catch (IOException e1) {
+	} catch (Exception e1) {
 	    e1.printStackTrace();
 	    return false;
 	}

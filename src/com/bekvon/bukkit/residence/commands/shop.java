@@ -25,7 +25,6 @@ import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class shop implements cmd {
 
@@ -306,8 +305,6 @@ public class shop implements cmd {
 		plugin.msg(player, lm.Shop_ToBigSelection);
 		return true;
 	    }
-
-	    Debug.D(cuboid.getXSize() + " : " + cuboid.getZSize());
 
 	    if (cuboid.getXSize() != 1 && cuboid.getZSize() != 1) {
 		plugin.msg(player, lm.Shop_ToDeapSelection);
