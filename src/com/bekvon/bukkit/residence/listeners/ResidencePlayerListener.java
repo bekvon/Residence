@@ -707,9 +707,6 @@ public class ResidencePlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerChangedWorldEvent event) {
 	Player player = event.getPlayer();
-	if (plugin.getPermissionManager().isResidenceAdmin(player)) {
-	    plugin.turnResAdminOn(player);
-	}
 	plugin.getPermissionManager().updateGroupNameForPlayer(player, true);
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
