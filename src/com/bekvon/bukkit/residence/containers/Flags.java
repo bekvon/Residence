@@ -84,6 +84,7 @@ public enum Flags {
     redstone(175, 0, FlagMode.Group, "Gives lever, diode, button, pressure, note flags", true),
     respawn(175, 0, FlagMode.Residence, "Automaticaly respawns player", false),
     riding(329, 0, FlagMode.Both, "Prevent riding a horse", true),
+    shoot(262, 0, FlagMode.Residence, "Allows or denys shooting projectile in area", true),
     sun(175, 0, FlagMode.Residence, "Sets weather to sunny in residence", true),
     shop(389, 0, FlagMode.Residence, "Adds residence to special residence shop list", true),
     snowtrail(78, 0, FlagMode.Residence, "Prevents snowman snow trails", true),

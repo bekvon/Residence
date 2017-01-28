@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -512,6 +513,23 @@ public class ResidenceEntityListener implements Listener {
 	if (!perms.playerHas(pname, world, Flags.place, perms.playerHas(pname, world, Flags.build, true))) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.getEntity().getShooter() instanceof Player) {
+	    if (plugin.isResAdminOn((Player) event.getEntity().getShooter()))
+		return;
+	}
+	FlagPermissions perms = plugin.getPermsByLoc(event.getEntity().getLocation());
+	if (perms.has(Flags.shoot, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	    if (event.getEntity().getShooter() instanceof Player)
+		plugin.msg((Player) event.getEntity().getShooter(), lm.Flag_Deny, Flags.shoot);
 	}
     }
 
