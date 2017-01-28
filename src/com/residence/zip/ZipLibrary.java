@@ -15,17 +15,18 @@ import java.util.zip.ZipOutputStream;
 import org.bukkit.World;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ZipLibrary {
     private Residence plugin;
     private File BackupDir = new File(Residence.getInstance().getDataLocation(), "Backup");
 
     public ZipLibrary(Residence residence) {
-	this.plugin = residence;	
+	this.plugin = residence;
     }
 
-    private  void cleanFiles() {
-	int x = plugin.getConfigManager().BackupAutoCleanUpDays() * 60 * 1000 * 24 * 60;
+    private void cleanFiles() {
+	Long x = plugin.getConfigManager().BackupAutoCleanUpDays() * 60L * 1000L * 24L * 60L;
 	Long time = System.currentTimeMillis();
 	for (File file : BackupDir.listFiles()) {
 	    long diff = time - file.lastModified();
@@ -36,12 +37,13 @@ public class ZipLibrary {
     }
 
     public void backup() throws IOException {
-	try {
-	    BackupDir.mkdir();
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return;
-	}
+	if (!BackupDir.isDirectory())
+	    try {
+		BackupDir.mkdir();
+	    } catch (Exception e) {
+		e.printStackTrace();
+		return;
+	    }
 	if (plugin.getConfigManager().BackupAutoCleanUpUse())
 	    cleanFiles();
 	// Generate the proper date for the backup filename
@@ -89,6 +91,7 @@ public class ZipLibrary {
     }
 
     private static void packZip(File output, List<File> sources) throws IOException {
+	Debug.D("zipping");
 	ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(output));
 	zipOut.setLevel(Deflater.DEFAULT_COMPRESSION);
 
