@@ -40,11 +40,11 @@ public class WorldGuardUtil {
 
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 
-	    for (ProtectedRegion one : regions) {
+	    for (ProtectedRegion one : regions.getRegions()) {
 		if (!player.hasPermission("residence.worldguard." + one.getId()))
 		    return one;
 	    }
-	} catch (Exception e) {
+	} catch (Exception | IncompatibleClassChangeError e) {
 	}
 	return null;
     }
