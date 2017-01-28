@@ -24,10 +24,10 @@ import org.bukkit.entity.Player;
 
 public class ResidencePermissions extends FlagPermissions {
 
-    protected UUID ownerUUID;
-    protected String ownerLastKnownName;
-    protected String world;
-    protected ClaimedResidence residence;
+    private UUID ownerUUID;
+    private String ownerLastKnownName;
+    private String world;
+    private ClaimedResidence residence;
 
     private ResidencePermissions(ClaimedResidence res) {
 	super();
@@ -620,5 +620,13 @@ public class ResidencePermissions extends FlagPermissions {
 	    return changed;
 	}
 	return false;
+    }
+
+    public String getOwnerLastKnownName() {
+	return ownerLastKnownName;
+    }
+
+    public void setOwnerLastKnownName(String ownerLastKnownName) {
+	this.ownerLastKnownName = ownerLastKnownName;
     }
 }

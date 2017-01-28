@@ -1411,7 +1411,7 @@ public class ClaimedResidence {
 
 	res.perms = ResidencePermissions.load(worldName, res, (Map<String, Object>) root.get("Permissions"));
 
-	if (res.getPermissions().ownerLastKnownName == null)
+	if (res.getPermissions().getOwnerLastKnownName() == null)
 	    return null;
 
 	if (root.containsKey("MainResidence"))

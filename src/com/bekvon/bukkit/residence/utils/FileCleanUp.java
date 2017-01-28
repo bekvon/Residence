@@ -21,6 +21,8 @@ public class FileCleanUp {
 
     public void cleanFiles() {
 
+	Bukkit.getConsoleSender().sendMessage("starting cleanup");
+	
 	ArrayList<String> resNameList = plugin.getResidenceManager().getResidenceList(false, false);
 	int i = 0;
 
