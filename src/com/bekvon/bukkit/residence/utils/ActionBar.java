@@ -12,14 +12,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
+import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ABInterface;
+import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
-/**
-*
-* @author hamzaxx
-*/
 public class ActionBar implements ABInterface {
-    private String version = "";
+    private Version version = Version.v1_11_R1;
     private Object packet;
     private Method getHandle;
     private Method sendPacket;
@@ -29,12 +27,17 @@ public class ActionBar implements ABInterface {
     private Class<?> packetType;
     private Constructor<?> constructor;
     private boolean simpleMessages = false;
+    private boolean simpleTitleMessages = false;
 
-    public ActionBar() {
+    private Constructor<?> nmsPacketPlayOutTitle;
+    private Class<?> enumTitleAction;
+    private Method fromString;
+    private Residence plugin;
+
+    public ActionBar(Residence plugin) {
+	this.plugin = plugin;
+	version = this.plugin.getVersionChecker().getVersion();
 	try {
-	    String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
-	    version = v[v.length - 1];
-//	    version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	    packetType = Class.forName(getPacketPlayOutChat());
 	    Class<?> typeCraftPlayer = Class.forName(getCraftPlayerClasspath());
 	    Class<?> typeNMSPlayer = Class.forName(getNMSPlayerClasspath());
@@ -44,15 +47,56 @@ public class ActionBar implements ABInterface {
 	    getHandle = typeCraftPlayer.getMethod("getHandle");
 	    playerConnection = typeNMSPlayer.getField("playerConnection");
 	    sendPacket = typePlayerConnection.getMethod("sendPacket", Class.forName(getPacketClasspath()));
-	    if (!version.contains("1_7")) {
+	    if (plugin.getVersionChecker().isHigher(Version.v1_7_R4)) {
 		constructor = packetType.getConstructor(nmsIChatBaseComponent, byte.class);
 	    } else {
 		constructor = packetType.getConstructor(nmsIChatBaseComponent, int.class);
 	    }
+
 	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException ex) {
 	    simpleMessages = true;
 	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully suport action bar messages. They will be shown in chat instead.");
 	}
+	// Title
+	try {
+	    Class<?> typePacketPlayOutTitle = Class.forName(getPacketPlayOutTitleClasspath());
+	    enumTitleAction = Class.forName(getEnumTitleActionClasspath());
+	    nmsPacketPlayOutTitle = typePacketPlayOutTitle.getConstructor(enumTitleAction, nmsIChatBaseComponent);
+	    fromString = Class.forName(getClassMessageClasspath()).getMethod("fromString", String.class);
+	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+	    simpleTitleMessages = true;
+	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully suport title messages. They will be shown in chat instead.");
+	}
+    }
+
+    @Override
+    public void sendTitle(Player receivingPacket, Object title, Object subtitle) {
+	if (simpleTitleMessages) {
+	    receivingPacket.sendMessage(ChatColor.translateAlternateColorCodes('&', String.valueOf(title)));
+	    receivingPacket.sendMessage(ChatColor.translateAlternateColorCodes('&', String.valueOf(subtitle)));
+	    return;
+	}
+	try {
+	    if (title != null) {
+		Object packetTitle = nmsPacketPlayOutTitle.newInstance(enumTitleAction.getField("TITLE").get(null),
+		    ((Object[]) fromString.invoke(null, ChatColor.translateAlternateColorCodes('&', String.valueOf(title))))[0]);
+		sendPacket(receivingPacket, packetTitle);
+	    }
+	    if (subtitle != null) {
+		Object packetSubtitle = nmsPacketPlayOutTitle.newInstance(enumTitleAction.getField("SUBTITLE").get(null),
+		    ((Object[]) fromString.invoke(null, ChatColor.translateAlternateColorCodes('&', String.valueOf(subtitle))))[0]);
+		sendPacket(receivingPacket, packetSubtitle);
+	    }
+	} catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchFieldException ex) {
+	    simpleTitleMessages = true;
+	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully support title messages. They will be shown in chat instead.");
+	}
+    }
+
+    private void sendPacket(Player player, Object packet) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	Object handle = getHandle.invoke(player);
+	Object connection = playerConnection.get(handle);
+	sendPacket.invoke(connection, packet);
     }
 
     @Override
@@ -72,7 +116,7 @@ public class ActionBar implements ABInterface {
 	try {
 	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', JSONObject
 		.escape(msg)) + "\"}");
-	    if (!version.contains("1_7")) {
+	    if (plugin.getVersionChecker().isHigher(Version.v1_7_R4)) {
 		packet = constructor.newInstance(serialized, (byte) 2);
 	    } else {
 		packet = constructor.newInstance(serialized, 2);
@@ -107,9 +151,8 @@ public class ActionBar implements ABInterface {
     }
 
     private String getChatSerializerClasspath() {
-	if (version.equals("v1_8_R1") || version.contains("1_7")) {
+	if (plugin.getVersionChecker().isLower(Version.v1_8_R2))
 	    return "net.minecraft.server." + version + ".ChatSerializer";
-	}
 	return "net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer";// 1_8_R2 moved to IChatBaseComponent
     }
 
@@ -117,8 +160,15 @@ public class ActionBar implements ABInterface {
 	return "net.minecraft.server." + version + ".PacketPlayOutChat";
     }
 
-    @Override
-    public void sendTitle(Player player, Object title, Object subtitle) {
-	return;
+    private String getPacketPlayOutTitleClasspath() {
+	return "net.minecraft.server." + version + ".PacketPlayOutTitle";
+    }
+
+    private String getEnumTitleActionClasspath() {
+	return getPacketPlayOutTitleClasspath() + "$EnumTitleAction";
+    }
+
+    private String getClassMessageClasspath() {
+	return "org.bukkit.craftbukkit." + version + ".util.CraftChatMessage";
     }
 }

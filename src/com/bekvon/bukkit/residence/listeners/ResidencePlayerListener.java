@@ -67,6 +67,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.GetTime;
+import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
 public class ResidencePlayerListener implements Listener {
 
@@ -315,7 +316,7 @@ public class ResidencePlayerListener implements Listener {
 	switch (event.getNewState()) {
 	case NEITHER:
 	case FALSE:
-	    if (plugin.getVersionChecker().GetVersion() > 1900 && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
+	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1) && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setGlowing(false);
 	    break;
@@ -323,7 +324,7 @@ public class ResidencePlayerListener implements Listener {
 	    break;
 	case TRUE:
 	    if (event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
-		if (plugin.getVersionChecker().GetVersion() > 1900)
+		if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
 		    for (Player one : event.getResidence().getPlayersInResidence())
 			one.setGlowing(true);
 	    break;
@@ -1532,12 +1533,12 @@ public class ResidencePlayerListener implements Listener {
 	    if (ResOld.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, false);
 
-	    if (plugin.getVersionChecker().GetVersion() > 1900 && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		player.setGlowing(false);
 	}
 
 	if (res != null && ResOld != null && res != ResOld) {
-	    if (plugin.getVersionChecker().GetVersion() > 1900) {
+	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1)) {
 		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(true);
 		else if (ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
@@ -1581,7 +1582,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (res != null && ResOld == null) {
-	    if (plugin.getVersionChecker().GetVersion() > 1900) {
+	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1)) {
 		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(true);
 	    }

@@ -101,6 +101,7 @@ import com.bekvon.bukkit.residence.utils.Sorting;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.utils.YmlMaker;
+import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.earth2me.essentials.Essentials;
@@ -399,6 +400,7 @@ public class Residence extends JavaPlugin {
 	try {
 	    instance = this;
 	    initsuccess = false;
+	    versionChecker = new VersionChecker(this);
 	    deleteConfirm = new HashMap<String, String>();
 	    resadminToggle = new ArrayList<String>();
 	    server = this.getServer();
@@ -470,9 +472,7 @@ public class Residence extends JavaPlugin {
 	    } catch (Exception e) {
 	    }
 
-	    String packageName = getServer().getClass().getPackage().getName();
-	    String[] packageSplit = packageName.split("\\.");
-	    String version = packageSplit[packageSplit.length - 1].substring(0, packageSplit[packageSplit.length - 1].length() - 3);
+	    String version = versionChecker.getVersion().getShortVersion();
 	    try {
 		Class<?> nmsClass;
 		if (getConfigManager().CouldronCompatability())
@@ -488,31 +488,13 @@ public class Residence extends JavaPlugin {
 		}
 	    } catch (SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | InstantiationException
 		| ClassNotFoundException e) {
-		System.out.println("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version + " and server will shutdown");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not compatible with this plugins version! Plugin will be disabled: " + version + " and server will shutdown");
 		this.setEnabled(false);
 		Bukkit.shutdown();
 		return;
 	    }
 
-	    ABManager = new ActionBar();
-	    version = packageSplit[packageSplit.length - 1];
-	    try {
-		Class<?> nmsClass;
-
-		nmsClass = Class.forName("com.bekvon.bukkit.residence.actionBarNMS." + version);
-
-		if (ABInterface.class.isAssignableFrom(nmsClass)) {
-		    ab = (ABInterface) nmsClass.getConstructor().newInstance();
-		} else {
-		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
-		    this.setEnabled(false);
-		    Bukkit.shutdown();
-		}
-	    } catch (SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | InstantiationException
-		| ClassNotFoundException e) {
-		ab = ABManager;
-		return;
-	    }
+	    ab = new ActionBar(this);
 
 	    gmanager = new PermissionManager(this);
 	    imanager = new WorldItemManager(this);
@@ -530,8 +512,6 @@ public class Residence extends JavaPlugin {
 	    InformationPagerManager = new InformationPager(this);
 
 	    zip = new ZipLibrary(this);
-
-	    versionChecker = new VersionChecker(this);
 
 	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
 	    if (lwcp != null)
@@ -706,15 +686,15 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(shlistener, this);
 
 		// 1.8 event
-		if (getVersionChecker().GetVersion() >= 1800)
+		if (getVersionChecker().isHigherEquals(Version.v1_8_R1))
 		    pm.registerEvents(new v1_8Events(), this);
 
 		// 1.9 event
-		if (getVersionChecker().GetVersion() >= 1900)
+		if (getVersionChecker().isHigherEquals(Version.v1_9_R1))
 		    pm.registerEvents(new v1_9Events(), this);
 
 		// 1.10 event
-		if (getVersionChecker().GetVersion() >= 11000)
+		if (getVersionChecker().isHigherEquals(Version.v1_10_R1))
 		    pm.registerEvents(new v1_10Events(), this);
 
 		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,

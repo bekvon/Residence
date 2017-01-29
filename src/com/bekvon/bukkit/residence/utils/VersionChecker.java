@@ -16,48 +16,83 @@ import com.bekvon.bukkit.residence.Residence;
 public class VersionChecker {
     Residence plugin;
     private int resource = 11480;
-    private int cleanVersion = 0;
 
     public VersionChecker(Residence plugin) {
 	this.plugin = plugin;
+	version = getCurrent();
     }
 
-    public int GetVersion() {
-	if (cleanVersion == 0) {
-	    String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
-	    String version = v[v.length - 1];
-	    // Translating version to integer for simpler use
-	    try {
-		cleanVersion = Integer.parseInt(version.replace("v", "").replace("V", "").replace("_", "").replace("r", "").replace("R", ""));
-		cleanVersion *= 10;
-	    } catch (NumberFormatException e) {
-		// Fail safe if it for some reason can't translate version to integer
-		if (version.contains("v1_4"))
-		    cleanVersion = 1400;
-		if (version.contains("v1_5"))
-		    cleanVersion = 1500;
-		if (version.contains("v1_6"))
-		    cleanVersion = 1600;
-		if (version.contains("v1_7"))
-		    cleanVersion = 1700;
-		if (version.contains("v1_8_R1"))
-		    cleanVersion = 1810;
-		if (version.contains("v1_8_R2"))
-		    cleanVersion = 1820;
-		if (version.contains("v1_8_R3"))
-		    cleanVersion = 1830;
-		if (version.contains("v1_9_R1"))
-		    cleanVersion = 1910;
-		if (version.contains("v1_9_R2"))
-		    cleanVersion = 1920;
-		if (version.contains("v1_10_R1"))
-		    cleanVersion = 11010;
-	    }
+    private Version version = Version.v1_11_R1;
 
-	    if (cleanVersion < 1400)
-		cleanVersion *= 10;
+    public Version getVersion() {
+	return version;
+    }
+
+    public enum Version {
+	v1_7_R1(),
+	v1_7_R2(),
+	v1_7_R3(),
+	v1_7_R4(),
+	v1_8_R1(),
+	v1_8_R2(),
+	v1_8_R3(),
+	v1_9_R1(),
+	v1_9_R2(),
+	v1_10_R1(),
+	v1_11_R1(),
+	v1_11_R2(),
+	v1_11_R3(),
+	v1_12_R1(),
+	v1_12_R2(),
+	v1_12_R3(),
+	v1_13_R1(),
+	v1_13_R2(),
+	v1_13_R3();
+
+	private Integer value = null;
+	private String shortVersion = null;
+
+	public Integer getValue() {
+	    if (value == null)
+		try {
+		    value = Integer.valueOf(this.name().replaceAll("[^\\d.]", ""));
+		} catch (Exception e) {
+		}
+	    return this.value;
 	}
-	return cleanVersion;
+
+	public String getShortVersion() {
+	    if (shortVersion == null)
+		shortVersion = this.name().split("_R")[0];
+	    return shortVersion;
+	}
+    }
+
+    public static Version getCurrent() {
+	String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
+	String vv = v[v.length - 1];
+	for (Version one : Version.values()) {
+	    if (one.name().equalsIgnoreCase(vv)) {
+		return one;
+	    }
+	}
+	return null;
+    }
+
+    public boolean isLower(Version version) {
+	return this.version.getValue() < version.getValue();
+    }
+
+    public boolean isLowerEquals(Version version) {
+	return this.version.getValue() <= version.getValue();
+    }
+
+    public boolean isHigher(Version version) {
+	return this.version.getValue() > version.getValue();
+    }
+
+    public boolean isHigherEquals(Version version) {
+	return this.version.getValue() >= version.getValue();
     }
 
     public void VersionCheck(final Player player) {
