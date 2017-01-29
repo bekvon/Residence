@@ -424,6 +424,31 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeFly(ResidenceFlagChangeEvent event) {
+	if (event.isCancelled())
+	    return;
+
+	if (!event.getFlag().equalsIgnoreCase(Flags.fly.getName()))
+	    return;
+
+	switch (event.getNewState()) {
+	case NEITHER:
+	case FALSE:
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		fly(one, false);
+	    break;
+	case INVALID:
+	    break;
+	case TRUE:
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		fly(one, true);
+	    break;
+	default:
+	    break;
+	}
+    }
+
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
 	// disabling event on world

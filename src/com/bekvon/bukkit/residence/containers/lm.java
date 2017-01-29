@@ -387,6 +387,7 @@ public enum lm {
     General_CurrentArea("&eCurrent Area: &6%1"),
     General_TotalResSize("&eTotal size: &6%1m\u00B3 (%2m\u00B2)"),
     General_TotalWorth("&eTotal worth of residence: &6%1 &e(&6%2&e)"),
+    General_TotalSubzones("&eSubzones in residence: &6%1 &e(&6%2&e)"),
     General_NotOnline("&eTarget player must be online."),
     General_NextPage("&eNext Page"),
     General_NextInfoPage("&2| &eNext Page &2>>>"),

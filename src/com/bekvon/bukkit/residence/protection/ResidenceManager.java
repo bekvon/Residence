@@ -709,6 +709,10 @@ public class ResidenceManager implements ResidenceInterface {
 	    plugin.msg(sender, lm.General_TotalWorth, (int) ((res.getTotalSize() * res.getOwnerGroup().getCostPerBlock())
 		* 100) / 100.0, (int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0);
 	}
+
+	if (res.getSubzonesAmount(false) > 0)
+	    plugin.msg(sender, lm.General_TotalSubzones, res.getSubzonesAmount(false), res.getSubzonesAmount(true));
+
 	if (plugin.getConfigManager().useLeases() && plugin.getLeaseManager().leaseExpires(areaname)) {
 	    String time = plugin.getLeaseManager().getExpireTime(areaname);
 	    if (time != null)

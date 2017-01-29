@@ -1052,6 +1052,16 @@ public class ClaimedResidence {
 	return list;
     }
 
+    public int getSubzonesAmount(Boolean includeChild) {
+	int i = 0;
+	for (Entry<String, ClaimedResidence> res : subzones.entrySet()) {
+	    i++;
+	    if (includeChild)
+		i += res.getValue().getSubzonesAmount(includeChild);
+	}
+	return i;
+    }
+
     public void printSubzoneList(Player player, int page) {
 	ArrayList<String> temp = new ArrayList<>();
 	for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
