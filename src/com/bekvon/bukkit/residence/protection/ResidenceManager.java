@@ -35,6 +35,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
@@ -42,7 +43,7 @@ import com.griefcraft.model.Protection;
 
 public class ResidenceManager implements ResidenceInterface {
     protected SortedMap<String, ClaimedResidence> residences;
-    protected Map<String, Map<ChunkRef, List<String>>> chunkResidences;
+    protected Map<String, Map<ChunkRef, List<ClaimedResidence>>> chunkResidences;
     protected List<ClaimedResidence> shops = new ArrayList<ClaimedResidence>();
     private Residence plugin;
 
@@ -61,23 +62,24 @@ public class ResidenceManager implements ResidenceInterface {
 
     @Override
     public ClaimedResidence getByLoc(Location loc) {
+	Long time = System.nanoTime();
 	if (loc == null)
 	    return null;
-	if (loc.getWorld() == null)
+	World world = loc.getWorld();
+	if (world == null)
 	    return null;
-	if (loc.getWorld().getName() == null)
+	String worldName = world.getName();
+	if (worldName == null)
 	    return null;
 	ClaimedResidence res = null;
-	String world = loc.getWorld().getName();
 	ChunkRef chunk = new ChunkRef(loc);
-	if (!chunkResidences.containsKey(world))
+	if (!chunkResidences.containsKey(worldName))
 	    return null;
 
-	Map<ChunkRef, List<String>> ChunkMap = chunkResidences.get(world);
+	Map<ChunkRef, List<ClaimedResidence>> ChunkMap = chunkResidences.get(worldName);
 
 	if (ChunkMap.containsKey(chunk)) {
-	    for (String key : ChunkMap.get(chunk)) {
-		ClaimedResidence entry = residences.get(key);
+	    for (ClaimedResidence entry : ChunkMap.get(chunk)) {
 		if (entry == null)
 		    continue;
 		if (entry.containsLoc(loc)) {
@@ -89,6 +91,8 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (res == null)
 	    return null;
+
+	Debug.D("Got res in " + (System.nanoTime() - time));
 
 	ClaimedResidence subres = res.getSubzoneByLoc(loc);
 	if (subres == null)
@@ -114,35 +118,6 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 	return res;
-    }
-
-    @Override
-    public String getNameByLoc(Location loc) {
-	ClaimedResidence res = this.getByLoc(loc);
-	if (res == null)
-	    return null;
-	String name = res.getName();
-	if (name == null)
-	    return null;
-	String szname = res.getSubzoneNameByLoc(loc);
-	if (szname != null)
-	    return name + "." + szname;
-	return name;
-    }
-
-    @Override
-    public String getNameByRes(ClaimedResidence res) {
-	Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-	for (Entry<String, ClaimedResidence> check : set) {
-	    if (check.getValue() == res) {
-		return check.getValue().getResidenceName();
-	    }
-	    String n = check.getValue().getSubzoneNameByRes(res);
-	    if (n != null) {
-		return check.getValue().getResidenceName() + "." + n;
-	    }
-	}
-	return null;
     }
 
     @Override
@@ -850,8 +825,8 @@ public class ResidenceManager implements ResidenceInterface {
 	return resm;
     }
 
-    public Map<ChunkRef, List<String>> loadMap(String worldName, Map<String, Object> root, ResidenceManager resm) throws Exception {
-	Map<ChunkRef, List<String>> retRes = new HashMap<>();
+    public Map<ChunkRef, List<ClaimedResidence>> loadMap(String worldName, Map<String, Object> root, ResidenceManager resm) throws Exception {
+	Map<ChunkRef, List<ClaimedResidence>> retRes = new HashMap<>();
 	if (root == null)
 	    return retRes;
 
@@ -893,11 +868,11 @@ public class ResidenceManager implements ResidenceInterface {
 		}
 
 		for (ChunkRef chunk : getChunks(residence)) {
-		    List<String> ress = new ArrayList<>();
+		    List<ClaimedResidence> ress = new ArrayList<>();
 		    if (retRes.containsKey(chunk)) {
 			ress.addAll(retRes.get(chunk));
 		    }
-		    ress.add(resName);
+		    ress.add(residence);
 		    retRes.put(chunk, ress);
 		}
 
@@ -1060,7 +1035,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 	chunkResidences.remove(world);
-	chunkResidences.put(world, new HashMap<ChunkRef, List<String>>());
+	chunkResidences.put(world, new HashMap<ChunkRef, List<ClaimedResidence>>());
 	if (count == 0) {
 	    sender.sendMessage(ChatColor.RED + "No residences found in world: " + ChatColor.YELLOW + world);
 	} else {
@@ -1088,11 +1063,11 @@ public class ResidenceManager implements ResidenceInterface {
 	    String world = res.getWorld();
 	    if (chunkResidences.get(world) != null) {
 		for (ChunkRef chunk : getChunks(res)) {
-		    List<String> ress = new ArrayList<>();
+		    List<ClaimedResidence> ress = new ArrayList<>();
 		    if (chunkResidences.get(world).containsKey(chunk)) {
 			ress.addAll(chunkResidences.get(world).get(chunk));
 		    }
-		    ress.remove(name);
+		    ress.remove(res);
 		    chunkResidences.get(world).put(chunk, ress);
 		}
 	    }
@@ -1107,19 +1082,20 @@ public class ResidenceManager implements ResidenceInterface {
 	name = name.toLowerCase();
 	res = residences.get(name);
 
-	if (res != null) {
-	    String world = res.getWorld();
-	    if (chunkResidences.get(world) == null) {
-		chunkResidences.put(world, new HashMap<ChunkRef, List<String>>());
+	if (res == null)
+	    return;
+
+	String world = res.getWorld();
+	if (chunkResidences.get(world) == null) {
+	    chunkResidences.put(world, new HashMap<ChunkRef, List<ClaimedResidence>>());
+	}
+	for (ChunkRef chunk : getChunks(res)) {
+	    List<ClaimedResidence> ress = new ArrayList<>();
+	    if (chunkResidences.get(world).containsKey(chunk)) {
+		ress.addAll(chunkResidences.get(world).get(chunk));
 	    }
-	    for (ChunkRef chunk : getChunks(res)) {
-		List<String> ress = new ArrayList<>();
-		if (chunkResidences.get(world).containsKey(chunk)) {
-		    ress.addAll(chunkResidences.get(world).get(chunk));
-		}
-		ress.add(name);
-		chunkResidences.get(world).put(chunk, ress);
-	    }
+	    ress.add(res);
+	    chunkResidences.get(world).put(chunk, ress);
 	}
     }
 

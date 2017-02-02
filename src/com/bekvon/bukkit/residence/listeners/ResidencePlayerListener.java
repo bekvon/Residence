@@ -649,7 +649,8 @@ public class ResidencePlayerListener implements Listener {
 
 	} else {
 	    res = plugin.getResidenceManager().getByLoc(loc);
-	    landName = plugin.getResidenceManager().getNameByLoc(loc);
+	    if (res != null)
+		landName = res.getName();
 	}
 
 	if (res == null) {
@@ -997,9 +998,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Location loc = block.getLocation();
-	String res = plugin.getResidenceManager().getNameByLoc(loc);
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 	if (res != null)
-	    plugin.getResidenceManager().printAreaInfo(res, player, false);
+	    plugin.getResidenceManager().printAreaInfo(res.getName(), player, false);
 	else
 	    plugin.msg(player, lm.Residence_NoResHere);
 	event.setCancelled(true);

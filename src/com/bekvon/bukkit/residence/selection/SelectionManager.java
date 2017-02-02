@@ -119,6 +119,10 @@ public class SelectionManager {
 	return new CuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
     }
 
+    public boolean hasPlacedBoth(Player player) {
+	return hasPlacedBoth(player.getName());
+    }
+
     public boolean hasPlacedBoth(String player) {
 	return playerLoc1.containsKey(player) && playerLoc2.containsKey(player);
     }

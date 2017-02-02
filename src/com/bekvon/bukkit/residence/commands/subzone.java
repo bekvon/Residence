@@ -26,30 +26,26 @@ public class subzone implements cmd {
 	    return false;
 	}
 	String zname;
-	String parent;
+	ClaimedResidence res = null;
 	if (args.length == 2) {
-	    parent = plugin.getResidenceManager().getNameByLoc(player.getLocation());
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    zname = args[1];
 	} else {
-	    parent = args[1];
+	    res = plugin.getResidenceManager().getByName(args[1]);
 	    zname = args[2];
 	}
-
+	if (res == null) {
+	    plugin.msg(player, lm.Invalid_Residence);
+	    return true;
+	}
 	if (plugin.getWorldEdit() != null) {
 	    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTooldID()) {
 		plugin.getSelectionManager().worldEdit(player);
 	    }
 	}
 	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    ClaimedResidence res = plugin.getResidenceManager().getByName(parent);
-	    if (res == null) {
-		plugin.msg(player, lm.Invalid_Residence);
+	    if (!resadmin && !plugin.hasPermission(player, "residence.create.subzone", lm.Subzone_CantCreate))
 		return true;
-	    }
-
-	    if (!resadmin && !plugin.hasPermission(player, "residence.create.subzone", lm.Subzone_CantCreate)) {
-		return true;
-	    }
 
 	    res.addSubzone(player, plugin.getSelectionManager().getPlayerLoc1(player.getName()), plugin.getSelectionManager().getPlayerLoc2(player.getName()),
 		zname, resadmin);

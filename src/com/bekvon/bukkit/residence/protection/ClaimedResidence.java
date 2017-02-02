@@ -574,6 +574,15 @@ public class ClaimedResidence {
 	return this.addSubzone(player, player.getName(), loc1, loc2, name, resadmin);
     }
 
+    public boolean addSubzone(Player player, String name, boolean resadmin) {
+	if (Residence.getInstance().getSelectionManager().hasPlacedBoth(player)) {
+	    Location loc1 = Residence.getInstance().getSelectionManager().getPlayerLoc1(player);
+	    Location loc2 = Residence.getInstance().getSelectionManager().getPlayerLoc2(player);
+	    return this.addSubzone(player, player.getName(), loc1, loc2, name, resadmin);
+	}
+	return false;
+    }
+
     public boolean addSubzone(Player player, String owner, Location loc1, Location loc2, String name, boolean resadmin) {
 	if (!plugin.validName(name)) {
 	    if (player != null) {
@@ -1579,7 +1588,10 @@ public class ClaimedResidence {
     }
 
     public String getName() {
-	return plugin.getResidenceManager().getNameByRes(this);
+	String name = this.resName;
+	if (this.getParent() != null)
+	    name = this.getParent().getName() + "." + name;
+	return name;
     }
 
     public void remove() {

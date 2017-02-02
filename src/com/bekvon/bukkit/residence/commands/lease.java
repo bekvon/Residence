@@ -49,7 +49,9 @@ public class lease implements cmd {
 		if (args.length == 3) {
 		    plugin.getLeaseManager().renewArea(args[2], player);
 		} else {
-		    plugin.getLeaseManager().renewArea(plugin.getResidenceManager().getNameByLoc(player.getLocation()), player);
+		    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+		    if (res != null)
+			plugin.getLeaseManager().renewArea(res.getName(), player);
 		}
 		return true;
 	    } else if (args[1].equals("cost")) {
@@ -63,12 +65,12 @@ public class lease implements cmd {
 		    }
 		    return true;
 		}
-		String area = plugin.getResidenceManager().getNameByLoc(player.getLocation());
-		ClaimedResidence res = plugin.getResidenceManager().getByName(area);
-		if (area == null || res == null) {
+		ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+		if (res == null) {
 		    plugin.msg(player, lm.Invalid_Area);
 		    return true;
 		}
+		String area = res.getName();
 		if (plugin.getLeaseManager().leaseExpires(area)) {
 		    int cost = plugin.getLeaseManager().getRenewCost(res);
 		    plugin.msg(player, lm.Economy_LeaseRenewalCost, area, cost);

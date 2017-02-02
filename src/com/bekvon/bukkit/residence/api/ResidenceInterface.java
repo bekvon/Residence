@@ -12,10 +12,6 @@ public interface ResidenceInterface {
 
     public ClaimedResidence getByName(String name);
 
-    public String getNameByLoc(Location loc);
-
-    public String getNameByRes(ClaimedResidence res);
-
     public String getSubzoneNameByRes(ClaimedResidence res);
 
     public void addShop(ClaimedResidence res);

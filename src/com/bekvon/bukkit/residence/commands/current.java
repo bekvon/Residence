@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class current implements cmd {
 
@@ -25,11 +26,11 @@ public class current implements cmd {
 	if (args.length != 1)
 	    return false;
 
-	String res = plugin.getResidenceManager().getNameByLoc(player.getLocation());
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	if (res == null) {
 	    plugin.msg(player, lm.Residence_NotIn);
 	} else {
-	    plugin.msg(player, lm.Residence_In, res);
+	    plugin.msg(player, lm.Residence_In, res.getName());
 	}
 	return true;
     }

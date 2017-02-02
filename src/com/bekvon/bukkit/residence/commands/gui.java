@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class gui implements cmd {
 
@@ -25,7 +26,9 @@ public class gui implements cmd {
 	    return true;
 
 	if (args.length == 1) {
-	    plugin.getSpout().showResidenceFlagGUI(SpoutManager.getPlayer(player), plugin.getResidenceManager().getNameByLoc(player.getLocation()), resadmin);
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+	    if (res != null)
+	    plugin.getSpout().showResidenceFlagGUI(SpoutManager.getPlayer(player), res.getName(), resadmin);
 	} else if (args.length == 2) {
 	    plugin.getSpout().showResidenceFlagGUI(SpoutManager.getPlayer(player), args[1], resadmin);
 	}
