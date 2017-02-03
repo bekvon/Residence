@@ -48,7 +48,7 @@ import org.bukkit.entity.Player;
 
 public class ClaimedResidence {
 
-    private String resName;
+    private String resName = null;
     protected ClaimedResidence parent;
     protected Map<String, CuboidArea> areas;
     protected Map<String, ClaimedResidence> subzones;
@@ -682,27 +682,6 @@ public class ClaimedResidence {
 	    plugin.msg(player, lm.Subzone_CreateFail, name);
 	}
 	return false;
-    }
-
-    public String getSubzoneNameByLoc(Location loc) {
-	Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
-	ClaimedResidence res = null;
-	String key = null;
-	for (Entry<String, ClaimedResidence> entry : set) {
-	    if (entry.getValue().containsLoc(loc)) {
-		key = entry.getKey();
-		res = entry.getValue();
-		break;
-	    }
-	}
-	if (key == null || res == null)
-	    return null;
-
-	String subname = res.getSubzoneNameByLoc(loc);
-	if (subname != null) {
-	    return key + "." + subname;
-	}
-	return key;
     }
 
     public ClaimedResidence getSubzoneByLoc(Location loc) {
@@ -1591,6 +1570,8 @@ public class ClaimedResidence {
 	String name = this.resName;
 	if (this.getParent() != null)
 	    name = this.getParent().getName() + "." + name;
+	if (name == null)
+	    return "Unknown";
 	return name;
     }
 

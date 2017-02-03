@@ -361,7 +361,7 @@ public class ShopSignUtil {
 
 		Sign sign = (Sign) block.getState();
 
-		if (Shop == null || Shop.equalsIgnoreCase("")) {
+		if (res == null || Shop == null || Shop.equalsIgnoreCase("")) {
 		    sign.setLine(0, "");
 		    sign.setLine(1, "");
 		    sign.setLine(2, "");

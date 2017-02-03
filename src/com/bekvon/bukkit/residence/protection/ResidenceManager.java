@@ -35,7 +35,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
@@ -62,7 +61,6 @@ public class ResidenceManager implements ResidenceInterface {
 
     @Override
     public ClaimedResidence getByLoc(Location loc) {
-	Long time = System.nanoTime();
 	if (loc == null)
 	    return null;
 	World world = loc.getWorld();
@@ -91,8 +89,6 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (res == null)
 	    return null;
-
-	Debug.D("Got res in " + (System.nanoTime() - time));
 
 	ClaimedResidence subres = res.getSubzoneByLoc(loc);
 	if (subres == null)
@@ -857,7 +853,7 @@ public class ResidenceManager implements ResidenceInterface {
 		String resName = res.getKey().toLowerCase();
 
 		// Checking for duplicated residence names and renaming them
-		int increment = getNameIncrement(resName, resm);
+		int increment = getNameIncrement(resName);
 
 		if (residence.getResidenceName() == null)
 		    residence.setName(res.getKey());
@@ -891,11 +887,11 @@ public class ResidenceManager implements ResidenceInterface {
 	return retRes;
     }
 
-    private static int getNameIncrement(String name, ResidenceManager resm) {
+    private int getNameIncrement(String name) {
 	String orName = name;
 	int i = 0;
 	while (i < 1000) {
-	    if (resm.residences.containsKey(name)) {
+	    if (residences.containsKey(name)) {
 		i++;
 		name = orName + i;
 	    } else
