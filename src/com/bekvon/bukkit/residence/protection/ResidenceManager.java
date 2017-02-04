@@ -793,10 +793,9 @@ public class ResidenceManager implements ResidenceInterface {
 	return worldmap;
     }
 
-    public ResidenceManager load(Map<String, Object> root) throws Exception {
-	ResidenceManager resm = new ResidenceManager(plugin);
+    public void load(Map<String, Object> root) throws Exception {
 	if (root == null)
-	    return resm;
+	    return;
 
 	for (World world : plugin.getServ().getWorlds()) {
 	    long time = System.currentTimeMillis();
@@ -805,7 +804,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + world.getName() + " data into memory...");
 	    if (reslist != null) {
 		try {
-		    resm.chunkResidences.put(world.getName(), loadMap(world.getName(), reslist, resm));
+		    chunkResidences.put(world.getName(), loadMap(world.getName(), reslist));
 		} catch (Exception ex) {
 		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + "Error in loading save file for world: " + world.getName());
 		    if (plugin.getConfigManager().stopOnSaveError())
@@ -818,10 +817,9 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
 	}
-	return resm;
     }
 
-    public Map<ChunkRef, List<ClaimedResidence>> loadMap(String worldName, Map<String, Object> root, ResidenceManager resm) throws Exception {
+    public Map<ChunkRef, List<ClaimedResidence>> loadMap(String worldName, Map<String, Object> root) throws Exception {
 	Map<ChunkRef, List<ClaimedResidence>> retRes = new HashMap<>();
 	if (root == null)
 	    return retRes;
@@ -838,7 +836,6 @@ public class ResidenceManager implements ResidenceInterface {
 	    try {
 		@SuppressWarnings("unchecked")
 		ClaimedResidence residence = ClaimedResidence.load(worldName, (Map<String, Object>) res.getValue(), null, plugin);
-
 		if (residence == null)
 		    continue;
 
@@ -872,7 +869,7 @@ public class ResidenceManager implements ResidenceInterface {
 		    retRes.put(chunk, ress);
 		}
 
-		resm.residences.put(resName, residence);
+		residences.put(resName.toLowerCase(), residence);
 
 	    } catch (Exception ex) {
 		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + " Failed to load residence (" + res.getKey() + ")! Reason:" + ex.getMessage()
@@ -891,7 +888,7 @@ public class ResidenceManager implements ResidenceInterface {
 	String orName = name;
 	int i = 0;
 	while (i < 1000) {
-	    if (residences.containsKey(name)) {
+	    if (residences.containsKey(name.toLowerCase())) {
 		i++;
 		name = orName + i;
 	    } else

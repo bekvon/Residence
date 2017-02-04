@@ -1242,8 +1242,8 @@ public class Residence extends JavaPlugin {
 		}
 	    }
 
-	    rmanager = getResidenceManager().load(worlds);
-
+	    getResidenceManager().load(worlds);
+//ss 
 	    // Getting shop residences
 	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
 	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {
