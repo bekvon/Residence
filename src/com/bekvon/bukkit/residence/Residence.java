@@ -1243,7 +1243,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    getResidenceManager().load(worlds);
-//ss 
+	    
 	    // Getting shop residences
 	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
 	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {
