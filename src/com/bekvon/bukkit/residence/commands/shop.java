@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.Map.Entry;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -25,6 +24,7 @@ import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
+import com.bekvon.bukkit.residence.utils.RawMessage;
 
 public class shop implements cmd {
 
@@ -136,16 +136,12 @@ public class shop implements cmd {
 	    int Prevpage = page - 1;
 	    Prevpage = page > 1 ? Prevpage : page;
 
-	    String prevCmd = "/res shop votes " + res.getName() + " " + Prevpage;
-	    String prev = "[\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
-		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
-		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	    String nextCmd = "/res shop votes " + res.getName() + " " + NextPage;
-	    String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
-		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
-		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
+	    RawMessage rm = new RawMessage();
 
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
+	    rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res shop votes " + res.getName() + " " + Prevpage : null);
+	    rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, page > 1 ? ">>>" : null, pagecount > page ? "/res shop votes " + res.getName() + " " + NextPage : null);
+	    if (pagecount != 0)
+		rm.show(sender);
 
 	    return true;
 	}
@@ -204,11 +200,9 @@ public class shop implements cmd {
 		String desc = res.getShopDesc() == null ? plugin.msg(lm.Shop_NoDesc) : plugin.msg(
 		    lm.Shop_Desc, ChatColor.translateAlternateColorCodes('&', res.getShopDesc().replace("/n", "\n")));
 
-		String prev = "[\"\",{\"text\":\"" + " " + message
-		    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/res tp " + one.getKey()
-		    + " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
-
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev);
+		RawMessage rm = new RawMessage();
+		rm.add(" " + message, desc, "/res tp " + one.getKey());
+		rm.show(sender);
 
 		i++;
 	    }
@@ -221,16 +215,11 @@ public class shop implements cmd {
 	    int Prevpage = page - 1;
 	    Prevpage = page > 1 ? Prevpage : page;
 
-	    String prevCmd = "/res shop list " + Prevpage;
-	    String prev = "[\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
-		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
-		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	    String nextCmd = "/res shop list " + NextPage;
-	    String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
-		+ "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + nextCmd
-		+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
-
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
+	    RawMessage rm = new RawMessage();
+	    rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res shop list " + Prevpage : null);
+	    rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, page > 1 ? ">>>" : null, pagecount > page ? "/res shop list " + NextPage : null);
+	    if (pagecount != 0)
+		rm.show(sender);
 
 	    return true;
 	}

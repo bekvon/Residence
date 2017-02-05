@@ -97,6 +97,7 @@ import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
+import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.bekvon.bukkit.residence.utils.Sorting;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.utils.VersionChecker;
@@ -1755,8 +1756,10 @@ public class Residence extends JavaPlugin {
 		String outMsg = getLM().getMessage(lm.General_NoPermission);
 		if (message != null)
 		    outMsg = message;
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " {\"text\":\"\",\"extra\":[{\"text\":\"" + outMsg
-		    + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§2" + permision + "\"}}]}");
+		
+		RawMessage rm = new RawMessage();
+		rm.add(outMsg, "§2" + permision);
+		    rm.show(sender);
 		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 		console.sendMessage(ChatColor.RED + sender.getName() + " No permission -> " + permision);
 	    }

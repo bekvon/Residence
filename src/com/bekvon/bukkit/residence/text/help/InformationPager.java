@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.GetTime;
+import com.bekvon.bukkit.residence.utils.RawMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,11 +29,11 @@ public class InformationPager {
 	this.plugin = plugin;
     }
 
-    public void printInfo(CommandSender sender, String title, String[] lines, int page) {
-	printInfo(sender, title, Arrays.asList(lines), page);
+    public void printInfo(CommandSender sender, String command, String title, String[] lines, int page) {
+	printInfo(sender, command, title, Arrays.asList(lines), page);
     }
 
-    public void printInfo(CommandSender sender, String title, List<String> lines, int page) {
+    public void printInfo(CommandSender sender, String command, String title, List<String> lines, int page) {
 	int perPage = 6;
 	int start = (page - 1) * perPage;
 	int end = start + perPage;
@@ -50,10 +51,24 @@ public class InformationPager {
 	    if (lines.size() > i)
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));
 	}
-	if (pagecount > page)
-	    plugin.msg(sender, lm.InformationPage_NextPage, plugin.msg(lm.General_NextPage));
+
+	RawMessage rm = new RawMessage();
+	if (page > 1)
+	    rm.add(plugin.msg(lm.General_PrevInfoPage), plugin.msg(lm.General_PrevInfoPage), command + " " + (page - 1));
 	else
-	    plugin.msg(sender, lm.InformationPage_NoNextPage);
+	    rm.add(plugin.msg(lm.General_PrevInfoPage));
+	if (pagecount > page)
+	    rm.add(plugin.msg(lm.General_NextInfoPage), plugin.msg(lm.General_NextInfoPage), command + " " + (page + 1));
+	else
+	    rm.add(plugin.msg(lm.General_NextInfoPage));
+
+	if (pagecount != 1)
+	    rm.show(sender);
+
+//	if (pagecount > page)
+//	    plugin.msg(sender, lm.InformationPage_NextPage, plugin.msg(lm.General_NextPage));
+//	else
+//	    plugin.msg(sender, lm.InformationPage_NoNextPage);
     }
 
     public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin) {
@@ -166,9 +181,9 @@ public class InformationPager {
 	}
 
 	if (targetPlayer != null)
-	    ShowPagination(sender.getName(), pagecount, page, cmd + " list " + targetPlayer);
+	    ShowPagination(sender, pagecount, page, cmd + " list " + targetPlayer);
 	else
-	    ShowPagination(sender.getName(), pagecount, page, cmd + " listall");
+	    ShowPagination(sender, pagecount, page, cmd + " listall");
     }
 
     private void printListWithDelay(final CommandSender sender, final TreeMap<String, ClaimedResidence> ownedResidences, final int start, final boolean resadmin) {
@@ -250,9 +265,9 @@ public class InformationPager {
 
     }
 
-    public void ShowPagination(String target, int pageCount, int CurrentPage, String cmd) {
-	if (target.equalsIgnoreCase("console"))
-	    return;
+    public void ShowPagination(CommandSender sender, int pageCount, int CurrentPage, String cmd) {
+	if (!cmd.startsWith("/"))
+	    cmd = "/" + cmd;
 	String separator = ChatColor.GOLD + "";
 	String simbol = "\u25AC";
 	for (int i = 0; i < 10; i++) {
@@ -267,21 +282,10 @@ public class InformationPager {
 	int Prevpage = CurrentPage - 1;
 	Prevpage = CurrentPage > 1 ? Prevpage : CurrentPage;
 
-	String prevCmd = "/" + cmd + " " + Prevpage;
-	String prev = "\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
-	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	String nextCmd = "/" + cmd + " " + NextPage;
-	String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
-	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}";
-
-	if (CurrentPage >= pageCount)
-	    next = "{\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator + "\"}";
-
-	if (CurrentPage <= 1)
-	    prev = "{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage) + "\"}";
-
-	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + target + " [" + prev + "," + next + "]");
+	RawMessage rm = new RawMessage();
+	rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), CurrentPage > 1 ? "<<<" : null, CurrentPage > 1 ? cmd + " " + Prevpage : null);
+	rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, pageCount > CurrentPage ? ">>>" : null, pageCount > CurrentPage ? cmd + " " + NextPage : null);
+	if (pageCount != 0)
+	    rm.show(sender);
     }
 }

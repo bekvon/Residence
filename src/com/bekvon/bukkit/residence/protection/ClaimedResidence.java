@@ -1055,7 +1055,7 @@ public class ClaimedResidence {
 	for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
 	    temp.add(ChatColor.GREEN + sz.getKey() + ChatColor.YELLOW + " - " + plugin.msg(lm.General_Owner, sz.getValue().getOwner()));
 	}
-	plugin.getInfoPageManager().printInfo(player, plugin.msg(lm.General_Subzones), temp, page);
+	plugin.getInfoPageManager().printInfo(player, "res sublist " + this.getName(), plugin.msg(lm.General_Subzones), temp, page);
     }
 
     public void printAreaList(Player player, int page) {
@@ -1063,7 +1063,7 @@ public class ClaimedResidence {
 	for (String area : areas.keySet()) {
 	    temp.add(area);
 	}
-	plugin.getInfoPageManager().printInfo(player, plugin.msg(lm.General_PhysicalAreas), temp, page);
+	plugin.getInfoPageManager().printInfo(player, "res area list " + this.getName(), plugin.msg(lm.General_PhysicalAreas), temp, page);
     }
 
     public void printAdvancedAreaList(Player player, int page) {
@@ -1076,7 +1076,7 @@ public class ClaimedResidence {
 		.getBlockX() + "," + h.getBlockY() + "," + h.getBlockZ() + ") " + ChatColor.YELLOW + "P2:" + ChatColor.RED + "(" + l.getBlockX() + "," + l.getBlockY()
 		+ "," + l.getBlockZ() + ") " + ChatColor.YELLOW + "(Size:" + ChatColor.RED + a.getSize() + ChatColor.YELLOW + ")" + ChatColor.GREEN + "} ");
 	}
-	plugin.getInfoPageManager().printInfo(player, plugin.msg(lm.General_PhysicalAreas), temp, page);
+	plugin.getInfoPageManager().printInfo(player, "res area listall " + this.getName(), plugin.msg(lm.General_PhysicalAreas), temp, page);
     }
 
     public String[] getAreaList() {

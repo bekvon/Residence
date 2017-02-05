@@ -1,6 +1,5 @@
 package com.bekvon.bukkit.residence.economy.rent;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 
@@ -15,6 +14,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.utils.GetTime;
+import com.bekvon.bukkit.residence.utils.RawMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -843,11 +843,13 @@ public class RentManager implements MarketRentInterface {
 	    String msg = plugin.msg(lm.Rent_RentList, z, res.getName(), res.getRentable().cost, res.getRentable().days, res.getRentable().AllowRenewing,
 		res.getOwner(), rentedBy);
 
+	    RawMessage rm = new RawMessage();
+	    rm.add(msg, "§2" + hover);
+
 	    if (!hover.equalsIgnoreCase(""))
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " {\"text\":\"\",\"extra\":[{\"text\":\"" + msg
-		    + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§2" + hover + "\"}}]}");
+		rm.show(player);
 	    else
-		player.sendMessage(msg);
+		rm.showClean(player);
 
 	}
 
@@ -865,16 +867,12 @@ public class RentManager implements MarketRentInterface {
 	int Prevpage = page - 1;
 	Prevpage = page > 1 ? Prevpage : page;
 
-	String prevCmd = "/res market list rent " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
-	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	String nextCmd = "/res market list rent " + NextPage;
-	String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
-	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
+	RawMessage rm = new RawMessage();
+	rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res market list rent " + Prevpage : null);
+	rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, pagecount > page ? ">>>" : null, pagecount > page ? "/res market list rent " + NextPage : null);
+	if (pagecount != 0)
+	    rm.show(player);
 
-	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + prev + "," + next);
     }
 
     @Override

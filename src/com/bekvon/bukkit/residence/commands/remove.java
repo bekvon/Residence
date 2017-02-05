@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +14,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.RawMessage;
 
 public class remove implements cmd {
 
@@ -69,16 +69,14 @@ public class remove implements cmd {
 	    if (resadmin)
 		cmd = "resadmin";
 	    if (sender instanceof Player) {
-		String raw = "";
+		RawMessage rm = new RawMessage();
 		if (res.isSubzone()) {
-		    raw = plugin.getResidenceManager().convertToRaw(null, plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName()),
-			"Click to confirm", cmd + " confirm");
+		    rm.add(plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName()), "Click to confirm", cmd + " confirm");
 		} else {
-		    raw = plugin.getResidenceManager().convertToRaw(null, plugin.msg(lm.Residence_DeleteConfirm, res.getResidenceName()),
-			"Click to confirm", cmd + " confirm");
+		    rm.add(plugin.msg(lm.Residence_DeleteConfirm, res.getResidenceName()), "Click to confirm", cmd + " confirm");
 		}
 		if (plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName()).length() > 0)
-		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + raw);
+		    rm.show(sender);
 	    } else {
 		if (res.isSubzone())
 		    plugin.msg(sender, lm.Subzone_DeleteConfirm, res.getResidenceName());

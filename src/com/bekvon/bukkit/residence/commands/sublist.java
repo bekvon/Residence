@@ -21,16 +21,17 @@ public class sublist implements cmd {
 	if (!(sender instanceof Player))
 	    return false;
 
+	if (args.length != 1 && args.length != 2 && args.length != 3)
+	    return false;
+
 	Player player = (Player) sender;
-	int page = 1;
+	int page = 0;
 	try {
 	    if (args.length > 0) {
 		page = Integer.parseInt(args[args.length - 1]);
 	    }
 	} catch (Exception ex) {
 	}
-	if (args.length != 1 && args.length != 2 && args.length != 3)
-	    return false;
 
 	ClaimedResidence res;
 	if (args.length == 1) {
@@ -38,6 +39,10 @@ public class sublist implements cmd {
 	} else {
 	    res = plugin.getResidenceManager().getByName(args[1]);
 	}
+
+	if (page < 1)
+	    page = 1;
+
 	if (res != null) {
 	    res.printSubzoneList(player, page);
 	} else {

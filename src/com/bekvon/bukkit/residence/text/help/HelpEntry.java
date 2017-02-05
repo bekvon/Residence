@@ -12,6 +12,8 @@ import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.RawMessage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -98,14 +100,9 @@ public class HelpEntry {
 		    if (resadmin)
 			path = path.replace("/res ", "/resadmin ");
 
-		    String msg = "[\"\",{\"text\":\"" + helplines.get(i).getDesc()
-			+ "\",\"color\":\"gold\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + path + helplines.get(i).getCommand()
-			+ " \"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + desc + "\"}]}}}]";
-
-		    if (sender instanceof Player)
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + msg);
-		    else
-			sender.sendMessage(helplines.get(i).getDesc());
+		    RawMessage rm = new RawMessage();
+		    rm.add(helplines.get(i).getDesc(), desc, null, path + helplines.get(i).getCommand());
+		    rm.show(sender);
 
 		} else
 		    sender.sendMessage(helplines.get(i).getDesc());
@@ -115,23 +112,9 @@ public class HelpEntry {
 	if (pagecount == 1)
 	    return;
 
-	int NextPage = page + 1;
-	NextPage = page < pagecount ? NextPage : page;
-	int Prevpage = page - 1;
-	Prevpage = page > 1 ? Prevpage : page;
-
 	String baseCmd = resadmin ? "resadmin" : "res";
-	String prevCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + Prevpage : "/" + baseCmd + " ? " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + separator + " " + Residence.getInstance().msg(lm.General_PrevInfoPage)
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
-	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	String nextCmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " + NextPage : "/" + baseCmd + " ? " + NextPage;
-	String next = " {\"text\":\"" + Residence.getInstance().msg(lm.General_NextInfoPage) + " " + separator
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
-	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
-
-	if (sender instanceof Player)
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + prev + "," + next);
+	String cmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " : "/" + baseCmd + " ? ";
+	Residence.getInstance().getInfoPageManager().ShowPagination(sender, pagecount, page, cmd);
     }
 
     public void printHelp(CommandSender sender, int page, String path, boolean resadmin) {

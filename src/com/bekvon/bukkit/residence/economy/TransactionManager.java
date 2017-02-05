@@ -1,9 +1,9 @@
 package com.bekvon.bukkit.residence.economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -108,7 +108,7 @@ public class TransactionManager implements MarketBuyInterface {
 	    }
 
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
-	    
+
 	    if (!resadmin && !(rPlayer.getGroup().canSellLand() || player.hasPermission("residence.sell"))) {
 		plugin.msg(player, lm.General_NoPermission);
 		return;
@@ -369,16 +369,11 @@ public class TransactionManager implements MarketBuyInterface {
 	int Prevpage = page - 1;
 	Prevpage = page > 1 ? Prevpage : page;
 
-	String prevCmd = "/res market list sell " + Prevpage;
-	String prev = "[\"\",{\"text\":\"" + separator + " " + plugin.msg(lm.General_PrevInfoPage)
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + prevCmd
-	    + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + "<<<" + "\"}]}}}";
-	String nextCmd = "/res market list sell " + NextPage;
-	String next = " {\"text\":\"" + plugin.msg(lm.General_NextInfoPage) + " " + separator
-	    + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
-	    + nextCmd + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ">>>" + "\"}]}}}]";
-
-	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + prev + "," + next);
+	RawMessage rm = new RawMessage();
+	rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res market list sell " + Prevpage : null);
+	rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, pagecount > page ? ">>>" : null, pagecount > page ? "/res market list sell " + NextPage : null);
+	if (pagecount != 0)
+	    rm.show(player);
     }
 
     public void clearSales() {

@@ -36,6 +36,7 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.GetTime;
+import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.model.Protection;
@@ -649,11 +650,14 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
 	if (sender instanceof Player) {
-	    String raw = convertToRaw(null, resNameOwner, worldInfo);
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + raw);
+	    RawMessage rm = new RawMessage();
+	    rm.add(resNameOwner, worldInfo);
+	    rm.show(sender);
 
-	    raw = convertToRaw(null, ResFlagMsg, ResFlagList);
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + raw);
+	    rm.clear();
+
+	    rm.add(ResFlagMsg, ResFlagList);
+	    rm.show(sender);	    
 	} else {
 	    plugin.msg(sender, resNameOwner);
 	    plugin.msg(sender, worldInfo);
