@@ -34,10 +34,9 @@ public class InformationPager {
     }
 
     public void printInfo(CommandSender sender, String command, String title, List<String> lines, int page) {
-	
 
 	PageInfo pi = new PageInfo(6, lines.size(), page);
-	
+
 	if (!pi.isPageOk()) {
 	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
@@ -78,13 +77,13 @@ public class InformationPager {
 	    cmd = "resadmin";
 
 	if (!(sender instanceof Player)) {
-	    printListWithDelay(sender, ownedResidences, start, resadmin);
+	    printListWithDelay(sender, ownedResidences, start - 1, resadmin);
 	    return;
 	}
 
 	List<String> linesForConsole = new ArrayList<String>();
 	int y = -1;
-	
+
 	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
 	    y++;
 	    if (y > pi.getEnd())
