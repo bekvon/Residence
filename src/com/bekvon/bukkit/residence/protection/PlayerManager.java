@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class PlayerManager implements ResidencePlayerInterface {
     private ConcurrentHashMap<String, ResidencePlayer> players = new ConcurrentHashMap<String, ResidencePlayer>();
@@ -26,34 +27,25 @@ public class PlayerManager implements ResidencePlayerInterface {
 	this.plugin = plugin;
     }
 
-    public void playerJoin(Player player) {
+    public ResidencePlayer playerJoin(Player player) {
 	ResidencePlayer resPlayer = players.get(player.getName().toLowerCase());
 	if (resPlayer == null) {
 	    resPlayer = new ResidencePlayer(player);
-	    resPlayer.recountRes();
 	    players.put(player.getName().toLowerCase(), resPlayer);
 	} else {
 	    resPlayer.updatePlayer(player);
 	    resPlayer.RecalculatePermissions();
 	}
-	return;
+	return resPlayer;
     }
 
     public ResidencePlayer playerJoin(String player) {
 	if (!players.containsKey(player.toLowerCase())) {
 	    ResidencePlayer resPlayer = new ResidencePlayer(player);
-	    resPlayer.recountRes();
 	    players.put(player.toLowerCase(), resPlayer);
 	    return resPlayer;
 	}
 	return null;
-    }
-
-    public void fillList() {
-	players.clear();
-	for (Player player : Bukkit.getOnlinePlayers()) {
-	    playerJoin(player);
-	}
     }
 
     @Override
@@ -126,9 +118,11 @@ public class PlayerManager implements ResidencePlayerInterface {
     public TreeMap<String, ClaimedResidence> getResidencesMap(String player, boolean showhidden, boolean onlyHidden, World world) {
 	TreeMap<String, ClaimedResidence> temp = new TreeMap<String, ClaimedResidence>();
 	playerJoin(player);
+
 	ResidencePlayer resPlayer = players.get(player.toLowerCase());
 	if (resPlayer == null)
 	    return temp;
+
 	for (Entry<String, ClaimedResidence> one : resPlayer.getResidenceMap().entrySet()) {
 	    boolean hidden = one.getValue().getPermissions().has(Flags.hidden, false);
 	    if (!showhidden && hidden)
@@ -188,11 +182,24 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public ResidencePlayer getResidencePlayer(Player player) {
-	return getResidencePlayer(player.getName());
+	ResidencePlayer resPlayer = null;
+	if (player == null)
+	    return null;
+	if (players.containsKey(player.getName().toLowerCase())) {
+	    resPlayer = players.get(player.getName().toLowerCase());
+	    resPlayer.updatePlayer(player);
+	} else {
+	    resPlayer = playerJoin(player);
+	}
+
+	return resPlayer;
     }
 
     @Override
     public ResidencePlayer getResidencePlayer(String player) {
+	Player p = Bukkit.getPlayer(player);
+	if (p != null)
+	    return getResidencePlayer(p);
 	ResidencePlayer resPlayer = null;
 	if (players.containsKey(player.toLowerCase())) {
 	    resPlayer = players.get(player.toLowerCase());

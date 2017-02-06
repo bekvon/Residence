@@ -778,8 +778,6 @@ public class Residence extends JavaPlugin {
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Enabled! Version " + this.getDescription().getVersion() + " by Zrips");
 	    initsuccess = true;
 
-	    PlayerManager.fillList();
-
 	} catch (Exception ex) {
 	    initsuccess = false;
 	    getServer().getPluginManager().disablePlugin(this);
@@ -1282,11 +1280,11 @@ public class Residence extends JavaPlugin {
 		rentmanager.load((Map) yml.getRoot().get("RentSystem"));
 	    }
 
-	    for (Player one : Bukkit.getOnlinePlayers()) {
-		ResidencePlayer rplayer = getPlayerManager().getResidencePlayer(one);
-		if (rplayer != null)
-		    rplayer.recountRes();
-	    }
+//	    for (Player one : Bukkit.getOnlinePlayers()) {
+//		ResidencePlayer rplayer = getPlayerManager().getResidencePlayer(one);
+//		if (rplayer != null)
+//		    rplayer.recountRes();
+//	    }
 
 	    // System.out.print("[Residence] Loaded...");
 	    return true;

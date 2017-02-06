@@ -51,24 +51,8 @@ public class InformationPager {
 	    if (lines.size() > i)
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));
 	}
-
-	RawMessage rm = new RawMessage();
-	if (page > 1)
-	    rm.add(plugin.msg(lm.General_PrevInfoPage), plugin.msg(lm.General_PrevInfoPage), command + " " + (page - 1));
-	else
-	    rm.add(plugin.msg(lm.General_PrevInfoPage));
-	if (pagecount > page)
-	    rm.add(plugin.msg(lm.General_NextInfoPage), plugin.msg(lm.General_NextInfoPage), command + " " + (page + 1));
-	else
-	    rm.add(plugin.msg(lm.General_NextInfoPage));
-
-	if (pagecount != 1)
-	    rm.show(sender);
-
-//	if (pagecount > page)
-//	    plugin.msg(sender, lm.InformationPage_NextPage, plugin.msg(lm.General_NextPage));
-//	else
-//	    plugin.msg(sender, lm.InformationPage_NoNextPage);
+	
+	plugin.getInfoPageManager().ShowPagination(sender, pagecount, page, command);	
     }
 
     public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin) {

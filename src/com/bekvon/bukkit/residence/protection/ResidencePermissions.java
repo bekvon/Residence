@@ -9,6 +9,8 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

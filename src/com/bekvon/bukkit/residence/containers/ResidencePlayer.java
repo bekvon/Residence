@@ -15,6 +15,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -188,13 +189,6 @@ public class ResidencePlayer {
 	String gp = Residence.getInstance().getPermissionManager().getGroupNameByPlayer(this.userName, world);
 	this.group = Residence.getInstance().getPermissionManager().getGroupByName(gp);
 	return this.group;
-    }
-
-    public void recountRes() {
-	if (this.userName != null) {
-	    ResidenceManager m = Residence.getInstance().getResidenceManager();
-	    this.ResidenceList = m.getResidenceMapList(this.userName, true);
-	}
     }
 
     public ResidencePlayer updatePlayer(Player player) {

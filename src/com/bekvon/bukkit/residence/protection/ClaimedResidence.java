@@ -24,6 +24,10 @@ import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
+import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Debug;
+import com.bekvon.bukkit.residence.utils.RawMessage;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -1050,12 +1054,30 @@ public class ClaimedResidence {
 	return i;
     }
 
-    public void printSubzoneList(Player player, int page) {
-	ArrayList<String> temp = new ArrayList<>();
-	for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
-	    temp.add(ChatColor.GREEN + sz.getKey() + ChatColor.YELLOW + " - " + plugin.msg(lm.General_Owner, sz.getValue().getOwner()));
+    public void printSubzoneList(CommandSender sender, int page) {
+
+	PageInfo pi = new PageInfo(6, subzones.size(), page);
+
+	if (!pi.isPageOk()) {
+	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
+	    return;
 	}
-	plugin.getInfoPageManager().printInfo(player, "res sublist " + this.getName(), plugin.msg(lm.General_Subzones), temp, page);
+
+	plugin.msg(sender, lm.InformationPage_TopLine, plugin.msg(lm.General_Subzones));
+	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page), pi.getTotalPages(), pi.getTotalEntries()));
+	RawMessage rm = new RawMessage();
+	for (int i = pi.getStart(); i < pi.getEnd(); i++) {
+	    if (subzones.size() <= i)
+		break;
+	    ClaimedResidence res = getSubzones().get(i);
+	    if (res == null)
+		continue;
+	    rm.add(ChatColor.GREEN + res.getResidenceName() + ChatColor.YELLOW + " - " + plugin.msg(lm.General_Owner, res.getOwner()), "Teleport to " + res.getName(), "res tp " + res.getName());
+	    rm.show(sender);
+	    rm.clear();
+	}
+
+	plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, "res sublist " + this.getName());
     }
 
     public void printAreaList(Player player, int page) {
@@ -1441,6 +1463,10 @@ public class ClaimedResidence {
 
 		if (plugin.getConfigManager().flagsInherit())
 		    subres.getPermissions().setParent(res.getPermissions());
+
+		// Adding subzone owner into hies res list if parent zone owner is not same person
+		if (subres.getParent() != null && !subres.getOwnerUUID().equals(subres.getParent().getOwnerUUID()))
+		    plugin.getPlayerManager().addResidence(subres.getOwner(), subres);
 
 		res.subzones.put(map.getKey().toLowerCase(), subres);
 	    }
