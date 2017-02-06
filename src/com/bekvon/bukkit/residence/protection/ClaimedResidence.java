@@ -482,7 +482,7 @@ public class ClaimedResidence {
 		}
 	    }
 	}
-	// Remove subzones that are not in the area anymore
+	// Don't remove subzones that are not in the area anymore, show colliding areas
 	String[] szs = listSubzones();
 	for (String sz : szs) {
 	    ClaimedResidence res = getSubzone(sz);
@@ -506,7 +506,6 @@ public class ClaimedResidence {
 		    v.setErrorAreas(res.getAreaArray());
 		    plugin.getSelectionManager().showBounds(player, v);
 		    return false;
-//		    res.removeArea(area);
 		}
 
 	    }

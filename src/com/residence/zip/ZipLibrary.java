@@ -91,7 +91,6 @@ public class ZipLibrary {
     }
 
     private static void packZip(File output, List<File> sources) throws IOException {
-	Debug.D("zipping");
 	ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(output));
 	zipOut.setLevel(Deflater.DEFAULT_COMPRESSION);
 

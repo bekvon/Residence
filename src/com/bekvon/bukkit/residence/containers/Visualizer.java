@@ -35,11 +35,9 @@ public class Visualizer {
 
     public void cancelAll() {
 	if (id != -1) {
-	    Debug.D("canceling id " + id);
 	    Bukkit.getScheduler().cancelTask(id);
 	}
 	if (errorId != -1) {
-	    Debug.D("canceling errorId");
 	    Bukkit.getScheduler().cancelTask(errorId);
 	}
     }
@@ -121,7 +119,6 @@ public class Visualizer {
     }
 
     public void setId(int id) {
-	Debug.D("set id " + id);
 	this.id = id;
     }
 
