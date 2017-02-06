@@ -118,7 +118,7 @@ public class select implements cmd {
 		    plugin.msg(player, lm.Invalid_Amount);
 		    return true;
 		}
-		plugin.getSelectionManager().modify(player, false, -amount);
+		plugin.getSelectionManager().contract(player, amount);
 		return true;
 	    } else if (args[1].equals("shift")) {
 		int amount;

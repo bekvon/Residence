@@ -500,15 +500,21 @@ public class ClaimedResidence {
 		    }
 		}
 		if (!good) {
-		    res.removeArea(area);
+		    plugin.msg(player, lm.Area_Collision, res.getName());
+		    Visualizer v = new Visualizer(player);
+		    v.setAreas(this.getAreaArray());
+		    v.setErrorAreas(res.getAreaArray());
+		    plugin.getSelectionManager().showBounds(player, v);
+		    return false;
+//		    res.removeArea(area);
 		}
 
 	    }
 	    if (res.getAreaArray().length == 0) {
 		removeSubzone(sz);
 	    }
-
 	}
+
 	if (!resadmin && player != null) {
 	    if (!this.perms.hasResidencePermission(player, true)) {
 		plugin.msg(player, lm.General_NoPermission);

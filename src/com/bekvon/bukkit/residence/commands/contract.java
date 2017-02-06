@@ -37,10 +37,9 @@ public class contract implements cmd {
 
 	if (res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.contract.subzone", lm.Subzone_CantContract))
 	    return true;
-	
 
-	if (!res.isSubzone()  && !resadmin && !plugin.hasPermission(player, "residence.contract", lm.Residence_CantContractResidence))
-	    return true;	
+	if (!res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.contract", lm.Residence_CantContractResidence))
+	    return true;
 
 	String resName = res.getName();
 	CuboidArea area = null;

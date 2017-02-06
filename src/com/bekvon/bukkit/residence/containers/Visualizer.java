@@ -91,7 +91,7 @@ public class Visualizer {
     }
 
     public void setAreas(CuboidArea area) {
-	areas.clear();
+	areas = new ArrayList<CuboidArea>();
 	this.areas.add(area);
     }
 
