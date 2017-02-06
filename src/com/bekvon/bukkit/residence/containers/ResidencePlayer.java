@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -44,10 +42,17 @@ public class ResidencePlayer {
 	this.RecalculatePermissions();
     }
 
+    public boolean isOnline() {
+	this.updatePlayer();
+	if (this.player != null && this.player.isOnline())
+	    return true;
+	return false;
+    }
+
     public ResidencePlayer(String userName) {
 	this.userName = userName;
-	updatePlayer();
-	RecalculatePermissions();
+	if (this.isOnline())
+	    RecalculatePermissions();
     }
 
     public void setMainResidence(ClaimedResidence res) {

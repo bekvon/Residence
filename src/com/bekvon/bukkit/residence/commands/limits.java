@@ -36,7 +36,7 @@ public class limits implements cmd {
 	plugin.getPermissionManager().updateGroupNameForPlayer(target.getName(), target.isOnline() ? target.getPlayer().getLocation().getWorld().getName() : plugin
 	    .getConfigManager().getDefaultWorld(), true);
 
-	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(target.getName());
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(target.getName(), true);
 	rPlayer.getGroup().printLimits(sender, target, rsadm);
 	return true;
     }

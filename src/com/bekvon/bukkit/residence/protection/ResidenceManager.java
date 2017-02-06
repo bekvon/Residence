@@ -302,9 +302,11 @@ public class ResidenceManager implements ResidenceInterface {
 	} else if (sender.getName().equalsIgnoreCase(targetplayer))
 	    showhidden = true;
 	boolean hidden = showhidden;
+	long time = System.currentTimeMillis();
 	TreeMap<String, ClaimedResidence> ownedResidences = plugin.getPlayerManager().getResidencesMap(targetplayer, hidden, onlyHidden, world);
 	ownedResidences.putAll(plugin.getRentManager().getRentsMap(targetplayer, onlyHidden, world));
 	plugin.getInfoPageManager().printListInfo(sender, targetplayer, ownedResidences, page, resadmin);
+	Debug.D("List printed in: " + (System.currentTimeMillis() - time));
     }
 
     public void listAllResidences(CommandSender sender, int page) {
