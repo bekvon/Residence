@@ -7,7 +7,6 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,8 +61,9 @@ public class SelectionManager {
 	if (loc != null) {
 	    playerLoc1.put(player.getName(), loc);
 	    updateForY(player);
-	    if (show)
+	    if (show) {
 		this.afterSelectionUpdate(player);
+	    }
 	}
     }
 
@@ -75,8 +75,9 @@ public class SelectionManager {
 	if (loc != null) {
 	    playerLoc2.put(player.getName(), loc);
 	    updateForY(player);
-	    if (show)
+	    if (show) {
 		this.afterSelectionUpdate(player);
+	    }
 	}
     }
 
@@ -89,7 +90,12 @@ public class SelectionManager {
 
     public void afterSelectionUpdate(Player player) {
 	if (hasPlacedBoth(player.getName())) {
-	    Visualizer v = new Visualizer(player);
+	    Visualizer v = vMap.get(player.getName());
+	    if (v == null) {
+		v = new Visualizer(player);
+	    }
+	    v.setStart(System.currentTimeMillis());
+	    v.cancelAll();
 	    v.setAreas(this.getSelectionCuboid(player));
 	    this.showBounds(player, v);
 	}
@@ -174,10 +180,7 @@ public class SelectionManager {
 	    return;
 	Visualizer tv = vMap.get(player.getName());
 	if (tv != null) {
-	    if (tv.getId() != -1)
-		Bukkit.getScheduler().cancelTask(tv.getId());
-	    if (tv.getErrorId() != -1)
-		Bukkit.getScheduler().cancelTask(tv.getErrorId());
+	    tv.cancelAll();
 	}
 	vMap.put(player.getName(), v);
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {

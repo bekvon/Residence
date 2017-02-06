@@ -109,6 +109,17 @@ public class select implements cmd {
 		}
 		plugin.getSelectionManager().modify(player, false, amount);
 		return true;
+	    }
+	    if (args[1].equals("contract")) {
+		int amount;
+		try {
+		    amount = Integer.parseInt(args[2]);
+		} catch (Exception ex) {
+		    plugin.msg(player, lm.Invalid_Amount);
+		    return true;
+		}
+		plugin.getSelectionManager().modify(player, false, -amount);
+		return true;
 	    } else if (args[1].equals("shift")) {
 		int amount;
 		try {

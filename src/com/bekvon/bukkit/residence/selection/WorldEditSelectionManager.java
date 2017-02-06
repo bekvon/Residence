@@ -32,7 +32,6 @@ public class WorldEditSelectionManager extends SelectionManager {
 	    }
 	    this.playerLoc1.put(player.getName(), pos1);
 	    this.playerLoc2.put(player.getName(), pos2);
-	    afterSelectionUpdate(player);
 	    return true;
 	}
 	return false;
@@ -63,28 +62,24 @@ public class WorldEditSelectionManager extends SelectionManager {
     public void sky(Player player, boolean resadmin) {
 	super.sky(player, resadmin);
 	this.worldEditUpdate(player);
-	afterSelectionUpdate(player);
     }
 
     @Override
     public void bedrock(Player player, boolean resadmin) {
 	super.bedrock(player, resadmin);
 	this.worldEditUpdate(player);
-	afterSelectionUpdate(player);
     }
 
     @Override
     public void modify(Player player, boolean shift, double amount) {
 	super.modify(player, shift, amount);
 	this.worldEditUpdate(player);
-	afterSelectionUpdate(player);
     }
 
     @Override
     public void selectChunk(Player player) {
 	super.selectChunk(player);
 	this.worldEditUpdate(player);
-	afterSelectionUpdate(player);
     }
 
     @Override

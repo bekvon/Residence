@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class Visualizer {
     private Player player;
@@ -18,6 +20,7 @@ public class Visualizer {
     private int id = -1;
     private int errorId = -1;
     private boolean once = false;
+    private int starting = 0;
 
     private List<Location> locations = new ArrayList<Location>();
     private List<Location> errorLocations = new ArrayList<Location>();
@@ -30,6 +33,17 @@ public class Visualizer {
 	this.start = System.currentTimeMillis();
     }
 
+    public void cancelAll() {
+	if (id != -1) {
+	    Debug.D("canceling id " + id);
+	    Bukkit.getScheduler().cancelTask(id);
+	}
+	if (errorId != -1) {
+	    Debug.D("canceling errorId");
+	    Bukkit.getScheduler().cancelTask(errorId);
+	}
+    }
+
     public boolean isSameLoc() {
 	if (loc == null)
 	    return false;
@@ -37,7 +51,7 @@ public class Visualizer {
 	    return false;
 	if (!errorAreas.isEmpty() && errorLocations.isEmpty())
 	    return false;
-	if (loc.distance(player.getLocation()) > 5)
+	if (loc.distance(player.getLocation()) > 1)
 	    return false;
 
 	return true;
@@ -77,6 +91,7 @@ public class Visualizer {
     }
 
     public void setAreas(CuboidArea area) {
+	areas.clear();
 	this.areas.add(area);
     }
 
@@ -106,6 +121,7 @@ public class Visualizer {
     }
 
     public void setId(int id) {
+	Debug.D("set id " + id);
 	this.id = id;
     }
 
@@ -163,5 +179,13 @@ public class Visualizer {
 
     public void setLoc(Location loc) {
 	this.loc = loc;
+    }
+
+    public int getStarting() {
+	return starting;
+    }
+
+    public void setStarting(int starting) {
+	this.starting = starting;
     }
 }
