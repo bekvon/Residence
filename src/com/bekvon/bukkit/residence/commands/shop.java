@@ -24,6 +24,7 @@ import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
+import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
 public class shop implements cmd {
@@ -96,52 +97,35 @@ public class shop implements cmd {
 	    for (int i = 0; i < 5; i++) {
 		separator += simbol;
 	    }
-	    int pagecount = (int) Math.ceil((double) VoteList.size() / (double) 10);
-	    if (page > pagecount || page < 1) {
+
+	    PageInfo pi = new PageInfo(10, VoteList.size(), page);
+
+	    if (!pi.isPageOk()) {
 		plugin.msg(sender, lm.Shop_NoVotes);
 		return true;
 	    }
 
-	    plugin.msg(player, lm.Shop_VotesTopLine, separator, res.getName(), VotePage, pagecount, separator);
+	    plugin.msg(player, lm.Shop_VotesTopLine, separator, res.getName(), VotePage, pi.getTotalPages(), separator);
 
-	    int start = VotePage * 10 - 9;
-	    int end = VotePage * 10 + 1;
-	    int position = 0;
-	    int i = start;
+	    int position = -1;
 	    for (ShopVote one : VoteList) {
 		position++;
-
-		if (position < start)
-		    continue;
-
-		if (position >= end)
+		if (position > pi.getEnd())
 		    break;
+		if (!pi.isInRange(position))
+		    continue;
 
 		Date dNow = new Date(one.getTime());
 		SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
 		ft.setTimeZone(TimeZone.getTimeZone(plugin.getConfigManager().getTimeZone()));
 		String timeString = ft.format(dNow);
 
-		String message = plugin.msg(lm.Shop_VotesList, i, one.getName(), (plugin.getConfigManager().isOnlyLike()
+		String message = plugin.msg(lm.Shop_VotesList, pi.getStart() + position + 1, one.getName(), (plugin.getConfigManager().isOnlyLike()
 		    ? "" : one.getVote()), timeString);
 		player.sendMessage(message);
-		i++;
 	    }
 
-	    if (pagecount == 1)
-		return true;
-
-	    int NextPage = page + 1;
-	    NextPage = page < pagecount ? NextPage : page;
-	    int Prevpage = page - 1;
-	    Prevpage = page > 1 ? Prevpage : page;
-
-	    RawMessage rm = new RawMessage();
-
-	    rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res shop votes " + res.getName() + " " + Prevpage : null);
-	    rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, page > 1 ? ">>>" : null, pagecount > page ? "/res shop votes " + res.getName() + " " + NextPage : null);
-	    if (pagecount != 0)
-		rm.show(sender);
+	    plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, "/res shop votes " + res.getName());
 
 	    return true;
 	}
@@ -165,26 +149,23 @@ public class shop implements cmd {
 	    for (int i = 0; i < 5; i++) {
 		separator += simbol;
 	    }
-	    int pagecount = (int) Math.ceil((double) ShopList.size() / (double) 10);
-	    if (page > pagecount || page < 1) {
+
+	    PageInfo pi = new PageInfo(10, ShopList.size(), page);
+
+	    if (!pi.isPageOk()) {
 		plugin.msg(sender, lm.Shop_NoVotes);
 		return true;
 	    }
 
-	    plugin.msg(player, lm.Shop_ListTopLine, separator, Shoppage, pagecount, separator);
+	    plugin.msg(player, lm.Shop_ListTopLine, separator, Shoppage, pi.getTotalPages(), separator);
 
-	    int start = Shoppage * 10 - 9;
-	    int end = Shoppage * 10 + 1;
-	    int position = 0;
-	    int i = start;
+	    int position = -1;
 	    for (Entry<String, Double> one : ShopList.entrySet()) {
 		position++;
-
-		if (position < start)
-		    continue;
-
-		if (position >= end)
+		if (position > pi.getEnd())
 		    break;
+		if (!pi.isInRange(position))
+		    continue;
 
 		Vote vote = plugin.getShopSignUtilManager().getAverageVote(one.getKey());
 		String votestat = "";
@@ -195,7 +176,7 @@ public class shop implements cmd {
 		    votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_ListVoted, vote.getVote(), vote.getAmount());
 		ClaimedResidence res = plugin.getResidenceManager().getByName(one.getKey());
 		String owner = plugin.getResidenceManager().getByName(one.getKey()).getOwner();
-		String message = plugin.msg(lm.Shop_List, i, one.getKey(), owner, votestat);
+		String message = plugin.msg(lm.Shop_List, pi.getStart() + position + 1, one.getKey(), owner, votestat);
 
 		String desc = res.getShopDesc() == null ? plugin.msg(lm.Shop_NoDesc) : plugin.msg(
 		    lm.Shop_Desc, ChatColor.translateAlternateColorCodes('&', res.getShopDesc().replace("/n", "\n")));
@@ -203,23 +184,9 @@ public class shop implements cmd {
 		RawMessage rm = new RawMessage();
 		rm.add(" " + message, desc, "/res tp " + one.getKey());
 		rm.show(sender);
-
-		i++;
 	    }
 
-	    if (pagecount == 1)
-		return true;
-
-	    int NextPage = page + 1;
-	    NextPage = page < pagecount ? NextPage : page;
-	    int Prevpage = page - 1;
-	    Prevpage = page > 1 ? Prevpage : page;
-
-	    RawMessage rm = new RawMessage();
-	    rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res shop list " + Prevpage : null);
-	    rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, page > 1 ? ">>>" : null, pagecount > page ? "/res shop list " + NextPage : null);
-	    if (pagecount != 0)
-		rm.show(sender);
+	    plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, "/res shop list");
 
 	    return true;
 	}

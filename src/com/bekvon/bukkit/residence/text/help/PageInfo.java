@@ -17,10 +17,22 @@ public class PageInfo {
 	calculate();
     }
 
+    public int getPositionForOutput(int place) {
+	return this.start + place + 1;
+    }
+    
     private void calculate() {
 	this.start = (this.currentPage - 1) * this.perPage;
-	this.end = this.start + this.perPage;
+	this.end = this.start + this.perPage - 1;
+	if (this.end + 1 > this.totalEntries)
+	    this.end = this.totalEntries - 1;
 	this.totalPages = (int) Math.ceil((double) this.totalEntries / (double) this.perPage);
+    }
+
+    public boolean isInRange(int place) {
+	if (place >= start && place <= end)
+	    return true;
+	return false;
     }
 
     public boolean isPageOk() {

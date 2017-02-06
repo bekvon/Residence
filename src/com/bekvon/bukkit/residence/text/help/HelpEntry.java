@@ -68,8 +68,10 @@ public class HelpEntry {
     public void printHelp(CommandSender sender, int page, boolean resadmin, String path) {
 	List<HelpLines> helplines = this.getHelpData(sender, resadmin);
 	path = "/" + path.replace(".", " ") + " ";
-	int pagecount = (int) Math.ceil((double) helplines.size() / (double) linesPerPage);
-	if (page > pagecount || page < 1) {
+
+	PageInfo pi = new PageInfo(linesPerPage, helplines.size(), page);
+
+	if (!pi.isPageOk()) {
 	    Residence.getInstance().msg(sender, lm.Invalid_Help);
 	    return;
 	}
@@ -78,43 +80,37 @@ public class HelpEntry {
 	if (!(sender instanceof Player))
 	    separator = "----------";
 
-	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pagecount) + " " + separator);
-	int start = linesPerPage * (page - 1);
-	int end = start + linesPerPage;
-	for (int i = start; i < end; i++) {
-	    if (helplines.size() > i) {
+	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pi.getTotalPages()) + " " + separator);
 
-		if (helplines.get(i).getCommand() != null) {
-		    HelpEntry sub = this.getSubEntry(helplines.get(i).getCommand());
+	for (int i = pi.getStart(); i <= pi.getEnd(); i++) {
+	    if (helplines.get(i).getCommand() != null) {
+		HelpEntry sub = this.getSubEntry(helplines.get(i).getCommand());
 
-		    String desc = "";
-		    int y = 0;
-		    for (String one : sub.lines) {
-			desc += one;
-			y++;
-			if (y < sub.lines.length) {
-			    desc += "\n";
-			}
+		String desc = "";
+		int y = 0;
+		for (String one : sub.lines) {
+		    desc += one;
+		    y++;
+		    if (y < sub.lines.length) {
+			desc += "\n";
 		    }
+		}
 
-		    if (resadmin)
-			path = path.replace("/res ", "/resadmin ");
+		if (resadmin)
+		    path = path.replace("/res ", "/resadmin ");
 
-		    RawMessage rm = new RawMessage();
-		    rm.add(helplines.get(i).getDesc(), desc, null, path + helplines.get(i).getCommand());
-		    rm.show(sender);
+		RawMessage rm = new RawMessage();
+		rm.add(helplines.get(i).getDesc(), desc, null, path + helplines.get(i).getCommand());
+		rm.show(sender);
 
-		} else
-		    sender.sendMessage(helplines.get(i).getDesc());
-	    }
+	    } else
+		sender.sendMessage(helplines.get(i).getDesc());
+
 	}
-
-	if (pagecount == 1)
-	    return;
 
 	String baseCmd = resadmin ? "resadmin" : "res";
 	String cmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " : "/" + baseCmd + " ? ";
-	Residence.getInstance().getInfoPageManager().ShowPagination(sender, pagecount, page, cmd);
+	Residence.getInstance().getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, cmd);
     }
 
     public void printHelp(CommandSender sender, int page, String path, boolean resadmin) {

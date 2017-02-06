@@ -13,6 +13,7 @@ import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
@@ -808,24 +809,19 @@ public class RentManager implements MarketRentInterface {
 	StringBuilder sbuild = new StringBuilder();
 	sbuild.append(ChatColor.GREEN);
 
-	int perpage = 10;
+	PageInfo pi = new PageInfo(10, rentableLand.size(), page);
 
-	int pagecount = (int) Math.ceil((double) rentableLand.size() / (double) perpage);
-
-	if (page < 1)
-	    page = 1;
-
-	int z = 0;
-
+	int position = -1;
 	for (ClaimedResidence res : rentableLand) {
 	    if (res == null)
 		continue;
 
-	    z++;
-	    if (z <= (page - 1) * perpage)
-		continue;
-	    if (z > (page - 1) * perpage + perpage)
+	    position++;
+
+	    if (position > pi.getEnd())
 		break;
+	    if (!pi.isInRange(position))
+		continue;
 
 	    boolean rented = res.isRented();
 
@@ -840,7 +836,7 @@ public class RentManager implements MarketRentInterface {
 		hover = GetTime.getTime(rent.endTime);
 	    }
 
-	    String msg = plugin.msg(lm.Rent_RentList, z, res.getName(), res.getRentable().cost, res.getRentable().days, res.getRentable().AllowRenewing,
+	    String msg = plugin.msg(lm.Rent_RentList, pi.getPositionForOutput(position), res.getName(), res.getRentable().cost, res.getRentable().days, res.getRentable().AllowRenewing,
 		res.getOwner(), rentedBy);
 
 	    RawMessage rm = new RawMessage();
@@ -853,25 +849,7 @@ public class RentManager implements MarketRentInterface {
 
 	}
 
-	String separator = ChatColor.GOLD + "";
-	String simbol = "\u25AC";
-	for (int i = 0; i < 10; i++) {
-	    separator += simbol;
-	}
-
-	if (pagecount == 1)
-	    return;
-
-	int NextPage = page + 1;
-	NextPage = page < pagecount ? NextPage : page;
-	int Prevpage = page - 1;
-	Prevpage = page > 1 ? Prevpage : page;
-
-	RawMessage rm = new RawMessage();
-	rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res market list rent " + Prevpage : null);
-	rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, pagecount > page ? ">>>" : null, pagecount > page ? "/res market list rent " + NextPage : null);
-	if (pagecount != 0)
-	    rm.show(player);
+	plugin.getInfoPageManager().ShowPagination(player, pi.getTotalPages(), page, "/res market list rent");
 
     }
 

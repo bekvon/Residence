@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence.economy;
 import org.bukkit.ChatColor;
 
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
@@ -328,52 +329,27 @@ public class TransactionManager implements MarketBuyInterface {
 	StringBuilder sbuild = new StringBuilder();
 	sbuild.append(ChatColor.GREEN);
 
-	int perpage = 10;
+	PageInfo pi = new PageInfo(10, sellAmount.size(), page);
 
-	int pagecount = (int) Math.ceil((double) sellAmount.size() / (double) perpage);
-
-	if (page < 1)
-	    page = 1;
-
-	int z = 0;
+	int position = -1;
 	for (ClaimedResidence res : sellAmount) {
-	    z++;
-	    if (z <= (page - 1) * perpage)
-		continue;
-	    if (z > (page - 1) * perpage + perpage)
+	    position++;
+	    if (position > pi.getEnd())
 		break;
+	    if (!pi.isInRange(position))
+		continue;
 
 	    if (res == null) {
-		z--;
 		toRemove.add(res);
 		continue;
 	    }
-	    plugin.msg(player, lm.Economy_SellList, z, res.getName(), res.getSellPrice(), res.getOwner());
+	    plugin.msg(player, lm.Economy_SellList, pi.getPositionForOutput(position), res.getName(), res.getSellPrice(), res.getOwner());
 	}
 
 	for (ClaimedResidence one : toRemove) {
 	    sellAmount.remove(one);
 	}
-
-	String separator = ChatColor.GOLD + "";
-	String simbol = "\u25AC";
-	for (int i = 0; i < 10; i++) {
-	    separator += simbol;
-	}
-
-	if (pagecount == 1)
-	    return;
-
-	int NextPage = page + 1;
-	NextPage = page < pagecount ? NextPage : page;
-	int Prevpage = page - 1;
-	Prevpage = page > 1 ? Prevpage : page;
-
-	RawMessage rm = new RawMessage();
-	rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), page > 1 ? "<<<" : null, page > 1 ? "/res market list sell " + Prevpage : null);
-	rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, pagecount > page ? ">>>" : null, pagecount > page ? "/res market list sell " + NextPage : null);
-	if (pagecount != 0)
-	    rm.show(player);
+	plugin.getInfoPageManager().ShowPagination(player, pi.getTotalPages(), page, "/res market list sell");
     }
 
     public void clearSales() {

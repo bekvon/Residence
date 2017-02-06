@@ -389,7 +389,6 @@ public enum lm {
     General_TotalWorth("&eTotal worth of residence: &6%1 &e(&6%2&e)"),
     General_TotalSubzones("&eSubzones in residence: &6%1 &e(&6%2&e)"),
     General_NotOnline("&eTarget player must be online."),
-    General_NextPage("&eNext Page"),
     General_NextInfoPage("&2| &eNext Page &2>>>"),
     General_PrevInfoPage("&2<<< &ePrev Page &2|"),
     General_GenericPages("&ePage &6%1 &eof &6%2 &e(&6%3&e)"),

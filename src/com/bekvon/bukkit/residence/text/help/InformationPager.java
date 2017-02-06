@@ -34,25 +34,23 @@ public class InformationPager {
     }
 
     public void printInfo(CommandSender sender, String command, String title, List<String> lines, int page) {
-	int perPage = 6;
-	int start = (page - 1) * perPage;
-	int end = start + perPage;
-	int pagecount = (int) Math.ceil((double) lines.size() / (double) perPage);
-	if (pagecount == 0)
-	    pagecount = 1;
-	if (page > pagecount) {
+	
+
+	PageInfo pi = new PageInfo(6, lines.size(), page);
+	
+	if (!pi.isPageOk()) {
 	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
 	}
 	plugin.msg(sender, lm.InformationPage_TopLine, title);
 	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),
-	    pagecount, lines.size()));
-	for (int i = start; i < end; i++) {
+	    pi.getTotalPages(), lines.size()));
+	for (int i = pi.getStart(); i <= pi.getEnd(); i++) {
 	    if (lines.size() > i)
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));
 	}
-	
-	plugin.getInfoPageManager().ShowPagination(sender, pagecount, page, command);	
+
+	plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, command);
     }
 
     public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin) {
@@ -60,20 +58,13 @@ public class InformationPager {
 	int perPage = 20;
 	if (sender instanceof Player)
 	    perPage = 6;
-	int start = (page - 1) * perPage;
-	int end = start + perPage;
 
-	int pagecount = (int) Math.ceil((double) ownedResidences.size() / (double) perPage);
-	if (page == -1) {
-	    start = 0;
-	    end = ownedResidences.size();
-	    page = 1;
-	    pagecount = 1;
-	}
+	PageInfo pi = new PageInfo(perPage, ownedResidences.size(), page);
 
-	if (pagecount == 0)
-	    pagecount = 1;
-	if (page > pagecount) {
+	int start = pi.getStart();
+	int pagecount = pi.getTotalPages();
+
+	if (!pi.isPageOk()) {
 	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
 	}
@@ -86,26 +77,20 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
-	if (ownedResidences.size() < end)
-	    end = ownedResidences.size();
-
 	if (!(sender instanceof Player)) {
 	    printListWithDelay(sender, ownedResidences, start, resadmin);
 	    return;
 	}
 
 	List<String> linesForConsole = new ArrayList<String>();
-	int y = 0;
-
+	int y = -1;
+	
 	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
 	    y++;
-	    if (ownedResidences.size() < y)
+	    if (y > pi.getEnd())
 		break;
-
-	    if (y <= start)
+	    if (!pi.isInRange(y))
 		continue;
-	    if (y > end)
-		break;
 
 	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
@@ -154,7 +139,7 @@ public class InformationPager {
 		moveFlag = res.getPermissions().playerHas(sender.getName(), Flags.move, true) ? ChatColor.DARK_GREEN + "M" : ChatColor.DARK_RED + "M";
 	    }
 
-	    String msg = plugin.msg(lm.Residence_ResList, y, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
+	    String msg = plugin.msg(lm.Residence_ResList, y + 1, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
 
 	    if (sender instanceof Player)
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + plugin.getResidenceManager().convertToRaw(null, msg,
