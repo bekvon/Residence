@@ -96,7 +96,7 @@ public class InformationPager {
 	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
 
-	    if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
+	    if (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin) {
 		worldInfo += "&6 (&3";
 		CuboidArea area = res.getAreaArray()[0];
 		worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
@@ -169,7 +169,7 @@ public class InformationPager {
 	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
 
-	    if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
+	    if (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin) {
 		worldInfo += "&6 (&3";
 		CuboidArea area = res.getAreaArray()[0];
 		worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()

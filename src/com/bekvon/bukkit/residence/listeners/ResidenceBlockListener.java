@@ -28,7 +28,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import org.bukkit.Location;
@@ -131,7 +133,9 @@ public class ResidenceBlockListener implements Listener {
 	Block block = event.getBlock();
 	Material mat = block.getType();
 	String world = block.getWorld().getName();
-	String group = plugin.getPermissionManager().getGroupNameByPlayer(player);
+
+	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = resPlayer.getGroup();
 	if (plugin.getItemManager().isIgnored(mat, group, world)) {
 	    return;
 	}
@@ -145,12 +149,11 @@ public class ResidenceBlockListener implements Listener {
 	    }
 	}
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
-	String pname = player.getName();
 	if (res != null && res.getItemIgnoreList().isListed(mat))
 	    return;
 
-	boolean hasdestroy = perms.playerHas(pname, player.getWorld().getName(), Flags.destroy, perms.playerHas(pname, player.getWorld().getName(), Flags.build, true));
-	boolean hasContainer = perms.playerHas(pname, player.getWorld().getName(), Flags.container, true);
+	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
+	boolean hasContainer = perms.playerHas(player, Flags.container, true);
 	if (!hasdestroy && !player.hasPermission("residence.bypass.destroy")) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
@@ -353,7 +356,9 @@ public class ResidenceBlockListener implements Listener {
 	Block block = event.getBlock();
 	Material mat = block.getType();
 	String world = block.getWorld().getName();
-	String group = plugin.getPermissionManager().getGroupNameByPlayer(player);
+
+	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = resPlayer.getGroup();
 	if (plugin.getItemManager().isIgnored(mat, group, world)) {
 	    return;
 	}
@@ -366,14 +371,13 @@ public class ResidenceBlockListener implements Listener {
 		return;
 	    }
 	}
-	String pname = player.getName();
 	if (res != null && !res.getItemBlacklist().isAllowed(mat)) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
 	}
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
-	boolean hasplace = perms.playerHas(pname, world, Flags.place, perms.playerHas(pname, world, Flags.build, true));
+	boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
 	if (!hasplace && !player.hasPermission("residence.bypass.build")) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place.getName());
@@ -630,7 +634,7 @@ public class ResidenceBlockListener implements Listener {
 	} else if (cause == IgniteCause.FLINT_AND_STEEL) {
 	    Player player = event.getPlayer();
 	    FlagPermissions perms = plugin.getPermsByLocForPlayer(event.getBlock().getLocation(), player);
-	    if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), Flags.ignite, true) && !plugin.isResAdminOn(player)) {
+	    if (player != null && !perms.playerHas(player, Flags.ignite, true) && !plugin.isResAdminOn(player)) {
 		event.setCancelled(true);
 		plugin.msg(player, lm.Flag_Deny, Flags.ignite.getName());
 	    }

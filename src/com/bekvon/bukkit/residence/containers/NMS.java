@@ -30,7 +30,7 @@ public interface NMS {
 
     public boolean isSpectator(GameMode mode);
 
-    public void addDefaultFlags(Map<Material, String> matUseFlagList);
+    public void addDefaultFlags(Map<Material, Flags> matuseflaglist);
 
     public boolean isPlate(Material mat);
 

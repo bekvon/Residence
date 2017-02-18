@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.NMS;
 
 public class v1_7_Couldron implements NMS {
@@ -101,7 +102,7 @@ public class v1_7_Couldron implements NMS {
     }
 
     @Override
-    public void addDefaultFlags(Map<Material, String> matUseFlagList) {
+    public void addDefaultFlags(Map<Material, Flags> matUseFlagList) {
     }
 
     @Override

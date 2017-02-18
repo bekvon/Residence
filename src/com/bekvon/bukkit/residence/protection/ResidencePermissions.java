@@ -9,8 +9,6 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.utils.Debug;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,10 +69,6 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean playerHas(Player player, Flags flag, FlagCombo f) {
-	return playerHas(player.getName(), flag, f);
-    }
-
-    public boolean playerHas(String player, Flags flag, FlagCombo f) {
 	switch (f) {
 	case FalseOrNone:
 	    return !this.playerHas(player, world, flag, false);
@@ -89,7 +83,33 @@ public class ResidencePermissions extends FlagPermissions {
 	}
     }
 
+//    public boolean playerHas(String player, Flags flag, FlagCombo f) {
+//	switch (f) {
+//	case FalseOrNone:
+//	    return !this.playerHas(player, world, flag, false);
+//	case OnlyFalse:
+//	    return !this.playerHas(player, world, flag, true);
+//	case OnlyTrue:
+//	    return this.playerHas(player, world, flag, false);
+//	case TrueOrNone:
+//	    return this.playerHas(player, world, flag, true);
+//	default:
+//	    return false;
+//	}
+//    }
+    
     @Override
+    public boolean playerHas(Player player, String world, Flags flag, boolean def) {
+	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag.getName(), FlagType.PLAYER, player.getName(), def);
+
+	Residence.getInstance().getServ().getPluginManager().callEvent(fc);
+	if (fc.isOverriden())
+	    return fc.getOverrideValue();
+	return super.playerHas(player, world, flag, def);
+    }
+
+    @Override
+    @Deprecated
     public boolean playerHas(String player, String world, String flag, boolean def) {
 	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag, FlagType.PLAYER, player, def);
 
@@ -112,15 +132,28 @@ public class ResidencePermissions extends FlagPermissions {
     public boolean has(Flags flag, FlagCombo f) {
 	return has(flag, f, true);
     }
-
+    
     public boolean has(Flags flag, FlagCombo f, boolean checkParent) {
-	return has(flag.getName(), f, checkParent);
-    }
-
+ 	switch (f) {
+ 	case FalseOrNone:
+ 	    return !has(flag, false, checkParent);
+ 	case OnlyFalse:
+ 	    return !has(flag, true, checkParent);
+ 	case OnlyTrue:
+ 	    return has(flag, false, checkParent);
+ 	case TrueOrNone:
+ 	    return has(flag, true, checkParent);
+ 	default:
+ 	    return false;
+ 	}
+     }
+    
+    @Deprecated
     public boolean has(String flag, FlagCombo f) {
 	return has(flag, f, true);
     }
 
+    @Deprecated
     public boolean has(String flag, FlagCombo f, boolean checkParent) {
 	switch (f) {
 	case FalseOrNone:
@@ -157,7 +190,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     public boolean hasApplicableFlag(String player, String flag) {
 	return super.inheritanceIsPlayerSet(player, flag) ||
-	    super.inheritanceIsGroupSet(Residence.getInstance().getPermissionManager().getGroupNameByPlayer(player, world), flag) ||
+	    super.inheritanceIsGroupSet(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world).getGroupName(), flag) ||
 	    super.inheritanceIsSet(flag);
     }
 
@@ -218,8 +251,9 @@ public class ResidencePermissions extends FlagPermissions {
 	    return true;
 
 	ClaimedResidence par = this.residence.getParent();
+	Player player = (Player) sender;
 	if (par != null)
-	    if (par.getPermissions().playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue))
+	    if (par.getPermissions().playerHas(player, Flags.admin, FlagCombo.OnlyTrue))
 		return true;
 
 	if (Residence.getInstance().getConfigManager().enabledRentSystem()) {
@@ -232,13 +266,13 @@ public class ResidencePermissions extends FlagPermissions {
 		if (sender.getName().equals(renter)) {
 		    return true;
 		}
-		return (playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue));
+		return (playerHas(player, Flags.admin, FlagCombo.OnlyTrue));
 	    }
 	}
 	if (requireOwner) {
 	    return (this.getOwner().equals(sender.getName()));
 	}
-	return (playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue) || this.getOwner().equals(sender.getName()));
+	return (playerHas(player, Flags.admin, FlagCombo.OnlyTrue) || this.getOwner().equals(sender.getName()));
     }
 
     private boolean checkCanSetFlag(CommandSender sender, String flag, FlagState state, boolean globalflag, boolean resadmin) {

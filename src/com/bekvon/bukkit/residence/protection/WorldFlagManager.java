@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 
 import java.io.File;
 import java.util.HashMap;
@@ -31,7 +32,8 @@ public class WorldFlagManager {
     }
 
     public FlagPermissions getPerms(Player player) {
-	return this.getPerms(player.getWorld().getName(), plugin.getPermissionManager().getGroupNameByPlayer(player));
+	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	return this.getPerms(player.getWorld().getName(), resPlayer.getGroup().getGroupName());
     }
 
     public FlagPermissions getPerms(String world, String group) {

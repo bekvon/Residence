@@ -44,10 +44,13 @@ public class ResidenceBank {
     }
 
     public void withdraw(CommandSender sender, int amount, boolean resadmin) {
+	if (!(sender instanceof Player))
+	    return;
+	Player player = (Player) sender;
 	if (!Residence.getInstance().getConfigManager().enableEconomy()) {
 	    Residence.getInstance().msg(sender, lm.Economy_MarketDisabled);
 	}
-	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), Flags.bank, FlagCombo.OnlyTrue)) {
+	if (!resadmin && !res.getPermissions().playerHas(player, Flags.bank, FlagCombo.OnlyTrue)) {
 	    Residence.getInstance().msg(sender, lm.Bank_NoAccess);
 	    return;
 	}
@@ -62,10 +65,13 @@ public class ResidenceBank {
     }
 
     public void deposit(CommandSender sender, int amount, boolean resadmin) {
+	if (!(sender instanceof Player))
+	    return;
+	Player player = (Player) sender;
 	if (!Residence.getInstance().getConfigManager().enableEconomy()) {
 	    Residence.getInstance().msg(sender, lm.Economy_MarketDisabled);
 	}
-	if (!resadmin && !res.getPermissions().playerHas(sender.getName(), Flags.bank, FlagCombo.OnlyTrue)) {
+	if (!resadmin && !res.getPermissions().playerHas(player, Flags.bank, FlagCombo.OnlyTrue)) {
 	    Residence.getInstance().msg(sender, lm.Bank_NoAccess);
 	    return;
 	}

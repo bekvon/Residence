@@ -37,8 +37,8 @@ public class check implements cmd {
 	if (!res.getPermissions().hasApplicableFlag(pname, args[2])) {
 	    plugin.msg(player, lm.Flag_CheckFalse, args[2], pname, args[1]);
 	} else {
-	    plugin.msg(player, lm.Flag_CheckTrue, args[2], pname, args[1], (res.getPermissions().playerHas(pname, res.getPermissions()
-		.getWorld(), args[2], false) ? plugin.msg(lm.General_True) : plugin.msg(lm.General_False)));
+	    plugin.msg(player, lm.Flag_CheckTrue, args[2], pname, args[1], (res.getPermissions().playerHas(player.getName(), res.getPermissions().getWorld(), args[2], false) ? plugin.msg(lm.General_True)
+		: plugin.msg(lm.General_False)));
 	}
 	return true;
     }
@@ -47,6 +47,6 @@ public class check implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Check flag state for you");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res check [residence] [flag] (playername)"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[flag]" ,"[playername]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[flag]", "[playername]"));
     }
 }

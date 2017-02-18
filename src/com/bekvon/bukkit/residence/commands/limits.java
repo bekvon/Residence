@@ -33,8 +33,8 @@ public class limits implements cmd {
 	    target = plugin.getOfflinePlayer(tempArgs[1]);
 	if (target == null)
 	    return false;
-	plugin.getPermissionManager().updateGroupNameForPlayer(target.getName(), target.isOnline() ? target.getPlayer().getLocation().getWorld().getName() : plugin
-	    .getConfigManager().getDefaultWorld(), true);
+//	plugin.getPermissionManager().updateGroupNameForPlayer(target.getName(), target.isOnline() ? target.getPlayer().getLocation().getWorld().getName() : plugin
+//	    .getConfigManager().getDefaultWorld(), true);
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(target.getName(), true);
 	rPlayer.getGroup().printLimits(sender, target, rsadm);

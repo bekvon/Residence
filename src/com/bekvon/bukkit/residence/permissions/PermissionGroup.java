@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -385,6 +386,11 @@ public class PermissionGroup {
 	return cancreate;
     }
 
+    public boolean hasFlagAccess(Flags flag) {
+	return flagPerms.has(flag, false);
+    }
+
+    @Deprecated
     public boolean hasFlagAccess(String flag) {
 	return flagPerms.has(flag, false);
     }

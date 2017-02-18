@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
@@ -14,30 +13,26 @@ import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class PlayerGroup {
 
-    String playerName = null;
-    Player player = null;
+    ResidencePlayer resPlayer;
     long lastCheck = 0L;
-    HashMap<String, String> groups = new HashMap<String, String>();
+    HashMap<String, PermissionGroup> groups = new HashMap<String, PermissionGroup>();
 
-    public PlayerGroup(String playerName) {
-	this.playerName = playerName;
-	this.player = Bukkit.getPlayer(playerName);
-    }
-
-    public PlayerGroup(Player player) {
-	this.playerName = player.getName();
-	this.player = player;
+    public PlayerGroup(ResidencePlayer resPlayer) {
+	this.resPlayer = resPlayer;
+	Player player = resPlayer.getPlayer();
+	if (player != null)
+	    updateGroup(player.getWorld().getName(), true);
     }
 
     public void setLastCkeck(Long time) {
 	this.lastCheck = time;
     }
 
-    public void addGroup(String world, String group) {
+    public void addGroup(String world, PermissionGroup group) {
 	groups.put(world, group);
     }
 
-    public String getGroup(String world) {
+    public PermissionGroup getGroup(String world) {
 	updateGroup(world, false);
 	return this.groups.get(world);
     }
@@ -49,21 +44,21 @@ public class PlayerGroup {
 	this.lastCheck = System.currentTimeMillis();
 	List<PermissionGroup> posibleGroups = new ArrayList<PermissionGroup>();
 	String group;
-	if (Residence.getInstance().getPermissionManager().getPlayersGroups().containsKey(playerName.toLowerCase())) {
-	    group = Residence.getInstance().getPermissionManager().getPlayersGroups().get(playerName.toLowerCase());
+	if (Residence.getInstance().getPermissionManager().getPlayersGroups().containsKey(resPlayer.getPlayerName().toLowerCase())) {
+	    group = Residence.getInstance().getPermissionManager().getPlayersGroups().get(resPlayer.getPlayerName().toLowerCase());
 	    if (group != null) {
 		group = group.toLowerCase();
 		if (group != null && Residence.getInstance().getPermissionManager().getGroups().containsKey(group)) {
 		    PermissionGroup g = Residence.getInstance().getPermissionManager().getGroups().get(group);
 		    posibleGroups.add(g);
-		    this.groups.put(world, group);
+		    this.groups.put(world, g);
 		}
 	    }
 	}
 
 	posibleGroups.add(getPermissionGroup());
 
-	group = Residence.getInstance().getPermissionManager().getPermissionsGroup(playerName, world);
+	group = Residence.getInstance().getPermissionManager().getPermissionsGroup(resPlayer.getPlayerName(), world);
 
 	PermissionGroup g = Residence.getInstance().getPermissionManager().getGroupByName(group);
 
@@ -85,22 +80,22 @@ public class PlayerGroup {
 	}
 
 	if (finalGroup == null || !Residence.getInstance().getPermissionManager().getGroups().containsValue(finalGroup)) {
-	    this.groups.put(world, Residence.getInstance().getConfigManager().getDefaultGroup().toLowerCase());
+	    this.groups.put(world, Residence.getInstance().getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup()));
 	} else {
-	    this.groups.put(world, finalGroup.getGroupName());
+	    this.groups.put(world, finalGroup);
 	}
     }
 
     private PermissionGroup getPermissionGroup() {
-	if (this.player == null)
-	    this.player = Bukkit.getPlayer(playerName);
+	Player player = resPlayer.getPlayer();
 	PermissionGroup group = Residence.getInstance().getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup());
 	for (Entry<String, PermissionGroup> one : Residence.getInstance().getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
-		if (this.player.hasPermission("residence.group." + one.getKey()))
+		if (player.hasPermission("residence.group." + one.getKey())) {
 		    group = one.getValue();
+		}
 	    } else {
-		OfflinePlayer offlineP = Residence.getInstance().getOfflinePlayer(playerName);
+		OfflinePlayer offlineP = Residence.getInstance().getOfflinePlayer(resPlayer.getPlayerName());
 		if (offlineP != null)
 		    if (ResidenceVaultAdapter.hasPermission(offlineP, "residence.group." + one.getKey(), Residence.getInstance().getConfigManager().getDefaultWorld()))
 			group = one.getValue();

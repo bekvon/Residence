@@ -22,14 +22,16 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 
 public class FlagPermissions {
 
     protected static ArrayList<String> validFlags = new ArrayList<>();
     protected static ArrayList<String> validPlayerFlags = new ArrayList<>();
     protected static ArrayList<String> validAreaFlags = new ArrayList<>();
-    final static Map<Material, String> matUseFlagList = new EnumMap<>(Material.class);
+    final static Map<Material, Flags> matUseFlagList = new EnumMap<>(Material.class);
     protected Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
     protected Map<String, Map<String, Boolean>> playerFlags = new HashMap<String, Map<String, Boolean>>();
     protected Map<String, Map<String, Boolean>> groupFlags = new HashMap<String, Map<String, Boolean>>();
@@ -53,10 +55,6 @@ public class FlagPermissions {
     }
 
     public static void addMaterialToUseFlag(Material mat, Flags flag) {
-	addMaterialToUseFlag(mat, flag.name());
-    }
-
-    public static void addMaterialToUseFlag(Material mat, String flag) {
 	matUseFlagList.put(mat, flag);
     }
 
@@ -64,8 +62,8 @@ public class FlagPermissions {
 	matUseFlagList.remove(mat);
     }
 
-    public static EnumMap<Material, String> getMaterialUseFlagList() {
-	return (EnumMap<Material, String>) matUseFlagList;
+    public static EnumMap<Material, Flags> getMaterialUseFlagList() {
+	return (EnumMap<Material, Flags>) matUseFlagList;
     }
 
     public static void addFlag(Flags flag) {
@@ -423,15 +421,29 @@ public class FlagPermissions {
     public boolean playerHas(Player player, Flags flag, boolean def) {
 	if (player == null)
 	    return false;
-	return playerHas(player.getName(), player.getWorld().getName(), flag.getName(), def);
+
+	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = resPlayer.getGroup();
+	return this.playerCheck(player.getName(), flag.getName(), this.groupCheck(group, flag.getName(), this.has(flag, def)));
     }
 
-    public boolean playerHas(String player, String world, Flags flag, boolean def) {
-	return playerHas(player, world, flag.getName(), def);
+    public boolean playerHas(Player player, String world, Flags flag, boolean def) {
+	if (player == null)
+	    return false;
+
+	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = resPlayer.getGroup(world);
+	return this.playerCheck(player.getName(), flag.getName(), this.groupCheck(group, flag.getName(), this.has(flag, def)));
     }
 
+//    public boolean playerHas(String player, String world, Flags flag, boolean def) {
+//	return playerHas(player, world, flag.getName(), def);
+//    }
+
+    @Deprecated
     public boolean playerHas(String player, String world, String flag, boolean def) {
-	String group = Residence.getInstance().getPermissionManager().getGroupNameByPlayer(player, world);
+	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = resPlayer.getGroup(world);
 	return this.playerCheck(player, flag, this.groupCheck(group, flag, this.has(flag, def)));
     }
 
@@ -450,6 +462,12 @@ public class FlagPermissions {
 	    return parent.playerCheck(player, flag, def);
 	}
 	return def;
+    }
+
+    private boolean groupCheck(PermissionGroup group, String flag, boolean def) {
+	if (group == null)
+	    return def;
+	return groupCheck(group.getGroupName(), flag, def);
     }
 
     private boolean groupCheck(String group, String flag, boolean def) {
@@ -481,13 +499,25 @@ public class FlagPermissions {
     }
 
     public boolean has(Flags flag, boolean def) {
-	return has(flag.getName(), def);
+	return has(flag, def, true);
     }
 
+    public boolean has(Flags flag, boolean def, boolean checkParent) {
+	if (cuboidFlags.containsKey(flag.getName())) {
+	    return cuboidFlags.get(flag.getName());
+	}
+	if (checkParent && parent != null) {
+	    return parent.has(flag, def);
+	}
+	return def;
+    }
+
+    @Deprecated
     public boolean has(String flag, boolean def) {
 	return has(flag, def, true);
     }
 
+    @Deprecated
     public boolean has(String flag, boolean def, boolean checkParent) {
 	if (cuboidFlags.containsKey(flag)) {
 	    return cuboidFlags.get(flag);
@@ -1090,4 +1120,5 @@ public class FlagPermissions {
     public FlagPermissions getParent() {
 	return parent;
     }
+
 }

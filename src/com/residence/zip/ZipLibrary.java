@@ -15,7 +15,6 @@ import java.util.zip.ZipOutputStream;
 import org.bukkit.World;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ZipLibrary {
     private Residence plugin;

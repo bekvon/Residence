@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -35,7 +36,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.griefcraft.cache.ProtectionCache;
@@ -629,7 +629,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 	String worldInfo = plugin.msg(lm.General_World, perms.getWorld());
 
-	if (res.getPermissions().has("hidden", FlagCombo.FalseOrNone) && res.getPermissions().has("coords", FlagCombo.TrueOrNone) || resadmin) {
+	if (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin) {
 	    worldInfo += "&6 (&3";
 	    CuboidArea area = res.getAreaArray()[0];
 	    worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());

@@ -26,7 +26,7 @@ public class ResidencePlayer {
     private Map<String, ClaimedResidence> ResidenceList = new HashMap<String, ClaimedResidence>();
     private ClaimedResidence mainResidence = null;
 
-    private PermissionGroup group = null;
+    private PlayerGroup groups = null;
 
     private int maxRes = -1;
     private int maxRents = -1;
@@ -96,8 +96,8 @@ public class ResidencePlayer {
     }
 
     public void recountMaxRes() {
-	if (this.group != null)
-	    this.maxRes = this.group.getMaxZones();
+	if (this.getGroup() != null)
+	    this.maxRes = this.getGroup().getMaxZones();
 	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxResCount(); i++) {
 	    if (player != null && player.isOnline()) {
 		if (this.player.hasPermission("residence.max.res." + i))
@@ -176,8 +176,6 @@ public class ResidencePlayer {
     }
 
     public int getMaxRes() {
-	Residence.getInstance().getPermissionManager().updateGroupNameForPlayer(this.userName, this.player != null && this.player.isOnline() ? this.player.getPlayer().getLocation()
-	    .getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), true);
 	recountMaxRes();
 	PermissionGroup g = getGroup();
 	if (this.maxRes < g.getMaxZones()) {
@@ -187,13 +185,16 @@ public class ResidencePlayer {
     }
 
     public PermissionGroup getGroup() {
+	updatePlayer();
 	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld());
     }
 
     public PermissionGroup getGroup(String world) {
-	String gp = Residence.getInstance().getPermissionManager().getGroupNameByPlayer(this.userName, world);
-	this.group = Residence.getInstance().getPermissionManager().getGroupByName(gp);
-	return this.group;
+	if (groups == null)
+	    groups = new PlayerGroup(this);
+	groups.updateGroup(world, false);
+	PermissionGroup group = groups.getGroup(world);
+	return group;
     }
 
     public ResidencePlayer updatePlayer(Player player) {
@@ -205,6 +206,9 @@ public class ResidencePlayer {
     }
 
     private void updatePlayer() {
+	player = Bukkit.getPlayer(this.uuid);
+	if (player != null)
+	    updatePlayer(player);
 	if (player != null && player.isOnline())
 	    return;
 	if (this.uuid != null && Bukkit.getPlayer(this.uuid) != null) {
@@ -274,4 +278,17 @@ public class ResidencePlayer {
 	return this.ResidenceList;
     }
 
+    public String getPlayerName() {
+	this.updatePlayer();
+	return userName;
+    }
+
+    public UUID getUuid() {
+	return uuid;
+    }
+
+    public Player getPlayer() {
+	this.updatePlayer();
+	return player;
+    }
 }

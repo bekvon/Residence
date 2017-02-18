@@ -209,7 +209,7 @@ public class ResidenceEntityListener implements Listener {
 	if (plugin.isResAdminOn(cause))
 	    return;
 
-	if (res.getPermissions().playerHas(cause.getName(), Flags.animalkilling, FlagCombo.OnlyFalse)) {
+	if (res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
 	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -304,7 +304,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (res.getPermissions().playerHas(cause.getName(), Flags.vehicledestroy, FlagCombo.OnlyFalse)) {
+	if (res.getPermissions().playerHas(cause, Flags.vehicledestroy, FlagCombo.OnlyFalse)) {
 	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.vehicledestroy.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -348,7 +348,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (res.getPermissions().playerHas(cause.getName(), Flags.mobkilling, FlagCombo.OnlyFalse)) {
+	if (res.getPermissions().playerHas(cause, Flags.mobkilling, FlagCombo.OnlyFalse)) {
 	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.mobkilling.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -374,7 +374,7 @@ public class ResidenceEntityListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (res.getPermissions().playerHas(player.getName(), Flags.leash, FlagCombo.OnlyFalse)) {
+	if (res.getPermissions().playerHas(player, Flags.leash, FlagCombo.OnlyFalse)) {
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.leash, res.getName());
 	    event.setCancelled(true);
 	}
@@ -508,9 +508,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(event.getEntity().getLocation(), player);
-	String pname = player.getName();
-	String world = player.getWorld().getName();
-	if (!perms.playerHas(pname, world, Flags.place, perms.playerHas(pname, world, Flags.build, true))) {
+	if (!perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true))) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
 	}
@@ -552,10 +550,8 @@ public class ResidenceEntityListener implements Listener {
 	if (plugin.getResidenceManager().isOwnerOfLocation(player, ent.getLocation()))
 	    return;
 
-	String pname = player.getName();
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(ent.getLocation(), player);
-	String world = ent.getWorld().getName();
-	if (!perms.playerHas(pname, world, Flags.destroy, perms.playerHas(pname, world, Flags.build, true))) {
+	if (!perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true))) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	}

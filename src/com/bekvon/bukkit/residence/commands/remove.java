@@ -35,15 +35,19 @@ public class remove implements cmd {
 	    return true;
 	}
 
-	if (res.isSubzone()  && !resadmin && !plugin.hasPermission(sender, "residence.delete.subzone", lm.Subzone_CantDelete)) {
+	if (res.isSubzone() && !resadmin && !plugin.hasPermission(sender, "residence.delete.subzone", lm.Subzone_CantDelete)) {
 	    return true;
 	}
 
-	if (res.isSubzone() &&
+	Player player = null;
+	if (sender instanceof Player)
+	    player = (Player) sender;
+
+	if (player != null && res.isSubzone() &&
 	    !resadmin &&
 	    plugin.getConfigManager().isPreventSubZoneRemoval() &&
 	    !res.getParent().isOwner(sender) &&
-	    !res.getPermissions().playerHas(sender.getName(), Flags.admin, FlagCombo.OnlyTrue) &&
+	    !res.getPermissions().playerHas(player, Flags.admin, FlagCombo.OnlyTrue) &&
 	    plugin.hasPermission(sender, "residence.delete.subzone", lm.Subzone_CantDeleteNotOwnerOfParent)) {
 	    return true;
 	}

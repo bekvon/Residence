@@ -130,22 +130,22 @@ public class v1_10 implements NMS {
     }
 
     @Override
-    public void addDefaultFlags(Map<Material, String> matUseFlagList) {
+    public void addDefaultFlags(Map<Material, Flags> matUseFlagList) {
 	/* 1.8 Doors */
-	matUseFlagList.put(Material.SPRUCE_DOOR, Flags.door.getName());
-	matUseFlagList.put(Material.BIRCH_DOOR, Flags.door.getName());
-	matUseFlagList.put(Material.JUNGLE_DOOR, Flags.door.getName());
-	matUseFlagList.put(Material.ACACIA_DOOR, Flags.door.getName());
-	matUseFlagList.put(Material.DARK_OAK_DOOR, Flags.door.getName());
+	matUseFlagList.put(Material.SPRUCE_DOOR, Flags.door);
+	matUseFlagList.put(Material.BIRCH_DOOR, Flags.door);
+	matUseFlagList.put(Material.JUNGLE_DOOR, Flags.door);
+	matUseFlagList.put(Material.ACACIA_DOOR, Flags.door);
+	matUseFlagList.put(Material.DARK_OAK_DOOR, Flags.door);
 	/* 1.8 Fence Gates */
-	matUseFlagList.put(Material.SPRUCE_FENCE_GATE, Flags.door.getName());
-	matUseFlagList.put(Material.BIRCH_FENCE_GATE, Flags.door.getName());
-	matUseFlagList.put(Material.JUNGLE_FENCE_GATE, Flags.door.getName());
-	matUseFlagList.put(Material.ACACIA_FENCE_GATE, Flags.door.getName());
-	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door.getName());
-	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door.getName());
+	matUseFlagList.put(Material.SPRUCE_FENCE_GATE, Flags.door);
+	matUseFlagList.put(Material.BIRCH_FENCE_GATE, Flags.door);
+	matUseFlagList.put(Material.JUNGLE_FENCE_GATE, Flags.door);
+	matUseFlagList.put(Material.ACACIA_FENCE_GATE, Flags.door);
+	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door);
+	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door);
 
-	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, Flags.diode.getName());
+	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, Flags.diode);
     }
 
     @Override

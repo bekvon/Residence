@@ -55,58 +55,12 @@ public class PermissionManager {
 	return groups;
     }
 
-//    public PermissionGroup getGroup(Player player) {
-//	PermissionGroup group = Residence.getPlayerManager().getGroup(player.getName());
-//	if (group != null) {
-//	    return group;
-//	}
-//	return groups.get(this.getGroupNameByPlayer(player));
-//    }
-//
-//    public PermissionGroup getGroup(String player, String world) {
-//	PermissionGroup group = Residence.getPlayerManager().getGroup(player);
-//	if (group != null) {
-//	    return group;
-//	}
-//	return groups.get(this.getGroupNameByPlayer(player, world));
-//    }
-
     public PermissionGroup getGroupByName(String group) {
 	group = group.toLowerCase();
 	if (!groups.containsKey(group)) {
 	    return groups.get(plugin.getConfigManager().getDefaultGroup());
 	}
 	return groups.get(group);
-    }
-
-    public String getGroupNameByPlayer(Player player) {
-	if (!this.groupsMap.containsKey(player.getName())) {
-	    updateGroupNameForPlayer(player);
-	}
-	PlayerGroup PGroup = this.groupsMap.get(player.getName());
-	if (PGroup != null) {
-	    String group = PGroup.getGroup(player.getWorld().getName());
-	    if (group != null)
-		return group;
-	}
-	return plugin.getConfigManager().getDefaultGroup().toLowerCase();
-    }
-
-    public String getGroupNameByPlayer(String playerName, String world) {
-	if (!this.groupsMap.containsKey(playerName)) {
-	    Player player = Bukkit.getPlayer(playerName);
-	    if (player != null)
-		updateGroupNameForPlayer(player);
-	    else
-		updateGroupNameForPlayer(playerName, world, true);
-	}
-	PlayerGroup PGroup = this.groupsMap.get(playerName);
-	if (PGroup != null) {
-	    String group = PGroup.getGroup(world);
-	    if (group != null)
-		return group;
-	}
-	return plugin.getConfigManager().getDefaultGroup().toLowerCase();
     }
 
     public String getPermissionsGroup(Player player) {
@@ -121,26 +75,6 @@ public class PermissionManager {
 	} catch (Exception e) {
 	    return plugin.getConfigManager().getDefaultGroup().toLowerCase();
 	}
-    }
-
-    public void updateGroupNameForPlayer(Player player) {
-	updateGroupNameForPlayer(player, false);
-    }
-
-    public void updateGroupNameForPlayer(Player player, boolean force) {
-	if (player == null)
-	    return;
-	updateGroupNameForPlayer(player.getName(), player.getWorld().getName(), force);
-    }
-
-    public void updateGroupNameForPlayer(String playerName, String world, boolean force) {
-	PlayerGroup GPlayer;
-	if (!groupsMap.containsKey(playerName)) {
-	    GPlayer = new PlayerGroup(playerName);
-	    groupsMap.put(playerName, GPlayer);
-	} else
-	    GPlayer = groupsMap.get(playerName);
-	GPlayer.updateGroup(world, force);
     }
 
     public boolean isResidenceAdmin(CommandSender sender) {

@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.api;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -21,4 +22,6 @@ public interface ResidencePlayerInterface {
     public ResidencePlayer getResidencePlayer(String player);
 
     public int getMaxSubzoneDepth(String player);
+
+    ArrayList<String> getResidenceList(UUID uuid);
 }

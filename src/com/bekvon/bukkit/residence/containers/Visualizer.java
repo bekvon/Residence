@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class Visualizer {
     private Player player;

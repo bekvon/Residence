@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 
 public class WorldItemManager {
     protected List<WorldItemList> lists;
@@ -20,6 +21,12 @@ public class WorldItemManager {
 	this.readLists();
     }
 
+    public boolean isAllowed(Material mat, PermissionGroup group, String world) {
+	if (group == null)
+	    return true;
+	return isAllowed(mat, group.getGroupName(), world);
+    }
+
     public boolean isAllowed(Material mat, String group, String world) {
 	for (WorldItemList list : lists) {
 	    if (!list.isAllowed(mat, world, group)) {
@@ -27,6 +34,12 @@ public class WorldItemManager {
 	    }
 	}
 	return true;
+    }
+
+    public boolean isIgnored(Material mat, PermissionGroup group, String world) {
+	if (group == null)
+	    return false;
+	return isIgnored(mat, group.getGroupName(), world);
     }
 
     public boolean isIgnored(Material mat, String group, String world) {

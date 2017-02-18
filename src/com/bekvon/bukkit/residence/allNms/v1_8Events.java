@@ -30,9 +30,8 @@ public class v1_8Events implements Listener {
 	    return;
 
 	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
-	String world = player.getWorld().getName();
 
-	if (!perms.playerHas(player.getName(), world, Flags.container, perms.playerHas(player.getName(), world, Flags.use, true))) {
+	if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
 	    event.setCancelled(true);
 	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.container.getName());
 	}
