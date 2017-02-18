@@ -602,18 +602,13 @@ public class Residence extends JavaPlugin {
 		});
 	    }
 
-	    if (rmanager == null) {
-		rmanager = new ResidenceManager(this);
-	    }
-	    if (leasemanager == null) {
-		leasemanager = new LeaseManager(this, rmanager);
-	    }
-	    if (tmanager == null) {
-		tmanager = new TransactionManager(this);
-	    }
-	    if (pmanager == null) {
-		pmanager = new PermissionListManager(this);
-	    }
+	    rmanager = new ResidenceManager(this);
+
+	    leasemanager = new LeaseManager(this, rmanager);
+
+	    tmanager = new TransactionManager(this);
+
+	    pmanager = new PermissionListManager(this);
 
 	    try {
 		this.loadYml();

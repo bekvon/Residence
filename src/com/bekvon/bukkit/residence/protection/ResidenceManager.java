@@ -49,8 +49,9 @@ public class ResidenceManager implements ResidenceInterface {
     private Residence plugin;
 
     public ResidenceManager(Residence plugin) {
-	residences = new TreeMap<>();
-	chunkResidences = new HashMap<>();
+	residences = new TreeMap<String, ClaimedResidence>();
+	chunkResidences = new HashMap<String, Map<ChunkRef, List<ClaimedResidence>>>();
+	shops = new ArrayList<ClaimedResidence>();
 	this.plugin = plugin;
     }
 
@@ -801,7 +802,7 @@ public class ResidenceManager implements ResidenceInterface {
     public void load(Map<String, Object> root) throws Exception {
 	if (root == null)
 	    return;
-
+	residences.clear();
 	for (World world : plugin.getServ().getWorlds()) {
 	    long time = System.currentTimeMillis();
 	    @SuppressWarnings("unchecked")

@@ -12,6 +12,7 @@ import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
 import java.io.File;
@@ -81,7 +82,7 @@ public class HelpEntry {
 	    separator = "----------";
 
 	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pi.getTotalPages()) + " " + separator);
-
+	Debug.D("here " + path + " " + page + " " + resadmin + " " + pi.getStart() + " " + pi.getEnd());
 	for (int i = pi.getStart(); i <= pi.getEnd(); i++) {
 	    if (helplines.get(i).getCommand() != null) {
 		HelpEntry sub = this.getSubEntry(helplines.get(i).getCommand());
@@ -142,8 +143,10 @@ public class HelpEntry {
 		if (!ResidenceCommandListener.getAdminCommands().contains(entry.getName().toLowerCase()) && resadmin)
 		    continue;
 
-		if (!sender.hasPermission("residence.command." + entry.getName().toLowerCase()))
-		    continue;
+//		if (!sender.hasPermission("residence.command." + entry.getName().toLowerCase())){
+//		    Debug.D("no perm: " + entry.getName().toLowerCase());
+//		    continue;
+//		}
 
 	    } else {
 		if (GlobalFlags.getFlags().containsKey(entry.getName().toLowerCase())) {
