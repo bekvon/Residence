@@ -42,26 +42,15 @@ import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.containers.ABInterface;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.NMS;
-import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
 import com.bekvon.bukkit.residence.dynmap.DynMapManager;
-import com.bekvon.bukkit.residence.economy.BOSEAdapter;
-import com.bekvon.bukkit.residence.economy.EconomyInterface;
-import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
-import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
-import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
-import com.bekvon.bukkit.residence.economy.RealShopEconomy;
-import com.bekvon.bukkit.residence.economy.TransactionManager;
+import com.bekvon.bukkit.residence.economy.*;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.gui.FlagUtil;
 import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
-import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
-import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
-import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
-import com.bekvon.bukkit.residence.allNms.v1_10Events;
-import com.bekvon.bukkit.residence.allNms.v1_8Events;
-import com.bekvon.bukkit.residence.allNms.v1_9Events;
+import com.bekvon.bukkit.residence.listeners.*;
+import com.bekvon.bukkit.residence.allNms.*;
 import com.bekvon.bukkit.residence.api.ChatInterface;
 import com.bekvon.bukkit.residence.api.MarketBuyInterface;
 import com.bekvon.bukkit.residence.api.MarketRentInterface;
@@ -72,36 +61,15 @@ import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.*;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.protection.LeaseManager;
-import com.bekvon.bukkit.residence.protection.PermissionListManager;
-import com.bekvon.bukkit.residence.protection.ResidenceManager;
-import com.bekvon.bukkit.residence.protection.ResidencePermissions;
-import com.bekvon.bukkit.residence.protection.PlayerManager;
-import com.bekvon.bukkit.residence.protection.WorldFlagManager;
-import com.bekvon.bukkit.residence.selection.AutoSelection;
-import com.bekvon.bukkit.residence.selection.SchematicsManager;
-import com.bekvon.bukkit.residence.selection.SelectionManager;
-import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
-import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
+import com.bekvon.bukkit.residence.selection.*;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
-import com.bekvon.bukkit.residence.spout.ResidenceSpout;
-import com.bekvon.bukkit.residence.spout.ResidenceSpoutListener;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
-import com.bekvon.bukkit.residence.utils.ActionBar;
-import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.FileCleanUp;
-import com.bekvon.bukkit.residence.utils.RandomTp;
-import com.bekvon.bukkit.residence.utils.RawMessage;
-import com.bekvon.bukkit.residence.utils.Sorting;
-import com.bekvon.bukkit.residence.utils.TabComplete;
-import com.bekvon.bukkit.residence.utils.VersionChecker;
-import com.bekvon.bukkit.residence.utils.YmlMaker;
+import com.bekvon.bukkit.residence.utils.*;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
@@ -144,8 +112,6 @@ public class Residence extends JavaPlugin {
     protected ResidenceBlockListener blistener;
     protected ResidencePlayerListener plistener;
     protected ResidenceEntityListener elistener;
-    protected ResidenceSpoutListener slistener;
-    protected ResidenceSpout spout;
 
     protected ResidenceFixesListener flistener;
 
@@ -698,13 +664,6 @@ public class Residence extends JavaPlugin {
 		if (getVersionChecker().isHigherEquals(Version.v1_10_R1))
 		    pm.registerEvents(new v1_10Events(), this);
 
-		// pm.registerEvent(Event.Type.WORLD_LOAD, wlistener,
-		// Priority.NORMAL, this);
-		if (cmanager.enableSpout()) {
-		    slistener = new ResidenceSpoutListener(this);
-		    pm.registerEvents(slistener, this);
-		    spout = new ResidenceSpout(this);
-		}
 		firstenable = false;
 	    } else {
 		plistener.reload();
@@ -865,14 +824,6 @@ public class Residence extends JavaPlugin {
 
     public ShopSignUtil getShopSignUtilManager() {
 	return ShopSignUtilManager;
-    }
-
-    public ResidenceSpout getSpout() {
-	return spout;
-    }
-
-    public ResidenceSpoutListener getSpoutListener() {
-	return slistener;
     }
 
     public CommandFiller getCommandFiller() {
@@ -1242,7 +1193,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    getResidenceManager().load(worlds);
-	    
+
 	    // Getting shop residences
 	    Map<String, ClaimedResidence> resList = rmanager.getResidences();
 	    for (Entry<String, ClaimedResidence> one : resList.entrySet()) {
@@ -1754,10 +1705,10 @@ public class Residence extends JavaPlugin {
 		String outMsg = getLM().getMessage(lm.General_NoPermission);
 		if (message != null)
 		    outMsg = message;
-		
+
 		RawMessage rm = new RawMessage();
 		rm.add(outMsg, "§2" + permision);
-		    rm.show(sender);
+		rm.show(sender);
 		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 		console.sendMessage(ChatColor.RED + sender.getName() + " No permission -> " + permision);
 	    }
