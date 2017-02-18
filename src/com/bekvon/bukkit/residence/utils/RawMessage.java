@@ -39,7 +39,7 @@ public class RawMessage {
 	String f = "{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', text) + "\"";
 
 	String last = ChatColor.getLastColors(text);
-	if (last != null) {
+	if (last != null && !last.isEmpty()) {
 	    ChatColor color = ChatColor.getByChar(last.replace("§", ""));
 	    if (color != null) {
 		f += ",\"color\":\"" + color.name().toLowerCase() + "\"";

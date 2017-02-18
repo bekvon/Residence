@@ -66,7 +66,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
@@ -733,7 +732,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerJoin(PlayerChangedWorldEvent event) {
+    public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
 	Player player = event.getPlayer();
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
