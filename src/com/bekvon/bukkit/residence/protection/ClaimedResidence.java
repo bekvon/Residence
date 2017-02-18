@@ -25,6 +25,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
 import java.text.DecimalFormat;
@@ -426,7 +427,7 @@ public class ClaimedResidence {
 		if (plugin.getKingdomsManager() != null && plugin.getKingdomsUtil().isSelectionInArea(player))
 		    return true;
 	    }
-	    
+
 	    if (chargeMoney && parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
 		int chargeamount = (int) Math.ceil(area.getSize() * group.getCostPerBlock());
 		if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
@@ -556,14 +557,17 @@ public class ClaimedResidence {
 		plugin.msg(player, lm.Area_HighLimit, String.format("%d", group.getMaxHeight()));
 		return false;
 	    }
-	    
+
+	    if (!isBiggerThanMin(player, newarea, resadmin))
+		return false;
+
 	    if (!resadmin) {
 		if (plugin.getWorldGuard() != null && plugin.getWorldGuardUtil().isSelectionInArea(player))
 		    return true;
 		if (plugin.getKingdomsManager() != null && plugin.getKingdomsUtil().isSelectionInArea(player))
 		    return true;
 	    }
-	    
+
 	    if (parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
 		int chargeamount = (int) Math.ceil((newarea.getSize() - oldarea.getSize()) * group.getCostPerBlock());
 		if (chargeamount > 0) {
