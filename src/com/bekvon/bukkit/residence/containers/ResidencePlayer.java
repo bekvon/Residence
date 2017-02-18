@@ -48,6 +48,13 @@ public class ResidencePlayer {
 	return false;
     }
 
+    public ResidencePlayer(String userName, UUID uuid) {
+	this.userName = userName;
+	this.uuid = uuid;
+	if (this.isOnline())
+	    RecalculatePermissions();
+    }
+
     public ResidencePlayer(String userName) {
 	this.userName = userName;
 	if (this.isOnline())

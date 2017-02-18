@@ -68,6 +68,15 @@ public class PlayerManager implements ResidencePlayerInterface {
 	}
 	return null;
     }
+    
+    public ResidencePlayer playerJoin(String player, UUID uuid) {
+	if (!players.containsKey(player.toLowerCase())) {
+	    ResidencePlayer resPlayer = new ResidencePlayer(player, uuid);
+	    addPlayer(resPlayer);
+	    return resPlayer;
+	}
+	return null;
+    }
 
     @Override
     public ArrayList<String> getResidenceList(UUID uuid) {
@@ -261,7 +270,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	if (playersUuid.containsKey(uuid)) {
 	    resPlayer = playersUuid.get(uuid);
 	} else {
-	    resPlayer = playerJoin(name);
+	    resPlayer = playerJoin(name, uuid);
 	}
 	return resPlayer;
     }
@@ -277,7 +286,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public void addResidence(String player, ClaimedResidence residence) {
 	ResidencePlayer resPlayer = getResidencePlayer(player, residence.getOwnerUUID());
 	if (resPlayer != null) {
-	    Debug.D("add res to player " + resPlayer.getPlayerName());
+	    Debug.D("add res to player " + resPlayer.getPlayerName() );
 	    resPlayer.addResidence(residence);
 	}
 	return;
