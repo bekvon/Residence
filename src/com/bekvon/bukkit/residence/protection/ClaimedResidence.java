@@ -563,6 +563,13 @@ public class ClaimedResidence {
 	if (resevent.isCancelled())
 	    return false;
 
+	if ((!resadmin) && (player != null)) {
+	    int chargeamount = (int) Math.ceil((newarea.getSize() - oldarea.getSize()) * getBlockSellPrice().doubleValue());
+	    if ((chargeamount < 0) && (this.plugin.getConfigManager().useResMoneyBack())) {
+		this.plugin.getTransactionManager().giveEconomyMoney(player, -chargeamount);
+	    }
+	}
+
 	plugin.getResidenceManager().removeChunkList(getName());
 	areas.remove(name);
 	areas.put(name, newarea);
