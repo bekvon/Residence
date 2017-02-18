@@ -36,6 +36,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.griefcraft.cache.ProtectionCache;
@@ -875,6 +876,7 @@ public class ResidenceManager implements ResidenceInterface {
 		    retRes.put(chunk, ress);
 		}
 
+		Debug.D("adding res " + residence.getOwner());
 		plugin.getPlayerManager().addResidence(residence.getOwner(), residence);
 
 		residences.put(resName.toLowerCase(), residence);

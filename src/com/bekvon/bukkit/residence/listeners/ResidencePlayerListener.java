@@ -727,7 +727,7 @@ public class ResidencePlayerListener implements Listener {
 	lastOutsideLoc.remove(pname);
 	plugin.getChatManager().removeFromChannel(pname);
 	plugin.getPlayerListener().removePlayerResidenceChat(pname);
-	plugin.getOfflinePlayerMap().put(pname, event.getPlayer());
+	plugin.addOfflinePlayerToChache(event.getPlayer());
 	if (plugin.getAutoSelectionManager().getList().containsKey(pname.toLowerCase()))
 	    plugin.getAutoSelectionManager().getList().remove(pname);
     }

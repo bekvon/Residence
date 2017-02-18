@@ -36,8 +36,7 @@ public class ResidencePlayer {
     public ResidencePlayer(Player player) {
 	if (player == null)
 	    return;
-	Residence.getInstance().getOfflinePlayerMap().put(player.getName(), player);
-	Residence.getInstance().addCachedPlayerNameUUIDs(player.getUniqueId(), player.getName());
+	Residence.getInstance().addOfflinePlayerToChache(player);
 	this.updatePlayer(player);
 	this.RecalculatePermissions();
     }

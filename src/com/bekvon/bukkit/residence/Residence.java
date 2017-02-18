@@ -163,7 +163,7 @@ public class Residence extends JavaPlugin {
     public List<String> resadminToggle;
     private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW", "French" };
     private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
-    private Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
+    private Map<UUID, OfflinePlayer> cachedPlayerNameUUIDs = new HashMap<UUID, OfflinePlayer>();
     private WorldEditPlugin wep = null;
     private WorldGuardPlugin wg = null;
     private int wepid;
@@ -579,11 +579,10 @@ public class Residence extends JavaPlugin {
 			continue;
 		    String name = player.getName();
 		    if (name == null)
-			continue;
-		    getOfflinePlayerMap().put(name.toLowerCase(), player);
-		    getCachedPlayerNameUUIDs().put(player.getUniqueId(), player.getName());
+			continue;		    
+		    this.addOfflinePlayerToChache(player);
 		}
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Player data loaded: " + getOfflinePlayerMap().size());
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Player data loaded: " + OfflinePlayerList.size());
 	    } else {
 		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
 		    @Override
@@ -594,8 +593,7 @@ public class Residence extends JavaPlugin {
 			    String name = player.getName();
 			    if (name == null)
 				continue;
-			    getOfflinePlayerMap().put(name.toLowerCase(), player);
-			    getCachedPlayerNameUUIDs().put(player.getUniqueId(), player.getName());
+			    addOfflinePlayerToChache(player);
 			}
 			return;
 		    }
@@ -1489,30 +1487,26 @@ public class Residence extends JavaPlugin {
 //	    return null;
 	Player p = getServ().getPlayer(playername);
 	if (p == null) {
-	    if (getOfflinePlayerMap().containsKey(playername.toLowerCase()))
-		return getOfflinePlayerMap().get(playername.toLowerCase()).getUniqueId();
+	    OfflinePlayer po = OfflinePlayerList.get(playername.toLowerCase());
+	    if (po != null)
+		return po.getUniqueId();
 	} else
 	    return p.getUniqueId();
 	return null;
     }
 
-    public ConcurrentHashMap<String, OfflinePlayer> getOfflinePlayerMap() {
-	return OfflinePlayerList;
-    }
-
-    @SuppressWarnings("deprecation")
     public OfflinePlayer getOfflinePlayer(String Name) {
-	if (getOfflinePlayerMap().containsKey(Name.toLowerCase())) {
-	    return getOfflinePlayerMap().get(Name.toLowerCase());
-	}
-	Player player = Bukkit.getPlayer(Name);
-	OfflinePlayer offPlayer = null;
-	if (player != null)
-	    offPlayer = player;
-	if (offPlayer == null)
-	    offPlayer = Bukkit.getOfflinePlayer(Name);
+	OfflinePlayer offPlayer = OfflinePlayerList.get(Name.toLowerCase());
 	if (offPlayer != null)
-	    getOfflinePlayerMap().put(Name.toLowerCase(), offPlayer);
+	    return offPlayer;
+
+	Player player = Bukkit.getPlayer(Name);
+	if (player != null)
+	    return player;
+
+//	offPlayer = Bukkit.getOfflinePlayer(Name);
+//	if (offPlayer != null)
+//	    addOfflinePlayerToChache(offPlayer);
 	return offPlayer;
     }
 
@@ -1521,6 +1515,26 @@ public class Residence extends JavaPlugin {
 	if (playerUUID != null)
 	    return playerUUID.toString();
 	return null;
+    }
+
+    public OfflinePlayer getOfflinePlayer(UUID uuid) {
+	OfflinePlayer offPlayer = cachedPlayerNameUUIDs.get(uuid);
+	if (offPlayer != null)
+	    return offPlayer;
+
+	Player player = Bukkit.getPlayer(uuid);
+	if (player != null)
+	    return player;
+
+//	offPlayer = Bukkit.getOfflinePlayer(uuid);
+//	if (offPlayer != null)
+//	    addOfflinePlayerToChache(offPlayer);
+	return offPlayer;
+    }
+
+    public void addOfflinePlayerToChache(OfflinePlayer player) {
+	OfflinePlayerList.put(player.getName().toLowerCase(), player);
+	cachedPlayerNameUUIDs.put(player.getUniqueId(), player);
     }
 
     public String getPlayerName(String uuid) {
@@ -1640,18 +1654,6 @@ public class Residence extends JavaPlugin {
 
     public InformationPager getInfoPageManager() {
 	return InformationPagerManager;
-    }
-
-    public Map<UUID, String> getCachedPlayerNameUUIDs() {
-	return cachedPlayerNameUUIDs;
-    }
-
-    public void addCachedPlayerNameUUIDs(UUID uuid, String name) {
-	cachedPlayerNameUUIDs.put(uuid, name);
-    }
-
-    public void addCachedPlayerNameUUIDs(Map<UUID, String> cachedPlayerNameUUIDs2) {
-	cachedPlayerNameUUIDs.putAll(cachedPlayerNameUUIDs2);
     }
 
     public WorldEditPlugin getWorldEdit() {

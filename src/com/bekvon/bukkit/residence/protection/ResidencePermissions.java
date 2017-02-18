@@ -545,7 +545,7 @@ public class ResidencePermissions extends FlagPermissions {
 
 	    OfflinePlayer p = null;
 	    if (newperms.ownerLastKnownName == null)
-		p = Bukkit.getOfflinePlayer(newperms.ownerUUID);
+		p = Residence.getInstance().getOfflinePlayer(newperms.ownerUUID);
 
 	    if (p != null)
 		newperms.ownerLastKnownName = p.getName();

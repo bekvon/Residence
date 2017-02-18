@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -590,7 +591,7 @@ public class FlagPermissions {
 //	root.put("LastKnownPlayerNames", cachedPlayerNameUUIDs);
 
 	// Putting uuid's to main cache for later save
-	Residence.getInstance().addCachedPlayerNameUUIDs(cachedPlayerNameUUIDs);
+//	Residence.getInstance().addCachedPlayerNameUUIDs(cachedPlayerNameUUIDs);
 
 	root.put("PlayerFlags", playerFlags);
 	if (!groupFlags.isEmpty())
@@ -621,8 +622,8 @@ public class FlagPermissions {
 
 	    try {
 		UUID uuid = UUID.fromString(one.getKey());
-		String name = Residence.getInstance().getCachedPlayerNameUUIDs().get(uuid);
-		newperms.cachedPlayerNameUUIDs.put(uuid, name);
+		OfflinePlayer player = Residence.getInstance().getOfflinePlayer(uuid);
+		newperms.cachedPlayerNameUUIDs.put(uuid, player.getName());
 	    } catch (Exception e) {
 		continue;
 	    }
