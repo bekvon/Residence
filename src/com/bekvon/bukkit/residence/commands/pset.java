@@ -99,7 +99,7 @@ public class pset implements cmd {
 		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
-	    SetFlag flag = new SetFlag(res.getName(), player, resadmin);
+	    SetFlag flag = new SetFlag(res, player, resadmin);
 	    flag.setTargetPlayer(targetPlayer);
 	    flag.recalculatePlayer(res);
 	    player.closeInventory();

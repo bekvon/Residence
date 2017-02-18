@@ -27,17 +27,18 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 
 public class SetFlag {
 
-    private String residence;
+    private ClaimedResidence residence;
     private Player player;
     private String targetPlayer = null;
     private Inventory inventory;
     private LinkedHashMap<String, Object> permMap = new LinkedHashMap<String, Object>();
     private LinkedHashMap<String, List<String>> description = new LinkedHashMap<String, List<String>>();
+    private List<String> flags = null;
     private boolean admin = false;
     private int page = 1;
     private int pageCount = 1;
 
-    public SetFlag(String residence, Player player, boolean admin) {
+    public SetFlag(ClaimedResidence residence, Player player, boolean admin) {
 	this.residence = residence;
 	this.player = player;
 	this.admin = admin;
@@ -56,7 +57,7 @@ public class SetFlag {
 	this.targetPlayer = player;
     }
 
-    public String getResidence() {
+    public ClaimedResidence getResidence() {
 	return this.residence;
     }
 
@@ -105,22 +106,23 @@ public class SetFlag {
 	}
 	if (targetPlayer == null) {
 	    if (admin)
-		Bukkit.dispatchCommand(player, "resadmin set " + residence + " " + flag + " " + command);
+		Bukkit.dispatchCommand(player, "resadmin set " + residence.getName() + " " + flag + " " + command);
 	    else
-		Bukkit.dispatchCommand(player, "res set " + residence + " " + flag + " " + command);
+		Bukkit.dispatchCommand(player, "res set " + residence.getName() + " " + flag + " " + command);
 	} else {
 	    if (admin)
-		Bukkit.dispatchCommand(player, "resadmin pset " + residence + " " + targetPlayer + " " + flag + " " + command);
+		Bukkit.dispatchCommand(player, "resadmin pset " + residence.getName() + " " + targetPlayer + " " + flag + " " + command);
 	    else
-		Bukkit.dispatchCommand(player, "res pset " + residence + " " + targetPlayer + " " + flag + " " + command);
+		Bukkit.dispatchCommand(player, "res pset " + residence.getName() + " " + targetPlayer + " " + flag + " " + command);
 	}
+
     }
 
     public void recalculateInv() {
 	if (targetPlayer == null)
-	    recalculateResidence(Residence.getInstance().getResidenceManager().getByName(residence));
+	    recalculateResidence(residence);
 	else
-	    recalculatePlayer(Residence.getInstance().getResidenceManager().getByName(residence));
+	    recalculatePlayer(residence);
     }
 
     private void fillFlagDescriptions() {
@@ -147,16 +149,20 @@ public class SetFlag {
     @SuppressWarnings("incomplete-switch")
     public void recalculateResidence(ClaimedResidence res) {
 
-	List<String> flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
+
+	if (flags == null)
+	    flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
+
 	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
 	Map<String, Object> TempPermMap = new LinkedHashMap<String, Object>();
+
 	Map<String, Boolean> globalFlags = Residence.getInstance().getPermissionManager().getAllFlags().getFlags();
 
 	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {
 	    if (flags.contains(one.getKey()))
 		resFlags.put(one.getKey(), one.getValue());
 	}
-
+	
 	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
 	    if (!flags.contains(one.getKey()))
 		continue;
@@ -167,6 +173,7 @@ public class SetFlag {
 		TempPermMap.put(one.getKey(), FlagState.NEITHER);
 	}
 
+
 	String title = "";
 	if (targetPlayer == null)
 	    title = Residence.getInstance().msg(lm.Gui_Set_Title, res.getName());
@@ -176,6 +183,7 @@ public class SetFlag {
 	if (title.length() > 32) {
 	    title = title.substring(0, Math.min(title.length(), 32));
 	}
+
 
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
@@ -202,6 +210,7 @@ public class SetFlag {
 		continue;
 	    permMap.put(one.getKey(), one.getValue());
 	}
+
 
 	for (Entry<String, Object> one : permMap.entrySet()) {
 
@@ -258,6 +267,8 @@ public class SetFlag {
 	    if (i > 53)
 		break;
 	}
+
+
 	ItemStack Item = new ItemStack(Material.ARROW);
 
 	ItemMeta meta = Item.getItemMeta();
@@ -266,6 +277,8 @@ public class SetFlag {
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
+
+
 	if (page < pageCount) {
 	    meta.setDisplayName(Residence.getInstance().msg(lm.General_NextInfoPage));
 	    Item.setItemMeta(meta);
@@ -282,7 +295,8 @@ public class SetFlag {
 	    globalFlags.put(oneFlag.getName(), oneFlag.isEnabled());
 	}
 
-	List<String> flags = res.getPermissions().getPosibleFlags(player, false, this.admin);
+	if (flags == null)
+	    flags = res.getPermissions().getPosibleFlags(player, false, this.admin);
 	Map<String, Boolean> resFlags = new HashMap<String, Boolean>();
 
 	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {

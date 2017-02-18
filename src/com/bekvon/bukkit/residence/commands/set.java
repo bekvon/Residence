@@ -14,6 +14,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class set implements cmd {
 
@@ -63,7 +64,8 @@ public class set implements cmd {
 		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
-	    SetFlag flag = new SetFlag(res.getName(), player, resadmin);
+
+	    SetFlag flag = new SetFlag(res, player, resadmin);
 	    flag.recalculateResidence(res);
 	    player.closeInventory();
 	    plugin.getPlayerListener().getGUImap().put(player.getName(), flag);
