@@ -98,7 +98,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	if (player != null)
 	    return getResidenceList(player.getUniqueId());
 	ArrayList<String> temp = new ArrayList<String>();
-	ResidencePlayer resPlayer = players.get(name.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(name.toLowerCase());
 	if (resPlayer != null) {
 	    for (ClaimedResidence one : resPlayer.getResList()) {
 		temp.add(one.getName());
@@ -116,7 +116,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public ArrayList<String> getResidenceList(String player, boolean showhidden, boolean onlyHidden) {
 	ArrayList<String> temp = new ArrayList<String>();
 //	playerJoin(player, false);
-	ResidencePlayer resPlayer = players.get(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
 	if (resPlayer == null)
 	    return temp;
 	for (ClaimedResidence one : resPlayer.getResList()) {
@@ -144,7 +144,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 
     public ArrayList<ClaimedResidence> getResidences(String player, boolean showhidden, boolean onlyHidden, World world) {
 	ArrayList<ClaimedResidence> temp = new ArrayList<ClaimedResidence>();
-	ResidencePlayer resPlayer = players.get(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
 	if (resPlayer == null)
 	    return temp;
 	for (ClaimedResidence one : resPlayer.getResList()) {
@@ -163,10 +163,8 @@ public class PlayerManager implements ResidencePlayerInterface {
     public TreeMap<String, ClaimedResidence> getResidencesMap(String player, boolean showhidden, boolean onlyHidden, World world) {
 	TreeMap<String, ClaimedResidence> temp = new TreeMap<String, ClaimedResidence>();
 
-	ResidencePlayer resPlayer = players.get(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
 	if (resPlayer == null) {
-
-	    Debug.D("no red player  " + players.size());
 	    return temp;
 	}
 
@@ -286,7 +284,6 @@ public class PlayerManager implements ResidencePlayerInterface {
     public void addResidence(String player, ClaimedResidence residence) {
 	ResidencePlayer resPlayer = getResidencePlayer(player, residence.getOwnerUUID());
 	if (resPlayer != null) {
-	    Debug.D("add res to player " + resPlayer.getPlayerName() );
 	    resPlayer.addResidence(residence);
 	}
 	return;
@@ -308,7 +305,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public void removeResFromPlayer(String player, String residence) {
-	ResidencePlayer resPlayer = players.get(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
 	if (resPlayer != null) {
 	    resPlayer.removeResidence(residence);
 	}

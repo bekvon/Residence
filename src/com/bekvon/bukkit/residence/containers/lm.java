@@ -52,6 +52,7 @@ public enum lm {
     Select_Points("&eSelect two points first before using this command!"),
     Select_Overlap("&cSelected points overlap with &6%1 &cregion!"),
     Select_WorldGuardOverlap("&cSelected points overlap with &6%1 &cWorldGuard region!"),
+    Select_KingdomsOverlap("&cSelected points overlap with &6%1 &cKingdoms land!"),
     Select_Success("&eSelection Successful!"),
     Select_Fail("&cInvalid select command..."),
     Select_Bedrock("&eSelection expanded to your lowest allowed limit."),

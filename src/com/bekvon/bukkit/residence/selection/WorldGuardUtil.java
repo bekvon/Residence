@@ -4,6 +4,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Visualizer;
+import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -17,7 +20,10 @@ public class WorldGuardUtil {
 	this.plugin = residence;
     }
 
-    public ProtectedRegion isSelectionInRegion(Player player) {
+    public ProtectedRegion getRegion(Player player, CuboidArea area) {
+
+	if (area == null)
+	    return null;
 
 	if (plugin.getWorldGuard() == null)
 	    return null;
@@ -25,10 +31,8 @@ public class WorldGuardUtil {
 	if (plugin.getWorldEdit() == null)
 	    return null;
 
-	if (!plugin.getSelectionManager().hasPlacedBoth(player.getName()))
-	    return null;
-	Location loc1 = plugin.getSelectionManager().getPlayerLoc1(player.getName());
-	Location loc2 = plugin.getSelectionManager().getPlayerLoc2(player.getName());
+	Location loc1 = area.getLowLoc();
+	Location loc2 = area.getHighLoc();
 
 	String id = "icp__tempregion";
 	try {
@@ -47,5 +51,25 @@ public class WorldGuardUtil {
 	} catch (Exception | IncompatibleClassChangeError e) {
 	}
 	return null;
+    }
+
+    public boolean isSelectionInArea(Player player) {
+	if (plugin.getWorldGuard() == null)
+	    return false;
+
+	ProtectedRegion Region = getRegion(player, plugin.getSelectionManager().getSelectionCuboid(player));
+	if (Region == null)
+	    return false;
+	
+	plugin.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
+	Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
+	    Region.getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
+	Location highLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(),
+	    Region.getMaximumPoint().getBlockY(), Region.getMaximumPoint().getBlockZ());
+	Visualizer v = new Visualizer(player);
+	v.setAreas(plugin.getSelectionManager().getSelectionCuboid(player));
+	v.setErrorAreas(new CuboidArea(lowLoc, highLoc));
+	plugin.getSelectionManager().showBounds(player, v);
+	return true;
     }
 }

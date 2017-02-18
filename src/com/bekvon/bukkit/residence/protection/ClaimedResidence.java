@@ -418,6 +418,15 @@ public class ClaimedResidence {
 		plugin.msg(player, lm.Area_HighLimit, String.format("%d", group.getMaxHeight()));
 		return false;
 	    }
+
+	    if (!resadmin) {
+		if (plugin.getWorldGuard() != null && plugin.getWorldGuardUtil().isSelectionInArea(player))
+		    return true;
+
+		if (plugin.getKingdomsManager() != null && plugin.getKingdomsUtil().isSelectionInArea(player))
+		    return true;
+	    }
+	    
 	    if (chargeMoney && parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
 		int chargeamount = (int) Math.ceil(area.getSize() * group.getCostPerBlock());
 		if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
@@ -547,6 +556,14 @@ public class ClaimedResidence {
 		plugin.msg(player, lm.Area_HighLimit, String.format("%d", group.getMaxHeight()));
 		return false;
 	    }
+	    
+	    if (!resadmin) {
+		if (plugin.getWorldGuard() != null && plugin.getWorldGuardUtil().isSelectionInArea(player))
+		    return true;
+		if (plugin.getKingdomsManager() != null && plugin.getKingdomsUtil().isSelectionInArea(player))
+		    return true;
+	    }
+	    
 	    if (parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
 		int chargeamount = (int) Math.ceil((newarea.getSize() - oldarea.getSize()) * group.getCostPerBlock());
 		if (chargeamount > 0) {

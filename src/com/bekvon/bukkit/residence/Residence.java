@@ -37,6 +37,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
+import org.kingdoms.main.Kingdoms;
+import org.kingdoms.manager.game.GameManagement;
 
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.containers.ABInterface;
@@ -139,6 +141,7 @@ public class Residence extends JavaPlugin {
     protected SchematicsManager SchematicManager;
     private InformationPager InformationPagerManager;
     private WorldGuardUtil worldGuardUtil;
+    private KingdomsUtil kingdomsUtil;
 
     protected CommandFiller cmdFiller;
 
@@ -579,7 +582,7 @@ public class Residence extends JavaPlugin {
 			continue;
 		    String name = player.getName();
 		    if (name == null)
-			continue;		    
+			continue;
 		    this.addOfflinePlayerToChache(player);
 		}
 		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Player data loaded: " + OfflinePlayerList.size());
@@ -629,6 +632,8 @@ public class Residence extends JavaPlugin {
 
 		setWorldEdit();
 		setWorldGuard();
+		
+		setKingdoms();
 
 		blistener = new ResidenceBlockListener(this);
 		plistener = new ResidencePlayerListener(this);
@@ -778,6 +783,22 @@ public class Residence extends JavaPlugin {
 	    smanager = new SelectionManager(server, this);
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " WorldEdit NOT found!");
 	}
+    }
+
+    private GameManagement kingdomsmanager = null;
+
+    private void setKingdoms() {
+	if (Bukkit.getPluginManager().getPlugin("Kingdoms") != null) {
+	    try {
+		kingdomsmanager = Kingdoms.getManagers();
+	    } catch (NoClassDefFoundError | Exception e) {
+
+	    }
+	}
+    }
+
+    public GameManagement getKingdomsManager(){
+	return kingdomsmanager;
     }
 
     private void setWorldGuard() {
@@ -1672,6 +1693,12 @@ public class Residence extends JavaPlugin {
 	if (worldGuardUtil == null)
 	    worldGuardUtil = new WorldGuardUtil(this);
 	return worldGuardUtil;
+    }
+    
+    public KingdomsUtil getKingdomsUtil() {
+	if (kingdomsUtil == null)
+	    kingdomsUtil = new KingdomsUtil(this);
+	return kingdomsUtil;
     }
 
     public boolean hasPermission(CommandSender sender, String permision, boolean output) {

@@ -35,28 +35,7 @@ public class create implements cmd {
 	    }
 	}
 	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
-	    if (plugin.getWorldGuard() != null) {
-		if (plugin.getWorldGuardUtil().isSelectionInRegion(player) == null) {
-		    plugin.getResidenceManager().addResidence(player, args[1], plugin.getSelectionManager().getPlayerLoc1(player.getName()), plugin
-			.getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
-		    return true;
-		}
-		ProtectedRegion Region = plugin.getWorldGuardUtil().isSelectionInRegion(player);
-		plugin.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
 
-		Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
-		    Region.getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
-
-		Location highLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(),
-		    Region.getMaximumPoint().getBlockY(), Region.getMaximumPoint().getBlockZ());
-
-		Visualizer v = new Visualizer(player);
-		v.setAreas(plugin.getSelectionManager().getSelectionCuboid(player));
-		v.setErrorAreas(new CuboidArea(lowLoc, highLoc));
-
-		plugin.getSelectionManager().showBounds(player, v);
-		return true;
-	    }
 	    plugin.getResidenceManager().addResidence(player, args[1], plugin.getSelectionManager().getPlayerLoc1(player.getName()), plugin
 		.getSelectionManager().getPlayerLoc2(player.getName()), resadmin);
 	    return true;

@@ -132,6 +132,8 @@ public class SelectionManager {
     }
 
     public CuboidArea getSelectionCuboid(String player) {
+	if (!hasPlacedBoth(player))
+	    return null;
 	return new CuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
     }
 

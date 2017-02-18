@@ -1023,10 +1023,6 @@ public class ResidencePlayerListener implements Listener {
 
 	Material mat = block.getType();
 
-	Debug.D("container interact2 " + isContainer(mat, block));
-	Debug.D("container interact22 " + (heldItemId != plugin.getConfigManager().getSelectionTooldID()) + "  " + (heldItemId != plugin.getConfigManager().getInfoToolID()) + "  "
-	    + (heldItem != Material.INK_SACK) + "  " + (!plugin.getNms().isArmorStandMaterial(heldItem)) + "  " + (!plugin.getNms().isBoat(heldItem)));
-
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || plugin.getNms().isCanUseEntity_BothClick(mat, block))) {
 	    if (heldItemId != plugin.getConfigManager().getSelectionTooldID() && heldItemId != plugin.getConfigManager().getInfoToolID()
@@ -1035,7 +1031,6 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	Debug.D("container interact3");
 	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;
 
@@ -1051,7 +1046,6 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	}
 
-	Debug.D("container interact4");
 	if (resadmin)
 	    return;
 
@@ -1079,10 +1073,8 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	Debug.D("container interact5");
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
-	    Debug.D("container interact6");
 	    for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 		if (mat != checkMat.getKey())
 		    continue;

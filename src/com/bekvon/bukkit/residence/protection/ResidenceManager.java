@@ -876,7 +876,6 @@ public class ResidenceManager implements ResidenceInterface {
 		    retRes.put(chunk, ress);
 		}
 
-		Debug.D("adding res " + residence.getOwner());
 		plugin.getPlayerManager().addResidence(residence.getOwner(), residence);
 
 		residences.put(resName.toLowerCase(), residence);
