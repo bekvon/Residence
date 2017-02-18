@@ -7,7 +7,7 @@
 Language:
   Invalid:
     Player: '&c无效的玩家名...'
-    World: '&cInvalid world...'
+    World: '&c无效的世界...'
     Residence: '&c无效的领地...'
     Subzone: '&c无效的领地子区域...'
     Direction: '&c无效的方向...'
