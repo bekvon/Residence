@@ -1275,6 +1275,8 @@ public class ClaimedResidence {
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override
 	    public void run() {
+		if (targloc == null || targetPlayer == null || !targetPlayer.isOnline())
+		    return;
 		if (!plugin.getTeleportDelayMap().contains(targetPlayer.getName()) && plugin.getConfigManager().getTeleportDelay() > 0)
 		    return;
 		else if (plugin.getTeleportDelayMap().contains(targetPlayer.getName()))

@@ -58,7 +58,7 @@ public class PermissionManager {
 
     public PermissionGroup getDefaultGroup() {
 	if (defaultGroup == null)
-	    defaultGroup = groups.get(Residence.getInstance().getConfigManager().getDefaultGroup());
+	    defaultGroup = groups.get(Residence.getInstance().getConfigManager().getDefaultGroup().toLowerCase());
 	return defaultGroup;
     }
 
