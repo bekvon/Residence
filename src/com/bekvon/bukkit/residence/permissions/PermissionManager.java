@@ -28,6 +28,7 @@ public class PermissionManager {
     protected FlagPermissions globalFlagPerms;
 
     protected HashMap<String, PlayerGroup> groupsMap = new HashMap<String, PlayerGroup>();
+    private PermissionGroup defaultGroup = null;
     private Residence plugin;
 
     public PermissionManager(Residence plugin) {
@@ -55,10 +56,16 @@ public class PermissionManager {
 	return groups;
     }
 
+    public PermissionGroup getDefaultGroup() {
+	if (defaultGroup == null)
+	    defaultGroup = groups.get(Residence.getInstance().getConfigManager().getDefaultGroup());
+	return defaultGroup;
+    }
+
     public PermissionGroup getGroupByName(String group) {
 	group = group.toLowerCase();
 	if (!groups.containsKey(group)) {
-	    return groups.get(plugin.getConfigManager().getDefaultGroup());
+	    return getDefaultGroup();
 	}
 	return groups.get(group);
     }

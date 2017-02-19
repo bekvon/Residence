@@ -80,7 +80,7 @@ public class PlayerGroup {
 	}
 
 	if (finalGroup == null || !Residence.getInstance().getPermissionManager().getGroups().containsValue(finalGroup)) {
-	    this.groups.put(world, Residence.getInstance().getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup()));
+	    this.groups.put(world, Residence.getInstance().getPermissionManager().getDefaultGroup());
 	} else {
 	    this.groups.put(world, finalGroup);
 	}
@@ -88,7 +88,7 @@ public class PlayerGroup {
 
     private PermissionGroup getPermissionGroup() {
 	Player player = resPlayer.getPlayer();
-	PermissionGroup group = Residence.getInstance().getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup());
+	PermissionGroup group = Residence.getInstance().getPermissionManager().getDefaultGroup();
 	for (Entry<String, PermissionGroup> one : Residence.getInstance().getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
 		if (player.hasPermission("residence.group." + one.getKey())) {

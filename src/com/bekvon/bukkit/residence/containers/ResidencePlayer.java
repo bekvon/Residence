@@ -201,7 +201,7 @@ public class ResidencePlayer {
 	groups.updateGroup(world, false);
 	PermissionGroup group = groups.getGroup(world);
 	if (group == null)
-	    group = Residence.getInstance().getPermissionManager().getGroupByName(Residence.getInstance().getConfigManager().getDefaultGroup());
+	    group = Residence.getInstance().getPermissionManager().getDefaultGroup();
 	return group;
     }
 
