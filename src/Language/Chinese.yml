@@ -33,6 +33,7 @@ Language:
     SubzoneCollision: '&c区域与领地子区域 &6%1 &c冲突.'
     NonExist: '&c区域不存在.'
     InvalidName: '&c无效区域名...'
+    ToSmallTotal: '&c选中的区域过小 (&6%1&c)'
     ToSmallX: '&c选区 &6X &c方向长度 (&6%1&c) 过小. &e该值必须为 &6%2 &e或更大.'
     ToSmallY: '&c选区高度 (&6%1&c) 过小. &e该值必须为 &6%2 &e或更大.'
     ToSmallZ: '&c选区 &6Z &c方向长度 (&6%1&c) 过小. &e该值必须为 &6%2 &e或更大.'
