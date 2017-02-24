@@ -63,7 +63,7 @@ public class ActionBar implements ABInterface {
 	    enumTitleAction = Class.forName(getEnumTitleActionClasspath());
 	    nmsPacketPlayOutTitle = typePacketPlayOutTitle.getConstructor(enumTitleAction, nmsIChatBaseComponent);
 	    fromString = Class.forName(getClassMessageClasspath()).getMethod("fromString", String.class);
-	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+	} catch (Exception ex) {
 	    simpleTitleMessages = true;
 	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully suport title messages. They will be shown in chat instead.");
 	}
@@ -87,7 +87,7 @@ public class ActionBar implements ABInterface {
 		    ((Object[]) fromString.invoke(null, ChatColor.translateAlternateColorCodes('&', String.valueOf(subtitle))))[0]);
 		sendPacket(receivingPacket, packetSubtitle);
 	    }
-	} catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchFieldException ex) {
+	} catch (Exception ex) {
 	    simpleTitleMessages = true;
 	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully support title messages. They will be shown in chat instead.");
 	}
