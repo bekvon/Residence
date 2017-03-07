@@ -430,6 +430,10 @@ public class ResidenceManager implements ResidenceInterface {
 	return null;
     }
 
+    public void removeResidence(ClaimedResidence res) {
+	this.removeResidence(null, res.getName(), true);
+    }
+    
     public void removeResidence(String name) {
 	this.removeResidence(null, name, true);
     }

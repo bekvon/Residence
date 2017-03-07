@@ -2,6 +2,8 @@ package com.bekvon.bukkit.residence.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -21,29 +23,33 @@ public class FileCleanUp {
 
     public void cleanFiles() {
 
-	ArrayList<String> resNameList = plugin.getResidenceManager().getResidenceList(false, false);
+	Map<String, ClaimedResidence> resNameList = new HashMap<String, ClaimedResidence>(plugin.getResidenceManager().getResidences());
 	int i = 0;
 
 	OfflinePlayer[] offplayer = Bukkit.getOfflinePlayers();
 
-	HashMap<UUID, OfflinePlayer> playermap = new HashMap<UUID, OfflinePlayer>();
+	HashMap<UUID, OfflinePlayer> playerMapUUID = new HashMap<UUID, OfflinePlayer>();
+	HashMap<String, OfflinePlayer> playerMapNane = new HashMap<String, OfflinePlayer>();
 
 	for (OfflinePlayer one : offplayer) {
-	    playermap.put(one.getUniqueId(), one);
+	    playerMapUUID.put(one.getUniqueId(), one);
+	    playerMapNane.put(one.getName(), one);
 	}
 
 	int interval = plugin.getConfigManager().getResidenceFileCleanDays();
 	long time = System.currentTimeMillis();
 
-	for (String oneName : resNameList) {
-	    ClaimedResidence res = plugin.getResidenceManager().getByName(oneName);
+	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Starting auto CleanUp (" + playerMapUUID.size() + "/" + resNameList.size() + ")!");
+
+	for (Entry<String, ClaimedResidence> oneName : resNameList.entrySet()) {
+	    ClaimedResidence res = oneName.getValue();
 	    if (res == null)
 		continue;
 
-	    if (!playermap.containsKey(res.getOwnerUUID()))
-		continue;
+	    OfflinePlayer player = playerMapUUID.get(res.getOwnerUUID());
 
-	    OfflinePlayer player = playermap.get(res.getOwnerUUID());
+	    if (player == null)
+		player = playerMapNane.get(res.getOwner());
 
 	    if (player == null)
 		continue;
@@ -62,7 +68,7 @@ public class FileCleanUp {
 	    if (ResidenceVaultAdapter.hasPermission(player, "residence.cleanbypass", res.getWorld()))
 		continue;
 
-	    plugin.getResidenceManager().removeResidence(oneName);
+	    plugin.getResidenceManager().removeResidence(oneName.getValue());
 	    i++;
 	}
 	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Auto CleanUp deleted " + i + " residences!");
