@@ -334,6 +334,29 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeWSpeed(ResidenceDeleteEvent event) {
+	if (event.isCancelled())
+	    return;
+
+	ClaimedResidence res = event.getResidence();
+	if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.setWalkSpeed(0.2F);
+
+	if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.resetPlayerWeather();
+
+	if (res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		fly(one, false);
+
+	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.setGlowing(false);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onFlagChangeWSpeed(ResidenceFlagChangeEvent event) {
 	if (event.isCancelled())
 	    return;

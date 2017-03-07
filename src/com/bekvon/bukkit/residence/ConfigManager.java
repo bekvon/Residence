@@ -620,7 +620,7 @@ public class ConfigManager {
 
 	// Auto remove old residences
 	c.getW().addComment("Global.AutoCleanUp.Use", "HIGHLY EXPERIMENTAL residence cleaning on server startup if player is offline for x days.",
-	    "Players can bypass this wih residence.cleanbypass permission node");
+	    "Players can bypass this with residence.cleanbypass permission node");
 	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
 	c.getW().addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
 	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
