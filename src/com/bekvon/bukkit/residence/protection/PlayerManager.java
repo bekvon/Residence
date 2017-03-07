@@ -68,7 +68,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	}
 	return null;
     }
-    
+
     public ResidencePlayer playerJoin(String player, UUID uuid) {
 	if (!players.containsKey(player.toLowerCase())) {
 	    ResidencePlayer resPlayer = new ResidencePlayer(player, uuid);
@@ -267,6 +267,8 @@ public class PlayerManager implements ResidencePlayerInterface {
 	ResidencePlayer resPlayer = null;
 	if (playersUuid.containsKey(uuid)) {
 	    resPlayer = playersUuid.get(uuid);
+	} else if (name != null && players.containsKey(name.toLowerCase())) {
+	    resPlayer = players.get(name.toLowerCase());
 	} else {
 	    resPlayer = playerJoin(name, uuid);
 	}
