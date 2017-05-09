@@ -57,8 +57,8 @@ public class InformationPager {
 	int perPage = 20;
 	if (sender instanceof Player)
 	    perPage = 6;
-	
-	if (ownedResidences.isEmpty()){	    
+
+	if (ownedResidences.isEmpty()) {
 	    plugin.msg(sender, lm.Residence_DontOwn, targetPlayer);
 	    return;
 	}
@@ -102,8 +102,9 @@ public class InformationPager {
 	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
 
-	    if (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin) {
+	    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
 		worldInfo += "&6 (&3";
+
 		CuboidArea area = res.getAreaArray()[0];
 		worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
 		    .getBlockZ());
@@ -175,7 +176,7 @@ public class InformationPager {
 	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
 	    String worldInfo = "";
 
-	    if (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin) {
+	    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
 		worldInfo += "&6 (&3";
 		CuboidArea area = res.getAreaArray()[0];
 		worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
