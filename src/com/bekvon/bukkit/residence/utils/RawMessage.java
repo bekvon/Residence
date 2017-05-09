@@ -94,6 +94,7 @@ public class RawMessage {
     public RawMessage showClean(Player player) {
 	if (combinedClean.isEmpty())
 	    combineClean();
+	Debug.D(combined);
 	player.sendMessage(combined);
 	return this;
     }

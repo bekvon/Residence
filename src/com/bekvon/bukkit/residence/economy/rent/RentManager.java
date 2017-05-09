@@ -810,7 +810,6 @@ public class RentManager implements MarketRentInterface {
 	sbuild.append(ChatColor.GREEN);
 
 	PageInfo pi = new PageInfo(10, rentableLand.size(), page);
-
 	int position = -1;
 	for (ClaimedResidence res : rentableLand) {
 	    if (res == null)
@@ -822,7 +821,6 @@ public class RentManager implements MarketRentInterface {
 		break;
 	    if (!pi.isInRange(position))
 		continue;
-
 	    boolean rented = res.isRented();
 
 	    if (!res.getRentable().AllowRenewing && rented)
@@ -842,11 +840,11 @@ public class RentManager implements MarketRentInterface {
 	    RawMessage rm = new RawMessage();
 	    rm.add(msg, "§2" + hover);
 
-	    if (!hover.equalsIgnoreCase(""))
+	    if (!hover.equalsIgnoreCase("")) {
 		rm.show(player);
-	    else
-		rm.showClean(player);
-
+	    } else {
+		    player.sendMessage(msg);
+	    }
 	}
 
 	plugin.getInfoPageManager().ShowPagination(player, pi.getTotalPages(), page, "/res market list rent");
