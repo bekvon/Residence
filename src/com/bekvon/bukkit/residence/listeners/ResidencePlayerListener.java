@@ -352,7 +352,7 @@ public class ResidencePlayerListener implements Listener {
 	    for (Player one : event.getResidence().getPlayersInResidence())
 		one.resetPlayerWeather();
 
-	if (res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+	if (res.getPermissions().playerHas(event.getPlayer(), Flags.fly, FlagCombo.OnlyTrue))
 	    for (Player one : event.getResidence().getPlayersInResidence())
 		fly(one, false);
 
@@ -1561,7 +1561,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		player.resetPlayerWeather();
 
-	    if (ResOld.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+	    if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, false);
 
 	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
@@ -1576,9 +1576,9 @@ public class ResidencePlayerListener implements Listener {
 		    player.setGlowing(false);
 	    }
 
-	    if (res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+	    if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, true);
-	    else if (ResOld.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+	    else if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && !res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, false);
 
 	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
@@ -1618,7 +1618,7 @@ public class ResidencePlayerListener implements Listener {
 		    player.setGlowing(true);
 	    }
 
-	    if (res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+	    if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, true);
 
 	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
@@ -1902,12 +1902,12 @@ public class ResidencePlayerListener implements Listener {
     }
 
     private StuckInfo updateStuckTeleport(Player player, Location loc) {
-	
+
 	if (loc.getY() >= player.getLocation().getY())
-	    return null;	
-	
+	    return null;
+
 	StuckInfo info = stuckTeleportCounter.get(player.getUniqueId());
-	if (info == null){
+	if (info == null) {
 	    info = new StuckInfo(player);
 	    stuckTeleportCounter.put(player.getUniqueId(), info);
 	}
