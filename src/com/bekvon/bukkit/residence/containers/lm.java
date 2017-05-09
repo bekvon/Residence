@@ -124,6 +124,7 @@ public enum lm {
     Subzone_DeleteConfirm("&eAre you sure you want to delete subzone &6%1&e, use &6/res confirm &eto confirm."),
     Subzone_OwnerChange("&eSubzone &6%1 &eowner changed to &6%2"),
 
+    Residence_DontOwn("&eNothing to show"),
     Residence_Hidden(" &e(&6Hidden&e)"),
     Residence_Bought("&eYou bought residence &6%1"),
     Residence_Buy("&6%1 &ehas bought residence &6%2 &efrom you."),

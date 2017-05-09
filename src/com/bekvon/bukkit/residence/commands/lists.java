@@ -47,17 +47,17 @@ public class lists implements cmd {
 	} else if (args.length == 5) {
 	    if (args[1].equals("set")) {
 		plugin.getPermissionListManager().getList(player.getName(), args[2]).setFlag(args[3], FlagPermissions.stringToFlagState(args[4]));
-		plugin.msg(player, lm.Flag_Set);
+		plugin.msg(player, lm.Flag_Set, args[3], args[2], FlagPermissions.stringToFlagState(args[4]));
 		return true;
 	    }
 	} else if (args.length == 6) {
 	    if (args[1].equals("gset")) {
 		plugin.getPermissionListManager().getList(player.getName(), args[2]).setGroupFlag(args[3], args[4], FlagPermissions.stringToFlagState(args[5]));
-		plugin.msg(player, lm.Flag_Set);
+		plugin.msg(player, lm.Flag_Set, args[3], args[2], FlagPermissions.stringToFlagState(args[4]));
 		return true;
 	    } else if (args[1].equals("pset")) {
 		plugin.getPermissionListManager().getList(player.getName(), args[2]).setPlayerFlag(args[3], args[4], FlagPermissions.stringToFlagState(args[5]));
-		plugin.msg(player, lm.Flag_Set);
+		plugin.msg(player, lm.Flag_Set, args[3], args[2], FlagPermissions.stringToFlagState(args[4]));
 		return true;
 	    }
 	}
