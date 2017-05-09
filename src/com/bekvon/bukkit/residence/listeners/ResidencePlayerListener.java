@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -54,6 +55,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.StuckInfo;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
@@ -74,6 +76,7 @@ public class ResidencePlayerListener implements Listener {
     protected Map<String, String> currentRes;
     protected Map<String, Long> lastUpdate;
     protected Map<String, Location> lastOutsideLoc;
+    protected Map<UUID, StuckInfo> stuckTeleportCounter;
     protected int minUpdateTime;
     protected boolean chatenabled;
     protected List<String> playerToggleChat = new ArrayList<String>();
@@ -86,6 +89,7 @@ public class ResidencePlayerListener implements Listener {
 	currentRes = new HashMap<String, String>();
 	lastUpdate = new HashMap<String, Long>();
 	lastOutsideLoc = new HashMap<String, Location>();
+	stuckTeleportCounter = new HashMap<UUID, StuckInfo>();
 	playerToggleChat.clear();
 	minUpdateTime = plugin.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = plugin.getConfigManager().chatEnabled();
@@ -103,6 +107,7 @@ public class ResidencePlayerListener implements Listener {
 	currentRes = new HashMap<String, String>();
 	lastUpdate = new HashMap<String, Long>();
 	lastOutsideLoc = new HashMap<String, Location>();
+	stuckTeleportCounter = new HashMap<UUID, StuckInfo>();
 	playerToggleChat.clear();
 	minUpdateTime = plugin.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = plugin.getConfigManager().chatEnabled();
@@ -1791,7 +1796,13 @@ public class ResidencePlayerListener implements Listener {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.teleport(newLoc);
 		} else if (lastLoc != null) {
-		    player.teleport(lastLoc);
+
+		    StuckInfo info = updateStuckTeleport(player, loc);
+		    if (info != null && info.getTimesTeleported() > 5) {
+			Location newLoc = res.getOutsideFreeLoc(loc, player);
+			player.teleport(newLoc);
+		    } else
+			player.teleport(lastLoc);
 		} else {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.teleport(newLoc);
@@ -1888,6 +1899,20 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	}
+    }
+
+    private StuckInfo updateStuckTeleport(Player player, Location loc) {
+	
+	if (loc.getY() >= player.getLocation().getY())
+	    return null;	
+	
+	StuckInfo info = stuckTeleportCounter.get(player.getUniqueId());
+	if (info == null){
+	    info = new StuckInfo(player);
+	    stuckTeleportCounter.put(player.getUniqueId(), info);
+	}
+	info.updateLastTp();
+	return info;
     }
 
     public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
