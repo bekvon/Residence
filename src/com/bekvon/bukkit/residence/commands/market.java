@@ -475,11 +475,12 @@ public class market implements cmd {
 	c.get(path + "confirm.Description", "Confirms residence unrent/release action");
 	c.get(path + "confirm.Info", Arrays.asList("&eUsage: &6/res market confirm"));
 
-	c.get(path + "release.Description", "Remove a residence from rent or rentable.");
-	c.get(path + "release.Info", Arrays.asList("&eUsage: &6/res market release [residence]",
+	c.get(path + "unrent.Description", "Remove a residence from rent or rentable.");
+	c.get(path + "unrent.Info", Arrays.asList("&eUsage: &6/res market unrent [residence]",
 	    "If you are the renter, this command releases the rent on the house for you.",
 	    "If you are the owner, this command makes the residence not for rent anymore."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "release"), Arrays.asList("[residence]"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "unrent"), Arrays.asList("[residence]"));
     }
 
 }
