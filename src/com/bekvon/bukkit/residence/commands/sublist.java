@@ -18,13 +18,10 @@ public class sublist implements cmd {
     @Override
     @CommandAnnotation(simple = true, priority = 4100)
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (!(sender instanceof Player))
-	    return false;
 
 	if (args.length != 1 && args.length != 2 && args.length != 3)
 	    return false;
 
-	Player player = (Player) sender;
 	int page = 0;
 	try {
 	    if (args.length > 0) {
@@ -34,8 +31,8 @@ public class sublist implements cmd {
 	}
 
 	ClaimedResidence res;
-	if (args.length == 1) {
-	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
+	if (args.length == 1 && sender instanceof Player) {
+	    res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
 	} else {
 	    res = plugin.getResidenceManager().getByName(args[1]);
 	}
@@ -44,9 +41,9 @@ public class sublist implements cmd {
 	    page = 1;
 
 	if (res != null) {
-	    res.printSubzoneList(player, page);
+	    res.printSubzoneList(sender, page);
 	} else {
-	    plugin.msg(player, lm.Invalid_Residence);
+	    plugin.msg(sender, lm.Invalid_Residence);
 	}
 	return true;
     }
