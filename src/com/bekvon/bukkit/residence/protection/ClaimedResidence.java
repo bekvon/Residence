@@ -1049,6 +1049,13 @@ public class ClaimedResidence {
 	return loc;
     }
 
+    public CuboidArea getMainArea() {
+	CuboidArea area = areas.get("main");
+	if (area == null && !areas.isEmpty())
+	    area = areas.get(0);
+	return area;
+    }
+
     public CuboidArea getAreaByLoc(Location loc) {
 	for (CuboidArea thisarea : areas.values()) {
 	    if (thisarea.containsLoc(loc)) {
@@ -1151,6 +1158,16 @@ public class ClaimedResidence {
 	return count;
     }
 
+    public Location getTeleportLocation() {
+	if (tpLoc == null) {
+	    Location low = this.getMainArea().getLowLoc();
+	    Location high = this.getMainArea().getHighLoc();
+	    Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2, (low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high.getBlockZ()) / 2);
+	    tpLoc = this.getMiddleFreeLoc(t, null);
+	}
+	return tpLoc;
+    }
+
     public void setTpLoc(Player player, boolean resadmin) {
 	if (!this.perms.hasResidencePermission(player, false) && !resadmin) {
 	    plugin.msg(player, lm.General_NoPermission);
@@ -1233,24 +1250,26 @@ public class ClaimedResidence {
 	    plugin.getTeleportDelayMap().add(reqPlayer.getName());
 	}
 
-	if (tpLoc != null) {
+	Location loc = this.getTeleportLocation();
+	
+//	if (loc != null) {
 	    if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
-		performDelaydTp(tpLoc, targetPlayer, reqPlayer, true);
+		performDelaydTp(loc, targetPlayer, reqPlayer, true);
 	    else
-		performInstantTp(tpLoc, targetPlayer, reqPlayer, true);
-	} else {
-	    CuboidArea area = areas.values().iterator().next();
-	    if (area == null) {
-		reqPlayer.sendMessage(ChatColor.RED + "Could not find area to teleport to...");
-		plugin.getTeleportDelayMap().remove(targetPlayer.getName());
-		return;
-	    }
-	    final Location targloc = this.getMiddleFreeLoc(area.getHighLoc(), targetPlayer);
-	    if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
-		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
-	    else
-		performInstantTp(targloc, targetPlayer, reqPlayer, true);
-	}
+		performInstantTp(loc, targetPlayer, reqPlayer, true);
+//	} else {
+//	    CuboidArea area = this.getMainArea();
+//	    if (area == null) {
+//		reqPlayer.sendMessage(ChatColor.RED + "Could not find area to teleport to...");
+//		plugin.getTeleportDelayMap().remove(targetPlayer.getName());
+//		return;
+//	    }
+//	    Location targloc = this.getMiddleFreeLoc(area.getHighLoc(), targetPlayer);
+//	    if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
+//		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
+//	    else
+//		performInstantTp(targloc, targetPlayer, reqPlayer, true);
+//	}
     }
 
     public void TpTimer(final Player player, final int t) {

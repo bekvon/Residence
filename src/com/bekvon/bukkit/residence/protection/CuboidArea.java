@@ -15,8 +15,8 @@ import org.bukkit.Server;
 import org.bukkit.World;
 
 public class CuboidArea {
-    protected Location highPoints;
-    protected Location lowPoints;
+    private Location highPoints;
+    private Location lowPoints;
     protected String worldName;
 
     public CuboidArea(Location startLoc, Location endLoc) {
@@ -218,5 +218,13 @@ public class CuboidArea {
 	    }
 	}
 	return chunks;
+    }
+
+    public void setHighLocation(Location highLocation) {
+	this.highPoints = highLocation;
+    }
+
+    public void setLowLocation(Location lowLocation) {
+	this.lowPoints = lowLocation;
     }
 }

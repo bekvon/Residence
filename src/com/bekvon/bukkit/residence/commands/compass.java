@@ -1,6 +1,9 @@
 package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -12,6 +15,8 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 public class compass implements cmd {
 
@@ -30,20 +35,25 @@ public class compass implements cmd {
 	}
 
 	if (!plugin.hasPermission(player, "residence.compass"))
-	    return true;	
+	    return true;
 
-	if (plugin.getResidenceManager().getByName(args[1]) != null) {
-	    if (plugin.getResidenceManager().getByName(args[1]).getWorld().equalsIgnoreCase(player.getWorld().getName())) {
-		Location low = plugin.getResidenceManager().getByName(args[1]).getArea("main").getLowLoc();
-		Location high = plugin.getResidenceManager().getByName(args[1]).getArea("main").getHighLoc();
-		Location mid = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2, (low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high
-		    .getBlockZ()) / 2);
-		player.setCompassTarget(mid);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
+
+	if (res != null) {
+	    if (res.getWorld().equalsIgnoreCase(player.getWorld().getName())) {
+		CuboidArea area = res.getMainArea();
+		if (area == null)
+		    return false;
+		Location loc = res.getTeleportLocation();
+		if (loc == null)
+		    return false;
+		player.setCompassTarget(loc);
 		plugin.msg(player, lm.General_CompassTargetSet, args[1]);
 	    }
 	} else {
 	    plugin.msg(player, lm.Invalid_Residence);
 	}
+
 	return true;
     }
 
