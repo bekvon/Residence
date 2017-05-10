@@ -78,6 +78,7 @@ public class ConfigManager {
     protected int leaseCheckInterval;
     protected int autoSaveInt;
     private int ItemPickUpDelay;
+    private boolean AutomaticResidenceCreationCheckCollision;
 
     // Backup stuff
     protected boolean BackupAutoCleanUpUse;
@@ -419,10 +420,14 @@ public class ConfigManager {
 	DisableListeners = c.get("Global.Optimizations.DisabledWorlds.DisableListeners", true);
 	c.getW().addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
 	DisableCommands = c.get("Global.Optimizations.DisabledWorlds.DisableCommands", true);
-	
 
-	c.getW().addComment("Global.Optimizations.ItemPickUpDelay", "Delay in seconds between item pickups after residence flag prevents it","Keep it at arround 10 sec to lower unesecery checks");
+	c.getW().addComment("Global.Optimizations.ItemPickUpDelay", "Delay in seconds between item pickups after residence flag prevents it", "Keep it at arround 10 sec to lower unesecery checks");
 	ItemPickUpDelay = c.get("Global.Optimizations.ItemPickUpDelay", 10);
+
+	c.getW().addComment("Global.Optimizations.AutomaticResidenceCreation.CheckCollision",
+	    "When set to true /res auto command will check for new area collision with other residences to avoid overlapping.",
+	    "Set it to false to gain some performace but new residence can often overlap with old ones");
+	AutomaticResidenceCreationCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
 
 //	c.getW().addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
 //	    "You can bypass this with residence.checkbadflags permission node");
@@ -1714,5 +1719,9 @@ public class ConfigManager {
 
     public int getItemPickUpDelay() {
 	return ItemPickUpDelay;
+    }
+
+    public boolean isAutomaticResidenceCreationCheckCollision() {
+	return AutomaticResidenceCreationCheckCollision;
     }
 }

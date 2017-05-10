@@ -430,10 +430,21 @@ public class ResidenceManager implements ResidenceInterface {
 	return null;
     }
 
+    public ClaimedResidence collidesWithResidence(CuboidArea newarea) {
+	Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
+	for (Entry<String, ClaimedResidence> entry : set) {
+	    ClaimedResidence check = entry.getValue();
+	    if (check.checkCollision(newarea)) {
+		return entry.getValue();
+	    }
+	}
+	return null;
+    }
+
     public void removeResidence(ClaimedResidence res) {
 	this.removeResidence(null, res.getName(), true);
     }
-    
+
     public void removeResidence(String name) {
 	this.removeResidence(null, name, true);
     }
