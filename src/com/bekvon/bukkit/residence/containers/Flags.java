@@ -5,6 +5,7 @@ public enum Flags {
     admin(7, 0, FlagMode.Player, "Gives a player permission to change flags on a residence", true),
     animalkilling(365, 0, FlagMode.Both, "Allows or denys animal killing", true),
     animals(383, 90, FlagMode.Residence, "Allows or denys animal spawns", true),
+    anvilbreak(145, 90, FlagMode.Residence, "Allows or denys anvil break in residence", true),
     backup(47, 0, FlagMode.Residence, "If set to true, restores previous look of area (WordEdit required)", false),
     bank(130, 0, FlagMode.Both, "Allows or denys deposit/withdraw money from res bank", true),
     bed(355, 0, FlagMode.Both, "Allows or denys players to use beds", true),

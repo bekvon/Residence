@@ -42,7 +42,10 @@ import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -55,6 +58,29 @@ public class ResidenceBlockListener implements Listener {
 
     public ResidenceBlockListener(Residence residence) {
 	this.plugin = residence;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onAnvilInventoryClick(InventoryClickEvent e) {
+	Inventory inv = e.getInventory();
+	if (inv == null || inv.getType() != InventoryType.ANVIL || e.getInventory().getLocation() == null)
+	    return;
+	Block b = e.getInventory().getLocation().getBlock();
+	if (b == null || b.getType() != Material.ANVIL)
+	    return;
+
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(e.getInventory().getLocation());
+	if (res == null)
+	    return;
+	// Fix anvil only when item is picked up
+	if (e.getRawSlot() != 2)
+	    return;
+	if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
+	    return;
+	if (!res.getPermissions().has(Flags.anvilbreak, FlagCombo.OnlyFalse))
+	    return;
+
+	b.setData((byte) 1);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
