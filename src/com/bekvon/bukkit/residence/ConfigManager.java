@@ -77,6 +77,7 @@ public class ConfigManager {
     protected int chatPrefixLength;
     protected int leaseCheckInterval;
     protected int autoSaveInt;
+    private int ItemPickUpDelay;
 
     // Backup stuff
     protected boolean BackupAutoCleanUpUse;
@@ -418,6 +419,10 @@ public class ConfigManager {
 	DisableListeners = c.get("Global.Optimizations.DisabledWorlds.DisableListeners", true);
 	c.getW().addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
 	DisableCommands = c.get("Global.Optimizations.DisabledWorlds.DisableCommands", true);
+	
+
+	c.getW().addComment("Global.Optimizations.ItemPickUpDelay", "Delay in seconds between item pickups after residence flag prevents it","Keep it at arround 10 sec to lower unesecery checks");
+	ItemPickUpDelay = c.get("Global.Optimizations.ItemPickUpDelay", 10);
 
 //	c.getW().addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
 //	    "You can bypass this with residence.checkbadflags permission node");
@@ -1705,5 +1710,9 @@ public class ConfigManager {
 
     public Double getWalkSpeed2() {
 	return WalkSpeed2;
+    }
+
+    public int getItemPickUpDelay() {
+	return ItemPickUpDelay;
     }
 }

@@ -55,6 +55,8 @@ public enum Flags {
     iceform(79, 0, FlagMode.Residence, "Prevents from ice forming", true),
     icemelt(79, 0, FlagMode.Residence, "Prevents ice from melting", true),
     ignite(259, 0, FlagMode.Both, "Allows or denys fire ignition", true),
+    itemdrop(288, 0, FlagMode.Both, "Allows or denys item drop", true),
+    itempickup(289, 0, FlagMode.Both, "Allows or denys item pickup", true),
     jump2(165, 0, FlagMode.Residence, "Allows to jump 2 blocks high", false),
     jump3(165, 0, FlagMode.Residence, "Allows to jump 3 blocks high", false),
     keepinv(298, 0, FlagMode.Residence, "Players keeps inventory after death", false),

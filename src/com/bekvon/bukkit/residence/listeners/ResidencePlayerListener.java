@@ -34,6 +34,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -45,6 +46,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
@@ -68,6 +70,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
@@ -131,6 +134,17 @@ public class ResidencePlayerListener implements Listener {
 	else if (perms.has(Flags.jump3, FlagCombo.OnlyTrue))
 	    player.setVelocity(player.getVelocity().add(player.getVelocity().multiply(0.6)));
 
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getItem().getLocation());
+	if (res == null)
+	    return;
+	if (!res.getPermissions().has(Flags.itempickup, FlagCombo.OnlyFalse))
+	    return;
+	event.setCancelled(true);
+	event.getItem().setPickupDelay(plugin.getConfigManager().getItemPickUpDelay() * 20);
     }
 
     // Adding to chat prefix main residence name
