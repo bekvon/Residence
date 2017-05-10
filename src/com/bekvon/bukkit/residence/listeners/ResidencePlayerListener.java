@@ -40,6 +40,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -145,6 +146,16 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	event.setCancelled(true);
 	event.getItem().setPickupDelay(plugin.getConfigManager().getItemPickUpDelay() * 20);
+    }
+    
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getPlayer().getLocation());
+	if (res == null)
+	    return;
+	if (!res.getPermissions().has(Flags.itemdrop, FlagCombo.OnlyFalse))
+	    return;
+	event.setCancelled(true);
     }
 
     // Adding to chat prefix main residence name
