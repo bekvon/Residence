@@ -144,10 +144,12 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (!res.getPermissions().has(Flags.itempickup, FlagCombo.OnlyFalse))
 	    return;
+	if (event.getPlayer().hasPermission("residence.flag.itempickup.bypass"))
+	    return;
 	event.setCancelled(true);
 	event.getItem().setPickupDelay(plugin.getConfigManager().getItemPickUpDelay() * 20);
     }
-    
+
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getPlayer().getLocation());
