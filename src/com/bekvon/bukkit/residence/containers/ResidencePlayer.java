@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -32,6 +33,8 @@ public class ResidencePlayer {
     private int maxRents = -1;
     private int maxSubzones = -1;
     private int maxSubzoneDepth = -1;
+
+    private int maxValue = 9999;
 
     public ResidencePlayer(Player player) {
 	if (player == null)
@@ -104,9 +107,23 @@ public class ResidencePlayer {
     public void recountMaxRes() {
 	if (this.getGroup() != null)
 	    this.maxRes = this.getGroup().getMaxZones();
+	this.maxRes = this.maxRes == -1 ? maxValue : this.maxRes;
+
+	if (player != null && player.isOnline()) {
+	    if (this.player.isPermissionSet("residence.max.res.unlimited")) {
+		this.maxRes = maxValue;
+		return;
+	    }
+	} else if (ofPlayer != null) {
+	    if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res.unlimited", Residence.getInstance().getConfigManager().getDefaultWorld())) {
+		this.maxRes = maxValue;
+		return;
+	    }
+	}
+
 	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxResCount(); i++) {
 	    if (player != null && player.isOnline()) {
-		if (this.player.hasPermission("residence.max.res." + i))
+		if (this.player.isPermissionSet("residence.max.res." + i))
 		    this.maxRes = i;
 	    } else if (ofPlayer != null) {
 		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.res." + i, Residence.getInstance().getConfigManager().getDefaultWorld()))
@@ -116,9 +133,21 @@ public class ResidencePlayer {
     }
 
     public void recountMaxRents() {
+	if (player != null) {
+	    if (this.player.isPermissionSet("residence.max.rents.unlimited")) {
+		this.maxRents = maxValue;
+		return;
+	    }
+	} else {
+	    if (ofPlayer != null)
+		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.rents.unlimited", Residence.getInstance().getConfigManager().getDefaultWorld())) {
+		    this.maxRents = maxValue;
+		    return;
+		}
+	}
 	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxRentCount(); i++) {
 	    if (player != null) {
-		if (this.player.isPermissionSet("residence.max.rents." + i))
+		if (this.player.isPermissionSet("residence.max.rents.unlimited" + i))
 		    this.maxRents = i;
 	    } else {
 		if (ofPlayer != null)
@@ -128,6 +157,7 @@ public class ResidencePlayer {
 	}
 
 	int m = this.getGroup().getMaxRents();
+	m = m == -1 ? maxValue : m;
 	if (this.maxRents < m)
 	    this.maxRents = m;
     }
@@ -138,6 +168,18 @@ public class ResidencePlayer {
     }
 
     public void recountMaxSubzones() {
+	if (player != null) {
+	    if (this.player.isPermissionSet("residence.max.subzones.unlimited")) {
+		this.maxSubzones = maxValue;
+		return;
+	    }
+	} else {
+	    if (ofPlayer != null)
+		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzones.unlimited", Residence.getInstance().getConfigManager().getDefaultWorld())) {
+		    this.maxSubzones = maxValue;
+		    return;
+		}
+	}
 	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxSubzonesCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.subzones." + i))
@@ -150,6 +192,7 @@ public class ResidencePlayer {
 	}
 
 	int m = this.getGroup().getMaxSubzones();
+	m = m == -1 ? maxValue : m;
 	if (this.maxSubzones < m)
 	    this.maxSubzones = m;
     }
@@ -160,6 +203,18 @@ public class ResidencePlayer {
     }
 
     public void recountMaxSubzoneDepth() {
+	if (player != null) {
+	    if (this.player.isPermissionSet("residence.max.subzonedepth.unlimited")) {
+		this.maxSubzoneDepth = maxValue;
+		return;
+	    }
+	} else {
+	    if (ofPlayer != null)
+		if (ResidenceVaultAdapter.hasPermission(this.ofPlayer, "residence.max.subzonedepth.unlimited", Residence.getInstance().getConfigManager().getDefaultWorld())) {
+		    this.maxSubzoneDepth = maxValue;
+		    return;
+		}
+	}
 	for (int i = 1; i <= Residence.getInstance().getConfigManager().getMaxSubzoneDepthCount(); i++) {
 	    if (player != null) {
 		if (this.player.isPermissionSet("residence.max.subzonedepth." + i))
@@ -172,6 +227,7 @@ public class ResidencePlayer {
 	}
 
 	int m = this.getGroup().getMaxSubzoneDepth();
+	m = m == -1 ? maxValue : m;
 	if (this.maxSubzoneDepth < m)
 	    this.maxSubzoneDepth = m;
     }
