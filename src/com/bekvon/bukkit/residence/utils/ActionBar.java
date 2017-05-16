@@ -25,7 +25,6 @@ public class ActionBar implements ABInterface {
     private Class<?> nmsChatSerializer;
     private Class<?> nmsIChatBaseComponent;
     private Class<?> packetType;
-    private Constructor<?> constructor;
     private boolean simpleMessages = false;
     private boolean simpleTitleMessages = false;
 
@@ -33,6 +32,10 @@ public class ActionBar implements ABInterface {
     private Class<?> enumTitleAction;
     private Method fromString;
     private Residence plugin;
+
+    private Class<?> ChatMessageclz;
+    private Class<?> sub;
+    private Object[] consts;
 
     public ActionBar(Residence plugin) {
 	this.plugin = plugin;
@@ -47,10 +50,11 @@ public class ActionBar implements ABInterface {
 	    getHandle = typeCraftPlayer.getMethod("getHandle");
 	    playerConnection = typeNMSPlayer.getField("playerConnection");
 	    sendPacket = typePlayerConnection.getMethod("sendPacket", Class.forName(getPacketClasspath()));
-	    if (plugin.getVersionChecker().isHigher(Version.v1_7_R4)) {
-		constructor = packetType.getConstructor(nmsIChatBaseComponent, byte.class);
-	    } else {
-		constructor = packetType.getConstructor(nmsIChatBaseComponent, int.class);
+
+	    if (plugin.getVersionChecker().getVersion().isHigher(Version.v1_11_R1)) {
+		ChatMessageclz = Class.forName(getChatMessageTypeClasspath());
+		consts = ChatMessageclz.getEnumConstants();
+		sub = consts[2].getClass();
 	    }
 
 	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException ex) {
@@ -116,10 +120,12 @@ public class ActionBar implements ABInterface {
 	try {
 	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', JSONObject
 		.escape(msg)) + "\"}");
-	    if (plugin.getVersionChecker().isHigher(Version.v1_7_R4)) {
-		packet = constructor.newInstance(serialized, (byte) 2);
+	    if (plugin.getVersionChecker().getVersion().isHigher(Version.v1_11_R1))
+		packet = packetType.getConstructor(nmsIChatBaseComponent, sub).newInstance(serialized, consts[2]);
+	    else if (version.isHigher(Version.v1_7_R4)) {
+		packet = packetType.getConstructor(nmsIChatBaseComponent, byte.class).newInstance(serialized, (byte) 2);
 	    } else {
-		packet = constructor.newInstance(serialized, 2);
+		packet = packetType.getConstructor(nmsIChatBaseComponent, int.class).newInstance(serialized, 2);
 	    }
 	    Object player = getHandle.invoke(receivingPacket);
 	    Object connection = playerConnection.get(player);
@@ -170,5 +176,9 @@ public class ActionBar implements ABInterface {
 
     private String getClassMessageClasspath() {
 	return "org.bukkit.craftbukkit." + version + ".util.CraftChatMessage";
+    }
+
+    private String getChatMessageTypeClasspath() {
+	return "net.minecraft.server." + version + ".ChatMessageType";
     }
 }

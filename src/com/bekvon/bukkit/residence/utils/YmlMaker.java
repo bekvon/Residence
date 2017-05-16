@@ -54,12 +54,11 @@ public class YmlMaker {
 	return config;
     }
 
-    @SuppressWarnings("deprecation")
-    private static YamlConfiguration loadConfiguration(InputStream defConfigStream) {
+    private YamlConfiguration loadConfiguration(InputStream defConfigStream) {
 	Validate.notNull(defConfigStream, "File cannot be null");
 	YamlConfiguration config = new YamlConfiguration();
 	try {
-	    config.load(defConfigStream);
+	    config.load(ConfigFile);
 	} catch (FileNotFoundException ex) {
 	} catch (IOException ex) {
 	} catch (InvalidConfigurationException ex) {

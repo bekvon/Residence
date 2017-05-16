@@ -66,6 +66,14 @@ public class VersionChecker {
 		shortVersion = this.name().split("_R")[0];
 	    return shortVersion;
 	}
+
+	public boolean isHigher(Version version) {
+	    return getValue() > version.getValue();
+	}
+	
+	public boolean isLower(Version version) {
+	    return getValue() < version.getValue();
+	}
     }
 
     public static Version getCurrent() {
