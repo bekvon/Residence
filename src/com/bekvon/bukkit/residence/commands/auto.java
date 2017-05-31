@@ -112,7 +112,9 @@ public class auto implements cmd {
 
 	int cost = (int) Math.ceil(cuboid.getSize() * group.getCostPerBlock());
 
-	double balance = plugin.getEconomyManager().getBalance(player.getName());
+	double balance = 0;
+	if (plugin.getEconomyManager() != null)
+	    balance = plugin.getEconomyManager().getBalance(player.getName());
 
 	direction dir = direction.Top;
 
@@ -189,7 +191,6 @@ public class auto implements cmd {
 	    skipped = 0;
 
 	    cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
-
 	    if (cost > balance)
 		break;
 
