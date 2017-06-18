@@ -1047,7 +1047,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (heldItemId != plugin.getConfigManager().getInfoToolID())
 	    return;
-	
+
 	if (this.isContainer(block.getType(), block))
 	    return;
 
@@ -1788,20 +1788,23 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null) {
 	    lastOutsideLoc.put(pname, loc);
 	    if (ResOld != null) {
-		String leave = ResOld.getLeaveMessage();
 
 		// New ResidenceChangeEvent
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		plugin.getServ().getPluginManager().callEvent(chgEvent);
 
-		if (leave != null && !leave.equals("")) {
-		    if (plugin.getConfigManager().useActionBar()) {
-			plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
-			    .toString());
-		    } else {
-			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
-		    }
-		}
+//		String leave = ResOld.getLeaveMessage();
+//		if (leave != null && !leave.equals("")) {
+//		    if (plugin.getConfigManager().useTitleMessage()) {
+//			plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, ResOld.getName(), ResOld, leave));
+//		    }
+//		    if (plugin.getConfigManager().useActionBar()) {
+//			plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
+//			    .toString());
+//		    } else {
+//			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+//		    }
+//		}
 		currentRes.remove(pname);
 	    }
 	    return;
@@ -1837,7 +1840,6 @@ public class ResidencePlayerListener implements Listener {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.teleport(newLoc);
 		}
-
 		if (plugin.getConfigManager().useActionBar()) {
 		    plugin.getAB().send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
 		} else {
@@ -1889,46 +1891,80 @@ public class ResidencePlayerListener implements Listener {
 
 	    // "from" residence for ResidenceChangedEvent
 	    ClaimedResidence chgFrom = null;
-	    if (ResOld != res && ResOld != null) {
-		String leave = ResOld.getLeaveMessage();
-		chgFrom = ResOld;
-		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
-		    if (plugin.getConfigManager().useActionBar()) {
-			plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
-			    .toString());
-		    } else {
-			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
-		    }
-		}
-	    }
-
-	    String enterMessage = res.getEnterMessage();
+//	    if (ResOld != res && ResOld != null) {
+//		String leave = ResOld.getLeaveMessage();
+//		chgFrom = ResOld;
+//		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
+//		    if (plugin.getConfigManager().useTitleMessage()) {
+//			plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, ResOld.getName(), ResOld, leave));
+//		    }
+//		    if (plugin.getConfigManager().useActionBar()) {
+//			plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
+//			    .toString());
+//		    } else {
+//			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
+//		    }
+//		}
+//	    }
 
 	    // New ResidenceChangedEvent
 	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(chgFrom, res, player);
 	    plugin.getServ().getPluginManager().callEvent(chgEvent);
 
-	    if (!(ResOld != null && res == ResOld.getParent())) {
-		if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(areaname) || plugin
-		    .getTransactionManager().isForSale(areaname))) {
-		    if (plugin.getRentManager().isForRent(areaname) && !plugin.getRentManager().isRented(areaname)) {
-			RentableLand rentable = plugin.getRentManager().getRentableLand(areaname);
-			if (rentable != null)
-			    plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeRented, areaname, rentable.cost, rentable.days));
-		    } else if (plugin.getTransactionManager().isForSale(areaname) && !res.isOwner(player)) {
-			int sale = plugin.getTransactionManager().getSaleAmount(areaname);
-			plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeBought, areaname, sale));
-		    }
-		} else if (enterMessage != null && !enterMessage.equals("")) {
-		    if (plugin.getConfigManager().useActionBar()) {
-			plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, areaname, res, enterMessage))
-			    .toString());
-		    } else {
-			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, areaname, res, enterMessage));
-		    }
+	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onResidenceChangeMessagePrint(ResidenceChangedEvent event) {
+
+	ClaimedResidence from = event.getFrom();
+	ClaimedResidence to = event.getTo();
+	String message = null;
+
+	ClaimedResidence res = from == null ? to : from;
+
+	if (from == null && to != null) {
+	    message = to.getEnterMessage();
+	    res = to;
+	}
+
+	if (from != null && to == null) {
+	    message = from.getLeaveMessage();
+	    res = from;
+	}
+
+	if (from != null && to != null) {
+	    message = to.getEnterMessage();
+	    res = to;
+	}
+
+	Player player = event.getPlayer();
+
+	if (message != null) {
+	    if (plugin.getConfigManager().useTitleMessage()) {
+		plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, res.getName(), res, message));
+	    }
+	    if (plugin.getConfigManager().useActionBar()) {
+		plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res.getName(), res, message))
+		    .toString());
+	    } else {
+		plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res.getName(), res, message));
+	    }
+	}
+	if (!(from != null && res == from.getParent())) {
+	    if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(from) || plugin
+		.getTransactionManager().isForSale(from))) {
+		if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
+		    RentableLand rentable = plugin.getRentManager().getRentableLand(from);
+		    if (rentable != null)
+			plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeRented, from, rentable.cost, rentable.days));
+		} else if (plugin.getTransactionManager().isForSale(from) && !res.isOwner(player)) {
+		    int sale = plugin.getTransactionManager().getSaleAmount(from);
+		    plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeBought, from, sale));
 		}
 	    }
 	}
+
     }
 
     private StuckInfo updateStuckTeleport(Player player, Location loc) {

@@ -113,6 +113,7 @@ public class ConfigManager {
     protected ChatColor chatColor;
     protected boolean chatEnable;
     protected boolean actionBar;
+    protected boolean titleMessage;
     protected boolean ActionBarOnSelection;
     protected boolean visualizer;
     protected int minMoveUpdate;
@@ -785,6 +786,9 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.ActionBar.General", "True for ActionBar - new component in 1.8", "False for old Messaging in chat enter/leave Residence messages");
 	actionBar = c.get("Global.ActionBar.General", true);
+	c.getW().addComment("Global.TitleBar.EnterLeave", "When set to true enter/leave messages will be shown in title/subtitle slots",
+	    "Subtitle can be defined with %subtitle% while setting enter/leave messages");
+	titleMessage = c.get("Global.TitleBar.EnterLeave", false);
 	ActionBarOnSelection = c.get("Global.ActionBar.ShowOnSelection", true);
 
 	c.getW().addComment("Global.ResidenceChatColor", "Color of residence chat.");
@@ -1039,6 +1043,7 @@ public class ConfigManager {
 	if (CouldronCompatability) {
 	    useVisualizer = false;
 	    actionBar = false;
+	    titleMessage = false;
 	    ActionBarOnSelection = false;
 	}
 
@@ -1463,6 +1468,10 @@ public class ConfigManager {
 
     public boolean useActionBar() {
 	return actionBar;
+    }
+
+    public boolean useTitleMessage() {
+	return titleMessage;
     }
 
     public boolean useActionBarOnSelection() {

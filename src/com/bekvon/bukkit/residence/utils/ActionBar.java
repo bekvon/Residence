@@ -74,6 +74,15 @@ public class ActionBar implements ABInterface {
     }
 
     @Override
+    public void sendTitle(Player receivingPacket, Object title) {
+	String t = (String) title;
+	if (t.contains("%subtitle%"))
+	    sendTitle(receivingPacket, t.split("%subtitle%")[0], t.split("%subtitle%")[1]);
+	else
+	    sendTitle(receivingPacket, t, "");
+    }
+
+    @Override
     public void sendTitle(Player receivingPacket, Object title, Object subtitle) {
 	if (simpleTitleMessages) {
 	    receivingPacket.sendMessage(ChatColor.translateAlternateColorCodes('&', String.valueOf(title)));
@@ -113,6 +122,8 @@ public class ActionBar implements ABInterface {
 
     @Override
     public void send(Player receivingPacket, String msg) {
+	if (msg != null)
+	    msg = msg.replace("%subtitle%", "");
 	if (simpleMessages) {
 	    receivingPacket.sendMessage(msg);
 	    return;

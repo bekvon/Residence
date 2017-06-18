@@ -10,4 +10,6 @@ public interface ABInterface {
     public void send(Player player, String msg);
 
     public void sendTitle(Player player, Object title, Object subtitle);
+
+    void sendTitle(Player receivingPacket, Object title);
 }
