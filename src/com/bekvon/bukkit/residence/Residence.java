@@ -169,7 +169,7 @@ public class Residence extends JavaPlugin {
     public Map<String, String> deleteConfirm;
     public Map<String, String> UnrentConfirm = new HashMap<String, String>();
     public List<String> resadminToggle;
-    private final static Set<String> validLanguages = new HashSet<String>(Arrays.asList("English", "Czech", "Chinese", "ChineseTW", "French"));
+    private final static Set<String> validLanguages = new HashSet<String>(Arrays.asList("English", "Czech", "Chinese", "ChineseTW", "French", "Spanish"));
     private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private Map<UUID, OfflinePlayer> cachedPlayerNameUUIDs = new HashMap<UUID, OfflinePlayer>();
     private WorldEditPlugin wep = null;
