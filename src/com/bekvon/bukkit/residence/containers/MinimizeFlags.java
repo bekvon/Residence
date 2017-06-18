@@ -1,20 +1,21 @@
 package com.bekvon.bukkit.residence.containers;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class MinimizeFlags {
 
-    private HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
+    private Map<String, Boolean> flags = new HashMap<String, Boolean>();
 
     private int id = 0;
 
-    public MinimizeFlags(int id, HashMap<String, Boolean> flags) {
+    public MinimizeFlags(int id, Map<String, Boolean> flags) {
 	this.id = id;
 	this.flags = flags;
     }
 
-    public boolean same(HashMap<String, Boolean> flags) {
+    public boolean same(Map<String, Boolean> flags) {
 	if (flags.size() != this.flags.size())
 	    return false;
 	for (Entry<String, Boolean> one : flags.entrySet()) {
@@ -26,7 +27,7 @@ public class MinimizeFlags {
 	return true;
     }
 
-    public boolean add(HashMap<String, Boolean> flags) {
+    public boolean add(Map<String, Boolean> flags) {
 	if (!same(flags))
 	    return false;
 	this.flags = flags;
@@ -37,7 +38,7 @@ public class MinimizeFlags {
 	return id;
     }
 
-    public HashMap<String, Boolean> getFlags() {
+    public Map<String, Boolean> getFlags() {
 	return flags;
     }
 

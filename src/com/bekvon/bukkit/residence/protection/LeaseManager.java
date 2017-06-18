@@ -9,9 +9,8 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -19,63 +18,104 @@ import org.bukkit.entity.Player;
 
 public class LeaseManager {
 
-    private Map<String, Long> leaseExpireTime;
+    private Set<ClaimedResidence> leaseExpireTime;
 
     ResidenceManager manager;
 
     private Residence plugin;
 
-    public LeaseManager(Residence plugin, ResidenceManager m) {
+    public LeaseManager(Residence plugin) {
 	this.plugin = plugin;
-	manager = m;
-	leaseExpireTime = Collections.synchronizedMap(new HashMap<String, Long>());
+	manager = plugin.getResidenceManager();
+	leaseExpireTime = new HashSet<ClaimedResidence>();
     }
 
+    @Deprecated
+    public boolean leaseExpires(ClaimedResidence res) {
+	return isLeased(res);
+    }
+    
+    public boolean isLeased(ClaimedResidence res) {
+	if (res == null)
+	    return false;
+	return res.getLeaseExpireTime() != null;
+    }
+
+    @Deprecated
     public boolean leaseExpires(String area) {
-	return leaseExpireTime.containsKey(area);
+	return isLeased(plugin.getResidenceManager().getByName(area));
     }
 
-    public String getExpireTime(String area) {
-	if (leaseExpireTime.containsKey(area)) {
-	    return GetTime.getTime(leaseExpireTime.get(area));
+    public String getExpireTime(ClaimedResidence res) {
+	if (res == null)
+	    return null;
+	Long time = res.getLeaseExpireTime();
+	if (time != null) {
+	    return GetTime.getTime(time);
 	}
 	return null;
     }
 
-    public void removeExpireTime(String area) {
-	leaseExpireTime.remove(area);
+    @Deprecated
+    public String getExpireTime(String area) {
+	return getExpireTime(plugin.getResidenceManager().getByName(area));
     }
 
+    public void removeExpireTime(ClaimedResidence res) {
+	if (res == null)
+	    return;
+	leaseExpireTime.remove(res);
+    }
+
+    @Deprecated
+    public void removeExpireTime(String area) {
+	removeExpireTime(plugin.getResidenceManager().getByName(area));
+    }
+
+    public void setExpireTime(Player player, ClaimedResidence res, int days) {
+	if (res == null) {
+	    if (player != null)
+		plugin.msg(player, lm.Invalid_Area);
+	    return;
+	}
+
+	res.setLeaseExpireTime(daysToMs(days) + System.currentTimeMillis());
+	leaseExpireTime.add(res);
+	if (player != null)
+	    plugin.msg(player, lm.Economy_LeaseRenew, getExpireTime(res));
+    }
+
+    @Deprecated
     public void setExpireTime(String area, int days) {
 	this.setExpireTime(null, area, days);
     }
 
+    @Deprecated
     public void setExpireTime(Player player, String area, int days) {
-	if (manager.getByName(area) != null) {
-	    leaseExpireTime.put(area, daysToMs(days) + System.currentTimeMillis());
-	    if (player != null)
-		plugin.msg(player, lm.Economy_LeaseRenew, getExpireTime(area));
-	} else {
-	    if (player != null)
-		plugin.msg(player, lm.Invalid_Area);
-	}
+	setExpireTime(player, plugin.getResidenceManager().getByName(area), days);
     }
 
+    @Deprecated
     public void renewArea(String area, Player player) {
-	if (!leaseExpires(area)) {
+	renewArea(plugin.getResidenceManager().getByName(area), player);
+    }
+
+    public void renewArea(ClaimedResidence res, Player player) {
+	if (res == null)
+	    return;
+	if (!isLeased(res)) {
 	    plugin.msg(player, lm.Economy_LeaseNotExpire);
 	    return;
 	}
+
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	int max = group.getMaxLeaseTime();
 	int add = group.getLeaseGiveTime();
-	int rem = daysRemaining(area);
+	int rem = daysRemaining(res);
 	EconomyInterface econ = plugin.getEconomyManager();
 	if (econ != null) {
 	    double cost = group.getLeaseRenewCost();
-	    ClaimedResidence res = manager.getByName(area);
-	    area = res.getName();
 	    int amount = (int) Math.ceil(res.getTotalSize() * cost);
 	    if (cost != 0D) {
 		//Account account = iConomy.getBank().getAccount(player.getName());
@@ -90,18 +130,21 @@ public class LeaseManager {
 	    }
 	}
 	if (rem + add > max) {
-	    setExpireTime(player, area, max);
+	    setExpireTime(player, res, max);
 	    plugin.msg(player, lm.Economy_LeaseRenewMax);
-	    plugin.msg(player, lm.Economy_LeaseRenew, getExpireTime(area));
 	    return;
 	}
-	Long get = leaseExpireTime.get(area);
+	Long get = res.getLeaseExpireTime();
 	if (get != null) {
 	    get = get + daysToMs(add);
-	    leaseExpireTime.put(area, get);
-	} else
-	    leaseExpireTime.put(area, daysToMs(add));
-	plugin.msg(player, lm.Economy_LeaseRenew, getExpireTime(area));
+	    res.setLeaseExpireTime(get);
+
+	    leaseExpireTime.add(res);
+	} else {
+	    res.setLeaseExpireTime(daysToMs(add));
+	    leaseExpireTime.add(res);
+	}
+	plugin.msg(player, lm.Economy_LeaseRenew, getExpireTime(res));
     }
 
     public int getRenewCost(ClaimedResidence res) {
@@ -118,70 +161,72 @@ public class LeaseManager {
 	return (int) Math.ceil((((ms / 1000D) / 60D) / 60D) / 24D);
     }
 
-    private int daysRemaining(String area) {
-	Long get = leaseExpireTime.get(area);
+    private static int daysRemaining(ClaimedResidence res) {
+	if (res == null)
+	    return 999;
+	Long get = res.getLeaseExpireTime();
 	if (get <= System.currentTimeMillis())
 	    return 0;
 	return msToDays((int) (get - System.currentTimeMillis()));
     }
 
     public void doExpirations() {
-	Set<Entry<String, Long>> set = leaseExpireTime.entrySet();
-	Iterator<Entry<String, Long>> it = set.iterator();
-	while (it.hasNext()) {
-	    Entry<String, Long> next = it.next();
-	    if (next.getValue() <= System.currentTimeMillis()) {
-		String resname = next.getKey();
-		ClaimedResidence res = plugin.getResidenceManager().getByName(resname);
-		if (res == null) {
-		    it.remove();
-		} else {
-		    resname = res.getName();
-		    boolean renewed = false;
-		    String owner = res.getPermissions().getOwner();
 
-		    PermissionGroup group = res.getOwnerGroup();
+	Set<ClaimedResidence> t = new HashSet<ClaimedResidence>(leaseExpireTime);
 
-		    int cost = this.getRenewCost(res);
-		    if (plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().autoRenewLeases()) {
-			if (cost == 0) {
-			    renewed = true;
-			} else if (res.getBank().hasEnough(cost)) {
-			    res.getBank().subtract(cost);
-			    renewed = true;
-			    if (plugin.getConfigManager().debugEnabled())
-				System.out.println("Lease Renewed From Residence Bank: " + resname);
-			} else if (plugin.getEconomyManager().canAfford(owner, cost)) {
-			    if (plugin.getEconomyManager().subtract(owner, cost)) {
-				renewed = true;
-				if (plugin.getConfigManager().debugEnabled())
-				    System.out.println("Lease Renewed From Economy: " + resname);
-			    }
-			}
-		    }
-		    if (!renewed) {
-			if (!plugin.getConfigManager().enabledRentSystem() || !plugin.getRentManager().isRented(resname)) {
-			    ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, res, DeleteCause.LEASE_EXPIRE);
-			    plugin.getServ().getPluginManager().callEvent(resevent);
-			    if (!resevent.isCancelled()) {
-				manager.removeResidence(next.getKey());
-				it.remove();
-				if (plugin.getConfigManager().debugEnabled())
-				    System.out.println("Lease NOT removed, Removing: " + resname);
-			    }
-			}
-		    } else {
-			if (plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().enableLeaseMoneyAccount()) {
-			    plugin.getEconomyManager().add("Lease Money", cost);
-			}
+	for (ClaimedResidence res : t) {
+	    if (res == null) {
+		leaseExpireTime.remove(res);
+		continue;
+	    }
+	    if (res.getLeaseExpireTime() > System.currentTimeMillis())
+		continue;
+
+	    String resname = res.getName();
+	    boolean renewed = false;
+	    String owner = res.getPermissions().getOwner();
+
+	    PermissionGroup group = res.getOwnerGroup();
+
+	    int cost = this.getRenewCost(res);
+	    if (plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().autoRenewLeases()) {
+		if (cost == 0) {
+		    renewed = true;
+		} else if (res.getBank().hasEnough(cost)) {
+		    res.getBank().subtract(cost);
+		    renewed = true;
+		    if (plugin.getConfigManager().debugEnabled())
+			System.out.println("Lease Renewed From Residence Bank: " + resname);
+		} else if (plugin.getEconomyManager().canAfford(owner, cost)) {
+		    if (plugin.getEconomyManager().subtract(owner, cost)) {
+			renewed = true;
 			if (plugin.getConfigManager().debugEnabled())
-			    System.out.println("Lease Renew Old: " + next.getValue());
-			next.setValue(System.currentTimeMillis() + daysToMs(group.getLeaseGiveTime()));
-			if (plugin.getConfigManager().debugEnabled())
-			    System.out.println("Lease Renew New: " + next.getValue());
+			    System.out.println("Lease Renewed From Economy: " + resname);
 		    }
 		}
 	    }
+	    if (!renewed) {
+		if (!plugin.getConfigManager().enabledRentSystem() || !plugin.getRentManager().isRented(resname)) {
+		    ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(null, res, DeleteCause.LEASE_EXPIRE);
+		    plugin.getServ().getPluginManager().callEvent(resevent);
+		    if (!resevent.isCancelled()) {
+			manager.removeResidence(res);
+			leaseExpireTime.remove(res);
+			if (plugin.getConfigManager().debugEnabled())
+			    System.out.println("Lease NOT removed, Removing: " + resname);
+		    }
+		}
+	    } else {
+		if (plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().enableLeaseMoneyAccount()) {
+		    plugin.getEconomyManager().add("Lease Money", cost);
+		}
+		if (plugin.getConfigManager().debugEnabled())
+		    System.out.println("Lease Renew Old: " + res.getName());
+		res.setLeaseExpireTime(System.currentTimeMillis() + daysToMs(group.getLeaseGiveTime()));
+		if (plugin.getConfigManager().debugEnabled())
+		    System.out.println("Lease Renew New: " + res.getName());
+	    }
+
 	}
     }
 
@@ -189,37 +234,46 @@ public class LeaseManager {
 	leaseExpireTime.clear();
 	String[] list = manager.getResidenceList();
 	for (String item : list) {
-	    if (item != null) {
-		ClaimedResidence res = plugin.getResidenceManager().getByName(item);
-		if (res != null)
-		    this.setExpireTime(null, item, res.getOwnerGroup().getLeaseGiveTime());
-	    }
+	    if (item == null)
+		continue;
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(item);
+	    if (res != null)
+		setExpireTime(null, res, res.getOwnerGroup().getLeaseGiveTime());
+
 	}
 	System.out.println("[Residence] - Set default leases.");
     }
 
     public Map<String, Long> save() {
-	return leaseExpireTime;
-    }
-
-    public void updateLeaseName(String oldName, String newName) {
-	if (leaseExpireTime.containsKey(oldName)) {
-	    leaseExpireTime.put(newName, leaseExpireTime.get(oldName));
-	    leaseExpireTime.remove(oldName);
+	Map<String, Long> m = new HashMap<String, Long>();
+	for (ClaimedResidence one : leaseExpireTime) {
+	    m.put(one.getName(), one.getLeaseExpireTime());
 	}
+	return m;
     }
 
     @SuppressWarnings("unchecked")
-    public LeaseManager load(@SuppressWarnings("rawtypes") Map root, ResidenceManager m) {
-	LeaseManager l = new LeaseManager(plugin, m);
-	if (root != null) {
-	    for (Object val : root.values()) {
-		if (!(val instanceof Long)) {
-		    root.remove(val);
-		}
+    public LeaseManager load(@SuppressWarnings("rawtypes") Map root) {
+	LeaseManager l = new LeaseManager(plugin);
+	if (root == null)
+	    return l;
+
+	for (Object val : root.values()) {
+	    if (!(val instanceof Long)) {
+		root.remove(val);
 	    }
-	    l.leaseExpireTime = Collections.synchronizedMap(root);
 	}
+
+	Map<String, Long> m = root;
+
+	for (Entry<String, Long> one : m.entrySet()) {
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(one.getKey());
+	    if (res == null)
+		continue;
+	    res.setLeaseExpireTime(one.getValue());
+	    l.leaseExpireTime.add(res);
+	}
+
 	return l;
     }
 }

@@ -608,7 +608,7 @@ public class Residence extends JavaPlugin {
 
 	    rmanager = new ResidenceManager(this);
 
-	    leasemanager = new LeaseManager(this, rmanager);
+	    leasemanager = new LeaseManager(this);
 
 	    tmanager = new TransactionManager(this);
 
@@ -1259,7 +1259,7 @@ public class Residence extends JavaPlugin {
 	    if (loadFile.isFile()) {
 		yml = new YMLSaveHelper(loadFile);
 		yml.load();
-		leasemanager = getLeaseManager().load((Map) yml.getRoot().get("Leases"), rmanager);
+		leasemanager = getLeaseManager().load((Map) yml.getRoot().get("Leases"));
 	    }
 	    loadFile = new File(saveFolder, "permlists.yml");
 	    if (loadFile.isFile()) {
@@ -1683,16 +1683,18 @@ public class Residence extends JavaPlugin {
 //	if (!isWorldOk(sender))
 //	    return;
 
-	if (sender != null)
-	    if (getLM().containsKey(lm.getPath())) {
-		String msg = getLM().getMessage(lm, variables);
-		if (msg.length() > 0)
-		    sender.sendMessage(msg);
-	    } else {
-		String msg = lm.getPath();
-		if (msg.length() > 0)
-		    sender.sendMessage(lm.getPath());
-	    }
+	if (sender == null)
+	    return;
+
+	if (getLM().containsKey(lm.getPath())) {
+	    String msg = getLM().getMessage(lm, variables);
+	    if (msg.length() > 0)
+		sender.sendMessage(msg);
+	} else {
+	    String msg = lm.getPath();
+	    if (msg.length() > 0)
+		sender.sendMessage(lm.getPath());
+	}
     }
 
     public List<String> msgL(lm lm) {

@@ -244,7 +244,7 @@ public class ResidenceManager implements ResidenceInterface {
 	residences.put(name.toLowerCase(), newRes);
 
 	calculateChunks(name);
-	plugin.getLeaseManager().removeExpireTime(name);
+	plugin.getLeaseManager().removeExpireTime(newRes);
 	plugin.getPlayerManager().addResidence(newRes.getOwner(), newRes);
 
 	if (player != null) {
@@ -256,11 +256,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    plugin.msg(player, lm.Residence_Create, name);
 	}
 	if (plugin.getConfigManager().useLeases()) {
-	    if (player != null) {
-		plugin.getLeaseManager().setExpireTime(player, name, group.getLeaseGiveTime());
-	    } else {
-		plugin.getLeaseManager().setExpireTime(name, group.getLeaseGiveTime());
-	    }
+		plugin.getLeaseManager().setExpireTime(player, newRes, group.getLeaseGiveTime());
 	}
 	return true;
 
@@ -540,9 +536,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
-	// plugin.getLeaseManager().removeExpireTime(name); - causing
-	// concurrent modification exception in lease manager... worked
-	// around for now
+	 plugin.getLeaseManager().removeExpireTime(res);
 
 	for (String oneSub : res.getSubzoneList()) {
 	    plugin.getPlayerManager().removeResFromPlayer(res.getOwner(), name + "." + oneSub);
@@ -708,8 +702,8 @@ public class ResidenceManager implements ResidenceInterface {
 	if (res.getSubzonesAmount(false) > 0)
 	    plugin.msg(sender, lm.General_TotalSubzones, res.getSubzonesAmount(false), res.getSubzonesAmount(true));
 
-	if (plugin.getConfigManager().useLeases() && plugin.getLeaseManager().leaseExpires(areaname)) {
-	    String time = plugin.getLeaseManager().getExpireTime(areaname);
+	if (plugin.getConfigManager().useLeases() && plugin.getLeaseManager().leaseExpires(res)) {
+	    String time = plugin.getLeaseManager().getExpireTime(res);
 	    if (time != null)
 		plugin.msg(sender, lm.Economy_LeaseExpire, time);
 	}
@@ -861,13 +855,13 @@ public class ResidenceManager implements ResidenceInterface {
 	return t;
     }
 
-    public MinimizeFlags addFlagsTempCache(HashMap<String, Boolean> flags) {
+    public MinimizeFlags addFlagsTempCache(Map<String, Boolean> map) {
 	for (MinimizeFlags one : optimizeFlags) {
-	    if (!one.add(flags))
+	    if (!one.add(map))
 		continue;
 	    return one;
 	}
-	MinimizeFlags m = new MinimizeFlags(lastMinimmizeFlagsId, flags);
+	MinimizeFlags m = new MinimizeFlags(lastMinimmizeFlagsId, map);
 	optimizeFlags.add(m);
 	lastMinimmizeFlagsId++;
 	return m;
@@ -916,7 +910,7 @@ public class ResidenceManager implements ResidenceInterface {
 	return m.getLeave();
     }
 
-    public HashMap<String, Boolean> getChacheFlags(String world, int id) {
+    public Map<String, Boolean> getChacheFlags(String world, int id) {
 	HashMap<Integer, MinimizeFlags> c = cacheFlags.get(world);
 	if (c == null)
 	    return null;
@@ -1080,9 +1074,6 @@ public class ResidenceManager implements ResidenceInterface {
 		plugin.getPlayerManager().renameResidence(player.getName(), oldName, newName);
 
 		calculateChunks(newName);
-		if (plugin.getConfigManager().useLeases()) {
-		    plugin.getLeaseManager().updateLeaseName(oldName, newName);
-		}
 
 		plugin.getSignUtil().updateSignResName(res);
 

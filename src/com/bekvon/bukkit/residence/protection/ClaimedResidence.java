@@ -70,6 +70,8 @@ public class ClaimedResidence {
     protected ResidenceItemList blacklist;
     protected boolean mainRes = false;
     protected long createTime = 0L;
+    
+    private Long leaseExpireTime = null;
 
     protected List<String> cmdWhiteList = new ArrayList<String>();
     protected List<String> cmdBlackList = new ArrayList<String>();
@@ -1833,5 +1835,13 @@ public class ClaimedResidence {
 
     public void addShopVote(ShopVote ShopVote) {
 	ShopVoteList.add(ShopVote);
+    }
+
+    public Long getLeaseExpireTime() {
+	return leaseExpireTime;
+    }
+
+    public void setLeaseExpireTime(Long leaseExpireTime) {
+	this.leaseExpireTime = leaseExpireTime;
     }
 }

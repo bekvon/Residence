@@ -248,6 +248,7 @@ public enum lm {
     Economy_SellAmount("&eSell Amount: &2%1"),
     Economy_SellList(" &6%1&e. &6%2 &e(&6%3&e) - &6%4"),
     Economy_LeaseExpire("&eLease Expire Time: &2%1"),
+    Economy_LeaseList("&6%1. &e%2 &2%3 &e%4"),
 
     Expanding_North("&eExpanding North &6%1 &eblocks"),
     Expanding_West("&eExpanding West &6%1 &eblocks"),

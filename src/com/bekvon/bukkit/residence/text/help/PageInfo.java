@@ -8,6 +8,8 @@ public class PageInfo {
     private int end = 0;
     private int currentPage = 0;
 
+    private int currentPlace = -1;
+
     private int perPage = 6;
 
     public PageInfo(int perPage, int totalEntries, int currentPage) {
@@ -20,7 +22,11 @@ public class PageInfo {
     public int getPositionForOutput(int place) {
 	return this.start + place + 1;
     }
-    
+
+    public int getPositionForOutput() {
+	return currentPlace + 1;
+    }
+
     private void calculate() {
 	this.start = (this.currentPage - 1) * this.perPage;
 	this.end = this.start + this.perPage - 1;
@@ -33,6 +39,11 @@ public class PageInfo {
 	if (place >= start && place <= end)
 	    return true;
 	return false;
+    }
+
+    public boolean isInRange() {
+	currentPlace++;
+	return isInRange(currentPlace);
     }
 
     public boolean isPageOk() {
@@ -65,5 +76,13 @@ public class PageInfo {
 
     public int getTotalEntries() {
 	return totalEntries;
+    }
+
+    public int getCurrentPlace() {
+	return currentPlace;
+    }
+
+    public void setCurrentPlace(int currentPlace) {
+	this.currentPlace = currentPlace;
     }
 }

@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -25,7 +24,6 @@ import org.bukkit.permissions.PermissionDefault;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;
-import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -598,7 +596,7 @@ public class FlagPermissions {
 
 	Map<String, Object> playerFlagsClone = new HashMap<String, Object>();
 	for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
-	    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache((HashMap<String, Boolean>) one.getValue());
+	    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(one.getValue());
 	    playerFlagsClone.put(one.getKey(), min.getId());
 	}
 	root.put("PlayerFlags", playerFlagsClone);
@@ -607,13 +605,13 @@ public class FlagPermissions {
 	if (!groupFlags.isEmpty()) {
 	    Map<String, Object> GroupFlagsClone = new HashMap<String, Object>();
 	    for (Entry<String, Map<String, Boolean>> one : groupFlags.entrySet()) {
-		MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache((HashMap<String, Boolean>) one.getValue());
+		MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(one.getValue());
 		GroupFlagsClone.put(one.getKey(), min.getId());
 	    }
 	    root.put("GroupFlags", GroupFlagsClone);
 	}
 
-	MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(new HashMap<String, Boolean>(cuboidFlags));
+	MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(cuboidFlags);
 	if (min == null) {
 	    // Cloning map to fix issue for yml anchors being created	
 	    root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));

@@ -1,6 +1,8 @@
 package com.bekvon.bukkit.residence.commands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,6 +14,7 @@ import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.text.help.PageInfo;
 
 public class lease implements cmd {
 
@@ -23,7 +26,32 @@ public class lease implements cmd {
 
 	Player player = (Player) sender;
 
-	if (args.length == 2 || args.length == 3) {
+	if (args.length == 2 || args.length == 3 || args.length == 4) {
+
+	    if (args[1].equals("set")) {
+		if (!resadmin) {
+		    plugin.msg(player, lm.General_NoPermission);
+		    return true;
+		}
+		if (args[3].equals("infinite")) {
+		    if (plugin.getLeaseManager().isLeased(plugin.getResidenceManager().getByName(args[2]))) {
+			plugin.getLeaseManager().removeExpireTime(plugin.getResidenceManager().getByName(args[2]));
+			plugin.msg(player, lm.Economy_LeaseInfinite);
+		    } else {
+			plugin.msg(player, lm.Economy_LeaseNotExpire);
+		    }
+		    return true;
+		}
+		int days;
+		try {
+		    days = Integer.parseInt(args[3]);
+		} catch (Exception ex) {
+		    plugin.msg(player, lm.Invalid_Days);
+		    return true;
+		}
+		plugin.getLeaseManager().setExpireTime(player, plugin.getResidenceManager().getByName(args[2]), days);
+		return true;
+	    }
 	    if (args[1].equals("expires")) {
 		ClaimedResidence res = null;
 		if (args.length == 2) {
@@ -40,24 +68,76 @@ public class lease implements cmd {
 		    }
 		}
 
-		String until = plugin.getLeaseManager().getExpireTime(res.getName());
+		String until = plugin.getLeaseManager().getExpireTime(res);
 		if (until != null)
 		    plugin.msg(player, lm.Economy_LeaseRenew, until);
 		return true;
 	    }
 	    if (args[1].equals("renew")) {
 		if (args.length == 3) {
-		    plugin.getLeaseManager().renewArea(args[2], player);
+		    plugin.getLeaseManager().renewArea(plugin.getResidenceManager().getByName(args[2]), player);
 		} else {
 		    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		    if (res != null)
-			plugin.getLeaseManager().renewArea(res.getName(), player);
+			plugin.getLeaseManager().renewArea(res, player);
+		    else
+			return false;
 		}
 		return true;
-	    } else if (args[1].equals("cost")) {
+	    }
+	    if (args[1].equals("list")) {
+		ClaimedResidence res = null;
+		int page = -1;
+		if (args.length > 2)
+		    try {
+			page = Integer.parseInt(args[2]);
+		    } catch (Exception e) {
+			res = plugin.getResidenceManager().getByName(args[2]);
+		    }
+		if (args.length > 3 && page == -1)
+		    try {
+			page = Integer.parseInt(args[3]);
+		    } catch (Exception e) {
+			res = plugin.getResidenceManager().getByName(args[3]);
+		    }
+
+		if (res == null)
+		    res = plugin.getResidenceManager().getByLoc(player.getLocation());
+
+		if (res == null)
+		    return false;
+
+		List<ClaimedResidence> list = new ArrayList<ClaimedResidence>();
+
+		if (plugin.getLeaseManager().isLeased(res))
+		    list.add(res);
+
+		for (ClaimedResidence one : res.getSubzones()) {
+		    if (plugin.getLeaseManager().isLeased(one))
+			list.add(one);
+		}
+
+		PageInfo pi = new PageInfo(3, list.size(), page);
+
+		plugin.msg(player, lm.General_Separator);
+		for (ClaimedResidence one : list) {
+		    if (!pi.isInRange())
+			continue;
+
+		    if (res.isOwner(player))
+			plugin.msg(player, lm.Economy_LeaseList, pi.getPositionForOutput(), one.getName(), plugin.getLeaseManager().getExpireTime(one), one.getOwner());
+		    else
+			plugin.msg(player, lm.Economy_LeaseList, pi.getPositionForOutput(), one.getName(), "", "");
+		}
+
+		plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), pi.getCurrentPage(), "res lease list " + res.getName());
+
+		return true;
+	    }
+	    if (args[1].equals("cost")) {
 		if (args.length == 3) {
 		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
-		    if (res == null || plugin.getLeaseManager().leaseExpires(args[2])) {
+		    if (res == null || plugin.getLeaseManager().isLeased(res)) {
 			int cost = plugin.getLeaseManager().getRenewCost(res);
 			plugin.msg(player, lm.Economy_LeaseRenewalCost, args[2], cost);
 		    } else {
@@ -71,38 +151,12 @@ public class lease implements cmd {
 		    return true;
 		}
 		String area = res.getName();
-		if (plugin.getLeaseManager().leaseExpires(area)) {
+		if (plugin.getLeaseManager().isLeased(res)) {
 		    int cost = plugin.getLeaseManager().getRenewCost(res);
 		    plugin.msg(player, lm.Economy_LeaseRenewalCost, area, cost);
 		} else {
 		    plugin.msg(player, lm.Economy_LeaseNotExpire);
 		}
-		return true;
-
-	    }
-	} else if (args.length == 4) {
-	    if (args[1].equals("set")) {
-		if (!resadmin) {
-		    plugin.msg(player, lm.General_NoPermission);
-		    return true;
-		}
-		if (args[3].equals("infinite")) {
-		    if (plugin.getLeaseManager().leaseExpires(args[2])) {
-			plugin.getLeaseManager().removeExpireTime(args[2]);
-			plugin.msg(player, lm.Economy_LeaseInfinite);
-		    } else {
-			plugin.msg(player, lm.Economy_LeaseNotExpire);
-		    }
-		    return true;
-		}
-		int days;
-		try {
-		    days = Integer.parseInt(args[3]);
-		} catch (Exception ex) {
-		    plugin.msg(player, lm.Invalid_Days);
-		    return true;
-		}
-		plugin.getLeaseManager().setExpireTime(player, args[2], days);
 		return true;
 	    }
 	}
@@ -126,6 +180,10 @@ public class lease implements cmd {
 	c.get(path + "renew.Description", "Renew the lease time");
 	c.get(path + "renew.Info", Arrays.asList("&eUsage: &6/resadmin lease renew <residence>", "Renews the lease time for current or specified residence."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "renew"), Arrays.asList("[residence]"));
+
+	c.get(path + "list.Description", "Show lease list of current residence");
+	c.get(path + "list.Info", Arrays.asList("&eUsage: &6/resadmin lease list <residence> <page>", "Prints out all subzones lease times"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "list"), Arrays.asList("[residence]"));
 
 	c.get(path + "expires.Description", "Lease end date");
 	c.get(path + "expires.Info", Arrays.asList("&eUsage: &6/resadmin lease expires <residence>", "Shows when expires residence lease time."));

@@ -313,7 +313,7 @@ public class TransactionManager implements MarketBuyInterface {
 	plugin.msg(player, lm.Area_Name, res.getName());
 	plugin.msg(player, lm.Economy_SellAmount, res.getSellPrice());
 	if (plugin.getConfigManager().useLeases()) {
-	    String etime = plugin.getLeaseManager().getExpireTime(res.getName());
+	    String etime = plugin.getLeaseManager().getExpireTime(res);
 	    if (etime != null) {
 		plugin.msg(player, lm.Economy_LeaseExpire, etime);
 	    }
