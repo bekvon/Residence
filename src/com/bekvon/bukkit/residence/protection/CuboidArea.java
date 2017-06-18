@@ -186,6 +186,33 @@ public class CuboidArea {
 	return root;
     }
 
+    public String newSave() {
+	return lowPoints.getBlockX() + ":" + lowPoints.getBlockY() + ":" + lowPoints.getBlockZ() + ":" + highPoints.getBlockX() + ":" + highPoints.getBlockY() + ":" + highPoints.getBlockZ();
+    }
+
+    public static CuboidArea newLoad(String root, World world) throws Exception {
+	if (root == null || !root.contains(":")) {
+	    throw new Exception("Invalid residence physical location...");
+	}
+	CuboidArea newArea = new CuboidArea();
+	String[] split = root.split(":");
+	try {
+	    int x1 = Integer.parseInt(split[0]);
+	    int y1 = Integer.parseInt(split[1]);
+	    int z1 = Integer.parseInt(split[2]);
+	    int x2 = Integer.parseInt(split[3]);
+	    int y2 = Integer.parseInt(split[4]);
+	    int z2 = Integer.parseInt(split[5]);
+	    newArea.lowPoints = new Location(world, x1, y1, z1);
+	    newArea.highPoints = new Location(world, x2, y2, z2);
+	    newArea.worldName = world.getName();
+	} catch (Exception e) {
+	    throw new Exception("Invalid residence physical location...");
+	}
+
+	return newArea;
+    }
+
     public static CuboidArea load(Map<String, Object> root, World world) throws Exception {
 	if (root == null) {
 	    throw new Exception("Invalid residence physical location...");

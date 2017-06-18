@@ -97,7 +97,7 @@ public class ResidencePermissions extends FlagPermissions {
 //	    return false;
 //	}
 //    }
-    
+
     @Override
     public boolean playerHas(Player player, String world, Flags flag, boolean def) {
 	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag.getName(), FlagType.PLAYER, player.getName(), def);
@@ -132,22 +132,22 @@ public class ResidencePermissions extends FlagPermissions {
     public boolean has(Flags flag, FlagCombo f) {
 	return has(flag, f, true);
     }
-    
+
     public boolean has(Flags flag, FlagCombo f, boolean checkParent) {
- 	switch (f) {
- 	case FalseOrNone:
- 	    return !has(flag, false, checkParent);
- 	case OnlyFalse:
- 	    return !has(flag, true, checkParent);
- 	case OnlyTrue:
- 	    return has(flag, false, checkParent);
- 	case TrueOrNone:
- 	    return has(flag, true, checkParent);
- 	default:
- 	    return false;
- 	}
-     }
-    
+	switch (f) {
+	case FalseOrNone:
+	    return !has(flag, false, checkParent);
+	case OnlyFalse:
+	    return !has(flag, true, checkParent);
+	case OnlyTrue:
+	    return has(flag, false, checkParent);
+	case TrueOrNone:
+	    return has(flag, true, checkParent);
+	default:
+	    return false;
+	}
+    }
+
     @Deprecated
     public boolean has(String flag, FlagCombo f) {
 	return has(flag, f, true);
@@ -529,7 +529,8 @@ public class ResidencePermissions extends FlagPermissions {
     @Override
     public Map<String, Object> save() {
 	Map<String, Object> root = super.save();
-	root.put("OwnerUUID", ownerUUID.toString());
+	if (!ownerUUID.toString().equals(Residence.getInstance().getTempUserUUID()))
+	    root.put("OwnerUUID", ownerUUID.toString());
 	root.put("OwnerLastKnownName", ownerLastKnownName);
 //	root.put("World", world);
 	return root;
@@ -538,9 +539,12 @@ public class ResidencePermissions extends FlagPermissions {
     public static ResidencePermissions load(String worldName, ClaimedResidence res, Map<String, Object> root) throws Exception {
 	ResidencePermissions newperms = new ResidencePermissions(res);
 	//newperms.owner = (String) root.get("Owner");
-	if (root.containsKey("OwnerUUID")) {
-	    newperms.ownerUUID = UUID.fromString((String) root.get("OwnerUUID"));//get owner UUID
-	    //			String name = Residence.getPlayerName(newperms.ownerUUID); //try to find the current name of the owner
+	if (root.containsKey("OwnerUUID") || root.containsKey("OwnerLastKnownName")) {
+	    if (!root.containsKey("OwnerUUID"))
+		newperms.ownerUUID = UUID.fromString(Residence.getInstance().getTempUserUUID());//get empty owner UUID
+	    else
+		newperms.ownerUUID = UUID.fromString((String) root.get("OwnerUUID"));//get owner UUID
+	    //			String name = Residence.getPlayerName(newperms.ownerUUID); //try to find the current name of the owner	    
 	    newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName");//otherwise load last known name from file
 
 	    OfflinePlayer p = null;

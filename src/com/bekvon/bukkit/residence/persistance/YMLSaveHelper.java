@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,18 +43,16 @@ public class YMLSaveHelper {
 
     @SuppressWarnings("unchecked")
     public void load() throws IOException {
-	FileInputStream fis = new FileInputStream(f);
-	InputStreamReader isr = new InputStreamReader(fis, "UTF8");
+	InputStream fis = new FileInputStream(f);
 	try {
-	    root = (Map<String, Object>) yml.load(isr);
+	    root = (Map<String, Object>) yml.load(fis);
 	} catch (ReaderException e) {
 	    System.out.println("[Residence] - Failed to load " + yml.getName() + " file!");
 	}
-	isr.close();
+	fis.close();
     }
 
     public Map<String, Object> getRoot() {
 	return root;
     }
-
 }

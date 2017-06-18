@@ -6,6 +6,7 @@ import org.bukkit.GameMode;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
@@ -1251,12 +1252,12 @@ public class ClaimedResidence {
 	}
 
 	Location loc = this.getTeleportLocation();
-	
+
 //	if (loc != null) {
-	    if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
-		performDelaydTp(loc, targetPlayer, reqPlayer, true);
-	    else
-		performInstantTp(loc, targetPlayer, reqPlayer, true);
+	if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
+	    performDelaydTp(loc, targetPlayer, reqPlayer, true);
+	else
+	    performInstantTp(loc, targetPlayer, reqPlayer, true);
 //	} else {
 //	    CuboidArea area = this.getMainArea();
 //	    if (area == null) {
@@ -1374,17 +1375,30 @@ public class ClaimedResidence {
 	Map<String, Object> root = new HashMap<>();
 	Map<String, Object> areamap = new HashMap<>();
 
-	root.put("CapitalizedName", resName);
+//	root.put("CapitalizedName", resName);
 	if (mainRes)
 	    root.put("MainResidence", mainRes);
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
 
-	if (enterMessage != null)
-	    root.put("EnterMessage", enterMessage);
+	if (enterMessage != null && leaveMessage != null) {
+	    MinimizeMessages min = plugin.getResidenceManager().addMessageToTempCache(enterMessage, leaveMessage);
+	    if (min == null) {
+		root.put("EnterMessage", enterMessage);
+		root.put("LeaveMessage", leaveMessage);
+	    } else {
+		root.put("Messages", min.getId());
+	    }
+	}
 
-	if (leaveMessage != null)
-	    root.put("LeaveMessage", leaveMessage);
+//	if (enterMessage != null)
+//	    root.put("EnterMessage", enterMessage);
+//
+//	if (leaveMessage != null) {
+//	    ResidenceManager mng = plugin.getResidenceManager();
+//	    Integer id = mng.addLeaveMessageToTempCache(leaveMessage);
+//	    root.put("LeaveMessage", id);
+//	}
 
 	if (ShopDesc != null)
 	    root.put("ShopDescription", ShopDesc);
@@ -1405,8 +1419,9 @@ public class ClaimedResidence {
 	map = ignorelist.save();
 	if (!map.isEmpty())
 	    root.put("IgnoreList", map);
+
 	for (Entry<String, CuboidArea> entry : areas.entrySet()) {
-	    areamap.put(entry.getKey(), entry.getValue().save());
+	    areamap.put(entry.getKey(), entry.getValue().newSave());
 	}
 
 	root.put("Areas", areamap);
@@ -1424,13 +1439,8 @@ public class ClaimedResidence {
 	    root.put("cmdWhiteList", this.cmdWhiteList);
 
 	if (tpLoc != null) {
-	    Map<String, Object> tpmap = new HashMap<>();
-	    tpmap.put("X", convertDouble(tpLoc.getX()));
-	    tpmap.put("Y", convertDouble(tpLoc.getY()));
-	    tpmap.put("Z", convertDouble(tpLoc.getZ()));
-	    tpmap.put("Pitch", convertDouble(tpLoc.getPitch()));
-	    tpmap.put("Yaw", convertDouble(tpLoc.getYaw()));
-	    root.put("TPLoc", tpmap);
+	    root.put("TPLoc", convertDouble(tpLoc.getX()) + ":" + convertDouble(tpLoc.getY()) + ":" + convertDouble(tpLoc.getZ()) + ":" + convertDouble(tpLoc.getPitch()) + ":" + convertDouble(tpLoc
+		.getYaw()));
 	}
 	return root;
     }
@@ -1498,7 +1508,13 @@ public class ClaimedResidence {
 	if (world == null)
 	    throw new Exception("Cant Find World: " + res.perms.getWorld());
 	for (Entry<String, Object> map : areamap.entrySet()) {
-	    res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(), world));
+	    if (map.getValue() instanceof String) {
+		// loading new same format
+		res.areas.put(map.getKey(), CuboidArea.newLoad((String) map.getValue(), world));
+	    } else {
+		// loading old format
+		res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(), world));
+	    }
 	}
 
 	if (root.containsKey("Subzones")) {
@@ -1523,28 +1539,54 @@ public class ClaimedResidence {
 	    }
 	}
 
-	if (root.containsKey("EnterMessage"))
+	if (root.containsKey("EnterMessage") && root.get("EnterMessage") instanceof String)
 	    res.enterMessage = (String) root.get("EnterMessage");
-
-	if (root.containsKey("LeaveMessage"))
+	if (root.containsKey("LeaveMessage") && root.get("LeaveMessage") instanceof String)
 	    res.leaveMessage = (String) root.get("LeaveMessage");
 
+	if (root.containsKey("Messages") && root.get("Messages") instanceof Integer){
+	    res.enterMessage = plugin.getResidenceManager().getChacheMessageEnter(worldName, (Integer) root.get("Messages"));
+	    res.leaveMessage = plugin.getResidenceManager().getChacheMessageLeave(worldName, (Integer) root.get("Messages"));
+	}
+
 	res.parent = parent;
-	Map<String, Object> tploc = (Map<String, Object>) root.get("TPLoc");
-	if (tploc != null) {
+
+	if (root.get("TPLoc") instanceof String) {
+	    String tpLoc = (String) root.get("TPLoc");
+
 	    double pitch = 0.0;
 	    double yaw = 0.0;
 
-	    if (tploc.containsKey("Yaw"))
-		yaw = convertDouble(tploc.get("Yaw").toString());
+	    try {
+		String[] split = tpLoc.split(":");
+		if (split.length > 3)
+		    yaw = convertDouble(split[3]);
+		if (split.length > 4)
+		    pitch = convertDouble(split[4]);
+		res.tpLoc = new Location(world, convertDouble(split[0]), convertDouble(split[1]), convertDouble(split[2]));
+	    } catch (Exception e) {
+	    }
 
-	    if (tploc.containsKey("Pitch"))
-		pitch = convertDouble(tploc.get("Pitch").toString());
-
-	    res.tpLoc = new Location(world, convertDouble(tploc.get("X").toString()), convertDouble(tploc.get("Y").toString()), convertDouble(tploc.get("Z")
-		.toString()));
 	    res.tpLoc.setPitch((float) pitch);
 	    res.tpLoc.setYaw((float) yaw);
+
+	} else {
+	    Map<String, Object> tploc = (Map<String, Object>) root.get("TPLoc");
+	    if (tploc != null) {
+		double pitch = 0.0;
+		double yaw = 0.0;
+
+		if (tploc.containsKey("Yaw"))
+		    yaw = convertDouble(tploc.get("Yaw").toString());
+
+		if (tploc.containsKey("Pitch"))
+		    pitch = convertDouble(tploc.get("Pitch").toString());
+
+		res.tpLoc = new Location(world, convertDouble(tploc.get("X").toString()), convertDouble(tploc.get("Y").toString()), convertDouble(tploc.get("Z")
+		    .toString()));
+		res.tpLoc.setPitch((float) pitch);
+		res.tpLoc.setYaw((float) yaw);
+	    }
 	}
 
 	if (root.containsKey("cmdBlackList"))

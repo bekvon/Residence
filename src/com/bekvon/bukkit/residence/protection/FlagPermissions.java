@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -23,6 +24,8 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.MinimizeFlags;
+import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -593,12 +596,32 @@ public class FlagPermissions {
 	// Putting uuid's to main cache for later save
 //	Residence.getInstance().addCachedPlayerNameUUIDs(cachedPlayerNameUUIDs);
 
-	root.put("PlayerFlags", playerFlags);
-	if (!groupFlags.isEmpty())
-	    root.put("GroupFlags", groupFlags);
+	Map<String, Object> playerFlagsClone = new HashMap<String, Object>();
+	for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
+	    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache((HashMap<String, Boolean>) one.getValue());
+	    playerFlagsClone.put(one.getKey(), min.getId());
+	}
+	root.put("PlayerFlags", playerFlagsClone);
 
-	// Cloning map to fix issue for yml anchors being created
-	root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
+//	root.put("PlayerFlags", playerFlags);
+	if (!groupFlags.isEmpty()) {
+	    Map<String, Object> GroupFlagsClone = new HashMap<String, Object>();
+	    for (Entry<String, Map<String, Boolean>> one : groupFlags.entrySet()) {
+		MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache((HashMap<String, Boolean>) one.getValue());
+		GroupFlagsClone.put(one.getKey(), min.getId());
+	    }
+	    root.put("GroupFlags", GroupFlagsClone);
+	}
+
+	MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(new HashMap<String, Boolean>(cuboidFlags));
+	if (min == null) {
+	    // Cloning map to fix issue for yml anchors being created	
+	    root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
+	} else {
+	    root.put("AreaFlags", min.getId());
+	}
+
+//	root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
 
 	return root;
     }
@@ -613,8 +636,30 @@ public class FlagPermissions {
 	if (root.containsKey("LastKnownPlayerNames"))
 	    newperms.cachedPlayerNameUUIDs = (Map) root.get("LastKnownPlayerNames");
 
-	if (root.containsKey("PlayerFlags"))
-	    newperms.playerFlags = (Map) root.get("PlayerFlags");
+	if (root.containsKey("PlayerFlags")) {
+	    boolean old = true;
+	    for (Entry<String, Object> one : ((HashMap<String, Object>) root.get("PlayerFlags")).entrySet()) {
+		if (one.getValue() instanceof Integer)
+		    old = false;
+		break;
+	    }
+	    if (old)
+		newperms.playerFlags = (Map) root.get("PlayerFlags");
+	    else {
+		if (newperms instanceof ResidencePermissions) {
+		    Map<String, Map<String, Boolean>> t = new HashMap<String, Map<String, Boolean>>();
+		    Map<String, Boolean> ft = new HashMap<String, Boolean>();
+		    for (Entry<String, Integer> one : ((HashMap<String, Integer>) root.get("PlayerFlags")).entrySet()) {
+			ft = Residence.getInstance().getResidenceManager().getChacheFlags(((ResidencePermissions) newperms).getWorld(), one.getValue());
+			if (ft != null && !ft.isEmpty())
+			    t.put(one.getKey(), ft);
+		    }
+		    if (!t.isEmpty())
+			newperms.playerFlags = t;
+		}
+
+	    }
+	}
 
 	for (Entry<String, Map<String, Boolean>> one : newperms.playerFlags.entrySet()) {
 	    if (one.getKey().length() != 32)
@@ -630,11 +675,50 @@ public class FlagPermissions {
 
 	}
 
-	if (root.containsKey("GroupFlags"))
-	    newperms.groupFlags = (Map) root.get("GroupFlags");
+	if (root.containsKey("GroupFlags")) {
+	    boolean old = true;
+	    for (Entry<String, Object> one : ((HashMap<String, Object>) root.get("GroupFlags")).entrySet()) {
+		if (one.getValue() instanceof Integer)
+		    old = false;
+		break;
+	    }
+	    if (old)
+		newperms.groupFlags = (Map) root.get("GroupFlags");
+	    else {
+		if (newperms instanceof ResidencePermissions) {
+		    Map<String, Map<String, Boolean>> t = new HashMap<String, Map<String, Boolean>>();
+		    Map<String, Boolean> ft = new HashMap<String, Boolean>();
+		    for (Entry<String, Integer> one : ((HashMap<String, Integer>) root.get("GroupFlags")).entrySet()) {
+			ft = Residence.getInstance().getResidenceManager().getChacheFlags(((ResidencePermissions) newperms).getWorld(), one.getValue());
+			if (ft != null && !ft.isEmpty())
+			    t.put(one.getKey(), ft);
+		    }
+		    if (!t.isEmpty()) {
+			newperms.groupFlags = t;
+		    }
+		}
+	    }
+	}
+
+//	if (root.containsKey("GroupFlags"))
+//	    newperms.groupFlags = (Map) root.get("GroupFlags");
 
 	if (root.containsKey("AreaFlags")) {
-	    newperms.cuboidFlags = (Map) root.get("AreaFlags");
+	    boolean old = true;
+	    if (root.get("AreaFlags") instanceof Integer)
+		old = false;
+	    if (old)
+		newperms.cuboidFlags = (Map) root.get("AreaFlags");
+	    else {
+		if (newperms instanceof ResidencePermissions) {
+		    Map<String, Boolean> ft = new HashMap<String, Boolean>();
+		    ft = Residence.getInstance().getResidenceManager().getChacheFlags(((ResidencePermissions) newperms).getWorld(), (Integer) root.get("AreaFlags"));
+		    if (ft != null && !ft.isEmpty())
+			newperms.cuboidFlags = ft;
+		}
+	    }
+
+//	    newperms.cuboidFlags = (Map) root.get("AreaFlags");
 	} else
 	    newperms.cuboidFlags = Residence.getInstance().getConfigManager().getGlobalResidenceDefaultFlags().getFlags();
 
@@ -643,7 +727,10 @@ public class FlagPermissions {
 
 	if (root.containsKey("OwnerLastKnownName")) {
 	    ownerName = (String) root.get("OwnerLastKnownName");
-	    uuid = (String) root.get("OwnerUUID");
+	    if (root.containsKey("OwnerUUID"))
+		uuid = (String) root.get("OwnerUUID");
+	    else
+		uuid = Residence.getInstance().getTempUserUUID();
 	}
 
 	if (Residence.getInstance().getConfigManager().isOfflineMode())

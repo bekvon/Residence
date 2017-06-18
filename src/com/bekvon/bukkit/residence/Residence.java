@@ -43,6 +43,8 @@ import org.kingdoms.manager.game.GameManagement;
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.containers.ABInterface;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.MinimizeFlags;
+import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.NMS;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
@@ -80,6 +82,7 @@ import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
 import com.residence.mcstats.Metrics;
 import com.residence.zip.ZipLibrary;
+import com.sk89q.util.yaml.YAMLNode;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -632,7 +635,7 @@ public class Residence extends JavaPlugin {
 
 		setWorldEdit();
 		setWorldGuard();
-		
+
 		setKingdoms();
 
 		blistener = new ResidenceBlockListener(this);
@@ -797,7 +800,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    public GameManagement getKingdomsManager(){
+    public GameManagement getKingdomsManager() {
 	return kingdomsmanager;
     }
 
@@ -1083,6 +1086,8 @@ public class Residence extends JavaPlugin {
 	    World world = server.getWorld(entry.getKey());
 	    if (world != null)
 		yml.getRoot().put("Seed", world.getSeed());
+	    yml.getRoot().put("LeaveMessage", this.getResidenceManager().getMessageCatch());
+	    yml.getRoot().put("Flags", this.getResidenceManager().getFlagsCatch());
 	    yml.getRoot().put("Residences", entry.getValue());
 	    yml.save();
 	    if (ymlSaveLoc.isFile()) {
@@ -1194,8 +1199,33 @@ public class Residence extends JavaPlugin {
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
 		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + world.getName() + "...");
+
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
+
+		    if (yml.getRoot().containsKey("LeaveMessage")) {
+			HashMap<Integer, MinimizeMessages> c = getResidenceManager().getCacheMessages().get(world.getName());
+			if (c == null)
+			    c = new HashMap<Integer, MinimizeMessages>();
+			Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("LeaveMessage");
+			for (Entry<Integer, Object> one : ms.entrySet()) {
+			    Map<String, String> msgs = (Map<String, String>) one.getValue();
+			    c.put(one.getKey(), new MinimizeMessages(one.getKey(), msgs.get("LeaveMessage"), msgs.get("EnterMessage")));
+			}
+			getResidenceManager().getCacheMessages().put(world.getName(), c);
+		    }
+
+		    if (yml.getRoot().containsKey("Flags")) {
+			HashMap<Integer, MinimizeFlags> c = getResidenceManager().getCacheFlags().get(world.getName());
+			if (c == null)
+			    c = new HashMap<Integer, MinimizeFlags>();
+			Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Flags");
+			for (Entry<Integer, Object> one : ms.entrySet()) {
+			    HashMap<String, Boolean> msgs = (HashMap<String, Boolean>) one.getValue();
+			    c.put(one.getKey(), new MinimizeFlags(one.getKey(), msgs));
+			}
+			getResidenceManager().getCacheFlags().put(world.getName(), c);
+		    }
 
 		    worlds.put(world.getName(), yml.getRoot().get("Residences"));
 
@@ -1694,7 +1724,7 @@ public class Residence extends JavaPlugin {
 	    worldGuardUtil = new WorldGuardUtil(this);
 	return worldGuardUtil;
     }
-    
+
     public KingdomsUtil getKingdomsUtil() {
 	if (kingdomsUtil == null)
 	    kingdomsUtil = new KingdomsUtil(this);

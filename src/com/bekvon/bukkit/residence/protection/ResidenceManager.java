@@ -25,6 +25,8 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.MinimizeFlags;
+import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -796,6 +798,7 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public Map<String, Object> save() {
+	clearSaveChache();
 	Map<String, Object> worldmap = new LinkedHashMap<>();
 	for (World world : plugin.getServ().getWorlds()) {
 	    Map<String, Object> resmap = new LinkedHashMap<>();
@@ -810,9 +813,117 @@ public class ResidenceManager implements ResidenceInterface {
 		    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
+
 	    worldmap.put(world.getName(), resmap);
 	}
 	return worldmap;
+    }
+
+    private void clearSaveChache() {
+	optimizeMessages.clear();
+	optimizeFlags.clear();
+	lastMinimmizeMessageId = 1;
+	lastMinimmizeFlagsId = 1;
+    }
+
+    // Optimizing save file
+    List<MinimizeMessages> optimizeMessages = new ArrayList<MinimizeMessages>();
+    List<MinimizeFlags> optimizeFlags = new ArrayList<MinimizeFlags>();
+//    List<MinimizeFlags> optimizePlayerFlags = new ArrayList<MinimizeFlags>();
+    int lastMinimmizeMessageId = 1;
+    int lastMinimmizeFlagsId = 1;
+//    int lastMinimmizePlayerFlagsId = 1;
+
+    public MinimizeMessages addMessageToTempCache(String enter, String leave) {
+	for (MinimizeMessages one : optimizeMessages) {
+	    if (!one.add(enter, leave))
+		continue;
+//	    if (one.getRepeat() < 2)
+//		return null;
+	    return one;
+	}
+	MinimizeMessages m = new MinimizeMessages(lastMinimmizeMessageId, enter, leave);
+	optimizeMessages.add(m);
+	lastMinimmizeMessageId++;
+	return m;
+    }
+
+    public HashMap<Integer, Object> getMessageCatch() {
+	HashMap<Integer, Object> t = new HashMap<Integer, Object>();
+	for (MinimizeMessages one : optimizeMessages) {
+//	    if (one.getRepeat() == 1)
+//		continue;
+	    Map<String, Object> root = new HashMap<>();
+	    root.put("EnterMessage", one.getEnter());
+	    root.put("LeaveMessage", one.getLeave());
+	    t.put(one.getId(), root);
+	}
+	return t;
+    }
+
+    public MinimizeFlags addFlagsTempCache(HashMap<String, Boolean> flags) {
+	for (MinimizeFlags one : optimizeFlags) {
+	    if (!one.add(flags))
+		continue;
+	    return one;
+	}
+	MinimizeFlags m = new MinimizeFlags(lastMinimmizeFlagsId, flags);
+	optimizeFlags.add(m);
+	lastMinimmizeFlagsId++;
+	return m;
+    }
+
+    public HashMap<Integer, Object> getFlagsCatch() {
+	HashMap<Integer, Object> t = new HashMap<Integer, Object>();
+	for (MinimizeFlags one : optimizeFlags) {
+	    t.put(one.getId(), one.getFlags());
+	}
+	return t;
+    }
+    
+    private void clearLoadChache() {
+	cacheMessages.clear();
+	cacheFlags.clear();
+     }
+    HashMap<String, HashMap<Integer, MinimizeMessages>> cacheMessages = new HashMap<String, HashMap<Integer, MinimizeMessages>>();
+    HashMap<String, HashMap<Integer, MinimizeFlags>> cacheFlags = new HashMap<String, HashMap<Integer, MinimizeFlags>>();
+
+    public HashMap<String, HashMap<Integer, MinimizeMessages>> getCacheMessages() {
+	return cacheMessages;
+    }
+
+    public HashMap<String, HashMap<Integer, MinimizeFlags>> getCacheFlags() {
+	return cacheFlags;
+    }
+
+    public String getChacheMessageEnter(String world, int id) {
+	HashMap<Integer, MinimizeMessages> c = cacheMessages.get(world);
+	if (c == null)
+	    return null;
+	MinimizeMessages m = c.get(id);
+	if (m == null)
+	    return null;
+	return m.getEnter();
+    }
+
+    public String getChacheMessageLeave(String world, int id) {
+	HashMap<Integer, MinimizeMessages> c = cacheMessages.get(world);
+	if (c == null)
+	    return null;
+	MinimizeMessages m = c.get(id);
+	if (m == null)
+	    return null;
+	return m.getLeave();
+    }
+
+    public HashMap<String, Boolean> getChacheFlags(String world, int id) {
+	HashMap<Integer, MinimizeFlags> c = cacheFlags.get(world);
+	if (c == null)
+	    return null;
+	MinimizeFlags m = c.get(id);
+	if (m == null)
+	    return null;
+	return m.getFlags();
     }
 
     public void load(Map<String, Object> root) throws Exception {
@@ -821,6 +932,7 @@ public class ResidenceManager implements ResidenceInterface {
 	residences.clear();
 	for (World world : plugin.getServ().getWorlds()) {
 	    long time = System.currentTimeMillis();
+
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
 	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + world.getName() + " data into memory...");
@@ -839,6 +951,8 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
 	}
+
+	clearLoadChache();
     }
 
     public Map<ChunkRef, List<ClaimedResidence>> loadMap(String worldName, Map<String, Object> root) throws Exception {
