@@ -82,12 +82,12 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
-	if (!(sender instanceof Player)) {
+	if (!(sender instanceof Player) && page == -1) {
 	    printListWithDelay(sender, ownedResidences, start - 1, resadmin);
 	    return;
 	}
 
-	List<String> linesForConsole = new ArrayList<String>();
+//	List<String> linesForConsole = new ArrayList<String>();
 	int y = -1;
 
 	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
@@ -147,12 +147,13 @@ public class InformationPager {
 
 	    String msg = plugin.msg(lm.Residence_ResList, y + 1, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
 
+	    RawMessage rm = new RawMessage();
 	    if (sender instanceof Player)
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + plugin.getResidenceManager().convertToRaw(null, msg,
-		    StringB.toString(), cmd + " tp " + res.getName()));
-	    else {
-		linesForConsole.add(msg + " " + StringB.toString().replace("\n", ""));
-	    }
+		rm.add(msg, StringB.toString(), cmd + " tp " + res.getName());
+	    else
+		rm.add(msg + " " + StringB.toString().replace("\n", ""));
+
+	    rm.show(sender);
 	}
 
 	if (targetPlayer != null)
@@ -164,7 +165,11 @@ public class InformationPager {
     private void printListWithDelay(final CommandSender sender, final TreeMap<String, ClaimedResidence> ownedResidences, final int start, final boolean resadmin) {
 
 	int i = start;
+	int y = 0;
 	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
+	    y++;
+	    if (y < i)
+		continue;
 	    i++;
 	    if (i >= start + 100)
 		break;
@@ -260,7 +265,7 @@ public class InformationPager {
 	RawMessage rm = new RawMessage();
 	rm.add(separator + " " + plugin.msg(lm.General_PrevInfoPage), CurrentPage > 1 ? "<<<" : null, CurrentPage > 1 ? cmd + " " + Prevpage : null);
 	rm.add(plugin.msg(lm.General_NextInfoPage) + " " + separator, pageCount > CurrentPage ? ">>>" : null, pageCount > CurrentPage ? cmd + " " + NextPage : null);
-	if (pageCount != 0)
+	if (pageCount != 0 && sender instanceof Player)
 	    rm.show(sender);
     }
 }
