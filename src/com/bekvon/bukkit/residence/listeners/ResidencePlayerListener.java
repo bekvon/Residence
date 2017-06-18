@@ -1047,6 +1047,9 @@ public class ResidencePlayerListener implements Listener {
 
 	if (heldItemId != plugin.getConfigManager().getInfoToolID())
 	    return;
+	
+	if (this.isContainer(block.getType(), block))
+	    return;
 
 	Location loc = block.getLocation();
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
