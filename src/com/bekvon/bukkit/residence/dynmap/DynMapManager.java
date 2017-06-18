@@ -290,7 +290,10 @@ public class DynMapManager {
     }
 
     public void activate() {
-	markerapi = api.getMarkerAPI();
+	try {
+	    markerapi = api.getMarkerAPI();
+	} catch (Exception e) {
+	}
 	if (markerapi == null) {
 	    Bukkit.getConsoleSender().sendMessage("[Residence] Error loading dynmap marker API!");
 	    return;
