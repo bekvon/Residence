@@ -14,10 +14,13 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -167,7 +170,7 @@ public class Residence extends JavaPlugin {
     public Map<String, String> deleteConfirm;
     public Map<String, String> UnrentConfirm = new HashMap<String, String>();
     public List<String> resadminToggle;
-    private final static String[] validLanguages = { "English", "Czech", "Chinese", "ChineseTW", "French" };
+    private final static Set<String> validLanguages = new HashSet<String>(Arrays.asList("English", "Czech", "Chinese", "ChineseTW", "French"));
     private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private Map<UUID, OfflinePlayer> cachedPlayerNameUUIDs = new HashMap<UUID, OfflinePlayer>();
     private WorldEditPlugin wep = null;
@@ -494,6 +497,7 @@ public class Residence extends JavaPlugin {
 		YmlMaker langFile = new YmlMaker(this, "Language" + File.separator + lang + ".yml");
 		langFile.saveDefaultConfig();
 	    }
+	    validLanguages.add(getConfigManager().getLanguage());
 
 	    for (String lang : validLanguages) {
 		getLocaleManager().LoadLang(lang);
