@@ -85,7 +85,6 @@ import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
 import com.residence.mcstats.Metrics;
 import com.residence.zip.ZipLibrary;
-import com.sk89q.util.yaml.YAMLNode;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -1027,6 +1026,7 @@ public class Residence extends JavaPlugin {
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Essentials Economy NOT found!");
 	}
     }
+
 
     private void loadRealEconomy() {
 	Plugin p = getServer().getPluginManager().getPlugin("RealPlugin");

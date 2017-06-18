@@ -320,7 +320,7 @@ public enum lm {
     Shop_ListTopLine("&6%1 &eShop list - Page &6%2 &eof &6%3 %4"),
     Shop_List(" &e%1. &6%2 &e(&6%3&e) %4"),
     Shop_ListVoted("&e%1 (&6%2&e)"),
-    Shop_ListLiked("&eLikes: &0%1"),
+    Shop_ListLiked("&7Likes: &7%1"),
 
     Shop_VotesTopLine("&6%1 &e%2 residence vote list &6- &ePage &6%3 &eof &6%4 %5"),
     Shop_VotesList(" &e%1. &6%2 &e%3 &7%4"),
