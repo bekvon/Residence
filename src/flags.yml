@@ -25,7 +25,6 @@ Global:
         tp: true
         ignite: true
         firespread: true
-        bucket: true
         flow: true
         lavaflow: true
         waterflow: true
@@ -80,9 +79,6 @@ Global:
             Data: 0
         brew:
             Id: 379
-            Data: 0
-        bucket: 
-            Id: 325
             Data: 0
         build: 
             Id: 45
@@ -275,7 +271,6 @@ Global:
       - tp
       - build
       - container
-      - bucket
       - move
       - leash
       - animalkilling
