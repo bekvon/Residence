@@ -9,6 +9,8 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -561,7 +563,7 @@ public class ResidencePermissions extends FlagPermissions {
 		newperms.ownerUUID = UUID.fromString((String) root.get("OwnerUUID"));//get owner UUID
 	    //			String name = Residence.getPlayerName(newperms.ownerUUID); //try to find the current name of the owner	    
 	    newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName");//otherwise load last known name from file
-
+	    
 	    OfflinePlayer p = null;
 	    if (newperms.ownerLastKnownName == null)
 		p = Residence.getInstance().getOfflinePlayer(newperms.ownerUUID);

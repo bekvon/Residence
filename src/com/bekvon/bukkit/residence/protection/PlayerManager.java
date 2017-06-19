@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class PlayerManager implements ResidencePlayerInterface {
     private ConcurrentHashMap<String, ResidencePlayer> players = new ConcurrentHashMap<String, ResidencePlayer>();
@@ -62,6 +63,12 @@ public class PlayerManager implements ResidencePlayerInterface {
 	ResidencePlayer resPlayer = playersUuid.get(uuid);
 	if (resPlayer != null) {
 	    resPlayer.RecalculatePermissions();
+	} else {
+	    OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
+	    if (off != null) {
+		resPlayer = new ResidencePlayer(off);
+		addPlayer(resPlayer);
+	    }
 	}
 	return resPlayer;
     }
@@ -279,6 +286,22 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return resPlayer;
     }
 
+    public ResidencePlayer getResidencePlayer(String name, UUID uuid) {
+	Player p = Bukkit.getPlayer(uuid);
+	if (p != null) {
+	    return getResidencePlayer(p);
+	}
+	ResidencePlayer resPlayer = null;
+	if (this.playersUuid.containsKey(uuid)) {
+	    resPlayer = this.playersUuid.get(uuid);
+	} else if ((name != null) && (this.players.containsKey(name.toLowerCase()))) {
+	    resPlayer = this.players.get(name.toLowerCase());
+	} else {
+	    resPlayer = playerJoin(name, uuid);
+	}
+	return resPlayer;
+    }
+
     public void addResidence(UUID uuid, ClaimedResidence residence) {
 	ResidencePlayer resPlayer = getResidencePlayer(uuid);
 	if (resPlayer != null) {
@@ -292,11 +315,10 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public void addResidence(String player, ClaimedResidence residence) {
-	ResidencePlayer resPlayer = getResidencePlayer(player);
+	ResidencePlayer resPlayer = getResidencePlayer(player, residence.getOwnerUUID());
 	if (resPlayer != null) {
 	    resPlayer.addResidence(residence);
 	}
-	return;
     }
 
     public void removeResFromPlayer(ClaimedResidence residence) {

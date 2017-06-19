@@ -999,7 +999,7 @@ public class ResidenceManager implements ResidenceInterface {
 		    retRes.put(chunk, ress);
 		}
 
-		plugin.getPlayerManager().addResidence(residence.getOwnerUUID(), residence);
+		plugin.getPlayerManager().addResidence(residence.getOwner(), residence);
 
 		residences.put(resName.toLowerCase(), residence);
 

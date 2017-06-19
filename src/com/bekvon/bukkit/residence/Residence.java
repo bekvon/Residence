@@ -1027,7 +1027,6 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-
     private void loadRealEconomy() {
 	Plugin p = getServer().getPluginManager().getPlugin("RealPlugin");
 	if (p != null) {
@@ -1551,6 +1550,8 @@ public class Residence extends JavaPlugin {
     }
 
     public OfflinePlayer getOfflinePlayer(String Name) {
+	if (Name == null)
+	    return null;
 	OfflinePlayer offPlayer = OfflinePlayerList.get(Name.toLowerCase());
 	if (offPlayer != null)
 	    return offPlayer;
@@ -1588,8 +1589,12 @@ public class Residence extends JavaPlugin {
     }
 
     public void addOfflinePlayerToChache(OfflinePlayer player) {
-	OfflinePlayerList.put(player.getName().toLowerCase(), player);
-	cachedPlayerNameUUIDs.put(player.getUniqueId(), player);
+	if (player == null)
+	    return;
+	if (player.getName() != null)
+	    OfflinePlayerList.put(player.getName().toLowerCase(), player);
+	if (player.getUniqueId() != null)
+	    cachedPlayerNameUUIDs.put(player.getUniqueId(), player);
     }
 
     public String getPlayerName(String uuid) {

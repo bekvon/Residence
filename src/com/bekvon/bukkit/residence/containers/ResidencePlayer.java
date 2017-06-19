@@ -33,6 +33,16 @@ public class ResidencePlayer {
 
     private int maxValue = 9999;
 
+    public ResidencePlayer(OfflinePlayer off) {
+	if (off == null)
+	    return;
+	this.uuid = off.getUniqueId();
+	this.userName = off.getName();
+	Residence.getInstance().addOfflinePlayerToChache(off);
+	this.updatePlayer();
+	this.RecalculatePermissions();
+    }
+
     public ResidencePlayer(Player player) {
 	if (player == null)
 	    return;
@@ -310,25 +320,8 @@ public class ResidencePlayer {
     public void removeResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
-	Debug.D("size " + ResidenceList.size());
-	boolean s = this.ResidenceList.remove(residence);
-	Debug.D("size " + ResidenceList.size());
-	Debug.D("removing res from " + this.getPlayerName() + " " + residence + "  " + s);
+	this.ResidenceList.remove(residence);
     }
-
-//    public void renameResidence(String oldResidence, String newResidence) {
-//	if (oldResidence == null)
-//	    return;
-//	if (newResidence == null)
-//	    return;
-//	oldResidence = oldResidence.toLowerCase();
-//
-//	ClaimedResidence res = ResidenceList.get(oldResidence);
-//	if (res != null) {
-//	    removeResidence(oldResidence);
-//	    ResidenceList.put(newResidence.toLowerCase(), res);
-//	}
-//    }
 
     public int getResAmount() {
 	return ResidenceList.size();
@@ -337,10 +330,6 @@ public class ResidencePlayer {
     public List<ClaimedResidence> getResList() {
 	return ResidenceList;
     }
-
-//    public Map<String, ClaimedResidence> getResidenceMap() {
-//	return this.ResidenceList;
-//    }
 
     public String getPlayerName() {
 	this.updatePlayer();
