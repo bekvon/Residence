@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -674,6 +676,7 @@ public class ResidenceEntityListener implements Listener {
 	Entity ent = event.getEntity();
 
 	Boolean cancel = false;
+	Boolean remove = true;
 	FlagPermissions perms = plugin.getPermsByLoc(loc);
 	FlagPermissions world = plugin.getWorldFlags().getPerms(loc.getWorld().getName());
 
@@ -716,9 +719,14 @@ public class ResidenceEntityListener implements Listener {
 		if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.witherdestruction, FlagCombo.OnlyFalse))
 		    cancel = true;
 		break;
+	    case ENDER_DRAGON:
+		remove = false;
+		break;
 	    default:
-		if (!perms.has(Flags.destroy, world.has(Flags.destroy, true)))
+		if (!perms.has(Flags.destroy, world.has(Flags.destroy, true))) {
 		    cancel = true;
+		    remove = false;
+		}
 		break;
 	    }
 	} else if (!perms.has(Flags.destroy, world.has(Flags.destroy, true))) {
@@ -727,8 +735,9 @@ public class ResidenceEntityListener implements Listener {
 
 	if (cancel) {
 	    event.setCancelled(true);
-	    if (ent != null)
+	    if (ent != null && remove) {
 		ent.remove();
+	    }
 	    return;
 	}
 
@@ -767,7 +776,7 @@ public class ResidenceEntityListener implements Listener {
 		    }
 		    continue;
 		case ENDER_DRAGON:
-		    if (!blockperms.has(Flags.dragongrief, false))
+		    if (blockperms.has(Flags.dragongrief, FlagCombo.OnlyFalse))
 			preserve.add(block);
 		    break;
 		case ENDER_CRYSTAL:

@@ -34,7 +34,6 @@ public class StuckInfo {
 
     public void updateLastTp() {
 	if (System.currentTimeMillis() - this.lastTp > 1000){
-	    Debug.D("more than 1000");
 	    this.times = 0;
 	}
 	addTimeTeleported();

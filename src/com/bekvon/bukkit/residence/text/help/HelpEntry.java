@@ -142,11 +142,6 @@ public class HelpEntry {
 		if (!ResidenceCommandListener.getAdminCommands().contains(entry.getName().toLowerCase()) && resadmin)
 		    continue;
 
-//		if (!sender.hasPermission("residence.command." + entry.getName().toLowerCase())){
-//		    Debug.D("no perm: " + entry.getName().toLowerCase());
-//		    continue;
-//		}
-
 	    } else {
 		if (GlobalFlags.getFlags().containsKey(entry.getName().toLowerCase())) {
 		    Boolean state = GlobalFlags.getFlags().get(entry.getName().toLowerCase());
