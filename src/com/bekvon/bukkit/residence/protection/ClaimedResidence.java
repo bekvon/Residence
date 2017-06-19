@@ -70,7 +70,7 @@ public class ClaimedResidence {
     protected ResidenceItemList blacklist;
     protected boolean mainRes = false;
     protected long createTime = 0L;
-    
+
     private Long leaseExpireTime = null;
 
     protected List<String> cmdWhiteList = new ArrayList<String>();
@@ -444,9 +444,9 @@ public class ClaimedResidence {
 	if (resevent.isCancelled())
 	    return false;
 
-	plugin.getResidenceManager().removeChunkList(getName());
+	plugin.getResidenceManager().removeChunkList(this);
 	areas.put(name, area);
-	plugin.getResidenceManager().calculateChunks(getName());
+	plugin.getResidenceManager().calculateChunks(this);
 	return true;
     }
 
@@ -593,10 +593,10 @@ public class ClaimedResidence {
 	    }
 	}
 
-	plugin.getResidenceManager().removeChunkList(getName());
+	plugin.getResidenceManager().removeChunkList(this);
 	areas.remove(name);
 	areas.put(name, newarea);
-	plugin.getResidenceManager().calculateChunks(getName());
+	plugin.getResidenceManager().calculateChunks(this);
 	if (player != null)
 	    plugin.msg(player, lm.Area_Update);
 	return true;
@@ -1343,9 +1343,9 @@ public class ClaimedResidence {
     }
 
     public void removeArea(String id) {
-	plugin.getResidenceManager().removeChunkList(getName());
+	plugin.getResidenceManager().removeChunkList(this);
 	areas.remove(id);
-	plugin.getResidenceManager().calculateChunks(getName());
+	plugin.getResidenceManager().calculateChunks(this);
     }
 
     public void removeArea(Player player, String id, boolean resadmin) {
@@ -1546,7 +1546,7 @@ public class ClaimedResidence {
 	if (root.containsKey("LeaveMessage") && root.get("LeaveMessage") instanceof String)
 	    res.leaveMessage = (String) root.get("LeaveMessage");
 
-	if (root.containsKey("Messages") && root.get("Messages") instanceof Integer){
+	if (root.containsKey("Messages") && root.get("Messages") instanceof Integer) {
 	    res.enterMessage = plugin.getResidenceManager().getChacheMessageEnter(worldName, (Integer) root.get("Messages"));
 	    res.leaveMessage = plugin.getResidenceManager().getChacheMessageLeave(worldName, (Integer) root.get("Messages"));
 	}
@@ -1697,11 +1697,9 @@ public class ClaimedResidence {
     }
 
     public void remove() {
-	String name = getName();
-	if (name != null) {
-	    plugin.getResidenceManager().removeResidence(name);
-	    plugin.getResidenceManager().removeChunkList(name);
-	}
+	plugin.getResidenceManager().removeResidence(this);
+	plugin.getResidenceManager().removeChunkList(this);
+	plugin.getPlayerManager().removeResFromPlayer(this);
     }
 
     public ResidenceBank getBank() {

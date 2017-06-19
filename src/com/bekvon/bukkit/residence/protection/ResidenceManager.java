@@ -38,7 +38,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.griefcraft.cache.ProtectionCache;
@@ -256,7 +255,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    plugin.msg(player, lm.Residence_Create, name);
 	}
 	if (plugin.getConfigManager().useLeases()) {
-		plugin.getLeaseManager().setExpireTime(player, newRes, group.getLeaseGiveTime());
+	    plugin.getLeaseManager().setExpireTime(player, newRes, group.getLeaseGiveTime());
 	}
 	return true;
 
@@ -536,15 +535,15 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
-	 plugin.getLeaseManager().removeExpireTime(res);
+	plugin.getLeaseManager().removeExpireTime(res);
 
 	for (String oneSub : res.getSubzoneList()) {
-	    plugin.getPlayerManager().removeResFromPlayer(res.getOwner(), name + "." + oneSub);
+	    plugin.getPlayerManager().removeResFromPlayer(res.getOwnerUUID(), name + "." + oneSub);
 	    plugin.getRentManager().removeRentable(name + "." + oneSub);
 	    plugin.getTransactionManager().removeFromSale(name + "." + oneSub);
 	}
 
-	plugin.getPlayerManager().removeResFromPlayer(res.getOwner(), name);
+	plugin.getPlayerManager().removeResFromPlayer(res.getOwnerUUID(), name);
 	plugin.getRentManager().removeRentable(name);
 	plugin.getTransactionManager().removeFromSale(name);
 
@@ -702,7 +701,7 @@ public class ResidenceManager implements ResidenceInterface {
 	if (res.getSubzonesAmount(false) > 0)
 	    plugin.msg(sender, lm.General_TotalSubzones, res.getSubzonesAmount(false), res.getSubzonesAmount(true));
 
-	if (plugin.getConfigManager().useLeases() && plugin.getLeaseManager().leaseExpires(res)) {
+	if (plugin.getConfigManager().useLeases() && plugin.getLeaseManager().isLeased(res)) {
 	    String time = plugin.getLeaseManager().getExpireTime(res);
 	    if (time != null)
 		plugin.msg(sender, lm.Economy_LeaseExpire, time);
@@ -874,11 +873,12 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 	return t;
     }
-    
+
     private void clearLoadChache() {
 	cacheMessages.clear();
 	cacheFlags.clear();
-     }
+    }
+
     HashMap<String, HashMap<Integer, MinimizeMessages>> cacheMessages = new HashMap<String, HashMap<Integer, MinimizeMessages>>();
     HashMap<String, HashMap<Integer, MinimizeFlags>> cacheFlags = new HashMap<String, HashMap<Integer, MinimizeFlags>>();
 
@@ -999,7 +999,7 @@ public class ResidenceManager implements ResidenceInterface {
 		    retRes.put(chunk, ress);
 		}
 
-		plugin.getPlayerManager().addResidence(residence.getOwner(), residence);
+		plugin.getPlayerManager().addResidence(residence.getOwnerUUID(), residence);
 
 		residences.put(resName.toLowerCase(), residence);
 
@@ -1071,8 +1071,6 @@ public class ResidenceManager implements ResidenceInterface {
 		residences.put(newName.toLowerCase(), res);
 		residences.remove(oldName.toLowerCase());
 
-		plugin.getPlayerManager().renameResidence(player.getName(), oldName, newName);
-
 		calculateChunks(newName);
 
 		plugin.getSignUtil().updateSignResName(res);
@@ -1137,10 +1135,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
-	plugin.getPlayerManager().removeResFromPlayer(reqPlayer, residence);
-	plugin.getPlayerManager().addResidence(targPlayer, res);
-
-	res.getPermissions().setOwner(giveplayer.getName(), true);
+	res.getPermissions().setOwner(giveplayer, true);
 	// Fix phrases here
 	plugin.msg(reqPlayer, lm.Residence_Give, residence, giveplayer.getName());
 	plugin.msg(giveplayer, lm.Residence_Recieve, residence, reqPlayer.getName());
@@ -1175,50 +1170,53 @@ public class ResidenceManager implements ResidenceInterface {
 	return residences;
     }
 
+    @Deprecated
     public void removeChunkList(String name) {
 	if (name == null)
 	    return;
-
 	name = name.toLowerCase();
-	ClaimedResidence res = residences.get(name);
-	if (res != null) {
-	    String world = res.getWorld();
-	    if (chunkResidences.get(world) != null) {
-		for (ChunkRef chunk : getChunks(res)) {
-		    List<ClaimedResidence> ress = new ArrayList<>();
-		    if (chunkResidences.get(world).containsKey(chunk)) {
-			ress.addAll(chunkResidences.get(world).get(chunk));
-		    }
-		    ress.remove(res);
-		    chunkResidences.get(world).put(chunk, ress);
-		}
-	    }
-	}
+	removeChunkList(residences.get(name));
     }
 
-    public void calculateChunks(String name) {
-	ClaimedResidence res = null;
-
-	if (name == null)
-	    return;
-	name = name.toLowerCase();
-	res = residences.get(name);
-
+    public void removeChunkList(ClaimedResidence res) {
 	if (res == null)
 	    return;
-
 	String world = res.getWorld();
-	if (chunkResidences.get(world) == null) {
-	    chunkResidences.put(world, new HashMap<ChunkRef, List<ClaimedResidence>>());
-	}
+	if (chunkResidences.get(world) == null)
+	    return;	
 	for (ChunkRef chunk : getChunks(res)) {
 	    List<ClaimedResidence> ress = new ArrayList<>();
 	    if (chunkResidences.get(world).containsKey(chunk)) {
 		ress.addAll(chunkResidences.get(world).get(chunk));
 	    }
-	    ress.add(res);
+	    ress.remove(res);
 	    chunkResidences.get(world).put(chunk, ress);
 	}
+
+    }
+    public void calculateChunks(ClaimedResidence res) {
+ 	if (res == null)
+ 	    return;
+ 	String world = res.getWorld();
+ 	if (chunkResidences.get(world) == null) {
+ 	    chunkResidences.put(world, new HashMap<ChunkRef, List<ClaimedResidence>>());
+ 	}
+ 	for (ChunkRef chunk : getChunks(res)) {
+ 	    List<ClaimedResidence> ress = new ArrayList<>();
+ 	    if (chunkResidences.get(world).containsKey(chunk)) {
+ 		ress.addAll(chunkResidences.get(world).get(chunk));
+ 	    }
+ 	    ress.add(res);
+ 	    chunkResidences.get(world).put(chunk, ress);
+ 	}
+     }
+    
+    @Deprecated
+    public void calculateChunks(String name) {
+	if (name == null)
+	    return;
+	name = name.toLowerCase();
+	calculateChunks(residences.get(name));
     }
 
     public static final class ChunkRef {

@@ -220,7 +220,7 @@ public class TransactionManager implements MarketBuyInterface {
 		player.sendMessage(ChatColor.RED + "Error, could not transfer " + amount + " from " + buyerName + " to " + sellerName);
 		return;
 	    }
-	    res.getPermissions().setOwner(player.getName(), true);
+	    res.getPermissions().setOwner(player, true);
 	    res.getPermissions().applyDefaultFlags();
 	    removeFromSale(res);
 

@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +17,6 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class PlayerManager implements ResidencePlayerInterface {
     private ConcurrentHashMap<String, ResidencePlayer> players = new ConcurrentHashMap<String, ResidencePlayer>();
@@ -55,6 +53,14 @@ public class PlayerManager implements ResidencePlayerInterface {
 	    addPlayer(resPlayer);
 	} else {
 	    resPlayer.updatePlayer(player);
+	    resPlayer.RecalculatePermissions();
+	}
+	return resPlayer;
+    }
+
+    public ResidencePlayer playerJoin(UUID uuid) {
+	ResidencePlayer resPlayer = playersUuid.get(uuid);
+	if (resPlayer != null) {
 	    resPlayer.RecalculatePermissions();
 	}
 	return resPlayer;
@@ -168,15 +174,15 @@ public class PlayerManager implements ResidencePlayerInterface {
 	    return temp;
 	}
 
-	for (Entry<String, ClaimedResidence> one : resPlayer.getResidenceMap().entrySet()) {
-	    boolean hidden = one.getValue().getPermissions().has(Flags.hidden, false);
+	for (ClaimedResidence one : resPlayer.getResList()) {
+	    boolean hidden = one.getPermissions().has(Flags.hidden, false);
 	    if (!showhidden && hidden)
 		continue;
 	    if (onlyHidden && !hidden)
 		continue;
-	    if (world != null && !world.getName().equalsIgnoreCase(one.getValue().getWorld()))
+	    if (world != null && !world.getName().equalsIgnoreCase(one.getWorld()))
 		continue;
-	    temp.put(one.getKey(), one.getValue());
+	    temp.put(one.getName(), one);
 	}
 	return temp;
     }
@@ -260,52 +266,86 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return resPlayer;
     }
 
-    public ResidencePlayer getResidencePlayer(String name, UUID uuid) {
+    public ResidencePlayer getResidencePlayer(UUID uuid) {
 	Player p = Bukkit.getPlayer(uuid);
 	if (p != null)
 	    return getResidencePlayer(p);
 	ResidencePlayer resPlayer = null;
 	if (playersUuid.containsKey(uuid)) {
 	    resPlayer = playersUuid.get(uuid);
-	} else if (name != null && players.containsKey(name.toLowerCase())) {
-	    resPlayer = players.get(name.toLowerCase());
 	} else {
-	    resPlayer = playerJoin(name, uuid);
+	    resPlayer = playerJoin(uuid);
 	}
 	return resPlayer;
     }
 
-    public void renameResidence(String player, String oldName, String newName) {
-	ResidencePlayer resPlayer = getResidencePlayer(player);
-	if (resPlayer != null) {
-	    resPlayer.renameResidence(oldName, newName);
-	}
-	return;
-    }
-
-    public void addResidence(String player, ClaimedResidence residence) {
-	ResidencePlayer resPlayer = getResidencePlayer(player, residence.getOwnerUUID());
+    public void addResidence(UUID uuid, ClaimedResidence residence) {
+	ResidencePlayer resPlayer = getResidencePlayer(uuid);
 	if (resPlayer != null) {
 	    resPlayer.addResidence(residence);
 	}
 	return;
     }
 
-    public void removeResFromPlayer(OfflinePlayer player, String residence) {
-	ResidencePlayer resPlayer = playersUuid.get(player.getUniqueId());
+    public void addResidence(Player player, ClaimedResidence residence) {
+	addResidence(player.getUniqueId(), residence);
+    }
+
+    public void addResidence(String player, ClaimedResidence residence) {
+	ResidencePlayer resPlayer = getResidencePlayer(player);
+	if (resPlayer != null) {
+	    resPlayer.addResidence(residence);
+	}
+	return;
+    }
+
+    public void removeResFromPlayer(ClaimedResidence residence) {
+	if (residence == null)
+	    return;
+	removeResFromPlayer(residence.getOwnerUUID(), residence);
+    }
+
+    public void removeResFromPlayer(UUID uuid, ClaimedResidence residence) {
+	ResidencePlayer resPlayer = playersUuid.get(uuid);
 	if (resPlayer != null) {
 	    resPlayer.removeResidence(residence);
 	}
     }
 
+    public void removeResFromPlayer(UUID uuid, String residence) {
+	ResidencePlayer resPlayer = playersUuid.get(uuid);
+	if (resPlayer != null) {
+	    resPlayer.removeResidence(plugin.getResidenceManager().getByName(residence));
+	}
+    }
+
+    public void removeResFromPlayer(OfflinePlayer player, ClaimedResidence residence) {
+	removeResFromPlayer(player.getUniqueId(), residence);
+    }
+
+    @Deprecated
+    public void removeResFromPlayer(OfflinePlayer player, String residence) {
+	removeResFromPlayer(player.getUniqueId(), residence);
+    }
+
+    public void removeResFromPlayer(Player player, ClaimedResidence residence) {
+	removeResFromPlayer(player.getUniqueId(), residence);
+    }
+
+    @Deprecated
     public void removeResFromPlayer(Player player, String residence) {
-	ResidencePlayer resPlayer = playersUuid.get(player.getUniqueId());
+	removeResFromPlayer(player.getUniqueId(), residence);
+    }
+
+    public void removeResFromPlayer(String player, ClaimedResidence residence) {
+	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
 	if (resPlayer != null) {
 	    resPlayer.removeResidence(residence);
 	}
 	return;
     }
 
+    @Deprecated
     public void removeResFromPlayer(String player, String residence) {
 	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
 	if (resPlayer != null) {

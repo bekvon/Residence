@@ -2,8 +2,6 @@ package com.bekvon.bukkit.residence.containers;
 
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.utils.Debug;
-
 public class StuckInfo {
 
     private Player player;

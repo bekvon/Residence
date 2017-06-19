@@ -483,12 +483,27 @@ public class ResidencePermissions extends FlagPermissions {
 	}
     }
 
+    public void setOwner(Player player, boolean resetFlags) {
+
+	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, player.getName());
+	Residence.getInstance().getServ().getPluginManager().callEvent(ownerchange);
+
+	Residence.getInstance().getPlayerManager().removeResFromPlayer(residence.getOwnerUUID(), residence);
+	Residence.getInstance().getPlayerManager().addResidence(player, residence);
+
+	ownerLastKnownName = player.getName();
+	ownerUUID = player.getUniqueId();
+
+	if (resetFlags)
+	    this.applyDefaultFlags();
+    }
+
     public void setOwner(String newOwner, boolean resetFlags) {
 
 	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, newOwner);
 	Residence.getInstance().getServ().getPluginManager().callEvent(ownerchange);
 
-	Residence.getInstance().getPlayerManager().removeResFromPlayer(ownerLastKnownName, residence.getName());
+	Residence.getInstance().getPlayerManager().removeResFromPlayer(residence.getOwnerUUID(), residence);
 	Residence.getInstance().getPlayerManager().addResidence(newOwner, residence);
 
 	ownerLastKnownName = newOwner;

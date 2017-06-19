@@ -1,10 +1,7 @@
 package com.bekvon.bukkit.residence.containers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -14,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -23,7 +21,7 @@ public class ResidencePlayer {
     private OfflinePlayer ofPlayer = null;
     private UUID uuid = null;
 
-    private Map<String, ClaimedResidence> ResidenceList = new HashMap<String, ClaimedResidence>();
+    private List<ClaimedResidence> ResidenceList = new ArrayList<ClaimedResidence>();
     private ClaimedResidence mainResidence = null;
 
     private PlayerGroup groups = null;
@@ -71,11 +69,11 @@ public class ResidencePlayer {
 
     public ClaimedResidence getMainResidence() {
 	if (mainResidence == null) {
-	    for (Entry<String, ClaimedResidence> one : ResidenceList.entrySet()) {
-		if (one.getValue() == null)
+	    for (ClaimedResidence one : ResidenceList) {
+		if (one == null)
 		    continue;
-		if (one.getValue().isMainResidence()) {
-		    mainResidence = one.getValue();
+		if (one.isMainResidence()) {
+		    mainResidence = one;
 		    return mainResidence;
 		}
 	    }
@@ -86,10 +84,10 @@ public class ResidencePlayer {
 		    return mainResidence;
 		}
 	    }
-	    for (Entry<String, ClaimedResidence> one : ResidenceList.entrySet()) {
-		if (one.getValue() == null)
+	    for (ClaimedResidence one : ResidenceList) {
+		if (one == null)
 		    continue;
-		mainResidence = one.getValue();
+		mainResidence = one;
 		return mainResidence;
 	    }
 	}
@@ -301,45 +299,48 @@ public class ResidencePlayer {
     public void addResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
-	this.ResidenceList.put(residence.getName().toLowerCase(), residence);
+	this.ResidenceList.add(residence);
     }
 
+    @Deprecated
     public void removeResidence(String residence) {
+	removeResidence(Residence.getInstance().getResidenceManager().getByName(residence));
+    }
+
+    public void removeResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
-	residence = residence.toLowerCase();
-	this.ResidenceList.remove(residence);
+	Debug.D("size " + ResidenceList.size());
+	boolean s = this.ResidenceList.remove(residence);
+	Debug.D("size " + ResidenceList.size());
+	Debug.D("removing res from " + this.getPlayerName() + " " + residence + "  " + s);
     }
 
-    public void renameResidence(String oldResidence, String newResidence) {
-	if (oldResidence == null)
-	    return;
-	if (newResidence == null)
-	    return;
-	oldResidence = oldResidence.toLowerCase();
-
-	ClaimedResidence res = ResidenceList.get(oldResidence);
-	if (res != null) {
-	    removeResidence(oldResidence);
-	    ResidenceList.put(newResidence.toLowerCase(), res);
-	}
-    }
+//    public void renameResidence(String oldResidence, String newResidence) {
+//	if (oldResidence == null)
+//	    return;
+//	if (newResidence == null)
+//	    return;
+//	oldResidence = oldResidence.toLowerCase();
+//
+//	ClaimedResidence res = ResidenceList.get(oldResidence);
+//	if (res != null) {
+//	    removeResidence(oldResidence);
+//	    ResidenceList.put(newResidence.toLowerCase(), res);
+//	}
+//    }
 
     public int getResAmount() {
 	return ResidenceList.size();
     }
 
     public List<ClaimedResidence> getResList() {
-	List<ClaimedResidence> temp = new ArrayList<ClaimedResidence>();
-	for (Entry<String, ClaimedResidence> one : this.ResidenceList.entrySet()) {
-	    temp.add(one.getValue());
-	}
-	return temp;
+	return ResidenceList;
     }
 
-    public Map<String, ClaimedResidence> getResidenceMap() {
-	return this.ResidenceList;
-    }
+//    public Map<String, ClaimedResidence> getResidenceMap() {
+//	return this.ResidenceList;
+//    }
 
     public String getPlayerName() {
 	this.updatePlayer();
