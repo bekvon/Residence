@@ -1053,9 +1053,12 @@ public class ClaimedResidence {
     }
 
     public CuboidArea getMainArea() {
-	CuboidArea area = areas.get("main");
+	CuboidArea area = areas.get(this.isSubzone() ? this.getResidenceName() : "main");
 	if (area == null && !areas.isEmpty())
-	    area = areas.get(0);
+	    for (Entry<String, CuboidArea> one : areas.entrySet()) {
+		area = one.getValue();
+		break;
+	    }
 	return area;
     }
 
