@@ -840,7 +840,7 @@ public class ResidenceManager implements ResidenceInterface {
 	HashMap<Integer, Object> t = new HashMap<Integer, Object>();
 	List<MinimizeMessages> ls = optimizeMessages.get(world);
 	if (ls == null)
-	    return t;
+	    return null;
 	for (MinimizeMessages one : ls) {
 	    Map<String, Object> root = new HashMap<>();
 	    root.put("EnterMessage", one.getEnter());
@@ -871,7 +871,7 @@ public class ResidenceManager implements ResidenceInterface {
 	HashMap<Integer, Object> t = new HashMap<Integer, Object>();
 	List<MinimizeFlags> ls = optimizeFlags.get(world);
 	if (ls == null)
-	    return t;
+	    return null;
 	for (MinimizeFlags one : ls) {
 	    t.put(one.getId(), one.getFlags());
 	}

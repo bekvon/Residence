@@ -1386,14 +1386,23 @@ public class ClaimedResidence {
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
 
-	if (enterMessage != null && leaveMessage != null) {
-	    MinimizeMessages min = plugin.getResidenceManager().addMessageToTempCache(this.getWorld(), enterMessage, leaveMessage);
-	    if (min == null) {
-		root.put("EnterMessage", enterMessage);
-		root.put("LeaveMessage", leaveMessage);
-	    } else {
-		root.put("Messages", min.getId());
+	if (plugin.getConfigManager().isNewSaveMechanic()) {
+	    if (enterMessage != null && leaveMessage != null) {
+		MinimizeMessages min = plugin.getResidenceManager().addMessageToTempCache(this.getWorld(), enterMessage, leaveMessage);
+		if (min == null) {
+		    if (enterMessage != null)
+			root.put("EnterMessage", enterMessage);
+		    if (leaveMessage != null)
+			root.put("LeaveMessage", leaveMessage);
+		} else {
+		    root.put("Messages", min.getId());
+		}
 	    }
+	} else {
+	    if (enterMessage != null)
+		root.put("EnterMessage", enterMessage);
+	    if (leaveMessage != null)
+		root.put("LeaveMessage", leaveMessage);
 	}
 
 //	if (enterMessage != null)
@@ -1425,8 +1434,14 @@ public class ClaimedResidence {
 	if (!map.isEmpty())
 	    root.put("IgnoreList", map);
 
-	for (Entry<String, CuboidArea> entry : areas.entrySet()) {
-	    areamap.put(entry.getKey(), entry.getValue().newSave());
+	if (plugin.getConfigManager().isNewSaveMechanic()) {
+	    for (Entry<String, CuboidArea> entry : areas.entrySet()) {
+		areamap.put(entry.getKey(), entry.getValue().newSave());
+	    }
+	} else {
+	    for (Entry<String, CuboidArea> entry : areas.entrySet()) {
+		areamap.put(entry.getKey(), entry.getValue().save());
+	    }
 	}
 
 	root.put("Areas", areamap);
@@ -1444,8 +1459,21 @@ public class ClaimedResidence {
 	    root.put("cmdWhiteList", this.cmdWhiteList);
 
 	if (tpLoc != null) {
-	    root.put("TPLoc", convertDouble(tpLoc.getX()) + ":" + convertDouble(tpLoc.getY()) + ":" + convertDouble(tpLoc.getZ()) + ":" + convertDouble(tpLoc.getPitch()) + ":" + convertDouble(tpLoc
-		.getYaw()));
+	    if (plugin.getConfigManager().isNewSaveMechanic()) {
+		root.put("TPLoc", convertDouble(tpLoc.getX()) + ":" +
+		    convertDouble(tpLoc.getY()) + ":" +
+		    convertDouble(tpLoc.getZ()) + ":" +
+		    convertDouble(tpLoc.getPitch()) + ":" +
+		    convertDouble(tpLoc.getYaw()));
+	    } else {
+		Map<String, Object> tpmap = new HashMap<String, Object>();
+		tpmap.put("X", convertDouble(this.tpLoc.getX()));
+		tpmap.put("Y", convertDouble(this.tpLoc.getY()));
+		tpmap.put("Z", convertDouble(this.tpLoc.getZ()));
+		tpmap.put("Pitch", convertDouble(this.tpLoc.getPitch()));
+		tpmap.put("Yaw", convertDouble(this.tpLoc.getYaw()));
+		root.put("TPLoc", tpmap);
+	    }
 	}
 	return root;
     }

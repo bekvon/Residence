@@ -592,31 +592,50 @@ public class FlagPermissions {
 
 	// Putting uuid's to main cache for later save
 
-	Map<String, Object> playerFlagsClone = new HashMap<String, Object>();
-	for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
-	    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, one.getValue());
-	    playerFlagsClone.put(one.getKey(), min.getId());
-	}
-	root.put("PlayerFlags", playerFlagsClone);
-
-	if (!groupFlags.isEmpty()) {
-	    Map<String, Object> GroupFlagsClone = new HashMap<String, Object>();
-	    for (Entry<String, Map<String, Boolean>> one : groupFlags.entrySet()) {
+	if (Residence.getInstance().getConfigManager().isNewSaveMechanic()) {
+	    Map<String, Object> playerFlagsClone = new HashMap<String, Object>();
+	    for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
 		MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, one.getValue());
-		GroupFlagsClone.put(one.getKey(), min.getId());
+		playerFlagsClone.put(one.getKey(), min.getId());
 	    }
-	    root.put("GroupFlags", GroupFlagsClone);
-	}
+	    root.put("PlayerFlags", playerFlagsClone);
 
-	MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, cuboidFlags);
-	if (min == null) {
-	    // Cloning map to fix issue for yml anchors being created	
-	    root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
+	    if (!groupFlags.isEmpty()) {
+		Map<String, Object> GroupFlagsClone = new HashMap<String, Object>();
+		for (Entry<String, Map<String, Boolean>> one : groupFlags.entrySet()) {
+		    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, one.getValue());
+		    GroupFlagsClone.put(one.getKey(), min.getId());
+		}
+		root.put("GroupFlags", GroupFlagsClone);
+	    }
+
+	    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, cuboidFlags);
+	    if (min == null) {
+		// Cloning map to fix issue for yml anchors being created	
+		root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
+	    } else {
+		root.put("AreaFlags", min.getId());
+	    }
+
 	} else {
-	    root.put("AreaFlags", min.getId());
+	    root.put("PlayerFlags", clone(playerFlags));
+	    if (!groupFlags.isEmpty()) {
+		root.put("GroupFlags", clone(this.groupFlags));
+	    }
+
+	    // Cloning map to fix issue for yml anchors being created
+	    root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
 	}
 
 	return root;
+    }
+
+    private HashMap<String, Map<String, Boolean>> clone(Map<String, Map<String, Boolean>> map) {
+	HashMap<String, Map<String, Boolean>> nm = new HashMap<String, Map<String, Boolean>>();
+	for (Entry<String, Map<String, Boolean>> one : map.entrySet()) {
+	    nm.put(one.getKey(), new HashMap<String, Boolean>(one.getValue()));
+	}
+	return nm;
     }
 
     public static FlagPermissions load(Map<String, Object> root) throws Exception {
