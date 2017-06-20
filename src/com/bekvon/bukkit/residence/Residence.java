@@ -1089,8 +1089,8 @@ public class Residence extends JavaPlugin {
 	    World world = server.getWorld(entry.getKey());
 	    if (world != null)
 		yml.getRoot().put("Seed", world.getSeed());
-	    yml.getRoot().put("LeaveMessage", this.getResidenceManager().getMessageCatch());
-	    yml.getRoot().put("Flags", this.getResidenceManager().getFlagsCatch());
+	    yml.getRoot().put("LeaveMessage", this.getResidenceManager().getMessageCatch(entry.getKey()));
+	    yml.getRoot().put("Flags", this.getResidenceManager().getFlagsCatch(entry.getKey()));
 	    yml.getRoot().put("Residences", entry.getValue());
 	    yml.save();
 	    if (ymlSaveLoc.isFile()) {

@@ -93,7 +93,7 @@ public class PermissionListManager {
 	    Map saveMap = new LinkedHashMap<>();
 	    Map<String, FlagPermissions> map = players.getValue();
 	    for (Entry<String, FlagPermissions> list : map.entrySet()) {
-		saveMap.put(list.getKey(), list.getValue().save());
+		saveMap.put(list.getKey(), list.getValue().save(null));
 	    }
 	    root.put(players.getKey(), saveMap);
 	}

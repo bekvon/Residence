@@ -1384,7 +1384,7 @@ public class ClaimedResidence {
 	    root.put("CreatedOn", createTime);
 
 	if (enterMessage != null && leaveMessage != null) {
-	    MinimizeMessages min = plugin.getResidenceManager().addMessageToTempCache(enterMessage, leaveMessage);
+	    MinimizeMessages min = plugin.getResidenceManager().addMessageToTempCache(this.getWorld(), enterMessage, leaveMessage);
 	    if (min == null) {
 		root.put("EnterMessage", enterMessage);
 		root.put("LeaveMessage", leaveMessage);
@@ -1433,7 +1433,7 @@ public class ClaimedResidence {
 	}
 	if (!subzonemap.isEmpty())
 	    root.put("Subzones", subzonemap);
-	root.put("Permissions", perms.save());
+	root.put("Permissions", perms.save(this.getWorld()));
 
 	if (!this.cmdBlackList.isEmpty())
 	    root.put("cmdBlackList", this.cmdBlackList);

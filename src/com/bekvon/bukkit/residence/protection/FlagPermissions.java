@@ -587,39 +587,34 @@ public class FlagPermissions {
 	return false;
     }
 
-    public Map<String, Object> save() {
+    public Map<String, Object> save(String world) {
 	Map<String, Object> root = new LinkedHashMap<>();
-//	root.put("LastKnownPlayerNames", cachedPlayerNameUUIDs);
 
 	// Putting uuid's to main cache for later save
-//	Residence.getInstance().addCachedPlayerNameUUIDs(cachedPlayerNameUUIDs);
 
 	Map<String, Object> playerFlagsClone = new HashMap<String, Object>();
 	for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
-	    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(one.getValue());
+	    MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, one.getValue());
 	    playerFlagsClone.put(one.getKey(), min.getId());
 	}
 	root.put("PlayerFlags", playerFlagsClone);
 
-//	root.put("PlayerFlags", playerFlags);
 	if (!groupFlags.isEmpty()) {
 	    Map<String, Object> GroupFlagsClone = new HashMap<String, Object>();
 	    for (Entry<String, Map<String, Boolean>> one : groupFlags.entrySet()) {
-		MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(one.getValue());
+		MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, one.getValue());
 		GroupFlagsClone.put(one.getKey(), min.getId());
 	    }
 	    root.put("GroupFlags", GroupFlagsClone);
 	}
 
-	MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(cuboidFlags);
+	MinimizeFlags min = Residence.getInstance().getResidenceManager().addFlagsTempCache(world, cuboidFlags);
 	if (min == null) {
 	    // Cloning map to fix issue for yml anchors being created	
 	    root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
 	} else {
 	    root.put("AreaFlags", min.getId());
 	}
-
-//	root.put("AreaFlags", new HashMap<String, Boolean>(cuboidFlags));
 
 	return root;
     }

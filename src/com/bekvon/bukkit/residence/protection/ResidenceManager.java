@@ -815,37 +815,33 @@ public class ResidenceManager implements ResidenceInterface {
     private void clearSaveChache() {
 	optimizeMessages.clear();
 	optimizeFlags.clear();
-	lastMinimmizeMessageId = 1;
-	lastMinimmizeFlagsId = 1;
     }
 
     // Optimizing save file
-    List<MinimizeMessages> optimizeMessages = new ArrayList<MinimizeMessages>();
-    List<MinimizeFlags> optimizeFlags = new ArrayList<MinimizeFlags>();
-//    List<MinimizeFlags> optimizePlayerFlags = new ArrayList<MinimizeFlags>();
-    int lastMinimmizeMessageId = 1;
-    int lastMinimmizeFlagsId = 1;
-//    int lastMinimmizePlayerFlagsId = 1;
+    HashMap<String, List<MinimizeMessages>> optimizeMessages = new HashMap<String, List<MinimizeMessages>>();
+    HashMap<String, List<MinimizeFlags>> optimizeFlags = new HashMap<String, List<MinimizeFlags>>();
 
-    public MinimizeMessages addMessageToTempCache(String enter, String leave) {
-	for (MinimizeMessages one : optimizeMessages) {
+    public MinimizeMessages addMessageToTempCache(String world, String enter, String leave) {
+	List<MinimizeMessages> ls = optimizeMessages.get(world);
+	if (ls == null)
+	    ls = new ArrayList<MinimizeMessages>();
+	for (MinimizeMessages one : ls) {
 	    if (!one.add(enter, leave))
 		continue;
-//	    if (one.getRepeat() < 2)
-//		return null;
 	    return one;
 	}
-	MinimizeMessages m = new MinimizeMessages(lastMinimmizeMessageId, enter, leave);
-	optimizeMessages.add(m);
-	lastMinimmizeMessageId++;
+	MinimizeMessages m = new MinimizeMessages(ls.size() + 1, enter, leave);
+	ls.add(m);
+	optimizeMessages.put(world, ls);
 	return m;
     }
 
-    public HashMap<Integer, Object> getMessageCatch() {
+    public HashMap<Integer, Object> getMessageCatch(String world) {
 	HashMap<Integer, Object> t = new HashMap<Integer, Object>();
-	for (MinimizeMessages one : optimizeMessages) {
-//	    if (one.getRepeat() == 1)
-//		continue;
+	List<MinimizeMessages> ls = optimizeMessages.get(world);
+	if (ls == null)
+	    return t;
+	for (MinimizeMessages one : ls) {
 	    Map<String, Object> root = new HashMap<>();
 	    root.put("EnterMessage", one.getEnter());
 	    root.put("LeaveMessage", one.getLeave());
@@ -854,21 +850,29 @@ public class ResidenceManager implements ResidenceInterface {
 	return t;
     }
 
-    public MinimizeFlags addFlagsTempCache(Map<String, Boolean> map) {
-	for (MinimizeFlags one : optimizeFlags) {
+    public MinimizeFlags addFlagsTempCache(String world, Map<String, Boolean> map) {
+	if (world == null)
+	    return null;
+	List<MinimizeFlags> ls = optimizeFlags.get(world);
+	if (ls == null)
+	    ls = new ArrayList<MinimizeFlags>();
+	for (MinimizeFlags one : ls) {
 	    if (!one.add(map))
 		continue;
 	    return one;
 	}
-	MinimizeFlags m = new MinimizeFlags(lastMinimmizeFlagsId, map);
-	optimizeFlags.add(m);
-	lastMinimmizeFlagsId++;
+	MinimizeFlags m = new MinimizeFlags(ls.size() + 1, map);
+	ls.add(m);
+	optimizeFlags.put(world, ls);
 	return m;
     }
 
-    public HashMap<Integer, Object> getFlagsCatch() {
+    public HashMap<Integer, Object> getFlagsCatch(String world) {
 	HashMap<Integer, Object> t = new HashMap<Integer, Object>();
-	for (MinimizeFlags one : optimizeFlags) {
+	List<MinimizeFlags> ls = optimizeFlags.get(world);
+	if (ls == null)
+	    return t;
+	for (MinimizeFlags one : ls) {
 	    t.put(one.getId(), one.getFlags());
 	}
 	return t;
@@ -1183,7 +1187,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    return;
 	String world = res.getWorld();
 	if (chunkResidences.get(world) == null)
-	    return;	
+	    return;
 	for (ChunkRef chunk : getChunks(res)) {
 	    List<ClaimedResidence> ress = new ArrayList<>();
 	    if (chunkResidences.get(world).containsKey(chunk)) {
@@ -1194,23 +1198,24 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
     }
+
     public void calculateChunks(ClaimedResidence res) {
- 	if (res == null)
- 	    return;
- 	String world = res.getWorld();
- 	if (chunkResidences.get(world) == null) {
- 	    chunkResidences.put(world, new HashMap<ChunkRef, List<ClaimedResidence>>());
- 	}
- 	for (ChunkRef chunk : getChunks(res)) {
- 	    List<ClaimedResidence> ress = new ArrayList<>();
- 	    if (chunkResidences.get(world).containsKey(chunk)) {
- 		ress.addAll(chunkResidences.get(world).get(chunk));
- 	    }
- 	    ress.add(res);
- 	    chunkResidences.get(world).put(chunk, ress);
- 	}
-     }
-    
+	if (res == null)
+	    return;
+	String world = res.getWorld();
+	if (chunkResidences.get(world) == null) {
+	    chunkResidences.put(world, new HashMap<ChunkRef, List<ClaimedResidence>>());
+	}
+	for (ChunkRef chunk : getChunks(res)) {
+	    List<ClaimedResidence> ress = new ArrayList<>();
+	    if (chunkResidences.get(world).containsKey(chunk)) {
+		ress.addAll(chunkResidences.get(world).get(chunk));
+	    }
+	    ress.add(res);
+	    chunkResidences.get(world).put(chunk, ress);
+	}
+    }
+
     @Deprecated
     public void calculateChunks(String name) {
 	if (name == null)

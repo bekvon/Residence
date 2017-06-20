@@ -544,8 +544,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     @Override
-    public Map<String, Object> save() {
-	Map<String, Object> root = super.save();
+    public Map<String, Object> save(String world) {
+	Map<String, Object> root = super.save(this.world);
 	if (!ownerUUID.toString().equals(Residence.getInstance().getTempUserUUID()))
 	    root.put("OwnerUUID", ownerUUID.toString());
 	root.put("OwnerLastKnownName", ownerLastKnownName);
