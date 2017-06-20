@@ -1564,10 +1564,10 @@ public class ClaimedResidence {
 
 	    try {
 		String[] split = tpLoc.split(":");
-		if (split.length > 3)
-		    yaw = convertDouble(split[3]);
 		if (split.length > 4)
-		    pitch = convertDouble(split[4]);
+		    yaw = convertDouble(split[4]);
+		if (split.length > 3)
+		    pitch = convertDouble(split[3]);
 		res.tpLoc = new Location(world, convertDouble(split[0]), convertDouble(split[1]), convertDouble(split[2]));
 	    } catch (Exception e) {
 	    }
