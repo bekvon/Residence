@@ -10,6 +10,7 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
@@ -67,6 +68,12 @@ public class InformationPager {
 	int start = pi.getStart();
 	int pagecount = pi.getTotalPages();
 
+	Debug.D("page " + page);
+	if (!(sender instanceof Player) && page == -1) {
+	    printListWithDelay(sender, ownedResidences, 0, resadmin);
+	    return;
+	}
+	
 	if (!pi.isPageOk()) {
 	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
@@ -81,10 +88,6 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
-	if (!(sender instanceof Player) && page == -1) {
-	    printListWithDelay(sender, ownedResidences, start - 1, resadmin);
-	    return;
-	}
 
 //	List<String> linesForConsole = new ArrayList<String>();
 	int y = -1;
@@ -172,7 +175,7 @@ public class InformationPager {
 	    i++;
 	    if (i >= start + 100)
 		break;
-	    if (ownedResidences.size() <= i)
+	    if (ownedResidences.size() < i)
 		break;
 
 	    ClaimedResidence res = resT.getValue();
@@ -215,7 +218,7 @@ public class InformationPager {
 		StringB.append("\n " + plugin.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
 	    }
 
-	    String msg = plugin.msg(lm.Residence_ResList, (i + 1), res.getName(), res.getWorld(), "", ExtraString);
+	    String msg = plugin.msg(lm.Residence_ResList, i, res.getName(), res.getWorld(), "", ExtraString);
 
 	    msg = ChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
 	    msg = msg.replaceAll("\\s{2}", " ");
