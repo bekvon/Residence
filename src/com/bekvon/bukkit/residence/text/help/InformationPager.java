@@ -11,7 +11,6 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
@@ -70,10 +69,8 @@ public class InformationPager {
 
 	PageInfo pi = new PageInfo(perPage, ownedResidences.size(), page);
 
-	int start = pi.getStart();
 	int pagecount = pi.getTotalPages();
 
-	Debug.D("page " + page);
 	if (!(sender instanceof Player) && page == -1) {
 	    printListWithDelay(sender, ownedResidences, 0, resadmin);
 	    return;
@@ -255,7 +252,7 @@ public class InformationPager {
     }
 
     private void printListToFile(final TreeMap<String, ClaimedResidence> ownedResidences, final boolean resadmin) {
-	
+
 	Bukkit.getConsoleSender().sendMessage("Saving");
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
