@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.text.help;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -14,7 +15,11 @@ import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -73,7 +78,11 @@ public class InformationPager {
 	    printListWithDelay(sender, ownedResidences, 0, resadmin);
 	    return;
 	}
-	
+	if (!(sender instanceof Player) && page == -2) {
+	    printListToFile(ownedResidences, resadmin);
+	    return;
+	}
+
 	if (!pi.isPageOk()) {
 	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
@@ -88,8 +97,6 @@ public class InformationPager {
 	if (resadmin)
 	    cmd = "resadmin";
 
-
-//	List<String> linesForConsole = new ArrayList<String>();
 	int y = -1;
 
 	for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
@@ -245,6 +252,86 @@ public class InformationPager {
 	    }
 	}, 5L);
 
+    }
+
+    private void printListToFile(final TreeMap<String, ClaimedResidence> ownedResidences, final boolean resadmin) {
+	
+	Bukkit.getConsoleSender().sendMessage("Saving");
+	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+	    @Override
+	    public void run() {
+		int y = 0;
+		final StringBuilder sb = new StringBuilder();
+		for (Entry<String, ClaimedResidence> resT : ownedResidences.entrySet()) {
+		    y++;
+		    if (ownedResidences.size() < y)
+			break;
+
+		    ClaimedResidence res = resT.getValue();
+		    StringBuilder StringB = new StringBuilder();
+		    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
+		    String worldInfo = "";
+
+		    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
+			worldInfo += "&6 (&3";
+			CuboidArea area = res.getAreaArray()[0];
+			worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
+			    .getBlockZ());
+			worldInfo += "&6; &3";
+			worldInfo += plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
+			    .getBlockZ());
+			worldInfo += "&6)";
+			worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
+			StringB.append("\n" + worldInfo);
+		    }
+
+		    StringB.append("\n " + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
+
+		    String ExtraString = "";
+		    if (res.isForRent()) {
+			if (res.isRented()) {
+			    ExtraString = " " + plugin.msg(lm.Residence_IsRented);
+			    StringB.append("\n " + plugin.msg(lm.Residence_RentedBy, res.getRentedLand().player));
+			} else {
+			    ExtraString = " " + plugin.msg(lm.Residence_IsForRent);
+			}
+			RentableLand rentable = res.getRentable();
+			StringB.append("\n " + plugin.msg(lm.General_Cost, rentable.cost, rentable.days));
+			StringB.append("\n " + plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
+			StringB.append("\n " + plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
+			StringB.append("\n " + plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+		    }
+
+		    if (res.isForSell()) {
+			ExtraString = " " + plugin.msg(lm.Residence_IsForSale);
+			StringB.append("\n " + plugin.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
+		    }
+
+		    String msg = plugin.msg(lm.Residence_ResList, y, res.getName(), res.getWorld(), "", ExtraString);
+
+		    msg = ChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
+		    msg = msg.replaceAll("\\s{2}", " ");
+
+		    sb.append(msg);
+		    sb.append(" \n");
+//	    sender.sendMessage(msg);
+		}
+
+		File BackupDir = new File(Residence.getInstance().getDataLocation(), "FullLists");
+		if (!BackupDir.isDirectory())
+		    BackupDir.mkdir();
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+		File file = new File(BackupDir, dateFormat.format(date) + ".txt");
+		try {
+		    FileUtils.writeStringToFile(file, sb.toString(), "UTF-8");
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		Bukkit.getConsoleSender().sendMessage("Saved file to FullLists folder with " + file.getName() + " name");
+		return;
+	    }
+	});
     }
 
     public void ShowPagination(CommandSender sender, int pageCount, int CurrentPage, String cmd) {

@@ -22,7 +22,7 @@ public class listall implements cmd {
 	int page = 1;
 	World world = null;
 
-	c : for (int i = 1; i < args.length; i++) {
+	c: for (int i = 1; i < args.length; i++) {
 	    try {
 		page = Integer.parseInt(args[i]);
 		if (page < 1)
@@ -33,6 +33,10 @@ public class listall implements cmd {
 
 	    if (args[i].equalsIgnoreCase("-a") && !(sender instanceof Player)) {
 		page = -1;
+		continue;
+	    }
+	    if (args[i].equalsIgnoreCase("-f") && !(sender instanceof Player)) {
+		page = -2;
 		continue;
 	    }
 
@@ -51,7 +55,7 @@ public class listall implements cmd {
     @Override
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "List All Residences");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res listall <page> <worldName> <-a>", "Lists all residences"));
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res listall <page> <worldName> <-a/-f>", "Lists all residences"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]"));
     }
 }
