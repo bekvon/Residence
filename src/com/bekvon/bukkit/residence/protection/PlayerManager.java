@@ -334,19 +334,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	}
     }
 
-    public void removeResFromPlayer(UUID uuid, String residence) {
-	ResidencePlayer resPlayer = playersUuid.get(uuid);
-	if (resPlayer != null) {
-	    resPlayer.removeResidence(plugin.getResidenceManager().getByName(residence));
-	}
-    }
-
     public void removeResFromPlayer(OfflinePlayer player, ClaimedResidence residence) {
-	removeResFromPlayer(player.getUniqueId(), residence);
-    }
-
-    @Deprecated
-    public void removeResFromPlayer(OfflinePlayer player, String residence) {
 	removeResFromPlayer(player.getUniqueId(), residence);
     }
 
@@ -354,21 +342,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	removeResFromPlayer(player.getUniqueId(), residence);
     }
 
-    @Deprecated
-    public void removeResFromPlayer(Player player, String residence) {
-	removeResFromPlayer(player.getUniqueId(), residence);
-    }
-
     public void removeResFromPlayer(String player, ClaimedResidence residence) {
-	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
-	if (resPlayer != null) {
-	    resPlayer.removeResidence(residence);
-	}
-	return;
-    }
-
-    @Deprecated
-    public void removeResFromPlayer(String player, String residence) {
 	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
 	if (resPlayer != null) {
 	    resPlayer.removeResidence(residence);

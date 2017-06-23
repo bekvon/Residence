@@ -450,7 +450,7 @@ public class ResidenceManager implements ResidenceInterface {
 	if (sender instanceof Player)
 	    removeResidence((Player) sender, name, resadmin);
 	else
-	    this.removeResidence(null, name, true);
+	    removeResidence(null, name, true);
     }
 
     @SuppressWarnings("deprecation")
@@ -537,13 +537,13 @@ public class ResidenceManager implements ResidenceInterface {
 
 	plugin.getLeaseManager().removeExpireTime(res);
 
-	for (String oneSub : res.getSubzoneList()) {
-	    plugin.getPlayerManager().removeResFromPlayer(res.getOwnerUUID(), name + "." + oneSub);
-	    plugin.getRentManager().removeRentable(name + "." + oneSub);
-	    plugin.getTransactionManager().removeFromSale(name + "." + oneSub);
+	for (ClaimedResidence oneSub : res.getSubzones()) {
+	    plugin.getPlayerManager().removeResFromPlayer(res.getOwnerUUID(), oneSub);
+	    plugin.getRentManager().removeRentable(name + "." + oneSub.getResidenceName());
+	    plugin.getTransactionManager().removeFromSale(name + "." + oneSub.getResidenceName());
 	}
 
-	plugin.getPlayerManager().removeResFromPlayer(res.getOwnerUUID(), name);
+	plugin.getPlayerManager().removeResFromPlayer(res.getOwnerUUID(), res);
 	plugin.getRentManager().removeRentable(name);
 	plugin.getTransactionManager().removeFromSale(name);
 
