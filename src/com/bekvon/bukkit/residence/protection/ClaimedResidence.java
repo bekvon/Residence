@@ -200,8 +200,8 @@ public class ClaimedResidence {
 	subzones = new HashMap<>();
 	areas = new HashMap<>();
 	bank = new ResidenceBank(this);
-	blacklist = new ResidenceItemList(this, ListType.BLACKLIST);
-	ignorelist = new ResidenceItemList(this, ListType.IGNORELIST);
+	blacklist = new ResidenceItemList(plugin, this, ListType.BLACKLIST);
+	ignorelist = new ResidenceItemList(plugin, this, ListType.IGNORELIST);
 	this.plugin = plugin;
     }
 

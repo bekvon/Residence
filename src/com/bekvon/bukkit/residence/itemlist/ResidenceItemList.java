@@ -13,14 +13,14 @@ public class ResidenceItemList extends ItemList {
     ClaimedResidence res;
     private Residence plugin;
 
-    public ResidenceItemList(ClaimedResidence parent, ListType type) {
+    public ResidenceItemList(Residence plugin, ClaimedResidence parent, ListType type) {
 	super(type);
+	this.plugin = plugin;
 	res = parent;
     }
 
     private ResidenceItemList(Residence plugin) {
 	this.plugin = plugin;
-
     }
 
     public void playerListChange(Player player, Material mat, boolean resadmin) {

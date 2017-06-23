@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -310,11 +309,6 @@ public class ResidencePlayer {
 	if (residence == null)
 	    return;
 	this.ResidenceList.add(residence);
-    }
-
-    @Deprecated
-    public void removeResidence(String residence) {
-	removeResidence(Residence.getInstance().getResidenceManager().getByName(residence));
     }
 
     public void removeResidence(ClaimedResidence residence) {
