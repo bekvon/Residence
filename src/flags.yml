@@ -240,6 +240,7 @@ Global:
     # These are default flags applied to the residence creator of any group.
     CreatorDefault:
         build: true
+        destroy: true
         move: true
         use: true
         ignite: true
