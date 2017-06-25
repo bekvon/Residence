@@ -64,8 +64,13 @@ public class ResidenceBlockListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onAnvilInventoryClick(InventoryClickEvent e) {
 	Inventory inv = e.getInventory();
-	if (inv == null || inv.getType() != InventoryType.ANVIL || e.getInventory().getLocation() == null)
+
+	try {
+	    if (inv == null || inv.getType() != InventoryType.ANVIL || e.getInventory().getLocation() == null)
+		return;
+	} catch (Exception | NoSuchMethodError ex) {
 	    return;
+	}
 	Block b = e.getInventory().getLocation().getBlock();
 	if (b == null || b.getType() != Material.ANVIL)
 	    return;
