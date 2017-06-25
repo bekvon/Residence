@@ -447,9 +447,9 @@ public class ClaimedResidence {
 	if (resevent.isCancelled())
 	    return false;
 
-	plugin.getResidenceManager().removeChunkList(this);
+	plugin.getResidenceManager().removeChunkList(this.getName());
 	areas.put(name, area);
-	plugin.getResidenceManager().calculateChunks(this);
+	plugin.getResidenceManager().calculateChunks(this.getName());
 	return true;
     }
 
@@ -596,10 +596,10 @@ public class ClaimedResidence {
 	    }
 	}
 
-	plugin.getResidenceManager().removeChunkList(this);
+	plugin.getResidenceManager().removeChunkList(this.getName());
 	areas.remove(name);
 	areas.put(name, newarea);
-	plugin.getResidenceManager().calculateChunks(this);
+	plugin.getResidenceManager().calculateChunks(this.getName());
 	if (player != null)
 	    plugin.msg(player, lm.Area_Update);
 	return true;
@@ -1349,9 +1349,9 @@ public class ClaimedResidence {
     }
 
     public void removeArea(String id) {
-	plugin.getResidenceManager().removeChunkList(this);
+	plugin.getResidenceManager().removeChunkList(this.getName());
 	areas.remove(id);
-	plugin.getResidenceManager().calculateChunks(this);
+	plugin.getResidenceManager().calculateChunks(this.getName());
     }
 
     public void removeArea(Player player, String id, boolean resadmin) {
@@ -1754,7 +1754,7 @@ public class ClaimedResidence {
 
     public void remove() {
 	plugin.getResidenceManager().removeResidence(this);
-	plugin.getResidenceManager().removeChunkList(this);
+	plugin.getResidenceManager().removeChunkList(this.getName());
 	plugin.getPlayerManager().removeResFromPlayer(this);
     }
 

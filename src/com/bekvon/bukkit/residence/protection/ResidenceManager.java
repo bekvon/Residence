@@ -239,7 +239,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (!newRes.isSubzone() && plugin.getConfigManager().enableEconomy() && !resadmin) {
 	    double chargeamount = Math.ceil(newArea.getSize() * group.getCostPerBlock());
-	    if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)){
+	    if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
 		// Need to remove area if we can't create residence
 		newRes.removeArea("main");
 		return false;
@@ -462,6 +462,7 @@ public class ResidenceManager implements ResidenceInterface {
     @SuppressWarnings("deprecation")
     public void removeResidence(Player player, String name, boolean resadmin) {
 
+	Debug.D("removing " + name);
 	ClaimedResidence res = this.getByName(name);
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
@@ -1180,32 +1181,38 @@ public class ResidenceManager implements ResidenceInterface {
 	return residences;
     }
 
-    @Deprecated
     public void removeChunkList(String name) {
 	if (name == null)
 	    return;
 	name = name.toLowerCase();
-	removeChunkList(residences.get(name));
-    }
-
-    public void removeChunkList(ClaimedResidence res) {
+	ClaimedResidence res = residences.get(name);
 	if (res == null)
 	    return;
 	String world = res.getWorld();
 	if (chunkResidences.get(world) == null)
 	    return;
+	Debug.D("removing chunks " + res.getName() + "  " + chunkResidences.get(world).size());
 	for (ChunkRef chunk : getChunks(res)) {
 	    List<ClaimedResidence> ress = new ArrayList<>();
 	    if (chunkResidences.get(world).containsKey(chunk)) {
+		Debug.D("Contains chunk");
 		ress.addAll(chunkResidences.get(world).get(chunk));
 	    }
+
+	    Debug.D("r " + ress.size());
 	    ress.remove(res);
+	    Debug.D("z " + ress.size());
 	    chunkResidences.get(world).put(chunk, ress);
 	}
+	Debug.D("removing chunks " + res.getName() + "  " + chunkResidences.get(world).size());
 
     }
 
-    public void calculateChunks(ClaimedResidence res) {
+    public void calculateChunks(String name) {
+	if (name == null)
+	    return;
+	name = name.toLowerCase();
+	ClaimedResidence res = residences.get(name);
 	if (res == null)
 	    return;
 	String world = res.getWorld();
@@ -1220,14 +1227,6 @@ public class ResidenceManager implements ResidenceInterface {
 	    ress.add(res);
 	    chunkResidences.get(world).put(chunk, ress);
 	}
-    }
-
-    @Deprecated
-    public void calculateChunks(String name) {
-	if (name == null)
-	    return;
-	name = name.toLowerCase();
-	calculateChunks(residences.get(name));
     }
 
     public static final class ChunkRef {

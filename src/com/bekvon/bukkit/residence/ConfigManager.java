@@ -159,6 +159,10 @@ public class ConfigManager {
     protected boolean DisableListeners;
     protected boolean DisableCommands;
 
+    //Town
+//    private boolean TownEnabled = false;
+//    private int TownMinRange = 0;
+
 //    protected boolean DisableNoFlagMessageUse;
 //    protected List<String> DisableNoFlagMessageWorlds = new ArrayList<String>();
 
@@ -755,6 +759,12 @@ public class ConfigManager {
 	c.getW().addComment("Global.EnableRentSystem", "Enables or disables the Rent System");
 	enableRentSystem = c.get("Global.EnableRentSystem", true);
 
+//	TownEnabled = c.get("Global.Town.Enabled", true);
+//	c.getW().addComment("Global.Town.MinRange", "Range between residences","Protects from building residence near another residence if owner not belonging to same town");
+//	TownMinRange = c.get("Global.Town.MinRange", 16);
+	
+	
+	
 	c.getW().addComment("Global.Rent.PreventRemoval", "Prevents residence/subzone removal if its subzone is still rented by some one");
 	RentPreventRemoval = c.get("Global.Rent.PreventRemoval", true);
 	c.getW().addComment("Global.Rent.Inform.OnEnding", "Informs players on rent time ending");
@@ -1740,4 +1750,12 @@ public class ConfigManager {
     public boolean isAutomaticResidenceCreationCheckCollision() {
 	return AutomaticResidenceCreationCheckCollision;
     }
+
+//    public int getTownMinRange() {
+//	return TownMinRange;
+//    }
+//
+//    public boolean isTownEnabled() {
+//	return TownEnabled;
+//    }
 }

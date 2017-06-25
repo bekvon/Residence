@@ -12,6 +12,7 @@ import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class check implements cmd {
 
@@ -34,6 +35,7 @@ public class check implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
+
 	if (!res.getPermissions().hasApplicableFlag(pname, args[2])) {
 	    plugin.msg(player, lm.Flag_CheckFalse, args[2], pname, args[1]);
 	} else {
