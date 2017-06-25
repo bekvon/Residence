@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,6 +39,8 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.towns.Town;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.griefcraft.cache.ProtectionCache;
@@ -236,8 +239,11 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (!newRes.isSubzone() && plugin.getConfigManager().enableEconomy() && !resadmin) {
 	    double chargeamount = Math.ceil(newArea.getSize() * group.getCostPerBlock());
-	    if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount))
+	    if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)){
+		// Need to remove area if we can't create residence
+		newRes.removeArea("main");
 		return false;
+	    }
 	}
 
 	residences.put(name.toLowerCase(), newRes);

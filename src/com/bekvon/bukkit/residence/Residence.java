@@ -80,6 +80,7 @@ import com.bekvon.bukkit.residence.utils.*;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+//import com.bekvon.bukkit.residence.towns.TownManager;
 import com.earth2me.essentials.Essentials;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
@@ -138,6 +139,7 @@ public class Residence extends JavaPlugin {
     protected PlayerManager PlayerManager;
     protected FlagUtil FlagUtilManager;
     protected ShopSignUtil ShopSignUtilManager;
+//    private TownManager townManager;
     protected RandomTp RandomTpManager;
     protected DynMapManager DynManager;
     protected Sorting SortingManager;
@@ -483,6 +485,7 @@ public class Residence extends JavaPlugin {
 	    PlayerManager = new PlayerManager(this);
 	    ShopSignUtilManager = new ShopSignUtil(this);
 	    RandomTpManager = new RandomTp(this);
+//	    townManager = new TownManager(this);
 
 	    InformationPagerManager = new InformationPager(this);
 
@@ -1794,4 +1797,8 @@ public class Residence extends JavaPlugin {
     public String getPrefix() {
 	return prefix;
     }
+
+//    public TownManager getTownManager() {
+//	return townManager;
+//    }
 }

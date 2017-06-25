@@ -26,6 +26,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.towns.Town;
 import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
@@ -70,6 +71,8 @@ public class ClaimedResidence {
     protected ResidenceItemList blacklist;
     protected boolean mainRes = false;
     protected long createTime = 0L;
+
+    private Town town = null;
 
     private Long leaseExpireTime = null;
 
@@ -1380,11 +1383,17 @@ public class ClaimedResidence {
 	Map<String, Object> root = new HashMap<>();
 	Map<String, Object> areamap = new HashMap<>();
 
-//	root.put("CapitalizedName", resName);
 	if (mainRes)
 	    root.put("MainResidence", mainRes);
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
+
+	if (this.getTown() != null && !this.isSubzone()) {
+	    if (this.getTown().getMainResidence().equals(this))
+		root.put("TownCap", this.getTown().getTownName());
+	    else
+		root.put("Town", this.getTown().getTownName());
+	}
 
 	if (plugin.getConfigManager().isNewSaveMechanic()) {
 	    if (enterMessage != null && leaveMessage != null) {
@@ -1527,6 +1536,22 @@ public class ClaimedResidence {
 
 	if (res.getPermissions().getOwnerLastKnownName() == null)
 	    return null;
+
+//	if (root.containsKey("TownCap")) {
+//	    String townName = (String) root.get("TownCap");
+//	    Town t = plugin.getTownManager().getTown(townName);
+//	    if (t == null)
+//		t = plugin.getTownManager().addTown(townName, res);
+//	    else
+//		t.setMainResidence(res);
+//	    res.setTown(t);
+//	} else if (root.containsKey("Town")) {
+//	    String townName = (String) root.get("Town");
+//	    Town t = plugin.getTownManager().getTown(townName);
+//	    if (t == null)
+//		t = plugin.getTownManager().addTown(townName);
+//	    res.setTown(t);
+//	}
 
 	if (root.containsKey("MainResidence"))
 	    res.mainRes = (Boolean) root.get("MainResidence");
@@ -1872,5 +1897,13 @@ public class ClaimedResidence {
 
     public void setLeaseExpireTime(Long leaseExpireTime) {
 	this.leaseExpireTime = leaseExpireTime;
+    }
+
+    public Town getTown() {
+	return town;
+    }
+
+    public void setTown(Town town) {
+	this.town = town;
     }
 }
