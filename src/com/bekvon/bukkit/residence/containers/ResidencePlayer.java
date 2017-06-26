@@ -318,7 +318,13 @@ public class ResidencePlayer {
     }
 
     public int getResAmount() {
-	return ResidenceList.size();
+	int i = 0;
+	for (ClaimedResidence one : ResidenceList) {
+	    if (one.isSubzone())
+		continue;
+	    i++;
+	}
+	return i;
     }
 
     public List<ClaimedResidence> getResList() {

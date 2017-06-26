@@ -21,17 +21,24 @@ public class give implements cmd {
 
 	Player player = (Player) sender;
 
-	if (args.length != 3)
+	boolean includeSubzones = false;
+
+	if (args.length != 3 && args.length != 4)
 	    return false;
 
-	plugin.getResidenceManager().giveResidence(player, args[2], args[1], resadmin);
+	for (String one : args) {
+	    if (one.equalsIgnoreCase("-s"))
+		includeSubzones = true;
+	}
+
+	plugin.getResidenceManager().giveResidence(player, args[2], args[1], resadmin, includeSubzones);
 	return true;
     }
 
     @Override
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Give residence to player.");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res give <residence name> [player]", "Gives your owned residence to target player"));
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res give <residence name> [player] <-s>", "Gives your owned residence to target player"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[playername]"));
     }
 }

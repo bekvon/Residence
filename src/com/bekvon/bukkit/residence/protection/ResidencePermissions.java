@@ -99,8 +99,9 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean playerHas(Player player, String world, Flags flag, boolean def) {
+	if (player == null)
+	    return false;
 	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag.getName(), FlagType.PLAYER, player.getName(), def);
-
 	Residence.getInstance().getServ().getPluginManager().callEvent(fc);
 	if (fc.isOverriden())
 	    return fc.getOverrideValue();

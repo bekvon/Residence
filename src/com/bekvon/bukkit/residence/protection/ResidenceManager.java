@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,8 +38,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.towns.Town;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.griefcraft.cache.ProtectionCache;
@@ -462,7 +459,6 @@ public class ResidenceManager implements ResidenceInterface {
     @SuppressWarnings("deprecation")
     public void removeResidence(Player player, String name, boolean resadmin) {
 
-	Debug.D("removing " + name);
 	ClaimedResidence res = this.getByName(name);
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
@@ -1106,13 +1102,21 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void giveResidence(Player reqPlayer, String targPlayer, String residence, boolean resadmin) {
-	ClaimedResidence res = getByName(residence);
+	giveResidence(reqPlayer, targPlayer, residence, resadmin, false);
+    }
+
+    public void giveResidence(Player reqPlayer, String targPlayer, String residence, boolean resadmin, boolean includeSubzones) {
+	giveResidence(reqPlayer, targPlayer, getByName(residence), resadmin, includeSubzones);
+    }
+
+    public void giveResidence(Player reqPlayer, String targPlayer, ClaimedResidence res, boolean resadmin, boolean includeSubzones) {
+
 	if (res == null) {
 	    plugin.msg(reqPlayer, lm.Invalid_Residence);
 	    return;
 	}
 
-	residence = res.getName();
+	String residence = res.getName();
 
 	if (!res.getPermissions().hasResidencePermission(reqPlayer, true) && !resadmin) {
 	    plugin.msg(reqPlayer, lm.General_NoPermission);
@@ -1150,6 +1154,11 @@ public class ResidenceManager implements ResidenceInterface {
 	// Fix phrases here
 	plugin.msg(reqPlayer, lm.Residence_Give, residence, giveplayer.getName());
 	plugin.msg(giveplayer, lm.Residence_Recieve, residence, reqPlayer.getName());
+
+	if (includeSubzones)
+	    for (ClaimedResidence one : res.getSubzones()) {
+		giveResidence(reqPlayer, targPlayer, one, resadmin, includeSubzones);
+	    }
     }
 
     public void removeAllFromWorld(CommandSender sender, String world) {
@@ -1191,20 +1200,15 @@ public class ResidenceManager implements ResidenceInterface {
 	String world = res.getWorld();
 	if (chunkResidences.get(world) == null)
 	    return;
-	Debug.D("removing chunks " + res.getName() + "  " + chunkResidences.get(world).size());
 	for (ChunkRef chunk : getChunks(res)) {
 	    List<ClaimedResidence> ress = new ArrayList<>();
 	    if (chunkResidences.get(world).containsKey(chunk)) {
-		Debug.D("Contains chunk");
 		ress.addAll(chunkResidences.get(world).get(chunk));
 	    }
 
-	    Debug.D("r " + ress.size());
 	    ress.remove(res);
-	    Debug.D("z " + ress.size());
 	    chunkResidences.get(world).put(chunk, ress);
 	}
-	Debug.D("removing chunks " + res.getName() + "  " + chunkResidences.get(world).size());
 
     }
 

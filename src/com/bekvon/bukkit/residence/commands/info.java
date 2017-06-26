@@ -12,7 +12,6 @@ import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class info implements cmd {
 
@@ -25,11 +24,6 @@ public class info implements cmd {
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
 		plugin.getResidenceManager().printAreaInfo(res.getName(), sender, resadmin);
-
-
-		Debug.D("cleaning");
-
-		plugin.getResidenceManager().removeResidence(res);
 	    } else {
 		plugin.msg(sender, lm.Invalid_Residence);
 	    }
