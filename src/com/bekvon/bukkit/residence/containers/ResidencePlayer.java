@@ -308,6 +308,8 @@ public class ResidencePlayer {
     public void addResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
+	if (residence.isSubzone())
+	    return;
 	this.ResidenceList.add(residence);
     }
 
