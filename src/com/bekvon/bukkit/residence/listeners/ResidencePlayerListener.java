@@ -364,7 +364,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onFlagChangeWSpeed(ResidenceDeleteEvent event) {
+    public void onResidenceDeleteEvent(ResidenceDeleteEvent event) {
 	if (event.isCancelled())
 	    return;
 
@@ -383,6 +383,28 @@ public class ResidencePlayerListener implements Listener {
 
 	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
 	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.setGlowing(false);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerQuitEvent(PlayerQuitEvent event) {
+
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getPlayer().getLocation());
+
+	if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+	    for (Player one : res.getPlayersInResidence())
+		one.setWalkSpeed(0.2F);
+
+	if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+	    for (Player one : res.getPlayersInResidence())
+		one.resetPlayerWeather();
+
+	if (event.getPlayer() != null && res.getPermissions().playerHas(event.getPlayer(), Flags.fly, FlagCombo.OnlyTrue))
+	    for (Player one : res.getPlayersInResidence())
+		fly(one, false);
+
+	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
+	    for (Player one : res.getPlayersInResidence())
 		one.setGlowing(false);
     }
 
