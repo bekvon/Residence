@@ -389,23 +389,20 @@ public class ResidencePlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
 
-	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getPlayer().getLocation());
+	Player player = event.getPlayer();
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 
 	if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
-	    for (Player one : res.getPlayersInResidence())
-		one.setWalkSpeed(0.2F);
+	    player.setWalkSpeed(0.2F);
 
 	if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
-	    for (Player one : res.getPlayersInResidence())
-		one.resetPlayerWeather();
+	    player.resetPlayerWeather();
 
 	if (event.getPlayer() != null && res.getPermissions().playerHas(event.getPlayer(), Flags.fly, FlagCombo.OnlyTrue))
-	    for (Player one : res.getPlayersInResidence())
-		fly(one, false);
+	    fly(player, false);
 
 	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
-	    for (Player one : res.getPlayersInResidence())
-		one.setGlowing(false);
+	    player.setGlowing(false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
