@@ -308,6 +308,7 @@ public class ResidencePlayer {
     public void addResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
+	// Exclude subzones
 	if (residence.isSubzone())
 	    return;
 	this.ResidenceList.add(residence);

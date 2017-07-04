@@ -252,7 +252,6 @@ public class ConfigManager {
 	globalGroupDefaults = new HashMap<String, FlagPermissions>();
 	UpdateConfigFile();
 	this.loadFlags();
-	this.loadGroups();
     }
 
     public static String Colors(String text) {
@@ -1106,6 +1105,7 @@ public class ConfigManager {
 	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
 	globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", flags.getConfigurationSection("Global"));
 	globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", flags.getConfigurationSection("Global"));
+	loadGroups();
     }
 
     public void loadGroups() {
