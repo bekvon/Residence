@@ -547,24 +547,26 @@ public class ResidencePlayerListener implements Listener {
 	if (player.hasPermission("residence.flag.command.bypass"))
 	    return;
 
-	String msg = event.getMessage().replace(" ", "_");
+	String msg = event.getMessage().replace(" ", "_").toLowerCase();
 
 	int white = 0;
 	int black = 0;
 
 	for (String oneWhite : res.getCmdWhiteList()) {
-	    if (msg.startsWith("/" + oneWhite)) {
-		if (oneWhite.contains("_") && oneWhite.split("_").length > white)
-		    white = oneWhite.split("_").length;
+	    String t = oneWhite.toLowerCase();
+	    if (msg.startsWith("/" + t)) {
+		if (t.contains("_") && t.split("_").length > white)
+		    white = t.split("_").length;
 		else if (white == 0)
 		    white = 1;
 	    }
 	}
 
 	for (String oneBlack : res.getCmdBlackList()) {
-	    if (msg.startsWith("/" + oneBlack)) {
+	    String t = oneBlack.toLowerCase();
+	    if (msg.startsWith("/" + t)) {
 		if (msg.contains("_"))
-		    black = oneBlack.split("_").length;
+		    black = t.split("_").length;
 		else
 		    black = 1;
 		break;
@@ -573,7 +575,8 @@ public class ResidencePlayerListener implements Listener {
 
 	if (black == 0)
 	    for (String oneBlack : res.getCmdBlackList()) {
-		if (oneBlack.equalsIgnoreCase("*")) {
+		String t = oneBlack.toLowerCase();
+		if (t.equalsIgnoreCase("*")) {
 		    if (msg.contains("_"))
 			black = msg.split("_").length;
 		    break;
@@ -1989,10 +1992,10 @@ public class ResidencePlayerListener implements Listener {
 		plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res.getName(), res, message));
 	    }
 	}
-	
+
 	if (from == null || res == null)
 	    return;
-	
+
 	if (!(res == from.getParent())) {
 	    if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(from) || plugin
 		.getTransactionManager().isForSale(from))) {
