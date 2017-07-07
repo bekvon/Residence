@@ -53,6 +53,8 @@ public class WorldItemManager {
 
     private void readLists() {
 	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
+	if (!flags.isConfigurationSection("ItemList"))
+	    return;
 	Set<String> keys = flags.getConfigurationSection("ItemList").getKeys(false);
 	if (keys != null) {
 	    for (String key : keys) {

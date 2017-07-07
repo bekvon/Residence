@@ -408,7 +408,7 @@ public class ConfigManager {
 	c.getW().addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
 	SelectionIgnoreY = c.get("Global.Selection.IgnoreY", false);
 	c.getW().addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
-	    "This will lower residence price by up to 256 times, so ajust block price BEFORE enabling this");
+	    "This will lower residence price by up to 256 times, so adjust block price BEFORE enabling this");
 	NoCostForYBlocks = c.get("Global.Selection.NoCostForYBlocks", false);
 
 	c.getW().addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
