@@ -1581,19 +1581,22 @@ public class ResidencePlayerListener implements Listener {
 	if (player.hasPermission("residence.flybypass"))
 	    return;
 	if (!state) {
+	    boolean land = player.isFlying();
 	    player.setFlying(state);
 	    player.setAllowFlight(state);
-	    Location loc = getSafeLocation(player.getLocation());
-	    if (loc == null) {
-		// get defined land location in case no safe landing spot are found
-		loc = plugin.getConfigManager().getFlyLandLocation();
+	    if (land) {
+		Location loc = getSafeLocation(player.getLocation());
 		if (loc == null) {
-		    // get main world spawn location in case valid location is not found
-		    loc = Bukkit.getWorlds().get(0).getSpawnLocation();
+		    // get defined land location in case no safe landing spot are found
+		    loc = plugin.getConfigManager().getFlyLandLocation();
+		    if (loc == null) {
+			// get main world spawn location in case valid location is not found
+			loc = Bukkit.getWorlds().get(0).getSpawnLocation();
+		    }
 		}
+		if (loc != null)
+		    player.teleport(loc);
 	    }
-	    if (loc != null)
-		player.teleport(loc);
 	} else {
 	    player.setAllowFlight(state);
 	}
@@ -1978,18 +1981,17 @@ public class ResidencePlayerListener implements Listener {
 	    message = to.getEnterMessage();
 	    res = to;
 	}
-
 	Player player = event.getPlayer();
 
 	if (message != null) {
 	    if (plugin.getConfigManager().useTitleMessage()) {
-		plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, res.getName(), res, message));
+		plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
 	    }
 	    if (plugin.getConfigManager().useActionBar()) {
-		plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res.getName(), res, message))
+		plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
 		    .toString());
 	    } else {
-		plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res.getName(), res, message));
+		plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
 	    }
 	}
 
@@ -2026,11 +2028,11 @@ public class ResidencePlayerListener implements Listener {
 	return info;
     }
 
-    public String insertMessages(Player player, String areaname, ClaimedResidence res, String message) {
+    public String insertMessages(Player player, ClaimedResidence res, String message) {
 	try {
 	    message = message.replaceAll("%player", player.getName());
 	    message = message.replaceAll("%owner", res.getPermissions().getOwner());
-	    message = message.replaceAll("%residence", areaname);
+	    message = message.replaceAll("%residence", res.getName());
 	} catch (Exception ex) {
 	    return "";
 	}

@@ -1219,7 +1219,7 @@ public class Residence extends JavaPlugin {
 			if (ms != null) {
 			    for (Entry<Integer, Object> one : ms.entrySet()) {
 				Map<String, String> msgs = (Map<String, String>) one.getValue();
-				c.put(one.getKey(), new MinimizeMessages(one.getKey(), msgs.get("LeaveMessage"), msgs.get("EnterMessage")));
+				c.put(one.getKey(), new MinimizeMessages(one.getKey(), msgs.get("EnterMessage"), msgs.get("LeaveMessage")));
 			    }
 			    getResidenceManager().getCacheMessages().put(world.getName(), c);
 			}
