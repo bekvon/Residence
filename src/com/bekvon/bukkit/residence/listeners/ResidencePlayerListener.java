@@ -70,6 +70,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
@@ -391,6 +392,9 @@ public class ResidencePlayerListener implements Listener {
 
 	Player player = event.getPlayer();
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+
+	if (res == null)
+	    return;
 
 	if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
 	    player.setWalkSpeed(0.2F);
@@ -1851,8 +1855,9 @@ public class ResidencePlayerListener implements Listener {
 		    if (info != null && info.getTimesTeleported() > 5) {
 			Location newLoc = res.getOutsideFreeLoc(loc, player);
 			player.teleport(newLoc);
-		    } else
+		    } else {
 			player.teleport(lastLoc);
+		    }
 		} else {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.teleport(newLoc);
@@ -1932,6 +1937,22 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerTeleportEvent(PlayerTeleportEvent event) {
+
+	Location from = event.getFrom();
+	Location to = event.getTo();
+
+	ClaimedResidence fromRes = plugin.getResidenceManager().getByLoc(from);
+	ClaimedResidence toRes = plugin.getResidenceManager().getByLoc(to);
+
+	if (fromRes != null && toRes != null && fromRes.equals(toRes))
+	    return;
+
+	ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(fromRes, toRes, event.getPlayer());
+	plugin.getServ().getPluginManager().callEvent(chgEvent);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceChangeMessagePrint(ResidenceChangedEvent event) {
 
 	ClaimedResidence from = event.getFrom();
@@ -1968,7 +1989,11 @@ public class ResidencePlayerListener implements Listener {
 		plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res.getName(), res, message));
 	    }
 	}
-	if (!(from != null && res == from.getParent())) {
+	
+	if (from == null || res == null)
+	    return;
+	
+	if (!(res == from.getParent())) {
 	    if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(from) || plugin
 		.getTransactionManager().isForSale(from))) {
 		if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
