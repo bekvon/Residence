@@ -485,8 +485,12 @@ public class ResidencePermissions extends FlagPermissions {
 
     public void setOwner(Player player, boolean resetFlags) {
 
-	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, player.getName());
+	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, player);
 	Residence.getInstance().getServ().getPluginManager().callEvent(ownerchange);
+
+	// Dont change owner if event is canceled
+	if (ownerchange.isCancelled())
+	    return;
 
 	Residence.getInstance().getPlayerManager().removeResFromPlayer(residence.getOwnerUUID(), residence);
 	Residence.getInstance().getPlayerManager().addResidence(player, residence);
@@ -502,6 +506,10 @@ public class ResidencePermissions extends FlagPermissions {
 
 	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, newOwner);
 	Residence.getInstance().getServ().getPluginManager().callEvent(ownerchange);
+
+	// Dont change owner if event is canceled
+	if (ownerchange.isCancelled())
+	    return;
 
 	Residence.getInstance().getPlayerManager().removeResFromPlayer(residence.getOwnerUUID(), residence);
 	Residence.getInstance().getPlayerManager().addResidence(newOwner, residence);
@@ -561,7 +569,7 @@ public class ResidencePermissions extends FlagPermissions {
 		newperms.ownerUUID = UUID.fromString((String) root.get("OwnerUUID"));//get owner UUID
 	    //			String name = Residence.getPlayerName(newperms.ownerUUID); //try to find the current name of the owner	    
 	    newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName");//otherwise load last known name from file
-	    
+
 	    OfflinePlayer p = null;
 	    if (newperms.ownerLastKnownName == null)
 		p = Residence.getInstance().getOfflinePlayer(newperms.ownerUUID);
