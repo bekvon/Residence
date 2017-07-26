@@ -271,6 +271,7 @@ Global:
       - use
       - tp
       - build
+      - destroy
       - container
       - move
       - leash

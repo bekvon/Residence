@@ -555,21 +555,22 @@ public class ConfigManager {
 	TeleportTitleMessage = c.get("Global.Tp.TeleportTitleMessage", true);
 
 	if (conf.contains("Global.RandomTeleportation.WorldName")) {
+	    for (World one : Bukkit.getWorlds()) {
+		String path = "Global.RandomTeleportation.";
+		String WorldName = conf.getString(path + "WorldName", one.getName());
 
-	    String path = "Global.RandomTeleportation.";
-	    String WorldName = conf.getString(path + "WorldName", defaultWorldName);
+		int MaxCoord = conf.getInt(path + "MaxCoord", 1000);
+		int MinCord = conf.getInt(path + "MinCord", 500);
+		int CenterX = conf.getInt(path + "CenterX", 0);
+		int CenterZ = conf.getInt(path + "CenterZ", 0);
 
-	    int MaxCoord = conf.getInt(path + "MaxCoord", 1000);
-	    int MinCord = conf.getInt(path + "MinCord", 500);
-	    int CenterX = conf.getInt(path + "CenterX", 0);
-	    int CenterZ = conf.getInt(path + "CenterZ", 0);
+		RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
 
-	    RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
-
-	    c.get("Global.RandomTeleportation." + WorldName + ".MaxCord", MaxCoord);
-	    c.get("Global.RandomTeleportation." + WorldName + ".MinCord", MinCord);
-	    c.get("Global.RandomTeleportation." + WorldName + ".CenterX", CenterX);
-	    c.get("Global.RandomTeleportation." + WorldName + ".CenterZ", CenterZ);
+		c.get("Global.RandomTeleportation." + WorldName + ".MaxCord", MaxCoord);
+		c.get("Global.RandomTeleportation." + WorldName + ".MinCord", MinCord);
+		c.get("Global.RandomTeleportation." + WorldName + ".CenterX", CenterX);
+		c.get("Global.RandomTeleportation." + WorldName + ".CenterZ", CenterZ);
+	    }
 	} else {
 	    if (conf.isConfigurationSection("Global.RandomTeleportation"))
 		for (String one : conf.getConfigurationSection("Global.RandomTeleportation").getKeys(false)) {
@@ -761,9 +762,7 @@ public class ConfigManager {
 //	TownEnabled = c.get("Global.Town.Enabled", true);
 //	c.getW().addComment("Global.Town.MinRange", "Range between residences","Protects from building residence near another residence if owner not belonging to same town");
 //	TownMinRange = c.get("Global.Town.MinRange", 16);
-	
-	
-	
+
 	c.getW().addComment("Global.Rent.PreventRemoval", "Prevents residence/subzone removal if its subzone is still rented by some one");
 	RentPreventRemoval = c.get("Global.Rent.PreventRemoval", true);
 	c.getW().addComment("Global.Rent.Inform.OnEnding", "Informs players on rent time ending");
