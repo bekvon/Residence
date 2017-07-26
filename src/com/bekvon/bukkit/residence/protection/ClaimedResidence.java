@@ -1169,6 +1169,8 @@ public class ClaimedResidence {
 
     public Location getTeleportLocation() {
 	if (tpLoc == null) {
+	    if (this.getMainArea() == null)
+		return null;
 	    Location low = this.getMainArea().getLowLoc();
 	    Location high = this.getMainArea().getHighLoc();
 	    Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2, (low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high.getBlockZ()) / 2);
