@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -27,16 +28,16 @@ public class rt implements cmd {
 	if (!resadmin && !plugin.hasPermission(sender, "residence.randomtp"))
 	    return true;
 
-	String wname = null;
+	World wname = null;
 
 	Player tPlayer = null;
 
 	if (args.length > 1) {
 	    c: for (int i = 1; i < args.length; i++) {
 		for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
-		    if (!one.getWorld().equalsIgnoreCase(args[i]))
+		    if (!one.getCenter().getWorld().getName().equalsIgnoreCase(args[i]))
 			continue;
-		    wname = one.getWorld();
+		    wname = one.getCenter().getWorld();
 		    continue c;
 		}
 		Player p = Bukkit.getPlayer(args[i]);
@@ -49,7 +50,9 @@ public class rt implements cmd {
 	    plugin.msg(sender, lm.Invalid_World);
 	    String worlds = "";
 	    for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
-		worlds += one.getWorld() + " ";
+		if (!worlds.isEmpty())
+		    worlds += ", ";
+		worlds += one.getCenter().getWorld().getName();
 		break;
 	    }
 	    plugin.msg(sender, lm.RandomTeleport_WorldList, worlds);
@@ -60,13 +63,15 @@ public class rt implements cmd {
 	    tPlayer = (Player) sender;
 
 	if (wname == null && tPlayer != null)
-	    wname = tPlayer.getLocation().getWorld().getName();
+	    wname = tPlayer.getLocation().getWorld();
 
 	if (wname == null && tPlayer == null) {
 	    plugin.msg(sender, lm.Invalid_World);
 	    String worlds = "";
 	    for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
-		worlds += one.getWorld() + " ";
+		if (!worlds.isEmpty())
+		    worlds += ", ";
+		worlds += one.getCenter().getWorld().getName();
 		break;
 	    }
 	    plugin.msg(sender, lm.RandomTeleport_WorldList, worlds);

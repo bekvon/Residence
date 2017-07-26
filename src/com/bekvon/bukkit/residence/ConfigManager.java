@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -554,56 +555,53 @@ public class ConfigManager {
 	c.getW().addComment("Global.Tp.TeleportTitleMessage", "Show aditional message in title message area when player is teleporting to residence");
 	TeleportTitleMessage = c.get("Global.Tp.TeleportTitleMessage", true);
 
-	if (conf.contains("Global.RandomTeleportation.WorldName")) {
-	    for (World one : Bukkit.getWorlds()) {
-		String path = "Global.RandomTeleportation.";
-		String WorldName = conf.getString(path + "WorldName", one.getName());
+	Set<World> worlds = new HashSet<World>();
+	worlds.addAll(Bukkit.getWorlds());
 
-		int MaxCoord = conf.getInt(path + "MaxCoord", 1000);
-		int MinCord = conf.getInt(path + "MinCord", 500);
-		int CenterX = conf.getInt(path + "CenterX", 0);
-		int CenterZ = conf.getInt(path + "CenterZ", 0);
+	boolean commented = false;
+	if (conf.isConfigurationSection("Global.RandomTeleportation")) {
+	    for (String one : conf.getConfigurationSection("Global.RandomTeleportation.Worlds").getKeys(false)) {
+		String path = "Global.RandomTeleportation.Worlds." + one + ".";
 
-		RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
-
-		c.get("Global.RandomTeleportation." + WorldName + ".MaxCord", MaxCoord);
-		c.get("Global.RandomTeleportation." + WorldName + ".MinCord", MinCord);
-		c.get("Global.RandomTeleportation." + WorldName + ".CenterX", CenterX);
-		c.get("Global.RandomTeleportation." + WorldName + ".CenterZ", CenterZ);
-	    }
-	} else {
-	    if (conf.isConfigurationSection("Global.RandomTeleportation"))
-		for (String one : conf.getConfigurationSection("Global.RandomTeleportation").getKeys(false)) {
-		    String path = "Global.RandomTeleportation." + one + ".";
-
-		    c.getW().addComment("Global.RandomTeleportation." + one,
+		if (!commented)
+		    c.getW().addComment("Global.RandomTeleportation.Worlds." + one,
 			"World name to use this feature. Add annother one with appropriate name to enable random teleportation");
 
+		if (!commented)
 		    c.getW().addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
-		    int MaxCoord = c.get(path + "MaxCoord", 1000);
+		int MaxCoord = c.get(path + "MaxCoord", 1000);
+
+		if (!commented)
 		    c.getW().addComment(path + "MinCord",
 			"If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
-		    int MinCord = c.get(path + "MinCord", 500);
-		    int CenterX = c.get(path + "CenterX", 0);
-		    int CenterZ = c.get(path + "CenterZ", 0);
-
-		    RTeleport.add(new RandomTeleport(one, MaxCoord, MinCord, CenterX, CenterZ));
-		}
-	    else {
-		String path = "Global.RandomTeleportation." + defaultWorldName + ".";
-
-		c.getW().addComment(path + "WorldName", "World to use this function, set main residence world");
-		String WorldName = c.get(path + "WorldName", defaultWorldName, true);
-
-		c.getW().addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
-		int MaxCoord = c.get(path + "MaxCoord", 1000);
-		c.getW().addComment(path + "MinCord",
-		    "If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
 		int MinCord = c.get(path + "MinCord", 500);
 		int CenterX = c.get(path + "CenterX", 0);
 		int CenterZ = c.get(path + "CenterZ", 0);
-		RTeleport.add(new RandomTeleport(WorldName, MaxCoord, MinCord, CenterX, CenterZ));
+
+		World w = getWorld(one);
+
+		if (w == null) {
+		    plugin.consoleMessage("&cCan't find world with (" + one + ") name");
+		    continue;
+		}
+
+		commented = true;
+		worlds.remove(w);
+		RTeleport.add(new RandomTeleport(w, MaxCoord, MinCord, CenterX, CenterZ));
 	    }
+	}
+	for (World one : worlds) {
+	    String name = one.getName();
+	    name = name.replace(".", "_");
+
+	    String path = "Global.RandomTeleportation.Worlds." + name + ".";
+
+	    int MaxCoord = c.get(path + "MaxCoord", 1000);
+	    int MinCord = c.get(path + "MinCord", 500);
+	    int CenterX = c.get(path + "CenterX", 0);
+	    int CenterZ = c.get(path + "CenterZ", 0);
+
+	    RTeleport.add(new RandomTeleport(one, MaxCoord, MinCord, CenterX, CenterZ));
 	}
 
 	c.getW().addComment("Global.RandomTeleportation.Cooldown", "How long force player to wait before using command again.");
@@ -1118,6 +1116,15 @@ public class ConfigManager {
 		}
 	    }
 	}
+    }
+
+    public World getWorld(String name ){
+	name = name.replace("_", "").replace(".", "");
+	for (World one : Bukkit.getWorlds()){
+	    if (one.getName().replace("_", "").replace(".", "").equalsIgnoreCase(name))
+		return one;
+	}
+	return null;
     }
 
     public boolean isGlobalChatEnabled() {

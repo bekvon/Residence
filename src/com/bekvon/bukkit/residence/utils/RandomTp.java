@@ -25,9 +25,9 @@ public class RandomTp {
 	this.plugin = plugin;
     }
 
-    public Location getRandomlocation(String WorldName) {
+    public Location getRandomlocation(World world) {
 
-	if (WorldName == null)
+	if (world == null)
 	    return null;
 
 	Random random = new Random(System.currentTimeMillis());
@@ -42,7 +42,7 @@ public class RandomTp {
 
 	for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
 
-	    if (!one.getWorld().equalsIgnoreCase(WorldName))
+	    if (!one.getCenter().getWorld().equals(world))
 		continue;
 
 	    rtloc = one;
@@ -50,11 +50,6 @@ public class RandomTp {
 	}
 
 	if (rtloc == null)
-	    return null;
-
-	World world = rtloc.getCenter().getWorld();
-
-	if (world == null)
 	    return null;
 
 	int inerrange = rtloc.getMinCord();
