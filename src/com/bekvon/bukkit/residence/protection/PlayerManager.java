@@ -48,13 +48,18 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public ResidencePlayer playerJoin(Player player) {
+	return playerJoin(player, true);
+    }
+
+    public ResidencePlayer playerJoin(Player player, boolean recalculate) {
 	ResidencePlayer resPlayer = playersUuid.get(player.getUniqueId());
 	if (resPlayer == null) {
 	    resPlayer = new ResidencePlayer(player);
 	    addPlayer(resPlayer);
 	} else {
 	    resPlayer.updatePlayer(player);
-	    resPlayer.RecalculatePermissions();
+	    if (recalculate)
+		resPlayer.RecalculatePermissions();
 	}
 	return resPlayer;
     }

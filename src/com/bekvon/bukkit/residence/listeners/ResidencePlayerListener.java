@@ -859,7 +859,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 	handleNewLocation(player, player.getLocation(), true);
 
-	plugin.getPlayerManager().playerJoin(player);
+	plugin.getPlayerManager().playerJoin(player, false);
 
 	if (player.hasPermission("residence.versioncheck")) {
 	    plugin.getVersionChecker().VersionCheck(player);
