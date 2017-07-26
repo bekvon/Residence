@@ -25,6 +25,15 @@ public class RandomTp {
 	this.plugin = plugin;
     }
 
+    public boolean isDefinedRnadomTp(World world) {
+	for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
+	    if (!one.getCenter().getWorld().equals(world))
+		continue;
+	    return true;
+	}
+	return false;
+    }
+
     public Location getRandomlocation(World world) {
 
 	if (world == null)

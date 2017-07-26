@@ -92,6 +92,10 @@ public class rt implements cmd {
 		return true;
 	    }
 	}
+	if (!plugin.getRandomTpManager().isDefinedRnadomTp(wname)) {
+	    plugin.msg(sender, lm.RandomTeleport_Disabled);
+	    return true;
+	}
 
 	Location loc = plugin.getRandomTpManager().getRandomlocation(wname);
 	plugin.getRandomTeleportMap().put(tPlayer.getName(), System.currentTimeMillis());

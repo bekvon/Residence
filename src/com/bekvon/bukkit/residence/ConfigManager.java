@@ -563,6 +563,8 @@ public class ConfigManager {
 	    for (String one : conf.getConfigurationSection("Global.RandomTeleportation.Worlds").getKeys(false)) {
 		String path = "Global.RandomTeleportation.Worlds." + one + ".";
 
+		boolean enabled = c.get(path + "Enabled", true);
+
 		if (!commented)
 		    c.getW().addComment("Global.RandomTeleportation.Worlds." + one,
 			"World name to use this feature. Add annother one with appropriate name to enable random teleportation");
@@ -587,6 +589,9 @@ public class ConfigManager {
 
 		commented = true;
 		worlds.remove(w);
+
+		if (!enabled)
+		    continue;
 		RTeleport.add(new RandomTeleport(w, MaxCoord, MinCord, CenterX, CenterZ));
 	    }
 	}
@@ -595,12 +600,14 @@ public class ConfigManager {
 	    name = name.replace(".", "_");
 
 	    String path = "Global.RandomTeleportation.Worlds." + name + ".";
-
+	    boolean enabled = c.get(path + "Enabled", true);
 	    int MaxCoord = c.get(path + "MaxCoord", 1000);
 	    int MinCord = c.get(path + "MinCord", 500);
 	    int CenterX = c.get(path + "CenterX", 0);
 	    int CenterZ = c.get(path + "CenterZ", 0);
 
+	    if (!enabled)
+		continue;
 	    RTeleport.add(new RandomTeleport(one, MaxCoord, MinCord, CenterX, CenterZ));
 	}
 
@@ -1118,9 +1125,9 @@ public class ConfigManager {
 	}
     }
 
-    public World getWorld(String name ){
+    public World getWorld(String name) {
 	name = name.replace("_", "").replace(".", "");
-	for (World one : Bukkit.getWorlds()){
+	for (World one : Bukkit.getWorlds()) {
 	    if (one.getName().replace("_", "").replace(".", "").equalsIgnoreCase(name))
 		return one;
 	}

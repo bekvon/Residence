@@ -352,6 +352,7 @@ public enum lm {
     RandomTeleport_TpLimit("&eYou can't teleport so fast, please wait &6%1 &esec and try again"),
     RandomTeleport_TeleportSuccess("&eTeleported to X:&6%1&e, Y:&6%2&e, Z:&6%3 &elocation"),
     RandomTeleport_IncorrectLocation("&6Could not find correct teleport location, please wait &e%1 &6sec and try again."),
+    RandomTeleport_Disabled("&cRandom teleportation is disabled in this world"),
     RandomTeleport_TeleportStarted("&eTeleportation started, don't move for next &6%4 &esec."),
     RandomTeleport_WorldList("&ePossible worlds: &6%1"),
 
