@@ -34,7 +34,7 @@ public class LeaseManager {
     public boolean leaseExpires(ClaimedResidence res) {
 	return isLeased(res);
     }
-    
+
     public boolean isLeased(ClaimedResidence res) {
 	if (res == null)
 	    return false;

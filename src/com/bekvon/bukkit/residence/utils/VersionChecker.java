@@ -70,7 +70,7 @@ public class VersionChecker {
 	public boolean isHigher(Version version) {
 	    return getValue() > version.getValue();
 	}
-	
+
 	public boolean isLower(Version version) {
 	    return getValue() < version.getValue();
 	}

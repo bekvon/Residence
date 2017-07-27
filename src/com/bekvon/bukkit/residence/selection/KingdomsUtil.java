@@ -25,7 +25,7 @@ public class KingdomsUtil {
 
 	if (plugin.getKingdomsManager() == null)
 	    return null;
-	
+
 	if (area == null)
 	    return null;
 

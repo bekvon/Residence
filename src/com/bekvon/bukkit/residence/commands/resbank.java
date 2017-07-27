@@ -62,6 +62,6 @@ public class resbank implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "Deposit or widraw money from residence bank");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res resbank [deposit/withdraw] [amount]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("deposit%%withdraw","1"));
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("deposit%%withdraw", "1"));
     }
 }

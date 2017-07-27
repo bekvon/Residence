@@ -31,7 +31,7 @@ public class StuckInfo {
     }
 
     public void updateLastTp() {
-	if (System.currentTimeMillis() - this.lastTp > 1000){
+	if (System.currentTimeMillis() - this.lastTp > 1000) {
 	    this.times = 0;
 	}
 	addTimeTeleported();

@@ -148,7 +148,6 @@ public class v1_11 implements NMS {
 	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door);
 
 	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, Flags.diode);
-	
 
 	/* 1.11 Shulker Box */
 	matUseFlagList.put(Material.BLACK_SHULKER_BOX, Flags.container);

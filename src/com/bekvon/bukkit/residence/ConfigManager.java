@@ -559,41 +559,43 @@ public class ConfigManager {
 	worlds.addAll(Bukkit.getWorlds());
 
 	boolean commented = false;
-	if (conf.isConfigurationSection("Global.RandomTeleportation")) {
-	    for (String one : conf.getConfigurationSection("Global.RandomTeleportation.Worlds").getKeys(false)) {
-		String path = "Global.RandomTeleportation.Worlds." + one + ".";
+	if (c.getC().isConfigurationSection("Global.RandomTeleportation.Worlds")) {
+	    ConfigurationSection sec = c.getC().getConfigurationSection("Global.RandomTeleportation.Worlds");
+	    if (sec != null)
+		for (String one : sec.getKeys(false)) {
+		    String path = "Global.RandomTeleportation.Worlds." + one + ".";
 
-		boolean enabled = c.get(path + "Enabled", true);
+		    boolean enabled = c.get(path + "Enabled", true);
 
-		if (!commented)
-		    c.getW().addComment("Global.RandomTeleportation.Worlds." + one,
-			"World name to use this feature. Add annother one with appropriate name to enable random teleportation");
+		    if (!commented)
+			c.getW().addComment("Global.RandomTeleportation.Worlds." + one,
+			    "World name to use this feature. Add annother one with appropriate name to enable random teleportation");
 
-		if (!commented)
-		    c.getW().addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
-		int MaxCoord = c.get(path + "MaxCoord", 1000);
+		    if (!commented)
+			c.getW().addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
+		    int MaxCoord = c.get(path + "MaxCoord", 1000);
 
-		if (!commented)
-		    c.getW().addComment(path + "MinCord",
-			"If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
-		int MinCord = c.get(path + "MinCord", 500);
-		int CenterX = c.get(path + "CenterX", 0);
-		int CenterZ = c.get(path + "CenterZ", 0);
+		    if (!commented)
+			c.getW().addComment(path + "MinCord",
+			    "If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
+		    int MinCord = c.get(path + "MinCord", 500);
+		    int CenterX = c.get(path + "CenterX", 0);
+		    int CenterZ = c.get(path + "CenterZ", 0);
 
-		World w = getWorld(one);
+		    World w = getWorld(one);
 
-		if (w == null) {
-		    plugin.consoleMessage("&cCan't find world with (" + one + ") name");
-		    continue;
+		    if (w == null) {
+			plugin.consoleMessage("&cCan't find world with (" + one + ") name");
+			continue;
+		    }
+
+		    commented = true;
+		    worlds.remove(w);
+
+		    if (!enabled)
+			continue;
+		    RTeleport.add(new RandomTeleport(w, MaxCoord, MinCord, CenterX, CenterZ));
 		}
-
-		commented = true;
-		worlds.remove(w);
-
-		if (!enabled)
-		    continue;
-		RTeleport.add(new RandomTeleport(w, MaxCoord, MinCord, CenterX, CenterZ));
-	    }
 	}
 	for (World one : worlds) {
 	    String name = one.getName();

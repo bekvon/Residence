@@ -57,14 +57,14 @@ public class SchematicsManager {
 		dir.mkdir();
 	    } catch (SecurityException se) {
 	    }
-	
+
 	File file = new File(plugin.getDataLocation(), "Schematics" + File.separator + res.getWorld() + File.separator + res.getName() + ".schematic");
 	try {
 	    SchematicFormat.MCEDIT.save(clipboard, file);
 	} catch (Exception e) {
 	    return false;
 	}
-	
+
 	editSession.flushQueue();
 	return true;
     }

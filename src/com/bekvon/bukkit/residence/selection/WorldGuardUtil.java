@@ -60,7 +60,7 @@ public class WorldGuardUtil {
 	ProtectedRegion Region = getRegion(player, plugin.getSelectionManager().getSelectionCuboid(player));
 	if (Region == null)
 	    return false;
-	
+
 	plugin.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
 	Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
 	    Region.getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());

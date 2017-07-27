@@ -378,7 +378,7 @@ public class ShopSignUtil {
 		    if (plugin.getConfigManager().isOnlyLike()) {
 			votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_ListLiked, getLikes(ShopNames.get(Start)));
 		    } else
-			votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_SignLines_4, vote.getVote() , vote.getAmount());
+			votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_SignLines_4, vote.getVote(), vote.getAmount());
 		}
 
 		sign.setLine(0, plugin.msg(lm.Shop_SignLines_1, Start + 1));

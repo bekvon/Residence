@@ -29,7 +29,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
  */
 public class ResidenceChangedEvent extends ResidencePlayerEvent {
     private static final HandlerList handlers = new HandlerList();
-    
+
     private ClaimedResidence from = null;
     private ClaimedResidence to = null;
 
@@ -44,11 +44,11 @@ public class ResidenceChangedEvent extends ResidencePlayerEvent {
      * @param player player involved in the transition
      */
     public ResidenceChangedEvent(ClaimedResidence from, ClaimedResidence to, Player player) {
-        super("RESIDENCE_CHANGE", null, player);
-        this.from = from;
-        this.to = to;
+	super("RESIDENCE_CHANGE", null, player);
+	this.from = from;
+	this.to = to;
     }
-    
+
     /**
      * Returns the residence from which player came.
      * 
@@ -56,9 +56,9 @@ public class ResidenceChangedEvent extends ResidencePlayerEvent {
      * unprotected area
      */
     public ClaimedResidence getFrom() {
-    	return from;
+	return from;
     }
-    
+
     /**
      * Returns the residence that player has entered.
      * 
@@ -66,15 +66,15 @@ public class ResidenceChangedEvent extends ResidencePlayerEvent {
      * unprotected area
      */
     public ClaimedResidence getTo() {
-    	return to;
+	return to;
     }
-    
+
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+	return handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+	return handlers;
     }
 }

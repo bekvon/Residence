@@ -4,6 +4,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+
 public class ResidenceChatEvent extends CancellableResidencePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();

@@ -843,7 +843,7 @@ public class RentManager implements MarketRentInterface {
 	    if (!hover.equalsIgnoreCase("")) {
 		rm.show(player);
 	    } else {
-		    player.sendMessage(msg);
+		player.sendMessage(msg);
 	    }
 	}
 

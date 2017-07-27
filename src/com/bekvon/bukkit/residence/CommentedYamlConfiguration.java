@@ -47,7 +47,7 @@ public class CommentedYamlConfiguration extends YamlConfiguration {
 	String data = insertComments(saveToString());
 	data = data.replace("\\x", "\\u00");
 	data = StringEscapeUtils.unescapeJava(data);
-		
+
 	Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 
 	try {

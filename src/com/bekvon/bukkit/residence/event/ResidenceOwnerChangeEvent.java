@@ -36,13 +36,13 @@ public class ResidenceOwnerChangeEvent extends ResidenceEvent implements Cancell
 	this.newowner = newOwner;
 	this.uuid = uuid;
     }
-    
+
     public ResidenceOwnerChangeEvent(ClaimedResidence resref, Player player) {
 	super("RESIDENCE_OWNER_CHANGE", resref);
 	this.newowner = player.getName();
 	this.uuid = player.getUniqueId();
     }
-    
+
     public String getNewOwner() {
 	return newowner;
     }

@@ -19,10 +19,10 @@ public class DynMapListeners implements Listener {
 
     private Residence plugin;
 
-    public DynMapListeners(Residence plugin){
-	this.plugin = plugin;	
+    public DynMapListeners(Residence plugin) {
+	this.plugin = plugin;
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceAreaAdd(ResidenceAreaAddEvent event) {
 	plugin.getDynManager().fireUpdateAdd(event.getResidence(), event.getResidence().getSubzoneDeep());

@@ -149,7 +149,6 @@ public class SetFlag {
     @SuppressWarnings("incomplete-switch")
     public void recalculateResidence(ClaimedResidence res) {
 
-
 	if (flags == null)
 	    flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
 
@@ -162,7 +161,7 @@ public class SetFlag {
 	    if (flags.contains(one.getKey()))
 		resFlags.put(one.getKey(), one.getValue());
 	}
-	
+
 	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
 	    if (!flags.contains(one.getKey()))
 		continue;
@@ -173,7 +172,6 @@ public class SetFlag {
 		TempPermMap.put(one.getKey(), FlagState.NEITHER);
 	}
 
-
 	String title = "";
 	if (targetPlayer == null)
 	    title = Residence.getInstance().msg(lm.Gui_Set_Title, res.getName());
@@ -183,7 +181,6 @@ public class SetFlag {
 	if (title.length() > 32) {
 	    title = title.substring(0, Math.min(title.length(), 32));
 	}
-
 
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
 	int i = 0;
@@ -210,7 +207,6 @@ public class SetFlag {
 		continue;
 	    permMap.put(one.getKey(), one.getValue());
 	}
-
 
 	for (Entry<String, Object> one : permMap.entrySet()) {
 
@@ -268,7 +264,6 @@ public class SetFlag {
 		break;
 	}
 
-
 	ItemStack Item = new ItemStack(Material.ARROW);
 
 	ItemMeta meta = Item.getItemMeta();
@@ -277,7 +272,6 @@ public class SetFlag {
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
-
 
 	if (page < pageCount) {
 	    meta.setDisplayName(Residence.getInstance().msg(lm.General_NextInfoPage));

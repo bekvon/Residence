@@ -8,13 +8,14 @@ import org.bukkit.event.HandlerList;
 public class ResidenceCommandEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
+
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+	return handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+	return handlers;
     }
 
     protected boolean cancelled;
@@ -22,38 +23,34 @@ public class ResidenceCommandEvent extends Event implements Cancellable {
     protected String arglist[];
     CommandSender commandsender;
 
-    public ResidenceCommandEvent(String command, String args[], CommandSender sender)
-    {
-        super();
-        cancelled = false;
-        arglist = args;
-        cmd = command;
-        commandsender = sender;
+    public ResidenceCommandEvent(String command, String args[], CommandSender sender) {
+	super();
+	cancelled = false;
+	arglist = args;
+	cmd = command;
+	commandsender = sender;
     }
 
     @Override
     public boolean isCancelled() {
-        return cancelled;
+	return cancelled;
     }
 
     @Override
     public void setCancelled(boolean bln) {
-        cancelled = bln;
+	cancelled = bln;
     }
 
-    public String getCommand()
-    {
-        return cmd;
+    public String getCommand() {
+	return cmd;
     }
 
-    public String[] getArgs()
-    {
-        return arglist;
+    public String[] getArgs() {
+	return arglist;
     }
 
-    public CommandSender getSender()
-    {
-        return commandsender;
+    public CommandSender getSender() {
+	return commandsender;
     }
 
 }

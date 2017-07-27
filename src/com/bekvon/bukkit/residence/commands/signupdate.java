@@ -11,7 +11,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 
 public class signupdate implements cmd {
-    
+
     @Override
     @CommandAnnotation(simple = false, priority = 5700)
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {

@@ -42,7 +42,7 @@ public class PermissionListManager {
 	    get.put(listname, perms);
 	    plugin.msg(player, lm.General_ListCreate, listname);
 	} else {
-	    plugin.msg(player,lm.General_ListExists);
+	    plugin.msg(player, lm.General_ListExists);
 	}
     }
 
