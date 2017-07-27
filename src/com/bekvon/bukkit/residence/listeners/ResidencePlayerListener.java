@@ -2004,10 +2004,10 @@ public class ResidencePlayerListener implements Listener {
 		if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
 		    RentableLand rentable = plugin.getRentManager().getRentableLand(from);
 		    if (rentable != null)
-			plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeRented, from, rentable.cost, rentable.days));
+			plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
 		} else if (plugin.getTransactionManager().isForSale(from) && !res.isOwner(player)) {
 		    int sale = plugin.getTransactionManager().getSaleAmount(from);
-		    plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeBought, from, sale));
+		    plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
 		}
 	    }
 	}
