@@ -1220,6 +1220,27 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
+    private static boolean canRide(EntityType type) {
+	switch (type.name().toLowerCase()) {
+	case "horse":
+	case "donkey":
+	case "llama":
+	case "pig":
+	    return true;
+	}
+	return false;
+    }
+    
+    private static boolean canHaveContainer(EntityType type) {
+	switch (type.name().toLowerCase()) {
+	case "horse":
+	case "donkey":
+	case "llama":
+	    return true;
+	}
+	return false;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractWithHorse(PlayerInteractEntityEvent event) {
 	// disabling event on world
@@ -1231,7 +1252,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Entity ent = event.getRightClicked();
 
-	if (ent.getType() != EntityType.HORSE)
+	if (!canHaveContainer(ent.getType() ))
 	    return;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
@@ -1240,7 +1261,27 @@ public class ResidencePlayerListener implements Listener {
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
 	    event.setCancelled(true);
-	} else if (!res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.riding, FlagCombo.TrueOrNone)) {
+	}
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerInteractWithRidable(PlayerInteractEntityEvent event) {
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+	Player player = event.getPlayer();
+	if (plugin.isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getRightClicked();
+
+	if (!canRide(ent.getType() ))
+	    return;
+
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
+	if (res == null)
+	    return;
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.riding, FlagCombo.TrueOrNone)) {
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.riding.getName(), res.getName());
 	    event.setCancelled(true);
 	}
@@ -1624,8 +1665,6 @@ public class ResidencePlayerListener implements Listener {
 	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		player.setGlowing(false);
 	}
-	    Debug.D("old res null: " +(ResOld == null));
-	    Debug.D("new res null: " +(res == null));
 
 	if (res != null && ResOld != null && !res.equals(ResOld)) {
 	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1)) {
@@ -1635,7 +1674,6 @@ public class ResidencePlayerListener implements Listener {
 		    player.setGlowing(false);
 	    }
 
-	    Debug.D("here");
 	    if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, true);
 	    else if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && !res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
