@@ -144,7 +144,7 @@ public class PermissionManager {
 		    groups.put(key.toLowerCase(), new PermissionGroup(key.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms, i));
 		    List<String> mirrors = nodes.getConfigurationSection(key).getStringList("Mirror");
 		    for (String group : mirrors) {
-			groups.put(group.toLowerCase(), new PermissionGroup(key.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms));
+			groups.put(group.toLowerCase(), new PermissionGroup(group.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms, i));
 		    }
 		} catch (Exception ex) {
 		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Error parsing group from config:" + key + " Exception:" + ex);
