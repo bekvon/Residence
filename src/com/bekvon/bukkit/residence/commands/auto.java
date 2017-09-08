@@ -101,6 +101,17 @@ public class auto implements cmd {
 	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
 	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
 	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player));
+
+	if (plugin.getResidenceManager().getByName(resName) != null) {
+	    for (int i = 1; i < 50; i++) {
+		String tempName = resName + plugin.getConfigManager().AutomaticResidenceCreationIncrementFormat().replace("[number]", i + "");
+		if (plugin.getResidenceManager().getByName(tempName) == null) {
+		    resName = tempName;
+		    break;
+		}
+	    }
+	}
+
 	player.performCommand("res create " + resName);
 	return true;
     }

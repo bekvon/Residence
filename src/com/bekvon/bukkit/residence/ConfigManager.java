@@ -81,6 +81,7 @@ public class ConfigManager {
     protected boolean NewSaveMechanic;
     private int ItemPickUpDelay;
     private boolean AutomaticResidenceCreationCheckCollision;
+    private String AutomaticResidenceCreationIncrementFormat;
 
     // Backup stuff
     protected boolean BackupAutoCleanUpUse;
@@ -434,6 +435,10 @@ public class ConfigManager {
 	    "When set to true /res auto command will check for new area collision with other residences to avoid overlapping.",
 	    "Set it to false to gain some performace but new residence can often overlap with old ones");
 	AutomaticResidenceCreationCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
+	
+	c.getW().addComment("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat",
+	    "Defines new residence name increment when using autoamtic residence creation command if residence with that name already exist");
+	AutomaticResidenceCreationIncrementFormat= c.get("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat", "_[number]");
 
 //	c.getW().addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
 //	    "You can bypass this with residence.checkbadflags permission node");
@@ -1764,6 +1769,10 @@ public class ConfigManager {
 
     public boolean isAutomaticResidenceCreationCheckCollision() {
 	return AutomaticResidenceCreationCheckCollision;
+    }
+
+    public String AutomaticResidenceCreationIncrementFormat() {
+	return AutomaticResidenceCreationIncrementFormat;
     }
 
 //    public int getTownMinRange() {
