@@ -27,7 +27,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.towns.Town;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
 import java.text.DecimalFormat;

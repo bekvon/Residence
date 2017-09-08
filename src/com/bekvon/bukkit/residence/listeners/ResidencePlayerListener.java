@@ -1624,8 +1624,10 @@ public class ResidencePlayerListener implements Listener {
 	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		player.setGlowing(false);
 	}
+	    Debug.D("old res null: " +(ResOld == null));
+	    Debug.D("new res null: " +(res == null));
 
-	if (res != null && ResOld != null && res != ResOld) {
+	if (res != null && ResOld != null && !res.equals(ResOld)) {
 	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1)) {
 		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(true);
@@ -1633,6 +1635,7 @@ public class ResidencePlayerListener implements Listener {
 		    player.setGlowing(false);
 	    }
 
+	    Debug.D("here");
 	    if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, true);
 	    else if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && !res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
@@ -1918,7 +1921,7 @@ public class ResidencePlayerListener implements Listener {
 	    currentRes.put(pname, areaname);
 
 	    // "from" residence for ResidenceChangedEvent
-	    ClaimedResidence chgFrom = null;
+//	    ClaimedResidence chgFrom = null;
 //	    if (ResOld != res && ResOld != null) {
 //		String leave = ResOld.getLeaveMessage();
 //		chgFrom = ResOld;
@@ -1936,7 +1939,7 @@ public class ResidencePlayerListener implements Listener {
 //	    }
 
 	    // New ResidenceChangedEvent
-	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(chgFrom, res, player);
+	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, res, player);
 	    plugin.getServ().getPluginManager().callEvent(chgEvent);
 
 	}
