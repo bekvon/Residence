@@ -798,7 +798,7 @@ public class ResidenceManager implements ResidenceInterface {
 	Map<String, Object> worldmap = new LinkedHashMap<>();
 	for (World world : plugin.getServ().getWorlds()) {
 	    Map<String, Object> resmap = new LinkedHashMap<>();
-	    for (Entry<String, ClaimedResidence> res : residences.entrySet()) {
+	    for (Entry<String, ClaimedResidence> res : (new TreeMap<String, ClaimedResidence>(residences)).entrySet()) {
 		if (!res.getValue().getWorld().equals(world.getName()))
 		    continue;
 
