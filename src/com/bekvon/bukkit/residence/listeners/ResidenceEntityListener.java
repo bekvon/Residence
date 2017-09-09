@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -937,12 +939,16 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockCatchingFire(ProjectileHitEvent event) {
+    public void onBlockCatchingFire(ProjectileHitEvent event) {	
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
 	if (!(event.getEntity() instanceof Arrow))
 	    return;
+	
+	if (event.getHitEntity() == null || !(event.getHitEntity() instanceof Player))
+	    return;
+	
 	Arrow arrow = (Arrow) event.getEntity();
 
 	FlagPermissions perms = plugin.getPermsByLoc(arrow.getLocation());
