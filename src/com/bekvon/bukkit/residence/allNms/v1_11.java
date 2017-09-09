@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
+import org.bukkit.entity.Donkey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -60,7 +61,8 @@ public class v1_11 implements NMS {
 	    ent instanceof Villager ||
 	    ent instanceof Rabbit ||
 	    ent instanceof Llama ||
-	    ent instanceof PolarBear);
+	    ent instanceof PolarBear||
+	    ent instanceof Donkey);
     }
 
     @Override

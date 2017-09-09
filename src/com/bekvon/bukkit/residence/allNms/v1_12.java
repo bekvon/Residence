@@ -44,7 +44,8 @@ public class v1_12 implements NMS {
 	    ent instanceof Rabbit ||
 	    ent instanceof Llama ||
 	    ent instanceof PolarBear ||
-	    ent instanceof Parrot);
+	    ent instanceof Parrot||
+	    ent instanceof Donkey);
     }
 
     @Override
