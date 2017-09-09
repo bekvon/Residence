@@ -318,6 +318,10 @@ public class HelpEntry {
 	    if (neededArgPlace < ArgsList.size() && neededArgPlace >= 0)
 		NeededArg = ArgsList.get(neededArgPlace);
 
+	    Player playerSender = null;
+	    if (sender instanceof Player)
+		playerSender = (Player) sender;
+
 	    if (NeededArg != null) {
 
 		List<String> list = new ArrayList<String>();
@@ -330,8 +334,10 @@ public class HelpEntry {
 		for (String oneArg : list) {
 		    switch (oneArg) {
 		    case "[playername]":
-			for (Player one : Bukkit.getOnlinePlayers())
-			    subCommands.add(one.getName());
+			for (Player one : Bukkit.getOnlinePlayers()) {
+			    if (playerSender == null || one.canSee(playerSender))
+				subCommands.add(one.getName());
+			}
 			break;
 		    case "[residence]":
 			if (sender instanceof Player) {
