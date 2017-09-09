@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -34,10 +35,18 @@ public class check implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
+
+	Flags flag = Flags.getFlag(args[2]);
+
+	if (flag == null) {
+	    plugin.msg(player, lm.Invalid_Flag);
+	    return true;
+	}
+
 	if (!res.getPermissions().hasApplicableFlag(pname, args[2])) {
-	    plugin.msg(player, lm.Flag_CheckFalse, args[2], pname, args[1]);
+	    plugin.msg(player, lm.Flag_CheckFalse, flag, pname, args[1]);
 	} else {
-	    plugin.msg(player, lm.Flag_CheckTrue, args[2], pname, args[1], (res.getPermissions().playerHas(player.getName(), res.getPermissions().getWorld(), args[2], false) ? plugin.msg(lm.General_True)
+	    plugin.msg(player, lm.Flag_CheckTrue, flag, pname, args[1], (res.getPermissions().playerHas(player, res.getPermissions().getWorld(), flag, false) ? plugin.msg(lm.General_True)
 		: plugin.msg(lm.General_False)));
 	}
 	return true;
