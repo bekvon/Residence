@@ -635,7 +635,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Block block = event.getClickedBlock();
 
-	if (block == null)
+	if (block == null || block.getState() == null)
 	    return;
 
 	if (!(block.getState() instanceof Sign))
