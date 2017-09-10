@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.chat;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ChatInterface;
+import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class ChatManager implements ChatInterface {
 	this.removeFromChannel(player);
 	if (!channelmap.containsKey(res.getName()))
 	    channelmap.put(res.getName(), new ChatChannel(res.getName(), res.getChatPrefix(), res.getChannelColor()));
-	channelmap.get(res.getName()).join(player);
+	channelmap.get(res.getName()).join(player);	
 	return true;
     }
 

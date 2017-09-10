@@ -1284,6 +1284,14 @@ public class ResidenceManager implements ResidenceInterface {
 	    sb.append("{ x: ").append(x).append(", z: ").append(z).append(" }");
 	    return sb.toString();
 	}
+
+	public int getZ() {
+	    return z;
+	}
+
+	public int getX() {
+	    return x;
+	}
     }
 
 }
