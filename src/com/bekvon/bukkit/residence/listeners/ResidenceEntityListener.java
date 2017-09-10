@@ -939,17 +939,17 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockCatchingFire(ProjectileHitEvent event) {	
+    public void onEntityCatchingFire(EntityDamageByEntityEvent event) {	
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
-	if (!(event.getEntity() instanceof Arrow))
+	if (!(event.getDamager() instanceof Arrow))
+	    return;
+		
+	if (event.getEntity() == null || !(event.getEntity() instanceof Player))
 	    return;
 	
-	if (event.getHitEntity() == null || !(event.getHitEntity() instanceof Player))
-	    return;
-	
-	Arrow arrow = (Arrow) event.getEntity();
+	Arrow arrow = (Arrow) event.getDamager();
 
 	FlagPermissions perms = plugin.getPermsByLoc(arrow.getLocation());
 
