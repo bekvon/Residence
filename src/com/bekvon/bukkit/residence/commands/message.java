@@ -68,6 +68,22 @@ public class message implements cmd {
 	    return true;
 	}
 
+	if (enter && !plugin.hasPermission(sender, "residence.command.message.enter", true)) {
+	    return true;
+	}
+
+	if (!enter && !plugin.hasPermission(sender, "residence.command.message.leave", true)) {
+	    return true;
+	}
+
+	if (message == null && enter && !plugin.hasPermission(sender, "residence.command.message.enter.remove", true)) {
+	    return true;
+	}
+	
+	if (message == null && !enter && !plugin.hasPermission(sender, "residence.command.message.leave.remove", true)) {
+	    return true;
+	}
+	
 	res.setEnterLeaveMessage(sender, message, enter, resadmin);
 
 	return true;
