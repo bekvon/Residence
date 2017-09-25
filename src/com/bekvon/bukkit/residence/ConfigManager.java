@@ -522,7 +522,7 @@ public class ConfigManager {
 	VoteRangeFrom = c.get("Global.Optimizations.Vote.RangeFrom", 0);
 	VoteRangeTo = c.get("Global.Optimizations.Vote.RangeTo", 10);
 
-	c.getW().addComment("Global.Optimizations.Vote.OnlyLike", "If this true, players can onli give like for shop instead of point voting");
+	c.getW().addComment("Global.Optimizations.Vote.OnlyLike", "If this true, players can only give like for shop instead of point voting");
 	OnlyLike = c.get("Global.Optimizations.Vote.OnlyLike", false);
 
 	// Healing/Feed interval
