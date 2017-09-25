@@ -18,85 +18,58 @@ public class message implements cmd {
     @Override
     @CommandAnnotation(simple = true, priority = 1000)
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (!(sender instanceof Player))
-	    return false;
-
-	Player player = (Player) sender;
-
 	ClaimedResidence res = null;
-	int start = 0;
-	boolean enter = false;
-	if (args.length < 2) {
-	    return false;
+	String message = null;
+	Boolean enter = null;
+
+	c: for (String one : plugin.reduceArgs(args)) {
+	    if (message == null)
+		switch (one.toLowerCase()) {
+		case "enter":
+		    if (enter == null) {
+			enter = true;
+			continue;
+		    }
+		    break;
+		case "leave":
+		    if (enter == null) {
+			enter = false;
+			continue;
+		    }
+		    break;
+		case "remove":
+		    break c;
+		}
+
+	    if (res == null && enter == null) {
+		res = plugin.getResidenceManager().getByName(one);
+		if (res != null)
+		    continue;
+	    }
+
+	    if (message == null)
+		message = "";
+	    if (!message.isEmpty())
+		message += " ";
+	    message += one;
 	}
-	if (args[1].equals("enter")) {
-	    enter = true;
-	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    start = 2;
-	} else if (args[1].equals("leave")) {
-	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    start = 2;
-	} else if (args[1].equals("remove")) {
-	    if (args.length > 2 && args[2].equals("enter")) {
-		res = plugin.getResidenceManager().getByLoc(player.getLocation());
-		if (res != null) {
-		    res.setEnterLeaveMessage(player, null, true, resadmin);
-		} else {
-		    plugin.msg(player, lm.Invalid_Residence);
-		}
-		return true;
-	    } else if (args.length > 2 && args[2].equals("leave")) {
-		res = plugin.getResidenceManager().getByLoc(player.getLocation());
-		if (res != null) {
-		    res.setEnterLeaveMessage(player, null, false, resadmin);
-		} else {
-		    plugin.msg(player, lm.Invalid_Residence);
-		}
-		return true;
-	    }
-	    plugin.msg(player, lm.Invalid_MessageType);
-	    return true;
-	} else if (args.length > 2 && args[2].equals("enter")) {
-	    enter = true;
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	    start = 3;
-	} else if (args.length > 2 && args[2].equals("leave")) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	    start = 3;
-	} else if (args.length > 2 && args[2].equals("remove")) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	    if (args.length != 4) {
-		return false;
-	    }
-	    if (args[3].equals("enter")) {
-		if (res != null) {
-		    res.setEnterLeaveMessage(player, null, true, resadmin);
-		}
-		return true;
-	    } else if (args[3].equals("leave")) {
-		if (res != null) {
-		    res.setEnterLeaveMessage(player, null, false, resadmin);
-		}
-		return true;
-	    }
-	    plugin.msg(player, lm.Invalid_MessageType);
-	    return true;
-	} else {
-	    plugin.msg(player, lm.Invalid_MessageType);
+
+	if (res == null && sender instanceof Player) {
+	    res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
+	}
+
+	if (res == null) {
+	    plugin.msg(sender, lm.Invalid_Residence);
 	    return true;
 	}
-	if (start == 0) {
-	    return false;
+
+	if (enter == null) {
+	    plugin.msg(sender, lm.Invalid_MessageType);
+	    return true;
 	}
-	String message = "";
-	for (int i = start; i < args.length; i++) {
-	    message = message + args[i] + " ";
-	}
-	if (res != null) {
-	    res.setEnterLeaveMessage(player, message, enter, resadmin);
-	} else {
-	    plugin.msg(player, lm.Invalid_Residence);
-	}
+
+	res.setEnterLeaveMessage(sender, message, enter, resadmin);
+
 	return true;
     }
 

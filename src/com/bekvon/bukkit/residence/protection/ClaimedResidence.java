@@ -909,34 +909,30 @@ public class ClaimedResidence {
 	ShopDesc = message;
     }
 
-    public void setEnterLeaveMessage(Player player, String message, boolean enter, boolean resadmin) {
-	// if(message!=null &&
-	// plugin.getConfigManager().getResidenceNameRegex() != null) {
-	// Removed pending further action
-	// player.sendMessage(ChatColor.RED+plugin.getLanguage().getPhrase("InvalidCharacters"));
-	// return;
-	// }
+    public void setEnterLeaveMessage(CommandSender sender, String message, boolean enter, boolean resadmin) {
 	if (message != null) {
 	    if (message.equals("")) {
 		message = null;
 	    }
 	}
-	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
-	PermissionGroup group = rPlayer.getGroup();
-	if (!group.canSetEnterLeaveMessages() && !resadmin) {
-	    plugin.msg(player, lm.Residence_OwnerNoPermission);
-	    return;
-	}
-	if (!perms.hasResidencePermission(player, false) && !resadmin) {
-	    plugin.msg(player, lm.General_NoPermission);
-	    return;
+	if (sender instanceof Player) {
+	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer((Player) sender);
+	    PermissionGroup group = rPlayer.getGroup();
+	    if (!group.canSetEnterLeaveMessages() && !resadmin) {
+		plugin.msg(sender, lm.Residence_OwnerNoPermission);
+		return;
+	    }
+	    if (!perms.hasResidencePermission(sender, false) && !resadmin) {
+		plugin.msg(sender, lm.General_NoPermission);
+		return;
+	    }
 	}
 	if (enter) {
 	    this.setEnterMessage(message);
 	} else {
 	    this.setLeaveMessage(message);
 	}
-	plugin.msg(player, lm.Residence_MessageChange);
+	plugin.msg(sender, lm.Residence_MessageChange);
     }
 
     public Location getMiddleFreeLoc(Location insideLoc, Player player) {

@@ -1798,6 +1798,11 @@ public class Residence extends JavaPlugin {
 	return prefix;
     }
 
+    public String[] reduceArgs(String[] args) {
+	if (args.length <= 1)
+	    return new String[0];
+	return Arrays.copyOfRange(args, 1, args.length);
+    }
 //    public TownManager getTownManager() {
 //	return townManager;
 //    }
