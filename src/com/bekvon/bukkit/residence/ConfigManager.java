@@ -437,7 +437,7 @@ public class ConfigManager {
 	AutomaticResidenceCreationCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
 	
 	c.getW().addComment("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat",
-	    "Defines new residence name increment when using autoamtic residence creation command if residence with that name already exist");
+	    "Defines new residence name increment when using automatic residence creation command if residence with that name already exist");
 	AutomaticResidenceCreationIncrementFormat= c.get("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat", "_[number]");
 
 //	c.getW().addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
