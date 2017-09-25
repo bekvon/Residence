@@ -203,6 +203,9 @@ permissions:
   residence.command.message.leave.remove:
     description: Allows to access particular command
     default: true
+  residence.newguyresidence:
+    description: Allows for auto residence creation on chest place
+    default: true
   residence.command.mirror:
     description: Allows to access particular command
     default: true

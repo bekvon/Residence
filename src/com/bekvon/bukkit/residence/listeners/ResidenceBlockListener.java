@@ -329,6 +329,9 @@ public class ResidenceBlockListener implements Listener {
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
+	if (!player.hasPermission("residence.newguyresidence"))
+	    return;
+
 	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(player.getName());
 	if (list.size() != 0)
 	    return;
