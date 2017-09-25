@@ -83,6 +83,8 @@ public class ConfigManager {
     private boolean AutomaticResidenceCreationCheckCollision;
     private String AutomaticResidenceCreationIncrementFormat;
 
+    private boolean ConsoleLogsShowFlagChanges = true;
+
     // Backup stuff
     protected boolean BackupAutoCleanUpUse;
     protected int BackupAutoCleanUpDays;
@@ -435,10 +437,10 @@ public class ConfigManager {
 	    "When set to true /res auto command will check for new area collision with other residences to avoid overlapping.",
 	    "Set it to false to gain some performace but new residence can often overlap with old ones");
 	AutomaticResidenceCreationCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
-	
+
 	c.getW().addComment("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat",
 	    "Defines new residence name increment when using automatic residence creation command if residence with that name already exist");
-	AutomaticResidenceCreationIncrementFormat= c.get("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat", "_[number]");
+	AutomaticResidenceCreationIncrementFormat = c.get("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat", "_[number]");
 
 //	c.getW().addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
 //	    "You can bypass this with residence.checkbadflags permission node");
@@ -524,6 +526,9 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.Optimizations.Vote.OnlyLike", "If this true, players can only give like for shop instead of point voting");
 	OnlyLike = c.get("Global.Optimizations.Vote.OnlyLike", false);
+
+	c.getW().addComment("Global.Optimizations.ConsoleLogs.ShowFlagChanges", "If this true, flag changes throw GUI will be recorded in console");
+	ConsoleLogsShowFlagChanges = c.get("Global.Optimizations.ConsoleLogs.ShowFlagChanges", true);
 
 	// Healing/Feed interval
 	c.getW().addComment("Global.Optimizations.Intervals.Heal", "How often in seconds to heal/feed players in residence with appropriate flag",
@@ -1773,6 +1778,10 @@ public class ConfigManager {
 
     public String AutomaticResidenceCreationIncrementFormat() {
 	return AutomaticResidenceCreationIncrementFormat;
+    }
+
+    public boolean isConsoleLogsShowFlagChanges() {
+	return ConsoleLogsShowFlagChanges;
     }
 
 //    public int getTownMinRange() {

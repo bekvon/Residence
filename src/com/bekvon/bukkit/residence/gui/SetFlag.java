@@ -104,17 +104,15 @@ public class SetFlag {
 	    }
 	    i++;
 	}
-	if (targetPlayer == null) {
-	    if (admin)
-		Bukkit.dispatchCommand(player, "resadmin set " + residence.getName() + " " + flag + " " + command);
-	    else
-		Bukkit.dispatchCommand(player, "res set " + residence.getName() + " " + flag + " " + command);
-	} else {
-	    if (admin)
-		Bukkit.dispatchCommand(player, "resadmin pset " + residence.getName() + " " + targetPlayer + " " + flag + " " + command);
-	    else
-		Bukkit.dispatchCommand(player, "res pset " + residence.getName() + " " + targetPlayer + " " + flag + " " + command);
-	}
+
+	String targetPlayerName = targetPlayer == null ? "" : " " + targetPlayer;
+	String actionType = targetPlayer == null ? "set" : "pset";
+	String cmdPrefix = admin ? "resadmin" : "res";
+
+	Bukkit.dispatchCommand(player, cmdPrefix + " " + actionType + " " + residence.getName() + targetPlayerName + " " + flag + " " + command);
+	if (Residence.getInstance().getConfigManager().isConsoleLogsShowFlagChanges())
+	    Residence.getInstance().consoleMessage(player.getName() + " issued server command: /" + cmdPrefix + " " + actionType + " " + residence.getName() + targetPlayerName + " " + flag + " "
+		+ command);
 
     }
 
