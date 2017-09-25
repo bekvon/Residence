@@ -1223,6 +1223,7 @@ public class ClaimedResidence {
 
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
+	boolean bypassDelay = targetPlayer.hasPermission("residence.tpdelaybypass");
 	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass") && !this.isOwner(targetPlayer)) {
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(reqPlayer);
 	    PermissionGroup group = rPlayer.getGroup();
@@ -1262,24 +1263,10 @@ public class ClaimedResidence {
 
 	Location loc = this.getTeleportLocation();
 
-//	if (loc != null) {
-	if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
+	if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !bypassDelay)
 	    performDelaydTp(loc, targetPlayer, reqPlayer, true);
 	else
 	    performInstantTp(loc, targetPlayer, reqPlayer, true);
-//	} else {
-//	    CuboidArea area = this.getMainArea();
-//	    if (area == null) {
-//		reqPlayer.sendMessage(ChatColor.RED + "Could not find area to teleport to...");
-//		plugin.getTeleportDelayMap().remove(targetPlayer.getName());
-//		return;
-//	    }
-//	    Location targloc = this.getMiddleFreeLoc(area.getHighLoc(), targetPlayer);
-//	    if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin)
-//		performDelaydTp(targloc, targetPlayer, reqPlayer, true);
-//	    else
-//		performInstantTp(targloc, targetPlayer, reqPlayer, true);
-//	}
     }
 
     public void TpTimer(final Player player, final int t) {
