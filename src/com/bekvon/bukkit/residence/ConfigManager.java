@@ -685,7 +685,7 @@ public class ConfigManager {
 	CreeperExplodeBelow = c.get("Global.AntiGreef.Creeper.ExplodeBelow", false);
 	CreeperExplodeBelowLevel = c.get("Global.AntiGreef.Creeper.level", 62);
 	// Flow
-	c.getW().addComment("Global.AntiGreef.Flow.Level", "Level from witch one to start lava and water flow blocking", "This dont have effect in residence area");
+	c.getW().addComment("Global.AntiGreef.Flow.Level", "Level from which one to start lava and water flow blocking", "This dont have effect in residence area");
 	FlowLevel = c.get("Global.AntiGreef.Flow.Level", 63);
 	c.getW().addComment("Global.AntiGreef.Flow.NoLavaFlow", "With this set to true, lava flow outside residence is blocked");
 	NoLava = c.get("Global.AntiGreef.Flow.NoLavaFlow", true);
@@ -694,7 +694,7 @@ public class ConfigManager {
 	NoFlowWorlds = c.get("Global.AntiGreef.Flow.Worlds", Arrays.asList(defaultWorldName));
 
 	// Place
-	c.getW().addComment("Global.AntiGreef.Place.Level", "Level from witch one to start block lava and water place", "This don't have effect in residence area");
+	c.getW().addComment("Global.AntiGreef.Place.Level", "Level from which one to start block lava and water place", "This don't have effect in residence area");
 	PlaceLevel = c.get("Global.AntiGreef.Place.Level", 63);
 	c.getW().addComment("Global.AntiGreef.Place.NoLavaPlace", "With this set to true, playrs cant place lava outside residence");
 	NoLavaPlace = c.get("Global.AntiGreef.Place.NoLavaPlace", true);
@@ -705,7 +705,7 @@ public class ConfigManager {
 	// Sand fall
 	c.getW().addComment("Global.AntiGreef.BlockFall.Use", "With this set to true, falling blocks will be deleted if they will land in different area");
 	useBlockFall = c.get("Global.AntiGreef.BlockFall.Use", true);
-	c.getW().addComment("Global.AntiGreef.BlockFall.Level", "Level from witch one to start block block's fall",
+	c.getW().addComment("Global.AntiGreef.BlockFall.Level", "Level from which one to start block block's fall",
 	    "This don't have effect in residence area or outside");
 	BlockFallLevel = c.get("Global.AntiGreef.BlockFall.Level", 62);
 	BlockFallWorlds = c.get("Global.AntiGreef.BlockFall.Worlds", Arrays.asList(defaultWorldName));
