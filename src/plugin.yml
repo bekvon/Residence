@@ -191,6 +191,18 @@ permissions:
   residence.command.message:
     description: Allows to access particular command
     default: true
+  residence.command.message.enter:
+    description: Allows to access particular command
+    default: true
+  residence.command.message.enter.remove:
+    description: Allows to access particular command
+    default: true
+  residence.command.message.leave:
+    description: Allows to access particular command
+    default: true
+  residence.command.message.leave.remove:
+    description: Allows to access particular command
+    default: true
   residence.command.mirror:
     description: Allows to access particular command
     default: true
