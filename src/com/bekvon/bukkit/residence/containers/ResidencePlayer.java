@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -311,13 +312,18 @@ public class ResidencePlayer {
 	// Exclude subzones
 	if (residence.isSubzone())
 	    return;
+	residence.getPermissions().setOwnerUUID(uuid);
 	this.ResidenceList.add(residence);
     }
 
     public void removeResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
-	this.ResidenceList.remove(residence);
+
+	residence = Residence.getInstance().getResidenceManager().getByName(residence.getName());
+	if (residence == null)
+	    return;
+	boolean rem = this.ResidenceList.remove(residence);
     }
 
     public int getResAmount() {

@@ -512,9 +512,13 @@ public class ResidencePermissions extends FlagPermissions {
 	    return;
 
 	Residence.getInstance().getPlayerManager().removeResFromPlayer(residence.getOwnerUUID(), residence);
-	Residence.getInstance().getPlayerManager().addResidence(newOwner, residence);
 
 	ownerLastKnownName = newOwner;
+	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(newOwner);
+	if (rPlayer != null)
+	    this.ownerUUID = rPlayer.getUuid();
+	
+	Residence.getInstance().getPlayerManager().addResidence(newOwner, residence);
 
 	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase(Residence.getInstance().getServerLandname())) {
 	    ownerUUID = UUID.fromString(Residence.getInstance().getServerLandUUID());// the UUID for server owned land
@@ -543,6 +547,10 @@ public class ResidencePermissions extends FlagPermissions {
 
     public UUID getOwnerUUID() {
 	return ownerUUID;
+    }
+
+    public void setOwnerUUID(UUID ownerUUID) {
+	this.ownerUUID = ownerUUID;
     }
 
     public String getWorld() {
