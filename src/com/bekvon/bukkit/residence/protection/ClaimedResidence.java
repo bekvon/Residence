@@ -1250,7 +1250,7 @@ public class ClaimedResidence {
 	    }
 	}
 
-	if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !resadmin) {
+	if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !resadmin && !bypassDelay) {
 	    plugin.msg(reqPlayer, lm.General_TeleportStarted, this.getName(), plugin.getConfigManager().getTeleportDelay());
 	    if (plugin.getConfigManager().isTeleportTitleMessage())
 		TpTimer(reqPlayer, plugin.getConfigManager().getTeleportDelay());
