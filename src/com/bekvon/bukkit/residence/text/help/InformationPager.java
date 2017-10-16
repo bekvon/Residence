@@ -334,11 +334,7 @@ public class InformationPager {
     public void ShowPagination(CommandSender sender, int pageCount, int CurrentPage, String cmd) {
 	if (!cmd.startsWith("/"))
 	    cmd = "/" + cmd;
-	String separator = ChatColor.GOLD + "";
-	String simbol = "\u25AC";
-	for (int i = 0; i < 10; i++) {
-	    separator += simbol;
-	}
+	String separator = plugin.msg(lm.General_fliperSimbols);
 
 	if (pageCount == 1)
 	    return;

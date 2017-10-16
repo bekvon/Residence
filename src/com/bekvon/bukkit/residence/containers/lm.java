@@ -395,6 +395,7 @@ public enum lm {
     General_NotOnline("&eTarget player must be online."),
     General_NextInfoPage("&2| &eNext Page &2>>>"),
     General_PrevInfoPage("&2<<< &ePrev Page &2|"),
+    General_fliperSimbols("&e----------"),
     General_GenericPages("&ePage &6%1 &eof &6%2 &e(&6%3&e)"),
     General_WorldEditNotFound("&cWorldEdit was not detected."),
     General_CoordsTop("&eX:&6%1 &eY:&6%2 &eZ:&6%3"),
