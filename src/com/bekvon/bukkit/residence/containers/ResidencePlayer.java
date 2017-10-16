@@ -1,7 +1,10 @@
 package com.bekvon.bukkit.residence.containers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -11,7 +14,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -21,7 +23,7 @@ public class ResidencePlayer {
     private OfflinePlayer ofPlayer = null;
     private UUID uuid = null;
 
-    private List<ClaimedResidence> ResidenceList = new ArrayList<ClaimedResidence>();
+    private Set<ClaimedResidence> ResidenceList = new HashSet<ClaimedResidence>();
     private ClaimedResidence mainResidence = null;
 
     private PlayerGroup groups = null;
@@ -313,17 +315,26 @@ public class ResidencePlayer {
 	if (residence.isSubzone())
 	    return;
 	residence.getPermissions().setOwnerUUID(uuid);
+	if (this.userName != null)
+	    residence.getPermissions().setOwnerLastKnownName(userName);
 	this.ResidenceList.add(residence);
     }
 
     public void removeResidence(ClaimedResidence residence) {
 	if (residence == null)
 	    return;
-
-	residence = Residence.getInstance().getResidenceManager().getByName(residence.getName());
-	if (residence == null)
-	    return;
 	boolean rem = this.ResidenceList.remove(residence);
+	// in case its fails to remove, double check by name
+	if (rem == false) {
+	    Iterator<ClaimedResidence> iter = this.ResidenceList.iterator();
+	    while (iter.hasNext()) {
+		ClaimedResidence one = iter.next();
+		if (one.getName().equalsIgnoreCase(residence.getName())) {
+		    iter.remove();
+		    break;
+		}
+	    }
+	}
     }
 
     public int getResAmount() {
@@ -337,7 +348,9 @@ public class ResidencePlayer {
     }
 
     public List<ClaimedResidence> getResList() {
-	return ResidenceList;
+	List<ClaimedResidence> ls = new ArrayList<ClaimedResidence>();
+	ls.addAll(ResidenceList);
+	return ls;
     }
 
     public String getPlayerName() {
