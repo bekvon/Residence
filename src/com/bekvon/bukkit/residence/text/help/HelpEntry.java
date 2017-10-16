@@ -76,9 +76,7 @@ public class HelpEntry {
 	    return;
 	}
 
-	String separator = Residence.getInstance().msg(lm.InformationPage_Separator);
-	if (!(sender instanceof Player))
-	    separator = "----------";
+	String separator = Residence.getInstance().msg(lm.InformationPage_SmallSeparator);
 
 	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pi.getTotalPages()) + " " + separator);
 	for (int i = pi.getStart(); i <= pi.getEnd(); i++) {

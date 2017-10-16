@@ -92,11 +92,7 @@ public class shop implements cmd {
 
 	    List<ShopVote> VoteList = res.GetShopVotes();
 
-	    String separator = ChatColor.GOLD + "";
-	    String simbol = "\u25AC";
-	    for (int i = 0; i < 5; i++) {
-		separator += simbol;
-	    }
+	    String separator = plugin.msg(lm.InformationPage_SmallSeparator);
 
 	    PageInfo pi = new PageInfo(10, VoteList.size(), page);
 
@@ -144,11 +140,7 @@ public class shop implements cmd {
 
 	    Map<String, Double> ShopList = plugin.getShopSignUtilManager().getSortedShopList();
 
-	    String separator = ChatColor.GOLD + "";
-	    String simbol = "\u25AC";
-	    for (int i = 0; i < 5; i++) {
-		separator += simbol;
-	    }
+	    String separator = plugin.msg(lm.InformationPage_SmallSeparator);
 
 	    PageInfo pi = new PageInfo(10, ShopList.size(), page);
 

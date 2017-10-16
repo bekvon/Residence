@@ -334,7 +334,7 @@ public class InformationPager {
     public void ShowPagination(CommandSender sender, int pageCount, int CurrentPage, String cmd) {
 	if (!cmd.startsWith("/"))
 	    cmd = "/" + cmd;
-	String separator = plugin.msg(lm.General_fliperSimbols);
+	String separator = plugin.msg(lm.InformationPage_SmallSeparator);
 
 	if (pageCount == 1)
 	    return;
