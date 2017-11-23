@@ -34,6 +34,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -612,6 +613,10 @@ public class ResidencePlayerListener implements Listener {
 	InventoryAction action = event.getAction();
 	setFlag.toggleFlag(slot, click, action);
 	setFlag.recalculateInv();
+
+	if (!player.getOpenInventory().getTopInventory().getType().equals(InventoryType.CHEST))
+	    return;
+
 	player.getOpenInventory().getTopInventory().setContents(setFlag.getInventory().getContents());
     }
 
@@ -844,6 +849,7 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), location.getWorld().getName());
+	    player.closeInventory();
 	    player.teleport(location);
 	    player.setFlying(false);
 	    player.setAllowFlight(false);
@@ -1649,8 +1655,10 @@ public class ResidencePlayerListener implements Listener {
 			loc = Bukkit.getWorlds().get(0).getSpawnLocation();
 		    }
 		}
-		if (loc != null)
+		if (loc != null) {
+		    player.closeInventory();
 		    player.teleport(loc);
+		}
 	    }
 	} else {
 	    player.setAllowFlight(state);
@@ -1837,6 +1845,7 @@ public class ResidencePlayerListener implements Listener {
 			    }
 			    if (location.getBlockY() <= 0) {
 				Location lastLoc = lastOutsideLoc.get(pname);
+				player.closeInventory();
 				if (lastLoc != null)
 				    player.teleport(lastLoc);
 				else
@@ -1846,6 +1855,7 @@ public class ResidencePlayerListener implements Listener {
 			    }
 			}
 			plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
+			player.closeInventory();
 			player.teleport(location);
 			player.setFlying(false);
 			player.setAllowFlight(false);
@@ -1909,10 +1919,12 @@ public class ResidencePlayerListener implements Listener {
 
 		if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !player.hasPermission("residence.admin.tp")) {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
+		    player.closeInventory();
 		    player.teleport(newLoc);
 		} else if (lastLoc != null) {
 
 		    StuckInfo info = updateStuckTeleport(player, loc);
+		    player.closeInventory();
 		    if (info != null && info.getTimesTeleported() > 5) {
 			Location newLoc = res.getOutsideFreeLoc(loc, player);
 			player.teleport(newLoc);
@@ -1921,6 +1933,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		} else {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
+		    player.closeInventory();
 		    player.teleport(newLoc);
 		}
 		if (plugin.getConfigManager().useActionBar()) {
@@ -1951,6 +1964,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		    if (location.getBlockY() <= 0) {
 			Location lastLoc = lastOutsideLoc.get(pname);
+			player.closeInventory();
 			if (lastLoc != null)
 			    player.teleport(lastLoc);
 			else
@@ -1961,6 +1975,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		}
 		plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
+		player.closeInventory();
 		player.teleport(location);
 		player.setFlying(false);
 		player.setAllowFlight(false);

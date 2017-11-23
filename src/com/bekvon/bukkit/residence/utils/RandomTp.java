@@ -139,6 +139,7 @@ public class RandomTp {
 		    return;
 		else if (plugin.getTeleportDelayMap().contains(targetPlayer.getName()))
 		    plugin.getTeleportDelayMap().remove(targetPlayer.getName());
+		targetPlayer.closeInventory();
 		targetPlayer.teleport(loc);
 		plugin.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
 		return;
@@ -147,6 +148,7 @@ public class RandomTp {
     }
 
     public void performInstantTp(Location loc, Player targetPlayer) {
+	targetPlayer.closeInventory();
 	targetPlayer.teleport(loc);
 	plugin.msg(targetPlayer, lm.RandomTeleport_TeleportSuccess, loc.getX(), loc.getY(), loc.getZ());
     }

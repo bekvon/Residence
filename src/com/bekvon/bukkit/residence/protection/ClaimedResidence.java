@@ -1293,6 +1293,7 @@ public class ClaimedResidence {
 		    return;
 		else if (plugin.getTeleportDelayMap().contains(targetPlayer.getName()))
 		    plugin.getTeleportDelayMap().remove(targetPlayer.getName());
+		targetPlayer.closeInventory();
 		targetPlayer.teleport(targloc);
 		if (near)
 		    plugin.msg(targetPlayer, lm.Residence_TeleportNear);
@@ -1307,6 +1308,7 @@ public class ClaimedResidence {
 	ResidenceTPEvent tpevent = new ResidenceTPEvent(this, targloc, targetPlayer, reqPlayer);
 	plugin.getServ().getPluginManager().callEvent(tpevent);
 	if (!tpevent.isCancelled()) {
+	    targetPlayer.closeInventory();
 	    targetPlayer.teleport(targloc);
 	    if (near)
 		plugin.msg(targetPlayer, lm.Residence_TeleportNear);

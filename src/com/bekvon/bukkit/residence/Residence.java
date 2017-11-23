@@ -765,7 +765,7 @@ public class Residence extends JavaPlugin {
     }
 
     public void consoleMessage(String message) {
-	Bukkit.getConsoleSender().sendMessage(getPrefix() + " " + message);
+	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', getPrefix() + " " + message));
     }
 
     public boolean validName(String name) {

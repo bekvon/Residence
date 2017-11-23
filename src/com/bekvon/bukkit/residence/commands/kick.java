@@ -55,6 +55,7 @@ public class kick implements cmd {
 
 	if (res.getPlayersInResidence().contains(targetplayer)) {
 	    Location loc = plugin.getConfigManager().getKickLocation();
+	    targetplayer.closeInventory();
 	    if (loc != null)
 		targetplayer.teleport(loc);
 	    else
