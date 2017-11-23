@@ -141,7 +141,7 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getItem().getLocation());
 	if (res == null)
 	    return;
-	if (!res.getPermissions().has(Flags.itempickup, FlagCombo.OnlyFalse))
+	if (!res.getPermissions().playerHas(event.getPlayer(), Flags.itempickup, FlagCombo.OnlyFalse))
 	    return;
 	if (event.getPlayer().hasPermission("residence.flag.itempickup.bypass"))
 	    return;
@@ -154,7 +154,7 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getPlayer().getLocation());
 	if (res == null)
 	    return;
-	if (!res.getPermissions().has(Flags.itemdrop, FlagCombo.OnlyFalse))
+	if (!res.getPermissions().playerHas(event.getPlayer(), Flags.itemdrop, FlagCombo.OnlyFalse))
 	    return;
 	event.setCancelled(true);
     }
