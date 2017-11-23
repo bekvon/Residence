@@ -49,7 +49,7 @@ public class TransactionManager implements MarketBuyInterface {
 	return true;
     }
 
-    public boolean giveEconomyMoney(Player player, int amount) {
+    public boolean giveEconomyMoney(Player player, double amount) {
 	if (player == null)
 	    return false;
 	if (amount == 0)

@@ -550,8 +550,8 @@ public class ResidenceManager implements ResidenceInterface {
 	plugin.getRentManager().removeRentable(name);
 	plugin.getTransactionManager().removeFromSale(name);
 
-	if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {
-	    int chargeamount = (int) Math.ceil(res.getAreaArray()[0].getSize() * res.getBlockSellPrice());
+	if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {	    	    
+	    double chargeamount = Math.ceil(res.getTotalSize() * res.getBlockSellPrice());
 	    plugin.getTransactionManager().giveEconomyMoney(player, chargeamount);
 	}
     }
