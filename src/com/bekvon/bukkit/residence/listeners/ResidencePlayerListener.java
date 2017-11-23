@@ -1086,6 +1086,12 @@ public class ResidencePlayerListener implements Listener {
 
     }
 
+    private boolean placingMinecart(Block block, ItemStack item) {
+	if (block.getType().name().contains("RAIL") && item.getType().name().contains("MINECART"))
+	    return true;
+	return false;
+    }
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -1107,7 +1113,7 @@ public class ResidencePlayerListener implements Listener {
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || plugin.getNms().isCanUseEntity_BothClick(mat, block))) {
 	    if (heldItemId != plugin.getConfigManager().getSelectionTooldID() && heldItemId != plugin.getConfigManager().getInfoToolID()
-		&& heldItem != Material.INK_SACK && !plugin.getNms().isArmorStandMaterial(heldItem) && !plugin.getNms().isBoat(heldItem)) {
+		&& heldItem != Material.INK_SACK && !plugin.getNms().isArmorStandMaterial(heldItem) && !plugin.getNms().isBoat(heldItem) && !placingMinecart(block, iih)) {
 		return;
 	    }
 	}
@@ -1146,6 +1152,14 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	    if (plugin.getNms().isArmorStandMaterial(heldItem) || plugin.getNms().isBoat(heldItem)) {
 		perms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
+		if (!perms.playerHas(player, Flags.build, true)) {
+		    plugin.msg(player, lm.Flag_Deny, Flags.build.getName());
+		    event.setCancelled(true);
+		    return;
+		}
+	    }
+	    if (placingMinecart(block, iih)) {
+		perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 		if (!perms.playerHas(player, Flags.build, true)) {
 		    plugin.msg(player, lm.Flag_Deny, Flags.build.getName());
 		    event.setCancelled(true);
@@ -1230,7 +1244,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 	return false;
     }
-    
+
     private static boolean canHaveContainer(EntityType type) {
 	switch (type.name().toLowerCase()) {
 	case "horse":
@@ -1252,7 +1266,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Entity ent = event.getRightClicked();
 
-	if (!canHaveContainer(ent.getType() ))
+	if (!canHaveContainer(ent.getType()))
 	    return;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
@@ -1263,7 +1277,7 @@ public class ResidencePlayerListener implements Listener {
 	    event.setCancelled(true);
 	}
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractWithRidable(PlayerInteractEntityEvent event) {
 	// disabling event on world
@@ -1275,7 +1289,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Entity ent = event.getRightClicked();
 
-	if (!canRide(ent.getType() ))
+	if (!canRide(ent.getType()))
 	    return;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
