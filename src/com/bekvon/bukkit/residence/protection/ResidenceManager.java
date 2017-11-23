@@ -1150,7 +1150,8 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
-	res.getPermissions().setOwner(giveplayer, true);
+	if (!res.getPermissions().setOwner(giveplayer, true))
+	    return;
 	// Fix phrases here
 	plugin.msg(reqPlayer, lm.Residence_Give, residence, giveplayer.getName());
 	plugin.msg(giveplayer, lm.Residence_Recieve, residence, reqPlayer.getName());

@@ -630,7 +630,7 @@ public class FlagPermissions {
 	return root;
     }
 
-    private HashMap<String, Map<String, Boolean>> clone(Map<String, Map<String, Boolean>> map) {
+    private static HashMap<String, Map<String, Boolean>> clone(Map<String, Map<String, Boolean>> map) {
 	HashMap<String, Map<String, Boolean>> nm = new HashMap<String, Map<String, Boolean>>();
 	for (Entry<String, Map<String, Boolean>> one : map.entrySet()) {
 	    nm.put(one.getKey(), new HashMap<String, Boolean>(one.getValue()));

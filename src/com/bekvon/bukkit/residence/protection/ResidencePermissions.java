@@ -483,14 +483,14 @@ public class ResidencePermissions extends FlagPermissions {
 	}
     }
 
-    public void setOwner(Player player, boolean resetFlags) {
+    public boolean setOwner(Player player, boolean resetFlags) {
 
 	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, player);
 	Residence.getInstance().getServ().getPluginManager().callEvent(ownerchange);
 
 	// Dont change owner if event is canceled
 	if (ownerchange.isCancelled())
-	    return;
+	    return false;
 
 	Residence.getInstance().getPlayerManager().removeResFromPlayer(residence.getOwnerUUID(), residence);
 	Residence.getInstance().getPlayerManager().addResidence(player, residence);
@@ -500,6 +500,8 @@ public class ResidencePermissions extends FlagPermissions {
 
 	if (resetFlags)
 	    this.applyDefaultFlags();
+	
+	return true;
     }
 
     public void setOwner(String newOwner, boolean resetFlags) {
