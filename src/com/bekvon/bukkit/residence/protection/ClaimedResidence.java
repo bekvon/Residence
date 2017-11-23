@@ -427,10 +427,10 @@ public class ClaimedResidence {
 
 	    if (!resadmin) {
 		if (plugin.getWorldGuard() != null && plugin.getWorldGuardUtil().isSelectionInArea(player))
-		    return true;
+		    return false;
 
 		if (plugin.getKingdomsManager() != null && plugin.getKingdomsUtil().isSelectionInArea(player))
-		    return true;
+		    return false;
 	    }
 
 	    if (chargeMoney && parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
@@ -568,9 +568,9 @@ public class ClaimedResidence {
 
 	    if (!resadmin) {
 		if (plugin.getWorldGuard() != null && plugin.getWorldGuardUtil().isSelectionInArea(player))
-		    return true;
+		    return false;
 		if (plugin.getKingdomsManager() != null && plugin.getKingdomsUtil().isSelectionInArea(player))
-		    return true;
+		    return false;
 	    }
 
 	    if (parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
