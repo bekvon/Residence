@@ -58,4 +58,8 @@ public class RealShopEconomy implements EconomyInterface {
 	return "RealShopEconomy";
     }
 
+    @Override
+    public String format(double amount) {
+	return plugin.format(amount);
+    }
 }

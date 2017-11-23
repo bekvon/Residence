@@ -100,4 +100,8 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 	return "EssentialsEconomy";
     }
 
+    @Override
+    public String format(double amount) {
+	return Economy.format(amount);
+    }
 }

@@ -12,4 +12,7 @@ public interface EconomyInterface {
     public boolean transfer(String playerFrom, String playerTo, double amount);
 
     public String getName();
+
+    public String format(double amount);
+
 }

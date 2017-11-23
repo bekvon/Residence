@@ -153,4 +153,11 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
     public String getName() {
 	return "Vault";
     }
+
+    @Override
+    public String format(double amount) {	
+	return economy.format(amount);
+    }
+    
+    
 }

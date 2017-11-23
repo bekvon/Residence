@@ -62,4 +62,10 @@ public class BOSEAdapter implements EconomyInterface {
     public String getName() {
 	return "BOSEconomy";
     }
+
+    @Override
+    public String format(double amount) {
+	return plugin.getMoneyFormatted(amount);
+    }
+
 }

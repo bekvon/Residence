@@ -638,7 +638,7 @@ public class ResidenceManager implements ResidenceInterface {
 	resNameOwner += plugin.msg(lm.General_Owner, perms.getOwner());
 	if (plugin.getConfigManager().enableEconomy()) {
 	    if (res.isOwner(sender) || !(sender instanceof Player) || resadmin)
-		resNameOwner += plugin.msg(lm.Bank_Name, res.getBank().getStoredMoney());
+		resNameOwner += plugin.msg(lm.Bank_Name, res.getBank().getStoredMoneyFormated());
 	}
 	resNameOwner = ChatColor.translateAlternateColorCodes('&', resNameOwner);
 

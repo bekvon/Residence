@@ -23,6 +23,14 @@ public class ResidenceBank {
 	return storedMoney;
     }
 
+    public String getStoredMoneyFormated() {	
+	try{
+	return Residence.getInstance().getEconomyManager().format(storedMoney);
+	}catch(Exception e){
+	    return String.valueOf(this.storedMoney);
+	}
+    }
+
     public void setStoredMoney(int amount) {
 	storedMoney = amount;
     }

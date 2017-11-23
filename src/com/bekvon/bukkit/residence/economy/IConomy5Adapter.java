@@ -56,4 +56,9 @@ public class IConomy5Adapter implements EconomyInterface {
     public String getName() {
 	return "iConomy";
     }
+
+    @Override
+    public String format(double amount) {
+	return iConomy.format(amount);
+    }
 }

@@ -1218,8 +1218,12 @@ public class Residence extends JavaPlugin {
 			Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Messages");
 			if (ms != null) {
 			    for (Entry<Integer, Object> one : ms.entrySet()) {
-				Map<String, String> msgs = (Map<String, String>) one.getValue();
-				c.put(one.getKey(), new MinimizeMessages(one.getKey(), msgs.get("EnterMessage"), msgs.get("LeaveMessage")));
+				try {
+				    Map<String, String> msgs = (Map<String, String>) one.getValue();
+				    c.put(one.getKey(), new MinimizeMessages(one.getKey(), msgs.get("EnterMessage"), msgs.get("LeaveMessage")));
+				} catch (Exception e) {
+
+				}
 			    }
 			    getResidenceManager().getCacheMessages().put(world.getName(), c);
 			}
@@ -1232,8 +1236,12 @@ public class Residence extends JavaPlugin {
 			Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Flags");
 			if (ms != null) {
 			    for (Entry<Integer, Object> one : ms.entrySet()) {
-				HashMap<String, Boolean> msgs = (HashMap<String, Boolean>) one.getValue();
-				c.put(one.getKey(), new MinimizeFlags(one.getKey(), msgs));
+				try {
+				    HashMap<String, Boolean> msgs = (HashMap<String, Boolean>) one.getValue();
+				    c.put(one.getKey(), new MinimizeFlags(one.getKey(), msgs));
+				} catch (Exception e) {
+
+				}
 			    }
 			    getResidenceManager().getCacheFlags().put(world.getName(), c);
 			}
