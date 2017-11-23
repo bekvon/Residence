@@ -35,12 +35,12 @@ public class bank implements cmd {
 	    plugin.msg(sender, lm.Residence_NotIn);
 	    return true;
 	}
-	int amount = 0;
+	double amount = 0D;
 	try {
 	    if (args.length == 3)
-		amount = Integer.parseInt(args[2]);
+		amount = Double.parseDouble(args[2]);
 	    else
-		amount = Integer.parseInt(args[3]);
+		amount = Double.parseDouble(args[3]);
 	} catch (Exception ex) {
 	    plugin.msg(sender, lm.Invalid_Amount);
 	    return true;

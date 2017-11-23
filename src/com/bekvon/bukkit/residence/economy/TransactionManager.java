@@ -61,7 +61,7 @@ public class TransactionManager implements MarketBuyInterface {
 	}
 
 	econ.add(player.getName(), amount);
-	plugin.msg(player, lm.Economy_MoneyAdded, String.format("%d", amount), econ.getName());
+	plugin.msg(player, lm.Economy_MoneyAdded, plugin.getEconomyManager().format(amount), econ.getName());
 	return true;
     }
 
@@ -233,12 +233,12 @@ public class TransactionManager implements MarketBuyInterface {
 	    v.setAreas(res);
 	    plugin.getSelectionManager().showBounds(player, v);
 
-	    plugin.msg(player, lm.Economy_MoneyCharged, String.format("%d", amount), econ.getName());
+	    plugin.msg(player, lm.Economy_MoneyCharged, plugin.getEconomyManager().format(amount), econ.getName());
 	    plugin.msg(player, lm.Residence_Bought, res.getResidenceName());
 	    Player seller = serv.getPlayer(sellerName);
 	    if (seller != null && seller.isOnline()) {
 		seller.sendMessage(plugin.msg(lm.Residence_Buy, player.getName(), res.getResidenceName()));
-		seller.sendMessage(plugin.msg(lm.Economy_MoneyCredit, String.format("%d", amount), econ.getName()));
+		seller.sendMessage(plugin.msg(lm.Economy_MoneyCredit, plugin.getEconomyManager().format(amount), econ.getName()));
 	    }
 	} else {
 	    plugin.msg(player, lm.Economy_NotEnoughMoney);

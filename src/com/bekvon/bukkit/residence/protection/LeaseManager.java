@@ -122,7 +122,7 @@ public class LeaseManager {
 		if (econ.canAfford(player.getName(), amount)/*account.hasEnough(amount)*/) {
 		    econ.subtract(player.getName(), amount);
 		    econ.add("Lease Money", amount);
-		    plugin.msg(player, lm.Economy_MoneyCharged, String.format("%d", amount), econ.getName());
+		    plugin.msg(player, lm.Economy_MoneyCharged, plugin.getEconomyManager().format(amount), econ.getName());
 		} else {
 		    plugin.msg(player, lm.Economy_NotEnoughMoney);
 		    return;
@@ -147,9 +147,17 @@ public class LeaseManager {
 	plugin.msg(player, lm.Economy_LeaseRenew, getExpireTime(res));
     }
 
-    public int getRenewCost(ClaimedResidence res) {
+//    @Deprecated
+//    public int getRenewCost(ClaimedResidence res) {
+//	double cost = res.getOwnerGroup().getLeaseRenewCost();
+//	int amount = (int) Math.ceil(res.getTotalSize() * cost);
+//	return amount;
+//    }
+
+    public double getRenewCostD(ClaimedResidence res) {
 	double cost = res.getOwnerGroup().getLeaseRenewCost();
-	int amount = (int) Math.ceil(res.getTotalSize() * cost);
+	double amount = res.getTotalSize() * cost;
+	amount = Math.round(amount * 100) / 100D;
 	return amount;
     }
 
@@ -188,7 +196,7 @@ public class LeaseManager {
 
 	    PermissionGroup group = res.getOwnerGroup();
 
-	    int cost = this.getRenewCost(res);
+	    double cost = this.getRenewCostD(res);
 	    if (plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().autoRenewLeases()) {
 		if (cost == 0) {
 		    renewed = true;

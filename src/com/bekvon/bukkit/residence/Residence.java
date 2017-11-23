@@ -580,6 +580,7 @@ public class Residence extends JavaPlugin {
 		}
 		if (economy == null) {
 		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Unable to find an economy system...");
+		    economy = new BlackHoleEconomy();
 		}
 	    }
 

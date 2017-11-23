@@ -1409,8 +1409,8 @@ public class ClaimedResidence {
 
 	if (ShopDesc != null)
 	    root.put("ShopDescription", ShopDesc);
-	if (bank.getStoredMoney() != 0)
-	    root.put("StoredMoney", bank.getStoredMoney());
+	if (bank.getStoredMoneyD() != 0)
+	    root.put("StoredMoney", bank.getStoredMoneyD());
 	if (BlockSellPrice != 0D)
 	    root.put("BlockSellPrice", BlockSellPrice);
 
@@ -1506,8 +1506,12 @@ public class ClaimedResidence {
 	if (root.containsKey("ShopDescription"))
 	    res.setShopDesc((String) root.get("ShopDescription"));
 
-	if (root.containsKey("StoredMoney"))
-	    res.bank.setStoredMoney((Integer) root.get("StoredMoney"));
+	if (root.containsKey("StoredMoney")) {
+	    if (root.get("StoredMoney") instanceof Double)
+		res.bank.setStoredMoney((Double) root.get("StoredMoney"));
+	    else
+		res.bank.setStoredMoney((Integer) root.get("StoredMoney"));
+	}
 
 	if (root.containsKey("BlackList"))
 	    res.blacklist = ResidenceItemList.load(plugin, res, (Map<String, Object>) root.get("BlackList"));
