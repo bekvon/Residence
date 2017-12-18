@@ -1791,7 +1791,10 @@ public class ResidencePlayerListener implements Listener {
 
 	this.lastUpdate.put(name, now);
 
-	handleNewLocation(player, locto, true);
+	boolean handled = handleNewLocation(player, locto, true);
+	if (!handled)
+	    event.setCancelled(true);
+
 	if (!plugin.getTeleportDelayMap().isEmpty() && plugin.getConfigManager().getTeleportDelay() > 0 && plugin.getTeleportDelayMap().contains(player
 	    .getName())) {
 	    plugin.getTeleportDelayMap().remove(player.getName());
@@ -1801,7 +1804,21 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
-    public void handleNewLocation(final Player player, Location loc, boolean move) {
+    private static boolean teleport(Player player, Location loc) {
+	if (player == null || !player.isOnline() || loc == null)
+	    return false;
+
+//	PlayerTeleportEvent ev = new PlayerTeleportEvent(player, player.getLocation(), loc);
+//	Bukkit.getServer().getPluginManager().callEvent(ev);
+//	Debug.D("teleporting " + !ev.isCancelled());
+	if (!player.teleport(loc))
+	    return false;
+
+//	Debug.D("tp " + player.teleport(loc));
+	return true;
+    }
+
+    public boolean handleNewLocation(final Player player, Location loc, boolean move) {
 
 	String pname = player.getName();
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
@@ -1846,23 +1863,28 @@ public class ResidencePlayerListener implements Listener {
 			    if (location.getBlockY() <= 0) {
 				Location lastLoc = lastOutsideLoc.get(pname);
 				player.closeInventory();
+				boolean teleported = false;
 				if (lastLoc != null)
-				    player.teleport(lastLoc);
+				    teleported = teleport(player, lastLoc);
 				else
-				    player.teleport(res.getOutsideFreeLoc(loc, player));
+				    teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
 				plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
-				return;
+				if (!teleported)
+				    return false;
+				return true;
 			    }
 			}
 			plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
 			player.closeInventory();
-			player.teleport(location);
+			boolean teleported = teleport(player, location);
+			if (!teleported)
+			    return false;
 			player.setFlying(false);
 			player.setAllowFlight(false);
 		    }
 
 		    lastOutsideLoc.put(pname, loc);
-		    return;
+		    return true;
 		}
 	    }
 	}
@@ -1899,7 +1921,7 @@ public class ResidencePlayerListener implements Listener {
 //		}
 		currentRes.remove(pname);
 	    }
-	    return;
+	    return true;
 	}
 
 	if (move) {
@@ -1916,32 +1938,32 @@ public class ResidencePlayerListener implements Listener {
 		}
 
 		ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
-
+		boolean teleported = false;
 		if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !player.hasPermission("residence.admin.tp")) {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.closeInventory();
-		    player.teleport(newLoc);
+		    teleported = teleport(player, newLoc);
 		} else if (lastLoc != null) {
 
 		    StuckInfo info = updateStuckTeleport(player, loc);
 		    player.closeInventory();
 		    if (info != null && info.getTimesTeleported() > 5) {
 			Location newLoc = res.getOutsideFreeLoc(loc, player);
-			player.teleport(newLoc);
+			teleported = teleport(player, newLoc);
 		    } else {
-			player.teleport(lastLoc);
+			teleported = teleport(player, lastLoc);
 		    }
 		} else {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.closeInventory();
-		    player.teleport(newLoc);
+		    teleported = teleport(player, newLoc);
 		}
 		if (plugin.getConfigManager().useActionBar()) {
 		    plugin.getAB().send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
 		} else {
 		    plugin.msg(player, lm.Residence_MoveDeny, orres.getName());
 		}
-		return;
+		return teleported;
 	    }
 
 	    // Preventing fly in residence only when player has move permission
@@ -1955,6 +1977,8 @@ public class ResidencePlayerListener implements Listener {
 		location.setYaw(lc.getYaw());
 		int from = location.getBlockY();
 		int maxH = location.getWorld().getMaxHeight() - 1;
+		boolean teleported = false;
+
 		for (int i = 0; i < maxH; i++) {
 		    location.setY(from - i);
 		    Block block = location.getBlock();
@@ -1966,17 +1990,19 @@ public class ResidencePlayerListener implements Listener {
 			Location lastLoc = lastOutsideLoc.get(pname);
 			player.closeInventory();
 			if (lastLoc != null)
-			    player.teleport(lastLoc);
+			    teleported = teleport(player, lastLoc);
 			else
-			    player.teleport(res.getOutsideFreeLoc(loc, player));
+			    teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
 
 			plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
-			return;
+			return teleported;
 		    }
 		}
 		plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly.getName(), orres.getName());
 		player.closeInventory();
-		player.teleport(location);
+		teleported = teleport(player, location);
+		if (!teleported)
+		    return false;
 		player.setFlying(false);
 		player.setAllowFlight(false);
 	    }
@@ -2010,6 +2036,7 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.getServ().getPluginManager().callEvent(chgEvent);
 
 	}
+	return true;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
