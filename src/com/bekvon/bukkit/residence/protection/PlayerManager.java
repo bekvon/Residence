@@ -292,6 +292,8 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public ResidencePlayer getResidencePlayer(String name, UUID uuid) {
+	if (uuid.toString().equals(plugin.getServerLandUUID()))
+	    return null;
 	Player p = Bukkit.getPlayer(uuid);
 	if (p != null) {
 	    return getResidencePlayer(p);

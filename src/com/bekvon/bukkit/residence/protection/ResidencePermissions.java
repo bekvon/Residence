@@ -9,6 +9,8 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -500,7 +502,7 @@ public class ResidencePermissions extends FlagPermissions {
 
 	if (resetFlags)
 	    this.applyDefaultFlags();
-	
+
 	return true;
     }
 
@@ -519,8 +521,6 @@ public class ResidencePermissions extends FlagPermissions {
 	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(newOwner);
 	if (rPlayer != null)
 	    this.ownerUUID = rPlayer.getUuid();
-	
-	Residence.getInstance().getPlayerManager().addResidence(newOwner, residence);
 
 	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase(Residence.getInstance().getServerLandname())) {
 	    ownerUUID = UUID.fromString(Residence.getInstance().getServerLandUUID());// the UUID for server owned land
@@ -531,6 +531,7 @@ public class ResidencePermissions extends FlagPermissions {
 	    else
 		ownerUUID = UUID.fromString(Residence.getInstance().getTempUserUUID());//the fake UUID used when unable to find the real one, will be updated with players real UUID when its possible to find it
 	}
+	Residence.getInstance().getPlayerManager().addResidence(newOwner, residence);
 	if (resetFlags)
 	    this.applyDefaultFlags();
     }
