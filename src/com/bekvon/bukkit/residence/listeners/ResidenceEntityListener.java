@@ -643,6 +643,8 @@ public class ResidenceEntityListener implements Listener {
 		ent.remove();
 	    }
 	    break;
+	case WITHER:
+	    break;
 	default:
 	    if (perms.has(Flags.destroy, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
@@ -703,6 +705,7 @@ public class ResidenceEntityListener implements Listener {
 		if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.fireball, FlagCombo.OnlyFalse))
 		    cancel = true;
 		break;
+	    case WITHER:
 	    case WITHER_SKULL:
 		if (perms.has(Flags.explode, FlagCombo.OnlyFalse) || perms.has(Flags.witherdestruction, FlagCombo.OnlyFalse))
 		    cancel = true;
