@@ -1099,6 +1099,11 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @SuppressWarnings("deprecation")
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerInteracts(PlayerInteractEvent event) {
+	Debug.D("event canceled " + event.isCancelled());
+    }
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 	if (event.getPlayer() == null)

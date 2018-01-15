@@ -201,10 +201,12 @@ public class auto implements cmd {
 
 	    skipped = 0;
 
-	    cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
-	    if (cost > balance)
-		break;
-
+	    if (plugin.getConfigManager().enableEconomy()) {
+		cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
+		if (cost > balance)
+		    break;
+	    }
+	    
 	    cuboid.setLowLocation(c.getLowLoc());
 	    cuboid.setHighLocation(c.getHighLoc());
 
