@@ -105,7 +105,7 @@ public class rt implements cmd {
 	    return true;
 	}
 
-	if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !plugin.hasPermission(sender, "residence.randomtp.delaybypass")) {
+	if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !plugin.hasPermission(sender, "residence.randomtp.delaybypass", false)) {
 	    plugin.msg(tPlayer, lm.RandomTeleport_TeleportStarted, loc.getX(), loc.getY(), loc
 		.getZ(), plugin.getConfigManager().getTeleportDelay());
 	    plugin.getTeleportDelayMap().add(tPlayer.getName());
