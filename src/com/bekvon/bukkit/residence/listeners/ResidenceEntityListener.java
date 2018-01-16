@@ -42,6 +42,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
@@ -548,6 +550,27 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onHangingBreakEvent(HangingBreakEvent event) {
+	// disabling event on world
+	Hanging ent = event.getEntity();
+	if (ent == null)
+	    return;
+	if (plugin.isDisabledWorldListener(ent.getWorld()))
+	    return;
+	
+	if (!event.getEntity().getType().equals(EntityType.ITEM_FRAME))
+	    return;
+	
+	if (!event.getCause().equals(RemoveCause.PHYSICS))
+	    return;
+
+	FlagPermissions perms = plugin.getPermsByLoc(ent.getLocation());
+	if (!perms.has(Flags.destroy, perms.has(Flags.build, true))) {
+	    event.setCancelled(true);
+	}
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
 	// disabling event on world
 	Hanging ent = event.getEntity();
@@ -556,8 +579,8 @@ public class ResidenceEntityListener implements Listener {
 	if (plugin.isDisabledWorldListener(ent.getWorld()))
 	    return;
 
-//	if (event.getRemover() instanceof Player)
-//	    return;
+	if (event.getRemover() instanceof Player)
+	    return;
 
 	FlagPermissions perms = plugin.getPermsByLoc(ent.getLocation());
 	if (!perms.has(Flags.destroy, perms.has(Flags.build, true))) {
