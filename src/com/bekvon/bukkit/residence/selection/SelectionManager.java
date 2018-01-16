@@ -350,7 +350,7 @@ public class SelectionManager {
     public Location getPlayerLoc1(Player player) {
 	if (player == null)
 	    return null;
-	return getSelection(player).getBaseLoc1();
+	return getSelection(player).getResizedArea().getLowLoc();
     }
 
     @Deprecated
@@ -361,7 +361,7 @@ public class SelectionManager {
     public Location getPlayerLoc2(Player player) {
 	if (player == null)
 	    return null;
-	return getSelection(player).getBaseLoc2();
+	return getSelection(player).getResizedArea().getHighLoc();
     }
 
     @Deprecated
