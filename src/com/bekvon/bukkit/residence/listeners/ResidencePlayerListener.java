@@ -54,6 +54,7 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -63,7 +64,10 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
-import com.bekvon.bukkit.residence.event.*;
+import com.bekvon.bukkit.residence.event.ResidenceChangedEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
+import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -71,7 +75,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
@@ -1048,8 +1051,10 @@ public class ResidencePlayerListener implements Listener {
 		event.setCancelled(true);
 	    }
 
-	    if (plugin.getSelectionManager().hasPlacedBoth(player.getName()))
+	    if (plugin.getSelectionManager().hasPlacedBoth(player)) {
 		plugin.getSelectionManager().showSelectionInfoInActionBar(player);
+		plugin.getSelectionManager().updateLocations(player);
+	    }
 	}
 	return;
     }
@@ -1092,17 +1097,12 @@ public class ResidencePlayerListener implements Listener {
 
     }
 
-    private boolean placingMinecart(Block block, ItemStack item) {
+    private static boolean placingMinecart(Block block, ItemStack item) {
 	if (block.getType().name().contains("RAIL") && item.getType().name().contains("MINECART"))
 	    return true;
 	return false;
     }
 
-    @SuppressWarnings("deprecation")
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerInteracts(PlayerInteractEvent event) {
-	Debug.D("event canceled " + event.isCancelled());
-    }
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {

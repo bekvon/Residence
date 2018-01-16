@@ -19,7 +19,7 @@ public class WorldEditSelectionManager extends SelectionManager {
     @Override
     public boolean worldEdit(Player player) {
 	WorldEditPlugin wep = (WorldEditPlugin) this.server.getPluginManager().getPlugin("WorldEdit");
-	Selection sel = wep.getSelection(player);
+	com.sk89q.worldedit.bukkit.selections.Selection sel = wep.getSelection(player);
 
 	if (sel != null) {
 	    Location pos1 = sel.getMinimumPoint();
@@ -30,8 +30,7 @@ public class WorldEditSelectionManager extends SelectionManager {
 		pos2 = new Location(player.getWorld(), region.getPos2().getX(), region.getPos2().getY(), region.getPos2().getZ());
 	    } catch (Exception e) {
 	    }
-	    this.playerLoc1.put(player.getName(), pos1);
-	    this.playerLoc2.put(player.getName(), pos2);
+	    this.updateLocations(player, pos1, pos2);
 	    return true;
 	}
 	return false;
@@ -39,9 +38,9 @@ public class WorldEditSelectionManager extends SelectionManager {
 
     @Override
     public boolean worldEditUpdate(Player player) {
-	if (!hasPlacedBoth(player.getName()))
+	if (!hasPlacedBoth(player))
 	    return false;
-	CuboidSelection selection = new CuboidSelection(player.getWorld(), getPlayerLoc1(player.getName()), getPlayerLoc2(player.getName()));
+	CuboidSelection selection = new CuboidSelection(player.getWorld(), getPlayerLoc1(player), getPlayerLoc2(player));
 	plugin.getWorldEdit().setSelection(player, selection);
 	return true;
     }

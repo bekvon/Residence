@@ -158,6 +158,7 @@ public class ConfigManager {
     protected boolean UUIDConvertion = true;
     protected boolean OfflineMode = false;
     protected boolean SelectionIgnoreY = false;
+    protected boolean SelectionIgnoreYInSubzone = false;
     protected boolean NoCostForYBlocks = false;
     protected boolean useVisualizer;
     protected boolean DisableListeners;
@@ -411,6 +412,12 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
 	SelectionIgnoreY = c.get("Global.Selection.IgnoreY", false);
+
+	c.getW().addComment("Global.Selection.IgnoreYInSubzone",
+	    "When this set to true, selections inside existing residence will be from bottom to top of that residence",
+	    "When this set to false, selections inside existing residence will be exactly as they are");
+	SelectionIgnoreYInSubzone = c.get("Global.Selection.IgnoreYInSubzone", false);
+
 	c.getW().addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
 	    "This will lower residence price by up to 256 times, so adjust block price BEFORE enabling this");
 	NoCostForYBlocks = c.get("Global.Selection.NoCostForYBlocks", false);
@@ -1642,6 +1649,10 @@ public class ConfigManager {
 
     public boolean isSelectionIgnoreY() {
 	return SelectionIgnoreY;
+    }
+
+    public boolean isSelectionIgnoreYInSubzone() {
+	return SelectionIgnoreYInSubzone;
     }
 
     public boolean isNoCostForYBlocks() {

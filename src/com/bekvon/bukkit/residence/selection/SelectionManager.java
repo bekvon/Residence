@@ -1,37 +1,264 @@
 package com.bekvon.bukkit.residence.selection;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 
 public class SelectionManager {
-    protected Map<String, Location> playerLoc1;
-    protected Map<String, Location> playerLoc2;
+    protected Map<UUID, Selection> selections;
     protected Server server;
     protected Residence plugin;
 
-    private HashMap<String, Visualizer> vMap = new HashMap<String, Visualizer>();
+    private HashMap<UUID, Visualizer> vMap = new HashMap<UUID, Visualizer>();
 
     public static final int MIN_HEIGHT = 0;
 
-    Permission p = new Permission("residence.bypass.ignorey", PermissionDefault.FALSE);
+    Permission ignoreyPermission = new Permission("residence.bypass.ignorey", PermissionDefault.FALSE);
+    Permission ignoreyinsubzonePermission = new Permission("residence.bypass.ignoreyinsubzone", PermissionDefault.FALSE);
+
+    public enum selectionType {
+	noLimits, ignoreY, residenceBounds;
+    }
+
+    public class Selection {
+	private Player player;
+	private Location loc1;
+	private Location loc2;
+
+	public Selection(Player player) {
+	    this.player = player;
+	}
+
+	public Location getBaseLoc1() {
+	    return loc1 == null ? null : loc1.clone();
+	}
+
+	public void setBaseLoc1(Location loc1) {
+	    this.loc1 = loc1.clone();
+	}
+
+	public World getWorld() {
+	    if (loc1 != null)
+		return loc1.getWorld();
+	    if (loc2 != null)
+		return loc2.getWorld();
+	    return player.getWorld();
+	}
+
+	public Location getBaseLoc2() {
+	    return loc2 == null ? null : loc2.clone();
+	}
+
+	public void setBaseLoc2(Location loc2) {
+	    this.loc2 = loc2.clone();
+	}
+
+	public selectionType getSelectionRestrictions() {
+	    if (inSameResidence()) {
+		if (plugin.getConfigManager().isSelectionIgnoreYInSubzone()) {
+		    if (hasPlacedBoth() && !player.hasPermission(ignoreyinsubzonePermission)) {
+			return selectionType.residenceBounds;
+		    }
+		}
+	    } else {
+		if (plugin.getConfigManager().isSelectionIgnoreY()) {
+		    if (hasPlacedBoth() && !player.hasPermission(ignoreyPermission)) {
+			return selectionType.ignoreY;
+		    }
+		}
+	    }
+	    return selectionType.noLimits;
+	}
+
+	public int getMaxYAllowed() {
+	    switch (getSelectionRestrictions()) {
+	    case ignoreY:
+	    case noLimits:
+	    default:
+		return getWorld().getMaxHeight() - 1;
+	    case residenceBounds:
+		ClaimedResidence res1 = plugin.getResidenceManager().getByLoc(this.getBaseLoc2());
+		if (res1 != null) {
+		    CuboidArea area = res1.getAreaByLoc(this.getBaseLoc2());
+		    if (area != null) {
+			return area.getHighLoc().getBlockY();
+		    }
+		}
+		break;
+	    }
+	    return getWorld().getMaxHeight() - 1;
+	}
+
+	public int getMinYAllowed() {
+	    switch (getSelectionRestrictions()) {
+	    case ignoreY:
+	    case noLimits:
+	    default:
+		return 0;
+	    case residenceBounds:
+		ClaimedResidence res1 = plugin.getResidenceManager().getByLoc(this.getBaseLoc1());
+		if (res1 != null) {
+		    CuboidArea area = res1.getAreaByLoc(getBaseLoc1());
+		    if (area != null)
+			return area.getLowLoc().getBlockY();
+		}
+		break;
+	    }
+	    return 0;
+	}
+
+	private boolean inSameResidence() {
+	    if (!hasPlacedBoth())
+		return false;
+
+	    ClaimedResidence res1 = plugin.getResidenceManager().getByLoc(this.getBaseLoc1());
+
+	    if (res1 == null)
+		return false;
+
+	    ClaimedResidence res2 = plugin.getResidenceManager().getByLoc(this.getBaseLoc2());
+
+	    if (res2 == null)
+		return false;
+	    return res1.getName().equals(res2.getName());
+	}
+
+	public void vert(boolean resadmin) {
+	    if (hasPlacedBoth()) {
+		sky(resadmin);
+		bedrock(resadmin);
+	    } else {
+		plugin.msg(player, lm.Select_Points);
+	    }
+	}
+
+	private void shadowSky(CuboidArea area) {
+	    if (!hasPlacedBoth())
+		return;
+	    area.setHighLocation(this.getBaseArea().getHighLoc());
+	    area.getHighLoc().setY(this.getMaxYAllowed());
+	}
+
+	private void shadowBedrock(CuboidArea area) {
+	    if (!hasPlacedBoth())
+		return;
+	    area.setLowLocation(this.getBaseArea().getLowLoc());
+	    area.getLowLoc().setY(this.getMinYAllowed());
+	}
+
+	public void sky(boolean resadmin) {
+	    if (hasPlacedBoth()) {
+		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(this.getPlayer());
+		PermissionGroup group = rPlayer.getGroup();
+		int y1 = this.getBaseLoc1().getBlockY();
+
+		int newy = this.getMaxYAllowed();
+
+		if (!resadmin) {
+		    if (group.getMaxHeight() < newy)
+			newy = group.getMaxHeight();
+		    if (newy - y1 > (group.getMaxY() - 1))
+			newy = y1 + (group.getMaxY() - 1);
+		}
+		this.getBaseLoc2().setY(newy);
+
+		plugin.msg(player, lm.Select_Sky);
+	    } else {
+		plugin.msg(player, lm.Select_Points);
+	    }
+	}
+
+	public void bedrock(boolean resadmin) {
+	    if (hasPlacedBoth()) {
+		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(this.getPlayer());
+		PermissionGroup group = rPlayer.getGroup();
+
+		int y2 = this.getBaseLoc2().getBlockY();
+
+		int newy = this.getMinYAllowed();
+		if (!resadmin) {
+		    if (newy < group.getMinHeight())
+			newy = group.getMinHeight();
+		    if (y2 - newy > (group.getMaxY() - 1))
+			newy = y2 - (group.getMaxY() - 1);
+		}
+		this.getBaseLoc1().setY(newy);
+		plugin.msg(player, lm.Select_Bedrock);
+	    } else {
+		plugin.msg(player, lm.Select_Points);
+	    }
+	}
+
+	public void selectChunk() {
+	    Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+	    int xcoord = chunk.getX() * 16;
+	    int zcoord = chunk.getZ() * 16;
+	    int xmax = xcoord + 15;
+	    int zmax = zcoord + 15;
+	    this.setBaseLoc1(new Location(player.getWorld(), xcoord, player.getLocation().getBlockY(), zcoord));
+	    this.setBaseLoc2(new Location(player.getWorld(), xmax, player.getLocation().getBlockY(), zmax));
+	    plugin.msg(player, lm.Select_Success);
+	}
+
+	public boolean hasPlacedBoth() {
+	    return this.getBaseLoc1() != null && this.getBaseLoc2() != null;
+	}
+
+	public Player getPlayer() {
+	    return player;
+	}
+
+	public void setPlayer(Player player) {
+	    this.player = player;
+	}
+
+	public CuboidArea getBaseArea() {
+	    if (!this.hasPlacedBoth())
+		return null;
+	    return new CuboidArea(this.loc1, this.loc2);
+	}
+
+	public CuboidArea getResizedArea() {
+
+	    CuboidArea area = this.getBaseArea();
+	    switch (getSelectionRestrictions()) {
+	    case noLimits:
+		break;
+	    case residenceBounds:
+	    case ignoreY:
+		shadowSky(area);
+		shadowBedrock(area);
+		break;
+	    default:
+		break;
+	    }
+
+	    return area;
+	}
+    }
 
     public enum Direction {
 	UP, DOWN, PLUSX, PLUSZ, MINUSX, MINUSZ
@@ -40,8 +267,23 @@ public class SelectionManager {
     public SelectionManager(Server server, Residence plugin) {
 	this.plugin = plugin;
 	this.server = server;
-	playerLoc1 = Collections.synchronizedMap(new HashMap<String, Location>());
-	playerLoc2 = Collections.synchronizedMap(new HashMap<String, Location>());
+	selections = Collections.synchronizedMap(new HashMap<UUID, Selection>());
+    }
+
+    public Selection getSelection(Player player) {
+	Selection s = selections.get(player.getUniqueId());
+	if (s == null) {
+	    s = new Selection(player);
+	    selections.put(player.getUniqueId(), s);
+	}
+	return s;
+    }
+
+    public void updateLocations(Player player) {
+	Selection s = selections.get(player.getUniqueId());
+	if (s != null) {
+	    updateLocations(player, this.getSelection(player).getBaseLoc1(), this.getSelection(player).getBaseLoc2(), true);
+	}
     }
 
     public void updateLocations(Player player, Location loc1, Location loc2) {
@@ -50,9 +292,9 @@ public class SelectionManager {
 
     public void updateLocations(Player player, Location loc1, Location loc2, boolean force) {
 	if (loc1 != null && loc2 != null) {
-	    playerLoc1.put(player.getName(), loc1);
-	    playerLoc2.put(player.getName(), loc2);
-	    updateForY(player);
+	    Selection selection = getSelection(player);
+	    selection.setBaseLoc1(loc1);
+	    selection.setBaseLoc2(loc2);
 	    this.afterSelectionUpdate(player, force);
 	}
     }
@@ -63,8 +305,7 @@ public class SelectionManager {
 
     public void placeLoc1(Player player, Location loc, boolean show) {
 	if (loc != null) {
-	    playerLoc1.put(player.getName(), loc);
-	    updateForY(player);
+	    getSelection(player).setBaseLoc1(loc);
 	    if (show) {
 		this.afterSelectionUpdate(player);
 	    }
@@ -77,18 +318,10 @@ public class SelectionManager {
 
     public void placeLoc2(Player player, Location loc, boolean show) {
 	if (loc != null) {
-	    playerLoc2.put(player.getName(), loc);
-	    updateForY(player);
+	    getSelection(player).setBaseLoc2(loc);
 	    if (show) {
 		this.afterSelectionUpdate(player);
 	    }
-	}
-    }
-
-    private void updateForY(Player player) {
-	if (plugin.getConfigManager().isSelectionIgnoreY() && hasPlacedBoth(player.getName()) && !player.hasPermission(p)) {
-	    this.qsky(player);
-	    this.qbedrock(player);
 	}
     }
 
@@ -97,52 +330,66 @@ public class SelectionManager {
     }
 
     public void afterSelectionUpdate(Player player, boolean force) {
-	if (hasPlacedBoth(player.getName())) {
-	    Visualizer v = vMap.get(player.getName());
-	    if (v == null) {
-		v = new Visualizer(player);
-	    }
-	    v.setStart(System.currentTimeMillis());
-	    v.cancelAll();
-	    if (force)
-		v.setLoc(null);
-	    v.setAreas(this.getSelectionCuboid(player));
-	    this.showBounds(player, v);
+	if (!hasPlacedBoth(player))
+	    return;
+
+	Visualizer v = vMap.get(player.getUniqueId());
+	if (v == null) {
+	    v = new Visualizer(player);
+	    vMap.put(player.getUniqueId(), v);
 	}
+	v.setStart(System.currentTimeMillis());
+	v.cancelAll();
+	if (force)
+	    v.setLoc(null);
+	v.setAreas(this.getSelectionCuboid(player));
+	this.showBounds(player, v);
     }
 
     public Location getPlayerLoc1(Player player) {
-	return getPlayerLoc1(player.getName());
+	if (player == null)
+	    return null;
+	return getSelection(player).getBaseLoc1();
     }
 
+    @Deprecated
     public Location getPlayerLoc1(String player) {
-	return playerLoc1.get(player);
+	return getPlayerLoc1(Bukkit.getPlayer(player));
     }
 
     public Location getPlayerLoc2(Player player) {
-	return getPlayerLoc2(player.getName());
+	if (player == null)
+	    return null;
+	return getSelection(player).getBaseLoc2();
     }
 
+    @Deprecated
     public Location getPlayerLoc2(String player) {
-	return playerLoc2.get(player);
+	return getPlayerLoc2(Bukkit.getPlayer(player));
     }
 
     public CuboidArea getSelectionCuboid(Player player) {
-	return getSelectionCuboid(player.getName());
+	if (player == null)
+	    return null;
+	return getSelection(player).getResizedArea();
     }
 
+    @Deprecated
     public CuboidArea getSelectionCuboid(String player) {
 	if (!hasPlacedBoth(player))
 	    return null;
-	return new CuboidArea(getPlayerLoc1(player), getPlayerLoc2(player));
+	return getSelectionCuboid(Bukkit.getPlayer(player));
     }
 
     public boolean hasPlacedBoth(Player player) {
-	return hasPlacedBoth(player.getName());
+	if (player == null)
+	    return false;
+	return getSelection(player).hasPlacedBoth();
     }
 
+    @Deprecated
     public boolean hasPlacedBoth(String player) {
-	return playerLoc1.containsKey(player) && playerLoc2.containsKey(player);
+	return hasPlacedBoth(Bukkit.getPlayer(player));
     }
 
     public void showSelectionInfoInActionBar(Player player) {
@@ -150,8 +397,7 @@ public class SelectionManager {
 	if (!plugin.getConfigManager().useActionBarOnSelection())
 	    return;
 
-	String pname = player.getName();
-	CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
+	CuboidArea cuboidArea = this.getSelectionCuboid(player);
 
 	String Message = plugin.msg(lm.Select_TotalSize, cuboidArea.getSize());
 
@@ -165,10 +411,9 @@ public class SelectionManager {
     }
 
     public void showSelectionInfo(Player player) {
-	String pname = player.getName();
-	if (hasPlacedBoth(pname)) {
+	if (hasPlacedBoth(player)) {
 	    plugin.msg(player, lm.General_Separator);
-	    CuboidArea cuboidArea = new CuboidArea(getPlayerLoc1(pname), getPlayerLoc2(pname));
+	    CuboidArea cuboidArea = this.getSelectionCuboid(player);
 	    plugin.msg(player, lm.Select_TotalSize, cuboidArea.getSize());
 
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
@@ -190,12 +435,13 @@ public class SelectionManager {
     public void showBounds(final Player player, final Visualizer v) {
 	if (!plugin.getConfigManager().useVisualizer())
 	    return;
-	Visualizer tv = vMap.get(player.getName());
+	Visualizer tv = vMap.get(player.getUniqueId());
 	if (tv != null) {
 	    tv.cancelAll();
 	}
-	vMap.put(player.getName(), v);
-	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+	vMap.put(player.getUniqueId(), v);
+	v.setBaseShedId(Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
 		if (!v.getAreas().isEmpty())
@@ -204,7 +450,7 @@ public class SelectionManager {
 		    MakeBorders(player, true);
 		return;
 	    }
-	});
+	}).getTaskId());
     }
 
     public List<Location> getLocations(Location lowLoc, Location loc, Double TX, Double TY, Double TZ, Double Range, boolean StartFromZero) {
@@ -342,7 +588,7 @@ public class SelectionManager {
 
     public boolean MakeBorders(final Player player, final boolean error) {
 
-	final Visualizer v = vMap.get(player.getName());
+	final Visualizer v = vMap.get(player.getUniqueId());
 
 	if (v == null)
 	    return false;
@@ -358,7 +604,7 @@ public class SelectionManager {
 	int Range = plugin.getConfigManager().getVisualizerRange();
 
 	final List<Location> locList = new ArrayList<Location>();
-	final List<Location> locList2 = new ArrayList<Location>();
+	final List<Location> errorLocList = new ArrayList<Location>();
 
 	final boolean same = v.isSameLoc();
 	if (!same) {
@@ -418,26 +664,25 @@ public class SelectionManager {
 		}
 
 		locList.addAll(GetLocationsWallsByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range));
-		locList2.addAll(GetLocationsCornersByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range));
+		errorLocList.addAll(GetLocationsCornersByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range));
 	    }
 	    v.setLoc(player.getLocation());
 	} else {
 	    if (error) {
 		locList.addAll(v.getErrorLocations());
-		locList2.addAll(v.getErrorLocations2());
+		errorLocList.addAll(v.getErrorLocations2());
 	    } else {
 		locList.addAll(v.getLocations());
-		locList2.addAll(v.getLocations2());
+		errorLocList.addAll(v.getLocations2());
 	    }
 	}
 
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @SuppressWarnings("deprecation")
 	    @Override
 	    public void run() {
 
 		int size = locList.size();
-		int errorSize = locList2.size();
+		int errorSize = errorLocList.size();
 
 		int timesMore = 1;
 		int errorTimesMore = 1;
@@ -453,68 +698,8 @@ public class SelectionManager {
 		List<Location> trimed2 = new ArrayList<Location>();
 
 		try {
-		    boolean spigot = plugin.isSpigot();
-
-		    if (spigot) {
-			if (!error)
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed.add(l);
-			    }
-
-			if (!error)
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed2.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed2.add(l);
-			    }
-		    } else {
-			if (!error)
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				plugin.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				plugin.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed.add(l);
-			    }
-			if (!error)
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				plugin.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed2.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				plugin.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed2.add(l);
-			    }
-		    }
+		    showParticles(locList, player, timesMore, same, trimed, error, true);
+		    showParticles(errorLocList, player, errorTimesMore, same, trimed2, error, false);
 		} catch (Exception e) {
 		    return;
 		}
@@ -554,10 +739,41 @@ public class SelectionManager {
 	    v.setErrorId(scid);
 
 	return true;
+
+    }
+
+    private void showParticles(List<Location> locList, Player player, int timesMore, boolean sameLocation, List<Location> trimed, boolean error, boolean sides) {
+	for (int i = 0; i < locList.size(); i += timesMore) {
+	    Location l = locList.get(i);
+	    if (plugin.isSpigot()) {
+		Effect effect = null;
+		if (sides) {
+		    effect = error ? plugin.getConfigManager().getOverlapSpigotSides() : plugin.getConfigManager().getSelectedSpigotSides();
+		} else {
+		    effect = error ? plugin.getConfigManager().getOverlapSpigotFrame() : plugin.getConfigManager().getSelectedSpigotFrame();
+		}
+		player.spigot().playEffect(l, effect, 0, 0, 0, 0, 0, 0, 1, 128);
+	    } else {
+		if (error) {
+		    if (sides)
+			plugin.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
+		    else
+			plugin.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
+		} else {
+		    if (sides)
+			plugin.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
+		    else
+			plugin.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
+		}
+	    }
+
+	    if (!sameLocation)
+		trimed.add(l);
+	}
     }
 
     public void vert(Player player, boolean resadmin) {
-	if (hasPlacedBoth(player.getName())) {
+	if (hasPlacedBoth(player)) {
 	    this.sky(player, resadmin);
 	    this.bedrock(player, resadmin);
 	} else {
@@ -565,105 +781,36 @@ public class SelectionManager {
 	}
     }
 
-    public void qsky(Player player) {
-	int y1 = playerLoc1.get(player.getName()).getBlockY();
-	int y2 = playerLoc2.get(player.getName()).getBlockY();
-	int newy = player.getLocation().getWorld().getMaxHeight() - 1;
-	if (y1 > y2)
-	    playerLoc1.get(player.getName()).setY(newy);
-	else
-	    playerLoc2.get(player.getName()).setY(newy);
-    }
-
-    public void qbedrock(Player player) {
-	int y1 = playerLoc1.get(player.getName()).getBlockY();
-	int y2 = playerLoc2.get(player.getName()).getBlockY();
-	if (y1 < y2) {
-	    int newy = MIN_HEIGHT;
-	    playerLoc1.get(player.getName()).setY(newy);
-	} else {
-	    int newy = MIN_HEIGHT;
-	    playerLoc2.get(player.getName()).setY(newy);
-	}
-    }
+//    @Deprecated
+//    public void qsky(Player player) {
+//	Selection selection = this.getSelection(player);
+//	selection.shadowSky();
+//    }
+//
+//    @Deprecated
+//    public void qbedrock(Player player) {
+//	Selection selection = this.getSelection(player);
+//	selection.shadowBedrock();
+//    }
 
     public void sky(Player player, boolean resadmin) {
-	if (hasPlacedBoth(player.getName())) {
-	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
-	    PermissionGroup group = rPlayer.getGroup();
-	    int y1 = playerLoc1.get(player.getName()).getBlockY();
-	    int y2 = playerLoc2.get(player.getName()).getBlockY();
-	    int newy = player.getLocation().getWorld().getMaxHeight() - 1;
-	    if (y1 > y2) {
-		if (!resadmin) {
-		    if (group.getMaxHeight() < newy)
-			newy = group.getMaxHeight();
-		    if (newy - y2 > (group.getMaxY() - 1))
-			newy = y2 + (group.getMaxY() - 1);
-		}
-		playerLoc1.get(player.getName()).setY(newy);
-	    } else {
-		if (!resadmin) {
-		    if (group.getMaxHeight() < newy)
-			newy = group.getMaxHeight();
-		    if (newy - y1 > (group.getMaxY() - 1))
-			newy = y1 + (group.getMaxY() - 1);
-		}
-		playerLoc2.get(player.getName()).setY(newy);
-	    }
-	    plugin.msg(player, lm.Select_Sky);
-	} else {
-	    plugin.msg(player, lm.Select_Points);
-	}
+	Selection selection = this.getSelection(player);
+	selection.sky(resadmin);
     }
 
     public void bedrock(Player player, boolean resadmin) {
-	if (hasPlacedBoth(player.getName())) {
-	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
-	    PermissionGroup group = rPlayer.getGroup();
-	    int y1 = playerLoc1.get(player.getName()).getBlockY();
-	    int y2 = playerLoc2.get(player.getName()).getBlockY();
-	    if (y1 < y2) {
-		int newy = MIN_HEIGHT;
-		if (!resadmin) {
-		    if (newy < group.getMinHeight())
-			newy = group.getMinHeight();
-		    if (y2 - newy > (group.getMaxY() - 1))
-			newy = y2 - (group.getMaxY() - 1);
-		}
-		playerLoc1.get(player.getName()).setY(newy);
-	    } else {
-		int newy = MIN_HEIGHT;
-		if (!resadmin) {
-		    if (newy < group.getMinHeight())
-			newy = group.getMinHeight();
-		    if (y1 - newy > (group.getMaxY() - 1))
-			newy = y1 - (group.getMaxY() - 1);
-		}
-		playerLoc2.get(player.getName()).setY(newy);
-	    }
-	    plugin.msg(player, lm.Select_Bedrock);
-	} else {
-	    plugin.msg(player, lm.Select_Points);
-	}
+	Selection selection = this.getSelection(player);
+	selection.bedrock(resadmin);
     }
 
     public void clearSelection(Player player) {
-	playerLoc1.remove(player.getName());
-	playerLoc2.remove(player.getName());
+	selections.remove(player.getUniqueId());
     }
 
+    @Deprecated
     public void selectChunk(Player player) {
-	Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
-	int xcoord = chunk.getX() * 16;
-	int zcoord = chunk.getZ() * 16;
-	int ycoord = MIN_HEIGHT;
-	int xmax = xcoord + 15;
-	int zmax = zcoord + 15;
-	int ymax = player.getLocation().getWorld().getMaxHeight() - 1;
-	playerLoc1.put(player.getName(), new Location(player.getWorld(), xcoord, ycoord, zcoord));
-	playerLoc2.put(player.getName(), new Location(player.getWorld(), xmax, ymax, zmax));
-	plugin.msg(player, lm.Select_Success);
+	Selection selection = this.getSelection(player);
+	selection.selectChunk();
     }
 
     public boolean worldEdit(Player player) {
@@ -680,14 +827,33 @@ public class SelectionManager {
 	Location myloc = player.getLocation();
 	Location loc1 = new Location(myloc.getWorld(), myloc.getBlockX() + xsize, myloc.getBlockY() + ysize, myloc.getBlockZ() + zsize);
 	Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
+
+	CuboidArea area = new CuboidArea(loc1, loc2);
+
+//	area.getlo
+
 	placeLoc1(player, loc1, false);
-	placeLoc2(player, loc2, true);
+	placeLoc2(player, loc2, false);
+
+	Selection selection = this.getSelection(player);
+
+	if (selection.getMaxYAllowed() < area.getHighLoc().getBlockY())
+	    selection.getBaseLoc2().setY(selection.getMaxYAllowed());
+
+	if (selection.getMinYAllowed() > area.getLowLoc().getBlockY())
+	    selection.getBaseLoc1().setY(selection.getMinYAllowed());
+
+//	selection.updateBaseArea();
+//	selection.updateShadowLocations();
+//	selection.updateShadowArea();
+
+	this.afterSelectionUpdate(player);
 	plugin.msg(player, lm.Select_Success);
 	showSelectionInfo(player);
     }
 
     public void modify(Player player, boolean shift, double amount) {
-	if (!hasPlacedBoth(player.getName())) {
+	if (!hasPlacedBoth(player)) {
 	    plugin.msg(player, lm.Select_Points);
 	    return;
 	}
@@ -696,7 +862,7 @@ public class SelectionManager {
 	    plugin.msg(player, lm.Invalid_Direction);
 	    return;
 	}
-	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
+	CuboidArea area = this.getSelectionCuboid(player);
 	switch (d) {
 	case DOWN:
 	    double oldy = area.getLowLoc().getBlockY();
@@ -789,7 +955,7 @@ public class SelectionManager {
     }
 
     public boolean contract(Player player, double amount, @SuppressWarnings("unused") boolean resadmin) {
-	if (!hasPlacedBoth(player.getName())) {
+	if (!hasPlacedBoth(player)) {
 	    plugin.msg(player, lm.Select_Points);
 	    return false;
 	}
@@ -798,7 +964,7 @@ public class SelectionManager {
 	    plugin.msg(player, lm.Invalid_Direction);
 	    return false;
 	}
-	CuboidArea area = new CuboidArea(playerLoc1.get(player.getName()), playerLoc2.get(player.getName()));
+	CuboidArea area = this.getSelectionCuboid(player);
 	switch (d) {
 	case UP:
 	    double oldy = area.getHighLoc().getBlockY();
