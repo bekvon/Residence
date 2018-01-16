@@ -556,8 +556,8 @@ public class ResidenceEntityListener implements Listener {
 	if (plugin.isDisabledWorldListener(ent.getWorld()))
 	    return;
 
-	if (event.getRemover() instanceof Player)
-	    return;
+//	if (event.getRemover() instanceof Player)
+//	    return;
 
 	FlagPermissions perms = plugin.getPermsByLoc(ent.getLocation());
 	if (!perms.has(Flags.destroy, perms.has(Flags.build, true))) {
@@ -727,7 +727,8 @@ public class ResidenceEntityListener implements Listener {
 	if (cancel) {
 	    event.setCancelled(true);
 	    if (ent != null && remove) {
-		ent.remove();
+		if (!event.getEntityType().equals(EntityType.WITHER))
+		    ent.remove();
 	    }
 	    return;
 	}
@@ -942,16 +943,16 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityCatchingFire(EntityDamageByEntityEvent event) {	
+    public void onEntityCatchingFire(EntityDamageByEntityEvent event) {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
 	if (!(event.getDamager() instanceof Arrow))
 	    return;
-		
+
 	if (event.getEntity() == null || !(event.getEntity() instanceof Player))
 	    return;
-	
+
 	Arrow arrow = (Arrow) event.getDamager();
 
 	FlagPermissions perms = plugin.getPermsByLoc(arrow.getLocation());
