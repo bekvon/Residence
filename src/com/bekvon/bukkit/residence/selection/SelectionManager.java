@@ -26,6 +26,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SelectionManager {
     protected Map<UUID, Selection> selections;
@@ -687,31 +688,30 @@ public class SelectionManager {
 		int timesMore = 1;
 		int errorTimesMore = 1;
 
-		if (size > plugin.getConfigManager().getVisualizerSidesCap() && !same) {
+		if (size > plugin.getConfigManager().getVisualizerSidesCap()) {
 		    timesMore = size / plugin.getConfigManager().getVisualizerSidesCap() + 1;
 		}
-		if (errorSize > plugin.getConfigManager().getVisualizerFrameCap() && !same) {
+		if (errorSize > plugin.getConfigManager().getVisualizerFrameCap()) {
 		    errorTimesMore = errorSize / plugin.getConfigManager().getVisualizerFrameCap() + 1;
 		}
 
-		List<Location> trimed = new ArrayList<Location>();
-		List<Location> trimed2 = new ArrayList<Location>();
+		v.addCurrentSkip();
+		if (v.getCurrentSkip() > plugin.getConfigManager().getVisualizerSkipBy())
+		    v.setCurrentSkip(1);
 
 		try {
-		    showParticles(locList, player, timesMore, same, trimed, error, true);
-		    showParticles(errorLocList, player, errorTimesMore, same, trimed2, error, false);
+		    showParticles(locList, player, timesMore, error, true, v.getCurrentSkip());
+		    showParticles(errorLocList, player, errorTimesMore, error, false, v.getCurrentSkip());
 		} catch (Exception e) {
 		    return;
 		}
 
-		if (!same) {
-		    if (error) {
-			v.setErrorLocations(trimed);
-			v.setErrorLocations2(trimed2);
-		    } else {
-			v.setLocations(trimed);
-			v.setLocations2(trimed2);
-		    }
+		if (error) {
+		    v.setErrorLocations(locList);
+		    v.setErrorLocations2(errorLocList);
+		} else {
+		    v.setLocations(locList);
+		    v.setLocations2(errorLocList);
 		}
 
 		return;
@@ -742,8 +742,18 @@ public class SelectionManager {
 
     }
 
-    private void showParticles(List<Location> locList, Player player, int timesMore, boolean sameLocation, List<Location> trimed, boolean error, boolean sides) {
+    private void showParticles(List<Location> locList, Player player, int timesMore, boolean error, boolean sides, int currentSkipBy) {
+	int s = 0;
+
 	for (int i = 0; i < locList.size(); i += timesMore) {
+	    s++;
+
+	    if (s > plugin.getConfigManager().getVisualizerSkipBy())
+		s = 1;
+
+	    if (s != currentSkipBy)
+		continue;
+
 	    Location l = locList.get(i);
 	    if (plugin.isSpigot()) {
 		Effect effect = null;
@@ -767,8 +777,8 @@ public class SelectionManager {
 		}
 	    }
 
-	    if (!sameLocation)
-		trimed.add(l);
+//	    if (!sameLocation)
+//		trimed.add(l);
 	}
     }
 

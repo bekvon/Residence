@@ -112,6 +112,7 @@ public class ConfigManager {
     protected boolean TeleportTitleMessage;
     protected int VisualizerRowSpacing;
     protected int VisualizerCollumnSpacing;
+    protected int VisualizerSkipBy;
     private int VisualizerFrameCap;
     private int VisualizerSidesCap;
     protected boolean flagsInherit;
@@ -899,8 +900,8 @@ public class ConfigManager {
 	VisualizerRange = c.get("Global.Visualizer.Range", 16);
 	c.getW().addComment("Global.Visualizer.ShowFor", "For how long in miliseconds (5000 = 5sec) to show particle effects");
 	VisualizerShowFor = c.get("Global.Visualizer.ShowFor", 5000);
-	c.getW().addComment("Global.Visualizer.updateInterval", "How often in miliseconds update particles for player");
-	VisualizerUpdateInterval = c.get("Global.Visualizer.updateInterval", 20);
+	c.getW().addComment("Global.Visualizer.updateInterval", "How often in ticks to update particles for player");
+	VisualizerUpdateInterval = c.get("Global.Visualizer.updateInterval", 5);
 	c.getW().addComment("Global.Visualizer.RowSpacing", "Spacing in blocks between particle effects for rows");
 	VisualizerRowSpacing = c.get("Global.Visualizer.RowSpacing", 2);
 	if (VisualizerRowSpacing < 1)
@@ -910,8 +911,16 @@ public class ConfigManager {
 	if (VisualizerCollumnSpacing < 1)
 	    VisualizerCollumnSpacing = 1;
 
+	c.getW().addComment("Global.Visualizer.SkipBy",
+	    "Defines by how many particles we need to skip",
+	    "This will create moving particle effect and will improve overall look of selection",
+	    "By increasing this number, you can decrease update interval");
+	VisualizerSkipBy = c.get("Global.Visualizer.SkipBy", 5);
+	if (VisualizerSkipBy < 1)
+	    VisualizerSkipBy = 1;
+
 	c.getW().addComment("Global.Visualizer.FrameCap", "Maximum amount of frame particles to show for one player");
-	VisualizerFrameCap = c.get("Global.Visualizer.FrameCap", 2000);
+	VisualizerFrameCap = c.get("Global.Visualizer.FrameCap", 500);
 	if (VisualizerFrameCap < 1)
 	    VisualizerFrameCap = 1;
 
@@ -1247,6 +1256,10 @@ public class ConfigManager {
 
     public int getVisualizerCollumnSpacing() {
 	return VisualizerCollumnSpacing;
+    }
+
+    public int getVisualizerSkipBy() {
+	return VisualizerSkipBy;
     }
 
     public int getVisualizerUpdateInterval() {

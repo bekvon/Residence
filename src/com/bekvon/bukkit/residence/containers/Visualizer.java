@@ -21,6 +21,7 @@ public class Visualizer {
     private int baseShedId = -1;
     private boolean once = false;
     private int starting = 0;
+    private int currentSkip = 0;
 
     private List<Location> locations = new ArrayList<Location>();
     private List<Location> errorLocations = new ArrayList<Location>();
@@ -195,5 +196,17 @@ public class Visualizer {
 
     public void setBaseShedId(int baseShedId) {
 	this.baseShedId = baseShedId;
+    }
+
+    public int getCurrentSkip() {
+	return currentSkip;
+    }
+
+    public void setCurrentSkip(int currentSkip) {
+	this.currentSkip = currentSkip;
+    }
+
+    public void addCurrentSkip() {
+	this.currentSkip++;
     }
 }
