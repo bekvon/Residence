@@ -46,6 +46,7 @@ public class select implements cmd {
 	    plugin.msg(player, lm.Select_Disabled);
 	    return true;
 	}
+	
 	if (args.length == 2) {
 	    if (args[1].equals("size") || args[1].equals("cost")) {
 		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
@@ -188,8 +189,8 @@ public class select implements cmd {
 	    plugin.getSelectionManager().selectBySize(player, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 	    return true;
 	} catch (Exception ex) {
-	    plugin.msg(player, lm.Select_Fail);
-	    return true;
+//	    plugin.msg(player, lm.Select_Fail);
+	    return false;
 	}
     }
 
