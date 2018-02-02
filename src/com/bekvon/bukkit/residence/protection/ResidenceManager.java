@@ -64,6 +64,10 @@ public class ResidenceManager implements ResidenceInterface {
 	return false;
     }
 
+    public ClaimedResidence getByLoc(Player player) {
+	return getByLoc(player.getLocation());
+    }
+
     @Override
     public ClaimedResidence getByLoc(Location loc) {
 	if (loc == null)
@@ -550,7 +554,7 @@ public class ResidenceManager implements ResidenceInterface {
 	plugin.getRentManager().removeRentable(name);
 	plugin.getTransactionManager().removeFromSale(name);
 
-	if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {	    	    
+	if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {
 	    double chargeamount = Math.ceil(res.getTotalSize() * res.getBlockSellPrice());
 	    plugin.getTransactionManager().giveEconomyMoney(player, chargeamount);
 	}

@@ -1181,23 +1181,25 @@ public class ResidencePlayerListener implements Listener {
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
-	    for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
-		if (mat != checkMat.getKey())
-		    continue;
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+	    if (res == null || !res.isOwner(player))
+		for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
+		    if (mat != checkMat.getKey())
+			continue;
 
-		if (perms.playerHas(player, checkMat.getValue(), hasuse))
-		    continue;
+		    if (perms.playerHas(player, checkMat.getValue(), hasuse))
+			continue;
 
-		if (hasuse || checkMat.getValue().equals(Flags.container)) {
+		    if (hasuse || checkMat.getValue().equals(Flags.container)) {
+			event.setCancelled(true);
+			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			return;
+		    }
 		    event.setCancelled(true);
-		    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+		    plugin.msg(player, lm.Flag_Deny, Flags.use);
 		    return;
 		}
-		event.setCancelled(true);
-		plugin.msg(player, lm.Flag_Deny, Flags.use);
-		return;
 
-	    }
 	    if (plugin.getConfigManager().getCustomContainers().contains(blockId)) {
 		if (!perms.playerHas(player, Flags.container, hasuse)) {
 		    event.setCancelled(true);
