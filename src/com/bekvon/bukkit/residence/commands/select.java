@@ -67,16 +67,15 @@ public class select implements cmd {
 		}
 	    } else if (args[1].equals("vert")) {
 		plugin.getSelectionManager().vert(player, resadmin);
-
-		plugin.getSelectionManager().afterSelectionUpdate(player, false);
+		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
 	    } else if (args[1].equals("sky")) {
 		plugin.getSelectionManager().sky(player, resadmin);
-		plugin.getSelectionManager().afterSelectionUpdate(player, false);
+		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
 	    } else if (args[1].equals("bedrock")) {
 		plugin.getSelectionManager().bedrock(player, resadmin);
-		plugin.getSelectionManager().afterSelectionUpdate(player, false);
+		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
 	    } else if (args[1].equals("coords")) {
 		plugin.msg(player, lm.General_Separator);
@@ -88,15 +87,14 @@ public class select implements cmd {
 		Location playerLoc2 = plugin.getSelectionManager().getPlayerLoc2(player);
 		if (playerLoc2 != null) {
 		    plugin.msg(player, lm.Select_Secondary, plugin.msg(lm.General_CoordsBottom, playerLoc2.getBlockX(),
-			playerLoc2
-			    .getBlockY(), playerLoc2.getBlockZ()));
+			playerLoc2.getBlockY(), playerLoc2.getBlockZ()));
 		}
 		plugin.msg(player, lm.General_Separator);
 		plugin.getSelectionManager().afterSelectionUpdate(player, false);
 		return true;
 	    } else if (args[1].equals("chunk")) {
 		plugin.getSelectionManager().selectChunk(player);
-		plugin.getSelectionManager().afterSelectionUpdate(player, false);
+		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
 	    } else if (args[1].equals("worldedit")) {
 		if (plugin.getSelectionManager().worldEdit(player)) {

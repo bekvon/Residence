@@ -174,7 +174,10 @@ public class SelectionManager {
 	    if (hasPlacedBoth()) {
 		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(this.getPlayer());
 		PermissionGroup group = rPlayer.getGroup();
-		int y1 = this.getBaseLoc1().getBlockY();
+
+		CuboidArea base = this.getBaseArea();
+
+		int y1 = base.getLowLoc().getBlockY();
 
 		int newy = this.getMaxYAllowed();
 
@@ -184,7 +187,10 @@ public class SelectionManager {
 		    if (newy - y1 > (group.getMaxY() - 1))
 			newy = y1 + (group.getMaxY() - 1);
 		}
-		this.getBaseLoc2().setY(newy);
+
+		loc1 = base.getLowLoc();
+		loc2 = base.getHighLoc();
+		loc2.setY(newy);
 
 		plugin.msg(player, lm.Select_Sky);
 	    } else {
@@ -197,7 +203,9 @@ public class SelectionManager {
 		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(this.getPlayer());
 		PermissionGroup group = rPlayer.getGroup();
 
-		int y2 = this.getBaseLoc2().getBlockY();
+		CuboidArea base = this.getBaseArea();
+
+		int y2 = base.getHighLoc().getBlockY();
 
 		int newy = this.getMinYAllowed();
 		if (!resadmin) {
@@ -206,7 +214,11 @@ public class SelectionManager {
 		    if (y2 - newy > (group.getMaxY() - 1))
 			newy = y2 - (group.getMaxY() - 1);
 		}
-		this.getBaseLoc1().setY(newy);
+
+		loc1 = base.getLowLoc();
+		loc2 = base.getHighLoc();
+		loc1.setY(newy);
+
 		plugin.msg(player, lm.Select_Bedrock);
 	    } else {
 		plugin.msg(player, lm.Select_Points);
@@ -219,8 +231,8 @@ public class SelectionManager {
 	    int zcoord = chunk.getZ() * 16;
 	    int xmax = xcoord + 15;
 	    int zmax = zcoord + 15;
-	    this.setBaseLoc1(new Location(player.getWorld(), xcoord, player.getLocation().getBlockY(), zcoord));
-	    this.setBaseLoc2(new Location(player.getWorld(), xmax, player.getLocation().getBlockY(), zmax));
+	    this.setBaseLoc1(new Location(player.getWorld(), xcoord, this.getMinYAllowed(), zcoord));
+	    this.setBaseLoc2(new Location(player.getWorld(), xmax, this.getMaxYAllowed(), zmax));
 	    plugin.msg(player, lm.Select_Success);
 	}
 

@@ -30,8 +30,7 @@ public class create implements cmd {
 		plugin.getSelectionManager().worldEdit(player);
 	    }
 	}
-	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
-
+	if (plugin.getSelectionManager().hasPlacedBoth(player)) {
 	    plugin.getResidenceManager().addResidence(player, args[1], plugin.getSelectionManager().getPlayerLoc1(player), plugin
 		.getSelectionManager().getPlayerLoc2(player), resadmin);
 	    return true;
