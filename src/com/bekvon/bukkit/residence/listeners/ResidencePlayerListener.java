@@ -1195,8 +1195,11 @@ public class ResidencePlayerListener implements Listener {
 			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
 			return;
 		    }
-		    event.setCancelled(true);
-		    plugin.msg(player, lm.Flag_Deny, Flags.use);
+
+		    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			event.setCancelled(true);
+			plugin.msg(player, lm.Flag_Deny, Flags.use);
+		    }
 		    return;
 		}
 
