@@ -37,14 +37,20 @@ public class FlagUtil {
 	    if (!c.getC().contains("Global.FlagGui." + oneFlag))
 		continue;
 
-	    if (!c.getC().contains("Global.FlagGui." + oneFlag + ".Id"))
-		continue;
+	    int id = 35;
+	    int data = 0;
 
-	    if (!c.getC().contains("Global.FlagGui." + oneFlag + ".Data"))
-		continue;
+	    String value = c.get("Global.FlagGui." + oneFlag, "35-0");
 
-	    int id = c.get("Global.FlagGui." + oneFlag + ".Id", 35);
-	    int data = c.get("Global.FlagGui." + oneFlag + ".Data", 0);
+	    try {
+		if (value.contains("-")) {
+		    id = Integer.parseInt(value.split("-")[0]);
+		    data = Integer.parseInt(value.split("-")[1]);
+		} else
+		    id = Integer.parseInt(value);
+	    } catch (Exception e) {
+	    }
+	    
 
 	    @SuppressWarnings("deprecation")
 	    Material Mat = Material.getMaterial(id);
@@ -53,6 +59,8 @@ public class FlagUtil {
 	    ItemStack item = new ItemStack(Mat, 1, (short) data);
 	    flagData.addFlagButton(oneFlag.toLowerCase(), item);
 	}
+	
+	
     }
 
     public FlagData getFlagData() {

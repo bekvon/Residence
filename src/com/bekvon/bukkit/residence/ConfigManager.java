@@ -297,6 +297,12 @@ public class ConfigManager {
 	File f = new File(plugin.getDataFolder(), "flags.yml");
 	YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 
+//	if (!conf.isConfigurationSection("Global.CompleteDisable"))
+//	    conf.crea.createSection("Global.CompleteDisable");
+
+	if (!conf.isList("Global.TotalFlagDisabling"))
+	    conf.set("Global.TotalFlagDisabling", Arrays.asList("Completely", "Disabled", "Particular", "Flags"));
+
 	for (Flags fl : Flags.values()) {
 	    if (conf.isBoolean("Global.FlagPermission." + fl.getName()))
 		continue;
@@ -310,8 +316,19 @@ public class ConfigManager {
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
 
 	for (Flags fl : Flags.values()) {
-	    guiSection.set(fl.getName() + ".Id", fl.getId());
-	    guiSection.set(fl.getName() + ".Data", fl.getData());
+	    if (guiSection.isInt(fl.getName() + ".Id") && guiSection.isInt(fl.getName() + ".Data")) {
+
+		String data = "";
+		if (guiSection.getInt(fl.getName() + ".Data") != 0)
+		    data = "-" + guiSection.getInt(fl.getName() + ".Data");
+
+		guiSection.set(fl.getName(), guiSection.getInt(fl.getName() + ".Id") + data);
+	    } else {
+		String data = "";
+		if (fl.getData() != 0)
+		    data = "-" + guiSection.getInt(fl.getName() + ".Data");
+		guiSection.set(fl.getName(), fl.getId() + data);
+	    }
 	}
 
 	try {
@@ -1135,6 +1152,18 @@ public class ConfigManager {
 
     public void loadFlags() {
 	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
+
+	if (flags.isList("Global.TotalFlagDisabling")) {
+	    List<String> globalDisable = flags.getStringList("Global.TotalFlagDisabling");
+
+	    for (String fl : globalDisable) {
+		Flags flag = Flags.getFlag(fl);
+		if (flag == null)
+		    continue;
+		flag.setGlobalyEnabled(false);
+	    }
+	}
+
 	globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", flags.getConfigurationSection("Global"));
 	globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", flags.getConfigurationSection("Global"));
 	loadGroups();

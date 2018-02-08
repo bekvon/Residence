@@ -837,9 +837,16 @@ public class FlagPermissions {
 	    int i = -1;
 	    int t = 0;
 	    while (it.hasNext()) {
+		Entry<String, Boolean> next = it.next();
+		String fname = next.getKey();
+
+		Flags flag = Flags.getFlag(fname);
+
+		if (flag != null && !flag.isGlobalyEnabled())
+		    continue;
+
 		i++;
 		t++;
-		Entry<String, Boolean> next = it.next();
 
 		if (totalShow > 0 && t > totalShow) {
 		    break;
@@ -851,12 +858,12 @@ public class FlagPermissions {
 		}
 
 		if (next.getValue()) {
-		    sbuild.append("&2").append("+").append(next.getKey());
+		    sbuild.append("&2").append("+").append(flag);
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append("&3").append("-").append(next.getKey());
+		    sbuild.append("&3").append("-").append(flag);
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -898,6 +905,13 @@ public class FlagPermissions {
 	    if (!residence && !getposibleFlags().contains(one.getKey()))
 		continue;
 
+	    String fname = one.getKey();
+
+	    Flags flag = Flags.getFlag(fname);
+
+	    if (flag != null && !flag.isGlobalyEnabled())
+		continue;
+	    
 	    flags.add(one.getKey());
 	}
 

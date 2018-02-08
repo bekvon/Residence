@@ -125,6 +125,10 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler
     public void onJump(PlayerMoveEvent event) {
+
+	if (!Flags.jump3.isGlobalyEnabled() && !Flags.jump2.isGlobalyEnabled())
+	    return;
+
 	Player player = event.getPlayer();
 	if (player.isFlying())
 	    return;
@@ -133,15 +137,17 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	FlagPermissions perms = plugin.getPermsByLoc(player.getLocation());
-	if (perms.has(Flags.jump2, FlagCombo.OnlyTrue))
+	if (Flags.jump2.isGlobalyEnabled() && perms.has(Flags.jump2, FlagCombo.OnlyTrue))
 	    player.setVelocity(player.getVelocity().add(player.getVelocity().multiply(0.3)));
-	else if (perms.has(Flags.jump3, FlagCombo.OnlyTrue))
+	else if (Flags.jump3.isGlobalyEnabled() && perms.has(Flags.jump3, FlagCombo.OnlyTrue))
 	    player.setVelocity(player.getVelocity().add(player.getVelocity().multiply(0.6)));
 
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
+	if (!Flags.itempickup.isGlobalyEnabled())
+	    return;
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getItem().getLocation());
 	if (res == null)
 	    return;
@@ -155,6 +161,8 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+	if (!Flags.itemdrop.isGlobalyEnabled())
+	    return;
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getPlayer().getLocation());
 	if (res == null)
 	    return;
@@ -290,6 +298,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onFishingRodUse(PlayerFishEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.hook.isGlobalyEnabled())
+	    return;
 	if (event == null)
 	    return;
 	// disabling event on world
@@ -532,6 +543,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.command.isGlobalyEnabled())
+	    return;
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -820,6 +834,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.nofly.isGlobalyEnabled())
+	    return;
 	Player player = event.getPlayer();
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
@@ -1276,6 +1293,9 @@ public class ResidencePlayerListener implements Listener {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
+	// Disabling listener if flag disabled globally
+	if (!Flags.container.isGlobalyEnabled())
+	    return;
 	Player player = event.getPlayer();
 	if (plugin.isResAdminOn(player))
 	    return;
@@ -1296,6 +1316,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractWithRidable(PlayerInteractEntityEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.riding.isGlobalyEnabled())
+	    return;
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -1319,6 +1342,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractWithMinecartStorage(PlayerInteractEntityEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.container.isGlobalyEnabled())
+	    return;
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -1342,6 +1368,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractWithMinecart(PlayerInteractEntityEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.riding.isGlobalyEnabled())
+	    return;
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -1365,6 +1394,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDyeSheep(PlayerInteractEntityEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.dye.isGlobalyEnabled())
+	    return;
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -1388,6 +1420,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.shear.isGlobalyEnabled())
+	    return;
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -1413,6 +1448,9 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerItemFrameInteract(PlayerInteractEntityEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.container.isGlobalyEnabled())
+	    return;
 
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
@@ -1853,8 +1891,9 @@ public class ResidencePlayerListener implements Listener {
 	    } else {
 		if (res != null && ResOld.getName().equals(res.getName())) {
 
-		    f: if (player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) && !player.hasPermission(
-			"residence.nofly.bypass")) {
+		    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) && !player
+			.hasPermission(
+			    "residence.nofly.bypass")) {
 			if (res.isOwner(player))
 			    break f;
 			Location lc = player.getLocation();
@@ -1977,7 +2016,7 @@ public class ResidencePlayerListener implements Listener {
 	    }
 
 	    // Preventing fly in residence only when player has move permission
-	    f: if (player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) && !player.hasPermission(
+	    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) && !player.hasPermission(
 		"residence.nofly.bypass")) {
 		if (res.isOwner(player))
 		    break f;
@@ -2148,6 +2187,8 @@ public class ResidencePlayerListener implements Listener {
 
     @SuppressWarnings("deprecation")
     public void doHeals() {
+	if (!Flags.healing.isGlobalyEnabled())
+	    return;
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 		String resname = plugin.getPlayerListener().getCurrentResidenceName(player.getName());
@@ -2172,6 +2213,8 @@ public class ResidencePlayerListener implements Listener {
     }
 
     public void feed() {
+	if (!Flags.feed.isGlobalyEnabled())
+	    return;
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 		String resname = plugin.getPlayerListener().getCurrentResidenceName(player.getName());
@@ -2194,6 +2237,8 @@ public class ResidencePlayerListener implements Listener {
     }
 
     public void DespawnMobs() {
+	if (!Flags.nomobs.isGlobalyEnabled())
+	    return;
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 		String resname = plugin.getPlayerListener().getCurrentResidenceName(player.getName());

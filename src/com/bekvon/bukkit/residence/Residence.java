@@ -437,6 +437,9 @@ public class Residence extends JavaPlugin {
 		    }
 		}
 	    }
+
+	    getConfigManager().UpdateFlagFile();
+	    
 	    FlagUtilManager = new FlagUtil(this);
 	    getFlagUtilManager().load();
 
@@ -505,7 +508,6 @@ public class Residence extends JavaPlugin {
 		getLocaleManager().LoadLang(lang);
 	    }
 
-	    getConfigManager().UpdateFlagFile();
 
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");

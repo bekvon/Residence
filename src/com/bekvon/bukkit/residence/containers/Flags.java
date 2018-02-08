@@ -117,6 +117,7 @@ public enum Flags {
     private FlagMode flagMode;
     private String desc;
     private boolean enabled;
+    private boolean globalyEnabled = true;
 
     public static enum FlagMode {
 	Player, Residence, Both, Group
@@ -155,7 +156,7 @@ public enum Flags {
     }
 
     public boolean isEnabled() {
-	return enabled;
+	return globalyEnabled ? enabled : false;
     }
 
     public void setEnabled(boolean enabled) {
@@ -168,5 +169,13 @@ public enum Flags {
 		return f;
 	}
 	return null;
+    }
+
+    public boolean isGlobalyEnabled() {
+	return globalyEnabled;
+    }
+
+    public void setGlobalyEnabled(boolean globalyEnabled) {
+	this.globalyEnabled = globalyEnabled;
     }
 }

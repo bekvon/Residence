@@ -161,6 +161,14 @@ public class SetFlag {
 	}
 
 	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
+
+	    String fname = one.getKey();
+
+	    Flags flag = Flags.getFlag(fname);
+
+	    if (flag != null && !flag.isGlobalyEnabled())
+		continue;
+
 	    if (!flags.contains(one.getKey()))
 		continue;
 

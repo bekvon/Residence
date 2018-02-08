@@ -372,6 +372,8 @@ public class HelpEntry {
 			break;
 		    case "[flag]":
 			for (Flags one : Flags.values()) {
+			    if (!one.isGlobalyEnabled())
+				continue;
 			    subCommands.add(one.getName());
 			}
 			break;
