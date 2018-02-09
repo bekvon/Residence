@@ -27,6 +27,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.towns.Town;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
 import java.text.DecimalFormat;
@@ -1220,6 +1221,7 @@ public class ClaimedResidence {
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
 	boolean bypassDelay = targetPlayer.hasPermission("residence.tpdelaybypass");
+
 	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass") && !this.isOwner(targetPlayer)) {
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(reqPlayer);
 	    PermissionGroup group = rPlayer.getGroup();
@@ -1309,12 +1311,14 @@ public class ClaimedResidence {
 	plugin.getServ().getPluginManager().callEvent(tpevent);
 	if (!tpevent.isCancelled()) {
 	    targetPlayer.closeInventory();
-	    targetPlayer.teleport(targloc);
-	    if (near)
-		plugin.msg(targetPlayer, lm.Residence_TeleportNear);
-	    else
-		plugin.msg(targetPlayer, lm.General_TeleportSuccess);
+	    boolean teleported = targetPlayer.teleport(targloc);
 
+	    if (teleported) {
+		if (near)
+		    plugin.msg(targetPlayer, lm.Residence_TeleportNear);
+		else
+		    plugin.msg(targetPlayer, lm.General_TeleportSuccess);
+	    }
 	}
     }
 
