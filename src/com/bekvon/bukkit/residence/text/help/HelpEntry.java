@@ -127,7 +127,7 @@ public class HelpEntry {
 	}
 
 	FlagPermissions GlobalFlags = Residence.getInstance().getPermissionManager().getAllFlags();
-
+	
 	Map<String, String> unsortMap = new HashMap<String, String>();
 
 	for (HelpEntry entry : subentrys) {

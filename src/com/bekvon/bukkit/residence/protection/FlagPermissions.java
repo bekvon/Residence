@@ -53,7 +53,10 @@ public class FlagPermissions {
     }
 
     public static enum FlagState {
-	TRUE, FALSE, NEITHER, INVALID
+	TRUE, FALSE, NEITHER, INVALID;
+	public String getName() {
+	    return name().toLowerCase();
+	}
     }
 
     public static void addMaterialToUseFlag(Material mat, Flags flag) {
@@ -911,7 +914,7 @@ public class FlagPermissions {
 
 	    if (flag != null && !flag.isGlobalyEnabled())
 		continue;
-	    
+
 	    flags.add(one.getKey());
 	}
 

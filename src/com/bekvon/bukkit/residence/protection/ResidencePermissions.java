@@ -9,6 +9,7 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.utils.Debug;
 
 import java.util.ArrayList;
@@ -353,11 +354,18 @@ public class ResidencePermissions extends FlagPermissions {
 	return false;
     }
 
+    @Deprecated
     public boolean setFlag(CommandSender sender, String flag, String flagstate, boolean resadmin) {
-	if (validFlagGroups.containsKey(flag))
-	    return this.setFlagGroup(sender, flag, flagstate, resadmin);
+	return setFlag(sender, flag, FlagPermissions.stringToFlagState(flagstate), resadmin);
+    }
 
-	FlagState state = FlagPermissions.stringToFlagState(flagstate);
+    public boolean setFlag(CommandSender sender, String flag, FlagState state, boolean resadmin) {
+	return setFlag(sender, flag, state, resadmin, true);
+    }
+
+    public boolean setFlag(CommandSender sender, String flag, FlagState state, boolean resadmin, boolean inform) {
+	if (validFlagGroups.containsKey(flag))
+	    return this.setFlagGroup(sender, flag, state, resadmin);
 
 	if (Residence.getInstance().getConfigManager().isPvPFlagPrevent()) {
 	    for (String oneFlag : Residence.getInstance().getConfigManager().getProtectedFlagsList()) {
@@ -371,7 +379,8 @@ public class ResidencePermissions extends FlagPermissions {
 			if (!one.getName().equals(this.getOwner()))
 			    size++;
 		    }
-		    Residence.getInstance().msg(sender, lm.Flag_ChangeDeny, flag, size);
+		    if (inform)
+			Residence.getInstance().msg(sender, lm.Flag_ChangeDeny, flag, size);
 		    return false;
 		}
 	    }
@@ -384,7 +393,8 @@ public class ResidencePermissions extends FlagPermissions {
 	    if (fc.isCancelled())
 		return false;
 	    if (super.setFlag(flag, state)) {
-		Residence.getInstance().msg(sender, lm.Flag_Set, flag, this.residence.getName(), flagstate);
+		if (inform)
+		    Residence.getInstance().msg(sender, lm.Flag_Set, flag, this.residence.getName(), state.name());
 		return true;
 	    }
 	}
@@ -646,7 +656,12 @@ public class ResidencePermissions extends FlagPermissions {
 	}
     }
 
+    @Deprecated
     public boolean setFlagGroup(CommandSender sender, String flaggroup, String state, boolean resadmin) {
+	return setFlagGroup(sender, flaggroup, FlagPermissions.stringToFlagState(state), resadmin);
+    }
+
+    public boolean setFlagGroup(CommandSender sender, String flaggroup, FlagState state, boolean resadmin) {
 	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
 	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
