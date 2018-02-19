@@ -549,6 +549,10 @@ public class ResidenceEntityListener implements Listener {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
+
+	if (event.getEntityType().equals(EntityType.THROWN_EXP_BOTTLE))
+	    return;
+
 	if (event.getEntity().getShooter() instanceof Player) {
 	    if (plugin.isResAdminOn((Player) event.getEntity().getShooter()))
 		return;
