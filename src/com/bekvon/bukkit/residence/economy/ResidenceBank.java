@@ -7,6 +7,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 import org.bukkit.entity.Player;
 
@@ -78,7 +79,7 @@ public class ResidenceBank {
 	}
 	if (sender instanceof Player && Residence.getInstance().getEconomyManager().add(sender.getName(), amount) || !(sender instanceof Player)) {
 	    this.subtract(amount);
-	    Residence.getInstance().msg(sender, lm.Bank_Withdraw, String.format("%d", amount));
+	    Residence.getInstance().msg(sender, lm.Bank_Withdraw, String.format("%.2f", amount));
 	}
     }
 

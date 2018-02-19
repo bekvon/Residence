@@ -105,7 +105,7 @@ public enum lm {
     Bank_Name(" &eBank: &6%1"),
     Bank_NoMoney("&cNot enough money in the bank."),
     Bank_Deposit("&eYou deposit &6%1 &einto the residence bank."),
-    Bank_Withdraw("&eYou withdraw &6%1 from the residence bank."),
+    Bank_Withdraw("&eYou withdraw &6%1 &efrom the residence bank."),
 
     Subzone_Rename("&eRenamed subzone &6%1 &eto &6%2"),
     Subzone_Remove("&eSubzone &6%1 &eremoved."),
