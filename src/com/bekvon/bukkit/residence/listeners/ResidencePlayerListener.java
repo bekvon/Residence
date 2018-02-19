@@ -136,6 +136,9 @@ public class ResidencePlayerListener implements Listener {
 
 	if (event.getTo().getY() - event.getFrom().getY() != 0.41999998688697815D)
 	    return;
+	
+	if (player.hasMetadata("NPC"))
+	    return;
 
 	FlagPermissions perms = plugin.getPermsByLoc(player.getLocation());
 	if (Flags.jump2.isGlobalyEnabled() && perms.has(Flags.jump2, FlagCombo.OnlyTrue))
@@ -152,6 +155,8 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getItem().getLocation());
 	if (res == null)
 	    return;
+	if (event.getPlayer().hasMetadata("NPC"))
+	    return;
 	if (!res.getPermissions().playerHas(event.getPlayer(), Flags.itempickup, FlagCombo.OnlyFalse))
 	    return;
 	if (event.getPlayer().hasPermission("residence.flag.itempickup.bypass"))
@@ -166,6 +171,8 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getPlayer().getLocation());
 	if (res == null)
+	    return;
+	if (event.getPlayer().hasMetadata("NPC"))
 	    return;
 	if (!res.getPermissions().playerHas(event.getPlayer(), Flags.itemdrop, FlagCombo.OnlyFalse))
 	    return;
@@ -665,7 +672,8 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Player player = event.getPlayer();
-
+	if (player.hasMetadata("NPC"))
+	    return;
 	Location loc = block.getLocation();
 
 	for (Signs one : plugin.getSignUtil().getSigns().GetAllSigns()) {
@@ -730,7 +738,8 @@ public class ResidencePlayerListener implements Listener {
 	String landName = null;
 
 	Player player = event.getPlayer();
-
+	if (player.hasMetadata("NPC"))
+	    return;
 	ClaimedResidence res = null;
 	if (!event.getLine(1).equalsIgnoreCase("")) {
 
@@ -802,7 +811,8 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Location loc = block.getLocation();
-
+	if (event.getPlayer().hasMetadata("NPC"))
+	    return;
 	for (Signs one : plugin.getSignUtil().getSigns().GetAllSigns()) {
 
 	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
@@ -839,7 +849,8 @@ public class ResidencePlayerListener implements Listener {
 	if (!Flags.nofly.isGlobalyEnabled())
 	    return;
 	Player player = event.getPlayer();
-
+	if (player.hasMetadata("NPC"))
+	    return;
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
 
 	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !plugin.isResAdminOn(player) && !player.hasPermission(
@@ -901,6 +912,8 @@ public class ResidencePlayerListener implements Listener {
 	Location loc = event.getRespawnLocation();
 	Boolean bed = event.isBedSpawn();
 	Player player = event.getPlayer();
+	if (player.hasMetadata("NPC"))
+	    return;
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 	if (res == null) {
 	    return;
@@ -980,6 +993,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Player player = event.getPlayer();
+	if (player.hasMetadata("NPC"))
+	    return;
+	
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	if (relativeBlock.getType() == Material.FIRE) {
 	    boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
