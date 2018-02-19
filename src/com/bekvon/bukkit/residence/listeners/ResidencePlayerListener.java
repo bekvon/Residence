@@ -1021,6 +1021,8 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	Material mat = block.getType();
 	Player player = event.getPlayer();
+	if (player.hasMetadata("NPC"))
+	    return;
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean resadmin = plugin.isResAdminOn(player);
 	if (!resadmin) {
@@ -1063,7 +1065,8 @@ public class ResidencePlayerListener implements Listener {
 	    event.setCancelled(true);
 
 	boolean resadmin = plugin.isResAdminOn(player);
-
+	if (player.hasMetadata("NPC"))
+	    return;
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group
@@ -1119,7 +1122,8 @@ public class ResidencePlayerListener implements Listener {
 
 	if (this.isContainer(block.getType(), block))
 	    return;
-
+	if (player.hasMetadata("NPC"))
+	    return;
 	Location loc = block.getLocation();
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 	if (res != null)
@@ -2116,7 +2120,8 @@ public class ResidencePlayerListener implements Listener {
 
 	if (fromRes != null && toRes != null && fromRes.equals(toRes))
 	    return;
-
+	if (event.getPlayer().hasMetadata("NPC"))
+	    return;
 	ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(fromRes, toRes, event.getPlayer());
 	plugin.getServ().getPluginManager().callEvent(chgEvent);
     }
@@ -2145,7 +2150,8 @@ public class ResidencePlayerListener implements Listener {
 	    res = to;
 	}
 	Player player = event.getPlayer();
-
+	if (player.hasMetadata("NPC"))
+	    return;
 	if (message != null) {
 	    if (plugin.getConfigManager().useTitleMessage()) {
 		plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
