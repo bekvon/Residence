@@ -137,6 +137,7 @@ public class ConfigManager {
     protected String language;
     protected String DefaultWorld;
     protected String DateFormat;
+    protected String DateFormatShort;
     protected String TimeZone;
     protected boolean preventBuildInRent;
     protected boolean PreventSubZoneRemoval;
@@ -766,6 +767,10 @@ public class ConfigManager {
 	c.getW().addComment("Global.DateFormat", "Sets date format when shown in example lease or rent expire date",
 	    "How to use it properly, more information can be found at http://www.tutorialspoint.com/java/java_date_time.htm");
 	DateFormat = c.get("Global.DateFormat", "E yyyy.MM.dd 'at' hh:mm:ss a zzz");
+
+	c.getW().addComment("Global.DateFormatShort", "Sets date format when shown in example lease or rent expire date",
+	    "How to use it properly, more information can be found at http://www.tutorialspoint.com/java/java_date_time.htm");
+	DateFormatShort = c.get("Global.DateFormatShort", "MM.dd hh:mm");
 
 	c.getW().addComment("Global.TimeZone", "Sets time zone for showing date, usefull when server is in different country then main server player base",
 	    "Full list of posible time zones can be found at http://www.mkyong.com/java/java-display-list-of-timezone-with-gmt/");
@@ -1631,6 +1636,10 @@ public class ConfigManager {
 
     public String getDateFormat() {
 	return DateFormat;
+    }
+
+    public String getDateFormatShort() {
+	return DateFormatShort;
     }
 
     public String getTimeZone() {

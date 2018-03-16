@@ -460,16 +460,34 @@ public class ResidenceManager implements ResidenceInterface {
 	    removeResidence(null, name, true);
     }
 
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public void removeResidence(Player player, String name, boolean resadmin) {
-
 	ClaimedResidence res = this.getByName(name);
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return;
 	}
+	removeResidence(player, res, resadmin);
+    }
 
-	name = res.getName();
+    @Deprecated
+    public void removeResidence(Player player, ClaimedResidence res, boolean resadmin) {
+	removeResidence(plugin.getPlayerManager().getResidencePlayer(player), res, resadmin);
+    }
+
+    @SuppressWarnings("deprecation")
+    public void removeResidence(ResidencePlayer rPlayer, ClaimedResidence res, boolean resadmin) {
+
+	Player player = null;
+	if (rPlayer != null)
+	    player = rPlayer.getPlayer();
+
+	if (res == null) {
+	    plugin.msg(player, lm.Invalid_Residence);
+	    return;
+	}
+
+	String name = res.getName();
 
 	if (plugin.getConfigManager().isRentPreventRemoval() && !resadmin) {
 	    ClaimedResidence rented = res.getRentedSubzone();
@@ -556,7 +574,10 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {
 	    double chargeamount = Math.ceil(res.getTotalSize() * res.getBlockSellPrice());
-	    plugin.getTransactionManager().giveEconomyMoney(player, chargeamount);
+	    if (player != null)
+		plugin.getTransactionManager().giveEconomyMoney(player, chargeamount);
+	    else if (rPlayer != null)
+		plugin.getTransactionManager().giveEconomyMoney(rPlayer.getPlayerName(), chargeamount);
 	}
     }
 
@@ -606,9 +627,9 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void removeAllByOwner(String owner) {
-	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(owner);
-	for (String oneRes : list) {
-	    removeResidence(null, oneRes, true);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(owner);
+	for (ClaimedResidence oneRes : rPlayer.getResList()) {
+	    removeResidence(rPlayer, oneRes, true);
 	}
     }
 
