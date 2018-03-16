@@ -18,13 +18,13 @@ import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class PermissionGroup {
-    protected int xmax;
-    protected int ymax;
-    protected int zmax;
+    private int xmax;
+    private int ymax;
+    private int zmax;
 
-    protected int xmin;
-    protected int ymin;
-    protected int zmin;
+    private int xmin;
+    private int ymin;
+    private int zmin;
 
     protected int Subzonexmax;
     protected int Subzoneymax;
@@ -35,8 +35,8 @@ public class PermissionGroup {
     protected int Subzonezmin;
 
     protected int resmax;
-    protected double costperarea;
-    protected double sellperarea = 0;
+    private double costperarea;
+    private double sellperarea = 0;
     protected boolean tpaccess;
     protected int subzonedepth;
     protected int maxSubzones;
@@ -47,8 +47,8 @@ public class PermissionGroup {
     protected boolean messageperms;
     protected String defaultEnterMessage;
     protected String defaultLeaveMessage;
-    protected int maxLeaseTime;
-    protected int leaseGiveTime;
+    private int maxLeaseTime;
+    private int leaseGiveTime;
     protected double renewcostperarea;
     protected boolean canBuy;
     protected boolean canSell;
@@ -107,9 +107,9 @@ public class PermissionGroup {
 	resmax = limits.getInt("Residence.MaxResidences", 0);
 	maxPhysical = limits.getInt("Residence.MaxAreasPerResidence", 2);
 
-	xmax = limits.getInt("Residence.MaxEastWest", 0);
-	xmin = limits.getInt("Residence.MinEastWest", 0);
-	xmin = xmin > xmax ? xmax : xmin;
+	xmax = (limits.getInt("Residence.MaxEastWest", 0));
+	xmin = (limits.getInt("Residence.MinEastWest", 0));
+	xmin = (getXmin() > getXmax() ? getXmax() : getXmin());
 
 	ymax = limits.getInt("Residence.MaxUpDown", 0);
 	ymin = limits.getInt("Residence.MinUpDown", 0);
@@ -127,8 +127,8 @@ public class PermissionGroup {
 
 	subzonedepth = limits.getInt("Residence.SubzoneDepth", 0);
 
-	Subzonexmax = limits.getInt("Residence.SubzoneMaxEastWest", xmax);
-	Subzonexmax = xmax < Subzonexmax ? xmax : Subzonexmax;
+	Subzonexmax = limits.getInt("Residence.SubzoneMaxEastWest", getXmax());
+	Subzonexmax = getXmax() < Subzonexmax ? getXmax() : Subzonexmax;
 	Subzonexmin = limits.getInt("Residence.SubzoneMinEastWest", 0);
 	Subzonexmin = Subzonexmin > Subzonexmax ? Subzonexmax : Subzonexmin;
 
@@ -231,7 +231,7 @@ public class PermissionGroup {
     }
 
     public int getMaxX() {
-	return xmax;
+	return getXmax();
     }
 
     public int getMaxY() {
@@ -243,7 +243,7 @@ public class PermissionGroup {
     }
 
     public int getMinX() {
-	return xmin;
+	return getXmin();
     }
 
     public int getMinY() {
@@ -451,6 +451,38 @@ public class PermissionGroup {
 	    Residence.getInstance().msg(player, lm.Limits_RenewCost, group.renewcostperarea);
 	}
 	Residence.getInstance().msg(player, lm.General_Separator);
+    }
+
+    public double getCostperarea() {
+	return costperarea;
+    }
+
+    public double getSellperarea() {
+	return sellperarea;
+    }
+
+    public int getXmin() {
+	return xmin;
+    }
+
+    public int getXmax() {
+	return xmax;
+    }
+
+    public int getZmin() {
+	return zmin;
+    }
+
+    public int getYmin() {
+	return ymin;
+    }
+
+    public int getYmax() {
+	return ymax;
+    }
+
+    public int getZmax() {
+	return zmax;
     }
 
 }

@@ -200,11 +200,11 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
-	boolean hasContainer = perms.playerHas(player, Flags.container, true);
+
 	if (!hasdestroy && !player.hasPermission("residence.bypass.destroy")) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
-	} else if (!hasContainer && mat == Material.CHEST) {
+	} else if (mat == Material.CHEST && !perms.playerHas(player, Flags.container, true)) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.container);
 	    event.setCancelled(true);
 	}

@@ -22,7 +22,7 @@ public class VersionChecker {
 	version = getCurrent();
     }
 
-    private Version version = Version.v1_11_R1;
+    private Version version = Version.v1_12_R1;
 
     public Version getVersion() {
 	return version;

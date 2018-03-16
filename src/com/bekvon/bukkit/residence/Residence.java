@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -29,6 +31,7 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -43,6 +46,17 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
+import com.bekvon.bukkit.residence.Placeholders.Placeholder;
+import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;
+import com.bekvon.bukkit.residence.allNms.v1_10Events;
+import com.bekvon.bukkit.residence.allNms.v1_8Events;
+import com.bekvon.bukkit.residence.allNms.v1_9Events;
+import com.bekvon.bukkit.residence.api.ChatInterface;
+import com.bekvon.bukkit.residence.api.MarketBuyInterface;
+import com.bekvon.bukkit.residence.api.MarketRentInterface;
+import com.bekvon.bukkit.residence.api.ResidenceApi;
+import com.bekvon.bukkit.residence.api.ResidenceInterface;
+import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.containers.ABInterface;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -52,34 +66,56 @@ import com.bekvon.bukkit.residence.containers.NMS;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
 import com.bekvon.bukkit.residence.dynmap.DynMapManager;
-import com.bekvon.bukkit.residence.economy.*;
+import com.bekvon.bukkit.residence.economy.BOSEAdapter;
+import com.bekvon.bukkit.residence.economy.BlackHoleEconomy;
+import com.bekvon.bukkit.residence.economy.EconomyInterface;
+import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
+import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
+import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
+import com.bekvon.bukkit.residence.economy.RealShopEconomy;
+import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.gui.FlagUtil;
 import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
-import com.bekvon.bukkit.residence.listeners.*;
-import com.bekvon.bukkit.residence.allNms.*;
-import com.bekvon.bukkit.residence.api.ChatInterface;
-import com.bekvon.bukkit.residence.api.MarketBuyInterface;
-import com.bekvon.bukkit.residence.api.MarketRentInterface;
-import com.bekvon.bukkit.residence.api.ResidenceApi;
-import com.bekvon.bukkit.residence.api.ResidenceInterface;
-import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
+import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
+import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
+import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
-import com.bekvon.bukkit.residence.protection.*;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.selection.*;
+import com.bekvon.bukkit.residence.protection.LeaseManager;
+import com.bekvon.bukkit.residence.protection.PermissionListManager;
+import com.bekvon.bukkit.residence.protection.PlayerManager;
+import com.bekvon.bukkit.residence.protection.ResidenceManager;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
+import com.bekvon.bukkit.residence.protection.WorldFlagManager;
+import com.bekvon.bukkit.residence.selection.AutoSelection;
+import com.bekvon.bukkit.residence.selection.KingdomsUtil;
+import com.bekvon.bukkit.residence.selection.SchematicsManager;
+import com.bekvon.bukkit.residence.selection.SelectionManager;
+import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
+import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
-import com.bekvon.bukkit.residence.utils.*;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
-import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
+import com.bekvon.bukkit.residence.utils.ActionBar;
+import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.FileCleanUp;
+import com.bekvon.bukkit.residence.utils.RandomTp;
+import com.bekvon.bukkit.residence.utils.RawMessage;
+import com.bekvon.bukkit.residence.utils.Sorting;
+import com.bekvon.bukkit.residence.utils.TabComplete;
+import com.bekvon.bukkit.residence.utils.VersionChecker;
+import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
+import com.bekvon.bukkit.residence.utils.YmlMaker;
+import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 //import com.bekvon.bukkit.residence.towns.TownManager;
 import com.earth2me.essentials.Essentials;
 import com.griefcraft.lwc.LWC;
@@ -92,11 +128,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
-
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.bukkit.OfflinePlayer;
 
 /**
  * 
@@ -190,6 +221,9 @@ public class Residence extends JavaPlugin {
     public List<String> teleportDelayMap = new ArrayList<String>();
     public HashMap<String, ClaimedResidence> teleportMap = new HashMap<String, ClaimedResidence>();
 
+    private Placeholder Placeholder;
+    private boolean PlaceholderAPIEnabled = false;
+
     private String prefix = ChatColor.GREEN + "[" + ChatColor.GOLD + "Residence" + ChatColor.GREEN + "]" + ChatColor.GRAY;
 
     public boolean isSpigot() {
@@ -226,6 +260,16 @@ public class Residence extends JavaPlugin {
 	if (ResidenceAPI == null)
 	    ResidenceAPI = rmanager;
 	return ResidenceAPI;
+    }
+
+    public Placeholder getPlaceholderAPIManager() {
+	if (Placeholder == null)
+	    Placeholder = new Placeholder(this);
+	return Placeholder;
+    }
+
+    public boolean isPlaceholderAPIEnabled() {
+	return PlaceholderAPIEnabled;
     }
 
     public MarketRentInterface getMarketRentManagerAPI() {
@@ -439,7 +483,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    getConfigManager().UpdateFlagFile();
-	    
+
 	    FlagUtilManager = new FlagUtil(this);
 	    getFlagUtilManager().load();
 
@@ -507,7 +551,6 @@ public class Residence extends JavaPlugin {
 	    for (String lang : validLanguages) {
 		getLocaleManager().LoadLang(lang);
 	    }
-
 
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
@@ -693,6 +736,11 @@ public class Residence extends JavaPlugin {
 	    } catch (Exception e) {
 	    }
 
+	    if (setupPlaceHolderAPI()) {
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " PlaceholderAPI was found - Enabling capabilities.");
+		PlaceholderAPIEnabled = true;
+	    }
+
 	    if (getServer().getPluginManager().getPlugin("CrackShot") != null)
 		getServer().getPluginManager().registerEvents(new CrackShot(this), this);
 
@@ -760,6 +808,14 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().BoardUpdate();
 	getVersionChecker().VersionCheck(null);
 
+    }
+
+    private boolean setupPlaceHolderAPI() {
+	if (!getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
+	    return false;
+	if ((new PlaceholderAPIHook(this)).hook())
+	    Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " PlaceholderAPI hooked.");
+	return true;
     }
 
     public SignUtil getSignUtil() {
