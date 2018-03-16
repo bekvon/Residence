@@ -65,20 +65,6 @@ public class TransactionManager implements MarketBuyInterface {
 	return true;
     }
 
-    @Deprecated
-    public boolean giveEconomyMoney(String playerName, double amount) {
-	if (playerName == null)
-	    return false;
-	if (amount == 0)
-	    return true;
-	EconomyInterface econ = plugin.getEconomyManager();
-	if (econ == null) {
-	    return false;
-	}
-	econ.add(playerName, amount);
-	return true;
-    }
-
     public void putForSale(String areaname, Player player, int amount, boolean resadmin) {
 	ClaimedResidence res = plugin.getResidenceManager().getByName(areaname);
 	putForSale(res, player, amount, resadmin);

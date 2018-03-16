@@ -86,7 +86,7 @@ public enum lm {
     Sign_ForSaleTopLine("&8For Sale"),
     Sign_ForSalePriceLine("&8%1"),
     Sign_ForSaleResName("&8%1"),
-    Sign_ForSaleBottom("&5%1m\u00B3"),
+    Sign_ForSaleBottomLine("&5Available"),
     Sign_LookAt("&cYou are not looking at sign"),
 
     Flag_Set("&eFlag (&6%1&e) set for &6%2 &eto &6%3 &estate"),
