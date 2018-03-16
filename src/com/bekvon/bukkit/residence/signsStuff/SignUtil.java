@@ -287,7 +287,7 @@ public class SignUtil {
 	    if (secondLine != null)
 		sign.setLine(3, plugin.msg(lm.Sign_RentedResName, secondLine));
 	    else
-		sign.setLine(3, plugin.msg(lm.Sign_ForSaleBottomLine));
+		sign.setLine(3, plugin.msg(lm.Sign_ForSaleBottom, res.getTotalSize()));
 	    sign.update();
 	}
 

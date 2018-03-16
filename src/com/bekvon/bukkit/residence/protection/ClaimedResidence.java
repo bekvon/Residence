@@ -26,7 +26,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
-import com.bekvon.bukkit.residence.towns.Town;
 import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 
@@ -71,8 +70,6 @@ public class ClaimedResidence {
     protected ResidenceItemList blacklist;
     protected boolean mainRes = false;
     protected long createTime = 0L;
-
-    private Town town = null;
 
     private Long leaseExpireTime = null;
 
@@ -1378,12 +1375,12 @@ public class ClaimedResidence {
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
 
-	if (this.getTown() != null && !this.isSubzone()) {
-	    if (this.getTown().getMainResidence().equals(this))
-		root.put("TownCap", this.getTown().getTownName());
-	    else
-		root.put("Town", this.getTown().getTownName());
-	}
+//	if (this.getTown() != null && !this.isSubzone()) {
+//	    if (this.getTown().getMainResidence().equals(this))
+//		root.put("TownCap", this.getTown().getTownName());
+//	    else
+//		root.put("Town", this.getTown().getTownName());
+//	}
 
 	if (plugin.getConfigManager().isNewSaveMechanic()) {
 	    if (enterMessage != null && leaveMessage != null) {
@@ -1893,11 +1890,11 @@ public class ClaimedResidence {
 	this.leaseExpireTime = leaseExpireTime;
     }
 
-    public Town getTown() {
-	return town;
-    }
-
-    public void setTown(Town town) {
-	this.town = town;
-    }
+//    public Town getTown() {
+//	return town;
+//    }
+//
+//    public void setTown(Town town) {
+//	this.town = town;
+//    }
 }

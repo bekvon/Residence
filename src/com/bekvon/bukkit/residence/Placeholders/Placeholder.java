@@ -8,10 +8,12 @@ import java.util.regex.Pattern;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.GetTime;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
@@ -38,7 +40,17 @@ public class Placeholder {
 	residence_user_maxrentdays,
 	residence_user_blockcost,
 	residence_user_blocksell,
-	residence_user_currentres,
+	residence_user_current_res,
+	residence_user_current_bank,
+	residence_user_current_qsize,
+	residence_user_current_ssize,
+	residence_user_current_forsale,
+	residence_user_current_saleprice,
+	residence_user_current_forrent,
+	residence_user_current_rentprice,
+	residence_user_current_rentedby,
+	residence_user_current_rentdays,
+	residence_user_current_rentends,
 	;
 
 	public static CMIPlaceHolders getByName(String name) {
@@ -158,9 +170,39 @@ public class Placeholder {
 		return String.valueOf(user.getMaxSubzoneDepth());
 	    case residence_user_maxud:
 		return group.getYmin() + "-" + group.getYmax();
-	    case residence_user_currentres:
+	    case residence_user_current_res:
 		ClaimedResidence res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
 		return res == null ? "" : res.getName();
+	    case residence_user_current_bank:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null ? "0" : res.getBank().getStoredMoneyFormated();
+	    case residence_user_current_qsize:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null ? "0" : String.valueOf(res.getTotalSize());
+	    case residence_user_current_ssize:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null ? "0" : String.valueOf(res.getXZSize());
+	    case residence_user_current_forsale:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null ? "" : String.valueOf(res.isForSell());
+	    case residence_user_current_saleprice:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null || !res.isForSell() ? "" : String.valueOf(res.getSellPrice());
+	    case residence_user_current_rentprice:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null || !res.isForRent() ? "" : String.valueOf(res.getRentable().cost);
+	    case residence_user_current_rentdays:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null || !res.isForRent() ? "" : String.valueOf(res.getRentable().days);
+	    case residence_user_current_rentedby:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null || !res.isForRent() || res.getRentedLand() == null || res.getRentedLand().player == null ? "" : res.getRentedLand().player;
+	    case residence_user_current_rentends:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null || !res.isForRent() || res.getRentedLand() == null || res.getRentedLand().player == null ? "" : GetTime.getTime(res.getRentedLand().endTime, true);
+	    case residence_user_current_forrent:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null ? "" : String.valueOf(res.isForRent());
 	    default:
 		break;
 	    }
