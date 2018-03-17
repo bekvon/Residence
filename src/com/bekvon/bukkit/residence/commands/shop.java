@@ -151,13 +151,11 @@ public class shop implements cmd {
 
 	    plugin.msg(player, lm.Shop_ListTopLine, separator, Shoppage, pi.getTotalPages(), separator);
 
-	    int position = -1;
 	    for (Entry<String, Double> one : ShopList.entrySet()) {
-		position++;
-		if (position > pi.getEnd())
-		    break;
-		if (!pi.isInRange(position))
+		if (!pi.isEntryOk())
 		    continue;
+		if (pi.isBreak())		    
+		    break;
 
 		Vote vote = plugin.getShopSignUtilManager().getAverageVote(one.getKey());
 		String votestat = "";
@@ -168,7 +166,7 @@ public class shop implements cmd {
 		    votestat = vote.getAmount() == 0 ? "" : plugin.msg(lm.Shop_ListVoted, vote.getVote(), vote.getAmount());
 		ClaimedResidence res = plugin.getResidenceManager().getByName(one.getKey());
 		String owner = plugin.getResidenceManager().getByName(one.getKey()).getOwner();
-		String message = plugin.msg(lm.Shop_List, pi.getStart() + position + 1, one.getKey(), owner, votestat);
+		String message = plugin.msg(lm.Shop_List, pi.getPositionForOutput(), one.getKey(), owner, votestat);
 
 		String desc = res.getShopDesc() == null ? plugin.msg(lm.Shop_NoDesc) : plugin.msg(
 		    lm.Shop_Desc, ChatColor.translateAlternateColorCodes('&', res.getShopDesc().replace("/n", "\n")));

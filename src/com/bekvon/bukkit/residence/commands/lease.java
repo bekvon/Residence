@@ -121,9 +121,12 @@ public class lease implements cmd {
 
 		plugin.msg(player, lm.General_Separator);
 		for (ClaimedResidence one : list) {
-		    if (!pi.isInRange())
+		    if (!pi.isEntryOk())
 			continue;
 
+		    if (pi.isBreak())
+			break;
+		    
 		    if (res.isOwner(player))
 			plugin.msg(player, lm.Economy_LeaseList, pi.getPositionForOutput(), one.getName(), plugin.getLeaseManager().getExpireTime(one), one.getOwner());
 		    else
