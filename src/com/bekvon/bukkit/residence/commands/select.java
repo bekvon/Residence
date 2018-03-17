@@ -46,7 +46,7 @@ public class select implements cmd {
 	    plugin.msg(player, lm.Select_Disabled);
 	    return true;
 	}
-	
+
 	if (args.length == 2) {
 	    if (args[1].equals("size") || args[1].equals("cost")) {
 		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
@@ -80,6 +80,12 @@ public class select implements cmd {
 		return true;
 	    } else if (args[1].equals("coords")) {
 		plugin.msg(player, lm.General_Separator);
+
+		if (!plugin.getSelectionManager().hasPlacedBoth(player)) {
+		    plugin.msg(player, lm.Select_Points);
+		    return true;
+		}
+
 		Location playerLoc1 = plugin.getSelectionManager().getPlayerLoc1(player);
 		if (playerLoc1 != null) {
 		    plugin.msg(player, lm.Select_Primary, plugin.msg(lm.General_CoordsTop, playerLoc1.getBlockX(), playerLoc1
