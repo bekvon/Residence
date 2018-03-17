@@ -10,6 +10,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class reset implements cmd {
@@ -26,6 +27,12 @@ public class reset implements cmd {
 	    return false;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
+	
+	if (res == null) {
+	    plugin.msg(sender, lm.Invalid_Residence);
+	    return true;
+	}
+	
 	res.getPermissions().applyDefaultFlags(player, resadmin);
 	return true;
     }
