@@ -592,6 +592,24 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onHangingBreakEventByExplosion(HangingBreakEvent event) {
+	// disabling event on world
+	Hanging ent = event.getEntity();
+	if (ent == null)
+	    return;
+	if (plugin.isDisabledWorldListener(ent.getWorld()))
+	    return;
+
+	if (!event.getCause().equals(RemoveCause.EXPLOSION))
+	    return;	
+	
+	FlagPermissions perms = plugin.getPermsByLoc(ent.getLocation());
+	if (perms.has(Flags.explode, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreakEvent(HangingBreakEvent event) {
 	// disabling event on world
 	Hanging ent = event.getEntity();
