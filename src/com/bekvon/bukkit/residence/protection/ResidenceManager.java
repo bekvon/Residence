@@ -38,6 +38,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.griefcraft.cache.ProtectionCache;
@@ -475,8 +476,12 @@ public class ResidenceManager implements ResidenceInterface {
 	removeResidence(plugin.getPlayerManager().getResidencePlayer(player), res, resadmin);
     }
 
-    @SuppressWarnings("deprecation")
     public void removeResidence(ResidencePlayer rPlayer, ClaimedResidence res, boolean resadmin) {
+	removeResidence(rPlayer, res, resadmin, false);
+    }
+
+    @SuppressWarnings("deprecation")
+    public void removeResidence(ResidencePlayer rPlayer, ClaimedResidence res, boolean resadmin, boolean regenerate) {
 
 	Player player = null;
 	if (rPlayer != null)
@@ -548,9 +553,13 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    if (plugin.getConfigManager().isRemoveLwcOnDelete())
 		removeLwcFromResidence(player, res);
+	    if (regenerate) {
+		for (CuboidArea one : res.getAreaArray()) {
+		    plugin.getSelectionManager().regenerate(one);
+		}
+	    }
 
 	    plugin.msg(player, lm.Residence_Remove, name);
-
 	} else {
 	    String[] split = name.split("\\.");
 	    if (player != null) {

@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
@@ -67,7 +68,9 @@ public class FileCleanUp {
 	    if (ResidenceVaultAdapter.hasPermission(player, "residence.cleanbypass", res.getWorld()))
 		continue;
 
-	    plugin.getResidenceManager().removeResidence(oneName.getValue());
+	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());
+
+	    plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
 	    i++;
 	}
 	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Auto CleanUp deleted " + i + " residences!");

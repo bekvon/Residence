@@ -58,6 +58,7 @@ public class ConfigManager {
     protected boolean BlockAnyTeleportation;
     protected int infoToolId;
     protected int AutoCleanUpDays;
+    protected boolean AutoCleanUpRegenerate;
     protected int selectionToolId;
     protected boolean adminOps;
     protected boolean AdminFullAccess;
@@ -685,6 +686,8 @@ public class ConfigManager {
 	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
 	c.getW().addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
 	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
+	c.getW().addComment("Global.AutoCleanUp.Regenerate", "Do you want to regenetate old residence area", "This requires world edit to be present");
+	AutoCleanUpRegenerate = c.get("Global.AutoCleanUp.Regenerate", false);
 	c.getW().addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
@@ -1422,6 +1425,10 @@ public class ConfigManager {
 
     public int getResidenceFileCleanDays() {
 	return AutoCleanUpDays;
+    }
+
+    public boolean isAutoCleanUpRegenerate() {
+	return AutoCleanUpRegenerate;
     }
 
     public boolean isUseClean() {

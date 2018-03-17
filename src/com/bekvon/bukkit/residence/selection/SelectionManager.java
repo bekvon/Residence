@@ -1071,4 +1071,6 @@ public class SelectionManager {
 	return null;
     }
 
+    public void regenerate(CuboidArea area) {
+    }
 }
