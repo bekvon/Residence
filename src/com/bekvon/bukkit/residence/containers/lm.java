@@ -101,6 +101,8 @@ public enum lm {
     Flag_SetDeny("&cOwner does not have access to flag &6%1"),
     Flag_ChangeDeny("&cYou cant change &6%1 &cflag state while there is &6%2 &cplayer(s) inside."),
     Flag_ChangedFor("&eChanged &6%1 &eflags from &6%2 &eresidences checked"),
+    Flag_reset("&eReset flags for &6%1 &eresidence"),
+    Flag_resetAll("&eReset flags for &6%1 &eresidences"),
 
     Bank_NoAccess("&cYou dont have bank access."),
     Bank_Name(" &eBank: &6%1"),

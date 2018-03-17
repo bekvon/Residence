@@ -170,6 +170,9 @@ permissions:
   residence.command.listall:
     description: Allows to access particular command
     default: true
+  residence.command.setdefaultflags:
+    description: Allows to access particular command
+    default: true
   residence.command.listallhidden:
     description: Allows to access particular command
     default: op
