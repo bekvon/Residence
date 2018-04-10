@@ -100,7 +100,7 @@ public class auto implements cmd {
 
 	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
 	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
-	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player));
+	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true);
 
 	if (plugin.getResidenceManager().getByName(resName) != null) {
 	    for (int i = 1; i < 50; i++) {
@@ -116,7 +116,7 @@ public class auto implements cmd {
 	return true;
     }
 
-    private static void resize(Residence plugin, Player player, CuboidArea cuboid) {
+    public static void resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance) {
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
@@ -201,12 +201,14 @@ public class auto implements cmd {
 
 	    skipped = 0;
 
-	    if (plugin.getConfigManager().enableEconomy()) {
-		cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
-		if (cost > balance)
-		    break;
+	    if (checkBalance) {
+		if (plugin.getConfigManager().enableEconomy()) {
+		    cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
+		    if (cost > balance)
+			break;
+		}
 	    }
-	    
+
 	    cuboid.setLowLocation(c.getLowLoc());
 	    cuboid.setHighLocation(c.getHighLoc());
 
@@ -217,7 +219,7 @@ public class auto implements cmd {
 	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLoc());
     }
 
-    private enum direction {
+    public enum direction {
 	Top(new Vector(0, 1, 0), new Vector(0, 0, 0)),
 	Bottom(new Vector(0, 0, 0), new Vector(0, 1, 0)),
 	East(new Vector(1, 0, 0), new Vector(0, 0, 0)),

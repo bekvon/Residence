@@ -1,7 +1,10 @@
 package com.bekvon.bukkit.residence.listeners;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
@@ -27,11 +30,14 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.commands.auto;
+import com.bekvon.bukkit.residence.commands.auto.direction;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -52,7 +58,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 public class ResidenceBlockListener implements Listener {
 
     private List<String> MessageInformed = new ArrayList<String>();
-    private List<String> ResCreated = new ArrayList<String>();
+    
+    private Set<UUID> ResCreated = new HashSet<UUID>();
+    public static Set<UUID> newPlayers = new HashSet<UUID>();
 
     private Residence plugin;
 
@@ -393,20 +401,131 @@ public class ResidenceBlockListener implements Listener {
 	if (list.size() != 0)
 	    return;
 
-	if (ResCreated.contains(player.getName()))
+	if (ResCreated.contains(player.getUniqueId()))
+	    return;
+	
+	if (!newPlayers.contains(player.getUniqueId()))
 	    return;
 
 	Location loc = block.getLocation();
 
-	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), loc.getBlockX() - plugin.getConfigManager().getNewPlayerRangeX(), loc
-	    .getBlockY() - plugin.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() - plugin.getConfigManager().getNewPlayerRangeZ()), true);
-	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), loc.getBlockX() + plugin.getConfigManager().getNewPlayerRangeX(), loc
-	    .getBlockY() + plugin.getConfigManager().getNewPlayerRangeY(), loc.getBlockZ() + plugin.getConfigManager().getNewPlayerRangeZ()), true);
+	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), loc.getBlockX() - 1, loc.getBlockY() - 1, loc.getBlockZ() - 1), true);
+	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), loc.getBlockX() + 1, loc.getBlockY() + 1, loc.getBlockZ() + 1), true);
+
+	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), !plugin.getConfigManager().isNewPlayerFree(),
+	    plugin.getConfigManager().getNewPlayerRangeX() * 2,
+	    plugin.getConfigManager().getNewPlayerRangeY() * 2,
+	    plugin.getConfigManager().getNewPlayerRangeZ() * 2);
 
 	boolean created = plugin.getResidenceManager().addResidence(player, player.getName(), plugin.getSelectionManager().getPlayerLoc1(player.getName()),
 	    plugin.getSelectionManager().getPlayerLoc2(player.getName()), plugin.getConfigManager().isNewPlayerFree());
-	if (created)
-	    ResCreated.add(player.getName());
+	if (created){
+	    ResCreated.add(player.getUniqueId());
+	    newPlayers.remove(player.getUniqueId());
+	}
+    }
+
+    public static void resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance, int maxX, int maxY, int maxZ) {
+
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	PermissionGroup group = rPlayer.getGroup();
+
+	int cost = (int) Math.ceil(cuboid.getSize() * group.getCostPerBlock());
+
+	double balance = 0;
+	if (plugin.getEconomyManager() != null)
+	    balance = plugin.getEconomyManager().getBalance(player.getName());
+
+	direction dir = direction.Top;
+
+	List<direction> locked = new ArrayList<direction>();
+
+	boolean checkCollision = plugin.getConfigManager().isAutomaticResidenceCreationCheckCollision();
+	int skipped = 0;
+	int done = 0;
+	while (true) {
+	    done++;
+
+	    if (skipped >= 6) {
+		break;
+	    }
+
+	    // fail safe if loop keeps going on
+	    if (done > 10000)
+		break;
+
+	    if (locked.contains(dir)) {
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
+
+	    CuboidArea c = new CuboidArea();
+	    c.setLowLocation(cuboid.getLowLoc().clone().add(-dir.getLow().getX(), -dir.getLow().getY(), -dir.getLow().getZ()));
+	    c.setHighLocation(cuboid.getHighLoc().clone().add(dir.getHigh().getX(), dir.getHigh().getY(), dir.getHigh().getZ()));
+
+	    if (c.getLowLoc().getY() < 0) {
+		c.getLowLoc().setY(0);
+		locked.add(dir);
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
+
+	    if (c.getHighLoc().getY() >= c.getWorld().getMaxHeight()) {
+		c.getHighLoc().setY(c.getWorld().getMaxHeight() - 1);
+		locked.add(dir);
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
+
+	    if (checkCollision && plugin.getResidenceManager().collidesWithResidence(c) != null) {
+		locked.add(dir);
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
+
+	    if (c.getXSize() >= maxX - group.getMinX()) {
+		locked.add(dir);
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
+
+	    if (c.getYSize() >= maxY - group.getMinY()) {
+		locked.add(dir);
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
+
+	    if (c.getZSize() >= maxZ - group.getMinZ()) {
+		locked.add(dir);
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
+
+	    skipped = 0;
+
+	    if (checkBalance) {
+		if (plugin.getConfigManager().enableEconomy()) {
+		    cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
+		    if (cost > balance)
+			break;
+		}
+	    }
+
+	    cuboid.setLowLocation(c.getLowLoc());
+	    cuboid.setHighLocation(c.getHighLoc());
+
+	    dir = dir.getNext();
+	}
+
+	plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLoc());
+	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLoc());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

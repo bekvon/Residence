@@ -75,7 +75,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
@@ -136,7 +135,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (event.getTo().getY() - event.getFrom().getY() != 0.41999998688697815D)
 	    return;
-	
+
 	if (player.hasMetadata("NPC"))
 	    return;
 
@@ -275,6 +274,13 @@ public class ResidencePlayerListener implements Listener {
 	if (plugin.getSchematicManager() == null)
 	    return;
 	plugin.getSchematicManager().delete(event.getResidence());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerFirstLogin(PlayerLoginEvent event) {
+	Player player = event.getPlayer()	    ;
+	if (!player.hasPlayedBefore())
+	    ResidenceBlockListener.newPlayers.add(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -995,7 +1001,7 @@ public class ResidencePlayerListener implements Listener {
 	Player player = event.getPlayer();
 	if (player.hasMetadata("NPC"))
 	    return;
-	
+
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	if (relativeBlock.getType() == Material.FIRE) {
 	    boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));

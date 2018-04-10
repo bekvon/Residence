@@ -47,6 +47,7 @@ import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -1072,6 +1073,7 @@ public class ResidenceEntityListener implements Listener {
 	
 	if (event.getCause() != DamageCause.FIRE_TICK)
 	    return;
+
 	Entity ent = event.getEntity();
 	if (!plugin.getNms().isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
 	    return;
