@@ -122,7 +122,8 @@ public class LeaseManager {
 		if (econ.canAfford(player.getName(), amount)/*account.hasEnough(amount)*/) {
 		    econ.subtract(player.getName(), amount);
 		    econ.add("Lease Money", amount);
-		    plugin.msg(player, lm.Economy_MoneyCharged, plugin.getEconomyManager().format(amount), econ.getName());
+		    if (amount != 0D)
+			plugin.msg(player, lm.Economy_MoneyCharged, plugin.getEconomyManager().format(amount), econ.getName());
 		} else {
 		    plugin.msg(player, lm.Economy_NotEnoughMoney);
 		    return;
