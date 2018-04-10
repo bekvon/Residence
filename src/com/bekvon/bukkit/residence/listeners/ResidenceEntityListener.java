@@ -601,8 +601,8 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (!event.getCause().equals(RemoveCause.EXPLOSION))
-	    return;	
-	
+	    return;
+
 	FlagPermissions perms = plugin.getPermsByLoc(ent.getLocation());
 	if (perms.has(Flags.explode, FlagCombo.OnlyFalse)) {
 	    event.setCancelled(true);
@@ -1069,7 +1069,28 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 	if (event.isCancelled())
 	    return;
+	
 	if (event.getCause() != DamageCause.FIRE_TICK)
+	    return;
+	Entity ent = event.getEntity();
+	if (!plugin.getNms().isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
+	    return;
+
+	if (!plugin.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)) {
+	    event.setCancelled(true);
+	    ent.setFireTicks(0);
+	}
+    }
+
+    @EventHandler
+    public void OnArmorStandExplosion(EntityDamageEvent event) {
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
+	    return;
+	if (event.isCancelled())
+	    return;
+
+	if (event.getCause() != DamageCause.BLOCK_EXPLOSION && event.getCause() != DamageCause.ENTITY_EXPLOSION)
 	    return;
 	Entity ent = event.getEntity();
 	if (!plugin.getNms().isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
