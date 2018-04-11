@@ -26,7 +26,6 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SelectionManager {
     protected Map<UUID, Selection> selections;
@@ -99,7 +98,7 @@ public class SelectionManager {
 	    case ignoreY:
 	    case noLimits:
 	    default:
-		return getWorld().getMaxHeight() - 1;
+		return getMaxWorldHeight(getWorld()) - 1;
 	    case residenceBounds:
 		ClaimedResidence res1 = plugin.getResidenceManager().getByLoc(this.getBaseLoc2());
 		if (res1 != null) {
@@ -110,7 +109,7 @@ public class SelectionManager {
 		}
 		break;
 	    }
-	    return getWorld().getMaxHeight() - 1;
+	    return getMaxWorldHeight(getWorld()) - 1;
 	}
 
 	public int getMinYAllowed() {
@@ -271,6 +270,22 @@ public class SelectionManager {
 
 	    return area;
 	}
+    }
+
+    private int getMaxWorldHeight(World world) {
+	if (world == null)
+	    return 256;
+	switch (world.getEnvironment()) {
+	case NETHER:
+	    return 128;
+	case NORMAL:
+	case THE_END:
+	    return 256;
+	default:
+	    break;
+	}
+
+	return 256;
     }
 
     public enum Direction {
@@ -953,9 +968,9 @@ public class SelectionManager {
 	case UP:
 	    oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy + amount;
-	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
+	    if (oldy > getMaxWorldHeight(player.getLocation().getWorld()) - 1) {
 		plugin.msg(player, lm.Select_TooHigh);
-		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
+		oldy = getMaxWorldHeight(player.getLocation().getWorld()) - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
 	    if (shift) {
@@ -991,9 +1006,9 @@ public class SelectionManager {
 	case UP:
 	    double oldy = area.getHighLoc().getBlockY();
 	    oldy = oldy - amount;
-	    if (oldy > player.getLocation().getWorld().getMaxHeight() - 1) {
+	    if (oldy > getMaxWorldHeight(player.getLocation().getWorld()) - 1) {
 		plugin.msg(player, lm.Select_TooHigh);
-		oldy = player.getLocation().getWorld().getMaxHeight() - 1;
+		oldy = getMaxWorldHeight(player.getLocation().getWorld()) - 1;
 	    }
 	    area.getHighLoc().setY(oldy);
 	    plugin.msg(player, lm.Contracting_Down, amount);
