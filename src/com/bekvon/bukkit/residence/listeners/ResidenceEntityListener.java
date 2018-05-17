@@ -991,8 +991,29 @@ public class ResidenceEntityListener implements Listener {
 	    if (target.getType() != EntityType.PLAYER)
 		continue;
 	    Boolean tgtpvp = plugin.getPermsByLoc(target.getLocation()).has(Flags.pvp, FlagCombo.TrueOrNone);
-	    if (!srcpvp || !tgtpvp)
+	    if (!srcpvp || !tgtpvp) {
 		event.setIntensity(target, 0);
+		continue;
+	    }
+
+	    ClaimedResidence area = plugin.getResidenceManager().getByLoc(target.getLocation());
+
+	    if ((target instanceof Player) && (shooter instanceof Player)) {
+		Player attacker = null;
+		if (shooter instanceof Player) {
+		    attacker = (Player) shooter;
+		}
+		if (attacker != null) {
+		    if (!(target instanceof Player))
+			return;
+		    ClaimedResidence srcarea = plugin.getResidenceManager().getByLoc(attacker.getLocation());
+		    if (srcarea != null && area != null && srcarea.equals(area) && srcarea.getPermissions().playerHas((Player) target, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
+			srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
+			plugin.getAB().send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
+			event.setIntensity(target, 0);
+		    }
+		}
+	    }
 	}
     }
 
@@ -1070,7 +1091,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 	if (event.isCancelled())
 	    return;
-	
+
 	if (event.getCause() != DamageCause.FIRE_TICK)
 	    return;
 
@@ -1330,6 +1351,16 @@ public class ResidenceEntityListener implements Listener {
 
 		if (!(ent instanceof Player))
 		    return;
+
+		if (srcarea != null && area != null && srcarea.equals(area) && attacker != null &&
+		    srcarea.getPermissions().playerHas((Player) ent, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
+		    srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
+
+		    plugin.getAB().send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
+		    if (isOnFire)
+			ent.setFireTicks(0);
+		    event.setCancelled(true);
+		}
 
 		if (!srcpvp && !isSnowBall || !allowSnowBall && isSnowBall) {
 		    if (attacker != null)

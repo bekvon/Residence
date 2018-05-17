@@ -41,6 +41,7 @@ public enum Flags {
     fallinprotection(12, 0, FlagMode.Residence, "Protects from blocks falling into residence", true),
     falldamage(301, 0, FlagMode.Residence, "Protects players from fall damage", true),
     feed(364, 0, FlagMode.Residence, "Setting to true makes the residence feed its occupants", true),
+    friendlyfire(175, 0, FlagMode.Player, "Allow or disallow friendly fire", false),
     fireball(385, 0, FlagMode.Residence, "Allows or denys fire balls in residences", true),
     firespread(377, 0, FlagMode.Residence, "Allows or denys fire spread", true),
     flowinprotection(333, 0, FlagMode.Residence, "Allows or denys liquid flow into residence", true),

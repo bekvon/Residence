@@ -376,6 +376,7 @@ public enum lm {
     General_ItemBlacklisted("&cYou are blacklisted from using this item here."),
     General_WorldPVPDisabled("&cWorld PVP is disabled."),
     General_NoPVPZone("&cNo PVP zone."),
+    General_NoFriendlyFire("&cNo friendly fire"),
     General_InvalidHelp("&cInvalid help page."),
 
     General_TeleportDeny("&cYou dont have teleport access."),

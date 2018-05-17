@@ -122,8 +122,10 @@ public class ActionBar implements ABInterface {
 
     @Override
     public void send(Player receivingPacket, String msg) {
-	if (msg != null)
-	    msg = msg.replace("%subtitle%", "");
+	if (msg == null || msg.isEmpty())
+	    return;
+
+	msg = msg.replace("%subtitle%", "");
 	if (simpleMessages) {
 	    receivingPacket.sendMessage(msg);
 	    return;
