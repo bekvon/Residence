@@ -39,6 +39,7 @@ public class Placeholder {
 	residence_user_maxrentdays,
 	residence_user_blockcost,
 	residence_user_blocksell,
+	residence_user_current_owner,
 	residence_user_current_res,
 	residence_user_current_bank,
 	residence_user_current_qsize,
@@ -169,8 +170,11 @@ public class Placeholder {
 		return String.valueOf(user.getMaxSubzoneDepth());
 	    case residence_user_maxud:
 		return group.getYmin() + "-" + group.getYmax();
-	    case residence_user_current_res:
+	    case residence_user_current_owner:
 		ClaimedResidence res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
+		return res == null ? "" : res.getOwner();
+	    case residence_user_current_res:
+		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
 		return res == null ? "" : res.getName();
 	    case residence_user_current_bank:
 		res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());
