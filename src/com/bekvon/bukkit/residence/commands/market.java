@@ -18,6 +18,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Utils;
 
 public class market implements cmd {
     Residence plugin;
@@ -113,7 +114,7 @@ public class market implements cmd {
 	    if (args.length != 3) {
 		return false;
 	    }
-	    Block block = plugin.getNms().getTargetBlock(player, 10);
+	    Block block = Utils.getTargetBlock(player, 10);
 
 	    if (!(block.getState() instanceof Sign)) {
 		plugin.msg(player, lm.Sign_LookAt);

@@ -2,12 +2,12 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -25,8 +25,8 @@ public class tool implements cmd {
 	Player player = (Player) sender;
 
 	plugin.msg(player, lm.General_Separator);
-	plugin.msg(player, lm.Select_Tool, Material.getMaterial(plugin.getConfigManager().getSelectionTooldID()));
-	plugin.msg(player, lm.General_InfoTool, Material.getMaterial(plugin.getConfigManager().getInfoToolID()));
+	plugin.msg(player, lm.Select_Tool, CMIMaterial.get(plugin.getConfigManager().getSelectionTooldID()).getName());
+	plugin.msg(player, lm.General_InfoTool, CMIMaterial.get(plugin.getConfigManager().getInfoToolID()).getName());
 	plugin.msg(player, lm.General_Separator);
 	return true;
     }

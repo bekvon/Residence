@@ -541,8 +541,8 @@ public class ResidenceManager implements ResidenceInterface {
 				temploc.setY(y);
 				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
 				    temploc.setZ(z);
-				    if (plugin.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getTypeId())) {
-					temploc.getBlock().setTypeId(0);
+				    if (plugin.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getType().getId())) {
+					temploc.getBlock().setType(Material.AIR);
 				    }
 				}
 			    }

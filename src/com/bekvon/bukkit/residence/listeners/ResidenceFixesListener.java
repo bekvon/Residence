@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 
 public class ResidenceFixesListener implements Listener {
 
@@ -32,7 +33,8 @@ public class ResidenceFixesListener implements Listener {
 	Location loc = new Location(bclicked.getWorld(), bclicked.getX() + face.getModX(), bclicked.getY() + face.getModY(),
 	    bclicked.getZ() + face.getModZ());
 	Block block = loc.getBlock();
-	if (block == null || block.getType() == Material.AIR || block.getType() != Material.SKULL && block.getType() != Material.FLOWER_POT)
+	CMIMaterial mat = CMIMaterial.get(block);
+	if (block == null || block.getType() == Material.AIR || !mat.isSkull() && block.getType() != Material.FLOWER_POT)
 	    return;
 	event.setCancelled(true);
     }

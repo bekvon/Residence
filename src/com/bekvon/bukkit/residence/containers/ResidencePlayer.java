@@ -1,17 +1,20 @@
 package com.bekvon.bukkit.residence.containers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
@@ -365,5 +368,80 @@ public class ResidencePlayer {
     public Player getPlayer() {
 	this.updatePlayer();
 	return player;
+    }
+    
+    HashMap<String, BossBarInfo> barMap = new HashMap<String, BossBarInfo>();
+
+    public void removeBossBar(BossBarInfo bossBar) {
+	if (bossBar == null)
+	    return;
+	if (bossBar.getBar() != null)
+	    bossBar.getBar().setVisible(false);
+	bossBar.cancelAutoScheduler();
+	bossBar.cancelHideScheduler();
+	barMap.remove(bossBar.getNameOfBar().toLowerCase());
+    }
+
+    public void addBossBar(BossBarInfo barInfo) {
+	if (!barMap.containsKey(barInfo.getNameOfBar().toLowerCase())) {
+	    barMap.put(barInfo.getNameOfBar().toLowerCase(), barInfo);
+	    Residence.getInstance().getBossBarManager().Show(barInfo);
+	} else {
+	    BossBarInfo old = getBossBar(barInfo.getNameOfBar().toLowerCase());
+	    if (old != null) {
+
+		if (barInfo.getColor() != null)
+		    old.setColor(barInfo.getColor());
+
+		if (barInfo.getKeepFor() != null)
+		    old.setKeepForTicks(barInfo.getKeepFor());
+
+		if (barInfo.getPercentage() != null)
+		    old.setPercentage(barInfo.getPercentage());
+
+		if (barInfo.getUser() != null)
+		    old.setUser(barInfo.getUser());
+
+		if (barInfo.getAdjustPerc() != null)
+		    old.setAdjustPerc(barInfo.getAdjustPerc());
+
+		if (barInfo.getStyle() != null)
+		    old.setStyle(barInfo.getStyle());
+
+		if (!barInfo.getTitleOfBar().isEmpty())
+		    old.setTitleOfBar(barInfo.getTitleOfBar());
+
+		if (barInfo.getBar() != null)
+		    old.setBar(barInfo.getBar());
+
+		if (barInfo.getId() != null)
+		    old.setId(barInfo.getId());
+
+		if (barInfo.getAuto() != null)
+		    old.setAuto(barInfo.getAuto());
+	    }
+	    Residence.getInstance().getBossBarManager().Show(old);
+	}
+    }
+
+    public BossBarInfo getBossBar(String name) {
+	return barMap.get(name.toLowerCase());
+    }
+
+    public synchronized HashMap<String, BossBarInfo> getBossBarInfo() {
+	return this.barMap;
+    }
+
+    public synchronized void hideBossBars() {
+	for (Entry<String, BossBarInfo> one : this.barMap.entrySet()) {
+	    one.getValue().getBar().setVisible(false);
+	}
+    }
+
+    public void clearBossMaps() {
+	for (Entry<String, BossBarInfo> one : barMap.entrySet()) {
+	    one.getValue().cancelHideScheduler();
+	}
+	barMap.clear();
     }
 }

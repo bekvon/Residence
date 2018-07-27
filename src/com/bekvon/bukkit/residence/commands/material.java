@@ -2,12 +2,12 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -27,7 +27,7 @@ public class material implements cmd {
 	    return false;
 	}
 	try {
-	    plugin.msg(player, lm.General_MaterialGet, args[1], Material.getMaterial(Integer.parseInt(args[1])).name());
+	    plugin.msg(player, lm.General_MaterialGet, args[1], CMIMaterial.get(Integer.parseInt(args[1])).getName());
 	} catch (Exception ex) {
 	    plugin.msg(player, lm.Invalid_Material);
 	}

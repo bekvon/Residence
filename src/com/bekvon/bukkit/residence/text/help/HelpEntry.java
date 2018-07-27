@@ -127,7 +127,7 @@ public class HelpEntry {
 	}
 
 	FlagPermissions GlobalFlags = Residence.getInstance().getPermissionManager().getAllFlags();
-	
+
 	Map<String, String> unsortMap = new HashMap<String, String>();
 
 	for (HelpEntry entry : subentrys) {
@@ -255,9 +255,10 @@ public class HelpEntry {
 	return entry;
     }
 
+    File langFile = new File(new File(Residence.getInstance().getDataLocation(), "Language"), "English.yml");
+
     @SuppressWarnings("deprecation")
     public Set<String> getSubCommands(CommandSender sender, String[] args) {
-	File langFile = new File(new File(Residence.getInstance().getDataLocation(), "Language"), "English.yml");
 	Set<String> subCommands = new HashSet<String>();
 
 	if (langFile.isFile()) {
@@ -406,7 +407,7 @@ public class HelpEntry {
 
 	    if (subCommand)
 		return tempmeinPath.getKeys(false);
-	    Bukkit.dispatchCommand(sender, command + " ?");
+//	    Bukkit.dispatchCommand(sender, command + " ?");
 	}
 	return new HashSet<String>(Arrays.asList("?"));
     }

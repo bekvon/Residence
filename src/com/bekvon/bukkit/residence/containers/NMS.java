@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -13,6 +14,8 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
+
+import com.bekvon.bukkit.residence.CMILib.CMIEffect;
 
 public interface NMS {
 
@@ -32,15 +35,11 @@ public interface NMS {
 
     public void addDefaultFlags(Map<Material, Flags> matuseflaglist);
 
-    public boolean isPlate(Material mat);
-
     public boolean isMainHand(PlayerInteractEvent event);
-
-    public Block getTargetBlock(Player player, int range);
 
     public ItemStack itemInMainHand(Player player);
 
     public boolean isChorusTeleport(TeleportCause tpcause);
 
-    public boolean isBoat(Material mat);
+    void playEffect(Player player, Location location, CMIEffect ef);
 }

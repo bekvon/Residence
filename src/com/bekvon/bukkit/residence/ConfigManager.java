@@ -1,16 +1,5 @@
 package com.bekvon.bukkit.residence;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-
-import com.bekvon.bukkit.residence.containers.Flags;
-import com.bekvon.bukkit.residence.containers.ConfigReader;
-import com.bekvon.bukkit.residence.containers.RandomTeleport;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.ParticleEffects;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,12 +15,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+
+import com.bekvon.bukkit.residence.CMILib.CMIEffectManager.CMIParticle;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.RandomTeleport;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ConfigManager {
     protected String defaultGroup;
@@ -56,10 +58,10 @@ public class ConfigManager {
     protected boolean PvPFlagPrevent;
     protected boolean OverridePvp;
     protected boolean BlockAnyTeleportation;
-    protected int infoToolId;
+    protected CMIMaterial infoTool;
     protected int AutoCleanUpDays;
     protected boolean AutoCleanUpRegenerate;
-    protected int selectionToolId;
+    protected CMIMaterial selectionTool;
     protected boolean adminOps;
     protected boolean AdminFullAccess;
     protected String multiworldPlugin;
@@ -209,17 +211,17 @@ public class ConfigManager {
 
     private boolean enforceAreaInsideArea;
 
-    protected ParticleEffects SelectedFrame;
-    protected ParticleEffects SelectedSides;
+    protected CMIParticle SelectedFrame;
+    protected CMIParticle SelectedSides;
 
-    protected ParticleEffects OverlapFrame;
-    protected ParticleEffects OverlapSides;
+    protected CMIParticle OverlapFrame;
+    protected CMIParticle OverlapSides;
 
-    protected Effect SelectedSpigotFrame;
-    protected Effect SelectedSpigotSides;
+    protected CMIParticle SelectedSpigotFrame;
+    protected CMIParticle SelectedSpigotSides;
 
-    protected Effect OverlapSpigotFrame;
-    protected Effect OverlapSpigotSides;
+    protected CMIParticle OverlapSpigotFrame;
+    protected CMIParticle OverlapSpigotSides;
 
     // DynMap
     public boolean DynMapUse;
@@ -428,7 +430,7 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.SelectionToolId", "Wooden Hoe is the default selection tool for Residence.",
 	    "You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values");
-	selectionToolId = c.get("Global.SelectionToolId", Material.WOOD_HOE.getId());
+	selectionTool = CMIMaterial.get(c.get("Global.SelectionToolId", CMIMaterial.WOODEN_HOE.name()));
 
 	c.getW().addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
 	SelectionIgnoreY = c.get("Global.Selection.IgnoreY", false);
@@ -444,7 +446,7 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
 	    "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
-	infoToolId = c.get("Global.InfoToolId", Material.STRING.getId());
+	infoTool = CMIMaterial.get(c.get("Global.InfoToolId", Material.STRING.toString()));
 
 	c.getW().addComment("Global.Optimizations.DefaultWorld", "Name of your main residence world. Usually normal starting world 'World'. Capitalization essential");
 	DefaultWorld = c.get("Global.Optimizations.DefaultWorld", defaultWorldName, false);
@@ -926,7 +928,7 @@ public class ConfigManager {
 	c.getW().addComment("Global.Visualizer.ShowFor", "For how long in miliseconds (5000 = 5sec) to show particle effects");
 	VisualizerShowFor = c.get("Global.Visualizer.ShowFor", 5000);
 	c.getW().addComment("Global.Visualizer.updateInterval", "How often in ticks to update particles for player");
-	VisualizerUpdateInterval = c.get("Global.Visualizer.updateInterval", 5);
+	VisualizerUpdateInterval = c.get("Global.Visualizer.updateInterval", 20);
 	c.getW().addComment("Global.Visualizer.RowSpacing", "Spacing in blocks between particle effects for rows");
 	VisualizerRowSpacing = c.get("Global.Visualizer.RowSpacing", 2);
 	if (VisualizerRowSpacing < 1)
@@ -972,93 +974,84 @@ public class ConfigManager {
 
 	// Frame
 	String efname = c.get("Global.Visualizer.Selected.Frame", "happyVillager");
-	SelectedFrame = ParticleEffects.fromName(efname);
+	SelectedFrame = CMIParticle.getCMIParticle(efname);
 	if (SelectedFrame == null) {
-	    SelectedFrame = ParticleEffects.VILLAGER_HAPPY;
+	    SelectedFrame = CMIParticle.HAPPY_VILLAGER;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
 	for (Effect one : Effect.values()) {
 	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		SelectedSpigotFrame = one;
+		SelectedSpigotFrame = CMIParticle.getCMIParticle(one.toString());
 		break;
 	    }
 	}
 
-	if (plugin.isSpigot())
-	    if (SelectedSpigotFrame == null) {
-		SelectedSpigotFrame = Effect.getByName("HAPPY_VILLAGER");
-		if (SelectedSpigotFrame == null)
-		    SelectedSpigotFrame = Effect.values()[0];
-		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	    }
+	if (SelectedSpigotFrame == null) {
+	    SelectedSpigotFrame = CMIParticle.HAPPY_VILLAGER;
+	    if (SelectedSpigotFrame == null)
+		SelectedSpigotFrame = CMIParticle.COLOURED_DUST;
+	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	}
 
 	// Sides
 	efname = c.get("Global.Visualizer.Selected.Sides", "reddust");
-	SelectedSides = ParticleEffects.fromName(efname);
+	SelectedSides = CMIParticle.getCMIParticle(efname);
 	if (SelectedSides == null) {
-	    SelectedSides = ParticleEffects.REDSTONE;
+	    SelectedSides = CMIParticle.COLOURED_DUST;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
 	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
 	for (Effect one : Effect.values()) {
 	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		SelectedSpigotSides = one;
+		SelectedSpigotSides = CMIParticle.getCMIParticle(one.toString());
 		break;
 	    }
 	}
 
-	if (plugin.isSpigot())
-	    if (SelectedSpigotSides == null) {
-		SelectedSpigotSides = Effect.getByName("COLOURED_DUST");
-		if (SelectedSpigotSides == null)
-		    SelectedSpigotSides = Effect.values()[0];
-
-		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	    }
+	if (SelectedSpigotSides == null) {
+	    SelectedSpigotSides = CMIParticle.COLOURED_DUST;
+	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
+	}
 
 	efname = c.get("Global.Visualizer.Overlap.Frame", "FLAME");
-	OverlapFrame = ParticleEffects.fromName(efname);
+	OverlapFrame = CMIParticle.getCMIParticle(efname);
 	if (OverlapFrame == null) {
-	    OverlapFrame = ParticleEffects.FLAME;
+	    OverlapFrame = CMIParticle.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Overlap Frame with this name, it was set to default");
 	}
 
 	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
 	for (Effect one : Effect.values()) {
 	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		OverlapSpigotFrame = one;
+		OverlapSpigotFrame = CMIParticle.getCMIParticle(one.toString());
 		break;
 	    }
 	}
 
 	if (plugin.isSpigot())
 	    if (OverlapSpigotFrame == null) {
-		OverlapSpigotFrame = Effect.getByName("FLAME");
-		if (OverlapSpigotFrame == null)
-		    OverlapSpigotFrame = Effect.values()[0];
+		OverlapSpigotFrame = CMIParticle.FLAME;
 		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	    }
 
 	efname = c.get("Global.Visualizer.Overlap.Sides", "FLAME");
-	OverlapSides = ParticleEffects.fromName(efname);
+	OverlapSides = CMIParticle.getCMIParticle(efname);
 	if (OverlapSides == null) {
-	    OverlapSides = ParticleEffects.FLAME;
+	    OverlapSides = CMIParticle.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
 	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
 	for (Effect one : Effect.values()) {
 	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		OverlapSpigotSides = one;
+		OverlapSpigotSides = CMIParticle.getCMIParticle(one.toString());
 		break;
 	    }
 	}
 
 	if (plugin.isSpigot())
 	    if (OverlapSpigotSides == null) {
-		OverlapSpigotSides = Effect.getByName("FLAME");
-		if (OverlapSpigotSides == null)
-		    OverlapSpigotSides = Effect.values()[0];
+		OverlapSpigotSides = CMIParticle.FLAME;
 		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	    }
 
@@ -1073,7 +1066,7 @@ public class ConfigManager {
 	int id = c.get("Global.GUI.setTrue.Id", 35);
 	int data = c.get("Global.GUI.setTrue.Data", 13);
 
-	Material Mat = Material.getMaterial(id);
+	Material Mat = CMIMaterial.get(id).getMaterial();
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiTrue = new ItemStack(Mat, 1, (short) data);
@@ -1082,7 +1075,7 @@ public class ConfigManager {
 	id = c.get("Global.GUI.setFalse.Id", 35);
 	data = c.get("Global.GUI.setFalse.Data", 14);
 
-	Mat = Material.getMaterial(id);
+	Mat = CMIMaterial.get(id).getMaterial();
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiFalse = new ItemStack(Mat, 1, (short) data);
@@ -1091,7 +1084,7 @@ public class ConfigManager {
 	id = c.get("Global.GUI.setRemove.Id", 35);
 	data = c.get("Global.GUI.setRemove.Data", 8);
 
-	Mat = Material.getMaterial(id);
+	Mat = CMIMaterial.get(id).getMaterial();
 	if (Mat == null)
 	    Mat = Material.STONE;
 	GuiRemove = new ItemStack(Mat, 1, (short) data);
@@ -1303,35 +1296,35 @@ public class ConfigManager {
 	return VisualizerUpdateInterval;
     }
 
-    public ParticleEffects getSelectedFrame() {
+    public CMIParticle getSelectedFrame() {
 	return SelectedFrame;
     }
 
-    public ParticleEffects getSelectedSides() {
+    public CMIParticle getSelectedSides() {
 	return SelectedSides;
     }
 
-    public ParticleEffects getOverlapFrame() {
+    public CMIParticle getOverlapFrame() {
 	return OverlapFrame;
     }
 
-    public ParticleEffects getOverlapSides() {
+    public CMIParticle getOverlapSides() {
 	return OverlapSides;
     }
 
-    public Effect getSelectedSpigotFrame() {
+    public CMIParticle getSelectedSpigotFrame() {
 	return SelectedSpigotFrame;
     }
 
-    public Effect getSelectedSpigotSides() {
+    public CMIParticle getSelectedSpigotSides() {
 	return SelectedSpigotSides;
     }
 
-    public Effect getOverlapSpigotFrame() {
+    public CMIParticle getOverlapSpigotFrame() {
 	return OverlapSpigotFrame;
     }
 
-    public Effect getOverlapSpigotSides() {
+    public CMIParticle getOverlapSpigotSides() {
 	return OverlapSpigotSides;
     }
 
@@ -1447,12 +1440,22 @@ public class ConfigManager {
 	return BlockAnyTeleportation;
     }
 
+    @Deprecated
     public int getInfoToolID() {
-	return infoToolId;
+	return infoTool.getId();
     }
 
+    public CMIMaterial getInfoTool() {
+	return infoTool;
+    }
+
+    public CMIMaterial getSelectionTool() {
+	return selectionTool;
+    }
+
+    @Deprecated
     public int getSelectionTooldID() {
-	return selectionToolId;
+	return selectionTool.getId();
     }
 
     public boolean getOpsAreAdmins() {

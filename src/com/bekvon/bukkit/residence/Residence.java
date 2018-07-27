@@ -46,8 +46,12 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
+import com.bekvon.bukkit.residence.BossBar.BossBarManager;
+import com.bekvon.bukkit.residence.CMILib.ItemManager;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
 import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;
+import com.bekvon.bukkit.residence.Siege.ResidenceSiegeListener;
 import com.bekvon.bukkit.residence.allNms.v1_10Events;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
 import com.bekvon.bukkit.residence.allNms.v1_9Events;
@@ -153,6 +157,11 @@ public class Residence extends JavaPlugin {
     protected ResidenceEntityListener elistener;
 
     protected ResidenceFixesListener flistener;
+    protected ResidenceSiegeListener slistener;
+
+    protected ResidenceCommandListener cManager;
+
+    protected BossBarManager BossBarManager;
 
     protected SpigotListener spigotlistener;
     protected ShopListener shlistener;
@@ -207,7 +216,7 @@ public class Residence extends JavaPlugin {
     private Map<UUID, OfflinePlayer> cachedPlayerNameUUIDs = new HashMap<UUID, OfflinePlayer>();
     private WorldEditPlugin wep = null;
     private WorldGuardPlugin wg = null;
-    private int wepid;
+    private CMIMaterial wepid;
 
     private String ServerLandname = "Server_Land";
     private String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
@@ -285,10 +294,22 @@ public class Residence extends JavaPlugin {
 
     }
 
+    public BossBarManager getBossBarManager() {
+	if (BossBarManager == null)
+	    BossBarManager = new BossBarManager(this);
+	return BossBarManager;
+    }
+
     public ChatInterface getResidenceChatAPI() {
 	if (ChatAPI == null)
 	    ChatAPI = chatmanager;
 	return ChatAPI;
+    }
+
+    public ResidenceCommandListener getCommandManager() {
+	if (cManager == null)
+	    cManager = new ResidenceCommandListener(this);
+	return cManager;
     }
 
     public ResidenceApi getAPI() {
@@ -422,6 +443,7 @@ public class Residence extends JavaPlugin {
 	    instance = this;
 	    initsuccess = false;
 	    versionChecker = new VersionChecker(this);
+	    ItemManager.load();
 	    deleteConfirm = new HashMap<String, String>();
 	    resadminToggle = new ArrayList<String>();
 	    server = this.getServer();
@@ -458,9 +480,14 @@ public class Residence extends JavaPlugin {
 	    if (!new File(dataFolder, "groups.yml").isFile()) {
 		this.writeDefaultGroupsFromJar();
 	    }
+
+	    this.getCommand("res").setExecutor(getCommandManager());
+//	    this.getCommand("resadmin").setExecutor(getCommandManager());
+//	    this.getCommand("residence").setExecutor(getCommandManager());
+
 	    this.getCommand("res").setTabCompleter(new TabComplete());
-	    this.getCommand("resadmin").setTabCompleter(new TabComplete());
-	    this.getCommand("residence").setTabCompleter(new TabComplete());
+//	    this.getCommand("resadmin").setTabCompleter(new TabComplete());
+//	    this.getCommand("residence").setTabCompleter(new TabComplete());
 
 //	    Residence.getConfigManager().UpdateConfigFile();
 
@@ -502,11 +529,11 @@ public class Residence extends JavaPlugin {
 		if (getConfigManager().CouldronCompatability())
 		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms.v1_7_Couldron");
 		else
-		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + version);
+		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + versionChecker.getVersion());
 		if (NMS.class.isAssignableFrom(nmsClass)) {
 		    nms = (NMS) nmsClass.getConstructor().newInstance();
 		} else {
-		    System.out.println("Something went wrong, please note down version and contact author v:" + version);
+		    System.out.println("Something went wrong, please note down version and contact author v:" + versionChecker.getVersion());
 		    this.setEnabled(false);
 		    Bukkit.shutdown();
 		}
@@ -694,6 +721,7 @@ public class Residence extends JavaPlugin {
 		plistener = new ResidencePlayerListener(this);
 		elistener = new ResidenceEntityListener(this);
 		flistener = new ResidenceFixesListener();
+//		slistener = new ResidenceSiegeListener();
 
 		shlistener = new ShopListener(this);
 		spigotlistener = new SpigotListener();
@@ -704,6 +732,7 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(elistener, this);
 		pm.registerEvents(flistener, this);
 		pm.registerEvents(shlistener, this);
+//		pm.registerEvents(slistener, this);
 
 		// 1.8 event
 		if (getVersionChecker().isHigherEquals(Version.v1_8_R1))
@@ -845,7 +874,7 @@ public class Residence extends JavaPlugin {
 	if (plugin != null) {
 	    smanager = new WorldEditSelectionManager(server, this);
 	    this.wep = (WorldEditPlugin) plugin;
-	    wepid = this.getWorldEdit().getConfig().getInt("wand-item");
+	    wepid = CMIMaterial.get(this.getWorldEdit().getConfig().getInt("wand-item"));
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit");
 	} else {
 	    smanager = new SelectionManager(server, this);
@@ -1802,7 +1831,9 @@ public class Residence extends JavaPlugin {
 	return wg;
     }
 
-    public int getWepid() {
+    public CMIMaterial getWorldEditTool() {
+	if (wepid == null)
+	    wepid = CMIMaterial.NONE;
 	return wepid;
     }
 

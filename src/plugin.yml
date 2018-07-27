@@ -1,8 +1,9 @@
 name: Residence
-main: com.bekvon.bukkit.residence.ResidenceCommandListener
-version: 4.7.8.1
+main: com.bekvon.bukkit.residence.Residence
+version: 4.7.8.2
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
+api-version: 1.13
 authors: [bekvon,nate302,t00thpick1]
 softdepend: [Vault,Essentials,RealPlugin,BOSEconomy,iConomy,bPermissions,PermissionsBukkit,Permissions,WorldEdit,WorldGuard,CrackShot,My Worlds,dynmap,LWC,Kingdoms,PlaceholderAPI]
 contributors: [lemon42,smbarbour,inorixu,Shayana_fr,Zrips]
@@ -300,5 +301,8 @@ permissions:
     description: Allows to access particular command
     default: true
   residence.command.version:
+    description: Allows to access particular command
+    default: true
+  residence.command.siege:
     description: Allows to access particular command
     default: true

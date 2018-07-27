@@ -22,6 +22,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -184,31 +185,31 @@ public class FlagPermissions {
 //	addFlagToFlagGroup("fire", "ignite");
 //	addFlagToFlagGroup("fire", "firespread");
 
-	addMaterialToUseFlag(Material.DIODE, Flags.diode);
-	addMaterialToUseFlag(Material.DIODE_BLOCK_OFF, Flags.diode);
-	addMaterialToUseFlag(Material.DIODE_BLOCK_ON, Flags.diode);
-	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR, Flags.diode);
-	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_OFF, Flags.diode);
-	addMaterialToUseFlag(Material.REDSTONE_COMPARATOR_ON, Flags.diode);
+	addMaterialToUseFlag(CMIMaterial.REPEATER.getMaterial(), Flags.diode);
+//	addMaterialToUseFlag(CMIMaterial.DIODE_BLOCK_OFF.getMaterial(), Flags.diode);
+//	addMaterialToUseFlag(CMIMaterial.DIODE_BLOCK_ON.getMaterial(), Flags.diode);
+	addMaterialToUseFlag(CMIMaterial.COMPARATOR.getMaterial(), Flags.diode);
+//	addMaterialToUseFlag(CMIMaterial.REDSTONE_COMPARATOR_OFF.getMaterial(), Flags.diode);
+//	addMaterialToUseFlag(CMIMaterial.REDSTONE_COMPARATOR_ON.getMaterial(), Flags.diode);
 	addMaterialToUseFlag(Material.DAYLIGHT_DETECTOR, Flags.diode);
-	addMaterialToUseFlag(Material.WORKBENCH, Flags.table);
-	addMaterialToUseFlag(Material.WOODEN_DOOR, Flags.door);
+	addMaterialToUseFlag(CMIMaterial.CRAFTING_TABLE.getMaterial(), Flags.table);
+	addMaterialToUseFlag(CMIMaterial.OAK_DOOR.getMaterial(), Flags.door);
 
 	Residence.getInstance().getNms().addDefaultFlags(matUseFlagList);
 
-	addMaterialToUseFlag(Material.FENCE_GATE, Flags.door);
-	addMaterialToUseFlag(Material.NETHER_FENCE, Flags.door);
-	addMaterialToUseFlag(Material.TRAP_DOOR, Flags.door);
-	addMaterialToUseFlag(Material.ENCHANTMENT_TABLE, Flags.enchant);
+//	addMaterialToUseFlag(CMIMaterial.FENCE_GATE, Flags.door);
+//	addMaterialToUseFlag(Material.NETHER_FENCE, Flags.door);
+//	addMaterialToUseFlag(Material.TRAP_DOOR, Flags.door);
+	addMaterialToUseFlag(CMIMaterial.ENCHANTING_TABLE.getMaterial(), Flags.enchant);
 	addMaterialToUseFlag(Material.STONE_BUTTON, Flags.button);
 	addMaterialToUseFlag(Material.LEVER, Flags.lever);
-	addMaterialToUseFlag(Material.BED_BLOCK, Flags.bed);
+	addMaterialToUseFlag(CMIMaterial.BED_BLOCK.getMaterial(), Flags.bed);
 	addMaterialToUseFlag(Material.BREWING_STAND, Flags.brew);
 	addMaterialToUseFlag(Material.CAKE, Flags.cake);
 	addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
 	addMaterialToUseFlag(Material.DRAGON_EGG, Flags.egg);
-	addMaterialToUseFlag(Material.COMMAND, Flags.commandblock);
-	addMaterialToUseFlag(Material.WOOD_BUTTON, Flags.button);
+	addMaterialToUseFlag(CMIMaterial.COMMAND_BLOCK.getMaterial(), Flags.commandblock);
+	addMaterialToUseFlag(CMIMaterial.OAK_BUTTON.getMaterial(), Flags.button);
 	addMaterialToUseFlag(Material.ANVIL, Flags.anvil);
 	addMaterialToUseFlag(Material.FLOWER_POT, Flags.flowerpot);
 	addMaterialToUseFlag(Material.BEACON, Flags.beacon);
@@ -218,9 +219,9 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.HOPPER, Flags.container);
 	addMaterialToUseFlag(Material.DROPPER, Flags.container);
 	addMaterialToUseFlag(Material.FURNACE, Flags.container);
-	addMaterialToUseFlag(Material.BURNING_FURNACE, Flags.container);
+	addMaterialToUseFlag(CMIMaterial.BURNING_FURNACE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(Material.DISPENSER, Flags.container);
-	addMaterialToUseFlag(Material.CAKE_BLOCK, Flags.cake);
+	addMaterialToUseFlag(CMIMaterial.CAKE_BLOCK.getMaterial(), Flags.cake);
     }
 
     public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node) {

@@ -1,20 +1,24 @@
 package com.bekvon.bukkit.residence.listeners;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -28,22 +32,6 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.commands.auto;
-import com.bekvon.bukkit.residence.commands.auto.direction;
-import com.bekvon.bukkit.residence.containers.Flags;
-import com.bekvon.bukkit.residence.containers.ResidencePlayer;
-import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -55,10 +43,24 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.residence.commands.auto.direction;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
+import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
+
 public class ResidenceBlockListener implements Listener {
 
     private List<String> MessageInformed = new ArrayList<String>();
-    
+
     private Set<UUID> ResCreated = new HashSet<UUID>();
     public static Set<UUID> newPlayers = new HashSet<UUID>();
 
@@ -97,7 +99,17 @@ public class ResidenceBlockListener implements Listener {
 	if (!res.getPermissions().has(Flags.anvilbreak, FlagCombo.OnlyFalse))
 	    return;
 
-	b.setData((byte) 1);
+	if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1)) {
+	    try {
+		b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 1);
+	    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+		e1.printStackTrace();
+	    }
+	} else {
+	    // Waiting for 1.13+ fix
+
+	}
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -266,7 +278,7 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
-	if (event.getNewState().getType() != Material.STATIONARY_WATER && event.getBlock().getState().getType() != Material.SNOW && event.getBlock().getState()
+	if (!CMIMaterial.get(event.getNewState().getType()).equals(CMIMaterial.WATER) && event.getBlock().getState().getType() != Material.SNOW && event.getBlock().getState()
 	    .getType() != Material.SNOW_BLOCK)
 	    return;
 
@@ -403,7 +415,7 @@ public class ResidenceBlockListener implements Listener {
 
 	if (ResCreated.contains(player.getUniqueId()))
 	    return;
-	
+
 	if (!newPlayers.contains(player.getUniqueId()))
 	    return;
 
@@ -419,7 +431,7 @@ public class ResidenceBlockListener implements Listener {
 
 	boolean created = plugin.getResidenceManager().addResidence(player, player.getName(), plugin.getSelectionManager().getPlayerLoc1(player.getName()),
 	    plugin.getSelectionManager().getPlayerLoc2(player.getName()), plugin.getConfigManager().isNewPlayerFree());
-	if (created){
+	if (created) {
 	    ResCreated.add(player.getUniqueId());
 	    newPlayers.remove(player.getUniqueId());
 	}
@@ -694,13 +706,13 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	}
 
-	if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+	if (mat == Material.LAVA) {
 	    if (!perms.has(Flags.lavaflow, hasflow)) {
 		event.setCancelled(true);
 	    }
 	    return;
 	}
-	if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
+	if (mat == Material.WATER) {
 	    if (!perms.has(Flags.waterflow, hasflow)) {
 		event.setCancelled(true);
 	    }
@@ -718,13 +730,23 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
-	Material mat = event.getBlock().getType();
-	if (mat != Material.SOIL)
+	CMIMaterial mat = CMIMaterial.get(event.getBlock());
+	if (!mat.equals(CMIMaterial.FARMLAND))
 	    return;
 
 	FlagPermissions perms = plugin.getPermsByLoc(event.getNewState().getLocation());
 	if (!perms.has(Flags.dryup, true)) {
-	    event.getBlock().setData((byte) 7);
+	    Block b = event.getBlock();
+	    if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1)) {
+		try {
+		    b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+		    e1.printStackTrace();
+		}
+	    } else {
+		// Waiting for 1.13+ fix
+
+	    }
 	    event.setCancelled(true);
 	    return;
 	}
@@ -740,13 +762,23 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
-	Material mat = event.getBlock().getType();
-	if (mat != Material.SOIL)
+	CMIMaterial mat = CMIMaterial.get(event.getBlock());
+	if (!mat.equals(CMIMaterial.FARMLAND))
 	    return;
 
 	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.dryup, true)) {
-	    event.getBlock().setData((byte) 7);
+	    Block b = event.getBlock();
+	    if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1)) {
+		try {
+		    b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+		    e1.printStackTrace();
+		}
+	    } else {
+		// Waiting for 1.13+ fix
+
+	    }
 	    event.setCancelled(true);
 	    return;
 	}
@@ -808,13 +840,13 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	if (plugin.getConfigManager().isNoLava())
-	    if (mat == Material.LAVA || mat == Material.STATIONARY_LAVA) {
+	    if (mat == Material.LAVA) {
 		event.setCancelled(true);
 		return;
 	    }
 
 	if (plugin.getConfigManager().isNoWater())
-	    if (mat == Material.WATER || mat == Material.STATIONARY_WATER) {
+	    if (mat == Material.WATER) {
 		event.setCancelled(true);
 		return;
 	    }

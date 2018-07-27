@@ -56,6 +56,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -278,7 +279,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerFirstLogin(PlayerLoginEvent event) {
-	Player player = event.getPlayer()	    ;
+	Player player = event.getPlayer();
 	if (!player.hasPlayedBefore())
 	    ResidenceBlockListener.newPlayers.add(player.getUniqueId());
     }
@@ -942,7 +943,7 @@ public class ResidencePlayerListener implements Listener {
     @SuppressWarnings("deprecation")
     private boolean isContainer(Material mat, Block block) {
 	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals(Flags.container)
-	    || plugin.getConfigManager().getCustomContainers().contains(block.getTypeId());
+	    || plugin.getConfigManager().getCustomContainers().contains(block.getType().getId());
     }
 
     @SuppressWarnings("deprecation")
@@ -970,7 +971,7 @@ public class ResidencePlayerListener implements Listener {
 	case "DAYLIGHT_DETECTOR_INVERTED":
 	    return true;
 	default:
-	    return plugin.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getTypeId()));
+	    return plugin.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getType().getId()));
 	}
     }
 
@@ -1025,7 +1026,7 @@ public class ResidencePlayerListener implements Listener {
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
-	Material mat = block.getType();
+	CMIMaterial mat = CMIMaterial.get(block);
 	Player player = event.getPlayer();
 	if (player.hasMetadata("NPC"))
 	    return;
@@ -1034,13 +1035,12 @@ public class ResidencePlayerListener implements Listener {
 	if (!resadmin) {
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
-	    if ((!hasuse && !haspressure || !haspressure) && (mat == Material.STONE_PLATE || mat == Material.WOOD_PLATE || plugin.getNms().isPlate(mat))) {
+	    if ((!hasuse && !haspressure || !haspressure) && mat.isPlate()) {
 		event.setCancelled(true);
 		return;
 	    }
 	}
-	if (!perms.playerHas(player, Flags.trample, perms.playerHas(player, Flags.build, true)) && (mat == Material.SOIL
-	    || mat == Material.SOUL_SAND)) {
+	if (!perms.playerHas(player, Flags.trample, perms.playerHas(player, Flags.build, true)) && (mat.equals(CMIMaterial.FARMLAND) || mat.equals(CMIMaterial.SOUL_SAND))) {
 	    event.setCancelled(true);
 	    return;
 	}
@@ -1059,12 +1059,12 @@ public class ResidencePlayerListener implements Listener {
 
 	Player player = event.getPlayer();
 	@SuppressWarnings("deprecation")
-	int heldItemId = player.getItemInHand().getTypeId();
+	CMIMaterial heldItem = CMIMaterial.get(player.getItemInHand());
 
-	if (heldItemId != plugin.getConfigManager().getSelectionTooldID())
+	if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()))
 	    return;
 
-	if (plugin.getWepid() == plugin.getConfigManager().getSelectionTooldID())
+	if (plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool()))
 	    return;
 
 	if (player.getGameMode() == GameMode.CREATIVE)
@@ -1121,9 +1121,9 @@ public class ResidencePlayerListener implements Listener {
 	if (item == null)
 	    return;
 
-	int heldItemId = item.getTypeId();
+	CMIMaterial heldItem = CMIMaterial.get(item);
 
-	if (heldItemId != plugin.getConfigManager().getInfoToolID())
+	if (!heldItem.equals(plugin.getConfigManager().getInfoTool()))
 	    return;
 
 	if (this.isContainer(block.getType(), block))
@@ -1136,6 +1136,7 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.getResidenceManager().printAreaInfo(res.getName(), player, false);
 	else
 	    plugin.msg(player, lm.Residence_NoResHere);
+
 	event.setCancelled(true);
 	return;
 
@@ -1157,8 +1158,8 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	Player player = event.getPlayer();
 	ItemStack iih = plugin.getNms().itemInMainHand(player);
-	Material heldItem = iih.getType();
-	int heldItemId = iih.getTypeId();
+	CMIMaterial heldItem = CMIMaterial.get(iih);
+
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
@@ -1167,8 +1168,8 @@ public class ResidencePlayerListener implements Listener {
 
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || plugin.getNms().isCanUseEntity_BothClick(mat, block))) {
-	    if (heldItemId != plugin.getConfigManager().getSelectionTooldID() && heldItemId != plugin.getConfigManager().getInfoToolID()
-		&& heldItem != Material.INK_SACK && !plugin.getNms().isArmorStandMaterial(heldItem) && !plugin.getNms().isBoat(heldItem) && !placingMinecart(block, iih)) {
+	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
+		&& !heldItem.isDye() && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
 		return;
 	    }
 	}
@@ -1182,7 +1183,7 @@ public class ResidencePlayerListener implements Listener {
 	PermissionGroup group = resPlayer.getGroup();
 
 	boolean resadmin = plugin.isResAdminOn(player);
-	if (!resadmin && !plugin.getItemManager().isAllowed(heldItem, group, world)) {
+	if (!resadmin && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), group, world)) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
@@ -1191,12 +1192,12 @@ public class ResidencePlayerListener implements Listener {
 	if (resadmin)
 	    return;
 
-	int blockId = block.getTypeId();
+	CMIMaterial blockM = CMIMaterial.get(block);
+
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	if (heldItem != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-	    if (heldItem == Material.INK_SACK) {
-		if (plugin.getNms().itemInMainHand(player).getData().getData() == 15 && block.getType() == Material.GRASS || iih.getData().getData() == 3
-		    && blockId == 17 && (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15)) {
+	    if (heldItem.isDye()) {
+		if (heldItem.equals(CMIMaterial.BONE_MEAL) && block.getType() == Material.GRASS || heldItem.equals(CMIMaterial.COCOA_BEANS) && blockM.equals(CMIMaterial.JUNGLE_WOOD)) {
 		    perms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		    if (!perms.playerHas(player, Flags.build, true)) {
 			plugin.msg(player, lm.Flag_Deny, Flags.build.getName());
@@ -1205,7 +1206,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		}
 	    }
-	    if (plugin.getNms().isArmorStandMaterial(heldItem) || plugin.getNms().isBoat(heldItem)) {
+	    if (heldItem.equals(CMIMaterial.ARMOR_STAND) || heldItem.isBoat()) {
 		perms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		if (!perms.playerHas(player, Flags.build, true)) {
 		    plugin.msg(player, lm.Flag_Deny, Flags.build.getName());
@@ -1247,21 +1248,21 @@ public class ResidencePlayerListener implements Listener {
 		    return;
 		}
 
-	    if (plugin.getConfigManager().getCustomContainers().contains(blockId)) {
+	    if (plugin.getConfigManager().getCustomContainers().contains(blockM.getId())) {
 		if (!perms.playerHas(player, Flags.container, hasuse)) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.container.getName());
 		    return;
 		}
 	    }
-	    if (plugin.getConfigManager().getCustomBothClick().contains(blockId)) {
+	    if (plugin.getConfigManager().getCustomBothClick().contains(blockM.getId())) {
 		if (!hasuse) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.use.getName());
 		    return;
 		}
 	    }
-	    if (plugin.getConfigManager().getCustomRightClick().contains(blockId) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+	    if (plugin.getConfigManager().getCustomRightClick().contains(blockM.getId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 		if (!hasuse) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.use.getName());

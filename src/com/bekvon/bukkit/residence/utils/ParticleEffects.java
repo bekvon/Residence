@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.utils.ReflectionUtils.PackageType;
 
 /**
@@ -499,8 +500,8 @@ public enum ParticleEffects {
      * @return Whether water is at this location or not
      */
     private static boolean isWater(Location location) {
-	Material material = location.getBlock().getType();
-	return material == Material.WATER || material == Material.STATIONARY_WATER;
+	CMIMaterial material = CMIMaterial.get(location.getBlock());
+	return material.equals(CMIMaterial.WATER) || material.equals(CMIMaterial.FLOWING_WATER);
     }
 
     /**

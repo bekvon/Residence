@@ -45,8 +45,11 @@ public class RawMessage {
 		f += ",\"color\":\"" + color.name().toLowerCase() + "\"";
 	    }
 	}
-	if (hoverText != null)
+	if (hoverText != null && !hoverText.isEmpty()) {
+	    hoverText = hoverText.replace("\n", "\\n");
+	    hoverText = hoverText.replace(" \n", " \\n");
 	    f += ",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', hoverText) + "\"}]}}";
+	}
 	if (suggestion != null)
 	    f += ",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + suggestion + "\"}";
 	if (command != null) {

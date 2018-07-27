@@ -1,14 +1,16 @@
 package com.bekvon.bukkit.residence.itemlist;
 
-import org.bukkit.ChatColor;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 
 public class ItemList {
 
@@ -104,12 +106,12 @@ public class ItemList {
 		}
 		if (parse == -1) {
 		    try {
-			list.add(Material.valueOf(item.toUpperCase()));
+			list.add(CMIMaterial.get(item.toUpperCase()).getMaterial());
 		    } catch (Exception ex) {
 		    }
 		} else {
 		    try {
-			list.add(Material.getMaterial(parse));
+			list.add(CMIMaterial.get(parse).getMaterial());
 		    } catch (Exception ex) {
 		    }
 		}

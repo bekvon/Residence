@@ -19,6 +19,8 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.CMIEffect;
+import com.bekvon.bukkit.residence.CMILib.CMIEffectManager.CMIParticle;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
 import com.bekvon.bukkit.residence.containers.Visualizer;
@@ -782,27 +784,32 @@ public class SelectionManager {
 		continue;
 
 	    Location l = locList.get(i);
-	    if (plugin.isSpigot()) {
-		Effect effect = null;
-		if (sides) {
-		    effect = error ? plugin.getConfigManager().getOverlapSpigotSides() : plugin.getConfigManager().getSelectedSpigotSides();
-		} else {
-		    effect = error ? plugin.getConfigManager().getOverlapSpigotFrame() : plugin.getConfigManager().getSelectedSpigotFrame();
-		}
-		player.spigot().playEffect(l, effect, 0, 0, 0, 0, 0, 0, 1, 128);
+//	    if (plugin.isSpigot()) {
+	    CMIParticle effect = null;
+	    if (sides) {
+		effect = error ? plugin.getConfigManager().getOverlapSpigotSides() : plugin.getConfigManager().getSelectedSpigotSides();
 	    } else {
-		if (error) {
-		    if (sides)
-			plugin.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
-		    else
-			plugin.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
-		} else {
-		    if (sides)
-			plugin.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
-		    else
-			plugin.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
-		}
+		effect = error ? plugin.getConfigManager().getOverlapSpigotFrame() : plugin.getConfigManager().getSelectedSpigotFrame();
 	    }
+
+	    CMIEffect ef = new CMIEffect(effect);
+
+	    Residence.getInstance().getNms().playEffect(player, l, ef);
+
+//		player.spigot().playEffect(l, effect, 0, 0, 0, 0, 0, 0, 1, 128);
+//	    } else {
+//		if (error) {
+//		    if (sides)
+//			plugin.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
+//		    else
+//			plugin.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
+//		} else {
+//		    if (sides)
+//			plugin.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
+//		    else
+//			plugin.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
+//		}
+//	    }
 
 //	    if (!sameLocation)
 //		trimed.add(l);

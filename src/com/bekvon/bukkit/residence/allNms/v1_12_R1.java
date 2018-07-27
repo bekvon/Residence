@@ -3,11 +3,13 @@ package com.bekvon.bukkit.residence.allNms;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
@@ -18,26 +20,33 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.PolarBear;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
-import org.bukkit.entity.PolarBear;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.CMIEffect;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.NMS;
-import com.bekvon.bukkit.residence.Residence;
 
-public class v1_11 implements NMS {
+import net.minecraft.server.v1_12_R1.EnumParticle;
+import net.minecraft.server.v1_12_R1.Packet;
+import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
+
+public class v1_12_R1 implements NMS {
     @Override
     public List<Block> getPistonRetractBlocks(BlockPistonRetractEvent event) {
 	List<Block> blocks = new ArrayList<Block>();
@@ -61,7 +70,8 @@ public class v1_11 implements NMS {
 	    ent instanceof Villager ||
 	    ent instanceof Rabbit ||
 	    ent instanceof Llama ||
-	    ent instanceof PolarBear||
+	    ent instanceof PolarBear ||
+	    ent instanceof Parrot ||
 	    ent instanceof Donkey);
     }
 
@@ -78,53 +88,50 @@ public class v1_11 implements NMS {
     @SuppressWarnings("deprecation")
     @Override
     public boolean isCanUseEntity_BothClick(Material mat, Block block) {
-	switch (mat) {
+	CMIMaterial m = CMIMaterial.get(mat);
+	if (m.isDoor())
+	    return true;
+	if (m.isButton())
+	    return true;
+	if (m.isGate())
+	    return true;
+	if (m.isTrapDoor())
+	    return true;
+
+	switch (CMIMaterial.get(mat)) {
 	case LEVER:
-	case STONE_BUTTON:
-	case WOOD_BUTTON:
-	case WOODEN_DOOR:
-	case SPRUCE_DOOR:
-	case BIRCH_DOOR:
-	case JUNGLE_DOOR:
-	case ACACIA_DOOR:
-	case DARK_OAK_DOOR:
-	case SPRUCE_FENCE_GATE:
-	case BIRCH_FENCE_GATE:
-	case JUNGLE_FENCE_GATE:
-	case ACACIA_FENCE_GATE:
-	case DARK_OAK_FENCE_GATE:
-	case TRAP_DOOR:
-	case IRON_TRAPDOOR:
-	case FENCE_GATE:
-	case PISTON_BASE:
-	case PISTON_STICKY_BASE:
+	case PISTON:
+	case STICKY_PISTON:
 	case DRAGON_EGG:
 	    return true;
 	default:
-	    return Residence.getInstance().getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
+	    return Residence.getInstance().getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getType().getId()));
 	}
     }
 
     @Override
     public boolean isEmptyBlock(Block block) {
-	switch (block.getType()) {
-	case AIR:
-	case WEB:
+	switch (CMIMaterial.get(block)) {
+	case COBWEB:
 	case STRING:
 	case WALL_BANNER:
 	case WALL_SIGN:
-	case SAPLING:
 	case VINE:
 	case TRIPWIRE_HOOK:
 	case TRIPWIRE:
-	case STONE_BUTTON:
-	case WOOD_BUTTON:
 	case PAINTING:
 	case ITEM_FRAME:
 	    return true;
 	default:
 	    break;
 	}
+
+	if (CMIMaterial.get(block).isSapling())
+	    return true;
+	if (CMIMaterial.get(block).isAir())
+	    return true;
+	if (CMIMaterial.get(block).isButton())
+	    return true;
 	return false;
     }
 
@@ -149,7 +156,7 @@ public class v1_11 implements NMS {
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door);
 	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door);
 
-	matUseFlagList.put(Material.DAYLIGHT_DETECTOR_INVERTED, Flags.diode);
+	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR_INVERTED.getMaterial(), Flags.diode);
 
 	/* 1.11 Shulker Box */
 	matUseFlagList.put(Material.BLACK_SHULKER_BOX, Flags.container);
@@ -165,14 +172,9 @@ public class v1_11 implements NMS {
 	matUseFlagList.put(Material.PINK_SHULKER_BOX, Flags.container);
 	matUseFlagList.put(Material.PURPLE_SHULKER_BOX, Flags.container);
 	matUseFlagList.put(Material.RED_SHULKER_BOX, Flags.container);
-	matUseFlagList.put(Material.SILVER_SHULKER_BOX, Flags.container);
+	matUseFlagList.put(CMIMaterial.LIGHT_GRAY_SHULKER_BOX.getMaterial(), Flags.container);
 	matUseFlagList.put(Material.WHITE_SHULKER_BOX, Flags.container);
 	matUseFlagList.put(Material.YELLOW_SHULKER_BOX, Flags.container);
-    }
-
-    @Override
-    public boolean isPlate(Material mat) {
-	return mat == Material.GOLD_PLATE || mat == Material.IRON_PLATE;
     }
 
     @Override
@@ -186,29 +188,88 @@ public class v1_11 implements NMS {
     }
 
     @Override
-    public Block getTargetBlock(Player player, int range) {
-	return player.getTargetBlock((Set<Material>) null, range);
-    }
-
-    @Override
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	if (tpcause == TeleportCause.CHORUS_FRUIT)
 	    return true;
 	return false;
     }
 
-    @SuppressWarnings("incomplete-switch")
     @Override
-    public boolean isBoat(Material mat) {
-	switch (mat) {
-	case BOAT:
-	case BOAT_ACACIA:
-	case BOAT_BIRCH:
-	case BOAT_DARK_OAK:
-	case BOAT_JUNGLE:
-	case BOAT_SPRUCE:
-	    return true;
+    public void playEffect(Player player, Location location, CMIEffect ef) {
+	if (location == null || ef == null || location.getWorld() == null)
+	    return;
+	Packet<?> packet = null;
+	if (ef.getParticle().getEffect() == null)
+	    return;
+	if (!ef.getParticle().isParticle()) {
+//	    int packetData = effect.getId();
+//	    packet = new PacketPlayOutWorldEvent(packetData, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()), id, false);
+	} else {
+	    Particle effect = ef.getParticle().getParticle();
+
+	    EnumParticle particle = ef.getParticle().getEnumParticle() == null ? null : (EnumParticle) ef.getParticle().getEnumParticle();
+	    int[] extra = ef.getParticle().getExtra();
+	    if (particle == null) {
+		for (EnumParticle p : EnumParticle.values()) {
+		    if (effect.name().replace("_", "").equalsIgnoreCase((p.toString().replace("_", "")))) {
+			particle = p;
+			if (ef.getParticle().getEffect().getData() != null) {
+			    if (ef.getParticle().getEffect().equals(org.bukkit.Material.class)) {
+				extra = new int[] { 0 };
+			    } else {
+				extra = new int[] { (0 << 12) | (0 & 0xFFF) };
+			    }
+			}
+			break;
+		    }
+		    if (ef.getParticle().getName().replace("_", "").equalsIgnoreCase((p.toString().replace("_", "")))) {
+			particle = p;
+			if (ef.getParticle().getEffect().getData() != null) {
+			    if (ef.getParticle().getEffect().equals(org.bukkit.Material.class)) {
+				extra = new int[] { 0 };
+			    } else {
+				extra = new int[] { (0 << 12) | (0 & 0xFFF) };
+			    }
+			}
+			break;
+		    }
+		    if (ef.getParticle().getSecondaryName().replace("_", "").equalsIgnoreCase((p.toString().replace("_", "")))) {
+			particle = p;
+			if (ef.getParticle().getEffect().getData() != null) {
+			    if (ef.getParticle().getEffect().equals(org.bukkit.Material.class)) {
+				extra = new int[] { 0 };
+			    } else {
+				extra = new int[] { (0 << 12) | (0 & 0xFFF) };
+			    }
+			}
+			break;
+		    }
+		}
+		if (extra == null) {
+		    extra = new int[0];
+		}
+	    }
+
+	    if (particle == null)
+		return;
+
+	    if (ef.getParticle().getEnumParticle() == null) {
+		ef.getParticle().setEnumParticle(particle);
+		ef.getParticle().setExtra(extra);
+	    }
+
+	    packet = new PacketPlayOutWorldParticles(particle, true, (float) location.getX(), (float) location.getY(), (float) location.getZ(), (float) ef.getOffset().getX(), (float) ef.getOffset().getY(),
+		(float) ef.getOffset().getZ(), ef.getSpeed(), ef.getAmount(), extra);
 	}
-	return false;
+	CraftPlayer cPlayer = (CraftPlayer) player;
+	if (cPlayer.getHandle().playerConnection == null)
+	    return;
+
+	if (!location.getWorld().equals(cPlayer.getWorld()))
+	    return;
+
+	if (packet == null)
+	    return;
+	cPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 }

@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.Siege.ResidenceSiege;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
@@ -84,6 +85,8 @@ public class ClaimedResidence {
     protected Integer sellPrice = -1;
 
     private Residence plugin;
+
+    private ResidenceSiege siege;
 
     public String getResidenceName() {
 	return resName;
@@ -1024,12 +1027,10 @@ public class ClaimedResidence {
 	    if (!plugin.getNms().isEmptyBlock(loc.getBlock()))
 		continue;
 
-	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.LAVA || loc.clone().add(0, -1, 0).getBlock().getState()
-		.getType() == Material.STATIONARY_LAVA)
+	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.LAVA)
 		continue;
 
-	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.WATER || loc.clone().add(0, -1, 0).getBlock().getState()
-		.getType() == Material.STATIONARY_WATER)
+	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.WATER)
 		continue;
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
@@ -1897,4 +1898,59 @@ public class ClaimedResidence {
 //    public void setTown(Town town) {
 //	this.town = town;
 //    }
+
+    public boolean isUnderSiege() {
+	return getSiege().getEndsAt() > System.currentTimeMillis() && getSiege().getStartsAt() < System.currentTimeMillis();
+    }
+
+    public boolean canSiege() {
+	return !isUnderSiege() && this.getSiege().getCooldownEnd() < System.currentTimeMillis();
+    }
+
+    public ResidenceSiege getSiege() {
+	if (siege == null)
+	    siege = new ResidenceSiege();
+	return siege;
+    }
+
+    public boolean isUnderSiegeCooldown() {
+	return this.getSiege().getCooldownEnd() > System.currentTimeMillis();
+    }
+
+    int preSiegeDuration = 5;
+    int siegeDuration = 5;
+
+    public boolean startSiege(Player attacker) {
+
+	if (isUnderSiege())
+	    return false;
+
+	if (this.getSiege().getCooldownEnd() > System.currentTimeMillis())
+	    return false;
+
+	getSiege().addAttacker(attacker);
+	getSiege().addDefender(this.getRPlayer().getPlayer());
+	getSiege().setStartsAt(System.currentTimeMillis() + (preSiegeDuration * 1000));
+	getSiege().setEndsAt(getSiege().getStartsAt() + (siegeDuration * 1000));
+
+	return true;
+    }
+
+    public void endSiege() {
+	getSiege().setEndsAt(System.currentTimeMillis());
+	if (getSiege().getSchedId() > 0) {
+	    Bukkit.getScheduler().cancelTask(getSiege().getSchedId());
+	    getSiege().setSchedId(-1);
+	}
+
+	getSiege().setStartsAt(0L);
+
+	for (Player one : this.getSiege().getAttackers()) {
+	    Location outside = this.getOutsideFreeLoc(one.getLocation(), one);
+	    if (outside != null)
+		one.teleport(outside);
+	}
+	this.getSiege().getAttackers().clear();
+	this.getSiege().getDefenders().clear();
+    }
 }

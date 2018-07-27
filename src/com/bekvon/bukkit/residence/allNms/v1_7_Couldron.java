@@ -1,12 +1,15 @@
 package com.bekvon.bukkit.residence.allNms;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.Effect;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
@@ -28,8 +31,12 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.CMIEffect;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.NMS;
+
+import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
 
 public class v1_7_Couldron implements NMS {
     @Override
@@ -58,41 +65,51 @@ public class v1_7_Couldron implements NMS {
     @SuppressWarnings("deprecation")
     @Override
     public boolean isCanUseEntity_BothClick(Material mat, Block block) {
-	switch (mat) {
+	CMIMaterial m = CMIMaterial.get(mat);
+	if (m.isDoor())
+	    return true;
+	if (m.isButton())
+	    return true;
+	if (m.isGate())
+	    return true;
+	if (m.isTrapDoor())
+	    return true;
+
+	switch (CMIMaterial.get(mat)) {
 	case LEVER:
-	case STONE_BUTTON:
-	case WOOD_BUTTON:
-	case WOODEN_DOOR:
-	case TRAP_DOOR:
-	case FENCE_GATE:
-	case PISTON_BASE:
-	case PISTON_STICKY_BASE:
+	case PISTON:
+	case STICKY_PISTON:
 	case DRAGON_EGG:
 	    return true;
 	default:
-	    return Residence.getInstance().getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getTypeId()));
+	    return Residence.getInstance().getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getType().getId()));
 	}
     }
 
     @Override
     public boolean isEmptyBlock(Block block) {
-	switch (block.getType()) {
-	case AIR:
-	case WEB:
+	switch (CMIMaterial.get(block)) {
+	case COBWEB:
 	case STRING:
+	case WALL_BANNER:
 	case WALL_SIGN:
-	case SAPLING:
 	case VINE:
 	case TRIPWIRE_HOOK:
 	case TRIPWIRE:
-	case STONE_BUTTON:
-	case WOOD_BUTTON:
 	case PAINTING:
 	case ITEM_FRAME:
 	    return true;
 	default:
 	    break;
 	}
+
+	if (CMIMaterial.get(block).isSapling())
+	    return true;
+	if (CMIMaterial.get(block).isAir())
+	    return true;
+	if (CMIMaterial.get(block).isButton())
+	    return true;
+
 	return false;
     }
 
@@ -106,11 +123,6 @@ public class v1_7_Couldron implements NMS {
     }
 
     @Override
-    public boolean isPlate(Material mat) {
-	return false;
-    }
-
-    @Override
     public boolean isMainHand(PlayerInteractEvent event) {
 	return true;
     }
@@ -121,24 +133,24 @@ public class v1_7_Couldron implements NMS {
 	return player.getInventory().getItemInHand();
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public Block getTargetBlock(Player player, int range) {
-	return player.getTargetBlock((HashSet<Byte>) null, range);
-    }
-
     @Override
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	return false;
     }
 
-    @SuppressWarnings("incomplete-switch")
     @Override
-    public boolean isBoat(Material mat) {
-	switch (mat) {
-	case BOAT:
-	    return true;
-	}
-	return false;
+    public void playEffect(Player player, Location location, CMIEffect ef) {
+	if (location == null || ef == null || location.getWorld() == null)
+	    return;
+	CraftPlayer cPlayer = (CraftPlayer) player;
+	if (cPlayer.getHandle().playerConnection == null)
+	    return;
+
+	Effect effect = ef.getParticle().getEffect();
+	if (effect == null)
+	    return;
+	PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect.name(), (float) location.getX(), (float) location.getY(), (float) location.getZ(), (float) ef.getOffset().getX(),
+	    (float) ef.getOffset().getY(), (float) ef.getOffset().getZ(), ef.getSpeed(), ef.getAmount());
+	cPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 }

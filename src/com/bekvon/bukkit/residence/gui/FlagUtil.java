@@ -3,12 +3,12 @@ package com.bekvon.bukkit.residence.gui;
 import java.io.File;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 
 public class FlagUtil {
@@ -50,17 +50,14 @@ public class FlagUtil {
 		    id = Integer.parseInt(value);
 	    } catch (Exception e) {
 	    }
-	    
 
-	    @SuppressWarnings("deprecation")
-	    Material Mat = Material.getMaterial(id);
+	    CMIMaterial Mat = CMIMaterial.get(id, data);
 	    if (Mat == null)
-		Mat = Material.STONE;
-	    ItemStack item = new ItemStack(Mat, 1, (short) data);
+		Mat = CMIMaterial.STONE;
+	    ItemStack item = Mat.newItemStack();
 	    flagData.addFlagButton(oneFlag.toLowerCase(), item);
 	}
-	
-	
+
     }
 
     public FlagData getFlagData() {

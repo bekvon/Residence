@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creeper;
@@ -47,17 +46,16 @@ import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
-
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -77,11 +75,11 @@ public class ResidenceEntityListener implements Listener {
 	if (plugin.isDisabledWorldListener(hopper.getWorld()))
 	    return;
 	Block block = hopper.getLocation().getBlock();
-	switch (block.getType()) {
+	switch (CMIMaterial.get(block)) {
 	case ACTIVATOR_RAIL:
 	case DETECTOR_RAIL:
 	case POWERED_RAIL:
-	case RAILS:
+	case RAIL:
 	    return;
 	}
 	event.setCancelled(true);
@@ -111,11 +109,11 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 	if (plugin.isDisabledWorldListener(block.getWorld()))
 	    return;
-	Material mat = block.getType();
+	CMIMaterial mat = CMIMaterial.get(block);
 	Entity entity = event.getEntity();
 	FlagPermissions perms = plugin.getPermsByLoc(block.getLocation());
 	boolean hastrample = perms.has(Flags.trample, perms.has(Flags.build, true));
-	if (!hastrample && !(entity.getType() == EntityType.FALLING_BLOCK) && (mat == Material.SOIL || mat == Material.SOUL_SAND)) {
+	if (!hastrample && !(entity.getType() == EntityType.FALLING_BLOCK) && (mat.equals(CMIMaterial.FARMLAND) || mat.equals(CMIMaterial.SOUL_SAND))) {
 	    event.setCancelled(true);
 	}
     }

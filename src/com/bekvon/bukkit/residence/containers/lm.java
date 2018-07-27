@@ -89,6 +89,20 @@ public enum lm {
     Sign_ForSaleBottom("&5%1m\u00B3"),
     Sign_LookAt("&cYou are not looking at sign"),
 
+    Siege_Started("&7Siege started!"),
+    Siege_noSelf("&cCan't siege your own residence!"),
+    Siege_isOffline("&cCan't siege while owner is offline!"),
+    Siege_cooldown("&cToo soon for another siege on this residence! Wait %1"),
+
+    info_years("&e%1 &6years "),
+    info_oneYear("&e%1 &6year "),
+    info_day("&e%1 &6days "),
+    info_oneDay("&e%1 &6day "),
+    info_hour("&e%1 &6hours "),
+    info_oneHour("&e%1 &6hour "),
+    info_min("&e%1 &6min "),
+    info_sec("&e%1 &6sec "),
+    
     Flag_Set("&eFlag (&6%1&e) set for &6%2 &eto &6%3 &estate"),
     Flag_SetFailed("&cYou dont have access to &6%1 &cflag"),
     Flag_CheckTrue("&eFlag &6%1 &eapplies to player &6%2 &efor residence &6%3&e, value = &6%4"),
