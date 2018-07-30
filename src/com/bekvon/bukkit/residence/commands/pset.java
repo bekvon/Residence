@@ -77,8 +77,7 @@ public class pset implements cmd {
 
 	    res.getPermissions().setPlayerFlag(sender, args[2], args[3], args[4], resadmin, true);
 	    return true;
-	} else if ((args.length == 2 || args.length == 3) && plugin.getConfigManager().useFlagGUI()) {
-	    
+	} else if ((args.length == 2 || args.length == 3) && plugin.getConfigManager().useFlagGUI()) {	    
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		@Override
 		public void run() {

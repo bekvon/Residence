@@ -1,4 +1,4 @@
-package com.bekvon.bukkit.residence.commands;
+package com.bekvon.bukkit.residence.commandsInProgress;
 
 import java.util.Arrays;
 
