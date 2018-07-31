@@ -101,6 +101,7 @@ import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.KingdomsUtil;
 import com.bekvon.bukkit.residence.selection.SchematicsManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
+import com.bekvon.bukkit.residence.selection.WorldEdit7SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
@@ -756,9 +757,6 @@ public class Residence extends JavaPlugin {
 
 	    AutoSelectionManager = new AutoSelection(this);
 
-	    if (wep != null)
-		SchematicManager = new SchematicsManager(this);
-
 	    try {
 		Class.forName("org.bukkit.event.player.PlayerItemDamageEvent");
 		getServer().getPluginManager().registerEvents(spigotlistener, this);
@@ -872,8 +870,17 @@ public class Residence extends JavaPlugin {
     private void setWorldEdit() {
 	Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
 	if (plugin != null) {
-	    smanager = new WorldEditSelectionManager(server, this);
 	    this.wep = (WorldEditPlugin) plugin;
+	    try {
+		Class.forName("com.sk89q.worldedit.bukkit.selections.Selection");
+		smanager = new WorldEditSelectionManager(server, this);
+		if (wep != null)
+		    SchematicManager = new SchematicsManager(this);
+	    } catch (ClassNotFoundException e) {
+		smanager = new WorldEdit7SelectionManager(server, this);
+		if (wep != null)
+		    SchematicManager = new SchematicsManager(this);
+	    }
 	    wepid = CMIMaterial.get(this.getWorldEdit().getConfig().getInt("wand-item"));
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit");
 	} else {

@@ -10,6 +10,8 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -23,19 +25,22 @@ public class WorldEditSelectionManager extends SelectionManager {
     @Override
     public boolean worldEdit(Player player) {
 	WorldEditPlugin wep = (WorldEditPlugin) this.server.getPluginManager().getPlugin("WorldEdit");
-	com.sk89q.worldedit.bukkit.selections.Selection sel = wep.getSelection(player);
-
-	if (sel != null) {
-	    Location pos1 = sel.getMinimumPoint();
-	    Location pos2 = sel.getMaximumPoint();
-	    try {
-		CuboidRegion region = (CuboidRegion) sel.getRegionSelector().getRegion();
-		pos1 = new Location(player.getWorld(), region.getPos1().getX(), region.getPos1().getY(), region.getPos1().getZ());
-		pos2 = new Location(player.getWorld(), region.getPos2().getX(), region.getPos2().getY(), region.getPos2().getZ());
-	    } catch (Exception e) {
+	try {
+	    com.sk89q.worldedit.bukkit.selections.Selection sel = (com.sk89q.worldedit.bukkit.selections.Selection) wep.getClass().getMethod("getSelection", Player.class).invoke(wep, player);
+	    if (sel != null) {
+		Location pos1 = sel.getMinimumPoint();
+		Location pos2 = sel.getMaximumPoint();
+		try {
+		    CuboidRegion region = (CuboidRegion) sel.getRegionSelector().getRegion();
+		    pos1 = new Location(player.getWorld(), region.getPos1().getX(), region.getPos1().getY(), region.getPos1().getZ());
+		    pos2 = new Location(player.getWorld(), region.getPos2().getX(), region.getPos2().getY(), region.getPos2().getZ());
+		} catch (Exception e) {
+		}
+		this.updateLocations(player, pos1, pos2);
+		return true;
 	    }
-	    this.updateLocations(player, pos1, pos2);
-	    return true;
+	} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+	    e1.printStackTrace();
 	}
 	return false;
     }
@@ -45,7 +50,13 @@ public class WorldEditSelectionManager extends SelectionManager {
 	if (!hasPlacedBoth(player))
 	    return false;
 	CuboidSelection selection = new CuboidSelection(player.getWorld(), getPlayerLoc1(player), getPlayerLoc2(player));
-	plugin.getWorldEdit().setSelection(player, selection);
+	try {
+	    plugin.getWorldEdit().getClass().getMethod("setSelection", Player.class, com.sk89q.worldedit.bukkit.selections.Selection.class).invoke(plugin.getWorldEdit(), player, selection);
+	} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+	    e.printStackTrace();
+	}
+
+//	plugin.getWorldEdit().setSelection(player, selection);
 	return true;
     }
 
@@ -90,7 +101,6 @@ public class WorldEditSelectionManager extends SelectionManager {
 	super.showSelectionInfo(player);
 	this.worldEditUpdate(player);
     }
-
 
     @Override
     public void regenerate(CuboidArea area) {
