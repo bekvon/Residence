@@ -99,8 +99,10 @@ import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.KingdomsUtil;
+import com.bekvon.bukkit.residence.selection.Schematics7Manager;
 import com.bekvon.bukkit.residence.selection.SchematicsManager;
 import com.bekvon.bukkit.residence.selection.SelectionManager;
+import com.bekvon.bukkit.residence.selection.WESchematicManager;
 import com.bekvon.bukkit.residence.selection.WorldEdit7SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
@@ -186,7 +188,7 @@ public class Residence extends JavaPlugin {
     protected Sorting SortingManager;
     protected ActionBar ABManager;
     protected AutoSelection AutoSelectionManager;
-    protected SchematicsManager SchematicManager;
+    protected WESchematicManager SchematicManager;
     private InformationPager InformationPagerManager;
     private WorldGuardUtil worldGuardUtil;
     private KingdomsUtil kingdomsUtil;
@@ -879,8 +881,10 @@ public class Residence extends JavaPlugin {
 	    } catch (ClassNotFoundException e) {
 		smanager = new WorldEdit7SelectionManager(server, this);
 		if (wep != null)
-		    SchematicManager = new SchematicsManager(this);
+		    SchematicManager = new Schematics7Manager(this);
 	    }
+	    if (smanager == null)
+		    smanager = new SelectionManager(server, this);
 	    wepid = CMIMaterial.get(this.getWorldEdit().getConfig().getInt("wand-item"));
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit");
 	} else {
@@ -976,7 +980,7 @@ public class Residence extends JavaPlugin {
 	return DynManager;
     }
 
-    public SchematicsManager getSchematicManager() {
+    public WESchematicManager getSchematicManager() {
 	return SchematicManager;
     }
 
