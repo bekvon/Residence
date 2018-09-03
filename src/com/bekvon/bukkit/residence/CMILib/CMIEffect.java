@@ -1,10 +1,9 @@
+/**
+ * Copyright (C) 2017 Zrips
+ */
 package com.bekvon.bukkit.residence.CMILib;
 
-import java.lang.reflect.Method;
-
 import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.bekvon.bukkit.residence.CMILib.CMIEffectManager.CMIParticle;
@@ -17,7 +16,6 @@ public class CMIEffect {
     private int size = 1;
     private int amount = 1;
     private float speed = 0;
-    private Location loc;
 
     public CMIEffect(CMIParticle particle) {
 	this.particle = particle;
@@ -71,14 +69,6 @@ public class CMIEffect {
 
     public void setSize(int size) {
 	this.size = size;
-    }
-
-    public Location getLoc() {
-	return loc;
-    }
-
-    public void setLoc(Location loc) {
-	this.loc = loc;
     }
 
 }

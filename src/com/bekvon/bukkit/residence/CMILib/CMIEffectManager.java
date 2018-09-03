@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2017 Zrips
+ */
 package com.bekvon.bukkit.residence.CMILib;
 
 import java.util.ArrayList;
@@ -7,12 +10,11 @@ import org.bukkit.Effect;
 import org.bukkit.Effect.Type;
 import org.bukkit.Material;
 
-import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 
-public class CMIEffectManager {
 
+public class CMIEffectManager {
     public enum CMIParticleType {
 	SOUND, VISUAL, PARTICLE, NONE;
     }
@@ -219,9 +221,9 @@ public class CMIEffectManager {
 		    break;
 		}
 	    }
-	    if (cmiEffect != null && Residence.getInstance().getVersionChecker().getVersion().isEqualOrHigher(Version.v1_9_R1) && cmiEffect.getParticle() == null)
+	    if (cmiEffect != null && Version.isCurrentEqualOrHigher(Version.v1_9_R1) && cmiEffect.getParticle() == null)
 		return null;
-	    if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1) && cmiEffect != null && cmiEffect.getEffect() == null)
+	    if (Version.isCurrentLower(Version.v1_13_R1) && cmiEffect != null && cmiEffect.getEffect() == null)
 		return null;
 	    return cmiEffect;
 	}
@@ -292,13 +294,13 @@ public class CMIEffectManager {
 	}
 
 	public static List<CMIParticle> getParticleList() {
-	    List<CMIParticle> ls = new ArrayList<CMIParticle>();
+	    List<CMIParticle> ls = new ArrayList<>();
 	    for (CMIParticle one : CMIParticle.values()) {
 		if (!one.isParticle())
 		    continue;
-		if (Residence.getInstance().getVersionChecker().getVersion().isEqualOrHigher(Version.v1_9_R1) && one.getParticle() == null)
+		if (Version.isCurrentEqualOrHigher(Version.v1_9_R1) && one.getParticle() == null)
 		    continue;
-		if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1) && one.getEffect() == null)
+		if (Version.isCurrentLower(Version.v1_13_R1) && one.getEffect() == null)
 		    continue;
 		ls.add(one);
 	    }
@@ -315,7 +317,7 @@ public class CMIEffectManager {
 
 		if (!next.isParticle())
 		    continue;
-		if (Residence.getInstance().getVersionChecker().getVersion().isEqualOrHigher(Version.v1_9_R1) && next.getParticle() == null)
+		if (Version.isCurrentEqualOrHigher(Version.v1_9_R1) && next.getParticle() == null)
 		    continue;
 
 		if (next.equals(this)) {
@@ -335,7 +337,7 @@ public class CMIEffectManager {
 		if (next == null)
 		    continue;
 
-		if (Residence.getInstance().getVersionChecker().getVersion().isEqualOrHigher(Version.v1_9_R1) && next.getParticle() == null)
+		if (Version.isCurrentEqualOrHigher(Version.v1_9_R1) && next.getParticle() == null)
 		    continue;
 
 		if (!next.isParticle())
@@ -358,7 +360,7 @@ public class CMIEffectManager {
 	}
 
 	public org.bukkit.Particle getParticle() {
-	    if (Residence.getInstance().getVersionChecker().getVersion().isEqualOrLower(Version.v1_8_R3))
+	    if (Version.isCurrentEqualOrLower(Version.v1_8_R3))
 		return null;
 	    if (particle == null) {
 		String n = this.toString().replace("_", "").toLowerCase();

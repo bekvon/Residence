@@ -95,7 +95,6 @@ public class v1_8_R2 implements NMS {
 	switch (CMIMaterial.get(block)) {
 	case COBWEB:
 	case STRING:
-	case WALL_BANNER:
 	case WALL_SIGN:
 	case VINE:
 	case TRIPWIRE_HOOK:
@@ -138,7 +137,7 @@ public class v1_8_R2 implements NMS {
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door);
 	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door);
 	/* 1.8 day light sensor */
-	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR_INVERTED.getMaterial(), Flags.diode);
+	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR.getMaterial(), Flags.diode);
     }
 
     @Override

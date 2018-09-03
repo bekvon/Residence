@@ -112,7 +112,6 @@ public class v1_11_R1 implements NMS {
 	switch (CMIMaterial.get(block)) {
 	case COBWEB:
 	case STRING:
-	case WALL_BANNER:
 	case WALL_SIGN:
 	case VINE:
 	case TRIPWIRE_HOOK:
@@ -154,7 +153,7 @@ public class v1_11_R1 implements NMS {
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door);
 	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door);
 
-	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR_INVERTED.getMaterial(), Flags.diode);
+	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR.getMaterial(), Flags.diode);
 
 	/* 1.11 Shulker Box */
 	matUseFlagList.put(Material.BLACK_SHULKER_BOX, Flags.container);

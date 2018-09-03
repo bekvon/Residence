@@ -22,12 +22,11 @@ public class VersionChecker {
 	version = getCurrent();
     }
 
-    private Version version = Version.v1_12_R1;
+    private static Version version = Version.v1_12_R1;
 
     public Version getVersion() {
 	return version;
     }
-
 
     public enum Version {
 	v1_7_R1(171, "v1_7"),
@@ -46,6 +45,7 @@ public class VersionChecker {
 	v1_12_R2(1122, "v1_12"),
 	v1_13_R1(1131, "v1_13"),
 	v1_13_R2(1132, "v1_13"),
+	v1_13_R3(1133, "v1_13"),
 	v1_14_R1(1141, "v1_14"),
 	v1_14_R2(1142, "v1_14"),
 	v1_15_R1(1151, "v1_15"),
@@ -91,6 +91,18 @@ public class VersionChecker {
 
 	public boolean isEqualOrHigher(Version version) {
 	    return getValue() >= version.getValue();
+	}
+
+	public static boolean isCurrentEqualOrHigher(Version v) {
+	    return version.getValue() >= v.getValue();
+	}
+
+	public static boolean isCurrentLower(Version v) {
+	    return version.getValue() < v.getValue();
+	}
+
+	public static boolean isCurrentEqualOrLower(Version v) {
+	    return version.getValue() <= v.getValue();
 	}
     }
 

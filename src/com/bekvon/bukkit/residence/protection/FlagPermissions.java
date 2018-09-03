@@ -203,7 +203,13 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.ENCHANTING_TABLE.getMaterial(), Flags.enchant);
 	addMaterialToUseFlag(Material.STONE_BUTTON, Flags.button);
 	addMaterialToUseFlag(Material.LEVER, Flags.lever);
-	addMaterialToUseFlag(CMIMaterial.BED_BLOCK.getMaterial(), Flags.bed);
+
+	for (CMIMaterial one : CMIMaterial.values()) {
+	    if (!one.isBed())
+		continue;
+	    addMaterialToUseFlag(one.getMaterial(), Flags.bed);
+	}
+	
 	addMaterialToUseFlag(Material.BREWING_STAND, Flags.brew);
 	addMaterialToUseFlag(Material.CAKE, Flags.cake);
 	addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
@@ -219,9 +225,9 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.HOPPER, Flags.container);
 	addMaterialToUseFlag(Material.DROPPER, Flags.container);
 	addMaterialToUseFlag(Material.FURNACE, Flags.container);
-	addMaterialToUseFlag(CMIMaterial.BURNING_FURNACE.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.FURNACE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(Material.DISPENSER, Flags.container);
-	addMaterialToUseFlag(CMIMaterial.CAKE_BLOCK.getMaterial(), Flags.cake);
+	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
     }
 
     public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node) {

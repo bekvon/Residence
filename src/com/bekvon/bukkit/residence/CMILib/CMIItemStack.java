@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2017 Zrips
+ */
 package com.bekvon.bukkit.residence.CMILib;
 
 import java.util.ArrayList;
@@ -14,9 +17,9 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
+
 
 public class CMIItemStack {
 
@@ -107,7 +110,7 @@ public class CMIItemStack {
 	ItemMeta meta = this.getItemStack().getItemMeta();
 	List<String> lore = meta.getLore();
 	if (lore == null)
-	    lore = new ArrayList<String>();
+	    lore = new ArrayList<>();
 	lore.add(ChatColor.translateAlternateColorCodes('&', string));
 	meta.setLore(lore);
 	this.getItemStack().setItemMeta(meta);
@@ -116,7 +119,7 @@ public class CMIItemStack {
 
     public CMIItemStack clearLore() {
 	ItemMeta meta = this.getItemStack().getItemMeta();
-	List<String> t = new ArrayList<String>();
+	List<String> t = new ArrayList<>();
 	meta.setLore(t);
 	this.getItemStack().setItemMeta(meta);
 	return this;
@@ -126,7 +129,7 @@ public class CMIItemStack {
 	if (lore == null || lore.isEmpty())
 	    return this;
 	ItemMeta meta = this.getItemStack().getItemMeta();
-	List<String> t = new ArrayList<String>();
+	List<String> t = new ArrayList<>();
 	for (String one : lore) {
 	    t.add(ChatColor.translateAlternateColorCodes('&', one));
 	}
@@ -165,7 +168,7 @@ public class CMIItemStack {
 	if (meta != null) {
 	    List<String> lore = meta.getLore();
 	    if (lore == null) {
-		lore = new ArrayList<String>();
+		lore = new ArrayList<>();
 		meta.setLore(lore);
 	    }
 
@@ -222,7 +225,7 @@ public class CMIItemStack {
     @SuppressWarnings("deprecation")
     public ItemStack getItemStack() {
 	if (item == null) {
-	    if (Residence.getInstance().getVersionChecker().getVersion().isEqualOrHigher(Version.v1_13_R1)) {
+	    if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
 		this.item = new ItemStack(material.getMaterial(), this.amount == 0 ? 1 : this.amount);
 	    } else {
 		this.item = new ItemStack(material.getMaterial(), this.amount == 0 ? 1 : this.amount, data);

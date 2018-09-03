@@ -501,7 +501,7 @@ public enum ParticleEffects {
      */
     private static boolean isWater(Location location) {
 	CMIMaterial material = CMIMaterial.get(location.getBlock());
-	return material.equals(CMIMaterial.WATER) || material.equals(CMIMaterial.FLOWING_WATER);
+	return material.equals(CMIMaterial.WATER);
     }
 
     /**

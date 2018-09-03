@@ -105,10 +105,10 @@ public class v1_10_R1 implements NMS {
 
     @Override
     public boolean isEmptyBlock(Block block) {
-	switch (CMIMaterial.get(block)) {
+	CMIMaterial cm = CMIMaterial.get(block);
+	switch (cm) {
 	case COBWEB:
 	case STRING:
-	case WALL_BANNER:
 	case WALL_SIGN:
 	case VINE:
 	case TRIPWIRE_HOOK:
@@ -151,7 +151,7 @@ public class v1_10_R1 implements NMS {
 	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door);
 	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door);
 
-	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR_INVERTED.getMaterial(), Flags.diode);
+	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR.getMaterial(), Flags.diode);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class v1_10_R1 implements NMS {
 	    return true;
 	return false;
     }
-    
+
     @Override
     public void playEffect(Player player, Location location, CMIEffect ef) {
 	if (location == null || ef == null || location.getWorld() == null)
@@ -190,7 +190,7 @@ public class v1_10_R1 implements NMS {
 		for (EnumParticle p : EnumParticle.values()) {
 		    if (effect.name().replace("_", "").equalsIgnoreCase((p.toString().replace("_", "")))) {
 			particle = p;
-			if (ef.getParticle().getEffect().getData() != null) { 
+			if (ef.getParticle().getEffect().getData() != null) {
 			    if (ef.getParticle().getEffect().equals(org.bukkit.Material.class)) {
 				extra = new int[] { 0 };
 			    } else {
@@ -226,7 +226,7 @@ public class v1_10_R1 implements NMS {
 		    extra = new int[0];
 		}
 	    }
-	    
+
 	    if (particle == null)
 		return;
 

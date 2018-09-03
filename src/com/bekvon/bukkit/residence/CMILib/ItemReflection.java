@@ -4,6 +4,7 @@
 
 package com.bekvon.bukkit.residence.CMILib;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
@@ -11,9 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
-
 
 public class ItemReflection {
 
@@ -60,21 +59,47 @@ public class ItemReflection {
     }
 
     private static Class<?> getBukkitClass(String nmsClassString) throws ClassNotFoundException {
-	return Class.forName("org.bukkit.craftbukkit." + Residence.getInstance().getVersionChecker().getVersion() + "." + nmsClassString);
+	return Class.forName("org.bukkit.craftbukkit." + Version.getCurrent() + "." + nmsClassString);
     }
 
     public static Class<?> getMinecraftClass(String nmsClassString) throws ClassNotFoundException {
-	return Class.forName("net.minecraft.server." + Residence.getInstance().getVersionChecker().getVersion() + "." + nmsClassString);
+	return Class.forName("net.minecraft.server." + Version.getCurrent() + "." + nmsClassString);
     }
 
     public static String getItemMinecraftName(ItemStack item) {
+	try {
+
+	    Object nmsStack = asNMSCopy(item);
+	    
+	    if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+		Object pre = nmsStack.getClass().getMethod("getItem").invoke(nmsStack);
+		Object n = pre.getClass().getMethod("getName").invoke(pre);
+		Class<?> ll = Class.forName("net.minecraft.server." + Version.getCurrent() + ".LocaleLanguage");
+		Object lla = ll.getMethod("a").invoke(ll);
+		return (String) lla.getClass().getMethod("a", String.class).invoke(lla, (String) n);
+	    }
+	    
+	    Field field = Item.getField("REGISTRY");
+	    Object reg = field.get(field);
+	    Method meth = reg.getClass().getMethod("b", Object.class);
+	    meth.setAccessible(true);
+	    Method secmeth = nmsStack.getClass().getMethod("getItem");
+	    Object res2 = secmeth.invoke(nmsStack);
+	    Object res = meth.invoke(reg, res2);
+	    return res.toString();
+	} catch (Exception e) {
+	    return null;
+	}
+    }
+
+    public static String getItemRealName(ItemStack item) {
 	try {
 	    Object nmsStack = asNMSCopy(item);
 	    Method itemMeth = Item.getMethod("getById", int.class);
 	    Object res = itemMeth.invoke(Item, item.getType().getId());
 
 	    String ff = "b";
-	    switch (Residence.getInstance().getVersionChecker().getVersion()) {
+	    switch (Version.getCurrent()) {
 	    case v1_10_R1:
 	    case v1_9_R1:
 	    case v1_9_R2:
@@ -151,7 +176,7 @@ public class ItemReflection {
     }
 
     public ItemStack getItemInOffHand(Player player) {
-	if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_9_R1))
+	if (Version.getCurrent().isLower(Version.v1_9_R1))
 	    return null;
 	return player.getInventory().getItemInOffHand();
     }

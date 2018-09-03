@@ -127,7 +127,6 @@ public class v1_13_R1 implements NMS {
 	switch (CMIMaterial.get(block)) {
 	case COBWEB:
 	case STRING:
-	case WALL_BANNER:
 	case WALL_SIGN:
 	case VINE:
 	case TRIPWIRE_HOOK:
@@ -187,16 +186,10 @@ public class v1_13_R1 implements NMS {
 
 	matUseFlagList.put(CMIMaterial.OAK_DOOR.getMaterial(), Flags.door);
 	matUseFlagList.put(CMIMaterial.IRON_DOOR.getMaterial(), Flags.door);
-	matUseFlagList.put(CMIMaterial.SPRUCE_DOOR_ITEM.getMaterial(), Flags.door);
-	matUseFlagList.put(CMIMaterial.BIRCH_DOOR_ITEM.getMaterial(), Flags.door);
-	matUseFlagList.put(CMIMaterial.JUNGLE_DOOR_ITEM.getMaterial(), Flags.door);
-	matUseFlagList.put(CMIMaterial.ACACIA_DOOR_ITEM.getMaterial(), Flags.door);
-	matUseFlagList.put(CMIMaterial.DARK_OAK_DOOR_ITEM.getMaterial(), Flags.door);
 	matUseFlagList.put(CMIMaterial.OAK_DOOR.getMaterial(), Flags.door);
 	matUseFlagList.put(CMIMaterial.ACACIA_DOOR.getMaterial(), Flags.door);
 	matUseFlagList.put(CMIMaterial.BIRCH_DOOR.getMaterial(), Flags.door);
 	matUseFlagList.put(CMIMaterial.DARK_OAK_DOOR.getMaterial(), Flags.door);
-	matUseFlagList.put(CMIMaterial.IRON_DOOR_BLOCK.getMaterial(), Flags.door);
 	matUseFlagList.put(CMIMaterial.JUNGLE_DOOR.getMaterial(), Flags.door);
 	matUseFlagList.put(CMIMaterial.SPRUCE_DOOR.getMaterial(), Flags.door);
 

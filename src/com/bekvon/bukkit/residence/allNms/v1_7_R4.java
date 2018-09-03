@@ -91,7 +91,6 @@ public class v1_7_R4 implements NMS {
 	switch (CMIMaterial.get(block)) {
 	case COBWEB:
 	case STRING:
-	case WALL_BANNER:
 	case WALL_SIGN:
 	case VINE:
 	case TRIPWIRE_HOOK:
