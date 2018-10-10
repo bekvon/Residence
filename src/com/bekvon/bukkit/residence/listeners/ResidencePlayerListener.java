@@ -56,7 +56,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -77,7 +76,10 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.GetTime;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
+
+import cmiLib.ActionBarTitleMessages;
+import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.VersionChecker.Version;
 
 public class ResidencePlayerListener implements Listener {
 
@@ -377,7 +379,7 @@ public class ResidencePlayerListener implements Listener {
 	switch (event.getNewState()) {
 	case NEITHER:
 	case FALSE:
-	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1) && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
+	    if (Version.isCurrentEqualOrHigher(Version.v1_9_R1) && event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
 		for (Player one : event.getResidence().getPlayersInResidence())
 		    one.setGlowing(false);
 	    break;
@@ -385,7 +387,7 @@ public class ResidencePlayerListener implements Listener {
 	    break;
 	case TRUE:
 	    if (event.getFlag().equalsIgnoreCase(Flags.glow.getName()))
-		if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
+		if (Version.isCurrentEqualOrHigher(Version.v1_9_R1))
 		    for (Player one : event.getResidence().getPlayersInResidence())
 			one.setGlowing(true);
 	    break;
@@ -412,7 +414,7 @@ public class ResidencePlayerListener implements Listener {
 	    for (Player one : event.getResidence().getPlayersInResidence())
 		fly(one, false);
 
-	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
+	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && Version.isCurrentEqualOrHigher(Version.v1_9_R1))
 	    for (Player one : event.getResidence().getPlayersInResidence())
 		one.setGlowing(false);
     }
@@ -435,7 +437,7 @@ public class ResidencePlayerListener implements Listener {
 	if (event.getPlayer() != null && res.getPermissions().playerHas(event.getPlayer(), Flags.fly, FlagCombo.OnlyTrue))
 	    fly(player, false);
 
-	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1))
+	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && Version.isCurrentEqualOrHigher(Version.v1_9_R1))
 	    player.setGlowing(false);
     }
 
@@ -1760,12 +1762,12 @@ public class ResidencePlayerListener implements Listener {
 	    if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, false);
 
-	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+	    if (Version.isCurrentEqualOrHigher(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		player.setGlowing(false);
 	}
 
 	if (res != null && ResOld != null && !res.equals(ResOld)) {
-	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1)) {
+	    if (Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
 		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(true);
 		else if (ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
@@ -1809,7 +1811,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (res != null && ResOld == null) {
-	    if (plugin.getVersionChecker().isHigherEquals(Version.v1_9_R1)) {
+	    if (Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
 		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		    player.setGlowing(true);
 	    }
@@ -1876,7 +1878,7 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.getTeleportDelayMap().remove(player.getName());
 	    plugin.msg(player, lm.General_TeleportCanceled);
 	    if (plugin.getConfigManager().isTeleportTitleMessage())
-		plugin.getAB().sendTitle(player, "", "");
+		ActionBarTitleMessages.sendTitle(player, "", "");
 	}
     }
 
@@ -2036,7 +2038,7 @@ public class ResidencePlayerListener implements Listener {
 		    teleported = teleport(player, newLoc);
 		}
 		if (plugin.getConfigManager().useActionBar()) {
-		    plugin.getAB().send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
+		    ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
 		} else {
 		    plugin.msg(player, lm.Residence_MoveDeny, orres.getName());
 		}
@@ -2161,10 +2163,10 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (message != null) {
 	    if (plugin.getConfigManager().useTitleMessage()) {
-		plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
+		ActionBarTitleMessages.sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
 	    }
 	    if (plugin.getConfigManager().useActionBar()) {
-		plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
+		ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
 		    .toString());
 	    } else {
 		plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
@@ -2180,10 +2182,10 @@ public class ResidencePlayerListener implements Listener {
 		if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
 		    RentableLand rentable = plugin.getRentManager().getRentableLand(from);
 		    if (rentable != null)
-			plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
+			ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
 		} else if (plugin.getTransactionManager().isForSale(from) && !res.isOwner(player)) {
 		    int sale = plugin.getTransactionManager().getSaleAmount(from);
-		    plugin.getAB().send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
+		    ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
 		}
 	    }
 	}

@@ -19,8 +19,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.CMILib.CMIEffect;
-import com.bekvon.bukkit.residence.CMILib.CMIEffectManager.CMIParticle;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
 import com.bekvon.bukkit.residence.containers.Visualizer;
@@ -28,6 +26,10 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+
+import cmiLib.ActionBarTitleMessages;
+import cmiLib.CMIEffect;
+import cmiLib.CMIEffectManager.CMIParticle;
 
 public class SelectionManager {
     protected Map<UUID, Selection> selections;
@@ -436,7 +438,7 @@ public class SelectionManager {
 	if (plugin.getConfigManager().enableEconomy())
 	    Message += " " + plugin.msg(lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
 
-	plugin.getAB().send(player, Message);
+	ActionBarTitleMessages.send(player, Message);
 
     }
 

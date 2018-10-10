@@ -31,11 +31,11 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.CMILib.CMIEffect;
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.NMS;
 
+import cmiLib.CMIEffect;
+import cmiLib.ItemManager.CMIMaterial;
 import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
 
 public class v1_7_R4 implements NMS {

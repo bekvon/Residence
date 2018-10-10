@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2017 Zrips
  */
-package com.bekvon.bukkit.residence.CMILib;
+package cmiLib;
 
 import org.bukkit.Color;
 import org.bukkit.util.Vector;
 
-import com.bekvon.bukkit.residence.CMILib.CMIEffectManager.CMIParticle;
+import cmiLib.CMIEffectManager.CMIParticle;
 
 public class CMIEffect {
 

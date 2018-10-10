@@ -15,8 +15,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.utils.ReflectionUtils.PackageType;
+
+import cmiLib.ItemManager.CMIMaterial;
 
 /**
  * <b>ParticleEffect Library</b>

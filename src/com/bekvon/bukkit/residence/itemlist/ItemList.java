@@ -10,7 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
+import cmiLib.ItemManager.CMIMaterial;
 
 public class ItemList {
 

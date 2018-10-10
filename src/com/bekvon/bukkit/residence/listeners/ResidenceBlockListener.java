@@ -44,7 +44,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.commands.auto.direction;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -55,7 +54,9 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.Debug;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
+
+import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.VersionChecker.Version;
 
 public class ResidenceBlockListener implements Listener {
 
@@ -99,7 +100,7 @@ public class ResidenceBlockListener implements Listener {
 	if (!res.getPermissions().has(Flags.anvilbreak, FlagCombo.OnlyFalse))
 	    return;
 
-	if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1)) {
+	if (Version.isCurrentLower(Version.v1_13_R1)) {
 	    try {
 		b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 1);
 	    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {

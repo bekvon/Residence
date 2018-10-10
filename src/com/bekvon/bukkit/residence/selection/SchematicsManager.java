@@ -9,12 +9,13 @@ import org.bukkit.World;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+
+import cmiLib.VersionChecker.Version;
 
 @SuppressWarnings("deprecation")
 public class SchematicsManager implements WESchematicManager {
@@ -26,7 +27,7 @@ public class SchematicsManager implements WESchematicManager {
 
     @Override
     public boolean save(ClaimedResidence res) {
-	if (plugin.getVersionChecker().getVersion().isEqualOrHigher(Version.v1_13_R1))
+	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
 	    return false;
 	if (plugin.getWorldEdit() == null)
 	    return false;
@@ -82,7 +83,7 @@ public class SchematicsManager implements WESchematicManager {
     @Override
     public boolean load(ClaimedResidence res) {
 
-	if (plugin.getVersionChecker().getVersion().isEqualOrHigher(Version.v1_13_R1))
+	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
 	    return false;
 	if (plugin.getWorldEdit() == null)
 	    return false;

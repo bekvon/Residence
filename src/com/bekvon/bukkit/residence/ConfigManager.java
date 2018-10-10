@@ -27,13 +27,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.residence.CMILib.CMIEffectManager.CMIParticle;
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
+
+import cmiLib.CMIEffectManager.CMIParticle;
+import cmiLib.ItemManager.CMIMaterial;
 
 public class ConfigManager {
     protected String defaultGroup;

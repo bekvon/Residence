@@ -1,19 +1,9 @@
 package com.bekvon.bukkit.residence.selection;
 
 import java.io.File;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 
 @SuppressWarnings("deprecation")
 public class Schematics7Manager implements WESchematicManager {

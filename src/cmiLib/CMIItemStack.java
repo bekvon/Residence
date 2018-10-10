@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2017 Zrips
  */
-package com.bekvon.bukkit.residence.CMILib;
+package cmiLib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +17,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
+import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.VersionChecker.Version;
 
 
 public class CMIItemStack {

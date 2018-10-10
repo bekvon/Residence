@@ -47,8 +47,6 @@ import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
 import com.bekvon.bukkit.residence.BossBar.BossBarManager;
-import com.bekvon.bukkit.residence.CMILib.ItemManager;
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
 import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;
 import com.bekvon.bukkit.residence.Siege.ResidenceSiegeListener;
@@ -112,15 +110,11 @@ import com.bekvon.bukkit.residence.signsStuff.SignUtil;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
-import com.bekvon.bukkit.residence.utils.ActionBar;
 import com.bekvon.bukkit.residence.utils.CrackShot;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
-import com.bekvon.bukkit.residence.utils.RawMessage;
 import com.bekvon.bukkit.residence.utils.Sorting;
 import com.bekvon.bukkit.residence.utils.TabComplete;
-import com.bekvon.bukkit.residence.utils.VersionChecker;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
 import com.bekvon.bukkit.residence.utils.YmlMaker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 //import com.bekvon.bukkit.residence.towns.TownManager;
@@ -132,6 +126,12 @@ import com.residence.zip.ZipLibrary;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
+import cmiLib.ActionBarTitleMessages;
+import cmiLib.ItemManager;
+import cmiLib.RawMessage;
+import cmiLib.VersionChecker;
+import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.VersionChecker.Version;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
@@ -186,7 +186,7 @@ public class Residence extends JavaPlugin {
     protected RandomTp RandomTpManager;
     protected DynMapManager DynManager;
     protected Sorting SortingManager;
-    protected ActionBar ABManager;
+    protected ActionBarTitleMessages ABManager;
     protected AutoSelection AutoSelectionManager;
     protected WESchematicManager SchematicManager;
     private InformationPager InformationPagerManager;
@@ -225,7 +225,6 @@ public class Residence extends JavaPlugin {
     private String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
     private String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
-    private ABInterface ab;
     private NMS nms;
     private LWC lwc;
 
@@ -322,10 +321,6 @@ public class Residence extends JavaPlugin {
 
     public NMS getNms() {
 	return nms;
-    }
-
-    public ABInterface getAB() {
-	return ab;
     }
 
     private Runnable doHeals = new Runnable() {
@@ -548,8 +543,6 @@ public class Residence extends JavaPlugin {
 		return;
 	    }
 
-	    ab = new ActionBar(this);
-
 	    gmanager = new PermissionManager(this);
 	    imanager = new WorldItemManager(this);
 	    wmanager = new WorldFlagManager(this);
@@ -738,15 +731,15 @@ public class Residence extends JavaPlugin {
 //		pm.registerEvents(slistener, this);
 
 		// 1.8 event
-		if (getVersionChecker().isHigherEquals(Version.v1_8_R1))
+		if (Version.isCurrentEqualOrHigher(Version.v1_8_R1))
 		    pm.registerEvents(new v1_8Events(), this);
 
 		// 1.9 event
-		if (getVersionChecker().isHigherEquals(Version.v1_9_R1))
+		if (Version.isCurrentEqualOrHigher(Version.v1_9_R1))
 		    pm.registerEvents(new v1_9Events(), this);
 
 		// 1.10 event
-		if (getVersionChecker().isHigherEquals(Version.v1_10_R1))
+		if (Version.isCurrentEqualOrHigher(Version.v1_10_R1))
 		    pm.registerEvents(new v1_10Events(), this);
 
 		firstenable = false;
@@ -884,7 +877,7 @@ public class Residence extends JavaPlugin {
 		    SchematicManager = new Schematics7Manager(this);
 	    }
 	    if (smanager == null)
-		    smanager = new SelectionManager(server, this);
+		smanager = new SelectionManager(server, this);
 	    wepid = CMIMaterial.get(this.getWorldEdit().getConfig().getInt("wand-item"));
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit");
 	} else {

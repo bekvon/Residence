@@ -1,4 +1,4 @@
-package com.bekvon.bukkit.residence.utils;
+package cmiLib;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,48 +15,81 @@ import com.bekvon.bukkit.residence.Residence;
 
 public class VersionChecker {
     Residence plugin;
-    private int resource = 11480;
+    private static int resource = 11480;
 
     public VersionChecker(Residence plugin) {
 	this.plugin = plugin;
-	version = getCurrent();
+	version = Version.getCurrent();
     }
 
-    private static Version version = Version.v1_12_R1;
+    private static Version version = Version.v1_11_R1;
 
     public Version getVersion() {
+	return Version.getCurrent();
+    }
+
+    public Integer convertVersion(String v) {
+	v = v.replaceAll("[^\\d.]", "");
+	Integer version = 0;
+	if (v.contains(".")) {
+	    String lVersion = "";
+	    for (String one : v.split("\\.")) {
+		String s = one;
+		if (s.length() == 1)
+		    s = "0" + s;
+		lVersion += s;
+	    }
+
+	    try {
+		version = Integer.parseInt(lVersion);
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	} else {
+	    try {
+		version = Integer.parseInt(v);
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
 	return version;
     }
 
     public enum Version {
-	v1_7_R1(171, "v1_7"),
-	v1_7_R2(172, "v1_7"),
-	v1_7_R3(173, "v1_7"),
-	v1_7_R4(174, "v1_7"),
-	v1_8_R1(181, "v1_8"),
-	v1_8_R2(182, "v1_8"),
-	v1_8_R3(183, "v1_8"),
-	v1_9_R1(191, "v1_9"),
-	v1_9_R2(192, "v1_9"),
-	v1_10_R1(1101, "v1_10"),
-	v1_11_R1(1111, "v1_11"),
-	v1_11_R2(1112, "v1_11"),
-	v1_12_R1(1121, "v1_12"),
-	v1_12_R2(1122, "v1_12"),
-	v1_13_R1(1131, "v1_13"),
-	v1_13_R2(1132, "v1_13"),
-	v1_13_R3(1133, "v1_13"),
-	v1_14_R1(1141, "v1_14"),
-	v1_14_R2(1142, "v1_14"),
-	v1_15_R1(1151, "v1_15"),
-	v1_15_R2(1152, "v1_15");
+	v1_7_R1,
+	v1_7_R2,
+	v1_7_R3,
+	v1_7_R4,
+	v1_8_R1,
+	v1_8_R2,
+	v1_8_R3,
+	v1_9_R1,
+	v1_9_R2,
+	v1_10_R1,
+	v1_11_R1,
+	v1_12_R1,
+	v1_13_R1,
+	v1_13_R2,
+	v1_13_R3,
+	v1_14_R1,
+	v1_14_R2,
+	v1_15_R1,
+	v1_15_R2,
+	v1_16_R1,
+	v1_16_R2,
+	v1_17_R1,
+	v1_17_R2;
 
 	private Integer value;
 	private String shortVersion;
+	private static Version current = null;
 
-	Version(Integer value, String ShortVersion) {
-	    this.value = value;
-	    shortVersion = ShortVersion;
+	Version() {
+	    try {
+		this.value = Integer.valueOf(this.name().replaceAll("[^\\d.]", ""));
+	    } catch (Exception e) {
+	    }
+	    shortVersion = this.name().substring(0, this.name().length() - 3);
 	}
 
 	public Integer getValue() {
@@ -68,13 +101,17 @@ public class VersionChecker {
 	}
 
 	public static Version getCurrent() {
+	    if (current != null)
+		return current;
 	    String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
 	    String vv = v[v.length - 1];
 	    for (Version one : values()) {
-		if (one.name().equalsIgnoreCase(vv))
-		    return one;
+		if (one.name().equalsIgnoreCase(vv)) {
+		    current = one;
+		    break;
+		}
 	    }
-	    return null;
+	    return current;
 	}
 
 	public boolean isLower(Version version) {
@@ -97,6 +134,10 @@ public class VersionChecker {
 	    return version.getValue() >= v.getValue();
 	}
 
+	public static boolean isCurrentHigher(Version v) {
+	    return version.getValue() > v.getValue();
+	}
+
 	public static boolean isCurrentLower(Version v) {
 	    return version.getValue() < v.getValue();
 	}
@@ -104,33 +145,6 @@ public class VersionChecker {
 	public static boolean isCurrentEqualOrLower(Version v) {
 	    return version.getValue() <= v.getValue();
 	}
-    }
-
-    public static Version getCurrent() {
-	String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
-	String vv = v[v.length - 1];
-	for (Version one : Version.values()) {
-	    if (one.name().equalsIgnoreCase(vv)) {
-		return one;
-	    }
-	}
-	return null;
-    }
-
-    public boolean isLower(Version version) {
-	return this.version.getValue() < version.getValue();
-    }
-
-    public boolean isLowerEquals(Version version) {
-	return this.version.getValue() <= version.getValue();
-    }
-
-    public boolean isHigher(Version version) {
-	return this.version.getValue() > version.getValue();
-    }
-
-    public boolean isHigherEquals(Version version) {
-	return this.version.getValue() >= version.getValue();
     }
 
     public void VersionCheck(final Player player) {
@@ -153,7 +167,7 @@ public class VersionChecker {
 		    if (player != null)
 			player.sendMessage(one);
 		    else
-			plugin.consoleMessage(one);
+			Bukkit.getConsoleSender().sendMessage(one);
 	    }
 	});
     }
@@ -165,10 +179,10 @@ public class VersionChecker {
 	    con.setRequestMethod("POST");
 	    con.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resource).getBytes("UTF-8"));
 	    String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-	    if (version.length() <= 9)
+	    if (version.length() <= 7)
 		return version;
 	} catch (Exception ex) {
-	    plugin.consoleMessage(ChatColor.RED + "Failed to check for " + plugin.getDescription().getName() + " update on spigot web page.");
+	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Failed to check for " + plugin.getDescription().getName() + " update on spigot web page.");
 	}
 	return null;
     }

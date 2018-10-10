@@ -12,13 +12,11 @@ import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceSiegeListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void ResidenceSiegePreStartEvent(com.bekvon.bukkit.residence.event.ResidenceSiegePreStartEvent event) {
-	Debug.D("ResidenceSiegePreStartEvent");
 	ClaimedResidence res = event.getRes();
 	Player player = event.getAttacker();
 
@@ -88,7 +86,6 @@ public class ResidenceSiegeListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void ResidenceSiegeEndEvent(com.bekvon.bukkit.residence.event.ResidenceSiegeEndEvent event) {
-	Debug.D("ResidenceSiegeEndEvent");
 	event.getRes().endSiege();
     }
 

@@ -8,8 +8,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.CMILib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
+
+import cmiLib.ItemManager.CMIMaterial;
 
 public class FlagUtil {
 

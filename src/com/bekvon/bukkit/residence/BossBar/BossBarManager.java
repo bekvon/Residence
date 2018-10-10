@@ -12,7 +12,8 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
-import com.bekvon.bukkit.residence.utils.VersionChecker.Version;
+
+import cmiLib.VersionChecker.Version;
 
 public class BossBarManager {
 
@@ -23,7 +24,7 @@ public class BossBarManager {
     }
 
     public synchronized void updateBossBars(ResidencePlayer player) {
-	if (plugin.getVersionChecker().getVersion().isLower(Version.v1_9_R1))
+	if (Version.isCurrentLower(Version.v1_9_R1))
 	    return;
 	if (player == null)
 	    return;
@@ -34,7 +35,7 @@ public class BossBarManager {
     }
 
     public synchronized void Show(final BossBarInfo barInfo) {
-	if (plugin.getVersionChecker().getVersion().isLower(Version.v1_9_R1))
+	if (Version.isCurrentLower(Version.v1_9_R1))
 	    return;
 	final ResidencePlayer user = barInfo.getUser();
 
