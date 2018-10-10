@@ -55,6 +55,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.Debug;
 
+import cmiLib.ActionBarTitleMessages;
 import cmiLib.ItemManager.CMIMaterial;
 import cmiLib.VersionChecker.Version;
 
@@ -393,6 +394,57 @@ public class ResidenceBlockListener implements Listener {
 	plugin.msg(player, lm.General_NewPlayerInfo);
 
 	MessageInformed.add(player.getName());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onChestPlaceNearResidence(BlockPlaceEvent event) {
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+
+	Player player = event.getPlayer();
+	if (plugin.isResAdminOn(player))
+	    return;
+
+	Block block = event.getBlock();
+	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
+	    return;
+
+	ClaimedResidence orRes = plugin.getResidenceManager().getByLoc(block.getLocation());
+
+	boolean cancel = false;
+
+	ClaimedResidence res = null;
+	Block b = block.getLocation().clone().add(0, 0, -1).getBlock();
+	if (b.getType() == block.getType()) {
+	    res = plugin.getResidenceManager().getByLoc(b.getLocation());
+	    if (res != null && !res.equals(orRes))
+		cancel = true;
+	}
+	b = block.getLocation().clone().add(0, 0, 1).getBlock();
+	if (b.getType() == block.getType()) {
+	    res = plugin.getResidenceManager().getByLoc(b.getLocation());
+	    if (res != null && !res.equals(orRes))
+		cancel = true;
+	}
+	b = block.getLocation().clone().add(1, 0, 0).getBlock();
+	if (b.getType() == block.getType()) {
+	    res = plugin.getResidenceManager().getByLoc(b.getLocation());
+	    if (res != null && !res.equals(orRes))
+		cancel = true;
+	}
+	b = block.getLocation().clone().add(-1, 0, 0).getBlock();
+	if (b.getType() == block.getType()) {
+	    res = plugin.getResidenceManager().getByLoc(b.getLocation());
+	    if (res != null && !res.equals(orRes))
+		cancel = true;
+	}
+
+	if (cancel) {
+	    ActionBarTitleMessages.send(player, plugin.msg(lm.General_CantPlaceChest));
+	    event.setCancelled(true);
+	}
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

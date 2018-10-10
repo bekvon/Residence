@@ -1953,4 +1953,11 @@ public class ClaimedResidence {
 	this.getSiege().getAttackers().clear();
 	this.getSiege().getDefenders().clear();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj == null)
+	    return false;
+	return this == obj;
+    }
 }
