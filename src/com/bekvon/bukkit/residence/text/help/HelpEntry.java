@@ -284,6 +284,9 @@ public class HelpEntry {
 	    int i = 0;
 	    while (ok) {
 
+		if (i >= args.length)
+		    break;
+
 		if (args[i].equalsIgnoreCase(""))
 		    return tempmeinPath.getKeys(false);
 
@@ -298,7 +301,7 @@ public class HelpEntry {
 	    int neededArgPlace = args.length - 2 - i;
 
 	    boolean subCommand = true;
-	    if (tempmeinPath.isConfigurationSection(args[i])) {
+	    if (i < args.length && tempmeinPath.isConfigurationSection(args[i])) {
 		subCommand = false;
 		tempmeinPath = tempmeinPath.getConfigurationSection(args[i]);
 	    }
