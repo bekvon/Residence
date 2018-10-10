@@ -23,7 +23,6 @@ public class info implements cmd {
 	    Player player = (Player) sender;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null) {
-		Residence.getInstance().getSchematicManager().save(res);
 		plugin.getResidenceManager().printAreaInfo(res.getName(), sender, resadmin);
 	    } else {
 		plugin.msg(sender, lm.Invalid_Residence);
