@@ -45,7 +45,7 @@ public class TransactionManager implements MarketBuyInterface {
 	econ.subtract(player.getName(), chargeamount);
 	try {
 	    if (chargeamount != 0D)
-		plugin.msg(player, lm.Economy_MoneyCharged, chargeamount, econ.getName());
+		plugin.msg(player, lm.Economy_MoneyCharged, plugin.getEconomyManager().format(chargeamount), econ.getName());
 	} catch (Exception e) {
 	}
 	return true;

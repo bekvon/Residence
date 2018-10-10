@@ -20,6 +20,7 @@ import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class DynMapManager {
@@ -217,8 +218,8 @@ public class DynMapManager {
 	    String id = oneArea.getKey() + "." + resid;
 
 	    String name = res.getName();
-	    double[] x = new double[2];
-	    double[] z = new double[2];
+	    double[] x = new double[4];
+	    double[] z = new double[4];
 
 	    String resName = res.getName();
 
@@ -234,10 +235,19 @@ public class DynMapManager {
 	    Location l0 = oneArea.getValue().getLowLoc();
 	    Location l1 = oneArea.getValue().getHighLoc();
 
+//	    x[0] = l0.getX();
+//	    z[0] = l0.getZ();
+//	    x[1] = l1.getX() + 1.0;
+//	    z[1] = l1.getZ() + 1.0;
+
 	    x[0] = l0.getX();
 	    z[0] = l0.getZ();
-	    x[1] = l1.getX() + 1.0;
+	    x[1] = l0.getX();
 	    z[1] = l1.getZ() + 1.0;
+	    x[2] = l1.getX() + 1.0;
+	    z[2] = l1.getZ() + 1.0;
+	    x[3] = l1.getX() + 1.0;
+	    z[3] = l0.getZ();
 
 	    AreaMarker marker = null;
 
@@ -247,12 +257,12 @@ public class DynMapManager {
 		marker.deleteMarker();
 	    }
 
-	    marker = set.createAreaMarker(id, name, true, res.getWorld(), x, z, false);
+	    marker = set.createAreaMarker(id, name, true, res.getWorld(), x, z, true);
 	    if (marker == null)
 		return;
 
 	    if (plugin.getConfigManager().DynMapLayer3dRegions)
-		marker.setRangeY(Math.min(l0.getY(), l1.getY()), Math.max(l0.getY(), l1.getY()));
+		marker.setRangeY(l1.getY(), l0.getY());
 
 	    marker.setDescription(desc);
 	    addStyle(resid, marker);
