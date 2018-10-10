@@ -18,7 +18,6 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.selector.limit.PermissiveSelectorLimits;
 import com.sk89q.worldedit.world.World;
-import com.sk89q.worldguard.bukkit.BukkitUtil;
 
 public class WorldEdit7SelectionManager extends SelectionManager {
 
@@ -29,9 +28,11 @@ public class WorldEdit7SelectionManager extends SelectionManager {
     @Override
     public boolean worldEdit(Player player) {
 	WorldEditPlugin wep = (WorldEditPlugin) this.server.getPluginManager().getPlugin("WorldEdit");
-	Region sel;
+	Region sel = null;
 	try {
-	    sel = wep.getSession(player).getSelection(wep.getSession(player).getSelectionWorld());
+	    World w = wep.getSession(player).getSelectionWorld();
+	    if (w != null)
+		sel = wep.getSession(player).getSelection(w);
 	    if (sel != null) {
 		try {
 		    Location pos1 = new Location(player.getWorld(), sel.getMinimumPoint().getX(), sel.getMinimumPoint().getY(), sel.getMinimumPoint().getZ());
