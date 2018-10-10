@@ -756,9 +756,12 @@ public class ResidenceManager implements ResidenceInterface {
 		rentableString.append(plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket) + "\n");
 		rentableString.append(plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
-	    if (sender instanceof Player)
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + convertToRaw(null, forRentMsg, rentableString.toString()));
-	    else
+	    if (sender instanceof Player) {
+
+		RawMessage rm = new RawMessage();
+		rm.add(forRentMsg, rentableString.toString());
+		rm.show(sender);
+	    } else
 		plugin.msg(sender, forRentMsg);
 	} else if (plugin.getConfigManager().enabledRentSystem() && plugin.getRentManager().isRented(areaname)) {
 	    String RentedMsg = plugin.msg(lm.Residence_RentedBy, plugin.getRentManager().getRentingPlayer(areaname));
@@ -781,9 +784,12 @@ public class ResidenceManager implements ResidenceInterface {
 		rentableString.append(plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
 
-	    if (sender instanceof Player)
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + convertToRaw(null, RentedMsg, rentableString.toString()));
-	    else
+	    if (sender instanceof Player) {
+
+		RawMessage rm = new RawMessage();
+		rm.add(RentedMsg, rentableString.toString());
+		rm.show(sender);
+	    } else
 		plugin.msg(sender, RentedMsg);
 	} else if (plugin.getTransactionManager().isForSale(areaname)) {
 	    int amount = plugin.getTransactionManager().getSaleAmount(areaname);
@@ -792,24 +798,6 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
 	plugin.msg(sender, lm.General_Separator);
-    }
-
-    public String convertToRaw(String preText, String text, String hover) {
-	return convertToRaw(preText, text, hover, null);
-    }
-
-    public String convertToRaw(String preText, String text, String hover, String command) {
-	StringBuilder msg = new StringBuilder();
-	String cmd = "";
-	if (command != null) {
-	    cmd = ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/" + command + "\"}";
-	}
-	msg.append("[\"\",");
-	if (preText != null)
-	    msg.append("{\"text\":\"" + preText + "\"}");
-	msg.append("{\"text\":\"" + text + "\"" + cmd + ",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + hover + "\"}]}}}");
-	msg.append("]");
-	return msg.toString();
     }
 
     public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea, boolean resadmin) {
