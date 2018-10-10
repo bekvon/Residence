@@ -75,6 +75,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import cmiLib.ActionBarTitleMessages;
@@ -973,8 +974,17 @@ public class ResidencePlayerListener implements Listener {
 	case "DAYLIGHT_DETECTOR_INVERTED":
 	    return true;
 	default:
-	    return plugin.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getType().getId()));
+	    break;
 	}
+
+	CMIMaterial cmat = CMIMaterial.get(mat);
+	if (cmat != null) {
+	    if (cmat.isPottedFlower()) {
+		return true;
+	    }
+	}
+
+	return plugin.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getType().getId()));
     }
 
     private boolean isCanUseEntity(Material mat, Block block) {
@@ -1175,6 +1185,8 @@ public class ResidencePlayerListener implements Listener {
 		return;
 	    }
 	}
+
+	Debug.D("check pot? "+ isCanUseEntity(mat, block) + " " + mat);
 
 	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;

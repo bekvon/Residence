@@ -2075,6 +2075,43 @@ public class ItemManager {
 	    return false;
 	}
 
+	public static boolean isPottedFlower(Material mat) {
+	    CMIMaterial m = CMIMaterial.get(mat);
+	    if (m == null)
+		return false;
+	    return m.isPottedFlower();
+	}
+
+	public boolean isPottedFlower() {
+	    switch (this) {
+	    case POTTED_ACACIA_SAPLING:
+	    case POTTED_ALLIUM:
+	    case POTTED_AZURE_BLUET:
+	    case POTTED_BIRCH_SAPLING:
+	    case POTTED_BLUE_ORCHID:
+	    case POTTED_BROWN_MUSHROOM:
+	    case POTTED_CACTUS:
+	    case POTTED_DANDELION:
+	    case POTTED_DARK_OAK_SAPLING:
+	    case POTTED_DEAD_BUSH:
+	    case POTTED_FERN:
+	    case POTTED_JUNGLE_SAPLING:
+	    case POTTED_OAK_SAPLING:
+	    case POTTED_ORANGE_TULIP:
+	    case POTTED_OXEYE_DAISY:
+	    case POTTED_PINK_TULIP:
+	    case POTTED_POPPY:
+	    case POTTED_RED_MUSHROOM:
+	    case POTTED_RED_TULIP:
+	    case POTTED_SPRUCE_SAPLING:
+	    case POTTED_WHITE_TULIP:
+		return true;
+	    default:
+		break;
+	    }
+	    return false;
+	}
+
 	public static boolean isBoat(Material mat) {
 	    CMIMaterial m = CMIMaterial.get(mat);
 	    if (m == null)

@@ -29,6 +29,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 
 import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.VersionChecker.Version;
 
 public class FlagPermissions {
 
@@ -210,7 +211,7 @@ public class FlagPermissions {
 		continue;
 	    addMaterialToUseFlag(one.getMaterial(), Flags.bed);
 	}
-	
+
 	addMaterialToUseFlag(Material.BREWING_STAND, Flags.brew);
 	addMaterialToUseFlag(Material.CAKE, Flags.cake);
 	addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
@@ -219,6 +220,16 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.OAK_BUTTON.getMaterial(), Flags.button);
 	addMaterialToUseFlag(Material.ANVIL, Flags.anvil);
 	addMaterialToUseFlag(Material.FLOWER_POT, Flags.flowerpot);
+
+	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
+	    for (CMIMaterial one : CMIMaterial.values()) {
+		if (!one.isPottedFlower())
+		    continue;
+		if (one.getMaterial() == null)
+		    continue;
+		addMaterialToUseFlag(one.getMaterial(), Flags.flowerpot);
+	    }
+
 	addMaterialToUseFlag(Material.BEACON, Flags.beacon);
 	addMaterialToUseFlag(Material.JUKEBOX, Flags.container);
 	addMaterialToUseFlag(Material.CHEST, Flags.container);
