@@ -1642,7 +1642,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 	    .getCause() == TeleportCause.PLUGIN) {
-	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player)) {
+	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player) && !player.hasPermission("residence.tpbypass")) {
 		event.setCancelled(true);
 		plugin.msg(player, lm.Residence_MoveDeny, res.getName());
 		return;
