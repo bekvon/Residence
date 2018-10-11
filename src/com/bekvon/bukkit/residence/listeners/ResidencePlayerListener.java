@@ -1235,8 +1235,8 @@ public class ResidencePlayerListener implements Listener {
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
-	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    if (res == null || !res.isOwner(player))
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+	    if (res == null || !res.isOwner(player)){
 		for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 		    if (mat != checkMat.getKey())
 			continue;
@@ -1256,7 +1256,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		    return;
 		}
-
+	    }
 	    if (plugin.getConfigManager().getCustomContainers().contains(blockM.getId())) {
 		if (!perms.playerHas(player, Flags.container, hasuse)) {
 		    event.setCancelled(true);

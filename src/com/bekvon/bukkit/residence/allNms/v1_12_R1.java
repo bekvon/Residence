@@ -174,6 +174,7 @@ public class v1_12_R1 implements NMS {
 	matUseFlagList.put(CMIMaterial.LIGHT_GRAY_SHULKER_BOX.getMaterial(), Flags.container);
 	matUseFlagList.put(Material.WHITE_SHULKER_BOX, Flags.container);
 	matUseFlagList.put(Material.YELLOW_SHULKER_BOX, Flags.container);
+	
     }
 
     @Override
