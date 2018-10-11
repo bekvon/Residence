@@ -5,6 +5,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +48,7 @@ import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
+import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
 
 import cmiLib.ActionBarTitleMessages;
@@ -87,6 +89,8 @@ public class ClaimedResidence {
     private Residence plugin;
 
     private ResidenceSiege siege;
+    
+    private Set<Signs> signsInResidence = new HashSet<Signs>();
 
     public String getResidenceName() {
 	return resName;
@@ -1959,5 +1963,13 @@ public class ClaimedResidence {
 	if (obj == null)
 	    return false;
 	return this == obj;
+    }
+
+    public Set<Signs> getSignsInResidence() {
+	return signsInResidence;
+    }
+
+    public void setSignsInResidence(Set<Signs> signsInResidence) {
+	this.signsInResidence = signsInResidence;
     }
 }

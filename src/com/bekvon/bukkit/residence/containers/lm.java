@@ -88,6 +88,8 @@ public enum lm {
     Sign_ForSaleResName("&8%1"),
     Sign_ForSaleBottom("&5%1m\u00B3"),
     Sign_LookAt("&cYou are not looking at sign"),
+    Sign_ResName("&8%1"),
+    Sign_Owner("&5%1"),
 
     Siege_Started("&7Siege started!"),
     Siege_noSelf("&cCan't siege your own residence!"),

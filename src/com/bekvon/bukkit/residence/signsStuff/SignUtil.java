@@ -167,12 +167,13 @@ public class SignUtil {
 	saveSigns();
     }
 
-    public void removeSign(ClaimedResidence res) {
+    @Deprecated
+    public void removeSign(String res) {
 	if (res != null)
-	    removeSign(res.getName());
+	    removeSign(plugin.getResidenceManager().getByName(res));
     }
 
-    public void removeSign(String res) {
+    public void removeSign(ClaimedResidence res) {
 	List<Signs> signList = new ArrayList<Signs>();
 	signList.addAll(this.getSigns().GetAllSigns());
 
@@ -185,7 +186,7 @@ public class SignUtil {
 
     public void updateSignResName(ClaimedResidence res) {
 	for (Signs one : this.getSigns().GetAllSigns()) {
-	    if (res != one.GetResidence())
+	    if (!res.equals(one.GetResidence()))
 		continue;
 	    this.SignUpdate(one);
 	    saveSigns();
@@ -207,6 +208,7 @@ public class SignUtil {
 
 	if (nloc == null) {
 	    Signs.removeSign(Sign);
+	    res.getSignsInResidence().remove(Sign);
 	    return false;
 	}
 
@@ -214,6 +216,7 @@ public class SignUtil {
 
 	if (block.getType() == Material.AIR) {
 	    Signs.removeSign(Sign);
+	    res.getSignsInResidence().remove(Sign);
 	    return false;
 	}
 
@@ -222,15 +225,30 @@ public class SignUtil {
 
 	Sign sign = (Sign) block.getState();
 
-	if (!ForRent && !ForSale) {
-	    block.breakNaturally();
-	    Signs.removeSign(Sign);
-	    return true;
-	}
 	String landName = res.getName();
-
 	if (landName == null)
 	    return false;
+	if (!ForRent && !ForSale) {
+	    String shortName = fixResName(landName);
+	    String secondLine = null;
+	    if (shortName.contains("~")) {
+		String[] lines = fixDoubleResName(landName);
+		shortName = lines[0];
+		secondLine = lines[1];
+	    }
+	    sign.setLine(0, plugin.msg(lm.Sign_ResName, shortName));
+	    if (secondLine != null)
+		sign.setLine(1, plugin.msg(lm.Sign_ResName, secondLine));
+	    sign.setLine(2, "");
+	    sign.setLine(3, "");
+	    sign.setLine(secondLine == null ? 1 : 2, plugin.msg(lm.Sign_Owner, res.getOwner()));
+	    sign.update();
+
+//	    block.breakNaturally();
+//	    Signs.removeSign(Sign);
+	    return true;
+	}
+
 	if (ForRent) {
 
 	    boolean rented = res.isRented();

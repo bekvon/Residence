@@ -229,6 +229,9 @@ public class RentManager implements MarketRentInterface {
 	    newrent.AllowAutoPay = AllowAutoPay;
 	    res.setRentable(newrent);
 	    rentableLand.add(res);
+	    
+	    plugin.getSignUtil().CheckSign(res);
+	    
 	    plugin.msg(player, lm.Residence_ForRentSuccess, res.getResidenceName(), amount, days);
 	} else {
 	    plugin.msg(player, lm.Residence_AlreadyRent);

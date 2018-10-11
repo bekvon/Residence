@@ -781,21 +781,16 @@ public class ResidencePlayerListener implements Listener {
 
 	final ClaimedResidence residence = res;
 
-	boolean ForSale = plugin.getTransactionManager().isForSale(landName);
-	boolean ForRent = plugin.getRentManager().isForRent(landName);
-
 	int category = 1;
 	if (plugin.getSignUtil().getSigns().GetAllSigns().size() > 0)
 	    category = plugin.getSignUtil().getSigns().GetAllSigns().get(plugin.getSignUtil().getSigns().GetAllSigns().size() - 1).GetCategory() + 1;
 
-	if (ForSale || ForRent) {
-	    signInfo.setCategory(category);
-	    signInfo.setResidence(res);
-	    signInfo.setLocation(loc);
-//	    signInfo.updateLocation();
-	    plugin.getSignUtil().getSigns().addSign(signInfo);
-	    plugin.getSignUtil().saveSigns();
-	}
+	signInfo.setCategory(category);
+	signInfo.setResidence(res);
+	signInfo.setLocation(loc);
+	plugin.getSignUtil().getSigns().addSign(signInfo);
+	plugin.getSignUtil().saveSigns();
+
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override
 	    public void run() {
@@ -835,6 +830,8 @@ public class ResidencePlayerListener implements Listener {
 		continue;
 
 	    plugin.getSignUtil().getSigns().removeSign(one);
+	    if (one.GetResidence() != null)
+		one.GetResidence().getSignsInResidence().remove(one);
 	    plugin.getSignUtil().saveSigns();
 	    break;
 	}
@@ -1186,7 +1183,7 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	Debug.D("check pot? "+ isCanUseEntity(mat, block) + " " + mat);
+	Debug.D("check pot? " + isCanUseEntity(mat, block) + " " + mat);
 
 	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;

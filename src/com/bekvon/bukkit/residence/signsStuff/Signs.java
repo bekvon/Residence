@@ -32,6 +32,8 @@ public class Signs {
 
     public void setResidence(ClaimedResidence Residence) {
 	this.Residence = Residence;
+	if (Residence != null)
+	    Residence.getSignsInResidence().add(this);
     }
 
     public ClaimedResidence GetResidence() {
