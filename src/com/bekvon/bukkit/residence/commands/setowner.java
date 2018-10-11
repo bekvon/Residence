@@ -34,6 +34,8 @@ public class setowner implements cmd {
 		plugin.getTransactionManager().removeFromSale(area.getName());
 	    area.getPermissions().applyDefaultFlags();
 
+	    plugin.getSignUtil().updateSignResName(area);
+	    
 	    if (area.getParent() == null) {
 		plugin.msg(sender, lm.Residence_OwnerChange, args[1], args[2]);
 	    } else {
