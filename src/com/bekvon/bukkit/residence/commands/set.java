@@ -71,7 +71,7 @@ public class set implements cmd {
 		    SetFlag flag = new SetFlag(res, player, resadmin);
 		    flag.recalculateResidence(res);
 		    player.closeInventory();
-		    plugin.getPlayerListener().getGUImap().put(player.getName(), flag);
+		    plugin.getPlayerListener().getGUImap().put(player.getUniqueId(), flag);
 		    player.openInventory(flag.getInventory());
 		    return;
 		}

@@ -1,10 +1,11 @@
 package com.bekvon.bukkit.residence.listeners;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -84,46 +85,46 @@ import cmiLib.VersionChecker.Version;
 
 public class ResidencePlayerListener implements Listener {
 
-    protected Map<String, String> currentRes;
-    protected Map<String, Long> lastUpdate;
-    protected Map<String, Location> lastOutsideLoc;
+    protected Map<UUID, ClaimedResidence> currentRes;
+    protected Map<UUID, Long> lastUpdate;
+    protected Map<UUID, Location> lastOutsideLoc;
     protected Map<UUID, StuckInfo> stuckTeleportCounter;
     protected int minUpdateTime;
     protected boolean chatenabled;
-    protected List<String> playerToggleChat = new ArrayList<String>();
+    protected Set<UUID> playerToggleChat = new HashSet<UUID>();
 
-    public Map<String, SetFlag> GUI = new HashMap<String, SetFlag>();
+    public Map<UUID, SetFlag> GUI = new HashMap<UUID, SetFlag>();
 
     private Residence plugin;
 
     public ResidencePlayerListener(Residence plugin) {
-	currentRes = new HashMap<String, String>();
-	lastUpdate = new HashMap<String, Long>();
-	lastOutsideLoc = new HashMap<String, Location>();
+	currentRes = new HashMap<UUID, ClaimedResidence>();
+	lastUpdate = new HashMap<UUID, Long>();
+	lastOutsideLoc = new HashMap<UUID, Location>();
 	stuckTeleportCounter = new HashMap<UUID, StuckInfo>();
 	playerToggleChat.clear();
 	minUpdateTime = plugin.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = plugin.getConfigManager().chatEnabled();
 	for (Player player : Bukkit.getOnlinePlayers()) {
-	    lastUpdate.put(player.getName(), System.currentTimeMillis());
+	    lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
 	}
 	this.plugin = plugin;
     }
 
-    public Map<String, SetFlag> getGUImap() {
+    public Map<UUID, SetFlag> getGUImap() {
 	return GUI;
     }
 
     public void reload() {
-	currentRes = new HashMap<String, String>();
-	lastUpdate = new HashMap<String, Long>();
-	lastOutsideLoc = new HashMap<String, Location>();
+	currentRes = new HashMap<UUID, ClaimedResidence>();
+	lastUpdate = new HashMap<UUID, Long>();
+	lastOutsideLoc = new HashMap<UUID, Location>();
 	stuckTeleportCounter = new HashMap<UUID, StuckInfo>();
 	playerToggleChat.clear();
 	minUpdateTime = plugin.getConfigManager().getMinMoveUpdateInterval();
 	chatenabled = plugin.getConfigManager().chatEnabled();
 	for (Player player : Bukkit.getOnlinePlayers()) {
-	    lastUpdate.put(player.getName(), System.currentTimeMillis());
+	    lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
 	}
     }
 
@@ -568,12 +569,12 @@ public class ResidencePlayerListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Player player = event.getPlayer();
-	String resname = plugin.getPlayerListener().getCurrentResidenceName(player.getName());
-	if (resname == null)
-	    return;
-	ClaimedResidence res = plugin.getResidenceManager().getByName(resname);
+
+	ClaimedResidence res = getCurrentResidence(player.getUniqueId());
+
 	if (res == null)
 	    return;
+
 	if (!res.getPermissions().playerHas(player, Flags.command, FlagCombo.OnlyFalse))
 	    return;
 
@@ -629,12 +630,12 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onFlagGuiClick(InventoryClickEvent event) {
-	if (this.getGUImap().size() == 0)
+	if (this.getGUImap().isEmpty())
 	    return;
 
 	Player player = (Player) event.getWhoClicked();
 
-	if (!this.getGUImap().containsKey(player.getName()))
+	if (!this.getGUImap().containsKey(player.getUniqueId()))
 	    return;
 
 	event.setCancelled(true);
@@ -643,7 +644,7 @@ public class ResidencePlayerListener implements Listener {
 	if (slot > 53 || slot < 0)
 	    return;
 
-	SetFlag setFlag = this.getGUImap().get(player.getName());
+	SetFlag setFlag = this.getGUImap().get(player.getUniqueId());
 	ClickType click = event.getClick();
 	InventoryAction action = event.getAction();
 	setFlag.toggleFlag(slot, click, action);
@@ -660,9 +661,7 @@ public class ResidencePlayerListener implements Listener {
 	if (this.getGUImap().isEmpty())
 	    return;
 	HumanEntity player = event.getPlayer();
-	if (!this.getGUImap().containsKey(player.getName()))
-	    return;
-	this.getGUImap().remove(player.getName());
+	this.getGUImap().remove(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -840,14 +839,15 @@ public class ResidencePlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
 	String pname = event.getPlayer().getName();
-	currentRes.remove(pname);
-	lastUpdate.remove(pname);
-	lastOutsideLoc.remove(pname);
+	currentRes.remove(event.getPlayer().getUniqueId());
+	lastUpdate.remove(event.getPlayer().getUniqueId());
+	lastOutsideLoc.remove(event.getPlayer().getUniqueId());
+
 	plugin.getChatManager().removeFromChannel(pname);
-	plugin.getPlayerListener().removePlayerResidenceChat(pname);
+	plugin.getPlayerListener().removePlayerResidenceChat(event.getPlayer());
 	plugin.addOfflinePlayerToChache(event.getPlayer());
-	if (plugin.getAutoSelectionManager().getList().containsKey(pname.toLowerCase()))
-	    plugin.getAutoSelectionManager().getList().remove(pname);
+
+	plugin.getAutoSelectionManager().getList().remove(pname.toLowerCase());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -898,7 +898,7 @@ public class ResidencePlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
 	Player player = event.getPlayer();
-	lastUpdate.put(player.getName(), 0L);
+	lastUpdate.put(player.getUniqueId(), 0L);
 	if (plugin.getPermissionManager().isResidenceAdmin(player)) {
 	    plugin.turnResAdminOn(player);
 	}
@@ -1870,13 +1870,13 @@ public class ResidencePlayerListener implements Listener {
 	if (name == null)
 	    return;
 
-	Long last = lastUpdate.get(name);
+	Long last = lastUpdate.get(player.getUniqueId());
 	long now = System.currentTimeMillis();
 	if (last != null)
 	    if (now - last < plugin.getConfigManager().getMinMoveUpdateInterval())
 		return;
 
-	this.lastUpdate.put(name, now);
+	this.lastUpdate.put(player.getUniqueId(), now);
 
 	boolean handled = handleNewLocation(player, locto, true);
 	if (!handled)
@@ -1907,7 +1907,6 @@ public class ResidencePlayerListener implements Listener {
 
     public boolean handleNewLocation(final Player player, Location loc, boolean move) {
 
-	String pname = player.getName();
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 
 	ClaimedResidence orres = res;
@@ -1922,11 +1921,13 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
+	UUID uuid = player.getUniqueId();
+
 	ClaimedResidence ResOld = null;
-	if (currentRes.containsKey(pname)) {
-	    ResOld = plugin.getResidenceManager().getByName(currentRes.get(pname));
+	if (currentRes.containsKey(uuid)) {
+	    ResOld = currentRes.get(uuid);
 	    if (ResOld == null) {
-		currentRes.remove(pname);
+		currentRes.remove(uuid);
 	    } else {
 		if (res != null && ResOld.getName().equals(res.getName())) {
 
@@ -1949,7 +1950,7 @@ public class ResidencePlayerListener implements Listener {
 				break;
 			    }
 			    if (location.getBlockY() <= 0) {
-				Location lastLoc = lastOutsideLoc.get(pname);
+				Location lastLoc = lastOutsideLoc.get(uuid);
 				player.closeInventory();
 				boolean teleported = false;
 				if (lastLoc != null)
@@ -1971,7 +1972,7 @@ public class ResidencePlayerListener implements Listener {
 			player.setAllowFlight(false);
 		    }
 
-		    lastOutsideLoc.put(pname, loc);
+		    lastOutsideLoc.put(uuid, loc);
 		    return true;
 		}
 	    }
@@ -1988,7 +1989,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (res == null) {
-	    lastOutsideLoc.put(pname, loc);
+	    lastOutsideLoc.put(uuid, loc);
 	    if (ResOld != null) {
 
 		// New ResidenceChangeEvent
@@ -2007,7 +2008,7 @@ public class ResidencePlayerListener implements Listener {
 //			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
 //		    }
 //		}
-		currentRes.remove(pname);
+		currentRes.remove(uuid);
 	    }
 	    return true;
 	}
@@ -2016,7 +2017,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !player.hasPermission(
 		"residence.admin.move")) {
 
-		Location lastLoc = lastOutsideLoc.get(pname);
+		Location lastLoc = lastOutsideLoc.get(uuid);
 
 		if (plugin.getConfigManager().BounceAnimation()) {
 		    Visualizer v = new Visualizer(player);
@@ -2075,7 +2076,7 @@ public class ResidencePlayerListener implements Listener {
 			break;
 		    }
 		    if (location.getBlockY() <= 0) {
-			Location lastLoc = lastOutsideLoc.get(pname);
+			Location lastLoc = lastOutsideLoc.get(uuid);
 			player.closeInventory();
 			if (lastLoc != null)
 			    teleported = teleport(player, lastLoc);
@@ -2096,10 +2097,10 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	lastOutsideLoc.put(pname, loc);
+	lastOutsideLoc.put(uuid, loc);
 
-	if (!currentRes.containsKey(pname) || ResOld != res) {
-	    currentRes.put(pname, areaname);
+	if (!currentRes.containsKey(uuid) || ResOld != res) {
+	    currentRes.put(uuid, res);
 
 	    // "from" residence for ResidenceChangedEvent
 //	    ClaimedResidence chgFrom = null;
@@ -2232,13 +2233,11 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-		String resname = plugin.getPlayerListener().getCurrentResidenceName(player.getName());
-		ClaimedResidence res = null;
 
-		if (resname == null)
+		ClaimedResidence res = getCurrentResidence(player.getUniqueId());
+
+		if (res == null)
 		    continue;
-
-		res = plugin.getResidenceManager().getByName(resname);
 
 		if (!res.getPermissions().has(Flags.healing, false))
 		    continue;
@@ -2258,12 +2257,11 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-		String resname = plugin.getPlayerListener().getCurrentResidenceName(player.getName());
 
-		if (resname == null)
+		ClaimedResidence res = getCurrentResidence(player.getUniqueId());
+
+		if (res == null)
 		    continue;
-
-		ClaimedResidence res = plugin.getResidenceManager().getByName(resname);
 
 		if (!res.getPermissions().has(Flags.feed, false))
 		    continue;
@@ -2282,13 +2280,10 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-		String resname = plugin.getPlayerListener().getCurrentResidenceName(player.getName());
+		ClaimedResidence res = getCurrentResidence(player.getUniqueId());
 
-		if (resname == null)
+		if (res == null)
 		    continue;
-
-		ClaimedResidence res = null;
-		res = plugin.getResidenceManager().getByName(resname);
 
 		if (!res.getPermissions().has(Flags.nomobs, false))
 		    continue;
@@ -2313,7 +2308,7 @@ public class ResidencePlayerListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	String pname = event.getPlayer().getName();
-	if (!chatenabled || !playerToggleChat.contains(pname))
+	if (!chatenabled || !playerToggleChat.contains(event.getPlayer().getUniqueId()))
 	    return;
 
 	ChatChannel channel = plugin.getChatManager().getPlayerChannel(pname);
@@ -2324,25 +2319,31 @@ public class ResidencePlayerListener implements Listener {
     }
 
     public void tooglePlayerResidenceChat(Player player, String residence) {
-	String pname = player.getName();
-	playerToggleChat.add(pname);
+	playerToggleChat.add(player.getUniqueId());
 	plugin.msg(player, lm.Chat_ChatChannelChange, residence);
     }
 
+    @Deprecated
     public void removePlayerResidenceChat(String pname) {
-	playerToggleChat.remove(pname);
-	Player player = Bukkit.getPlayer(pname);
-	if (player != null)
-	    plugin.msg(player, lm.Chat_ChatChannelLeave);
+	removePlayerResidenceChat(Bukkit.getPlayer(pname));
     }
 
     public void removePlayerResidenceChat(Player player) {
-	String pname = player.getName();
-	playerToggleChat.remove(pname);
+	if (player == null)
+	    return;
+	playerToggleChat.remove(player.getUniqueId());
 	plugin.msg(player, lm.Chat_ChatChannelLeave);
     }
 
-    public String getCurrentResidenceName(String player) {
-	return currentRes.get(player);
+//    @Deprecated
+//    public String getCurrentResidenceName(UUID uuid) {
+//	ClaimedResidence r = currentRes.get(uuid);
+//	if (r == null)
+//	    return null;
+//	return r.getName();
+//    }
+
+    public ClaimedResidence getCurrentResidence(UUID uuid) {
+	return currentRes.get(uuid);
     }
 }

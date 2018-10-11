@@ -110,7 +110,7 @@ public class pset implements cmd {
 		    flag.setTargetPlayer(targetPlayer);
 		    flag.recalculatePlayer(res);
 		    player.closeInventory();
-		    plugin.getPlayerListener().getGUImap().put(player.getName(), flag);
+		    plugin.getPlayerListener().getGUImap().put(player.getUniqueId(), flag);
 		    player.openInventory(flag.getInventory());
 		    return;
 		}

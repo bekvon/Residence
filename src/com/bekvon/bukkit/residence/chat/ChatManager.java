@@ -1,12 +1,13 @@
 package com.bekvon.bukkit.residence.chat;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.api.ChatInterface;
-import com.bekvon.bukkit.residence.api.ResidenceApi;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.bukkit.Server;
+
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.api.ChatInterface;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class ChatManager implements ChatInterface {
 
