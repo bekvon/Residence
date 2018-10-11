@@ -686,7 +686,7 @@ public class FlagPermissions {
 		    for (Entry<String, Integer> one : ((HashMap<String, Integer>) root.get("PlayerFlags")).entrySet()) {
 			ft = Residence.getInstance().getResidenceManager().getChacheFlags(((ResidencePermissions) newperms).getWorld(), one.getValue());
 			if (ft != null && !ft.isEmpty())
-			    t.put(one.getKey(), ft);
+			    t.put(one.getKey(), new HashMap<String, Boolean>(ft));
 		    }
 		    if (!t.isEmpty())
 			newperms.playerFlags = t;
@@ -725,7 +725,7 @@ public class FlagPermissions {
 		    for (Entry<String, Integer> one : ((HashMap<String, Integer>) root.get("GroupFlags")).entrySet()) {
 			ft = Residence.getInstance().getResidenceManager().getChacheFlags(((ResidencePermissions) newperms).getWorld(), one.getValue());
 			if (ft != null && !ft.isEmpty())
-			    t.put(one.getKey(), ft);
+			    t.put(one.getKey(), new HashMap<String, Boolean>(ft));
 		    }
 		    if (!t.isEmpty()) {
 			newperms.groupFlags = t;
@@ -748,7 +748,7 @@ public class FlagPermissions {
 		    Map<String, Boolean> ft = new HashMap<String, Boolean>();
 		    ft = Residence.getInstance().getResidenceManager().getChacheFlags(((ResidencePermissions) newperms).getWorld(), (Integer) root.get("AreaFlags"));
 		    if (ft != null && !ft.isEmpty())
-			newperms.cuboidFlags = ft;
+			newperms.cuboidFlags = new HashMap<String, Boolean>(ft);
 		}
 	    }
 

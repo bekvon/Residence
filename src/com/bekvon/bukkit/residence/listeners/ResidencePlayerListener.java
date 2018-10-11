@@ -1183,8 +1183,6 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	Debug.D("check pot? " + isCanUseEntity(mat, block) + " " + mat);
-
 	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;
 
@@ -1897,11 +1895,9 @@ public class ResidencePlayerListener implements Listener {
 
 //	PlayerTeleportEvent ev = new PlayerTeleportEvent(player, player.getLocation(), loc);
 //	Bukkit.getServer().getPluginManager().callEvent(ev);
-//	Debug.D("teleporting " + !ev.isCancelled());
 	if (!player.teleport(loc))
 	    return false;
 
-//	Debug.D("tp " + player.teleport(loc));
 	return true;
     }
 

@@ -37,7 +37,6 @@ public class ResidenceCommandListener implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-	Debug.D(command.getName() + " " + args.length);
 
 //	if (args.length < 3)
 //	    return true;
