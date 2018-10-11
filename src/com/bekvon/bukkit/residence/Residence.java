@@ -103,6 +103,8 @@ import com.bekvon.bukkit.residence.selection.SelectionManager;
 import com.bekvon.bukkit.residence.selection.WESchematicManager;
 import com.bekvon.bukkit.residence.selection.WorldEdit7SelectionManager;
 import com.bekvon.bukkit.residence.selection.WorldEditSelectionManager;
+import com.bekvon.bukkit.residence.selection.WorldGuard7Util;
+import com.bekvon.bukkit.residence.selection.WorldGuardInterface;
 import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
@@ -190,7 +192,7 @@ public class Residence extends JavaPlugin {
     protected AutoSelection AutoSelectionManager;
     protected WESchematicManager SchematicManager;
     private InformationPager InformationPagerManager;
-    private WorldGuardUtil worldGuardUtil;
+    private WorldGuardInterface worldGuardUtil;
     private KingdomsUtil kingdomsUtil;
 
     protected CommandFiller cmdFiller;
@@ -1841,9 +1843,16 @@ public class Residence extends JavaPlugin {
 	return wepid;
     }
 
-    public WorldGuardUtil getWorldGuardUtil() {
-	if (worldGuardUtil == null)
-	    worldGuardUtil = new WorldGuardUtil(this);
+    public WorldGuardInterface getWorldGuardUtil() {
+	if (worldGuardUtil == null) {
+	    try {
+		Class.forName("com.sk89q.worldguard.WorldGuard");
+		this.consoleMessage("WorldGuard7");
+		worldGuardUtil = new WorldGuard7Util(this);
+	    } catch (Exception e) {
+		worldGuardUtil = new WorldGuardUtil(this);
+	    }
+	}
 	return worldGuardUtil;
     }
 

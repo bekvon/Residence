@@ -1,5 +1,7 @@
 package com.bekvon.bukkit.residence.selection;
 
+import java.lang.reflect.Method;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -13,13 +15,14 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-public class WorldGuardUtil {
+public class WorldGuardUtil implements WorldGuardInterface {
     private Residence plugin;
 
     public WorldGuardUtil(Residence residence) {
 	this.plugin = residence;
     }
 
+    @Override
     public ProtectedRegion getRegion(Player player, CuboidArea area) {
 
 	if (area == null)
@@ -40,7 +43,11 @@ public class WorldGuardUtil {
 	    BlockVector max = new BlockVector(loc2.getX(), loc2.getY(), loc2.getZ());
 	    ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
 
-	    RegionManager mgr = plugin.getWorldGuard().getRegionManager(loc1.getWorld());
+	    Method methd = plugin.getWorldGuard().getClass().getMethod("getRegionManager", loc1.getWorld().getClass());
+
+	    RegionManager mgr = (RegionManager) methd.invoke(plugin.getWorldGuard(), loc1.getWorld());
+
+//	    RegionManager mgr = plugin.getWorldGuard().getRegionManager(loc1.getWorld());
 
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 
@@ -53,6 +60,7 @@ public class WorldGuardUtil {
 	return null;
     }
 
+    @Override
     public boolean isSelectionInArea(Player player) {
 	if (plugin.getWorldGuard() == null)
 	    return false;
