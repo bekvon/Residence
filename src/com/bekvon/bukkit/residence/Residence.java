@@ -70,6 +70,7 @@ import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
 import com.bekvon.bukkit.residence.dynmap.DynMapManager;
 import com.bekvon.bukkit.residence.economy.BOSEAdapter;
 import com.bekvon.bukkit.residence.economy.BlackHoleEconomy;
+import com.bekvon.bukkit.residence.economy.CMIEconomy;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
 import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
@@ -623,31 +624,71 @@ public class Residence extends JavaPlugin {
 		if (in != null)
 		    in.close();
 	    }
+
 	    economy = null;
 	    if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
 		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Scanning for economy systems...");
-		if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
-		    ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
-		    if (vault.economyOK()) {
-			economy = vault;
-			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found Vault using economy system: " + vault.getEconomyName());
-		    }
-		}
-		if (economy == null) {
-		    this.loadVaultEconomy();
-		}
-		if (economy == null) {
+		switch (this.getConfigManager().getEconomyType()) {
+		case BOSEconomy:
 		    this.loadBOSEconomy();
-		}
-		if (economy == null) {
+		    break;
+		case CMIEconomy:
+		    this.loadCMIEconomy();
+		    break;
+		case Essentials:
 		    this.loadEssentialsEconomy();
-		}
-		if (economy == null) {
+		    break;
+		case MineConomy:
+		    break;
+		case None:
+		    if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
+			ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
+			if (vault.economyOK()) {
+			    economy = vault;
+			    consoleMessage("Found Vault using economy system: &5" + vault.getEconomyName());
+			}
+		    }
+		    if (economy == null) {
+			this.loadVaultEconomy();
+		    }
+		    if (economy == null) {
+			this.loadCMIEconomy();
+		    }
+		    if (economy == null) {
+			this.loadBOSEconomy();
+		    }
+		    if (economy == null) {
+			this.loadEssentialsEconomy();
+		    }
+		    if (economy == null) {
+			this.loadRealEconomy();
+		    }
+		    if (economy == null) {
+			this.loadIConomy();
+		    }
+		    break;
+		case RealEconomy:
 		    this.loadRealEconomy();
-		}
-		if (economy == null) {
+		    break;
+		case Vault:
+		    if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
+			ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
+			if (vault.economyOK()) {
+			    economy = vault;
+			    consoleMessage("Found Vault using economy system: &5" + vault.getEconomyName());
+			}
+		    }
+		    if (economy == null) {
+			this.loadVaultEconomy();
+		    }
+		    break;
+		case iConomy:
 		    this.loadIConomy();
+		    break;
+		default:
+		    break;
 		}
+
 		if (economy == null) {
 		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Unable to find an economy system...");
 		    economy = new BlackHoleEconomy();
@@ -1095,12 +1136,13 @@ public class Residence extends JavaPlugin {
 	    } else if (p.getDescription().getVersion().startsWith("5")) {
 		economy = new IConomy5Adapter();
 	    } else {
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + " UNKNOWN iConomy version!");
+		consoleMessage("UNKNOWN iConomy version!");
 		return;
 	    }
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with iConomy! Version: " + p.getDescription().getVersion());
+	    consoleMessage("Successfully linked with &5iConomy");
+	    consoleMessage("Version: " + p.getDescription().getVersion());
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " iConomy NOT found!");
+	    consoleMessage("iConomy NOT found!");
 	}
     }
 
@@ -1108,9 +1150,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("BOSEconomy");
 	if (p != null) {
 	    economy = new BOSEAdapter((BOSEconomy) p);
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with BOSEconomy!");
+	    consoleMessage("Successfully linked with &5BOSEconomy");
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " BOSEconomy NOT found!");
+	    consoleMessage("BOSEconomy NOT found!");
 	}
     }
 
@@ -1118,9 +1160,19 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("Essentials");
 	if (p != null) {
 	    economy = new EssentialsEcoAdapter((Essentials) p);
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with Essentials Economy!");
+	    consoleMessage("Successfully linked with &5Essentials Economy");
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Essentials Economy NOT found!");
+	    consoleMessage("Essentials Economy NOT found!");
+	}
+    }
+
+    private void loadCMIEconomy() {
+	Plugin p = getServer().getPluginManager().getPlugin("CMI");
+	if (p != null) {
+	    economy = new CMIEconomy();
+	    consoleMessage("Successfully linked with &5CMIEconomy");
+	} else {
+	    consoleMessage("CMIEconomy NOT found!");
 	}
     }
 
@@ -1128,9 +1180,9 @@ public class Residence extends JavaPlugin {
 	Plugin p = getServer().getPluginManager().getPlugin("RealPlugin");
 	if (p != null) {
 	    economy = new RealShopEconomy(new RealEconomy((RealPlugin) p));
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Successfully linked with RealShop Economy!");
+	    consoleMessage("Successfully linked with &5RealShop Economy");
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " RealShop Economy NOT found!");
+	    consoleMessage("RealShop Economy NOT found!");
 	}
     }
 
@@ -1139,13 +1191,13 @@ public class Residence extends JavaPlugin {
 	if (p != null) {
 	    ResidenceVaultAdapter vault = new ResidenceVaultAdapter(getServer());
 	    if (vault.economyOK()) {
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found Vault using economy: " + vault.getEconomyName());
+		consoleMessage("Found Vault using economy: &5" + vault.getEconomyName());
 		economy = vault;
 	    } else {
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found Vault, but Vault reported no usable economy system...");
+		consoleMessage("Found Vault, but Vault reported no usable economy system...");
 	    }
 	} else {
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Vault NOT found!");
+	    consoleMessage("Vault NOT found!");
 	}
     }
 

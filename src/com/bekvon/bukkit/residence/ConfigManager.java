@@ -28,6 +28,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.EconomyType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -40,6 +41,7 @@ public class ConfigManager {
     protected boolean useLeases;
     protected boolean ResMoneyBack;
     protected boolean enableEconomy;
+    private EconomyType VaultEconomy;
     protected boolean ExtraEnterMessage;
     protected boolean adminsOnly;
     protected boolean allowEmptyResidences;
@@ -800,6 +802,16 @@ public class ConfigManager {
 	c.getW().addComment("Global.EnableEconomy",
 	    "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
 	enableEconomy = c.get("Global.EnableEconomy", true);
+
+	c.getW().addComment("Global.Type",
+	    "Defaults to None which will start by looking to default economy engine throw vault API and if it fails to any supported economy engine",
+	    "Custom economy engines can be defined to access economy directly", "Supported variables: " + EconomyType.toStringLine());
+	VaultEconomy = EconomyType.getByName(c.get("Global.Type", "None"));
+	if (VaultEconomy == null) {
+	    plugin.consoleMessage("&cCould not determine economy from " + c.get("Global.Type", "Vault"));
+	    plugin.consoleMessage("&cTrying to find suitable economy system");
+	    VaultEconomy = EconomyType.None;
+	}
 
 	c.getW().addComment("Global.ExtraEnterMessage",
 	    "When enabled extra message will apear in chat if residence is for rent or for sell to inform how he can rent/buy residence with basic information.");
@@ -1854,6 +1866,10 @@ public class ConfigManager {
 
     public boolean isConsoleLogsShowFlagChanges() {
 	return ConsoleLogsShowFlagChanges;
+    }
+
+    public EconomyType getEconomyType() {
+	return VaultEconomy;
     }
 
 //    public int getTownMinRange() {
