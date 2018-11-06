@@ -112,10 +112,10 @@ public class RandomTp {
 	    if (!plugin.getNms().isEmptyBlock(loc.getBlock()))
 		continue;
 
-	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.LAVA)
+	    if (loc.clone().add(0, -1, 0).getBlock().getType().equals(Material.LAVA))
 		continue;
 
-	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.WATER)
+	    if (loc.clone().add(0, -1, 0).getBlock().getType().equals(Material.WATER))
 		continue;
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
