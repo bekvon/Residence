@@ -88,12 +88,8 @@ public class RandomTp {
 
 	    loc = new Location(world, x, world.getMaxHeight(), z);
 
-	    int dir = random.nextInt(359);
-
 	    int max = loc.getWorld().getMaxHeight();
-	    max = loc.getWorld().getEnvironment() == Environment.NETHER ? 100 : max;
-
-	    loc.setYaw(dir);
+	    max = loc.getWorld().getEnvironment().equals(Environment.NETHER) ? 100 : world.getHighestBlockAt(loc).getY() + 1;
 
 	    for (int i = max; i > 0; i--) {
 		loc.setY(i);
@@ -126,6 +122,12 @@ public class RandomTp {
 	    loc.setY(loc.getY() + 2);
 	    break;
 	}
+
+	if (loc != null) {
+	    int dir = random.nextInt(359);
+	    loc.setYaw(dir);
+	}
+
 	return loc;
     }
 
