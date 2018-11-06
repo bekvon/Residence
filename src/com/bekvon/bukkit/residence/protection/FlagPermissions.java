@@ -184,6 +184,12 @@ public class FlagPermissions {
 
 	    if (one.isButton() && one.getMaterial() != null)
 		matUseFlagList.put(one.getMaterial(), Flags.button);
+
+	    if (one.isBed() && one.getMaterial() != null)
+		matUseFlagList.put(one.getMaterial(), Flags.bed);
+
+	    if (one.isPottedFlower() && one.getMaterial() != null)
+		matUseFlagList.put(one.getMaterial(), Flags.flowerpot);
 	}
 
 	if (CMIMaterial.DAYLIGHT_DETECTOR.getMaterial() != null)
@@ -191,14 +197,8 @@ public class FlagPermissions {
 
 	if (CMIMaterial.ENCHANTING_TABLE.getMaterial() != null)
 	    addMaterialToUseFlag(CMIMaterial.ENCHANTING_TABLE.getMaterial(), Flags.enchant);
+
 	addMaterialToUseFlag(Material.LEVER, Flags.lever);
-
-	for (CMIMaterial one : CMIMaterial.values()) {
-	    if (!one.isBed() || one.getMaterial() == null)
-		continue;
-	    addMaterialToUseFlag(one.getMaterial(), Flags.bed);
-	}
-
 	addMaterialToUseFlag(Material.BREWING_STAND, Flags.brew);
 	addMaterialToUseFlag(Material.CAKE, Flags.cake);
 	addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
@@ -206,16 +206,6 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.COMMAND_BLOCK.getMaterial(), Flags.commandblock);
 	addMaterialToUseFlag(Material.ANVIL, Flags.anvil);
 	addMaterialToUseFlag(Material.FLOWER_POT, Flags.flowerpot);
-
-	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
-	    for (CMIMaterial one : CMIMaterial.values()) {
-		if (!one.isPottedFlower())
-		    continue;
-		if (one.getMaterial() == null)
-		    continue;
-		addMaterialToUseFlag(one.getMaterial(), Flags.flowerpot);
-	    }
-
 	addMaterialToUseFlag(Material.BEACON, Flags.beacon);
 	addMaterialToUseFlag(Material.JUKEBOX, Flags.container);
 	addMaterialToUseFlag(Material.CHEST, Flags.container);

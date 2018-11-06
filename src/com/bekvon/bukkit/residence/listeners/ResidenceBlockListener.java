@@ -815,7 +815,7 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
-	CMIMaterial mat = CMIMaterial.get(event.getBlock());
+	CMIMaterial mat = CMIMaterial.get(event.getBlock().getType());
 	if (!mat.equals(CMIMaterial.FARMLAND))
 	    return;
 
