@@ -1,11 +1,19 @@
 package com.bekvon.bukkit.residence.economy;
 
+import org.bukkit.entity.Player;
+
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Containers.CMIUser;
 
 public class CMIEconomy implements EconomyInterface {
 
     public CMIEconomy() {
+    }
+
+    @Override
+    public double getBalance(Player player) {
+	CMIUser user = CMI.getInstance().getPlayerManager().getUser(player);
+	return user == null ? 0D : user.getBalance();
     }
 
     @Override

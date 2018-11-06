@@ -1,5 +1,7 @@
 package com.bekvon.bukkit.residence.economy;
 
+import org.bukkit.entity.Player;
+
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 
 public class RealShopEconomy implements EconomyInterface {
@@ -8,6 +10,11 @@ public class RealShopEconomy implements EconomyInterface {
 
     public RealShopEconomy(RealEconomy e) {
 	plugin = e;
+    }
+
+    @Override
+    public double getBalance(Player player) {
+	return plugin.getBalance(player.getName());
     }
 
     @Override

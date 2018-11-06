@@ -1,8 +1,15 @@
 package com.bekvon.bukkit.residence.economy;
 
+import org.bukkit.entity.Player;
+
 public class BlackHoleEconomy implements EconomyInterface {
 
     public BlackHoleEconomy() {
+    }
+
+    @Override
+    public double getBalance(Player player) {
+	return 0D;
     }
 
     @Override

@@ -91,6 +91,11 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
 	}
     }
 
+    @Override
+    public double getBalance(Player player) {
+	return economy.getBalance(player);
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public double getBalance(String playerName) {
@@ -155,9 +160,8 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
     }
 
     @Override
-    public String format(double amount) {	
+    public String format(double amount) {
 	return economy.format(amount);
     }
-    
-    
+
 }

@@ -1,9 +1,17 @@
 package com.bekvon.bukkit.residence.economy;
 
+import org.bukkit.entity.Player;
+
 import com.iConomy.iConomy;
 import com.iConomy.system.Account;
 
 public class IConomy5Adapter implements EconomyInterface {
+
+    @Override
+    public double getBalance(Player player) {
+	Account acc = iConomy.getAccount(player.getName());
+	return (acc == null) ? 0 : acc.getHoldings().balance();
+    }
 
     @Override
     public double getBalance(String playerName) {

@@ -1,5 +1,7 @@
 package com.bekvon.bukkit.residence.economy;
 
+import org.bukkit.entity.Player;
+
 import com.iCo6.iConomy;
 import com.iCo6.system.Account;
 import com.iCo6.system.Accounts;
@@ -12,6 +14,11 @@ public class IConomy6Adapter implements EconomyInterface {
 	icon = iconomy;
     }
 
+    @Override
+    public double getBalance(Player player) {
+	checkExist(player.getName());
+	return new Accounts().get(player.getName()).getHoldings().getBalance();
+    }
     @Override
     public double getBalance(String playerName) {
 	checkExist(playerName);
