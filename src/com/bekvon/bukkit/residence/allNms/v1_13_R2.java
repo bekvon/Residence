@@ -115,6 +115,7 @@ public class v1_13_R2 implements NMS {
 	case LEVER:
 	case PISTON:
 	case STICKY_PISTON:
+	case NOTE_BLOCK:
 	case DRAGON_EGG:
 	    return true;
 	default:

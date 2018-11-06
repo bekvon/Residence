@@ -76,7 +76,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import cmiLib.ActionBarTitleMessages;
@@ -956,7 +955,6 @@ public class ResidencePlayerListener implements Listener {
 	case "COMMAND":
 	case "ANVIL":
 	case "CAKE_BLOCK":
-	case "NOTE_BLOCK":
 	case "DIODE":
 	case "DIODE_BLOCK_OFF":
 	case "DIODE_BLOCK_ON":
@@ -1082,6 +1080,7 @@ public class ResidencePlayerListener implements Listener {
 	boolean resadmin = plugin.isResAdminOn(player);
 	if (player.hasMetadata("NPC"))
 	    return;
+
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (player.hasPermission("residence.select") || player.hasPermission("residence.create") && !player.isPermissionSet("residence.select") || group
@@ -1166,6 +1165,10 @@ public class ResidencePlayerListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Player player = event.getPlayer();
+
+	if (!plugin.getNms().isMainHand(event))
+	    return;
+
 	ItemStack iih = plugin.getNms().itemInMainHand(player);
 	CMIMaterial heldItem = CMIMaterial.get(iih);
 
@@ -1236,7 +1239,7 @@ public class ResidencePlayerListener implements Listener {
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
-	    if (res == null || !res.isOwner(player)){
+	    if (res == null || !res.isOwner(player)) {
 		for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
 		    if (mat != checkMat.getKey())
 			continue;
@@ -1252,8 +1255,15 @@ public class ResidencePlayerListener implements Listener {
 
 		    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, Flags.use);
+			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			return;
 		    }
+
+		    if (plugin.getNms().isCanUseEntity_BothClick(mat, block)) {
+			event.setCancelled(true);
+			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+		    }
+
 		    return;
 		}
 	    }

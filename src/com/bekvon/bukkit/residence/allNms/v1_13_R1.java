@@ -114,6 +114,7 @@ public class v1_13_R1 implements NMS {
 	switch (CMIMaterial.get(mat)) {
 	case LEVER:
 	case PISTON:
+	case NOTE_BLOCK:
 	case STICKY_PISTON:
 	case DRAGON_EGG:
 	    return true;
