@@ -45,6 +45,7 @@ import com.bekvon.bukkit.residence.event.ResidenceSubzoneCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceTPEvent;
 import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
@@ -965,7 +966,7 @@ public class ClaimedResidence {
 	    Block block = newLoc.getBlock();
 	    Block block2 = newLoc.clone().add(0, 1, 0).getBlock();
 	    Block block3 = newLoc.clone().add(0, -1, 0).getBlock();
-	    if (plugin.getNms().isEmptyBlock(block) && plugin.getNms().isEmptyBlock(block2) && !plugin.getNms().isEmptyBlock(block3)) {
+	    if (ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2) && !ResidencePlayerListener.isEmptyBlock(block3)) {
 		found = true;
 		break;
 	    }
@@ -1023,12 +1024,12 @@ public class ClaimedResidence {
 		Block block = loc.getBlock();
 		Block block2 = loc.clone().add(0, 1, 0).getBlock();
 		Block block3 = loc.clone().add(0, -1, 0).getBlock();
-		if (!plugin.getNms().isEmptyBlock(block3) && plugin.getNms().isEmptyBlock(block) && plugin.getNms().isEmptyBlock(block2)) {
+		if (!ResidencePlayerListener.isEmptyBlock(block3) && ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2)) {
 		    break;
 		}
 	    }
 
-	    if (!plugin.getNms().isEmptyBlock(loc.getBlock()))
+	    if (!ResidencePlayerListener.isEmptyBlock(loc.getBlock()))
 		continue;
 
 	    if (loc.clone().add(0, -1, 0).getBlock().getState().getType() == Material.LAVA)
@@ -1211,7 +1212,7 @@ public class ClaimedResidence {
 	for (int i = 0; i < 255; i++) {
 	    tempLoc.setY(from - i);
 	    Block block = tempLoc.getBlock();
-	    if (plugin.getNms().isEmptyBlock(block)) {
+	    if (ResidencePlayerListener.isEmptyBlock(block)) {
 		fallDistance++;
 	    } else {
 		break;

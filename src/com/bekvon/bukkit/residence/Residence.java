@@ -60,7 +60,6 @@ import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
 import com.bekvon.bukkit.residence.chat.ChatManager;
-import com.bekvon.bukkit.residence.containers.ABInterface;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
@@ -131,9 +130,9 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import cmiLib.ActionBarTitleMessages;
 import cmiLib.ItemManager;
+import cmiLib.ItemManager.CMIMaterial;
 import cmiLib.RawMessage;
 import cmiLib.VersionChecker;
-import cmiLib.ItemManager.CMIMaterial;
 import cmiLib.VersionChecker.Version;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;

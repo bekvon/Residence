@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class RandomTp {
@@ -96,7 +97,7 @@ public class RandomTp {
 		Block block = loc.getBlock();
 		Block block2 = loc.clone().add(0, 1, 0).getBlock();
 		Block block3 = loc.clone().add(0, -1, 0).getBlock();
-		if (!plugin.getNms().isEmptyBlock(block3) && plugin.getNms().isEmptyBlock(block) && plugin.getNms().isEmptyBlock(block2)) {
+		if (!ResidencePlayerListener.isEmptyBlock(block3) && ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2)) {
 		    break;
 		}
 		if (i <= 3) {
@@ -105,7 +106,7 @@ public class RandomTp {
 		}
 	    }
 
-	    if (!plugin.getNms().isEmptyBlock(loc.getBlock()))
+	    if (!ResidencePlayerListener.isEmptyBlock(loc.getBlock()))
 		continue;
 
 	    if (loc.clone().add(0, -1, 0).getBlock().getType().equals(Material.LAVA))

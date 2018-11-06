@@ -875,7 +875,7 @@ public class ResidencePlayerListener implements Listener {
 	    for (int i = 0; i < maxH; i++) {
 		location.setY(from - i);
 		Block block = location.getBlock();
-		if (!plugin.getNms().isEmptyBlock(block)) {
+		if (!isEmptyBlock(block)) {
 		    location.setY(from - i + 1);
 		    break;
 		}
@@ -982,8 +982,55 @@ public class ResidencePlayerListener implements Listener {
 	return plugin.getConfigManager().getCustomRightClick().contains(Integer.valueOf(block.getType().getId()));
     }
 
+    public boolean isCanUseEntity_BothClick(Material mat, Block block) {
+	CMIMaterial m = CMIMaterial.get(mat);
+	if (m.isDoor())
+	    return true;
+	if (m.isButton())
+	    return true;
+	if (m.isGate())
+	    return true;
+	if (m.isTrapDoor())
+	    return true;
+
+	switch (CMIMaterial.get(mat)) {
+	case LEVER:
+	case PISTON:
+	case STICKY_PISTON:
+	case NOTE_BLOCK:
+	case DRAGON_EGG:
+	    return true;
+	default:
+	    return Residence.getInstance().getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getType().getId()));
+	}
+    }
+
+    public static boolean isEmptyBlock(Block block) {
+	switch (CMIMaterial.get(block)) {
+	case COBWEB:
+	case STRING:
+	case WALL_SIGN:
+	case VINE:
+	case TRIPWIRE_HOOK:
+	case TRIPWIRE:
+	case PAINTING:
+	case ITEM_FRAME:
+	    return true;
+	default:
+	    break;
+	}
+
+	if (CMIMaterial.get(block).isSapling())
+	    return true;
+	if (CMIMaterial.get(block).isAir())
+	    return true;
+	if (CMIMaterial.get(block).isButton())
+	    return true;
+	return false;
+    }
+
     private boolean isCanUseEntity(Material mat, Block block) {
-	return plugin.getNms().isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
+	return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1179,7 +1226,7 @@ public class ResidencePlayerListener implements Listener {
 	Material mat = block.getType();
 
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
-	    || plugin.getNms().isCanUseEntity_BothClick(mat, block))) {
+	    || isCanUseEntity_BothClick(mat, block))) {
 	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
 		&& !heldItem.isDye() && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
 		return;
@@ -1259,7 +1306,7 @@ public class ResidencePlayerListener implements Listener {
 			return;
 		    }
 
-		    if (plugin.getNms().isCanUseEntity_BothClick(mat, block)) {
+		    if (isCanUseEntity_BothClick(mat, block)) {
 			event.setCancelled(true);
 			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
 		    }
@@ -1951,7 +1998,7 @@ public class ResidencePlayerListener implements Listener {
 			for (int i = 0; i < maxH; i++) {
 			    location.setY(from - i);
 			    Block block = location.getBlock();
-			    if (!plugin.getNms().isEmptyBlock(block)) {
+			    if (!isEmptyBlock(block)) {
 				location.setY(from - i + 1);
 				break;
 			    }
@@ -2077,7 +2124,7 @@ public class ResidencePlayerListener implements Listener {
 		for (int i = 0; i < maxH; i++) {
 		    location.setY(from - i);
 		    Block block = location.getBlock();
-		    if (!plugin.getNms().isEmptyBlock(block)) {
+		    if (!isEmptyBlock(block)) {
 			location.setY(from - i + 1);
 			break;
 		    }

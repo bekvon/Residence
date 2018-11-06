@@ -1,11 +1,11 @@
 package com.bekvon.bukkit.residence;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceCommandListener implements CommandExecutor {
 

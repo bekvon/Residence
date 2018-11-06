@@ -2,12 +2,10 @@ package com.bekvon.bukkit.residence.allNms;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Bat;
@@ -31,12 +29,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.NMS;
 
 import cmiLib.CMIEffect;
-import cmiLib.ItemManager.CMIMaterial;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
@@ -62,83 +57,8 @@ public class v1_8_R3 implements NMS {
     }
 
     @Override
-    public boolean isArmorStandMaterial(Material material) {
-	return material == Material.ARMOR_STAND;
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public boolean isCanUseEntity_BothClick(Material mat, Block block) {
-	CMIMaterial m = CMIMaterial.get(mat);
-	if (m.isDoor())
-	    return true;
-	if (m.isButton())
-	    return true;
-	if (m.isGate())
-	    return true;
-	if (m.isTrapDoor())
-	    return true;
-
-	switch (CMIMaterial.get(mat)) {
-	case LEVER:
-	case PISTON:
-	case NOTE_BLOCK:
-	case STICKY_PISTON:
-	case DRAGON_EGG:
-	    return true;
-	default:
-	    return Residence.getInstance().getConfigManager().getCustomBothClick().contains(Integer.valueOf(block.getType().getId()));
-	}
-    }
-
-    @Override
-    public boolean isEmptyBlock(Block block) {
-	switch (CMIMaterial.get(block)) {
-	case COBWEB:
-	case STRING:
-	case WALL_SIGN:
-	case VINE:
-	case TRIPWIRE_HOOK:
-	case TRIPWIRE:
-	case PAINTING:
-	case ITEM_FRAME:
-	    return true;
-	default:
-	    break;
-	}
-
-	if (CMIMaterial.get(block).isSapling())
-	    return true;
-	if (CMIMaterial.get(block).isAir())
-	    return true;
-	if (CMIMaterial.get(block).isButton())
-	    return true;
-
-	return false;
-    }
-
-    @Override
     public boolean isSpectator(GameMode mode) {
 	return mode == GameMode.SPECTATOR;
-    }
-
-    @Override
-    public void addDefaultFlags(Map<Material, Flags> matUseFlagList) {
-	/* 1.8 Doors */
-	matUseFlagList.put(Material.SPRUCE_DOOR, Flags.door);
-	matUseFlagList.put(Material.BIRCH_DOOR, Flags.door);
-	matUseFlagList.put(Material.JUNGLE_DOOR, Flags.door);
-	matUseFlagList.put(Material.ACACIA_DOOR, Flags.door);
-	matUseFlagList.put(Material.DARK_OAK_DOOR, Flags.door);
-	/* 1.8 Fence Gates */
-	matUseFlagList.put(Material.SPRUCE_FENCE_GATE, Flags.door);
-	matUseFlagList.put(Material.BIRCH_FENCE_GATE, Flags.door);
-	matUseFlagList.put(Material.JUNGLE_FENCE_GATE, Flags.door);
-	matUseFlagList.put(Material.ACACIA_FENCE_GATE, Flags.door);
-	matUseFlagList.put(Material.DARK_OAK_FENCE_GATE, Flags.door);
-	matUseFlagList.put(Material.IRON_TRAPDOOR, Flags.door);
-	/* 1.8 day light sensor */
-	matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR.getMaterial(), Flags.diode);
     }
 
     @Override

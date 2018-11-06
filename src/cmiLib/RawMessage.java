@@ -17,8 +17,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.residence.Residence;
-
 import cmiLib.VersionChecker.Version;
 
 

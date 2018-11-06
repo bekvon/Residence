@@ -1541,9 +1541,7 @@ public class ItemManager {
 	LEGACY_STATIONARY_WATER(9, 0, -1, "Stationary Water", ""),
 	LEGACY_STATIONARY_LAVA(11, 0, -1, "Stationary Lava", ""),
 	LEGACY_BURNING_FURNACE(62, 0, -1, "Burning Furnace", ""),
-	LEGACY_WOODEN_DOOR_BLOCK(64, 0, -1, "Wooden Door Block", ""),
 	LEGACY_NETHER_WARTS(115, -1, -1, "Nether Warts", ""),
-	LEGACY_IRON_DOOR_BLOCK(71, 0, -1, "Iron Door Block", ""),
 	LEGACY_GLOWING_REDSTON_ORE(74, 0, -1, "Glowing Redstone Ore", ""),
 	LEGACY_SUGAR_CANE_BLOCK(83, -1, -1, "Sugar Cane Block", ""),
 	LEGACY_RAW_FISH(349, 0, -1, "Raw Fish", ""),
@@ -1565,11 +1563,13 @@ public class ItemManager {
 //	LEGACY_WALL_BANNER(177, -1, -1, "LEGACY_WALL_BANNER", ""),
 //	LEGACY_DAYLIGHT_DETECTOR_INVERTED(178, -1, -1, "LEGACY_DAYLIGHT_DETECTOR_INVERTED", ""),
 //	LEGACY_DOUBLE_STONE_SLAB2(181, -1, -1, "LEGACY_DOUBLE_STONE_SLAB2", ""),
-//	LEGACY_SPRUCE_DOOR(193, -1, -1, "LEGACY_SPRUCE_DOOR", ""),
-//	LEGACY_BIRCH_DOOR(194, -1, -1, "LEGACY_BIRCH_DOOR", ""),
-//	LEGACY_JUNGLE_DOOR(195, -1, -1, "LEGACY_JUNGLE_DOOR", ""),
-//	LEGACY_ACACIA_DOOR(196, -1, -1, "LEGACY_ACACIA_DOOR", ""),
-//	LEGACY_DARK_OAK_DOOR(197, -1, -1, "LEGACY_DARK_OAK_DOOR", ""),
+	LEGACY_IRON_DOOR_BLOCK(71, 0, -1, "Iron Door Block"),
+	LEGACY_WOODEN_DOOR(64, 0, -1, "Wooden Door Block"),
+	LEGACY_SPRUCE_DOOR(193, 0, -1, "Spruce Door Block"),
+	LEGACY_BIRCH_DOOR(194, 0, -1, "Birch Door Block"),
+	LEGACY_JUNGLE_DOOR(195, 0, -1, "Jungle Door Block"),
+	LEGACY_ACACIA_DOOR(196, 0, -1, "Acacia Door Block"),
+	LEGACY_DARK_OAK_DOOR(197, 0, -1, "Dark Oak Door Block"),
 //	LEGACY_PURPUR_DOUBLE_SLAB(204, -1, -1, "LEGACY_PURPUR_DOUBLE_SLAB", ""),
 //	LEGACY_COMMAND_REPEATING(210, -1, -1, "LEGACY_COMMAND_REPEATING", ""),
 //	LEGACY_COMMAND_CHAIN(211, -1, -1, "LEGACY_COMMAND_CHAIN", ""),
@@ -2242,6 +2242,7 @@ public class ItemManager {
 	    return false;
 	}
 
+
 	public static boolean isShulkerBox(Material mat) {
 	    CMIMaterial m = CMIMaterial.get(mat);
 	    if (m == null)
@@ -2325,6 +2326,15 @@ public class ItemManager {
 	    switch (this) {
 	    case OAK_DOOR:
 	    case IRON_DOOR:
+
+	    case LEGACY_SPRUCE_DOOR:
+	    case LEGACY_BIRCH_DOOR:
+	    case LEGACY_JUNGLE_DOOR:
+	    case LEGACY_ACACIA_DOOR:
+	    case LEGACY_DARK_OAK_DOOR:
+	    case LEGACY_WOODEN_DOOR:
+	    case LEGACY_IRON_DOOR_BLOCK:
+
 //	    case SPRUCE_DOOR_ITEM:
 //	    case BIRCH_DOOR_ITEM:
 //	    case JUNGLE_DOOR_ITEM:

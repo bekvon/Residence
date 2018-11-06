@@ -164,50 +164,37 @@ public class FlagPermissions {
 
 	Residence.getInstance().getConfigManager().UpdateGroupedFlagsFile();
 
-	// All these flags are moved to flags.yml as of 2.9.11.0 version for option to customize them
-//	addFlagToFlagGroup("redstone", "note");
-//	addFlagToFlagGroup("redstone", "pressure");
-//	addFlagToFlagGroup("redstone", "lever");
-//	addFlagToFlagGroup("redstone", "button");
-//	addFlagToFlagGroup("redstone", "diode");
-//	addFlagToFlagGroup("craft", "brew");
-//	addFlagToFlagGroup("craft", "table");
-//	addFlagToFlagGroup("craft", "enchant");
-//	addFlagToFlagGroup("trusted", "use");
-//	addFlagToFlagGroup("trusted", "tp");
-//	addFlagToFlagGroup("trusted", "build");
-//	addFlagToFlagGroup("trusted", "container");
-//	addFlagToFlagGroup("trusted", "bucket");
-//	addFlagToFlagGroup("trusted", "move");
-//	addFlagToFlagGroup("trusted", "leash");
-//	addFlagToFlagGroup("trusted", "animalkilling");
-//	addFlagToFlagGroup("trusted", "mobkilling");
-//	addFlagToFlagGroup("trusted", "shear");
-//	addFlagToFlagGroup("trusted", "chat");
-//	addFlagToFlagGroup("fire", "ignite");
-//	addFlagToFlagGroup("fire", "firespread");
-
 	addMaterialToUseFlag(CMIMaterial.REPEATER.getMaterial(), Flags.diode);
-//	addMaterialToUseFlag(CMIMaterial.DIODE_BLOCK_OFF.getMaterial(), Flags.diode);
-//	addMaterialToUseFlag(CMIMaterial.DIODE_BLOCK_ON.getMaterial(), Flags.diode);
 	addMaterialToUseFlag(CMIMaterial.COMPARATOR.getMaterial(), Flags.diode);
-//	addMaterialToUseFlag(CMIMaterial.REDSTONE_COMPARATOR_OFF.getMaterial(), Flags.diode);
-//	addMaterialToUseFlag(CMIMaterial.REDSTONE_COMPARATOR_ON.getMaterial(), Flags.diode);
-	addMaterialToUseFlag(Material.DAYLIGHT_DETECTOR, Flags.diode);
+
 	addMaterialToUseFlag(CMIMaterial.CRAFTING_TABLE.getMaterial(), Flags.table);
-	addMaterialToUseFlag(CMIMaterial.OAK_DOOR.getMaterial(), Flags.door);
 
-	Residence.getInstance().getNms().addDefaultFlags(matUseFlagList);
+	for (CMIMaterial one : CMIMaterial.values()) {
+	    if (one.isDoor() && one.getMaterial() != null)
+		matUseFlagList.put(one.getMaterial(), Flags.door);
 
-//	addMaterialToUseFlag(CMIMaterial.FENCE_GATE, Flags.door);
-//	addMaterialToUseFlag(Material.NETHER_FENCE, Flags.door);
-//	addMaterialToUseFlag(Material.TRAP_DOOR, Flags.door);
-	addMaterialToUseFlag(CMIMaterial.ENCHANTING_TABLE.getMaterial(), Flags.enchant);
-	addMaterialToUseFlag(Material.STONE_BUTTON, Flags.button);
+	    if (one.isGate() && one.getMaterial() != null)
+		matUseFlagList.put(one.getMaterial(), Flags.door);
+
+	    if (one.isTrapDoor() && one.getMaterial() != null)
+		matUseFlagList.put(one.getMaterial(), Flags.door);
+
+	    if (one.isShulkerBox() && one.getMaterial() != null)
+		matUseFlagList.put(one.getMaterial(), Flags.container);
+
+	    if (one.isButton() && one.getMaterial() != null)
+		matUseFlagList.put(one.getMaterial(), Flags.button);
+	}
+
+	if (CMIMaterial.DAYLIGHT_DETECTOR.getMaterial() != null)
+	    matUseFlagList.put(CMIMaterial.DAYLIGHT_DETECTOR.getMaterial(), Flags.diode);
+
+	if (CMIMaterial.ENCHANTING_TABLE.getMaterial() != null)
+	    addMaterialToUseFlag(CMIMaterial.ENCHANTING_TABLE.getMaterial(), Flags.enchant);
 	addMaterialToUseFlag(Material.LEVER, Flags.lever);
 
 	for (CMIMaterial one : CMIMaterial.values()) {
-	    if (!one.isBed())
+	    if (!one.isBed() || one.getMaterial() == null)
 		continue;
 	    addMaterialToUseFlag(one.getMaterial(), Flags.bed);
 	}
@@ -217,7 +204,6 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
 	addMaterialToUseFlag(Material.DRAGON_EGG, Flags.egg);
 	addMaterialToUseFlag(CMIMaterial.COMMAND_BLOCK.getMaterial(), Flags.commandblock);
-	addMaterialToUseFlag(CMIMaterial.OAK_BUTTON.getMaterial(), Flags.button);
 	addMaterialToUseFlag(Material.ANVIL, Flags.anvil);
 	addMaterialToUseFlag(Material.FLOWER_POT, Flags.flowerpot);
 
