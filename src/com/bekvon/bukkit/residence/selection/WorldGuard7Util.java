@@ -8,6 +8,8 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -39,12 +41,11 @@ public class WorldGuard7Util implements WorldGuardInterface {
 
 	String id = "icp__tempregion";
 	try {
-	    BlockVector min = new BlockVector(loc1.getX(), loc1.getY(), loc1.getZ());
-	    BlockVector max = new BlockVector(loc2.getX(), loc2.getY(), loc2.getZ());
+	    BlockVector3 min = BlockVector3.at(loc1.getX(), loc1.getY(), loc1.getZ());
+	    BlockVector3 max = BlockVector3.at(loc2.getX(), loc2.getY(), loc2.getZ());
 	    ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
 
-	    World w = WorldGuard.getInstance().getPlatform().getWorldByName(loc1.getWorld().getName());
-	    RegionManager mgr = WorldGuard.getInstance().getPlatform().getRegionContainer().get(w);
+	    RegionManager mgr = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc1.getWorld()));
 	    
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 

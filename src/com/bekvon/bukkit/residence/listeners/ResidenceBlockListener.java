@@ -805,7 +805,7 @@ public class ResidenceBlockListener implements Listener {
 	}
     }
 
-    @SuppressWarnings("deprecation")
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLandDryPhysics(BlockPhysicsEvent event) {
 	// Disabling listener if flag disabled globally
