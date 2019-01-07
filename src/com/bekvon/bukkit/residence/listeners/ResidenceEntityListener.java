@@ -1279,7 +1279,7 @@ public class ResidenceEntityListener implements Listener {
 	    ItemFrame it = (ItemFrame) event.getEntity();
 	    if (it.getItem() != null) {
 
-		boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+		boolean hasContainerBypass = player.hasPermission("residence.bypass.container");
 		if (!hasContainerBypass)
 		    if (!perms.playerHas(player, Flags.container, true)) {
 			event.setCancelled(true);

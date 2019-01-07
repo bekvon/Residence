@@ -1088,7 +1088,7 @@ public class ResidencePlayerListener implements Listener {
 	boolean resadmin = plugin.isResAdminOn(player);
 	if (!resadmin) {
 
-	    boolean hasUseBypass = player.hasPermission("residence.use.bypass");
+	    boolean hasUseBypass = player.hasPermission("residence.bypass.use");
 
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
@@ -1287,8 +1287,8 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
-	    boolean hasUseBypass = player.hasPermission("residence.use.bypass");
-	    boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+	    boolean hasUseBypass = player.hasPermission("residence.bypass.use");
+	    boolean hasContainerBypass = player.hasPermission("residence.bypass.container");
 	    boolean hasuse = perms.playerHas(player, Flags.use, true) || hasUseBypass;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 	    if (res == null || !res.isOwner(player)) {
@@ -1414,7 +1414,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+	boolean hasContainerBypass = player.hasPermission("residence.bypass.container");
 
 	if (!hasContainerBypass)
 	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
@@ -1470,7 +1470,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+	boolean hasContainerBypass = player.hasPermission("residence.bypass.container");
 
 	if (!hasContainerBypass)
 	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
@@ -1597,7 +1597,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	}
 
-	boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+	boolean hasContainerBypass = player.hasPermission("residence.bypass.container");
 
 	if (!hasContainerBypass)
 	    if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
