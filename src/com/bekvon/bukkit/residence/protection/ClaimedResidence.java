@@ -51,6 +51,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 import cmiLib.ActionBarTitleMessages;
 import cmiLib.RawMessage;
@@ -90,7 +91,7 @@ public class ClaimedResidence {
     private Residence plugin;
 
     private ResidenceSiege siege;
-    
+
     private Set<Signs> signsInResidence = new HashSet<Signs>();
 
     public String getResidenceName() {
@@ -406,6 +407,8 @@ public class ClaimedResidence {
 		}
 	    }
 
+	    Debug.D(area.getHighLoc().getBlockY());
+
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	    PermissionGroup group = rPlayer.getGroup();
@@ -422,10 +425,12 @@ public class ClaimedResidence {
 		plugin.msg(player, lm.Area_SizeLimit);
 		return false;
 	    }
+
 	    if (group.getMinHeight() > area.getLowLoc().getBlockY()) {
 		plugin.msg(player, lm.Area_LowLimit, String.format("%d", group.getMinHeight()));
 		return false;
 	    }
+
 	    if (group.getMaxHeight() < area.getHighLoc().getBlockY()) {
 		plugin.msg(player, lm.Area_HighLimit, String.format("%d", group.getMaxHeight()));
 		return false;

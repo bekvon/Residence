@@ -114,7 +114,13 @@ public class PermissionGroup {
 	ymax = limits.getInt("Residence.MaxUpDown", 0);
 	ymin = limits.getInt("Residence.MinUpDown", 0);
 	ymin = ymin > ymax ? ymax : ymin;
-
+	
+	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()){
+	    ymin = 0;
+	    ymax = 255;
+	}
+	
+	
 	zmax = limits.getInt("Residence.MaxNorthSouth", 0);
 	zmin = limits.getInt("Residence.MinNorthSouth", 0);
 	zmin = zmin > zmax ? zmax : zmin;

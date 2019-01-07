@@ -277,18 +277,18 @@ public class SelectionManager {
 
     private int getMaxWorldHeight(World world) {
 	if (world == null)
-	    return 256;
+	    return 255;
 	switch (world.getEnvironment()) {
 	case NETHER:
 	    return 128;
 	case NORMAL:
 	case THE_END:
-	    return 256;
+	    return 255;
 	default:
 	    break;
 	}
 
-	return 256;
+	return 255;
     }
 
     public enum Direction {
@@ -451,7 +451,7 @@ public class SelectionManager {
 	    PermissionGroup group = rPlayer.getGroup();
 
 	    if (plugin.getConfigManager().enableEconomy())
-		plugin.msg(player, lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
+		plugin.msg(player, lm.General_LandCost, (int) (cuboidArea.getSize() * group.getCostPerBlock() * 100) / 100D);
 	    player.sendMessage(ChatColor.YELLOW + "X" + plugin.msg(lm.General_Size, cuboidArea.getXSize()));
 	    player.sendMessage(ChatColor.YELLOW + "Y" + plugin.msg(lm.General_Size, cuboidArea.getYSize()));
 	    player.sendMessage(ChatColor.YELLOW + "Z" + plugin.msg(lm.General_Size, cuboidArea.getZSize()));

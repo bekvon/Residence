@@ -49,7 +49,7 @@ public class select implements cmd {
 
 	if (args.length == 2) {
 	    if (args[1].equals("size") || args[1].equals("cost")) {
-		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+		if (plugin.getSelectionManager().hasPlacedBoth(player)) {
 		    try {
 			plugin.getSelectionManager().showSelectionInfo(player);
 			return true;
