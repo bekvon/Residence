@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.selection;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,6 +11,11 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
@@ -39,15 +45,14 @@ public class WorldGuardUtil implements WorldGuardInterface {
 
 	String id = "icp__tempregion";
 	try {
+
 	    BlockVector min = new BlockVector(loc1.getX(), loc1.getY(), loc1.getZ());
 	    BlockVector max = new BlockVector(loc2.getX(), loc2.getY(), loc2.getZ());
-	    ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
+	    ProtectedRegion region = ProtectedCuboidRegion.class.getConstructor(String.class, BlockVector.class, BlockVector.class).newInstance(id, min, max);
 
 	    Method methd = plugin.getWorldGuard().getClass().getMethod("getRegionManager", loc1.getWorld().getClass());
 
 	    RegionManager mgr = (RegionManager) methd.invoke(plugin.getWorldGuard(), loc1.getWorld());
-
-//	    RegionManager mgr = plugin.getWorldGuard().getRegionManager(loc1.getWorld());
 
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 

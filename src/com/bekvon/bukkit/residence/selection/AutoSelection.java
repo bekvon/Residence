@@ -1,6 +1,8 @@
 package com.bekvon.bukkit.residence.selection;
 
 import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -13,7 +15,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 public class AutoSelection {
 
-    private HashMap<String, AutoSelector> list = new HashMap<String, AutoSelector>();
+    private HashMap<UUID, AutoSelector> list = new HashMap<UUID, AutoSelector>();
     private Residence plugin;
 
     public AutoSelection(Residence residence) {
@@ -21,38 +23,40 @@ public class AutoSelection {
     }
 
     public void switchAutoSelection(Player player) {
-	if (!list.containsKey(player.getName().toLowerCase())) {
+	if (!list.containsKey(player.getUniqueId())) {
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup(player.getWorld().getName());
-	    list.put(player.getName().toLowerCase(), new AutoSelector(group, System.currentTimeMillis()));
+	    list.put(player.getUniqueId(), new AutoSelector(group, System.currentTimeMillis()));
 	    plugin.msg(player, lm.Select_AutoEnabled);
 	} else {
-	    list.remove(player.getName().toLowerCase());
+	    list.remove(player.getUniqueId());
 	    plugin.msg(player, lm.Select_AutoDisabled);
 	}
     }
 
     public void UpdateSelection(Player player) {
+	UpdateSelection(player, player.getLocation());
+    }
 
-	if (!getList().containsKey(player.getName().toLowerCase()))
+    public void UpdateSelection(Player player, Location targetLoc) {
+
+	if (!list.containsKey(player.getUniqueId()))
 	    return;
 
-	AutoSelector AutoSelector = getList().get(player.getName().toLowerCase());
+	AutoSelector AutoSelector = list.get(player.getUniqueId());
 
 	int Curenttime = (int) (System.currentTimeMillis() - AutoSelector.getTime()) / 1000;
 
 	if (Curenttime > 270) {
-	    list.remove(player.getName().toLowerCase());
+	    list.remove(player.getUniqueId());
 	    plugin.msg(player, lm.Select_AutoDisabled);
 	    return;
 	}
 
-	String name = player.getName();
+	Location cloc = targetLoc.clone();
 
-	Location cloc = player.getLocation();
-
-	Location loc1 = plugin.getSelectionManager().getPlayerLoc1(name);
-	Location loc2 = plugin.getSelectionManager().getPlayerLoc2(name);
+	Location loc1 = plugin.getSelectionManager().getPlayerLoc1(player);
+	Location loc2 = plugin.getSelectionManager().getPlayerLoc2(player);
 
 	if (loc1 == null) {
 	    plugin.getSelectionManager().placeLoc1(player, cloc, false);
@@ -123,7 +127,7 @@ public class AutoSelection {
 	}
     }
 
-    public HashMap<String, AutoSelector> getList() {
+    public HashMap<UUID, AutoSelector> getList() {
 	return list;
     }
 }

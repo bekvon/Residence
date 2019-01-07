@@ -193,6 +193,7 @@ public class Residence extends JavaPlugin {
     protected WESchematicManager SchematicManager;
     private InformationPager InformationPagerManager;
     private WorldGuardInterface worldGuardUtil;
+    private int wepVersion = 6;
     private KingdomsUtil kingdomsUtil;
 
     protected CommandFiller cmdFiller;
@@ -947,17 +948,17 @@ public class Residence extends JavaPlugin {
     private void setWorldGuard() {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
-	    try {
-		Class.forName("com.sk89q.worldedit.BlockVector");
-		Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet");
-		Class.forName("com.sk89q.worldguard.protection.managers.RegionManager");
-		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion");
-		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedRegion");
-	    } catch (Exception e) {
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + ChatColor.RED
-		    + " Found WorldGuard, but its not supported by Residence plugin. Please update WorldGuard to latest version");
-		return;
-	    }
+//	    try {
+//		Class.forName("com.sk89q.worldedit.BlockVector");
+//		Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet");
+//		Class.forName("com.sk89q.worldguard.protection.managers.RegionManager");
+//		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion");
+//		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedRegion");
+//	    } catch (Exception e) {
+//		Bukkit.getConsoleSender().sendMessage(getPrefix() + ChatColor.RED
+//		    + " Found WorldGuard, but its not supported by Residence plugin. Please update WorldGuard to latest version");
+//		return;
+//	    }
 	    wg = (WorldGuardPlugin) wgplugin;
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard");
 	}
@@ -1896,11 +1897,16 @@ public class Residence extends JavaPlugin {
 
     public WorldGuardInterface getWorldGuardUtil() {
 	if (worldGuardUtil == null) {
+
+	    int version = 6;
 	    try {
-		Class.forName("com.sk89q.worldguard.WorldGuard");
-		this.consoleMessage("WorldGuard7");
-		worldGuardUtil = new WorldGuard7Util(this);
+		version = Integer.parseInt(wep.getDescription().getVersion().substring(0, 1));
 	    } catch (Exception e) {
+	    }
+	    if (version >= 7) {
+		wepVersion = version;
+		worldGuardUtil = new WorldGuard7Util(this);
+	    } else {
 		worldGuardUtil = new WorldGuardUtil(this);
 	    }
 	}
@@ -1968,4 +1974,8 @@ public class Residence extends JavaPlugin {
 //    public TownManager getTownManager() {
 //	return townManager;
 //    }
+
+    public int getWorldGuardVersion() {
+	return wepVersion;
+    }
 }

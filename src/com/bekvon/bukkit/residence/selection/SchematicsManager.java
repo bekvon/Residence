@@ -69,10 +69,20 @@ public class SchematicsManager implements WESchematicManager {
 	    try {
 		com.sk89q.worldedit.schematic.SchematicFormat.MCEDIT.save(clipboard, file);
 	    } catch (Exception e) {
+
+		if (plugin.getWorldGuardVersion() >= 7) {
+		    editSession.flushSession();
+		} else {
+		    editSession.getClass().getMethod("flushQueue").invoke(editSession);
+		}
 		return false;
 	    }
+	    if (plugin.getWorldGuardVersion() >= 7) {
+		editSession.flushSession();
+	    } else {
+		editSession.getClass().getMethod("flushQueue").invoke(editSession);
+	    }
 
-	    editSession.flushQueue();
 	} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
 	    e1.printStackTrace();
 	}
