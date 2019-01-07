@@ -1087,12 +1087,16 @@ public class ResidencePlayerListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean resadmin = plugin.isResAdminOn(player);
 	if (!resadmin) {
+
+	    boolean hasUseBypass = player.hasPermission("residence.use.bypass");
+
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
-	    if ((!hasuse && !haspressure || !haspressure) && mat.isPlate()) {
-		event.setCancelled(true);
-		return;
-	    }
+	    if (!hasUseBypass)
+		if ((!hasuse && !haspressure || !haspressure) && mat.isPlate()) {
+		    event.setCancelled(true);
+		    return;
+		}
 	}
 	if (!perms.playerHas(player, Flags.trample, perms.playerHas(player, Flags.build, true)) && (mat.equals(CMIMaterial.FARMLAND) || mat.equals(CMIMaterial.SOUL_SAND))) {
 	    event.setCancelled(true);
@@ -1157,7 +1161,6 @@ public class ResidencePlayerListener implements Listener {
 	return;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInfoCheck(PlayerInteractEvent event) {
 	if (event.getPlayer() == null)
@@ -1284,55 +1287,63 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
-	    boolean hasuse = perms.playerHas(player, Flags.use, true);
+	    boolean hasUseBypass = player.hasPermission("residence.use.bypass");
+	    boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+	    boolean hasuse = perms.playerHas(player, Flags.use, true) || hasUseBypass;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 	    if (res == null || !res.isOwner(player)) {
-		for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
-		    if (mat != checkMat.getKey())
-			continue;
+		if (!hasContainerBypass)
+		    for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
+			if (mat != checkMat.getKey())
+			    continue;
 
-		    if (perms.playerHas(player, checkMat.getValue(), hasuse))
-			continue;
+			if (perms.playerHas(player, checkMat.getValue(), hasuse))
+			    continue;
 
-		    if (hasuse || checkMat.getValue().equals(Flags.container)) {
-			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			if (hasuse || checkMat.getValue().equals(Flags.container)) {
+			    event.setCancelled(true);
+			    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			    return;
+			}
+
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			    event.setCancelled(true);
+			    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			    return;
+			}
+
+			if (isCanUseEntity_BothClick(mat, block)) {
+			    event.setCancelled(true);
+			    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			}
+
 			return;
 		    }
+	    }
 
-		    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+	    if (!hasContainerBypass)
+		if (plugin.getConfigManager().getCustomContainers().contains(blockM.getId())) {
+		    if (!perms.playerHas(player, Flags.container, hasuse)) {
 			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			plugin.msg(player, lm.Flag_Deny, Flags.container.getName());
 			return;
 		    }
+		}
 
-		    if (isCanUseEntity_BothClick(mat, block)) {
+	    if (!hasUseBypass) {
+		if (plugin.getConfigManager().getCustomBothClick().contains(blockM.getId())) {
+		    if (!hasuse) {
 			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			plugin.msg(player, lm.Flag_Deny, Flags.use.getName());
+			return;
 		    }
-
-		    return;
 		}
-	    }
-	    if (plugin.getConfigManager().getCustomContainers().contains(blockM.getId())) {
-		if (!perms.playerHas(player, Flags.container, hasuse)) {
-		    event.setCancelled(true);
-		    plugin.msg(player, lm.Flag_Deny, Flags.container.getName());
-		    return;
-		}
-	    }
-	    if (plugin.getConfigManager().getCustomBothClick().contains(blockM.getId())) {
-		if (!hasuse) {
-		    event.setCancelled(true);
-		    plugin.msg(player, lm.Flag_Deny, Flags.use.getName());
-		    return;
-		}
-	    }
-	    if (plugin.getConfigManager().getCustomRightClick().contains(blockM.getId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-		if (!hasuse) {
-		    event.setCancelled(true);
-		    plugin.msg(player, lm.Flag_Deny, Flags.use.getName());
-		    return;
+		if (plugin.getConfigManager().getCustomRightClick().contains(blockM.getId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		    if (!hasuse) {
+			event.setCancelled(true);
+			plugin.msg(player, lm.Flag_Deny, Flags.use.getName());
+			return;
+		    }
 		}
 	    }
 	}
@@ -1402,10 +1413,14 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
 	if (res == null)
 	    return;
-	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
-	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
-	    event.setCancelled(true);
-	}
+
+	boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+
+	if (!hasContainerBypass)
+	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
+		plugin.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
+		event.setCancelled(true);
+	    }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1454,10 +1469,14 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(ent.getLocation());
 	if (res == null)
 	    return;
-	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
-	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
-	    event.setCancelled(true);
-	}
+
+	boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+
+	if (!hasContainerBypass)
+	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
+		plugin.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
+		event.setCancelled(true);
+	    }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1577,10 +1596,14 @@ public class ResidencePlayerListener implements Listener {
 	    event.setCancelled(true);
 	    return;
 	}
-	if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
-	    event.setCancelled(true);
-	    plugin.msg(player, lm.Flag_Deny, Flags.container.getName());
-	}
+
+	boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+
+	if (!hasContainerBypass)
+	    if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
+		event.setCancelled(true);
+		plugin.msg(player, lm.Flag_Deny, Flags.container.getName());
+	    }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

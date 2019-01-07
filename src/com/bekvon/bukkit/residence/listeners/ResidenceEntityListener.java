@@ -1278,10 +1278,13 @@ public class ResidenceEntityListener implements Listener {
 	if (event.getEntityType() == EntityType.ITEM_FRAME) {
 	    ItemFrame it = (ItemFrame) event.getEntity();
 	    if (it.getItem() != null) {
-		if (!perms.playerHas(player, Flags.container, true)) {
-		    event.setCancelled(true);
-		    plugin.msg(player, lm.Flag_Deny, Flags.container);
-		}
+
+		boolean hasContainerBypass = player.hasPermission("residence.container.bypass");
+		if (!hasContainerBypass)
+		    if (!perms.playerHas(player, Flags.container, true)) {
+			event.setCancelled(true);
+			plugin.msg(player, lm.Flag_Deny, Flags.container);
+		    }
 		return;
 	    }
 	}
