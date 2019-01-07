@@ -445,7 +445,7 @@ public class ClaimedResidence {
 	    }
 
 	    if (chargeMoney && parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
-		int chargeamount = (int) Math.ceil(area.getSize() * group.getCostPerBlock());
+		double chargeamount = area.getCost(group);
 		if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
 		    return false;
 		}
@@ -585,7 +585,7 @@ public class ClaimedResidence {
 	    }
 
 	    if (parent == null && plugin.getConfigManager().enableEconomy() && !resadmin) {
-		int chargeamount = (int) Math.ceil((newarea.getSize() - oldarea.getSize()) * group.getCostPerBlock());
+		double chargeamount = newarea.getCost(group) - oldarea.getCost(group);
 		if (chargeamount > 0) {
 		    if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
 			return false;
@@ -1977,5 +1977,13 @@ public class ClaimedResidence {
 
     public void setSignsInResidence(Set<Signs> signsInResidence) {
 	this.signsInResidence = signsInResidence;
+    }
+
+    public double getWorthByOwner() {
+	return (int) ((getTotalSize() * getOwnerGroup().getCostPerBlock()) * 100) / 100D;
+    }
+
+    public double getWorth() {
+	return (int) ((getTotalSize() * getBlockSellPrice()) * 100) / 100.0;
     }
 }

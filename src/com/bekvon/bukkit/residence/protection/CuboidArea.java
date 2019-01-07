@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ResidenceManager.ChunkRef;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -253,5 +254,9 @@ public class CuboidArea {
 
     public void setLowLocation(Location lowLocation) {
 	this.lowPoints = lowLocation;
+    }
+
+    public double getCost(PermissionGroup group) {
+	return (int) (getSize() * group.getCostPerBlock() * 100) / 100D;
     }
 }

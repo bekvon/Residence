@@ -495,7 +495,7 @@ public class ResidenceBlockListener implements Listener {
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 
-	int cost = (int) Math.ceil(cuboid.getSize() * group.getCostPerBlock());
+	double cost = cuboid.getCost(group);
 
 	double balance = 0;
 	if (plugin.getEconomyManager() != null)
@@ -577,7 +577,7 @@ public class ResidenceBlockListener implements Listener {
 
 	    if (checkBalance) {
 		if (plugin.getConfigManager().enableEconomy()) {
-		    cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
+		    cost = c.getCost(group);
 		    if (cost > balance)
 			break;
 		}
@@ -804,7 +804,6 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	}
     }
-
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLandDryPhysics(BlockPhysicsEvent event) {

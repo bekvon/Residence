@@ -435,7 +435,7 @@ public class SelectionManager {
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (plugin.getConfigManager().enableEconomy())
-	    Message += " " + plugin.msg(lm.General_LandCost, ((int) Math.ceil(cuboidArea.getSize() * group.getCostPerBlock())));
+	    Message += " " + plugin.msg(lm.General_LandCost, cuboidArea.getCost(group));
 
 	ActionBarTitleMessages.send(player, Message);
 
@@ -451,7 +451,7 @@ public class SelectionManager {
 	    PermissionGroup group = rPlayer.getGroup();
 
 	    if (plugin.getConfigManager().enableEconomy())
-		plugin.msg(player, lm.General_LandCost, (int) (cuboidArea.getSize() * group.getCostPerBlock() * 100) / 100D);
+		plugin.msg(player, lm.General_LandCost, cuboidArea.getCost(group));
 	    player.sendMessage(ChatColor.YELLOW + "X" + plugin.msg(lm.General_Size, cuboidArea.getXSize()));
 	    player.sendMessage(ChatColor.YELLOW + "Y" + plugin.msg(lm.General_Size, cuboidArea.getYSize()));
 	    player.sendMessage(ChatColor.YELLOW + "Z" + plugin.msg(lm.General_Size, cuboidArea.getZSize()));

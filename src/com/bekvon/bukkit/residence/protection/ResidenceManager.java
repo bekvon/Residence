@@ -240,7 +240,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    return false;
 
 	if (!newRes.isSubzone() && plugin.getConfigManager().enableEconomy() && !resadmin) {
-	    double chargeamount = Math.ceil(newArea.getSize() * group.getCostPerBlock());
+	    double chargeamount = newArea.getCost(group);
 	    if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
 		// Need to remove area if we can't create residence
 		newRes.removeArea("main");
@@ -731,8 +731,7 @@ public class ResidenceManager implements ResidenceInterface {
 	plugin.msg(sender, ChatColor.translateAlternateColorCodes('&', msg));
 
 	if (plugin.getEconomyManager() != null) {
-	    plugin.msg(sender, lm.General_TotalWorth, (int) ((res.getTotalSize() * res.getOwnerGroup().getCostPerBlock())
-		* 100) / 100.0, (int) ((res.getTotalSize() * res.getBlockSellPrice()) * 100) / 100.0);
+	    plugin.msg(sender, lm.General_TotalWorth, res.getWorthByOwner(), res.getWorth());
 	}
 
 	if (res.getSubzonesAmount(false) > 0)

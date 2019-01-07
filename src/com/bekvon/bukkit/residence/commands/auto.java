@@ -122,7 +122,7 @@ public class auto implements cmd {
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 
-	int cost = (int) Math.ceil(cuboid.getSize() * group.getCostPerBlock());
+	double cost = cuboid.getCost(group);
 
 	double balance = 0;
 	if (plugin.getEconomyManager() != null)
@@ -214,7 +214,7 @@ public class auto implements cmd {
 
 	    if (checkBalance) {
 		if (plugin.getConfigManager().enableEconomy()) {
-		    cost = (int) Math.ceil(c.getSize() * group.getCostPerBlock());
+		    cost = c.getCost(group);
 		    if (cost > balance)
 			break;
 		}
