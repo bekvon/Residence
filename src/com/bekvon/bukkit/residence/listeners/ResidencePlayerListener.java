@@ -76,6 +76,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import cmiLib.ActionBarTitleMessages;
@@ -214,9 +215,19 @@ public class ResidencePlayerListener implements Listener {
 	event.setFormat(format);
     }
 
-    // Changing chat prefix variable to job name
+    // Changing chat prefix variable to residence name
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerChatGlobalLow(AsyncPlayerChatEvent event) {
+	processEvent(event);
+    }
+
+    // Changing chat prefix variable to residence name
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onPlayerChatGlobalHigh(AsyncPlayerChatEvent event) {
+	processEvent(event);
+    }
+
+    private void processEvent(AsyncPlayerChatEvent event) {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -224,6 +235,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (plugin.getConfigManager().isGlobalChatSelfModify())
 	    return;
+
 	Player player = event.getPlayer();
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);

@@ -64,7 +64,8 @@ public class flags implements cmd {
 
 	for (String fl : keys) {
 	    String pt = path + "SubCommands." + fl;
-	    c.get(pt + ".Translated", c.getC().getString(pt + ".Translated"));
+//	    No translation for custom flags for now
+//	    c.get(pt + ".Translated", c.getC().getString(pt + ".Translated"));
 	    c.get(pt + ".Description", c.getC().getString(pt + ".Description"));
 	    c.get(pt + ".Info", c.getC().getStringList(pt + ".Info"));
 	}
