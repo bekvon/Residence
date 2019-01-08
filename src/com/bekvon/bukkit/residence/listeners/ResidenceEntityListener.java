@@ -58,6 +58,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 import cmiLib.ActionBarTitleMessages;
 import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.VersionChecker.Version;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -422,6 +423,30 @@ public class ResidenceEntityListener implements Listener {
 
 	FlagPermissions perms = plugin.getPermsByLoc(event.getLocation());
 	if (perms.has(Flags.witherspawn, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	    return;
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPhantomSpawn(CreatureSpawnEvent event) {
+	if (Version.isCurrentLower(Version.v1_13_R1))
+	    return;
+	// Disabling listener if flag disabled globally
+	if (!Flags.phantomspawn.isGlobalyEnabled())
+	    return;
+	// disabling event on world
+	Entity ent = event.getEntity();
+	if (ent == null)
+	    return;
+	if (plugin.isDisabledWorldListener(ent.getWorld()))
+	    return;
+
+	if (ent.getType() != EntityType.PHANTOM)
+	    return;
+
+	FlagPermissions perms = plugin.getPermsByLoc(event.getLocation());
+	if (perms.has(Flags.phantomspawn, FlagCombo.OnlyFalse)) {
 	    event.setCancelled(true);
 	    return;
 	}
