@@ -23,7 +23,9 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SetFlag {
 
@@ -154,12 +156,12 @@ public class SetFlag {
 	Map<String, Boolean> globalFlags = Residence.getInstance().getPermissionManager().getAllFlags().getFlags();
 
 	for (Entry<String, Boolean> one : res.getPermissions().getFlags().entrySet()) {
-	    if (flags.contains(one.getKey()))
+	    if (flags.contains(one.getKey())) {
 		resFlags.put(one.getKey(), one.getValue());
+	    }
 	}
 
 	for (Entry<String, Boolean> one : globalFlags.entrySet()) {
-
 	    String fname = one.getKey();
 
 	    Flags flag = Flags.getFlag(fname);
@@ -167,14 +169,18 @@ public class SetFlag {
 	    if (flag != null && !flag.isGlobalyEnabled())
 		continue;
 
-	    if (!flags.contains(one.getKey()))
+	    if (!flags.contains(one.getKey())) {
+		Debug.D("not contain " + one.getKey());
 		continue;
+	    }
 
 	    if (resFlags.containsKey(one.getKey()))
 		TempPermMap.put(one.getKey(), resFlags.get(one.getKey()) ? FlagState.TRUE : FlagState.FALSE);
 	    else
 		TempPermMap.put(one.getKey(), FlagState.NEITHER);
 	}
+
+	Debug.D(TempPermMap.containsKey("testing"));
 
 	String title = "";
 	if (targetPlayer == null)

@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.Flags;
+
 import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -25,6 +27,11 @@ public class setall implements cmd {
 	    return false;
 
 	String flag = args[1];
+	
+	Flags f = Flags.getFlag(flag);
+	if (f != null)
+	    flag = f.toString();
+	
 	FlagState state = FlagPermissions.stringToFlagState(args[2]);
 	FlagPermissions GlobalFlags = Residence.getInstance().getPermissionManager().getAllFlags();
 

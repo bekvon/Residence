@@ -8,15 +8,13 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
-import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 
-import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.ConfigReader;
 
 public class tool implements cmd {
 
-    @SuppressWarnings("deprecation")
     @Override
     @CommandAnnotation(simple = true, priority = 1600)
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
@@ -26,8 +24,8 @@ public class tool implements cmd {
 	Player player = (Player) sender;
 
 	plugin.msg(player, lm.General_Separator);
-	plugin.msg(player, lm.Select_Tool, CMIMaterial.get(plugin.getConfigManager().getSelectionTooldID()).getName());
-	plugin.msg(player, lm.General_InfoTool, CMIMaterial.get(plugin.getConfigManager().getInfoToolID()).getName());
+	plugin.msg(player, lm.Select_Tool, plugin.getConfigManager().getSelectionTool().getName());
+	plugin.msg(player, lm.General_InfoTool, plugin.getConfigManager().getSelectionTool().getName());
 	plugin.msg(player, lm.General_Separator);
 	return true;
     }

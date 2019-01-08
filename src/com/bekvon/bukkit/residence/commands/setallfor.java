@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.Flags;
+
 import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -25,6 +27,11 @@ public class setallfor implements cmd {
 
 	String playerName = args[1];
 	String flag = args[2];
+
+	Flags f = Flags.getFlag(flag);
+	if (f != null)
+	    flag = f.toString();
+	
 	FlagState state = FlagPermissions.stringToFlagState(args[3]);
 	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(playerName);
 	if (resPlayer == null)

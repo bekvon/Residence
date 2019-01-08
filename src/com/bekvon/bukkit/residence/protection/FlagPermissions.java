@@ -27,11 +27,9 @@ import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 import cmiLib.ItemManager.CMIMaterial;
 import cmiLib.RawMessage;
-import cmiLib.VersionChecker.Version;
 
 public class FlagPermissions {
 
@@ -88,6 +86,12 @@ public class FlagPermissions {
 	if (validFlagGroups.containsKey(flag)) {
 	    validFlagGroups.remove(flag);
 	}
+
+	// Checking custom flag
+	Flags f = Flags.getFlag(flag);
+	if (f == null) {
+	    Residence.getInstance().getPermissionManager().getAllFlags().setFlag(flag, FlagState.TRUE);
+	}
     }
 
     public static void addPlayerOrGroupOnlyFlag(Flags flag) {
@@ -102,6 +106,12 @@ public class FlagPermissions {
 	if (validFlagGroups.containsKey(flag)) {
 	    validFlagGroups.remove(flag);
 	}
+
+	// Checking custom flag
+	Flags f = Flags.getFlag(flag);
+	if (f == null) {
+	    Residence.getInstance().getPermissionManager().getAllFlags().setFlag(flag, FlagState.TRUE);
+	}
     }
 
     public static void addResidenceOnlyFlag(Flags flag) {
@@ -115,6 +125,11 @@ public class FlagPermissions {
 	}
 	if (validFlagGroups.containsKey(flag)) {
 	    validFlagGroups.remove(flag);
+	}
+	// Checking custom flag
+	Flags f = Flags.getFlag(flag);
+	if (f == null) {
+	    Residence.getInstance().getPermissionManager().getAllFlags().setFlag(flag, FlagState.TRUE);
 	}
     }
 
@@ -850,8 +865,8 @@ public class FlagPermissions {
 
 		if (flag != null && !flag.isGlobalyEnabled())
 		    continue;
-		if (flag == null)
-		    continue;
+		if (flag != null)
+		    fname = flag.getName();
 		i++;
 		t++;
 
@@ -865,12 +880,12 @@ public class FlagPermissions {
 		}
 
 		if (next.getValue()) {
-		    sbuild.append(haveColor).append(havePrefix).append(flag.getName());
+		    sbuild.append(haveColor).append(havePrefix).append(fname);
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append(denyColor).append(denyPrefix).append(flag.getName());
+		    sbuild.append(denyColor).append(denyPrefix).append(fname);
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -892,7 +907,12 @@ public class FlagPermissions {
 	return this.getPlayerFlags(player, false);
     }
 
+    @Deprecated
     public Set<String> getposibleFlags() {
+	return getAllPosibleFlags();
+    }
+
+    public static Set<String> getAllPosibleFlags() {
 	Set<String> t = new HashSet<String>();
 	t.addAll(FlagPermissions.validFlags);
 	t.addAll(FlagPermissions.validPlayerFlags);
@@ -904,12 +924,12 @@ public class FlagPermissions {
     }
 
     public List<String> getPosibleFlags(Player player, boolean residence, boolean resadmin) {
-	List<String> flags = new ArrayList<String>();
+	Set<String> flags = new HashSet<String>();
 	for (Entry<String, Boolean> one : Residence.getInstance().getPermissionManager().getAllFlags().getFlags().entrySet()) {
 	    if (!one.getValue() && !resadmin && !player.hasPermission(new Permission("residence.flag." + one.getKey().toLowerCase(), PermissionDefault.FALSE)))
 		continue;
 
-	    if (!residence && !getposibleFlags().contains(one.getKey()))
+	    if (!residence && !getAllPosibleFlags().contains(one.getKey()))
 		continue;
 
 	    String fname = one.getKey();
@@ -922,7 +942,7 @@ public class FlagPermissions {
 	    flags.add(one.getKey());
 	}
 
-	return flags;
+	return new ArrayList<String>(flags);
     }
 
     public String listPlayerFlags(String player) {
@@ -949,17 +969,21 @@ public class FlagPermissions {
 	    while (it.hasNext()) {
 		Entry<String, Boolean> next = it.next();
 
+		String fname = next.getKey();
+
 		Flags flag = Flags.getFlag(next.getKey());
-		if (flag == null)
+		if (flag != null && !flag.isGlobalyEnabled())
 		    continue;
+		if (flag != null)
+		    fname = flag.getName();
 
 		if (next.getValue()) {
-		    sbuild.append(haveColor).append(havePrefix).append(flag.getName());
+		    sbuild.append(haveColor).append(havePrefix).append(fname);
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append(denyColor).append(denyPrefix).append(flag.getName());
+		    sbuild.append(denyColor).append(denyPrefix).append(fname);
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -1095,8 +1119,6 @@ public class FlagPermissions {
 	}
 
 	return rm;
-//	sbuild.append("]");
-//	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
     }
 
     protected String splitBy(int by, String perms) {
@@ -1115,73 +1137,6 @@ public class FlagPermissions {
 	}
 	return perms;
     }
-
-//    public String listOtherPlayersFlagsRaw(String text, String player) {
-////	player = player.toLowerCase();
-//	String uuids = Residence.getInstance().getPlayerUUIDString(player);
-//	StringBuilder sbuild = new StringBuilder();
-//
-//	sbuild.append("[\"\",");
-//	sbuild.append("{\"text\":\"" + text + "\"}");
-//
-//	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
-//	synchronized (set) {
-//	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
-//	    boolean random = true;
-//	    while (it.hasNext()) {
-//		Entry<String, Map<String, Boolean>> nextEnt = it.next();
-//		String next = nextEnt.getKey();
-//		if (!Residence.getInstance().getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getInstance().getConfigManager().isOfflineMode() && !next
-//		    .equals(player)) {
-//		    String perms = printPlayerFlags(nextEnt.getValue());
-//		    if (next.length() == 36) {
-//			String resolvedName = Residence.getInstance().getPlayerName(next);
-//			if (resolvedName != null) {
-//			    try {
-//				UUID uuid = UUID.fromString(next);
-//				this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
-//			    } catch (Exception e) {
-//			    }
-//			    next = resolvedName;
-//			} else if (this.cachedPlayerNameUUIDs.containsKey(next))
-//			    next = this.cachedPlayerNameUUIDs.get(next);
-//		    }
-//		    if (!perms.equals("none")) {
-//			sbuild.append(",");
-//
-//			if (random) {
-//			    random = false;
-//			    next = "&2" + next + "&r";
-//			} else {
-//			    random = true;
-//			    next = "&3" + next + "&r";
-//			}
-//			sbuild.append(ConvertToRaw(next, perms));
-//		    }
-//		}
-//	    }
-//	}
-//
-//	sbuild.append("]");
-//	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
-//    }
-//
-//    protected String ConvertToRaw(String playerName, String perms) {
-//	if (perms.contains(" ")) {
-//	    String[] splited = perms.split(" ");
-//	    int i = 0;
-//	    perms = "";
-//	    for (String one : splited) {
-//		i++;
-//		perms += one + " ";
-//		if (i >= 5) {
-//		    i = 0;
-//		    perms += "\n";
-//		}
-//	    }
-//	}
-//	return "{\"text\":\"[" + playerName + "]\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + perms + "\"}]}}}";
-//    }
 
     public String listGroupFlags() {
 	StringBuilder sbuild = new StringBuilder();

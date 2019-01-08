@@ -151,7 +151,7 @@ public class HelpEntry {
 		    Flags flag = Flags.getFlag(entry.getName());
 		    if (flag != null)
 			flagName = flag.getName();
-		    
+
 		    String desc = entry.getDescription();
 
 		    switch (entry.getName().toLowerCase()) {
@@ -381,10 +381,18 @@ public class HelpEntry {
 			}
 			break;
 		    case "[flag]":
-			for (Flags one : Flags.values()) {
-			    if (!one.isGlobalyEnabled())
-				continue;
-			    subCommands.add(one.getName());
+
+			for (String one : Residence.getInstance().getPermissionManager().getAllFlags().getAllPosibleFlags()) {
+
+			    Flags f = Flags.getFlag(one);
+
+			    if (f != null) {
+				if (!f.isGlobalyEnabled())
+				    continue;
+				subCommands.add(f.getName());
+			    }
+			    subCommands.add(one);
+
 			}
 			break;
 		    case "[material]":
@@ -409,7 +417,7 @@ public class HelpEntry {
 		}
 	    }
 
-	    String command = tempmeinPath.getCurrentPath().replace("CommandHelp.SubCommands.", "").replace(".SubCommands.", " ");
+//	    String command = tempmeinPath.getCurrentPath().replace("CommandHelp.SubCommands.", "").replace(".SubCommands.", " ");
 	    if (subCommands.size() > 0) {
 		return subCommands;
 	    }
