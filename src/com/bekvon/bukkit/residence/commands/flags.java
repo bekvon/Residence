@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -9,10 +10,10 @@ import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
-import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
-import com.bekvon.bukkit.residence.utils.Debug;
+
+import cmiLib.ConfigReader;
 
 public class flags implements cmd {
 
@@ -38,7 +39,10 @@ public class flags implements cmd {
 	c.get(path + "Description", "List of flags");
 	c.get(path + "Info", Arrays.asList("For flag values, usually true allows the action, and false denys the action."));
 
-	Set<String> keys = c.getC().getConfigurationSection(path + "SubCommands").getKeys(false);
+	Set<String> keys = new HashSet<String>();
+	if (c.getC().isConfigurationSection(path + "SubCommands")){
+	    keys = c.getC().getConfigurationSection(path + "SubCommands").getKeys(false);
+	}
 
 	for (Flags fl : Flags.values()) {
 	    String pt = path + "SubCommands." + fl.toString();
