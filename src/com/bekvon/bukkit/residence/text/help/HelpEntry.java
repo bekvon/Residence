@@ -147,6 +147,11 @@ public class HelpEntry {
 			continue;
 		    }
 
+		    String flagName = entry.getName();
+		    Flags flag = Flags.getFlag(entry.getName());
+		    if (flag != null)
+			flagName = flag.getName();
+		    
 		    String desc = entry.getDescription();
 
 		    switch (entry.getName().toLowerCase()) {
@@ -159,7 +164,7 @@ public class HelpEntry {
 		    }
 
 		    // adding flag name and description for later sorting
-		    unsortMap.put(entry.getName(), Residence.getInstance().msg(lm.InformationPage_FlagsList, entry.getName(), desc));
+		    unsortMap.put(entry.getName(), Residence.getInstance().msg(lm.InformationPage_FlagsList, flagName, desc));
 		    continue;
 		}
 	    }

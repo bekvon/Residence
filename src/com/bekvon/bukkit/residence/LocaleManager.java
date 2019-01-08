@@ -21,8 +21,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.bekvon.bukkit.residence.containers.CommandStatus;
 import com.bekvon.bukkit.residence.containers.ConfigReader;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class LocaleManager {
 
@@ -130,6 +132,14 @@ public class LocaleManager {
 	    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 		| NoSuchMethodException | SecurityException e) {
 		continue;
+	    }
+	}
+	
+	if (lang.equalsIgnoreCase(plugin.getConfigManager().getLanguage())) {
+	    for (Flags one : Flags.values()) {
+		String pt = plugin.getLocaleManager().path + "flags.SubCommands." + one.toString();
+		one.setTranslated(c.getC().getString(pt + ".Translated"));
+		one.setDesc(c.getC().getString(pt + ".Description"));
 	    }
 	}
 

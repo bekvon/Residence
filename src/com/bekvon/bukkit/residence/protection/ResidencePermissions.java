@@ -362,6 +362,11 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setFlag(CommandSender sender, String flag, FlagState state, boolean resadmin, boolean inform) {
+	
+	Flags f = Flags.getFlag(flag);
+	if (f != null)
+	    flag = f.toString();
+	
 	if (validFlagGroups.containsKey(flag))
 	    return this.setFlagGroup(sender, flag, state, resadmin);
 

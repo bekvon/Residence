@@ -99,7 +99,6 @@ public class rt implements cmd {
 	}
 	Long time = System.currentTimeMillis();
 	Location loc = plugin.getRandomTpManager().getRandomlocation(wname);
-	Debug.D(System.currentTimeMillis() - time);
 	plugin.getRandomTeleportMap().put(tPlayer.getName(), System.currentTimeMillis());
 
 	if (loc == null) {

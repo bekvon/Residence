@@ -512,7 +512,6 @@ public class Residence extends JavaPlugin {
 
 	    getConfigManager().UpdateFlagFile();
 
-	    FlagUtilManager = new FlagUtil(this);
 	    getFlagUtilManager().load();
 
 	    try {
@@ -1001,6 +1000,8 @@ public class Residence extends JavaPlugin {
     }
 
     public FlagUtil getFlagUtilManager() {
+	if (FlagUtilManager == null)
+	    FlagUtilManager = new FlagUtil(this);
 	return FlagUtilManager;
     }
 

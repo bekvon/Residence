@@ -27,6 +27,7 @@ import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 import cmiLib.ItemManager.CMIMaterial;
 import cmiLib.VersionChecker.Version;
@@ -842,7 +843,8 @@ public class FlagPermissions {
 
 		if (flag != null && !flag.isGlobalyEnabled())
 		    continue;
-
+		if (flag == null)
+		    continue;
 		i++;
 		t++;
 
@@ -856,12 +858,12 @@ public class FlagPermissions {
 		}
 
 		if (next.getValue()) {
-		    sbuild.append("&2").append("+").append(flag);
+		    sbuild.append("&2").append("").append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append("&3").append("-").append(flag);
+		    sbuild.append("&8").append("").append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -933,13 +935,18 @@ public class FlagPermissions {
 	    Iterator<Entry<String, Boolean>> it = set.iterator();
 	    while (it.hasNext()) {
 		Entry<String, Boolean> next = it.next();
+		
+		Flags flag = Flags.getFlag(next.getKey());
+		if (flag == null)
+		    continue;
+		
 		if (next.getValue()) {
-		    sbuild.append("&2").append("+").append(next.getKey());
+		    sbuild.append("&2").append("").append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append("&3").append("-").append(next.getKey());
+		    sbuild.append("&8").append("").append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -1176,12 +1183,12 @@ public class FlagPermissions {
 		while (it.hasNext()) {
 		    Entry<String, Boolean> next = it.next();
 		    if (next.getValue()) {
-			sbuild.append("&2").append("+").append(next.getKey());
+			sbuild.append("&2").append("").append(next.getKey());
 			if (it.hasNext()) {
 			    sbuild.append(" ");
 			}
 		    } else {
-			sbuild.append("&3").append("-").append(next.getKey());
+			sbuild.append("&8").append("").append(next.getKey());
 			if (it.hasNext()) {
 			    sbuild.append(" ");
 			}

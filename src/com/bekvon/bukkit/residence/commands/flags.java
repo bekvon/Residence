@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -34,9 +35,9 @@ public class flags implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	c.get(path + "Description", "List of flags");
 	c.get(path + "Info", Arrays.asList("For flag values, usually true allows the action, and false denys the action."));
-
 	for (Flags fl : Flags.values()) {
-	    String pt = path + "SubCommands." + fl.getName();
+	    String pt = path + "SubCommands." + fl.toString();
+	    c.get(pt + ".Translated", fl.toString());
 	    c.get(pt + ".Description", fl.getDesc());
 	    String forSet = "set/pset";
 	    switch (fl.getFlagMode()) {
@@ -51,6 +52,7 @@ public class flags implements cmd {
 	    default:
 		break;
 	    }
+
 	    c.get(pt + ".Info", Arrays.asList("&eUsage: &6/res " + forSet + " <residence> " + fl.getName() + " true/false/remove"));
 	}
 

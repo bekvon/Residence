@@ -1,5 +1,9 @@
 package com.bekvon.bukkit.residence.containers;
 
+import com.bekvon.bukkit.residence.utils.Debug;
+
+import cmiLib.ItemManager.CMIMaterial;
+
 public enum Flags {
     anvil(145, 0, FlagMode.Both, "Allows or denys interaction with anvil", true),
     admin(7, 0, FlagMode.Player, "Gives a player permission to change flags on a residence", true),
@@ -113,8 +117,8 @@ public enum Flags {
     wspeed1(373, 0, FlagMode.Residence, "Change players walk speed in residence to %1", true),
     wspeed2(373, 0, FlagMode.Residence, "Change players walk speed in residence to %1", true);
 
-    private int id;
-    private int data;
+    private String translated = null;
+    private CMIMaterial icon;
     private FlagMode flagMode;
     private String desc;
     private boolean enabled;
@@ -124,24 +128,30 @@ public enum Flags {
 	Player, Residence, Both, Group
     }
 
+    @Deprecated
     private Flags(int id, int data, FlagMode flagMode, String desc, boolean enabled) {
-	this.id = id;
-	this.data = data;
+	this(CMIMaterial.get(id, data), flagMode, desc, enabled);
+    }
+
+    private Flags(CMIMaterial icon, FlagMode flagMode, String desc, boolean enabled) {
+	this.icon = icon;
 	this.flagMode = flagMode;
 	this.desc = desc;
 	this.enabled = enabled;
     }
 
+    @Deprecated
     public int getId() {
-	return id;
+	return icon.getId();
     }
 
+    @Deprecated
     public int getData() {
-	return data;
+	return icon.getData();
     }
 
     public String getName() {
-	return this.name();
+	return getTranslated() == null ? this.name() : getTranslated();
     }
 
     public FlagMode getFlagMode() {
@@ -166,7 +176,9 @@ public enum Flags {
 
     public static Flags getFlag(String flag) {
 	for (Flags f : Flags.values()) {
-	    if (f.getName().equalsIgnoreCase(flag))
+	    if (f.toString().equalsIgnoreCase(flag))
+		return f;
+	    if (f.getTranslated() != null && f.getTranslated().equalsIgnoreCase(flag))
 		return f;
 	}
 	return null;
@@ -178,5 +190,21 @@ public enum Flags {
 
     public void setGlobalyEnabled(boolean globalyEnabled) {
 	this.globalyEnabled = globalyEnabled;
+    }
+
+    public String getTranslated() {
+	return translated;
+    }
+
+    public void setTranslated(String translated) {
+	this.translated = translated;
+    }
+
+    public CMIMaterial getIcon() {
+	return icon;
+    }
+
+    public void setIcon(CMIMaterial icon) {
+	this.icon = icon;
     }
 }

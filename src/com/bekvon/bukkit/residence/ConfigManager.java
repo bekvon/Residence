@@ -1163,7 +1163,7 @@ public class ConfigManager {
 	}
     }
 
-    public void loadFlags() {
+    public void loadFlags() {	
 	FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
 
 	if (flags.isList("Global.TotalFlagDisabling")) {

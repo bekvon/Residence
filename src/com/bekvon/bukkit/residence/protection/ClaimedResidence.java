@@ -407,8 +407,6 @@ public class ClaimedResidence {
 		}
 	    }
 
-	    Debug.D(area.getHighLoc().getBlockY());
-
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	    PermissionGroup group = rPlayer.getGroup();
