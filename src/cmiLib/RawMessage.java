@@ -16,10 +16,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import com.Zrips.CMI.Modules.ChatFormat.ChatFormatManager;
-import com.Zrips.CMI.utils.Util.CMIChatColor;
-
 import cmiLib.VersionChecker.Version;
 
 public class RawMessage {
@@ -173,7 +169,7 @@ public class RawMessage {
 	}
 
 	unfinishedClean = text;
-	unfinished += "\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(ChatFormatManager.colorReplacerPlaceholder, "&") + "\"";
+	unfinished += "\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(colorReplacerPlaceholder, "&") + "\"";
 	return this;
     }
 
@@ -266,7 +262,7 @@ public class RawMessage {
 	    text = text.replace("\\\\\\n", "\\\\n");
 	}
 
-	String f = "{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(ChatFormatManager.colorReplacerPlaceholder, "&") + "\"";
+	String f = "{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(colorReplacerPlaceholder, "&") + "\"";
 
 	if (hoverText != null && !hoverText.isEmpty()) {
 	    hoverText = provessText(hoverText);
