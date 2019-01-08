@@ -32,7 +32,7 @@ public class SetFlag {
     private String targetPlayer = null;
     private Inventory inventory;
     private LinkedHashMap<String, Object> permMap = new LinkedHashMap<String, Object>();
-    private LinkedHashMap<String, List<String>> description = new LinkedHashMap<String, List<String>>();
+    private LinkedHashMap<Flags, List<String>> description = new LinkedHashMap<Flags, List<String>>();
     private List<String> flags = null;
     private boolean admin = false;
     private int page = 1;
@@ -124,13 +124,11 @@ public class SetFlag {
     }
 
     private void fillFlagDescriptions() {
-	Set<String> list = Residence.getInstance().getLM().getKeyList("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands");
-	for (String onelist : list) {
-	    String onelisttemp = Residence.getInstance().msg("CommandHelp.SubCommands.res.SubCommands.flags.SubCommands." + onelist + ".Description");
+	for (Flags flag : Flags.values()) {
 	    List<String> lore = new ArrayList<String>();
 	    int i = 0;
 	    String sentence = "";
-	    for (String oneWord : onelisttemp.split(" ")) {
+	    for (String oneWord : flag.getDesc().split(" ")) {
 		sentence += oneWord + " ";
 		if (i > 4) {
 		    lore.add(ChatColor.YELLOW + sentence);
@@ -140,7 +138,7 @@ public class SetFlag {
 		i++;
 	    }
 	    lore.add(ChatColor.YELLOW + sentence);
-	    description.put(onelist, lore);
+	    description.put(flag, lore);
 	}
     }
 

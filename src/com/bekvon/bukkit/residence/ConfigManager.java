@@ -1075,31 +1075,22 @@ public class ConfigManager {
 
 	c.getW().addComment("Global.GUI.setTrue", "Item id and data to use when flag is set to true");
 
-	int id = c.get("Global.GUI.setTrue.Id", 35);
-	int data = c.get("Global.GUI.setTrue.Data", 13);
-
-	Material Mat = CMIMaterial.get(id).getMaterial();
+	CMIMaterial Mat = CMIMaterial.get(c.get("Global.GUI.setTrue", "GREEN_WOOL"));
 	if (Mat == null)
-	    Mat = Material.STONE;
-	GuiTrue = new ItemStack(Mat, 1, (short) data);
+	    Mat = CMIMaterial.GREEN_WOOL;
+	GuiTrue = Mat.newItemStack();
 
 	c.getW().addComment("Global.GUI.setFalse", "Item id and data to use when flag is set to false");
-	id = c.get("Global.GUI.setFalse.Id", 35);
-	data = c.get("Global.GUI.setFalse.Data", 14);
-
-	Mat = CMIMaterial.get(id).getMaterial();
+	Mat = CMIMaterial.get(c.get("Global.GUI.setFalse", "RED_WOOL"));
 	if (Mat == null)
-	    Mat = Material.STONE;
-	GuiFalse = new ItemStack(Mat, 1, (short) data);
+	    Mat = CMIMaterial.RED_WOOL;
+	GuiFalse = Mat.newItemStack();
 
 	c.getW().addComment("Global.GUI.setRemove", "Item id and data to use when flag is set to remove");
-	id = c.get("Global.GUI.setRemove.Id", 35);
-	data = c.get("Global.GUI.setRemove.Data", 8);
-
-	Mat = CMIMaterial.get(id).getMaterial();
+	Mat = CMIMaterial.get(c.get("Global.GUI.setRemove", "LIGHT_GRAY_WOOL"));
 	if (Mat == null)
-	    Mat = Material.STONE;
-	GuiRemove = new ItemStack(Mat, 1, (short) data);
+	    Mat = CMIMaterial.LIGHT_GRAY_WOOL;
+	GuiRemove = Mat.newItemStack();
 
 	c.getW().addComment("Global.AutoMobRemoval", "Default = false. Enabling this, residences with flag nomobs will be cleared from monsters in regular intervals.",
 	    "This is quite heavy on server side, so enable only if you really need this feature");
