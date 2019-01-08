@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -72,14 +73,12 @@ public class ResidenceBlockListener implements Listener {
 	this.plugin = residence;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onAnvilInventoryClick(InventoryClickEvent e) {
 	// Disabling listener if flag disabled globally
 	if (!Flags.anvilbreak.isGlobalyEnabled())
 	    return;
 	Inventory inv = e.getInventory();
-
 	try {
 	    if (inv == null || inv.getType() != InventoryType.ANVIL || e.getInventory().getLocation() == null)
 		return;
@@ -87,7 +86,7 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 	}
 	Block b = e.getInventory().getLocation().getBlock();
-	if (b == null || b.getType() != Material.ANVIL)
+	if (b == null || !CMIMaterial.isAnvil(b.getType()))
 	    return;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(e.getInventory().getLocation());
@@ -108,8 +107,8 @@ public class ResidenceBlockListener implements Listener {
 		e1.printStackTrace();
 	    }
 	} else {
-	    // Waiting for 1.13+ fix
-
+	    // Need to fix roTation issue
+	    b.setType(CMIMaterial.ANVIL.getMaterial());
 	}
 
     }
