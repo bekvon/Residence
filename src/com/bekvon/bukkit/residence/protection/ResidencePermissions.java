@@ -51,7 +51,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean playerHas(Player player, Flags flag, boolean def) {
-	return playerHas(player, flag.getName(), def);
+	return playerHas(player, flag.toString(), def);
     }
 
     @Deprecated
@@ -60,7 +60,7 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean playerHas(String player, Flags flag, boolean def) {
-	return playerHas(player, flag.getName(), def);
+	return playerHas(player, flag.toString(), def);
     }
 
     @Deprecated
@@ -102,7 +102,7 @@ public class ResidencePermissions extends FlagPermissions {
     public boolean playerHas(Player player, String world, Flags flag, boolean def) {
 	if (player == null)
 	    return false;
-	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag.getName(), FlagType.PLAYER, player.getName(), def);
+	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag.toString(), FlagType.PLAYER, player.getName(), def);
 	Residence.getInstance().getServ().getPluginManager().callEvent(fc);
 	if (fc.isOverriden())
 	    return fc.getOverrideValue();
@@ -172,7 +172,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean has(Flags flag, boolean def) {
-	return has(flag.getName(), def);
+	return has(flag.toString(), def);
     }
 
     @Override

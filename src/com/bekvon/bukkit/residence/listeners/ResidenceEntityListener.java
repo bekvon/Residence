@@ -170,7 +170,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
-	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName());
+	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling, res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -220,7 +220,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
-	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName());
+	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling, res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -324,7 +324,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (res.getPermissions().playerHas(cause, Flags.vehicledestroy, FlagCombo.OnlyFalse)) {
-	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.vehicledestroy.getName(), res.getName());
+	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.vehicledestroy, res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -371,7 +371,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	if (res.getPermissions().playerHas(cause, Flags.mobkilling, FlagCombo.OnlyFalse)) {
-	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.mobkilling.getName(), res.getName());
+	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.mobkilling, res.getName());
 	    event.setCancelled(true);
 	}
     }
@@ -1291,7 +1291,7 @@ public class ResidenceEntityListener implements Listener {
 
 	if (!perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true))) {
 	    event.setCancelled(true);
-	    plugin.msg(player, lm.Flag_Deny, Flags.destroy.getName());
+	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	}
     }
 

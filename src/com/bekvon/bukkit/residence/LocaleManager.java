@@ -20,11 +20,12 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.bekvon.bukkit.residence.containers.CommandStatus;
-import com.bekvon.bukkit.residence.containers.ConfigReader;
+import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.utils.Debug;
+import com.google.common.util.concurrent.ListenableFutureTask;
 
 public class LocaleManager {
 
@@ -57,19 +58,15 @@ public class LocaleManager {
     public void LoadLang(String lang) {
 
 	File f = new File(plugin.getDataFolder(), "Language" + File.separator + lang + ".yml");
-
 	BufferedReader in = null;
 	try {
 	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
 	} catch (FileNotFoundException e1) {
 	    e1.printStackTrace();
 	}
-
 	if (in == null)
 	    return;
-
 	YamlConfiguration conf = loadConfiguration(in, lang);
-
 	if (conf == null) {
 	    try {
 		in.close();
@@ -78,25 +75,28 @@ public class LocaleManager {
 	    }
 	    return;
 	}
+	try {
+	    in.close();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	
 
-	CommentedYamlConfiguration writer = new CommentedYamlConfiguration();
-	ConfigReader c = new ConfigReader(conf, writer);
-	c.getC().options().copyDefaults(true);
+	ConfigReader c = null;
+	try {
+	    c = new ConfigReader("Language" + File.separator + lang + ".yml");
+	} catch (Exception e1) {
+	    e1.printStackTrace();
+	}
+	if (c == null)
+	    return;
+	c.copyDefaults(true);
 
-	StringBuilder header = new StringBuilder();
-	header.append(System.getProperty("line.separator"));
-	header.append("NOTE If you want to modify this file, it is HIGHLY recommended that you make a copy");
-	header.append(System.getProperty("line.separator"));
-	header.append("of this file and modify that instead. This file will be updated automatically by Residence");
-	header.append(System.getProperty("line.separator"));
-	header.append("when a newer version is detected, and your changes will be overwritten.  Once you ");
-	header.append(System.getProperty("line.separator"));
-	header.append("have a copy of this file, change the Language: option under the Residence config.yml");
-	header.append(System.getProperty("line.separator"));
-	header.append("to whatever you named your copy.");
-	header.append(System.getProperty("line.separator"));
-
-	c.getW().options().header(header.toString());
+	c.header(Arrays.asList("NOTE If you want to modify this file, it is HIGHLY recommended that you make a copy",
+	    "of this file and modify that instead. This file will be updated automatically by Residence",
+	    "when a newer version is detected, and your changes will be overwritten.  Once you ",
+	    "have a copy of this file, change the Language: option under the Residence config.yml",
+	    "to whatever you named your copy."));
 
 	for (lm lm : lm.values()) {
 	    if (lm.getText() instanceof String)
@@ -112,10 +112,10 @@ public class LocaleManager {
 	    }
 
 	    if (lm.getComments() != null)
-		writer.addComment(lm.getPath(), lm.getComments());
+		c.addComment(lm.getPath(), lm.getComments());
 	}
 
-	writer.addComment("CommandHelp", "");
+	c.addComment("CommandHelp", "");
 
 	c.get("CommandHelp.Description", "Contains Help for Residence");
 	c.get("CommandHelp.SubCommands.res.Description", "Main Residence Command");
@@ -134,7 +134,7 @@ public class LocaleManager {
 		continue;
 	    }
 	}
-	
+
 	if (lang.equalsIgnoreCase(plugin.getConfigManager().getLanguage())) {
 	    for (Flags one : Flags.values()) {
 		String pt = plugin.getLocaleManager().path + "flags.SubCommands." + one.toString();
@@ -158,15 +158,6 @@ public class LocaleManager {
 	    Arrays.asList("&eUsage: &6/res removeworld [worldname]", "Can only be used from console"));
 
 	// Write back config
-	try {
-	    c.getW().save(f);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	try {
-	    in.close();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+	c.save();
     }
 }

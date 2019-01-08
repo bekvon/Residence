@@ -5,6 +5,8 @@ import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.residence.Residence;
 
+import cmiLib.ConfigReader;
+
 public interface cmd {
 
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender);

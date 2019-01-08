@@ -629,7 +629,7 @@ public class ResidenceBlockListener implements Listener {
 	boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
 	if (!hasplace && !player.hasPermission("residence.bypass.build")) {
 	    event.setCancelled(true);
-	    plugin.msg(player, lm.Flag_Deny, Flags.place.getName());
+	    plugin.msg(player, lm.Flag_Deny, Flags.place);
 	    return;
 	}
     }
@@ -938,7 +938,7 @@ public class ResidenceBlockListener implements Listener {
 	    FlagPermissions perms = plugin.getPermsByLocForPlayer(event.getBlock().getLocation(), player);
 	    if (player != null && !perms.playerHas(player, Flags.ignite, true) && !plugin.isResAdminOn(player)) {
 		event.setCancelled(true);
-		plugin.msg(player, lm.Flag_Deny, Flags.ignite.getName());
+		plugin.msg(player, lm.Flag_Deny, Flags.ignite);
 	    }
 	} else {
 	    // Disabling listener if flag disabled globally

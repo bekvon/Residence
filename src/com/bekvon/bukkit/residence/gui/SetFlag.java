@@ -236,7 +236,11 @@ public class SetFlag {
 		MiscInfo.removeEnchantment(Enchantment.LUCK);
 
 	    ItemMeta MiscInfoMeta = MiscInfo.getItemMeta();
-	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + one.getKey());
+	    String flagName = one.getKey();
+	    Flags flag = Flags.getFlag(flagName);
+	    if (flag != null)
+		flagName = flag.getName();
+	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + flagName);
 
 	    List<String> lore = new ArrayList<String>();
 
@@ -290,7 +294,7 @@ public class SetFlag {
     public void recalculatePlayer(ClaimedResidence res) {
 	Map<String, Boolean> globalFlags = new HashMap<String, Boolean>();
 	for (Flags oneFlag : Flags.values()) {
-	    globalFlags.put(oneFlag.getName(), oneFlag.isEnabled());
+	    globalFlags.put(oneFlag.toString(), oneFlag.isEnabled());
 	}
 
 	if (flags == null)
@@ -388,7 +392,11 @@ public class SetFlag {
 		MiscInfo.removeEnchantment(Enchantment.LUCK);
 
 	    ItemMeta MiscInfoMeta = MiscInfo.getItemMeta();
-	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + one.getKey());
+	    String flagName = one.getKey();
+	    Flags flag = Flags.getFlag(flagName);
+	    if (flag != null)
+		flagName = flag.getName();
+	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + flagName);
 
 	    List<String> lore = new ArrayList<String>();
 

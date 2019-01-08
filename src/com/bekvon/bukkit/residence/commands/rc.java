@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
-import com.bekvon.bukkit.residence.containers.ConfigReader;
+import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -71,7 +71,7 @@ public class rc implements cmd {
 	    }
 
 	    if (!res.getPermissions().playerHas(player.getName(), Flags.chat, true) && !plugin.getPermissionManager().isResidenceAdmin(player)) {
-		plugin.msg(player, lm.Residence_FlagDeny, Flags.chat.getName(), res.getName());
+		plugin.msg(player, lm.Residence_FlagDeny, Flags.chat, res.getName());
 		return false;
 	    }
 	    plugin.getPlayerListener().tooglePlayerResidenceChat(player, res.getName());

@@ -61,7 +61,7 @@ public class CrackShot implements Listener {
 
 	if (plugin.getNms().isAnimal(entity)) {
 	    if (res != null && res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
-		cause.sendMessage(plugin.msg(lm.Residence_FlagDeny, Flags.animalkilling.getName(), res.getName()));
+		cause.sendMessage(plugin.msg(lm.Residence_FlagDeny, Flags.animalkilling, res.getName()));
 		event.setCancelled(true);
 	    }
 	}
@@ -94,7 +94,7 @@ public class CrackShot implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 	if (res != null && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
 	    event.setCancelled(true);
-	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container.getName(), res.getName());
+	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container, res.getName());
 	}
 
     }

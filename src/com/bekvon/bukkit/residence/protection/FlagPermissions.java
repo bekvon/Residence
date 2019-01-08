@@ -425,7 +425,7 @@ public class FlagPermissions {
 
 	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup();
-	return this.playerCheck(player.getName(), flag.getName(), this.groupCheck(group, flag.getName(), this.has(flag, def)));
+	return this.playerCheck(player.getName(), flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));
     }
 
     public boolean playerHas(Player player, String world, Flags flag, boolean def) {
@@ -434,7 +434,7 @@ public class FlagPermissions {
 
 	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup(world);
-	return this.playerCheck(player.getName(), flag.getName(), this.groupCheck(group, flag.getName(), this.has(flag, def)));
+	return this.playerCheck(player.getName(), flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));
     }
 
 //    public boolean playerHas(String player, String world, Flags flag, boolean def) {
@@ -504,8 +504,8 @@ public class FlagPermissions {
     }
 
     public boolean has(Flags flag, boolean def, boolean checkParent) {
-	if (cuboidFlags.containsKey(flag.getName())) {
-	    return cuboidFlags.get(flag.getName());
+	if (cuboidFlags.containsKey(flag.toString())) {
+	    return cuboidFlags.get(flag.toString());
 	}
 	if (checkParent && parent != null) {
 	    return parent.has(flag, def);
