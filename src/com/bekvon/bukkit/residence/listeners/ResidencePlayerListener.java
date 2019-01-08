@@ -81,6 +81,7 @@ import com.bekvon.bukkit.residence.utils.GetTime;
 
 import cmiLib.ActionBarTitleMessages;
 import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.ItemReflection;
 import cmiLib.VersionChecker.Version;
 
 public class ResidencePlayerListener implements Listener {
@@ -1531,6 +1532,13 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.dye, FlagCombo.OnlyFalse)) {
+	    ItemStack iih = plugin.getNms().itemInMainHand(player);
+	    ItemStack iiho = ItemReflection.getItemInOffHand(player);
+	    if (iih == null && iiho == null)
+		return;
+	    if (iih != null && !CMIMaterial.isDye(iih.getType()) && iiho != null && !CMIMaterial.isDye(iiho.getType()))
+		return;	    
+	    
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.dye, res.getName());
 	    event.setCancelled(true);
 	}
@@ -1558,6 +1566,12 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.shear, FlagCombo.OnlyFalse)) {
+	    ItemStack iih = plugin.getNms().itemInMainHand(player);
+	    ItemStack iiho = ItemReflection.getItemInOffHand(player);
+	    if (iih == null && iiho == null)
+		return;
+	    if (iih != null && !CMIMaterial.SHEARS.equals(iih.getType()) && iiho != null && !CMIMaterial.SHEARS.equals(iiho.getType()))
+		return;	    
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.shear, res.getName());
 	    event.setCancelled(true);
 	}

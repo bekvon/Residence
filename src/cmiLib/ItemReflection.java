@@ -174,7 +174,7 @@ public class ItemReflection {
 	return CraftServer;
     }
 
-    public ItemStack getItemInOffHand(Player player) {
+    public static ItemStack getItemInOffHand(Player player) {
 	if (Version.getCurrent().isLower(Version.v1_9_R1))
 	    return null;
 	return player.getInventory().getItemInOffHand();
