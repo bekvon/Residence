@@ -188,7 +188,7 @@ public class auto implements cmd {
 		continue;
 	    }
 
-	    if (c.getXSize() >= group.getMaxX() - group.getMinX()) {
+	    if (c.getXSize() > group.getMaxX() - group.getMinX()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
@@ -196,14 +196,14 @@ public class auto implements cmd {
 	    }
 
 	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY())
-		if (c.getYSize() >= group.getMaxY() - group.getMinY()) {
+		if (c.getYSize() > group.getMaxY() - group.getMinY()) {
 		    locked.add(dir);
 		    dir = dir.getNext();
 		    skipped++;
 		    continue;
 		}
 
-	    if (c.getZSize() >= group.getMaxZ() - group.getMinZ()) {
+	    if (c.getZSize() > group.getMaxZ() - group.getMinZ()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
