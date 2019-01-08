@@ -195,7 +195,7 @@ public enum Flags {
     }
 
     public void setTranslated(String translated) {
-	this.translated = translated;
+	this.translated = translated == null ? null : translated.replace(" ", "");
     }
 
     public CMIMaterial getIcon() {

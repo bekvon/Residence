@@ -277,6 +277,9 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     private boolean checkCanSetFlag(CommandSender sender, String flag, FlagState state, boolean globalflag, boolean resadmin) {
+	Flags f = Flags.getFlag(flag);
+	if (f != null)
+	    flag = f.toString();
 	if (!checkValidFlag(flag, globalflag)) {
 	    Residence.getInstance().msg(sender, lm.Invalid_Flag);
 	    return false;
@@ -311,6 +314,10 @@ public class ResidencePermissions extends FlagPermissions {
 	    return false;
 	}
 
+	Flags f = Flags.getFlag(flag);
+	if (f != null)
+	    flag = f.toString();
+
 	if (validFlagGroups.containsKey(flag))
 	    return this.setFlagGroupOnPlayer(sender, targetPlayer, flag, flagstate, resadmin);
 	FlagState state = FlagPermissions.stringToFlagState(flagstate);
@@ -330,6 +337,11 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setGroupFlag(Player player, String group, String flag, String flagstate, boolean resadmin) {
+
+	Flags f = Flags.getFlag(flag);
+	if (f != null)
+	    flag = f.toString();
+
 	group = group.toLowerCase();
 	if (validFlagGroups.containsKey(flag))
 	    return this.setFlagGroupOnGroup(player, flag, group, flagstate, resadmin);
@@ -362,11 +374,11 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setFlag(CommandSender sender, String flag, FlagState state, boolean resadmin, boolean inform) {
-	
+
 	Flags f = Flags.getFlag(flag);
 	if (f != null)
 	    flag = f.toString();
-	
+
 	if (validFlagGroups.containsKey(flag))
 	    return this.setFlagGroup(sender, flag, state, resadmin);
 

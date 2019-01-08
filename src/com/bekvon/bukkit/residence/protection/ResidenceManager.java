@@ -717,8 +717,9 @@ public class ResidenceManager implements ResidenceInterface {
 	if (!plugin.getConfigManager().isShortInfoUse() || !(sender instanceof Player))
 	    sender.sendMessage(plugin.msg(lm.General_PlayersFlags, perms.listPlayersFlags()));
 	else if (plugin.getConfigManager().isShortInfoUse() || sender instanceof Player) {
-	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + sender.getName() + " " + perms.listPlayersFlagsRaw(sender.getName(), plugin.msg(
-		lm.General_PlayersFlags, "")));
+
+	    RawMessage rm = perms.listPlayersFlagsRaw(sender.getName(), plugin.msg(lm.General_PlayersFlags, ""));
+	    rm.show(sender);
 	}
 
 	String groupFlags = perms.listGroupFlags();

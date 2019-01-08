@@ -17,8 +17,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import cmiLib.VersionChecker.Version;
+import com.Zrips.CMI.Modules.ChatFormat.ChatFormatManager;
+import com.Zrips.CMI.utils.Util.CMIChatColor;
 
+import cmiLib.VersionChecker.Version;
 
 public class RawMessage {
 
@@ -31,7 +33,7 @@ public class RawMessage {
 
     private String combined = "";
     String combinedClean = "";
-    private boolean breakLine = true;
+    private boolean dontBreakLine = false;
 
 //    private boolean colorizeEntireWithLast = true;
 
@@ -80,23 +82,25 @@ public class RawMessage {
     CMIChatColor firstBlockColor = null;
 
     private String makeMessyText(String text) {
+	if (text.equalsIgnoreCase(" "))
+	    return text;
 	text = CMIChatColor.deColorize(text);
 	List<String> splited = new ArrayList<String>();
 
 	if (text.contains(" ")) {
 	    for (String one : text.split(" ")) {
-		if (this.isBreakLine() && one.contains("\\n")) {
-		    String[] split = one.split("\\\\n");
-		    for (int i = 0; i < split.length; i++) {
-			if (i < split.length - 1) {
-			    splited.add(split[i] + "\n");
-			} else {
-			    splited.add(split[i]);
-			}
-		    }
-		} else {
-		    splited.add(one);
-		}
+// 		if (this.isBreakLine() && one.contains("\\n")) {
+// 		    String[] split = one.split("\\\\n");
+// 		    for (int i = 0; i < split.length; i++) {
+// 			if (i < split.length - 1) {
+// 			    splited.add(split[i] + "\n");
+// 			} else {
+// 			    splited.add(split[i]);
+// 			}
+// 		    }
+// 		} else {
+		splited.add(one);
+// 		}
 		splited.add(" ");
 	    }
 	    if (text.length() > 1 && text.endsWith(" "))
@@ -116,6 +120,8 @@ public class RawMessage {
 	    String colorString = "";
 	    if (lastColor != null)
 		colorString += lastColor.getColorCode();
+	    else
+		colorString += CMIChatColor.WHITE.getColorCode();
 	    for (CMIChatColor oneC : formats) {
 		colorString = colorString + oneC.getColorCode();
 	    }
@@ -161,17 +167,13 @@ public class RawMessage {
     public RawMessage addText(String text) {
 	if (text == null)
 	    return this;
-	if (breakLine) {
-	    Random rand = new Random();
-	    String breakLine = rand.nextDouble() + "breakLine";
-	    text = text.replace("\\n", breakLine);
-	    text = text.replace("\\", "\\\\");
-	    text = text.replace(breakLine, "\\n");
+	text = provessText(text);
+	if (dontBreakLine) {
+	    text = text.replace("\\\\\\n", "\\\\n");
 	}
 
-	text = text.replace("\n", "\\n");
 	unfinishedClean = text;
-	unfinished += "\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(colorReplacerPlaceholder, "&") + "\"";
+	unfinished += "\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(ChatFormatManager.colorReplacerPlaceholder, "&") + "\"";
 	return this;
     }
 
@@ -232,41 +234,59 @@ public class RawMessage {
 	return this;
     }
 
-    public RawMessage add(String text, String hoverText, String command, String suggestion, String url) {
+    private String provessText(String text) {
+	Random rand = new Random();
 
+	String breakLine0 = String.valueOf(rand.nextInt(Integer.MAX_VALUE));
+	text = text.replace("\\n", breakLine0);
+
+	String breakLine3 = String.valueOf(rand.nextInt(Integer.MAX_VALUE));
+	text = text.replace("\\", breakLine3);
+
+	String breakLine2 = String.valueOf(rand.nextInt(Integer.MAX_VALUE));
+	text = text.replace("\\\"", breakLine2);
+
+	String breakLine1 = String.valueOf(rand.nextInt(Integer.MAX_VALUE));
+	text = text.replace("\"", breakLine1);
+
+	text = text.replace(breakLine3, "\\\\");
+	text = text.replace(breakLine0, "\\n");
+	text = text.replace(breakLine1, "\\\"");
+	text = text.replace(breakLine2, "\\\"");
+
+	return text;
+    }
+
+    public RawMessage add(String text, String hoverText, String command, String suggestion, String url) {
 	if (text == null)
 	    return this;
+	text = provessText(text);
 
-	if (breakLine) {
-	    Random rand = new Random();
-	    String breakLine = rand.nextDouble() + "breakLine";
-	    text = text.replace("\\n", breakLine);
-	    text = text.replace("\\", "\\\\");
-	    text = text.replace(breakLine, "\\n");
+	if (dontBreakLine) {
+	    text = text.replace("\\\\\\n", "\\\\n");
 	}
 
-	text = text.replace("\"", "\\\"");
-
-	String f = "{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(colorReplacerPlaceholder, "&") + "\"";
-
-//	if (firstBlockColor != null) {
-//	    f += ",\"color\":\"" + firstBlockColor.name().toLowerCase() + "\"";
-//	}
+	String f = "{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(ChatFormatManager.colorReplacerPlaceholder, "&") + "\"";
 
 	if (hoverText != null && !hoverText.isEmpty()) {
+	    hoverText = provessText(hoverText);
 	    hoverText = hoverText.replace(" \n", " \\n");
 	    hoverText = hoverText.replace("\n", "\\n");
 	    f += ",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', hoverText) + "\"}]}}";
 	}
 
-//	if (suggestion != null && command != null) {
-//	    f += ",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + CMIChatColor.deColorize(suggestion) + "\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + command + "\"\"}";
-//
-//	} else {
+	if (suggestion != null) {
 
-	if (suggestion != null)
+	    suggestion = provessText(suggestion);
+
+	    suggestion = suggestion.replace("\\n", "\\\\n");
+	    suggestion = suggestion.replace(" \\n", " \\\\n");
+	    suggestion = suggestion.replace(" \n", " \\\\n");
+
 	    f += ",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + CMIChatColor.deColorize(suggestion) + "\"}";
+	}
 	if (url != null) {
+	    url = provessText(url);
 	    if (!url.toLowerCase().startsWith("http://") || !url.toLowerCase().startsWith("https://"))
 		url = "http://" + url;
 	    f += ",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}";
@@ -275,6 +295,7 @@ public class RawMessage {
 	if (command != null) {
 	    if (!command.startsWith("/"))
 		command = "/" + command;
+	    command = provessText(command);
 	    f += ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + command + "\"}";
 	}
 //	}
@@ -385,7 +406,8 @@ public class RawMessage {
 	if (!Lore.isEmpty()) {
 	    loreS = ",Lore:[" + loreS + "]";
 	}
-	f += ",\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:" + itemName + ",Count:1b,tag:{display:{Name:\\\"" + CMIChatColor.translateAlternateColorCodes(ItemDisplayName) + "\\\"" + loreS + "}"
+	f += ",\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:" + itemName + ",Count:1b,tag:{display:{Name:\\\"" + CMIChatColor.translateAlternateColorCodes(ItemDisplayName) + "\\\"" + loreS
+	    + "}"
 	    + Enchants + "}}\"}";
 
 	if (suggestion != null)
@@ -551,12 +573,12 @@ public class RawMessage {
 	return f;
     }
 
-    public boolean isBreakLine() {
-	return breakLine;
+    public boolean isDontBreakLine() {
+	return dontBreakLine;
     }
 
-    public void setBreakLine(boolean breakLine) {
-	this.breakLine = breakLine;
+    public void setDontBreakLine(boolean dontBreakLine) {
+	this.dontBreakLine = dontBreakLine;
     }
 
     public void setCombined(String combined) {

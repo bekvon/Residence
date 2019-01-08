@@ -30,6 +30,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.utils.Debug;
 
 import cmiLib.ItemManager.CMIMaterial;
+import cmiLib.RawMessage;
 import cmiLib.VersionChecker.Version;
 
 public class FlagPermissions {
@@ -835,6 +836,12 @@ public class FlagPermissions {
 	    Iterator<Entry<String, Boolean>> it = set.iterator();
 	    int i = -1;
 	    int t = 0;
+
+	    String haveColor = Residence.getInstance().getLM().getMessage(lm.Flag_haveColor);
+	    String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_denyColor);
+	    String havePrefix = Residence.getInstance().getLM().getMessage(lm.Flag_havePrefix);
+	    String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_denyPrefix);
+
 	    while (it.hasNext()) {
 		Entry<String, Boolean> next = it.next();
 		String fname = next.getKey();
@@ -858,12 +865,12 @@ public class FlagPermissions {
 		}
 
 		if (next.getValue()) {
-		    sbuild.append("&2").append("").append(flag.getName());
+		    sbuild.append(haveColor).append(havePrefix).append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append("&8").append("").append(flag.getName());
+		    sbuild.append(denyColor).append(denyPrefix).append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -931,22 +938,28 @@ public class FlagPermissions {
 	if (flags == null)
 	    return "none";
 	Set<Entry<String, Boolean>> set = flags.entrySet();
+
+	String haveColor = Residence.getInstance().getLM().getMessage(lm.Flag_haveColor);
+	String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_denyColor);
+	String havePrefix = Residence.getInstance().getLM().getMessage(lm.Flag_havePrefix);
+	String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_denyPrefix);
+
 	synchronized (flags) {
 	    Iterator<Entry<String, Boolean>> it = set.iterator();
 	    while (it.hasNext()) {
 		Entry<String, Boolean> next = it.next();
-		
+
 		Flags flag = Flags.getFlag(next.getKey());
 		if (flag == null)
 		    continue;
-		
+
 		if (next.getValue()) {
-		    sbuild.append("&2").append("").append(flag.getName());
+		    sbuild.append(haveColor).append(havePrefix).append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
 		} else {
-		    sbuild.append("&8").append("").append(flag.getName());
+		    sbuild.append(denyColor).append(denyPrefix).append(flag.getName());
 		    if (it.hasNext()) {
 			sbuild.append(" ");
 		    }
@@ -1027,16 +1040,19 @@ public class FlagPermissions {
 	return sbuild.toString();
     }
 
-    public String listPlayersFlagsRaw(String player, String text) {
-	StringBuilder sbuild = new StringBuilder();
-
-	sbuild.append("[\"\",");
-	sbuild.append("{\"text\":\"" + text + "\"}");
-
+    public RawMessage listPlayersFlagsRaw(String player, String text) {
+	RawMessage rm = new RawMessage();
+	rm.add(text);
 	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
+
 	synchronized (set) {
 	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
 	    boolean random = true;
+
+	    String ownColor = Residence.getInstance().getLM().getMessage(lm.Flag_ownColor);
+	    String p1Color = Residence.getInstance().getLM().getMessage(lm.Flag_p1Color);
+	    String p2Color = Residence.getInstance().getLM().getMessage(lm.Flag_p2Color);
+
 	    while (it.hasNext()) {
 		Entry<String, Map<String, Boolean>> nextEnt = it.next();
 		String next = nextEnt.getKey();
@@ -1059,81 +1075,31 @@ public class FlagPermissions {
 		    continue;
 
 		if (!perms.equals("none")) {
-		    sbuild.append(",");
-
 		    if (random) {
 			random = false;
 			if (player.equals(next))
-			    next = "&4" + next + "&r";
+			    next = ownColor + next + "&r";
 			else
-			    next = "&2" + next + "&r";
+			    next = p2Color + next + "&r";
 		    } else {
 			random = true;
 			if (player.equals(next))
-			    next = "&4" + next + "&r";
+			    next = ownColor + next + "&r";
 			else
-			    next = "&3" + next + "&r";
+			    next = p1Color + next + "&r";
 		    }
-		    sbuild.append(ConvertToRaw(next, perms));
+		    rm.add(next, splitBy(5, perms));
+		    rm.add(" ");
 		}
 	    }
 	}
 
-	sbuild.append("]");
-	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
+	return rm;
+//	sbuild.append("]");
+//	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
     }
 
-    public String listOtherPlayersFlagsRaw(String text, String player) {
-//	player = player.toLowerCase();
-	String uuids = Residence.getInstance().getPlayerUUIDString(player);
-	StringBuilder sbuild = new StringBuilder();
-
-	sbuild.append("[\"\",");
-	sbuild.append("{\"text\":\"" + text + "\"}");
-
-	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
-	synchronized (set) {
-	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
-	    boolean random = true;
-	    while (it.hasNext()) {
-		Entry<String, Map<String, Boolean>> nextEnt = it.next();
-		String next = nextEnt.getKey();
-		if (!Residence.getInstance().getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getInstance().getConfigManager().isOfflineMode() && !next
-		    .equals(player)) {
-		    String perms = printPlayerFlags(nextEnt.getValue());
-		    if (next.length() == 36) {
-			String resolvedName = Residence.getInstance().getPlayerName(next);
-			if (resolvedName != null) {
-			    try {
-				UUID uuid = UUID.fromString(next);
-				this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
-			    } catch (Exception e) {
-			    }
-			    next = resolvedName;
-			} else if (this.cachedPlayerNameUUIDs.containsKey(next))
-			    next = this.cachedPlayerNameUUIDs.get(next);
-		    }
-		    if (!perms.equals("none")) {
-			sbuild.append(",");
-
-			if (random) {
-			    random = false;
-			    next = "&2" + next + "&r";
-			} else {
-			    random = true;
-			    next = "&3" + next + "&r";
-			}
-			sbuild.append(ConvertToRaw(next, perms));
-		    }
-		}
-	    }
-	}
-
-	sbuild.append("]");
-	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
-    }
-
-    protected String ConvertToRaw(String playerName, String perms) {
+    protected String splitBy(int by, String perms) {
 	if (perms.contains(" ")) {
 	    String[] splited = perms.split(" ");
 	    int i = 0;
@@ -1141,14 +1107,81 @@ public class FlagPermissions {
 	    for (String one : splited) {
 		i++;
 		perms += one + " ";
-		if (i >= 5) {
+		if (i >= by) {
 		    i = 0;
 		    perms += "\n";
 		}
 	    }
 	}
-	return "{\"text\":\"[" + playerName + "]\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + perms + "\"}]}}}";
+	return perms;
     }
+
+//    public String listOtherPlayersFlagsRaw(String text, String player) {
+////	player = player.toLowerCase();
+//	String uuids = Residence.getInstance().getPlayerUUIDString(player);
+//	StringBuilder sbuild = new StringBuilder();
+//
+//	sbuild.append("[\"\",");
+//	sbuild.append("{\"text\":\"" + text + "\"}");
+//
+//	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
+//	synchronized (set) {
+//	    Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
+//	    boolean random = true;
+//	    while (it.hasNext()) {
+//		Entry<String, Map<String, Boolean>> nextEnt = it.next();
+//		String next = nextEnt.getKey();
+//		if (!Residence.getInstance().getConfigManager().isOfflineMode() && !next.equals(player) && !next.equals(uuids) || Residence.getInstance().getConfigManager().isOfflineMode() && !next
+//		    .equals(player)) {
+//		    String perms = printPlayerFlags(nextEnt.getValue());
+//		    if (next.length() == 36) {
+//			String resolvedName = Residence.getInstance().getPlayerName(next);
+//			if (resolvedName != null) {
+//			    try {
+//				UUID uuid = UUID.fromString(next);
+//				this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
+//			    } catch (Exception e) {
+//			    }
+//			    next = resolvedName;
+//			} else if (this.cachedPlayerNameUUIDs.containsKey(next))
+//			    next = this.cachedPlayerNameUUIDs.get(next);
+//		    }
+//		    if (!perms.equals("none")) {
+//			sbuild.append(",");
+//
+//			if (random) {
+//			    random = false;
+//			    next = "&2" + next + "&r";
+//			} else {
+//			    random = true;
+//			    next = "&3" + next + "&r";
+//			}
+//			sbuild.append(ConvertToRaw(next, perms));
+//		    }
+//		}
+//	    }
+//	}
+//
+//	sbuild.append("]");
+//	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
+//    }
+//
+//    protected String ConvertToRaw(String playerName, String perms) {
+//	if (perms.contains(" ")) {
+//	    String[] splited = perms.split(" ");
+//	    int i = 0;
+//	    perms = "";
+//	    for (String one : splited) {
+//		i++;
+//		perms += one + " ";
+//		if (i >= 5) {
+//		    i = 0;
+//		    perms += "\n";
+//		}
+//	    }
+//	}
+//	return "{\"text\":\"[" + playerName + "]\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + perms + "\"}]}}}";
+//    }
 
     public String listGroupFlags() {
 	StringBuilder sbuild = new StringBuilder();
@@ -1178,17 +1211,23 @@ public class FlagPermissions {
 	    StringBuilder sbuild = new StringBuilder();
 	    Map<String, Boolean> get = groupFlags.get(group);
 	    Set<Entry<String, Boolean>> set = get.entrySet();
+
+	    String haveColor = Residence.getInstance().getLM().getMessage(lm.Flag_haveColor);
+	    String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_denyColor);
+	    String havePrefix = Residence.getInstance().getLM().getMessage(lm.Flag_havePrefix);
+	    String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_denyPrefix);
+
 	    synchronized (get) {
 		Iterator<Entry<String, Boolean>> it = set.iterator();
 		while (it.hasNext()) {
 		    Entry<String, Boolean> next = it.next();
 		    if (next.getValue()) {
-			sbuild.append("&2").append("").append(next.getKey());
+			sbuild.append(haveColor).append(havePrefix).append(next.getKey());
 			if (it.hasNext()) {
 			    sbuild.append(" ");
 			}
 		    } else {
-			sbuild.append("&8").append("").append(next.getKey());
+			sbuild.append(denyColor).append(denyPrefix).append(next.getKey());
 			if (it.hasNext()) {
 			    sbuild.append(" ");
 			}
