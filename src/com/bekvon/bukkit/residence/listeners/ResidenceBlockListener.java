@@ -805,7 +805,7 @@ public class ResidenceBlockListener implements Listener {
 	}
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onLandDryPhysics(BlockPhysicsEvent event) {
 	// Disabling listener if flag disabled globally
 	if (!Flags.dryup.isGlobalyEnabled())
@@ -814,12 +814,15 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
+	if (!event.getBlock().getChunk().isLoaded())
+	    return;
+
 	CMIMaterial mat = CMIMaterial.get(event.getBlock().getType());
 	if (!mat.equals(CMIMaterial.FARMLAND))
 	    return;
 
 	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
-	if (!perms.has(Flags.dryup, true)) {
+	if (perms.has(Flags.dryup, FlagCombo.OnlyFalse)) {
 	    Block b = event.getBlock();
 	    if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1)) {
 		try {
@@ -828,8 +831,9 @@ public class ResidenceBlockListener implements Listener {
 		    e1.printStackTrace();
 		}
 	    } else {
-		// Waiting for 1.13+ fix
-
+		org.bukkit.block.data.type.Farmland farm = (org.bukkit.block.data.type.Farmland) event.getBlock().getBlockData();
+		farm.setMoisture(7);
+		event.getBlock().setBlockData(farm);
 	    }
 	    event.setCancelled(true);
 	    return;
