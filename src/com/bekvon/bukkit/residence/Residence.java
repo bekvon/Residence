@@ -871,9 +871,6 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().LoadSigns();
 	getShopSignUtilManager().BoardUpdate();
 	getVersionChecker().VersionCheck(null);
-	
-	FlagPermissions.addFlag("testing");
-
     }
 
     private boolean setupPlaceHolderAPI() {

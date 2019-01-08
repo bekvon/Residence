@@ -772,7 +772,6 @@ public class ResidenceBlockListener implements Listener {
 	}
     }
 
-    @SuppressWarnings({ "deprecation" })
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLandDryFade(BlockFadeEvent event) {
 	// Disabling listener if flag disabled globally
@@ -796,7 +795,9 @@ public class ResidenceBlockListener implements Listener {
 		    e1.printStackTrace();
 		}
 	    } else {
-		// Waiting for 1.13+ fix
+		org.bukkit.block.data.type.Farmland farm = (org.bukkit.block.data.type.Farmland) event.getBlock().getBlockData();
+		farm.setMoisture(7);
+		event.getBlock().setBlockData(farm);
 
 	    }
 	    event.setCancelled(true);
