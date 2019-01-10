@@ -46,10 +46,17 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
+import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
+import com.bekvon.bukkit.cmiLib.ItemManager;
+import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.cmiLib.VersionChecker;
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.BossBar.BossBarManager;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
 import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;
 import com.bekvon.bukkit.residence.Siege.ResidenceSiegeListener;
+import com.bekvon.bukkit.residence.allNms.v1_13Events;
 import com.bekvon.bukkit.residence.allNms.v1_10Events;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
 import com.bekvon.bukkit.residence.allNms.v1_9Events;
@@ -128,12 +135,6 @@ import com.residence.zip.ZipLibrary;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
-import cmiLib.ActionBarTitleMessages;
-import cmiLib.ItemManager;
-import cmiLib.ItemManager.CMIMaterial;
-import cmiLib.RawMessage;
-import cmiLib.VersionChecker;
-import cmiLib.VersionChecker.Version;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
@@ -783,6 +784,10 @@ public class Residence extends JavaPlugin {
 		// 1.10 event
 		if (Version.isCurrentEqualOrHigher(Version.v1_10_R1))
 		    pm.registerEvents(new v1_10Events(), this);
+
+		// 1.13 event
+		if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
+		    pm.registerEvents(new v1_13Events(this), this);
 
 		firstenable = false;
 	    } else {

@@ -1,4 +1,4 @@
-package cmiLib;
+package com.bekvon.bukkit.cmiLib;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -16,7 +16,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import cmiLib.VersionChecker.Version;
+
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 
 public class RawMessage {
 

@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2017 Zrips
  */
-package cmiLib;
+package com.bekvon.bukkit.cmiLib;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 
 public class ItemManager {
 

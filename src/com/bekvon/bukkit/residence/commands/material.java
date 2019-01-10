@@ -6,13 +6,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
-import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
-
-import cmiLib.ItemManager.CMIMaterial;
 
 public class material implements cmd {
 

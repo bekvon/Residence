@@ -19,8 +19,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.CommandStatus;
-import cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;

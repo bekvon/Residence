@@ -1,6 +1,6 @@
 package com.bekvon.bukkit.residence.containers;
 
-import cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
 
 public enum Flags {
     anvil(CMIMaterial.ANVIL, FlagMode.Both, "Allows or denys interaction with anvil", true),

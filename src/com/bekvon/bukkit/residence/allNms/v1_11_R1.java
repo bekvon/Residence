@@ -33,9 +33,9 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import com.bekvon.bukkit.cmiLib.CMIEffect;
 import com.bekvon.bukkit.residence.containers.NMS;
 
-import cmiLib.CMIEffect;
 import net.minecraft.server.v1_11_R1.EnumParticle;
 import net.minecraft.server.v1_11_R1.Packet;
 import net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles;

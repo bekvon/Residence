@@ -43,6 +43,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
+import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.commands.auto.direction;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -53,10 +56,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-
-import cmiLib.ActionBarTitleMessages;
-import cmiLib.ItemManager.CMIMaterial;
-import cmiLib.VersionChecker.Version;
 
 public class ResidenceBlockListener implements Listener {
 
@@ -772,6 +771,9 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLandDryFade(BlockFadeEvent event) {
+	// Moved to separate class
+	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
+	    return;
 	// Disabling listener if flag disabled globally
 	if (!Flags.dryup.isGlobalyEnabled())
 	    return;
@@ -786,17 +788,10 @@ public class ResidenceBlockListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLoc(event.getNewState().getLocation());
 	if (!perms.has(Flags.dryup, true)) {
 	    Block b = event.getBlock();
-	    if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1)) {
-		try {
-		    b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
-		    e1.printStackTrace();
-		}
-	    } else {
-		org.bukkit.block.data.type.Farmland farm = (org.bukkit.block.data.type.Farmland) event.getBlock().getBlockData();
-		farm.setMoisture(7);
-		event.getBlock().setBlockData(farm);
-
+	    try {
+		b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
+	    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+		e1.printStackTrace();
 	    }
 	    event.setCancelled(true);
 	    return;
@@ -805,6 +800,9 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onLandDryPhysics(BlockPhysicsEvent event) {
+	// Moved to separate class
+	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
+	    return;
 	// Disabling listener if flag disabled globally
 	if (!Flags.dryup.isGlobalyEnabled())
 	    return;
@@ -822,16 +820,10 @@ public class ResidenceBlockListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (perms.has(Flags.dryup, FlagCombo.OnlyFalse)) {
 	    Block b = event.getBlock();
-	    if (Residence.getInstance().getVersionChecker().getVersion().isLower(Version.v1_13_R1)) {
-		try {
-		    b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
-		    e1.printStackTrace();
-		}
-	    } else {
-		org.bukkit.block.data.type.Farmland farm = (org.bukkit.block.data.type.Farmland) event.getBlock().getBlockData();
-		farm.setMoisture(7);
-		event.getBlock().setBlockData(farm);
+	    try {
+		b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
+	    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+		e1.printStackTrace();
 	    }
 	    event.setCancelled(true);
 	    return;

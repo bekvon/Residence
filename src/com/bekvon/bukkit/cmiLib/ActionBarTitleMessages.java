@@ -1,4 +1,4 @@
-package cmiLib;
+package com.bekvon.bukkit.cmiLib;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -11,9 +11,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
-
-import cmiLib.VersionChecker.Version;
 
 public class ActionBarTitleMessages {
     private static Object packet;

@@ -1,4 +1,4 @@
-package cmiLib;
+package com.bekvon.bukkit.cmiLib;
 
 import java.util.ArrayList;
 import java.util.Collections;

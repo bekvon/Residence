@@ -1,4 +1,4 @@
-package cmiLib;
+package com.bekvon.bukkit.cmiLib;
 
 import java.io.File;
 import java.io.FileInputStream;

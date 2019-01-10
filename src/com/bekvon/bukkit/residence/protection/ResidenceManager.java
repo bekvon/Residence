@@ -22,6 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -43,8 +44,6 @@ import com.bekvon.bukkit.residence.utils.GetTime;
 import com.griefcraft.cache.ProtectionCache;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.model.Protection;
-
-import cmiLib.RawMessage;
 
 public class ResidenceManager implements ResidenceInterface {
     protected SortedMap<String, ClaimedResidence> residences;

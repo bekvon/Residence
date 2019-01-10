@@ -11,9 +11,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.Residence;
-
-import cmiLib.ItemManager.CMIMaterial;
 
 public class ResidenceFixesListener implements Listener {
 

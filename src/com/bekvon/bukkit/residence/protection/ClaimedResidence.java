@@ -25,6 +25,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
+import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.Siege.ResidenceSiege;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -52,9 +54,6 @@ import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.utils.Debug;
-
-import cmiLib.ActionBarTitleMessages;
-import cmiLib.RawMessage;
 
 public class ClaimedResidence {
 

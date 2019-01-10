@@ -2,7 +2,7 @@
  * Copyright (C) 2017 Zrips
  */
 
-package cmiLib;
+package com.bekvon.bukkit.cmiLib;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 
 
 public class ItemReflection {

@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2017 Zrips
  */
-package cmiLib;
+package com.bekvon.bukkit.cmiLib;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 import org.bukkit.Effect;
 import org.bukkit.Effect.Type;
 
-import cmiLib.ItemManager.CMIMaterial;
-import cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 
 import org.bukkit.Material;
 

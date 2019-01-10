@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import cmiLib.CMIEffect;
+import com.bekvon.bukkit.cmiLib.CMIEffect;
 
 public interface NMS {
 
