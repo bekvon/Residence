@@ -63,10 +63,10 @@ Groups:
            CanChange: true
            # The default enter message to apply to new Residences created by players in this group.
            # Leaving the message blank will disable it.
-           DefaultEnter: Welcome %player to %residence, owned by %owner.
+           DefaultEnter: "Welcome %player to %residence, owned by %owner."
            # The default leave message to apply to new Residences created by players in this group.
            # Leaving the message blank will disable it.
-           DefaultLeave: Now leaving %residence.
+           DefaultLeave: "Now leaving %residence."
        # Options relating to the Lease system.
        Lease:
           # The maximum number of days to allow leases.
@@ -141,8 +141,8 @@ Groups:
            ItemListAccess: true
        Messaging:
            CanChange: true
-           DefaultEnter: Welcome %player to %residence, owned by %owner.
-           DefaultLeave: Now leaving %residence.
+           DefaultEnter: "Welcome %player to %residence, owned by %owner."
+           DefaultLeave: "Now leaving %residence."
        Lease:
           MaxDays: 16
           RenewIncrement: 14
