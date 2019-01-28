@@ -1227,7 +1227,8 @@ public class ClaimedResidence {
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
 	boolean bypassDelay = targetPlayer.hasPermission("residence.tpdelaybypass");
 
-	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass") && !this.isOwner(targetPlayer)) {
+	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass") && (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer) && Residence.getInstance().getConfigManager()
+	    .isCanTeleportIncludeOwner())) {
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(reqPlayer);
 	    PermissionGroup group = rPlayer.getGroup();
 	    if (!group.hasTpAccess()) {

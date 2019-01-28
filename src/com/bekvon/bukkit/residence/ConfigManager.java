@@ -57,6 +57,7 @@ public class ConfigManager {
     protected CMIMaterial infoTool;
     protected int AutoCleanUpDays;
     protected boolean AutoCleanUpRegenerate;
+    protected boolean CanTeleportIncludeOwner;
     protected CMIMaterial selectionTool;
     protected boolean adminOps;
     protected boolean AdminFullAccess;
@@ -315,7 +316,7 @@ public class ConfigManager {
 
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
 
-	for (Flags fl : Flags.values()) {	    
+	for (Flags fl : Flags.values()) {
 	    guiSection.set(fl.toString(), fl.getIcon().toString());
 	}
 
@@ -423,6 +424,12 @@ public class ConfigManager {
 	c.addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
 	    "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
 	infoTool = CMIMaterial.get(c.get("Global.InfoToolId", Material.STRING.toString()));
+
+	c.addComment("Global.Optimizations.CanTeleportIncludeOwner", "This will slightly change behavior of groups file CanTeleport section which will include server owner into check",
+	    "When this is set to false and CanTeleport set to false, players will not have option to teleport to other player residences, only to their own",
+	    "When this is set to true and CanTeleport set to false, players will not have option to teleport to residences in general", 
+	    "Keep in mind that this only applies for commands like /res tp");
+	CanTeleportIncludeOwner = c.get("Global.Optimizations.CanTeleportIncludeOwner", false);
 
 	c.addComment("Global.Optimizations.DefaultWorld", "Name of your main residence world. Usually normal starting world 'World'. Capitalization essential");
 	DefaultWorld = c.get("Global.Optimizations.DefaultWorld", defaultWorldName);
@@ -1825,6 +1832,10 @@ public class ConfigManager {
 
     public EconomyType getEconomyType() {
 	return VaultEconomy;
+    }
+
+    public boolean isCanTeleportIncludeOwner() {
+	return CanTeleportIncludeOwner;
     }
 
 //    public int getTownMinRange() {
