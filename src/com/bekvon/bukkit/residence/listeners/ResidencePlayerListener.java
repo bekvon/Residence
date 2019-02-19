@@ -1797,7 +1797,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		    return;
 		}
-	    }, 1L);
+	    }, 20L);
     }
 
     private static Location getSafeLocation(Location loc) {
