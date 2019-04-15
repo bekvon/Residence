@@ -42,6 +42,7 @@ public class PermissionGroup {
     protected int maxSubzones;
     protected FlagPermissions flagPerms;
     protected Map<String, Boolean> creatorDefaultFlags;
+//    protected Map<String, Boolean> rentedDefaultFlags;
     protected Map<String, Map<String, Boolean>> groupDefaultFlags;
     protected Map<String, Boolean> residenceDefaultFlags;
     protected boolean messageperms;
@@ -70,6 +71,7 @@ public class PermissionGroup {
     public PermissionGroup(String name) {
 	flagPerms = new FlagPermissions();
 	creatorDefaultFlags = new HashMap<String, Boolean>();
+//	rentedDefaultFlags = new HashMap<String, Boolean>();
 	residenceDefaultFlags = new HashMap<String, Boolean>();
 	groupDefaultFlags = new HashMap<String, Map<String, Boolean>>();
 	groupname = name;
@@ -114,13 +116,12 @@ public class PermissionGroup {
 	ymax = limits.getInt("Residence.MaxUpDown", 0);
 	ymin = limits.getInt("Residence.MinUpDown", 0);
 	ymin = ymin > ymax ? ymax : ymin;
-	
-	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()){
+
+	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 	    ymin = 0;
 	    ymax = 255;
 	}
-	
-	
+
 	zmax = limits.getInt("Residence.MaxNorthSouth", 0);
 	zmin = limits.getInt("Residence.MinNorthSouth", 0);
 	zmin = zmin > zmax ? zmax : zmin;
@@ -196,8 +197,27 @@ public class PermissionGroup {
 		boolean access = limits.getBoolean("Flags.CreatorDefault." + flagname, false);
 		creatorDefaultFlags.put(flagname, access);
 	    }
-
 	}
+
+//	node = limits.getConfigurationSection("Flags.RentedDefault");
+//	if (node == null) {
+//	    Object defaultRented = limits.get("Flags.CreatorDefault");
+//	    if (defaultRented != null) {
+//		limits.set("Flags.RentedDefault", defaultRented);
+//	    }
+//	    node = limits.getConfigurationSection("Flags.RentedDefault");
+//	}
+//	if (node != null) {
+//	    flags = node.getKeys(false);
+//	    if (flags != null) {
+//		Iterator<String> flagit = flags.iterator();
+//		while (flagit.hasNext()) {
+//		    String flagname = flagit.next();
+//		    rentedDefaultFlags.put(flagname, limits.getBoolean("Flags.RentedDefault." + flagname, false));
+//		}
+//	    }
+//	}
+
 	node = limits.getConfigurationSection("Flags.Default");
 	if (node != null) {
 	    flags = node.getKeys(false);
@@ -383,6 +403,10 @@ public class PermissionGroup {
     public Set<Entry<String, Boolean>> getDefaultCreatorFlags() {
 	return creatorDefaultFlags.entrySet();
     }
+
+//    public Set<Entry<String, Boolean>> getDefaultRentedFlags() {
+//	return rentedDefaultFlags.entrySet();
+//    }
 
     public Set<Entry<String, Map<String, Boolean>>> getDefaultGroupFlags() {
 	return groupDefaultFlags.entrySet();

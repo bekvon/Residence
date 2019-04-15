@@ -68,156 +68,119 @@ Global:
         bank: false
     # This sets GUI items to represent each flag, if not given, then gray wool will be used
     FlagGui:
-        animalkilling: 
-            Id: 365
-            Data: 0
-        animals: 
-            Id: 383
-            Data: 90
-        bed:
-            Id: 355
-            Data: 0
-        brew:
-            Id: 379
-            Data: 0
-        build: 
-            Id: 45
-            Data: 0            
-        burn:
-            Id: 50
-            Data: 0
-        button: 
-            Id: 143
-            Data: 0
-        cake:
-            Id: 354
-            Data: 0
-        canimals: 
-            Id: 383
-            Data: 91
-        chat:
-            Id: 386
-            Data: 0
-        cmonsters: 
-            Id: 383
-            Data: 50
-        command:
-            Id: 137
-            Data: 0
-        container: 
-            Id: 342
-            Data: 0
-        creeper: 
-            Id: 383
-            Data: 50
-        destroy: 
-            Id: 121
-            Data: 0
-        diode: 
-            Id: 356
-            Data: 0
-        door: 
-            Id: 324
-            Data: 0
-        enchant:
-            Id: 116
-            Data: 0
-        explode:
-            Id: 407
-            Data: 0
-        fireball:
-            Id: 385
-            Data: 0
-        firespread: 
-            Id: 377
-            Data: 0
-        flow: 
-            Id: 111
-            Data: 0
-        healing: 
-            Id: 373
-            Data: 0
-        ignite: 
-            Id: 259
-            Data: 0
-        lavaflow: 
-            Id: 327
-            Data: 0
-        leash: 
-            Id: 420
-            Data: 0
-        lever: 
-            Id: 69
-            Data: 0
-        mobkilling: 
-            Id: 367
-            Data: 0
-        monsters: 
-            Id: 52
-            Data: 0
-        move: 
-            Id: 301
-            Data: 0
-        nanimals: 
-            Id: 383
-            Data: 92
-        nmonsters: 
-            Id: 383
-            Data: 51
-        nofly: 
-            Id: 171
-            Data: 1
-        nomobs: 
-            Id: 166
-            Data: 0
-        note:
-            Id: 25
-            Data: 0
-        piston: 
-            Id: 33
-            Data: 0
-        place: 
-            Id: 169
-            Data: 0
-        pvp: 
-            Id: 268
-            Data: 0
-        sanimals: 
-            Id: 383
-            Data: 101
-        shear: 
-            Id: 359
-            Data: 0
-        smonsters: 
-            Id: 383
-            Data: 54
-        subzone: 
-            Id: 160
-            Data: 7
-        table: 
-            Id: 58
-            Data: 0
-        tnt: 
-            Id: 46
-            Data: 0
-        tp: 
-            Id: 120
-            Data: 0
-        trade: 
-            Id: 388
-            Data: 0
-        trample:
-            Id: 3
-            Data: 0
-        use: 
-            Id: 70
-            Data: 0
-        vehicledestroy: 
-            Id: 328
-            Data: 0
-        waterflow: 
-            Id: 326
-            Data: 0
+        animalkilling: CHICKEN
+        animals: PIG_SPAWN_EGG
+        bed: WHITE_BED
+        brew: BREWING_STAND
+        build: BRICKS
+        burn: TORCH
+        button: OAK_BUTTON
+        cake: CAKE
+        canimals: SHEEP_SPAWN_EGG
+        chat: WRITABLE_BOOK
+        cmonsters: CREEPER_SPAWN_EGG
+        command: COMMAND_BLOCK
+        container: CHEST_MINECART
+        creeper: CREEPER_SPAWN_EGG
+        destroy: END_STONE
+        diode: REPEATER
+        door: OAK_DOOR
+        enchant: ENCHANTING_TABLE
+        explode: TNT_MINECART
+        fireball: FIRE_CHARGE
+        firespread: BLAZE_POWDER
+        flow: LILY_PAD
+        healing: POTION
+        ignite: FLINT_AND_STEEL
+        lavaflow: LAVA_BUCKET
+        leash: LEAD
+        lever: LEVER
+        mobkilling: ROTTEN_FLESH
+        monsters: SPAWNER
+        move: LEATHER_BOOTS
+        nanimals: COW_SPAWN_EGG
+        nmonsters: SKELETON_SPAWN_EGG
+        nofly: ORANGE_CARPET
+        nomobs: BARRIER
+        note: NOTE_BLOCK
+        piston: PISTON
+        place: SEA_LANTERN
+        pvp: WOODEN_SWORD
+        sanimals: RABBIT_SPAWN_EGG
+        shear: SHEARS
+        smonsters: ZOMBIE_SPAWN_EGG
+        subzone: GRAY_STAINED_GLASS_PANE
+        table: CRAFTING_TABLE
+        tnt: TNT
+        tp: END_PORTAL_FRAME
+        trade: EMERALD
+        trample: DIRT
+        use: STONE_PRESSURE_PLATE
+        vehicledestroy: MINECART
+        waterflow: WATER_BUCKET
+        anvil: ANVIL
+        admin: BEDROCK
+        anvilbreak: ANVIL
+        backup: BOOKSHELF
+        bank: ENDER_CHEST
+        beacon: BEACON
+        chorustp: CHORUS_FRUIT
+        commandblock: COMMAND_BLOCK
+        coords: COMPASS
+        craft: STONE
+        dragongrief: DIRT
+        day: DANDELION
+        dye: ORANGE_DYE
+        damage: GOLDEN_SWORD
+        decay: OAK_LEAVES
+        dryup: BLUE_STAINED_GLASS_PANE
+        egg: EGG
+        enderpearl: ENDER_PEARL
+        fallinprotection: SAND
+        falldamage: LEATHER_BOOTS
+        feed: COOKED_BEEF
+        friendlyfire: SUNFLOWER
+        flowinprotection: OAK_BOAT
+        flowerpot: FLOWER_POT
+        grow: WHEAT_SEEDS
+        glow: SEA_LANTERN
+        hotfloor: MAGMA_BLOCK
+        hidden: GLASS_PANE
+        hook: FISHING_ROD
+        iceform: ICE
+        icemelt: ICE
+        itemdrop: FEATHER
+        itempickup: GUNPOWDER
+        jump2: SLIME_BLOCK
+        jump3: SLIME_BLOCK
+        keepinv: LEATHER_HELMET
+        keepexp: GOLDEN_APPLE
+        mobexpdrop: MELON_SEEDS
+        mobitemdrop: COCOA_BEANS
+        night: BLACK_WOOL
+        fly: ORANGE_CARPET
+        nodurability: ANVIL
+        overridepvp: IRON_SWORD
+        pressure: LIGHT_WEIGHTED_PRESSURE_PLATE
+        pistonprotection: STICKY_PISTON
+        rain: BLUE_ORCHID
+        redstone: SUNFLOWER
+        respawn: SUNFLOWER
+        riding: SADDLE
+        shoot: ARROW
+        sun: SUNFLOWER
+        shop: ITEM_FRAME
+        snowtrail: SNOW
+        spread: SNOWBALL
+        snowball: SNOWBALL
+        trusted: STONE
+        witherspawn: WITHER_SKELETON_SKULL
+        witherdamage: WITHER_SKELETON_SKULL
+        witherdestruction: WITHER_SKELETON_SKULL
+        wspeed1: POTION
+        wspeed2: POTION
+        testing: WHITE_WOOL
+        phantomspawn: BROWN_WOOL
     # These are default flags applied to all residences from any user group.
     ResidenceDefault:
         build: false
@@ -251,6 +214,21 @@ Global:
         trade: true
         shear: true
         leash: true
+    # These are default flags applied to the residence renter of any group.        
+      RentedDefault:
+        container: true
+        ignite: true
+        move: true
+        trade: true
+        mobkilling: true
+        shear: true
+        build: true
+        use: true
+        destroy: true
+        vehicledestroy: true
+        leash: true
+        animalkilling: true
+        admin: true
      # These are default group flags applied to a residence made by a user of any group.
     GroupDefault:
         #default: #group name

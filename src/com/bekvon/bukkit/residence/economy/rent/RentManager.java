@@ -304,7 +304,7 @@ public class RentManager implements MarketRentInterface {
 
 		res.getPermissions().copyUserPermissions(res.getPermissions().getOwner(), player.getName());
 		res.getPermissions().clearPlayersFlags(res.getPermissions().getOwner());
-		res.getPermissions().setPlayerFlag(player.getName(), "admin", FlagState.TRUE);
+		res.getPermissions().applyDefaultRentedFlags();
 		plugin.msg(player, lm.Residence_RentSuccess, res.getName(), land.days);
 
 		if (plugin.getSchematicManager() != null &&

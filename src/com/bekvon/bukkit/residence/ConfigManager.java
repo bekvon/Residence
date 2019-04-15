@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -132,6 +133,7 @@ public class ConfigManager {
     protected int FeedInterval;
     protected int VoteRangeTo;
     protected FlagPermissions globalCreatorDefaults;
+    protected FlagPermissions globalRentedDefaults;
     protected FlagPermissions globalResidenceDefaults;
     protected Map<String, FlagPermissions> globalGroupDefaults;
     protected String language;
@@ -255,6 +257,7 @@ public class ConfigManager {
 //	FileConfiguration config = YamlConfiguration.loadConfiguration(new File(Residence.dataFolder, "config.yml"));
 	this.plugin = plugin;
 	globalCreatorDefaults = new FlagPermissions();
+	globalRentedDefaults = new FlagPermissions();
 	globalResidenceDefaults = new FlagPermissions();
 	globalGroupDefaults = new HashMap<String, FlagPermissions>();
 	UpdateConfigFile();
@@ -313,6 +316,13 @@ public class ConfigManager {
 
 	if (!conf.isConfigurationSection("Global.FlagGui"))
 	    conf.createSection("Global.FlagGui");
+
+	if (!conf.isConfigurationSection("Global.RentedDefault")) {
+	    for (Entry<String, Boolean> one : this.getGlobalCreatorDefaultFlags().getFlags().entrySet()) {
+		conf.set("Global.RentedDefault." + one.getKey(), one.getValue());
+	    }
+	    conf.set("Global.RentedDefault.admin", true);
+	}
 
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
 
@@ -427,7 +437,7 @@ public class ConfigManager {
 
 	c.addComment("Global.Optimizations.CanTeleportIncludeOwner", "This will slightly change behavior of groups file CanTeleport section which will include server owner into check",
 	    "When this is set to false and CanTeleport set to false, players will not have option to teleport to other player residences, only to their own",
-	    "When this is set to true and CanTeleport set to false, players will not have option to teleport to residences in general", 
+	    "When this is set to true and CanTeleport set to false, players will not have option to teleport to residences in general",
 	    "Keep in mind that this only applies for commands like /res tp");
 	CanTeleportIncludeOwner = c.get("Global.Optimizations.CanTeleportIncludeOwner", false);
 
@@ -1140,6 +1150,7 @@ public class ConfigManager {
 	}
 
 	globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", flags.getConfigurationSection("Global"));
+	globalRentedDefaults = FlagPermissions.parseFromConfigNode("RentedDefault", flags.getConfigurationSection("Global"));
 	globalResidenceDefaults = FlagPermissions.parseFromConfigNode("ResidenceDefault", flags.getConfigurationSection("Global"));
 	loadGroups();
     }
@@ -1600,6 +1611,10 @@ public class ConfigManager {
 
     public FlagPermissions getGlobalCreatorDefaultFlags() {
 	return globalCreatorDefaults;
+    }
+
+    public FlagPermissions getGlobalRentedDefaultFlags() {
+	return globalRentedDefaults;
     }
 
     public FlagPermissions getGlobalResidenceDefaultFlags() {

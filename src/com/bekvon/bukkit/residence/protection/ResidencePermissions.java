@@ -510,6 +510,20 @@ public class ResidencePermissions extends FlagPermissions {
 	}
     }
 
+    public void applyDefaultRentedFlags() {
+	if (!this.residence.isRented())
+	    return;
+	FlagPermissions dflags = Residence.getInstance().getConfigManager().getGlobalRentedDefaultFlags();
+	Map<String, Boolean> dgflags = dflags.getFlags();
+	if (this.residence.rentedland == null || this.residence.rentedland.player == null)
+	    return;
+	this.removeAllPlayerFlags(this.residence.rentedland.player);
+	String player = this.residence.rentedland.player;
+	for (Entry<String, Boolean> entry : dgflags.entrySet()) {
+	    this.setPlayerFlag(player, entry.getKey(), entry.getValue() ? FlagState.TRUE : FlagState.FALSE);
+	}
+    }
+
     public boolean setOwner(Player player, boolean resetFlags) {
 
 	ResidenceOwnerChangeEvent ownerchange = new ResidenceOwnerChangeEvent(residence, player);
