@@ -260,8 +260,8 @@ public class SetFlag {
 	    }
 	    lore.add(Residence.getInstance().msg(lm.General_FlagState, variable));
 
-	    if (description.containsKey(one.getKey()))
-		lore.addAll(description.get(one.getKey()));
+	    if (description.containsKey(flag))
+		lore.addAll(description.get(flag));
 
 	    lore.addAll(Residence.getInstance().msgL(lm.Gui_Actions));
 
@@ -416,8 +416,8 @@ public class SetFlag {
 	    }
 	    lore.add(Residence.getInstance().msg(lm.General_FlagState, variable));
 
-	    if (description.containsKey(one.getKey()))
-		lore.addAll(description.get(one.getKey()));
+	    if (description.containsKey(flag))
+		lore.addAll(description.get(flag));
 
 	    lore.addAll(Residence.getInstance().msgL(lm.Gui_Actions));
 
