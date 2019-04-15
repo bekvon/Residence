@@ -57,7 +57,7 @@ public class FileCleanUp {
 	    if (!plugin.getConfigManager().getCleanWorlds().contains(res.getWorld()))
 		continue;
 
-	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandname()))
+	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandName()))
 		continue;
 
 	    long lastPlayed = player.getLastPlayed();

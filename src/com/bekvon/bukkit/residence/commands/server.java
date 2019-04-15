@@ -33,8 +33,8 @@ public class server implements cmd {
 		plugin.msg(player, lm.Invalid_Residence);
 		return true;
 	    }
-	    res.getPermissions().setOwner(plugin.getServerLandname(), false);
-	    plugin.msg(player, lm.Residence_OwnerChange, args[1], plugin.getServerLandname());
+	    res.getPermissions().setOwner(plugin.getServerLandName(), false);
+	    plugin.msg(player, lm.Residence_OwnerChange, args[1], plugin.getServerLandName());
 	    return true;
 	}
 	plugin.msg(player, lm.Invalid_Residence);

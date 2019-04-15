@@ -773,7 +773,7 @@ public class FlagPermissions {
 	    if (keyset.length() == 36) {
 		String uuid = keyset;
 		if (uuid.equalsIgnoreCase(Residence.getInstance().getServerLandUUID()))
-		    converts.put(uuid, Residence.getInstance().getServerLandname());
+		    converts.put(uuid, Residence.getInstance().getServerLandName());
 		else {
 		    String name = Residence.getInstance().getPlayerName(uuid);
 		    if (name != null)
@@ -1052,7 +1052,7 @@ public class FlagPermissions {
 			next = this.cachedPlayerNameUUIDs.get(next);
 		}
 
-		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandname()))
+		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))
 		    continue;
 
 		if (!perms.equals("none")) {
@@ -1094,7 +1094,7 @@ public class FlagPermissions {
 			next = this.cachedPlayerNameUUIDs.get(next);
 		}
 
-		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandname()))
+		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))
 		    continue;
 
 		if (!perms.equals("none")) {

@@ -359,7 +359,7 @@ public class HelpEntry {
 				subCommands.add(oneRes.getName());
 			    }
 			} else {
-			    ArrayList<String> resList = Residence.getInstance().getResidenceManager().getResidenceList(Residence.getInstance().getServerLandname(), true, false, false);
+			    ArrayList<String> resList = Residence.getInstance().getResidenceManager().getResidenceList(Residence.getInstance().getServerLandName(), true, false, false);
 			    if (resList.size() > 0)
 				subCommands.addAll(resList);
 			}

@@ -114,7 +114,7 @@ public class LocaleManager {
 	    if (lm.getComments() != null)
 		c.addComment(lm.getPath(), lm.getComments());
 	}
-
+	
 	c.addComment("CommandHelp", "");
 
 	c.get("CommandHelp.Description", "Contains Help for Residence");

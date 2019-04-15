@@ -226,7 +226,7 @@ public class Residence extends JavaPlugin {
     private WorldGuardPlugin wg = null;
     private CMIMaterial wepid;
 
-    private String ServerLandname = "Server_Land";
+//    private String ServerLandname = "Server_Land";
     private String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
     private String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
@@ -733,9 +733,12 @@ public class Residence extends JavaPlugin {
 
 	    pmanager = new PermissionListManager(this);
 
+	    NewLanguageManager = new Language(this);
+	    getLM().LanguageReload();
+
 	    try {
 		this.loadYml();
-	    } catch (Exception e) {
+	    } catch (Exception e) {		
 		this.getLogger().log(Level.SEVERE, "Unable to load save file", e);
 		throw e;
 	    }
@@ -794,9 +797,6 @@ public class Residence extends JavaPlugin {
 	    } else {
 		plistener.reload();
 	    }
-
-	    NewLanguageManager = new Language(this);
-	    getLM().LanguageReload();
 
 	    AutoSelectionManager = new AutoSelection(this);
 
@@ -1776,8 +1776,13 @@ public class Residence extends JavaPlugin {
 	return null;
     }
 
+    @Deprecated
     public String getServerLandname() {
-	return ServerLandname;
+	return this.getLM().getMessage(lm.server_land);
+    }
+
+    public String getServerLandName() {
+	return this.getLM().getMessage(lm.server_land);
     }
 
     public String getServerLandUUID() {
@@ -1986,4 +1991,5 @@ public class Residence extends JavaPlugin {
     public int getWorldGuardVersion() {
 	return wepVersion;
     }
+
 }

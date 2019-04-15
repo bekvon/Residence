@@ -105,6 +105,8 @@ public enum lm {
     info_min("&e%1 &6min "),
     info_sec("&e%1 &6sec "),
 
+    server_land("Server_Land"),
+
     Flag_ownColor("&4"),
     Flag_p1Color("&2"),
     Flag_p2Color("&a"),

@@ -175,7 +175,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     @Override
     public boolean addResidence(String name, Location loc1, Location loc2) {
-	return this.addResidence(name, plugin.getServerLandname(), loc1, loc2);
+	return this.addResidence(name, plugin.getServerLandName(), loc1, loc2);
     }
 
     @Override
@@ -1000,11 +1000,11 @@ public class ResidenceManager implements ResidenceInterface {
 
 		if (residence.getPermissions().getOwnerUUID().toString().equals(plugin.getServerLandUUID()) &&
 		    !residence.getOwner().equalsIgnoreCase("Server land") &&
-		    !residence.getOwner().equalsIgnoreCase(plugin.getServerLandname()))
+		    !residence.getOwner().equalsIgnoreCase(plugin.getServerLandName()))
 		    continue;
 
 		if (residence.getOwner().equalsIgnoreCase("Server land")) {
-		    residence.getPermissions().setOwner(plugin.getServerLandname(), false);
+		    residence.getPermissions().setOwner(plugin.getServerLandName(), false);
 		}
 		String resName = res.getKey().toLowerCase();
 

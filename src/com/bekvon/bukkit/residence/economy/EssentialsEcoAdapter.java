@@ -14,7 +14,7 @@ public class EssentialsEcoAdapter implements EconomyInterface {
 
     public EssentialsEcoAdapter(Essentials p) {
 	plugin = p;
-	String serverland = Residence.getInstance().getServerLandname();
+	String serverland = Residence.getInstance().getServerLandName();
 	if (!Economy.playerExists(serverland)) {
 	    Economy.createNPC(serverland);
 	}

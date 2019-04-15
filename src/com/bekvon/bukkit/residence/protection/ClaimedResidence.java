@@ -191,7 +191,7 @@ public class ClaimedResidence {
     }
 
     public ClaimedResidence(String creationWorld, Residence plugin) {
-	this(plugin.getServerLandname(), creationWorld, plugin);
+	this(plugin.getServerLandName(), creationWorld, plugin);
     }
 
     public ClaimedResidence(String creator, String creationWorld, Residence plugin) {
@@ -618,7 +618,7 @@ public class ClaimedResidence {
 
     public boolean addSubzone(Player player, Location loc1, Location loc2, String name, boolean resadmin) {
 	if (player == null) {
-	    return this.addSubzone(null, plugin.getServerLandname(), loc1, loc2, name, resadmin);
+	    return this.addSubzone(null, plugin.getServerLandName(), loc1, loc2, name, resadmin);
 	}
 	return this.addSubzone(player, player.getName(), loc1, loc2, name, resadmin);
     }
