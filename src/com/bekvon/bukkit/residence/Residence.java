@@ -120,6 +120,7 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -924,7 +925,9 @@ public class Residence extends JavaPlugin {
 	    }
 	    if (smanager == null)
 		smanager = new SelectionManager(server, this);
-	    wepid = CMIMaterial.get(this.getWorldEdit().getConfig().getInt("wand-item"));
+
+	    wepid = CMIMaterial.get((String) this.getWorldEdit().getConfig().get("wand-item"));
+
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit");
 	} else {
 	    smanager = new SelectionManager(server, this);

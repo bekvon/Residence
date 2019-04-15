@@ -1717,7 +1717,7 @@ public class ItemManager {
 	public static CMIMaterial get(String id) {
 	    Integer ids = null;
 	    Integer data = null;
-	    id = id.replace("_", "").replace(" ", "").toLowerCase();
+	    id = id.replace("_", "").replace(" ", "").replace("minecraft:", "").toLowerCase();
 	    try {
 		ids = Integer.parseInt(id);
 	    } catch (Exception e) {

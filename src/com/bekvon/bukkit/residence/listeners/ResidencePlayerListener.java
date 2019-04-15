@@ -1124,10 +1124,10 @@ public class ResidencePlayerListener implements Listener {
 	@SuppressWarnings("deprecation")
 	CMIMaterial heldItem = CMIMaterial.get(player.getItemInHand());
 
-	if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()))
+	if (heldItem != plugin.getConfigManager().getSelectionTool())
 	    return;
 
-	if (plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool()))
+	if (plugin.getWorldEditTool() == plugin.getConfigManager().getSelectionTool())
 	    return;
 
 	if (player.getGameMode() == GameMode.CREATIVE)
@@ -1536,8 +1536,8 @@ public class ResidencePlayerListener implements Listener {
 	    if (iih == null && iiho == null)
 		return;
 	    if (iih != null && !CMIMaterial.isDye(iih.getType()) && iiho != null && !CMIMaterial.isDye(iiho.getType()))
-		return;	    
-	    
+		return;
+
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.dye, res.getName());
 	    event.setCancelled(true);
 	}
@@ -1570,7 +1570,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (iih == null && iiho == null)
 		return;
 	    if (iih != null && !CMIMaterial.SHEARS.equals(iih.getType()) && iiho != null && !CMIMaterial.SHEARS.equals(iiho.getType()))
-		return;	    
+		return;
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.shear, res.getName());
 	    event.setCancelled(true);
 	}
