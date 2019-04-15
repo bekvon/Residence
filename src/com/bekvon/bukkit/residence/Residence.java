@@ -954,17 +954,6 @@ public class Residence extends JavaPlugin {
     private void setWorldGuard() {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
-//	    try {
-//		Class.forName("com.sk89q.worldedit.BlockVector");
-//		Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet");
-//		Class.forName("com.sk89q.worldguard.protection.managers.RegionManager");
-//		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion");
-//		Class.forName("com.sk89q.worldguard.protection.regions.ProtectedRegion");
-//	    } catch (Exception e) {
-//		Bukkit.getConsoleSender().sendMessage(getPrefix() + ChatColor.RED
-//		    + " Found WorldGuard, but its not supported by Residence plugin. Please update WorldGuard to latest version");
-//		return;
-//	    }
 	    wg = (WorldGuardPlugin) wgplugin;
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard " + wg.getDescription().getVersion());
 	}
