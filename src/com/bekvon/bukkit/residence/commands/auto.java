@@ -17,7 +17,6 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class auto implements cmd {
 
@@ -58,9 +57,13 @@ public class auto implements cmd {
 	int Z = group.getMinZ();
 
 	if (lenght > 0) {
-	    if (lenght < group.getMaxX() && lenght > X)
+	    if (lenght > group.getMaxX())
+		X = group.getMaxX();
+	    else
 		X = lenght;
-	    if (lenght < group.getMaxZ() && lenght > Z)
+	    if (lenght > group.getMaxZ())
+		Z = group.getMaxZ();
+	    else
 		Z = lenght;
 	}
 
