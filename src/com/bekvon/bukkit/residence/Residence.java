@@ -738,7 +738,7 @@ public class Residence extends JavaPlugin {
 
 	    try {
 		this.loadYml();
-	    } catch (Exception e) {		
+	    } catch (Exception e) {
 		this.getLogger().log(Level.SEVERE, "Unable to load save file", e);
 		throw e;
 	    }
@@ -916,8 +916,9 @@ public class Residence extends JavaPlugin {
 	    try {
 		Class.forName("com.sk89q.worldedit.bukkit.selections.Selection");
 		smanager = new WorldEditSelectionManager(server, this);
-		if (wep != null)
+		if (wep != null) {
 		    SchematicManager = new SchematicsManager(this);
+		}
 	    } catch (ClassNotFoundException e) {
 		smanager = new WorldEdit7SelectionManager(server, this);
 		if (wep != null)
@@ -966,7 +967,7 @@ public class Residence extends JavaPlugin {
 //		return;
 //	    }
 	    wg = (WorldGuardPlugin) wgplugin;
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard " + wgplugin.getDescription().getVersion());
 	}
     }
 
@@ -1913,8 +1914,9 @@ public class Residence extends JavaPlugin {
 
 	    int version = 6;
 	    try {
-		version = Integer.parseInt(wep.getDescription().getVersion().substring(0, 1));
-	    } catch (Exception e) {
+		version = Integer.parseInt(wg.getDescription().getVersion().substring(0, 1));
+		Debug.D(version);
+	    } catch (Exception | Error e) {
 	    }
 	    if (version >= 7) {
 		wepVersion = version;
