@@ -1853,7 +1853,8 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = event.getTo();
 	ClaimedResidence ResOld = event.getFrom();
 	Player player = event.getPlayer();
-
+	if (player == null)
+	    return;
 	if (res == null && ResOld != null) {
 	    if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		player.resetPlayerTime();
