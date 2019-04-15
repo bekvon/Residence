@@ -59,11 +59,14 @@ public class WorldEdit7SelectionManager extends SelectionManager {
 
 	World w = BukkitAdapter.adapt(player.getWorld());
 
-	plugin.getWorldEdit().getSession(player).getRegionSelector(w).selectPrimary(BlockVector3.at(getPlayerLoc1(player).getBlockX(), getPlayerLoc1(player).getBlockY(), getPlayerLoc1(player).getBlockZ()),
-	    PermissiveSelectorLimits.getInstance());
-	plugin.getWorldEdit().getSession(player).getRegionSelector(w).selectSecondary(BlockVector3.at(getPlayerLoc2(player).getBlockX(), getPlayerLoc2(player).getBlockY(), getPlayerLoc2(player).getBlockZ()),
-	    PermissiveSelectorLimits.getInstance());
-
+	try {
+	    plugin.getWorldEdit().getSession(player).getRegionSelector(w).selectPrimary(BlockVector3.at(getPlayerLoc1(player).getBlockX(), getPlayerLoc1(player).getBlockY(), getPlayerLoc1(player)
+		.getBlockZ()), PermissiveSelectorLimits.getInstance());
+	    plugin.getWorldEdit().getSession(player).getRegionSelector(w).selectSecondary(BlockVector3.at(getPlayerLoc2(player).getBlockX(), getPlayerLoc2(player).getBlockY(), getPlayerLoc2(player)
+		.getBlockZ()), PermissiveSelectorLimits.getInstance());
+	} catch (Exception | Error e) {
+	    return false;
+	}
 //	CuboidSelection selection = new CuboidSelection(player.getWorld(), getPlayerLoc1(player), getPlayerLoc2(player));
 
 //	plugin.getWorldEdit().getSession(player).setRegionSelector(plugin.getWorldEdit().getSession(player).getSelectionWorld(), selection.getRegionSelector());
@@ -118,10 +121,12 @@ public class WorldEdit7SelectionManager extends SelectionManager {
 	CuboidRegionSelector sellection = new CuboidRegionSelector(BukkitAdapter.adapt(area.getWorld()));
 
 	// set up selector
-
-	sellection.selectPrimary(BlockVector3.at(area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ()), PermissiveSelectorLimits.getInstance());
-	sellection.selectSecondary(BlockVector3.at(area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ()), PermissiveSelectorLimits.getInstance());
-
+	try {
+	    sellection.selectPrimary(BlockVector3.at(area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ()), PermissiveSelectorLimits.getInstance());
+	    sellection.selectSecondary(BlockVector3.at(area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ()), PermissiveSelectorLimits.getInstance());
+	} catch (Exception | Error e) {
+	    return;
+	}
 	// set up CuboidSelection
 	CuboidRegion cuboid = sellection.getIncompleteRegion();
 

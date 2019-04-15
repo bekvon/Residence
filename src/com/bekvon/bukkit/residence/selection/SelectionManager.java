@@ -784,7 +784,7 @@ public class SelectionManager {
 		continue;
 
 	    Location l = locList.get(i);
-//	    if (plugin.isSpigot()) {
+
 	    CMIParticle effect = null;
 	    if (sides) {
 		effect = error ? plugin.getConfigManager().getOverlapSpigotSides() : plugin.getConfigManager().getSelectedSpigotSides();
@@ -795,24 +795,6 @@ public class SelectionManager {
 	    CMIEffect ef = new CMIEffect(effect);
 
 	    Residence.getInstance().getNms().playEffect(player, l, ef);
-
-//		player.spigot().playEffect(l, effect, 0, 0, 0, 0, 0, 0, 1, 128);
-//	    } else {
-//		if (error) {
-//		    if (sides)
-//			plugin.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
-//		    else
-//			plugin.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
-//		} else {
-//		    if (sides)
-//			plugin.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
-//		    else
-//			plugin.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
-//		}
-//	    }
-
-//	    if (!sameLocation)
-//		trimed.add(l);
 	}
     }
 
@@ -824,18 +806,6 @@ public class SelectionManager {
 	    plugin.msg(player, lm.Select_Points);
 	}
     }
-
-//    @Deprecated
-//    public void qsky(Player player) {
-//	Selection selection = this.getSelection(player);
-//	selection.shadowSky();
-//    }
-//
-//    @Deprecated
-//    public void qbedrock(Player player) {
-//	Selection selection = this.getSelection(player);
-//	selection.shadowBedrock();
-//    }
 
     public void sky(Player player, boolean resadmin) {
 	Selection selection = this.getSelection(player);
@@ -873,8 +843,6 @@ public class SelectionManager {
 	Location loc2 = new Location(myloc.getWorld(), myloc.getBlockX() - xsize, myloc.getBlockY() - ysize, myloc.getBlockZ() - zsize);
 
 	CuboidArea area = new CuboidArea(loc1, loc2);
-
-//	area.getlo
 
 	placeLoc1(player, loc1, false);
 	placeLoc2(player, loc2, false);
