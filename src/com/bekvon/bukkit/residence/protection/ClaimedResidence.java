@@ -711,24 +711,24 @@ public class ClaimedResidence {
 		newres.getPermissions().setParent(perms);
 	    }
 
-	    newres.resName = name;
+	    newres.resName = NName;
 
 	    newres.setCreateTime();
 
-	    ResidenceSubzoneCreationEvent resevent = new ResidenceSubzoneCreationEvent(player, name, newres, newArea);
+	    ResidenceSubzoneCreationEvent resevent = new ResidenceSubzoneCreationEvent(player, NName, newres, newArea);
 	    plugin.getServ().getPluginManager().callEvent(resevent);
 	    if (resevent.isCancelled())
 		return false;
 
 	    subzones.put(name, newres);
 	    if (player != null) {
-		plugin.msg(player, lm.Area_Create, name);
-		plugin.msg(player, lm.Subzone_Create, name);
+		plugin.msg(player, lm.Area_Create, NName);
+		plugin.msg(player, lm.Subzone_Create, NName);
 	    }
 	    return true;
 	}
 	if (player != null) {
-	    plugin.msg(player, lm.Subzone_CreateFail, name);
+	    plugin.msg(player, lm.Subzone_CreateFail, NName);
 	}
 	return false;
     }
@@ -1452,7 +1452,7 @@ public class ClaimedResidence {
 	root.put("Areas", areamap);
 	Map<String, Object> subzonemap = new HashMap<>();
 	for (Entry<String, ClaimedResidence> sz : subzones.entrySet()) {
-	    subzonemap.put(sz.getKey(), sz.getValue().save());
+	    subzonemap.put(sz.getValue().getResidenceName(), sz.getValue().save());
 	}
 	if (!subzonemap.isEmpty())
 	    root.put("Subzones", subzonemap);

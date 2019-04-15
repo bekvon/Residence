@@ -169,7 +169,6 @@ public class SetFlag {
 		continue;
 
 	    if (!flags.contains(one.getKey())) {
-		Debug.D("not contain " + one.getKey());
 		continue;
 	    }
 
