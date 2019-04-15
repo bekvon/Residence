@@ -738,7 +738,7 @@ public class Residence extends JavaPlugin {
 
 	    try {
 		this.loadYml();
-	    } catch (Exception e) {		
+	    } catch (Exception e) {
 		this.getLogger().log(Level.SEVERE, "Unable to load save file", e);
 		throw e;
 	    }
@@ -928,7 +928,7 @@ public class Residence extends JavaPlugin {
 
 	    wepid = CMIMaterial.get((String) this.getWorldEdit().getConfig().get("wand-item"));
 
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit " + this.getWorldEdit().getDescription().getVersion());
 	} else {
 	    smanager = new SelectionManager(server, this);
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " WorldEdit NOT found!");
@@ -966,7 +966,7 @@ public class Residence extends JavaPlugin {
 //		return;
 //	    }
 	    wg = (WorldGuardPlugin) wgplugin;
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard");
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard " + wg.getDescription().getVersion());
 	}
     }
 
@@ -1913,8 +1913,8 @@ public class Residence extends JavaPlugin {
 
 	    int version = 6;
 	    try {
-		version = Integer.parseInt(wep.getDescription().getVersion().substring(0, 1));
-	    } catch (Exception e) {
+		version = Integer.parseInt(wg.getDescription().getVersion().substring(0, 1));
+	    } catch (Exception | Error e) {
 	    }
 	    if (version >= 7) {
 		wepVersion = version;
@@ -1962,7 +1962,7 @@ public class Residence extends JavaPlugin {
 		    outMsg = message;
 
 		RawMessage rm = new RawMessage();
-		rm.add(outMsg, "ง2" + permision);
+		rm.add(outMsg, "ยง2" + permision);
 		rm.show(sender);
 		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 		console.sendMessage(ChatColor.RED + sender.getName() + " No permission -> " + permision);
