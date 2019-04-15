@@ -15,6 +15,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class v1_13Events implements Listener {
 
@@ -64,26 +65,26 @@ public class v1_13Events implements Listener {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
+	try {
+	    CMIMaterial mat = CMIMaterial.get(event.getChangedType());
+	    if (mat != CMIMaterial.FARMLAND)
+		return;
 
-	if (!event.getBlock().getChunk().isLoaded())
-	    return;
-
-	CMIMaterial mat = CMIMaterial.get(event.getBlock().getType());
-	if (!mat.equals(CMIMaterial.FARMLAND))
-	    return;
-
-	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
-	if (perms.has(Flags.dryup, FlagCombo.OnlyFalse)) {
-	    Block b = event.getBlock();
-	    try {
-		BlockData data = b.getBlockData();
-		Farmland farm = (Farmland) data;
-		farm.setMoisture(7);
-		b.setBlockData(farm);
-	    } catch (NoClassDefFoundError e) {
+	    FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
+	    if (perms.has(Flags.dryup, FlagCombo.OnlyFalse)) {
+		Block b = event.getBlock();
+		try {
+		    BlockData data = b.getBlockData();
+		    Farmland farm = (Farmland) data;
+		    farm.setMoisture(7);
+		    b.setBlockData(farm);
+		} catch (NoClassDefFoundError e) {
+		}
+		event.setCancelled(true);
+		return;
 	    }
-	    event.setCancelled(true);
-	    return;
+	} catch (Exception | Error e) {
+
 	}
     }
 }
