@@ -910,28 +910,34 @@ public class Residence extends JavaPlugin {
     }
 
     private void setWorldEdit() {
-	Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
-	if (plugin != null) {
-	    this.wep = (WorldEditPlugin) plugin;
-	    try {
-		Class.forName("com.sk89q.worldedit.bukkit.selections.Selection");
-		smanager = new WorldEditSelectionManager(server, this);
-		if (wep != null)
-		    SchematicManager = new SchematicsManager(this);
-	    } catch (ClassNotFoundException e) {
-		smanager = new WorldEdit7SelectionManager(server, this);
-		if (wep != null)
-		    SchematicManager = new Schematics7Manager(this);
-	    }
-	    if (smanager == null)
+	try {
+	    Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
+	    if (plugin != null) {
+		this.wep = (WorldEditPlugin) plugin;
+		try {
+		    Class.forName("com.sk89q.worldedit.bukkit.selections.Selection");
+		    smanager = new WorldEditSelectionManager(server, this);
+		    if (wep != null)
+			SchematicManager = new SchematicsManager(this);
+		} catch (ClassNotFoundException e) {
+		    smanager = new WorldEdit7SelectionManager(server, this);
+		    if (wep != null)
+			SchematicManager = new Schematics7Manager(this);
+		}
+		if (smanager == null)
+		    smanager = new SelectionManager(server, this);
+		if (this.getWorldEdit().getConfig().isInt("wand-item"))
+		    wepid = CMIMaterial.get(this.getWorldEdit().getConfig().getInt("wand-item"));
+		else
+		    wepid = CMIMaterial.get((String) this.getWorldEdit().getConfig().get("wand-item"));
+
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit " + this.getWorldEdit().getDescription().getVersion());
+	    } else {
 		smanager = new SelectionManager(server, this);
-
-	    wepid = CMIMaterial.get((String) this.getWorldEdit().getConfig().get("wand-item"));
-
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit " + this.getWorldEdit().getDescription().getVersion());
-	} else {
-	    smanager = new SelectionManager(server, this);
-	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " WorldEdit NOT found!");
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " WorldEdit NOT found!");
+	    }
+	} catch (Exception | Error e) {
+	    e.printStackTrace();
 	}
     }
 
