@@ -1264,7 +1264,9 @@ public class ResidencePlayerListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	if (heldItem != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 	    if (heldItem.isDye()) {
-		if (heldItem.equals(CMIMaterial.BONE_MEAL) && block.getType() == Material.GRASS || heldItem.equals(CMIMaterial.COCOA_BEANS) && blockM.equals(CMIMaterial.JUNGLE_WOOD)) {
+		CMIMaterial btype = CMIMaterial.get(block);
+		if (heldItem.equals(CMIMaterial.BONE_MEAL) && (btype == CMIMaterial.GRASS_BLOCK || btype == CMIMaterial.GRASS || btype.isSapling()) || 
+		    heldItem == CMIMaterial.COCOA_BEANS && blockM == CMIMaterial.JUNGLE_WOOD) {
 		    perms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		    if (!perms.playerHas(player, Flags.build, true)) {
 			plugin.msg(player, lm.Flag_Deny, Flags.build);
