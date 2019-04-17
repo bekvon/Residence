@@ -273,10 +273,10 @@ public class SignUtil {
 	    else
 		endDate = plugin.msg(lm.Sign_RentedAutorenewFalse, endDate);
 
-	    String TopLine = rented ? endDate : plugin.msg(lm.Sign_ForRentTopLine);
+	    String TopLine = rented ? plugin.msg(lm.Sign_RentedTopLine, endDate) : plugin.msg(lm.Sign_ForRentTopLine);
 	    sign.setLine(0, TopLine);
 
-	    String infoLine = plugin.msg(lm.Sign_ForRentPriceLine, plugin.getRentManager().getCostOfRent(res), plugin
+	    String infoLine = plugin.msg(rented ? lm.Sign_RentedPriceLine : lm.Sign_ForRentPriceLine, plugin.getRentManager().getCostOfRent(res), plugin
 		.getRentManager().getRentDays(res), plugin.getRentManager().getRentableRepeatable(res));
 
 	    sign.setLine(1, infoLine);
