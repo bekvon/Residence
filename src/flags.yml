@@ -215,7 +215,7 @@ Global:
         shear: true
         leash: true
     # These are default flags applied to the residence renter of any group.        
-      RentedDefault:
+    RentedDefault:
         container: true
         ignite: true
         move: true
