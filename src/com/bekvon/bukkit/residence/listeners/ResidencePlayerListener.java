@@ -219,16 +219,25 @@ public class ResidencePlayerListener implements Listener {
     // Changing chat prefix variable to residence name
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerChatGlobalLow(AsyncPlayerChatEvent event) {
-	processEvent(event);
+	procEvent(event);
     }
 
-    // Changing chat prefix variable to residence name
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    private void processNEvent(AsyncPlayerChatEvent event) {
+	procEvent(event);
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPlayerChatGlobalHigh(AsyncPlayerChatEvent event) {
-	processEvent(event);
+    private void processHEvent(AsyncPlayerChatEvent event) {
+	procEvent(event);
     }
 
-    private void processEvent(AsyncPlayerChatEvent event) {
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    private void processHHEvent(AsyncPlayerChatEvent event) {
+	procEvent(event);
+    }
+
+    private void procEvent(AsyncPlayerChatEvent event) {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -489,6 +498,7 @@ public class ResidencePlayerListener implements Listener {
 	    break;
 	}
     }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onFlagChangeWSpeed(ResidenceOwnerChangeEvent event) {
 	if (event.isCancelled())
