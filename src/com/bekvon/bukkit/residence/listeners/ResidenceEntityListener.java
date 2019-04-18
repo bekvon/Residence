@@ -58,6 +58,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -65,26 +66,6 @@ public class ResidenceEntityListener implements Listener {
 
     public ResidenceEntityListener(Residence plugin) {
 	this.plugin = plugin;
-    }
-
-    @SuppressWarnings("incomplete-switch")
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onMinecartHopperItemMove(InventoryMoveItemEvent event) {
-	if (!(event.getInitiator().getHolder() instanceof HopperMinecart))
-	    return;
-	HopperMinecart hopper = (HopperMinecart) event.getInitiator().getHolder();
-	// disabling event on world
-	if (plugin.isDisabledWorldListener(hopper.getWorld()))
-	    return;
-	Block block = hopper.getLocation().getBlock();
-	switch (CMIMaterial.get(block)) {
-	case ACTIVATOR_RAIL:
-	case DETECTOR_RAIL:
-	case POWERED_RAIL:
-	case RAIL:
-	    return;
-	}
-	event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
