@@ -13,6 +13,7 @@ import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -79,11 +80,12 @@ public class HelpEntry {
 	String separator = Residence.getInstance().msg(lm.InformationPage_SmallSeparator);
 
 	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pi.getTotalPages()) + " " + separator);
+
 	for (int i = pi.getStart(); i <= pi.getEnd(); i++) {
 	    if (helplines.get(i).getCommand() != null) {
 		HelpEntry sub = this.getSubEntry(helplines.get(i).getCommand());
 
-		String desc = "";
+		String desc = "&6";
 		int y = 0;
 		for (String one : sub.lines) {
 		    desc += one;
