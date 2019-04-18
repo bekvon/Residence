@@ -468,10 +468,6 @@ public class Residence extends JavaPlugin {
 		this.ConvertFile();
 	    }
 
-	    if (!new File(dataFolder, "config.yml").isFile()) {
-		this.writeDefaultConfigFromJar();
-	    }
-
 	    if (!new File(dataFolder, "uuids.yml").isFile()) {
 		File file = new File(this.getDataFolder(), "uuids.yml");
 		file.createNewFile();
