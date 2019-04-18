@@ -599,7 +599,8 @@ public class ClaimedResidence {
 	if ((!resadmin) && (player != null)) {
 	    int chargeamount = (int) Math.ceil((newarea.getSize() - oldarea.getSize()) * getBlockSellPrice().doubleValue());
 	    if ((chargeamount < 0) && (this.plugin.getConfigManager().useResMoneyBack())) {
-		this.plugin.getTransactionManager().giveEconomyMoney(player, -chargeamount);
+		if (!this.isServerLand())
+		    this.plugin.getTransactionManager().giveEconomyMoney(player, -chargeamount);
 	    }
 	}
 
@@ -621,6 +622,10 @@ public class ClaimedResidence {
 	    return this.addSubzone(null, plugin.getServerLandName(), loc1, loc2, name, resadmin);
 	}
 	return this.addSubzone(player, player.getName(), loc1, loc2, name, resadmin);
+    }
+
+    public boolean isServerLand() {
+	return this.getOwnerUUID().toString() == Residence.getInstance().getServerLandUUID();
     }
 
     public boolean addSubzone(Player player, String name, boolean resadmin) {
@@ -1786,6 +1791,8 @@ public class ClaimedResidence {
     }
 
     public boolean isOwner(Player p) {
+	if (p == null)
+	    return false;
 	if (plugin.getConfigManager().isOfflineMode())
 	    return perms.getOwner().equals(p.getName());
 	return perms.getOwnerUUID().equals(p.getUniqueId());

@@ -583,58 +583,63 @@ public class ResidenceManager implements ResidenceInterface {
 	plugin.getRentManager().removeRentable(name);
 	plugin.getTransactionManager().removeFromSale(name);
 
-	if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {
-	    double chargeamount = res.getWorth();
-	    if (player != null)
-		plugin.getTransactionManager().giveEconomyMoney(player, chargeamount);
-	    else if (rPlayer != null)
-		plugin.getTransactionManager().giveEconomyMoney(rPlayer.getPlayerName(), chargeamount);
-	}
+	if (!res.isServerLand())
+	    if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {
+		double chargeamount = res.getWorth();
+		if (!res.isOwner(player)) {
+		    plugin.getTransactionManager().giveEconomyMoney(res.getOwner(), chargeamount);
+		} else {
+		    if (player != null)
+			plugin.getTransactionManager().giveEconomyMoney(player, chargeamount);
+		    else if (rPlayer != null)
+			plugin.getTransactionManager().giveEconomyMoney(rPlayer.getPlayerName(), chargeamount);
+		}
+	    }
     }
 
     public void removeLwcFromResidence(final Player player, final ClaimedResidence res) {
 //	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 //	    @Override
 //	    public void run() {
-		long time = System.currentTimeMillis();
-		LWC lwc = plugin.getLwc();
-		if (lwc == null)
-		    return;
-		if (res == null)
-		    return;
-		int i = 0;
+	long time = System.currentTimeMillis();
+	LWC lwc = plugin.getLwc();
+	if (lwc == null)
+	    return;
+	if (res == null)
+	    return;
+	int i = 0;
 
-		ProtectionCache cache = lwc.getProtectionCache();
+	ProtectionCache cache = lwc.getProtectionCache();
 
-		List<Material> list = plugin.getConfigManager().getLwcMatList();
+	List<Material> list = plugin.getConfigManager().getLwcMatList();
 
-		try {
-		    for (CuboidArea area : res.getAreaArray()) {
-			Location low = area.getLowLoc();
-			Location high = area.getHighLoc();
-			World world = low.getWorld();
-			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
-			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
-				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
-				    Block b = world.getBlockAt(x, y, z);
-				    if (!b.getChunk().isLoaded())
-					b.getChunk().load();
-				    if (!list.contains(b.getType()))
-					continue;
-				    Protection prot = cache.getProtection(b);
-				    if (prot == null)
-					continue;
-				    prot.remove();
-				    i++;
-				}
-			    }
+	try {
+	    for (CuboidArea area : res.getAreaArray()) {
+		Location low = area.getLowLoc();
+		Location high = area.getHighLoc();
+		World world = low.getWorld();
+		for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+		    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
+			for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+			    Block b = world.getBlockAt(x, y, z);
+			    if (!b.getChunk().isLoaded())
+				b.getChunk().load();
+			    if (!list.contains(b.getType()))
+				continue;
+			    Protection prot = cache.getProtection(b);
+			    if (prot == null)
+				continue;
+			    prot.remove();
+			    i++;
 			}
 		    }
-		} catch (Exception e) {
 		}
-		if (i > 0)
-		    plugin.msg(player, lm.Residence_LwcRemoved, i, System.currentTimeMillis() - time);
-		return;
+	    }
+	} catch (Exception e) {
+	}
+	if (i > 0)
+	    plugin.msg(player, lm.Residence_LwcRemoved, i, System.currentTimeMillis() - time);
+	return;
 //	    }
 //	});
     }
