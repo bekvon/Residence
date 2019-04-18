@@ -72,6 +72,7 @@ import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.ResidenceChangedEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
+import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
@@ -487,6 +488,28 @@ public class ResidencePlayerListener implements Listener {
 	default:
 	    break;
 	}
+    }
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFlagChangeWSpeed(ResidenceOwnerChangeEvent event) {
+	if (event.isCancelled())
+	    return;
+
+	ClaimedResidence res = event.getResidence();
+	if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.setWalkSpeed(0.2F);
+
+	if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.resetPlayerWeather();
+
+	if (res.getPermissions().has(Flags.fly, FlagCombo.OnlyTrue))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		fly(one, false);
+
+	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && Version.isCurrentEqualOrHigher(Version.v1_9_R1))
+	    for (Player one : event.getResidence().getPlayersInResidence())
+		one.setGlowing(false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
