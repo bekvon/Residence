@@ -247,8 +247,8 @@ public class PlayerManager implements ResidencePlayerInterface {
 	ResidencePlayer resPlayer = null;
 	if (player == null)
 	    return null;
-	if (playersUuid.containsKey(player.getUniqueId())) {
-	    resPlayer = playersUuid.get(player.getUniqueId());
+	resPlayer = playersUuid.get(player.getUniqueId());
+	if (resPlayer != null) {
 	    resPlayer.updatePlayer(player);
 	    resPlayer.RecalculatePermissions();
 	} else {

@@ -56,6 +56,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceBlockListener implements Listener {
 
@@ -204,6 +205,7 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.getItemManager().isIgnored(mat, group, world)) {
 	    return;
 	}
+	
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 	if (plugin.getConfigManager().enabledRentSystem() && res != null) {
 	    String resname = res.getName();
@@ -213,6 +215,7 @@ public class ResidenceBlockListener implements Listener {
 		return;
 	    }
 	}
+
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	if (res != null && res.getItemIgnoreList().isListed(mat))
 	    return;
@@ -226,6 +229,7 @@ public class ResidenceBlockListener implements Listener {
 	    plugin.msg(player, lm.Flag_Deny, Flags.container);
 	    event.setCancelled(true);
 	}
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

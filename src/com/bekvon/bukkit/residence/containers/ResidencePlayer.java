@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -35,6 +36,9 @@ public class ResidencePlayer {
     private int maxRents = -1;
     private int maxSubzones = -1;
     private int maxSubzoneDepth = -1;
+
+    private boolean updated = false;
+    private Long lastRecalculation = 0L;
 
     private int maxValue = 9999;
 
@@ -110,6 +114,10 @@ public class ResidencePlayer {
     }
 
     public void RecalculatePermissions() {
+	if (lastRecalculation + 5000L > System.currentTimeMillis())
+	    return;
+	lastRecalculation = System.currentTimeMillis();
+
 	getGroup();
 	recountMaxRes();
 	recountMaxRents();
@@ -274,14 +282,19 @@ public class ResidencePlayer {
     }
 
     public ResidencePlayer updatePlayer(Player player) {
+	if (updated)
+	    return this;
 	this.player = player;
 	this.uuid = player.getUniqueId();
 	this.userName = player.getName();
 	this.ofPlayer = player;
+	updated = true;
 	return this;
     }
 
     private void updatePlayer() {
+	if (updated)
+	    return;
 	player = Bukkit.getPlayer(this.uuid);
 	if (player != null)
 	    updatePlayer(player);
@@ -369,7 +382,7 @@ public class ResidencePlayer {
 	this.updatePlayer();
 	return player;
     }
-    
+
     HashMap<String, BossBarInfo> barMap = new HashMap<String, BossBarInfo>();
 
     public void removeBossBar(BossBarInfo bossBar) {
