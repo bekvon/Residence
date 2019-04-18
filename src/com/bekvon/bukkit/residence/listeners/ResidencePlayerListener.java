@@ -1265,7 +1265,7 @@ public class ResidencePlayerListener implements Listener {
 	if (heldItem != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 	    if (heldItem.isDye()) {
 		CMIMaterial btype = CMIMaterial.get(block);
-		if (heldItem.equals(CMIMaterial.BONE_MEAL) && (btype == CMIMaterial.GRASS_BLOCK || btype == CMIMaterial.GRASS || btype.isSapling()) || 
+		if (heldItem.equals(CMIMaterial.BONE_MEAL) && (btype == CMIMaterial.GRASS_BLOCK || btype == CMIMaterial.GRASS || btype.isSapling()) ||
 		    heldItem == CMIMaterial.COCOA_BEANS && blockM == CMIMaterial.JUNGLE_WOOD) {
 		    perms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		    if (!perms.playerHas(player, Flags.build, true)) {
@@ -2003,7 +2003,6 @@ public class ResidencePlayerListener implements Listener {
     }
 
     public boolean handleNewLocation(final Player player, Location loc, boolean move) {
-
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 
 	ClaimedResidence orres = res;
@@ -2242,6 +2241,8 @@ public class ResidencePlayerListener implements Listener {
 	plugin.getServ().getPluginManager().callEvent(chgEvent);
     }
 
+    HashMap<UUID, Long> informar = new HashMap<UUID, Long>();
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceChangeMessagePrint(ResidenceChangedEvent event) {
 
@@ -2272,11 +2273,16 @@ public class ResidencePlayerListener implements Listener {
 	    if (plugin.getConfigManager().useTitleMessage()) {
 		ActionBarTitleMessages.sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
 	    }
-	    if (plugin.getConfigManager().useActionBar()) {
-		ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
-		    .toString());
-	    } else {
-		plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
+	    Long time = informar.get(player.getUniqueId());
+	    if (time == null || time + 100L < System.currentTimeMillis()) {
+		if (plugin.getConfigManager().useActionBar()) {
+		    ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
+			.toString());
+
+		} else {
+		    plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
+		}
+		informar.put(player.getUniqueId(), System.currentTimeMillis());
 	    }
 	}
 
