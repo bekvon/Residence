@@ -1,20 +1,19 @@
 package com.bekvon.bukkit.residence.selection;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
-import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
-
-import java.lang.reflect.InvocationTargetException;
-
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 public class WorldEditSelectionManager extends SelectionManager {
 

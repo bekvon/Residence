@@ -487,10 +487,10 @@ public class Residence extends JavaPlugin {
 	    this.getCommand("res").setExecutor(getCommandManager());
 	    this.getCommand("resadmin").setExecutor(getCommandManager());
 	    this.getCommand("residence").setExecutor(getCommandManager());
-
-	    this.getCommand("res").setTabCompleter(new TabComplete());
-	    this.getCommand("resadmin").setTabCompleter(new TabComplete());
-	    this.getCommand("residence").setTabCompleter(new TabComplete());
+	    TabComplete tab = new TabComplete();
+	    this.getCommand("res").setTabCompleter(tab);
+	    this.getCommand("resadmin").setTabCompleter(tab);
+	    this.getCommand("residence").setTabCompleter(tab);
 
 //	    Residence.getConfigManager().UpdateConfigFile();
 

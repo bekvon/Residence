@@ -321,12 +321,12 @@ public class SelectionManager {
     }
 
     public void updateLocations(Player player, Location loc1, Location loc2, boolean force) {
-	if (loc1 != null && loc2 != null) {
-	    Selection selection = getSelection(player);
+	Selection selection = getSelection(player);
+	if (loc1 != null)
 	    selection.setBaseLoc1(loc1);
+	if (loc2 != null)
 	    selection.setBaseLoc2(loc2);
-	    this.afterSelectionUpdate(player, force);
-	}
+	this.afterSelectionUpdate(player, force);
     }
 
     public void placeLoc1(Player player, Location loc) {
@@ -360,7 +360,7 @@ public class SelectionManager {
     }
 
     public void afterSelectionUpdate(Player player, boolean force) {
-	if (!hasPlacedBoth(player))
+	if (!this.hasPlacedBoth(player))
 	    return;
 
 	Visualizer v = vMap.get(player.getUniqueId());
