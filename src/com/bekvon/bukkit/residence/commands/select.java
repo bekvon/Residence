@@ -140,6 +140,10 @@ public class select implements cmd {
 		    plugin.msg(player, lm.Invalid_Amount);
 		    return true;
 		}
+		if (amount > 100)
+		    amount = 100;
+		if (amount < -100)
+		    amount = -100;
 		plugin.getSelectionManager().modify(player, true, amount);
 		return true;
 	    }
