@@ -246,6 +246,10 @@ public class ResidencePlayerListener implements Listener {
 	if (plugin.getConfigManager().isGlobalChatSelfModify())
 	    return;
 
+	String format = event.getFormat();
+	if (!format.contains("{residence}"))
+	    return;
+	
 	Player player = event.getPlayer();
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
@@ -258,15 +262,10 @@ public class ResidencePlayerListener implements Listener {
 
 	ClaimedResidence res = rPlayer.getMainResidence();
 
-	if (res == null)
-	    return;
-
-	String honorific = plugin.getConfigManager().getGlobalChatFormat().replace("%1", res.getTopParentName());
+	String honorific = plugin.getConfigManager().getGlobalChatFormat().replace("%1", res == null ? "" : res.getTopParentName());
 	if (honorific.equalsIgnoreCase(" "))
 	    honorific = "";
-	String format = event.getFormat();
-	if (!format.contains("{residence}"))
-	    return;
+	
 	format = format.replace("{residence}", honorific);
 	event.setFormat(format);
     }
