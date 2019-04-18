@@ -156,7 +156,7 @@ public class ConfigManager {
     protected boolean useFlagGUI;
     protected int AutoMobRemovalInterval;
     protected boolean enableLeaseMoneyAccount;
-    protected boolean CouldronCompatability;
+    protected boolean Couldroncompatibility;
     protected boolean enableDebug = false;
     protected boolean versionCheck = true;
     protected boolean UUIDConvertion = true;
@@ -483,16 +483,16 @@ public class ConfigManager {
 	    "This can prevent from teleporting players to residence with 3rd party plugins like esentials /tpa");
 	BlockAnyTeleportation = c.get("Global.Optimizations.BlockAnyTeleportation", true);
 
-	c.addComment("Global.Optimizations.MaxResCount", "Set this as low as posible depending of residence.max.res.[number] permission you are using",
+	c.addComment("Global.Optimizations.MaxResCount", "Set this as low as possible depending of residence.max.res.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
 	MaxResCount = c.get("Global.Optimizations.MaxResCount", 30);
-	c.addComment("Global.Optimizations.MaxRentCount", "Set this as low as posible depending of residence.max.rents.[number] permission you are using",
+	c.addComment("Global.Optimizations.MaxRentCount", "Set this as low as possible depending of residence.max.rents.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
 	MaxRentCount = c.get("Global.Optimizations.MaxRentCount", 10);
-	c.addComment("Global.Optimizations.MaxSubzoneCount", "Set this as low as posible depending of residence.max.subzones.[number] permission you are using",
+	c.addComment("Global.Optimizations.MaxSubzoneCount", "Set this as low as possible depending of residence.max.subzones.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
 	MaxSubzonesCount = c.get("Global.Optimizations.MaxSubzoneCount", 5);
-	c.addComment("Global.Optimizations.MaxSubzoneDepthCount", "Set this as low as posible depending of residence.max.subzonedepth.[number] permission you are using",
+	c.addComment("Global.Optimizations.MaxSubzoneDepthCount", "Set this as low as possible depending of residence.max.subzonedepth.[number] permission you are using",
 	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
 	MaxSubzoneDepthCount = c.get("Global.Optimizations.MaxSubzoneDepthCount", 5);
 
@@ -658,7 +658,7 @@ public class ConfigManager {
 	NewSaveMechanic = c.get("Global.NewSaveMechanic", false);
 
 	c.addComment("Global.Backup.AutoCleanUp.Use",
-	    "Do you want to automaticaly remove backup files from main backup folder if they are older than defined day amount");
+	    "Do you want to automatically remove backup files from main backup folder if they are older than defined day amount");
 	BackupAutoCleanUpUse = c.get("Global.Backup.AutoCleanUp.Use", false);
 	BackupAutoCleanUpDays = c.get("Global.Backup.AutoCleanUp.Days", 30);
 
@@ -681,7 +681,7 @@ public class ConfigManager {
 	AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
 	c.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
 	AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
-	c.addComment("Global.AutoCleanUp.Regenerate", "Do you want to regenetate old residence area", "This requires world edit to be present");
+	c.addComment("Global.AutoCleanUp.Regenerate", "Do you want to regenerate old residence area", "This requires world edit to be present");
 	AutoCleanUpRegenerate = c.get("Global.AutoCleanUp.Regenerate", false);
 	c.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
@@ -770,8 +770,8 @@ public class ConfigManager {
 	    "How to use it properly, more information can be found at http://www.tutorialspoint.com/java/java_date_time.htm");
 	DateFormatShort = c.get("Global.DateFormatShort", "MM.dd hh:mm");
 
-	c.addComment("Global.TimeZone", "Sets time zone for showing date, usefull when server is in different country then main server player base",
-	    "Full list of posible time zones can be found at http://www.mkyong.com/java/java-display-list-of-timezone-with-gmt/");
+	c.addComment("Global.TimeZone", "Sets time zone for showing date, useful when server is in different country then main server player base",
+	    "Full list of possible time zones can be found at http://www.mkyong.com/java/java-display-list-of-timezone-with-gmt/");
 	TimeZone = c.get("Global.TimeZone", Calendar.getInstance().getTimeZone().getID());
 
 	c.addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
@@ -805,7 +805,7 @@ public class ConfigManager {
 	}
 
 	c.addComment("Global.ExtraEnterMessage",
-	    "When enabled extra message will apear in chat if residence is for rent or for sell to inform how he can rent/buy residence with basic information.");
+	    "When enabled extra message will appear in chat if residence is for rent or for sell to inform how he can rent/buy residence with basic information.");
 	ExtraEnterMessage = c.get("Global.ExtraEnterMessage", true);
 
 	c.addComment("Global.Sell.Subzone", "If set to true, this will allow to sell subzones. Its recommended to keep it false tho");
@@ -923,7 +923,7 @@ public class ConfigManager {
 	customBothClick = c.getIntList("Global.CustomBothClick", new ArrayList<Integer>());
 	customRightClick = c.getIntList("Global.CustomRightClick", new ArrayList<Integer>());
 
-	c.addComment("Global.Visualizer.Use", "With this enabled player will see particle effects to mark selection boundries");
+	c.addComment("Global.Visualizer.Use", "With this enabled player will see particle effects to mark selection boundaries");
 	useVisualizer = c.get("Global.Visualizer.Use", true);
 	c.addComment("Global.Visualizer.Range", "Range in blocks to draw particle effects for player",
 	    "Keep it no more as 30, as player cant see more than 16 blocks");
@@ -969,11 +969,11 @@ public class ConfigManager {
 	}
 
 	c.addComment("Global.Visualizer.Selected",
-	    "Particle effect names. Posible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
+	    "Particle effect names. possible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
 	    " smoke, largesmoke, spell, instantSpell, mobSpell, mobSpellAmbient, witchMagic, dripWater, dripLava, angryVillager, happyVillager, townaura",
 	    " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance",
 	    "",
-	    "If using spigot based server different particales can be used:", effectsList);
+	    "If using spigot based server different particles can be used:", effectsList);
 
 	// Frame
 	String efname = c.get("Global.Visualizer.Selected.Frame", "happyVillager");
@@ -1093,10 +1093,10 @@ public class ConfigManager {
 	spoutEnable = c.get("Global.EnableSpout", false);
 	enableLeaseMoneyAccount = c.get("Global.EnableLeaseMoneyAccount", true);
 
-	c.addComment("Global.CouldronCompatability",
-	    "By setting this to true, partial compatability for kCouldron servers will be anabled. Action bar messages and selection visualizer will be disabled automaticaly as off incorrect compatability");
-	CouldronCompatability = c.get("Global.CouldronCompatability", false);
-	if (CouldronCompatability) {
+	c.addComment("Global.Couldroncompatibility",
+	    "By setting this to true, partial compatibility for kCouldron servers will be enabled. Action bar messages and selection visualizer will be disabled automatically as off incorrect compatibility");
+	Couldroncompatibility = c.get("Global.Couldroncompatibility", false);
+	if (Couldroncompatibility) {
 	    useVisualizer = false;
 	    actionBar = false;
 	    titleMessage = false;
@@ -1129,7 +1129,7 @@ public class ConfigManager {
 
 	c.addComment("DynMap.VisibleRegions", "Shows only regions on this list");
 	DynMapVisibleRegions = c.get("DynMap.VisibleRegions", new ArrayList<String>());
-	c.addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden ingame");
+	c.addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden in game");
 	DynMapHiddenRegions = c.get("DynMap.HiddenRegions", new ArrayList<String>());
 
 	c.save();
@@ -1689,8 +1689,8 @@ public class ConfigManager {
 	return enableLeaseMoneyAccount;
     }
 
-    public boolean CouldronCompatability() {
-	return CouldronCompatability;
+    public boolean CouldronCompatibility() {
+	return Couldroncompatibility;
     }
 
     public boolean debugEnabled() {

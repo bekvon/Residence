@@ -524,7 +524,7 @@ public class Residence extends JavaPlugin {
 	    String version = versionChecker.getVersion().getShortVersion();
 	    try {
 		Class<?> nmsClass;
-		if (getConfigManager().CouldronCompatability())
+		if (getConfigManager().CouldronCompatibility())
 		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms.v1_7_Couldron");
 		else
 		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + versionChecker.getVersion());
