@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
@@ -99,11 +100,11 @@ public class HelpEntry {
 		    path = path.replace("/res ", "/resadmin ");
 
 		RawMessage rm = new RawMessage();
-		rm.add(helplines.get(i).getDesc(), desc, null, path + helplines.get(i).getCommand());
+		rm.add(CMIChatColor.translateAlternateColorCodes("&6" + helplines.get(i).getDesc()), desc, null, path + helplines.get(i).getCommand());
 		rm.show(sender);
 
 	    } else
-		sender.sendMessage(helplines.get(i).getDesc());
+		sender.sendMessage(CMIChatColor.translateAlternateColorCodes("&6" + helplines.get(i).getDesc()));
 
 	}
 
