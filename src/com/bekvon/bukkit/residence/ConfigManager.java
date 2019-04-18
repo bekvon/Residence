@@ -26,6 +26,8 @@ import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
 import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.residence.containers.ELMessageType;
 import com.bekvon.bukkit.residence.containers.EconomyType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
@@ -119,8 +121,9 @@ public class ConfigManager {
     protected boolean flagsInherit;
     protected ChatColor chatColor;
     protected boolean chatEnable;
-    protected boolean actionBar;
-    protected boolean titleMessage;
+    private ELMessageType EnterLeaveMessageType;
+//    protected boolean actionBar;
+//    protected boolean titleMessage;
     protected boolean ActionBarOnSelection;
     protected boolean visualizer;
     protected int minMoveUpdate;
@@ -850,11 +853,14 @@ public class ConfigManager {
 	c.addComment("Global.ResidenceChatEnable", "Enable or disable residence chat channels.");
 	chatEnable = c.get("Global.ResidenceChatEnable", true);
 
-	c.addComment("Global.ActionBar.General", "True for ActionBar - new component in 1.8", "False for old Messaging in chat enter/leave Residence messages");
-	actionBar = c.get("Global.ActionBar.General", true);
-	c.addComment("Global.TitleBar.EnterLeave", "When set to true enter/leave messages will be shown in title/subtitle slots",
-	    "Subtitle can be defined with %subtitle% while setting enter/leave messages");
-	titleMessage = c.get("Global.TitleBar.EnterLeave", false);
+	ELMessageType old = c.getC().isBoolean("Global.ActionBar.General") && c.getC().getBoolean("Global.ActionBar.General") ? ELMessageType.ActionBar : ELMessageType.ChatBox;
+	old = c.getC().isBoolean("Global.TitleBar.EnterLeave") && c.getC().getBoolean("Global.TitleBar.EnterLeave") ? ELMessageType.TitleBar : old;
+
+	c.addComment("Global.Messages.GeneralMessages", "Defines where you want to send residence enter/leave/deny move and similar messages. Possible options: " + ELMessageType.getAllValuesAsString());
+	EnterLeaveMessageType = ELMessageType.getByName(c.get("Global.Messages.GeneralMessages", old.toString()));
+	if (EnterLeaveMessageType == null || Version.isCurrentEqualOrLower(Version.v1_7_R4))
+	    EnterLeaveMessageType = ELMessageType.ChatBox;
+
 	ActionBarOnSelection = c.get("Global.ActionBar.ShowOnSelection", true);
 
 	c.addComment("Global.ResidenceChatColor", "Color of residence chat.");
@@ -1098,8 +1104,7 @@ public class ConfigManager {
 	Couldroncompatibility = c.get("Global.Couldroncompatibility", false);
 	if (Couldroncompatibility) {
 	    useVisualizer = false;
-	    actionBar = false;
-	    titleMessage = false;
+	    EnterLeaveMessageType = ELMessageType.ChatBox;
 	    ActionBarOnSelection = false;
 	}
 
@@ -1557,14 +1562,6 @@ public class ConfigManager {
 	return chatEnable;
     }
 
-    public boolean useActionBar() {
-	return actionBar;
-    }
-
-    public boolean useTitleMessage() {
-	return titleMessage;
-    }
-
     public boolean useActionBarOnSelection() {
 	return ActionBarOnSelection;
     }
@@ -1851,6 +1848,10 @@ public class ConfigManager {
 
     public boolean isCanTeleportIncludeOwner() {
 	return CanTeleportIncludeOwner;
+    }
+
+    public ELMessageType getEnterLeaveMessageType() {
+	return EnterLeaveMessageType;
     }
 
 //    public int getTownMinRange() {

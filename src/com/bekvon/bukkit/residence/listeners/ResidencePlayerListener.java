@@ -62,6 +62,7 @@ import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.containers.ELMessageType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.StuckInfo;
@@ -2172,10 +2173,17 @@ public class ResidencePlayerListener implements Listener {
 		    player.closeInventory();
 		    teleported = teleport(player, newLoc);
 		}
-		if (plugin.getConfigManager().useActionBar()) {
+
+		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
+		case ActionBar:
+		case TitleBar:
 		    ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
-		} else {
+		    break;
+		case ChatBox:
 		    plugin.msg(player, lm.Residence_MoveDeny, orres.getName());
+		    break;
+		default:
+		    break;
 		}
 		return teleported;
 	    }
@@ -2299,17 +2307,23 @@ public class ResidencePlayerListener implements Listener {
 	if (player.hasMetadata("NPC"))
 	    return;
 	if (message != null) {
-	    if (plugin.getConfigManager().useTitleMessage()) {
-		ActionBarTitleMessages.sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
-	    }
+
 	    Long time = informar.get(player.getUniqueId());
 	    if (time == null || time + 100L < System.currentTimeMillis()) {
-		if (plugin.getConfigManager().useActionBar()) {
+
+		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
+		case ActionBar:
 		    ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
 			.toString());
-
-		} else {
+		    break;
+		case ChatBox:
 		    plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
+		    break;
+		case TitleBar:
+		    ActionBarTitleMessages.sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
+		    break;
+		default:
+		    break;
 		}
 		informar.put(player.getUniqueId(), System.currentTimeMillis());
 	    }
