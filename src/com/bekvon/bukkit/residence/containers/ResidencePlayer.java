@@ -87,7 +87,7 @@ public class ResidencePlayer {
     }
 
     public ClaimedResidence getMainResidence() {
-	if (mainResidence == null) {
+	if (mainResidence == null || !mainResidence.isOwner(this.getPlayerName())) {
 	    for (ClaimedResidence one : ResidenceList) {
 		if (one == null)
 		    continue;
