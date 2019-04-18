@@ -23,14 +23,16 @@ public class SpigotListener implements Listener {
 	Player player = event.getPlayer();
 	Location loc = player.getLocation();
 	FlagPermissions perms = Residence.getInstance().getPermsByLoc(loc);
-	if (perms.has(Flags.nodurability, false)) {
-	    ItemStack held = Residence.getInstance().getNms().itemInMainHand(player);
-	    if (held.getType() != Material.AIR) {
-		held.setDurability(held.getDurability());
-		player.setItemInHand(held);
-		event.setDamage(0);
-		event.setCancelled(true);
-	    }
-	}
+	if (!perms.has(Flags.nodurability, false))
+	    return;
+
+	ItemStack held = Residence.getInstance().getNms().itemInMainHand(player);
+	if (held.getType() == Material.AIR || held.getDurability() <= 0)
+	    return;
+	
+	held.setDurability(held.getDurability());
+	player.setItemInHand(held);
+	event.setDamage(0);
+	event.setCancelled(true);
     }
 }
