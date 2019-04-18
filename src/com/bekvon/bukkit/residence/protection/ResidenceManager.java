@@ -593,9 +593,9 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void removeLwcFromResidence(final Player player, final ClaimedResidence res) {
-	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @Override
-	    public void run() {
+//	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+//	    @Override
+//	    public void run() {
 		long time = System.currentTimeMillis();
 		LWC lwc = plugin.getLwc();
 		if (lwc == null)
@@ -617,6 +617,8 @@ public class ResidenceManager implements ResidenceInterface {
 			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
 				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
 				    Block b = world.getBlockAt(x, y, z);
+				    if (!b.getChunk().isLoaded())
+					b.getChunk().load();
 				    if (!list.contains(b.getType()))
 					continue;
 				    Protection prot = cache.getProtection(b);
@@ -633,8 +635,8 @@ public class ResidenceManager implements ResidenceInterface {
 		if (i > 0)
 		    plugin.msg(player, lm.Residence_LwcRemoved, i, System.currentTimeMillis() - time);
 		return;
-	    }
-	});
+//	    }
+//	});
     }
 
     public void removeAllByOwner(String owner) {
