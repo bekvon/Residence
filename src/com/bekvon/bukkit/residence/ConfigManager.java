@@ -156,6 +156,7 @@ public class ConfigManager {
     protected boolean spoutEnable;
     protected boolean AutoMobRemoval;
     protected boolean BounceAnimation;
+    private boolean EnterAnimation;
     protected boolean useFlagGUI;
     protected int AutoMobRemovalInterval;
     protected boolean enableLeaseMoneyAccount;
@@ -183,10 +184,10 @@ public class ConfigManager {
     protected boolean CreeperExplodeBelow;
     protected int CreeperExplodeBelowLevel;
 
-    protected List<CMIMaterial> customContainers;
-    protected List<CMIMaterial> customBothClick;
-    protected List<CMIMaterial> customRightClick;
-    protected List<CMIMaterial> CleanBlocks;
+    protected List<CMIMaterial> customContainers = new ArrayList<CMIMaterial>();
+    protected List<CMIMaterial> customBothClick = new ArrayList<CMIMaterial>();
+    protected List<CMIMaterial> customRightClick = new ArrayList<CMIMaterial>();
+    protected List<CMIMaterial> CleanBlocks = new ArrayList<CMIMaterial>();
 
     protected List<String> NoFlowWorlds;
     protected List<String> AutoCleanUpWorlds;
@@ -1089,6 +1090,9 @@ public class ConfigManager {
 		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	    }
 
+	c.addComment("Global.Visualizer.EnterAnimation", "Shows particle effect when player enters residence. Only applies to main residence area");
+	EnterAnimation = c.get("Global.Visualizer.EnterAnimation", true);
+	
 	c.addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
 	BounceAnimation = c.get("Global.BounceAnimation", true);
 
@@ -1877,6 +1881,10 @@ public class ConfigManager {
 
     public ELMessageType getEnterLeaveMessageType() {
 	return EnterLeaveMessageType;
+    }
+
+    public boolean isEnterAnimation() {
+	return EnterAnimation;
     }
 
 //    public int getTownMinRange() {

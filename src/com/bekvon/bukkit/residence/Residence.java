@@ -353,7 +353,7 @@ public class Residence extends JavaPlugin {
 	@Override
 	public void run() {
 	    rentmanager.checkCurrentRents();
-	    if (cmanager.showIntervalMessages()) {
+	    if (getConfigManager().showIntervalMessages()) {
 		Bukkit.getConsoleSender().sendMessage(getPrefix() + " - Rent Expirations checked!");
 	    }
 	}
@@ -362,7 +362,7 @@ public class Residence extends JavaPlugin {
 	@Override
 	public void run() {
 	    leasemanager.doExpirations();
-	    if (cmanager.showIntervalMessages()) {
+	    if (getConfigManager().showIntervalMessages()) {
 		Bukkit.getConsoleSender().sendMessage(getPrefix() + " - Lease Expirations checked!");
 	    }
 	}
@@ -404,10 +404,10 @@ public class Residence extends JavaPlugin {
 
 	server.getScheduler().cancelTask(DespawnMobsBukkitId);
 
-	if (cmanager.useLeases()) {
+	if (getConfigManager().useLeases()) {
 	    server.getScheduler().cancelTask(leaseBukkitId);
 	}
-	if (cmanager.enabledRentSystem()) {
+	if (getConfigManager().enabledRentSystem()) {
 	    server.getScheduler().cancelTask(rentBukkitId);
 	}
 
@@ -495,9 +495,7 @@ public class Residence extends JavaPlugin {
 //		this.getConfig().load("config.yml");
 //		System.out.println("[Residence] Config Invalid, wrote default...");
 //	    }
-
-	    cmanager = new ConfigManager(this);
-	    String multiworld = cmanager.getMultiworldPlugin();
+	    String multiworld = getConfigManager().getMultiworldPlugin();
 	    if (multiworld != null) {
 		Plugin plugin = server.getPluginManager().getPlugin(multiworld);
 		if (plugin != null) {
@@ -576,7 +574,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    try {
-		File langFile = new File(new File(dataFolder, "Language"), cmanager.getLanguage() + ".yml");
+		File langFile = new File(new File(dataFolder, "Language"), getConfigManager().getLanguage() + ".yml");
 
 		BufferedReader in = null;
 		try {
@@ -597,7 +595,7 @@ public class Residence extends JavaPlugin {
 		if (in != null)
 		    in.close();
 	    } catch (Exception ex) {
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Failed to load language file: " + cmanager.getLanguage()
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Failed to load language file: " + getConfigManager().getLanguage()
 		    + ".yml setting to default - English");
 
 		File langFile = new File(new File(dataFolder, "Language"), "English.yml");
@@ -819,7 +817,7 @@ public class Residence extends JavaPlugin {
 		getDynManager().activate();
 	    }
 
-	    int autosaveInt = cmanager.getAutoSaveInterval();
+	    int autosaveInt = getConfigManager().getAutoSaveInterval();
 	    if (autosaveInt < 1) {
 		autosaveInt = 1;
 	    }
@@ -831,16 +829,16 @@ public class Residence extends JavaPlugin {
 		DespawnMobsBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, DespawnMobs, 20 * getConfigManager().AutoMobRemovalInterval(), 20
 		    * getConfigManager().AutoMobRemovalInterval());
 
-	    if (cmanager.useLeases()) {
-		int leaseInterval = cmanager.getLeaseCheckInterval();
+	    if (getConfigManager().useLeases()) {
+		int leaseInterval = getConfigManager().getLeaseCheckInterval();
 		if (leaseInterval < 1) {
 		    leaseInterval = 1;
 		}
 		leaseInterval = leaseInterval * 60 * 20;
 		leaseBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, leaseExpire, leaseInterval, leaseInterval);
 	    }
-	    if (cmanager.enabledRentSystem()) {
-		int rentint = cmanager.getRentCheckInterval();
+	    if (getConfigManager().enabledRentSystem()) {
+		int rentint = getConfigManager().getRentCheckInterval();
 		if (rentint < 1) {
 		    rentint = 1;
 		}
@@ -895,10 +893,10 @@ public class Residence extends JavaPlugin {
 	if (name.contains(":") || name.contains(".") || name.contains("|")) {
 	    return false;
 	}
-	if (cmanager.getResidenceNameRegex() == null) {
+	if (getConfigManager().getResidenceNameRegex() == null) {
 	    return true;
 	}
-	String namecheck = name.replaceAll(cmanager.getResidenceNameRegex(), "");
+	String namecheck = name.replaceAll(getConfigManager().getResidenceNameRegex(), "");
 	if (!name.equals(namecheck)) {
 	    return false;
 	}
@@ -978,6 +976,8 @@ public class Residence extends JavaPlugin {
     }
 
     public ShopSignUtil getShopSignUtilManager() {
+	if (ShopSignUtilManager == null)
+	    ShopSignUtilManager = new ShopSignUtil(this);
 	return ShopSignUtilManager;
     }
 
@@ -1051,11 +1051,14 @@ public class Residence extends JavaPlugin {
 	return helppages;
     }
 
+    @Deprecated
     public void setConfigManager(ConfigManager cm) {
 	cmanager = cm;
     }
 
     public ConfigManager getConfigManager() {
+	if (cmanager == null)
+	    cmanager = new ConfigManager(this);
 	return cmanager;
     }
 
@@ -1328,7 +1331,7 @@ public class Residence extends JavaPlugin {
 	}
 	tmpFile.renameTo(ymlSaveLoc);
 
-	if (cmanager.showIntervalMessages()) {
+	if (getConfigManager().showIntervalMessages()) {
 	    System.out.println("[Residence] - Saved Residences...");
 	}
     }

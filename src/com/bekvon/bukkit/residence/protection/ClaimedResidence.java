@@ -837,6 +837,10 @@ public class ClaimedResidence {
 	return parent.getTopParent();
     }
 
+    public boolean isTopArea() {
+	return parent == null;
+    }
+
     public boolean removeSubzone(String name) {
 	return this.removeSubzone(null, name, true);
     }
@@ -1990,5 +1994,12 @@ public class ClaimedResidence {
 
     public double getWorth() {
 	return (int) ((getTotalSize() * getBlockSellPrice()) * 100) / 100.0;
+    }
+
+    public void showBounds(Player player, boolean showOneTime) {
+	Visualizer v = new Visualizer(player);
+	v.setAreas(getAreaArray());
+	v.setOnce(showOneTime);
+	plugin.getSelectionManager().showBounds(player, v);
     }
 }

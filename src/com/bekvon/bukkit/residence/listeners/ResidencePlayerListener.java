@@ -2327,6 +2327,11 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
+	if (to != null && plugin.getConfigManager().isEnterAnimation() && to.isTopArea()) {
+	    if (from == null || from.getTopParent() != to)
+		to.showBounds(player, true);
+	}
+
 	if (from == null || res == null)
 	    return;
 
