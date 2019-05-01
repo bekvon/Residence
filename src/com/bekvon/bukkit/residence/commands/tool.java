@@ -24,7 +24,7 @@ public class tool implements cmd {
 
 	plugin.msg(player, lm.General_Separator);
 	plugin.msg(player, lm.Select_Tool, plugin.getConfigManager().getSelectionTool().getName());
-	plugin.msg(player, lm.General_InfoTool, plugin.getConfigManager().getSelectionTool().getName());
+	plugin.msg(player, lm.General_InfoTool, plugin.getConfigManager().getInfoTool().getName()); 
 	plugin.msg(player, lm.General_Separator);
 	return true;
     }
