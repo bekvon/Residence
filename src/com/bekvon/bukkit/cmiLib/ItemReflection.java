@@ -93,52 +93,6 @@ public class ItemReflection {
 	}
     }
 
-    public static String getItemRealName(ItemStack item) {
-	try {
-	    Object nmsStack = asNMSCopy(item);
-	    Method itemMeth = Item.getMethod("getById", int.class);
-	    Object res = itemMeth.invoke(Item, item.getType().getId());
-
-	    String ff = "b";
-	    switch (Version.getCurrent()) {
-	    case v1_10_R1:
-	    case v1_9_R1:
-	    case v1_9_R2:
-	    case v1_8_R1:
-	    case v1_8_R3:
-	    case v1_8_R2:
-		ff = "a";
-		break;
-	    case v1_11_R1:
-	    case v1_12_R1:
-		ff = "b";
-		break;
-	    case v1_13_R2:
-	    case v1_13_R1:
-	    case v1_14_R2:
-	    case v1_14_R1:
-	    case v1_15_R2:
-	    case v1_15_R1:
-		ff = "h";
-		break;
-	    case v1_7_R1:
-	    case v1_7_R2:
-	    case v1_7_R3:
-	    case v1_7_R4:
-		ff = "n";
-		break;
-	    default:
-		break;
-	    }
-
-	    Method meth2 = res.getClass().getMethod(ff, IStack);
-	    Object name = meth2.invoke(res, nmsStack);
-	    return name.toString();
-	} catch (Exception e) {
-	    return item != null ? item.getType().name() : "";
-	}
-    }
-
     public String getItemMinecraftNamePath(ItemStack item) {
 	try {
 	    Object nmsStack = asNMSCopy(item);

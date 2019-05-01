@@ -26,7 +26,7 @@ public class create implements cmd {
 	}
 
 	if (plugin.getWorldEdit() != null) {
-	    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTool().getId()) {
+	    if (plugin.getWorldEditTool() == plugin.getConfigManager().getSelectionTool()) {
 		plugin.getSelectionManager().worldEdit(player);
 	    }
 	}

@@ -7,6 +7,7 @@ import org.bukkit.World;
 
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -403,9 +404,10 @@ public class HelpEntry {
 			}
 			break;
 		    case "[materialId]":
-			for (Material one : Material.values()) {
-			    subCommands.add(String.valueOf(one.getId()));
-			}
+			if (Version.isCurrentEqualOrLower(Version.v1_13_R2))
+			    for (Material one : Material.values()) {
+				subCommands.add(String.valueOf(one.getId()));
+			    }
 			break;
 		    case "[worldname]":
 			for (World one : Bukkit.getWorlds()) {

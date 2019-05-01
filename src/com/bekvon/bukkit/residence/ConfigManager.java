@@ -182,10 +182,12 @@ public class ConfigManager {
     protected int TNTExplodeBelowLevel;
     protected boolean CreeperExplodeBelow;
     protected int CreeperExplodeBelowLevel;
-    protected List<Integer> customContainers;
-    protected List<Integer> customBothClick;
-    protected List<Integer> customRightClick;
-    protected List<Integer> CleanBlocks;
+
+    protected List<CMIMaterial> customContainers;
+    protected List<CMIMaterial> customBothClick;
+    protected List<CMIMaterial> customRightClick;
+    protected List<CMIMaterial> CleanBlocks;
+
     protected List<String> NoFlowWorlds;
     protected List<String> AutoCleanUpWorlds;
     protected List<String> NoPlaceWorlds;
@@ -750,7 +752,13 @@ public class ConfigManager {
 	c.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
 	CleanLevel = c.get("Global.AntiGreef.ResCleaning.Level", 63);
 	c.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
-	CleanBlocks = c.getIntList("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(8, 9, 10, 11));
+	List<?> pls = c.getList("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(CMIMaterial.WATER.toString(), CMIMaterial.LAVA.toString()));
+	for (Object one : pls) {
+	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
+	    if (mat != CMIMaterial.NONE)
+		CleanBlocks.add(mat);
+	}
+
 	CleanWorlds = c.get("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName));
 
 	c.addComment("Global.AntiGreef.Flags.Prevent",
@@ -925,9 +933,26 @@ public class ConfigManager {
 
 	c.addComment("Global.CustomContainers",
 	    "Experimental - The following settings are lists of block IDs to be used as part of the checks for the 'container' and 'use' flags when using mods.");
-	customContainers = c.getIntList("Global.CustomContainers", new ArrayList<Integer>());
-	customBothClick = c.getIntList("Global.CustomBothClick", new ArrayList<Integer>());
-	customRightClick = c.getIntList("Global.CustomRightClick", new ArrayList<Integer>());
+	pls = c.getList("Global.CustomContainers", new ArrayList<Integer>());	
+	for (Object one : pls) {
+	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
+	    if (mat != CMIMaterial.NONE)
+		customContainers.add(mat);
+	}
+	
+	pls = c.getList("Global.CustomBothClick", new ArrayList<Integer>());
+	for (Object one : pls) {
+	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
+	    if (mat != CMIMaterial.NONE)
+		customBothClick.add(mat);
+	}
+	
+	pls = c.getList("Global.CustomRightClick", new ArrayList<Integer>());
+	for (Object one : pls) {
+	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
+	    if (mat != CMIMaterial.NONE)
+		customRightClick.add(mat);
+	}
 
 	c.addComment("Global.Visualizer.Use", "With this enabled player will see particle effects to mark selection boundaries");
 	useVisualizer = c.get("Global.Visualizer.Use", true);
@@ -1718,19 +1743,19 @@ public class ConfigManager {
 	return OfflineMode;
     }
 
-    public List<Integer> getCustomContainers() {
+    public List<CMIMaterial> getCustomContainers() {
 	return customContainers;
     }
 
-    public List<Integer> getCustomBothClick() {
+    public List<CMIMaterial> getCustomBothClick() {
 	return customBothClick;
     }
 
-    public List<Integer> getCustomRightClick() {
+    public List<CMIMaterial> getCustomRightClick() {
 	return customRightClick;
     }
 
-    public List<Integer> getCleanBlocks() {
+    public List<CMIMaterial> getCleanBlocks() {
 	return CleanBlocks;
     }
 

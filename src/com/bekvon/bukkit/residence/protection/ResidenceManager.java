@@ -22,6 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.Zrips.CMI.Modules.CmiItems.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
@@ -544,7 +545,7 @@ public class ResidenceManager implements ResidenceInterface {
 				    temploc.setZ(z);
 				    if (!temploc.getChunk().isLoaded())
 					temploc.getChunk().load();
-				    if (plugin.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getType().getId())) {
+				    if (plugin.getConfigManager().getCleanBlocks().contains(CMIMaterial.get(temploc.getBlock()))) {
 					temploc.getBlock().setType(Material.AIR);
 				    }
 				}
