@@ -57,12 +57,11 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
-import com.bekvon.bukkit.cmiLib.ItemReflection;
 import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.ItemReflection;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.containers.ELMessageType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.StuckInfo;
@@ -82,7 +81,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1009,7 +1007,7 @@ public class ResidencePlayerListener implements Listener {
 
 	CMIMaterial cmat = CMIMaterial.get(mat);
 	if (cmat != null) {
-	    if (cmat.isPottedFlower()) {
+	    if (cmat.isPotted()) {
 		return true;
 	    }
 	}

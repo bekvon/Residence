@@ -204,7 +204,7 @@ public class FlagPermissions {
 	    if (one.isBed() && one.getMaterial() != null)
 		matUseFlagList.put(one.getMaterial(), Flags.bed);
 
-	    if (one.isPottedFlower() && one.getMaterial() != null)
+	    if (one.isPotted() && one.getMaterial() != null)
 		matUseFlagList.put(one.getMaterial(), Flags.flowerpot);
 	}
 
