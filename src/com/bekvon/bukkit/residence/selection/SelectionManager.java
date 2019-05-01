@@ -379,7 +379,13 @@ public class SelectionManager {
     public Location getPlayerLoc1(Player player) {
 	if (player == null)
 	    return null;
-	return getSelection(player).getResizedArea().getLowLoc();
+	Selection sel = getSelection(player);
+	if (sel == null)
+	    return null;
+	CuboidArea area = sel.getResizedArea();
+	if (area == null)
+	    return null;
+	return area.getLowLoc();
     }
 
     @Deprecated
@@ -390,7 +396,13 @@ public class SelectionManager {
     public Location getPlayerLoc2(Player player) {
 	if (player == null)
 	    return null;
-	return getSelection(player).getResizedArea().getHighLoc();
+	Selection sel = getSelection(player);
+	if (sel == null)
+	    return null;
+	CuboidArea area = sel.getResizedArea();
+	if (area == null)
+	    return null;
+	return area.getHighLoc();
     }
 
     @Deprecated
