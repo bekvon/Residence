@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,10 +42,10 @@ public class SignUtil {
     }
 
     public int updateAllSigns() {
-	List<Signs> temp = new ArrayList<Signs>();
-	temp.addAll(Signs.GetAllSigns());
-	for (Signs one : temp) {
-	    SignUpdate(one);
+	ConcurrentHashMap<String, Signs> temp = new ConcurrentHashMap<String, Signs>();
+	temp.putAll(Signs.GetAllSigns());
+	for (Entry<String, Signs> one : temp.entrySet()) {
+	    SignUpdate(one.getValue());
 	}
 	saveSigns();
 	return temp.size();
@@ -105,13 +107,14 @@ public class SignUtil {
 	if (!conf.isConfigurationSection("Signs"))
 	    conf.createSection("Signs");
 
-	for (Signs one : Signs.GetAllSigns()) {
-	    String path = "Signs." + String.valueOf(one.GetCategory());
-	    writer.set(path + ".Residence", one.GetResidence().getName());
-	    writer.set(path + ".World", one.GetLocation().getWorld().getName());
-	    writer.set(path + ".X", one.GetLocation().getBlockX());
-	    writer.set(path + ".Y", one.GetLocation().getBlockY());
-	    writer.set(path + ".Z", one.GetLocation().getBlockZ());
+	for (Entry<String, Signs> one : new ConcurrentHashMap<String, Signs>(Signs.GetAllSigns()).entrySet()) {
+	    Signs s = one.getValue();
+	    String path = "Signs." + String.valueOf(s.GetCategory());
+	    writer.set(path + ".Residence", s.GetResidence().getName());
+	    writer.set(path + ".World", s.GetLocation().getWorld().getName());
+	    writer.set(path + ".X", s.GetLocation().getBlockX());
+	    writer.set(path + ".Y", s.GetLocation().getBlockY());
+	    writer.set(path + ".Z", s.GetLocation().getBlockZ());
 	}
 
 	try {
@@ -123,28 +126,7 @@ public class SignUtil {
     }
 
     public Signs getSignFromLoc(Location loc) {
-	if (loc == null)
-	    return null;
-	List<Signs> signList = new ArrayList<Signs>();
-	signList.addAll(this.getSigns().GetAllSigns());
-	for (Signs one : signList) {
-	    if (one == null)
-		continue;
-	    if (one.GetLocation() == null)
-		continue;
-	    if (one.GetLocation().getWorld() == null)
-		continue;
-	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
-		continue;
-	    if (one.GetLocation().getBlockX() != loc.getBlockX())
-		continue;
-	    if (one.GetLocation().getBlockY() != loc.getBlockY())
-		continue;
-	    if (one.GetLocation().getBlockZ() != loc.getBlockZ())
-		continue;
-	    return one;
-	}
-	return null;
+	return this.getSigns().getResSign(loc);
     }
 
     public void CheckSign(final ClaimedResidence res, int time) {
@@ -157,9 +139,7 @@ public class SignUtil {
     }
 
     public void CheckSign(ClaimedResidence res) {
-	List<Signs> signList = new ArrayList<Signs>();
-	signList.addAll(this.getSigns().GetAllSigns());
-	for (Signs one : signList) {
+	for (Signs one : res.getSignsInResidence()) {
 	    if (res != one.GetResidence())
 		continue;
 	    this.SignUpdate(one);
@@ -174,19 +154,16 @@ public class SignUtil {
     }
 
     public void removeSign(ClaimedResidence res) {
-	List<Signs> signList = new ArrayList<Signs>();
-	signList.addAll(this.getSigns().GetAllSigns());
-
-	for (Signs one : signList) {
-	    if (!res.equals(one.GetResidence()))
+	for (Signs one : res.getSignsInResidence()) {
+	    if (res != one.GetResidence())
 		continue;
 	    this.SignUpdate(one);
 	}
     }
 
     public void updateSignResName(ClaimedResidence res) {
-	for (Signs one : this.getSigns().GetAllSigns()) {
-	    if (!res.equals(one.GetResidence()))
+	for (Signs one : res.getSignsInResidence()) {
+	    if (res != one.GetResidence())
 		continue;
 	    this.SignUpdate(one);
 	    saveSigns();
@@ -369,21 +346,9 @@ public class SignUtil {
 	    }
 
 	    signs.setLocation(new Location(world, x, y, z));
-	    boolean found = false;
 
-	    for (Signs onesigns : this.getSigns().GetAllSigns()) {
-		if (!onesigns.GetLocation().getWorld().getName().equalsIgnoreCase(signs.GetLocation().getWorld().getName()))
-		    continue;
-		if (onesigns.GetLocation().getBlockX() != signs.GetLocation().getBlockX())
-		    continue;
-		if (onesigns.GetLocation().getBlockY() != signs.GetLocation().getBlockY())
-		    continue;
-		if (onesigns.GetLocation().getBlockZ() != signs.GetLocation().getBlockZ())
-		    continue;
-		found = true;
-	    }
-
-	    if (found)
+	    Signs s = this.getSigns().getResSign(signs.GetLocation());
+	    if (s == null)
 		continue;
 
 	    Location nloc = signs.GetLocation();

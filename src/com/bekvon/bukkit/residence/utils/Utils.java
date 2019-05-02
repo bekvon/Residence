@@ -3,7 +3,10 @@ package com.bekvon.bukkit.residence.utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
@@ -97,5 +100,75 @@ public class Utils {
 	    }
 	}
 	return !blocks.isEmpty() ? blocks.get(blocks.size() - 1) : null;
+    }
+
+    public static String convertLocToStringShort(Location loc) {
+	String map = "";
+	if (loc != null) {
+	    if (loc.getWorld() != null) {
+		map += loc.getWorld().getName();
+		map += ";" + (int) (loc.getX() * 100) / 100D;
+		map += ";" + (int) (loc.getY() * 100) / 100D;
+		map += ";" + (int) (loc.getZ() * 100) / 100D;
+	    }
+	}
+	return map.replace(",", ".");
+    }
+
+    public static Location convertStringToLocation(String map) {
+	Location loc = null;
+	if (map == null)
+	    return null;
+	if (!map.contains(";"))
+	    return null;
+
+	String[] split = map.replace(",", ".").split(";");
+	double x = 0;
+	double y = 0;
+	double z = 0;
+	float yaw = 0;
+	float pitch = 0;
+
+	if (split.length > 0)
+	    try {
+		x = Double.parseDouble(split[1]);
+	    } catch (Exception e) {
+		return loc;
+	    }
+
+	if (split.length > 1)
+	    try {
+		y = Double.parseDouble(split[2]);
+	    } catch (Exception e) {
+		return loc;
+	    }
+
+	if (split.length > 2)
+	    try {
+		z = Double.parseDouble(split[3]);
+	    } catch (Exception e) {
+		return loc;
+	    }
+
+	if (split.length > 3)
+	    try {
+		yaw = Float.parseFloat(split[4]);
+	    } catch (Exception e) {
+	    }
+
+	if (split.length > 4)
+	    try {
+		pitch = Float.parseFloat(split[5]);
+	    } catch (Exception e) {
+	    }
+
+	World w = Bukkit.getWorld(split[0]);
+	if (w == null)
+	    return null;
+	loc = new Location(w, x, y, z);
+	loc.setYaw(yaw);
+	loc.setPitch(pitch);
+
+	return loc;
     }
 }

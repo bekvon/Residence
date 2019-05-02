@@ -1,21 +1,32 @@
 package com.bekvon.bukkit.residence.signsStuff;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.bukkit.Location;
+
+import com.bekvon.bukkit.residence.utils.Utils;
 
 public class SignInfo {
 
-    List<Signs> AllSigns = new ArrayList<Signs>();
+    ConcurrentHashMap<String, Signs> AllSigns = new ConcurrentHashMap<String, Signs>();
 
     public SignInfo() {
     }
 
-    public void setAllSigns(List<Signs> AllSigns) {
-	this.AllSigns = AllSigns;
+    public void setAllSigns(ConcurrentHashMap<String, Signs> AllSigns) {
+	this.AllSigns.clear();
+	this.AllSigns.putAll(AllSigns);
     }
 
-    public List<Signs> GetAllSigns() {
+    public ConcurrentHashMap<String, Signs> GetAllSigns() {
 	return this.AllSigns;
+    }
+
+    public Signs getResSign(Location loc) {
+	String l = Utils.convertLocToStringShort(loc);
+	if (l == null)
+	    return null;
+	return this.AllSigns.get(l);
     }
 
     public void removeSign(Signs sign) {
@@ -23,6 +34,9 @@ public class SignInfo {
     }
 
     public void addSign(Signs sign) {
-	this.AllSigns.add(sign);
+	String loc = Utils.convertLocToStringShort(sign.GetLocation());
+	if (loc == null)
+	    return;
+	this.AllSigns.put(loc, sign);
     }
 }

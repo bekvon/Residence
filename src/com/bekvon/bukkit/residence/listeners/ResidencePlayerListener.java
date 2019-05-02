@@ -724,42 +724,35 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	Location loc = block.getLocation();
 
-	for (Signs one : plugin.getSignUtil().getSigns().GetAllSigns()) {
-	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
-		continue;
-	    if (one.GetLocation().getBlockX() != loc.getBlockX())
-		continue;
-	    if (one.GetLocation().getBlockY() != loc.getBlockY())
-		continue;
-	    if (one.GetLocation().getBlockZ() != loc.getBlockZ())
-		continue;
+	Signs s = plugin.getSignUtil().getSigns().getResSign(loc);
+	if (s == null)
+	    return;
 
-	    ClaimedResidence res = one.GetResidence();
+	ClaimedResidence res = s.GetResidence();
 
-	    boolean ForSale = res.isForSell();
-	    boolean ForRent = res.isForRent();
-	    String landName = res.getName();
-	    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-		if (ForSale) {
-		    Bukkit.dispatchCommand(player, "res market buy " + landName);
-		    break;
-		}
+	boolean ForSale = res.isForSell();
+	boolean ForRent = res.isForRent();
+	String landName = res.getName();
+	if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+	    if (ForSale) {
+		Bukkit.dispatchCommand(player, "res market buy " + landName);
+		return;
+	    }
 
-		if (ForRent) {
-		    if (res.isRented() && player.isSneaking())
-			Bukkit.dispatchCommand(player, "res market release " + landName);
-		    else {
-			boolean stage = true;
-			if (player.isSneaking())
-			    stage = false;
-			Bukkit.dispatchCommand(player, "res market rent " + landName + " " + stage);
-		    }
-		    break;
+	    if (ForRent) {
+		if (res.isRented() && player.isSneaking())
+		    Bukkit.dispatchCommand(player, "res market release " + landName);
+		else {
+		    boolean stage = true;
+		    if (player.isSneaking())
+			stage = false;
+		    Bukkit.dispatchCommand(player, "res market rent " + landName + " " + stage);
 		}
-	    } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-		if (ForRent && res.isRented() && plugin.getRentManager().getRentingPlayer(res).equals(player.getName())) {
-		    plugin.getRentManager().payRent(player, res, false);
-		}
+		return;
+	    }
+	} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+	    if (ForRent && res.isRented() && plugin.getRentManager().getRentingPlayer(res).equals(player.getName())) {
+		plugin.getRentManager().payRent(player, res, false);
 	    }
 	}
     }
@@ -849,23 +842,15 @@ public class ResidencePlayerListener implements Listener {
 	Location loc = block.getLocation();
 	if (event.getPlayer().hasMetadata("NPC"))
 	    return;
-	for (Signs one : plugin.getSignUtil().getSigns().GetAllSigns()) {
 
-	    if (!one.GetLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()))
-		continue;
-	    if (one.GetLocation().getBlockX() != loc.getBlockX())
-		continue;
-	    if (one.GetLocation().getBlockY() != loc.getBlockY())
-		continue;
-	    if (one.GetLocation().getBlockZ() != loc.getBlockZ())
-		continue;
+	Signs s = plugin.getSignUtil().getSigns().getResSign(loc);
+	if (s == null)
+	    return;
 
-	    plugin.getSignUtil().getSigns().removeSign(one);
-	    if (one.GetResidence() != null)
-		one.GetResidence().getSignsInResidence().remove(one);
-	    plugin.getSignUtil().saveSigns();
-	    break;
-	}
+	plugin.getSignUtil().getSigns().removeSign(s);
+	if (s.GetResidence() != null)
+	    s.GetResidence().getSignsInResidence().remove(s);
+	plugin.getSignUtil().saveSigns();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -1239,7 +1224,6 @@ public class ResidencePlayerListener implements Listener {
 	return false;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 	if (event.getPlayer() == null)

@@ -1188,8 +1188,8 @@ public class ResidenceManager implements ResidenceInterface {
 	// Fix phrases here
 	plugin.msg(reqPlayer, lm.Residence_Give, residence, giveplayer.getName());
 	plugin.msg(giveplayer, lm.Residence_Recieve, residence, reqPlayer.getName());
-
-	if (includeSubzones)
+	plugin.getSignUtil().updateSignResName(res);
+	if (includeSubzones) 
 	    for (ClaimedResidence one : res.getSubzones()) {
 		giveResidence(reqPlayer, targPlayer, one, resadmin, includeSubzones);
 	    }
