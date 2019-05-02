@@ -230,6 +230,18 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.DROPPER, Flags.container);
 	addMaterialToUseFlag(Material.FURNACE, Flags.container);
 	addMaterialToUseFlag(CMIMaterial.FURNACE.getMaterial(), Flags.container);
+	
+	addMaterialToUseFlag(CMIMaterial.BARREL.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.BLAST_FURNACE.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.CARTOGRAPHY_TABLE.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.FLETCHING_TABLE.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.GRINDSTONE.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.LECTERN.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.LOOM.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.SMITHING_TABLE.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.COMPOSTER.getMaterial(), Flags.container);
+	
 	addMaterialToUseFlag(Material.DISPENSER, Flags.container);
 	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
     }

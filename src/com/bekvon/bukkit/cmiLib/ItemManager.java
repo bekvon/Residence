@@ -28,7 +28,6 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-import com.Zrips.CMI.Modules.CmiItems.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 
@@ -1847,10 +1846,10 @@ public class ItemManager {
 	POLISHED_DIORITE_STAIRS(null, null, 4625, "Polished Diorite Stairs"),
 	POLISHED_GRANITE_SLAB(null, null, 4521, "Polished Granite Slab"),
 	POLISHED_GRANITE_STAIRS(null, null, 29588, "Polished Granite Stairs"),
-	POTTED_BAMBOO(null, null, 22542, "Air"),
-	POTTED_CORNFLOWER(null, null, 28917, "Air"),
-	POTTED_LILY_OF_THE_VALLEY(null, null, 9364, "Air"),
-	POTTED_WITHER_ROSE(null, null, 26876, "Air"),
+	POTTED_BAMBOO(null, null, 22542, "Potted Bamboo"),
+	POTTED_CORNFLOWER(null, null, 28917, "Potted CornFlower"),
+	POTTED_LILY_OF_THE_VALLEY(null, null, 9364, "Potted Lily Of The Valley"),
+	POTTED_WITHER_ROSE(null, null, 26876, "Potted Wither Rose"),
 	PRISMARINE_WALL(null, null, 18184, "Prismarine Wall"),
 	RAVAGER_SPAWN_EGG(null, null, 31284, "Ravager Spawn Egg"),
 	RED_DYE(null, null, 5728, "Red Dye"),
@@ -1871,13 +1870,13 @@ public class ItemManager {
 	SMOOTH_SANDSTONE_STAIRS(null, null, 21183, "Smooth Sandstone Stairs"),
 	SMOOTH_STONE_SLAB(null, null, 24129, "Smooth Stone Slab"),
 	SPRUCE_SIGN(null, null, 21502, "Spruce Sign"),
-	SPRUCE_WALL_SIGN(null, null, 7352, "Air"),
+	SPRUCE_WALL_SIGN(null, null, 7352, "Spruce Wall Sign"),
 	STONECUTTER(null, null, 25170, "Stonecutter"),
 	STONE_BRICK_WALL(null, null, 29073, "Stone Brick Wall"),
 	STONE_STAIRS(null, null, 23784, "Stone Stairs"),
 	SUSPICIOUS_STEW(null, null, 8173, "Suspicious Stew"),
 	SWEET_BERRIES(null, null, 19747, "Sweet Berries"),
-	SWEET_BERRY_BUSH(null, null, 11958, "Air"),
+	SWEET_BERRY_BUSH(null, null, 11958, "Sweet Berry Bush"),
 	TRADER_LLAMA_SPAWN_EGG(null, null, 13512, "Trader Llama Spawn Egg"),
 	WANDERING_TRADER_SPAWN_EGG(null, null, 12312, "Wandering Trader Spawn Egg"),
 	WHITE_DYE(null, null, 10758, "White Dye"),
@@ -1891,7 +1890,7 @@ public class ItemManager {
 	LEGACY_BURNING_FURNACE(62, 0, null, "Burning Furnace"),
 	LEGACY_NETHER_WARTS(115, 0, null, "Nether Warts"),
 	LEGACY_IRON_DOOR_BLOCK(71, 0, null, "Iron Door Block"),
-	LEGACY_GLOWING_REDSTON_ORE(74, 0, null, "Glowing Redstone Ore"),
+	LEGACY_GLOWING_REDSTONE_ORE(74, 0, null, "Glowing Redstone Ore"),
 	LEGACY_SUGAR_CANE_BLOCK(83, 0, null, "Sugar Cane Block"),
 	LEGACY_RAW_FISH(349, 0, null, "Raw Fish"),
 	LEGACY_SKULL(144, 0, null, "Skull"),
@@ -2582,12 +2581,6 @@ public class ItemManager {
 	    case JUNGLE_SAPLING:
 	    case ACACIA_SAPLING:
 	    case DARK_OAK_SAPLING:
-	    case POTTED_ACACIA_SAPLING:
-	    case POTTED_BIRCH_SAPLING:
-	    case POTTED_DARK_OAK_SAPLING:
-	    case POTTED_JUNGLE_SAPLING:
-	    case POTTED_OAK_SAPLING:
-	    case POTTED_SPRUCE_SAPLING:
 		return true;
 	    default:
 		break;
@@ -2921,6 +2914,10 @@ public class ItemManager {
 	    case POTTED_RED_TULIP:
 	    case POTTED_SPRUCE_SAPLING:
 	    case POTTED_WHITE_TULIP:
+	    case POTTED_BAMBOO:
+	    case POTTED_CORNFLOWER:
+	    case POTTED_LILY_OF_THE_VALLEY:
+	    case POTTED_WITHER_ROSE:
 		return true;
 	    default:
 		break;
