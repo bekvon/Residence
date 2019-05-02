@@ -32,6 +32,7 @@ import com.bekvon.bukkit.residence.containers.EconomyType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ConfigManager {
     protected String defaultGroup;
@@ -222,11 +223,11 @@ public class ConfigManager {
     protected CMIParticle OverlapFrame;
     protected CMIParticle OverlapSides;
 
-    protected CMIParticle SelectedSpigotFrame;
-    protected CMIParticle SelectedSpigotSides;
-
-    protected CMIParticle OverlapSpigotFrame;
-    protected CMIParticle OverlapSpigotSides;
+//    protected CMIParticle SelectedSpigotFrame;
+//    protected CMIParticle SelectedSpigotSides;
+//
+//    protected CMIParticle OverlapSpigotFrame;
+//    protected CMIParticle OverlapSpigotSides;
 
     // DynMap
     public boolean DynMapUse;
@@ -934,20 +935,20 @@ public class ConfigManager {
 
 	c.addComment("Global.CustomContainers",
 	    "Experimental - The following settings are lists of block IDs to be used as part of the checks for the 'container' and 'use' flags when using mods.");
-	pls = c.getList("Global.CustomContainers", new ArrayList<Integer>());	
+	pls = c.getList("Global.CustomContainers", new ArrayList<Integer>());
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
 	    if (mat != CMIMaterial.NONE)
 		customContainers.add(mat);
 	}
-	
+
 	pls = c.getList("Global.CustomBothClick", new ArrayList<Integer>());
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
 	    if (mat != CMIMaterial.NONE)
 		customBothClick.add(mat);
 	}
-	
+
 	pls = c.getList("Global.CustomRightClick", new ArrayList<Integer>());
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
@@ -1014,20 +1015,6 @@ public class ConfigManager {
 	    SelectedFrame = CMIParticle.HAPPY_VILLAGER;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
-	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
-	for (Effect one : Effect.values()) {
-	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		SelectedSpigotFrame = CMIParticle.getCMIParticle(one.toString());
-		break;
-	    }
-	}
-
-	if (SelectedSpigotFrame == null) {
-	    SelectedSpigotFrame = CMIParticle.HAPPY_VILLAGER;
-	    if (SelectedSpigotFrame == null)
-		SelectedSpigotFrame = CMIParticle.COLOURED_DUST;
-	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	}
 
 	// Sides
 	efname = c.get("Global.Visualizer.Selected.Sides", "reddust");
@@ -1035,18 +1022,6 @@ public class ConfigManager {
 	if (SelectedSides == null) {
 	    SelectedSides = CMIParticle.COLOURED_DUST;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
-	}
-	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
-	for (Effect one : Effect.values()) {
-	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		SelectedSpigotSides = CMIParticle.getCMIParticle(one.toString());
-		break;
-	    }
-	}
-
-	if (SelectedSpigotSides == null) {
-	    SelectedSpigotSides = CMIParticle.COLOURED_DUST;
-	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
 	}
 
 	efname = c.get("Global.Visualizer.Overlap.Frame", "FLAME");
@@ -1056,43 +1031,16 @@ public class ConfigManager {
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Overlap Frame with this name, it was set to default");
 	}
 
-	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
-	for (Effect one : Effect.values()) {
-	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		OverlapSpigotFrame = CMIParticle.getCMIParticle(one.toString());
-		break;
-	    }
-	}
-
-	if (plugin.isSpigot())
-	    if (OverlapSpigotFrame == null) {
-		OverlapSpigotFrame = CMIParticle.FLAME;
-		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	    }
-
 	efname = c.get("Global.Visualizer.Overlap.Sides", "FLAME");
 	OverlapSides = CMIParticle.getCMIParticle(efname);
 	if (OverlapSides == null) {
 	    OverlapSides = CMIParticle.FLAME;
 	    Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Sides with this name, it was set to default");
 	}
-	efname = efname.equalsIgnoreCase("reddust") ? "COLOURED_DUST" : efname;
-	for (Effect one : Effect.values()) {
-	    if (one.name().replace("_", "").equalsIgnoreCase(efname.replace("_", ""))) {
-		OverlapSpigotSides = CMIParticle.getCMIParticle(one.toString());
-		break;
-	    }
-	}
-
-	if (plugin.isSpigot())
-	    if (OverlapSpigotSides == null) {
-		OverlapSpigotSides = CMIParticle.FLAME;
-		Bukkit.getConsoleSender().sendMessage("Can't find effect for Selected Frame with this name, it was set to default");
-	    }
 
 	c.addComment("Global.Visualizer.EnterAnimation", "Shows particle effect when player enters residence. Only applies to main residence area");
 	EnterAnimation = c.get("Global.Visualizer.EnterAnimation", true);
-	
+
 	c.addComment("Global.BounceAnimation", "Shows particle effect when player are being pushed back");
 	BounceAnimation = c.get("Global.BounceAnimation", true);
 
@@ -1331,20 +1279,24 @@ public class ConfigManager {
 	return OverlapSides;
     }
 
+    @Deprecated
     public CMIParticle getSelectedSpigotFrame() {
-	return SelectedSpigotFrame;
+	return SelectedFrame;
     }
 
+    @Deprecated
     public CMIParticle getSelectedSpigotSides() {
-	return SelectedSpigotSides;
+	return SelectedSides;
     }
 
+    @Deprecated
     public CMIParticle getOverlapSpigotFrame() {
-	return OverlapSpigotFrame;
+	return OverlapFrame;
     }
 
+    @Deprecated
     public CMIParticle getOverlapSpigotSides() {
-	return OverlapSpigotSides;
+	return OverlapSides;
     }
 
     public int getTeleportDelay() {

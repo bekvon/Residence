@@ -799,9 +799,9 @@ public class SelectionManager {
 
 	    CMIParticle effect = null;
 	    if (sides) {
-		effect = error ? plugin.getConfigManager().getOverlapSpigotSides() : plugin.getConfigManager().getSelectedSpigotSides();
+		effect = error ? plugin.getConfigManager().getOverlapSides() : plugin.getConfigManager().getSelectedSides();
 	    } else {
-		effect = error ? plugin.getConfigManager().getOverlapSpigotFrame() : plugin.getConfigManager().getSelectedSpigotFrame();
+		effect = error ? plugin.getConfigManager().getOverlapFrame() : plugin.getConfigManager().getSelectedFrame();
 	    }
 
 	    CMIEffect ef = new CMIEffect(effect);
