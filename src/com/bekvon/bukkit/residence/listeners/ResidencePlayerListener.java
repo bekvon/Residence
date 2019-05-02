@@ -81,6 +81,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1105,9 +1106,7 @@ public class ResidencePlayerListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean resadmin = plugin.isResAdminOn(player);
 	if (!resadmin) {
-
 	    boolean hasUseBypass = player.hasPermission("residence.bypass.use");
-
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
 	    if (!hasUseBypass)
@@ -1116,7 +1115,7 @@ public class ResidencePlayerListener implements Listener {
 		    return;
 		}
 	}
-	if (!perms.playerHas(player, Flags.trample, perms.playerHas(player, Flags.build, true)) && (mat.equals(CMIMaterial.FARMLAND) || mat.equals(CMIMaterial.SOUL_SAND))) {
+	if (!perms.playerHas(player, Flags.trample, perms.playerHas(player, Flags.build, true)) && (mat == CMIMaterial.FARMLAND || mat == CMIMaterial.SOUL_SAND)) {
 	    event.setCancelled(true);
 	    return;
 	}
@@ -1137,8 +1136,9 @@ public class ResidencePlayerListener implements Listener {
 	@SuppressWarnings("deprecation")
 	CMIMaterial heldItem = CMIMaterial.get(player.getItemInHand());
 
-	if (heldItem != plugin.getConfigManager().getSelectionTool())
+	if (heldItem != plugin.getConfigManager().getSelectionTool()) {
 	    return;
+	}
 
 	if (plugin.getWorldEditTool() == plugin.getConfigManager().getSelectionTool())
 	    return;
@@ -1199,7 +1199,7 @@ public class ResidencePlayerListener implements Listener {
 
 	CMIMaterial heldItem = CMIMaterial.get(item);
 
-	if (!heldItem.equals(plugin.getConfigManager().getInfoTool()))
+	if (heldItem != plugin.getConfigManager().getInfoTool())
 	    return;
 
 	if (this.isContainer(block.getType(), block))
@@ -1236,15 +1236,14 @@ public class ResidencePlayerListener implements Listener {
 	if (!plugin.getNms().isMainHand(event))
 	    return;
 
-	ItemStack iih = plugin.getNms().itemInMainHand(player);
-	CMIMaterial heldItem = CMIMaterial.get(iih);
-
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
 
-	Material mat = block.getType();
+	ItemStack iih = plugin.getNms().itemInMainHand(player);
+	CMIMaterial heldItem = CMIMaterial.get(iih);
 
+	Material mat = block.getType();
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || isCanUseEntity_BothClick(mat, block))) {
 	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
