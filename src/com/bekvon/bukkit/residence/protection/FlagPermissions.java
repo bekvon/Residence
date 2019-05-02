@@ -62,10 +62,14 @@ public class FlagPermissions {
     }
 
     public static void addMaterialToUseFlag(Material mat, Flags flag) {
+	if (mat == null)
+	    return;
 	matUseFlagList.put(mat, flag);
     }
 
     public static void removeMaterialFromUseFlag(Material mat) {
+	if (mat == null)
+	    return;
 	matUseFlagList.remove(mat);
     }
 
