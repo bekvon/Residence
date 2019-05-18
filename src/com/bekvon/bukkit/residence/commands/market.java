@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
+import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,6 +19,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.Utils;
 
 public class market implements cmd {
@@ -149,12 +151,7 @@ public class market implements cmd {
 	    boolean ForSale = res.isForSell();
 	    boolean ForRent = res.isForRent();
 
-	    int category = 1;
-	    if (plugin.getSignUtil().getSigns().GetAllSigns().size() > 0)
-		category = plugin.getSignUtil().getSigns().GetAllSigns().get(plugin.getSignUtil().getSigns().GetAllSigns().size() - 1).GetCategory() + 1;
-
 	    if (ForSale || ForRent) {
-		signInfo.setCategory(category);
 		signInfo.setResidence(res);
 		signInfo.setLocation(loc);
 		plugin.getSignUtil().getSigns().addSign(signInfo);

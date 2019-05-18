@@ -806,11 +806,6 @@ public class ResidencePlayerListener implements Listener {
 
 	final ClaimedResidence residence = res;
 
-	int category = 1;
-	if (plugin.getSignUtil().getSigns().GetAllSigns().size() > 0)
-	    category = plugin.getSignUtil().getSigns().GetAllSigns().get(plugin.getSignUtil().getSigns().GetAllSigns().size() - 1).GetCategory() + 1;
-
-	signInfo.setCategory(category);
 	signInfo.setResidence(res);
 	signInfo.setLocation(loc);
 	plugin.getSignUtil().getSigns().addSign(signInfo);

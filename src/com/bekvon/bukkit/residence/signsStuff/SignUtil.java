@@ -68,7 +68,6 @@ public class SignUtil {
 	for (String category : categoriesList) {
 	    ConfigurationSection NameSection = ConfCategory.getConfigurationSection(category);
 	    Signs newTemp = new Signs();
-	    newTemp.setCategory(Integer.valueOf(category));
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByName(NameSection.getString("Residence"));
 
@@ -107,9 +106,11 @@ public class SignUtil {
 	if (!conf.isConfigurationSection("Signs"))
 	    conf.createSection("Signs");
 
+	int i = 0;
 	for (Entry<String, Signs> one : new ConcurrentHashMap<String, Signs>(Signs.GetAllSigns()).entrySet()) {
 	    Signs s = one.getValue();
-	    String path = "Signs." + String.valueOf(s.GetCategory());
+	    ++i;
+	    String path = "Signs." + i;
 	    writer.set(path + ".Residence", s.GetResidence().getName());
 	    writer.set(path + ".World", s.GetLocation().getWorld().getName());
 	    writer.set(path + ".X", s.GetLocation().getBlockX());
@@ -305,17 +306,12 @@ public class SignUtil {
 	Set<String> sectionname = conf.getConfigurationSection("signs").getKeys(false);
 	ConfigurationSection section = conf.getConfigurationSection("signs");
 
-	int category = 1;
-	if (this.getSigns().GetAllSigns().size() > 0)
-	    category = this.getSigns().GetAllSigns().get(this.getSigns().GetAllSigns().size() - 1).GetCategory() + 1;
-
 	long time = System.currentTimeMillis();
 
 	int i = 0;
 	for (String one : sectionname) {
 	    Signs signs = new Signs();
 	    String resname = section.getString(one + ".resName");
-	    signs.setCategory(category);
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByName(resname);
 
@@ -359,7 +355,6 @@ public class SignUtil {
 
 	    this.getSigns().addSign(signs);
 	    this.SignUpdate(signs);
-	    category++;
 	    i++;
 	}
 
