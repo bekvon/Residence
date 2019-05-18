@@ -102,6 +102,19 @@ public class Utils {
 	return !blocks.isEmpty() ? blocks.get(blocks.size() - 1) : null;
     }
 
+    public static String convertLocToStringTiny(Location loc) {
+	String map = "";
+	if (loc != null) {
+	    if (loc.getWorld() != null) {
+		map += loc.getWorld().getName();
+		map += ";" + loc.getBlockX();
+		map += ";" + loc.getBlockY();
+		map += ";" + loc.getBlockZ();
+	    }
+	}
+	return map.replace(",", ".");
+    }
+
     public static String convertLocToStringShort(Location loc) {
 	String map = "";
 	if (loc != null) {

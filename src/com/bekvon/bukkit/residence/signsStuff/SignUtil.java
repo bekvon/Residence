@@ -27,6 +27,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Utils;
 
 public class SignUtil {
 
@@ -69,24 +70,27 @@ public class SignUtil {
 	    ConfigurationSection NameSection = ConfCategory.getConfigurationSection(category);
 	    Signs newTemp = new Signs();
 
-	    ClaimedResidence res = plugin.getResidenceManager().getByName(NameSection.getString("Residence"));
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(NameSection.contains("Residence") ? NameSection.getString("Residence") : NameSection.getString("Res"));
 
 	    if (res == null)
 		continue;
 
 	    newTemp.setResidence(res);
 
-	    World w = Bukkit.getWorld(NameSection.getString("World"));
+	    if (NameSection.contains("World")) {
+		World w = Bukkit.getWorld(NameSection.getString("World"));
+		if (w == null)
+		    continue;
+		double x = NameSection.getDouble("X");
+		double y = NameSection.getDouble("Y");
+		double z = NameSection.getDouble("Z");
+		Location loc = new Location(w, x, y, z);
+		newTemp.setLocation(loc);
+	    } else {
+		Location loc = Utils.convertStringToLocation(NameSection.getString("Loc"));
+		newTemp.setLocation(loc);
+	    }
 
-	    if (w == null)
-		continue;
-
-	    double x = NameSection.getDouble("X");
-	    double y = NameSection.getDouble("Y");
-	    double z = NameSection.getDouble("Z");
-
-	    Location loc = new Location(w, x, y, z);
-	    newTemp.setLocation(loc);
 	    Signs.addSign(newTemp);
 	}
 	return;
@@ -111,11 +115,8 @@ public class SignUtil {
 	    Signs s = one.getValue();
 	    ++i;
 	    String path = "Signs." + i;
-	    writer.set(path + ".Residence", s.GetResidence().getName());
-	    writer.set(path + ".World", s.GetLocation().getWorld().getName());
-	    writer.set(path + ".X", s.GetLocation().getBlockX());
-	    writer.set(path + ".Y", s.GetLocation().getBlockY());
-	    writer.set(path + ".Z", s.GetLocation().getBlockZ());
+	    writer.set(path + ".Res", s.getResidence().getName());
+	    writer.set(path + ".Loc", Utils.convertLocToStringTiny(s.getLocation()));
 	}
 
 	try {

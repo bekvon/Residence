@@ -6,9 +6,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class Signs {
 
-//    int Category = 0;
     ClaimedResidence Residence = null;
-
     Location loc = null;
 
     public Signs() {
@@ -18,17 +16,14 @@ public class Signs {
 	this.loc = loc;
     }
 
+    @Deprecated
     public Location GetLocation() {
 	return this.loc;
     }
 
-//    public void setCategory(int Category) {
-//	this.Category = Category;
-//    }
-
-//    public int GetCategory() {
-//	return this.Category;
-//    }
+    public Location getLocation() {
+	return this.loc;
+    }
 
     public void setResidence(ClaimedResidence Residence) {
 	this.Residence = Residence;
@@ -36,6 +31,11 @@ public class Signs {
 	    Residence.getSignsInResidence().add(this);
     }
 
+    public ClaimedResidence getResidence() {
+	return this.Residence;
+    }
+
+    @Deprecated
     public ClaimedResidence GetResidence() {
 	return this.Residence;
     }

@@ -34,7 +34,7 @@ public class SignInfo {
     }
 
     public void addSign(Signs sign) {
-	String loc = Utils.convertLocToStringShort(sign.GetLocation());
+	String loc = Utils.convertLocToStringShort(sign.getLocation());
 	if (loc == null)
 	    return;
 	this.AllSigns.put(loc, sign);
