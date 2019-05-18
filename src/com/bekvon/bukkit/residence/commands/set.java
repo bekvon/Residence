@@ -50,10 +50,11 @@ public class set implements cmd {
 	    res.getPermissions().setFlag(sender, args[2], args[3], resadmin);
 	    return true;
 	} else if ((args.length == 1 || args.length == 2) && plugin.getConfigManager().useFlagGUI()) {
+	    final Player player = (Player) sender;
+	    player.closeInventory();
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		@Override
 		public void run() {
-		    Player player = (Player) sender;
 		    ClaimedResidence res = null;
 		    if (args.length == 1)
 			res = plugin.getResidenceManager().getByLoc(player.getLocation());
@@ -68,11 +69,14 @@ public class set implements cmd {
 			return;
 		    }
 
-		    SetFlag flag = new SetFlag(res, player, resadmin);
+		    final SetFlag flag = new SetFlag(res, player, resadmin);
 		    flag.recalculateResidence(res);
-		    player.closeInventory();
 		    plugin.getPlayerListener().getGUImap().put(player.getUniqueId(), flag);
-		    player.openInventory(flag.getInventory());
+
+		    Bukkit.getScheduler().runTask(plugin, () -> {
+			player.openInventory(flag.getInventory());
+		    });
+
 		    return;
 		}
 	    });

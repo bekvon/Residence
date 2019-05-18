@@ -77,12 +77,13 @@ public class pset implements cmd {
 
 	    res.getPermissions().setPlayerFlag(sender, args[2], args[3], args[4], resadmin, true);
 	    return true;
-	} else if ((args.length == 2 || args.length == 3) && plugin.getConfigManager().useFlagGUI()) {	    
+	} else if ((args.length == 2 || args.length == 3) && plugin.getConfigManager().useFlagGUI()) {
+	    final Player player = (Player) sender;
+	    player.closeInventory();
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		@Override
 		public void run() {
 
-		    Player player = (Player) sender;
 		    ClaimedResidence res = null;
 		    String targetPlayer = null;
 		    if (args.length == 2) {
@@ -95,27 +96,29 @@ public class pset implements cmd {
 
 		    if (res == null) {
 			plugin.msg(sender, lm.Invalid_Residence);
-			return ;
+			return;
 		    }
 
-		    if (!plugin.isPlayerExist(player, targetPlayer, true)){
+		    if (!plugin.isPlayerExist(player, targetPlayer, true)) {
 			plugin.msg(sender, lm.Invalid_Player);
 			return;
 		    }
 		    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
 			plugin.msg(sender, lm.General_NoPermission);
-			return ;
+			return;
 		    }
-		    SetFlag flag = new SetFlag(res, player, resadmin);
+		    final SetFlag flag = new SetFlag(res, player, resadmin);
 		    flag.setTargetPlayer(targetPlayer);
 		    flag.recalculatePlayer(res);
-		    player.closeInventory();
 		    plugin.getPlayerListener().getGUImap().put(player.getUniqueId(), flag);
-		    player.openInventory(flag.getInventory());
+
+		    Bukkit.getScheduler().runTask(plugin, () -> {
+			player.openInventory(flag.getInventory());
+		    });
+
 		    return;
 		}
 	    });
-	    
 
 	    return true;
 	}
