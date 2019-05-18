@@ -1806,7 +1806,7 @@ public class ClaimedResidence {
 	if (plugin.getConfigManager().isOfflineMode())
 	    return perms.getOwner().equals(sender.getName());
 	if (sender instanceof Player)
-	    return perms.getOwnerUUID().equals(((Player) sender).getUniqueId());
+	    return perms.getOwnerUUID() == ((Player) sender).getUniqueId();
 	return true;
     }
 
