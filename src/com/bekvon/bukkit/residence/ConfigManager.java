@@ -321,8 +321,9 @@ public class ConfigManager {
 	    conf.set("Global.FlagPermission." + fl, fl.isEnabled());
 	}
 
-	if (!conf.isConfigurationSection("Global.FlagGui"))
+	if (!conf.isConfigurationSection("Global.FlagGui")){
 	    conf.createSection("Global.FlagGui");
+	}
 
 	if (!conf.isConfigurationSection("Global.RentedDefault")) {
 	    for (Entry<String, Boolean> one : this.getGlobalCreatorDefaultFlags().getFlags().entrySet()) {
@@ -334,7 +335,7 @@ public class ConfigManager {
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
 
 	for (Flags fl : Flags.values()) {
-	    guiSection.set(fl.toString(), fl.getIcon().toString());
+	    guiSection.set(fl.toString(), guiSection.get(fl.toString(),fl.getIcon().toString()));
 	}
 
 	try {
