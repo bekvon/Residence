@@ -282,19 +282,14 @@ public class ResidencePlayer {
     }
 
     public ResidencePlayer updatePlayer(Player player) {
-	if (updated)
-	    return this;
 	this.player = player;
 	this.uuid = player.getUniqueId();
 	this.userName = player.getName();
 	this.ofPlayer = player;
-	updated = true;
 	return this;
     }
 
     private void updatePlayer() {
-	if (updated)
-	    return;
 	player = Bukkit.getPlayer(this.uuid);
 	if (player != null)
 	    updatePlayer(player);
