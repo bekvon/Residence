@@ -56,8 +56,8 @@ import com.bekvon.bukkit.residence.BossBar.BossBarManager;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
 import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;
 import com.bekvon.bukkit.residence.Siege.ResidenceSiegeListener;
-import com.bekvon.bukkit.residence.allNms.v1_13Events;
 import com.bekvon.bukkit.residence.allNms.v1_10Events;
+import com.bekvon.bukkit.residence.allNms.v1_13Events;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
 import com.bekvon.bukkit.residence.allNms.v1_9Events;
 import com.bekvon.bukkit.residence.api.ChatInterface;
@@ -120,7 +120,6 @@ import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
 import com.bekvon.bukkit.residence.utils.CrackShot;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
@@ -876,7 +875,7 @@ public class Residence extends JavaPlugin {
     private boolean setupPlaceHolderAPI() {
 	if (!getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
 	    return false;
-	if ((new PlaceholderAPIHook(this)).hook())
+	if ((new PlaceholderAPIHook(this)).register())
 	    Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " PlaceholderAPI hooked.");
 	return true;
     }
