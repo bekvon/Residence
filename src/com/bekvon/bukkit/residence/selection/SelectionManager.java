@@ -362,7 +362,6 @@ public class SelectionManager {
     public void afterSelectionUpdate(Player player, boolean force) {
 	if (!this.hasPlacedBoth(player))
 	    return;
-
 	Visualizer v = vMap.get(player.getUniqueId());
 	if (v == null) {
 	    v = new Visualizer(player);
@@ -373,6 +372,7 @@ public class SelectionManager {
 	if (force)
 	    v.setLoc(null);
 	v.setAreas(this.getSelectionCuboid(player));
+	v.setOnce(false);
 	this.showBounds(player, v);
     }
 
@@ -475,8 +475,10 @@ public class SelectionManager {
     }
 
     public void showBounds(final Player player, final Visualizer v) {
+
 	if (!plugin.getConfigManager().useVisualizer())
 	    return;
+
 	Visualizer tv = vMap.get(player.getUniqueId());
 	if (tv != null) {
 	    tv.cancelAll();
