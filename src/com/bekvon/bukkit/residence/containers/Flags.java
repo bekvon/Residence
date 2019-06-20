@@ -100,6 +100,7 @@ public enum Flags {
     shear(CMIMaterial.SHEARS, FlagMode.Both, "Allows or denys sheep shear", false),
     smonsters(CMIMaterial.ZOMBIE_SPAWN_EGG, FlagMode.Residence, "Allows or denys spawner or spawn egg monster spawns", true),
     subzone(CMIMaterial.GRAY_STAINED_GLASS_PANE, FlagMode.Both, "Allow a player to make subzones in the residence", true),
+    title(CMIMaterial.PAPER, FlagMode.Residence, "Shows or hides enter/leave message in residence", true),
     table(CMIMaterial.CRAFTING_TABLE, FlagMode.Both, "Allows or denys players to use workbenches", true),
     tnt(CMIMaterial.TNT, FlagMode.Residence, "Allow or deny tnt explosions", false),
     tp(CMIMaterial.END_PORTAL_FRAME, FlagMode.Both, "Allow or disallow teleporting to the residence", true),

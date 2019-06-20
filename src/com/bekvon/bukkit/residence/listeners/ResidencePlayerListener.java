@@ -2153,7 +2153,9 @@ public class ResidencePlayerListener implements Listener {
 		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
 		case ActionBar:
 		case TitleBar:
-		    ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
+		    FlagPermissions perms = res.getPermissions();
+		    if (perms.has(Flags.title, FlagCombo.TrueOrNone))
+			ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
 		    break;
 		case ChatBox:
 		    plugin.msg(player, lm.Residence_MoveDeny, orres.getName());
@@ -2287,20 +2289,22 @@ public class ResidencePlayerListener implements Listener {
 	    Long time = informar.get(player.getUniqueId());
 	    if (time == null || time + 100L < System.currentTimeMillis()) {
 
-		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
-		case ActionBar:
-		    ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
-			.toString());
-		    break;
-		case ChatBox:
-		    plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
-		    break;
-		case TitleBar:
-		    ActionBarTitleMessages.sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
-		    break;
-		default:
-		    break;
-		}
+		FlagPermissions perms = res.getPermissions();
+		if (perms.has(Flags.title, FlagCombo.TrueOrNone))
+		    switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
+		    case ActionBar:
+			ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
+			    .toString());
+			break;
+		    case ChatBox:
+			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
+			break;
+		    case TitleBar:
+			ActionBarTitleMessages.sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
+			break;
+		    default:
+			break;
+		    }
 		informar.put(player.getUniqueId(), System.currentTimeMillis());
 	    }
 	}
