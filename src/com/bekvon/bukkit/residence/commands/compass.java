@@ -40,7 +40,7 @@ public class compass implements cmd {
 		CuboidArea area = res.getMainArea();
 		if (area == null)
 		    return false;
-		Location loc = res.getTeleportLocation();
+		Location loc = res.getTeleportLocation(player);
 		if (loc == null)
 		    return false;
 		player.setCompassTarget(loc);

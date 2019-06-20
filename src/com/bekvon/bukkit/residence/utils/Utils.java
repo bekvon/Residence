@@ -59,6 +59,22 @@ public class Utils {
 	return time;
     }
 
+    public static int getMaxWorldHeight(World world) {
+	if (world == null)
+	    return 256;
+
+	switch (world.getEnvironment()) {
+	case NETHER:
+	    return 128;
+	case NORMAL:
+	case THE_END:
+	    return 256;
+	default:
+	    break;
+	}
+	return 256;
+    }
+
     public static Block getTargetBlock(Player player, int distance, boolean ignoreNoneSolids) {
 	return getTargetBlock(player, null, distance, ignoreNoneSolids);
     }
