@@ -242,6 +242,12 @@ public class SetFlag {
 	    Flags flag = Flags.getFlag(flagName);
 	    if (flag != null)
 		flagName = flag.getName();
+	    if (flagName == null)
+		flagName = "Unknown";
+	    
+	    // Can it be null?
+	    if (MiscInfoMeta == null)
+		continue;
 	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + flagName);
 
 	    List<String> lore = new ArrayList<String>();
