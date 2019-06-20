@@ -52,25 +52,27 @@ public class set implements cmd {
 	} else if ((args.length == 1 || args.length == 2) && plugin.getConfigManager().useFlagGUI()) {
 	    final Player player = (Player) sender;
 	    player.closeInventory();
+	    ClaimedResidence res = null;
+	    if (args.length == 1)
+		res = plugin.getResidenceManager().getByLoc(player.getLocation());
+	    else
+		res = plugin.getResidenceManager().getByName(args[1]);
+	    if (res == null) {
+		plugin.msg(sender, lm.Invalid_Residence);
+		return true;
+	    }
+	    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
+		plugin.msg(sender, lm.General_NoPermission);
+		return true;
+	    }
+
+	    ClaimedResidence r = res;
+
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		@Override
 		public void run() {
-		    ClaimedResidence res = null;
-		    if (args.length == 1)
-			res = plugin.getResidenceManager().getByLoc(player.getLocation());
-		    else
-			res = plugin.getResidenceManager().getByName(args[1]);
-		    if (res == null) {
-			plugin.msg(sender, lm.Invalid_Residence);
-			return;
-		    }
-		    if (!res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
-			plugin.msg(sender, lm.General_NoPermission);
-			return;
-		    }
-
-		    final SetFlag flag = new SetFlag(res, player, resadmin);
-		    flag.recalculateResidence(res);
+		    final SetFlag flag = new SetFlag(r, player, resadmin);
+		    flag.recalculateResidence(r);
 		    plugin.getPlayerListener().getGUImap().put(player.getUniqueId(), flag);
 
 		    Bukkit.getScheduler().runTask(plugin, () -> {
