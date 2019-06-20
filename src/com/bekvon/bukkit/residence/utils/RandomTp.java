@@ -40,7 +40,8 @@ public class RandomTp {
 	if (world == null)
 	    return null;
 
-	Random random = new Random(System.currentTimeMillis());
+	Random randomX = new Random(System.currentTimeMillis());
+	Random randomZ = new Random(System.nanoTime());
 
 	boolean ok = false;
 	double x = 0;
@@ -78,12 +79,12 @@ public class RandomTp {
 	    if (tries > maxtries)
 		return null;
 
-	    x = random.nextInt(outerrange * 2) - outerrange + 0.5 + centerX;
+	    x = randomX.nextInt(outerrange * 2) - outerrange + 0.5 + centerX;
 
 	    if (x > inerrange * -1 && x < inerrange)
 		continue;
 
-	    z = random.nextInt(outerrange * 2) - outerrange + 0.5 + centerY;
+	    z = randomZ.nextInt(outerrange * 2) - outerrange + 0.5 + centerY;
 	    if (z > inerrange * -1 && z < inerrange)
 		continue;
 
@@ -125,7 +126,7 @@ public class RandomTp {
 	}
 
 	if (loc != null) {
-	    int dir = random.nextInt(359);
+	    int dir = randomZ.nextInt(359);
 	    loc.setYaw(dir);
 	}
 
