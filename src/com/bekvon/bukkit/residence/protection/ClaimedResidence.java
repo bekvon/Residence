@@ -1211,13 +1211,9 @@ public class ClaimedResidence {
 //    }
 
     public Location getTeleportLocation(Player player) {
-	Debug.D("3 ss");
-	tpLoc = null;
 	if (tpLoc == null) {
-	    Debug.D("33");
 	    if (this.getMainArea() == null)
 		return null;
-	    Debug.D("4");
 	    Location low = this.getMainArea().getLowLoc();
 	    Location high = this.getMainArea().getHighLoc();
 	    Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2,
@@ -1271,7 +1267,7 @@ public class ClaimedResidence {
     }
 
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
-	Debug.D("11");
+
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
 	boolean bypassDelay = targetPlayer.hasPermission("residence.tpdelaybypass");
 
@@ -1315,7 +1311,6 @@ public class ClaimedResidence {
 	    plugin.getTeleportDelayMap().add(reqPlayer.getName());
 	}
 
-	Debug.D("22");
 	Location loc = this.getTeleportLocation(targetPlayer);
 
 	if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !bypassDelay)
