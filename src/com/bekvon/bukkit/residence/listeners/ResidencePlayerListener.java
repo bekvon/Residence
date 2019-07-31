@@ -1787,8 +1787,11 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	if (res.getPermissions().has(Flags.keepinv, false))
+	if (res.getPermissions().has(Flags.keepinv, false)) {
 	    event.setKeepInventory(true);
+	    if (Version.isCurrentEqualOrHigher(Version.v1_14_R1))
+		event.getDrops().clear();
+	}
 
 	if (res.getPermissions().has(Flags.keepexp, false)) {
 	    event.setKeepLevel(true);
