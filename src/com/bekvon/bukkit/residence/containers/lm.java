@@ -198,6 +198,7 @@ public enum lm {
     Residence_NotIn("&cYou are not in a Residence."),
     Residence_PlayerNotIn("&cPlayer standing not in your Residence area."),
     Residence_Kicked("&eYou were kicked from residence"),
+    Residence_CantKick("&eCan't kick this player"),
     Residence_In("&eYou are standing in Residence &6%1"),
     Residence_OwnerChange("&eResidence &6%1 &eowner changed to &6%2"),
     Residence_NonAdmin("&cYou are not a Residence admin."),

@@ -54,6 +54,11 @@ public class kick implements cmd {
 	    return false;
 
 	if (res.getPlayersInResidence().contains(targetplayer)) {
+
+	    if (plugin.hasPermission(targetplayer, "residence.command.kick.bypass")) {
+		plugin.msg(sender, lm.Residence_CantKick);
+		return true;
+	    }
 	    Location loc = plugin.getConfigManager().getKickLocation();
 	    targetplayer.closeInventory();
 	    if (loc != null)
