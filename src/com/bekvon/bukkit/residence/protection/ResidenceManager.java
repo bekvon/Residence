@@ -983,7 +983,8 @@ public class ResidenceManager implements ResidenceInterface {
 	    long pass = System.currentTimeMillis() - time;
 	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ")");
+	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ") -> " + (reslist == null ? "0" : reslist.size())
+		+ " residences");
 	}
 
 	clearLoadChache();
