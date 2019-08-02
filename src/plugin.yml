@@ -75,10 +75,10 @@ permissions:
   residence.versioncheck:
     description: Notice to new version after connect
     default: op
-  residence.nofly.bypass:
+  residence.bypass.nofly:
     description: Bypasses nofly flag in residence
     default: op
-  residence.flag.command.bypass:
+  residence.bypass.command:
     description: Bypasses command flag in residence
     default: op
   residence.select.auto.others:
