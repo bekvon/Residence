@@ -1,14 +1,17 @@
 package com.bekvon.bukkit.residence.allNms;
 
 import java.util.Iterator;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.LingeringPotionSplashEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.potion.PotionEffect;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -19,14 +22,18 @@ public class v1_9Events implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLingeringSplashPotion(LingeringPotionSplashEvent event) {
+	ProjectileHitEvent ev = event;
+
+	ThrownPotion potion = (ThrownPotion) ev.getEntity();
+
 	// disabling event on world
-	if (Residence.getInstance().isDisabledWorldListener(event.getEntity().getWorld()))
+	if (Residence.getInstance().isDisabledWorldListener(potion.getWorld()))
 	    return;
 	if (event.isCancelled())
 	    return;
 
 	boolean harmfull = false;
-	mein: for (PotionEffect one : event.getEntity().getEffects()) {
+	mein: for (PotionEffect one : potion.getEffects()) {
 	    for (String oneHarm : Residence.getInstance().getConfigManager().getNegativePotionEffects()) {
 		if (oneHarm.equalsIgnoreCase(one.getType().getName())) {
 		    harmfull = true;
@@ -37,7 +44,7 @@ public class v1_9Events implements Listener {
 	if (!harmfull)
 	    return;
 
-	Entity ent = event.getEntity();
+	Entity ent = potion;
 	boolean srcpvp = Residence.getInstance().getPermsByLoc(ent.getLocation()).has(Flags.pvp, FlagCombo.TrueOrNone);
 	if (!srcpvp)
 	    event.setCancelled(true);
