@@ -18,10 +18,12 @@ public class bank implements cmd {
     @Override
     @CommandAnnotation(simple = true, priority = 3400)
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if ((args.length != 3) && (args.length != 4)) {
+	
+	if (args.length != 3 && args.length != 4) {
 	    return false;
-	}
+	}	
 	ClaimedResidence res = null;
+	
 	if (args.length == 4) {
 	    res = plugin.getResidenceManager().getByName(args[2]);
 	    if (res == null) {

@@ -55,7 +55,7 @@ public class compass implements cmd {
 
     @Override
     public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Set compass ponter to residence location");
+	c.get(path + "Description", "Set compass pointer to residence location");
 	c.get(path + "Info", Arrays.asList("&eUsage: &6/res compass <residence>"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }

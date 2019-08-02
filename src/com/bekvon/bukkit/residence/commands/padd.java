@@ -43,7 +43,7 @@ public class padd implements cmd {
     public void getLocale(ConfigReader c, String path) {
 	// Main command
 	c.get(path + "Description", "Add player to residence.");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res padd <residence name> [player]", "Adds essential flags for player"));
+	c.get(path + "Info", Arrays.asList("&eUsage: &6/res padd <residence> [player]", "Adds essential flags for player"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[playername]", "[playername]"));
     }
 }
