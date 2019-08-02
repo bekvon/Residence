@@ -165,7 +165,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (!res.getPermissions().playerHas(event.getPlayer(), Flags.itempickup, FlagCombo.OnlyFalse))
 	    return;
-	if (ResPerm.bypass_$1.hasPermission(event.getPlayer(), Flags.itempickup.toString()))
+	if (ResPerm.bypass_itempickup.hasPermission(event.getPlayer()))
 	    return;
 	event.setCancelled(true);
 	event.getItem().setPickupDelay(plugin.getConfigManager().getItemPickUpDelay() * 20);
@@ -622,7 +622,7 @@ public class ResidencePlayerListener implements Listener {
 	if (plugin.getPermissionManager().isResidenceAdmin(player))
 	    return;
 
-	if (ResPerm.bypass_$1.hasPermission(player, Flags.command.toString()))
+	if (ResPerm.bypass_command.hasPermission(player))
 	    return;
 
 	String msg = event.getMessage().replace(" ", "_").toLowerCase();
@@ -874,7 +874,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
 
-	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !plugin.isResAdminOn(player) && !ResPerm.bypass_$1.hasPermission(player, Flags.nofly)) {
+	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !plugin.isResAdminOn(player) && !ResPerm.bypass_nofly.hasPermission(player)) {
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null && res.isOwner(player))
@@ -1101,7 +1101,7 @@ public class ResidencePlayerListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean resadmin = plugin.isResAdminOn(player);
 	if (!resadmin) {
-	    boolean hasUseBypass = ResPerm.bypass_$1.hasPermission(player, Flags.use.toString());
+	    boolean hasUseBypass = ResPerm.bypass_use.hasPermission(player);
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
 	    if (!hasUseBypass)
@@ -1300,8 +1300,8 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
-	    boolean hasUseBypass = ResPerm.bypass_$1.hasPermission(player, Flags.use);
-	    boolean hasContainerBypass = ResPerm.bypass_$1.hasPermission(player, Flags.container);
+	    boolean hasUseBypass = ResPerm.bypass_use.hasPermission(player);
+	    boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player);
 	    boolean hasuse = perms.playerHas(player, Flags.use, true) || hasUseBypass;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 	    if (res == null || !res.isOwner(player)) {
@@ -1427,7 +1427,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	boolean hasContainerBypass = ResPerm.bypass_$1.hasPermission(player, Flags.container);
+	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player);
 
 	if (!hasContainerBypass)
 	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
@@ -1483,7 +1483,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	boolean hasContainerBypass = ResPerm.bypass_$1.hasPermission(player, Flags.container);
+	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player);
 
 	if (!hasContainerBypass)
 	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
@@ -1623,7 +1623,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	}
 
-	boolean hasContainerBypass = ResPerm.bypass_$1.hasPermission(player, Flags.container);
+	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player);
 
 	if (!hasContainerBypass)
 	    if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
@@ -1743,7 +1743,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 	    .getCause() == TeleportCause.PLUGIN) {
-	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player) && !ResPerm.bypass_$1.hasPermission(player, Flags.tp)) {
+	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player) && !ResPerm.bypass_tp.hasPermission(player)) {
 		event.setCancelled(true);
 		plugin.msg(player, lm.Residence_MoveDeny, res.getName());
 		return;
@@ -1833,7 +1833,7 @@ public class ResidencePlayerListener implements Listener {
     private void fly(Player player, boolean state) {
 	if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE)
 	    return;
-	if (ResPerm.bypass_$1.hasPermission(player, Flags.fly))
+	if (ResPerm.bypass_fly.hasPermission(player))
 	    return;
 	if (!state) {
 	    boolean land = player.isFlying();
@@ -2037,7 +2037,7 @@ public class ResidencePlayerListener implements Listener {
 		if (res != null && ResOld.getName().equals(res.getName())) {
 
 		    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) &&
-			!ResPerm.bypass_$1.hasPermission(player, Flags.nofly)) {
+			!ResPerm.bypass_nofly.hasPermission(player)) {
 			if (res.isOwner(player))
 			    break f;
 			Location lc = player.getLocation();
@@ -2169,7 +2169,7 @@ public class ResidencePlayerListener implements Listener {
 
 	    // Preventing fly in residence only when player has move permission
 	    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) &&
-		!ResPerm.bypass_$1.hasPermission(player, Flags.nofly)) {
+		!ResPerm.bypass_nofly.hasPermission(player)) {
 		if (res.isOwner(player))
 		    break f;
 		Location lc = player.getLocation();

@@ -209,8 +209,8 @@ public class PermissionManager {
 	command_message_leave_remove("Allows to remove residence leave message"),
 
 	cleanbypass("Prevents residence from ebing removed on automatic cleanup"),
-	worldguard_$1("Allows to create residence inside region","region"),
-	flag_$1("Gives access to defined flag","flagName"),
+	worldguard_$1("Allows to create residence inside region", "region"),
+	flag_$1("Gives access to defined flag", "flagName"),
 	tpdelaybypass("Allows to bypass teleport delay"),
 	backup("Allows to use backup flag to save residence into schematics"),
 	admin_tp("Allows teleportation into residence where its not allowed"),
@@ -223,7 +223,12 @@ public class PermissionManager {
 	bypass_destroy("Allows to bypass destroy flag"),
 	bypass_build("Allows to bypass build flag"),
 	bypass_container("Allows to bypass container flag"),
-	bypass_$1("Allows to bypass container flag"),
+	bypass_use("Allows to bypass use flag"),
+	bypass_fly("Allows to bypass fly flag"),
+	bypass_nofly("Allows to bypass nofly flag"),
+	bypass_tp("Allows to bypass command flag"),
+	bypass_command("Allows to bypass command flag"),
+	bypass_itempickup("Allows to bypass itempickup flag"),
 	buy("Allows to buy residence"),
 	sell("Allows to sell residence"),
 	max_res_unlimited("Defines residence limit as unlimited"),
@@ -251,14 +256,9 @@ public class PermissionManager {
 	command_kick_bypass("Allows to bypass kick from residence"),
 	command_contract_subzone("Allows to contract subzones"),
 	command_expand_subzone("Allows to expand subzones"),
-//	security_admin("Sets players security level"),
-//	prewards_$1("Allows to get particular playtime reward"),
-//	colors_$1_$star("Allows all color usage in particular areas", "type"),
-//	command_repair("", false),
 	versioncheck("Shows when we have new version of plugin"),
-	command_$1("", false),
-	command_$1_others("Allows to perform command on another player", "commandName"),
-	command_$1_$2("", false);
+	command_$1("Gives access to particular command", "commandName"),
+	command_$1_others("Allows to perform command on another player", "commandName");
 
 	private Boolean show = true;
 	private String desc;
