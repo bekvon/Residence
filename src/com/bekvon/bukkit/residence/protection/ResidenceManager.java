@@ -40,6 +40,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
@@ -204,12 +205,11 @@ public class ResidenceManager implements ResidenceInterface {
 
 	PermissionGroup group = rPlayer.getGroup();
 //	PermissionGroup group = plugin.getPermissionManager().getGroup(owner, loc1.getWorld().getName());
-	if (!resadmin && !group.canCreateResidences() && !plugin.hasPermission(player, "residence.create", false)) {
-	    plugin.msg(player, lm.General_NoPermission);
+	if (!resadmin && !group.canCreateResidences() && !ResPerm.create.hasPermission(player, lm.General_NoPermission)) {
 	    return false;
 	}
 
-	if (!resadmin && !plugin.hasPermission(player, "residence.create")) {
+	if (!resadmin && !ResPerm.create.hasPermission(player, true)) {
 	    return false;
 	}
 
@@ -260,7 +260,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    Visualizer v = new Visualizer(player);
 	    v.setAreas(newArea);
 	    plugin.getSelectionManager().showBounds(player, v);
-	    plugin.getAutoSelectionManager().getList().remove(player.getName().toLowerCase());
+	    plugin.getAutoSelectionManager().getList().remove(player.getUniqueId());
 	    plugin.msg(player, lm.Area_Create, "main");
 	    plugin.msg(player, lm.Residence_Create, name);
 	}
@@ -1082,7 +1082,7 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public boolean renameResidence(Player player, String oldName, String newName, boolean resadmin) {
-	if (!plugin.hasPermission(player, "residence.rename")) {
+	if (!ResPerm.rename.hasPermission(player, true)) {
 	    return false;
 	}
 
@@ -1189,7 +1189,7 @@ public class ResidenceManager implements ResidenceInterface {
 	plugin.msg(reqPlayer, lm.Residence_Give, residence, giveplayer.getName());
 	plugin.msg(giveplayer, lm.Residence_Recieve, residence, reqPlayer.getName());
 	plugin.getSignUtil().updateSignResName(res);
-	if (includeSubzones) 
+	if (includeSubzones)
 	    for (ClaimedResidence one : res.getSubzones()) {
 		giveResidence(reqPlayer, targPlayer, one, resadmin, includeSubzones);
 	    }

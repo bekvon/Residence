@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -41,8 +42,7 @@ public class select implements cmd {
 	    plugin.msg(player, lm.Select_Disabled);
 	    return true;
 	}
-	if ((!player.hasPermission("residence.create") && player.isPermissionSet("residence.create") && !player.hasPermission("residence.select") && player
-	    .isPermissionSet("residence.select")) && !resadmin) {
+	if (!ResPerm.create.hasPermission(player) && !ResPerm.select.hasPermission(player) && !resadmin) {
 	    plugin.msg(player, lm.Select_Disabled);
 	    return true;
 	}
@@ -151,7 +151,7 @@ public class select implements cmd {
 	if ((args.length == 2 || args.length == 3) && args[1].equals("auto")) {
 	    Player target = player;
 	    if (args.length == 3) {
-		if (!plugin.hasPermission(player, "residence.select.auto.others")) {
+		if (!ResPerm.select_auto_others.hasPermission(player, true)) {
 		    return true;
 		}
 		target = Bukkit.getPlayer(args[2]);

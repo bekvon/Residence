@@ -15,6 +15,7 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.utils.Debug;
 
 public class rt implements cmd {
@@ -26,7 +27,7 @@ public class rt implements cmd {
 	    return false;
 	}
 
-	if (!resadmin && !plugin.hasPermission(sender, "residence.randomtp"))
+	if (!resadmin && !ResPerm.randomtp.hasPermission(sender))
 	    return true;
 
 	World wname = null;
@@ -82,11 +83,11 @@ public class rt implements cmd {
 	if (tPlayer == null)
 	    return false;
 
-	if (!sender.getName().equalsIgnoreCase(tPlayer.getName()) && !plugin.hasPermission(sender, "residence.randomtp.admin"))
+	if (!sender.getName().equalsIgnoreCase(tPlayer.getName()) && !ResPerm.randomtp_admin.hasPermission(sender))
 	    return false;
 
 	int sec = plugin.getConfigManager().getrtCooldown();
-	if (plugin.getRandomTeleportMap().containsKey(tPlayer.getName()) && !resadmin && !plugin.hasPermission(sender, "residence.randomtp.cooldownbypass", false)) {
+	if (plugin.getRandomTeleportMap().containsKey(tPlayer.getName()) && !resadmin && !ResPerm.randomtp_cooldownbypass.hasPermission(sender, false)) {
 	    if (plugin.getRandomTeleportMap().get(tPlayer.getName()) + (sec * 1000) > System.currentTimeMillis()) {
 		int left = (int) (sec - ((System.currentTimeMillis() - plugin.getRandomTeleportMap().get(tPlayer.getName())) / 1000));
 		plugin.msg(tPlayer, lm.RandomTeleport_TpLimit, left);
@@ -106,7 +107,7 @@ public class rt implements cmd {
 	    return true;
 	}
 
-	if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !plugin.hasPermission(sender, "residence.randomtp.delaybypass", false)) {
+	if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
 	    plugin.msg(tPlayer, lm.RandomTeleport_TeleportStarted, loc.getX(), loc.getY(), loc
 		.getZ(), plugin.getConfigManager().getTeleportDelay());
 	    plugin.getTeleportDelayMap().add(tPlayer.getName());

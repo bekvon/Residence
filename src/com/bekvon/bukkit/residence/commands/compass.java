@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -30,7 +31,7 @@ public class compass implements cmd {
 	    return true;
 	}
 
-	if (!plugin.hasPermission(player, "residence.compass"))
+	if (!ResPerm.command_$1.hasPermission(sender, this.getClass().getSimpleName()))
 	    return true;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);

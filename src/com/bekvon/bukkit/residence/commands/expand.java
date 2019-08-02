@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -37,12 +38,12 @@ public class expand implements cmd {
 	    return true;
 	}
 
-	if (res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.expand.subzone", lm.Subzone_CantExpand))
+	if (res.isSubzone() && !resadmin && !ResPerm.command_expand_subzone.hasPermission(player, lm.Subzone_CantExpand))
 	    return true;
 
-	if (!res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.expand", lm.Residence_CantExpandResidence))
+	if (!res.isSubzone() && !resadmin && !ResPerm.command_$1.hasPermission(player, lm.Residence_CantExpandResidence, this.getClass().getSimpleName()))
 	    return true;
-
+	
 	String resName = res.getName();
 	CuboidArea area = null;
 	String areaName = null;

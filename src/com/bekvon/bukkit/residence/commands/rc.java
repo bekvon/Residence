@@ -14,6 +14,7 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class rc implements cmd {
@@ -98,7 +99,7 @@ public class rc implements cmd {
 		    return true;
 		}
 
-		if (!plugin.hasPermission(player, "residence.chatcolor"))
+		if (!ResPerm.chatcolor.hasPermission(player))
 		    return true;
 
 		String posibleColor = args[1];
@@ -134,7 +135,7 @@ public class rc implements cmd {
 		    return true;
 		}
 
-		if (!plugin.hasPermission(player, "residence.chatprefix"))
+		if (!ResPerm.chatprefix.hasPermission(player))
 		    return true;
 
 		String prefix = args[1];
@@ -167,7 +168,7 @@ public class rc implements cmd {
 		    return true;
 		}
 
-		if (!plugin.hasPermission(player, "residence.chatkick"))
+		if (!ResPerm.chatkick.hasPermission(player))
 		    return true;
 
 		String targetName = args[1];

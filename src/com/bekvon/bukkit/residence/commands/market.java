@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.Debug;
@@ -76,7 +77,7 @@ public class market implements cmd {
 	    }
 
 	    if (res.isRented()) {
-		if (resadmin || plugin.isResAdminOn(player) || player.hasPermission("residence.market.evict")) {
+		if (resadmin || plugin.isResAdminOn(player) || ResPerm.market_evict.hasPermission(player)) {
 		    plugin.UnrentConfirm.put(player.getName(), res.getName());
 		    plugin.msg(sender, lm.Rent_EvictConfirm, res.getName());
 		} else if (plugin.getRentManager().getRentingPlayer(res).equalsIgnoreCase(sender.getName())) {

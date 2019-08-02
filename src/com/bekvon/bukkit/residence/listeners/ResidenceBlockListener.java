@@ -52,6 +52,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -222,7 +223,7 @@ public class ResidenceBlockListener implements Listener {
 
 	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
 
-	if (!hasdestroy && !player.hasPermission("residence.bypass.destroy")) {
+	if (!hasdestroy && !ResPerm.bypass_destroy.hasPermission(player)) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
 	} else if (mat == Material.CHEST && !perms.playerHas(player, Flags.container, true)) {
@@ -381,7 +382,7 @@ public class ResidenceBlockListener implements Listener {
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
-	if (!player.hasPermission("residence.newguyresidence"))
+	if (!ResPerm.newguyresidence.hasPermission(player))
 	    return;
 
 	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(player.getName());
@@ -627,7 +628,7 @@ public class ResidenceBlockListener implements Listener {
 	}
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
-	if (!hasplace && !player.hasPermission("residence.bypass.build")) {
+	if (!hasplace && !ResPerm.bypass_build.hasPermission(player)) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
 	    return;

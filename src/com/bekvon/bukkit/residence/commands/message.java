@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class message implements cmd {
@@ -68,22 +69,22 @@ public class message implements cmd {
 	    return true;
 	}
 
-	if (enter && !plugin.hasPermission(sender, "residence.command.message.enter", true)) {
+	if (enter && !ResPerm.command_message_enter.hasPermission(sender)) {
 	    return true;
 	}
 
-	if (!enter && !plugin.hasPermission(sender, "residence.command.message.leave", true)) {
+	if (!enter && !ResPerm.command_message_leave.hasPermission(sender)) {
 	    return true;
 	}
 
-	if (message == null && enter && !plugin.hasPermission(sender, "residence.command.message.enter.remove", true)) {
+	if (message == null && enter && !ResPerm.command_message_enter_remove.hasPermission(sender)) {
 	    return true;
 	}
-	
-	if (message == null && !enter && !plugin.hasPermission(sender, "residence.command.message.leave.remove", true)) {
+
+	if (message == null && !enter && !ResPerm.command_message_leave_remove.hasPermission(sender)) {
 	    return true;
 	}
-	
+
 	res.setEnterLeaveMessage(sender, message, enter, resadmin);
 
 	return true;

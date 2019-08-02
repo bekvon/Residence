@@ -53,6 +53,7 @@ import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
@@ -1280,9 +1281,7 @@ public class ResidenceEntityListener implements Listener {
 	if (event.getEntityType() == EntityType.ITEM_FRAME) {
 	    ItemFrame it = (ItemFrame) event.getEntity();
 	    if (it.getItem() != null) {
-
-		boolean hasContainerBypass = player.hasPermission("residence.bypass.container");
-		if (!hasContainerBypass)
+		if (!ResPerm.bypass_container.hasPermission(player))
 		    if (!perms.playerHas(player, Flags.container, true)) {
 			event.setCancelled(true);
 			plugin.msg(player, lm.Flag_Deny, Flags.container);

@@ -12,6 +12,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
@@ -409,7 +410,7 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (resadmin || rent.player.equals(player.getName()) || res.isOwner(player) && player.hasPermission("residence.market.evict")) {
+	if (resadmin || rent.player.equals(player.getName()) || res.isOwner(player) && ResPerm.market_evict.hasPermission(player)) {
 	    ResidenceRentEvent revent = new ResidenceRentEvent(res, player, RentEventType.UNRENTABLE);
 	    plugin.getServ().getPluginManager().callEvent(revent);
 	    if (revent.isCancelled())

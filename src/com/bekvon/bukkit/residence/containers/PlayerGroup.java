@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class PlayerGroup {
@@ -91,13 +92,13 @@ public class PlayerGroup {
 	PermissionGroup group = Residence.getInstance().getPermissionManager().getDefaultGroup();
 	for (Entry<String, PermissionGroup> one : Residence.getInstance().getPermissionManager().getGroups().entrySet()) {
 	    if (player != null) {
-		if (player.hasPermission("residence.group." + one.getKey())) {
+		if (ResPerm.group_$1.hasPermission(player, one.getKey())) {
 		    group = one.getValue();
 		}
 	    } else {
 		OfflinePlayer offlineP = Residence.getInstance().getOfflinePlayer(resPlayer.getPlayerName());
 		if (offlineP != null)
-		    if (ResidenceVaultAdapter.hasPermission(offlineP, "residence.group." + one.getKey(), Residence.getInstance().getConfigManager().getDefaultWorld()))
+		    if (ResidenceVaultAdapter.hasPermission(offlineP, ResPerm.group_$1.getPermission(one.getKey()), Residence.getInstance().getConfigManager().getDefaultWorld()))
 			group = one.getValue();
 	    }
 	}

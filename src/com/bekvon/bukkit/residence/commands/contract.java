@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -35,10 +36,10 @@ public class contract implements cmd {
 	    return true;
 	}
 
-	if (res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.contract.subzone", lm.Subzone_CantContract))
+	if (res.isSubzone() && !resadmin && !ResPerm.command_contract_subzone.hasPermission(player, lm.Subzone_CantContract))
 	    return true;
 
-	if (!res.isSubzone() && !resadmin && !plugin.hasPermission(player, "residence.contract", lm.Residence_CantContractResidence))
+	if (!res.isSubzone() && !resadmin && !ResPerm.command_$1.hasPermission(player, lm.Residence_CantContractResidence, this.getClass().getSimpleName()))
 	    return true;
 
 	String resName = res.getName();

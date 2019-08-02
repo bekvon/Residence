@@ -13,6 +13,7 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
@@ -35,7 +36,7 @@ public class remove implements cmd {
 	    return true;
 	}
 
-	if (res.isSubzone() && !resadmin && !plugin.hasPermission(sender, "residence.delete.subzone", lm.Subzone_CantDelete)) {
+	if (res.isSubzone() && !resadmin && !ResPerm.delete_subzone.hasPermission(sender, lm.Subzone_CantDelete)) {
 	    return true;
 	}
 
@@ -48,18 +49,18 @@ public class remove implements cmd {
 	    plugin.getConfigManager().isPreventSubZoneRemoval() &&
 	    !res.getParent().isOwner(sender) &&
 	    !res.getPermissions().playerHas(player, Flags.admin, FlagCombo.OnlyTrue) &&
-	    plugin.hasPermission(sender, "residence.delete.subzone", lm.Subzone_CantDeleteNotOwnerOfParent)) {
+	    ResPerm.delete_subzone.hasPermission(sender, lm.Subzone_CantDeleteNotOwnerOfParent)) {
 	    return true;
 	}
 
 	if (!res.isSubzone() &&
 	    !resadmin &&
 	    !res.isOwner(sender) &&
-	    plugin.hasPermission(sender, "residence.delete", lm.Residence_CantDeleteResidence)) {
+	    ResPerm.delete.hasPermission(sender, lm.Residence_CantDeleteResidence)) {
 	    return true;
 	}
 
-	if (!res.isSubzone() && !resadmin && !plugin.hasPermission(sender, "residence.delete", lm.Residence_CantDeleteResidence)) {
+	if (!res.isSubzone() && !resadmin && !ResPerm.delete.hasPermission(sender, lm.Residence_CantDeleteResidence)) {
 	    return true;
 	}
 

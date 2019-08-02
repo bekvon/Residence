@@ -17,10 +17,16 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
 public class ResidenceCommandListener implements CommandExecutor {
 
     private static List<String> AdminCommands = new ArrayList<String>();
+    private static final String label = "res";
+
+    public String getLabel() {
+	return label;
+    }
 
     public static List<String> getAdminCommands() {
 	if (AdminCommands.size() == 0)
@@ -145,7 +151,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 		return commandHelp(new String[] { "?" }, resadmin, sender, command);
 	    }
 
-	    if (!resadmin && !plugin.hasPermission(sender, "residence.command." + args[0].toLowerCase()))
+	    if (!resadmin && !ResPerm.command_$1.hasPermission(sender, args[0].toLowerCase()))
 		return true;
 
 	    if (!resadmin && player != null && plugin.resadminToggle.contains(player.getName())) {

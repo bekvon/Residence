@@ -18,6 +18,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
@@ -124,7 +125,7 @@ public class TransactionManager implements MarketBuyInterface {
 
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
-	    if (!resadmin && !(rPlayer.getGroup().canSellLand() || player.hasPermission("residence.sell"))) {
+	    if (!resadmin && !(rPlayer.getGroup().canSellLand() || ResPerm.sell.hasPermission(player))) {
 		plugin.msg(player, lm.General_NoPermission);
 		return;
 	    }
@@ -188,7 +189,7 @@ public class TransactionManager implements MarketBuyInterface {
 		plugin.msg(player, lm.Economy_MarketDisabled);
 		return;
 	    }
-	    boolean canbuy = group.canBuyLand() || player.hasPermission("residence.buy");
+	    boolean canbuy = group.canBuyLand() || ResPerm.buy.hasPermission(player);
 	    if (!canbuy && !resadmin) {
 		plugin.msg(player, lm.General_NoPermission);
 		return;

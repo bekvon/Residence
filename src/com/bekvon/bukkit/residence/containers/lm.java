@@ -389,12 +389,17 @@ public enum lm {
     RandomTeleport_TeleportStarted("&eTeleportation started, don't move for next &6%4 &esec."),
     RandomTeleport_WorldList("&ePossible worlds: &6%1"),
 
+    Permissions_variableColor("&f"),
+    Permissions_permissionColor("&6"),
+    Permissions_cmdPermissionColor("&2"),
+    
     General_DisabledWorld("&cResidence plugin is disabled in this world"),
     General_UseNumbers("&cPlease use numbers..."),
     General_CantPlaceLava("&cYou can't place lava outside residence and higher than &6%1 &cblock level", "Replace all text with '' to disable this message"),
     General_CantPlaceWater("&cYou can't place Water outside residence and higher than &6%1 &cblock level", "Replace all text with '' to disable this message"),
     General_CantPlaceChest("&cYou can't place chest at this place"),
     General_NoPermission("&cYou dont have permission for this."),
+    General_info_NoPlayerPermission("&c[playerName] doesn't have [permission] permission"),
     General_NoCmdPermission("&cYou dont have permission for this command."),
     General_DefaultUsage("&eType &6/%1 ? &efor more info"),
     General_MaterialGet("&eThe material name for ID &6%1 &eis &6%2"),

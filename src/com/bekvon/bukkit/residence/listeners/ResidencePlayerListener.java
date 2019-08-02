@@ -860,7 +860,7 @@ public class ResidencePlayerListener implements Listener {
 	plugin.getPlayerListener().removePlayerResidenceChat(event.getPlayer());
 	plugin.addOfflinePlayerToChache(event.getPlayer());
 
-	plugin.getAutoSelectionManager().getList().remove(pname.toLowerCase());
+	plugin.getAutoSelectionManager().getList().remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

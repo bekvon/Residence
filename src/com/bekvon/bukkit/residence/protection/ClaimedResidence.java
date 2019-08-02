@@ -49,6 +49,7 @@ import com.bekvon.bukkit.residence.itemlist.ItemList.ListType;
 import com.bekvon.bukkit.residence.itemlist.ResidenceItemList;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
@@ -412,9 +413,9 @@ public class ClaimedResidence {
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	    PermissionGroup group = rPlayer.getGroup();
-	    if (!this.isSubzone() && !group.canCreateResidences() && !plugin.hasPermission(player, "residence.create")
+	    if (!this.isSubzone() && !group.canCreateResidences() && !ResPerm.create.hasPermission(player, true)
 		|| this.isSubzone() && !group.canCreateResidences()
-		    && !plugin.hasPermission(player, "residence.create.subzone")) {
+		    && !ResPerm.create_subzone.hasPermission(player, true)) {
 		return false;
 	    }
 
@@ -559,7 +560,7 @@ public class ClaimedResidence {
 	    }
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
-	    if (!group.canCreateResidences() && !plugin.hasPermission(player, "residence.resize")) {
+	    if (!group.canCreateResidences() && !ResPerm.resize.hasPermission(player, true)) {
 		return false;
 	    }
 

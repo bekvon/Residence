@@ -1925,44 +1925,44 @@ public class Residence extends JavaPlugin {
 	return kingdomsUtil;
     }
 
-    public boolean hasPermission(CommandSender sender, String permision, boolean output) {
-	return hasPermission(sender, permision, output, null);
-    }
-
-    public boolean hasPermission(CommandSender sender, String permision) {
-	return hasPermission(sender, permision, true, null);
-    }
-
-    public boolean hasPermission(CommandSender sender, String permision, String message) {
-	return hasPermission(sender, permision, true, message);
-    }
-
-    public boolean hasPermission(CommandSender sender, String permision, lm message) {
-	return hasPermission(sender, permision, true, getLM().getMessage(message));
-    }
-
-    public boolean hasPermission(CommandSender sender, String permision, Boolean output, String message) {
-	if (sender == null)
-	    return false;
-	if (sender instanceof ConsoleCommandSender) {
-	    return true;
-	} else if (sender instanceof Player) {
-	    if (sender.hasPermission(permision))
-		return true;
-	    if (output) {
-		String outMsg = getLM().getMessage(lm.General_NoPermission);
-		if (message != null)
-		    outMsg = message;
-
-		RawMessage rm = new RawMessage();
-		rm.add(outMsg, "§2" + permision);
-		rm.show(sender);
-		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-		console.sendMessage(ChatColor.RED + sender.getName() + " No permission -> " + permision);
-	    }
-	}
-	return false;
-    }
+//    public boolean hasPermission(CommandSender sender, String permision, boolean output) {
+//	return hasPermission(sender, permision, output, null);
+//    }
+//
+//    public boolean hasPermission(CommandSender sender, String permision) {
+//	return hasPermission(sender, permision, true, null);
+//    }
+//
+//    public boolean hasPermission(CommandSender sender, String permision, String message) {
+//	return hasPermission(sender, permision, true, message);
+//    }
+//
+//    public boolean hasPermission(CommandSender sender, String permision, lm message) {
+//	return hasPermission(sender, permision, true, getLM().getMessage(message));
+//    }
+//
+//    public boolean hasPermission(CommandSender sender, String permision, Boolean output, String message) {
+//	if (sender == null)
+//	    return false;
+//	if (sender instanceof ConsoleCommandSender) {
+//	    return true;
+//	} else if (sender instanceof Player) {
+//	    if (sender.hasPermission(permision))
+//		return true;
+//	    if (output) {
+//		String outMsg = getLM().getMessage(lm.General_NoPermission);
+//		if (message != null)
+//		    outMsg = message;
+//
+//		RawMessage rm = new RawMessage();
+//		rm.add(outMsg, "§2" + permision);
+//		rm.show(sender);
+//		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+//		console.sendMessage(ChatColor.RED + sender.getName() + " No permission -> " + permision);
+//	    }
+//	}
+//	return false;
+//    }
 
     public static Residence getInstance() {
 	return instance;

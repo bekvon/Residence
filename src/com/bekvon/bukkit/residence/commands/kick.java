@@ -15,6 +15,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class kick implements cmd {
@@ -55,7 +56,7 @@ public class kick implements cmd {
 
 	if (res.getPlayersInResidence().contains(targetplayer)) {
 
-	    if (plugin.hasPermission(targetplayer, "residence.command.kick.bypass")) {
+	    if (ResPerm.command_kick_bypass.hasPermission(targetplayer)) {
 		plugin.msg(sender, lm.Residence_CantKick);
 		return true;
 	    }
