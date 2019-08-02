@@ -748,7 +748,8 @@ public class Residence extends JavaPlugin {
 		}
 		FlagPermissions.initValidFlags();
 
-		setWorldEdit();
+		if (smanager == null)
+		    setWorldEdit();
 		setWorldGuard();
 
 		setKingdoms();
@@ -993,6 +994,8 @@ public class Residence extends JavaPlugin {
     }
 
     public SelectionManager getSelectionManager() {
+	if (smanager == null)
+	    setWorldEdit();
 	return smanager;
     }
 
