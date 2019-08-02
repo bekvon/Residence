@@ -13,6 +13,7 @@ import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.Debug;
@@ -146,7 +147,7 @@ public class HelpEntry {
 	    } else {
 		if (GlobalFlags.getFlags().containsKey(entry.getName().toLowerCase())) {
 		    Boolean state = GlobalFlags.getFlags().get(entry.getName().toLowerCase());
-		    if (!state && !resadmin && !sender.hasPermission("residence.flag." + entry.getName().toLowerCase())) {
+		    if (!state && !resadmin && !ResPerm.flag_$1.hasPermission(sender, entry.getName().toLowerCase())) {
 			continue;
 		    }
 

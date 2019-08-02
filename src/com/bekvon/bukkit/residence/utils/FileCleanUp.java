@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
@@ -65,7 +66,7 @@ public class FileCleanUp {
 	    if (dif < interval)
 		continue;
 
-	    if (ResidenceVaultAdapter.hasPermission(player, "residence.cleanbypass", res.getWorld()))
+	    if (ResidenceVaultAdapter.hasPermission(player, ResPerm.cleanbypass.getPermission(), res.getWorld()))
 		continue;
 
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());

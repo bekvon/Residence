@@ -29,6 +29,7 @@ import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
 public class FlagPermissions {
 
@@ -942,7 +943,7 @@ public class FlagPermissions {
     public List<String> getPosibleFlags(Player player, boolean residence, boolean resadmin) {
 	Set<String> flags = new HashSet<String>();
 	for (Entry<String, Boolean> one : Residence.getInstance().getPermissionManager().getAllFlags().getFlags().entrySet()) {
-	    if (!one.getValue() && !resadmin && !player.hasPermission(new Permission("residence.flag." + one.getKey().toLowerCase(), PermissionDefault.FALSE)))
+	    if (!one.getValue() && !resadmin && !ResPerm.flag_$1.hasSetPermission(player, one.getKey().toLowerCase()))
 		continue;
 
 	    if (!residence && !getAllPosibleFlags().contains(one.getKey()))

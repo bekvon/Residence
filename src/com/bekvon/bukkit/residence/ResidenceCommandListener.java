@@ -61,7 +61,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 	if (command.getName().equals("resreload") && args.length == 0) {
 	    if (sender instanceof Player) {
 		Player player = (Player) sender;
-		if (plugin.getPermissionManager().isResidenceAdmin(player) && player.hasPermission("residence.topadmin")) {
+		if (plugin.getPermissionManager().isResidenceAdmin(player) && ResPerm.topadmin.hasPermission(player)) {
 		    plugin.reloadPlugin();
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded config.");
 		    System.out.println("[Residence] Reloaded by " + player.getName() + ".");
@@ -74,8 +74,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 	    return true;
 	}
 	if (command.getName().equals("resload")) {
-	    if (!(sender instanceof Player) || sender instanceof Player && plugin.getPermissionManager().isResidenceAdmin(sender) && ((Player) sender).hasPermission(
-		"residence.topadmin")) {
+	    if (!(sender instanceof Player) || sender instanceof Player && plugin.getPermissionManager().isResidenceAdmin(sender) && ResPerm.topadmin.hasPermission(sender)) {
 		try {
 		    plugin.loadYml();
 		    sender.sendMessage(ChatColor.GREEN + "[Residence] Reloaded save file...");

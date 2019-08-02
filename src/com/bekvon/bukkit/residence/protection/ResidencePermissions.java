@@ -21,6 +21,7 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
 public class ResidencePermissions extends FlagPermissions {
 
@@ -293,7 +294,7 @@ public class ResidencePermissions extends FlagPermissions {
 		Residence.getInstance().msg(sender, lm.General_NoPermission);
 		return false;
 	    }
-	    if (!hasFlagAccess(this.getOwner(), flag) && !sender.hasPermission("residence.flag." + flag.toLowerCase())) {
+	    if (!hasFlagAccess(this.getOwner(), flag) && !ResPerm.flag_$1.hasPermission(sender, flag.toLowerCase())) {
 		Residence.getInstance().msg(sender, lm.Flag_SetFailed, flag);
 		return false;
 	    }

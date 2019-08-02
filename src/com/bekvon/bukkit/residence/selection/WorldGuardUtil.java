@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
@@ -57,7 +58,7 @@ public class WorldGuardUtil implements WorldGuardInterface {
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 
 	    for (ProtectedRegion one : regions.getRegions()) {
-		if (!player.hasPermission("residence.worldguard." + one.getId()))
+		if (!ResPerm.worldguard_$1.hasPermission(player, one.getId()))
 		    return one;
 	    }
 	} catch (Exception | IncompatibleClassChangeError e) {

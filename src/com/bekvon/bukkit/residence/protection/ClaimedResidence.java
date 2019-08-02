@@ -1071,7 +1071,7 @@ public class ClaimedResidence {
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 	    if (res != null && player != null && !res.getPermissions().playerHas(player, Flags.tp, FlagCombo.TrueOrNone)
-		&& !player.hasPermission("residence.admin.tp"))
+		&& !ResPerm.admin_tp.hasPermission(player))
 		continue;
 
 	    found = true;
@@ -1270,9 +1270,9 @@ public class ClaimedResidence {
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
 
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
-	boolean bypassDelay = targetPlayer.hasPermission("residence.tpdelaybypass");
+	boolean bypassDelay = ResPerm.tpdelaybypass.hasPermission(targetPlayer);
 
-	if (!resadmin && !isAdmin && !reqPlayer.hasPermission("residence.tpbypass")
+	if (!resadmin && !isAdmin && !ResPerm.bypass_$1.hasPermission(reqPlayer, Flags.tp)
 	    && (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer)
 		&& Residence.getInstance().getConfigManager().isCanTeleportIncludeOwner())) {
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(reqPlayer);

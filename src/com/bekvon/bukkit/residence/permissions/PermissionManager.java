@@ -27,6 +27,8 @@ import org.bukkit.plugin.Plugin;
 import com.Zrips.CMI.Modules.Permissions.PermissionInfo;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.commands.flags;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.PlayerGroup;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
@@ -98,7 +100,7 @@ public class PermissionManager {
     }
 
     public boolean isResidenceAdmin(CommandSender sender) {
-	return (sender.hasPermission("residence.admin") || (sender.isOp() && plugin.getConfigManager().getOpsAreAdmins()));
+	return (ResPerm.admin_move.hasPermission(sender) || (sender.isOp() && plugin.getConfigManager().getOpsAreAdmins()));
     }
 
     private void checkPermissions() {
@@ -206,7 +208,18 @@ public class PermissionManager {
 	command_message_enter_remove("Allows to remove residence enter message"),
 	command_message_leave_remove("Allows to remove residence leave message"),
 
+	cleanbypass("Prevents residence from ebing removed on automatic cleanup"),
+	worldguard_$1("Allows to create residence inside region","region"),
+	flag_$1("Gives access to defined flag","flagName"),
+	tpdelaybypass("Allows to bypass teleport delay"),
+	backup("Allows to use backup flag to save residence into schematics"),
+	admin_tp("Allows teleportation into residence where its not allowed"),
+	topadmin("Defines as residence top admin"),
+	admin("Defines as residence admin"),
+	admin_move("Allows movement in residence where its not allowed"),
 	newguyresidence("Creates residence on first chest place"),
+	bypass_ignorey("Allows to ignore Y corrdiante restrictions"),
+	bypass_ignoreyinsubzone("Allows to ignore subzone limitations"),
 	bypass_destroy("Allows to bypass destroy flag"),
 	bypass_build("Allows to bypass build flag"),
 	bypass_container("Allows to bypass container flag"),
@@ -242,6 +255,7 @@ public class PermissionManager {
 //	prewards_$1("Allows to get particular playtime reward"),
 //	colors_$1_$star("Allows all color usage in particular areas", "type"),
 //	command_repair("", false),
+	versioncheck("Shows when we have new version of plugin"),
 	command_$1("", false),
 	command_$1_others("Allows to perform command on another player", "commandName"),
 	command_$1_$2("", false);
@@ -325,6 +339,10 @@ public class PermissionManager {
 
 	public boolean hasPermission(CommandSender sender, lm lm, String... extra) {
 	    return hasPermission(sender, true, true, null, lm, extra);
+	}
+
+	public boolean hasPermission(CommandSender sender, Flags flag) {
+	    return hasPermission(sender, false, flag.toString());
 	}
 
 	public boolean hasPermission(CommandSender sender, String... extra) {

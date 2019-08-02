@@ -26,6 +26,7 @@ import com.bekvon.bukkit.residence.containers.SelectionSides;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -38,8 +39,8 @@ public class SelectionManager {
 
     public static final int MIN_HEIGHT = 0;
 
-    Permission ignoreyPermission = new Permission("residence.bypass.ignorey", PermissionDefault.FALSE);
-    Permission ignoreyinsubzonePermission = new Permission("residence.bypass.ignoreyinsubzone", PermissionDefault.FALSE);
+    Permission ignoreyPermission = new Permission(ResPerm.bypass_ignorey.getPermission(), PermissionDefault.FALSE);
+    Permission ignoreyinsubzonePermission = new Permission(ResPerm.bypass_ignoreyinsubzone.getPermission(), PermissionDefault.FALSE);
 
     public enum selectionType {
 	noLimits, ignoreY, residenceBounds;

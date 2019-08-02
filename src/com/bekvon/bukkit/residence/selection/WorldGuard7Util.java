@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -26,7 +27,7 @@ public class WorldGuard7Util implements WorldGuardInterface {
 
     @Override
     public ProtectedRegion getRegion(Player player, CuboidArea area) {
-	
+
 	if (area == null)
 	    return null;
 
@@ -46,11 +47,11 @@ public class WorldGuard7Util implements WorldGuardInterface {
 	    ProtectedRegion region = new ProtectedCuboidRegion(id, min, max);
 
 	    RegionManager mgr = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc1.getWorld()));
-	    
+
 	    ApplicableRegionSet regions = mgr.getApplicableRegions(region);
 
 	    for (ProtectedRegion one : regions.getRegions()) {
-		if (!player.hasPermission("residence.worldguard." + one.getId()))
+		if (!ResPerm.worldguard_$1.hasPermission(player, one.getId()))
 		    return one;
 	    }
 	} catch (Exception | IncompatibleClassChangeError e) {
@@ -68,9 +69,9 @@ public class WorldGuard7Util implements WorldGuardInterface {
 	    return false;
 
 	plugin.msg(player, lm.Select_WorldGuardOverlap, Region.getId());
-	Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMinimumPoint().getBlockX(),
+	Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player).getWorld(), Region.getMinimumPoint().getBlockX(),
 	    Region.getMinimumPoint().getBlockY(), Region.getMinimumPoint().getBlockZ());
-	Location highLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), Region.getMaximumPoint().getBlockX(),
+	Location highLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player).getWorld(), Region.getMaximumPoint().getBlockX(),
 	    Region.getMaximumPoint().getBlockY(), Region.getMaximumPoint().getBlockZ());
 	Visualizer v = new Visualizer(player);
 	v.setAreas(plugin.getSelectionManager().getSelectionCuboid(player));
