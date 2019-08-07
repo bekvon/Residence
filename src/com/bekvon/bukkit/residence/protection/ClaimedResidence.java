@@ -964,7 +964,6 @@ public class ClaimedResidence {
     }
 
     public Location getMiddleFreeLoc(Location insideLoc, Player player) {
-	Debug.D("d");
 	CuboidArea area = this.getAreaByLoc(insideLoc);
 	if (area == null) {
 	    return insideLoc;

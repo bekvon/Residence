@@ -100,7 +100,7 @@ public class PermissionManager {
     }
 
     public boolean isResidenceAdmin(CommandSender sender) {
-	return (ResPerm.admin_move.hasPermission(sender) || (sender.isOp() && plugin.getConfigManager().getOpsAreAdmins()));
+	return (ResPerm.admin.hasPermission(sender) || (sender.isOp() && plugin.getConfigManager().getOpsAreAdmins()));
     }
 
     private void checkPermissions() {
