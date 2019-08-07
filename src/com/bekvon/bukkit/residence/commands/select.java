@@ -162,6 +162,10 @@ public class select implements cmd {
 		}
 	    }
 	    plugin.getSelectionManager().clearSelection(target);
+
+	    plugin.getSelectionManager().placeLoc1(player, player.getLocation().clone(), false);
+	    plugin.getSelectionManager().placeLoc2(player, player.getLocation().clone().add(0, 1, 0), true);
+
 	    plugin.getAutoSelectionManager().switchAutoSelection(target);
 	    return true;
 	}
