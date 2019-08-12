@@ -18,11 +18,8 @@ public class confirm implements cmd {
     @CommandAnnotation(simple = true, priority = 2400)
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
 	Player player = null;
-	String name = "Console";
-	if (sender instanceof Player) {
-	    player = (Player) sender;
-	    name = player.getName();
-	}
+	String name = sender.getName();
+
 	if (args.length != 1)
 	    return true;
 

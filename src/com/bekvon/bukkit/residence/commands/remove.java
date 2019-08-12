@@ -64,8 +64,7 @@ public class remove implements cmd {
 	    return true;
 	}
 
-	if (plugin.deleteConfirm.containsKey(senderName))
-	    plugin.deleteConfirm.remove(senderName);
+	plugin.deleteConfirm.remove(senderName);
 
 	String resname = res.getName();
 
