@@ -222,6 +222,8 @@ public class PermissionManager {
 	bypass_build("Allows to bypass build flag"),
 	bypass_container("Allows to bypass container flag"),
 	bypass_use("Allows to bypass use flag"),
+	bypass_door("Allows to bypass door flag"),
+	bypass_button("Allows to bypass button flag"),
 	bypass_fly("Allows to bypass fly flag"),
 	bypass_nofly("Allows to bypass nofly flag"),
 	bypass_tp("Allows to bypass command flag"),

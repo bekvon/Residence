@@ -24,6 +24,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SetFlag {
 
@@ -144,6 +145,7 @@ public class SetFlag {
 
     @SuppressWarnings("incomplete-switch")
     public void recalculateResidence(ClaimedResidence res) {
+	Debug.D("ss");
 
 	if (flags == null)
 	    flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
@@ -188,7 +190,6 @@ public class SetFlag {
 	}
 
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
-	int i = 0;
 
 	if (targetPlayer == null)
 	    TempPermMap.remove("admin");
@@ -213,6 +214,7 @@ public class SetFlag {
 	    permMap.put(one.getKey(), one.getValue());
 	}
 
+	int i = -1;
 	for (Entry<String, Object> one : permMap.entrySet()) {
 	    i++;
 	    ItemStack MiscInfo = Residence.getInstance().getConfigManager().getGuiRemove();
@@ -352,7 +354,6 @@ public class SetFlag {
 	}
 
 	Inventory GuiInv = Bukkit.createInventory(null, 54, title);
-	int i = 0;
 
 	TempPermMap = (LinkedHashMap<String, Object>) Residence.getInstance().getSortingManager().sortByKeyASC(TempPermMap);
 
@@ -374,8 +375,9 @@ public class SetFlag {
 	    permMap.put(one.getKey(), one.getValue());
 	}
 
+	int i = -1;
 	for (Entry<String, Object> one : permMap.entrySet()) {
-
+	    i++;
 	    ItemStack MiscInfo = Residence.getInstance().getConfigManager().getGuiRemove();
 
 	    switch ((FlagState) one.getValue()) {
@@ -434,10 +436,9 @@ public class SetFlag {
 	    MiscInfoMeta.setLore(lore);
 
 	    MiscInfo.setItemMeta(MiscInfoMeta);
-	    GuiInv.setItem(i, MiscInfo);
-	    i++;
 	    if (i > 53)
 		break;
+	    GuiInv.setItem(i, MiscInfo);
 	}
 	ItemStack Item = new ItemStack(Material.ARROW);
 
