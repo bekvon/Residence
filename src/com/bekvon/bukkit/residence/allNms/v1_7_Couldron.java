@@ -69,6 +69,11 @@ public class v1_7_Couldron implements NMS {
     }
 
     @Override
+    public ItemStack itemInOffHand(Player player) {
+	return null;
+    }
+
+    @Override
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	return false;
     }

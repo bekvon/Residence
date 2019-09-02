@@ -1228,14 +1228,11 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	Player player = event.getPlayer();
 
-	if (!plugin.getNms().isMainHand(event))
-	    return;
-
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
 
-	ItemStack iih = plugin.getNms().itemInMainHand(player);
+	ItemStack iih = event.getItem();
 	CMIMaterial heldItem = CMIMaterial.get(iih);
 
 	Material mat = block.getType();

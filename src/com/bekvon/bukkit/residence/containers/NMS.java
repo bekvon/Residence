@@ -32,4 +32,6 @@ public interface NMS {
     public boolean isChorusTeleport(TeleportCause tpcause);
 
     void playEffect(Player player, Location location, CMIEffect ef);
+
+    ItemStack itemInOffHand(Player player);
 }

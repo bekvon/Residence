@@ -108,6 +108,11 @@ public class v1_14_R1 implements NMS {
     }
 
     @Override
+    public ItemStack itemInOffHand(Player player) {
+	return player.getInventory().getItemInOffHand();
+    }
+
+    @Override
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	if (tpcause == TeleportCause.CHORUS_FRUIT)
 	    return true;

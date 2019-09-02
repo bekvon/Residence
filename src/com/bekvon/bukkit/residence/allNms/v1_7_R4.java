@@ -52,7 +52,6 @@ public class v1_7_R4 implements NMS {
 	return false;
     }
 
-
     @Override
     public boolean isSpectator(GameMode mode) {
 	return false;
@@ -67,6 +66,11 @@ public class v1_7_R4 implements NMS {
     @Override
     public ItemStack itemInMainHand(Player player) {
 	return player.getInventory().getItemInHand();
+    }
+
+    @Override
+    public ItemStack itemInOffHand(Player player) {
+	return null;
     }
 
     @Override

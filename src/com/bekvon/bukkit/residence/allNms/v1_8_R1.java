@@ -55,7 +55,7 @@ public class v1_8_R1 implements NMS {
     public boolean isArmorStandEntity(EntityType ent) {
 	return ent == EntityType.ARMOR_STAND;
     }
-	
+
     @Override
     public boolean isSpectator(GameMode mode) {
 	return mode == GameMode.SPECTATOR;
@@ -70,6 +70,11 @@ public class v1_8_R1 implements NMS {
     @Override
     public ItemStack itemInMainHand(Player player) {
 	return player.getInventory().getItemInHand();
+    }
+
+    @Override
+    public ItemStack itemInOffHand(Player player) {
+	return null;
     }
 
     @Override

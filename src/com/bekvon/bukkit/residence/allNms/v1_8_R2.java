@@ -73,6 +73,11 @@ public class v1_8_R2 implements NMS {
     }
 
     @Override
+    public ItemStack itemInOffHand(Player player) {
+	return null;
+    }
+
+    @Override
     public boolean isChorusTeleport(TeleportCause tpcause) {
 	return false;
     }
