@@ -1317,6 +1317,17 @@ public class ResidencePlayerListener implements Listener {
 			}
 
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			    switch (checkMat.getValue()) {
+			    case door:
+				if (ResPerm.bypass_door.hasPermission(player))
+				    continue;
+				break;
+			    case button:
+				if (ResPerm.bypass_button.hasPermission(player))
+				    continue;
+				break;
+			    }
+
 			    event.setCancelled(true);
 			    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
 			    return;
