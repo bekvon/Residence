@@ -24,7 +24,6 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class SetFlag {
 
@@ -215,7 +214,7 @@ public class SetFlag {
 	}
 
 	for (Entry<String, Object> one : permMap.entrySet()) {
-
+	    i++;
 	    ItemStack MiscInfo = Residence.getInstance().getConfigManager().getGuiRemove();
 
 	    switch ((FlagState) one.getValue()) {
@@ -244,7 +243,7 @@ public class SetFlag {
 		flagName = flag.getName();
 	    if (flagName == null)
 		flagName = "Unknown";
-	    
+
 	    // Can it be null?
 	    if (MiscInfoMeta == null)
 		continue;
@@ -274,10 +273,9 @@ public class SetFlag {
 	    MiscInfoMeta.setLore(lore);
 
 	    MiscInfo.setItemMeta(MiscInfoMeta);
-	    GuiInv.setItem(i, MiscInfo);
-	    i++;
 	    if (i > 53)
 		break;
+	    GuiInv.setItem(i, MiscInfo);
 	}
 
 	ItemStack Item = new ItemStack(Material.ARROW);
@@ -409,7 +407,7 @@ public class SetFlag {
 	    // Can it be null?
 	    if (MiscInfoMeta == null)
 		continue;
-	    
+
 	    MiscInfoMeta.setDisplayName(ChatColor.GREEN + flagName);
 
 	    List<String> lore = new ArrayList<String>();

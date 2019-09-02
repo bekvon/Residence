@@ -724,14 +724,12 @@ public class ResidencePermissions extends FlagPermissions {
 	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
 	    String flagString = "";
-	    int i = 0;
 	    for (String flag : flags) {
-		i++;
 		if (this.setPlayerFlag(sender, target, flag, state, resadmin, false)) {
 		    changed = true;
-		    flagString += flag;
-		    if (i < flags.size() - 1)
+		    if (!flagString.isEmpty())
 			flagString += ", ";
+		    flagString += flag;
 		}
 	    }
 	    if (flagString.length() > 0)
