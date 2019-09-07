@@ -1214,7 +1214,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     private static boolean placingMinecart(Block block, ItemStack item) {
-	if (block.getType().name().contains("RAIL") && item.getType().name().contains("MINECART"))
+	if (block != null && block.getType().name().contains("RAIL") && item != null && item.getType().name().contains("MINECART"))
 	    return true;
 	return false;
     }
