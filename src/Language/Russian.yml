@@ -427,7 +427,7 @@ Language:
     cmdPermissionColor: '&2'
   General:
     DisabledWorld: '&cПлагин Residence отключен в этом мире'
-    UseNumbers: '&cПожалуйста, используйте номерs...'
+    UseNumbers: '&cПожалуйста, используйте номер...'
     # Replace all text with '' to disable this message
     CantPlaceLava: '&cВы не можете разместить лаву за пределами резиденции и выше
       уровня блока &6%1 '
@@ -502,7 +502,7 @@ Language:
     Name: '&eНазвание: &6%1'
     Lists: '&eСписки: &6'
     Residences: '&eРезиденции&6'
-    CreatedOn: '&eСоздатель: &6%1'
+    CreatedOn: '&eСоздана: &6%1'
     Owner: '&eВладелец: &6%1'
     World: '&eМир: &6%1'
     Subzones: '&eПодзона'
