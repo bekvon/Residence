@@ -216,7 +216,7 @@ Language:
     PlayerNotIn: '&cИгрок стоит не в вашей резиденции.'
     Kicked: '&eВас кикнули из резиденции'
     CantKick: '&eНе могу кикнуть этого игрока'
-    In: '&eYou are standing in Residence &6%1'
+    In: '&eВы стоите в резиденции &6%1'
     OwnerChange: '&eВ резиденции &6%1 &eизменился владелец. Им стал &6%2'
     NonAdmin: '&cВы не администратор резиденции.'
     Line: '&eРезиденция: &6%1 '
@@ -385,7 +385,7 @@ Language:
     VotesList: ' &e%1. &6%2 &e%3 &7%4'
     NoDesc: '&6Без описания'
     Desc: |-
-      &6Description:
+      &6Описание:
       %1
     DescChange: '&6Описание изменено на: %1'
     NewBoard: '&6Успешно добавлена новая вывеска магазина'
@@ -895,7 +895,7 @@ CommandHelp:
               Description: Дать лайк для магазина резиденции
               Info:
               - '&eПишите: &6/res shop like <резиденция>'
-              - Gives like for residence shop
+              - Дает лайк для магазин резиденции
             votes:
               Description: Показать голоса магазина
               Info:
@@ -1315,7 +1315,7 @@ CommandHelp:
               - '&eПишите: &6/res set <резиденция> night true/false/remove'
             nofly:
               Translated: nofly
-              Description: Allows or denys fly in residence
+              Description: Разрешает или запрещает летать по резиденции
               Info:
               - '&eПишите: &6/res set/pset <резиденция> nofly true/false/remove'
             fly:
