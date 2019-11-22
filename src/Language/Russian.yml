@@ -487,7 +487,7 @@ Language:
     LandCost: '&eСтоимость земли: &6%1'
     'True': '&2ВКЛ'
     'False': '&cОТКЛ'
-    Removed: '&6Удаление'
+    Removed: '&6Удален'
     FlagState: '&eСтатус флага: %1'
     Land: '&eЗемля: &6%1'
     Cost: '&eСтоимость: &6%1 &eза &6%2 &eдней'
@@ -661,10 +661,10 @@ CommandHelp:
           Description: Контракты резиденции в направлении, котором вы ищете
           Info:
           - '&eПишите: &6/res contract (резиденция) [количество]'
-          - Contracts residence in direction you looking.
-          - Residence name is optional
+          - Контракты резиденции в направлении, котором Вы ищете.
+          - Название резиденции необязательно
         check:
-          Description: Check flag state for you
+          Description: Проверьте состояние вашего флага
           Info:
           - '&eПишите: &6/res check [резиденция] [флаг] (игрок)'
         gset:
@@ -930,10 +930,10 @@ CommandHelp:
           Info:
           - '&eПишите: &6/res lset <резиденция> [blacklist/ignorelist] [material]'
           - '&eПишите: &6/res lset <резиденция> Info'
-          - Blacklisting a material prevents it from being placed in the residence.
-          - Ignorelist causes a specific material to not be protected by Residence.
+          - Внесение в черный список материала предотвращает его размещение в резиденции.
+          - Игнорирование приводит к тому, что конкретный материал не защищен Резиденцией.
         pset:
-          Description: Set flags on a specific player for a Residence.
+          Description: Установите флаги на конкретного игрока в резиденции
           Info:
           - '&eПишите: &6/res pset <резиденция> [игрок] [флаг] [true/false/remove]'
           - '&eПишите: &6/res pset <резиденция> [игрок] removeall'
