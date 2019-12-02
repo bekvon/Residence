@@ -1158,7 +1158,7 @@ public class ClaimedResidence {
 	    rm.clear();
 	}
 
-	plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, "res sublist " + this.getName());
+	plugin.getInfoPageManager().ShowPagination(sender, pi, "res sublist " + this.getName());
     }
 
     public void printAreaList(Player player, int page) {

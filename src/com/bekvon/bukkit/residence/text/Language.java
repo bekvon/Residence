@@ -1,5 +1,7 @@
 package com.bekvon.bukkit.residence.text;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.YmlMaker;
 
 public class Language {
@@ -25,8 +28,22 @@ public class Language {
      * Reloads the config
      */
     public void LanguageReload() {
-	customlocale = new YmlMaker(plugin, "Language/" + plugin.getConfigManager().getLanguage() + ".yml").getConfig();
-	enlocale = new YmlMaker(plugin, "Language/English.yml").getConfig();
+	File f = new File(plugin.getDataFolder(), "Language" + File.separator + plugin.getConfigManager().getLanguage() + ".yml");
+	if (!f.isFile())
+	    try {
+		f.createNewFile();
+	    } catch (IOException e2) {
+		e2.printStackTrace();
+	    }
+	f = new File(plugin.getDataFolder(), "Language" + File.separator + "English.yml");
+	if (!f.isFile())
+	    try {
+		f.createNewFile();
+	    } catch (IOException e2) {
+		e2.printStackTrace();
+	    }
+	customlocale = new YmlMaker(plugin, "Language" + File.separator + plugin.getConfigManager().getLanguage() + ".yml").getConfig();
+	enlocale = new YmlMaker(plugin, "Language" + File.separator + "English.yml").getConfig();
 	if (customlocale == null)
 	    customlocale = enlocale;
     }
@@ -82,13 +99,13 @@ public class Language {
 	if (customlocale == null || !customlocale.contains(key))
 	    message = enlocale.contains(key) == true ? enlocale.getString(key) : missing;
 	message = customlocale.contains(key) == true ? customlocale.getString(key) : missing;
-
 	for (int i = 1; i <= variables.length; i++) {
 	    String vr = String.valueOf(variables[i - 1]);
 	    if (variables[i - 1] instanceof Flags)
 		vr = ((Flags) variables[i - 1]).getName();
 	    message = message.replace("%" + i, vr);
 	}
+
 	return ChatColor.translateAlternateColorCodes('&', message);
     }
 

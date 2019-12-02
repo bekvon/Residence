@@ -392,7 +392,7 @@ public enum lm {
     Permissions_variableColor("&f"),
     Permissions_permissionColor("&6"),
     Permissions_cmdPermissionColor("&2"),
-    
+
     General_DisabledWorld("&cResidence plugin is disabled in this world"),
     General_UseNumbers("&cPlease use numbers..."),
     General_CantPlaceLava("&cYou can't place lava outside residence and higher than &6%1 &cblock level", "Replace all text with '' to disable this message"),
@@ -433,8 +433,22 @@ public enum lm {
     General_TotalWorth("&eTotal worth of residence: &6%1 &e(&6%2&e)"),
     General_TotalSubzones("&eSubzones in residence: &6%1 &e(&6%2&e)"),
     General_NotOnline("&eTarget player must be online."),
-    General_NextInfoPage("&2| &eNext Page &2>>>"),
-    General_PrevInfoPage("&2<<< &ePrev Page &2|"),
+
+    General_prevPage("&2----<< &6Prev "),
+    General_prevPageGui("&6Previous page "),
+    General_prevPageClean("&6Prev "),
+    General_prevPageOff("&2----<< &7Prev "),
+    General_prevPageHover("&7<<<"),
+    General_firstPageHover("&7|<"),
+    General_nextPage("&6 Next &2>>----"),
+    General_nextPageGui("&6Next Page"),
+    General_nextPageClean("&6 Next"),
+    General_nextPageOff("&7 Next &2>>----"),
+    General_nextPageHover("&7>>>"),
+    General_lastPageHover("&7>|"),
+    General_pageCount("&2%1&7/&2%2"),
+    General_pageCountHover("&e%1 entries"),
+
     General_GenericPages("&ePage &6%1 &eof &6%2 &e(&6%3&e)"),
     General_WorldEditNotFound("&cWorldEdit was not detected."),
     General_CoordsTop("&eX:&6%1 &eY:&6%2 &eZ:&6%3"),

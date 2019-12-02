@@ -45,7 +45,7 @@ public class area implements cmd {
 			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
-		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+		if (plugin.getSelectionManager().hasPlacedBoth(player)) {
 		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
 		    if (res != null) {
 			if (res.addArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[3], resadmin))
@@ -63,7 +63,7 @@ public class area implements cmd {
 			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
-		if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+		if (plugin.getSelectionManager().hasPlacedBoth(player)) {
 		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
 		    if (res != null) {
 			res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[3], resadmin);

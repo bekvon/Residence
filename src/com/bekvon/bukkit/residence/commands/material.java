@@ -15,7 +15,6 @@ import com.bekvon.bukkit.residence.containers.lm;
 
 public class material implements cmd {
 
-    @SuppressWarnings("deprecation")
     @Override
     @CommandAnnotation(simple = true, priority = 4300)
     public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {

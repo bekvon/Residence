@@ -133,7 +133,7 @@ public class lease implements cmd {
 			plugin.msg(player, lm.Economy_LeaseList, pi.getPositionForOutput(), one.getName(), "", "");
 		}
 
-		plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), pi.getCurrentPage(), "res lease list " + res.getName());
+		plugin.getInfoPageManager().ShowPagination(sender, pi, "res lease list " + res.getName());
 
 		return true;
 	    }

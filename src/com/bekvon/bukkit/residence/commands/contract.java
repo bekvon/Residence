@@ -84,7 +84,7 @@ public class contract implements cmd {
 	if (!plugin.getSelectionManager().contract(player, amount))
 	    return true;
 
-	if (plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+	if (plugin.getSelectionManager().hasPlacedBoth(player)) {
 	    res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);
 	    return true;
 	}

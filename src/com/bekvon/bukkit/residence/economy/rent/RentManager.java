@@ -851,7 +851,7 @@ public class RentManager implements MarketRentInterface {
 	    }
 	}
 
-	plugin.getInfoPageManager().ShowPagination(player, pi.getTotalPages(), page, "/res market list rent");
+	plugin.getInfoPageManager().ShowPagination(player, pi, "/res market list rent");
 
     }
 

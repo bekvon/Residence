@@ -112,7 +112,7 @@ public class HelpEntry {
 
 	String baseCmd = resadmin ? "resadmin" : "res";
 	String cmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " : "/" + baseCmd + " ? ";
-	Residence.getInstance().getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, cmd);
+	Residence.getInstance().getInfoPageManager().ShowPagination(sender, pi, cmd);
     }
 
     public void printHelp(CommandSender sender, int page, String path, boolean resadmin) {

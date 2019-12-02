@@ -284,13 +284,13 @@ public class SetFlag {
 
 	ItemMeta meta = Item.getItemMeta();
 	if (page > 1) {
-	    meta.setDisplayName(Residence.getInstance().msg(lm.General_PrevInfoPage));
+	    meta.setDisplayName(Residence.getInstance().msg(lm.General_prevPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
 
 	if (page < pageCount) {
-	    meta.setDisplayName(Residence.getInstance().msg(lm.General_NextInfoPage));
+	    meta.setDisplayName(Residence.getInstance().msg(lm.General_nextPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(53, Item);
 	}
@@ -444,12 +444,12 @@ public class SetFlag {
 
 	ItemMeta meta = Item.getItemMeta();
 	if (page > 1) {
-	    meta.setDisplayName(Residence.getInstance().msg(lm.General_PrevInfoPage));
+	    meta.setDisplayName(Residence.getInstance().msg(lm.General_prevPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(45, Item);
 	}
 	if (page < pageCount) {
-	    meta.setDisplayName(Residence.getInstance().msg(lm.General_NextInfoPage));
+	    meta.setDisplayName(Residence.getInstance().msg(lm.General_nextPage));
 	    Item.setItemMeta(meta);
 	    GuiInv.setItem(53, Item);
 	}

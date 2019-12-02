@@ -121,7 +121,7 @@ public class shop implements cmd {
 		player.sendMessage(message);
 	    }
 
-	    plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, "/res shop votes " + res.getName());
+	    plugin.getInfoPageManager().ShowPagination(sender, pi, "/res shop votes " + res.getName());
 
 	    return true;
 	}
@@ -179,7 +179,7 @@ public class shop implements cmd {
 		rm.show(sender);
 	    }
 
-	    plugin.getInfoPageManager().ShowPagination(sender, pi.getTotalPages(), page, "/res shop list");
+	    plugin.getInfoPageManager().ShowPagination(sender, pi, "/res shop list");
 
 	    return true;
 	}

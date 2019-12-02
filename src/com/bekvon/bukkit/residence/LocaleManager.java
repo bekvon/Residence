@@ -58,6 +58,12 @@ public class LocaleManager {
     public void LoadLang(String lang) {
 
 	File f = new File(plugin.getDataFolder(), "Language" + File.separator + lang + ".yml");
+	if(!f.isFile())
+	    try {
+		f.createNewFile();
+	    } catch (IOException e2) {
+		e2.printStackTrace();
+	    }
 	BufferedReader in = null;
 	try {
 	    in = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
