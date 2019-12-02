@@ -11,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ItemList {
 
@@ -48,7 +49,8 @@ public class ItemList {
 	    list.remove(mat);
 	    return false;
 	}
-	list.add(mat);
+	if (mat != null)
+	    list.add(mat);
 	return true;
     }
 
@@ -106,12 +108,16 @@ public class ItemList {
 		}
 		if (parse == -1) {
 		    try {
-			list.add(CMIMaterial.get(item.toUpperCase()).getMaterial());
+			Material mat = CMIMaterial.get(item.toUpperCase()).getMaterial();
+			if (mat != null)
+			    list.add(mat);
 		    } catch (Exception ex) {
 		    }
 		} else {
 		    try {
-			list.add(CMIMaterial.get(parse).getMaterial());
+			Material mat = CMIMaterial.get(parse).getMaterial();
+			if (mat != null)
+			    list.add( mat);
 		    } catch (Exception ex) {
 		    }
 		}
@@ -168,7 +174,9 @@ public class ItemList {
 	    @SuppressWarnings("unchecked")
 	    List<String> list = (List<String>) map.get("ItemList");
 	    for (String item : list) {
-		newlist.add(Material.valueOf(item));
+		CMIMaterial cmat = CMIMaterial.get(item);
+		if (cmat != null && cmat.getMaterial() != null)
+		    newlist.add(cmat.getMaterial());
 	    }
 	} catch (Exception ex) {
 	}

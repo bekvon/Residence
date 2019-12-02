@@ -113,9 +113,8 @@ public class ResidenceEntityListener implements Listener {
 	if (ent instanceof Projectile && ent.getType().toString().equalsIgnoreCase("Splash_potion")) {
 	    for (PotionEffect one : ((ThrownPotion) ent).getEffects()) {
 		for (String oneHarm : Residence.getInstance().getConfigManager().getNegativePotionEffects()) {
-		    if (oneHarm.equalsIgnoreCase(one.getType().getName())) {
+		    if (oneHarm.equalsIgnoreCase(one.getType().getName()))
 			return true;
-		    }
 		}
 	    }
 	}

@@ -145,8 +145,6 @@ public class SetFlag {
 
     @SuppressWarnings("incomplete-switch")
     public void recalculateResidence(ClaimedResidence res) {
-	Debug.D("ss");
-
 	if (flags == null)
 	    flags = res.getPermissions().getPosibleFlags(player, true, this.admin);
 

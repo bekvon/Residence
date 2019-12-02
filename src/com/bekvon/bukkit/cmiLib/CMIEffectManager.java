@@ -289,7 +289,7 @@ public class CMIEffectManager {
 	}
 
 	public Material getIcon() {
-	    return icon;
+	    return icon == null ? Material.STONE : icon;
 	}
 
 	public static List<CMIParticle> getParticleList() {

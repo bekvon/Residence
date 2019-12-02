@@ -191,25 +191,28 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.CRAFTING_TABLE.getMaterial(), Flags.table);
 
 	for (CMIMaterial one : CMIMaterial.values()) {
-	    if (one.isDoor() && one.getMaterial() != null)
+	    if (one.getMaterial() == null)
+		continue;
+
+	    if (one.isDoor())
 		matUseFlagList.put(one.getMaterial(), Flags.door);
 
-	    if (one.isGate() && one.getMaterial() != null)
+	    if (one.isGate())
 		matUseFlagList.put(one.getMaterial(), Flags.door);
 
-	    if (one.isTrapDoor() && one.getMaterial() != null)
+	    if (one.isTrapDoor())
 		matUseFlagList.put(one.getMaterial(), Flags.door);
 
-	    if (one.isShulkerBox() && one.getMaterial() != null)
+	    if (one.isShulkerBox())
 		matUseFlagList.put(one.getMaterial(), Flags.container);
 
-	    if (one.isButton() && one.getMaterial() != null)
+	    if (one.isButton())
 		matUseFlagList.put(one.getMaterial(), Flags.button);
 
-	    if (one.isBed() && one.getMaterial() != null)
+	    if (one.isBed())
 		matUseFlagList.put(one.getMaterial(), Flags.bed);
 
-	    if (one.isPotted() && one.getMaterial() != null)
+	    if (one.isPotted())
 		matUseFlagList.put(one.getMaterial(), Flags.flowerpot);
 	}
 
@@ -235,7 +238,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.DROPPER, Flags.container);
 	addMaterialToUseFlag(Material.FURNACE, Flags.container);
 	addMaterialToUseFlag(CMIMaterial.FURNACE.getMaterial(), Flags.container);
-	
+
 	addMaterialToUseFlag(CMIMaterial.BARREL.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.BLAST_FURNACE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.CARTOGRAPHY_TABLE.getMaterial(), Flags.container);
@@ -247,7 +250,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.COMPOSTER.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.STONECUTTER.getMaterial(), Flags.container);
-	
+
 	addMaterialToUseFlag(Material.DISPENSER, Flags.container);
 	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
     }
