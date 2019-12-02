@@ -3,6 +3,8 @@ package com.bekvon.bukkit.residence.containers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.bukkit.ChatColor;
+
 public enum lm {
     Invalid_Player("&cInvalid player name..."),
     Invalid_World("&cInvalid world..."),
@@ -41,6 +43,9 @@ public enum lm {
     Area_Rename("&eRenamed area &6%1 &eto &6%2"),
     Area_Remove("&eRemoved area &6%1..."),
     Area_Name("&eName: &2%1"),
+
+    Area_ListAll("&a{&eID:&c%1 &eP1:&c(%2,%3,%4) &eP2:&c(%5,%6,%7) &e(Size:&c%8&e)&a}"),
+
     Area_RemoveLast("&cCannot remove the last area in a residence."),
     Area_NotWithinParent("&cArea is not within parent area."),
     Area_Update("&eArea Updated..."),
@@ -428,6 +433,7 @@ public enum lm {
     General_ListRemoved("&eList removed..."),
     General_ListCreate("&eCreated list &6%1"),
     General_PhysicalAreas("&ePhysical Areas"),
+
     General_CurrentArea("&eCurrent Area: &6%1"),
     General_TotalResSize("&eTotal size: &6%1m\u00B3 (%2m\u00B2)"),
     General_TotalWorth("&eTotal worth of residence: &6%1 &e(&6%2&e)"),

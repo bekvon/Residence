@@ -1176,11 +1176,10 @@ public class ClaimedResidence {
 	    CuboidArea a = entry.getValue();
 	    Location h = a.getHighLoc();
 	    Location l = a.getLowLoc();
-	    temp.add(ChatColor.GREEN + "{" + ChatColor.YELLOW + "ID:" + ChatColor.RED + entry.getKey() + " "
-		+ ChatColor.YELLOW + "P1:" + ChatColor.RED + "(" + h.getBlockX() + "," + h.getBlockY() + ","
-		+ h.getBlockZ() + ") " + ChatColor.YELLOW + "P2:" + ChatColor.RED + "(" + l.getBlockX() + ","
-		+ l.getBlockY() + "," + l.getBlockZ() + ") " + ChatColor.YELLOW + "(Size:" + ChatColor.RED
-		+ a.getSize() + ChatColor.YELLOW + ")" + ChatColor.GREEN + "} ");
+	    if (this.getPermissions().has(Flags.coords, FlagCombo.OnlyFalse))
+		temp.add(plugin.msg(lm.Area_ListAll, entry.getKey(), 0, 0, 0, 0, 0, 0, a.getSize()));
+	    else
+		temp.add(plugin.msg(lm.Area_ListAll, entry.getKey(), h.getBlockX(), h.getBlockY(), h.getBlockZ(), l.getBlockX(), l.getBlockY(), l.getBlockZ(), a.getSize()));
 	}
 	plugin.getInfoPageManager().printInfo(player, "res area listall " + this.getName(),
 	    plugin.msg(lm.General_PhysicalAreas), temp, page);
