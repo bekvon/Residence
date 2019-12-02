@@ -44,7 +44,7 @@ public enum lm {
     Area_Remove("&eRemoved area &6%1..."),
     Area_Name("&eName: &2%1"),
 
-    Area_ListAll("&a{&eID:&c%1 &eP1:&c(%2,%3,%4) &eP2:&c(%5,%6,%7) &e(Size:&c%8&e)&a}"),
+    Area_ListAll("&a{&eID:&c%1 &eP1:&c(%2,%3,%4) &eP2:&c(%5,%6,%7) &e(Size:&c%8&e)&a}"), 
 
     Area_RemoveLast("&cCannot remove the last area in a residence."),
     Area_NotWithinParent("&cArea is not within parent area."),
