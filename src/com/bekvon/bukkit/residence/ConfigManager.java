@@ -868,7 +868,8 @@ public class ConfigManager {
 	ELMessageType old = c.getC().isBoolean("Global.ActionBar.General") && c.getC().getBoolean("Global.ActionBar.General") ? ELMessageType.ActionBar : ELMessageType.ChatBox;
 	old = c.getC().isBoolean("Global.TitleBar.EnterLeave") && c.getC().getBoolean("Global.TitleBar.EnterLeave") ? ELMessageType.TitleBar : old;
 
-	c.addComment("Global.Messages.GeneralMessages", "Defines where you want to send residence enter/leave/deny move and similar messages. Possible options: " + ELMessageType.getAllValuesAsString());
+	c.addComment("Global.Messages.GeneralMessages", "Defines where you want to send residence enter/leave/deny move and similar messages. Possible options: " + ELMessageType.getAllValuesAsString(),
+	    "TitleBar can have %subtitle% variable to define second line");
 	EnterLeaveMessageType = ELMessageType.getByName(c.get("Global.Messages.GeneralMessages", old.toString()));
 	if (EnterLeaveMessageType == null || Version.isCurrentEqualOrLower(Version.v1_7_R4))
 	    EnterLeaveMessageType = ELMessageType.ChatBox;

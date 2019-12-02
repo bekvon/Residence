@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ActionBarTitleMessages {
     private static Object packet;
@@ -125,6 +126,13 @@ public class ActionBarTitleMessages {
 
 		String t = title == null ? null : CMIChatColor.translateAlternateColorCodes((String) title);
 		String s = subtitle == null ? null : CMIChatColor.translateAlternateColorCodes((String) subtitle);
+
+		if (t != null && s == null && t.contains("%subtitle%")) {
+		    s = t.split("%subtitle%")[1];
+		    t = t.split("%subtitle%")[0];
+		    t = t == null ? null : CMIChatColor.translateAlternateColorCodes(t);
+		    s = s == null ? null : CMIChatColor.translateAlternateColorCodes(s);
+		}
 
 		if (simpleTitleMessages) {
 		    receivingPacket.sendMessage(t);
