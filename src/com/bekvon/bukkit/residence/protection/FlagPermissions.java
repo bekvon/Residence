@@ -939,7 +939,7 @@ public class FlagPermissions {
 	return t;
     }
 
-    public ArrayList<String> getposibleAreaFlags() {
+    public static ArrayList<String> getPosibleAreaFlags() {
 	return FlagPermissions.validAreaFlags;
     }
 

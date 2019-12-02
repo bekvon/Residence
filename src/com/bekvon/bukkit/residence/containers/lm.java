@@ -428,7 +428,7 @@ public enum lm {
     General_TeleportTitleTime("&6%1"),
     General_TeleportCanceled("&eTeleportation canceled!"),
     General_NoTeleportConfirm("&eThere is no teleports waiting for confirmation!"),
-    General_HelpPageHeader("&eHelp Pages - &6%1 &e- Page <&6%2 &eof &6%3&e>"),
+    General_HelpPageHeader2("&eHelp Pages - &6%1 &e- Page <&6%2 &eof &6%3&e>"),
     General_ListExists("&cList already exists..."),
     General_ListRemoved("&eList removed..."),
     General_ListCreate("&eCreated list &6%1"),

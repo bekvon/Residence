@@ -80,9 +80,9 @@ public class HelpEntry {
 	    return;
 	}
 
-	String separator = Residence.getInstance().msg(lm.InformationPage_SmallSeparator);
+//	String separator = Residence.getInstance().msg(lm.InformationPage_SmallSeparator);
 
-	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pi.getTotalPages()) + " " + separator);
+//	sender.sendMessage(separator + " " + Residence.getInstance().msg(lm.General_HelpPageHeader, path, page, pi.getTotalPages()) + " " + separator);
 
 	for (int i = pi.getStart(); i <= pi.getEnd(); i++) {
 	    if (helplines.get(i).getCommand() != null) {
@@ -386,7 +386,19 @@ public class HelpEntry {
 			break;
 		    case "[flag]":
 
-			for (String one : Residence.getInstance().getPermissionManager().getAllFlags().getAllPosibleFlags()) {
+			for (String one : FlagPermissions.getAllPosibleFlags()) {
+
+			    Flags f = Flags.getFlag(one);
+
+			    if (f != null) {
+				if (!f.isGlobalyEnabled())
+				    continue;
+				subCommands.add(f.getName());
+			    }
+			    subCommands.add(one);
+
+			}
+			for (String one : FlagPermissions.getPosibleAreaFlags()) {
 
 			    Flags f = Flags.getFlag(one);
 

@@ -41,7 +41,7 @@ public class area implements cmd {
 		return true;
 	    } else if (args[1].equals("add")) {
 		if (plugin.getWorldEdit() != null) {
-		    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTooldID()) {
+		    if (plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool())) {
 			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
@@ -59,7 +59,7 @@ public class area implements cmd {
 		return true;
 	    } else if (args[1].equals("replace")) {
 		if (plugin.getWorldEdit() != null) {
-		    if (plugin.getWorldEdit().getConfig().getInt("wand-item") == plugin.getConfigManager().getSelectionTooldID()) {
+		    if (plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool())) {
 			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
