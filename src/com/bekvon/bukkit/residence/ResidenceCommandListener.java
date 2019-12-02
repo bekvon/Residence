@@ -12,12 +12,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceCommandListener implements CommandExecutor {
 
@@ -112,7 +115,6 @@ public class ResidenceCommandListener implements CommandExecutor {
 	    } else {
 		resadmin = true;
 	    }
-
 	    if (args.length > 0 && args[args.length - 1].equalsIgnoreCase("?") || args.length > 1 && args[args.length - 2].equals("?")) {
 		return commandHelp(args, resadmin, sender, command);
 	    }
@@ -150,8 +152,15 @@ public class ResidenceCommandListener implements CommandExecutor {
 		return commandHelp(new String[] { "?" }, resadmin, sender, command);
 	    }
 
-	    if (!resadmin && !ResPerm.command_$1.hasPermission(sender, args[0].toLowerCase()))
+	    if (!resadmin && !ResPerm.command_$1.hasPermission(sender, args[0].toLowerCase())) {
+		RawMessage rm = new RawMessage();
+		rm.add(plugin.msg(lm.General_NoPermission), "&2" + ResPerm.command_$1.getPermission(args[0].toLowerCase()));
+		rm.show(sender);
+
+		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+		plugin.msg(console, plugin.msg(lm.General_NoPermission) + " " + ResPerm.command_$1.getPermission(args[0].toLowerCase()));
 		return true;
+	    }
 
 	    if (!resadmin && player != null && plugin.resadminToggle.contains(player.getName())) {
 		if (!plugin.getPermissionManager().isResidenceAdmin(player)) {
