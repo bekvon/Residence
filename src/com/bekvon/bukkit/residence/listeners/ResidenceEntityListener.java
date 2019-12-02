@@ -57,6 +57,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -106,6 +107,10 @@ public class ResidenceEntityListener implements Listener {
     private static boolean isTamed(Entity ent) {
 	return (ent instanceof Tameable ? ((Tameable) ent).isTamed() : false);
     }
+    
+    private static boolean damageableProjectile(Entity ent) {
+	return ent instanceof Arrow || ent instanceof Projectile && ent.getType().toString().equalsIgnoreCase("Trident");
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(EntityDamageByEntityEvent event) {
@@ -123,10 +128,10 @@ public class ResidenceEntityListener implements Listener {
 
 	Entity damager = event.getDamager();
 
-	if (!(damager instanceof Arrow) && !(damager instanceof Player))
+	if (!damageableProjectile(damager) && !(damager instanceof Player))
 	    return;
 
-	if (damager instanceof Arrow && !(((Arrow) damager).getShooter() instanceof Player))
+	if (damageableProjectile(damager) && !(((Projectile) damager).getShooter() instanceof Player))
 	    return;
 
 	Player cause = null;
@@ -134,7 +139,7 @@ public class ResidenceEntityListener implements Listener {
 	if (damager instanceof Player) {
 	    cause = (Player) damager;
 	} else {
-	    cause = (Player) ((Arrow) damager).getShooter();
+	    cause = (Player) ((Projectile) damager).getShooter();
 	}
 
 	if (cause == null)
@@ -178,10 +183,10 @@ public class ResidenceEntityListener implements Listener {
 
 	Entity damager = event.getCombuster();
 
-	if (!(damager instanceof Arrow) && !(damager instanceof Player))
+	if (!damageableProjectile(damager) && !(damager instanceof Player))
 	    return;
 
-	if (damager instanceof Arrow && !(((Arrow) damager).getShooter() instanceof Player))
+	if (damageableProjectile(damager) && !(((Projectile) damager).getShooter() instanceof Player))
 	    return;
 
 	Player cause = null;
@@ -189,7 +194,7 @@ public class ResidenceEntityListener implements Listener {
 	if (damager instanceof Player) {
 	    cause = (Player) damager;
 	} else {
-	    cause = (Player) ((Arrow) damager).getShooter();
+	    cause = (Player) ((Projectile) damager).getShooter();
 	}
 
 	if (cause == null)
@@ -324,10 +329,10 @@ public class ResidenceEntityListener implements Listener {
 
 	Entity damager = event.getDamager();
 
-	if (!(damager instanceof Arrow) && !(damager instanceof Player))
+	if (!damageableProjectile(damager) && !(damager instanceof Player))
 	    return;
 
-	if (damager instanceof Arrow && !(((Arrow) damager).getShooter() instanceof Player))
+	if (damageableProjectile(damager) && !(((Projectile) damager).getShooter() instanceof Player))
 	    return;
 
 	Player cause = null;
@@ -335,7 +340,7 @@ public class ResidenceEntityListener implements Listener {
 	if (damager instanceof Player) {
 	    cause = (Player) damager;
 	} else {
-	    cause = (Player) ((Arrow) damager).getShooter();
+	    cause = (Player) ((Projectile) damager).getShooter();
 	}
 
 	if (cause == null)
@@ -1043,10 +1048,10 @@ public class ResidenceEntityListener implements Listener {
 
 	Entity damager = event.getCombuster();
 
-	if (!(damager instanceof Arrow) && !(damager instanceof Player))
+	if (!damageableProjectile(damager) && !(damager instanceof Player))
 	    return;
 
-	if (damager instanceof Arrow && !(((Arrow) damager).getShooter() instanceof Player))
+	if (damageableProjectile(damager) && !(((Projectile) damager).getShooter() instanceof Player))
 	    return;
 
 	Player cause = null;
@@ -1054,7 +1059,7 @@ public class ResidenceEntityListener implements Listener {
 	if (damager instanceof Player) {
 	    cause = (Player) damager;
 	} else {
-	    cause = (Player) ((Arrow) damager).getShooter();
+	    cause = (Player) ((Projectile) damager).getShooter();
 	}
 
 	if (cause == null)
@@ -1136,18 +1141,18 @@ public class ResidenceEntityListener implements Listener {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
-	if (!(event.getDamager() instanceof Arrow))
+	if (!damageableProjectile(event.getDamager()))
 	    return;
 
 	if (event.getEntity() == null || !(event.getEntity() instanceof Player))
 	    return;
 
-	Arrow arrow = (Arrow) event.getDamager();
+	Projectile projectile = (Projectile) event.getDamager();
 
-	FlagPermissions perms = plugin.getPermsByLoc(arrow.getLocation());
+	FlagPermissions perms = plugin.getPermsByLoc(projectile.getLocation());
 
 	if (!perms.has(Flags.pvp, FlagCombo.TrueOrNone))
-	    arrow.setFireTicks(0);
+	    projectile.setFireTicks(0);
     }
 
     @EventHandler
