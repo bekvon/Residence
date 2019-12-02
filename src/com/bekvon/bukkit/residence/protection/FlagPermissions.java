@@ -22,7 +22,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import com.bekvon.bukkit.cmiLib.RawMessage;
-import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;

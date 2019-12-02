@@ -47,8 +47,7 @@ import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
-import com.bekvon.bukkit.cmiLib.ItemManager;
-import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.cmiLib.VersionChecker;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
@@ -445,7 +444,6 @@ public class Residence extends JavaPlugin {
 	    instance = this;
 	    initsuccess = false;
 	    versionChecker = new VersionChecker(this);
-	    ItemManager.load();
 	    deleteConfirm = new HashMap<String, String>();
 	    resadminToggle = new ArrayList<String>();
 	    server = this.getServer();

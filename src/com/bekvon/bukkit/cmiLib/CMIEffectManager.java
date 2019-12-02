@@ -9,7 +9,6 @@ import java.util.List;
 import org.bukkit.Effect;
 import org.bukkit.Effect.Type;
 
-import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 
 import org.bukkit.Material;

@@ -4,8 +4,8 @@ import java.util.Set;
 
 import org.bukkit.inventory.ItemStack;
 
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
-import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
 import com.bekvon.bukkit.residence.Residence;
 
 public class FlagUtil {

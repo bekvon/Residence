@@ -57,8 +57,8 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
-import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.ItemReflection;
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.CMIReflections;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -1548,7 +1548,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.dye, FlagCombo.OnlyFalse)) {
 	    ItemStack iih = plugin.getNms().itemInMainHand(player);
-	    ItemStack iiho = ItemReflection.getItemInOffHand(player);
+	    ItemStack iiho = CMIReflections.getItemInOffHand(player);
 	    if (iih == null && iiho == null)
 		return;
 	    if (iih != null && !CMIMaterial.isDye(iih.getType()) && iiho != null && !CMIMaterial.isDye(iiho.getType()))
@@ -1582,7 +1582,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.shear, FlagCombo.OnlyFalse)) {
 	    ItemStack iih = plugin.getNms().itemInMainHand(player);
-	    ItemStack iiho = ItemReflection.getItemInOffHand(player);
+	    ItemStack iiho = CMIReflections.getItemInOffHand(player);
 	    if (iih == null && iiho == null)
 		return;
 	    if (iih != null && !CMIMaterial.SHEARS.equals(iih.getType()) && iiho != null && !CMIMaterial.SHEARS.equals(iiho.getType()))

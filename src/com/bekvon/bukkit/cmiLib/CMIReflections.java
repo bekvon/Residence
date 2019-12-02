@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 
 
-public class ItemReflection {
+public class CMIReflections {
 
     private static Class<?> CraftServerClass;
     private static Object CraftServer;

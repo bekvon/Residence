@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
-import com.bekvon.bukkit.cmiLib.ItemManager.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.containers.ELMessageType;
 import com.bekvon.bukkit.residence.containers.EconomyType;
