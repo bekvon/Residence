@@ -188,7 +188,7 @@ public class ConfigManager {
     protected List<CMIMaterial> customContainers = new ArrayList<CMIMaterial>();
     protected List<CMIMaterial> customBothClick = new ArrayList<CMIMaterial>();
     protected List<CMIMaterial> customRightClick = new ArrayList<CMIMaterial>();
-    protected List<CMIMaterial> CleanBlocks = new ArrayList<CMIMaterial>();
+    protected List<Material> CleanBlocks = new ArrayList<Material>();
 
     protected List<String> NoFlowWorlds;
     protected List<String> AutoCleanUpWorlds;
@@ -321,7 +321,7 @@ public class ConfigManager {
 	    conf.set("Global.FlagPermission." + fl, fl.isEnabled());
 	}
 
-	if (!conf.isConfigurationSection("Global.FlagGui")){
+	if (!conf.isConfigurationSection("Global.FlagGui")) {
 	    conf.createSection("Global.FlagGui");
 	}
 
@@ -335,7 +335,7 @@ public class ConfigManager {
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
 
 	for (Flags fl : Flags.values()) {
-	    guiSection.set(fl.toString(), guiSection.get(fl.toString(),fl.getIcon().toString()));
+	    guiSection.set(fl.toString(), guiSection.get(fl.toString(), fl.getIcon().toString()));
 	}
 
 	try {
@@ -750,7 +750,8 @@ public class ConfigManager {
 	// Res cleaning
 	c.addComment("Global.AntiGreef.ResCleaning.Use",
 	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
-	    "Effective way to prevent residence creating near greefing target and then remove it");
+	    "Effective way to prevent residence creating near greefing target and then remove it",
+	    "ATTENTION! Bigger residence areas could want to create bigger loads on server when cleaning up areas. So dont use this if regular player have access to huge residences. 15 million blocks would be a max limit");
 	UseClean = c.get("Global.AntiGreef.ResCleaning.Use", true);
 	c.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
 	CleanLevel = c.get("Global.AntiGreef.ResCleaning.Level", 63);
@@ -758,8 +759,8 @@ public class ConfigManager {
 	List<?> pls = c.getList("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(CMIMaterial.WATER.toString(), CMIMaterial.LAVA.toString()));
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
-	    if (mat != CMIMaterial.NONE)
-		CleanBlocks.add(mat);
+	    if (mat != CMIMaterial.NONE && mat.getMaterial() != null)
+		CleanBlocks.add(mat.getMaterial());
 	}
 
 	CleanWorlds = c.get("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName));
@@ -1712,7 +1713,7 @@ public class ConfigManager {
 	return customRightClick;
     }
 
-    public List<CMIMaterial> getCleanBlocks() {
+    public List<Material> getCleanBlocks() {
 	return CleanBlocks;
     }
 

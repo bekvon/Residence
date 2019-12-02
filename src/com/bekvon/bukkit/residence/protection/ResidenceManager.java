@@ -523,36 +523,50 @@ public class ResidenceManager implements ResidenceInterface {
 	    residences.remove(name.toLowerCase());
 
 	    if (plugin.getConfigManager().isUseClean() && plugin.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
-		for (CuboidArea area : res.getAreaArray()) {
 
-		    Location low = area.getLowLoc();
-		    Location high = area.getHighLoc();
+		CuboidArea[] arr = res.getAreaArray();
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+		    @Override
+		    public void run() {
+			for (CuboidArea area : arr) {
+			    Location low = area.getLowLoc().clone();
+			    Location high = area.getHighLoc().clone();
 
-		    if (high.getBlockY() > plugin.getConfigManager().getCleanLevel()) {
+			    if (high.getBlockY() > plugin.getConfigManager().getCleanLevel()) {
 
-			if (low.getBlockY() < plugin.getConfigManager().getCleanLevel())
-			    low.setY(plugin.getConfigManager().getCleanLevel());
+				if (low.getBlockY() < plugin.getConfigManager().getCleanLevel())
+				    low.setY(plugin.getConfigManager().getCleanLevel());
 
-			World world = low.getWorld();
+				World world = low.getWorld();
 
-			Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
+				Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
 
-			for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
-			    temploc.setX(x);
-			    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
-				temploc.setY(y);
-				for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
-				    temploc.setZ(z);
-				    if (!temploc.getChunk().isLoaded())
-					temploc.getChunk().load();
-				    if (plugin.getConfigManager().getCleanBlocks().contains(CMIMaterial.get(temploc.getBlock()))) {
-					temploc.getBlock().setType(Material.AIR);
+				Bukkit.getScheduler().runTask(plugin, () -> {
+				    Long blocks = 0L;
+				    for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+					temploc.setX(x);
+					for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+					    temploc.setZ(z);
+					    for (int y = low.getBlockY(); y <= world.getHighestBlockAt(x, z).getY(); y++) {
+						temploc.setY(y);
+
+						if (!temploc.getChunk().isLoaded()) {
+						    temploc.getChunk().load();
+						}
+						if (plugin.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getType())) {
+						    temploc.getBlock().setType(Material.AIR);
+						}
+
+						blocks++;
+					    }
+					}
 				    }
-				}
+				});
 			    }
 			}
+			return;
 		    }
-		}
+		});
 	    }
 
 	    if (plugin.getConfigManager().isRemoveLwcOnDelete())
