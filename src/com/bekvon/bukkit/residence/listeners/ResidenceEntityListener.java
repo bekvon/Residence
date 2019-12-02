@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Tameable;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.Witch;
 import org.bukkit.event.EventHandler;
@@ -107,9 +108,18 @@ public class ResidenceEntityListener implements Listener {
     private static boolean isTamed(Entity ent) {
 	return (ent instanceof Tameable ? ((Tameable) ent).isTamed() : false);
     }
-    
+
     private static boolean damageableProjectile(Entity ent) {
-	return ent instanceof Arrow || ent instanceof Projectile && ent.getType().toString().equalsIgnoreCase("Trident");
+	if (ent instanceof Projectile && ent.getType().toString().equalsIgnoreCase("Splash_potion")) {
+	    for (PotionEffect one : ((ThrownPotion) ent).getEffects()) {
+		for (String oneHarm : Residence.getInstance().getConfigManager().getNegativePotionEffects()) {
+		    if (oneHarm.equalsIgnoreCase(one.getType().getName())) {
+			return true;
+		    }
+		}
+	    }
+	}
+	return ent instanceof Arrow || ent instanceof Projectile && (ent.getType().toString().equalsIgnoreCase("Trident"));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -980,6 +990,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	boolean harmfull = false;
+
 	mein: for (PotionEffect one : event.getPotion().getEffects()) {
 	    for (String oneHarm : plugin.getConfigManager().getNegativePotionEffects()) {
 		if (oneHarm.equalsIgnoreCase(one.getType().getName())) {
