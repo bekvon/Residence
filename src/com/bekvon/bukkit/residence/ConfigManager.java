@@ -616,9 +616,9 @@ public class ConfigManager {
 		    int MaxCoord = c.get(path + "MaxCoord", 1000);
 
 		    if (!commented)
-			c.addComment(path + "MinCord",
+			c.addComment(path + "MinCoord",
 			    "If maxcord set to 1000 and mincord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
-		    int MinCord = c.get(path + "MinCord", 500);
+		    int MinCoord = c.get(path + "MinCoord", c.getC().getInt(path + "MinCord", 500));
 		    int CenterX = c.get(path + "CenterX", 0);
 		    int CenterZ = c.get(path + "CenterZ", 0);
 
@@ -634,7 +634,7 @@ public class ConfigManager {
 
 		    if (!enabled)
 			continue;
-		    RTeleport.add(new RandomTeleport(w, MaxCoord, MinCord, CenterX, CenterZ));
+		    RTeleport.add(new RandomTeleport(w, MaxCoord, MinCoord, CenterX, CenterZ));
 		}
 	}
 	for (World one : worlds) {
