@@ -34,13 +34,21 @@ public class auto implements cmd {
 
 	String resName = null;
 
-	if (args.length > 1)
+	int lenght = -1;
+	if (args.length == 2)
+	    try {
+		lenght = Integer.parseInt(args[1]);
+	    } catch (Exception | Error e) {
+
+	    }
+
+	if (args.length > 1 && lenght == -1)
 	    resName = args[1];
 	else
 	    resName = player.getName();
 
-	int lenght = -1;
 	if (args.length == 3) {
+	    resName = args[1];
 	    try {
 		lenght = Integer.parseInt(args[2]);
 	    } catch (Exception ex) {
@@ -84,7 +92,6 @@ public class auto implements cmd {
 
 	int minY = loc.getBlockY() - rY;
 	int maxY = loc.getBlockY() + rY;
-	Debug.D(minY + " " + maxY + " " + rY + "  " + Y);
 
 	if (maxY - minY + 1 < Y)
 	    maxY++;
