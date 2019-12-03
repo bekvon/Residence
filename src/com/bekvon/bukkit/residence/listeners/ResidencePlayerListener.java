@@ -970,13 +970,17 @@ public class ResidencePlayerListener implements Listener {
 	case "DIODE":
 	case "DIODE_BLOCK_OFF":
 	case "DIODE_BLOCK_ON":
+	case "COMPARATOR":
+	case "REPEATER":
 	case "REDSTONE_COMPARATOR":
 	case "REDSTONE_COMPARATOR_OFF":
 	case "REDSTONE_COMPARATOR_ON":
 	case "BED_BLOCK":
 	case "WORKBENCH":
+	case "CRAFTING_TABLE":
 	case "BREWING_STAND":
 	case "ENCHANTMENT_TABLE":
+	case "ENCHANTING_TABLE":
 	case "DAYLIGHT_DETECTOR":
 	case "DAYLIGHT_DETECTOR_INVERTED":
 	    return true;
@@ -1234,6 +1238,7 @@ public class ResidencePlayerListener implements Listener {
 	CMIMaterial heldItem = CMIMaterial.get(iih);
 
 	Material mat = block.getType();
+	Debug.D(mat.toString());
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || isCanUseEntity_BothClick(mat, block))) {
 	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
@@ -1290,6 +1295,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
+
 	    boolean hasUseBypass = ResPerm.bypass_use.hasPermission(player);
 	    boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player);
 	    boolean hasuse = perms.playerHas(player, Flags.use, true) || hasUseBypass;
