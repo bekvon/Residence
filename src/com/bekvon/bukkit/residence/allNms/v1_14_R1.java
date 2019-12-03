@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_14_R1.CraftParticle;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Bat;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cod;
 import org.bukkit.entity.Cow;
@@ -84,7 +85,8 @@ public class v1_14_R1 implements NMS {
 	    ent instanceof Turtle ||
 	    ent instanceof Dolphin ||
 	    ent instanceof Fox ||
-	    ent instanceof Panda);
+	    ent instanceof Panda||
+	    ent instanceof Cat); 
     }
 
     @Override
