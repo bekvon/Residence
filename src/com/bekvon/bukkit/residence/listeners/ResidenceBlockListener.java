@@ -44,6 +44,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
+import com.bekvon.bukkit.cmiLib.CMIBlock;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
@@ -206,7 +207,7 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.getItemManager().isIgnored(mat, group, world)) {
 	    return;
 	}
-	
+
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 	if (plugin.getConfigManager().enabledRentSystem() && res != null) {
 	    String resname = res.getName();
@@ -399,6 +400,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChestPlaceNearResidence(BlockPlaceEvent event) {
+
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
@@ -445,7 +447,6 @@ public class ResidenceBlockListener implements Listener {
 	    ActionBarTitleMessages.send(player, plugin.msg(lm.General_CantPlaceChest));
 	    event.setCancelled(true);
 	}
-
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -632,6 +633,20 @@ public class ResidenceBlockListener implements Listener {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
 	    return;
+	}
+
+	if (CMIMaterial.isBed(mat)) {
+	    CMIBlock cb = new CMIBlock(block);
+	    Block sec = cb.getSecondaryBedBlock();
+	    if (sec != null) {
+		perms = plugin.getPermsByLocForPlayer(sec.getLocation(), player);
+		hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
+		if (!hasplace && !ResPerm.bypass_build.hasPermission(player)) {
+		    event.setCancelled(true);
+		    plugin.msg(player, lm.Flag_Deny, Flags.place);
+		    return;
+		}
+	    }
 	}
     }
 
