@@ -65,8 +65,8 @@ public class v1_13Events implements Listener {
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 	try {
-	    CMIMaterial mat = CMIMaterial.get(event.getChangedType());
-	    if (mat != CMIMaterial.FARMLAND)
+
+	    if (!event.getChangedType().toString().equalsIgnoreCase("FARMLAND"))
 		return;
 
 	    FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
