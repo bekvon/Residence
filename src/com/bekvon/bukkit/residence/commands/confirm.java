@@ -27,7 +27,7 @@ public class confirm implements cmd {
 	if (area == null) {
 	    plugin.msg(sender, lm.Invalid_Residence);
 	} else {
-	    plugin.getResidenceManager().removeResidence(player, area, resadmin);
+	    plugin.getResidenceManager().removeResidence(sender instanceof Player ? (Player) sender : null, area, resadmin);
 	    plugin.deleteConfirm.remove(name);
 	}
 

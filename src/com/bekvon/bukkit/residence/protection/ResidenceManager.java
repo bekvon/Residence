@@ -568,7 +568,6 @@ public class ResidenceManager implements ResidenceInterface {
 		    }
 		});
 	    }
-
 	    if (plugin.getConfigManager().isRemoveLwcOnDelete())
 		removeLwcFromResidence(player, res);
 	    if (regenerate) {
@@ -576,7 +575,6 @@ public class ResidenceManager implements ResidenceInterface {
 		    plugin.getSelectionManager().regenerate(one);
 		}
 	    }
-
 	    plugin.msg(player, lm.Residence_Remove, name);
 	} else {
 	    String[] split = name.split("\\.");
