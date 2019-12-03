@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class auto implements cmd {
 
@@ -65,6 +66,10 @@ public class auto implements cmd {
 		Z = group.getMaxZ();
 	    else
 		Z = lenght;
+	    if (lenght > group.getMaxY())
+		Y = group.getMaxY();
+	    else
+		Y = lenght;
 	}
 
 	int rX = (X - 1) / 2;
@@ -79,6 +84,7 @@ public class auto implements cmd {
 
 	int minY = loc.getBlockY() - rY;
 	int maxY = loc.getBlockY() + rY;
+	Debug.D(minY + " " + maxY + " " + rY + "  " + Y);
 
 	if (maxY - minY + 1 < Y)
 	    maxY++;
@@ -104,6 +110,7 @@ public class auto implements cmd {
 
 	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
 	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
+	Debug.D(minY + " " + maxY);
 	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true);
 
 	if (plugin.getResidenceManager().getByName(resName) != null) {
