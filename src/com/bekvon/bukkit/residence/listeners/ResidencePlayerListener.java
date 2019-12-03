@@ -730,7 +730,7 @@ public class ResidencePlayerListener implements Listener {
 	if (s == null)
 	    return;
 
-	ClaimedResidence res = s.GetResidence();
+	ClaimedResidence res = s.getResidence();
 
 	boolean ForSale = res.isForSell();
 	boolean ForRent = res.isForRent();
@@ -953,13 +953,11 @@ public class ResidencePlayerListener implements Listener {
 	event.setRespawnLocation(loc);
     }
 
-    @SuppressWarnings("deprecation")
     private boolean isContainer(Material mat, Block block) {
 	return FlagPermissions.getMaterialUseFlagList().containsKey(mat) && FlagPermissions.getMaterialUseFlagList().get(mat).equals(Flags.container)
 	    || plugin.getConfigManager().getCustomContainers().contains(CMIMaterial.get(block));
     }
 
-    @SuppressWarnings("deprecation")
     private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
 
 	switch (mat.name()) {
@@ -1094,14 +1092,14 @@ public class ResidencePlayerListener implements Listener {
 	Block block = event.getClickedBlock();
 	if (block == null)
 	    return;
-	CMIMaterial mat = CMIMaterial.get(block);
 	Player player = event.getPlayer();
 	if (player.hasMetadata("NPC"))
 	    return;
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean resadmin = plugin.isResAdminOn(player);
+	CMIMaterial mat = CMIMaterial.get(block);
 	if (!resadmin) {
-	    boolean hasUseBypass = ResPerm.bypass_use.hasPermission(player);
+	    boolean hasUseBypass = ResPerm.bypass_use.hasPermission(player, 100L);
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
 	    if (!hasUseBypass)
@@ -1247,13 +1245,8 @@ public class ResidencePlayerListener implements Listener {
 	if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;
 
-	String world = player.getWorld().getName();
-
-	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
-	PermissionGroup group = resPlayer.getGroup();
-
 	boolean resadmin = plugin.isResAdminOn(player);
-	if (!resadmin && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), group, world)) {
+	if (!resadmin && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
@@ -1302,44 +1295,45 @@ public class ResidencePlayerListener implements Listener {
 	    boolean hasuse = perms.playerHas(player, Flags.use, true) || hasUseBypass;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 	    if (res == null || !res.isOwner(player)) {
-		if (!hasContainerBypass)
-		    for (Entry<Material, Flags> checkMat : FlagPermissions.getMaterialUseFlagList().entrySet()) {
-			if (mat != checkMat.getKey())
-			    continue;
+		if (!hasContainerBypass) {
 
-			if (perms.playerHas(player, checkMat.getValue(), hasuse))
-			    continue;
+		    Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
 
-			if (hasuse || checkMat.getValue().equals(Flags.container)) {
-			    event.setCancelled(true);
-			    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
-			    return;
-			}
+		    if (result != null) {
+			main: if (!perms.playerHas(player, result, hasuse)) {
 
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			    switch (checkMat.getValue()) {
-			    case door:
-				if (ResPerm.bypass_door.hasPermission(player))
-				    continue;
-				break;
-			    case button:
-				if (ResPerm.bypass_button.hasPermission(player))
-				    continue;
-				break;
+			    if (hasuse || result.equals(Flags.container)) {
+				event.setCancelled(true);
+				plugin.msg(player, lm.Flag_Deny, result);
+				return;
 			    }
 
-			    event.setCancelled(true);
-			    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
+			    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				switch (result) {
+				case door:
+				    if (ResPerm.bypass_door.hasPermission(player))
+					break main;
+				    break;
+				case button:
+				    if (ResPerm.bypass_button.hasPermission(player))
+					break main;
+				    break;
+				}
+
+				event.setCancelled(true);
+				plugin.msg(player, lm.Flag_Deny, result);
+				return;
+			    }
+
+			    if (isCanUseEntity_BothClick(mat, block)) {
+				event.setCancelled(true);
+				plugin.msg(player, lm.Flag_Deny, result);
+			    }
 			    return;
 			}
-
-			if (isCanUseEntity_BothClick(mat, block)) {
-			    event.setCancelled(true);
-			    plugin.msg(player, lm.Flag_Deny, checkMat.getValue());
-			}
-
-			return;
 		    }
+
+		}
 	    }
 
 	    if (!hasContainerBypass)
