@@ -637,7 +637,7 @@ public class ResidenceBlockListener implements Listener {
 
 	if (CMIMaterial.isBed(mat)) {
 	    CMIBlock cb = new CMIBlock(block);
-	    Block sec = cb.getSecondaryBedBlock();
+	    Block sec = cb.getSecondaryBedBlock();	    
 	    if (sec != null) {
 		perms = plugin.getPermsByLocForPlayer(sec.getLocation(), player);
 		hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));

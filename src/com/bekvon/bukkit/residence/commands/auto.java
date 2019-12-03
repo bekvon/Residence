@@ -116,7 +116,7 @@ public class auto implements cmd {
 	    }
 	}
 
-	player.performCommand("res create " + resName);
+	player.performCommand((resadmin ? "resadmin" : "res") + " create " + resName);
 	return true;
     }
 
