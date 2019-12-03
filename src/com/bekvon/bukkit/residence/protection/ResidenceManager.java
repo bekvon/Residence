@@ -511,7 +511,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
-	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, player == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
+	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, rPlayer == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
 	plugin.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())
 	    return;
