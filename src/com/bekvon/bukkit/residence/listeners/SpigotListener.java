@@ -29,7 +29,11 @@ public class SpigotListener implements Listener {
 	ItemStack held = Residence.getInstance().getNms().itemInMainHand(player);
 	if (held.getType() == Material.AIR || held.getDurability() <= 0)
 	    return;
-	
+
+	if (held.getType().toString().equalsIgnoreCase("TRIDENT")) {
+	    return;
+	}
+
 	held.setDurability(held.getDurability());
 	player.setItemInHand(held);
 	event.setDamage(0);
