@@ -23,6 +23,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
@@ -120,11 +121,20 @@ public class PermissionManager {
 	    return;
 	}
 
-	p = server.getPluginManager().getPlugin("LuckPerms");
-	if (p != null) {
-	    perms = new LuckPerms4Adapter();
-	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found LuckPerms Plugin!");
-	    return;
+	PluginManager pluginManager = plugin.getServer().getPluginManager();
+	Plugin pl = pluginManager.getPlugin("LuckPerms");
+	if (pl != null && pl.isEnabled()) {
+	    Integer ver = plugin.getVersionChecker().convertVersion(pl.getDescription().getVersion());
+	    if (ver >= 40000 && ver < 50000) {
+		perms = new LuckPerms4Adapter();
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found LuckPerms4 Plugin!");
+		return;
+	    } else if (ver > 50000) {
+		perms = new LuckPerms5Adapter();
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found LuckPerms5 Plugin!");
+		return;
+	    }
+	    plugin.consoleMessage("&cLuckPerms plugin was found but its outdated");
 	}
 
 	p = server.getPluginManager().getPlugin("bPermissions");

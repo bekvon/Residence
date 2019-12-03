@@ -547,7 +547,7 @@ public class ConfigManager {
 
 	c.addComment("Global.Optimizations.ShortInfo.Use",
 	    "By setting this to true, when checking residence info with /res info, you will get only names in list, by hovering on them, you will get flag list");
-	ShortInfoUse = c.get("Global.Optimizations.ShortInfo.Use", false);
+	ShortInfoUse = c.get("Global.Optimizations.ShortInfo.Use", true);
 
 	// Vote range
 	c.addComment("Global.Optimizations.Vote.RangeFrom", "Range players can vote to, by default its from 0 to 10 points");
