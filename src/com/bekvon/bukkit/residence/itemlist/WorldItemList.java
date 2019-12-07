@@ -25,6 +25,8 @@ public class WorldItemList extends ItemList {
     }
 
     public boolean isAllowed(Material mat, String inworld, String ingroup) {
+	if (mat == null)
+	    return true;
 	if (!listApplicable(inworld, ingroup))
 	    return true;
 	return super.isAllowed(mat);

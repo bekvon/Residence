@@ -18,11 +18,9 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 
-import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;
@@ -401,8 +399,6 @@ public class FlagPermissions {
 	    return;
 	}
 	playerFlags.remove(player);
-	cachedPlayerNameUUIDs.remove(player);
-
     }
 
     public void removeAllGroupFlags(String group) {
@@ -1038,8 +1034,7 @@ public class FlagPermissions {
 			    } catch (Exception e) {
 			    }
 			    next = resolvedName;
-			} else if (this.cachedPlayerNameUUIDs.containsKey(next))
-			    next = this.cachedPlayerNameUUIDs.get(next);
+			}
 		    }
 		    if (!perms.equals("none")) {
 			sbuild.append(next).append(ChatColor.WHITE).append("[").append(perms).append(ChatColor.WHITE).append("] ");
@@ -1069,8 +1064,7 @@ public class FlagPermissions {
 			} catch (Exception e) {
 			}
 			next = resolvedName;
-		    } else if (this.cachedPlayerNameUUIDs.containsKey(next))
-			next = this.cachedPlayerNameUUIDs.get(next);
+		    }
 		}
 
 		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))
@@ -1111,8 +1105,7 @@ public class FlagPermissions {
 			} catch (Exception e) {
 			}
 			next = resolvedName;
-		    } else if (this.cachedPlayerNameUUIDs.containsKey(next))
-			next = this.cachedPlayerNameUUIDs.get(next);
+		    }
 		}
 
 		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))

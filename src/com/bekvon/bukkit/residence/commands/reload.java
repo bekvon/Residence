@@ -12,8 +12,8 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class reload implements cmd {
 
@@ -30,7 +30,7 @@ public class reload implements cmd {
 	}
 
 	if (args[1].equalsIgnoreCase("lang")) {
-	    plugin.getLM().LanguageReload();	    
+	    plugin.getLM().LanguageReload();
 	    plugin.getLocaleManager().LoadLang(plugin.getConfigManager().getLanguage());
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded language file.");
 	    return true;
@@ -49,6 +49,9 @@ public class reload implements cmd {
 	    plugin.gmanager = new PermissionManager(plugin);
 	    plugin.imanager = new WorldItemManager(plugin);
 	    plugin.wmanager = new WorldFlagManager(plugin);
+
+	    FlagPermissions.initValidFlags();
+
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded flags file.");
 	    return true;
 	}

@@ -23,12 +23,16 @@ public class WorldItemManager {
     }
 
     public boolean isAllowed(Material mat, PermissionGroup group, String world) {
+	if (mat == null)
+	    return true;
 	if (group == null)
 	    return true;
 	return isAllowed(mat, group.getGroupName(), world);
     }
 
     public boolean isAllowed(Material mat, String group, String world) {
+	if (mat == null)
+	    return true;
 	for (WorldItemList list : lists) {
 	    if (!list.isAllowed(mat, world, group)) {
 		return false;
