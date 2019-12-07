@@ -1238,7 +1238,7 @@ public class ResidencePlayerListener implements Listener {
 	CMIMaterial heldItem = CMIMaterial.get(iih);
 
 	Material mat = block.getType();
-	Debug.D(mat.toString());
+
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || isCanUseEntity_BothClick(mat, block))) {
 	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())

@@ -40,7 +40,7 @@ public class ItemList {
     }
 
     public void add(Material mat) {
-	if (!list.contains(mat))
+	if (!list.contains(mat) && mat != null)
 	    list.add(mat);
     }
 
@@ -59,6 +59,8 @@ public class ItemList {
     }
 
     public boolean isAllowed(Material mat) {
+	if (mat == null)
+	    return true;
 	if (type == ListType.BLACKLIST) {
 	    if (list.contains(mat)) {
 		return false;
@@ -74,6 +76,8 @@ public class ItemList {
     }
 
     public boolean isIgnored(Material mat) {
+	if (mat == null)
+	    return false;
 	if (type == ListType.IGNORELIST) {
 	    if (list.contains(mat)) {
 		return true;
@@ -94,7 +98,6 @@ public class ItemList {
 	return ItemList.readList(node, new ItemList());
     }
 
-    @SuppressWarnings("deprecation")
     protected static ItemList readList(ConfigurationSection node, ItemList list) {
 	ListType type = ListType.valueOf(node.getString("Type", "").toUpperCase());
 	list.type = type;
@@ -117,7 +120,7 @@ public class ItemList {
 		    try {
 			Material mat = CMIMaterial.get(parse).getMaterial();
 			if (mat != null)
-			    list.add( mat);
+			    list.add(mat);
 		    } catch (Exception ex) {
 		    }
 		}
