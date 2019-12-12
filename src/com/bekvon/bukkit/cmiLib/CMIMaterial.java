@@ -1130,6 +1130,8 @@ public enum CMIMaterial {
     }
 
     public void updateMaterial() {
+	if (this.equals(CMIMaterial.NONE))
+	    return;
 	if (mat == null) {
 	    for (Material one : Material.class.getEnumConstants()) {
 		if (!one.name().replace("LEGACY_", "").replace("_", "").equalsIgnoreCase(this.name().replace("_", "")))
