@@ -1033,6 +1033,15 @@ public enum CMIMaterial {
     YELLOW_DYE(null, null, 5952, "Yellow Dye"),
     COMPOSTER(null, null, -4, "Composter"),
 
+    //1.15    
+    BEEHIVE("Beehive"),
+    BEE_NEST("Bee Nest"),
+    BEE_SPAWN_EGG("Bee Spawn Egg"),
+    HONEYCOMB("Honeycomb"),
+    HONEYCOMB_BLOCK("Honeycomb Block"),
+    HONEY_BLOCK("Honey Block"),
+    HONEY_BOTTLE("Honey Bottle"),
+
     // Legacy
     LEGACY_STATIONARY_WATER(9, 0, null, "Stationary Water"),
     LEGACY_STATIONARY_LAVA(11, 0, null, "Stationary Lava"),
@@ -1086,12 +1095,16 @@ public enum CMIMaterial {
 	this(legacyId, legacyData, id, name, "");
     }
 
+    CMIMaterial(String name, String... legacyName) {
+	this(null, null, null, name, legacyName);
+    }
+
     CMIMaterial(Integer legacyId, Integer legacyData, Integer id, String name, String... legacyName) {
 	this.legacyId = legacyId;
 	this.legacyData = legacyData;
 	this.id = id;
 	this.name = name;
-	if (legacyName != null && !legacyName[0].isEmpty())
+	if (legacyName != null && legacyName.length > 0 && !legacyName[0].isEmpty())
 	    this.legacyName = Arrays.asList(legacyName);
     }
 
