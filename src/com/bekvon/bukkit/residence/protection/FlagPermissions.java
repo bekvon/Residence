@@ -235,7 +235,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.HOPPER, Flags.container);
 	addMaterialToUseFlag(Material.DROPPER, Flags.container);
 	addMaterialToUseFlag(Material.FURNACE, Flags.container);
-	addMaterialToUseFlag(CMIMaterial.FURNACE.getMaterial(), Flags.container);
+	addMaterialToUseFlag(CMIMaterial.LEGACY_BURNING_FURNACE.getMaterial(), Flags.container);
 
 	addMaterialToUseFlag(CMIMaterial.BARREL.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.BLAST_FURNACE.getMaterial(), Flags.container);
