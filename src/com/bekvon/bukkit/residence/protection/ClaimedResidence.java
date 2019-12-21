@@ -27,8 +27,9 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.Siege.ResidenceSiege;
+import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
@@ -41,6 +42,9 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.ResidenceAreaAddEvent;
 import com.bekvon.bukkit.residence.event.ResidenceAreaDeleteEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRaidEndEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRaidPreStartEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRaidStartEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceSizeChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceSubzoneCreationEvent;
@@ -51,6 +55,9 @@ import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.raid.RaidAttacker;
+import com.bekvon.bukkit.residence.raid.RaidDefender;
+import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
@@ -91,7 +98,7 @@ public class ClaimedResidence {
 
     private Residence plugin;
 
-    private ResidenceSiege siege;
+    private ResidenceRaid raid;
 
     private Set<Signs> signsInResidence = new HashSet<Signs>();
 
@@ -1843,6 +1850,9 @@ public class ClaimedResidence {
 	return perms.getOwner().equalsIgnoreCase(name);
     }
 
+    public boolean isOwner(UUID uuid) {
+	return perms.getOwnerUUID().toString().equals(uuid.toString());
+    }
     public boolean isOwner(Player p) {
 	if (p == null)
 	    return false;
@@ -1969,60 +1979,135 @@ public class ClaimedResidence {
 //	this.town = town;
 //    }
 
-    public boolean isUnderSiege() {
-	return getSiege().getEndsAt() > System.currentTimeMillis()
-	    && getSiege().getStartsAt() < System.currentTimeMillis();
+    public boolean isUnderRaid() {
+	return getRaid().getEndsAt() > System.currentTimeMillis()
+	    && getRaid().getStartsAt() < System.currentTimeMillis();
     }
 
-    public boolean canSiege() {
-	return !isUnderSiege() && this.getSiege().getCooldownEnd() < System.currentTimeMillis();
+    public boolean isInPreRaid() {
+	return getRaid().getEndsAt() > System.currentTimeMillis()
+	    && getRaid().getStartsAt() > System.currentTimeMillis();
     }
 
-    public ResidenceSiege getSiege() {
-	if (siege == null)
-	    siege = new ResidenceSiege();
-	return siege;
+    public boolean canRaid() {
+	return !isUnderRaid() && this.getRaid().getCooldownEnd() < System.currentTimeMillis();
     }
 
-    public boolean isUnderSiegeCooldown() {
-	return this.getSiege().getCooldownEnd() > System.currentTimeMillis();
+    public ResidenceRaid getRaid() {
+	if (raid == null)
+	    raid = new ResidenceRaid(this);
+	return raid;
     }
 
-    int preSiegeDuration = 5;
-    int siegeDuration = 5;
+    public boolean isUnderRaidCooldown() {
+	return this.getRaid().getCooldownEnd() > System.currentTimeMillis();
+    }
 
-    public boolean startSiege(Player attacker) {
+    public boolean preStartRaid(Player attacker) {
 
-	if (isUnderSiege())
+	if (isUnderRaid() || this.isInPreRaid())
 	    return false;
 
-	if (this.getSiege().getCooldownEnd() > System.currentTimeMillis())
+	if (this.getRaid().getCooldownEnd() > System.currentTimeMillis())
 	    return false;
 
-	getSiege().addAttacker(attacker);
-	getSiege().addDefender(this.getRPlayer().getPlayer());
-	getSiege().setStartsAt(System.currentTimeMillis() + (preSiegeDuration * 1000));
-	getSiege().setEndsAt(getSiege().getStartsAt() + (siegeDuration * 1000));
+	getRaid().addAttacker(attacker);
+	getRaid().addDefender(this.getRPlayer().getPlayer());
+	getRaid().setStartsAt(System.currentTimeMillis() + (ConfigManager.PreRaidTimer * 1000));
+	getRaid().setEndsAt(getRaid().getStartsAt() + (ConfigManager.RaidTimer * 1000));
+
+	ResidenceRaidPreStartEvent start = new ResidenceRaidPreStartEvent(getResidence(), getRaid().getAttackers());
+
+	Bukkit.getPluginManager().callEvent(start);
+	if (start.isCancelled())
+	    return false;
 
 	return true;
     }
 
-    public void endSiege() {
-	getSiege().setEndsAt(System.currentTimeMillis());
-	if (getSiege().getSchedId() > 0) {
-	    Bukkit.getScheduler().cancelTask(getSiege().getSchedId());
-	    getSiege().setSchedId(-1);
+    Integer repeatId = -1;
+
+    public boolean startRaid() {
+
+	if (!isUnderRaid() && !this.isInPreRaid())
+	    return false;
+
+	ResidenceRaidStartEvent start = new ResidenceRaidStartEvent(getResidence(), getRaid().getAttackers());
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
+	    public void run() {
+		Bukkit.getPluginManager().callEvent(start);
+		if (start.isCancelled())
+		    start.getRes().endRaid();
+	    }
+	}, ((getRaid().getStartsAt() - System.currentTimeMillis()) / 50));
+
+	repeatId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+	    @Override
+	    public void run() {
+		if (!isUnderRaid() && !isInPreRaid()) {
+		    Bukkit.getServer().getScheduler().cancelTask(repeatId);
+		    return;
+		}
+		getRaid().showBossBar();
+	    }
+	}, this.isUnderRaid() ? 20L : 0L, 20L);
+
+	getRaid().setSchedId(Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	    @Override
+	    public void run() {
+		endRaid();
+	    }
+	}, ((getRaid().getEndsAt() - System.currentTimeMillis()) / 50)));
+
+	return true;
+    }
+
+    public void endRaid() {
+	getRaid().setEndsAt(System.currentTimeMillis());
+
+	if (getRaid().getSchedId() > 0) {
+	    ResidenceRaidEndEvent End = new ResidenceRaidEndEvent(this);
+	    Bukkit.getPluginManager().callEvent(End);
+	    Bukkit.getScheduler().cancelTask(getRaid().getSchedId());
+	    getRaid().setSchedId(-1);
 	}
 
-	getSiege().setStartsAt(0L);
+	getRaid().setStartsAt(0L);
 
-	for (Player one : this.getSiege().getAttackers()) {
-	    Location outside = this.getOutsideFreeLoc(one.getLocation(), one);
+	for (Entry<UUID, RaidAttacker> one : this.getRaid().getAttackers().entrySet()) {
+	    Player player = Bukkit.getPlayer(one.getKey());
+	    if (player == null)
+		continue;
+	    Residence.getInstance().msg(player, lm.Raid_Ended, this.getName());
+	    Location outside = this.getOutsideFreeLoc(player.getLocation(), player);
 	    if (outside != null)
-		one.teleport(outside);
+		player.teleport(outside);
 	}
-	this.getSiege().getAttackers().clear();
-	this.getSiege().getDefenders().clear();
+
+	for (Entry<UUID, RaidAttacker> one : getRaid().getAttackers().entrySet()) {
+	    ResidencePlayer RPlayer = one.getValue().getPlayer();
+	    if (RPlayer != null) {
+		RPlayer.setLastRaidAttackTimer(System.currentTimeMillis());
+		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
+		if (barInfo != null)
+		    RPlayer.removeBossBar(barInfo);
+	    }
+	}
+	
+	for (Entry<UUID, RaidDefender> one : getRaid().getDefenders().entrySet()) {
+	    ResidencePlayer RPlayer = one.getValue().getPlayer();
+	    if (RPlayer != null) {
+		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
+		if (barInfo != null)
+		    RPlayer.removeBossBar(barInfo);
+	    }
+	}
+
+	this.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
+
+	this.getRaid().getAttackers().clear();
+	this.getRaid().getDefenders().clear();
     }
 
     @Override
@@ -2053,5 +2138,9 @@ public class ClaimedResidence {
 	v.setAreas(getAreaArray());
 	v.setOnce(showOneTime);
 	plugin.getSelectionManager().showBounds(player, v);
+    }
+
+    private ClaimedResidence getResidence() {
+	return this;
     }
 }

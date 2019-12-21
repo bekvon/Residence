@@ -246,6 +246,20 @@ public class ConfigManager {
     public List<String> DynMapHiddenRegions;
     // DynMap
 
+    // Raid
+    public static boolean RaidEnabled = false;
+    public static boolean RaidAttackerBlockBreak = false;
+    public static boolean RaidAttackerBlockPlace = false;
+    public static boolean RaidDefenderBlockBreak = false;
+    public static boolean RaidDefenderBlockPlace = false;
+    public static boolean RaidDefenderContainerUsage = false;
+    public static boolean RaidFriendlyFire = false;
+    public static int PreRaidTimer = 120;
+    public static int RaidTimer = 120;
+    public static int RaidCooldown = 120;
+    public static int RaidPlayerCooldown = 120;
+    // Raid
+
     // Schematics
     public boolean RestoreAfterRentEnds;
     public boolean SchematicsSaveOnFlagChange;
@@ -1115,6 +1129,34 @@ public class ConfigManager {
 	DynMapVisibleRegions = c.get("DynMap.VisibleRegions", new ArrayList<String>());
 	c.addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden in game");
 	DynMapHiddenRegions = c.get("DynMap.HiddenRegions", new ArrayList<String>());
+
+	c.addComment("Raid.Enabled", "Determines if you want to enable raid feature for your server",
+	    "When residence is under raid, attackers can move inside residence even if residence has move false flag");
+	RaidEnabled = c.get("Raid.Enabled", false);
+	c.addComment("Raid.PreTimer", "Time in seconds before raid starts", "This will allow defenders to get back to residence and prepare for attack");
+	PreRaidTimer = c.get("Raid.PreTimer", 120);
+	c.addComment("Raid.Timer", "Time in seconds raid should be", "During this time attackers can steal and kill defenders");
+	RaidTimer = c.get("Raid.Timer", 120);
+	c.addComment("Raid.Cooldown", "Time in seconds residence is immune for next raid");
+	RaidCooldown = c.get("Raid.Cooldown", 120);
+	c.addComment("Raid.PlayerCooldown", "Time in seconds player is immune for next raid", "In case player has more than one residence, this can prevent player from being attacked again");
+	RaidPlayerCooldown = c.get("Raid.PlayerCooldown", 120);
+
+	c.addComment("Raid.Allow.Attacker.blockBreak", "Allows to break blocks inside raided residence even if it has destroy false", "This only applies for attackers and for raid time");
+	RaidAttackerBlockBreak = c.get("Raid.Allow.Attacker.blockBreak", true);
+	c.addComment("Raid.Allow.Attacker.blockPlace", "Allows to place blocks inside raided residence even if it has place false", "This only applies for attackers and for raid time");
+	RaidAttackerBlockPlace = c.get("Raid.Allow.Attacker.blockPlace", true);
+	c.addComment("Raid.Allow.Defender.blockBreak", "Allows to break blocks inside raided residence even if it has destroy false", "This only applies for defenders and for raid time");
+	RaidDefenderBlockBreak = c.get("Raid.Allow.Defender.blockBreak", true);
+	c.addComment("Raid.Allow.Defender.blockPlace", "Allows to place blocks inside raided residence even if it has place false", "This only applies for defenders and for raid time");
+	RaidDefenderBlockPlace = c.get("Raid.Allow.Defender.blockPlace", true);
+
+	c.addComment("Raid.Allow.Defender.containerUsage", "Allows to use containers, such as chests, during raid time", "This only applies for defenders and for raid time",
+	    "Keeping this at false might prevent from players moving their items to another residence which is not in raid", "Attackers will have access to any container in your residence during raid");
+	RaidDefenderContainerUsage = c.get("Raid.Allow.Defender.containerUsage", false);
+
+	c.addComment("Raid.FriendlyFire", "When set to false players in same teams (attackers or defenders) will not cause each other damage");
+	RaidFriendlyFire = c.get("Raid.FriendlyFire", true);
 
 	c.save();
     }

@@ -54,7 +54,6 @@ import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.BossBar.BossBarManager;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
 import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;
-import com.bekvon.bukkit.residence.Siege.ResidenceSiegeListener;
 import com.bekvon.bukkit.residence.allNms.v1_10Events;
 import com.bekvon.bukkit.residence.allNms.v1_13Events;
 import com.bekvon.bukkit.residence.allNms.v1_8Events;
@@ -95,6 +94,7 @@ import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.raid.ResidenceRaidListener;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.protection.PlayerManager;
@@ -162,7 +162,7 @@ public class Residence extends JavaPlugin {
     protected ResidenceEntityListener elistener;
 
     protected ResidenceFixesListener flistener;
-    protected ResidenceSiegeListener slistener;
+    protected ResidenceRaidListener slistener;
 
     protected ResidenceCommandListener cManager;
 
@@ -756,7 +756,7 @@ public class Residence extends JavaPlugin {
 		plistener = new ResidencePlayerListener(this);
 		elistener = new ResidenceEntityListener(this);
 		flistener = new ResidenceFixesListener();
-//		slistener = new ResidenceSiegeListener();
+		slistener = new ResidenceRaidListener();
 
 		shlistener = new ShopListener(this);
 		spigotlistener = new SpigotListener();
@@ -767,7 +767,7 @@ public class Residence extends JavaPlugin {
 		pm.registerEvents(elistener, this);
 		pm.registerEvents(flistener, this);
 		pm.registerEvents(shlistener, this);
-//		pm.registerEvents(slistener, this);
+		pm.registerEvents(slistener, this);
 
 		// 1.8 event
 		if (Version.isCurrentEqualOrHigher(Version.v1_8_R1))

@@ -47,6 +47,7 @@ import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIBlock;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.commands.auto.direction;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -223,6 +224,12 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
+
+	if (res != null && res.isUnderRaid()) {
+	    if (res.getRaid().isAttacker(player.getUniqueId()) && ConfigManager.RaidAttackerBlockBreak || res.getRaid().isDefender(player.getUniqueId()) && ConfigManager.RaidDefenderBlockBreak) {
+		hasdestroy = true;
+	    }
+	}
 
 	if (!hasdestroy && !ResPerm.bypass_destroy.hasPermission(player)) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
@@ -629,6 +636,13 @@ public class ResidenceBlockListener implements Listener {
 	}
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 	boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
+
+	if (res != null && res.isUnderRaid()) {
+	    if (res.getRaid().isAttacker(player.getUniqueId()) && ConfigManager.RaidAttackerBlockPlace || res.getRaid().isDefender(player.getUniqueId()) && ConfigManager.RaidDefenderBlockPlace) {
+		hasplace = true;
+	    }
+	}
+
 	if (!hasplace && !ResPerm.bypass_build.hasPermission(player)) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
@@ -637,7 +651,7 @@ public class ResidenceBlockListener implements Listener {
 
 	if (CMIMaterial.isBed(mat)) {
 	    CMIBlock cb = new CMIBlock(block);
-	    Block sec = cb.getSecondaryBedBlock();	    
+	    Block sec = cb.getSecondaryBedBlock();
 	    if (sec != null) {
 		perms = plugin.getPermsByLocForPlayer(sec.getLocation(), player);
 		hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));

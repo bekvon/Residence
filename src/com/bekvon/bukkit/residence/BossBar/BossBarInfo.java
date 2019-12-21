@@ -188,6 +188,10 @@ public class BossBarInfo {
 	this.autoId = autoId;
     }
 
+    public void updateCycle() {
+	
+    }
+
 //    public List<String> getCommands() {
 //	return cmds;
 //    }

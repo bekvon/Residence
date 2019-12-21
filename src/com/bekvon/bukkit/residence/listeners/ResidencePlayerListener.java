@@ -60,6 +60,7 @@ import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -82,6 +83,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1255,7 +1257,6 @@ public class ResidencePlayerListener implements Listener {
 	    event.setCancelled(true);
 	    return;
 	}
-
 	if (resadmin)
 	    return;
 
@@ -1299,6 +1300,20 @@ public class ResidencePlayerListener implements Listener {
 	    boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player);
 	    boolean hasuse = perms.playerHas(player, Flags.use, true) || hasUseBypass;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+
+	    main: if (res != null && res.isUnderRaid()) {
+		if (res.getRaid().isDefender(player) && !ConfigManager.RaidDefenderContainerUsage) {
+		    Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
+		    if (result != null) {
+			if (result.equals(Flags.container)) {
+			    event.setCancelled(true);
+			    plugin.msg(player, lm.Raid_cantDo);
+			    return;
+			}
+		    }
+		}
+	    }
+
 	    if (res == null || !res.isOwner(player)) {
 		if (!hasContainerBypass) {
 
@@ -1308,12 +1323,26 @@ public class ResidencePlayerListener implements Listener {
 			main: if (!perms.playerHas(player, result, hasuse)) {
 
 			    if (hasuse || result.equals(Flags.container)) {
+
+				if (res != null && res.isUnderRaid()) {
+				    if (res.getRaid().isAttacker(player)) {
+					break main;
+				    }
+				}
+
 				event.setCancelled(true);
 				plugin.msg(player, lm.Flag_Deny, result);
 				return;
 			    }
 
 			    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+				if (res != null && res.isUnderRaid()) {
+				    if (res.getRaid().isAttacker(player)) {
+					break main;
+				    }
+				}
+
 				switch (result) {
 				case door:
 				    if (ResPerm.bypass_door.hasPermission(player))
@@ -1324,13 +1353,19 @@ public class ResidencePlayerListener implements Listener {
 					break main;
 				    break;
 				}
-
 				event.setCancelled(true);
 				plugin.msg(player, lm.Flag_Deny, result);
 				return;
 			    }
 
 			    if (isCanUseEntity_BothClick(mat, block)) {
+
+				if (res != null && res.isUnderRaid()) {
+				    if (res.getRaid().isAttacker(player)) {
+					break main;
+				    }
+				}
+
 				event.setCancelled(true);
 				plugin.msg(player, lm.Flag_Deny, result);
 			    }
@@ -2035,18 +2070,15 @@ public class ResidencePlayerListener implements Listener {
 
 	UUID uuid = player.getUniqueId();
 
-	ClaimedResidence ResOld = null;
-	if (currentRes.containsKey(uuid)) {
-	    ResOld = currentRes.get(uuid);
-	    if (ResOld == null) {
-		currentRes.remove(uuid);
-	    } else {
-		if (res != null && ResOld.getName().equals(res.getName())) {
+	ClaimedResidence ResOld = currentRes.get(uuid);
+	if (ResOld == null) {
+	    currentRes.remove(uuid);
+	} else {
+	    if (res != null && ResOld.getName().equals(res.getName())) {
 
-		    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) &&
-			!ResPerm.bypass_nofly.hasPermission(player)) {
-			if (res.isOwner(player))
-			    break f;
+		if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) &&
+		    !ResPerm.bypass_nofly.hasPermission(player)) {
+		    if (!res.isOwner(player)) {
 			Location lc = player.getLocation();
 			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
 			location.setPitch(lc.getPitch());
@@ -2082,10 +2114,9 @@ public class ResidencePlayerListener implements Listener {
 			player.setFlying(false);
 			player.setAllowFlight(false);
 		    }
-
-		    lastOutsideLoc.put(uuid, loc);
-		    return true;
 		}
+		lastOutsideLoc.put(uuid, loc);
+		return true;
 	    }
 	}
 
@@ -2102,23 +2133,9 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null) {
 	    lastOutsideLoc.put(uuid, loc);
 	    if (ResOld != null) {
-
 		// New ResidenceChangeEvent
 		ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, null, player);
 		plugin.getServ().getPluginManager().callEvent(chgEvent);
-
-//		String leave = ResOld.getLeaveMessage();
-//		if (leave != null && !leave.equals("")) {
-//		    if (plugin.getConfigManager().useTitleMessage()) {
-//			plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, ResOld.getName(), ResOld, leave));
-//		    }
-//		    if (plugin.getConfigManager().useActionBar()) {
-//			plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
-//			    .toString());
-//		    } else {
-//			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
-//		    }
-//		}
 		currentRes.remove(uuid);
 	    }
 	    return true;
@@ -2126,6 +2143,12 @@ public class ResidencePlayerListener implements Listener {
 
 	if (move) {
 	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move.hasPermission(player)) {
+
+		if (res.isUnderRaid()) {
+		    if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
+			return true;
+		    }
+		}
 
 		Location lastLoc = lastOutsideLoc.get(uuid);
 

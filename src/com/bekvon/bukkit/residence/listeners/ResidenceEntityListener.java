@@ -51,6 +51,7 @@ import org.bukkit.projectiles.ProjectileSource;
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -1371,6 +1372,15 @@ public class ResidenceEntityListener implements Listener {
 		if (!(ent instanceof Player))
 		    return;
 
+		if (srcarea != null && area != null && srcarea.equals(area) && attacker != null && area.isUnderRaid() && area.getRaid().onSameTeam(attacker, (Player) ent)
+		    && !ConfigManager.RaidFriendlyFire) {
+		    event.setCancelled(true);
+		}
+		
+		if (srcarea != null && area != null && srcarea.equals(area) && attacker != null && area.isUnderRaid() && !area.getRaid().onSameTeam(attacker, (Player) ent)) {
+		    return;
+		}
+		
 		if (srcarea != null && area != null && srcarea.equals(area) && attacker != null &&
 		    srcarea.getPermissions().playerHas((Player) ent, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
 		    srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {

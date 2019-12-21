@@ -43,6 +43,9 @@ public class ResidencePlayer {
 
     private int maxValue = 9999;
 
+    private Long lastRaidAttackTimer = 0L;
+    private Long lastRaidDefendTimer = 0L;
+
     public ResidencePlayer(OfflinePlayer off) {
 	if (off == null)
 	    return;
@@ -370,8 +373,14 @@ public class ResidencePlayer {
 	return userName;
     }
 
-    public UUID getUuid() {
+    public UUID getUniqueId() {
 	return uuid;
+
+    }
+
+    @Deprecated
+    public UUID getUuid() {
+	return getUniqueId();
     }
 
     public Player getPlayer() {
@@ -452,5 +461,30 @@ public class ResidencePlayer {
 	    one.getValue().cancelHideScheduler();
 	}
 	barMap.clear();
+    }
+
+    public ClaimedResidence getCurrentlyRaidedResidence() {
+	for (ClaimedResidence one : getResList()) {
+	    if (one.isUnderRaid() || one.isInPreRaid()) {
+		return one;
+	    }
+	}
+	return null;
+    }
+
+    public Long getLastRaidAttackTimer() {
+	return lastRaidAttackTimer;
+    }
+
+    public void setLastRaidAttackTimer(Long lastRaidAttackTimer) {
+	this.lastRaidAttackTimer = lastRaidAttackTimer;
+    }
+
+    public Long getLastRaidDefendTimer() {
+	return lastRaidDefendTimer;
+    }
+
+    public void setLastRaidDefendTimer(Long lastRaidDefendTimer) {
+	this.lastRaidDefendTimer = lastRaidDefendTimer;
     }
 }

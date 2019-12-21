@@ -1,12 +1,16 @@
 package com.bekvon.bukkit.residence.event;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.raid.RaidAttacker;
 
-public class ResidenceSiegeEndEvent extends Event implements Cancellable {
+public class ResidenceRaidStartEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -20,10 +24,12 @@ public class ResidenceSiegeEndEvent extends Event implements Cancellable {
     }
 
     private ClaimedResidence res;
+    private HashMap<UUID, RaidAttacker> attackers;
     protected boolean cancelled;
 
-    public ResidenceSiegeEndEvent(ClaimedResidence res) {
+    public ResidenceRaidStartEvent(ClaimedResidence res, HashMap<UUID, RaidAttacker> hashMap) {
 	this.res = res;
+	this.attackers = hashMap;
     }
 
     @Override
@@ -38,5 +44,9 @@ public class ResidenceSiegeEndEvent extends Event implements Cancellable {
 
     public ClaimedResidence getRes() {
 	return res;
+    }
+
+    public HashMap<UUID, RaidAttacker> getAttackers() {
+	return attackers;
     }
 }

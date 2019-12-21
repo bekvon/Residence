@@ -41,6 +41,8 @@ public class BossBarManager {
 	if (user == null || !user.isOnline())
 	    return;
 
+	barInfo.updateCycle();
+	
 	BossBar bar = barInfo.getBar();
 
 	String name = barInfo.getTitleOfBar();
