@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,11 +13,7 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.event.ResidenceRaidEndEvent;
-import com.bekvon.bukkit.residence.event.ResidenceRaidPreStartEvent;
-import com.bekvon.bukkit.residence.event.ResidenceRaidStartEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.Utils;
 
 public class attack implements cmd {
@@ -45,24 +40,30 @@ public class attack implements cmd {
 	else
 	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 
+	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	if (resPlayer.getJoinedRaid() != null) {
+	    plugin.msg(player, lm.Raid_defend_alreadyInAnother, resPlayer.getJoinedRaid().getRes().getName());
+	    return true;
+	}
+
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
 
 	if (res.isOwner(player)) {
-	    plugin.msg(player, lm.Raid_noSelf);
+	    plugin.msg(player, lm.Raid_attack_noSelf);
 	    return true;
 	}
 
 	final ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(res.getOwnerUUID());
 	if (!rPlayer.isOnline()) {
-	    plugin.msg(player, lm.Raid_isOffline);
+	    plugin.msg(player, lm.Raid_attack_isOffline);
 	    return true;
 	}
 
 	if (res.isUnderRaidCooldown() && !res.isInPreRaid() && !res.isUnderRaid()) {
-	    plugin.msg(player, lm.Raid_cooldown, Utils.to24hourShort(res.getRaid().getCooldownEnd() - System.currentTimeMillis() + 1000));
+	    plugin.msg(player, lm.Raid_attack_cooldown, Utils.to24hourShort(res.getRaid().getCooldownEnd() - System.currentTimeMillis() + 1000));
 	    return true;
 	}
 
@@ -70,7 +71,7 @@ public class attack implements cmd {
 	    if (!res.getRaid().isAttacker(player))
 		res.getRaid().addAttacker(player);
 
-	    plugin.msg(player, lm.Raid_Joined, res.getName());
+	    plugin.msg(player, lm.Raid_attack_Joined, res.getName());
 
 	    return true;
 	}

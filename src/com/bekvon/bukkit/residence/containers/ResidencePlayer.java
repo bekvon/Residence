@@ -18,6 +18,7 @@ import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
@@ -45,6 +46,8 @@ public class ResidencePlayer {
 
     private Long lastRaidAttackTimer = 0L;
     private Long lastRaidDefendTimer = 0L;
+    
+    private ResidenceRaid raid = null;
 
     public ResidencePlayer(OfflinePlayer off) {
 	if (off == null)
@@ -486,5 +489,13 @@ public class ResidencePlayer {
 
     public void setLastRaidDefendTimer(Long lastRaidDefendTimer) {
 	this.lastRaidDefendTimer = lastRaidDefendTimer;
+    }
+
+    public ResidenceRaid getJoinedRaid() {
+	return raid;
+    }
+
+    public void setJoinedRaid(ResidenceRaid raid) {
+	this.raid = raid;
     }
 }

@@ -35,7 +35,12 @@ public class contract implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
-
+	
+	if (res.isRaidInitialized()) {
+	    plugin.msg(sender, lm.Raid_cantDo);
+	    return true;
+	}
+	
 	if (res.isSubzone() && !resadmin && !ResPerm.command_contract_subzone.hasPermission(player, lm.Subzone_CantContract))
 	    return true;
 

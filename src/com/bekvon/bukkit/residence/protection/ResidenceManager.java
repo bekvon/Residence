@@ -1108,6 +1108,12 @@ public class ResidenceManager implements ResidenceInterface {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return false;
 	}
+	
+	if (res.isRaidInitialized() && !resadmin) {
+	    plugin.msg(player, lm.Raid_cantDo);
+	    return false;
+	}
+	
 	oldName = res.getName();
 	if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (res.getParent() == null) {

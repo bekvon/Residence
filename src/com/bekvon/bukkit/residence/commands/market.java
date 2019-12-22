@@ -249,9 +249,9 @@ public class market implements cmd {
 	else if (args.length > 2)
 	    res = plugin.getResidenceManager().getByName(args[2]);
 
-	if (res != null)
+	if (res != null) {
 	    plugin.getRentManager().rent(player, res, repeat, resadmin);
-	else
+	} else
 	    plugin.msg(player, lm.Invalid_Residence);
 
 	return true;

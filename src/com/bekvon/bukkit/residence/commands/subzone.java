@@ -39,6 +39,12 @@ public class subzone implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
+
+	if (res.isRaidInitialized()) {
+	    plugin.msg(sender, lm.Raid_cantDo);
+	    return true;
+	}
+
 	if (plugin.getWorldEdit() != null) {
 	    if (plugin.getWorldEditTool() == plugin.getConfigManager().getSelectionTool()) {
 		plugin.getSelectionManager().worldEdit(player);

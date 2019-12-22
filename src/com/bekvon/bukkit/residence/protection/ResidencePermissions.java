@@ -315,6 +315,11 @@ public class ResidencePermissions extends FlagPermissions {
 	    return false;
 	}
 
+	if (this.residence.isRaidInitialized() && !resadmin) {
+	    Residence.getInstance().msg(sender, lm.Raid_noFlagChange);
+	    return false;
+	}
+
 	Flags f = Flags.getFlag(flag);
 	if (f != null)
 	    flag = f.toString();
@@ -342,6 +347,11 @@ public class ResidencePermissions extends FlagPermissions {
 	Flags f = Flags.getFlag(flag);
 	if (f != null)
 	    flag = f.toString();
+	
+	if (this.residence.isRaidInitialized() && !resadmin) {
+	    Residence.getInstance().msg(player, lm.Raid_noFlagChange);
+	    return false;
+	}
 
 	group = group.toLowerCase();
 	if (validFlagGroups.containsKey(flag))
@@ -379,6 +389,11 @@ public class ResidencePermissions extends FlagPermissions {
 	Flags f = Flags.getFlag(flag);
 	if (f != null)
 	    flag = f.toString();
+
+	if (this.residence.isRaidInitialized() && !resadmin) {
+	    Residence.getInstance().msg(sender, lm.Raid_noFlagChange);
+	    return false;
+	}
 
 	if (validFlagGroups.containsKey(flag))
 	    return this.setFlagGroup(sender, flag, state, resadmin);

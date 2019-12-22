@@ -28,6 +28,12 @@ public class setowner implements cmd {
 
 	ClaimedResidence area = plugin.getResidenceManager().getByName(args[1]);
 	if (area != null) {
+
+	    if (area.isRaidInitialized() && !resadmin) {
+		plugin.msg(sender, lm.Raid_cantDo);
+		return true;
+	    }
+
 	    area.getPermissions().setOwner(args[2], true);
 	    if (plugin.getRentManager().isForRent(area.getName()))
 		plugin.getRentManager().removeRentable(area.getName());
@@ -36,7 +42,7 @@ public class setowner implements cmd {
 	    area.getPermissions().applyDefaultFlags();
 
 	    plugin.getSignUtil().updateSignResName(area);
-	    
+
 	    if (area.getParent() == null) {
 		plugin.msg(sender, lm.Residence_OwnerChange, args[1], args[2]);
 	    } else {

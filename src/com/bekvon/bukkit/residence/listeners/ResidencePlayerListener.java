@@ -2142,13 +2142,60 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (move) {
-	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move.hasPermission(player)) {
 
-		if (res.isUnderRaid()) {
-		    if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
-			return true;
+	    if (res.isUnderRaid()) {
+		if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
+		    return true;
+		} else {
+		    Location lastLoc = lastOutsideLoc.get(uuid);
+
+		    if (plugin.getConfigManager().BounceAnimation()) {
+			Visualizer v = new Visualizer(player);
+			v.setErrorAreas(res);
+			v.setOnce(true);
+			plugin.getSelectionManager().showBounds(player, v);
 		    }
+
+		    ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
+		    boolean teleported = false;
+		    if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player)) {
+			Location newLoc = res.getOutsideFreeLoc(loc, player);
+			player.closeInventory();
+			teleported = teleport(player, newLoc);
+		    } else if (lastLoc != null) {
+
+			StuckInfo info = updateStuckTeleport(player, loc);
+			player.closeInventory();
+			if (info != null && info.getTimesTeleported() > 5) {
+			    Location newLoc = res.getOutsideFreeLoc(loc, player);
+			    teleported = teleport(player, newLoc);
+			} else {
+			    teleported = teleport(player, lastLoc);
+			}
+		    } else {
+			Location newLoc = res.getOutsideFreeLoc(loc, player);
+			player.closeInventory();
+			teleported = teleport(player, newLoc);
+		    }
+
+		    switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
+		    case ActionBar:
+		    case TitleBar:
+			FlagPermissions perms = res.getPermissions();
+			if (perms.has(Flags.title, FlagCombo.TrueOrNone))
+			    ActionBarTitleMessages.send(player, plugin.msg(lm.Raid_cantDo));
+			break;
+		    case ChatBox:
+			plugin.msg(player, lm.Raid_cantDo, orres.getName());
+			break;
+		    default:
+			break;
+		    }
+		    return teleported;
 		}
+	    }
+
+	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move.hasPermission(player)) {
 
 		Location lastLoc = lastOutsideLoc.get(uuid);
 

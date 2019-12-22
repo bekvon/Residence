@@ -31,6 +31,16 @@ public class tp implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
+	
+	if (res.isRaidInitialized()) {
+	    if (res.getRaid().isAttacker(player)) {
+		plugin.msg(player, lm.Raid_cantDo);
+		return true;
+	    }
+	    
+	    
+	}
+	
 	res.tpToResidence(player, player, resadmin);
 	return true;
     }

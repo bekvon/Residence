@@ -188,6 +188,11 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
+	if (res.isRaidInitialized() && !resadmin) {
+	    plugin.msg(player, lm.Raid_cantDo);
+	    return;
+	}
+
 	if (!plugin.getConfigManager().enabledRentSystem()) {
 	    plugin.msg(player, lm.Economy_MarketDisabled);
 	    return;
@@ -229,9 +234,9 @@ public class RentManager implements MarketRentInterface {
 	    newrent.AllowAutoPay = AllowAutoPay;
 	    res.setRentable(newrent);
 	    rentableLand.add(res);
-	    
+
 	    plugin.getSignUtil().CheckSign(res);
-	    
+
 	    plugin.msg(player, lm.Residence_ForRentSuccess, res.getResidenceName(), amount, days);
 	} else {
 	    plugin.msg(player, lm.Residence_AlreadyRent);
@@ -246,8 +251,14 @@ public class RentManager implements MarketRentInterface {
 
     @SuppressWarnings("deprecation")
     public void rent(Player player, ClaimedResidence res, boolean AutoPay, boolean resadmin) {
+
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
+	    return;
+	}
+
+	if (res.isRaidInitialized() && !resadmin) {
+	    plugin.msg(player, lm.Raid_cantDo);
 	    return;
 	}
 
@@ -401,6 +412,11 @@ public class RentManager implements MarketRentInterface {
     public void unrent(Player player, ClaimedResidence res, boolean resadmin) {
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
+	    return;
+	}
+
+	if (res.isRaidInitialized() && !resadmin) {
+	    plugin.msg(player, lm.Raid_cantDo);
 	    return;
 	}
 

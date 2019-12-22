@@ -65,6 +65,12 @@ public class defend implements cmd {
 	    return true;
 	}
 
+	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	if (resPlayer.getJoinedRaid() != null) {
+	    plugin.msg(player, lm.Raid_attack_alreadyInAnother, resPlayer.getJoinedRaid().getRes().getName());
+	    return true;
+	}
+
 	if (res.isOwner(player)) {
 	    if (target != null) {
 		ClaimedResidence req = joinRequests.get(target.getUniqueId());

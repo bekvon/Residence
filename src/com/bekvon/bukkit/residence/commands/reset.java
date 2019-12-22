@@ -33,7 +33,7 @@ public class reset implements cmd {
 	if (args.length == 1 && sender instanceof Player)
 	    res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
 
-	if (residenceName != null && !residenceName.equalsIgnoreCase("all") && res == null || args.length == 1  && res == null) {
+	if (residenceName != null && !residenceName.equalsIgnoreCase("all") && res == null || args.length == 1 && res == null) {
 	    plugin.msg(sender, lm.Invalid_Residence);
 	    return true;
 	}
@@ -43,6 +43,12 @@ public class reset implements cmd {
 		plugin.msg(sender, lm.Residence_NotOwner);
 		return true;
 	    }
+
+	    if (res.isRaidInitialized() && !resadmin) {
+		plugin.msg(sender, lm.Raid_cantDo);
+		return true;
+	    }
+
 	    res.getPermissions().applyDefaultFlags();
 	    plugin.msg(sender, lm.Flag_reset, res.getName());
 	    return true;

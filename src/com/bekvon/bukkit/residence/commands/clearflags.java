@@ -29,6 +29,10 @@ public class clearflags implements cmd {
 	}
 	ClaimedResidence area = plugin.getResidenceManager().getByName(args[1]);
 	if (area != null) {
+	    if (area.isRaidInitialized()) {
+		plugin.msg(sender, lm.Raid_cantDo);
+		return true;
+	    }
 	    area.getPermissions().clearFlags();
 	    plugin.msg(player, lm.Flag_Cleared);
 	} else {

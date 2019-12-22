@@ -1275,28 +1275,40 @@ public class ClaimedResidence {
     public void tpToResidence(Player reqPlayer, final Player targetPlayer, boolean resadmin) {
 
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
-	boolean bypassDelay = ResPerm.tpdelaybypass.hasPermission(targetPlayer);
 
-	if (!resadmin && !isAdmin && !ResPerm.bypass_tp.hasPermission(reqPlayer)
-	    && (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer)
-		&& Residence.getInstance().getConfigManager().isCanTeleportIncludeOwner())) {
-	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(reqPlayer);
-	    PermissionGroup group = rPlayer.getGroup();
-	    if (!group.hasTpAccess()) {
-		plugin.msg(reqPlayer, lm.General_TeleportDeny);
+	if (this.isRaidInitialized()) {
+	    if (this.getRaid().isAttacker(targetPlayer)) {
+		plugin.msg(reqPlayer, lm.Raid_cantDo);
 		return;
+	    } else if (this.getRaid().isDefender(targetPlayer) && !ConfigManager.RaidDefenderTeleport) {
+		plugin.msg(reqPlayer, lm.Raid_cantDo);
+		return;
+	    } else if (!resadmin) {
+		plugin.msg(reqPlayer, lm.Raid_cantDo);
 	    }
-	    if (!reqPlayer.equals(targetPlayer)) {
-		plugin.msg(reqPlayer, lm.General_NoPermission);
-		return;
-	    }
-	    if (!this.perms.playerHas(reqPlayer, Flags.tp, FlagCombo.TrueOrNone)) {
-		plugin.msg(reqPlayer, lm.Residence_TeleportNoFlag);
-		return;
-	    }
-	    if (!this.perms.playerHas(reqPlayer, Flags.move, FlagCombo.TrueOrNone)) {
-		plugin.msg(reqPlayer, lm.Residence_MoveDeny, this.getName());
-		return;
+
+	} else {
+	    if (!resadmin && !isAdmin && !ResPerm.bypass_tp.hasPermission(reqPlayer)
+		&& (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer)
+		    && Residence.getInstance().getConfigManager().isCanTeleportIncludeOwner())) {
+		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(reqPlayer);
+		PermissionGroup group = rPlayer.getGroup();
+		if (!group.hasTpAccess()) {
+		    plugin.msg(reqPlayer, lm.General_TeleportDeny);
+		    return;
+		}
+		if (!reqPlayer.equals(targetPlayer)) {
+		    plugin.msg(reqPlayer, lm.General_NoPermission);
+		    return;
+		}
+		if (!this.perms.playerHas(reqPlayer, Flags.tp, FlagCombo.TrueOrNone)) {
+		    plugin.msg(reqPlayer, lm.Residence_TeleportNoFlag);
+		    return;
+		}
+		if (!this.perms.playerHas(reqPlayer, Flags.move, FlagCombo.TrueOrNone)) {
+		    plugin.msg(reqPlayer, lm.Residence_MoveDeny, this.getName());
+		    return;
+		}
 	    }
 	}
 
@@ -1308,6 +1320,8 @@ public class ClaimedResidence {
 		return;
 	    }
 	}
+
+	boolean bypassDelay = ResPerm.tpdelaybypass.hasPermission(targetPlayer);
 
 	if (plugin.getConfigManager().getTeleportDelay() > 0 && !isAdmin && !resadmin && !bypassDelay) {
 	    plugin.msg(reqPlayer, lm.General_TeleportStarted, this.getName(),
@@ -1782,6 +1796,12 @@ public class ClaimedResidence {
 	    plugin.msg(player, lm.Invalid_NameCharacters);
 	    return false;
 	}
+
+	if (isRaidInitialized() && !resadmin) {
+	    plugin.msg(player, lm.Raid_cantDo);
+	    return false;
+	}
+
 	if (player == null || perms.hasResidencePermission(player, true) || resadmin) {
 	    if (areas.containsKey(newName)) {
 		if (player != null)
@@ -1853,6 +1873,7 @@ public class ClaimedResidence {
     public boolean isOwner(UUID uuid) {
 	return perms.getOwnerUUID().toString().equals(uuid.toString());
     }
+
     public boolean isOwner(Player p) {
 	if (p == null)
 	    return false;
@@ -1971,6 +1992,16 @@ public class ClaimedResidence {
 	this.leaseExpireTime = leaseExpireTime;
     }
 
+    public boolean kickFromResidence(Player player) {
+	if (!this.containsLoc(player.getLocation()))
+	    return false;
+	Location loc = Residence.getInstance().getConfigManager().getKickLocation();
+	player.closeInventory();
+	if (loc != null) {
+	    return player.teleport(loc);
+	}
+	return player.teleport(getOutsideFreeLoc(player.getLocation(), player));
+    }
 //    public Town getTown() {
 //	return town;
 //    }
@@ -1982,6 +2013,14 @@ public class ClaimedResidence {
     public boolean isUnderRaid() {
 	return getRaid().getEndsAt() > System.currentTimeMillis()
 	    && getRaid().getStartsAt() < System.currentTimeMillis();
+    }
+
+    public boolean isRaidInitialized() {
+	if (isUnderRaid() || isInPreRaid())
+	    return true;
+	if (this.getParent() != null)
+	    return this.getParent().isRaidInitialized();
+	return false;
     }
 
     public boolean isInPreRaid() {
@@ -2038,7 +2077,7 @@ public class ClaimedResidence {
 	    public void run() {
 		Bukkit.getPluginManager().callEvent(start);
 		if (start.isCancelled())
-		    start.getRes().endRaid();
+		    start.getRes().getRaid().endRaid();
 	    }
 	}, ((getRaid().getStartsAt() - System.currentTimeMillis()) / 50));
 
@@ -2056,58 +2095,11 @@ public class ClaimedResidence {
 	getRaid().setSchedId(Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override
 	    public void run() {
-		endRaid();
+		getRaid().endRaid();
 	    }
 	}, ((getRaid().getEndsAt() - System.currentTimeMillis()) / 50)));
 
 	return true;
-    }
-
-    public void endRaid() {
-	getRaid().setEndsAt(System.currentTimeMillis());
-
-	if (getRaid().getSchedId() > 0) {
-	    ResidenceRaidEndEvent End = new ResidenceRaidEndEvent(this);
-	    Bukkit.getPluginManager().callEvent(End);
-	    Bukkit.getScheduler().cancelTask(getRaid().getSchedId());
-	    getRaid().setSchedId(-1);
-	}
-
-	getRaid().setStartsAt(0L);
-
-	for (Entry<UUID, RaidAttacker> one : this.getRaid().getAttackers().entrySet()) {
-	    Player player = Bukkit.getPlayer(one.getKey());
-	    if (player == null)
-		continue;
-	    Residence.getInstance().msg(player, lm.Raid_Ended, this.getName());
-	    Location outside = this.getOutsideFreeLoc(player.getLocation(), player);
-	    if (outside != null)
-		player.teleport(outside);
-	}
-
-	for (Entry<UUID, RaidAttacker> one : getRaid().getAttackers().entrySet()) {
-	    ResidencePlayer RPlayer = one.getValue().getPlayer();
-	    if (RPlayer != null) {
-		RPlayer.setLastRaidAttackTimer(System.currentTimeMillis());
-		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
-		if (barInfo != null)
-		    RPlayer.removeBossBar(barInfo);
-	    }
-	}
-	
-	for (Entry<UUID, RaidDefender> one : getRaid().getDefenders().entrySet()) {
-	    ResidencePlayer RPlayer = one.getValue().getPlayer();
-	    if (RPlayer != null) {
-		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
-		if (barInfo != null)
-		    RPlayer.removeBossBar(barInfo);
-	    }
-	}
-
-	this.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
-
-	this.getRaid().getAttackers().clear();
-	this.getRaid().getDefenders().clear();
     }
 
     @Override

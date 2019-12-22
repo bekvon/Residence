@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -13,6 +15,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.event.ResidenceRaidEndEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class ResidenceRaid {
@@ -69,6 +72,7 @@ public class ResidenceRaid {
     public void addDefender(ResidencePlayer defender) {
 	this.attackers.remove(defender.getUniqueId());
 	this.defenders.put(defender.getUniqueId(), new RaidDefender(defender));
+	defender.setJoinedRaid(this);
     }
 
     public boolean isDefender(Player player) {
@@ -79,8 +83,13 @@ public class ResidenceRaid {
 	return defenders.containsKey(uuid);
     }
 
-    public void removeDefenders(Player defender) {
+    public void removeDefender(Player defender) {
+	removeDefender(Residence.getInstance().getPlayerManager().getResidencePlayer(defender));
+    }
+
+    public void removeDefender(ResidencePlayer defender) {
 	this.defenders.remove(defender.getUniqueId());
+	defender.setJoinedRaid(null);
     }
 
     public boolean isAttacker(Player player) {
@@ -95,17 +104,38 @@ public class ResidenceRaid {
 	return attackers;
     }
 
+    public void clearAttackers() {
+	for (Entry<UUID, RaidAttacker> one : this.attackers.entrySet()) {
+	    one.getValue().getPlayer().setJoinedRaid(null);
+	}
+	this.attackers.clear();
+    }
+
+    public void clearDefenders() {
+	for (Entry<UUID, RaidDefender> one : this.defenders.entrySet()) {
+	    one.getValue().getPlayer().setJoinedRaid(null);
+	}
+	this.defenders.clear();
+    }
+
     public void addAttacker(Player attacker) {
-	this.defenders.remove(attacker.getUniqueId());
-	this.attackers.put(attacker.getUniqueId(), new RaidAttacker(Residence.getInstance().getPlayerManager().getResidencePlayer(attacker)));
+	addAttacker(Residence.getInstance().getPlayerManager().getResidencePlayer(attacker));
     }
 
     public void addAttacker(ResidencePlayer attacker) {
 	this.defenders.remove(attacker.getUniqueId());
 	this.attackers.put(attacker.getUniqueId(), new RaidAttacker(attacker));
+
+	attacker.setJoinedRaid(this);
     }
 
     public void removeAttacker(Player attacker) {
+	this.attackers.remove(attacker.getUniqueId());
+	removeAttacker(Residence.getInstance().getPlayerManager().getResidencePlayer(attacker));
+    }
+
+    public void removeAttacker(ResidencePlayer attacker) {
+	attacker.setJoinedRaid(null);
 	this.attackers.remove(attacker.getUniqueId());
     }
 
@@ -175,5 +205,52 @@ public class ResidenceRaid {
 
 	    rPlayer.addBossBar(barInfo);
 	}
+    }
+
+    public void endRaid() {
+	setEndsAt(System.currentTimeMillis());
+
+	if (getSchedId() > 0) {
+	    ResidenceRaidEndEvent End = new ResidenceRaidEndEvent(res);
+	    Bukkit.getPluginManager().callEvent(End);
+	    Bukkit.getScheduler().cancelTask(getSchedId());
+	    setSchedId(-1);
+	}
+
+	setStartsAt(0L);
+
+	for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
+	    Player player = Bukkit.getPlayer(one.getKey());
+	    if (player == null)
+		continue;
+	    Residence.getInstance().msg(player, lm.Raid_Ended, res.getName());
+	    Location outside = res.getOutsideFreeLoc(player.getLocation(), player);
+	    if (outside != null)
+		player.teleport(outside);
+	}
+
+	for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
+	    ResidencePlayer RPlayer = one.getValue().getPlayer();
+	    if (RPlayer != null) {
+		RPlayer.setLastRaidAttackTimer(System.currentTimeMillis());
+		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
+		if (barInfo != null)
+		    RPlayer.removeBossBar(barInfo);
+	    }
+	}
+
+	for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
+	    ResidencePlayer RPlayer = one.getValue().getPlayer();
+	    if (RPlayer != null) {
+		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
+		if (barInfo != null)
+		    RPlayer.removeBossBar(barInfo);
+	    }
+	}
+
+	res.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
+
+	clearAttackers();
+	clearDefenders();
     }
 }

@@ -252,6 +252,7 @@ public class ConfigManager {
     public static boolean RaidAttackerBlockPlace = false;
     public static boolean RaidDefenderBlockBreak = false;
     public static boolean RaidDefenderBlockPlace = false;
+    public static boolean RaidDefenderTeleport = false;
     public static boolean RaidDefenderContainerUsage = false;
     public static boolean RaidFriendlyFire = false;
     public static int PreRaidTimer = 120;
@@ -1150,6 +1151,9 @@ public class ConfigManager {
 	RaidDefenderBlockBreak = c.get("Raid.Allow.Defender.blockBreak", true);
 	c.addComment("Raid.Allow.Defender.blockPlace", "Allows to place blocks inside raided residence even if it has place false", "This only applies for defenders and for raid time");
 	RaidDefenderBlockPlace = c.get("Raid.Allow.Defender.blockPlace", true);
+	c.addComment("Raid.Allow.Defender.Teleport", "Allows to teleport into raided residence, includes /res tp and other 3rd party teleport commands", "This only applies for defenders and for raid time",
+	    "keep in mind that attackers will not have this option and will be prevented from teleporting inside raided residence");
+	RaidDefenderTeleport = c.get("Raid.Allow.Defender.Teleport", false);
 
 	c.addComment("Raid.Allow.Defender.containerUsage", "Allows to use containers, such as chests, during raid time", "This only applies for defenders and for raid time",
 	    "Keeping this at false might prevent from players moving their items to another residence which is not in raid", "Attackers will have access to any container in your residence during raid");

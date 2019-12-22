@@ -45,7 +45,7 @@ public enum lm {
     Area_Remove("&eRemoved area &6%1..."),
     Area_Name("&eName: &2%1"),
 
-    Area_ListAll("&a{&eID:&c%1 &eP1:&c(%2,%3,%4) &eP2:&c(%5,%6,%7) &e(Size:&c%8&e)&a}"), 
+    Area_ListAll("&a{&eID:&c%1 &eP1:&c(%2,%3,%4) &eP2:&c(%5,%6,%7) &e(Size:&c%8&e)&a}"),
 
     Area_RemoveLast("&cCannot remove the last area in a residence."),
     Area_NotWithinParent("&cArea is not within parent area."),
@@ -97,22 +97,32 @@ public enum lm {
     Sign_ResName("&8%1"),
     Sign_Owner("&5%1"),
 
-    Raid_NotEnabled("&cRaid is not enabled!"),
+    Raid_NotEnabled("&cRaid feature is not enabled!"),
+    Raid_NotIn("&cYou are not in the raid!"),
+    Raid_CantLeave("&cYou cant leave (%1) your own residence raid!"),
     Raid_StartsIn("&7Raid starts in: [autoTimeLeft] &2%1D &4%2A"),
     Raid_EndsIn("&cRaid ends in: [autoTimeLeft] &2%1D &4%2A"),
-    Raid_Joined("&7Joined &2%1 &7raid!"),
-    Raid_Started("&7Raid started!"),
+
     Raid_Ended("&7Raid on &4%1 &7ended!"),
     Raid_cantDo("&cCan't do this during raid!"),
-    Raid_noSelf("&cCan't raid your own residence!"),
-    Raid_isOffline("&cCan't raid while owner is offline!"),
-    Raid_cooldown("&cToo soon for another raid on this residence! Wait %1"),
+    Raid_left("&7You have left &4%1 &7raid"),
+    Raid_noFlagChange("&cCan't change flags during raid"),
+    Raid_noRemoval("&cCan't remove residence during raid"),
+
+    Raid_attack_Joined("&7Joined &2%1 &7raid!"),
+    Raid_attack_Started("&7Raid started!"),
+    Raid_attack_cooldown("&cToo soon for another raid on this residence! Wait %1"),
+    Raid_attack_isOffline("&cCan't raid while owner is offline!"),
+    Raid_attack_noSelf("&cCan't raid your own residence!"),
+    Raid_attack_alreadyInAnother("&cCan't join this rais, you are in another one already (%1)"),
+
     Raid_defend_Joined("&7Joined &2%1 &7defence forces!"),
     Raid_defend_Sent("&7Request to join raid defence is sent, wait for confirmation"),
     Raid_defend_JoinedDef("&2%1&7 joined defence forces!"),
     Raid_defend_IsOffline("&cCan't join defend team while owner is offline!"),
     Raid_defend_noSelf("&cYou already defending this residence"),
     Raid_defend_notRaided("&cResidence is not under the raid"),
+    Raid_defend_alreadyInAnother("&cCan't join this residence defence, you are in another one already (%1)"),
 
     info_years("&e%1 &6years "),
     info_oneYear("&e%1 &6year "),

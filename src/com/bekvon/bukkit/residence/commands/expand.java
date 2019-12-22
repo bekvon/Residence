@@ -37,7 +37,12 @@ public class expand implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
-
+	
+	if (res.isRaidInitialized()) {
+	    plugin.msg(sender, lm.Raid_cantDo);
+	    return true;
+	}
+	
 	if (res.isSubzone() && !resadmin && !ResPerm.command_expand_subzone.hasPermission(player, lm.Subzone_CantExpand))
 	    return true;
 
