@@ -32,7 +32,7 @@ public class kick implements cmd {
 	    return false;
 
 	Player targetplayer = Bukkit.getPlayer(args[1]);
-	if (targetplayer == null) {
+	if (targetplayer == null || !player.canSee(targetplayer)) {
 	    plugin.msg(player, lm.General_NotOnline);
 	    return true;
 	}
