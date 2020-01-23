@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,16 +21,16 @@ public class kick implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2200)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
 
-	if (args.length != 2)
+	if (args.length != 1)
 	    return false;
 
-	Player targetplayer = Bukkit.getPlayer(args[1]);
+	Player targetplayer = Bukkit.getPlayer(args[0]);
 	if (targetplayer == null || !player.canSee(targetplayer)) {
 	    plugin.msg(player, lm.General_NotOnline);
 	    return true;
@@ -77,9 +76,10 @@ public class kick implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Kicks player from residence.");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res kick <player>", "You must be the owner or an admin to do this.", "Player should be online."));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Kicks player from residence.");
+	c.get("Info", Arrays.asList("&eUsage: &6/res kick <player>", "You must be the owner or an admin to do this.", "Player should be online."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]"));
     }
 }

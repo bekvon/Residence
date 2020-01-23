@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,13 +20,13 @@ public class remove implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2300)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	ClaimedResidence res = null;
 	String senderName = sender.getName();
-	if (args.length == 2) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	} else if (sender instanceof Player && args.length == 1) {
+	if (args.length == 1) {
+	    res = plugin.getResidenceManager().getByName(args[0]);
+	} else if (sender instanceof Player && args.length == 0) {
 	    res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
 	}
 
@@ -100,10 +99,11 @@ public class remove implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Main command
-	c.get(path + "Description", "Remove residences.");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res remove <residence name>"));
+	c.get("Description", "Remove residences.");
+	c.get("Info", Arrays.asList("&eUsage: &6/res remove <residence name>"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

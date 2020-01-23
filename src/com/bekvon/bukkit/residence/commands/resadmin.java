@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,17 +15,17 @@ public class resadmin implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5300)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
-	if (args.length != 2)
+	if (args.length != 1)
 	    return true;
 
 	Player player = (Player) sender;
-	if (args[1].equals("on")) {
+	if (args[0].equals("on")) {
 	    plugin.resadminToggle.add(player.getName());
 	    plugin.msg(player, lm.General_AdminToggleTurnOn);
-	} else if (args[1].equals("off")) {
+	} else if (args[0].equals("off")) {
 	    plugin.resadminToggle.remove(player.getName());
 	    plugin.msg(player, lm.General_AdminToggleTurnOff);
 	}
@@ -34,9 +33,10 @@ public class resadmin implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Enabled or disable residence admin");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res resadmin [on/off]"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Enabled or disable residence admin");
+	c.get("Info", Arrays.asList("&eUsage: &6/res resadmin [on/off]"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("on%%off"));
     }
 }

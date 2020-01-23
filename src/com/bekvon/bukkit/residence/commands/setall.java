@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
@@ -21,17 +20,17 @@ public class setall implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 700)
-    public boolean perform(final Residence plugin, final String[] args, final boolean resadmin, Command command, final CommandSender sender) {
-	if (args.length != 3)
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+	if (args.length != 2)
 	    return false;
 
-	String flag = args[1];
-	
+	String flag = args[0];
+
 	Flags f = Flags.getFlag(flag);
 	if (f != null)
 	    flag = f.toString();
-	
-	FlagState state = FlagPermissions.stringToFlagState(args[2]);
+
+	FlagState state = FlagPermissions.stringToFlagState(args[1]);
 	FlagPermissions GlobalFlags = Residence.getInstance().getPermissionManager().getAllFlags();
 
 	if (flag == null || !GlobalFlags.checkValidFlag(flag.toLowerCase(), true)) {
@@ -59,9 +58,10 @@ public class setall implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Set general flags on all residences");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res setall [flag] [true/false/remove]"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Set general flags on all residences");
+	c.get("Info", Arrays.asList("&eUsage: &6/res setall [flag] [true/false/remove]"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[flag]", "true%%false%%remove"));
     }
 }

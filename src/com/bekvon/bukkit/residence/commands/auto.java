@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -17,40 +16,39 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class auto implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 150)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
-	if (args.length != 2 && args.length != 1 && args.length != 3) {
+	if (args.length != 1 && args.length != 0 && args.length != 2) {
 	    return false;
 	}
 
 	String resName = null;
 
 	int lenght = -1;
-	if (args.length == 2)
+	if (args.length == 1)
 	    try {
-		lenght = Integer.parseInt(args[1]);
+		lenght = Integer.parseInt(args[0]);
 	    } catch (Exception | Error e) {
 
 	    }
 
-	if (args.length > 1 && lenght == -1)
-	    resName = args[1];
+	if (args.length > 0 && lenght == -1)
+	    resName = args[0];
 	else
 	    resName = player.getName();
 
-	if (args.length == 3) {
-	    resName = args[1];
+	if (args.length == 2) {
+	    resName = args[0];
 	    try {
-		lenght = Integer.parseInt(args[2]);
+		lenght = Integer.parseInt(args[1]);
 	    } catch (Exception ex) {
 	    }
 	}
@@ -117,7 +115,7 @@ public class auto implements cmd {
 
 	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
 	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
-	Debug.D(minY + " " + maxY);
+
 	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true);
 
 	if (plugin.getResidenceManager().getByName(resName) != null) {
@@ -289,9 +287,10 @@ public class auto implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Main command
-	c.get(path + "Description", "Create maximum allowed residence around you");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res auto (residence name) (radius)"));
+	c.get("Description", "Create maximum allowed residence around you");
+	c.get("Info", Arrays.asList("&eUsage: &6/res auto (residence name) (radius)"));
     }
 }

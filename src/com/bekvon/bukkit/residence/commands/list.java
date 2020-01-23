@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
@@ -17,7 +16,7 @@ public class list implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 300)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	int page = 1;
 	World world = null;
 	String target = null;
@@ -49,9 +48,10 @@ public class list implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "List Residences");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res list <player> <page> <worldName>",
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "List Residences");
+	c.get("Info", Arrays.asList("&eUsage: &6/res list <player> <page> <worldName>",
 	    "Lists all the residences a player owns (except hidden ones).",
 	    "If listing your own residences, shows hidden ones as well.",
 	    "To list everyones residences, use /res listall."));

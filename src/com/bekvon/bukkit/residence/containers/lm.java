@@ -27,6 +27,9 @@ public enum lm {
     Invalid_Help("&cInvalid Help Page..."),
     Invalid_NameCharacters("&cName contained unallowed characters..."),
 
+     Invalid_FromConsole("&cYou can only use this in the console!"),
+    Invalid_Ingame("&cYou can only use this in game!"),
+    
     Area_Exists("&cArea name already exists."),
     Area_Create("&eResidence Area created, ID &6%1"),
     Area_DiffWorld("&cArea is in a different world from residence."),

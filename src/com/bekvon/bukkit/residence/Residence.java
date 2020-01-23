@@ -131,8 +131,6 @@ import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
 import com.residence.mcstats.Metrics;
 import com.residence.zip.ZipLibrary;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
@@ -220,8 +218,8 @@ public class Residence extends JavaPlugin {
     private final static Set<String> validLanguages = new HashSet<String>(Arrays.asList("English", "Czech", "Chinese", "ChineseTW", "French", "Spanish"));
     private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private Map<UUID, OfflinePlayer> cachedPlayerNameUUIDs = new HashMap<UUID, OfflinePlayer>();
-    private WorldEditPlugin wep = null;
-    private WorldGuardPlugin wg = null;
+    private com.sk89q.worldedit.bukkit.WorldEditPlugin wep = null;
+    private com.sk89q.worldguard.bukkit.WorldGuardPlugin wg = null;
     private CMIMaterial wepid;
 
 //    private String ServerLandname = "Server_Land";
@@ -905,7 +903,7 @@ public class Residence extends JavaPlugin {
 	try {
 	    Plugin plugin = server.getPluginManager().getPlugin("WorldEdit");
 	    if (plugin != null) {
-		this.wep = (WorldEditPlugin) plugin;
+		this.wep = (com.sk89q.worldedit.bukkit.WorldEditPlugin) plugin;
 		try {
 		    Class.forName("com.sk89q.worldedit.bukkit.selections.Selection");
 		    smanager = new WorldEditSelectionManager(server, this);
@@ -952,7 +950,7 @@ public class Residence extends JavaPlugin {
     private void setWorldGuard() {
 	Plugin wgplugin = server.getPluginManager().getPlugin("WorldGuard");
 	if (wgplugin != null) {
-	    wg = (WorldGuardPlugin) wgplugin;
+	    wg = (com.sk89q.worldguard.bukkit.WorldGuardPlugin) wgplugin;
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldGuard " + wg.getDescription().getVersion());
 	}
     }
@@ -1888,11 +1886,11 @@ public class Residence extends JavaPlugin {
 	return InformationPagerManager;
     }
 
-    public WorldEditPlugin getWorldEdit() {
+    public com.sk89q.worldedit.bukkit.WorldEditPlugin getWorldEdit() {
 	return wep;
     }
 
-    public WorldGuardPlugin getWorldGuard() {
+    public com.sk89q.worldguard.bukkit.WorldGuardPlugin getWorldGuard() {
 	return wg;
     }
 

@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +17,7 @@ public class message implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1000)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	ClaimedResidence res = null;
 	String message = null;
 	Boolean enter = null;
@@ -91,9 +90,10 @@ public class message implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Manage residence enter / leave messages");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res message <residence> [enter/leave] [message]",
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Manage residence enter / leave messages");
+	c.get("Info", Arrays.asList("&eUsage: &6/res message <residence> [enter/leave] [message]",
 	    "Set the enter or leave message of a residence.", "&eUsage: &6/res message <residence> remove [enter/leave]", "Removes a enter or leave message."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%enter%%leave", "enter%%leave"));
     }

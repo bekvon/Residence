@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Map.Entry;
+import java.util.TimeZone;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -31,7 +31,7 @@ public class shop implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1700)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -44,22 +44,22 @@ public class shop implements cmd {
 	} catch (Exception ex) {
 	}
 
-	if ((args.length == 2 || args.length == 3 || args.length == 4) && (args[1].equalsIgnoreCase("votes") || args[1].equalsIgnoreCase("likes"))) {
+	if ((args.length == 1 || args.length == 2 || args.length == 3) && (args[0].equalsIgnoreCase("votes") || args[0].equalsIgnoreCase("likes"))) {
 
 	    int VotePage = 1;
 
 	    ClaimedResidence res = null;
-	    if (args.length == 2) {
+	    if (args.length == 1) {
 		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
 		    plugin.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
-	    } else if (args.length == 3) {
-		res = plugin.getResidenceManager().getByName(args[2]);
+	    } else if (args.length == 2) {
+		res = plugin.getResidenceManager().getByName(args[1]);
 		if (res == null) {
 		    try {
-			VotePage = Integer.parseInt(args[2]);
+			VotePage = Integer.parseInt(args[1]);
 			res = plugin.getResidenceManager().getByLoc(player.getLocation());
 			if (res == null) {
 			    plugin.msg(player, lm.Residence_NotIn);
@@ -71,14 +71,14 @@ public class shop implements cmd {
 		    }
 		}
 
-	    } else if (args.length == 4) {
-		res = plugin.getResidenceManager().getByName(args[2]);
+	    } else if (args.length == 3) {
+		res = plugin.getResidenceManager().getByName(args[1]);
 		if (res == null) {
 		    plugin.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 		try {
-		    VotePage = Integer.parseInt(args[3]);
+		    VotePage = Integer.parseInt(args[2]);
 		} catch (Exception ex) {
 		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
@@ -125,13 +125,13 @@ public class shop implements cmd {
 
 	    return true;
 	}
-	if ((args.length == 2 || args.length == 3) && args[1].equalsIgnoreCase("list")) {
+	if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("list")) {
 
 	    int Shoppage = 1;
 
-	    if (args.length == 3) {
+	    if (args.length == 2) {
 		try {
-		    Shoppage = Integer.parseInt(args[2]);
+		    Shoppage = Integer.parseInt(args[1]);
 		} catch (Exception ex) {
 		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
@@ -184,7 +184,7 @@ public class shop implements cmd {
 	    return true;
 	}
 
-	if (args.length == 2 && args[1].equalsIgnoreCase("DeleteBoard")) {
+	if (args.length == 1 && args[0].equalsIgnoreCase("DeleteBoard")) {
 
 	    if (!resadmin) {
 		plugin.msg(player, lm.General_AdminOnly);
@@ -195,12 +195,12 @@ public class shop implements cmd {
 	    plugin.msg(player, lm.Shop_DeleteBoard);
 	    return true;
 	}
-	if (args.length > 2 && args[1].equalsIgnoreCase("setdesc")) {
+	if (args.length > 1 && args[0].equalsIgnoreCase("setdesc")) {
 
 	    ClaimedResidence res = null;
 
 	    String desc = "";
-	    if (args.length >= 2) {
+	    if (args.length >= 1) {
 		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
 		    plugin.msg(player, lm.Residence_NotIn);
@@ -225,21 +225,21 @@ public class shop implements cmd {
 	    plugin.msg(player, lm.Shop_DescChange, ChatColor.translateAlternateColorCodes('&', desc));
 	    return true;
 	}
-	if (args.length == 3 && args[1].equalsIgnoreCase("createboard")) {
+	if (args.length == 2 && args[0].equalsIgnoreCase("createboard")) {
 
 	    if (!resadmin) {
 		plugin.msg(player, lm.General_AdminOnly);
 		return true;
 	    }
 
-	    if (!plugin.getSelectionManager().hasPlacedBoth(player.getName())) {
+	    if (!plugin.getSelectionManager().hasPlacedBoth(player)) {
 		plugin.msg(player, lm.Select_Points);
 		return true;
 	    }
 
 	    int place = 1;
 	    try {
-		place = Integer.parseInt(args[2]);
+		place = Integer.parseInt(args[1]);
 	    } catch (Exception ex) {
 		plugin.msg(player, lm.General_UseNumbers);
 		return true;
@@ -260,8 +260,8 @@ public class shop implements cmd {
 		return true;
 	    }
 
-	    Location loc1 = plugin.getSelectionManager().getPlayerLoc1(player.getName());
-	    Location loc2 = plugin.getSelectionManager().getPlayerLoc2(player.getName());
+	    Location loc1 = plugin.getSelectionManager().getPlayerLoc1(player);
+	    Location loc2 = plugin.getSelectionManager().getPlayerLoc2(player);
 
 	    if (loc1.getBlockY() < loc2.getBlockY()) {
 		plugin.msg(player, lm.Shop_InvalidSelection);
@@ -287,15 +287,15 @@ public class shop implements cmd {
 	    return true;
 
 	}
-	if ((args.length == 2 || args.length == 3 || args.length == 4) && (args[1].equalsIgnoreCase("vote") || args[1].equalsIgnoreCase("like"))) {
+	if ((args.length == 1 || args.length == 2 || args.length == 3) && (args[0].equalsIgnoreCase("vote") || args[0].equalsIgnoreCase("like"))) {
 	    String resName = "";
 	    int vote = 5;
 	    ClaimedResidence res = null;
-	    if (args.length == 3) {
+	    if (args.length == 2) {
 
 		if (plugin.getConfigManager().isOnlyLike()) {
 
-		    res = plugin.getResidenceManager().getByName(args[2]);
+		    res = plugin.getResidenceManager().getByName(args[1]);
 		    if (res == null) {
 			plugin.msg(player, lm.Invalid_Residence);
 			return true;
@@ -310,39 +310,39 @@ public class shop implements cmd {
 		    }
 
 		    try {
-			vote = Integer.parseInt(args[2]);
+			vote = Integer.parseInt(args[1]);
 		    } catch (Exception ex) {
 			plugin.msg(player, lm.General_UseNumbers);
 			return true;
 		    }
 		}
-	    } else if (args.length == 2 && plugin.getConfigManager().isOnlyLike()) {
+	    } else if (args.length == 1 && plugin.getConfigManager().isOnlyLike()) {
 		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
 		    plugin.msg(player, lm.Residence_NotIn);
 		    return true;
 		}
 		vote = plugin.getConfigManager().getVoteRangeTo();
-	    } else if (args.length == 4 && !plugin.getConfigManager().isOnlyLike()) {
-		res = plugin.getResidenceManager().getByName(args[2]);
+	    } else if (args.length == 3 && !plugin.getConfigManager().isOnlyLike()) {
+		res = plugin.getResidenceManager().getByName(args[1]);
 		if (res == null) {
 		    plugin.msg(player, lm.Invalid_Residence);
 		    return true;
 		}
 		try {
-		    vote = Integer.parseInt(args[3]);
+		    vote = Integer.parseInt(args[2]);
 		} catch (Exception ex) {
 		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
 		}
-	    } else if (args.length == 3 && !plugin.getConfigManager().isOnlyLike()) {
+	    } else if (args.length == 2 && !plugin.getConfigManager().isOnlyLike()) {
 		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res == null) {
 		    plugin.msg(player, lm.Invalid_Residence);
 		    return true;
 		}
 		try {
-		    vote = Integer.parseInt(args[3]);
+		    vote = Integer.parseInt(args[2]);
 		} catch (Exception ex) {
 		    plugin.msg(player, lm.General_UseNumbers);
 		    return true;
@@ -406,40 +406,41 @@ public class shop implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Manage residence shop");
-	c.get(path + "Info", Arrays.asList("Manages residence shop feature"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Manage residence shop");
+	c.get("Info", Arrays.asList("Manages residence shop feature"));
 
 	// Sub commands
-	path += "SubCommands.";
-	c.get(path + "list.Description", "Shows list of res shops");
-	c.get(path + "list.Info", Arrays.asList("&eUsage: &6/res shop list", "Shows full list of all residences with shop flag"));
+	c.setP(c.getPath()+"SubCommands.");
+	c.get("list.Description", "Shows list of res shops");
+	c.get("list.Info", Arrays.asList("&eUsage: &6/res shop list", "Shows full list of all residences with shop flag"));
 
-	c.get(path + "vote.Description", "Vote for residence shop");
-	c.get(path + "vote.Info", Arrays.asList("&eUsage: &6/res shop vote <residence> [amount]", "Votes for current or defined residence"));
+	c.get("vote.Description", "Vote for residence shop");
+	c.get("vote.Info", Arrays.asList("&eUsage: &6/res shop vote <residence> [amount]", "Votes for current or defined residence"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "vote"), Arrays.asList("[residence]", "10"));
 
-	c.get(path + "like.Description", "Give like for residence shop");
-	c.get(path + "like.Info", Arrays.asList("&eUsage: &6/res shop like <residence>", "Gives like for residence shop"));
+	c.get("like.Description", "Give like for residence shop");
+	c.get("like.Info", Arrays.asList("&eUsage: &6/res shop like <residence>", "Gives like for residence shop"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "like"), Arrays.asList("[residenceshop]"));
 
-	c.get(path + "votes.Description", "Shows res shop votes");
-	c.get(path + "votes.Info", Arrays.asList("&eUsage: &6/res shop votes <residence> <page>", "Shows full vote list of current or defined residence shop"));
+	c.get("votes.Description", "Shows res shop votes");
+	c.get("votes.Info", Arrays.asList("&eUsage: &6/res shop votes <residence> <page>", "Shows full vote list of current or defined residence shop"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "votes"), Arrays.asList("[residenceshop]"));
 
-	c.get(path + "likes.Description", "Shows res shop likes");
-	c.get(path + "likes.Info", Arrays.asList("&eUsage: &6/res shop likes <residence> <page>", "Shows full like list of current or defined residence shop"));
+	c.get("likes.Description", "Shows res shop likes");
+	c.get("likes.Info", Arrays.asList("&eUsage: &6/res shop likes <residence> <page>", "Shows full like list of current or defined residence shop"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "likes"), Arrays.asList("[residenceshop]"));
 
-	c.get(path + "setdesc.Description", "Sets residence shop description");
-	c.get(path + "setdesc.Info", Arrays.asList("&eUsage: &6/res shop setdesc [text]", "Sets residence shop description. Color code supported. For new line use /n"));
+	c.get("setdesc.Description", "Sets residence shop description");
+	c.get("setdesc.Info", Arrays.asList("&eUsage: &6/res shop setdesc [text]", "Sets residence shop description. Color code supported. For new line use /n"));
 
-	c.get(path + "createboard.Description", "Create res shop board");
-	c.get(path + "createboard.Info", Arrays.asList("&eUsage: &6/res shop createboard [place]",
+	c.get("createboard.Description", "Create res shop board");
+	c.get("createboard.Info", Arrays.asList("&eUsage: &6/res shop createboard [place]",
 	    "Creates res shop board from selected area. Place - position from which to start filling board"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "createboard"), Arrays.asList("1"));
 
-	c.get(path + "deleteboard.Description", "Deletes res shop board");
-	c.get(path + "deleteboard.Info", Arrays.asList("&eUsage: &6/res shop deleteboard", "Deletes res shop board bi right clicking on one of signs"));
+	c.get("deleteboard.Description", "Deletes res shop board");
+	c.get("deleteboard.Info", Arrays.asList("&eUsage: &6/res shop deleteboard", "Deletes res shop board bi right clicking on one of signs"));
     }
 }

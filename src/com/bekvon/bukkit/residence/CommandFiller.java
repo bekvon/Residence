@@ -19,7 +19,7 @@ import com.bekvon.bukkit.residence.containers.CommandStatus;
 public class CommandFiller {
 
     public final String packagePath = "com.bekvon.bukkit.residence.commands";
-    public Map<String, CommandStatus> CommandList = new HashMap<String, CommandStatus>();
+    private Map<String, CommandStatus> CommandList = new HashMap<String, CommandStatus>();
 
     public List<String> getCommands(Boolean simple) {
 	Map<String, Integer> cmd = new HashMap<String, Integer>();
@@ -74,12 +74,15 @@ public class CommandFiller {
 		Boolean simple = met.getAnnotation(CommandAnnotation.class).simple();
 		int Priority = met.getAnnotation(CommandAnnotation.class).priority();
 
+		String info = met.getAnnotation(CommandAnnotation.class).info();
+		String[] usage = met.getAnnotation(CommandAnnotation.class).usage();
+
 		String cmd = OneClass.getKey();
-		CommandList.put(cmd, new CommandStatus(simple, Priority));
+		CommandList.put(cmd, new CommandStatus(simple, Priority, info, usage));
 		break;
 	    }
 	    if (!found) {
-		CommandList.put(OneClass.getKey(), new CommandStatus(true, 1000));
+		CommandList.put(OneClass.getKey(), new CommandStatus(true, 1000, "", new String[0]));
 	    }
 	}
 	return CommandList;
@@ -138,5 +141,11 @@ public class CommandFiller {
 	} catch (SecurityException e) {
 	}
 	return nmsClass;
+    }
+
+    public Map<String, CommandStatus> getCommandMap() {
+	if (CommandList.isEmpty())
+	    this.fillCommands();
+	return CommandList;
     }
 }

@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,16 +16,16 @@ public class material implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4300)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
-	if (args.length != 2) {
+	if (args.length != 1) {
 	    return false;
 	}
 	try {
-	    plugin.msg(player, lm.General_MaterialGet, args[1], CMIMaterial.get(Integer.parseInt(args[1])).getName());
+	    plugin.msg(player, lm.General_MaterialGet, args[0], CMIMaterial.get(Integer.parseInt(args[0])).getName());
 	} catch (Exception ex) {
 	    plugin.msg(player, lm.Invalid_Material);
 	}
@@ -34,9 +33,10 @@ public class material implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Check if material exists by its id");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res material [material]"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Check if material exists by its id");
+	c.get("Info", Arrays.asList("&eUsage: &6/res material [material]"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[materialId]"));
     }
 }

@@ -3,7 +3,6 @@ package com.bekvon.bukkit.residence.commands;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,11 +19,11 @@ public class set implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 700)
-    public boolean perform(final Residence plugin, final String[] args, final boolean resadmin, Command command, final CommandSender sender) {
-	if (!(sender instanceof Player) && args.length != 4)
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+	if (!(sender instanceof Player) && args.length != 3)
 	    return false;
 
-	if (args.length == 3) {
+	if (args.length == 2) {
 	    Player player = (Player) sender;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res == null) {
@@ -35,10 +34,10 @@ public class set implements cmd {
 		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
-	    res.getPermissions().setFlag(sender, args[1], args[2], resadmin);
+	    res.getPermissions().setFlag(sender, args[0], args[1], resadmin);
 	    return true;
-	} else if (args.length == 4) {
-	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
+	} else if (args.length == 3) {
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 	    if (res == null) {
 		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
@@ -47,16 +46,16 @@ public class set implements cmd {
 		plugin.msg(sender, lm.General_NoPermission);
 		return true;
 	    }
-	    res.getPermissions().setFlag(sender, args[2], args[3], resadmin);
+	    res.getPermissions().setFlag(sender, args[1], args[2], resadmin);
 	    return true;
-	} else if ((args.length == 1 || args.length == 2) && plugin.getConfigManager().useFlagGUI()) {
+	} else if ((args.length == 0 || args.length == 1) && plugin.getConfigManager().useFlagGUI()) {
 	    final Player player = (Player) sender;
 	    player.closeInventory();
 	    ClaimedResidence res = null;
-	    if (args.length == 1)
+	    if (args.length == 0)
 		res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    else
-		res = plugin.getResidenceManager().getByName(args[1]);
+		res = plugin.getResidenceManager().getByName(args[0]);
 	    if (res == null) {
 		plugin.msg(sender, lm.Invalid_Residence);
 		return true;
@@ -88,9 +87,10 @@ public class set implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Set general flags on a Residence");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res set <residence> [flag] [true/false/remove]",
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Set general flags on a Residence");
+	c.get("Info", Arrays.asList("&eUsage: &6/res set <residence> [flag] [true/false/remove]",
 	    "To see a list of flags, use /res flags ?", "These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%[flag]", "[flag]%%true%%false%%remove",
 	    "true%%false%%remove"));

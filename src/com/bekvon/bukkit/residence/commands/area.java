@@ -2,11 +2,11 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -16,8 +16,8 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class area implements cmd {
 
     @Override
-    @CommandAnnotation(simple = true, priority = 3300)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    @CommandAnnotation(info = "Manage physical areas for a residence.",priority = 3300)
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -30,26 +30,26 @@ public class area implements cmd {
 	} catch (Exception ex) {
 	}
 
-	if (args.length == 4) {
-	    if (args[1].equals("remove")) {
-		ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
+	if (args.length == 3) {
+	    if (args[0].equals("remove")) {
+		ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 		if (res != null) {
-		    res.removeArea(player, args[3], resadmin);
+		    res.removeArea(player, args[2], resadmin);
 		} else {
 		    plugin.msg(player, lm.Invalid_Residence);
 		}
 		return true;
-	    } else if (args[1].equals("add")) {
+	    } else if (args[0].equals("add")) {
 		if (plugin.getWorldEdit() != null) {
 		    if (plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool())) {
 			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
 		if (plugin.getSelectionManager().hasPlacedBoth(player)) {
-		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
+		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 		    if (res != null) {
-			if (res.addArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[3], resadmin))
-			    plugin.msg(player, lm.Area_Create, args[3]);
+			if (res.addArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[2], resadmin))
+			    plugin.msg(player, lm.Area_Create, args[2]);
 		    } else {
 			plugin.msg(player, lm.Invalid_Residence);
 		    }
@@ -57,16 +57,16 @@ public class area implements cmd {
 		    plugin.msg(player, lm.Select_Points);
 		}
 		return true;
-	    } else if (args[1].equals("replace")) {
+	    } else if (args[0].equals("replace")) {
 		if (plugin.getWorldEdit() != null) {
 		    if (plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool())) {
 			plugin.getSelectionManager().worldEdit(player);
 		    }
 		}
 		if (plugin.getSelectionManager().hasPlacedBoth(player)) {
-		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
+		    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 		    if (res != null) {
-			res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[3], resadmin);
+			res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), args[2], resadmin);
 		    } else {
 			plugin.msg(player, lm.Invalid_Residence);
 		    }
@@ -76,16 +76,16 @@ public class area implements cmd {
 		return true;
 	    }
 	}
-	if ((args.length == 3 || args.length == 4) && args[1].equals("list")) {
-	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
+	if ((args.length == 2 || args.length == 3) && args[0].equals("list")) {
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
 		res.printAreaList(player, page);
 	    } else {
 		plugin.msg(player, lm.Invalid_Residence);
 	    }
 	    return true;
-	} else if ((args.length == 3 || args.length == 4) && args[1].equals("listall")) {
-	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[2]);
+	} else if ((args.length == 2 || args.length == 3) && args[0].equals("listall")) {
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res != null) {
 		res.printAdvancedAreaList(player, page);
 	    } else {
@@ -97,28 +97,30 @@ public class area implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Manage physical areas for a residence.");
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Sub commands
-	path += "SubCommands.";
-	c.get(path + "list.Description", "List physical areas in a residence");
-	c.get(path + "list.Info", Arrays.asList("&eUsage: &6/res area list [residence] <page>"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "list"), Arrays.asList("[residence]"));
+	c.setP(c.getPath() + "SubCommands.");
+	c.get("list.Description", "List physical areas in a residence");
+	c.get("list.Info", Arrays.asList("&eUsage: &6/res area list [residence] <page>"));	
+	LocaleManager.addTabComplete(this, "list", "[residence]");
 
-	c.get(path + "listall.Description", "List coordinates and other Info for areas");
-	c.get(path + "listall.Info", Arrays.asList("&eUsage: &6/res area listall [residence] <page>"));
+	c.get("listall.Description", "List coordinates and other Info for areas");
+	c.get("listall.Info", Arrays.asList("&eUsage: &6/res area listall [residence] <page>"));	
+	
+	LocaleManager.addTabComplete(this, "listall", "[residence]");
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "listall"), Arrays.asList("[residence]"));
 
-	c.get(path + "add.Description", "Add physical areas to a residence");
-	c.get(path + "add.Info", Arrays.asList("&eUsage: &6/res area add [residence] [areaID]", "You must first select two points first."));
+	c.get("add.Description", "Add physical areas to a residence");
+	c.get("add.Info", Arrays.asList("&eUsage: &6/res area add [residence] [areaID]", "You must first select two points first."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "add"), Arrays.asList("[residence]"));
 
-	c.get(path + "remove.Description", "Remove physical areas from a residence");
-	c.get(path + "remove.Info", Arrays.asList("&eUsage: &6/res area remove [residence] [areaID]"));
+	c.get("remove.Description", "Remove physical areas from a residence");
+	c.get("remove.Info", Arrays.asList("&eUsage: &6/res area remove [residence] [areaID]"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "remove"), Arrays.asList("[residence]"));
 
-	c.get(path + "replace.Description", "Replace physical areas in a residence");
-	c.get(path + "replace.Info", Arrays.asList("&eUsage: &6/res area replace [residence] [areaID]",
+	c.get("replace.Description", "Replace physical areas in a residence");
+	c.get("replace.Info", Arrays.asList("&eUsage: &6/res area replace [residence] [areaID]",
 	    "You must first select two points first.", "Replacing a area will charge the difference in size if the new area is bigger."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "replace"), Arrays.asList("[residence]"));
 

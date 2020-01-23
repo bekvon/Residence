@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,20 +20,19 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.RaidAttacker;
 import com.bekvon.bukkit.residence.raid.RaidDefender;
 import com.bekvon.bukkit.residence.raid.ResidenceRaid;
-import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.Utils;
 
 public class raidstatus implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3100)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	final Player player = (Player) sender;
 
-	if (args.length != 1 && args.length != 2)
+	if (args.length != 0 && args.length != 1)
 	    return false;
 
 	if (!ConfigManager.RaidEnabled) {
@@ -42,9 +40,9 @@ public class raidstatus implements cmd {
 	    return true;
 	}
 
-	ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 	if (res == null) {
-	    OfflinePlayer offp = plugin.getOfflinePlayer(args[1]);
+	    OfflinePlayer offp = plugin.getOfflinePlayer(args[0]);
 	    if (offp != null) {
 		ResidencePlayer resp = plugin.getPlayerManager().getResidencePlayer(offp.getUniqueId());
 		res = resp.getCurrentlyRaidedResidence();
@@ -122,9 +120,10 @@ public class raidstatus implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Check raid status for a residence");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res raidstatus (resName/playerName)"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Check raid status for a residence");
+	c.get("Info", Arrays.asList("&eUsage: &6/res raidstatus (resName/playerName)"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]%%[playername]"));
     }
 

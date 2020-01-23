@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +17,7 @@ public class show implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3300)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -26,8 +25,8 @@ public class show implements cmd {
 
 	ClaimedResidence res = null;
 
-	if (args.length == 2) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
+	if (args.length == 1) {
+	    res = plugin.getResidenceManager().getByName(args[0]);
 	} else {
 	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	}
@@ -45,9 +44,10 @@ public class show implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Show residence boundaries");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res show <residence>"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Show residence boundaries");
+	c.get("Info", Arrays.asList("&eUsage: &6/res show <residence>"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +17,7 @@ public class give implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3800)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -27,7 +26,7 @@ public class give implements cmd {
 	boolean includeSubzones = false;
 	boolean confirmed = false;
 
-	if (args.length != 3 && args.length != 4 && args.length != 5)
+	if (args.length != 2 && args.length != 3 && args.length != 4)
 	    return false;
 
 	for (String one : args) {
@@ -40,27 +39,28 @@ public class give implements cmd {
 
 	    RawMessage rm = new RawMessage();
 
-	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
+	    ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 
 	    if (res == null) {
 		plugin.msg(sender, lm.Invalid_Residence);
 		return false;
 	    }
 
-	    rm.add(plugin.getLM().getMessage(lm.Residence_GiveConfirm, args[1], res.getOwner(), args[2]), plugin.getLM().getMessage(lm.info_click), (resadmin ? "resadmin" : "res") + " give " + args[1]
-		+ " " + args[2] + (includeSubzones ? " -s" : "") + " -confirmed");
+	    rm.add(plugin.getLM().getMessage(lm.Residence_GiveConfirm, args[0], res.getOwner(), args[1]), plugin.getLM().getMessage(lm.info_click), (resadmin ? "resadmin" : "res") + " give " + args[0]
+		+ " " + args[1] + (includeSubzones ? " -s" : "") + " -confirmed");
 	    rm.show(sender);
 
 	    return true;
 	}
-	plugin.getResidenceManager().giveResidence(player, args[2], args[1], resadmin, includeSubzones);
+	plugin.getResidenceManager().giveResidence(player, args[1], args[0], resadmin, includeSubzones);
 	return true;
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Give residence to player.");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res give <residence name> [player] <-s>", "Gives your owned residence to target player"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Give residence to player.");
+	c.get("Info", Arrays.asList("&eUsage: &6/res give <residence name> [player] <-s>", "Gives your owned residence to target player"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[playername]"));
     }
 }

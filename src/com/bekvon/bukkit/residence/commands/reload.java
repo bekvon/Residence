@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
@@ -19,39 +18,37 @@ public class reload implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5800)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!resadmin && !sender.isOp()) {
 	    plugin.msg(sender, lm.General_NoPermission);
 	    return true;
 	}
 
-	if (args.length != 2) {
+	if (args.length != 1) {
 	    return false;
 	}
-
-	if (args[1].equalsIgnoreCase("lang")) {
+	switch (args[0].toLowerCase()) {
+	case "lang":
 	    plugin.getLM().LanguageReload();
 	    plugin.getLocaleManager().LoadLang(plugin.getConfigManager().getLanguage());
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded language file.");
 	    return true;
-	} else if (args[1].equalsIgnoreCase("config")) {
+	case "config":
 	    plugin.getConfigManager().UpdateConfigFile();
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded config file.");
 	    return true;
-	} else if (args[1].equalsIgnoreCase("groups")) {
+	case "groups":
 	    plugin.getConfigManager().loadGroups();
 	    plugin.gmanager = new PermissionManager(plugin);
 	    plugin.wmanager = new WorldFlagManager(plugin);
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded groups file.");
 	    return true;
-	} else if (args[1].equalsIgnoreCase("flags")) {
+	case "flags":
 	    plugin.getConfigManager().loadFlags();
 	    plugin.gmanager = new PermissionManager(plugin);
 	    plugin.imanager = new WorldItemManager(plugin);
 	    plugin.wmanager = new WorldFlagManager(plugin);
-
 	    FlagPermissions.initValidFlags();
-
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded flags file.");
 	    return true;
 	}
@@ -59,9 +56,10 @@ public class reload implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "reload lanf or config files");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res reload [config/lang/groups/flags]"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "reload lanf or config files");
+	c.get("Info", Arrays.asList("&eUsage: &6/res reload [config/lang/groups/flags]"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("config%%lang%%groups%%flags"));
     }
 }

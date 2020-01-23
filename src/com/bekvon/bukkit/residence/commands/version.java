@@ -3,7 +3,6 @@ package com.bekvon.bukkit.residence.commands;
 import java.util.Arrays;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
@@ -15,7 +14,7 @@ public class version implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5900)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	sender.sendMessage(ChatColor.GRAY + "------------------------------------");
 	sender.sendMessage(ChatColor.RED + "This server running " + ChatColor.GOLD + "Residence" + ChatColor.RED + " version: " + ChatColor.BLUE + plugin.getResidenceVersion());
 	sender.sendMessage(ChatColor.GREEN + "Created by: " + ChatColor.YELLOW + "bekvon");
@@ -38,8 +37,9 @@ public class version implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "how residence version");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res version"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "how residence version");
+	c.get("Info", Arrays.asList("&eUsage: &6/res version"));
     }
 }

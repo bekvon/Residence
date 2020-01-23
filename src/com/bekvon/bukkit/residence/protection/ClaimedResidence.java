@@ -1082,6 +1082,12 @@ public class ClaimedResidence {
 
 	    found = true;
 	    loc.add(0.5, 0.1, 0.5);
+
+	    // Incase empty space is on oposite side
+	    if (plugin.getResidenceManager().getByLoc(loc) == this) {
+		loc.add(-1, 0, -1);
+	    }
+
 	    break;
 	}
 

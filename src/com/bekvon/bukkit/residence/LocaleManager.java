@@ -33,9 +33,14 @@ public class LocaleManager {
     private Residence plugin;
 
     public String path = "CommandHelp.SubCommands.res.SubCommands.";
+    private ConfigReader c = null;
 
     public LocaleManager(Residence plugin) {
 	this.plugin = plugin;
+    }
+    
+    public static void addTabComplete(Object cl, String subCmd, String... tabs) {	
+	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(cl.getClass().getSimpleName(), subCmd), Arrays.asList(tabs));
     }
 
     private static YamlConfiguration loadConfiguration(BufferedReader in, String language) {
@@ -58,7 +63,7 @@ public class LocaleManager {
     public void LoadLang(String lang) {
 
 	File f = new File(plugin.getDataFolder(), "Language" + File.separator + lang + ".yml");
-	if(!f.isFile())
+	if (!f.isFile())
 	    try {
 		f.createNewFile();
 	    } catch (IOException e2) {
@@ -86,9 +91,8 @@ public class LocaleManager {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-	
 
-	ConfigReader c = null;
+	c = null;
 	try {
 	    c = new ConfigReader("Language" + File.separator + lang + ".yml");
 	} catch (Exception e1) {
@@ -97,6 +101,9 @@ public class LocaleManager {
 	if (c == null)
 	    return;
 	c.copyDefaults(true);
+
+	if (lang.equalsIgnoreCase(plugin.getConfigManager().getLanguage()))
+	    c.setRecordContents(true);
 
 	c.header(Arrays.asList("NOTE If you want to modify this file, it is HIGHLY recommended that you make a copy",
 	    "of this file and modify that instead. This file will be updated automatically by Residence",
@@ -120,26 +127,31 @@ public class LocaleManager {
 	    if (lm.getComments() != null)
 		c.addComment(lm.getPath(), lm.getComments());
 	}
-	
+
 	c.addComment("CommandHelp", "");
 
 	c.get("CommandHelp.Description", "Contains Help for Residence");
 	c.get("CommandHelp.SubCommands.res.Description", "Main Residence Command");
 	c.get("CommandHelp.SubCommands.res.Info", Arrays.asList("&2Use &6/res [command] ? <page> &2to view more help Information."));
 
-	for (Entry<String, CommandStatus> cmo : plugin.getCommandFiller().CommandList.entrySet()) {
-	    String path = plugin.getLocaleManager().path + cmo.getKey() + ".";
+	for (Entry<String, CommandStatus> cmo : plugin.getCommandFiller().getCommandMap().entrySet()) {
+	    c.setP(plugin.getLocaleManager().path + cmo.getKey() + ".");
 	    try {
 		Class<?> cl = Class.forName(plugin.getCommandFiller().packagePath + "." + cmo.getKey());
 		if (cmd.class.isAssignableFrom(cl)) {
 		    cmd cm = (cmd) cl.getConstructor().newInstance();
-		    cm.getLocale(c, path);
+		    if (!cmo.getValue().getInfo().isEmpty())
+			c.get("Description", cmo.getValue().getInfo());
+		    if (cmo.getValue().getUsage().length != 0)
+			c.get("Info", Arrays.asList(cmo.getValue().getUsage()));
+		    cm.getLocale();
 		}
 	    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 		| NoSuchMethodException | SecurityException e) {
 		continue;
 	    }
 	}
+	c.resetP();
 
 	if (lang.equalsIgnoreCase(plugin.getConfigManager().getLanguage())) {
 	    for (Flags one : Flags.values()) {
@@ -165,5 +177,9 @@ public class LocaleManager {
 
 	// Write back config
 	c.save();
+    }
+
+    public ConfigReader getLocaleConfig() {
+	return c;
     }
 }

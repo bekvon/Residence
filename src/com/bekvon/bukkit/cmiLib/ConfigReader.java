@@ -25,9 +25,11 @@ import com.google.common.io.Files;
 
 public class ConfigReader extends YamlConfiguration {
     private HashMap<String, String> comments;
+    private HashMap<String, Object> contents;
     YamlConfiguration config;
     private String p = null;
     private File file = null;
+    private boolean recordContents = false;
 
     public ConfigReader(String fileName) throws Exception {
 	this(new File(Residence.getInstance().getDataFolder(), fileName));
@@ -36,8 +38,17 @@ public class ConfigReader extends YamlConfiguration {
     public ConfigReader(File file) throws Exception {
 	super();
 	comments = new HashMap<String, String>();
+	contents = new HashMap<String, Object>();
 	this.file = file;
 	this.config = getyml(file);
+    }
+
+    public void load() {
+	try {
+	    this.load(file);
+	} catch (IOException | InvalidConfigurationException e) {
+	    e.printStackTrace();
+	}
     }
 
     @Override
@@ -181,6 +192,9 @@ public class ConfigReader extends YamlConfiguration {
     }
 
     public void addComment(String path, String... commentLines) {
+	if (this.p != null)
+	    path = this.p + path;
+
 	StringBuilder commentstring = new StringBuilder();
 	String leadingSpaces = "";
 	for (int n = 0; n < path.length(); n++) {
@@ -207,6 +221,7 @@ public class ConfigReader extends YamlConfiguration {
 	try {
 	    fileinputstream = new FileInputStream(file);
 	    InputStreamReader str = new InputStreamReader(fileinputstream, Charset.forName("UTF-8"));
+
 	    config.load(str);
 	    str.close();
 	} catch (FileNotFoundException e) {
@@ -289,6 +304,11 @@ public class ConfigReader extends YamlConfiguration {
 	getC().options().copyDefaults(value);
     }
 
+    public Boolean get(String path, Boolean boo) {
+	path = process(path, boo);
+	return config.getBoolean(path);
+    }
+
     private String process(String path, Object value) {
 	if (this.p != null)
 	    path = this.p + path;
@@ -296,11 +316,6 @@ public class ConfigReader extends YamlConfiguration {
 	config.addDefault(path, value);
 	copySetting(path);
 	return path;
-    }
-
-    public Boolean get(String path, Boolean boo) {
-	path = process(path, boo);
-	return config.getBoolean(path);
     }
 
     public Object get(String path, Location boo) {
@@ -318,14 +333,84 @@ public class ConfigReader extends YamlConfiguration {
 	return config.getIntegerList(path);
     }
 
+    private static String convertUnicode(String st) {
+	try {
+	    if (!st.contains("\\u"))
+		return st;
+
+	    StringBuilder sb = new StringBuilder(st.length());
+	    for (int i = 0; i < st.length(); i++) {
+		char ch = st.charAt(i);
+		if (ch == '\\') {
+		    char nextChar = (i == st.length() - 1) ? '\\' : st.charAt(i + 1);
+		    if (nextChar >= '0' && nextChar <= '7') {
+			String code = "" + nextChar;
+			i++;
+			if ((i < st.length() - 1) && st.charAt(i + 1) >= '0' && st.charAt(i + 1) <= '7') {
+			    code += st.charAt(i + 1);
+			    i++;
+			    if ((i < st.length() - 1) && st.charAt(i + 1) >= '0' && st.charAt(i + 1) <= '7') {
+				code += st.charAt(i + 1);
+				i++;
+			    }
+			}
+			sb.append((char) Integer.parseInt(code, 8));
+			continue;
+		    }
+		    switch (nextChar) {
+		    case 'u':
+			if (i >= st.length() - 5) {
+			    ch = 'u';
+			    break;
+			}
+			try {
+			    int code = Integer.parseInt("" + st.charAt(i + 2) + st.charAt(i + 3) + st.charAt(i + 4) + st.charAt(i + 5), 16);
+			    sb.append(Character.toChars(code));
+			} catch (NumberFormatException e) {
+			    sb.append("\\");
+			    continue;
+			}
+			i += 5;
+			continue;
+		    default:
+			sb.append("\\");
+			continue;
+		    }
+		    i++;
+		}
+		sb.append(ch);
+	    }
+	    return sb.toString();
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return st;
+	}
+    }
+
     public List<String> get(String path, List<String> list) {
 	path = process(path, list);
-	return config.getStringList(path);
+
+	if (recordContents) {
+	    contents.put(path, config.isList(path) ? config.getStringList(path) : list);
+	}
+
+	List<String> ls = config.getStringList(path);
+
+	for (int p = 0; p < ls.size(); p++) {
+	    String st = convertUnicode(ls.get(p));
+	    ls.set(p, st);
+	}
+
+	return ls;
     }
 
     public String get(String path, String boo) {
 	path = process(path, boo);
-	return config.getString(path);
+
+	if (recordContents)
+	    contents.put(path, config.isString(path) ? config.getString(path) : boo);
+
+	return convertUnicode(config.getString(path));
     }
 
     public Double get(String path, Double boo) {
@@ -342,6 +427,18 @@ public class ConfigReader extends YamlConfiguration {
     }
 
     public void setP(String cmd) {
-	this.p = "command." + cmd + ".info.";
+	this.p = cmd;
+    }
+
+    public String getPath() {
+	return this.p;
+    }
+
+    public void setRecordContents(boolean recordContents) {
+	this.recordContents = recordContents;
+    }
+
+    public HashMap<String, Object> getContents() {
+	return contents;
     }
 }

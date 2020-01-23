@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
@@ -15,22 +14,19 @@ public class signupdate implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5700)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (args.length == 1) {
-	    if (!resadmin) {
-		plugin.msg(sender, lm.General_NoPermission);
-		return true;
-	    }
-	    int number = plugin.getSignUtil().updateAllSigns();
-	    plugin.msg(sender, lm.Sign_Updated, number);
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+	if (!resadmin) {
+	    plugin.msg(sender, lm.General_NoPermission);
 	    return true;
 	}
-	return false;
+	plugin.msg(sender, lm.Sign_Updated, plugin.getSignUtil().updateAllSigns());
+	return true;
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Updated residence signs");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res signupdate"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Updated residence signs");
+	c.get("Info", Arrays.asList("&eUsage: &6/res signupdate"));
     }
 }

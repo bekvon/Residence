@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,27 +16,27 @@ public class command implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3000)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	ClaimedResidence res = null;
 	String action = null;
 	String cmd = null;
-	if (args.length == 2 && sender instanceof Player) {
+	if (args.length == 1 && sender instanceof Player) {
 	    Player player = (Player) sender;
 	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    action = args[1];
-	} else if (args.length == 3 && sender instanceof Player) {
+	    action = args[0];
+	} else if (args.length == 2 && sender instanceof Player) {
 	    Player player = (Player) sender;
 	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
+	    action = args[0];
+	    cmd = args[1];
+	} else if (args.length == 3) {
+	    res = plugin.getResidenceManager().getByName(args[0]);
 	    action = args[1];
 	    cmd = args[2];
-	} else if (args.length == 4) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	    action = args[2];
-	    cmd = args[3];
-	} else if (args.length == 3 && !(sender instanceof Player)) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	    action = args[2];
+	} else if (args.length == 2 && !(sender instanceof Player)) {
+	    res = plugin.getResidenceManager().getByName(args[0]);
+	    action = args[1];
 	}
 
 	if (res == null) {
@@ -84,9 +83,10 @@ public class command implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Manages allowed or blocked commands in residence");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res command <residence> <allow/block/list> <command>",
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Manages allowed or blocked commands in residence");
+	c.get("Info", Arrays.asList("&eUsage: &6/res command <residence> <allow/block/list> <command>",
 	    "Shows list, adds or removes allowed or disabled commands in residence",
 	    "Use _ to include command with multiple variables"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%allow%%block%%list",

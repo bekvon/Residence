@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
@@ -16,9 +15,9 @@ public class setowner implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5500)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
-	if (args.length < 3)
+	if (args.length < 2)
 	    return false;
 
 	if (!resadmin) {
@@ -26,7 +25,7 @@ public class setowner implements cmd {
 	    return true;
 	}
 
-	ClaimedResidence area = plugin.getResidenceManager().getByName(args[1]);
+	ClaimedResidence area = plugin.getResidenceManager().getByName(args[0]);
 	if (area != null) {
 
 	    if (area.isRaidInitialized() && !resadmin) {
@@ -34,7 +33,7 @@ public class setowner implements cmd {
 		return true;
 	    }
 
-	    area.getPermissions().setOwner(args[2], true);
+	    area.getPermissions().setOwner(args[1], true);
 	    if (plugin.getRentManager().isForRent(area.getName()))
 		plugin.getRentManager().removeRentable(area.getName());
 	    if (plugin.getTransactionManager().isForSale(area.getName()))
@@ -44,9 +43,9 @@ public class setowner implements cmd {
 	    plugin.getSignUtil().updateSignResName(area);
 
 	    if (area.getParent() == null) {
-		plugin.msg(sender, lm.Residence_OwnerChange, args[1], args[2]);
+		plugin.msg(sender, lm.Residence_OwnerChange, args[0], args[1]);
 	    } else {
-		plugin.msg(sender, lm.Subzone_OwnerChange, args[1].split("\\.")[args[1].split("\\.").length - 1], args[2]);
+		plugin.msg(sender, lm.Subzone_OwnerChange, args[0].split("\\.")[args[0].split("\\.").length - 1], args[1]);
 	    }
 	} else {
 	    plugin.msg(sender, lm.Invalid_Residence);
@@ -55,9 +54,10 @@ public class setowner implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Change owner of a residence.");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/resadmin setowner [residence] [player]"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Change owner of a residence.");
+	c.get("Info", Arrays.asList("&eUsage: &6/resadmin setowner [residence] [player]"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]"));
     }
 

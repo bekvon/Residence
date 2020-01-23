@@ -1,8 +1,8 @@
 package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
+
 import org.bukkit.Location;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,14 +18,12 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 public class compass implements cmd {
 
     @Override
-    @CommandAnnotation(simple = true, priority = 3200)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (!(sender instanceof Player))
-	    return false;
+    @CommandAnnotation(simple = true, priority = 3200, consoleVar = { 666 })
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	Player player = (Player) sender;
 
-	if (args.length != 2) {
+	if (args.length != 1) {
 	    player.setCompassTarget(player.getWorld().getSpawnLocation());
 	    plugin.msg(player, lm.General_CompassTargetReset);
 	    return true;
@@ -34,30 +32,30 @@ public class compass implements cmd {
 	if (!ResPerm.command_$1.hasPermission(sender, this.getClass().getSimpleName()))
 	    return true;
 
-	ClaimedResidence res = plugin.getResidenceManager().getByName(args[1]);
+	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 
-	if (res != null) {
-	    if (res.getWorld().equalsIgnoreCase(player.getWorld().getName())) {
-		CuboidArea area = res.getMainArea();
-		if (area == null)
-		    return false;
-		Location loc = res.getTeleportLocation(player);
-		if (loc == null)
-		    return false;
-		player.setCompassTarget(loc);
-		plugin.msg(player, lm.General_CompassTargetSet, args[1]);
-	    }
-	} else {
+	if (res == null || !res.getWorld().equalsIgnoreCase(player.getWorld().getName())) {
 	    plugin.msg(player, lm.Invalid_Residence);
+	    return true;
 	}
+
+	CuboidArea area = res.getMainArea();
+	if (area == null)
+	    return false;
+	Location loc = res.getTeleportLocation(player);
+	if (loc == null)
+	    return false;
+	player.setCompassTarget(loc);
+	plugin.msg(player, lm.General_CompassTargetSet, args[0]);
 
 	return true;
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Set compass pointer to residence location");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res compass <residence>"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Set compass pointer to residence location");
+	c.get("Info", Arrays.asList("&eUsage: &6/res compass <residence>"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }
 }

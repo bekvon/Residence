@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,22 +14,22 @@ public class rename implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2700)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
-	Player player = (Player) sender;
-	if (args.length == 3) {
-	    plugin.getResidenceManager().renameResidence(player, args[1], args[2], resadmin);
-	    return true;
-	}
-	return false;
+	if (args.length != 2)
+	    return false;
+
+	plugin.getResidenceManager().renameResidence((Player) sender, args[0], args[1], resadmin);
+	return true;
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Renames a residence.");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rename [OldName] [NewName]", "You must be the owner or an admin to do this.",
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Renames a residence.");
+	c.get("Info", Arrays.asList("&eUsage: &6/res rename [OldName] [NewName]", "You must be the owner or an admin to do this.",
 	    "The name must not already be taken by another residence."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
     }

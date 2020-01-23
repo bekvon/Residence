@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,13 +18,13 @@ public class leaveraid implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3100)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	final Player player = (Player) sender;
 
-	if (args.length != 1 && args.length != 2)
+	if (args.length != 0 && args.length != 1)
 	    return false;
 
 	if (!ConfigManager.RaidEnabled) {
@@ -57,9 +56,10 @@ public class leaveraid implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Leave raid");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res leaveraid"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Leave raid");
+	c.get("Info", Arrays.asList("&eUsage: &6/res leaveraid"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]%%[playername]"));
     }
 

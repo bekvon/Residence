@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,11 +15,7 @@ public class signconvert implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5600)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
-
-	if (args.length != 0)
-	    return false;
-
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (sender instanceof Player) {
 	    Player player = (Player) sender;
 	    if (plugin.getPermissionManager().isResidenceAdmin(player)) {
@@ -34,8 +29,9 @@ public class signconvert implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Converts signs from ResidenceSign plugin");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res signconvert", "Will try to convert saved sign data from 3rd party plugin"));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Converts signs from ResidenceSign plugin");
+	c.get("Info", Arrays.asList("&eUsage: &6/res signconvert", "Will try to convert saved sign data from 3rd party plugin"));
     }
 }

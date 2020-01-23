@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,11 +17,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceCommandListener implements CommandExecutor {
 
@@ -95,7 +96,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 		sendUsage(sender, command.getName());
 		return true;
 	    }
-	    boolean respond = cmdClass.perform(Residence.getInstance(), args, false, command, sender);
+	    boolean respond = cmdClass.perform(Residence.getInstance(), sender, reduceArgs(args), false);
 	    if (!respond)
 		sendUsage(sender, command.getName());
 	    return true;
@@ -167,7 +168,102 @@ public class ResidenceCommandListener implements CommandExecutor {
 		    plugin.resadminToggle.remove(player.getName());
 		}
 	    }
-	    boolean respond = cmdClass.perform(Residence.getInstance(), args, resadmin, command, sender);
+
+	    String[] targ = reduceArgs(args);
+
+	    for (Method met : cmdClass.getClass().getMethods()) {
+		if (!met.isAnnotationPresent(CommandAnnotation.class))
+		    continue;
+		CommandAnnotation cs = met.getAnnotation(CommandAnnotation.class);
+
+		varCheck : if (sender instanceof Player) {
+		    int[] regVar = cs.regVar();
+		    List<Integer> list = new ArrayList<Integer>();
+		    boolean more = true;
+		    for (int one : regVar) {
+			if (one < 0)
+			    more = false;
+			list.add(one);
+		    }
+
+		    int size = targ.length;
+
+		    boolean good = true;
+		    
+		    if (list.isEmpty())
+			break varCheck;
+
+		    if (list.contains(666) || list.contains(-666)) {
+			plugin.msg(sender, lm.Invalid_FromConsole);
+			return false;
+		    }
+
+		    if (list.contains(-size))
+			good = false;
+
+		    if (list.contains(size))
+			good = true;
+
+		    if (list.contains(-100) && size == 0)
+			good = false;
+
+		    if (more && !list.contains(size))
+			good = false;
+
+		    if (!good) {
+			String[] tempArray = new String[args.length + 1];
+			for (int i = 0; i < args.length; i++) {
+			    tempArray[i] = args[i];
+			}
+			tempArray[args.length] = "?";
+			args = tempArray;
+			return commandHelp(args, resadmin, sender, command);
+		    }
+		} else {
+
+		    int[] consoleVar = cs.consoleVar();
+		    List<Integer> list = new ArrayList<Integer>();
+		    boolean more = true;
+		    for (int one : consoleVar) {
+			if (one < 0)
+			    more = false;
+			list.add(one);
+		    }
+		    int size = targ.length;
+		    boolean good = true;
+
+		    if (list.isEmpty())
+			break varCheck;
+		    
+		    if (list.contains(666) || list.contains(-666)) {
+			plugin.msg(sender, lm.Invalid_Ingame);
+			return false;
+		    }
+
+		    if (list.contains(-size))
+			good = false;
+
+		    if (list.contains(size))
+			good = true;
+
+		    if (list.contains(-100) && size == 0)
+			good = false;
+
+		    if (more && !list.contains(size))
+			good = false;
+		    if (!good) {
+			String[] tempArray = new String[args.length + 1];
+			for (int i = 0; i < args.length; i++) {
+			    tempArray[i] = args[i];
+			}
+			tempArray[args.length] = "?";
+			args = tempArray;
+			return commandHelp(args, resadmin, sender, command);
+		    }
+		}
+	    }
+
+	    boolean respond = cmdClass.perform(Residence.getInstance(), sender, targ, resadmin);
 	    if (!respond) {
 		String[] tempArray = new String[args.length + 1];
 		for (int i = 0; i < args.length; i++) {
@@ -181,6 +277,13 @@ public class ResidenceCommandListener implements CommandExecutor {
 	    return true;
 	}
 	return this.onCommand(sender, command, label, args);
+    }
+
+    private static String[] reduceArgs(String[] args) {
+	if (args.length <= 1)
+	    return new String[0];
+
+	return Arrays.copyOfRange(args, 1, args.length);
     }
 
     private static cmd getCmdClass(String[] args) {

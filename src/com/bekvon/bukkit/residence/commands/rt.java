@@ -5,7 +5,6 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,14 +15,13 @@ import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class rt implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2500)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
-	if (args.length != 1 && args.length != 2 && args.length != 3) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+	if (args.length != 0 && args.length != 1 && args.length != 2) {
 	    return false;
 	}
 
@@ -34,7 +32,7 @@ public class rt implements cmd {
 
 	Player tPlayer = null;
 
-	if (args.length > 1) {
+	if (args.length > 0) {
 	    c: for (int i = 1; i < args.length; i++) {
 		for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
 		    if (!one.getCenter().getWorld().getName().equalsIgnoreCase(args[i]))
@@ -48,7 +46,7 @@ public class rt implements cmd {
 	    }
 	}
 
-	if (args.length > 1 && wname == null && tPlayer == null) {
+	if (args.length > 0 && wname == null && tPlayer == null) {
 	    plugin.msg(sender, lm.Invalid_World);
 	    String worlds = "";
 	    for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
@@ -98,7 +96,7 @@ public class rt implements cmd {
 	    plugin.msg(sender, lm.RandomTeleport_Disabled);
 	    return true;
 	}
-	Long time = System.currentTimeMillis();
+
 	Location loc = plugin.getRandomTpManager().getRandomlocation(wname);
 	plugin.getRandomTeleportMap().put(tPlayer.getName(), System.currentTimeMillis());
 
@@ -119,9 +117,10 @@ public class rt implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Teleports to random location in world");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rt (worldname) (playerName)", "Teleports you to random location in defined world."));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Teleports to random location in world");
+	c.get("Info", Arrays.asList("&eUsage: &6/res rt (worldname) (playerName)", "Teleports you to random location in defined world."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[worldname]", "[playername]"));
     }
 }

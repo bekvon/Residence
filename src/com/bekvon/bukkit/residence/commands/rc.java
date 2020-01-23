@@ -21,7 +21,7 @@ public class rc implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1100)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return true;
 	Player player = (Player) sender;
@@ -30,8 +30,6 @@ public class rc implements cmd {
 	    plugin.msg(player, lm.Residence_ChatDisabled);
 	    return false;
 	}
-	if (args.length > 0)
-	    args = Arrays.copyOfRange(args, 1, args.length);
 
 	if (args.length == 0) {
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
@@ -187,23 +185,24 @@ public class rc implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Joins current or defined residence chat channel");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res rc (residence)", "Join residence chat channel."));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Joins current or defined residence chat channel");
+	c.get("Info", Arrays.asList("&eUsage: &6/res rc (residence)", "Join residence chat channel."));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
 
-	path += "SubCommands.";
-	c.get(path + "leave.Description", "Leaves current residence chat channel");
-	c.get(path + "leave.Info", Arrays.asList("&eUsage: &6/res rc leave", "If you are in residence chat channel then you will leave it"));
+	c.setP(c.getPath() + "SubCommands.");
+	c.get("leave.Description", "Leaves current residence chat channel");
+	c.get("leave.Info", Arrays.asList("&eUsage: &6/res rc leave", "If you are in residence chat channel then you will leave it"));
 
-	c.get(path + "setcolor.Description", "Sets residence chat channel text color");
-	c.get(path + "setcolor.Info", Arrays.asList("&eUsage: &6/res rc setcolor [colorCode]", "Sets residence chat channel text color"));
+	c.get("setcolor.Description", "Sets residence chat channel text color");
+	c.get("setcolor.Info", Arrays.asList("&eUsage: &6/res rc setcolor [colorCode]", "Sets residence chat channel text color"));
 
-	c.get(path + "setprefix.Description", "Sets residence chat channel prefix");
-	c.get(path + "setprefix.Info", Arrays.asList("&eUsage: &6/res rc setprefix [newName]", "Sets residence chat channel prefix"));
+	c.get("setprefix.Description", "Sets residence chat channel prefix");
+	c.get("setprefix.Info", Arrays.asList("&eUsage: &6/res rc setprefix [newName]", "Sets residence chat channel prefix"));
 
-	c.get(path + "kick.Description", "Kicks player from channel");
-	c.get(path + "kick.Info", Arrays.asList("&eUsage: &6/res rc kick [player]", "Kicks player from channel"));
+	c.get("kick.Description", "Kicks player from channel");
+	c.get("kick.Info", Arrays.asList("&eUsage: &6/res rc kick [player]", "Kicks player from channel"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "kick"), Arrays.asList("[playername]"));
     }
 }

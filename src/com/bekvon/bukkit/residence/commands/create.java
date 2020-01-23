@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,12 +15,12 @@ public class create implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 100)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
-	if (args.length != 2) {
+	if (args.length != 1) {
 	    return false;
 	}
 
@@ -31,7 +30,7 @@ public class create implements cmd {
 	    }
 	}
 	if (plugin.getSelectionManager().hasPlacedBoth(player)) {
-	    plugin.getResidenceManager().addResidence(player, args[1], plugin.getSelectionManager().getPlayerLoc1(player), plugin
+	    plugin.getResidenceManager().addResidence(player, args[0], plugin.getSelectionManager().getPlayerLoc1(player), plugin
 		.getSelectionManager().getPlayerLoc2(player), resadmin);
 	    return true;
 	}
@@ -40,9 +39,10 @@ public class create implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Main command
-	c.get(path + "Description", "Create Residences");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res create <residence name>"));
+	c.get("Description", "Create Residences");
+	c.get("Info", Arrays.asList("&eUsage: &6/res create <residence name>"));
     }
 }

@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,7 +16,7 @@ public class tpset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 200)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -32,10 +31,11 @@ public class tpset implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Main command
-	c.get(path + "Description", "Set the teleport location of a Residence");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res tpset", "This will set the teleport location for a residence to where your standing.",
+	c.get("Description", "Set the teleport location of a Residence");
+	c.get("Info", Arrays.asList("&eUsage: &6/res tpset", "This will set the teleport location for a residence to where your standing.",
 	    "You must be standing in the residence to use this command.", "You must also be the owner or have the +admin flag for the residence."));
     }
 }

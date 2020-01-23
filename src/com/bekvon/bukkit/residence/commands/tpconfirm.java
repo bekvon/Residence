@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,12 +15,12 @@ public class tpconfirm implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1500)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
 	Player player = (Player) sender;
-	if (args.length != 1) {
+	if (args.length != 0) {
 	    return false;
 	}
 	if (plugin.getTeleportMap().containsKey(player.getName())) {
@@ -33,8 +32,9 @@ public class tpconfirm implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Ignore unsafe teleportation warning");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res tpconfirm", "Teleports you to a residence, when teleportation is unsafe."));
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Ignore unsafe teleportation warning");
+	c.get("Info", Arrays.asList("&eUsage: &6/res tpconfirm", "Teleports you to a residence, when teleportation is unsafe."));
     }
 }

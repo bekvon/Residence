@@ -3,7 +3,6 @@ package com.bekvon.bukkit.residence.commands;
 import java.util.Arrays;
 
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +17,7 @@ public class lset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 5000)
-    public boolean perform(Residence plugin, String[] args, boolean resadmin, Command command, CommandSender sender) {
+    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -28,11 +27,11 @@ public class lset implements cmd {
 	Material mat = null;
 	String listtype = null;
 	boolean showinfo = false;
-	if (args.length == 2 && args[1].equals("info")) {
+	if (args.length == 1 && args[0].equals("info")) {
 	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    showinfo = true;
-	} else if (args.length == 3 && args[2].equals("info")) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
+	} else if (args.length == 2 && args[1].equals("info")) {
+	    res = plugin.getResidenceManager().getByName(args[0]);
 	    showinfo = true;
 	}
 	if (showinfo) {
@@ -45,20 +44,20 @@ public class lset implements cmd {
 	    plugin.msg(player, lm.General_Ignorelist);
 	    res.getItemIgnoreList().printList(player);
 	    return true;
-	} else if (args.length == 4) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	    listtype = args[2];
+	} else if (args.length == 3) {
+	    res = plugin.getResidenceManager().getByName(args[0]);
+	    listtype = args[1];
 	    try {
-		mat = Material.valueOf(args[3].toUpperCase());
+		mat = Material.valueOf(args[2].toUpperCase());
 	    } catch (Exception ex) {
 		plugin.msg(player, lm.Invalid_Material);
 		return true;
 	    }
-	} else if (args.length == 3) {
+	} else if (args.length == 2) {
 	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    listtype = args[1];
+	    listtype = args[0];
 	    try {
-		mat = Material.valueOf(args[2].toUpperCase());
+		mat = Material.valueOf(args[1].toUpperCase());
 	    } catch (Exception ex) {
 		plugin.msg(player, lm.Invalid_Material);
 		return true;
@@ -79,9 +78,10 @@ public class lset implements cmd {
     }
 
     @Override
-    public void getLocale(ConfigReader c, String path) {
-	c.get(path + "Description", "Change blacklist and ignorelist options");
-	c.get(path + "Info", Arrays.asList("&eUsage: &6/res lset <residence> [blacklist/ignorelist] [material]",
+    public void getLocale() {
+	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+	c.get("Description", "Change blacklist and ignorelist options");
+	c.get("Info", Arrays.asList("&eUsage: &6/res lset <residence> [blacklist/ignorelist] [material]",
 	    "&eUsage: &6/res lset <residence> Info",
 	    "Blacklisting a material prevents it from being placed in the residence.",
 	    "Ignorelist causes a specific material to not be protected by Residence."));
