@@ -1,7 +1,10 @@
 package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,15 +21,46 @@ public class info implements cmd {
     @Override
     @CommandAnnotation(simple = true, priority = 600)
     public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
-	Debug.D("check"); 
+
 	if (args.length == 0 && sender instanceof Player) {
 	    Player player = (Player) sender;
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+
+	    Set<ClaimedResidence> nearby = new HashSet<ClaimedResidence>();
+
+	    Location loc = player.getLocation();
+	    for (int x = -3; x <= 3; x = x + 3) {
+		for (int z = -3; z <= 3; z = z + 3) {
+		    for (int y = -3; y <= 3; y = y + 3) {
+			if (x == 0 && z == 0 && y == 0)
+			    continue;
+			Location l = loc.clone().add(x, y, z);
+			ClaimedResidence nr = plugin.getResidenceManager().getByLoc(l);
+			if (nr != null)
+			    nearby.add(nr);
+		    }
+		}
+	    }
+	    nearby.remove(res);
+
 	    if (res != null) {
 		plugin.getResidenceManager().printAreaInfo(res.getName(), sender, resadmin);
 	    } else {
-		plugin.msg(sender, lm.Invalid_Residence);
+		if (nearby.isEmpty())
+		    plugin.msg(sender, lm.Invalid_Residence);
 	    }
+
+	    String list = "";
+	    if (!nearby.isEmpty()) {
+		for (ClaimedResidence one : nearby) {
+		    if (!list.isEmpty())
+			list += ", ";
+		    list += one.getName();
+		}
+
+		plugin.msg(sender, lm.Residence_Near, list);
+	    }
+
 	    return true;
 	} else if (args.length == 1) {
 	    plugin.getResidenceManager().printAreaInfo(args[0], sender, resadmin);

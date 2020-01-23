@@ -221,6 +221,7 @@ public enum lm {
     Residence_Recieve("&eYou have recieved residence &6%1 &efrom player &6%2"),
     Residence_ResList(" &a%1. &e%2 &e- &6%3 %4&6%5"),
     Residence_List(" &e%2 &e- &6%3"),
+    Residence_Near("&eNearby residences: &7%1"),
     Residence_TeleportNear("&eTeleported to near residence."),
     Residence_SetTeleportLocation("&eTeleport Location Set..."),
     Residence_PermissionsApply("&ePermissions applied to residence."),
