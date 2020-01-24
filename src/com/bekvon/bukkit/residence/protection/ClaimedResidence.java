@@ -1461,6 +1461,14 @@ public class ClaimedResidence {
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
 
+	if (this.isTopArea() && this.isUnderRaidCooldown()) {
+	    root.put("LastRaid", this.getRaid().getEndsAt());
+	}
+	
+	if (this.isTopArea() && this.getRaid().isImmune()) {
+	    root.put("Immunity", this.getRaid().getImmunityUntil());
+	}
+
 //	if (this.getTown() != null && !this.isSubzone()) {
 //	    if (this.getTown().getMainResidence().equals(this))
 //		root.put("TownCap", this.getTown().getTownName());
@@ -1594,6 +1602,14 @@ public class ClaimedResidence {
 	    res.createTime = ((Long) root.get("CreatedOn"));
 	else
 	    res.createTime = System.currentTimeMillis();
+	
+	if (root.containsKey("LastRaid")) {	    
+	    res.getRaid().setEndsAt(((Long) root.get("LastRaid")));
+	}
+	
+	if (root.containsKey("Immunity")) {
+	    res.getRaid().setImmunityUntil(((Long) root.get("Immunity")));
+	}
 
 	if (root.containsKey("ShopDescription"))
 	    res.setShopDesc((String) root.get("ShopDescription"));

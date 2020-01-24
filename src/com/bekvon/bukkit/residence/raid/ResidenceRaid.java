@@ -23,6 +23,7 @@ public class ResidenceRaid {
     private ClaimedResidence res;
     private Long startsAt = 0L;
     private Long endsAt = 0L;
+    private Long immunityUntil = null;
 //    private Long lastSiegeEnded = 0L;
     private HashMap<UUID, RaidAttacker> attackers = new HashMap<UUID, RaidAttacker>();
     private HashMap<UUID, RaidDefender> defenders = new HashMap<UUID, RaidDefender>();
@@ -252,5 +253,20 @@ public class ResidenceRaid {
 
 	clearAttackers();
 	clearDefenders();
+    }
+
+    public boolean isImmune() {
+	return immunityUntil == null ? false : immunityUntil > System.currentTimeMillis();
+    }
+
+    public Long getImmunityUntil() {
+	return immunityUntil;
+    }
+
+    public void setImmunityUntil(Long immunityUntil) {
+	if (immunityUntil != null && immunityUntil > System.currentTimeMillis())
+	    this.immunityUntil = immunityUntil;
+	else
+	    this.immunityUntil = null;
     }
 }

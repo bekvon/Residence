@@ -111,10 +111,13 @@ public enum lm {
     Raid_left("&7You have left &4%1 &7raid"),
     Raid_noFlagChange("&cCan't change flags during raid"),
     Raid_noRemoval("&cCan't remove residence during raid"),
+    Raid_immune("&eImmune for next %1"),
+    Raid_notImmune("&eNo longer immune"),
 
     Raid_attack_Joined("&7Joined &2%1 &7raid!"),
     Raid_attack_Started("&7Raid started!"),
     Raid_attack_cooldown("&cToo soon for another raid on this residence! Wait %1"),
+    Raid_attack_immune("&cThis residence is immune to raids! Wait %1"),
     Raid_attack_isOffline("&cCan't raid while owner is offline!"),
     Raid_attack_noSelf("&cCan't raid your own residence!"),
     Raid_attack_alreadyInAnother("&cCan't join this rais, you are in another one already (%1)"),

@@ -47,7 +47,7 @@ public class raidstatus implements cmd {
 	if (res == null) {
 	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	}
- 
+
 	if (res == null) {
 	    OfflinePlayer offp = plugin.getOfflinePlayer(args[0]);
 	    if (offp != null) {
@@ -68,7 +68,9 @@ public class raidstatus implements cmd {
 	ResidenceRaid raid = res.getRaid();
 
 	plugin.msg(sender, "&7----------- &f" + res.getName() + "(" + res.getOwner() + ") &7-----------");
-	if (res.isInPreRaid()) {
+	if (res.getRaid().isImmune()) {
+	    plugin.msg(sender, "&eImmune to raids for next: " + Utils.to24hourShort(raid.getImmunityUntil() - System.currentTimeMillis() + 1000L));
+	} else if (res.isInPreRaid()) {
 	    plugin.msg(sender, "&7Raid starts in: " + Utils.to24hourShort(raid.getStartsAt() - System.currentTimeMillis()));
 	    RawMessage rm = new RawMessage();
 	    rm.add("&7Attackers: &4" + raid.getAttackers().size(), getAttackers(raid));
