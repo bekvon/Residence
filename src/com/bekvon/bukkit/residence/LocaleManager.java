@@ -38,9 +38,12 @@ public class LocaleManager {
     public LocaleManager(Residence plugin) {
 	this.plugin = plugin;
     }
-    
-    public static void addTabComplete(Object cl, String subCmd, String... tabs) {	
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(cl.getClass().getSimpleName(), subCmd), Arrays.asList(tabs));
+
+    public static void addTabComplete(Object cl, String subCmd, String... tabs) {
+	if (subCmd == null || subCmd.isEmpty())
+	    Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(cl.getClass().getSimpleName()), Arrays.asList(tabs));
+	else
+	    Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(cl.getClass().getSimpleName(), subCmd), Arrays.asList(tabs));
     }
 
     private static YamlConfiguration loadConfiguration(BufferedReader in, String language) {

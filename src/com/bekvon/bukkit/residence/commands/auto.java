@@ -20,15 +20,10 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 public class auto implements cmd {
 
     @Override
-    @CommandAnnotation(simple = true, priority = 150)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
-	if (!(sender instanceof Player))
-	    return false;
+    @CommandAnnotation(simple = true, priority = 150, regVar = { 0, 1, 2 }, consoleVar = { 666 })
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	Player player = (Player) sender;
-	if (args.length != 1 && args.length != 0 && args.length != 2) {
-	    return false;
-	}
 
 	String resName = null;
 

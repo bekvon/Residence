@@ -15,51 +15,46 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class command implements cmd {
 
     @Override
-    @CommandAnnotation(simple = true, priority = 3000)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    @CommandAnnotation(simple = true, priority = 3000, regVar = { -100 }, consoleVar = { -100, -1 })
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
+	String cmd = args[args.length - 1];
+	if (!cmd.equalsIgnoreCase("list"))
+	    args = Arrays.copyOfRange(args, 0, args.length - 1);
 	ClaimedResidence res = null;
-	String action = null;
-	String cmd = null;
-	if (args.length == 1 && sender instanceof Player) {
-	    Player player = (Player) sender;
-	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    action = args[0];
-	} else if (args.length == 2 && sender instanceof Player) {
-	    Player player = (Player) sender;
-	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    action = args[0];
-	    cmd = args[1];
-	} else if (args.length == 3) {
+	String action = args.length > 0 ? args[args.length - 1].toLowerCase() : "";
+	if (args.length > 0)
+	    args = Arrays.copyOfRange(args, 0, args.length - 1);
+	if (args.length > 0)
 	    res = plugin.getResidenceManager().getByName(args[0]);
-	    action = args[1];
-	    cmd = args[2];
-	} else if (args.length == 2 && !(sender instanceof Player)) {
-	    res = plugin.getResidenceManager().getByName(args[0]);
-	    action = args[1];
-	}
+
+	if (res == null && sender instanceof Player)
+	    res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
 
 	if (res == null) {
 	    plugin.msg(sender, lm.Invalid_Residence);
-	    return true;
+	    return null;
 	}
 
 	if (!res.isOwner(sender) && !resadmin) {
 	    plugin.msg(sender, lm.Residence_NotOwner);
-	    return true;
+	    return null;
 	}
 
-	if (action != null && action.equalsIgnoreCase("allow")) {
+	switch (action) {
+	case "allow":
 	    if (res.addCmdWhiteList(cmd)) {
 		plugin.msg(sender, lm.command_addedAllow, res.getName());
 	    } else
 		plugin.msg(sender, lm.command_removedAllow, res.getName());
-	} else if (action != null && action.equalsIgnoreCase("block")) {
+	    return true;
+	case "block":
 	    if (res.addCmdBlackList(cmd)) {
 		plugin.msg(sender, lm.command_addedBlock, res.getName());
 	    } else
 		plugin.msg(sender, lm.command_removedBlock, res.getName());
-	} else if (action != null && action.equalsIgnoreCase("list")) {
+	    return true;
+	case "list":
 	    StringBuilder sb = new StringBuilder();
 	    for (int i = 0; i < res.getCmdBlackList().size(); i++) {
 		sb.append("/" + res.getCmdBlackList().get(i).replace("_", " "));
@@ -75,10 +70,10 @@ public class command implements cmd {
 		    sb.append(", ");
 	    }
 	    plugin.msg(sender, lm.command_Allowed, sb.toString());
-	} else
-	    return false;
+	    return true;
+	}
 
-	return true;
+	return false;
 
     }
 

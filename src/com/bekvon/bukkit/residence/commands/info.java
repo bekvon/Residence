@@ -14,13 +14,12 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class info implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 600)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	if (args.length == 0 && sender instanceof Player) {
 	    Player player = (Player) sender;

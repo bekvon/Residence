@@ -14,7 +14,7 @@ public class listhidden implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 4800)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	int page = 1;
 	try {
 	    if (args.length > 0) {

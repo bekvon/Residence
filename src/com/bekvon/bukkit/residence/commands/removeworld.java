@@ -16,7 +16,7 @@ public class removeworld implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5200)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	if (args.length != 1)
 	    return false;

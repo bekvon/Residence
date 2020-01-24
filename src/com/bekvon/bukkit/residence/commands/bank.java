@@ -15,26 +15,23 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class bank implements cmd {
 
     @Override
-    @CommandAnnotation(simple = true, priority = 3400)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
-	
-	if (args.length != 2 && args.length != 3) {
-	    return false;
-	}	
+    @CommandAnnotation(simple = true, priority = 3400, regVar = { 2, 3 }, consoleVar = { 2, 3 })
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+
 	ClaimedResidence res = null;
-	
+
 	if (args.length == 3) {
 	    res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res == null) {
 		plugin.msg(sender, lm.Invalid_Residence);
-		return true;
+		return null;
 	    }
-	} else if ((sender instanceof Player)) {
+	} else if (sender instanceof Player) {
 	    res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
 	}
 	if (res == null) {
 	    plugin.msg(sender, lm.Residence_NotIn);
-	    return true;
+	    return null;
 	}
 	double amount = 0D;
 	try {
@@ -44,16 +41,19 @@ public class bank implements cmd {
 		amount = Double.parseDouble(args[2]);
 	} catch (Exception ex) {
 	    plugin.msg(sender, lm.Invalid_Amount);
+	    return null;
+	}
+	
+	switch(args[0].toLowerCase()) {
+	case "deposit":
+	    res.getBank().deposit(sender, amount, resadmin);
+	    return true;
+	case "withdraw":
+	    res.getBank().withdraw(sender, amount, resadmin);
 	    return true;
 	}
-	if (args[0].equals("deposit"))
-	    res.getBank().deposit(sender, amount, resadmin);
-	else if (args[0].equals("withdraw"))
-	    res.getBank().withdraw(sender, amount, resadmin);
-	else
-	    return false;
-
-	return true;
+	
+	return false;
     }
 
     @Override

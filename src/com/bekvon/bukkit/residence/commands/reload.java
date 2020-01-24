@@ -18,7 +18,7 @@ public class reload implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5800)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!resadmin && !sender.isOp()) {
 	    plugin.msg(sender, lm.General_NoPermission);
 	    return true;

@@ -27,8 +27,8 @@ public class raid implements cmd {
     }
 
     @Override
-    @CommandAnnotation(simple = true, priority = 3100)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    @CommandAnnotation(simple = true, priority = 3100, regVar = {  1, 2 }, consoleVar = { 1, 2 })
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -38,7 +38,7 @@ public class raid implements cmd {
 	    return false;
 
 	if (!ConfigManager.RaidEnabled) {
-	    plugin.msg(player, lm.Raid_NotEnabled);
+	    plugin.msg(sender, lm.Raid_NotEnabled);
 	    return true;
 	}
 
@@ -56,6 +56,9 @@ public class raid implements cmd {
 	case immunity:
 	    break;
 	case kick:
+	    
+	    
+	    
 	    break;
 	case start:
 	    break;
@@ -67,6 +70,7 @@ public class raid implements cmd {
 	
 	// raid start [resname/playerName/currentres]
 	// raid stop [resname/playerName/currentres]
+	// raid kick [resname/playerName]
 	// raid immunity [add/take/set/clear] [resname/playerName/currentres]
 
 	return false;

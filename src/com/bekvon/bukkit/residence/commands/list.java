@@ -16,7 +16,7 @@ public class list implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 300)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	int page = 1;
 	World world = null;
 	String target = null;

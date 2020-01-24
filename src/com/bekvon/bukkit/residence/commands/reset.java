@@ -18,7 +18,7 @@ public class reset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4400)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (args.length != 1 && args.length != 0)
 	    return false;
 

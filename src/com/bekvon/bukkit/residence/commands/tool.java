@@ -14,7 +14,7 @@ public class tool implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1600)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	plugin.msg(sender, lm.General_Separator);
 	plugin.msg(sender, lm.Select_Tool, plugin.getConfigManager().getSelectionTool().getName());
 	plugin.msg(sender, lm.General_InfoTool, plugin.getConfigManager().getInfoTool().getName()); 

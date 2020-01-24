@@ -263,8 +263,8 @@ public class ResidenceCommandListener implements CommandExecutor {
 		}
 	    }
 
-	    boolean respond = cmdClass.perform(Residence.getInstance(), sender, targ, resadmin);
-	    if (!respond) {
+	    Boolean respond = cmdClass.perform(Residence.getInstance(), sender, targ, resadmin);
+	    if (respond != null && !respond) {
 		String[] tempArray = new String[args.length + 1];
 		for (int i = 0; i < args.length; i++) {
 		    tempArray[i] = args[i];
@@ -274,7 +274,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 		return commandHelp(args, resadmin, sender, command);
 	    }
 
-	    return true;
+	    return respond == null || !respond ? false : true;
 	}
 	return this.onCommand(sender, command, label, args);
     }

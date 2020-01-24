@@ -14,7 +14,7 @@ public class removeall implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5100)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (args.length != 1 && args.length != 0) {
 	    return false;
 	}

@@ -16,7 +16,7 @@ public class sublist implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4100)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	if (args.length != 0 && args.length != 1 && args.length != 2)
 	    return false;

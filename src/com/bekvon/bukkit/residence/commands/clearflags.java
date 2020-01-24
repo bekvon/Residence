@@ -15,28 +15,28 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class clearflags implements cmd {
 
     @Override
-    @CommandAnnotation(simple = false, priority = 3600)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
-	if (!(sender instanceof Player))
-	    return false;
-
+    @CommandAnnotation(simple = false, priority = 3600, regVar = { 2, 3 }, consoleVar = { 666 })
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	Player player = (Player) sender;
 
 	if (!resadmin) {
 	    plugin.msg(player, lm.General_NoPermission);
-	    return true;
+	    return null;
 	}
+
 	ClaimedResidence area = plugin.getResidenceManager().getByName(args[0]);
-	if (area != null) {
-	    if (area.isRaidInitialized()) {
-		plugin.msg(sender, lm.Raid_cantDo);
-		return true;
-	    }
-	    area.getPermissions().clearFlags();
-	    plugin.msg(player, lm.Flag_Cleared);
-	} else {
+	if (area == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
+	    return null;
 	}
+	
+	if (area.isRaidInitialized()) {
+	    plugin.msg(sender, lm.Raid_cantDo);
+	    return null;
+	}
+	area.getPermissions().clearFlags();
+	plugin.msg(player, lm.Flag_Cleared);
+
 	return true;
     }
 

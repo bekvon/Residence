@@ -15,7 +15,7 @@ public class signconvert implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5600)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (sender instanceof Player) {
 	    Player player = (Player) sender;
 	    if (plugin.getPermissionManager().isResidenceAdmin(player)) {

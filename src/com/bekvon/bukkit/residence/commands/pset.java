@@ -19,7 +19,7 @@ public class pset implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 800)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player) && args.length != 5 && args.length == 4 && !args[3].equalsIgnoreCase("removeall"))
 	    return false;
 

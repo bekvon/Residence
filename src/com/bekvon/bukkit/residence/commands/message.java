@@ -17,7 +17,7 @@ public class message implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 1000)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	ClaimedResidence res = null;
 	String message = null;
 	Boolean enter = null;

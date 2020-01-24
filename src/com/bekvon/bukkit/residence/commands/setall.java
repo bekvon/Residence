@@ -20,7 +20,7 @@ public class setall implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 700)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (args.length != 2)
 	    return false;
 

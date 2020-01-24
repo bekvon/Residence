@@ -14,7 +14,7 @@ public class signupdate implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5700)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!resadmin) {
 	    plugin.msg(sender, lm.General_NoPermission);
 	    return true;

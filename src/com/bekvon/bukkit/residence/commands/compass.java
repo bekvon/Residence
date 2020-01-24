@@ -19,7 +19,7 @@ public class compass implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3200, consoleVar = { 666 })
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	Player player = (Player) sender;
 
@@ -30,13 +30,13 @@ public class compass implements cmd {
 	}
 
 	if (!ResPerm.command_$1.hasPermission(sender, this.getClass().getSimpleName()))
-	    return true;
+	    return null;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 
 	if (res == null || !res.getWorld().equalsIgnoreCase(player.getWorld().getName())) {
 	    plugin.msg(player, lm.Invalid_Residence);
-	    return true;
+	    return null;
 	}
 
 	CuboidArea area = res.getMainArea();

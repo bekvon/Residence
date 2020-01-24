@@ -25,7 +25,7 @@ public class market implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2600)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	this.plugin = plugin;
 	if (!(sender instanceof Player))
 	    return false;

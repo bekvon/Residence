@@ -16,7 +16,7 @@ public class listall implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4200)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	int page = 1;
 	World world = null;

@@ -16,7 +16,7 @@ public class material implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 4300)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 

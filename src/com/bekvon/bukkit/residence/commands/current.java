@@ -16,7 +16,7 @@ public class current implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3100, regVar = { 0 }, consoleVar = { 666 })
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	Player player = (Player) sender;
 

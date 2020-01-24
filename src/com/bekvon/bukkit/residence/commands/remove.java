@@ -20,7 +20,7 @@ public class remove implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2300)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
 	ClaimedResidence res = null;
 	String senderName = sender.getName();

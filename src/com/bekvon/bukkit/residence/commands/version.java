@@ -14,7 +14,7 @@ public class version implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5900)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	sender.sendMessage(ChatColor.GRAY + "------------------------------------");
 	sender.sendMessage(ChatColor.RED + "This server running " + ChatColor.GOLD + "Residence" + ChatColor.RED + " version: " + ChatColor.BLUE + plugin.getResidenceVersion());
 	sender.sendMessage(ChatColor.GREEN + "Created by: " + ChatColor.YELLOW + "bekvon");

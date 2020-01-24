@@ -26,7 +26,7 @@ public class raidstatus implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 3100)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 
@@ -40,7 +40,14 @@ public class raidstatus implements cmd {
 	    return true;
 	}
 
-	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
+	ClaimedResidence res = null;
+	if (args.length > 0)
+	    res = plugin.getResidenceManager().getByName(args[0]);
+
+	if (res == null) {
+	    res = plugin.getResidenceManager().getByLoc(player.getLocation());
+	}
+ 
 	if (res == null) {
 	    OfflinePlayer offp = plugin.getOfflinePlayer(args[0]);
 	    if (offp != null) {

@@ -16,15 +16,11 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 public class check implements cmd {
 
     @Override
-    @CommandAnnotation(simple = true, priority = 3500)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
-	if (!(sender instanceof Player))
-	    return false;
+    @CommandAnnotation(simple = true, priority = 3500, regVar = { 2, 3 }, consoleVar = { 666 })
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+
 	Player player = (Player) sender;
 	String pname = player.getName();
-
-	if (args.length != 2 && args.length != 3)
-	    return false;
 
 	if (args.length == 3)
 	    pname = args[2];
@@ -32,14 +28,14 @@ public class check implements cmd {
 	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
-	    return true;
+	    return null;
 	}
 
 	Flags flag = Flags.getFlag(args[1]);
 
 	if (flag == null) {
 	    plugin.msg(player, lm.Invalid_Flag);
-	    return true;
+	    return null;
 	}
 
 	if (!res.getPermissions().hasApplicableFlag(pname, args[1])) {

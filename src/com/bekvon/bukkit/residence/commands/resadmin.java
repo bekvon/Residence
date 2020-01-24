@@ -15,7 +15,7 @@ public class resadmin implements cmd {
 
     @Override
     @CommandAnnotation(simple = false, priority = 5300)
-    public boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
+    public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	if (!(sender instanceof Player))
 	    return false;
 	if (args.length != 1)
