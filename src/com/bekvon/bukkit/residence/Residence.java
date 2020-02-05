@@ -35,7 +35,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -48,7 +47,6 @@ import org.kingdoms.manager.game.GameManagement;
 
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.cmiLib.VersionChecker;
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.BossBar.BossBarManager;
@@ -94,13 +92,13 @@ import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.raid.ResidenceRaidListener;
 import com.bekvon.bukkit.residence.protection.LeaseManager;
 import com.bekvon.bukkit.residence.protection.PermissionListManager;
 import com.bekvon.bukkit.residence.protection.PlayerManager;
 import com.bekvon.bukkit.residence.protection.ResidenceManager;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.protection.WorldFlagManager;
+import com.bekvon.bukkit.residence.raid.ResidenceRaidListener;
 import com.bekvon.bukkit.residence.selection.AutoSelection;
 import com.bekvon.bukkit.residence.selection.KingdomsUtil;
 import com.bekvon.bukkit.residence.selection.Schematics7Manager;
@@ -555,8 +553,12 @@ public class Residence extends JavaPlugin {
 	    zip = new ZipLibrary(this);
 
 	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
-	    if (lwcp != null)
-		lwc = ((LWCPlugin) lwcp).getLWC();
+	    try {
+		if (lwcp != null)
+		    lwc = ((LWCPlugin) lwcp).getLWC();
+	    } catch (Throwable e) {
+		e.printStackTrace();
+	    }
 
 	    for (String lang : validLanguages) {
 		YmlMaker langFile = new YmlMaker(this, "Language" + File.separator + lang + ".yml");
