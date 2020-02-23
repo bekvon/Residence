@@ -1,0 +1,611 @@
+# NOTE: 'If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten. Once you
+# have a copy of this file, change the Language: 'option under the Residence config.yml
+# to whatever you named your copy.
+Version: 21
+FieldsVersion: 22
+Language:
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
+    #Version 1 Fields
+    InvalidResidence: '無效的領地...'
+    InvalidSubzone: '無效的附屬領地...'
+    InvalidDirection: '無效的方向...'
+    InvalidChannel: '無效頻道...'
+    InvalidAmount: '無效數量...'
+    InvalidCost: '無效的花費金額...'
+    InvalidDays: '無效的天數...'
+    InvalidMaterial: '無效的材料...'
+    InvalidBoolean: '無效值，必須是布爾值，true(t)或者false(f)。'
+    InvalidArea: '無效的區域...'
+    InvalidGroup: '無效的權限組...'
+    InvalidMessageType: '消息類型必須enter(進入)或remove(離開)。'
+    InvalidList: '無效的清單...'
+    InvalidFlag: '權限不存在...'
+    InvalidFlagState: '無效的權限狀態，必須是true(t)開啟，false(f)關閉，或者 remove(r)移除。'
+    AreaExists: '區域名字已經存在。'
+    AreaCreate: '領地ID %1 創建成功'
+    AreaDiffWorld: '區域與領地是在一個不同的世界。'
+    AreaCollision: '區域與領地 %1 沖突。'
+    AreaSubzoneCollision: '區域和附屬領地 %1 沖突。'
+    AreaNonExist: '區域不存在。'
+    AreaInvalidName: '區域名無效...'
+    AreaRename: '區域名從 %1 更改到 %2'
+    AreaRemove: '移除區域 %1 ...'
+    AreaRemoveLast: '不能把最後一個區域從領地中移除。'
+    AreaNotWithinParent: '這個區域不在父區域之內。'
+    AreaUpdate: '區域已更新...'
+    AreaMaxPhysical: '你已經達到你的領地所允許的最大區域。'
+    AreaSizeLimit: '區域的大小超出你允許的範圍上限。'
+    AreaHighLimit: '你不能保護這樣高的領地,你的上限是 %1 。'
+    AreaLowLimit: '你不能保護這樣深的領地,你的上限是 %1 。'
+    NotInResidence: '你不在一個領地里。'
+    InResidence: '你正站在領地 %1 里。'
+    ResidenceOwnerChange: '領地的擁有者從玩家 %1 改為玩家 %2 。'
+    NonAdmin: '你不是領地的管理員。'
+    AdminOnly: '只有管理員才能使用這個命令。'
+    ChatDisabled: '領地聊天已關閉...'
+    SubzoneRename: '附屬領地 %1 已重命名為 %2 。'
+    SubzoneRemove: '附屬領地 %1 已移除.'
+    SubzoneCreate: '創建附屬領地 %1 。'
+    SubzoneCreateFail: '不能創建附屬領地 %1 。'
+    SubzoneExists: '附屬領地 %1 已經存在。'
+    SubzoneCollide: '附屬領地與另一個附屬領地 %1 沖突。'
+    SubzoneMaxDepth: '您已達到了系統允許的最大分區深度。'
+    SubzoneSelectInside: '兩個選擇點必須在領地內。'
+    SelectPoints: '在用這個命令之前，請先用選擇工具選取兩個點！'
+    SelectionSuccess: '選擇成功！'
+    SelectionFail: '無效的選擇命令...'
+    SelectionBedrock: '擴大到允許的最低高度。'
+    SelectionSky: '擴大到允許的最高高度。'
+    SelectionArea: '在領地 %2 中選擇區域 %1 。'
+    SelectDiabled: '你沒有圈地權限。'
+    NoPermission: '你沒有使用此命令的權限。'
+    OwnerNoPermission: '所有者無此命令的權限。'
+    ParentNoPermission: '你沒有改變父區域的權限。'
+    MessageChange: '消息已設置...'
+    FlagSet: '權限已設置...'
+    FlagCheckTrue: '權限 %1 為玩家 %2 在領地 %3 設置，值為=%4 。'
+    FlagCheckFalse: '權限 %1 未為玩家 %2 在領地中設置。'
+    FlagsCleared: '權限已清除。'
+    FlagsDefault: '權限已設置為默認。'
+    Usage: '命令用法'
+    InvalidHelp: '無效的幫助頁...'
+    SubCommands: '子命令'
+    InvalidList: '未知列表的類型,必須是黑名單中的類型.'
+    MaterialGet: '材料名稱為ID %1 是 %2 。'
+    MarketDisabled: '市場功能已禁用！'
+    MarketList: '市場列表'
+    SelectionTool: '選擇工具'
+    InfoTool: '信息工具'
+    NoBankAccess: '你沒有銀行權限...'
+    NotEnoughMoney: '你沒有足夠的錢。'
+    BankNoMoney: '在銀行里沒有足夠的錢。'
+    BankDeposit: '你存 %1 元到領地銀行。'
+    BankWithdraw: '你取出 %1 元從領地銀行。'
+    MoneyCharged: '支出 %1 元從 %2 帳戶。'
+    MoneyCredit: '收入 %1 元從 %2 帳戶。'
+    RentDisabled: '租憑系統已關閉。'
+    RentReleaseInvalid: '領地 %1 沒有被租用或者被出租。'
+    RentSellFail: '不能出售一個被租出去的領地。'
+    SellRentFail: '當前領地在出售不能出租領地。'
+    OwnerBuyFail: '無法購買自己的土地！'
+    OwnerRentFail: '不能租你自己的土地！'
+    AlreadySellFail: '領地已經出售！'
+    ResidenceBought: '你已經買下了領地 %1 ！'
+    ResidenceBuy: '玩家 %1 從你那買下了領地 %2 。'
+    ResidenceBuyTooBig: '此領地已超過系統允許的最大領域。'
+    ResidenceNotForSale: '領地沒有用於出售。'
+    ResidenceForSale: '現在以 %2 銷售領地 %1 。'
+    ResidenceStopSelling: '領地不再銷售。'
+    ResidenceTooMany: '已達到系統允許領地的最大上限。'
+    ResidenceMaxRent: '已達到系統允許你租用領地的最大上限。'
+    ResidenceAlreadyRent: '領地已經被租用...'
+    ResidenceNotForRent: '領地不用於出租...'
+    ResidenceNotRented: '領地沒有被租用。'
+    ResidenceUnrent: '領地 %1 已不再出租。'
+    ResidenceRemoveRentable: '領地 %1 不再出租。'
+    ResidenceForRentSuccess: '領地 %1 現在租金為 %2 ，每次 %3 天。'
+    ResidenceRentSuccess: '你已經租用領地 %1  %2 天...'
+    ResidenceAlreadyRented: '領地 %1 ，目前已出租給 %2 。'
+    ResidenceAlreadyExists: '領地 %1 已存在。'
+    ResidenceCreate: '你創建了領地 %1 ！'
+    ResidenceRename: '領地 %1 已改名為 %2 。'
+    ResidenceRemove: '領地 %1 已經被移除...'
+    RentDisabled: '出租被禁用...'
+    RentDisableRenew: '%1 自動到期續約已關閉'
+    RentEnableRenew: '%1 自動到期續約已開啟.'
+    RentableDisableRenew: '%1 更新可租用狀態關閉.'
+    RentableEnableRenew: '%1 更新可租用狀態開啟.'
+    LandForSale: '出售土地'
+    SellAmount: '銷售金額'
+    LeaseExpire: '租賃到期時間'
+    RentExpire: '租金到期時間'
+    RentableAutoRenew: '自動更新可出租的土地'
+    RentAutoRenew: '租借自動更新'
+    RentableLand: '可供出租土地'
+    ListMaterialAdd: '%1 添加到領地 %2'
+    ListMaterialRemove: '%1 已從領地 %2 移除'
+    ItemBlacklisted: '你不能在這使用被禁止的物品.'
+    RentedModifyDeny: '不能修改一個租來的領地.'
+    WorldPVPDisabled: '當前世界的PvP被禁止.'
+    NoPVPZone: '沒有PVP的區域.'
+    FlagDeny: '你沒有擁有領地 %1 的權限.'
+    FlagSetDeny: '所有者不能使用這個權限 %1'
+    SelectPoint: '選擇了 %1 的選擇點'
+    ResidenceChat: '領地聊天切換到 %1 '
+    ResidenceMoveDeny: '你沒有領地 %1 的移動權限'
+    TeleportDeny: '你沒有傳送權限。'
+    TeleportSuccess: '已傳送！'
+    TeleportNear: '已傳送到領地的附近。'
+    TeleportNoFlag: '對不起，你沒有傳送權限去目標領地。'
+    SetTeleportLocation: '傳送點已設置...'
+    HelpPageHeader: '幫助頁 - %1 - 第 %2頁 共 %3頁'
+    ListExists: '列表已經存在...'
+    ListRemoved: '列表被移除...'
+    ListCreate: '已創建列表 %1'
+    LeaseRenew: '租賃有效期至 %1到期'
+    LeaseRenewMax: '租賃最大的允許值'
+    LeaseNotExpire: '沒有這樣的租賃或者租賃未到期.'
+    LeaseRenewalCost: '更新區域 %1 的花費是 %2'
+    LeaseInfinite: '租賃時間已設置為無限...'
+    PermissionsApply: '權限已應用到領地.'
+    PhysicalAreas: '物理區域'
+    CurrentArea: '當前區域'
+    LeaseExpire: '租約期滿'
+    NotOnline: '目標玩家必須在線.'
+    ResidenceGiveLimits: '無法給予目標玩家，因為這超過了目標玩家的上線'
+    ResidenceGive: '你把領地 %1 給了玩家 %2'
+    ResidenceRecieve: '你從玩家 %2 那里接收到了 %1 領地'
+    #Version 4 New Fields
+    #ResidenceListAll: 'Residences - <Page %1 of %2> - removed, use GenericPage now
+    ResidenceListAllEmpty: '在這個服務器上沒有任何的領地...'
+    InvalidPage: '無效頁數...'
+    NextPage: '下一頁'
+    #Version 10 New Fields
+    RemovePlayersResidences: '刪除了所有這個玩家的領地 %1'
+    GenericPage: '頁數 %1 / %2'
+    #Version 11 New Fields
+    ResidenceRentedBy: '被 %1 租用'
+    #Version 14 New Fields
+    InvalidCharacters: '偵測到無效名字...'
+    InvalidNameCharacters: '名字里包含非法字符...'
+    #Version 15 New Fields
+    DeleteConfirm: '你確定要刪除領地 %1 嗎？輸入"/res confirm"來確定。'
+    #Version 18 New Fields
+    SelectTooHigh: '警告！你所劃分的領地大小已超過服務器限制！'
+    SelectTooLow: '警告！你所劃分的領地大小已超過服務器限制！'
+    WorldEditNotFound: '未發現WorldEdit插件。'
+    #Version 19 New Fields
+    NoResHere: '沒有人在這里設置了領地。'
+    DeleteSubzoneConfirm: '你確定要刪除分區 %1 嗎？輸入“/res confirm”來確定。'
+    #Version 20 New Fields
+    SubzoneOwnerChange: '分區 %1 所有者改為 %2'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatic resadmin toggle turned %1'
+    #Version 22 New Fields
+    NoSpawn: 'You do not have move permissions at your spawn point. Relocating'
+    CompassTargetReset: '你的指南針指向已重置'
+    CompassTargetSet: '你的指南針現在指向領地 %1'
+
+    
+    #The below lines are mostly a word bank for various uses.
+    #Version 1 Fields
+    Description: '描述'
+    Land: '土地'
+    Cost: '花費'
+    Selection: '選擇'
+    Total: '總計'
+    Size: '尺寸'
+    Expanding: '擴張'
+    Shifting: '移'
+    Up: '上'
+    Down: '下'
+    Error: '錯誤'
+    Flags: '權限'
+    Your: '你的'
+    Group: '組'
+    Others: '其他人'
+    Primary: '第一個'
+    Secondary: '第二個'
+    Selection: '選擇'
+    Moved: '移動'
+    Status: '狀態'
+    Available: '可用'
+    On: '開啟'
+    Off: '關閉'
+    Name: '名字'
+    Lists: '列表'
+    Residences: '領地'
+    Residence: '領地'
+    Count: '統計'
+    Owner: '所有者'
+    #Version 4 Fields
+    World: '世界'
+    #Version 12 Fields
+    Subzones: '附屬領地'
+    #Version 20 Fields
+    CoordsT: '頂坐標'
+    CoordsB: '底部的坐標'
+    #Version 22 Fields
+    TurnOn: '開'
+    TurnOff: '關'
+    
+# This is the help / usage messages for each command.
+# It follows this format:
+# <Command>
+# Description: '<general description of command, one line of text>
+# Info: '<extra info lines to describe the command, list of text>
+# SubCommands:
+# <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
+# Add a page number after the ? mark to see that page.
+
+HelpLinesPerPage: 7
+CommandHelp: #this is just a holder node, that holds the entire help
+    Description: 領地插件相關幫助
+    SubCommands: #this is the actual beginning of all commands
+        res: #main residence command
+            Description: 領地插件相關幫助
+            Info:
+                - '如果有疑問在這里找不到，歡迎訪問Wiki'
+                - '地址：residencebukkitmod.wikispaces.com (英文)'
+                - '輸入/[命令] ? <頁面>獲得更多信息'
+            SubCommands:
+                select: #selection commands
+                    Description: Selection Commands
+                    Info:
+                        - '選擇此命令的使用範圍領地.'
+                        - '/res select [x] [y] [z] - 選擇一個區塊在中間, 你的半徑.'
+                    SubCommands:
+                        coords:
+                            Description: 顯示選定的坐標
+                            Info:
+                                - 'Usage: /res select coords'
+                        size:
+                            Description: 顯示選定的領地大小
+                            Info:
+                                - 'Usage: /res select size'
+                        cost:
+                            Description: 顯示選定的領地需繳納金
+                            Info:
+                                - 'Usage: /res select cost'
+                        vert:
+                            Description: Expand Selection Vertically
+                            Info:
+                                - 'Usage: /res select vert'
+                                - 'Will expand selection as high and as low as allowed.'
+                        sky:
+                            Description: Expand Selection to Sky
+                            Info:
+                                - 'Usage: /res select sky'
+                                - 'Expands as high as your allowed to go.'
+                        bedrock:
+                            Description: Expand Selection to Bedrock
+                            Info:
+                                - 'Usage: /res select bedrock'
+                                - 'Expands as low as your allowed to go.'
+                        expand:
+                            Description: Expand selection in a direction.
+                            Info:
+                                - 'Usage: /res select expand <amount>'
+                                - 'Expands <amount> in the direction your looking.'
+                        shift:
+                            Description: Shift selection in a direction
+                            Info:
+                                - 'Usage: /res select shift <amount>'
+                                - 'Pushes your selection by <amount> in the direction your looking.'
+                        chunk:
+                            Description: Select the chunk your currently in.
+                            Info:
+                                - 'Usage: /res select chunk'
+                                - 'Selects the chunk your currently standing in.'
+                        領地:
+                            Description: Select a existing area in a 領地.
+                            Info:
+                                - 'Usage /res select <領地> <AreaID>'
+                                - 'Selects a existing area in a 領地.'
+                create: #creation command
+                    Description: 創建領地
+                    Info:
+                        - Usage: '/res create <領地名字>'
+                remove: #remove command
+                    Description: 刪除領地
+                    Info:
+                        - 'Usage: /res remove <領地名字>'
+                removeall:
+                    Description: 刪除某位玩家所屬的全部領地
+                    Info:
+                        - 'Usage: /res removeall [owner]'
+                        - 'Removes all residences owned by a specific player.'
+                        - 'Requires /resadmin if you use it on anyone besides yourself.'
+                confirm:
+                    - 'Usage: /res confirm'
+                    - '確認你要刪除某個領地'
+                subzone:
+                    Description: 在某個領地里創建附屬領地
+                    Info:
+                        - 'Usage: /res subzone <領地名> [附屬領地名]'
+                        - '如果領地名為空，那麽將以你所在的領地為主'
+                area:
+                    Description: 'Manage physical areas for a residence.'
+                    SubCommands:
+                        list:
+                            Description: List physical areas in a residence
+                            Info:
+                                - Usage: /res area list [residence] <page>
+                        listall:
+                            Description: List coordinates and other info for areas
+                            Info:
+                                - Usage: /res area listall [residence] <page>
+                        add:
+                            Description: Add physical areas to a residence
+                            Info:
+                                - Usage: /res area add [residence] [areaID]
+                                - You must first select two points first.
+                        remove:
+                            Description: Remove physical areas from a residence
+                            Info:
+                                - Usage: /res area remove [residence] [areaID]
+                        replace:
+                            Description: Replace physical areas in a residence
+                            Info:
+                                - Usage: /res area replace [residence] [areaID]
+                                - You must first select two points first.
+                                - Replacing a area will charge the difference in size if the new area is bigger.
+                info:
+                    Description: 顯示某個領地的信息
+                    Info:
+                        - Usage: /res info <領地名>
+                        - 如果領地名為空，將以你所處的領地為主
+                limits:
+                    Description: 顯示領地功能限制
+                    Info:
+                        - Usage: /res limits
+                        - 顯示你在創建或管理領地時對部分功能的限制
+                message:
+                    Description: 設置領地進入/離開信息
+                    Info:
+                        - Usage: /res message <領地名> [enter/leave] [信息]
+                        - 設置某個領地的進入/離開信息
+                        - Usage: /res message <領地名> remove [enter/leave]
+                        - 刪除某個領地的進入/離開信息
+                lease:
+                    Description: Manage residence leases
+                    Info:
+                        - Usage: /res lease [renew/cost] [residence]
+                        - /res lease cost will show the cost of renewing a residence lease.
+                        - /res lease renew will renew the residence provided you have enough money.
+                    SubCommands:
+                        set:
+                            Description: Set the lease time (admin only)
+                            Info:
+                                - Usage: /resadmin lease set [residence] [#days/infinite]
+                                - Sets the lease time to a specified number of days, or infinite.
+                bank:
+                    Description: Manage money in a Residence
+                    Info:
+                        - Usage: /res bank [deposit/withdraw] [amount]
+                        - You must be standing in a Residence
+                        - You must have the +bank flag.
+                tp:
+                    Description: 傳送到某個領地
+                    Info:
+                        - Usage: /res tp [領地名]
+                        - 將你傳送到某個領地，前提對應領地允許傳送或你是對應領地的主人
+                        - Your permission group must also be allowed to teleport by the server admin.
+                tpset:
+                    Description: 設置某個領地的傳送目標
+                    Info:
+                        - Usage: /res tpset
+                        - This will set the teleport location for a residence to where your standing.
+                        - You must be standing in the residence to use this command.
+                        - You must also be the owner or have the +admin flag for the residence.
+                set:
+                    Description: Set general flags on a Residence
+                    Info:
+                        - Usage: /res set <residence> [flag] [true/false/remove]
+                        - To see a list of flags, use /res flags ?
+                        - These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)
+                pset:
+                    Description: Set flags on a specific player for a Residence.
+                    Info:
+                        - Usage: /res pset <residence> [player] [flag] [true/false/remove]
+                        - Usage: /res pset <residence> [player] removeall
+                        - To see a list of flags, use /res flags ?
+                gset:
+                    Description: Set flags on a specific group for a Residence.
+                    Info:
+                        - Usage: /res gset <residence> [group] [flag] [true/false/remove]
+                        - To see a list of flags, use /res flags ?
+                lset:
+                    Description: Change blacklist and ignorelist options
+                    Info:
+                        - Usage: /res lset <residence> [blacklist/ignorelist] [material]
+                        - Usage: /res lset <residence> info
+                        - Blacklisting a material prevents it from being placed in the residence.
+                        - Ignorelist causes a specific material to not be protected by Residence.
+                flags:
+                    Description: List of flags
+                    Info:
+                        - 'For flag values, usually true allows the action, and false denys the action.'
+                        - 'build - 允許或禁止玩家放置破壞方塊'
+                        - 'use - 允許或禁止玩家使用門、按鈕、拉桿等'
+                        - 'move - 允許或禁止玩家進入此領地或在此領地活動'
+                        - 'container - 允許或禁止玩家使用熔爐、箱子、發射器等'
+                        - 'trusted - Gives build, use, move, container and tp flags'
+                        - 'place - allows or denys only placement of blocks, overrides the build flag.'
+                        - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
+                        - 'pvp - allow or deny pvp in the residence'
+                        - 'tp - allow or disallow teleporting to the residence.'
+                        - 'admin - gives a player permission to change flags on a residence.'
+                        - 'subzone - allow a player to make subzones in the residence.'
+                        - 'monsters - allows or denys monster spawns'
+                        - 'animals - allows or denys animal spawns.'
+                        - 'healing - setting to true makes the residence heal its occupants'
+                        - 'tnt - allow or deny tnt explosions'
+                        - 'creeper - allow or deny creeper explosions'
+                        - 'ignite - allows or denys fire ignition.'
+                        - 'firespread - allows or denys fire spread.'
+                        - 'bucket - allow or deny bucket use.'
+                        - 'flow - allows or denys liquid flow.'
+                        - 'lavaflow - allows or denys lava flow, overrides flow'
+                        - 'waterflow - allows or denys water flow, overrides flow'
+                        - 'damage - allows or denys all entity damage within the residence.'
+                        - 'piston - allow or deny pistons from pushing or pulling blocks in the residence.'
+                        - 'hidden - hides residence from list or listall commands.'
+                        - 'cake - allows or denys players to eat cake'
+                        - 'lever - allows or denys players to use levers'
+                        - 'button - allows or denys players to use buttons'
+                        - 'diode - allows or denys players to use redstone repeaters'
+                        - 'door - allows or denys players to use doors and trapdoors'
+                        - 'table - allows or denys players to use workbenches'
+                        - 'enchant - allows or denys players to use enchanting tables'
+                        - 'brew - allows or denys players to use brewing stands'
+                        - 'bed - allows or denys players to use beds'
+                        - 'button - allows or denys players to use buttons'
+                        - 'pressure - allows or denys players to use pressure plates'
+                        - 'note - allows or denys players to use note blocks'
+                        - 'redstone - Gives lever, diode, button, pressure, note flags'
+                        - 'craft - Gives table, enchant, brew flags'
+                list:
+                    Description: List Residences
+                    Info:
+                        - Usage: /res list <player> <page>
+                        - Lists all the residences you own.
+                        - To list everyones residences, use /res listall.
+                listall:
+                    Description: List All Residence
+                    Info:
+                        - Usage: /res listall <page>
+                        - Lists all residences on the server.
+                sublist:
+                    Description: List Residence Subzones
+                    Info:
+                        - Usage: /res sublist <residence> <page>
+                        - List subzones within a residence.
+                default:
+                    Description: Reset residence to default flags.
+                    Info:
+                        - Usage: /res default <residence>
+                        - Resets the flags on a residence to their default. You must be the owner or an admin to do this.
+                rename:
+                    Description: Renames a residence.
+                    Info:
+                        - Usage: /res rename [OldName] [NewName]
+                        - You must be the owner or an admin to do this.
+                        - The name must not already be taken by another residence.
+                mirror:
+                    Description: Mirrors Flags
+                    Info:
+                        - Usage: /res mirror [Source Residence] [Target Residence]
+                        - Mirrors flags from one residence to another. You must be owner of both or a admin to do this.
+                market:
+                    Description: Buy, Sell, or Rent Residences
+                    Info:
+                        - Usage: /res market ? for more info
+                    SubCommands:
+                        info:
+                            Description: Get economy info on residence
+                            Info:
+                                - Usage: /res market info [residence]
+                                - Shows if the Residence is for sale or for rent, and the cost.
+                        list:
+                            Description: Lists rentable and for sale residences.
+                            Info:
+                                - Usage: /res market list
+                        sell:
+                            Description: Sell a residence
+                            Info:
+                                - Usage: /res market sell [residence] [amount]
+                                - Puts a residence for sale for [amount] of money.
+                                - Another player can buy the residence with /res market buy
+                        buy:
+                            Description: Buy a residence
+                            Info:
+                                - Usage: /res market buy [residence]
+                                - Buys a Residence if its for sale.
+                        unsell:
+                            Description: Stops selling a residence
+                            Info:
+                                - Usage: /res market unsell [residence]
+                        rent:
+                            Description: Rent a residence
+                            Info:
+                                - Usage: /res market rent [residence] <autorenew>
+                                - Rents a residence. Autorenew can be either true or false. If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.
+                        rentable:
+                            Description: Make a residence rentable.
+                            Info:
+                                - Usage: /res market rentable [residence] [cost] [days] <repeat>
+                                - Makes a residence rentable for [cost] money for every [days] number of days. If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.
+                        release:
+                            Description: Remove a residence from rent or rentable.
+                            Info:
+                                - Usage: /res market release [residence]
+                                - If you are the renter, this command releases the rent on the house for you.
+                                - If you are the owner, this command makes the residence not for rent anymore.
+                current:
+                    Description: Show residence your currently in.
+                    Info:
+                        - Usage: /res current
+                lists:
+                    Description: Predefined permission lists
+                    Info:
+                        - Predefined permissions that can be applied to a residence.
+                    SubCommands:
+                        add:
+                            Description: Add a list
+                            Info:
+                                - Usage: /res lists add <listname>
+                        remove:
+                            Description: Remove a list
+                            Info:
+                                - Usage: /res lists remove <listname>
+                        apply:
+                            Description: Apply a list to a residence
+                            Info:
+                                - Usage: /res lists apply <listname> <residence>
+                        set:
+                            Description: Set a flag
+                            Info:
+                                - Usage: /res lists set <listname> <flag> <value>
+                        pset:
+                            Description: Set a player flag
+                            Info:
+                                - Usage: /res lists pset <listname> <player> <flag> <value>
+                        gset:
+                            Description: Set a group flag
+                            Info:
+                                - Usage: /res lists gset <listname> <group> <flag> <value>
+                        view:
+                            Description: View a list.
+                            Info:
+                                - Usage: /res lists view <listname>
+                server:
+                    Description: 設置某個領地為服務器所屬(僅限管理員使用)
+                    Info:
+                        - Usage: /resadmin server [residence]
+                        - 可以讓某個領地變為服務器所屬
+                setowner:
+                    Description: 設置某個領地的所有者(僅限管理員使用)
+                    Info:
+                        - Usage: /resadmin setowner [領地名] [玩家]
+                resreload:
+                    Description: 重新加載插件配置(僅限管理員使用)
+                    Info:
+                        - Usage: /resreload
+                resload:
+                    Description: Load residence save file (UNSAFE, admin only).
+                    Info:
+                        - Usage: /resload
+                        - UNSAFE command, does not save residences first.
+                        - Loads the residence save file after you have made changes.
+                version:
+                    Description: 顯示領地插件的版本信息
+                    Info:
+                        - Usage: /res version
