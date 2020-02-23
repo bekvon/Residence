@@ -1,0 +1,611 @@
+# NOTE: 'If you want to modify this file, it is HIGHLY recommended that you make a copy
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten. Once you
+# have a copy of this file, change the Language: 'option under the Residence config.yml
+# to whatever you named your copy.
+Version: 21
+FieldsVersion: 22
+Language:
+    # The below lines represent various messages residence sends to the players.
+    # Note that some messages have variables such as %1 that are inserted at runtime.
+    #Version 1 Fields
+    InvalidResidence: '...'
+    InvalidSubzone: '...'
+    InvalidDirection: '...'
+    InvalidChannel: '...'
+    InvalidAmount: '...'
+    InvalidCost: '...'
+    InvalidDays: '...'
+    InvalidMaterial: '...'
+    InvalidBoolean: 'true(t)false(f)'
+    InvalidArea: '...'
+    InvalidGroup: '...'
+    InvalidMessageType: 'enter()remove()'
+    InvalidList: '...'
+    InvalidFlag: '...'
+    InvalidFlagState: 'true(t)false(f) remove(r)'
+    AreaExists: ''
+    AreaCreate: 'ID %1 '
+    AreaDiffWorld: ''
+    AreaCollision: ' %1 '
+    AreaSubzoneCollision: ' %1 '
+    AreaNonExist: ''
+    AreaInvalidName: '...'
+    AreaRename: ' %1  %2'
+    AreaRemove: ' %1 ...'
+    AreaRemoveLast: ''
+    AreaNotWithinParent: ''
+    AreaUpdate: '...'
+    AreaMaxPhysical: ''
+    AreaSizeLimit: ''
+    AreaHighLimit: ', %1 '
+    AreaLowLimit: ', %1 '
+    NotInResidence: ''
+    InResidence: ' %1 '
+    ResidenceOwnerChange: ' %1  %2 '
+    NonAdmin: ''
+    AdminOnly: ''
+    ChatDisabled: '...'
+    SubzoneRename: ' %1  %2 '
+    SubzoneRemove: ' %1 .'
+    SubzoneCreate: ' %1 '
+    SubzoneCreateFail: ' %1 '
+    SubzoneExists: ' %1 '
+    SubzoneCollide: ' %1 '
+    SubzoneMaxDepth: ''
+    SubzoneSelectInside: ''
+    SelectPoints: ''
+    SelectionSuccess: ''
+    SelectionFail: '...'
+    SelectionBedrock: ''
+    SelectionSky: ''
+    SelectionArea: ' %2  %1 '
+    SelectDiabled: ''
+    NoPermission: ''
+    OwnerNoPermission: ''
+    ParentNoPermission: ''
+    MessageChange: '...'
+    FlagSet: '...'
+    FlagCheckTrue: ' %1  %2  %3 =%4 '
+    FlagCheckFalse: ' %1  %2 '
+    FlagsCleared: ''
+    FlagsDefault: ''
+    Usage: ''
+    InvalidHelp: '...'
+    SubCommands: ''
+    InvalidList: ',.'
+    MaterialGet: 'ID %1  %2 '
+    MarketDisabled: ''
+    MarketList: ''
+    SelectionTool: ''
+    InfoTool: ''
+    NoBankAccess: '...'
+    NotEnoughMoney: ''
+    BankNoMoney: ''
+    BankDeposit: ' %1 '
+    BankWithdraw: ' %1 '
+    MoneyCharged: ' %1  %2 '
+    MoneyCredit: ' %1  %2 '
+    RentDisabled: ''
+    RentReleaseInvalid: ' %1 '
+    RentSellFail: ''
+    SellRentFail: ''
+    OwnerBuyFail: ''
+    OwnerRentFail: ''
+    AlreadySellFail: ''
+    ResidenceBought: ' %1 '
+    ResidenceBuy: ' %1  %2 '
+    ResidenceBuyTooBig: ''
+    ResidenceNotForSale: ''
+    ResidenceForSale: ' %2  %1 '
+    ResidenceStopSelling: ''
+    ResidenceTooMany: ''
+    ResidenceMaxRent: ''
+    ResidenceAlreadyRent: '...'
+    ResidenceNotForRent: '...'
+    ResidenceNotRented: ''
+    ResidenceUnrent: ' %1 '
+    ResidenceRemoveRentable: ' %1 '
+    ResidenceForRentSuccess: ' %1  %2  %3 '
+    ResidenceRentSuccess: ' %1  %2 ...'
+    ResidenceAlreadyRented: ' %1  %2 '
+    ResidenceAlreadyExists: ' %1 '
+    ResidenceCreate: ' %1 '
+    ResidenceRename: ' %1  %2 '
+    ResidenceRemove: ' %1 ...'
+    RentDisabled: '...'
+    RentDisableRenew: '%1 '
+    RentEnableRenew: '%1 .'
+    RentableDisableRenew: '%1 .'
+    RentableEnableRenew: '%1 .'
+    LandForSale: ''
+    SellAmount: ''
+    LeaseExpire: ''
+    RentExpire: ''
+    RentableAutoRenew: ''
+    RentAutoRenew: ''
+    RentableLand: ''
+    ListMaterialAdd: '%1  %2'
+    ListMaterialRemove: '%1  %2 '
+    ItemBlacklisted: '.'
+    RentedModifyDeny: '.'
+    WorldPVPDisabled: 'PvP.'
+    NoPVPZone: 'PVP.'
+    FlagDeny: ' %1 .'
+    FlagSetDeny: ' %1'
+    SelectPoint: ' %1 '
+    ResidenceChat: ' %1 '
+    ResidenceMoveDeny: ' %1 '
+    TeleportDeny: ''
+    TeleportSuccess: ''
+    TeleportNear: ''
+    TeleportNoFlag: ''
+    SetTeleportLocation: '...'
+    HelpPageHeader: ' - %1 -  %2  %3'
+    ListExists: '...'
+    ListRemoved: '...'
+    ListCreate: ' %1'
+    LeaseRenew: ' %1'
+    LeaseRenewMax: ''
+    LeaseNotExpire: '.'
+    LeaseRenewalCost: ' %1  %2'
+    LeaseInfinite: '...'
+    PermissionsApply: '.'
+    PhysicalAreas: ''
+    CurrentArea: ''
+    LeaseExpire: ''
+    NotOnline: '.'
+    ResidenceGiveLimits: ''
+    ResidenceGive: ' %1  %2'
+    ResidenceRecieve: ' %2  %1 '
+    #Version 4 New Fields
+    #ResidenceListAll: 'Residences - <Page %1 of %2> - removed, use GenericPage now
+    ResidenceListAllEmpty: '...'
+    InvalidPage: '...'
+    NextPage: ''
+    #Version 10 New Fields
+    RemovePlayersResidences: ' %1'
+    GenericPage: ' %1 / %2'
+    #Version 11 New Fields
+    ResidenceRentedBy: ' %1 '
+    #Version 14 New Fields
+    InvalidCharacters: '...'
+    InvalidNameCharacters: '...'
+    #Version 15 New Fields
+    DeleteConfirm: ' %1 "/res confirm"'
+    #Version 18 New Fields
+    SelectTooHigh: ''
+    SelectTooLow: ''
+    WorldEditNotFound: 'WorldEdit'
+    #Version 19 New Fields
+    NoResHere: ''
+    DeleteSubzoneConfirm: ' %1 /res confirm'
+    #Version 20 New Fields
+    SubzoneOwnerChange: ' %1  %2'
+    CoordsTop: 'X:%1 Y:%2 Z:%3'
+    CoordsBottom: 'X:%1 Y:%2 Z:%3'
+    #Version 21 New Fields
+    AdminToggle: 'Automatic resadmin toggle turned %1'
+    #Version 22 New Fields
+    NoSpawn: 'You do not have move permissions at your spawn point. Relocating'
+    CompassTargetReset: ''
+    CompassTargetSet: ' %1'
+
+    
+    #The below lines are mostly a word bank for various uses.
+    #Version 1 Fields
+    Description: ''
+    Land: ''
+    Cost: ''
+    Selection: ''
+    Total: ''
+    Size: ''
+    Expanding: ''
+    Shifting: ''
+    Up: ''
+    Down: ''
+    Error: ''
+    Flags: ''
+    Your: ''
+    Group: ''
+    Others: ''
+    Primary: ''
+    Secondary: ''
+    Selection: ''
+    Moved: ''
+    Status: ''
+    Available: ''
+    On: ''
+    Off: ''
+    Name: ''
+    Lists: ''
+    Residences: ''
+    Residence: ''
+    Count: ''
+    Owner: ''
+    #Version 4 Fields
+    World: ''
+    #Version 12 Fields
+    Subzones: ''
+    #Version 20 Fields
+    CoordsT: ''
+    CoordsB: ''
+    #Version 22 Fields
+    TurnOn: ''
+    TurnOff: ''
+    
+# This is the help / usage messages for each command.
+# It follows this format:
+# <Command>
+# Description: '<general description of command, one line of text>
+# Info: '<extra info lines to describe the command, list of text>
+# SubCommands:
+# <SubCommands> - these follow the same format, and each sub command can have its own subcommands
+# When a user gets help for a command (adds a ? mark on the end), first its Info lines are printed, then its sub commands are printed below that
+# Pages are automatically generated if the total lines of text exceeds 6 (will be configurable later).
+# Add a page number after the ? mark to see that page.
+
+HelpLinesPerPage: 7
+CommandHelp: #this is just a holder node, that holds the entire help
+    Description: 
+    SubCommands: #this is the actual beginning of all commands
+        res: #main residence command
+            Description: 
+            Info:
+                - 'Wiki'
+                - 'residencebukkitmod.wikispaces.com ()'
+                - '/[] ? <>'
+            SubCommands:
+                select: #selection commands
+                    Description: Selection Commands
+                    Info:
+                        - '.'
+                        - '/res select [x] [y] [z] - , .'
+                    SubCommands:
+                        coords:
+                            Description: 
+                            Info:
+                                - 'Usage: /res select coords'
+                        size:
+                            Description: 
+                            Info:
+                                - 'Usage: /res select size'
+                        cost:
+                            Description: 
+                            Info:
+                                - 'Usage: /res select cost'
+                        vert:
+                            Description: Expand Selection Vertically
+                            Info:
+                                - 'Usage: /res select vert'
+                                - 'Will expand selection as high and as low as allowed.'
+                        sky:
+                            Description: Expand Selection to Sky
+                            Info:
+                                - 'Usage: /res select sky'
+                                - 'Expands as high as your allowed to go.'
+                        bedrock:
+                            Description: Expand Selection to Bedrock
+                            Info:
+                                - 'Usage: /res select bedrock'
+                                - 'Expands as low as your allowed to go.'
+                        expand:
+                            Description: Expand selection in a direction.
+                            Info:
+                                - 'Usage: /res select expand <amount>'
+                                - 'Expands <amount> in the direction your looking.'
+                        shift:
+                            Description: Shift selection in a direction
+                            Info:
+                                - 'Usage: /res select shift <amount>'
+                                - 'Pushes your selection by <amount> in the direction your looking.'
+                        chunk:
+                            Description: Select the chunk your currently in.
+                            Info:
+                                - 'Usage: /res select chunk'
+                                - 'Selects the chunk your currently standing in.'
+                        :
+                            Description: Select a existing area in a .
+                            Info:
+                                - 'Usage /res select <> <AreaID>'
+                                - 'Selects a existing area in a .'
+                create: #creation command
+                    Description: 
+                    Info:
+                        - Usage: '/res create <>'
+                remove: #remove command
+                    Description: 
+                    Info:
+                        - 'Usage: /res remove <>'
+                removeall:
+                    Description: 
+                    Info:
+                        - 'Usage: /res removeall [owner]'
+                        - 'Removes all residences owned by a specific player.'
+                        - 'Requires /resadmin if you use it on anyone besides yourself.'
+                confirm:
+                    - 'Usage: /res confirm'
+                    - ''
+                subzone:
+                    Description: 
+                    Info:
+                        - 'Usage: /res subzone <> []'
+                        - ''
+                area:
+                    Description: 'Manage physical areas for a residence.'
+                    SubCommands:
+                        list:
+                            Description: List physical areas in a residence
+                            Info:
+                                - Usage: /res area list [residence] <page>
+                        listall:
+                            Description: List coordinates and other info for areas
+                            Info:
+                                - Usage: /res area listall [residence] <page>
+                        add:
+                            Description: Add physical areas to a residence
+                            Info:
+                                - Usage: /res area add [residence] [areaID]
+                                - You must first select two points first.
+                        remove:
+                            Description: Remove physical areas from a residence
+                            Info:
+                                - Usage: /res area remove [residence] [areaID]
+                        replace:
+                            Description: Replace physical areas in a residence
+                            Info:
+                                - Usage: /res area replace [residence] [areaID]
+                                - You must first select two points first.
+                                - Replacing a area will charge the difference in size if the new area is bigger.
+                info:
+                    Description: 
+                    Info:
+                        - Usage: /res info <>
+                        - 
+                limits:
+                    Description: 
+                    Info:
+                        - Usage: /res limits
+                        - 
+                message:
+                    Description: /
+                    Info:
+                        - Usage: /res message <> [enter/leave] []
+                        - /
+                        - Usage: /res message <> remove [enter/leave]
+                        - /
+                lease:
+                    Description: Manage residence leases
+                    Info:
+                        - Usage: /res lease [renew/cost] [residence]
+                        - /res lease cost will show the cost of renewing a residence lease.
+                        - /res lease renew will renew the residence provided you have enough money.
+                    SubCommands:
+                        set:
+                            Description: Set the lease time (admin only)
+                            Info:
+                                - Usage: /resadmin lease set [residence] [#days/infinite]
+                                - Sets the lease time to a specified number of days, or infinite.
+                bank:
+                    Description: Manage money in a Residence
+                    Info:
+                        - Usage: /res bank [deposit/withdraw] [amount]
+                        - You must be standing in a Residence
+                        - You must have the +bank flag.
+                tp:
+                    Description: 
+                    Info:
+                        - Usage: /res tp []
+                        - 
+                        - Your permission group must also be allowed to teleport by the server admin.
+                tpset:
+                    Description: 
+                    Info:
+                        - Usage: /res tpset
+                        - This will set the teleport location for a residence to where your standing.
+                        - You must be standing in the residence to use this command.
+                        - You must also be the owner or have the +admin flag for the residence.
+                set:
+                    Description: Set general flags on a Residence
+                    Info:
+                        - Usage: /res set <residence> [flag] [true/false/remove]
+                        - To see a list of flags, use /res flags ?
+                        - These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)
+                pset:
+                    Description: Set flags on a specific player for a Residence.
+                    Info:
+                        - Usage: /res pset <residence> [player] [flag] [true/false/remove]
+                        - Usage: /res pset <residence> [player] removeall
+                        - To see a list of flags, use /res flags ?
+                gset:
+                    Description: Set flags on a specific group for a Residence.
+                    Info:
+                        - Usage: /res gset <residence> [group] [flag] [true/false/remove]
+                        - To see a list of flags, use /res flags ?
+                lset:
+                    Description: Change blacklist and ignorelist options
+                    Info:
+                        - Usage: /res lset <residence> [blacklist/ignorelist] [material]
+                        - Usage: /res lset <residence> info
+                        - Blacklisting a material prevents it from being placed in the residence.
+                        - Ignorelist causes a specific material to not be protected by Residence.
+                flags:
+                    Description: List of flags
+                    Info:
+                        - 'For flag values, usually true allows the action, and false denys the action.'
+                        - 'build - '
+                        - 'use - '
+                        - 'move - '
+                        - 'container - '
+                        - 'trusted - Gives build, use, move, container and tp flags'
+                        - 'place - allows or denys only placement of blocks, overrides the build flag.'
+                        - 'destroy - allows or denys only destruction of blocks, overrides the build flag.'
+                        - 'pvp - allow or deny pvp in the residence'
+                        - 'tp - allow or disallow teleporting to the residence.'
+                        - 'admin - gives a player permission to change flags on a residence.'
+                        - 'subzone - allow a player to make subzones in the residence.'
+                        - 'monsters - allows or denys monster spawns'
+                        - 'animals - allows or denys animal spawns.'
+                        - 'healing - setting to true makes the residence heal its occupants'
+                        - 'tnt - allow or deny tnt explosions'
+                        - 'creeper - allow or deny creeper explosions'
+                        - 'ignite - allows or denys fire ignition.'
+                        - 'firespread - allows or denys fire spread.'
+                        - 'bucket - allow or deny bucket use.'
+                        - 'flow - allows or denys liquid flow.'
+                        - 'lavaflow - allows or denys lava flow, overrides flow'
+                        - 'waterflow - allows or denys water flow, overrides flow'
+                        - 'damage - allows or denys all entity damage within the residence.'
+                        - 'piston - allow or deny pistons from pushing or pulling blocks in the residence.'
+                        - 'hidden - hides residence from list or listall commands.'
+                        - 'cake - allows or denys players to eat cake'
+                        - 'lever - allows or denys players to use levers'
+                        - 'button - allows or denys players to use buttons'
+                        - 'diode - allows or denys players to use redstone repeaters'
+                        - 'door - allows or denys players to use doors and trapdoors'
+                        - 'table - allows or denys players to use workbenches'
+                        - 'enchant - allows or denys players to use enchanting tables'
+                        - 'brew - allows or denys players to use brewing stands'
+                        - 'bed - allows or denys players to use beds'
+                        - 'button - allows or denys players to use buttons'
+                        - 'pressure - allows or denys players to use pressure plates'
+                        - 'note - allows or denys players to use note blocks'
+                        - 'redstone - Gives lever, diode, button, pressure, note flags'
+                        - 'craft - Gives table, enchant, brew flags'
+                list:
+                    Description: List Residences
+                    Info:
+                        - Usage: /res list <player> <page>
+                        - Lists all the residences you own.
+                        - To list everyones residences, use /res listall.
+                listall:
+                    Description: List All Residence
+                    Info:
+                        - Usage: /res listall <page>
+                        - Lists all residences on the server.
+                sublist:
+                    Description: List Residence Subzones
+                    Info:
+                        - Usage: /res sublist <residence> <page>
+                        - List subzones within a residence.
+                default:
+                    Description: Reset residence to default flags.
+                    Info:
+                        - Usage: /res default <residence>
+                        - Resets the flags on a residence to their default. You must be the owner or an admin to do this.
+                rename:
+                    Description: Renames a residence.
+                    Info:
+                        - Usage: /res rename [OldName] [NewName]
+                        - You must be the owner or an admin to do this.
+                        - The name must not already be taken by another residence.
+                mirror:
+                    Description: Mirrors Flags
+                    Info:
+                        - Usage: /res mirror [Source Residence] [Target Residence]
+                        - Mirrors flags from one residence to another. You must be owner of both or a admin to do this.
+                market:
+                    Description: Buy, Sell, or Rent Residences
+                    Info:
+                        - Usage: /res market ? for more info
+                    SubCommands:
+                        info:
+                            Description: Get economy info on residence
+                            Info:
+                                - Usage: /res market info [residence]
+                                - Shows if the Residence is for sale or for rent, and the cost.
+                        list:
+                            Description: Lists rentable and for sale residences.
+                            Info:
+                                - Usage: /res market list
+                        sell:
+                            Description: Sell a residence
+                            Info:
+                                - Usage: /res market sell [residence] [amount]
+                                - Puts a residence for sale for [amount] of money.
+                                - Another player can buy the residence with /res market buy
+                        buy:
+                            Description: Buy a residence
+                            Info:
+                                - Usage: /res market buy [residence]
+                                - Buys a Residence if its for sale.
+                        unsell:
+                            Description: Stops selling a residence
+                            Info:
+                                - Usage: /res market unsell [residence]
+                        rent:
+                            Description: Rent a residence
+                            Info:
+                                - Usage: /res market rent [residence] <autorenew>
+                                - Rents a residence. Autorenew can be either true or false. If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.
+                        rentable:
+                            Description: Make a residence rentable.
+                            Info:
+                                - Usage: /res market rentable [residence] [cost] [days] <repeat>
+                                - Makes a residence rentable for [cost] money for every [days] number of days. If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.
+                        release:
+                            Description: Remove a residence from rent or rentable.
+                            Info:
+                                - Usage: /res market release [residence]
+                                - If you are the renter, this command releases the rent on the house for you.
+                                - If you are the owner, this command makes the residence not for rent anymore.
+                current:
+                    Description: Show residence your currently in.
+                    Info:
+                        - Usage: /res current
+                lists:
+                    Description: Predefined permission lists
+                    Info:
+                        - Predefined permissions that can be applied to a residence.
+                    SubCommands:
+                        add:
+                            Description: Add a list
+                            Info:
+                                - Usage: /res lists add <listname>
+                        remove:
+                            Description: Remove a list
+                            Info:
+                                - Usage: /res lists remove <listname>
+                        apply:
+                            Description: Apply a list to a residence
+                            Info:
+                                - Usage: /res lists apply <listname> <residence>
+                        set:
+                            Description: Set a flag
+                            Info:
+                                - Usage: /res lists set <listname> <flag> <value>
+                        pset:
+                            Description: Set a player flag
+                            Info:
+                                - Usage: /res lists pset <listname> <player> <flag> <value>
+                        gset:
+                            Description: Set a group flag
+                            Info:
+                                - Usage: /res lists gset <listname> <group> <flag> <value>
+                        view:
+                            Description: View a list.
+                            Info:
+                                - Usage: /res lists view <listname>
+                server:
+                    Description: ()
+                    Info:
+                        - Usage: /resadmin server [residence]
+                        - 
+                setowner:
+                    Description: ()
+                    Info:
+                        - Usage: /resadmin setowner [] []
+                resreload:
+                    Description: ()
+                    Info:
+                        - Usage: /resreload
+                resload:
+                    Description: Load residence save file (UNSAFE, admin only).
+                    Info:
+                        - Usage: /resload
+                        - UNSAFE command, does not save residences first.
+                        - Loads the residence save file after you have made changes.
+                version:
+                    Description: 
+                    Info:
+                        - Usage: /res version
