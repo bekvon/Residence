@@ -50,6 +50,9 @@ public class ResidenceRaid {
 	this.endsAt = endsAt;
     }
 
+    public boolean isEnded() {
+	return getEndsAt() < System.currentTimeMillis();
+    }
 //    public Long getLastSiegeEnded() {
 //	return lastSiegeEnded;
 //    }

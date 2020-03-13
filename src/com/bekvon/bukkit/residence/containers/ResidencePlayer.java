@@ -371,7 +371,12 @@ public class ResidencePlayer {
 	return ls;
     }
 
+    @Deprecated
     public String getPlayerName() {
+	return getName();
+    }
+    
+    public String getName() {
 	this.updatePlayer();
 	return userName;
     }

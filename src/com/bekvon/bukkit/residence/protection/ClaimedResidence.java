@@ -1021,21 +1021,23 @@ public class ClaimedResidence {
 
 	List<RandomLoc> randomLocList = new ArrayList<RandomLoc>();
 
-	for (int z = -1; z < area.getZSize() + 1; z++) {
+	for (int z = -1; z < area.getZSize() + 2; z++) {
 	    randomLocList.add(new RandomLoc(area.getLowLoc().getX(), 0, area.getLowLoc().getZ() + z));
 	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + area.getXSize(), 0, area.getLowLoc().getZ() + z));
 	}
 
-	for (int x = -1; x < area.getXSize() + 1; x++) {
+	for (int x = -1; x < area.getXSize() + 2; x++) {
 	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ()));
 	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ() + area.getZSize()));
 	}
 
 	Location loc = insideLoc.clone();
 
+	boolean admin = ResPerm.admin_tp.hasPermission(player);
+
 	boolean found = false;
 	int it = 0;
-	int maxIt = 30;
+	int maxIt = 15;
 	while (!found && it < maxIt) {
 	    it++;
 
@@ -1076,8 +1078,7 @@ public class ClaimedResidence {
 		continue;
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
-	    if (res != null && player != null && !res.getPermissions().playerHas(player, Flags.tp, FlagCombo.TrueOrNone)
-		&& !ResPerm.admin_tp.hasPermission(player))
+	    if (res != null && player != null && !res.getPermissions().playerHas(player, Flags.tp, FlagCombo.TrueOrNone) && !admin)
 		continue;
 
 	    found = true;
@@ -1464,7 +1465,7 @@ public class ClaimedResidence {
 	if (this.isTopArea() && this.isUnderRaidCooldown()) {
 	    root.put("LastRaid", this.getRaid().getEndsAt());
 	}
-	
+
 	if (this.isTopArea() && this.getRaid().isImmune()) {
 	    root.put("Immunity", this.getRaid().getImmunityUntil());
 	}
@@ -1602,11 +1603,11 @@ public class ClaimedResidence {
 	    res.createTime = ((Long) root.get("CreatedOn"));
 	else
 	    res.createTime = System.currentTimeMillis();
-	
-	if (root.containsKey("LastRaid")) {	    
+
+	if (root.containsKey("LastRaid")) {
 	    res.getRaid().setEndsAt(((Long) root.get("LastRaid")));
 	}
-	
+
 	if (root.containsKey("Immunity")) {
 	    res.getRaid().setImmunityUntil(((Long) root.get("Immunity")));
 	}

@@ -45,8 +45,8 @@ public class PlayerGroup {
 	this.lastCheck = System.currentTimeMillis();
 	List<PermissionGroup> posibleGroups = new ArrayList<PermissionGroup>();
 	String group;
-	if (Residence.getInstance().getPermissionManager().getPlayersGroups().containsKey(resPlayer.getPlayerName().toLowerCase())) {
-	    group = Residence.getInstance().getPermissionManager().getPlayersGroups().get(resPlayer.getPlayerName().toLowerCase());
+	if (Residence.getInstance().getPermissionManager().getPlayersGroups().containsKey(resPlayer.getName().toLowerCase())) {
+	    group = Residence.getInstance().getPermissionManager().getPlayersGroups().get(resPlayer.getName().toLowerCase());
 	    if (group != null) {
 		group = group.toLowerCase();
 		if (group != null && Residence.getInstance().getPermissionManager().getGroups().containsKey(group)) {
@@ -59,7 +59,7 @@ public class PlayerGroup {
 
 	posibleGroups.add(getPermissionGroup());
 
-	group = Residence.getInstance().getPermissionManager().getPermissionsGroup(resPlayer.getPlayerName(), world);
+	group = Residence.getInstance().getPermissionManager().getPermissionsGroup(resPlayer.getName(), world);
 
 	PermissionGroup g = Residence.getInstance().getPermissionManager().getGroupByName(group);
 

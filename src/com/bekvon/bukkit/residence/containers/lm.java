@@ -103,6 +103,8 @@ public enum lm {
     Raid_NotEnabled("&cRaid feature is not enabled!"),
     Raid_NotIn("&cYou are not in the raid!"),
     Raid_CantLeave("&cYou cant leave (%1) your own residence raid!"),
+    Raid_CantKick("&cCant kick (%1) residence owner!"),
+    Raid_Kicked("&eKicked &7%1 &efrom &7%2 &eresidence raid!"),
     Raid_StartsIn("&7Raid starts in: [autoTimeLeft] &2%1D &4%2A"),
     Raid_EndsIn("&cRaid ends in: [autoTimeLeft] &2%1D &4%2A"),
 
@@ -113,12 +115,15 @@ public enum lm {
     Raid_noRemoval("&cCan't remove residence during raid"),
     Raid_immune("&eImmune for next %1"),
     Raid_notImmune("&eNo longer immune"),
+    
+    Raid_notInRaid("&ePlayer isn't in raid"),
 
     Raid_attack_Joined("&7Joined &2%1 &7raid!"),
     Raid_attack_Started("&7Raid started!"),
     Raid_attack_cooldown("&cToo soon for another raid on this residence! Wait %1"),
     Raid_attack_immune("&cThis residence is immune to raids! Wait %1"),
     Raid_attack_isOffline("&cCan't raid while owner is offline!"),
+    Raid_attack_noSubzones("&cCan't raid subzones!"),
     Raid_attack_noSelf("&cCan't raid your own residence!"),
     Raid_attack_alreadyInAnother("&cCan't join this rais, you are in another one already (%1)"),
 

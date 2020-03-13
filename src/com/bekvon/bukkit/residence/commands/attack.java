@@ -37,6 +37,11 @@ public class attack implements cmd {
 	    return null;
 	}
 
+	if (!res.isTopArea()) {
+	    plugin.msg(player, lm.Raid_attack_noSubzones);
+	    return null;
+	}
+
 	if (res.isOwner(player)) {
 	    plugin.msg(player, lm.Raid_attack_noSelf);
 	    return null;

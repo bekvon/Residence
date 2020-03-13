@@ -1,6 +1,6 @@
 name: Residence
 main: com.bekvon.bukkit.residence.Residence
-version: 4.8.8.2
+version: 4.9.0.0
 website: https://www.spigotmc.org/resources/residence.11480/
 description: Cuboid Residence Plugin
 api-version: 1.13
@@ -10,10 +10,8 @@ contributors: [lemon42,smbarbour,inorixu,Shayana_fr,Zrips]
 commands:
   res:
     description: Manage Residences
-    usage: §c/res ? for more info
   residence:
     description: Manage Residences
-    usage: §c/residence ? for more info
   resadmin:
     description: Residence admin functions.
     usage: §c/res ? or /resadmin ? for more info

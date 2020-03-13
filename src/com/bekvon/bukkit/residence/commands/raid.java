@@ -9,9 +9,11 @@ import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.utils.TimeModifier;
 import com.bekvon.bukkit.residence.utils.Utils;
 
@@ -114,8 +116,61 @@ public class raid implements cmd {
 
 	    break;
 	case kick:
-	    break;
+
+	    if (args.length < 2)
+		return false;
+
+	    String playername = args[1];
+
+	    ResidencePlayer rplayer = plugin.getPlayerManager().getResidencePlayer(playername);
+
+	    if (rplayer == null) {
+		plugin.msg(sender, lm.Invalid_Player);
+		return null;
+	    }
+
+	    if (rplayer.getJoinedRaid() == null || rplayer.getJoinedRaid().isEnded()) {
+		plugin.msg(sender, lm.Raid_notInRaid);
+		return null;
+	    }
+
+	    ResidenceRaid raid = rplayer.getJoinedRaid();
+	    if (raid == null || !raid.getRes().isUnderRaid() && !raid.getRes().isInPreRaid()) {
+		plugin.msg(sender, lm.Raid_NotIn);
+		return true;
+	    }
+
+	    if (raid.getRes().isOwner(rplayer.getUniqueId())) {
+		plugin.msg(sender, lm.Raid_CantKick, raid.getRes().getName());
+		return true;
+	    }
+
+	    raid.removeAttacker(rplayer);
+	    raid.removeDefender(rplayer);
+	    raid.getRes().kickFromResidence(rplayer.getPlayer());
+
+	    plugin.msg(sender, lm.Raid_Kicked, rplayer.getName(), raid.getRes().getName());
+
+	    return true;
 	case start:
+	    
+	    
+	     res = null;
+
+	    if (args.length > 1)
+		res = plugin.getResidenceManager().getByName(args[2]);
+	    if (res == null && sender instanceof Player)
+		res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
+
+	    if (res == null) {
+		plugin.msg(sender, lm.Invalid_Residence);
+		return null;
+	    }
+	    
+	    
+	    
+	    
+	    
 	    break;
 	case stop:
 	    break;
@@ -135,7 +190,7 @@ public class raid implements cmd {
     public void getLocale() {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Manage raid in residence");
-	c.get("Info", Arrays.asList("&eUsage: &6/res raid start [resname]", "&6/res raid stop [resname]", "&6/res raid kick [playerName]",
+	c.get("Info", Arrays.asList("&eUsage: &6/res raid start [resname] (playerName)", "&6/res raid stop [resname]", "&6/res raid kick [playerName]",
 	    "&6/res raid immunity [add/take/set/clear] [resname/currentres] [time]"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("start%%stop%%kick%%immunity"));
 	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "start"), Arrays.asList("[residence]"));

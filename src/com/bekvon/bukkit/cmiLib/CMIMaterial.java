@@ -1367,16 +1367,20 @@ public enum CMIMaterial {
     public static CMIMaterial get(Block block) {
 	if (block == null)
 	    return CMIMaterial.NONE;
-	byte data = Version.isCurrentEqualOrLower(Version.v1_13_R1) ? block.getData() : 0;
-	if (block.getState() instanceof Skull) {
-	    Skull skull = (Skull) block.getState();
-	    data = (byte) skull.getSkullType().ordinal();
-	}
 
 	CMIMaterial mat = null;
 
 	if (Version.isCurrentEqualOrHigher(Version.v1_14_R1)) {
 	    mat = ItemManager.byRealMaterial.get(block.getType());
+	}
+
+	if (mat != null)
+	    return mat;
+
+	byte data = Version.isCurrentEqualOrLower(Version.v1_13_R1) ? block.getData() : 0;
+	if (block.getState() instanceof Skull) {
+	    Skull skull = (Skull) block.getState();
+	    data = (byte) skull.getSkullType().ordinal();
 	}
 
 	if (mat == null) {
