@@ -231,7 +231,7 @@ public class ResidenceBlockListener implements Listener {
 	    }
 	}
 
-	if (!hasdestroy && !ResPerm.bypass_destroy.hasPermission(player)) {
+	if (!hasdestroy && !ResPerm.bypass_destroy.hasPermission(player, 10000L)) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
 	} else if (mat == Material.CHEST && !perms.playerHas(player, Flags.container, true)) {
@@ -390,8 +390,7 @@ public class ResidenceBlockListener implements Listener {
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
 
-	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(player.getUniqueId());
-	if (list.size() != 0)
+	if (plugin.getPlayerManager().getResidenceCount(player.getUniqueId()) != 0)
 	    return;
 
 	if (MessageInformed.contains(player.getName()))
@@ -470,9 +469,8 @@ public class ResidenceBlockListener implements Listener {
 	Block block = event.getBlock();
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
-
-	ArrayList<String> list = plugin.getPlayerManager().getResidenceList(player.getName());
-	if (list.size() != 0)
+	
+	if (plugin.getPlayerManager().getResidenceCount(player.getUniqueId()) != 0)
 	    return;
 
 	if (ResCreated.contains(player.getUniqueId()))
@@ -491,8 +489,8 @@ public class ResidenceBlockListener implements Listener {
 	    plugin.getConfigManager().getNewPlayerRangeY() * 2,
 	    plugin.getConfigManager().getNewPlayerRangeZ() * 2);
 
-	boolean created = plugin.getResidenceManager().addResidence(player, player.getName(), plugin.getSelectionManager().getPlayerLoc1(player.getName()),
-	    plugin.getSelectionManager().getPlayerLoc2(player.getName()), plugin.getConfigManager().isNewPlayerFree());
+	boolean created = plugin.getResidenceManager().addResidence(player, player.getName(), plugin.getSelectionManager().getPlayerLoc1(player),
+	    plugin.getSelectionManager().getPlayerLoc2(player), plugin.getConfigManager().isNewPlayerFree());
 	if (created) {
 	    ResCreated.add(player.getUniqueId());
 	    newPlayers.remove(player.getUniqueId());
@@ -643,7 +641,7 @@ public class ResidenceBlockListener implements Listener {
 	    }
 	}
 
-	if (!hasplace && !ResPerm.bypass_build.hasPermission(player)) {
+	if (!hasplace && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
 	    return;
@@ -655,7 +653,7 @@ public class ResidenceBlockListener implements Listener {
 	    if (sec != null) {
 		perms = plugin.getPermsByLocForPlayer(sec.getLocation(), player);
 		hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
-		if (!hasplace && !ResPerm.bypass_build.hasPermission(player)) {
+		if (!hasplace && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.place);
 		    return;

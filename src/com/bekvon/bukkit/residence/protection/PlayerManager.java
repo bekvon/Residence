@@ -95,6 +95,14 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return null;
     }
 
+    public int getResidenceCount(UUID uuid) {
+	ResidencePlayer resPlayer = playersUuid.get(uuid);
+	if (resPlayer != null) {
+	    return resPlayer.getResList().size();
+	}
+	return 0;
+    }
+
     @Override
     public ArrayList<String> getResidenceList(UUID uuid) {
 	ArrayList<String> temp = new ArrayList<String>();

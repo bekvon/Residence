@@ -1295,7 +1295,7 @@ public class ClaimedResidence {
 	    }
 
 	} else {
-	    if (!resadmin && !isAdmin && !ResPerm.bypass_tp.hasPermission(reqPlayer)
+	    if (!resadmin && !isAdmin && !ResPerm.bypass_tp.hasPermission(reqPlayer, 10000L)
 		&& (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer)
 		    && Residence.getInstance().getConfigManager().isCanTeleportIncludeOwner())) {
 		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(reqPlayer);

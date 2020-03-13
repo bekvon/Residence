@@ -503,14 +503,7 @@ public class PermissionManager {
 	if (old == null) {
 	    return null;
 	}
-
-	PermissionInfo info = old.get(perm);
-
-	if (info == null) {
-	    return null;
-	}
-
-	return info;
+	return old.get(perm);
     }
 
     public PermissionInfo addToCache(Player player, String perm, boolean has, Long delayInMiliseconds) {
