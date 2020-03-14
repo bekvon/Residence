@@ -2300,24 +2300,6 @@ public class ResidencePlayerListener implements Listener {
 	if (!currentRes.containsKey(uuid) || ResOld != res) {
 	    currentRes.put(uuid, res);
 
-	    // "from" residence for ResidenceChangedEvent
-//	    ClaimedResidence chgFrom = null;
-//	    if (ResOld != res && ResOld != null) {
-//		String leave = ResOld.getLeaveMessage();
-//		chgFrom = ResOld;
-//		if (leave != null && !leave.equals("") && ResOld != res.getParent()) {
-//		    if (plugin.getConfigManager().useTitleMessage()) {
-//			plugin.getAB().sendTitle(player, ChatColor.YELLOW + insertMessages(player, ResOld.getName(), ResOld, leave));
-//		    }
-//		    if (plugin.getConfigManager().useActionBar()) {
-//			plugin.getAB().send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, ResOld.getName(), ResOld, leave))
-//			    .toString());
-//		    } else {
-//			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, ResOld.getName(), ResOld, leave));
-//		    }
-//		}
-//	    }
-
 	    // New ResidenceChangedEvent
 	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, res, player);
 	    plugin.getServ().getPluginManager().callEvent(chgEvent);

@@ -502,6 +502,10 @@ public class ResidenceManager implements ResidenceInterface {
 		plugin.msg(player, lm.Residence_CantRemove, res.getName(), rented.getName(), rented.getRentedLand().player);
 		return;
 	    }
+	    if (player!= null && res.isRented() && !player.getName().equalsIgnoreCase(res.getRentedLand().player)) {		
+		plugin.msg(player, lm.Residence_CantRemove, res.getName(), res.getName(), res.getRentedLand().player);
+		return;
+	    }
 	}
 
 	if (player != null && !resadmin) {
