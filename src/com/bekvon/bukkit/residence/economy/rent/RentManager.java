@@ -215,6 +215,9 @@ public class RentManager implements MarketRentInterface {
 	    }
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
+	    
+	    days = group.getMaxRentDays() < days ? group.getMaxRentDays() : days;
+	    
 	    if (this.getRentableCount(player.getName()) >= group.getMaxRentables()) {
 		plugin.msg(player, lm.Residence_MaxRent);
 		return;
