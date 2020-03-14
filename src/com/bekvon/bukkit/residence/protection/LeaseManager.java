@@ -7,6 +7,7 @@ import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import java.util.HashMap;
@@ -113,6 +114,12 @@ public class LeaseManager {
 	int max = group.getMaxLeaseTime();
 	int add = group.getLeaseGiveTime();
 	int rem = daysRemaining(res);
+
+	if (rem >= max) {
+	    plugin.msg(player, lm.Economy_LeaseRenew, getExpireTime(res));
+	    return;
+	}
+
 	EconomyInterface econ = plugin.getEconomyManager();
 	if (econ != null) {
 	    double cost = group.getLeaseRenewCost();
@@ -130,6 +137,7 @@ public class LeaseManager {
 		}
 	    }
 	}
+
 	if (rem + add > max) {
 	    setExpireTime(player, res, max);
 	    plugin.msg(player, lm.Economy_LeaseRenewMax);
