@@ -215,9 +215,9 @@ public class RentManager implements MarketRentInterface {
 	    }
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	    PermissionGroup group = rPlayer.getGroup();
-	    
+
 	    days = group.getMaxRentDays() < days ? group.getMaxRentDays() : days;
-	    
+
 	    if (this.getRentableCount(player.getName()) >= group.getMaxRentables()) {
 		plugin.msg(player, lm.Residence_MaxRent);
 		return;
@@ -637,8 +637,8 @@ public class RentManager implements MarketRentInterface {
 	    if (land == null)
 		continue;
 
-	    if (land.endTime > System.currentTimeMillis())
-		continue;
+//	    if (land.endTime > System.currentTimeMillis())
+//		continue;
 
 	    if (plugin.getConfigManager().debugEnabled())
 		System.out.println("Rent Check: " + res.getName());
@@ -661,7 +661,18 @@ public class RentManager implements MarketRentInterface {
 		continue;
 	    }
 	    if (land.AutoPay && rentable.AllowAutoPay) {
-		if (!plugin.getEconomyManager().canAfford(land.player, rentable.cost)) {
+
+		Double money = 0D;
+		if (plugin.getConfigManager().isDeductFromBankThenPlayer()) {
+		    money += res.getBank().getStoredMoneyD();
+		    money += plugin.getEconomyManager().getBalance(land.player);
+		} else if (plugin.getConfigManager().isDeductFromBank()) {
+		    money += res.getBank().getStoredMoneyD();
+		} else {
+		    money += plugin.getEconomyManager().getBalance(land.player);
+		}
+
+		if (money < rentable.cost) {
 		    if (!rentable.StayInMarket) {
 			rentableLand.remove(res);
 			res.setRentable(null);
@@ -670,7 +681,44 @@ public class RentManager implements MarketRentInterface {
 		    res.setRented(null);
 		    res.getPermissions().applyDefaultFlags();
 		} else {
-		    if (!plugin.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost)) {
+
+		    boolean updatedTime = true;
+		    if (plugin.getConfigManager().isDeductFromBankThenPlayer()) {
+			double deductFromPlayer = rentable.cost;
+			double leftInBank = res.getBank().getStoredMoneyD();
+			if (leftInBank < deductFromPlayer) {
+			    deductFromPlayer = deductFromPlayer - leftInBank;
+			    leftInBank = 0D;
+			} else {
+			    leftInBank = leftInBank - deductFromPlayer;
+			    deductFromPlayer = 0D;
+			}
+			leftInBank = leftInBank < 0 ? 0 : leftInBank;
+
+			if (plugin.getEconomyManager().getBalance(land.player) < deductFromPlayer) {
+			    updatedTime = false;
+			} else {
+			    if (deductFromPlayer == 0D || plugin.getEconomyManager().subtract(land.player, deductFromPlayer)) {
+				plugin.getEconomyManager().add(res.getPermissions().getOwner(), rentable.cost);
+				res.getBank().setStoredMoney(leftInBank);
+				updatedTime = true;
+			    }
+			}
+		    } else if (plugin.getConfigManager().isDeductFromBank()) {
+			double deductFromPlayer = rentable.cost;
+			double leftInBank = res.getBank().getStoredMoneyD();
+			if (leftInBank < deductFromPlayer) {
+			    updatedTime = false;
+			} else {
+			    res.getBank().setStoredMoney(leftInBank - deductFromPlayer);
+			    plugin.getEconomyManager().add(res.getPermissions().getOwner(), rentable.cost);
+			    updatedTime = true;
+			}
+		    } else {
+			updatedTime = plugin.getEconomyManager().transfer(land.player, res.getPermissions().getOwner(), rentable.cost);
+		    }
+
+		    if (!updatedTime) {
 			if (!rentable.StayInMarket) {
 			    rentableLand.remove(res);
 			    res.setRentable(null);

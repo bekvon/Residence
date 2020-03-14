@@ -67,6 +67,8 @@ public class ConfigManager {
     protected String multiworldPlugin;
     protected boolean enableRentSystem;
     protected boolean RentPreventRemoval;
+    private boolean DeductFromBank;
+    private boolean DeductFromBankThenPlayer;
     protected boolean RentInformOnEnding;
     protected boolean RentAllowRenewing;
     protected boolean RentStayInMarket;
@@ -849,6 +851,14 @@ public class ConfigManager {
 
 	c.addComment("Global.Rent.PreventRemoval", "Prevents residence/subzone removal if its subzone is still rented by some one");
 	RentPreventRemoval = c.get("Global.Rent.PreventRemoval", true);
+
+	c.addComment("Global.Rent.DeductFromBank", "When set to true residence rent can be renewed from residence bank");
+	DeductFromBank = c.get("Global.Rent.DeductFromBank", false);
+	c.addComment("Global.Rent.DeductFromBankThenPlayer",
+	    "When set to true residence rent can be renewed from residence bank and if there is not enough money then we will deduct rest of it from player",
+	    "This will override behavior of DeductFromBank");
+	DeductFromBankThenPlayer = c.get("Global.Rent.DeductFromBankThenPlayer", false);
+
 	c.addComment("Global.Rent.Inform.OnEnding", "Informs players on rent time ending");
 	RentInformOnEnding = c.get("Global.Rent.Inform.OnEnding", true);
 	c.addComment("Global.Rent.Inform.Before", "Time range in minutes when to start informing about ending rent");
@@ -1885,6 +1895,14 @@ public class ConfigManager {
 
     public boolean isEnterAnimation() {
 	return EnterAnimation;
+    }
+
+    public boolean isDeductFromBank() {
+	return DeductFromBank;
+    }
+
+    public boolean isDeductFromBankThenPlayer() {
+	return DeductFromBankThenPlayer;
     }
 
 //    public int getTownMinRange() {
