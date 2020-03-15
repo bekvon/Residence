@@ -22,6 +22,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceCommandListener implements CommandExecutor {
 
@@ -264,6 +265,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 	    }
 
 	    Boolean respond = cmdClass.perform(Residence.getInstance(), sender, targ, resadmin);
+	    
 	    if (respond != null && !respond) {
 		String[] tempArray = new String[args.length + 1];
 		for (int i = 0; i < args.length; i++) {

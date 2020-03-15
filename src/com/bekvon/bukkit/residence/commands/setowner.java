@@ -7,9 +7,11 @@ import org.bukkit.command.CommandSender;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class setowner implements cmd {
 
@@ -26,13 +28,18 @@ public class setowner implements cmd {
 	}
 
 	ClaimedResidence area = plugin.getResidenceManager().getByName(args[0]);
+
 	if (area != null) {
 
 	    if (area.isRaidInitialized() && !resadmin) {
 		plugin.msg(sender, lm.Raid_cantDo);
 		return true;
 	    }
-
+ 
+	    if (!plugin.isPlayerExist(sender, args[1], true)) {
+		return null;
+	    }
+	    
 	    area.getPermissions().setOwner(args[1], true);
 	    if (plugin.getRentManager().isForRent(area.getName()))
 		plugin.getRentManager().removeRentable(area.getName());

@@ -554,8 +554,11 @@ public class Residence extends JavaPlugin {
 
 	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
 	    try {
-		if (lwcp != null)
+		if (lwcp != null) {
 		    lwc = ((LWCPlugin) lwcp).getLWC();
+		    Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " LWC hooked.");
+		   
+		}
 	    } catch (Throwable e) {
 		e.printStackTrace();
 	    }
