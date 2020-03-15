@@ -962,21 +962,21 @@ public class ConfigManager {
 
 	c.addComment("Global.CustomContainers",
 	    "Experimental - The following settings are lists of block IDs to be used as part of the checks for the 'container' and 'use' flags when using mods.");
-	pls = c.getList("Global.CustomContainers", new ArrayList<Integer>());
+	pls = c.get("Global.CustomContainers", new ArrayList<String>());
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
 	    if (mat != CMIMaterial.NONE)
 		customContainers.add(mat);
 	}
 
-	pls = c.getList("Global.CustomBothClick", new ArrayList<Integer>());
+	pls = c.get("Global.CustomBothClick", new ArrayList<String>());
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
 	    if (mat != CMIMaterial.NONE)
 		customBothClick.add(mat);
 	}
 
-	pls = c.getList("Global.CustomRightClick", new ArrayList<Integer>());
+	pls = c.get("Global.CustomRightClick", new ArrayList<String>());
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
 	    if (mat != CMIMaterial.NONE)
