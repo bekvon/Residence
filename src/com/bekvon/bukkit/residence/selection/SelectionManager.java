@@ -102,7 +102,7 @@ public class SelectionManager {
 	    case ignoreY:
 	    case noLimits:
 	    default:
-		return getMaxWorldHeight(getWorld()) - 1;
+		return getMaxWorldHeight(getWorld());
 	    case residenceBounds:
 		ClaimedResidence res1 = plugin.getResidenceManager().getByLoc(this.getBaseLoc2());
 		if (res1 != null) {
@@ -113,7 +113,7 @@ public class SelectionManager {
 		}
 		break;
 	    }
-	    return getMaxWorldHeight(getWorld()) - 1;
+	    return getMaxWorldHeight(getWorld());
 	}
 
 	public int getMinYAllowed() {
