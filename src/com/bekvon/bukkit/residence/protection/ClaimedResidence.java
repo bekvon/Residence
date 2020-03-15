@@ -364,6 +364,7 @@ public class ClaimedResidence {
 		}
 	    }
 	    if (!inside) {
+		plugin.msg(player, lm.Subzone_SelectInside);
 		return false;
 	    }
 	}

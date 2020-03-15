@@ -155,7 +155,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 
 	    if (!resadmin && !ResPerm.command_$1.hasPermission(sender, args[0].toLowerCase())) {
 		RawMessage rm = new RawMessage();
-		rm.add(plugin.msg(lm.General_NoPermission), "&2" + ResPerm.command_$1.getPermission(args[0].toLowerCase()));
+		rm.add(plugin.msg(lm.General_NoPermission), "&7" + ResPerm.command_$1.getPermission(args[0].toLowerCase()));
 		rm.show(sender);
 
 		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
