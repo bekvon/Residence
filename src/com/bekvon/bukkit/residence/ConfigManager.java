@@ -2,14 +2,20 @@ package com.bekvon.bukkit.residence;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -32,6 +38,8 @@ import com.bekvon.bukkit.residence.containers.EconomyType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
+import com.bekvon.bukkit.residence.utils.YmlMaker;
 
 public class ConfigManager {
     protected String defaultGroup;
@@ -289,6 +297,73 @@ public class ConfigManager {
 
     public static String Colors(String text) {
 	return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    public static List<String> getClassesFromPackage(String pckgname, String cleaner) throws ClassNotFoundException {
+	List<String> result = new ArrayList<String>();
+	try {
+	    for (URL jarURL : ((URLClassLoader) Residence.class.getClassLoader()).getURLs()) {
+		try {
+		    result.addAll(getClassesInSamePackageFromJar(pckgname, jarURL.toURI().getPath(), cleaner));
+		} catch (URISyntaxException e) {
+		    e.printStackTrace();
+		}
+	    }
+	} catch (NullPointerException x) {
+	    throw new ClassNotFoundException(pckgname + " does not appear to be a valid package (Null pointer exception)");
+	}
+	return result;
+    }
+
+    private static List<String> getClassesInSamePackageFromJar(String packageName, String jarPath, String cleaner) {
+	JarFile jarFile = null;
+	List<String> listOfCommands = new ArrayList<String>();
+	try {
+	    jarFile = new JarFile(jarPath);
+	    Enumeration<JarEntry> en = jarFile.entries();
+	    while (en.hasMoreElements()) {
+		JarEntry entry = en.nextElement();
+		String entryName = entry.getName();
+		packageName = packageName.replace(".", "/");
+		if (entryName != null && entryName.endsWith(".yml") && entryName.startsWith(packageName)) {
+		    String name = entryName.replace(packageName, "").replace(".yml", "").replace("/", "");
+		    if (name.contains("$"))
+			name = name.split("\\$")[0];
+		    if (cleaner != null)
+			name = name.replace(cleaner, "");
+		    listOfCommands.add(name);
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    if (jarFile != null)
+		try {
+		    jarFile.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	}
+	return listOfCommands;
+    }
+
+    public void copyOverTranslations() {
+
+	ArrayList<String> languages = new ArrayList<String>();
+	try {
+	    languages.addAll(getClassesFromPackage("Language", null));
+	} catch (ClassNotFoundException e1) {
+	    e1.printStackTrace();
+	}
+	
+	for (String one : languages) {
+	    File file = new File(plugin.getDataFolder(), "Language" + File.separator + one + ".yml");
+	    if (!file.exists()) {
+		YmlMaker f = new YmlMaker(plugin, "Language" + File.separator + one + ".yml");
+		f.saveDefaultConfig();
+		f.ConfigFile.renameTo(file);
+	    }
+	}
     }
 
     public void ChangeConfig(String path, Boolean stage) {

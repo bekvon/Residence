@@ -213,7 +213,6 @@ public class Residence extends JavaPlugin {
     public Map<String, String> deleteConfirm;
     public Map<String, String> UnrentConfirm = new HashMap<String, String>();
     public List<String> resadminToggle;
-    private final static Set<String> validLanguages = new HashSet<String>(Arrays.asList("English", "Czech", "Chinese", "ChineseTW", "French", "Spanish"));
     private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private Map<UUID, OfflinePlayer> cachedPlayerNameUUIDs = new HashMap<UUID, OfflinePlayer>();
     private com.sk89q.worldedit.bukkit.WorldEditPlugin wep = null;
@@ -434,6 +433,7 @@ public class Residence extends JavaPlugin {
 	}
     }
 
+
     @Override
     public void onEnable() {
 	try {
@@ -557,22 +557,14 @@ public class Residence extends JavaPlugin {
 		if (lwcp != null) {
 		    lwc = ((LWCPlugin) lwcp).getLWC();
 		    Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " LWC hooked.");
-		   
+
 		}
 	    } catch (Throwable e) {
 		e.printStackTrace();
 	    }
 
-	    for (String lang : validLanguages) {
-		YmlMaker langFile = new YmlMaker(this, "Language" + File.separator + lang + ".yml");
-		langFile.saveDefaultConfig();
-	    }
-	    validLanguages.add(getConfigManager().getLanguage());
-
-	    for (String lang : validLanguages) {
-		getLocaleManager().LoadLang(lang);
-	    }
-
+	    this.getConfigManager().copyOverTranslations();
+	    
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), getConfigManager().getLanguage() + ".yml");
 
