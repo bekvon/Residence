@@ -16,6 +16,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import java.util.ArrayList;
@@ -637,8 +638,8 @@ public class RentManager implements MarketRentInterface {
 	    if (land == null)
 		continue;
 
-//	    if (land.endTime > System.currentTimeMillis())
-//		continue;
+	    if (land.endTime > System.currentTimeMillis())
+		continue;
 
 	    if (plugin.getConfigManager().debugEnabled())
 		System.out.println("Rent Check: " + res.getName());

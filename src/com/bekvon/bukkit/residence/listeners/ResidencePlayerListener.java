@@ -57,6 +57,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
+import com.Zrips.CMI.CMI;
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
@@ -2478,13 +2479,13 @@ public class ResidencePlayerListener implements Listener {
     public void DespawnMobs() {
 	if (!Flags.nomobs.isGlobalyEnabled())
 	    return;
+
 	try {
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 		ClaimedResidence res = getCurrentResidence(player.getUniqueId());
 
 		if (res == null)
 		    continue;
-
 		if (!res.getPermissions().has(Flags.nomobs, false))
 		    continue;
 
@@ -2494,7 +2495,10 @@ public class ResidencePlayerListener implements Listener {
 			continue;
 
 		    if (res.containsLoc(ent.getLocation())) {
-			ent.remove();
+			ClaimedResidence ares = plugin.getResidenceManager().getByLoc(ent.getLocation());
+			if (ares.getPermissions().has(Flags.nomobs, FlagCombo.OnlyTrue)) {
+			    ent.remove();
+			}
 		    }
 		}
 	    }

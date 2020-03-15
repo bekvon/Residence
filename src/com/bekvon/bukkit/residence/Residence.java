@@ -840,8 +840,7 @@ public class Residence extends JavaPlugin {
 		if (rentint < 1) {
 		    rentint = 1;
 		}
-//		rentint = rentint * 60 * 20;
-		rentint = rentint * 20;
+		rentint = rentint * 60 * 20;
 		rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
 	    }
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
