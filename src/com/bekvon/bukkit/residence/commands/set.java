@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,7 +11,6 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class set implements cmd {
@@ -65,22 +63,8 @@ public class set implements cmd {
 		return true;
 	    }
 
-	    ClaimedResidence r = res;
+	    plugin.getFlagUtilManager().openSetFlagGui(player, res, resadmin, 1);
 
-	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-		@Override
-		public void run() {
-		    final SetFlag flag = new SetFlag(r, player, resadmin);
-		    flag.recalculateResidence(r);
-		    plugin.getPlayerListener().getGUImap().put(player.getUniqueId(), flag);
-
-		    Bukkit.getScheduler().runTask(plugin, () -> {
-			player.openInventory(flag.getInventory());
-		    });
-
-		    return;
-		}
-	    });
 	    return true;
 	}
 	return false;

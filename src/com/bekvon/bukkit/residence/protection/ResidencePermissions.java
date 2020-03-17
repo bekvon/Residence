@@ -22,7 +22,6 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidencePermissions extends FlagPermissions {
 

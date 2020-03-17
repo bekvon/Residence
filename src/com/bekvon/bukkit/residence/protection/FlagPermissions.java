@@ -473,6 +473,25 @@ public class FlagPermissions {
 //	return playerHas(player, world, flag.getName(), def);
 //    }
 
+    public boolean playerHas(String player, String world, String flag, FlagCombo f) {
+	switch (f) {
+	case FalseOrNone:
+	    return !this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, false, true)));
+//	    return !this.playerHas(player, world, flag.toString(), false);
+	case OnlyFalse:
+	    return !this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, true, true)));
+//	    return !this.playerHas(player, world, flag.toString(), true);
+	case OnlyTrue:
+	    return this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, false, true)));
+//	    return this.playerHas(player, world, flag.toString(), false);
+	case TrueOrNone:
+	    return this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, true, true)));
+//	    return this.playerHas(player, world, flag.toString(), true);
+	default:
+	    return false;
+	}
+    }
+
     @Deprecated
     public boolean playerHas(String player, String world, String flag, boolean def) {
 	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
@@ -552,6 +571,16 @@ public class FlagPermissions {
 
     @Deprecated
     public boolean has(String flag, boolean def, boolean checkParent) {
+	if (cuboidFlags.containsKey(flag)) {
+	    return cuboidFlags.get(flag);
+	}
+	if (checkParent && parent != null) {
+	    return parent.has(flag, def);
+	}
+	return def;
+    }
+
+    private boolean localHas(String flag, boolean def, boolean checkParent) {
 	if (cuboidFlags.containsKey(flag)) {
 	    return cuboidFlags.get(flag);
 	}

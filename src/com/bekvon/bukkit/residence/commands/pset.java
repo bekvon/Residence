@@ -12,7 +12,7 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.gui.SetFlag;
+import com.bekvon.bukkit.residence.gui.setFlagInfo;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class pset implements cmd {
@@ -104,23 +104,7 @@ public class pset implements cmd {
 		return true;
 	    }
 
-	    ClaimedResidence r = res;
-	    String tplayer = targetPlayer;
-	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-		@Override
-		public void run() {
-		    final SetFlag flag = new SetFlag(r, player, resadmin);
-		    flag.setTargetPlayer(tplayer);
-		    flag.recalculatePlayer(r);
-		    plugin.getPlayerListener().getGUImap().put(player.getUniqueId(), flag);
-
-		    Bukkit.getScheduler().runTask(plugin, () -> {
-			player.openInventory(flag.getInventory());
-		    });
-
-		    return;
-		}
-	    });
+	    plugin.getFlagUtilManager().openPsetFlagGui(player, targetPlayer, res, resadmin, 1);
 
 	    return true;
 	}

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,7 +21,6 @@ import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hanging;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,11 +30,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -57,7 +50,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import com.Zrips.CMI.CMI;
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
@@ -77,7 +69,6 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
-import com.bekvon.bukkit.residence.gui.SetFlag;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -85,7 +76,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -97,8 +87,6 @@ public class ResidencePlayerListener implements Listener {
     protected int minUpdateTime;
     protected boolean chatenabled;
     protected Set<UUID> playerToggleChat = new HashSet<UUID>();
-
-    public Map<UUID, SetFlag> GUI = new HashMap<UUID, SetFlag>();
 
     private Residence plugin;
 
@@ -114,10 +102,6 @@ public class ResidencePlayerListener implements Listener {
 	    lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
 	}
 	this.plugin = plugin;
-    }
-
-    public Map<UUID, SetFlag> getGUImap() {
-	return GUI;
     }
 
     public void reload() {
@@ -670,42 +654,6 @@ public class ResidencePlayerListener implements Listener {
 	event.setCancelled(true);
 	plugin.msg(player, lm.Residence_FlagDeny, Flags.command, res.getName());
 
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onFlagGuiClick(InventoryClickEvent event) {
-	if (this.getGUImap().isEmpty())
-	    return;
-
-	Player player = (Player) event.getWhoClicked();
-
-	if (!this.getGUImap().containsKey(player.getUniqueId()))
-	    return;
-
-	event.setCancelled(true);
-	int slot = event.getRawSlot();
-
-	if (slot > 53 || slot < 0)
-	    return;
-
-	SetFlag setFlag = this.getGUImap().get(player.getUniqueId());
-	ClickType click = event.getClick();
-	InventoryAction action = event.getAction();
-	setFlag.toggleFlag(slot, click, action);
-	setFlag.recalculateInv();
-
-	if (!player.getOpenInventory().getTopInventory().getType().equals(InventoryType.CHEST))
-	    return;
-
-	player.getOpenInventory().getTopInventory().setContents(setFlag.getInventory().getContents());
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onFlagGuiClose(InventoryCloseEvent event) {
-	if (this.getGUImap().isEmpty())
-	    return;
-	HumanEntity player = event.getPlayer();
-	this.getGUImap().remove(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

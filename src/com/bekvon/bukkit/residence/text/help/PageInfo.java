@@ -41,6 +41,10 @@ public class PageInfo {
 	return false;
     }
 
+    public boolean isContinue() {
+	return !isEntryOk();
+    }
+
     public boolean isEntryOk() {
 	currentEntry++;
 	return currentEntry - 1 >= start && currentEntry - 1 <= end;

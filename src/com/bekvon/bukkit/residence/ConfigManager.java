@@ -38,6 +38,7 @@ import com.bekvon.bukkit.residence.containers.EconomyType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.YmlMaker;
 
@@ -220,9 +221,7 @@ public class ConfigManager {
     protected int rtCooldown;
     protected int rtMaxTries;
 
-    protected ItemStack GuiTrue;
-    protected ItemStack GuiFalse;
-    protected ItemStack GuiRemove;
+    private HashMap<FlagState, ItemStack> guiBottonStates = new HashMap<FlagState, ItemStack>();
 
     private boolean enforceAreaInsideArea;
 
@@ -355,7 +354,7 @@ public class ConfigManager {
 	} catch (ClassNotFoundException e1) {
 	    e1.printStackTrace();
 	}
-	
+
 	for (String one : languages) {
 	    File file = new File(plugin.getDataFolder(), "Language" + File.separator + one + ".yml");
 	    if (!file.exists()) {
@@ -1154,19 +1153,19 @@ public class ConfigManager {
 	CMIMaterial Mat = CMIMaterial.get(c.get("Global.GUI.setTrue", "GREEN_WOOL"));
 	if (Mat == null)
 	    Mat = CMIMaterial.GREEN_WOOL;
-	GuiTrue = Mat.newItemStack();
+	guiBottonStates.put(FlagState.TRUE, Mat.newItemStack());
 
 	c.addComment("Global.GUI.setFalse", "Item id and data to use when flag is set to false");
 	Mat = CMIMaterial.get(c.get("Global.GUI.setFalse", "RED_WOOL"));
 	if (Mat == null)
 	    Mat = CMIMaterial.RED_WOOL;
-	GuiFalse = Mat.newItemStack();
+	guiBottonStates.put(FlagState.FALSE, Mat.newItemStack());
 
 	c.addComment("Global.GUI.setRemove", "Item id and data to use when flag is set to remove");
 	Mat = CMIMaterial.get(c.get("Global.GUI.setRemove", "LIGHT_GRAY_WOOL"));
 	if (Mat == null)
 	    Mat = CMIMaterial.LIGHT_GRAY_WOOL;
-	GuiRemove = Mat.newItemStack();
+	guiBottonStates.put(FlagState.NEITHER, Mat.newItemStack());
 
 	c.addComment("Global.AutoMobRemoval", "Default = false. Enabling this, residences with flag nomobs will be cleared from monsters in regular intervals.",
 	    "This is quite heavy on server side, so enable only if you really need this feature");
@@ -1884,18 +1883,6 @@ public class ConfigManager {
 	return enforceAreaInsideArea;
     }
 
-    public ItemStack getGuiTrue() {
-	return GuiTrue;
-    }
-
-    public ItemStack getGuiFalse() {
-	return GuiFalse;
-    }
-
-    public ItemStack getGuiRemove() {
-	return GuiRemove;
-    }
-
     public List<RandomTeleport> getRandomTeleport() {
 	return RTeleport;
     }
@@ -1979,6 +1966,11 @@ public class ConfigManager {
     public boolean isDeductFromBankThenPlayer() {
 	return DeductFromBankThenPlayer;
     }
+
+    public ItemStack getGuiBottonStates(FlagState state) {
+	return guiBottonStates.get(state);
+    }
+
 
 //    public int getTownMinRange() {
 //	return TownMinRange;

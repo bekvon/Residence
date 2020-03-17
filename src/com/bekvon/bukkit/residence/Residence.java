@@ -720,8 +720,8 @@ public class Residence extends JavaPlugin {
 	    pmanager = new PermissionListManager(this);
 
 	    NewLanguageManager = new Language(this);
-	    getLM().LanguageReload();
 	    getLocaleManager().LoadLang(getConfigManager().getLanguage());
+	    getLM().LanguageReload();
 
 	    try {
 		this.loadYml();
