@@ -721,6 +721,7 @@ public class Residence extends JavaPlugin {
 
 	    NewLanguageManager = new Language(this);
 	    getLM().LanguageReload();
+	    getLocaleManager().LoadLang(getConfigManager().getLanguage());
 
 	    try {
 		this.loadYml();
