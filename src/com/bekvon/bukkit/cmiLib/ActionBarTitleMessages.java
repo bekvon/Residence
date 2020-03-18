@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ActionBarTitleMessages {
     private static Object packet;
@@ -34,7 +33,6 @@ public class ActionBarTitleMessages {
     private static Object[] consts;
 
     static {
-	if (Version.getCurrent().isHigher(Version.v1_7_R4)) {
 	    try {
 		packetType = Class.forName(getPacketPlayOutChat());
 		Class<?> typeCraftPlayer = Class.forName(getCraftPlayerClasspath());
@@ -64,7 +62,6 @@ public class ActionBarTitleMessages {
 	    } catch (ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
 		simpleTitleMessages = true;
 	    }
-	}
     }
 
     public static void send(CommandSender receivingPacket, String msg) {
@@ -119,13 +116,14 @@ public class ActionBarTitleMessages {
 	if (msg == null)
 	    return;
 	try {
-	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, ChatColor.translateAlternateColorCodes('&', msg));
+	    Method meth = nmsChatSerializer.getMethod("a", String.class);
+	    Object serialized = meth.invoke(null, ChatColor.translateAlternateColorCodes('&', msg));
 	    if (Version.isCurrentHigher(Version.v1_11_R1))
 		packet = packetType.getConstructor(nmsIChatBaseComponent, sub).newInstance(serialized, consts[1]);
 	    else if (Version.isCurrentHigher(Version.v1_7_R4)) {
 		packet = packetType.getConstructor(nmsIChatBaseComponent, byte.class).newInstance(serialized, (byte) 1);
 	    } else {
-		packet = packetType.getConstructor(nmsIChatBaseComponent, int.class).newInstance(serialized, 1);
+		packet = packetType.getConstructor(nmsIChatBaseComponent, boolean.class).newInstance(serialized, true);
 	    }
 	    Object player = getHandle.invoke(receivingPacket);
 	    Object connection = playerConnection.get(player);

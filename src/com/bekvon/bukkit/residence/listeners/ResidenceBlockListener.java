@@ -469,7 +469,7 @@ public class ResidenceBlockListener implements Listener {
 	Block block = event.getBlock();
 	if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
 	    return;
-	
+
 	if (plugin.getPlayerManager().getResidenceCount(player.getUniqueId()) != 0)
 	    return;
 
@@ -842,10 +842,10 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
 
-	if (!event.getBlock().getChunk().isLoaded())
+	if (!event.getBlock().getWorld().isChunkLoaded((int) Math.floor(event.getBlock().getLocation().getX()) >> 4, ((int) Math.floor(event.getBlock().getLocation().getZ()) >> 4)))
 	    return;
 
-	CMIMaterial mat = CMIMaterial.get(event.getBlock().getType());
+	CMIMaterial mat = CMIMaterial.get(event.getBlock());
 	if (!mat.equals(CMIMaterial.FARMLAND))
 	    return;
 

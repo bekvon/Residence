@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
+import com.bekvon.bukkit.residence.commands.version;
 import com.bekvon.bukkit.residence.utils.Debug;
 
 public class RawMessage {
@@ -515,19 +516,21 @@ public class RawMessage {
 	if (!player.isOnline())
 	    return this;
 
-//	CMI.getInstance().d("|" + combined + "|");
-
 	if (softCombined) {
 	    for (String one : softCombine()) {
 		if (one.isEmpty())
 		    continue;
-//		CMI.getInstance().d("=" + one + "=");
-ActionBarTitleMessages.sendRaw(player, one);
-//		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + one);
+
+//		if (Version.isCurrentEqualOrHigher(Version.v1_8_R1))
+		ActionBarTitleMessages.sendRaw(player, one);
+//		else
+//		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + one);
 	    }
 	} else {
-ActionBarTitleMessages.sendRaw(player, combined);
-//	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + combined);
+//	    if (Version.isCurrentEqualOrHigher(Version.v1_8_R1))
+	    ActionBarTitleMessages.sendRaw(player, combined);
+//	    else
+//		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + combined);
 	}
 
 	return this;
