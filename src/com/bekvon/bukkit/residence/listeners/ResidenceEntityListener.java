@@ -1152,6 +1152,7 @@ public class ResidenceEntityListener implements Listener {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
+	
 	if (!damageableProjectile(event.getDamager()))
 	    return;
 

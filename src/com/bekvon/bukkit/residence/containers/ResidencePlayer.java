@@ -46,7 +46,7 @@ public class ResidencePlayer {
 
     private Long lastRaidAttackTimer = 0L;
     private Long lastRaidDefendTimer = 0L;
-    
+
     private ResidenceRaid raid = null;
 
     public ResidencePlayer(OfflinePlayer off) {
@@ -273,15 +273,24 @@ public class ResidencePlayer {
 	return this.maxRes;
     }
 
+    public PermissionGroup forceUpdateGroup() {
+	updatePlayer();
+	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), true);
+    }
+
     public PermissionGroup getGroup() {
 	updatePlayer();
 	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld());
     }
 
     public PermissionGroup getGroup(String world) {
+	return getGroup(world, false);
+    }
+
+    public PermissionGroup getGroup(String world, boolean force) {
 	if (groups == null)
 	    groups = new PlayerGroup(this);
-	groups.updateGroup(world, false);
+	groups.updateGroup(world, force);
 	PermissionGroup group = groups.getGroup(world);
 	if (group == null)
 	    group = Residence.getInstance().getPermissionManager().getDefaultGroup();
@@ -375,7 +384,7 @@ public class ResidencePlayer {
     public String getPlayerName() {
 	return getName();
     }
-    
+
     public String getName() {
 	this.updatePlayer();
 	return userName;
@@ -502,5 +511,9 @@ public class ResidencePlayer {
 
     public void setJoinedRaid(ResidenceRaid raid) {
 	this.raid = raid;
+    }
+
+    public PlayerGroup getGroups() {
+	return groups;
     }
 }
