@@ -231,8 +231,8 @@ Global:
         admin: true
      # These are default group flags applied to a residence made by a user of any group.
     GroupDefault:
-        #default: #group name
-            #build: true
+      default: groupName
+        build: true
      # These are grouped flags, so when using /res pset nickname redstone true, player will get all flags in list, same when setting to false or removing them.
     GroupedFlags:
       redstone:
@@ -265,11 +265,11 @@ ItemList: #this is where you can create blacklists / whitelists
      DefaultList: #list name is not important, as long as it is unique. Its good to use a descripive name. 
         #type of the list, can be blacklist, whitelist, or ignorelist
         Type: blacklist
-        #If you want, you can have this list only apply to one world, otherwise it applys to all worlds
+        #If you want, you can have this list only apply to one world, otherwise it applies to all worlds
         #World: world
-        #You can also have the list apply only to one group, otherwise it applys for all groups
+        #You can also have the list apply only to one group, otherwise it applies for all groups
         #Group: default
-        #this is the actual list of material names that this list allows or dissallows
+        #this is the actual list of material names that this list allows or disallows
         #You can look up the material name by item ID in game by typing /res material <id>
         #Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance
         Items: 

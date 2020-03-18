@@ -433,6 +433,42 @@ public class ConfigManager {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
+
+	ConfigReader cfg = null;
+	try {
+	    cfg = new ConfigReader(f);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	if (cfg == null)
+	    return;
+	cfg.load();
+	cfg.addComment("Global", "These are Global Settings for Residence.");
+	cfg.addComment("Global.Flags", "These are world flags that are applied when the player is NOT within a residence.");
+	cfg.addComment("Global.Flags.Global", "these are default for all worlds unless specified below, they can be overridden per group");
+	cfg.addComment("Global.FlagPermission", "This gives permission to change certain flags to all groups, unless specifically denied to the group.");
+	cfg.addComment("Global.FlagGui", "This sets GUI items to represent each flag, if not given, then gray wool will be used");
+	cfg.addComment("Global.ResidenceDefault", "These are default flags applied to all residences from any user group.");
+	cfg.addComment("Global.CreatorDefault", "These are default flags applied to the residence creator of any group.");
+	cfg.addComment("Global.RentedDefault", "These are default flags applied to the residence renter of any group.");
+	cfg.addComment("Global.GroupedFlags", "These are grouped flags, so when using /res pset nickname redstone true, player will get all flags in list, same when setting to false or removing them.");
+	cfg.addComment("Global.TotalFlagDisabling", "Completely disables defined flag which will no longer be accesable even with resadmin command",
+	    "Can save some of the server processing resources if you dont want to utilize specific checks for specific flags");
+	cfg.addComment("Global.GroupDefault", "These are default group flags applied to a residence made by a user of any group.");
+	cfg.get("Global.GroupDefault.default", "groupName");
+	cfg.get("Global.GroupDefault.default.build", true);
+	cfg.addComment("ItemList", "this is where you can create blacklists / whitelists");
+	cfg.addComment("ItemList.DefaultList", "list name is not important, as long as it is unique. Its good to use a descripive name.");
+	cfg.addComment("ItemList.DefaultList.Type", "type of the list, can be blacklist, whitelist, or ignorelist");
+	cfg.addComment("ItemList.DefaultList.Items", "If you want, you can have this list only apply to one world, otherwise it applies to all worlds",
+	    "World: world",
+	    "You can also have the list apply only to one group, otherwise it applies for all groups",
+	    "Group: default",
+	    "this is the actual list of material names that this list allows or disallows",
+	    "You can look up the material name by item ID in game by typing /res material <id>",
+	    "Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance");
+
+	cfg.save();
     }
 
     public void UpdateGroupedFlagsFile() {
@@ -1970,7 +2006,6 @@ public class ConfigManager {
     public ItemStack getGuiBottonStates(FlagState state) {
 	return guiBottonStates.get(state);
     }
-
 
 //    public int getTownMinRange() {
 //	return TownMinRange;
