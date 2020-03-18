@@ -111,6 +111,30 @@ public class ActionBarTitleMessages {
 	}
     }
 
+    public static void sendRaw(Player receivingPacket, String msg) {
+	if (receivingPacket == null)
+	    return;
+	if (!receivingPacket.isOnline())
+	    return;
+	if (msg == null)
+	    return;
+	try {
+	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, ChatColor.translateAlternateColorCodes('&', msg));
+	    if (Version.isCurrentHigher(Version.v1_11_R1))
+		packet = packetType.getConstructor(nmsIChatBaseComponent, sub).newInstance(serialized, consts[1]);
+	    else if (Version.isCurrentHigher(Version.v1_7_R4)) {
+		packet = packetType.getConstructor(nmsIChatBaseComponent, byte.class).newInstance(serialized, (byte) 1);
+	    } else {
+		packet = packetType.getConstructor(nmsIChatBaseComponent, int.class).newInstance(serialized, 1);
+	    }
+	    Object player = getHandle.invoke(receivingPacket);
+	    Object connection = playerConnection.get(player);
+	    sendPacket.invoke(connection, packet);
+	} catch (Exception ex) {
+	    Bukkit.getLogger().log(Level.SEVERE, "Error {0}", ex);
+	}
+    }
+
     public static void sendTitle(final Player receivingPacket, final Object title) {
 	sendTitle(receivingPacket, title, null, 0, 20, 20);
     }
