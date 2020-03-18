@@ -172,9 +172,11 @@ public class setFlagInfo {
 		@Override
 		public void updateLooks() {
 		    this.setItem(updateLook(one.getKey()));
+		    hideItemFlags();
 		    this.update();
 		}
 	    };
+	    button.hideItemFlags();
 
 	    buttons.add(button);
 	    i++;
@@ -271,12 +273,14 @@ public class setFlagInfo {
 		@Override
 		public void updateLooks() {
 		    this.setItem(updateLook(one.getKey()));
+		    hideItemFlags();
 		    this.update();
 		}
 
 	    };
 	    i++;
 
+	    button.hideItemFlags();
 	    buttons.add(button);
 	}
 	description.clear();

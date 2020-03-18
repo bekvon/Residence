@@ -99,6 +99,24 @@ public class CMIReflections {
 	}
     }
 
+    public static ItemStack HideFlag(ItemStack item, int state) {
+	Object nmsStack = asNMSCopy(item);
+	try {
+	    Method methTag = nmsStack.getClass().getMethod("getTag");
+	    Object tag = methTag.invoke(nmsStack);
+	    if (tag == null)
+		tag = NBTTagCompound.newInstance();
+
+	    Method meth = tag.getClass().getMethod("setInt", String.class, int.class);
+	    meth.invoke(tag, "HideFlags", state);
+	    Method meth2 = nmsStack.getClass().getMethod("setTag", NBTTagCompound);
+	    meth2.invoke(nmsStack, tag);
+	    return (ItemStack) asBukkitCopy(nmsStack);
+	} catch (Exception e) {
+	}
+	return item;
+    }
+
     private static Integer getActiveContainerId(Object entityplayer) {
 	try {
 	    Field field = entityplayer.getClass().getField("activeContainer");

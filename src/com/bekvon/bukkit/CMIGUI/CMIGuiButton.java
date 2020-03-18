@@ -48,10 +48,10 @@ public class CMIGuiButton {
 	this.slot = slot;
     }
 
-//    public void hideItemFlags() {
-//	if (item != null)
-//	    item = CMI.getInstance().getNMS().HideFlag(item, 63);
-//    }
+    public void hideItemFlags() {
+	if (item != null)
+	    item = CMIReflections.HideFlag(item, 63);
+    }
 
     public CMIGuiButton(ItemStack item) {
 	this.item = item == null ? null : item.clone();
