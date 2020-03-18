@@ -176,7 +176,7 @@ public class Residence extends JavaPlugin {
     protected Server server;
     public HelpEntry helppages;
     protected LocaleManager LocaleManager;
-    protected Language NewLanguageManager;
+    protected Language newLanguageManager;
     protected PlayerManager PlayerManager;
     protected FlagUtil FlagUtilManager;
     protected ShopSignUtil ShopSignUtilManager;
@@ -433,7 +433,6 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-
     @Override
     public void onEnable() {
 	try {
@@ -564,7 +563,7 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    this.getConfigManager().copyOverTranslations();
-	    
+
 	    try {
 		File langFile = new File(new File(dataFolder, "Language"), getConfigManager().getLanguage() + ".yml");
 
@@ -719,7 +718,6 @@ public class Residence extends JavaPlugin {
 
 	    pmanager = new PermissionListManager(this);
 
-	    NewLanguageManager = new Language(this);
 	    getLocaleManager().LoadLang(getConfigManager().getLanguage());
 	    getLM().LanguageReload();
 
@@ -1079,7 +1077,11 @@ public class Residence extends JavaPlugin {
     }
 
     public Language getLM() {
-	return NewLanguageManager;
+	if (newLanguageManager == null) {
+	    newLanguageManager = new Language(this);
+	    newLanguageManager.LanguageReload();
+	}
+	return newLanguageManager;
     }
 
     public ResidencePlayerListener getPlayerListener() {
