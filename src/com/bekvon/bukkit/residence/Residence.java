@@ -437,6 +437,7 @@ public class Residence extends JavaPlugin {
     public void onEnable() {
 	try {
 	    instance = this;
+	    	    
 	    initsuccess = false;
 	    versionChecker = new VersionChecker(this);
 	    deleteConfirm = new HashMap<String, String>();

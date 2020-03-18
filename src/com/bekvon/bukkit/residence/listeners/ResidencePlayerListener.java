@@ -76,6 +76,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1029,16 +1030,19 @@ public class ResidencePlayerListener implements Listener {
 	Player player = event.getPlayer();
 	if (player.hasMetadata("NPC"))
 	    return;
-
+	if (plugin.isResAdminOn(player))
+	    return;
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
-	if (relativeBlock.getType() == Material.FIRE) {
-	    boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
-	    if (!hasplace) {
-		event.setCancelled(true);
-		plugin.msg(player, lm.Flag_Deny, Flags.build);
-		return;
-	    }
-	}
+	if (relativeBlock.getType() != Material.FIRE)
+	    return;
+
+	boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
+	if (hasplace)
+	    return;
+
+	event.setCancelled(true);
+	plugin.msg(player, lm.Flag_Deny, Flags.build);
+	return;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

@@ -124,7 +124,7 @@ public class GUIManager {
 	}
     }
 
-    public static boolean processClick(final Player player, List<Integer> buttons, final GUIClickType clickType) {
+    public static boolean processClick(final Player player, List<Integer> buttons, final GUIClickType clickType) { 
 	CMIGui gui = map.get(player.getUniqueId());
 	if (gui == null)
 	    return false;
