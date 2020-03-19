@@ -229,10 +229,6 @@ Global:
         leash: true
         animalkilling: true
         admin: true
-     # These are default group flags applied to a residence made by a user of any group.
-    GroupDefault:
-      default: groupName
-        build: true
      # These are grouped flags, so when using /res pset nickname redstone true, player will get all flags in list, same when setting to false or removing them.
     GroupedFlags:
       redstone:

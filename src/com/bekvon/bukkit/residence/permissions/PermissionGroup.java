@@ -119,7 +119,7 @@ public class PermissionGroup {
 
 	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 	    ymin = 0;
-	    ymax = 255;
+	    ymax = 256;
 	}
 
 	zmax = limits.getInt("Residence.MaxNorthSouth", 0);

@@ -455,8 +455,6 @@ public class ConfigManager {
 	cfg.addComment("Global.TotalFlagDisabling", "Completely disables defined flag which will no longer be accesable even with resadmin command",
 	    "Can save some of the server processing resources if you dont want to utilize specific checks for specific flags");
 	cfg.addComment("Global.GroupDefault", "These are default group flags applied to a residence made by a user of any group.");
-	cfg.get("Global.GroupDefault.default", "groupName");
-	cfg.get("Global.GroupDefault.default.build", true);
 	cfg.addComment("ItemList", "this is where you can create blacklists / whitelists");
 	cfg.addComment("ItemList.DefaultList", "list name is not important, as long as it is unique. Its good to use a descripive name.");
 	cfg.addComment("ItemList.DefaultList.Type", "type of the list, can be blacklist, whitelist, or ignorelist");
@@ -467,7 +465,6 @@ public class ConfigManager {
 	    "this is the actual list of material names that this list allows or disallows",
 	    "You can look up the material name by item ID in game by typing /res material <id>",
 	    "Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance");
-
 	cfg.save();
     }
 
