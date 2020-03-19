@@ -153,9 +153,8 @@ public class raid implements cmd {
 
 	    return true;
 	case start:
-	    
-	    
-	     res = null;
+
+	    res = null;
 
 	    if (args.length > 1)
 		res = plugin.getResidenceManager().getByName(args[2]);
@@ -166,11 +165,18 @@ public class raid implements cmd {
 		plugin.msg(sender, lm.Invalid_Residence);
 		return null;
 	    }
-	    
-	    
-	    
-	    
-	    
+
+	    if (res.isUnderRaid() || res.isInPreRaid()) {
+		return null;
+	    }
+
+	    boolean started = res.preStartRaid(null);
+
+	    if (started) {
+		res.startRaid();
+		return true;
+	    }
+
 	    break;
 	case stop:
 	    break;

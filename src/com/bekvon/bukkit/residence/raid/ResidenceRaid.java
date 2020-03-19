@@ -262,6 +262,17 @@ public class ResidenceRaid {
 	return immunityUntil == null ? false : immunityUntil > System.currentTimeMillis();
     }
 
+    public Long getPlayerImmunityUntil() {
+	ResidencePlayer rplayer = this.res.getRPlayer();
+	if (rplayer == null)
+	    return 0L;
+	return rplayer.getLastRaidDefendTimer() == null ? 0L : rplayer.getLastRaidDefendTimer() + (ConfigManager.RaidPlayerCooldown * 1000L);
+    }
+
+    public boolean isPlayerImmune() {
+	return getPlayerImmunityUntil() > System.currentTimeMillis();
+    }
+
     public Long getImmunityUntil() {
 	return immunityUntil;
     }

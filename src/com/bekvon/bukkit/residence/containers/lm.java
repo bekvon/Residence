@@ -122,6 +122,7 @@ public enum lm {
     Raid_attack_Started("&7Raid started!"),
     Raid_attack_cooldown("&cToo soon for another raid on this residence! Wait %1"),
     Raid_attack_immune("&cThis residence is immune to raids! Wait %1"),
+    Raid_attack_playerImmune("&cResidence owner is immune to raids! Wait %1"),
     Raid_attack_isOffline("&cCan't raid while owner is offline!"),
     Raid_attack_noSubzones("&cCan't raid subzones!"),
     Raid_attack_noSelf("&cCan't raid your own residence!"),

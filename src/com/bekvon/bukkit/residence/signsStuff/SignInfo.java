@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.signsStuff;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
@@ -8,7 +9,7 @@ import com.bekvon.bukkit.residence.utils.Utils;
 
 public class SignInfo {
 
-    ConcurrentHashMap<String, Signs> AllSigns = new ConcurrentHashMap<String, Signs>();
+    HashMap<String, Signs> AllSigns = new HashMap<String, Signs>();
 
     public SignInfo() {
     }
@@ -18,11 +19,13 @@ public class SignInfo {
 	this.AllSigns.putAll(AllSigns);
     }
 
-    public ConcurrentHashMap<String, Signs> GetAllSigns() {
+    public HashMap<String, Signs> GetAllSigns() {
 	return this.AllSigns;
     }
 
     public Signs getResSign(Location loc) {
+	if (this.AllSigns.isEmpty())
+	    return null;
 	String l = Utils.convertLocToStringShort(loc);
 	if (l == null)
 	    return null;
@@ -30,7 +33,7 @@ public class SignInfo {
     }
 
     public void removeSign(Signs sign) {
-	this.AllSigns.remove(sign);
+	this.AllSigns.remove(Utils.convertLocToStringShort(sign.getLocation()));
     }
 
     public void addSign(Signs sign) {

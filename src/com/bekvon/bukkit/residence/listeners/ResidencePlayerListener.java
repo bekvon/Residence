@@ -659,6 +659,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onSignInteract(PlayerInteractEvent event) {
+
 	if (event.getPlayer() == null)
 	    return;
 	// disabling event on world
@@ -667,10 +668,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Block block = event.getClickedBlock();
 
-	if (block == null || block.getState() == null)
-	    return;
-
-	if (!(block.getState() instanceof Sign))
+	if (block == null || !CMIMaterial.isSign(block.getType()))
 	    return;
 
 	Player player = event.getPlayer();
@@ -679,6 +677,7 @@ public class ResidencePlayerListener implements Listener {
 	Location loc = block.getLocation();
 
 	Signs s = plugin.getSignUtil().getSigns().getResSign(loc);
+
 	if (s == null)
 	    return;
 
@@ -892,9 +891,9 @@ public class ResidencePlayerListener implements Listener {
 	if (player.hasMetadata("NPC"))
 	    return;
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
-	if (res == null) {
+	if (res == null)
 	    return;
-	}
+
 	if (!res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse)) {
 	    return;
 	}

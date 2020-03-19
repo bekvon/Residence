@@ -6,7 +6,7 @@ Wiki: https://github.com/Zrips/Residence/wiki
 IRC: http://webchat.esper.net/?channels=residence
 Spigot Resource page: https://www.spigotmc.org/resources/residence-1-7-10-up-to-1-11.11480/
 
-Downdload the latest config.yml: https://github.com/Zrips/Residence/raw/master/src/config.yml
+Download the latest config.yml: https://github.com/Zrips/Residence/raw/master/src/config.yml
 
 To build the source yourself, simply download the source, unzip and run ant:
 https://github.com/Zrips/Residence/zipball/master

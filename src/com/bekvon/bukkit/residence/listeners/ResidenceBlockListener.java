@@ -59,7 +59,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceBlockListener implements Listener {
 

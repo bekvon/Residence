@@ -2074,7 +2074,8 @@ public class ClaimedResidence {
 	if (this.getRaid().getCooldownEnd() > System.currentTimeMillis())
 	    return false;
 
-	getRaid().addAttacker(attacker);
+	if (attacker != null)
+	    getRaid().addAttacker(attacker);
 	getRaid().addDefender(this.getRPlayer().getPlayer());
 	getRaid().setStartsAt(System.currentTimeMillis() + (ConfigManager.PreRaidTimer * 1000));
 	getRaid().setEndsAt(getRaid().getStartsAt() + (ConfigManager.RaidTimer * 1000));
@@ -2084,6 +2085,11 @@ public class ClaimedResidence {
 	Bukkit.getPluginManager().callEvent(start);
 	if (start.isCancelled())
 	    return false;
+
+	if (attacker != null)
+	    plugin.getPlayerManager().getResidencePlayer(attacker).setLastRaidAttackTimer(System.currentTimeMillis());
+	this.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
+	getRaid().setImmunityUntil(ConfigManager.RaidCooldown * 1000L);
 
 	return true;
     }

@@ -1251,6 +1251,8 @@ public class ConfigManager {
 	c.addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden in game");
 	DynMapHiddenRegions = c.get("DynMap.HiddenRegions", new ArrayList<String>());
 
+	c.addComment("Raid", "In development");
+	
 	c.addComment("Raid.Enabled", "Determines if you want to enable raid feature for your server",
 	    "When residence is under raid, attackers can move inside residence even if residence has move false flag");
 	RaidEnabled = c.get("Raid.Enabled", false);
@@ -1258,10 +1260,11 @@ public class ConfigManager {
 	PreRaidTimer = c.get("Raid.PreTimer", 120);
 	c.addComment("Raid.Timer", "Time in seconds raid should be", "During this time attackers can steal and kill defenders");
 	RaidTimer = c.get("Raid.Timer", 120);
-	c.addComment("Raid.Cooldown", "Time in seconds residence is immune for next raid");
-	RaidCooldown = c.get("Raid.Cooldown", 120);
-	c.addComment("Raid.PlayerCooldown", "Time in seconds player is immune for next raid", "In case player has more than one residence, this can prevent player from being attacked again");
-	RaidPlayerCooldown = c.get("Raid.PlayerCooldown", 120);
+	c.addComment("Raid.Cooldown", "Time in seconds residence is immune for next raid","Default is 79200 seconds which results into 22 hours, this might reset if you have server restart");
+	RaidCooldown = c.get("Raid.Cooldown", 79200);
+	c.addComment("Raid.PlayerCooldown", "Time in seconds player is immune for next raid", "In case player has more than one residence, this can prevent player from being attacked again",
+	    "Default is 79200 seconds which results into 22 hours, this might reset if you have server restart");
+	RaidPlayerCooldown = c.get("Raid.PlayerCooldown", 79200);
 
 	c.addComment("Raid.Allow.Attacker.blockBreak", "Allows to break blocks inside raided residence even if it has destroy false", "This only applies for attackers and for raid time");
 	RaidAttackerBlockBreak = c.get("Raid.Allow.Attacker.blockBreak", true);

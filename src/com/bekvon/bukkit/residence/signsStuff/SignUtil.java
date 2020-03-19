@@ -157,7 +157,7 @@ public class SignUtil {
 
     public void removeSign(ClaimedResidence res) {
 	for (Signs one : res.getSignsInResidence()) {
-	    if (res != one.GetResidence())
+	    if (res != one.getResidence())
 		continue;
 	    this.SignUpdate(one);
 	}
@@ -165,7 +165,7 @@ public class SignUtil {
 
     public void updateSignResName(ClaimedResidence res) {
 	for (Signs one : res.getSignsInResidence()) {
-	    if (res != one.GetResidence())
+	    if (res != one.getResidence())
 		continue;
 	    this.SignUpdate(one);
 	    saveSigns();
@@ -175,7 +175,7 @@ public class SignUtil {
 
     public boolean SignUpdate(Signs Sign) {
 
-	ClaimedResidence res = Sign.GetResidence();
+	ClaimedResidence res = Sign.getResidence();
 
 	if (res == null)
 	    return false;
@@ -183,7 +183,7 @@ public class SignUtil {
 	boolean ForSale = res.isForSell();
 	boolean ForRent = res.isForRent();
 
-	Location nloc = Sign.GetLocation();
+	Location nloc = Sign.getLocation();
 
 	if (nloc == null) {
 	    Signs.removeSign(Sign);

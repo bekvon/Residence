@@ -296,12 +296,17 @@ public class ResidencePlayer {
 	    group = Residence.getInstance().getPermissionManager().getDefaultGroup();
 	return group;
     }
+    
+    private boolean updatedPlayer = false;
 
     public ResidencePlayer updatePlayer(Player player) {
+	if (updatedPlayer)
+	    return this;
 	this.player = player;
 	this.uuid = player.getUniqueId();
 	this.userName = player.getName();
 	this.ofPlayer = player;
+	updatedPlayer = true;
 	return this;
     }
 
