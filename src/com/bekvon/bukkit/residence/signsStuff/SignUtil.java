@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -193,14 +194,11 @@ public class SignUtil {
 
 	Block block = nloc.getBlock();
 
-	if (block.getType() == Material.AIR) {
+	if (!CMIMaterial.isSign(block.getType())) {
 	    Signs.removeSign(Sign);
 	    res.getSignsInResidence().remove(Sign);
 	    return false;
 	}
-
-	if (!(block.getState() instanceof Sign))
-	    return false;
 
 	Sign sign = (Sign) block.getState();
 

@@ -1833,7 +1833,7 @@ public class Residence extends JavaPlugin {
     }
 
     public void msg(Player player, String text) {
-	if (player != null && text.length() > 0)
+	if (player != null && !text.isEmpty())
 	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 

@@ -784,7 +784,7 @@ public class ResidencePlayerListener implements Listener {
 	if (block == null)
 	    return;
 
-	if (!(block.getState() instanceof Sign))
+	if (!CMIMaterial.isSign(block.getType()))
 	    return;
 
 	Location loc = block.getLocation();
@@ -1183,6 +1183,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
+
 	if (event.getPlayer() == null)
 	    return;
 	// disabling event on world
@@ -1203,6 +1204,7 @@ public class ResidencePlayerListener implements Listener {
 	    || isCanUseEntity_BothClick(mat, block))) {
 	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
 		&& !heldItem.isDye() && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
+
 		return;
 	    }
 	}
@@ -1211,7 +1213,6 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	boolean resadmin = plugin.isResAdminOn(player);
-
 	if (resadmin)
 	    return;
 
@@ -1604,14 +1605,15 @@ public class ResidencePlayerListener implements Listener {
 
 	Entity ent = event.getRightClicked();
 
+	if (ent.getType() != EntityType.ITEM_FRAME) {
+	    return;
+	}
+
 	/* Container - ItemFrame protection */
 	if (!(ent instanceof Hanging))
 	    return;
 
 	Hanging hanging = (Hanging) ent;
-	if (hanging.getType() != EntityType.ITEM_FRAME) {
-	    return;
-	}
 
 	Material heldItem = plugin.getNms().itemInMainHand(player).getType();
 
@@ -2310,8 +2312,7 @@ public class ResidencePlayerListener implements Listener {
 	    Long time = informar.get(player.getUniqueId());
 	    if (time == null || time + 100L < System.currentTimeMillis()) {
 
-		FlagPermissions perms = res.getPermissions();
-		if (perms.has(Flags.title, FlagCombo.TrueOrNone))
+		if (res.getPermissions().has(Flags.title, FlagCombo.TrueOrNone))
 		    switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
 		    case ActionBar:
 			ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
@@ -2335,8 +2336,9 @@ public class ResidencePlayerListener implements Listener {
 		to.showBounds(player, true);
 	}
 
-	if (from == null || res == null)
+	if (from == null || res == null) {
 	    return;
+	}
 
 	if (!(res == from.getParent())) {
 	    if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(from) || plugin
@@ -2351,7 +2353,6 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	}
-
     }
 
     private StuckInfo updateStuckTeleport(Player player, Location loc) {

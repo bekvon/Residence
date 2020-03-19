@@ -3,19 +3,16 @@ package com.bekvon.bukkit.residence.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.Zrips.CMI.utils.TimeManager.timeModifier;
-
 public enum TimeModifier {
 
     s(1), m(60), h(60 * 60), d(60 * 60 * 24), w(60 * 60 * 24 * 7), M(60 * 60 * 24 * 30), Y(60 * 60 * 24 * 365);
     private int modifier = 0;
 
     static Pattern patern = Pattern.compile("(\\d+[a-z])");
-    
+
     TimeModifier(int modifier) {
 	this.modifier = modifier;
     }
-
 
     public int getModifier() {
 	return modifier;
@@ -34,7 +31,7 @@ public enum TimeModifier {
 	Long total = null;
 	while (match.find()) {
 	    String t = match.group(1);
-	    for (timeModifier one : timeModifier.values()) {
+	    for (TimeModifier one : TimeModifier.values()) {
 		if (t.endsWith(one.name())) {
 		    try {
 			Long amount = Long.parseLong(t.substring(0, t.length() - one.name().length()));
