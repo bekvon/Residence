@@ -76,7 +76,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -965,7 +964,7 @@ public class ResidencePlayerListener implements Listener {
 	if (m.isTrapDoor())
 	    return true;
 
-	switch (CMIMaterial.get(mat)) {
+	switch (m) {
 	case LEVER:
 	case PISTON:
 	case STICKY_PISTON:
@@ -1063,13 +1062,13 @@ public class ResidencePlayerListener implements Listener {
 
 	CMIMaterial mat = CMIMaterial.get(block);
 	if (!plugin.isResAdminOn(player)) {
-	    if (!ResPerm.bypass_use.hasPermission(player, 10000L)) {
-		boolean hasuse = perms.playerHas(player, Flags.use, true);
-		boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
-		if ((!hasuse && !haspressure || !haspressure) && mat.isPlate()) {
-		    event.setCancelled(true);
-		    return;
-		}
+	    boolean hasuse = perms.playerHas(player, Flags.use, true);
+	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
+	    if ((!hasuse && !haspressure || !haspressure) && mat.isPlate()
+//		&& !ResPerm.bypass_use.hasPermission(player, 10000L)
+		) {
+		event.setCancelled(true);
+		return;
 	    }
 	}
 	if (!perms.playerHas(player, Flags.trample, perms.playerHas(player, Flags.build, true)) && (mat == CMIMaterial.FARMLAND || mat == CMIMaterial.SOUL_SAND)) {
@@ -1103,12 +1102,12 @@ public class ResidencePlayerListener implements Listener {
 	if (player.getGameMode() == GameMode.CREATIVE)
 	    event.setCancelled(true);
 
-	boolean resadmin = plugin.isResAdminOn(player);
 	if (player.hasMetadata("NPC"))
 	    return;
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
+	boolean resadmin = plugin.isResAdminOn(player);
 	if (ResPerm.select.hasPermission(player) || ResPerm.create.hasPermission(player) && !ResPerm.select.hasSetPermission(player) || group
 	    .canCreateResidences() && !ResPerm.create.hasSetPermission(player) && !ResPerm.select.hasSetPermission(player) || resadmin) {
 
@@ -1183,7 +1182,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-
+//	Long nano = System.nanoTime();
 	if (event.getPlayer() == null)
 	    return;
 	// disabling event on world
@@ -1216,7 +1215,7 @@ public class ResidencePlayerListener implements Listener {
 	if (resadmin)
 	    return;
 
-	if (!resadmin && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
+	if (!plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
@@ -1225,7 +1224,7 @@ public class ResidencePlayerListener implements Listener {
 	CMIMaterial blockM = CMIMaterial.get(block);
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
-	if (heldItem != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+	if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 	    if (heldItem.isDye()) {
 		CMIMaterial btype = CMIMaterial.get(block);
 		if (heldItem.equals(CMIMaterial.BONE_MEAL) && (btype == CMIMaterial.GRASS_BLOCK || btype == CMIMaterial.GRASS || btype.isSapling()) ||
@@ -1258,11 +1257,11 @@ public class ResidencePlayerListener implements Listener {
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
 
-	    boolean hasUseBypass = ResPerm.bypass_use.hasPermission(player, 10000L);
-	    boolean hasuse = perms.playerHas(player, Flags.use, true) || hasUseBypass;
+	    boolean hasuse = perms.playerHas(player, Flags.use, true);
+
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 
-	    main: if (res != null && res.isUnderRaid()) {
+	    if (res != null && res.isUnderRaid()) {
 		if (res.getRaid().isDefender(player) && !ConfigManager.RaidDefenderContainerUsage) {
 		    Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
 		    if (result != null) {
@@ -1275,96 +1274,92 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 
-	    boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
-
 	    if (res == null || !res.isOwner(player)) {
-		if (!hasContainerBypass) {
 
-		    Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
+		Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
 
-		    if (result != null) {
-			main: if (!perms.playerHas(player, result, hasuse)) {
+		if (result != null) {
+		    main: if (!perms.playerHas(player, result, hasuse)) {
 
-			    if (hasuse || result.equals(Flags.container)) {
+			if (hasuse || result.equals(Flags.container)) {
 
-				if (res != null && res.isUnderRaid()) {
-				    if (res.getRaid().isAttacker(player)) {
-					break main;
-				    }
+			    if (res != null && res.isUnderRaid()) {
+				if (res.getRaid().isAttacker(player)) {
+				    break main;
 				}
-
+			    }
+//			    if (!ResPerm.bypass_container.hasPermission(player, 10000L)) {
 				event.setCancelled(true);
 				plugin.msg(player, lm.Flag_Deny, result);
-				return;
-			    }
-
-			    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
-				if (res != null && res.isUnderRaid()) {
-				    if (res.getRaid().isAttacker(player)) {
-					break main;
-				    }
-				}
-
-				switch (result) {
-				case door:
-				    if (ResPerm.bypass_door.hasPermission(player, 10000L))
-					break main;
-				    break;
-				case button:
-				    if (ResPerm.bypass_button.hasPermission(player, 10000L))
-					break main;
-				    break;
-				}
-				event.setCancelled(true);
-				plugin.msg(player, lm.Flag_Deny, result);
-				return;
-			    }
-
-			    if (isCanUseEntity_BothClick(mat, block)) {
-
-				if (res != null && res.isUnderRaid()) {
-				    if (res.getRaid().isAttacker(player)) {
-					break main;
-				    }
-				}
-
-				event.setCancelled(true);
-				plugin.msg(player, lm.Flag_Deny, result);
-			    }
+//			    }
 			    return;
 			}
-		    }
 
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+			    if (res != null && res.isUnderRaid()) {
+				if (res.getRaid().isAttacker(player)) {
+				    break main;
+				}
+			    }
+
+//			    switch (result) {
+//			    case door:
+//				if (ResPerm.bypass_door.hasPermission(player, 10000L))
+//				    break main;
+//				break;
+//			    case button:
+//				if (ResPerm.bypass_button.hasPermission(player, 10000L))
+//				    break main;
+//				break;
+//			    }
+			    event.setCancelled(true);
+//			    Debug.D("took: " + (System.nanoTime() - nano));
+			    plugin.msg(player, lm.Flag_Deny, result);
+			    return;
+			}
+
+			if (isCanUseEntity_BothClick(mat, block)) {
+
+			    if (res != null && res.isUnderRaid()) {
+				if (res.getRaid().isAttacker(player)) {
+				    break main;
+				}
+			    }
+			    event.setCancelled(true);
+			    plugin.msg(player, lm.Flag_Deny, result);
+			}
+			return;
+		    }
 		}
 	    }
 
-	    if (!hasContainerBypass)
-		if (plugin.getConfigManager().getCustomContainers().contains(blockM)) {
-		    if (!perms.playerHas(player, Flags.container, hasuse)) {
-			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, Flags.container);
-			return;
-		    }
+	    if (plugin.getConfigManager().getCustomContainers().contains(blockM)) {
+		if (!perms.playerHas(player, Flags.container, hasuse) 
+//		    || !ResPerm.bypass_container.hasPermission(player, 10000L)
+		    ) {
+		    event.setCancelled(true);
+		    plugin.msg(player, lm.Flag_Deny, Flags.container);
+		    return;
 		}
+	    }
 
-	    if (!hasUseBypass) {
-		if (plugin.getConfigManager().getCustomBothClick().contains(blockM)) {
-		    if (!hasuse) {
-			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, Flags.use);
-			return;
-		    }
+	    if (plugin.getConfigManager().getCustomBothClick().contains(blockM)) {
+		if (!hasuse) {
+		    event.setCancelled(true);
+		    plugin.msg(player, lm.Flag_Deny, Flags.use);
+		    return;
 		}
-		if (plugin.getConfigManager().getCustomRightClick().contains(blockM) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-		    if (!hasuse) {
-			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, Flags.use);
-			return;
-		    }
+	    }
+	    if (plugin.getConfigManager().getCustomRightClick().contains(blockM) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (!hasuse) {
+		    event.setCancelled(true);
+		    plugin.msg(player, lm.Flag_Deny, Flags.use);
+		    return;
 		}
 	    }
 	}
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1432,9 +1427,9 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
-
-	if (!hasContainerBypass)
+//	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
+//
+//	if (!hasContainerBypass)
 	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
 		plugin.msg(player, lm.Residence_FlagDeny, Flags.container, res.getName());
 		event.setCancelled(true);
@@ -1488,9 +1483,9 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 
-	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
-
-	if (!hasContainerBypass)
+//	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
+//
+//	if (!hasContainerBypass)
 	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
 		plugin.msg(player, lm.Residence_FlagDeny, Flags.container, res.getName());
 		event.setCancelled(true);
@@ -1613,7 +1608,7 @@ public class ResidencePlayerListener implements Listener {
 	if (!(ent instanceof Hanging))
 	    return;
 
-	Hanging hanging = (Hanging) ent;
+//	Hanging hanging = (Hanging) ent;
 
 	Material heldItem = plugin.getNms().itemInMainHand(player).getType();
 
@@ -1629,9 +1624,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	}
 
-	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
-
-	if (!hasContainerBypass)
+//	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
+//
+//	if (!hasContainerBypass)
 	    if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
 		event.setCancelled(true);
 		plugin.msg(player, lm.Flag_Deny, Flags.container);
@@ -2109,53 +2104,52 @@ public class ResidencePlayerListener implements Listener {
 	    if (res.isUnderRaid()) {
 		if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
 		    return true;
-		} else {
-		    Location lastLoc = lastOutsideLoc.get(uuid);
-
-		    if (plugin.getConfigManager().BounceAnimation()) {
-			Visualizer v = new Visualizer(player);
-			v.setErrorAreas(res);
-			v.setOnce(true);
-			plugin.getSelectionManager().showBounds(player, v);
-		    }
-
-		    ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
-		    boolean teleported = false;
-		    if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
-			Location newLoc = res.getOutsideFreeLoc(loc, player);
-			player.closeInventory();
-			teleported = teleport(player, newLoc);
-		    } else if (lastLoc != null) {
-
-			StuckInfo info = updateStuckTeleport(player, loc);
-			player.closeInventory();
-			if (info != null && info.getTimesTeleported() > 5) {
-			    Location newLoc = res.getOutsideFreeLoc(loc, player);
-			    teleported = teleport(player, newLoc);
-			} else {
-			    teleported = teleport(player, lastLoc);
-			}
-		    } else {
-			Location newLoc = res.getOutsideFreeLoc(loc, player);
-			player.closeInventory();
-			teleported = teleport(player, newLoc);
-		    }
-
-		    switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
-		    case ActionBar:
-		    case TitleBar:
-			FlagPermissions perms = res.getPermissions();
-			if (perms.has(Flags.title, FlagCombo.TrueOrNone))
-			    ActionBarTitleMessages.send(player, plugin.msg(lm.Raid_cantDo));
-			break;
-		    case ChatBox:
-			plugin.msg(player, lm.Raid_cantDo, orres.getName());
-			break;
-		    default:
-			break;
-		    }
-		    return teleported;
 		}
+		Location lastLoc = lastOutsideLoc.get(uuid);
+
+		if (plugin.getConfigManager().BounceAnimation()) {
+		Visualizer v = new Visualizer(player);
+		v.setErrorAreas(res);
+		v.setOnce(true);
+		plugin.getSelectionManager().showBounds(player, v);
+		}
+
+		ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
+		boolean teleported = false;
+		if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
+		Location newLoc = res.getOutsideFreeLoc(loc, player);
+		player.closeInventory();
+		teleported = teleport(player, newLoc);
+		} else if (lastLoc != null) {
+
+		StuckInfo info = updateStuckTeleport(player, loc);
+		player.closeInventory();
+		if (info != null && info.getTimesTeleported() > 5) {
+		    Location newLoc = res.getOutsideFreeLoc(loc, player);
+		    teleported = teleport(player, newLoc);
+		} else {
+		    teleported = teleport(player, lastLoc);
+		}
+		} else {
+		Location newLoc = res.getOutsideFreeLoc(loc, player);
+		player.closeInventory();
+		teleported = teleport(player, newLoc);
+		}
+
+		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
+		case ActionBar:
+		case TitleBar:
+		FlagPermissions perms = res.getPermissions();
+		if (perms.has(Flags.title, FlagCombo.TrueOrNone))
+		    ActionBarTitleMessages.send(player, plugin.msg(lm.Raid_cantDo));
+		break;
+		case ChatBox:
+		plugin.msg(player, lm.Raid_cantDo, orres.getName());
+		break;
+		default:
+		break;
+		}
+		return teleported;
 	    }
 
 	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move.hasPermission(player, 10000L)) {

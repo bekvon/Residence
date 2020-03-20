@@ -28,6 +28,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
 
@@ -289,6 +290,25 @@ public class FlagPermissions {
 	return list;
     }
 
+    protected Map<String, Boolean> getPlayerFlags(Player player, boolean allowCreate) {
+
+	UUID uuid = player.getUniqueId();
+	Map<String, Boolean> flags = playerFlags.get(uuid.toString());
+	if (flags == null) {
+	    flags = playerFlags.get(player.getName());
+	    if (flags != null) {
+		flags = playerFlags.remove(player.getName());
+		playerFlags.put(uuid.toString(), flags);
+	    }
+	}
+
+	if (flags == null && allowCreate) {
+	    flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
+	    playerFlags.put(uuid.toString(), flags);
+	}
+	return flags;
+    }
+
     protected Map<String, Boolean> getPlayerFlags(String player, boolean allowCreate)//this function works with uuid in string format as well, instead of player name
     {
 
@@ -457,7 +477,7 @@ public class FlagPermissions {
 
 	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup();
-	return this.playerCheck(player.getName(), flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));
+	return this.playerCheck(player, flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));
     }
 
     public boolean playerHas(Player player, String world, Flags flag, boolean def) {
@@ -466,30 +486,7 @@ public class FlagPermissions {
 
 	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup(world);
-	return this.playerCheck(player.getName(), flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));
-    }
-
-//    public boolean playerHas(String player, String world, Flags flag, boolean def) {
-//	return playerHas(player, world, flag.getName(), def);
-//    }
-
-    public boolean playerHas(String player, String world, String flag, FlagCombo f) {
-	switch (f) {
-	case FalseOrNone:
-	    return !this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, false, true)));
-//	    return !this.playerHas(player, world, flag.toString(), false);
-	case OnlyFalse:
-	    return !this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, true, true)));
-//	    return !this.playerHas(player, world, flag.toString(), true);
-	case OnlyTrue:
-	    return this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, false, true)));
-//	    return this.playerHas(player, world, flag.toString(), false);
-	case TrueOrNone:
-	    return this.playerCheck(player, flag, this.groupCheck(Residence.getInstance().getPlayerManager().getResidencePlayer(player).getGroup(world), flag, localHas(flag, true, true)));
-//	    return this.playerHas(player, world, flag.toString(), true);
-	default:
-	    return false;
-	}
+	return this.playerCheck(player, flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));
     }
 
     @Deprecated
@@ -503,6 +500,20 @@ public class FlagPermissions {
 	return this.groupCheck(group, flag, this.has(flag, def));
     }
 
+    private boolean playerCheck(Player player, String flag, boolean def) {
+	Map<String, Boolean> pmap = this.getPlayerFlags(player, false);
+	if (pmap != null) {
+	    if (pmap.containsKey(flag)) {
+		return pmap.get(flag);
+	    }
+	}
+	if (parent != null) {
+	    return parent.playerCheck(player, flag, def);
+	}
+	return def;
+    }
+
+    @Deprecated
     private boolean playerCheck(String player, String flag, boolean def) {
 	Map<String, Boolean> pmap = this.getPlayerFlags(player, false);
 	if (pmap != null) {
@@ -571,16 +582,6 @@ public class FlagPermissions {
 
     @Deprecated
     public boolean has(String flag, boolean def, boolean checkParent) {
-	if (cuboidFlags.containsKey(flag)) {
-	    return cuboidFlags.get(flag);
-	}
-	if (checkParent && parent != null) {
-	    return parent.has(flag, def);
-	}
-	return def;
-    }
-
-    private boolean localHas(String flag, boolean def, boolean checkParent) {
 	if (cuboidFlags.containsKey(flag)) {
 	    return cuboidFlags.get(flag);
 	}

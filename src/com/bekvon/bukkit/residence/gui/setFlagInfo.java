@@ -293,9 +293,9 @@ public class setFlagInfo {
 	ResidencePermissions fp = this.residence.getPermissions();
 
 	if (this.targetPlayer != null) {
-	    if (fp.playerHas(targetPlayer, residence.getWorld(), flagName, FlagCombo.OnlyTrue))
+	    if (fp.playerHas(targetPlayer, Flags.getFlag(flagName), FlagCombo.OnlyTrue))
 		have = true;
-	    else if (fp.playerHas(targetPlayer, residence.getWorld(), flagName, FlagCombo.OnlyFalse))
+	    else if (fp.playerHas(targetPlayer, Flags.getFlag(flagName), FlagCombo.OnlyFalse))
 		have = false;
 	} else {
 	    if (fp.has(Flags.getFlag(flagName), FlagCombo.OnlyTrue))

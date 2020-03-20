@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -19,7 +19,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.ResidenceRaid;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -39,7 +38,6 @@ public class ResidencePlayer {
     private int maxSubzones = -1;
     private int maxSubzoneDepth = -1;
 
-    private boolean updated = false;
     private Long lastRecalculation = 0L;
 
     private int maxValue = 9999;
@@ -296,17 +294,12 @@ public class ResidencePlayer {
 	    group = Residence.getInstance().getPermissionManager().getDefaultGroup();
 	return group;
     }
-    
-    private boolean updatedPlayer = false;
 
     public ResidencePlayer updatePlayer(Player player) {
-	if (updatedPlayer)
-	    return this;
 	this.player = player;
 	this.uuid = player.getUniqueId();
 	this.userName = player.getName();
 	this.ofPlayer = player;
-	updatedPlayer = true;
 	return this;
     }
 

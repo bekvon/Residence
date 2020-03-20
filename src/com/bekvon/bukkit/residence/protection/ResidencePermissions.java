@@ -22,6 +22,7 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidencePermissions extends FlagPermissions {
 
@@ -52,7 +53,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean playerHas(Player player, Flags flag, boolean def) {
-	return playerHas(player, flag.toString(), def);
+	return playerHas(player, player.getWorld().getName(), flag, def);
     }
 
     @Deprecated
@@ -79,6 +80,22 @@ public class ResidencePermissions extends FlagPermissions {
 	    return this.playerHas(player, world, flag, false);
 	case TrueOrNone:
 	    return this.playerHas(player, world, flag, true);
+	default:
+	    return false;
+	}
+    }
+
+    @Deprecated
+    public boolean playerHas(String player, Flags flag, FlagCombo f) {
+	switch (f) {
+	case FalseOrNone:
+	    return !this.playerHas(player, world, flag.toString(), false);
+	case OnlyFalse:
+	    return !this.playerHas(player, world, flag.toString(), true);
+	case OnlyTrue:
+	    return this.playerHas(player, world, flag.toString(), false);
+	case TrueOrNone:
+	    return this.playerHas(player, world, flag.toString(), true);
 	default:
 	    return false;
 	}
@@ -279,7 +296,7 @@ public class ResidencePermissions extends FlagPermissions {
 		Residence.getInstance().msg(sender, lm.General_NoPermission);
 		return false;
 	    }
-	    if (!hasFlagAccess(this.getOwner(), flag) && !ResPerm.flag_$1.hasPermission(sender, flag.toLowerCase())) {
+	    if (!hasFlagAccess(this.getOwner(), flag) && !ResPerm.flag_$1.hasPermission(sender, 10000L, flag.toLowerCase())) {
 		Residence.getInstance().msg(sender, lm.Flag_SetFailed, flag);
 		return false;
 	    }
