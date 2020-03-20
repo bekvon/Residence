@@ -85,6 +85,32 @@ public class ResidencePermissions extends FlagPermissions {
 	}
     }
 
+    public boolean playerHas(ResidencePlayer player, Flags flag, FlagCombo f) {
+	switch (f) {
+	case FalseOrNone:
+	    return !this.playerHas(player, flag, false);
+	case OnlyFalse:
+	    return !this.playerHas(player, flag, true);
+	case OnlyTrue:
+	    return this.playerHas(player, flag, false);
+	case TrueOrNone:
+	    return this.playerHas(player, flag, true);
+	default:
+	    return false;
+	}
+    }
+
+    @Override
+    public boolean playerHas(ResidencePlayer player, Flags flag, boolean def) {
+	if (player == null)
+	    return false;
+	ResidenceFlagCheckEvent fc = new ResidenceFlagCheckEvent(residence, flag.toString(), FlagType.PLAYER, player.getName(), def);
+	Residence.getInstance().getServ().getPluginManager().callEvent(fc);
+	if (fc.isOverriden())
+	    return fc.getOverrideValue();
+	return super.playerHas(player, flag, def);
+    }
+
     @Deprecated
     public boolean playerHas(String player, Flags flag, FlagCombo f) {
 	switch (f) {

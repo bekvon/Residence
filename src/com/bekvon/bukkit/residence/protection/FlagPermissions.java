@@ -291,6 +291,8 @@ public class FlagPermissions {
     }
 
     protected Map<String, Boolean> getPlayerFlags(Player player, boolean allowCreate) {
+	if(player == null)
+	    return new HashMap<String, Boolean>();
 
 	UUID uuid = player.getUniqueId();
 	Map<String, Boolean> flags = playerFlags.get(uuid.toString());
@@ -469,6 +471,12 @@ public class FlagPermissions {
 	} else {
 	    return FlagState.INVALID;
 	}
+    }
+
+    public boolean playerHas(ResidencePlayer resPlayer, Flags flag, boolean def) {
+	if (resPlayer == null)
+	    return false;
+	return this.playerCheck(resPlayer.getPlayer(), flag.toString(), this.groupCheck(resPlayer.getGroup(), flag.toString(), this.has(flag, def)));
     }
 
     public boolean playerHas(Player player, Flags flag, boolean def) {

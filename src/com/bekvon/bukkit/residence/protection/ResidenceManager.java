@@ -72,6 +72,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     @Override
     public ClaimedResidence getByLoc(Location loc) {
+
 	if (loc == null)
 	    return null;
 	World world = loc.getWorld();
@@ -80,15 +81,17 @@ public class ResidenceManager implements ResidenceInterface {
 	String worldName = world.getName();
 	if (worldName == null)
 	    return null;
-	ClaimedResidence res = null;
-	ChunkRef chunk = new ChunkRef(loc);
 	if (!chunkResidences.containsKey(worldName))
 	    return null;
+	ClaimedResidence res = null;
+	ChunkRef chunk = new ChunkRef(loc);
 
 	Map<ChunkRef, List<ClaimedResidence>> ChunkMap = chunkResidences.get(worldName);
 
-	if (ChunkMap.containsKey(chunk)) {
-	    for (ClaimedResidence entry : ChunkMap.get(chunk)) {
+	List<ClaimedResidence> chunks = ChunkMap.get(chunk);
+
+	if (chunks != null) {
+	    for (ClaimedResidence entry : chunks) {
 		if (entry == null)
 		    continue;
 		if (entry.containsLoc(loc)) {
@@ -97,7 +100,6 @@ public class ResidenceManager implements ResidenceInterface {
 		}
 	    }
 	}
-
 	if (res == null)
 	    return null;
 
@@ -500,7 +502,7 @@ public class ResidenceManager implements ResidenceInterface {
 		plugin.msg(player, lm.Residence_CantRemove, res.getName(), rented.getName(), rented.getRentedLand().player);
 		return;
 	    }
-	    if (player!= null && res.isRented() && !player.getName().equalsIgnoreCase(res.getRentedLand().player)) {		
+	    if (player != null && res.isRented() && !player.getName().equalsIgnoreCase(res.getRentedLand().player)) {
 		plugin.msg(player, lm.Residence_CantRemove, res.getName(), res.getName(), res.getRentedLand().player);
 		return;
 	    }
@@ -1110,12 +1112,12 @@ public class ResidenceManager implements ResidenceInterface {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return false;
 	}
-	
+
 	if (res.isRaidInitialized() && !resadmin) {
 	    plugin.msg(player, lm.Raid_cantDo);
 	    return false;
 	}
-	
+
 	oldName = res.getName();
 	if (res.getPermissions().hasResidencePermission(player, true) || resadmin) {
 	    if (res.getParent() == null) {

@@ -210,9 +210,12 @@ public class ResidenceBlockListener implements Listener {
 	}
 
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+
+	if (res != null && res.getItemIgnoreList().isListed(mat))
+	    return;
+
 	if (plugin.getConfigManager().enabledRentSystem() && res != null) {
-	    String resname = res.getName();
-	    if (plugin.getConfigManager().preventRentModify() && plugin.getRentManager().isRented(resname)) {
+	    if (plugin.getConfigManager().preventRentModify() && res.isRented()) {
 		plugin.msg(player, lm.Rent_ModifyDeny);
 		event.setCancelled(true);
 		return;
@@ -220,8 +223,6 @@ public class ResidenceBlockListener implements Listener {
 	}
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
-	if (res != null && res.getItemIgnoreList().isListed(mat))
-	    return;
 
 	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
 
@@ -231,7 +232,9 @@ public class ResidenceBlockListener implements Listener {
 	    }
 	}
 
-	if (!hasdestroy && !ResPerm.bypass_destroy.hasPermission(player, 10000L)) {
+	if (!hasdestroy
+//	    && !ResPerm.bypass_destroy.hasPermission(player, 10000L)
+	) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
 	} else if (mat == Material.CHEST && !perms.playerHas(player, Flags.container, true)) {
@@ -641,7 +644,9 @@ public class ResidenceBlockListener implements Listener {
 	    }
 	}
 
-	if (!hasplace && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
+	if (!hasplace 
+//	    && !ResPerm.bypass_build.hasPermission(player, 10000L)
+	    ) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
 	    return;
@@ -653,7 +658,9 @@ public class ResidenceBlockListener implements Listener {
 	    if (sec != null) {
 		perms = plugin.getPermsByLocForPlayer(sec.getLocation(), player);
 		hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
-		if (!hasplace && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
+		if (!hasplace 
+//		    && !ResPerm.bypass_build.hasPermission(player, 10000L)
+		    ) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.place);
 		    return;

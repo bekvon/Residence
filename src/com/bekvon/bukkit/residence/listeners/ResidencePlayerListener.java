@@ -76,6 +76,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -152,8 +153,8 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (!res.getPermissions().playerHas(event.getPlayer(), Flags.itempickup, FlagCombo.OnlyFalse))
 	    return;
-	if (ResPerm.bypass_itempickup.hasPermission(event.getPlayer(), 10000L))
-	    return;
+//	if (ResPerm.bypass_itempickup.hasPermission(event.getPlayer(), 10000L))
+//	    return;
 	event.setCancelled(true);
 	event.getItem().setPickupDelay(plugin.getConfigManager().getItemPickUpDelay() * 20);
     }
@@ -824,7 +825,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
 
-	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !plugin.isResAdminOn(player) && !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
+	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !plugin.isResAdminOn(player)
+//	    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)
+	) {
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null && res.isOwner(player))
@@ -1025,14 +1028,15 @@ public class ResidencePlayerListener implements Listener {
 	if (relativeBlock == null)
 	    return;
 
+	if (relativeBlock.getType() != Material.FIRE)
+	    return;
+
 	Player player = event.getPlayer();
 	if (player.hasMetadata("NPC"))
 	    return;
 	if (plugin.isResAdminOn(player))
 	    return;
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
-	if (relativeBlock.getType() != Material.FIRE)
-	    return;
 
 	boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
 	if (hasplace)
@@ -1066,7 +1070,7 @@ public class ResidencePlayerListener implements Listener {
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
 	    if ((!hasuse && !haspressure || !haspressure) && mat.isPlate()
 //		&& !ResPerm.bypass_use.hasPermission(player, 10000L)
-		) {
+	    ) {
 		event.setCancelled(true);
 		return;
 	    }
@@ -1104,7 +1108,6 @@ public class ResidencePlayerListener implements Listener {
 
 	if (player.hasMetadata("NPC"))
 	    return;
-
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	boolean resadmin = plugin.isResAdminOn(player);
@@ -1289,8 +1292,8 @@ public class ResidencePlayerListener implements Listener {
 				}
 			    }
 //			    if (!ResPerm.bypass_container.hasPermission(player, 10000L)) {
-				event.setCancelled(true);
-				plugin.msg(player, lm.Flag_Deny, result);
+			    event.setCancelled(true);
+			    plugin.msg(player, lm.Flag_Deny, result);
 //			    }
 			    return;
 			}
@@ -1335,9 +1338,9 @@ public class ResidencePlayerListener implements Listener {
 	    }
 
 	    if (plugin.getConfigManager().getCustomContainers().contains(blockM)) {
-		if (!perms.playerHas(player, Flags.container, hasuse) 
+		if (!perms.playerHas(player, Flags.container, hasuse)
 //		    || !ResPerm.bypass_container.hasPermission(player, 10000L)
-		    ) {
+		) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.container);
 		    return;
@@ -1430,10 +1433,10 @@ public class ResidencePlayerListener implements Listener {
 //	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
 //
 //	if (!hasContainerBypass)
-	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
-		plugin.msg(player, lm.Residence_FlagDeny, Flags.container, res.getName());
-		event.setCancelled(true);
-	    }
+	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse) && player.isSneaking()) {
+	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container, res.getName());
+	    event.setCancelled(true);
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1486,10 +1489,10 @@ public class ResidencePlayerListener implements Listener {
 //	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
 //
 //	if (!hasContainerBypass)
-	    if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
-		plugin.msg(player, lm.Residence_FlagDeny, Flags.container, res.getName());
-		event.setCancelled(true);
-	    }
+	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.container, FlagCombo.OnlyFalse)) {
+	    plugin.msg(player, lm.Residence_FlagDeny, Flags.container, res.getName());
+	    event.setCancelled(true);
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1627,10 +1630,10 @@ public class ResidencePlayerListener implements Listener {
 //	boolean hasContainerBypass = ResPerm.bypass_container.hasPermission(player, 10000L);
 //
 //	if (!hasContainerBypass)
-	    if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
-		event.setCancelled(true);
-		plugin.msg(player, lm.Flag_Deny, Flags.container);
-	    }
+	if (!perms.playerHas(player, Flags.container, perms.playerHas(player, Flags.use, true))) {
+	    event.setCancelled(true);
+	    plugin.msg(player, lm.Flag_Deny, Flags.container);
+	}
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1744,7 +1747,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 	    .getCause() == TeleportCause.PLUGIN) {
-	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player) && !ResPerm.bypass_tp.hasPermission(player, 10000L)) {
+	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player)
+//		&& !ResPerm.bypass_tp.hasPermission(player, 10000L)
+	    ) {
 		event.setCancelled(true);
 		plugin.msg(player, lm.Residence_MoveDeny, res.getName());
 		return;
@@ -1834,8 +1839,8 @@ public class ResidencePlayerListener implements Listener {
     private void fly(Player player, boolean state) {
 	if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE)
 	    return;
-	if (ResPerm.bypass_fly.hasPermission(player, 10000L))
-	    return;
+//	if (ResPerm.bypass_fly.hasPermission(player, 10000L))
+//	    return;
 	if (!state) {
 	    boolean land = player.isFlying();
 	    player.setFlying(state);
@@ -2029,8 +2034,9 @@ public class ResidencePlayerListener implements Listener {
 	} else {
 	    if (res != null && ResOld.getName().equals(res.getName())) {
 
-		if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) &&
-		    !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
+		if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
+//		    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)
+		) {
 		    if (!res.isOwner(player)) {
 			Location lc = player.getLocation();
 			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
@@ -2108,46 +2114,46 @@ public class ResidencePlayerListener implements Listener {
 		Location lastLoc = lastOutsideLoc.get(uuid);
 
 		if (plugin.getConfigManager().BounceAnimation()) {
-		Visualizer v = new Visualizer(player);
-		v.setErrorAreas(res);
-		v.setOnce(true);
-		plugin.getSelectionManager().showBounds(player, v);
+		    Visualizer v = new Visualizer(player);
+		    v.setErrorAreas(res);
+		    v.setOnce(true);
+		    plugin.getSelectionManager().showBounds(player, v);
 		}
 
 		ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
 		boolean teleported = false;
 		if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
-		Location newLoc = res.getOutsideFreeLoc(loc, player);
-		player.closeInventory();
-		teleported = teleport(player, newLoc);
+		    Location newLoc = res.getOutsideFreeLoc(loc, player);
+		    player.closeInventory();
+		    teleported = teleport(player, newLoc);
 		} else if (lastLoc != null) {
 
-		StuckInfo info = updateStuckTeleport(player, loc);
-		player.closeInventory();
-		if (info != null && info.getTimesTeleported() > 5) {
+		    StuckInfo info = updateStuckTeleport(player, loc);
+		    player.closeInventory();
+		    if (info != null && info.getTimesTeleported() > 5) {
+			Location newLoc = res.getOutsideFreeLoc(loc, player);
+			teleported = teleport(player, newLoc);
+		    } else {
+			teleported = teleport(player, lastLoc);
+		    }
+		} else {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
+		    player.closeInventory();
 		    teleported = teleport(player, newLoc);
-		} else {
-		    teleported = teleport(player, lastLoc);
-		}
-		} else {
-		Location newLoc = res.getOutsideFreeLoc(loc, player);
-		player.closeInventory();
-		teleported = teleport(player, newLoc);
 		}
 
 		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
 		case ActionBar:
 		case TitleBar:
-		FlagPermissions perms = res.getPermissions();
-		if (perms.has(Flags.title, FlagCombo.TrueOrNone))
-		    ActionBarTitleMessages.send(player, plugin.msg(lm.Raid_cantDo));
-		break;
+		    FlagPermissions perms = res.getPermissions();
+		    if (perms.has(Flags.title, FlagCombo.TrueOrNone))
+			ActionBarTitleMessages.send(player, plugin.msg(lm.Raid_cantDo));
+		    break;
 		case ChatBox:
-		plugin.msg(player, lm.Raid_cantDo, orres.getName());
-		break;
+		    plugin.msg(player, lm.Raid_cantDo, orres.getName());
+		    break;
 		default:
-		break;
+		    break;
 		}
 		return teleported;
 	    }
@@ -2202,8 +2208,9 @@ public class ResidencePlayerListener implements Listener {
 	    }
 
 	    // Preventing fly in residence only when player has move permission
-	    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player) &&
-		!ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
+	    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
+//		&& !ResPerm.bypass_nofly.hasPermission(player, 10000L)
+		) {
 		if (res.isOwner(player))
 		    break f;
 		Location lc = player.getLocation();
