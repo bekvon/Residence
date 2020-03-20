@@ -24,6 +24,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.utils.Debug;
 
 public class setFlagInfo {
@@ -289,7 +290,7 @@ public class setFlagInfo {
     private ItemStack updateLook(String flagName) {
 
 	Boolean have = null;
-	FlagPermissions fp = (this.residence.getPermissions());
+	ResidencePermissions fp = this.residence.getPermissions();
 
 	if (this.targetPlayer != null) {
 	    if (fp.playerHas(targetPlayer, residence.getWorld(), flagName, FlagCombo.OnlyTrue))

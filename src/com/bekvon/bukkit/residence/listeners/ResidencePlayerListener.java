@@ -442,7 +442,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 	    player.resetPlayerWeather();
 
-	if (event.getPlayer() != null && res.getPermissions().playerHas(event.getPlayer(), Flags.fly, FlagCombo.OnlyTrue))
+	if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 	    fly(player, false);
 
 	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && Version.isCurrentEqualOrHigher(Version.v1_9_R1))

@@ -62,26 +62,18 @@ public class FlagUtil {
 	if (player == null || !player.isOnline())
 	    return;
 
-	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @Override
-	    public void run() {
+	setFlagInfo flag = new setFlagInfo(res, player, targetPlayer, resadmin);
+	flag.recalculate();
 
-		setFlagInfo flag = new setFlagInfo(res, player, targetPlayer, resadmin);
-		flag.recalculate();
+	CMIGui gui = new CMIGui(player);
+	gui.setTitle(Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
+	gui.setInvSize(GUIRows.r6);
+	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
 
-		Bukkit.getScheduler().runTask(plugin, () -> {
-		    CMIGui gui = new CMIGui(player);
-		    gui.setTitle(Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
-		    gui.setInvSize(GUIRows.r6);
-		    PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
+	fillButtons(flag, pi, gui);
 
-		    fillButtons(flag, pi, gui);
-
-		    gui.open();
-		});
-		return;
-	    }
-	});
+	gui.open();
+	return;
     }
 
     private void fillButtons(setFlagInfo flag, PageInfo pi, CMIGui gui) {
@@ -126,26 +118,17 @@ public class FlagUtil {
 	if (player == null || !player.isOnline())
 	    return;
 
-	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @Override
-	    public void run() {
+	setFlagInfo flag = new setFlagInfo(res, player, resadmin);
+	flag.recalculate();
+	CMIGui gui = new CMIGui(player);
+	gui.setTitle(Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
+	gui.setInvSize(GUIRows.r6);
 
-		setFlagInfo flag = new setFlagInfo(res, player, resadmin);
-		flag.recalculate();
-		Bukkit.getScheduler().runTask(plugin, () -> {
-		    CMIGui gui = new CMIGui(player);
-		    gui.setTitle(Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
-		    gui.setInvSize(GUIRows.r6);
+	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
 
-		    PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
+	fillButtons(flag, pi, gui);
 
-		    fillButtons(flag, pi, gui);
-
-		    gui.open();
-		});
-		return;
-	    }
-	});
+	gui.open();
     }
 
     public FlagData getFlagData() {

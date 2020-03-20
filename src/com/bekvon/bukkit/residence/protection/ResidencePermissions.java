@@ -84,21 +84,6 @@ public class ResidencePermissions extends FlagPermissions {
 	}
     }
 
-//    public boolean playerHas(String player, Flags flag, FlagCombo f) {
-//	switch (f) {
-//	case FalseOrNone:
-//	    return !this.playerHas(player, world, flag, false);
-//	case OnlyFalse:
-//	    return !this.playerHas(player, world, flag, true);
-//	case OnlyTrue:
-//	    return this.playerHas(player, world, flag, false);
-//	case TrueOrNone:
-//	    return this.playerHas(player, world, flag, true);
-//	default:
-//	    return false;
-//	}
-//    }
-
     @Override
     public boolean playerHas(Player player, String world, Flags flag, boolean def) {
 	if (player == null)
@@ -347,7 +332,7 @@ public class ResidencePermissions extends FlagPermissions {
 	Flags f = Flags.getFlag(flag);
 	if (f != null)
 	    flag = f.toString();
-	
+
 	if (this.residence.isRaidInitialized() && !resadmin) {
 	    Residence.getInstance().msg(player, lm.Raid_noFlagChange);
 	    return false;
