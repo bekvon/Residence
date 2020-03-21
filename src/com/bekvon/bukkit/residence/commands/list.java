@@ -11,7 +11,6 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class list implements cmd {
 
@@ -42,6 +41,7 @@ public class list implements cmd {
 
 	if (target != null && !sender.getName().equalsIgnoreCase(target) && !ResPerm.command_$1_others.hasPermission(sender, this.getClass().getSimpleName()))
 	    return true;	
+	
 	plugin.getResidenceManager().listResidences(sender, target, page, false, false, resadmin, world);
 
 	return true;
