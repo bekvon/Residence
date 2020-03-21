@@ -33,7 +33,7 @@ public class limits implements cmd {
 	if (target == null)
 	    return false;
 
-	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(target.getName(), true);
+	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(target.getUniqueId());
 	rPlayer.getGroup().printLimits(sender, target, rsadm);
 	return true;
     }

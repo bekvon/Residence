@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.permissions;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -31,6 +32,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.PlayerGroup;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
@@ -45,6 +47,9 @@ public class PermissionManager {
     private PermissionGroup defaultGroup = null;
     private Residence plugin;
 
+    private int autoCacheClearId = 0;
+    private static final int cacheClearDelay = 600;
+
     public PermissionManager(Residence plugin) {
 	this.plugin = plugin;
 	try {
@@ -55,6 +60,18 @@ public class PermissionManager {
 	    checkPermissions();
 	} catch (Exception ex) {
 	    Logger.getLogger(PermissionManager.class.getName()).log(Level.SEVERE, null, ex);
+	}
+    }
+
+    public void startCacheClearScheduler() {
+	autoCacheClearId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, cacheClear, cacheClearDelay * 20L, cacheClearDelay * 20L);
+    }
+
+    public void stopCacheClearScheduler() {
+	try {
+	    if (autoCacheClearId > 0)
+		Bukkit.getScheduler().cancelTask(autoCacheClearId);
+	} catch (Throwable e) {
 	}
     }
 
@@ -273,6 +290,7 @@ public class PermissionManager {
 	private Boolean show = true;
 	private String desc;
 	private String[] wars;
+	private String fixedPermission = null;
 
 	ResPerm(String desc, Boolean show) {
 	    this.desc = desc;
@@ -319,6 +337,9 @@ public class PermissionManager {
 	}
 
 	public String getPermission(String... extra) {
+	    if (fixedPermission != null)
+		return fixedPermission;
+
 	    String perm = this.name().replace("_", ".");
 	    int i = 0;
 	    for (String one : extra) {
@@ -328,6 +349,11 @@ public class PermissionManager {
 		perm = perm.replace("$" + i, one.toLowerCase());
 	    }
 	    perm = perm.replace("$star", "*");
+
+	    if (!this.name().contains("$")) {
+		fixedPermission = "residence." + perm;
+	    }
+
 	    return "residence." + perm;
 	}
 
@@ -397,7 +423,7 @@ public class PermissionManager {
 	    }
 
 	    if (!has && inform) {
-		boolean showPerm = ResPerm.permisiononerror.hasPermission(sender);
+		boolean showPerm = ResPerm.permisiononerror.hasPermission(sender, 50000L);
 		RawMessage rm = new RawMessage();
 		rm.add(Residence.getInstance().getLM().getMessage(lms == null ? lm.General_NoPermission : lms), showPerm ? perm : null);
 		rm.show(sender);
@@ -492,14 +518,21 @@ public class PermissionManager {
 	}
     }
 
-    private HashMap<UUID, HashMap<String, PermissionInfo>> cahce = new HashMap<UUID, HashMap<String, PermissionInfo>>();
+    private Runnable cacheClear = new Runnable() {
+	@Override
+	public void run() {
+	    cache.clear();
+	}
+    };
+
+    private HashMap<UUID, HashMap<String, PermissionInfo>> cache = new HashMap<UUID, HashMap<String, PermissionInfo>>();
 
     public void removeFromCache(Player player) {
-	cahce.remove(player.getUniqueId());
+	cache.remove(player.getUniqueId());
     }
 
     public PermissionInfo getFromCache(Player player, String perm) {
-	HashMap<String, PermissionInfo> old = cahce.get(player.getUniqueId());
+	HashMap<String, PermissionInfo> old = cache.get(player.getUniqueId());
 	if (old == null) {
 	    return null;
 	}
@@ -507,7 +540,7 @@ public class PermissionManager {
     }
 
     public PermissionInfo addToCache(Player player, String perm, boolean has, Long delayInMiliseconds) {
-	HashMap<String, PermissionInfo> old = cahce.get(player.getUniqueId());
+	HashMap<String, PermissionInfo> old = cache.get(player.getUniqueId());
 	if (old == null) {
 	    old = new HashMap<String, PermissionInfo>();
 	}
@@ -517,7 +550,7 @@ public class PermissionManager {
 	info.setEnabled(has);
 
 	old.put(perm, info);
-	cahce.put(player.getUniqueId(), old);
+	cache.put(player.getUniqueId(), old);
 
 	return info;
     }

@@ -38,8 +38,6 @@ public class ResidencePlayer {
     private int maxSubzones = -1;
     private int maxSubzoneDepth = -1;
 
-    private Long lastRecalculation = 0L;
-
     private int maxValue = 9999;
 
     private Long lastRaidAttackTimer = 0L;
@@ -54,7 +52,6 @@ public class ResidencePlayer {
 	this.userName = off.getName();
 	Residence.getInstance().addOfflinePlayerToChache(off);
 	this.updatePlayer();
-	this.RecalculatePermissions();
     }
 
     public ResidencePlayer(Player player) {
@@ -62,7 +59,6 @@ public class ResidencePlayer {
 	    return;
 	Residence.getInstance().addOfflinePlayerToChache(player);
 	this.updatePlayer(player);
-	this.RecalculatePermissions();
     }
 
     public boolean isOnline() {
@@ -75,14 +71,10 @@ public class ResidencePlayer {
     public ResidencePlayer(String userName, UUID uuid) {
 	this.userName = userName;
 	this.uuid = uuid;
-	if (this.isOnline())
-	    RecalculatePermissions();
     }
 
     public ResidencePlayer(String userName) {
 	this.userName = userName;
-	if (this.isOnline())
-	    RecalculatePermissions();
     }
 
     public void setMainResidence(ClaimedResidence res) {
@@ -118,18 +110,12 @@ public class ResidencePlayer {
 	return mainResidence;
     }
 
-    public void RecalculatePermissions() {
-	if (lastRecalculation + 5000L > System.currentTimeMillis())
-	    return;
-	lastRecalculation = System.currentTimeMillis();
-
-	getGroup();
-	recountMaxRes();
-	recountMaxRents();
-	recountMaxSubzones();
-    }
+    private Long lastMaxResRecalculation = 0L;
 
     public void recountMaxRes() {
+	if (lastMaxResRecalculation + 10000L > System.currentTimeMillis())
+	    return;
+	lastMaxResRecalculation = System.currentTimeMillis();
 	if (this.getGroup() != null)
 	    this.maxRes = this.getGroup().getMaxZones();
 	this.maxRes = this.maxRes == -1 ? maxValue : this.maxRes;
@@ -157,7 +143,13 @@ public class ResidencePlayer {
 	}
     }
 
+    private Long lastMaxRentsRecalculation = 0L;
+
     public void recountMaxRents() {
+	if (lastMaxRentsRecalculation + 10000L > System.currentTimeMillis())
+	    return;
+	lastMaxRentsRecalculation = System.currentTimeMillis();
+
 	if (player != null) {
 	    if (ResPerm.max_rents_unlimited.hasSetPermission(player)) {
 		this.maxRents = maxValue;
@@ -192,7 +184,13 @@ public class ResidencePlayer {
 	return this.maxRents;
     }
 
+    private Long lastMaxSubzonesRecalculation = 0L;
+
     public void recountMaxSubzones() {
+	if (lastMaxSubzonesRecalculation + 10000L > System.currentTimeMillis())
+	    return;
+	lastMaxSubzonesRecalculation = System.currentTimeMillis();
+
 	if (player != null) {
 	    if (ResPerm.max_subzones_unlimited.hasSetPermission(player)) {
 		this.maxSubzones = maxValue;
@@ -227,7 +225,13 @@ public class ResidencePlayer {
 	return this.maxSubzones;
     }
 
+    private Long lastMaxSubzonesDepthRecalculation = 0L;
+
     public void recountMaxSubzoneDepth() {
+	if (lastMaxSubzonesDepthRecalculation + 10000L > System.currentTimeMillis())
+	    return;
+	lastMaxSubzonesDepthRecalculation = System.currentTimeMillis();
+
 	if (player != null) {
 	    if (ResPerm.max_subzonedepth_unlimited.hasSetPermission(player)) {
 		this.maxSubzoneDepth = maxValue;
@@ -295,12 +299,24 @@ public class ResidencePlayer {
 	return group;
     }
 
+    private boolean updated = false;
+
     public ResidencePlayer updatePlayer(Player player) {
+	if (updated)
+	    return this;
+	if (player.isOnline())
+	    updated = true;
 	this.player = player;
 	this.uuid = player.getUniqueId();
 	this.userName = player.getName();
 	this.ofPlayer = player;
 	return this;
+    }
+
+    public void onQuit() {
+	this.ofPlayer = null;
+	this.player = null;
+	updated = false;
     }
 
     private void updatePlayer() {

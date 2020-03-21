@@ -520,17 +520,10 @@ public class RawMessage {
 	    for (String one : softCombine()) {
 		if (one.isEmpty())
 		    continue;
-
-//		if (Version.isCurrentEqualOrHigher(Version.v1_8_R1))
 		ActionBarTitleMessages.sendRaw(player, one);
-//		else
-//		    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + one);
 	    }
 	} else {
-//	    if (Version.isCurrentEqualOrHigher(Version.v1_8_R1))
 	    ActionBarTitleMessages.sendRaw(player, combined);
-//	    else
-//		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + combined);
 	}
 
 	return this;

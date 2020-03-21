@@ -398,6 +398,8 @@ public class Residence extends JavaPlugin {
 
 	server.getScheduler().cancelTask(DespawnMobsBukkitId);
 
+	this.getPermissionManager().stopCacheClearScheduler();
+
 	if (getConfigManager().useLeases()) {
 	    server.getScheduler().cancelTask(leaseBukkitId);
 	}
@@ -438,7 +440,7 @@ public class Residence extends JavaPlugin {
     public void onEnable() {
 	try {
 	    instance = this;
-	    	    
+
 	    initsuccess = false;
 	    versionChecker = new VersionChecker(this);
 	    deleteConfirm = new HashMap<String, String>();
@@ -536,6 +538,8 @@ public class Residence extends JavaPlugin {
 	    }
 
 	    gmanager = new PermissionManager(this);
+	    this.getPermissionManager().startCacheClearScheduler();
+
 	    imanager = new WorldItemManager(this);
 	    wmanager = new WorldFlagManager(this);
 

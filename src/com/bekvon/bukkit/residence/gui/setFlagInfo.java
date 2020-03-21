@@ -264,10 +264,10 @@ public class setFlagInfo {
 			break;
 		    }
 
-		    Bukkit.dispatchCommand(player, cmdPrefix + " pset " + residence.getName() + targetPlayerName + " " + Flags.getFlag(one.getKey()) + " " + command);
+		    Bukkit.dispatchCommand(player, cmdPrefix + " pset " + residence.getName() + targetPlayerName + " " + one.getKey() + " " + command);
 		    if (Residence.getInstance().getConfigManager().isConsoleLogsShowFlagChanges())
-			Residence.getInstance().consoleMessage(player.getName() + " issued server command: /" + cmdPrefix + " pset " + residence.getName() + targetPlayerName + " " + Flags.getFlag(one
-			    .getKey()) + " " + command);
+			Residence.getInstance().consoleMessage(player.getName() + " issued server command: /" + cmdPrefix + " pset " + residence.getName() + targetPlayerName + " " + one
+			    .getKey() + " " + command);
 		    updateLooks();
 		}
 
@@ -293,14 +293,14 @@ public class setFlagInfo {
 	ResidencePermissions fp = this.residence.getPermissions();
 
 	if (this.targetPlayer != null) {
-	    if (fp.playerHas(targetPlayer, Flags.getFlag(flagName), FlagCombo.OnlyTrue))
+	    if (fp.playerHas(targetPlayer, flagName, FlagCombo.OnlyTrue))
 		have = true;
-	    else if (fp.playerHas(targetPlayer, Flags.getFlag(flagName), FlagCombo.OnlyFalse))
+	    else if (fp.playerHas(targetPlayer, flagName, FlagCombo.OnlyFalse))
 		have = false;
 	} else {
-	    if (fp.has(Flags.getFlag(flagName), FlagCombo.OnlyTrue))
+	    if (fp.has(flagName, FlagCombo.OnlyTrue))
 		have = true;
-	    else if (fp.has(Flags.getFlag(flagName), FlagCombo.OnlyFalse))
+	    else if (fp.has(flagName, FlagCombo.OnlyFalse))
 		have = false;
 	}
 

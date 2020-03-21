@@ -30,7 +30,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public void addPlayer(ResidencePlayer resPlayer) {
 	if (resPlayer == null)
 	    return;
-	addPlayer(resPlayer.getPlayerName(), resPlayer.getUuid(), resPlayer);
+	addPlayer(resPlayer.getName(), resPlayer.getUniqueId(), resPlayer);
     }
 
     public void addPlayer(Player player, ResidencePlayer resPlayer) {
@@ -47,27 +47,19 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public ResidencePlayer playerJoin(Player player) {
-	return playerJoin(player, true);
-    }
-
-    public ResidencePlayer playerJoin(Player player, boolean recalculate) {
 	ResidencePlayer resPlayer = playersUuid.get(player.getUniqueId());
 	if (resPlayer == null) {
 	    resPlayer = new ResidencePlayer(player);
 	    addPlayer(resPlayer);
 	} else {
 	    resPlayer.updatePlayer(player);
-	    if (recalculate)
-		resPlayer.RecalculatePermissions();
 	}
 	return resPlayer;
     }
 
     public ResidencePlayer playerJoin(UUID uuid) {
 	ResidencePlayer resPlayer = playersUuid.get(uuid);
-	if (resPlayer != null) {
-	    resPlayer.RecalculatePermissions();
-	} else {
+	if (resPlayer == null) {
 	    OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
 	    if (off != null) {
 		resPlayer = new ResidencePlayer(off);
@@ -251,6 +243,10 @@ public class PlayerManager implements ResidencePlayerInterface {
 	return -1;
     }
 
+//    public ResidencePlayer getResidencePlayer(Player player) {
+//	return getResidencePlayer(player, true);
+//    }
+
     public ResidencePlayer getResidencePlayer(Player player) {
 	ResidencePlayer resPlayer = null;
 	if (player == null)
@@ -258,7 +254,6 @@ public class PlayerManager implements ResidencePlayerInterface {
 	resPlayer = playersUuid.get(player.getUniqueId());
 	if (resPlayer != null) {
 	    resPlayer.updatePlayer(player);
-	    resPlayer.RecalculatePermissions();
 	} else {
 	    resPlayer = playerJoin(player);
 	}
@@ -267,35 +262,25 @@ public class PlayerManager implements ResidencePlayerInterface {
 
     @Override
     public ResidencePlayer getResidencePlayer(String player) {
-	return getResidencePlayer(player, false);
-    }
-
-    public ResidencePlayer getResidencePlayer(String player, boolean recalculate) {
 	Player p = Bukkit.getPlayer(player);
 	if (p != null)
 	    return getResidencePlayer(p);
-	ResidencePlayer resPlayer = null;
-	if (players.containsKey(player.toLowerCase())) {
-	    resPlayer = players.get(player.toLowerCase());
-	    if (recalculate || resPlayer.isOnline())
-		resPlayer.RecalculatePermissions();
-	} else {
-	    resPlayer = playerJoin(player);
+	ResidencePlayer rplayer = players.get(player.toLowerCase());
+	if (rplayer != null) {
+	    return rplayer;
 	}
-	return resPlayer;
+	return playerJoin(player);
     }
 
     public ResidencePlayer getResidencePlayer(UUID uuid) {
 	Player p = Bukkit.getPlayer(uuid);
 	if (p != null)
 	    return getResidencePlayer(p);
-	ResidencePlayer resPlayer = null;
-	if (playersUuid.containsKey(uuid)) {
-	    resPlayer = playersUuid.get(uuid);
-	} else {
-	    resPlayer = playerJoin(uuid);
+	ResidencePlayer resPlayer = playersUuid.get(uuid);
+	if (resPlayer != null) {
+	    return resPlayer;
 	}
-	return resPlayer;
+	return playerJoin(uuid);
     }
 
     public ResidencePlayer getResidencePlayer(String name, UUID uuid) {
@@ -305,15 +290,17 @@ public class PlayerManager implements ResidencePlayerInterface {
 	if (p != null) {
 	    return getResidencePlayer(p);
 	}
-	ResidencePlayer resPlayer = null;
-	if (this.playersUuid.containsKey(uuid)) {
-	    resPlayer = this.playersUuid.get(uuid);
-	} else if ((name != null) && (this.players.containsKey(name.toLowerCase()))) {
-	    resPlayer = this.players.get(name.toLowerCase());
-	} else {
-	    resPlayer = playerJoin(name, uuid);
+	ResidencePlayer resPlayer = this.playersUuid.get(uuid);
+	if (resPlayer != null) {
+	    return resPlayer;
 	}
-	return resPlayer;
+
+	if (name != null)
+	    resPlayer = this.players.get(name.toLowerCase());
+	if (resPlayer != null)
+	    return resPlayer;
+
+	return playerJoin(name, uuid);
     }
 
     public void addResidence(UUID uuid, ClaimedResidence residence) {

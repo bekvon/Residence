@@ -431,6 +431,9 @@ public class ResidencePlayerListener implements Listener {
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
 
 	Player player = event.getPlayer();
+	
+	plugin.getPermissionManager().removeFromCache(player);
+	
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 
 	if (res == null)
@@ -447,6 +450,8 @@ public class ResidencePlayerListener implements Listener {
 
 	if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && Version.isCurrentEqualOrHigher(Version.v1_9_R1))
 	    player.setGlowing(false);
+	
+	plugin.getPlayerManager().getResidencePlayer(player).onQuit();
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -875,7 +880,7 @@ public class ResidencePlayerListener implements Listener {
 	}
 	handleNewLocation(player, player.getLocation(), true);
 
-	plugin.getPlayerManager().playerJoin(player, false);
+	plugin.getPlayerManager().playerJoin(player);
 
 	if (ResPerm.versioncheck.hasPermission(player)) {
 	    plugin.getVersionChecker().VersionCheck(player);

@@ -786,7 +786,7 @@ public class ConfigManager {
 	c.addComment("Global.SaveInterval", "The interval, in minutes, between residence saves.");
 	autoSaveInt = c.get("Global.SaveInterval", 10);
 	c.addComment("Global.NewSaveMechanic", "New save mechanic can minimize save file couple times and speedup save/load time in general", "Bigger files have bigger impact");
-	NewSaveMechanic = c.get("Global.NewSaveMechanic", false);
+	NewSaveMechanic = c.get("Global.NewSaveMechanic", true);
 
 	c.addComment("Global.Backup.AutoCleanUp.Use",
 	    "Do you want to automatically remove backup files from main backup folder if they are older than defined day amount");
@@ -875,11 +875,11 @@ public class ConfigManager {
 	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
 	    "Effective way to prevent residence creating near greefing target and then remove it",
 	    "ATTENTION! Bigger residence areas could want to create bigger loads on server when cleaning up areas. So dont use this if regular player have access to huge residences. 15 million blocks would be a max limit");
-	UseClean = c.get("Global.AntiGreef.ResCleaning.Use", true);
+	UseClean = c.get("Global.AntiGreef.ResCleaning.Use", false);
 	c.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
 	CleanLevel = c.get("Global.AntiGreef.ResCleaning.Level", 63);
 	c.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
-	List<?> pls = c.getList("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(CMIMaterial.WATER.toString(), CMIMaterial.LAVA.toString()));
+	List<?> pls = c.get("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(CMIMaterial.WATER.toString(), CMIMaterial.LAVA.toString()));
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
 	    if (mat != CMIMaterial.NONE && mat.getMaterial() != null)

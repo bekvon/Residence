@@ -112,16 +112,16 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     @Deprecated
-    public boolean playerHas(String player, Flags flag, FlagCombo f) {
+    public boolean playerHas(String player, String flag, FlagCombo f) {
 	switch (f) {
 	case FalseOrNone:
-	    return !this.playerHas(player, world, flag.toString(), false);
+	    return !this.playerHas(player, world, flag, false);
 	case OnlyFalse:
-	    return !this.playerHas(player, world, flag.toString(), true);
+	    return !this.playerHas(player, world, flag, true);
 	case OnlyTrue:
-	    return this.playerHas(player, world, flag.toString(), false);
+	    return this.playerHas(player, world, flag, false);
 	case TrueOrNone:
-	    return this.playerHas(player, world, flag.toString(), true);
+	    return this.playerHas(player, world, flag, true);
 	default:
 	    return false;
 	}
@@ -201,7 +201,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean has(Flags flag, boolean def) {
-	return has(flag.toString(), def);
+	return has(flag.toString(), def, true);
     }
 
     @Override
