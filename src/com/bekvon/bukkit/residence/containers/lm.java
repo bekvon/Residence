@@ -496,6 +496,7 @@ public enum lm {
     General_WorldEditNotFound("&cWorldEdit was not detected."),
     General_CoordsTop("&eX:&6%1 &eY:&6%2 &eZ:&6%3"),
     General_CoordsBottom("&eX:&6%1 &eY:&6%2 &eZ:&6%3"),
+    General_CoordsLiner("&7 (&3%1&7;%2&7)"),
     General_AdminToggleTurnOn("&eAutomatic resadmin toggle turned &6On"),
     General_AdminToggleTurnOff("&eAutomatic resadmin toggle turned &6Off"),
     General_NoSpawn("&eYou do not have &6move &epermissions at your spawn point. Relocating"),
