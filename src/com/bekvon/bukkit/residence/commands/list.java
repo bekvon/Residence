@@ -41,8 +41,7 @@ public class list implements cmd {
 	}
 
 	if (target != null && !sender.getName().equalsIgnoreCase(target) && !ResPerm.command_$1_others.hasPermission(sender, this.getClass().getSimpleName()))
-	    return true;
-	
+	    return true;	
 	plugin.getResidenceManager().listResidences(sender, target, page, false, false, resadmin, world);
 
 	return true;
