@@ -33,7 +33,7 @@ public class rt implements cmd {
 	Player tPlayer = null;
 
 	if (args.length > 0) {
-	    c: for (int i = 1; i < args.length; i++) {
+	    c: for (int i = 0; i < args.length; i++) {
 		for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
 		    if (!one.getCenter().getWorld().getName().equalsIgnoreCase(args[i]))
 			continue;
