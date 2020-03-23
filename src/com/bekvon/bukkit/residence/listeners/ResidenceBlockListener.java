@@ -381,26 +381,6 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChestPlace(BlockPlaceEvent event) {
-
-	Long time = System.nanoTime();
-	event.getPlayer().hasPermission("residence.newguyresidence");
-	Debug.D("Bukkit1: " + (System.nanoTime() - time));
-	time = System.nanoTime();	
-	ResPerm.newguyresidence.hasPermission(event.getPlayer(), 100L);	
-	Debug.D("took2: " + (System.nanoTime() - time));
-	time = System.nanoTime();
-	ResPerm.newguyresidence.hasPermission(event.getPlayer(), 100L);
-	Debug.D("took1: " + (System.nanoTime() - time));
-	time = System.nanoTime();
-	ResPerm.newguyresidence.hasPermission(event.getPlayer(), 100L);
-	Debug.D("took11: " + (System.nanoTime() - time));
-	time = System.nanoTime();
-	ResPerm.newguyresidence.hasPermission(event.getPlayer(), 100L);
-	Debug.D("took12: " + (System.nanoTime() - time));
-	time = System.nanoTime();
-	event.getPlayer().hasPermission("residence.newguyresidence");
-	Debug.D("Bukkit2: " + (System.nanoTime() - time));
-	
 	
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))

@@ -705,14 +705,11 @@ public class ResidenceManager implements ResidenceInterface {
 
 	String worldInfo = plugin.msg(lm.General_World, perms.getWorld());
 
-	if (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin) {
-	    worldInfo += "&6 (&3";
+	if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
 	    CuboidArea area = res.getAreaArray()[0];
-	    worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
-	    worldInfo += "&6; &3";
-	    worldInfo += plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
-	    worldInfo += "&6)";
-	    worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
+	    String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
+	    String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+	    worldInfo += ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 	}
 
 	worldInfo += "\n" + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.createTime));
@@ -853,7 +850,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 		try {
 		    resmap.put(res.getValue().getResidenceName(), res.getValue().save());
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + " Failed to save residence (" + res.getKey() + ")!");
 		    Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
 		}

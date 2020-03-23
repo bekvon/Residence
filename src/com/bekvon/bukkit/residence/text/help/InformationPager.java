@@ -107,14 +107,9 @@ public class InformationPager {
 	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
 
 	    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
-
 		CuboidArea area = res.getAreaArray()[0];
-		String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
-		    .getBlockZ());
-
-		String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
-		    .getBlockZ());
-
+		String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
+		String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
 		String worldInfo = ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 		StringB.append("\n" + worldInfo);
 	    }
@@ -144,8 +139,8 @@ public class InformationPager {
 	    String tpFlag = "";
 	    String moveFlag = "";
 	    if (sender instanceof Player && !res.isOwner(sender)) {
-		tpFlag = res.getPermissions().playerHas((Player) sender, Flags.tp, true) ? plugin.msg(lm.General_AllowedTeleportIcon) :  plugin.msg(lm.General_BlockedTeleportIcon);
-		moveFlag = res.getPermissions().playerHas(sender.getName(), Flags.move, true) ? plugin.msg(lm.General_AllowedMovementIcon) : plugin.msg(lm.General_BlockedMovementIcon) ;
+		tpFlag = res.getPermissions().playerHas((Player) sender, Flags.tp, true) ? plugin.msg(lm.General_AllowedTeleportIcon) : plugin.msg(lm.General_BlockedTeleportIcon);
+		moveFlag = res.getPermissions().playerHas(sender.getName(), Flags.move, true) ? plugin.msg(lm.General_AllowedMovementIcon) : plugin.msg(lm.General_BlockedMovementIcon);
 	    }
 
 	    String msg = plugin.msg(lm.Residence_ResList, y + 1, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
@@ -182,18 +177,12 @@ public class InformationPager {
 	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
 	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
-	    String worldInfo = "";
 
 	    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
-		worldInfo += "&6 (&3";
 		CuboidArea area = res.getAreaArray()[0];
-		worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
-		    .getBlockZ());
-		worldInfo += "&6; &3";
-		worldInfo += plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
-		    .getBlockZ());
-		worldInfo += "&6)";
-		worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
+		String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
+		String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+		String worldInfo = ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 		StringB.append("\n" + worldInfo);
 	    }
 
@@ -264,18 +253,12 @@ public class InformationPager {
 		    ClaimedResidence res = resT.getValue();
 		    StringBuilder StringB = new StringBuilder();
 		    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
-		    String worldInfo = "";
 
 		    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
-			worldInfo += "&6 (&3";
 			CuboidArea area = res.getAreaArray()[0];
-			worldInfo += plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc()
-			    .getBlockZ());
-			worldInfo += "&6; &3";
-			worldInfo += plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc()
-			    .getBlockZ());
-			worldInfo += "&6)";
-			worldInfo = ChatColor.translateAlternateColorCodes('&', worldInfo);
+			String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
+			String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+			String worldInfo = ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 			StringB.append("\n" + worldInfo);
 		    }
 
