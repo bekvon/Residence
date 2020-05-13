@@ -337,9 +337,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setPlayerFlag(CommandSender sender, String targetPlayer, String flag, String flagstate, boolean resadmin, boolean Show) {
-
 	if (Residence.getInstance().getPlayerUUID(targetPlayer) == null) {
-	    sender.sendMessage("no player by this name");
+	    sender.sendMessage("No player by this name");
 	    return false;
 	}
 

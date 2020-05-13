@@ -29,19 +29,20 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
 
     protected static ArrayList<String> validFlags = new ArrayList<>();
     protected static ArrayList<String> validPlayerFlags = new ArrayList<>();
     protected static ArrayList<String> validAreaFlags = new ArrayList<>();
+    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<>();
     final static Map<Material, Flags> matUseFlagList = new EnumMap<>(Material.class);
     protected Map<UUID, String> cachedPlayerNameUUIDs = new ConcurrentHashMap<UUID, String>();
     protected Map<String, Map<String, Boolean>> playerFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
     protected Map<String, Map<String, Boolean>> groupFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
     protected Map<String, Boolean> cuboidFlags = new ConcurrentHashMap<String, Boolean>();
     protected FlagPermissions parent;
-    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<>();
 
     public FlagPermissions() {
 	cuboidFlags = new ConcurrentHashMap<String, Boolean>();
@@ -292,22 +293,34 @@ public class FlagPermissions {
     }
 
     protected Map<String, Boolean> getPlayerFlags(Player player, boolean allowCreate) {
-	if (player == null)
-	    return new HashMap<String, Boolean>();
 
-	UUID uuid = player.getUniqueId();
-	Map<String, Boolean> flags = playerFlags.get(uuid.toString());
-	if (flags == null) {
-	    flags = playerFlags.get(player.getName());
-	    if (flags != null) {
-		flags = playerFlags.remove(player.getName());
+	Map<String, Boolean> flags = null;
+
+	if (!Residence.getInstance().getConfigManager().isOfflineMode()) {
+	    UUID uuid = player.getUniqueId();
+	    flags = playerFlags.get(uuid.toString());
+
+	    if (flags == null && allowCreate) {
+		flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
 		playerFlags.put(uuid.toString(), flags);
+		cachedPlayerNameUUIDs.put(uuid, player.getName());
 	    }
-	}
-
-	if (flags == null && allowCreate) {
-	    flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
-	    playerFlags.put(uuid.toString(), flags);
+	} else {
+	    for (Entry<String, Map<String, Boolean>> one : playerFlags.entrySet()) {
+		if (!one.getKey().equalsIgnoreCase(player.getName()))
+		    continue;
+		// Updating players name to correct capitalization
+		if (!one.getKey().equals(player.getName())) {
+		    Map<String, Boolean> r = playerFlags.remove(one.getKey());
+		    playerFlags.put(player.getName(), r);
+		}
+		flags = one.getValue();
+		break;
+	    }
+	    if (flags == null && allowCreate) {
+		flags = Collections.synchronizedMap(new HashMap<String, Boolean>());
+		playerFlags.put(player.getName(), flags);
+	    }
 	}
 	return flags;
     }
@@ -386,6 +399,7 @@ public class FlagPermissions {
     }
 
     public boolean setPlayerFlag(String player, String flag, FlagState state) {
+
 	Map<String, Boolean> map = this.getPlayerFlags(player, state != FlagState.NEITHER);
 	if (map == null)
 	    return true;
@@ -733,13 +747,20 @@ public class FlagPermissions {
 		    Map<String, Boolean> ft = new HashMap<String, Boolean>();
 		    for (Entry<String, Integer> one : ((HashMap<String, Integer>) root.get("PlayerFlags")).entrySet()) {
 			ft = Residence.getInstance().getResidenceManager().getChacheFlags(((ResidencePermissions) newperms).getWorld(), one.getValue());
-			if (ft != null && !ft.isEmpty())
-			    t.put(one.getKey(), new HashMap<String, Boolean>(ft));
+			if (ft != null && !ft.isEmpty()) {
+			    if (Residence.getInstance().getConfigManager().isOfflineMode() && one.getKey().length() == 36) {
+				String name = Residence.getInstance().getPlayerName(UUID.fromString(one.getKey()));
+				if (name != null)
+				    t.put(name, new HashMap<String, Boolean>(ft));
+				else
+				    t.put(one.getKey(), new HashMap<String, Boolean>(ft));
+			    } else
+				t.put(one.getKey(), new HashMap<String, Boolean>(ft));
+			}
 		    }
 		    if (!t.isEmpty())
 			newperms.playerFlags = t;
 		}
-
 	    }
 	}
 
