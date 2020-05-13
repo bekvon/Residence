@@ -182,7 +182,7 @@ public class setFlagInfo {
 	    buttons.add(button);
 	    i++;
 	}
-	description.clear();
+
     }
 
     private void recalculatePlayer() {
@@ -284,7 +284,7 @@ public class setFlagInfo {
 	    button.hideItemFlags();
 	    buttons.add(button);
 	}
-	description.clear();
+
     }
 
     private ItemStack updateLook(String flagName) {
@@ -351,6 +351,7 @@ public class setFlagInfo {
 	    break;
 	}
 	lore.add(Residence.getInstance().msg(lm.General_FlagState, variable));
+		    
 	if (description.containsKey(flag))
 	    lore.addAll(description.get(flag));
 	lore.addAll(Residence.getInstance().msgL(lm.Gui_Actions));
