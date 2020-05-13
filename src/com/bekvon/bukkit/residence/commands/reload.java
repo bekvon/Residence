@@ -31,9 +31,10 @@ public class reload implements cmd {
 	case "lang":
 	    plugin.getLM().LanguageReload();
 	    plugin.getLocaleManager().LoadLang(plugin.getConfigManager().getLanguage());
+	    plugin.parseHelpEntries();
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded language file.");
 	    return true;
-	case "config":
+	case "config":	    
 	    plugin.getConfigManager().UpdateConfigFile();
 	    sender.sendMessage(plugin.getPrefix() + " Reloaded config file.");
 	    return true;

@@ -64,7 +64,7 @@ public class LocaleManager {
 
     // Language file
     public void LoadLang(String lang) {
-
+Debug.D("loaging langs");
 	File f = new File(plugin.getDataFolder(), "Language" + File.separator + lang + ".yml");
 	if (!f.isFile())
 	    try {

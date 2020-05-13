@@ -177,7 +177,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 		    continue;
 		CommandAnnotation cs = met.getAnnotation(CommandAnnotation.class);
 
-		varCheck : if (sender instanceof Player) {
+		varCheck: if (sender instanceof Player) {
 		    int[] regVar = cs.regVar();
 		    List<Integer> list = new ArrayList<Integer>();
 		    boolean more = true;
@@ -190,7 +190,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 		    int size = targ.length;
 
 		    boolean good = true;
-		    
+
 		    if (list.isEmpty())
 			break varCheck;
 
@@ -235,7 +235,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 
 		    if (list.isEmpty())
 			break varCheck;
-		    
+
 		    if (list.contains(666) || list.contains(-666)) {
 			plugin.msg(sender, lm.Invalid_Ingame);
 			return false;
@@ -265,7 +265,7 @@ public class ResidenceCommandListener implements CommandExecutor {
 	    }
 
 	    Boolean respond = cmdClass.perform(Residence.getInstance(), sender, targ, resadmin);
-	    
+
 	    if (respond != null && !respond) {
 		String[] tempArray = new String[args.length + 1];
 		for (int i = 0; i < args.length; i++) {

@@ -566,52 +566,7 @@ public class Residence extends JavaPlugin {
 
 	    this.getConfigManager().copyOverTranslations();
 
-	    try {
-		File langFile = new File(new File(dataFolder, "Language"), getConfigManager().getLanguage() + ".yml");
-
-		BufferedReader in = null;
-		try {
-		    in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
-		} catch (UnsupportedEncodingException e1) {
-		    e1.printStackTrace();
-		} catch (FileNotFoundException e1) {
-		    e1.printStackTrace();
-		}
-
-		if (langFile.isFile()) {
-		    FileConfiguration langconfig = new YamlConfiguration();
-		    langconfig.load(in);
-		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
-		} else {
-		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Language file does not exist...");
-		}
-		if (in != null)
-		    in.close();
-	    } catch (Exception ex) {
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Failed to load language file: " + getConfigManager().getLanguage()
-		    + ".yml setting to default - English");
-
-		File langFile = new File(new File(dataFolder, "Language"), "English.yml");
-
-		BufferedReader in = null;
-		try {
-		    in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
-		} catch (UnsupportedEncodingException e1) {
-		    e1.printStackTrace();
-		} catch (FileNotFoundException e1) {
-		    e1.printStackTrace();
-		}
-
-		if (langFile.isFile()) {
-		    FileConfiguration langconfig = new YamlConfiguration();
-		    langconfig.load(in);
-		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
-		} else {
-		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Language file does not exist...");
-		}
-		if (in != null)
-		    in.close();
-	    }
+	    parseHelpEntries();
 
 	    economy = null;
 	    if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
@@ -865,6 +820,65 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().LoadSigns();
 	getShopSignUtilManager().BoardUpdate();
 	getVersionChecker().VersionCheck(null);
+    }
+
+    public void parseHelpEntries() {
+
+	try {
+	    File langFile = new File(new File(dataFolder, "Language"), getConfigManager().getLanguage() + ".yml");
+
+	    BufferedReader in = null;
+	    try {
+		in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
+	    } catch (UnsupportedEncodingException e1) {
+		e1.printStackTrace();
+	    } catch (FileNotFoundException e1) {
+		e1.printStackTrace();
+	    }
+
+	    if (langFile.isFile()) {
+		FileConfiguration langconfig = new YamlConfiguration();
+		langconfig.load(in);
+		helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
+	    } else {
+		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Language file does not exist...");
+	    }
+	    if (in != null)
+		in.close();
+	} catch (Exception ex) {
+	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Failed to load language file: " + getConfigManager().getLanguage()
+		+ ".yml setting to default - English");
+
+	    File langFile = new File(new File(dataFolder, "Language"), "English.yml");
+
+	    BufferedReader in = null;
+	    try {
+		in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
+	    } catch (UnsupportedEncodingException e1) {
+		e1.printStackTrace();
+	    } catch (FileNotFoundException e1) {
+		e1.printStackTrace();
+	    }
+
+	    try {
+		if (langFile.isFile()) {
+		    FileConfiguration langconfig = new YamlConfiguration();
+		    langconfig.load(in);
+		    helppages = HelpEntry.parseHelp(langconfig, "CommandHelp");
+		} else {
+		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Language file does not exist...");
+		}
+	    } catch (Throwable e) {
+
+	    } finally {
+		if (in != null)
+		    try {
+			in.close();
+		    } catch (IOException e) {
+			e.printStackTrace();
+		    }
+	    }
+	}
     }
 
     private boolean setupPlaceHolderAPI() {
