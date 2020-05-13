@@ -53,7 +53,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     @Override
     public boolean playerHas(Player player, Flags flag, boolean def) {
-	return playerHas(player, player.getWorld().getName(), flag, def);
+	return playerHas(player, world, flag, def);
     }
 
     @Deprecated
