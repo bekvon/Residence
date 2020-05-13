@@ -760,16 +760,17 @@ public class ConfigManager {
 		    RTeleport.add(new RandomTeleport(w, MaxCoord, MinCoord, CenterX, CenterZ));
 		}
 	}
+
 	for (World one : worlds) {
 	    String name = one.getName();
 	    name = name.replace(".", "_");
 
 	    String path = "Global.RandomTeleportation.Worlds." + name + ".";
-	    boolean enabled = c.get("Enabled", true);
-	    int MaxCoord = c.get("MaxCoord", 1000);
-	    int MinCoord = c.get("MinCoord", c.getC().getInt(path + "MinCord", 500));
-	    int CenterX = c.get("CenterX", 0);
-	    int CenterZ = c.get("CenterZ", 0);
+	    boolean enabled = c.get(path + "Enabled", true);
+	    int MaxCoord = c.get(path + "MaxCoord", 1000);
+	    int MinCoord = c.get(path + "MinCoord", c.getC().getInt(path + "MinCord", 500));
+	    int CenterX = c.get(path + "CenterX", 0);
+	    int CenterZ = c.get(path + "CenterZ", 0);
 
 	    if (!enabled)
 		continue;
@@ -1249,7 +1250,7 @@ public class ConfigManager {
 	DynMapHiddenRegions = c.get("DynMap.HiddenRegions", new ArrayList<String>());
 
 	c.addComment("Raid", "In development");
-	
+
 	c.addComment("Raid.Enabled", "Determines if you want to enable raid feature for your server",
 	    "When residence is under raid, attackers can move inside residence even if residence has move false flag");
 	RaidEnabled = c.get("Raid.Enabled", false);
@@ -1257,7 +1258,7 @@ public class ConfigManager {
 	PreRaidTimer = c.get("Raid.PreTimer", 120);
 	c.addComment("Raid.Timer", "Time in seconds raid should be", "During this time attackers can steal and kill defenders");
 	RaidTimer = c.get("Raid.Timer", 120);
-	c.addComment("Raid.Cooldown", "Time in seconds residence is immune for next raid","Default is 79200 seconds which results into 22 hours, this might reset if you have server restart");
+	c.addComment("Raid.Cooldown", "Time in seconds residence is immune for next raid", "Default is 79200 seconds which results into 22 hours, this might reset if you have server restart");
 	RaidCooldown = c.get("Raid.Cooldown", 79200);
 	c.addComment("Raid.PlayerCooldown", "Time in seconds player is immune for next raid", "In case player has more than one residence, this can prevent player from being attacked again",
 	    "Default is 79200 seconds which results into 22 hours, this might reset if you have server restart");
