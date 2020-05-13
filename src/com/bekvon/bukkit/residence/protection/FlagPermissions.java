@@ -408,9 +408,7 @@ public class FlagPermissions {
 	} else if (state == FlagState.TRUE) {
 	    map.put(flag, true);
 	} else if (state == FlagState.NEITHER) {
-	    if (map.containsKey(flag)) {
-		map.remove(flag);
-	    }
+		map.remove(flag);	    
 	}
 	if (map.isEmpty())
 	    this.removeAllPlayerFlags(player);
@@ -453,9 +451,7 @@ public class FlagPermissions {
 	} else if (state == FlagState.TRUE) {
 	    map.put(flag, true);
 	} else if (state == FlagState.NEITHER) {
-	    if (map.containsKey(flag)) {
-		map.remove(flag);
-	    }
+		map.remove(flag);	    
 	}
 	if (map.isEmpty()) {
 	    groupFlags.remove(group);
@@ -469,9 +465,7 @@ public class FlagPermissions {
 	} else if (state == FlagState.TRUE) {
 	    cuboidFlags.put(flag, true);
 	} else if (state == FlagState.NEITHER) {
-	    if (cuboidFlags.containsKey(flag)) {
-		cuboidFlags.remove(flag);
-	    }
+	    cuboidFlags.remove(flag);
 	}
 	return true;
     }

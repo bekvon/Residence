@@ -2,8 +2,8 @@ package com.bekvon.bukkit.residence.shopStuff;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -158,7 +158,7 @@ public class ShopListener implements Listener {
 
 	event.setCancelled(true);
 
-	plugin.msg(event.getPlayer(), ChatColor.YELLOW + "Can't change while shop flag is set to true");
+	plugin.msg(event.getPlayer(), lm.Shop_ChantChange);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

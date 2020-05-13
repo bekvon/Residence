@@ -403,6 +403,7 @@ public enum lm {
     Shop_NoDesc("&6No description"),
     Shop_Desc("&6Description:\n%1"),
     Shop_DescChange("&6Description changed to: %1"),
+    Shop_ChantChange("&4Can't change while shop flag is set to true"),
     Shop_NewBoard("&6Successfully added new shop sign board"),
     Shop_BoardExist("&cShop board already exists in this location"),
     Shop_DeleteBoard("&6Right click sign of board you want to delete"),
