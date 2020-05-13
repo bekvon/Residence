@@ -3,14 +3,18 @@ package com.bekvon.bukkit.residence.listeners;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
@@ -36,6 +40,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -45,6 +50,8 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -68,6 +75,8 @@ public class ResidenceEntityListener implements Listener {
     public ResidenceEntityListener(Residence plugin) {
 	this.plugin = plugin;
     }
+
+    private final static String CrossbowShooter = "CrossbowShooter";
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEndermanChangeBlock(EntityChangeBlockEvent event) {
@@ -1152,7 +1161,7 @@ public class ResidenceEntityListener implements Listener {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
 	    return;
-	
+
 	if (!damageableProjectile(event.getDamager()))
 	    return;
 
@@ -1314,6 +1323,22 @@ public class ResidenceEntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityShootBowEvent(EntityShootBowEvent event) {
+
+	if (Version.isCurrentEqualOrLower(Version.v1_14_R1))
+	    return;
+
+	if (event.getBow().getType() != Material.CROSSBOW)
+	    return;
+
+	if (!(event.getEntity() instanceof Player))
+	    return;
+
+	if (event.getProjectile().getType() == EntityType.FIREWORK)
+	    event.getProjectile().setMetadata(CrossbowShooter, new FixedMetadataValue(plugin, event.getEntity().getUniqueId()));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getEntity().getWorld()))
@@ -1352,9 +1377,11 @@ public class ResidenceEntityListener implements Listener {
 	    if (srcarea != null) {
 		srcpvp = srcarea.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone);
 	    }
+
 	    ent = attackevent.getEntity();
 	    if ((ent instanceof Player || tamedAnimal) && (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager)
-		.getShooter() instanceof Player))) && event.getCause() != DamageCause.FALL) {
+		.getShooter() instanceof Player))) && event.getCause() != DamageCause.FALL || damager instanceof Firework) {
+
 		Player attacker = null;
 		if (damager instanceof Player) {
 		    attacker = (Player) damager;
@@ -1368,6 +1395,15 @@ public class ResidenceEntityListener implements Listener {
 			isOnFire = true;
 
 		    attacker = (Player) ((Projectile) damager).getShooter();
+		} else if (damager instanceof Firework) {
+		    List<MetadataValue> meta = damager.getMetadata(CrossbowShooter);
+		    if (meta != null && !meta.isEmpty()) {
+			try {
+			    String uid = meta.get(0).asString();
+			    attacker = Bukkit.getPlayer(UUID.fromString(uid));
+			} catch (Throwable e) {
+			}
+		    }
 		}
 
 		if (!(ent instanceof Player))
@@ -1377,11 +1413,11 @@ public class ResidenceEntityListener implements Listener {
 		    && !ConfigManager.RaidFriendlyFire) {
 		    event.setCancelled(true);
 		}
-		
+
 		if (srcarea != null && area != null && srcarea.equals(area) && attacker != null && area.isUnderRaid() && !area.getRaid().onSameTeam(attacker, (Player) ent)) {
 		    return;
 		}
-		
+
 		if (srcarea != null && area != null && srcarea.equals(area) && attacker != null &&
 		    srcarea.getPermissions().playerHas((Player) ent, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
 		    srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
