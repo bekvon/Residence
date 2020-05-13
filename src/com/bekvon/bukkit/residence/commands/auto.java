@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -123,7 +124,11 @@ public class auto implements cmd {
 	    }
 	}
 
+	if (resName == null)
+	    resName = sender.getName() + (new Random().nextInt(10000));
+
 	player.performCommand((resadmin ? "resadmin" : "res") + " create " + resName);
+
 	return true;
     }
 

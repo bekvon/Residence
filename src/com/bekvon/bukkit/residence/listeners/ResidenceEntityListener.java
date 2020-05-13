@@ -147,7 +147,7 @@ public class ResidenceEntityListener implements Listener {
 
 	if (event.getCause() == DamageCause.LIGHTNING || event.getCause() == DamageCause.FIRE_TICK) {
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(entity.getLocation());
-	    if (res.getPermissions().has(Flags.animalkilling, FlagCombo.OnlyFalse)) {
+	    if (res != null && res.getPermissions().has(Flags.animalkilling, FlagCombo.OnlyFalse)) {
 		event.setCancelled(true);
 	    }
 	    return;
