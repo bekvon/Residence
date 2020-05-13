@@ -21,7 +21,7 @@ public class listall implements cmd {
 	int page = 1;
 	World world = null;
 
-	c: for (int i = 1; i < args.length; i++) {
+	c: for (int i = 0; i < args.length; i++) {
 	    try {
 		page = Integer.parseInt(args[i]);
 		if (page < 1)
