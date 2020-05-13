@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,7 +29,6 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
 
@@ -36,18 +36,18 @@ public class FlagPermissions {
     protected static ArrayList<String> validPlayerFlags = new ArrayList<>();
     protected static ArrayList<String> validAreaFlags = new ArrayList<>();
     final static Map<Material, Flags> matUseFlagList = new EnumMap<>(Material.class);
-    protected Map<UUID, String> cachedPlayerNameUUIDs = new HashMap<UUID, String>();
-    protected Map<String, Map<String, Boolean>> playerFlags = new HashMap<String, Map<String, Boolean>>();
-    protected Map<String, Map<String, Boolean>> groupFlags = new HashMap<String, Map<String, Boolean>>();
-    protected Map<String, Boolean> cuboidFlags = new HashMap<String, Boolean>();
+    protected Map<UUID, String> cachedPlayerNameUUIDs = new ConcurrentHashMap<UUID, String>();
+    protected Map<String, Map<String, Boolean>> playerFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
+    protected Map<String, Map<String, Boolean>> groupFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
+    protected Map<String, Boolean> cuboidFlags = new ConcurrentHashMap<String, Boolean>();
     protected FlagPermissions parent;
     protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<>();
 
     public FlagPermissions() {
-	cuboidFlags = Collections.synchronizedMap(new HashMap<String, Boolean>());
-	playerFlags = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
-	groupFlags = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
-	cachedPlayerNameUUIDs = Collections.synchronizedMap(new HashMap<UUID, String>());
+	cuboidFlags = new ConcurrentHashMap<String, Boolean>();
+	playerFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
+	groupFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
+	cachedPlayerNameUUIDs = new ConcurrentHashMap<UUID, String>();
     }
 
     public static enum FlagCombo {
@@ -56,6 +56,7 @@ public class FlagPermissions {
 
     public static enum FlagState {
 	TRUE, FALSE, NEITHER, INVALID;
+
 	public String getName() {
 	    return name().toLowerCase();
 	}
@@ -291,7 +292,7 @@ public class FlagPermissions {
     }
 
     protected Map<String, Boolean> getPlayerFlags(Player player, boolean allowCreate) {
-	if(player == null)
+	if (player == null)
 	    return new HashMap<String, Boolean>();
 
 	UUID uuid = player.getUniqueId();

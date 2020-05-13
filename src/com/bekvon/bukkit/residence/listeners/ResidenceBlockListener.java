@@ -234,7 +234,7 @@ public class ResidenceBlockListener implements Listener {
 	}
 
 	if (!hasdestroy
-//	    && !ResPerm.bypass_destroy.hasPermission(player, 10000L)
+	    && !ResPerm.bypass_destroy.hasPermission(player, 10000L)
 	) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
@@ -647,7 +647,7 @@ public class ResidenceBlockListener implements Listener {
 	}
 
 	if (!hasplace
-//	    && !ResPerm.bypass_build.hasPermission(player, 10000L)
+	    && !ResPerm.bypass_build.hasPermission(player, 10000L)
 	) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
@@ -661,7 +661,7 @@ public class ResidenceBlockListener implements Listener {
 		perms = plugin.getPermsByLocForPlayer(sec.getLocation(), player);
 		hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
 		if (!hasplace
-//		    && !ResPerm.bypass_build.hasPermission(player, 10000L)
+		    && !ResPerm.bypass_build.hasPermission(player, 10000L)
 		) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.place);
