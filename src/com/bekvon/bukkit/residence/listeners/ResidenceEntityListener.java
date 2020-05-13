@@ -128,11 +128,11 @@ public class ResidenceEntityListener implements Listener {
 		}
 	    }
 	}
-	return ent instanceof Arrow || ent instanceof Projectile && (ent.getType().toString().equalsIgnoreCase("Trident"));
+	return ent instanceof Arrow || ent.getType().toString().equalsIgnoreCase("Trident") || ent.getType().toString().equalsIgnoreCase("Spectral_Arrow");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void AnimalKilling(EntityDamageByEntityEvent event) {
+    public void AnimalKilling(EntityDamageEvent event) {
 	// Disabling listener if flag disabled globally
 	if (!Flags.animalkilling.isGlobalyEnabled())
 	    return;
@@ -145,12 +145,26 @@ public class ResidenceEntityListener implements Listener {
 	if (!plugin.getNms().isAnimal(entity))
 	    return;
 
-	Entity damager = event.getDamager();
+	if (event.getCause() == DamageCause.LIGHTNING || event.getCause() == DamageCause.FIRE_TICK) {
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(entity.getLocation());
+	    if (res.getPermissions().has(Flags.animalkilling, FlagCombo.OnlyFalse)) {
+		event.setCancelled(true);
+	    }
+	    return;
+	}
 
-	if (!damageableProjectile(damager) && !(damager instanceof Player))
+	if (!(event instanceof EntityDamageByEntityEvent))
 	    return;
 
-	if (damageableProjectile(damager) && !(((Projectile) damager).getShooter() instanceof Player))
+	EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
+	Entity damager = attackevent.getDamager();
+
+	boolean damageable = damageableProjectile(damager);
+
+	if (!damageable && !(damager instanceof Player))
+	    return;
+
+	if (damageable && !(((Projectile) damager).getShooter() instanceof Player))
 	    return;
 
 	Player cause = null;
@@ -174,8 +188,9 @@ public class ResidenceEntityListener implements Listener {
 
 	if (res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
 	    plugin.msg(cause, lm.Residence_FlagDeny, Flags.animalkilling, res.getName());
-	    event.setCancelled(true);
+	    attackevent.setCancelled(true);
 	}
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
