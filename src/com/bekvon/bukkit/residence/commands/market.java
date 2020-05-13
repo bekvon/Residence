@@ -138,7 +138,7 @@ public class market implements cmd {
 		return true;
 	    }
 
-	    res = plugin.getResidenceManager().getByName(args[2]);
+	    res = plugin.getResidenceManager().getByName(args[1]);
 
 	    if (res == null) {
 		plugin.msg(player, lm.Invalid_Residence);
