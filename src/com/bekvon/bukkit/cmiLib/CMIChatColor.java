@@ -64,7 +64,7 @@ public enum CMIChatColor {
     public static String deColorize(String text) {
 	if (text == null)
 	    return null;
-	return text.replace("ง", "&");
+	return text.replace("ยง", "&");
     }
 
     public static String stripColor(String text) {
@@ -86,7 +86,7 @@ public enum CMIChatColor {
     }
 
     public String getBukkitColorCode() {
-	return "ง" + c;
+	return "ยง" + c;
     }
 
     public char getChar() {

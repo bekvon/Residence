@@ -18,27 +18,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
-import com.bekvon.bukkit.residence.commands.version;
 import com.bekvon.bukkit.residence.utils.Debug;
 
 public class RawMessage {
 
-    List<String> parts = new ArrayList<String>();
-    List<String> cleanParts = new ArrayList<String>();
-    String colorReplacerPlaceholder = "%#%";
+    private List<String> parts = new ArrayList<>();
+    private List<String> cleanParts = new ArrayList<>();
+    private String colorReplacerPlaceholder = "%#%";
 
     private String unfinished = "";
     private String unfinishedClean = "";
 
     private String combined = "";
-    String combinedClean = "";
+    private String combinedClean = "";
     private boolean dontBreakLine = false;
 
 //    private boolean colorizeEntireWithLast = true;
 
     public void clear() {
-	parts = new ArrayList<String>();
-	cleanParts = new ArrayList<String>();
+	parts = new ArrayList<>();
+	cleanParts = new ArrayList<>();
 	combined = "";
 	combinedClean = "";
     }
@@ -72,34 +71,33 @@ public class RawMessage {
 	return add(text, hoverText, command, suggestion, null);
     }
 
-    Set<CMIChatColor> formats = new HashSet<CMIChatColor>();
-    CMIChatColor lastColor = null;
+    private Set<CMIChatColor> formats = new HashSet<>();
+    private CMIChatColor lastColor = null;
 
-    Set<CMIChatColor> savedFormats = new HashSet<CMIChatColor>();
-    CMIChatColor savedLastColor = null;
+    private Set<CMIChatColor> savedFormats = new HashSet<>();
+    private CMIChatColor savedLastColor = null;
 
-    CMIChatColor firstBlockColor = null;
+    private CMIChatColor firstBlockColor = null;
 
     private String makeMessyText(String text) {
 	if (text.equalsIgnoreCase(" "))
 	    return text;
 	text = CMIChatColor.deColorize(text);
 	List<String> splited = new ArrayList<String>();
-
 	if (text.contains(" ")) {
 	    for (String one : text.split(" ")) {
-// 		if (this.isBreakLine() && one.contains("\\n")) {
-// 		    String[] split = one.split("\\\\n");
-// 		    for (int i = 0; i < split.length; i++) {
-// 			if (i < split.length - 1) {
-// 			    splited.add(split[i] + "\n");
-// 			} else {
-// 			    splited.add(split[i]);
-// 			}
-// 		    }
-// 		} else {
+//		if (this.isBreakLine() && one.contains("\\n")) {
+//		    String[] split = one.split("\\\\n");
+//		    for (int i = 0; i < split.length; i++) {
+//			if (i < split.length - 1) {
+//			    splited.add(split[i] + "\n");
+//			} else {
+//			    splited.add(split[i]);
+//			}
+//		    }
+//		} else {
 		splited.add(one);
-// 		}
+//		}
 		splited.add(" ");
 	    }
 	    if (text.length() > 1 && text.endsWith(" "))
@@ -126,9 +124,10 @@ public class RawMessage {
 	    }
 
 	    if (one.contains("&")) {
-		Pattern pattern = Pattern.compile("(&[0123456789abcdefklmnor])");
+		Pattern pattern = Pattern.compile("(&[0123456789abcdefklmnorABCDEFKLMNOR])");
 		Matcher match = pattern.matcher(one);
 		while (match.find()) {
+
 		    String color = CMIChatColor.getLastColors(match.group(0));
 		    CMIChatColor c = CMIChatColor.getColor(color);
 		    if (c != null) {
@@ -137,7 +136,7 @@ public class RawMessage {
 			} else if (c.isReset()) {
 			    formats.clear();
 			    lastColor = null;
-			    firstBlockColor = null;
+//			    firstBlockColor = null;
 			} else if (c.isColor()) {
 			    lastColor = c;
 			    formats.clear();
@@ -160,6 +159,7 @@ public class RawMessage {
 
 	    newText += colorString + one;
 	}
+
 	return newText;
     }
 
@@ -257,13 +257,13 @@ public class RawMessage {
     }
 
     public RawMessage add(String text, String hoverText, String command, String suggestion, String url) {
+	
 	if (text == null)
 	    return this;
 	text = provessText(text);
 
-	if (dontBreakLine) {
+	if (dontBreakLine)
 	    text = text.replace("\\\\\\n", "\\\\n");
-	}
 
 	String f = "{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', makeMessyText(text)).replace(colorReplacerPlaceholder, "&") + "\"";
 
@@ -282,7 +282,8 @@ public class RawMessage {
 	    suggestion = suggestion.replace(" \\n", " \\\\n");
 	    suggestion = suggestion.replace(" \n", " \\\\n");
 
-	    f += ",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + CMIChatColor.deColorize(suggestion) + "\"}";
+	    if (suggestion != null)
+		f += ",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + CMIChatColor.deColorize(suggestion) + "\"}";
 	}
 	if (url != null) {
 	    url = provessText(url);
@@ -357,7 +358,7 @@ public class RawMessage {
 
 	CMIItemStack cm = ItemManager.getItem(item);
 
-	String ItemDisplayName = "&r&f" + cm.getDisplayName();
+	String ItemName = "&r&f" + cm.getDisplayName();
 	String Enchants = getItemEnchants(item);
 
 	if (!Enchants.isEmpty()) {
@@ -368,7 +369,7 @@ public class RawMessage {
 	    }
 	}
 
-	List<String> Lore = new ArrayList<String>();
+	List<String> Lore = new ArrayList<>();
 
 //	if (CMIMaterial.isShulkerBox(item.getType())) {
 //	    List<ItemStack> items = CMI.getInstance().getShulkerBoxManager().getShulkerBoxContents(item);
@@ -394,7 +395,7 @@ public class RawMessage {
 
 	if (itemName.equalsIgnoreCase("Air")) {
 	    itemName = "Stone";
-	    ItemDisplayName = "Hand";
+	    ItemName = "Hand";
 	}
 
 	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
@@ -405,7 +406,7 @@ public class RawMessage {
 	if (!Lore.isEmpty()) {
 	    loreS = ",Lore:[" + loreS + "]";
 	}
-	f += ",\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:" + itemName + ",Count:1b,tag:{display:{Name:\\\"" + CMIChatColor.translateAlternateColorCodes(ItemDisplayName) + "\\\"" + loreS
+	f += ",\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:" + itemName + ",Count:1b,tag:{display:{Name:\\\"" + CMIChatColor.translateAlternateColorCodes(ItemName) + "\\\"" + loreS
 	    + "}"
 	    + Enchants + "}}\"}";
 
@@ -458,7 +459,7 @@ public class RawMessage {
     }
 
     public List<String> softCombine() {
-	List<String> ls = new ArrayList<String>();
+	List<String> ls = new ArrayList<>();
 	String f = "";
 	for (String part : parts) {
 	    if (f.isEmpty())
@@ -520,10 +521,10 @@ public class RawMessage {
 	    for (String one : softCombine()) {
 		if (one.isEmpty())
 		    continue;
-		ActionBarTitleMessages.sendRaw(player, one);
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + one);
 	    }
 	} else {
-	    ActionBarTitleMessages.sendRaw(player, combined);
+	    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + combined);
 	}
 
 	return this;

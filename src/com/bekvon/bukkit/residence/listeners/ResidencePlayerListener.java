@@ -1321,7 +1321,6 @@ public class ResidencePlayerListener implements Listener {
 				break;
 			    }
 			    event.setCancelled(true);
-//			    Debug.D("took: " + (System.nanoTime() - nano));
 			    plugin.msg(player, lm.Flag_Deny, result);
 			    return;
 			}

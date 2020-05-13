@@ -908,7 +908,7 @@ public class RentManager implements MarketRentInterface {
 		res.getOwner(), rentedBy);
 
 	    RawMessage rm = new RawMessage();
-	    rm.add(msg, "§2" + hover);
+	    rm.add(msg, "&2" + hover);
 
 	    if (!hover.equalsIgnoreCase("")) {
 		rm.show(player);
