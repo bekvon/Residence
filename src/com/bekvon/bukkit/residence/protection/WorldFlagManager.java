@@ -1,8 +1,5 @@
 package com.bekvon.bukkit.residence.protection;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.containers.ResidencePlayer;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +13,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 
 public class WorldFlagManager {
     protected Map<String, Map<String, FlagPermissions>> groupperms;
@@ -72,13 +72,15 @@ public class WorldFlagManager {
 	    FileConfiguration flags = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "flags.yml"));
 	    FileConfiguration groups = YamlConfiguration.loadConfiguration(new File(plugin.dataFolder, "groups.yml"));
 
-	    Set<String> keys = flags.getConfigurationSection("Global.Flags").getKeys(false);
-	    if (keys != null) {
-		for (String key : keys) {
-		    if (key.equalsIgnoreCase("Global")) {
-			globaldefaults = FlagPermissions.parseFromConfigNode(key, flags.getConfigurationSection("Global.Flags"));
-		    } else {
-			worldperms.put(key.toLowerCase(), FlagPermissions.parseFromConfigNode(key, flags.getConfigurationSection("Global.Flags")));
+	    if (flags.isConfigurationSection("Global.Flags")) {
+		Set<String> keys = flags.getConfigurationSection("Global.Flags").getKeys(false);
+		if (keys != null) {
+		    for (String key : keys) {
+			if (key.equalsIgnoreCase("Global")) {
+			    globaldefaults = FlagPermissions.parseFromConfigNode(key, flags.getConfigurationSection("Global.Flags"));
+			} else {
+			    worldperms.put(key.toLowerCase(), FlagPermissions.parseFromConfigNode(key, flags.getConfigurationSection("Global.Flags")));
+			}
 		    }
 		}
 	    }
@@ -91,50 +93,52 @@ public class WorldFlagManager {
 		return;
 	    }
 
-	    keys = groups.getConfigurationSection("Groups").getKeys(false);
-	    if (keys != null) {
-		for (String key : keys) {
-		    if (!groups.contains("Groups." + key + ".Flags"))
-			continue;
-		    if (!groups.contains("Groups." + key + ".Flags.World"))
-			continue;
-		    if (key == null)
-			continue;
-		    Set<String> worldkeys = groups.getConfigurationSection("Groups." + key + ".Flags.World").getKeys(false);
+	    if (flags.isConfigurationSection("Groups")) {
+		Set<String> keys = groups.getConfigurationSection("Groups").getKeys(false);
+		if (keys != null) {
+		    for (String key : keys) {
+			if (!groups.contains("Groups." + key + ".Flags"))
+			    continue;
+			if (!groups.contains("Groups." + key + ".Flags.World"))
+			    continue;
+			if (key == null)
+			    continue;
+			Set<String> worldkeys = groups.getConfigurationSection("Groups." + key + ".Flags.World").getKeys(false);
 
-		    if (worldkeys == null)
-			continue;
+			if (worldkeys == null)
+			    continue;
 
-		    Map<String, FlagPermissions> perms = new HashMap<>();
-		    for (String wkey : worldkeys) {
-			FlagPermissions list = FlagPermissions.parseFromConfigNode(wkey, groups.getConfigurationSection("Groups." + key + ".Flags.World"));
-			if (wkey.equalsIgnoreCase("global")) {
-			    list.setParent(globaldefaults);
-			    perms.put(wkey.toLowerCase(), list);
-			    for (Entry<String, FlagPermissions> worldperm : worldperms.entrySet()) {
-				list = FlagPermissions.parseFromConfigNode(wkey, groups.getConfigurationSection("Groups." + key + ".Flags.World"));
-				list.setParent(worldperm.getValue());
-				perms.put("global." + worldperm.getKey().toLowerCase(), list);
-			    }
-			} else {
-			    perms.put(wkey.toLowerCase(), list);
-			}
-		    }
-		    for (Entry<String, FlagPermissions> entry : perms.entrySet()) {
-			String wkey = entry.getKey();
-			FlagPermissions list = entry.getValue();
-			if (!wkey.startsWith("global.")) {
-			    list.setParent(perms.get("global." + wkey));
-			    if (list.getParent() == null) {
-				list.setParent(worldperms.get(wkey));
-			    }
-			    if (list.getParent() == null) {
+			Map<String, FlagPermissions> perms = new HashMap<>();
+			for (String wkey : worldkeys) {
+			    FlagPermissions list = FlagPermissions.parseFromConfigNode(wkey, groups.getConfigurationSection("Groups." + key + ".Flags.World"));
+			    if (wkey.equalsIgnoreCase("global")) {
 				list.setParent(globaldefaults);
+				perms.put(wkey.toLowerCase(), list);
+				for (Entry<String, FlagPermissions> worldperm : worldperms.entrySet()) {
+				    list = FlagPermissions.parseFromConfigNode(wkey, groups.getConfigurationSection("Groups." + key + ".Flags.World"));
+				    list.setParent(worldperm.getValue());
+				    perms.put("global." + worldperm.getKey().toLowerCase(), list);
+				}
+			    } else {
+				perms.put(wkey.toLowerCase(), list);
 			    }
 			}
-		    }
-		    groupperms.put(key.toLowerCase(), perms);
+			for (Entry<String, FlagPermissions> entry : perms.entrySet()) {
+			    String wkey = entry.getKey();
+			    FlagPermissions list = entry.getValue();
+			    if (!wkey.startsWith("global.")) {
+				list.setParent(perms.get("global." + wkey));
+				if (list.getParent() == null) {
+				    list.setParent(worldperms.get(wkey));
+				}
+				if (list.getParent() == null) {
+				    list.setParent(globaldefaults);
+				}
+			    }
+			}
+			groupperms.put(key.toLowerCase(), perms);
 
+		    }
 		}
 	    }
 	} catch (Exception ex) {
