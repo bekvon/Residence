@@ -48,16 +48,10 @@ public class select implements cmd {
 	}
 
 	if (args.length == 1) {
-	    if (args[0].equals("size") || args[0].equals("cost")) {
-		if (plugin.getSelectionManager().hasPlacedBoth(player)) {
-		    try {
-			plugin.getSelectionManager().showSelectionInfo(player);
-			return true;
-		    } catch (Exception ex) {
-			Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
-			return true;
-		    }
-		} else if (plugin.getSelectionManager().worldEdit(player)) {
+	    switch (args[0].toLowerCase()) {
+	    case "size":
+	    case "cost":
+		if (plugin.getSelectionManager().hasPlacedBoth(player) || plugin.getSelectionManager().worldEdit(player)) {
 		    try {
 			plugin.getSelectionManager().showSelectionInfo(player);
 			return true;
@@ -66,19 +60,20 @@ public class select implements cmd {
 			return true;
 		    }
 		}
-	    } else if (args[0].equals("vert")) {
+		return false;
+	    case "vert":
 		plugin.getSelectionManager().vert(player, resadmin);
 		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
-	    } else if (args[0].equals("sky")) {
+	    case "sky":
 		plugin.getSelectionManager().sky(player, resadmin);
 		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
-	    } else if (args[0].equals("bedrock")) {
+	    case "bedrock":
 		plugin.getSelectionManager().bedrock(player, resadmin);
 		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
-	    } else if (args[0].equals("coords")) {
+	    case "coords":
 		plugin.msg(player, lm.General_Separator);
 
 		if (!plugin.getSelectionManager().hasPlacedBoth(player)) {
@@ -99,11 +94,11 @@ public class select implements cmd {
 		plugin.msg(player, lm.General_Separator);
 		plugin.getSelectionManager().afterSelectionUpdate(player, false);
 		return true;
-	    } else if (args[1].equals("chunk")) {
+	    case "chunk":
 		plugin.getSelectionManager().getSelection(player).selectChunk();
 		plugin.getSelectionManager().afterSelectionUpdate(player, true);
 		return true;
-	    } else if (args[1].equals("worldedit")) {
+	    case "worldedit":
 		if (plugin.getSelectionManager().worldEdit(player)) {
 		    plugin.msg(player, lm.Select_Success);
 		    plugin.getSelectionManager().afterSelectionUpdate(player, false);
@@ -111,35 +106,27 @@ public class select implements cmd {
 		return true;
 	    }
 	} else if (args.length == 2) {
-	    if (args[0].equals("expand")) {
-		int amount;
+	    int amount = 0;
+	    switch (args[0].toLowerCase()) {
+	    case "expand":
+	    case "contract":
+	    case "shift":
 		try {
 		    amount = Integer.parseInt(args[1]);
 		} catch (Exception ex) {
 		    plugin.msg(player, lm.Invalid_Amount);
 		    return true;
 		}
+	    }
+	    
+	    switch (args[0].toLowerCase()) {
+	    case "expand":
 		plugin.getSelectionManager().modify(player, false, amount);
 		return true;
-	    }
-	    if (args[0].equals("contract")) {
-		int amount;
-		try {
-		    amount = Integer.parseInt(args[1]);
-		} catch (Exception ex) {
-		    plugin.msg(player, lm.Invalid_Amount);
-		    return true;
-		}
+	    case "contract":
 		plugin.getSelectionManager().contract(player, amount);
 		return true;
-	    } else if (args[0].equals("shift")) {
-		int amount;
-		try {
-		    amount = Integer.parseInt(args[1]);
-		} catch (Exception ex) {
-		    plugin.msg(player, lm.Invalid_Amount);
-		    return true;
-		}
+	    case "shift":
 		if (amount > 100)
 		    amount = 100;
 		if (amount < -100)
