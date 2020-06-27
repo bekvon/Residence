@@ -10,8 +10,6 @@ import org.bukkit.block.data.type.Stairs.Shape;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
-
 public class CMIBlock {
     public static enum blockDirection {
 	none(-1), upWest(0), upEast(1), upNorth(2), upSouth(3), downWest(4), downEast(5), downNorth(6), downSouth(7);

@@ -15,8 +15,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
-
 public class CMIReflections {
 
     private static Class<?> CraftServerClass;
@@ -97,6 +95,23 @@ public class CMIReflections {
 	} catch (ClassNotFoundException | SecurityException | IllegalArgumentException e) {
 	    e.printStackTrace();
 	}
+    }
+
+    public static String toJson(ItemStack item) {
+	if (item == null)
+	    return null;
+
+	Object nmsStack = asNMSCopy(item);
+
+	try {
+	    Method meth = IStack.getMethod("save", NBTTagCompound);
+	    Object res = meth.invoke(nmsStack, NBTTagCompound.newInstance());
+	    return res.toString();
+	} catch (Throwable e) {
+	    e.printStackTrace();
+	}
+
+	return null;
     }
 
     public static ItemStack HideFlag(ItemStack item, int state) {

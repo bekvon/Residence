@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -11,7 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 
 public class ActionBarTitleMessages {
@@ -33,35 +33,35 @@ public class ActionBarTitleMessages {
     private static Object[] consts;
 
     static {
-	    try {
-		packetType = Class.forName(getPacketPlayOutChat());
-		Class<?> typeCraftPlayer = Class.forName(getCraftPlayerClasspath());
-		Class<?> typeNMSPlayer = Class.forName(getNMSPlayerClasspath());
-		Class<?> typePlayerConnection = Class.forName(getPlayerConnectionClasspath());
-		nmsChatSerializer = Class.forName(getChatSerializerClasspath());
-		nmsIChatBaseComponent = Class.forName(getIChatBaseComponentClasspath());
-		getHandle = typeCraftPlayer.getMethod("getHandle");
-		playerConnection = typeNMSPlayer.getField("playerConnection");
-		sendPacket = typePlayerConnection.getMethod("sendPacket", Class.forName(getPacketClasspath()));
+	try {
+	    packetType = Class.forName(getPacketPlayOutChat());
+	    Class<?> typeCraftPlayer = Class.forName(getCraftPlayerClasspath());
+	    Class<?> typeNMSPlayer = Class.forName(getNMSPlayerClasspath());
+	    Class<?> typePlayerConnection = Class.forName(getPlayerConnectionClasspath());
+	    nmsChatSerializer = Class.forName(getChatSerializerClasspath());
+	    nmsIChatBaseComponent = Class.forName(getIChatBaseComponentClasspath());
+	    getHandle = typeCraftPlayer.getMethod("getHandle");
+	    playerConnection = typeNMSPlayer.getField("playerConnection");
+	    sendPacket = typePlayerConnection.getMethod("sendPacket", Class.forName(getPacketClasspath()));
 
-		if (Version.isCurrentHigher(Version.v1_11_R1)) {
-		    ChatMessageclz = Class.forName(getChatMessageTypeClasspath());
-		    consts = ChatMessageclz.getEnumConstants();
-		    sub = consts[2].getClass();
-		}
+	    if (Version.isCurrentHigher(Version.v1_11_R1)) {
+		ChatMessageclz = Class.forName(getChatMessageTypeClasspath());
+		consts = ChatMessageclz.getEnumConstants();
+		sub = consts[2].getClass();
+	    }
 
-	    } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException ex) {
-		Bukkit.getLogger().log(Level.SEVERE, "Error {0}", ex);
-	    }
-	    // Title
-	    try {
-		Class<?> typePacketPlayOutTitle = Class.forName(getPacketPlayOutTitleClasspath());
-		enumTitleAction = Class.forName(getEnumTitleActionClasspath());
-		nmsPacketPlayOutTitle = typePacketPlayOutTitle.getConstructor(enumTitleAction, nmsIChatBaseComponent);
-		fromString = Class.forName(getClassMessageClasspath()).getMethod("fromString", String.class);
-	    } catch (ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
-		simpleTitleMessages = true;
-	    }
+	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException ex) {
+	    Bukkit.getLogger().log(Level.SEVERE, "Error {0}", ex);
+	}
+	// Title
+	try {
+	    Class<?> typePacketPlayOutTitle = Class.forName(getPacketPlayOutTitleClasspath());
+	    enumTitleAction = Class.forName(getEnumTitleActionClasspath());
+	    nmsPacketPlayOutTitle = typePacketPlayOutTitle.getConstructor(enumTitleAction, nmsIChatBaseComponent);
+	    fromString = Class.forName(getClassMessageClasspath()).getMethod("fromString", String.class);
+	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+	    simpleTitleMessages = true;
+	}
     }
 
     public static void send(CommandSender receivingPacket, String msg) {
@@ -84,12 +84,17 @@ public class ActionBarTitleMessages {
 		return;
 	    }
 
-	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', msg) + "\"}");
-	    if (Version.isCurrentHigher(Version.v1_11_R1))
+	    RawMessage rm = new RawMessage();
+	    rm.add(msg);
+
+	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, ChatColor.translateAlternateColorCodes('&', rm.getRaw()));
+	    if (Version.isCurrentHigher(Version.v1_15_R1))
+		packet = packetType.getConstructor(nmsIChatBaseComponent, sub, UUID.class).newInstance(serialized, consts[2], receivingPacket.getUniqueId());
+	    else if (Version.isCurrentHigher(Version.v1_11_R1))
 		packet = packetType.getConstructor(nmsIChatBaseComponent, sub).newInstance(serialized, consts[2]);
 	    else if (Version.isCurrentHigher(Version.v1_7_R4)) {
 		packet = packetType.getConstructor(nmsIChatBaseComponent, byte.class).newInstance(serialized, (byte) 2);
-	    } else {
+	    } else { 
 		packet = packetType.getConstructor(nmsIChatBaseComponent, int.class).newInstance(serialized, 2);
 	    }
 	    Object player = getHandle.invoke(receivingPacket);
@@ -117,8 +122,13 @@ public class ActionBarTitleMessages {
 	    return;
 	try {
 	    Method meth = nmsChatSerializer.getMethod("a", String.class);
-	    Object serialized = meth.invoke(null, ChatColor.translateAlternateColorCodes('&', msg));
-	    if (Version.isCurrentHigher(Version.v1_11_R1))
+
+	    RawMessage rm = new RawMessage();
+	    rm.add(msg);
+	    Object serialized = meth.invoke(null, ChatColor.translateAlternateColorCodes('&', rm.getRaw()));
+	    if (Version.isCurrentHigher(Version.v1_15_R1))
+		packet = packetType.getConstructor(nmsIChatBaseComponent, sub, UUID.class).newInstance(serialized, consts[1], receivingPacket.getUniqueId());
+	    else if (Version.isCurrentHigher(Version.v1_11_R1))
 		packet = packetType.getConstructor(nmsIChatBaseComponent, sub).newInstance(serialized, consts[1]);
 	    else if (Version.isCurrentHigher(Version.v1_7_R4)) {
 		packet = packetType.getConstructor(nmsIChatBaseComponent, byte.class).newInstance(serialized, (byte) 1);

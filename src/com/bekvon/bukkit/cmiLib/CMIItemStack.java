@@ -16,8 +16,6 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
-
 public class CMIItemStack {
 
     private int id = 0;

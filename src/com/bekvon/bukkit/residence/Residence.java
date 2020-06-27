@@ -43,10 +43,10 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
+import com.Zrips.CMI.utils.VersionChecker.Version;
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker;
-import com.bekvon.bukkit.cmiLib.VersionChecker.Version;
 import com.bekvon.bukkit.residence.BossBar.BossBarManager;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
 import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;

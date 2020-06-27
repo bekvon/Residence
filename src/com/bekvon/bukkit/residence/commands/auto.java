@@ -125,7 +125,7 @@ public class auto implements cmd {
 	}
 
 	if (resName == null)
-	    resName = sender.getName() + (new Random().nextInt(10000));
+	    resName = sender.getName() + (new Random().nextInt(99950) + 50);
 
 	player.performCommand((resadmin ? "resadmin" : "res") + " create " + resName);
 
