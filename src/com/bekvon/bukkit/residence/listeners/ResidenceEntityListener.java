@@ -55,7 +55,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
 
-import com.Zrips.CMI.utils.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.residence.ConfigManager;

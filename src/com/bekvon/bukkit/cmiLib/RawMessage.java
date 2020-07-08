@@ -72,8 +72,10 @@ public class RawMessage {
     CMIChatColor firstBlockColor = null;
 
     private String intoJsonColored(String text) {
-	if (text.equalsIgnoreCase(" "))
+	if (text.equalsIgnoreCase(" ")) {
+	    text = "{\"text\":\" \"}";
 	    return text;
+	}
 
 	text = CMIChatColor.deColorize(text);
 

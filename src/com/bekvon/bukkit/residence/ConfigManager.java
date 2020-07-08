@@ -29,7 +29,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import com.Zrips.CMI.utils.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.ConfigReader;

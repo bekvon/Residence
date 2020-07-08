@@ -50,7 +50,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import com.Zrips.CMI.utils.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
@@ -557,11 +557,11 @@ public class ResidencePlayerListener implements Listener {
 	    break;
 	case TRUE:
 	    if (event.getFlag().equalsIgnoreCase(Flags.sun.toString()))
-		for (Player one : event.getResidence().getPlayersInResidence())
-		    one.setPlayerWeather(WeatherType.CLEAR);
+		for (Player player : event.getResidence().getPlayersInResidence())
+		    player.setPlayerWeather(WeatherType.CLEAR);
 	    if (event.getFlag().equalsIgnoreCase(Flags.rain.toString()))
-		for (Player one : event.getResidence().getPlayersInResidence())
-		    one.setPlayerWeather(WeatherType.DOWNFALL);
+		for (Player player : event.getResidence().getPlayersInResidence())
+		    player.setPlayerWeather(WeatherType.DOWNFALL);
 	    break;
 	default:
 	    break;

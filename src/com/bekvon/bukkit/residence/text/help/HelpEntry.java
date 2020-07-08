@@ -23,7 +23,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.Zrips.CMI.utils.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;

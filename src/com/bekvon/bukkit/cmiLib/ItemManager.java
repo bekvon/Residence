@@ -538,11 +538,6 @@ public class ItemManager {
 //	    one.setName(one.getName().replace("[entityNames]", CMIEntityType.getById(one.getData()).getName()));
 //	return one;
 //    }
-    public enum SlabType {
-	TOP,
-	BOTTOM,
-	DOUBLE,
-	NOTSLAB;
-    }
+
 
 }

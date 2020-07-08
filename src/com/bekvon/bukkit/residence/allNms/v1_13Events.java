@@ -9,8 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 
-import com.Zrips.CMI.utils.VersionChecker.Version;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;

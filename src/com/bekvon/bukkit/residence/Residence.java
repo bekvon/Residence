@@ -43,7 +43,7 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
-import com.Zrips.CMI.utils.VersionChecker.Version;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker;

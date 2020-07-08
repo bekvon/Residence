@@ -94,7 +94,7 @@ public class ActionBarTitleMessages {
 		packet = packetType.getConstructor(nmsIChatBaseComponent, sub).newInstance(serialized, consts[2]);
 	    else if (Version.isCurrentHigher(Version.v1_7_R4)) {
 		packet = packetType.getConstructor(nmsIChatBaseComponent, byte.class).newInstance(serialized, (byte) 2);
-	    } else { 
+	    } else {
 		packet = packetType.getConstructor(nmsIChatBaseComponent, int.class).newInstance(serialized, 2);
 	    }
 	    Object player = getHandle.invoke(receivingPacket);
@@ -156,14 +156,14 @@ public class ActionBarTitleMessages {
 	    @Override
 	    public void run() {
 
-		String t = title == null ? null : CMIChatColor.translateAlternateColorCodes((String) title);
-		String s = subtitle == null ? null : CMIChatColor.translateAlternateColorCodes((String) subtitle);
+		String t = title == null ? null : CMIChatColor.translate((String) title);
+		String s = subtitle == null ? null : CMIChatColor.translate((String) subtitle);
 
 		if (t != null && s == null && t.contains("%subtitle%")) {
 		    s = t.split("%subtitle%")[1];
 		    t = t.split("%subtitle%")[0];
-		    t = t == null ? null : CMIChatColor.translateAlternateColorCodes(t);
-		    s = s == null ? null : CMIChatColor.translateAlternateColorCodes(s);
+		    t = t == null ? null : CMIChatColor.translate(t);
+		    s = s == null ? null : CMIChatColor.translate(s);
 		}
 
 		if (simpleTitleMessages) {
@@ -178,15 +178,6 @@ public class ActionBarTitleMessages {
 		    case v1_10_R1:
 		    case v1_11_R1:
 			receivingPacket.sendTitle(t, s);
-			break;
-		    case v1_12_R1:
-		    case v1_13_R1:
-		    case v1_13_R2:
-		    case v1_14_R1:
-		    case v1_14_R2:
-		    case v1_15_R1:
-		    case v1_15_R2:
-			receivingPacket.sendTitle(t, s, fadeIn, keep, fadeOut);
 			break;
 		    case v1_7_R1:
 		    case v1_7_R2:
@@ -211,7 +202,16 @@ public class ActionBarTitleMessages {
 			}
 
 			break;
+		    case v1_12_R1:
+		    case v1_13_R1:
+		    case v1_13_R2:
+		    case v1_14_R1:
+		    case v1_14_R2:
+		    case v1_15_R1:
+		    case v1_15_R2:
+		    case v1_16_R1:
 		    default:
+			receivingPacket.sendTitle(t, s, fadeIn, keep, fadeOut);
 			break;
 		    }
 

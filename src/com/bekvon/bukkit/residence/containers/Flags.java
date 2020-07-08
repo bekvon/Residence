@@ -77,7 +77,7 @@ public enum Flags {
     night(CMIMaterial.BLACK_WOOL, FlagMode.Residence, "Sets night time in residence", true),
     nofly(CMIMaterial.ORANGE_CARPET, FlagMode.Both, "Allows or denys fly in residence", false),
     fly(CMIMaterial.ORANGE_CARPET, FlagMode.Both, "Toggles fly for players in residence", false),
-    nomobs(CMIMaterial.BARRIER, FlagMode.Residence, "Prevents monsters from entering residence", true),
+    nomobs(CMIMaterial.BARRIER, FlagMode.Residence, "Prevents monsters from entering residence. Requires AutoMobRemoval to be enabled", true),
     note(CMIMaterial.NOTE_BLOCK, FlagMode.Both, "Allows or denys players to use note blocks", true),
     nodurability(CMIMaterial.ANVIL, FlagMode.Residence, "Prevents item durability loss", false),
     overridepvp(CMIMaterial.IRON_SWORD, FlagMode.Residence, "Overrides any plugin pvp protection", false),

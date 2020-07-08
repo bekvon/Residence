@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 
-import com.Zrips.CMI.utils.VersionChecker.Version;
-
 public class CMIChatColor {
 
     public static final String colorReplacerPlaceholder = "\uFF06";

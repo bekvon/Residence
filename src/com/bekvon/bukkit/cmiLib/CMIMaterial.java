@@ -13,9 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
 
-
-import com.bekvon.bukkit.cmiLib.ItemManager.SlabType;
-
 public enum CMIMaterial {
     NONE(null, "None"),
     ACACIA_BOAT(447, 0, 27326, "Acacia Boat", "BOAT_ACACIA"),
@@ -2622,24 +2619,24 @@ public enum CMIMaterial {
 	return false;
     }
 
-    public static SlabType getSlabType(Block block) {
+    public static CMISlabType getSlabType(Block block) {
 	if (!isSlab(block.getType()))
-	    return SlabType.NOTSLAB;
+	    return CMISlabType.NOTSLAB;
 
 	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
 	    if (block.getBlockData() instanceof org.bukkit.block.data.type.Slab) {
 		org.bukkit.block.data.type.Slab slab = (org.bukkit.block.data.type.Slab) block.getBlockData();
-		switch (slab.getType()) {
-		case TOP:
-		    return SlabType.TOP;
-		case BOTTOM:
-		    return SlabType.BOTTOM;
-		case DOUBLE:
-		    return SlabType.DOUBLE;
+		switch (slab.getType().toString()) {
+		case "TOP":
+		    return CMISlabType.TOP;
+		case "BOTTOM":
+		    return CMISlabType.BOTTOM;
+		case "DOUBLE":
+		    return CMISlabType.DOUBLE;
 		}
 
 	    }
-	    return SlabType.NOTSLAB;
+	    return CMISlabType.NOTSLAB;
 	}
 	if (block.getType().name().contains("STEP")) {
 	    switch (CMIMaterial.get(block).getLegacyId()) {
@@ -2653,9 +2650,9 @@ public enum CMIMaterial {
 		case 5:
 		case 6:
 		case 7:
-		    return SlabType.BOTTOM;
+		    return CMISlabType.BOTTOM;
 		default:
-		    return SlabType.DOUBLE;
+		    return CMISlabType.DOUBLE;
 		}
 	    case 126:
 		switch (block.getData()) {
@@ -2665,28 +2662,28 @@ public enum CMIMaterial {
 		case 3:
 		case 4:
 		case 5:
-		    return SlabType.BOTTOM;
+		    return CMISlabType.BOTTOM;
 		default:
-		    return SlabType.DOUBLE;
+		    return CMISlabType.DOUBLE;
 		}
 	    case 182:
 		switch (block.getData()) {
 		case 0:
-		    return SlabType.BOTTOM;
+		    return CMISlabType.BOTTOM;
 		default:
-		    return SlabType.DOUBLE;
+		    return CMISlabType.DOUBLE;
 		}
 	    case 205:
 		switch (block.getData()) {
 		case 0:
-		    return SlabType.BOTTOM;
+		    return CMISlabType.BOTTOM;
 		default:
-		    return SlabType.DOUBLE;
+		    return CMISlabType.DOUBLE;
 		}
 	    }
 	}
 
-	return SlabType.NOTSLAB;
+	return CMISlabType.NOTSLAB;
     }
 
     public boolean equals(Material mat) {
