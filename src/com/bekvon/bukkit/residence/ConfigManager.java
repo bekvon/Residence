@@ -739,7 +739,7 @@ public class ConfigManager {
 
 		    if (!commented)
 			c.addComment(path + "MinCoord",
-			    "If maxcoord set to 1000 and mincoord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
+			    "If maxcoord set to 1000 and mincoord to 500, then player can be teleported between -1000 to -500 and 500 to 1000 coordinates");
 		    int MinCoord = c.get(path + "MinCoord", c.getC().getInt(path + "MinCord", 500));
 		    int CenterX = c.get(path + "CenterX", 0);
 		    int CenterZ = c.get(path + "CenterZ", 0);

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bekvon.bukkit.CMIGUI.GUIManager.GUIClickType;
 import com.bekvon.bukkit.CMIGUI.GUIManager.GUIFieldType;
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.CMIItemStack;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
@@ -87,7 +87,7 @@ public class CMIGuiButton {
 	this.item = material == null ? null : material.newItemStack();
 	if (name != null) {
 	    ItemMeta meta = this.item.getItemMeta();
-	    meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+	    meta.setDisplayName(CMIChatColor.translate(name));
 	    this.item.setItemMeta(meta);
 	}
     }
@@ -98,7 +98,7 @@ public class CMIGuiButton {
 	this.item = new ItemStack(material, 1, (short) data);
 	if (name != null) {
 	    ItemMeta meta = this.item.getItemMeta();
-	    meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+	    meta.setDisplayName(CMIChatColor.translate(name));
 	    this.item.setItemMeta(meta);
 	}
     }
@@ -230,7 +230,7 @@ public class CMIGuiButton {
 	    return this;
 	ItemMeta meta = this.item.getItemMeta();
 	if (meta != null) {
-	    meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+	    meta.setDisplayName(CMIChatColor.translate(name));
 	    this.item.setItemMeta(meta);
 	}
 	return this;
@@ -270,15 +270,15 @@ public class CMIGuiButton {
 	    if (l.contains("\\n")) {
 		String[] split = l.split("\\\\n");
 		for (String one : split) {
-		    lore.add(ChatColor.translateAlternateColorCodes('&', one));
+		    lore.add(CMIChatColor.translate(one));
 		}
 	    } else if (l.contains("\n")) {
 		String[] split = l.split("\\n");
 		for (String one : split) {
-		    lore.add(ChatColor.translateAlternateColorCodes('&', one));
+		    lore.add(CMIChatColor.translate(one));
 		}
 	    } else
-		lore.add(ChatColor.translateAlternateColorCodes('&', l));
+		lore.add(CMIChatColor.translate(l));
 	    meta.setLore(lore);
 	    this.item.setItemMeta(meta);
 	}
@@ -300,7 +300,7 @@ public class CMIGuiButton {
 	if (this.item == null)
 	    return this;
 	ItemMeta meta = this.item.getItemMeta();
-	meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+	meta.setDisplayName(CMIChatColor.translate(name));
 	this.item.setItemMeta(meta);
 	return this;
     }

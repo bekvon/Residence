@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
+import com.bekvon.bukkit.cmiLib.ActionBarManager;
 import com.bekvon.bukkit.cmiLib.CMIEffect;
 import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
 import com.bekvon.bukkit.residence.Residence;
@@ -450,7 +450,7 @@ public class SelectionManager {
 	if (plugin.getConfigManager().enableEconomy())
 	    Message += " " + plugin.msg(lm.General_LandCost, cuboidArea.getCost(group));
 
-	ActionBarTitleMessages.send(player, Message);
+	ActionBarManager.send(player, Message);
 
     }
 

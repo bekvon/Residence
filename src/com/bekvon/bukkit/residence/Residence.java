@@ -44,7 +44,6 @@ import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
 import com.bekvon.bukkit.cmiLib.Version;
-import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.VersionChecker;
 import com.bekvon.bukkit.residence.BossBar.BossBarManager;
@@ -181,7 +180,6 @@ public class Residence extends JavaPlugin {
     protected RandomTp RandomTpManager;
     protected DynMapManager DynManager;
     protected Sorting SortingManager;
-    protected ActionBarTitleMessages ABManager;
     protected AutoSelection AutoSelectionManager;
     protected WESchematicManager SchematicManager;
     private InformationPager InformationPagerManager;

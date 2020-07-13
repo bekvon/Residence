@@ -50,10 +50,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.cmiLib.Version;
-import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
+import com.bekvon.bukkit.cmiLib.ActionBarManager;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
+import com.bekvon.bukkit.cmiLib.TitleMessageManager;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -76,7 +77,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1996,7 +1996,7 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.getTeleportDelayMap().remove(player.getName());
 	    plugin.msg(player, lm.General_TeleportCanceled);
 	    if (plugin.getConfigManager().isTeleportTitleMessage())
-		ActionBarTitleMessages.sendTitle(player, "", "");
+		TitleMessageManager.send(player, "", "");
 	}
     }
 
@@ -2147,7 +2147,7 @@ public class ResidencePlayerListener implements Listener {
 		case TitleBar:
 		    FlagPermissions perms = res.getPermissions();
 		    if (perms.has(Flags.title, FlagCombo.TrueOrNone))
-			ActionBarTitleMessages.send(player, plugin.msg(lm.Raid_cantDo));
+			ActionBarManager.send(player, plugin.msg(lm.Raid_cantDo));
 		    break;
 		case ChatBox:
 		    plugin.msg(player, lm.Raid_cantDo, orres.getName());
@@ -2196,7 +2196,7 @@ public class ResidencePlayerListener implements Listener {
 		case TitleBar:
 		    FlagPermissions perms = res.getPermissions();
 		    if (perms.has(Flags.title, FlagCombo.TrueOrNone))
-			ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
+			ActionBarManager.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
 		    break;
 		case ChatBox:
 		    plugin.msg(player, lm.Residence_MoveDeny, orres.getName());
@@ -2315,14 +2315,14 @@ public class ResidencePlayerListener implements Listener {
 		if (res.getPermissions().has(Flags.title, FlagCombo.TrueOrNone))
 		    switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
 		    case ActionBar:
-			ActionBarTitleMessages.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
+			ActionBarManager.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
 			    .toString());
 			break;
 		    case ChatBox:
 			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
 			break;
 		    case TitleBar:
-			ActionBarTitleMessages.sendTitle(player, ChatColor.YELLOW + insertMessages(player, res, message));
+			TitleMessageManager.send(player, ChatColor.YELLOW + insertMessages(player, res, message), null);
 			break;
 		    default:
 			break;
@@ -2346,10 +2346,10 @@ public class ResidencePlayerListener implements Listener {
 		if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
 		    RentableLand rentable = plugin.getRentManager().getRentableLand(from);
 		    if (rentable != null)
-			ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
+			ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
 		} else if (plugin.getTransactionManager().isForSale(from) && !res.isOwner(player)) {
 		    int sale = plugin.getTransactionManager().getSaleAmount(from);
-		    ActionBarTitleMessages.send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
+		    ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
 		}
 	    }
 	}

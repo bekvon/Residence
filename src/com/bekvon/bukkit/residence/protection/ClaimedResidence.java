@@ -25,8 +25,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
 import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.cmiLib.TitleMessageManager;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
@@ -1348,7 +1348,7 @@ public class ClaimedResidence {
     }
 
     public void TpTimer(final Player player, final int t) {
-	ActionBarTitleMessages.sendTitle(player, plugin.msg(lm.General_TeleportTitle),
+	TitleMessageManager.send(player, plugin.msg(lm.General_TeleportTitle),
 	    plugin.msg(lm.General_TeleportTitleTime, t));
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 	    @Override

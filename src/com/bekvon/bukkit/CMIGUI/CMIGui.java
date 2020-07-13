@@ -19,8 +19,6 @@ import com.bekvon.bukkit.CMIGUI.GUIManager.GUIRows;
 import com.bekvon.bukkit.CMIGUI.GUIManager.InvType;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.text.help.PageInfo;
 
 public class CMIGui {
 

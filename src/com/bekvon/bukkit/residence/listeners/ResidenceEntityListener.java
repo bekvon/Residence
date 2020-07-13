@@ -55,9 +55,9 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
 
-import com.bekvon.bukkit.cmiLib.Version;
-import com.bekvon.bukkit.cmiLib.ActionBarTitleMessages;
+import com.bekvon.bukkit.cmiLib.ActionBarManager;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -1051,7 +1051,7 @@ public class ResidenceEntityListener implements Listener {
 		    ClaimedResidence srcarea = plugin.getResidenceManager().getByLoc(attacker.getLocation());
 		    if (srcarea != null && area != null && srcarea.equals(area) && srcarea.getPermissions().playerHas((Player) target, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
 			srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
-			ActionBarTitleMessages.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
+			ActionBarManager.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
 			event.setIntensity(target, 0);
 		    }
 		}
@@ -1436,7 +1436,7 @@ public class ResidenceEntityListener implements Listener {
 		    srcarea.getPermissions().playerHas((Player) ent, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
 		    srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
 
-		    ActionBarTitleMessages.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
+		    ActionBarManager.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
 		    if (isOnFire)
 			ent.setFireTicks(0);
 		    event.setCancelled(true);
