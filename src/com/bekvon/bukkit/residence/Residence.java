@@ -1368,7 +1368,8 @@ public class Residence extends JavaPlugin {
 		loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + world.getName() + "...");
+		    if (!isDisabledWorld(world))
+			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + world.getName() + "...");
 
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
@@ -1414,7 +1415,8 @@ public class Residence extends JavaPlugin {
 		    int pass = (int) (System.currentTimeMillis() - time);
 		    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + world.getName() + " data. (" + PastTime + ")");
+		    if (!isDisabledWorld(world))
+			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + world.getName() + " data. (" + PastTime + ")");
 		}
 	    }
 
@@ -1808,6 +1810,16 @@ public class Residence extends JavaPlugin {
 	if (p != null)
 	    return p.getName();
 	return null;
+    }
+
+    public boolean isDisabledWorld(World world) {
+	return isDisabledWorld(world.getName());
+    }
+
+    public boolean isDisabledWorld(String worldname) {
+	if (getConfigManager().DisabledWorldsList.contains(worldname))
+	    return true;
+	return false;
     }
 
     public boolean isDisabledWorldListener(World world) {

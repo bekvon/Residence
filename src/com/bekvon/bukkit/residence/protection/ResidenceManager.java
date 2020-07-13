@@ -982,7 +982,8 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
-	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + world.getName() + " data into memory...");
+	    if (!plugin.isDisabledWorld(world))
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + world.getName() + " data into memory...");
 	    if (reslist != null) {
 		try {
 		    chunkResidences.put(world.getName(), loadMap(world.getName(), reslist));
@@ -996,8 +997,9 @@ public class ResidenceManager implements ResidenceInterface {
 	    long pass = System.currentTimeMillis() - time;
 	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ") -> " + (reslist == null ? "0" : reslist.size())
-		+ " residences");
+	    if (!plugin.isDisabledWorld(world))
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ") -> " + (reslist == null ? "0" : reslist.size())
+		    + " residences");
 	}
 
 	clearLoadChache();
