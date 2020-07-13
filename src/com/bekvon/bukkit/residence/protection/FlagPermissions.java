@@ -257,7 +257,7 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.STONECUTTER.getMaterial(), Flags.container);
 
 	addMaterialToUseFlag(Material.DISPENSER, Flags.container);
-	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
+//	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
     }
 
     public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node) {

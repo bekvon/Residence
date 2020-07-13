@@ -921,9 +921,9 @@ public class ResidencePlayerListener implements Listener {
     }
 
     private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
-
 	switch (mat.name()) {
 	case "ITEM_FRAME":
+	case "CAKE":
 	case "BEACON":
 	case "FLOWER_POT":
 	case "COMMAND":
@@ -1209,6 +1209,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || isCanUseEntity_BothClick(mat, block))) {
+
 	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
 		&& !heldItem.isDye() && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
 		return;
