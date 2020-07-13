@@ -378,6 +378,26 @@ public class HelpEntry {
 			    }
 			}
 			break;
+		    case "[enter]":
+			if (sender instanceof Player) {
+			    ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(((Player) sender).getLocation());
+			    if (res != null) {
+				String resName = res.getEnterMessage();
+				if (resName != null)
+				    subCommands.add(CMIChatColor.deColorize(resName));
+			    }
+			}
+			break;
+		    case "[leave]":
+			if (sender instanceof Player) {
+			    ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(((Player) sender).getLocation());
+			    if (res != null) {
+				String resName = res.getLeaveMessage();
+				if (resName != null)
+				    subCommands.add(CMIChatColor.deColorize(resName));
+			    }
+			}
+			break;
 		    case "[residenceshop]":
 			for (ClaimedResidence one : Residence.getInstance().getResidenceManager().getShops()) {
 			    subCommands.add(one.getName());

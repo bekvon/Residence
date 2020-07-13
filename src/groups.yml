@@ -62,9 +62,11 @@ Groups:
            # Whether or not the player can change the Residence enter and leave messages.
            CanChange: true
            # The default enter message to apply to new Residences created by players in this group.
+           # Use %subzone if you want to include only current residence name without including parent zones into name
            # Leaving the message blank will disable it.
            DefaultEnter: "Welcome %player to %residence, owned by %owner."
            # The default leave message to apply to new Residences created by players in this group.
+           # Use %subzone if you want to include only current residence name without including parent zones into name
            # Leaving the message blank will disable it.
            DefaultLeave: "Now leaving %residence."
        # Options relating to the Lease system.
