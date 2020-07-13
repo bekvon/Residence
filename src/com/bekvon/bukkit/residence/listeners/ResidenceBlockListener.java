@@ -175,16 +175,12 @@ public class ResidenceBlockListener implements Listener {
 
 	ClaimedResidence startRes = plugin.getResidenceManager().getByLoc(event.getLocation());
 	List<BlockState> blocks = event.getBlocks();
-	int i = 0;
-	for (BlockState one : blocks) {
+
+	for (BlockState one : new ArrayList<BlockState>(blocks)) {
 	    ClaimedResidence targetRes = plugin.getResidenceManager().getByLoc(one.getLocation());
-	    if (startRes == null && targetRes != null ||
-		targetRes != null && startRes != null && !startRes.getName().equals(targetRes.getName()) && !startRes.isOwner(targetRes.getOwner())) {
-		BlockState matas = blocks.get(i);
-		matas.setType(Material.AIR);
-		blocks.set(i, matas);
+	    if (startRes == null && targetRes != null || targetRes != null && startRes != null && !startRes.getName().equals(targetRes.getName()) && !startRes.isOwner(targetRes.getOwner())) {
+		blocks.remove(one);
 	    }
-	    i++;
 	}
     }
 
@@ -233,8 +229,7 @@ public class ResidenceBlockListener implements Listener {
 	}
 
 	if (!hasdestroy
-	    && !ResPerm.bypass_destroy.hasPermission(player, 10000L)
-	) {
+	    && !ResPerm.bypass_destroy.hasPermission(player, 10000L)) {
 	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
 	    event.setCancelled(true);
 	} else if (mat == Material.CHEST && !perms.playerHas(player, Flags.container, true)) {
@@ -380,7 +375,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChestPlace(BlockPlaceEvent event) {
-	
+
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
@@ -646,8 +641,7 @@ public class ResidenceBlockListener implements Listener {
 	}
 
 	if (!hasplace
-	    && !ResPerm.bypass_build.hasPermission(player, 10000L)
-	) {
+	    && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
 	    return;
@@ -660,8 +654,7 @@ public class ResidenceBlockListener implements Listener {
 		perms = plugin.getPermsByLocForPlayer(sec.getLocation(), player);
 		hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
 		if (!hasplace
-		    && !ResPerm.bypass_build.hasPermission(player, 10000L)
-		) {
+		    && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
 		    event.setCancelled(true);
 		    plugin.msg(player, lm.Flag_Deny, Flags.place);
 		    return;
