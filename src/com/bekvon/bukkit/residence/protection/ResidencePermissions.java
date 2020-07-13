@@ -16,6 +16,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.containers.Flags.FlagMode;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
@@ -310,7 +311,11 @@ public class ResidencePermissions extends FlagPermissions {
 	if (f != null)
 	    flag = f.toString();
 	if (!checkValidFlag(flag, globalflag)) {
-	    Residence.getInstance().msg(sender, lm.Invalid_Flag);
+	    if (f != null)
+		Residence.getInstance().msg(sender, lm.Invalid_FlagType_Fail, f.getFlagMode() == FlagMode.Residence ? Residence.getInstance().getLM().getMessage(lm.Invalid_FlagType_Residence) : Residence
+		    .getInstance().getLM().getMessage(lm.Invalid_FlagType_Player));
+	    else
+		Residence.getInstance().msg(sender, lm.Invalid_Flag);
 	    return false;
 	}
 	if (state == FlagState.INVALID) {

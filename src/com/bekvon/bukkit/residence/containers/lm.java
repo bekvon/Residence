@@ -3,8 +3,6 @@ package com.bekvon.bukkit.residence.containers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.bukkit.ChatColor;
-
 public enum lm {
     Invalid_Player("&cInvalid player name..."),
     Invalid_PlayerOffline("&cPlayer is offline"),
@@ -21,6 +19,9 @@ public enum lm {
     Invalid_Group("&cInvalid Group..."),
     Invalid_MessageType("&cMessage type must be enter or remove."),
     Invalid_Flag("&cInvalid Flag..."),
+    Invalid_FlagType_Fail("&cInvalid Flag... This flag can only be used on %1"),
+    Invalid_FlagType_Player("Player"),
+    Invalid_FlagType_Residence("Residence"),
     Invalid_FlagState("&cInvalid flag state, must be &6true(t)&c, &6false(f)&c, or &6remove(r)"),
     Invalid_List("&eUnknown list type, must be &6blacklist &eor &6ignorelist."),
     Invalid_Page("&eInvalid Page..."),

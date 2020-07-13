@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,7 +11,6 @@ import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.gui.setFlagInfo;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class pset implements cmd {

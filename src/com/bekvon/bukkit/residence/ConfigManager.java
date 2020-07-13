@@ -480,7 +480,7 @@ public class ConfigManager {
 		Flags.lever.toString(),
 		Flags.button.toString(),
 		Flags.diode.toString()));
-	    conf.set("Global.GroupedFlags.craft", Arrays.asList(
+	    conf.set("Global.GroupedFlags.crafting", Arrays.asList(
 		Flags.brew.toString(),
 		Flags.table.toString(),
 		Flags.enchant.toString()));
