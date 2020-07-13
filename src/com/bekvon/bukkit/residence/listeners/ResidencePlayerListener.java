@@ -2374,7 +2374,7 @@ public class ResidencePlayerListener implements Listener {
 	    message = message.replace("%player", player.getName());
 	    message = message.replace("%owner", res.getPermissions().getOwner());
 	    message = message.replace("%residence", res.getName());
-	    message = message.replace("%subzone", res.getResidenceName());
+	    message = message.replace("%zone", res.getResidenceName());
 	} catch (Exception ex) {
 	    return "";
 	}
