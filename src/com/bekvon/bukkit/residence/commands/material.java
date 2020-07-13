@@ -25,7 +25,7 @@ public class material implements cmd {
 	    return false;
 	}
 	try {
-	    plugin.msg(player, lm.General_MaterialGet, args[0], CMIMaterial.get(Integer.parseInt(args[0])).getName());
+	    plugin.msg(player, lm.General_MaterialGet, args[0], CMIMaterial.get(args[0]).getName());
 	} catch (Exception ex) {
 	    plugin.msg(player, lm.Invalid_Material);
 	}
