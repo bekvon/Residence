@@ -93,7 +93,8 @@ Groups:
           IgnoreLimits: false
           # The cost, per block, of making a new Residence or adding a area to it.
           BuyCost: 0.5
-          # The cost, per block, player will be getting back when removing residence.
+          # The cost, per block, player will be getting back when removing residence. 
+          # ATTENTION ResMoneyBack needs to be enabled in config file for this to work
           SellCost: 0.25
           # The cost, per block, of renewing a Residence lease (if the lease system is enabled).
           RenewCost: 0.2
