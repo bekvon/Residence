@@ -76,6 +76,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -830,8 +831,7 @@ public class ResidencePlayerListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
 
 	f: if ((player.getAllowFlight() || player.isFlying()) && perms.has(Flags.nofly, false) && !plugin.isResAdminOn(player)
-	    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)
-	) {
+	    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 	    if (res != null && res.isOwner(player))
@@ -928,6 +928,8 @@ public class ResidencePlayerListener implements Listener {
 	case "FLOWER_POT":
 	case "COMMAND":
 	case "ANVIL":
+	case "CHIPPED_ANVIL":
+	case "DAMAGED_ANVIL":
 	case "CAKE_BLOCK":
 	case "DIODE":
 	case "DIODE_BLOCK_OFF":
@@ -1073,8 +1075,7 @@ public class ResidencePlayerListener implements Listener {
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 	    boolean haspressure = perms.playerHas(player, Flags.pressure, hasuse);
 	    if ((!hasuse && !haspressure || !haspressure) && mat.isPlate()
-		&& !ResPerm.bypass_use.hasPermission(player, 10000L)
-	    ) {
+		&& !ResPerm.bypass_use.hasPermission(player, 10000L)) {
 		event.setCancelled(true);
 		return;
 	    }
@@ -1210,7 +1211,6 @@ public class ResidencePlayerListener implements Listener {
 	    || isCanUseEntity_BothClick(mat, block))) {
 	    if (!heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
 		&& !heldItem.isDye() && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
-
 		return;
 	    }
 	}
@@ -1263,7 +1263,6 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
-
 	    boolean hasuse = perms.playerHas(player, Flags.use, true);
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());

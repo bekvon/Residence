@@ -229,7 +229,11 @@ public class FlagPermissions {
 	addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
 	addMaterialToUseFlag(Material.DRAGON_EGG, Flags.egg);
 	addMaterialToUseFlag(CMIMaterial.COMMAND_BLOCK.getMaterial(), Flags.commandblock);
-	addMaterialToUseFlag(Material.ANVIL, Flags.anvil);
+
+	addMaterialToUseFlag(CMIMaterial.ANVIL.getMaterial(), Flags.anvil);
+	addMaterialToUseFlag(CMIMaterial.CHIPPED_ANVIL.getMaterial(), Flags.anvil);
+	addMaterialToUseFlag(CMIMaterial.DAMAGED_ANVIL.getMaterial(), Flags.anvil);
+
 	addMaterialToUseFlag(Material.FLOWER_POT, Flags.flowerpot);
 	addMaterialToUseFlag(Material.BEACON, Flags.beacon);
 	addMaterialToUseFlag(Material.JUKEBOX, Flags.container);
@@ -408,7 +412,7 @@ public class FlagPermissions {
 	} else if (state == FlagState.TRUE) {
 	    map.put(flag, true);
 	} else if (state == FlagState.NEITHER) {
-		map.remove(flag);	    
+	    map.remove(flag);
 	}
 	if (map.isEmpty())
 	    this.removeAllPlayerFlags(player);
@@ -451,7 +455,7 @@ public class FlagPermissions {
 	} else if (state == FlagState.TRUE) {
 	    map.put(flag, true);
 	} else if (state == FlagState.NEITHER) {
-		map.remove(flag);	    
+	    map.remove(flag);
 	}
 	if (map.isEmpty()) {
 	    groupFlags.remove(group);
