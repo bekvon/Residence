@@ -727,7 +727,7 @@ public class ConfigManager {
 		for (String one : sec.getKeys(false)) {
 		    String path = "Global.RandomTeleportation.Worlds." + one + ".";
 
-		    boolean enabled = c.get("Enabled", true);
+		    boolean enabled = c.get(path + "Enabled", true);
 
 		    if (!commented)
 			c.addComment("Global.RandomTeleportation.Worlds." + one,
@@ -735,14 +735,14 @@ public class ConfigManager {
 
 		    if (!commented)
 			c.addComment(path + "MaxCoord", "Max coordinate to teleport, setting to 1000, player can be teleported between -1000 and 1000 coordinates");
-		    int MaxCoord = c.get("MaxCoord", 1000);
+		    int MaxCoord = c.get(path + "MaxCoord", 1000);
 
 		    if (!commented)
 			c.addComment(path + "MinCoord",
 			    "If maxcoord set to 1000 and mincoord to 500, then player can be teleported between -1000 to -500 and 1000 to 500 coordinates");
-		    int MinCoord = c.get("MinCoord", c.getC().getInt(path + "MinCord", 500));
-		    int CenterX = c.get("CenterX", 0);
-		    int CenterZ = c.get("CenterZ", 0);
+		    int MinCoord = c.get(path + "MinCoord", c.getC().getInt(path + "MinCord", 500));
+		    int CenterX = c.get(path + "CenterX", 0);
+		    int CenterZ = c.get(path + "CenterZ", 0);
 
 		    World w = getWorld(one);
 
