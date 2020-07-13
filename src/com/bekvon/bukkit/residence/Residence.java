@@ -949,8 +949,8 @@ public class Residence extends JavaPlugin {
 	if (Bukkit.getPluginManager().getPlugin("Kingdoms") != null) {
 	    try {
 		kingdomsmanager = Kingdoms.getManagers();
-	    } catch (NoClassDefFoundError | Exception e) {
-
+	    } catch (Throwable e) {
+		this.consoleMessage("Failed to recognize Kingdoms plugin. Compatability disabled");
 	    }
 	}
     }
