@@ -33,6 +33,8 @@ public class YMLSaveHelper {
     }
 
     public void save() throws IOException {
+	if (f.getParentFile() != null && !f.getParentFile().exists())
+	    f.getParentFile().mkdirs();
 	if (f.isFile())
 	    f.delete();
 	FileOutputStream fout = new FileOutputStream(f);
