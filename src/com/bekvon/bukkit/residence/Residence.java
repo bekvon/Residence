@@ -43,8 +43,8 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
-import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.VersionChecker;
 import com.bekvon.bukkit.residence.BossBar.BossBarManager;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
@@ -201,6 +201,8 @@ public class Residence extends JavaPlugin {
     protected int feedBukkitId = -1;
 
     protected int DespawnMobsBukkitId = -1;
+
+    private boolean Slimefun = false;
 
     protected int autosaveBukkitId = -1;
     protected VersionChecker versionChecker;
@@ -562,6 +564,8 @@ public class Residence extends JavaPlugin {
 		e.printStackTrace();
 	    }
 
+	    Slimefun = Bukkit.getPluginManager().getPlugin("Slimefun") != null && Bukkit.getPluginManager().getPlugin("CS-CoreLib") != null;
+
 	    this.getConfigManager().copyOverTranslations();
 
 	    parseHelpEntries();
@@ -711,6 +715,7 @@ public class Residence extends JavaPlugin {
 		spigotlistener = new SpigotListener();
 
 		PluginManager pm = getServer().getPluginManager();
+
 		pm.registerEvents(blistener, this);
 		pm.registerEvents(plistener, this);
 		pm.registerEvents(elistener, this);
@@ -1966,6 +1971,10 @@ public class Residence extends JavaPlugin {
 
     public int getWorldGuardVersion() {
 	return wepVersion;
+    }
+
+    public boolean isSlimefunPresent() {
+	return Slimefun;
     }
 
 }

@@ -77,6 +77,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -778,6 +779,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onSignDestroy(BlockBreakEvent event) {
+
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
@@ -1862,12 +1864,24 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	} else {
-	    player.setAllowFlight(state);
+	    player.setAllowFlight(true);
+
+	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+
+	    if (res != null && res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue)) {
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+		    ClaimedResidence res2 = plugin.getResidenceManager().getByLoc(player.getLocation());
+		    if (player.isOnline() && res != null && res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue)) {
+			player.setAllowFlight(true);
+		    }
+		}, 20L);
+	    }
 	}
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onResidenceChange(ResidenceChangedEvent event) {
+
 	ClaimedResidence res = event.getTo();
 	ClaimedResidence ResOld = event.getFrom();
 	Player player = event.getPlayer();
@@ -2208,10 +2222,9 @@ public class ResidencePlayerListener implements Listener {
 	    }
 
 	    // Preventing fly in residence only when player has move permission
-	    f: if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
-		&& !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
-		if (res.isOwner(player))
-		    break f;
+	    if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
+		&& !ResPerm.bypass_nofly.hasPermission(player, 10000L) && res.isOwner(player)) {
+
 		Location lc = player.getLocation();
 		Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
 		location.setPitch(lc.getPitch());
@@ -2331,28 +2344,26 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	if (to != null && plugin.getConfigManager().isEnterAnimation() && to.isTopArea()) {
-	    if (from == null || from.getTopParent() != to)
-		to.showBounds(player, true);
+	if (to != null && plugin.getConfigManager().isEnterAnimation() && to.isTopArea() && (from == null || from.getTopParent() != to)) {
+	    to.showBounds(player, true);
 	}
 
 	if (from == null || res == null) {
 	    return;
 	}
 
-	if (!(res == from.getParent())) {
-	    if (plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(from) || plugin
-		.getTransactionManager().isForSale(from))) {
-		if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
-		    RentableLand rentable = plugin.getRentManager().getRentableLand(from);
-		    if (rentable != null)
-			ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
-		} else if (plugin.getTransactionManager().isForSale(from) && !res.isOwner(player)) {
-		    int sale = plugin.getTransactionManager().getSaleAmount(from);
-		    ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
-		}
+	if (res != from.getParent() && plugin.getConfigManager().isExtraEnterMessage() && !res.isOwner(player) && (plugin.getRentManager().isForRent(from) || plugin
+	    .getTransactionManager().isForSale(from))) {
+	    if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
+		RentableLand rentable = plugin.getRentManager().getRentableLand(from);
+		if (rentable != null)
+		    ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
+	    } else if (plugin.getTransactionManager().isForSale(from) && !res.isOwner(player)) {
+		int sale = plugin.getTransactionManager().getSaleAmount(from);
+		ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
 	    }
 	}
+
     }
 
     private StuckInfo updateStuckTeleport(Player player, Location loc) {
