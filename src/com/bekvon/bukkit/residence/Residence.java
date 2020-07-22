@@ -395,7 +395,9 @@ public class Residence extends JavaPlugin {
 	server.getScheduler().cancelTask(DespawnMobsBukkitId);
 
 	this.getPermissionManager().stopCacheClearScheduler();
-
+	
+	this.getSelectionManager().onDisable();
+	
 	if (getConfigManager().useLeases()) {
 	    server.getScheduler().cancelTask(leaseBukkitId);
 	}
@@ -414,20 +416,6 @@ public class Residence extends JavaPlugin {
 	    } catch (Exception ex) {
 		Logger.getLogger("Minecraft").log(Level.SEVERE, "[Residence] SEVERE SAVE ERROR", ex);
 	    }
-
-//	    File file = new File(this.getDataFolder(), "uuids.yml");
-//	    YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
-//	    if (!conf.isConfigurationSection("UUIDS"))
-//		conf.createSection("UUIDS");
-//	    for (Entry<UUID, String> one : getCachedPlayerNameUUIDs().entrySet()) {
-//		conf.set("UUIDS." + one.getKey().toString(), one.getValue());
-//	    }
-//	    try {
-//		conf.save(file);
-//	    } catch (IOException e) {
-//		e.printStackTrace();
-//	    }
-
 	    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Disabled!");
 	}
     }

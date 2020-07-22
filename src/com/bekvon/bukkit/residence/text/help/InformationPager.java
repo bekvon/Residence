@@ -68,7 +68,6 @@ public class InformationPager {
 
 	PageInfo pi = new PageInfo(perPage, ownedResidences.size(), page);
 
-
 	if (!(sender instanceof Player) && page == -1) {
 	    printListWithDelay(sender, ownedResidences, 0, resadmin);
 	    return;
@@ -84,7 +83,7 @@ public class InformationPager {
 	}
 
 	if (targetPlayer != null)
-	    plugin.msg(sender, lm.InformationPage_Top, plugin.msg(lm.General_Residences) , targetPlayer);
+	    plugin.msg(sender, lm.InformationPage_Top, plugin.msg(lm.General_Residences), targetPlayer);
 //	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),  pi.getTotalPages(), ownedResidences.size()));
 
 	String cmd = "res";
@@ -175,7 +174,7 @@ public class InformationPager {
 
 	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
-	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
+	    StringB.append(plugin.msg(lm.General_Owner, res.getOwner()));
 
 	    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
 		CuboidArea area = res.getAreaArray()[0];
@@ -185,7 +184,7 @@ public class InformationPager {
 		StringB.append("\n" + worldInfo);
 	    }
 
-	    StringB.append("\n " + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
+	    StringB.append("\n" + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
 
 	    String ExtraString = "";
 	    if (res.isForRent()) {
@@ -196,15 +195,15 @@ public class InformationPager {
 		    ExtraString = " " + plugin.msg(lm.Residence_IsForRent);
 		}
 		RentableLand rentable = res.getRentable();
-		StringB.append("\n " + plugin.msg(lm.General_Cost, rentable.cost, rentable.days));
-		StringB.append("\n " + plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
-		StringB.append("\n " + plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
-		StringB.append("\n " + plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+		StringB.append("\n" + plugin.msg(lm.General_Cost, rentable.cost, rentable.days));
+		StringB.append("\n" + plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
+		StringB.append("\n" + plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
+		StringB.append("\n" + plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
 
 	    if (res.isForSell()) {
 		ExtraString = " " + plugin.msg(lm.Residence_IsForSale);
-		StringB.append("\n " + plugin.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
+		StringB.append("\n" + plugin.msg(lm.Economy_LandForSale) + " " + res.getSellPrice());
 	    }
 
 	    String msg = plugin.msg(lm.Residence_ResList, i, res.getName(), res.getWorld(), "", ExtraString);
@@ -213,14 +212,6 @@ public class InformationPager {
 	    msg = msg.replaceAll("\\s{2}", " ");
 	    sender.sendMessage(msg);
 	}
-
-//	if (ownedResidences.size() > 100) {
-//	    i = 0;
-//	    while (i < 100) {
-//		i++;
-//		ownedResidences.remove(ownedResidences.firstKey());
-//	    }
-//	}
 
 	if (ownedResidences.isEmpty()) {
 	    return;
@@ -339,12 +330,12 @@ public class InformationPager {
 	Prevpage = CurrentPage > 1 ? Prevpage : CurrentPage;
 
 	RawMessage rm = new RawMessage();
-	rm.add((CurrentPage > 1 ? plugin.msg(lm.General_prevPage) : plugin.msg(lm.General_prevPageOff)),
-	    CurrentPage > 1 ? plugin.msg(lm.General_prevPageHover) : plugin.msg(lm.General_lastPageHover),
-	    CurrentPage > 1 ? cmd + " " + pagePrefix + Prevpage : cmd + " " + pagePrefix + pageCount);
-	rm.add(plugin.msg(lm.General_pageCount, CurrentPage, pageCount), plugin.msg(lm.General_pageCountHover, totalEntries));
-	rm.add(plugin.msg(pageCount > CurrentPage ? lm.General_nextPage : lm.General_nextPageOff),
-	    pageCount > CurrentPage ? plugin.msg(lm.General_nextPageHover) : plugin.msg(lm.General_firstPageHover),
+	rm.addText((CurrentPage > 1 ? plugin.msg(lm.General_prevPage) : plugin.msg(lm.General_prevPageOff))).addHover(
+	    CurrentPage > 1 ? plugin.msg(lm.General_prevPageHover) : plugin.msg(lm.General_lastPageHover)).addCommand(
+		CurrentPage > 1 ? cmd + " " + pagePrefix + Prevpage : cmd + " " + pagePrefix + pageCount);
+	rm.addText(plugin.msg(lm.General_pageCount, CurrentPage, pageCount)).addHover(plugin.msg(lm.General_pageCountHover, totalEntries));
+	rm.addText(plugin.msg(pageCount > CurrentPage ? lm.General_nextPage : lm.General_nextPageOff)).addHover(
+	    pageCount > CurrentPage ? plugin.msg(lm.General_nextPageHover) : plugin.msg(lm.General_firstPageHover)).addCommand(
 	    pageCount > CurrentPage ? cmd + " " + pagePrefix + NextPage : cmd + " " + pagePrefix + 1);
 	if (pageCount != 0)
 	    rm.show(sender);

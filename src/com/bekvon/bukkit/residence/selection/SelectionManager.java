@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -1078,5 +1079,12 @@ public class SelectionManager {
     }
 
     public void regenerate(CuboidArea area) {
+    }
+    
+    public void onDisable() {
+	for (Entry<UUID, Visualizer> one : vMap.entrySet()) {
+	    one.getValue().cancelAll();
+	}
+	vMap.clear();
     }
 }
