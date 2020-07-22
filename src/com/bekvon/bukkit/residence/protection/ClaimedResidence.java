@@ -1158,7 +1158,7 @@ public class ClaimedResidence {
 	    return;
 	}
 
-	plugin.msg(sender, lm.InformationPage_TopLine, plugin.msg(lm.General_Subzones));
+	plugin.msg(sender, lm.InformationPage_TopSingle, plugin.msg(lm.General_Subzones));
 	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),
 	    pi.getTotalPages(), pi.getTotalEntries()));
 	RawMessage rm = new RawMessage();

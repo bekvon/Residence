@@ -44,7 +44,7 @@ public class InformationPager {
 	    sender.sendMessage(ChatColor.RED + plugin.msg(lm.Invalid_Page));
 	    return;
 	}
-	plugin.msg(sender, lm.InformationPage_TopLine, title);
+	plugin.msg(sender, lm.InformationPage_TopSingle, title);
 	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),
 	    pi.getTotalPages(), lines.size()));
 	for (int i = pi.getStart(); i <= pi.getEnd(); i++) {
@@ -68,7 +68,6 @@ public class InformationPager {
 
 	PageInfo pi = new PageInfo(perPage, ownedResidences.size(), page);
 
-	int pagecount = pi.getTotalPages();
 
 	if (!(sender instanceof Player) && page == -1) {
 	    printListWithDelay(sender, ownedResidences, 0, resadmin);
@@ -85,9 +84,8 @@ public class InformationPager {
 	}
 
 	if (targetPlayer != null)
-	    plugin.msg(sender, lm.InformationPage_TopLine, plugin.msg(lm.General_Residences) + " - " + targetPlayer);
-	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),
-	    pagecount, ownedResidences.size()));
+	    plugin.msg(sender, lm.InformationPage_Top, plugin.msg(lm.General_Residences) , targetPlayer);
+//	plugin.msg(sender, lm.InformationPage_Page, plugin.msg(lm.General_GenericPages, String.format("%d", page),  pi.getTotalPages(), ownedResidences.size()));
 
 	String cmd = "res";
 	if (resadmin)
@@ -104,31 +102,32 @@ public class InformationPager {
 
 	    ClaimedResidence res = resT.getValue();
 	    StringBuilder StringB = new StringBuilder();
-	    StringB.append(" " + plugin.msg(lm.General_Owner, res.getOwner()));
+	    StringB.append(plugin.msg(lm.General_Owner, res.getOwner()));
 
 	    if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
+		StringB.append("\n");
 		CuboidArea area = res.getAreaArray()[0];
 		String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 		String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
 		String worldInfo = ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
-		StringB.append("\n" + worldInfo);
+		StringB.append(worldInfo);
 	    }
 
-	    StringB.append("\n " + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
+	    StringB.append("\n").append(plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.getCreateTime())));
 
 	    String ExtraString = "";
 	    if (res.isForRent()) {
 		if (res.isRented()) {
 		    ExtraString = " " + plugin.msg(lm.Residence_IsRented);
-		    StringB.append("\n " + plugin.msg(lm.Residence_RentedBy, res.getRentedLand().player));
+		    StringB.append("\n").append(plugin.msg(lm.Residence_RentedBy, res.getRentedLand().player));
 		} else {
 		    ExtraString = " " + plugin.msg(lm.Residence_IsForRent);
 		}
 		RentableLand rentable = res.getRentable();
-		StringB.append("\n " + plugin.msg(lm.General_Cost, rentable.cost, rentable.days));
-		StringB.append("\n " + plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
-		StringB.append("\n " + plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
-		StringB.append("\n " + plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
+		StringB.append("\n").append(plugin.msg(lm.General_Cost, rentable.cost, rentable.days));
+		StringB.append("\n").append(plugin.msg(lm.Rentable_AllowRenewing, rentable.AllowRenewing));
+		StringB.append("\n").append(plugin.msg(lm.Rentable_StayInMarket, rentable.StayInMarket));
+		StringB.append("\n").append(plugin.msg(lm.Rentable_AllowAutoPay, rentable.AllowAutoPay));
 	    }
 
 	    if (res.isForSell()) {
@@ -147,9 +146,9 @@ public class InformationPager {
 
 	    RawMessage rm = new RawMessage();
 	    if (sender instanceof Player)
-		rm.add(msg, StringB.toString(), cmd + " tp " + res.getName());
+		rm.addText(msg).addHover(StringB.toString()).addCommand(cmd + " tp " + res.getName());
 	    else
-		rm.add(msg + " " + StringB.toString().replace("\n", ""));
+		rm.addText(msg + " " + StringB.toString().replace("\n", ""));
 
 	    rm.show(sender);
 	}
