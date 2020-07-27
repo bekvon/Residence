@@ -293,12 +293,13 @@ public class HelpEntry {
 		break;
 
 	    if (args[i].equalsIgnoreCase(""))
-		return tempmeinPath.getKeys(false);
+		return tempmeinPath == null ? subCommands : tempmeinPath.getKeys(false);
 
-	    if (!tempmeinPath.isConfigurationSection(args[i] + ".SubCommands"))
+	    if (tempmeinPath != null && !tempmeinPath.isConfigurationSection(args[i] + ".SubCommands"))
 		break;
 
-	    tempmeinPath = tempmeinPath.getConfigurationSection(args[i] + ".SubCommands");
+	    if (tempmeinPath != null)
+		tempmeinPath = tempmeinPath.getConfigurationSection(args[i] + ".SubCommands");
 
 	    i++;
 	}
@@ -306,7 +307,7 @@ public class HelpEntry {
 	int neededArgPlace = args.length - 2 - i;
 
 	boolean subCommand = true;
-	if (i < args.length && tempmeinPath.isConfigurationSection(args[i])) {
+	if (i < args.length && tempmeinPath!= null && tempmeinPath.isConfigurationSection(args[i])) {
 	    subCommand = false;
 	    tempmeinPath = tempmeinPath.getConfigurationSection(args[i]);
 	}
@@ -455,7 +456,7 @@ public class HelpEntry {
 	}
 
 	if (subCommand)
-	    return tempmeinPath.getKeys(false);
+	    return tempmeinPath == null ? subCommands : tempmeinPath.getKeys(false);
 
 	return new HashSet<String>(Arrays.asList("?"));
     }
