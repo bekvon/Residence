@@ -59,6 +59,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceBlockListener implements Listener {
 
@@ -723,6 +724,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
@@ -739,29 +741,50 @@ public class ResidenceBlockListener implements Listener {
 	// Disabling listener if flag disabled globally
 	if (!Flags.pistonprotection.isGlobalyEnabled())
 	    return;
-	ClaimedResidence pistonRes = plugin.getResidenceManager().getByLoc(event.getBlock().getLocation());
+
+	Location origins = event.getBlock().getLocation();
+
+	int lowestY = 255;
+	int bigestY = 0;
+	int lowestX = Integer.MAX_VALUE;
+	int lowestZ = Integer.MAX_VALUE;
+	int bigestX = -Integer.MAX_VALUE;
+	int bigestZ = -Integer.MAX_VALUE;
 
 	BlockFace dir = event.getDirection();
-	for (Block block : event.getBlocks()) {
-	    Location locFrom = block.getLocation();
-	    Location locTo = new Location(block.getWorld(), block.getX() + dir.getModX(), block.getY() + dir.getModY(), block.getZ() + dir.getModZ());
-	    ClaimedResidence blockFrom = plugin.getResidenceManager().getByLoc(locFrom);
-	    ClaimedResidence blockTo = plugin.getResidenceManager().getByLoc(locTo);
 
-	    if (pistonRes == null && blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue)) {
-		event.setCancelled(true);
-		return;
-	    } else if (blockTo != null && blockFrom == null && blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue)) {
-		event.setCancelled(true);
-		return;
-	    } else if (blockTo != null && blockFrom != null && (pistonRes != null && !blockTo.isOwner(pistonRes.getOwner()) || !blockTo.isOwner(blockFrom.getOwner()))
-		&& blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue)) {
+	for (Block block : event.getBlocks()) {
+	    Location one = block.getLocation().clone().add(dir.getModX(), dir.getModY(), dir.getModZ());
+	    if (one.getBlockY() < lowestY)
+		lowestY = one.getBlockY();
+	    if (one.getBlockX() < lowestX)
+		lowestX = one.getBlockX();
+	    if (one.getBlockZ() < lowestZ)
+		lowestZ = one.getBlockZ();
+	    if (one.getBlockY() > bigestY)
+		bigestY = one.getBlockY();
+	    if (one.getBlockX() > bigestX)
+		bigestX = one.getBlockX();
+	    if (one.getBlockZ() > bigestZ)
+		bigestZ = one.getBlockZ();
+	}
+
+	ClaimedResidence pistonRes = plugin.getResidenceManager().getByLoc(event.getBlock().getLocation());
+
+	if (pistonRes != null && pistonRes.containsLoc(new Location(origins.getWorld(), lowestX, lowestY, lowestZ)) && pistonRes.containsLoc(new Location(origins.getWorld(), bigestX, bigestY, bigestZ))) {
+	    return;
+	}
+
+	for (int i = event.getBlocks().size() - 1; i >= 0; i--) {
+	    Block block = event.getBlocks().get(i);
+	    Location locTo = block.getLocation().clone().add(dir.getModX(), dir.getModY(), dir.getModZ());
+	    ClaimedResidence blockTo = plugin.getResidenceManager().getByLoc(locTo);
+	    boolean hasPerm = blockTo != null && blockTo.getPermissions().has(Flags.pistonprotection, FlagCombo.OnlyTrue);
+	    if (pistonRes == null && hasPerm || blockTo != null && pistonRes != null && !blockTo.isOwner(pistonRes.getOwner()) && hasPerm) {
 		event.setCancelled(true);
 		return;
 	    }
-
 	}
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
