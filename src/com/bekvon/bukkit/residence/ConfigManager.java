@@ -237,6 +237,7 @@ public class ConfigManager {
 //    protected CMIParticle OverlapSpigotSides;
 
     // DynMap
+    public boolean DynMapHideByDefault;
     public boolean DynMapUse;
     public boolean DynMapShowFlags;
     public boolean DynMapHideHidden;
@@ -1222,6 +1223,8 @@ public class ConfigManager {
 
 	c.addComment("DynMap.Use", "Enables or disable DynMap Support");
 	DynMapUse = c.get("DynMap.Use", false);
+	c.addComment("DynMap.HideByDefault", "When set to true we will hide residence areas by default on dynmap window","Residences can still be enabled throw provided DynMap option on left top side");
+	DynMapHideByDefault = c.get("DynMap.HideByDefault", false);
 	c.addComment("DynMap.ShowFlags", "Shows or hides residence flags");
 	DynMapShowFlags = c.get("DynMap.ShowFlags", true);
 	c.addComment("DynMap.HideHidden", "If set true, residence with hidden flag set to true will be hidden from dynmap");

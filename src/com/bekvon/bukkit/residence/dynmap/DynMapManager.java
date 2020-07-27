@@ -312,7 +312,7 @@ public class DynMapManager {
 	if (set != null) {
 	    set.deleteMarkerSet();
 	    set = null;
-	}
+	} 
 	set = markerapi.getMarkerSet("residence.markerset");
 	if (set == null)
 	    set = markerapi.createMarkerSet("residence.markerset", "Residence", null, false);
@@ -324,7 +324,7 @@ public class DynMapManager {
 	    return;
 	}
 	set.setLayerPriority(1);
-	set.setHideByDefault(false);
+	set.setHideByDefault(plugin.getConfigManager().DynMapHideByDefault);
 
 	Bukkit.getConsoleSender().sendMessage("[Residence] DynMap residence activated!");
 

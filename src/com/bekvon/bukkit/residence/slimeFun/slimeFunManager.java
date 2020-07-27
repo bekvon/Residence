@@ -24,6 +24,8 @@ public class slimeFunManager {
 		if (Bukkit.getPluginManager().getPlugin("Slimefun").isEnabled()) {
 		    ProtectionManager manager = SlimefunPlugin.getProtectionManager();
 		    manager.registerModule(Bukkit.getServer(), "Residence", pls -> new SlimeFunResidenceModule(plugin));
+		    
+		    plugin.consoleMessage("Enabled compatability with SlimeFun plugin");
 		    Bukkit.getScheduler().cancelTask(repeat);
 		}
 		if (times > 60) {
