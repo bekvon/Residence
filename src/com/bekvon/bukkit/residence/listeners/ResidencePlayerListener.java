@@ -964,7 +964,7 @@ public class ResidencePlayerListener implements Listener {
 	return plugin.getConfigManager().getCustomRightClick().contains(CMIMaterial.get(block));
     }
 
-    public boolean isCanUseEntity_BothClick(Material mat, Block block) {
+    public static boolean isCanUseEntity_BothClick(Material mat, Block block) {
 	CMIMaterial m = CMIMaterial.get(mat);
 	if (m.isDoor())
 	    return true;

@@ -110,6 +110,7 @@ import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
+import com.bekvon.bukkit.residence.slimeFun.slimeFunManager;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
@@ -129,6 +130,8 @@ import com.residence.zip.ZipLibrary;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
+import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectionManager;
 
 /**
  * 
@@ -143,7 +146,7 @@ public class Residence extends JavaPlugin {
     protected ResidenceManager rmanager;
     protected SelectionManager smanager;
     public PermissionManager gmanager;
-    protected ConfigManager cmanager;
+    protected ConfigManager configManager;
 
     protected boolean spigotPlatform = false;
 
@@ -156,7 +159,7 @@ public class Residence extends JavaPlugin {
     protected ResidenceFixesListener flistener;
     protected ResidenceRaidListener slistener;
 
-    protected ResidenceCommandListener cManager;
+    protected ResidenceCommandListener commandManager;
 
     protected BossBarManager BossBarManager;
 
@@ -202,7 +205,7 @@ public class Residence extends JavaPlugin {
 
     protected int DespawnMobsBukkitId = -1;
 
-    private boolean Slimefun = false;
+    private boolean SlimeFun = false;
 
     protected int autosaveBukkitId = -1;
     protected VersionChecker versionChecker;
@@ -304,9 +307,9 @@ public class Residence extends JavaPlugin {
     }
 
     public ResidenceCommandListener getCommandManager() {
-	if (cManager == null)
-	    cManager = new ResidenceCommandListener(this);
-	return cManager;
+	if (commandManager == null)
+	    commandManager = new ResidenceCommandListener(this);
+	return commandManager;
     }
 
     public ResidenceApi getAPI() {
@@ -395,9 +398,9 @@ public class Residence extends JavaPlugin {
 	server.getScheduler().cancelTask(DespawnMobsBukkitId);
 
 	this.getPermissionManager().stopCacheClearScheduler();
-	
+
 	this.getSelectionManager().onDisable();
-	
+
 	if (getConfigManager().useLeases()) {
 	    server.getScheduler().cancelTask(leaseBukkitId);
 	}
@@ -552,8 +555,11 @@ public class Residence extends JavaPlugin {
 		e.printStackTrace();
 	    }
 
-	    Slimefun = Bukkit.getPluginManager().getPlugin("Slimefun") != null && Bukkit.getPluginManager().getPlugin("CS-CoreLib") != null;
+	    SlimeFun = Bukkit.getPluginManager().getPlugin("Slimefun") != null && Bukkit.getPluginManager().getPlugin("CS-CoreLib") != null;
 
+	    if (SlimeFun)
+		new slimeFunManager(this);
+	    
 	    this.getConfigManager().copyOverTranslations();
 
 	    parseHelpEntries();
@@ -652,7 +658,6 @@ public class Residence extends JavaPlugin {
 				continue;
 			    addOfflinePlayerToChache(player);
 			}
-			return;
 		    }
 		});
 	    }
@@ -896,10 +901,7 @@ public class Residence extends JavaPlugin {
 	    return true;
 	}
 	String namecheck = name.replaceAll(getConfigManager().getResidenceNameRegex(), "");
-	if (!name.equals(namecheck)) {
-	    return false;
-	}
-	return true;
+	return name.equals(namecheck);
     }
 
     private void setWorldEdit() {
@@ -1054,13 +1056,13 @@ public class Residence extends JavaPlugin {
 
     @Deprecated
     public void setConfigManager(ConfigManager cm) {
-	cmanager = cm;
+	configManager = cm;
     }
 
     public ConfigManager getConfigManager() {
-	if (cmanager == null)
-	    cmanager = new ConfigManager(this);
-	return cmanager;
+	if (configManager == null)
+	    configManager = new ConfigManager(this);
+	return configManager;
     }
 
     public TransactionManager getTransactionManager() {
@@ -1215,10 +1217,7 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isResAdminOn(Player player) {
-	if (resadminToggle.contains(player.getName())) {
-	    return true;
-	}
-	return false;
+	return resadminToggle.contains(player.getName());
     }
 
     public void turnResAdminOn(Player player) {
@@ -1226,9 +1225,7 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isResAdminOn(String player) {
-	if (resadminToggle.contains(player))
-	    return true;
-	return false;
+	return resadminToggle.contains(player);
     }
 
     private void saveYml() throws IOException {
@@ -1473,12 +1470,6 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private void writeDefaultConfigFromJar() {
-	if (this.writeDefaultFileFromJar(new File(this.getDataFolder(), "config.yml"), "config.yml", true)) {
-	    System.out.println("[Residence] Wrote default config...");
-	}
-    }
-
     private void writeDefaultGroupsFromJar() {
 	if (this.writeDefaultFileFromJar(new File(this.getDataFolder(), "groups.yml"), "groups.yml", true)) {
 	    System.out.println("[Residence] Wrote default groups...");
@@ -1611,13 +1602,18 @@ public class Residence extends JavaPlugin {
     private static void copy(File source, File target) throws IOException {
 	InputStream in = new FileInputStream(source);
 	OutputStream out = new FileOutputStream(target);
-	byte[] buf = new byte[1024];
-	int len;
-	while ((len = in.read(buf)) > 0) {
-	    out.write(buf, 0, len);
+	try {
+	    byte[] buf = new byte[1024];
+	    int len;
+	    while ((len = in.read(buf)) > 0) {
+		out.write(buf, 0, len);
+	    }
+	} catch (Throwable e) {
+	    e.printStackTrace();
+	} finally {
+	    in.close();
+	    out.close();
 	}
-	in.close();
-	out.close();
     }
 
 //    private void writeDefaultLanguageFile(String lang) {
@@ -1658,33 +1654,44 @@ public class Residence extends JavaPlugin {
 	    File jarloc = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getCanonicalFile();
 	    if (jarloc.isFile()) {
 		JarFile jar = new JarFile(jarloc);
-		JarEntry entry = jar.getJarEntry(jarPath);
-		if (entry != null && !entry.isDirectory()) {
-		    InputStream in = jar.getInputStream(entry);
-		    InputStreamReader isr = new InputStreamReader(in, "UTF8");
-		    if (writeName.isFile()) {
-			if (backupOld) {
-			    if (fileBackup.isFile()) {
-				fileBackup.delete();
+		try {
+		    JarEntry entry = jar.getJarEntry(jarPath);
+		    if (entry != null && !entry.isDirectory()) {
+			InputStream in = jar.getInputStream(entry);
+			InputStreamReader isr = new InputStreamReader(in, "UTF8");
+			if (writeName.isFile()) {
+			    if (backupOld) {
+				if (fileBackup.isFile()) {
+				    fileBackup.delete();
+				}
+				writeName.renameTo(fileBackup);
+			    } else {
+				writeName.delete();
 			    }
-			    writeName.renameTo(fileBackup);
-			} else {
-			    writeName.delete();
 			}
+			FileOutputStream out = new FileOutputStream(writeName);
+			OutputStreamWriter osw = new OutputStreamWriter(out, "UTF8");
+			try {
+			    char[] tempbytes = new char[512];
+			    int readbytes = isr.read(tempbytes, 0, 512);
+			    while (readbytes > -1) {
+				osw.write(tempbytes, 0, readbytes);
+				readbytes = isr.read(tempbytes, 0, 512);
+			    }
+			} catch (Throwable e) {
+			    e.printStackTrace();
+			} finally {
+			    osw.close();
+			    isr.close();
+			    out.close();
+			}
+			return true;
 		    }
-		    FileOutputStream out = new FileOutputStream(writeName);
-		    OutputStreamWriter osw = new OutputStreamWriter(out, "UTF8");
-		    char[] tempbytes = new char[512];
-		    int readbytes = isr.read(tempbytes, 0, 512);
-		    while (readbytes > -1) {
-			osw.write(tempbytes, 0, readbytes);
-			readbytes = isr.read(tempbytes, 0, 512);
-		    }
-		    osw.close();
-		    isr.close();
-		    return true;
+		} catch (Throwable ex) {
+		    ex.printStackTrace();
+		} finally {
+		    jar.close();
 		}
-		jar.close();
 	    }
 	    return false;
 	} catch (Exception ex) {
@@ -1765,8 +1772,7 @@ public class Residence extends JavaPlugin {
 	    return;
 	if (player.getName() != null)
 	    OfflinePlayerList.put(player.getName().toLowerCase(), player);
-	if (player.getUniqueId() != null)
-	    cachedPlayerNameUUIDs.put(player.getUniqueId(), player);
+	cachedPlayerNameUUIDs.put(player.getUniqueId(), player);
     }
 
     public String getPlayerName(String uuid) {
@@ -1779,7 +1785,7 @@ public class Residence extends JavaPlugin {
 
     @Deprecated
     public String getServerLandname() {
-	return this.getLM().getMessage(lm.server_land);
+	return getServerLandName();
     }
 
     public String getServerLandName() {
@@ -1808,9 +1814,7 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isDisabledWorld(String worldname) {
-	if (getConfigManager().DisabledWorldsList.contains(worldname))
-	    return true;
-	return false;
+	return getConfigManager().DisabledWorldsList.contains(worldname);
     }
 
     public boolean isDisabledWorldListener(World world) {
@@ -1818,9 +1822,7 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isDisabledWorldListener(String worldname) {
-	if (getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableListeners)
-	    return true;
-	return false;
+	return getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableListeners;
     }
 
     public boolean isDisabledWorldCommand(World world) {
@@ -1828,18 +1830,8 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isDisabledWorldCommand(String worldname) {
-	if (getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableCommands)
-	    return true;
-	return false;
+	return getConfigManager().DisabledWorldsList.contains(worldname) && getConfigManager().DisableCommands;
     }
-
-//    public static void msg(Player player, String path, Object... variables) {
-//	if (player != null)
-//	    if (Residence.getLM().containsKey(path))
-//		player.sendMessage(Residence.getLM().getMessage(path, variables));
-//	    else
-//		player.sendMessage(path);
-//    }
 
     public String msg(String path) {
 	return getLM().getMessage(path);
@@ -1855,29 +1847,7 @@ public class Residence extends JavaPlugin {
 	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
     }
 
-//    private boolean isWorldOk(CommandSender sender) {
-//	if (!this.getConfigManager().DisableNoFlagMessageUse)
-//	    return true;
-//
-//	if (sender.hasPermission("residence.checkbadflags"))
-//	    return true;
-//	
-//	if (!(sender instanceof Player))
-//	    return true;
-//
-//	Player player = (Player) sender;
-//	String world = player.getWorld().getName();
-//	
-//	for (String one : this.getConfigManager().DisableNoFlagMessageWorlds) {
-//	    if (one.equalsIgnoreCase(world))
-//		return false;
-//	}
-//	return true;
-//    }
-
     public void msg(CommandSender sender, lm lm, Object... variables) {
-//	if (!isWorldOk(sender))
-//	    return;
 
 	if (sender == null)
 	    return;
@@ -1962,7 +1932,7 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isSlimefunPresent() {
-	return Slimefun;
+	return SlimeFun;
     }
 
 }

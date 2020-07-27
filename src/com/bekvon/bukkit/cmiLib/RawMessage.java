@@ -100,65 +100,64 @@ public class RawMessage {
 	    fragment = f;
 
 	StringBuilder finalText = new StringBuilder();
-	if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
-	    for (RawMessageFragment one : fragments) {
-		if (!finalText.toString().isEmpty())
-		    finalText.append("},{");
-		StringBuilder options = new StringBuilder();
-		for (CMIChatColor format : one.getFormats()) {
-		    if (!options.toString().isEmpty())
-			options.append(",");
-		    if (format.equals(CMIChatColor.UNDERLINE))
-			options.append("\"underlined\":true");
-		    else if (format.equals(CMIChatColor.BOLD))
-			options.append("\"bold\":true");
-		    else if (format.equals(CMIChatColor.ITALIC))
-			options.append("\"italic\":true");
-		    else if (format.equals(CMIChatColor.STRIKETHROUGH))
-			options.append("\"strikethrough\":true");
-		    else if (format.equals(CMIChatColor.MAGIC))
-			options.append("\"obfuscated\":true");
-		}
-		if (!options.toString().isEmpty()) {
-		    finalText.append(options.toString());
-		    finalText.append(",");
-		}
 
-		if (one.getLastColor() != null) {
-		    if (one.getLastColor().getHex() != null)
-			finalText.append("\"color\":\"#" + one.getLastColor().getHex() + "\",");
-		    else if (one.getLastColor().getName() != null) {
-			finalText.append("\"color\":\"" + one.getLastColor().getName().toLowerCase() + "\",");
-		    }
-		}
-		String t = one.getText();
-		finalText.append("\"text\":\"" + t + "\"");
+	for (RawMessageFragment one : fragments) {
+	    if (!finalText.toString().isEmpty())
+		finalText.append("},{");
+	    StringBuilder options = new StringBuilder();
+	    for (CMIChatColor format : one.getFormats()) {
+		if (!options.toString().isEmpty())
+		    options.append(",");
+		if (format.equals(CMIChatColor.UNDERLINE))
+		    options.append("\"underlined\":true");
+		else if (format.equals(CMIChatColor.BOLD))
+		    options.append("\"bold\":true");
+		else if (format.equals(CMIChatColor.ITALIC))
+		    options.append("\"italic\":true");
+		else if (format.equals(CMIChatColor.STRIKETHROUGH))
+		    options.append("\"strikethrough\":true");
+		else if (format.equals(CMIChatColor.MAGIC))
+		    options.append("\"obfuscated\":true");
 	    }
-	} else {
-	    for (RawMessageFragment one : fragments) {
-		if (!finalText.toString().isEmpty())
-		    finalText.append("},{");
-		StringBuilder options = new StringBuilder();
+	    if (!options.toString().isEmpty()) {
+		finalText.append(options.toString());
+		finalText.append(",");
+	    }
 
+	    if (one.getLastColor() != null) {
+		if (one.getLastColor().getHex() != null)
+		    finalText.append("\"color\":\"#" + one.getLastColor().getHex() + "\",");
+		else if (one.getLastColor().getName() != null) {
+		    finalText.append("\"color\":\"" + one.getLastColor().getName().toLowerCase() + "\",");
+		}
+	    }
+
+	    String t = one.getText();
+
+	    // Old server support, we need to add colors and formats to the text directly
+	    if (Version.isCurrentLower(Version.v1_16_R1)) {
+		StringBuilder oldColors = new StringBuilder();
 		if (one.getLastColor() != null && one.getLastColor().getName() != null) {
-			options.append(one.getLastColor().getColorCode());		    
+		    oldColors.append(one.getLastColor().getColorCode());
 		}
 		for (CMIChatColor format : one.getFormats()) {
 		    if (format.equals(CMIChatColor.UNDERLINE))
-			options.append("&n");
+			oldColors.append("&n");
 		    else if (format.equals(CMIChatColor.BOLD))
-			options.append("&l");
+			oldColors.append("&l");
 		    else if (format.equals(CMIChatColor.ITALIC))
-			options.append("&o");
+			oldColors.append("&o");
 		    else if (format.equals(CMIChatColor.STRIKETHROUGH))
-			options.append("&m");
+			oldColors.append("&m");
 		    else if (format.equals(CMIChatColor.MAGIC))
-			options.append("&k");
+			oldColors.append("&k");
 		}
-		String t = one.getText();
-		finalText.append("\"text\":\"" + options.toString() + t + "\"");
+		t = oldColors.toString() + t;
 	    }
+
+	    finalText.append("\"text\":\"" + t + "\"");
 	}
+
 	if (finalText.toString().isEmpty())
 	    return "";
 	return "{" + finalText.toString() + "}";
