@@ -720,6 +720,7 @@ public class ConfigManager {
 	Set<World> worlds = new HashSet<World>();
 	worlds.addAll(Bukkit.getWorlds());
 
+	RTeleport.clear();
 	boolean commented = false;
 	if (c.getC().isConfigurationSection("Global.RandomTeleportation.Worlds")) {
 	    ConfigurationSection sec = c.getC().getConfigurationSection("Global.RandomTeleportation.Worlds");
