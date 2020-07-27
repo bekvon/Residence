@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
@@ -159,7 +160,7 @@ public class shop implements cmd {
 		ClaimedResidence res = plugin.getResidenceManager().getByName(one.getKey());
 		if (res == null)
 		    continue;
-		
+
 		Vote vote = plugin.getShopSignUtilManager().getAverageVote(one.getKey());
 		String votestat = "";
 
@@ -172,10 +173,10 @@ public class shop implements cmd {
 		String message = plugin.msg(lm.Shop_List, pi.getPositionForOutput(), one.getKey(), owner, votestat);
 
 		String desc = res.getShopDesc() == null ? plugin.msg(lm.Shop_NoDesc) : plugin.msg(
-		    lm.Shop_Desc, ChatColor.translateAlternateColorCodes('&', res.getShopDesc().replace("/n", "\n")));
+		    lm.Shop_Desc, CMIChatColor.translate(res.getShopDesc().replace("/n", "\n")));
 
 		RawMessage rm = new RawMessage();
-		rm.add(" " + message, desc, "/res tp " + one.getKey());
+		rm.addText(" " + message).addHover(desc).addCommand("/res tp " + one.getKey());
 		rm.show(sender);
 	    }
 
@@ -222,7 +223,7 @@ public class shop implements cmd {
 	    }
 
 	    res.setShopDesc(desc);
-	    plugin.msg(player, lm.Shop_DescChange, ChatColor.translateAlternateColorCodes('&', desc));
+	    plugin.msg(player, lm.Shop_DescChange, CMIChatColor.translate(desc));
 	    return true;
 	}
 	if (args.length == 2 && args[0].equalsIgnoreCase("createboard")) {
@@ -412,7 +413,7 @@ public class shop implements cmd {
 	c.get("Info", Arrays.asList("Manages residence shop feature"));
 
 	// Sub commands
-	c.setP(c.getPath()+"SubCommands.");
+	c.setP(c.getPath() + "SubCommands.");
 	c.get("list.Description", "Shows list of res shops");
 	c.get("list.Info", Arrays.asList("&eUsage: &6/res shop list", "Shows full list of all residences with shop flag"));
 

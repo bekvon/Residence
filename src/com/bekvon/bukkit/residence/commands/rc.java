@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -105,7 +106,7 @@ public class rc implements cmd {
 		if (!posibleColor.contains("&"))
 		    posibleColor = "&" + posibleColor;
 
-		if (posibleColor.length() != 2 || ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', posibleColor)).length() != 0) {
+		if (posibleColor.length() != 2 || CMIChatColor.stripColor(CMIChatColor.translate(posibleColor)).length() != 0) {
 		    plugin.msg(player, lm.Chat_InvalidColor);
 		    return true;
 		}
@@ -146,7 +147,7 @@ public class rc implements cmd {
 
 		res.setChatPrefix(prefix);
 		chat.setChatPrefix(prefix);
-		plugin.msg(player, lm.Chat_ChangedPrefix, ChatColor.translateAlternateColorCodes('&', prefix));
+		plugin.msg(player, lm.Chat_ChangedPrefix, CMIChatColor.translate(prefix));
 		return true;
 	    } else if (args[0].equalsIgnoreCase("kick")) {
 		ChatChannel chat = plugin.getChatManager().getPlayerChannel(pname);

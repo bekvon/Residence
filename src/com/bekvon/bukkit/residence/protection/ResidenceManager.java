@@ -22,6 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
@@ -701,7 +702,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    if (res.isOwner(sender) || !(sender instanceof Player) || resadmin)
 		resNameOwner += plugin.msg(lm.Bank_Name, res.getBank().getStoredMoneyFormated());
 	}
-	resNameOwner = ChatColor.translateAlternateColorCodes('&', resNameOwner);
+	resNameOwner = CMIChatColor.translate(resNameOwner);
 
 	String worldInfo = plugin.msg(lm.General_World, perms.getWorld());
 
@@ -709,7 +710,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    CuboidArea area = res.getAreaArray()[0];
 	    String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 	    String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
-	    worldInfo += ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
+	    worldInfo += CMIChatColor.translate(plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 	}
 
 	worldInfo += "\n" + plugin.msg(lm.General_CreatedOn, GetTime.getTime(res.createTime));
@@ -753,7 +754,7 @@ public class ResidenceManager implements ResidenceInterface {
 	String msg = "";
 	msg += plugin.msg(lm.General_TotalResSize, res.getTotalSize(), res.getXZSize());
 
-	plugin.msg(sender, ChatColor.translateAlternateColorCodes('&', msg));
+	plugin.msg(sender, CMIChatColor.translate(msg));
 
 	if (plugin.getEconomyManager() != null) {
 	    plugin.msg(sender, lm.General_TotalWorth, res.getWorthByOwner(), res.getWorth());

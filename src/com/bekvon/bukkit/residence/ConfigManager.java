@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.ELMessageType;
@@ -295,7 +296,7 @@ public class ConfigManager {
     }
 
     public static String Colors(String text) {
-	return ChatColor.translateAlternateColorCodes('&', text);
+	return CMIChatColor.translate(text);
     }
 
     public static List<String> getClassesFromPackage(String pckgname, String cleaner) throws ClassNotFoundException {

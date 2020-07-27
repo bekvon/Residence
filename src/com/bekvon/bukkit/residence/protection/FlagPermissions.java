@@ -20,6 +20,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
@@ -970,7 +971,7 @@ public class FlagPermissions {
 	if (sbuild.length() == 0) {
 	    sbuild.append("none");
 	}
-	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
+	return CMIChatColor.translate(sbuild.toString());
     }
 
     public Map<String, Boolean> getFlags() {
@@ -1067,7 +1068,7 @@ public class FlagPermissions {
 	if (sbuild.length() == 0) {
 	    sbuild.append("none");
 	}
-	return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
+	return CMIChatColor.translate(sbuild.toString());
     }
 
     public String listOtherPlayersFlags(String player) {
@@ -1264,7 +1265,7 @@ public class FlagPermissions {
 		groupFlags.remove(group);
 		sbuild.append("none");
 	    }
-	    return ChatColor.translateAlternateColorCodes('&', sbuild.toString());
+	    return CMIChatColor.translate(sbuild.toString());
 	}
 	return "none";
     }

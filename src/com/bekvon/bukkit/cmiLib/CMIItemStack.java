@@ -95,7 +95,7 @@ public class CMIItemStack {
 	    if (name == null) {
 		meta.setDisplayName(null);
 	    } else
-		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+		meta.setDisplayName(CMIChatColor.translate(name));
 	}
 	this.getItemStack().setItemMeta(meta);
 	return this;
@@ -113,7 +113,7 @@ public class CMIItemStack {
 	List<String> lore = meta.getLore();
 	if (lore == null)
 	    lore = new ArrayList<String>();
-	lore.add(ChatColor.translateAlternateColorCodes('&', string));
+	lore.add(CMIChatColor.translate(string));
 	meta.setLore(lore);
 	this.getItemStack().setItemMeta(meta);
 	return this;
@@ -133,7 +133,7 @@ public class CMIItemStack {
 	ItemMeta meta = this.getItemStack().getItemMeta();
 	List<String> t = new ArrayList<String>();
 	for (String one : lore) {
-	    t.add(ChatColor.translateAlternateColorCodes('&', one));
+	    t.add(CMIChatColor.translate(one));
 	}
 	meta.setLore(t);
 	this.getItemStack().setItemMeta(meta);

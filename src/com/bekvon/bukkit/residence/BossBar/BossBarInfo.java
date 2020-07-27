@@ -11,6 +11,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.utils.Utils;
 
@@ -129,7 +130,7 @@ public class BossBarInfo {
 	if (titleOfBar == null || titleOfBar.isEmpty())
 	    this.titleOfBar = null;
 	else
-	    this.titleOfBar = ChatColor.translateAlternateColorCodes('&', titleOfBar);
+	    this.titleOfBar = CMIChatColor.translate(titleOfBar);
     }
 
     public void setBar(BossBar bar) {
@@ -189,7 +190,7 @@ public class BossBarInfo {
     }
 
     public void updateCycle() {
-	
+
     }
 
 //    public List<String> getCommands() {

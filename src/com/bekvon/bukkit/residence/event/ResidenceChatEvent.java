@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.event;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class ResidenceChatEvent extends CancellableResidencePlayerEvent {
     }
 
     public String getChatprefix() {
-	return ChatColor.translateAlternateColorCodes('&', prefix);
+	return CMIChatColor.translate( prefix);
     }
 
     public void setChatprefix(String prefix) {

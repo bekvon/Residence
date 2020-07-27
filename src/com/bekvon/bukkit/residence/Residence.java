@@ -43,6 +43,7 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.cmiLib.VersionChecker;
@@ -890,7 +891,7 @@ public class Residence extends JavaPlugin {
     }
 
     public void consoleMessage(String message) {
-	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', getPrefix() + " " + message));
+	Bukkit.getConsoleSender().sendMessage(CMIChatColor.translate(getPrefix() + " " + message));
     }
 
     public boolean validName(String name) {
@@ -1839,12 +1840,12 @@ public class Residence extends JavaPlugin {
 
     public void msg(CommandSender sender, String text) {
 	if (sender != null && text.length() > 0)
-	    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
+	    sender.sendMessage(CMIChatColor.translate(text));
     }
 
     public void msg(Player player, String text) {
 	if (player != null && !text.isEmpty())
-	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
+	    player.sendMessage(CMIChatColor.translate(text));
     }
 
     public void msg(CommandSender sender, lm lm, Object... variables) {

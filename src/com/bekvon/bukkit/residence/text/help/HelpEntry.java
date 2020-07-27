@@ -238,7 +238,7 @@ public class HelpEntry {
 		if (stringList != null) {
 		    entry.lines = new String[stringList.size()];
 		    for (int i = 0; i < stringList.size(); i++) {
-			entry.lines[i] = ChatColor.translateAlternateColorCodes('&', stringList.get(i));
+			entry.lines[i] = CMIChatColor.translate(stringList.get(i));
 		    }
 		}
 	    }

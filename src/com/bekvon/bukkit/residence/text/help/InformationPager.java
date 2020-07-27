@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -108,7 +109,7 @@ public class InformationPager {
 		CuboidArea area = res.getAreaArray()[0];
 		String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 		String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
-		String worldInfo = ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
+		String worldInfo = CMIChatColor.translate(plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 		StringB.append(worldInfo);
 	    }
 
@@ -180,7 +181,7 @@ public class InformationPager {
 		CuboidArea area = res.getAreaArray()[0];
 		String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 		String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
-		String worldInfo = ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
+		String worldInfo = CMIChatColor.translate(plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 		StringB.append("\n" + worldInfo);
 	    }
 
@@ -208,7 +209,7 @@ public class InformationPager {
 
 	    String msg = plugin.msg(lm.Residence_ResList, i, res.getName(), res.getWorld(), "", ExtraString);
 
-	    msg = ChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
+	    msg = CMIChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
 	    msg = msg.replaceAll("\\s{2}", " ");
 	    sender.sendMessage(msg);
 	}
@@ -248,7 +249,7 @@ public class InformationPager {
 			CuboidArea area = res.getAreaArray()[0];
 			String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
 			String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
-			String worldInfo = ChatColor.translateAlternateColorCodes('&', plugin.msg(lm.General_CoordsLiner, cord1, cord2));
+			String worldInfo = CMIChatColor.translate(plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 			StringB.append("\n" + worldInfo);
 		    }
 
@@ -276,7 +277,7 @@ public class InformationPager {
 
 		    String msg = plugin.msg(lm.Residence_ResList, y, res.getName(), res.getWorld(), "", ExtraString);
 
-		    msg = ChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
+		    msg = CMIChatColor.stripColor(msg + " " + StringB.toString().replace("\n", ""));
 		    msg = msg.replaceAll("\\s{2}", " ");
 
 		    sb.append(msg);

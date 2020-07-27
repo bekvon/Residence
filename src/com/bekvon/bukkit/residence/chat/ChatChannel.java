@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.chat;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceChatEvent;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class ChatChannel {
 		Residence.getInstance().msg(player, cevent.getChatprefix() + " " + Residence.getInstance().getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent
 		    .getChatMessage());
 	    }
-	    Bukkit.getConsoleSender().sendMessage("ResidentialChat[" + channelName + "] - " + sourcePlayer + ": " + ChatColor.stripColor(cevent.getChatMessage()));
+	    Bukkit.getConsoleSender().sendMessage("ResidentialChat[" + channelName + "] - " + sourcePlayer + ": " + CMIChatColor.stripColor(cevent.getChatMessage()));
 	});
     }
 

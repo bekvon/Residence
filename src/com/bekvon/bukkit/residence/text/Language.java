@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -77,7 +79,7 @@ public class Language {
 	if (customlocale == null || !customlocale.contains(key))
 	    message = enlocale.contains(key) == true ? enlocale.getString(key) : missing;
 	message = customlocale.contains(key) == true ? customlocale.getString(key) : missing;
-	return ChatColor.translateAlternateColorCodes('&', message);
+	return CMIChatColor.translate(message);
     }
 
     /**
@@ -106,7 +108,7 @@ public class Language {
 	    message = message.replace("%" + i, vr);
 	}
 
-	return ChatColor.translateAlternateColorCodes('&', message);
+	return CMIChatColor.translate(message);
     }
 
     /**
@@ -120,7 +122,7 @@ public class Language {
 	if (!key.contains("Language.") && !key.contains("CommandHelp."))
 	    key = "Language." + key;
 	String missing = "Missing locale for " + key;
-	return enlocale.contains(key) == true ? ChatColor.translateAlternateColorCodes('&', enlocale.getString(key)) : missing;
+	return enlocale.contains(key) == true ? CMIChatColor.translate(enlocale.getString(key)) : missing;
     }
 
     /**
@@ -193,6 +195,6 @@ public class Language {
     }
 
     private static String Colors(String text) {
-	return ChatColor.translateAlternateColorCodes('&', text);
+	return CMIChatColor.translate(text);
     }
 }

@@ -221,7 +221,7 @@ public class CMIReflections {
 
     public static Object textToIChatBaseComponent(String text) {
 	try {
-	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, ChatColor.translateAlternateColorCodes('&', text));
+	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, CMIChatColor.translate(text));
 	    return serialized;
 	} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 	    e.printStackTrace();

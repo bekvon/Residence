@@ -17,6 +17,7 @@ import com.bekvon.bukkit.CMIGUI.GUIManager.GUIClickType;
 import com.bekvon.bukkit.CMIGUI.GUIManager.GUIFieldType;
 import com.bekvon.bukkit.CMIGUI.GUIManager.GUIRows;
 import com.bekvon.bukkit.CMIGUI.GUIManager.InvType;
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
 
@@ -149,7 +150,7 @@ public class CMIGui {
     public String getTitle() {
 	if (title == null)
 	    title = "";
-	return ChatColor.translateAlternateColorCodes('&', title);
+	return CMIChatColor.translate(title);
     }
 
     public void updateTitle(String title) {

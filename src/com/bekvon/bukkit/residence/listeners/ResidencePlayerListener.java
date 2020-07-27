@@ -51,6 +51,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.cmiLib.ActionBarManager;
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.CMIReflections;
 import com.bekvon.bukkit.cmiLib.TitleMessageManager;
@@ -725,7 +726,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Sign sign = (Sign) block.getState();
 
-	if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase(plugin.msg(lm.Sign_TopLine)))
+	if (!CMIChatColor.stripColor(event.getLine(0)).equalsIgnoreCase(plugin.msg(lm.Sign_TopLine)))
 	    return;
 
 	Signs signInfo = new Signs();
