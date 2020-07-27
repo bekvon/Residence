@@ -465,6 +465,11 @@ public class ConfigManager {
 	    "this is the actual list of material names that this list allows or disallows",
 	    "You can look up the material name by item ID in game by typing /res material <id>",
 	    "Alternativly, you can simply use the item ID in the list, but its less descriptive and harder to see what the list allows or dissallows at a glance");
+
+	for (Flags fl : Flags.values()) {
+	    cfg.addComment("Global.FlagPermission." + fl, "Applies to: " + fl.getFlagMode());
+	}
+
 	cfg.save();
     }
 
@@ -1223,7 +1228,7 @@ public class ConfigManager {
 
 	c.addComment("DynMap.Use", "Enables or disable DynMap Support");
 	DynMapUse = c.get("DynMap.Use", false);
-	c.addComment("DynMap.HideByDefault", "When set to true we will hide residence areas by default on dynmap window","Residences can still be enabled throw provided DynMap option on left top side");
+	c.addComment("DynMap.HideByDefault", "When set to true we will hide residence areas by default on dynmap window", "Residences can still be enabled throw provided DynMap option on left top side");
 	DynMapHideByDefault = c.get("DynMap.HideByDefault", false);
 	c.addComment("DynMap.ShowFlags", "Shows or hides residence flags");
 	DynMapShowFlags = c.get("DynMap.ShowFlags", true);

@@ -87,7 +87,6 @@ public enum Flags {
     place(CMIMaterial.SEA_LANTERN, FlagMode.Both, "Allows or denys only placement of blocks, overrides the build flag", true),
     pvp(CMIMaterial.WOODEN_SWORD, FlagMode.Residence, "Allow or deny pvp in the residence", false),
     rain(CMIMaterial.BLUE_ORCHID, FlagMode.Residence, "Sets weather to rainny in residence", true),
-    redstone(CMIMaterial.SUNFLOWER, FlagMode.Group, "Gives lever, diode, button, pressure, note flags", true),
     respawn(CMIMaterial.SUNFLOWER, FlagMode.Residence, "Automaticaly respawns player", false),
     riding(CMIMaterial.SADDLE, FlagMode.Both, "Prevent riding a horse", true),
     shoot(CMIMaterial.ARROW, FlagMode.Residence, "Allows or denys shooting projectile in area", true),
@@ -106,7 +105,6 @@ public enum Flags {
     tp(CMIMaterial.END_PORTAL_FRAME, FlagMode.Both, "Allow or disallow teleporting to the residence", true),
     trade(CMIMaterial.EMERALD, FlagMode.Both, "Allows or denys villager trading in residence", true),
     trample(CMIMaterial.DIRT, FlagMode.Residence, "Allows or denys crop trampling in residence", true),
-    trusted(CMIMaterial.STONE, FlagMode.Group, "Gives build, use, move, container and tp flags", true),
     use(CMIMaterial.STONE_PRESSURE_PLATE, FlagMode.Both, "Allows or denys use of doors, lever, buttons, etc...", false),
     vehicledestroy(CMIMaterial.MINECART, FlagMode.Both, "Allows or denys vehicle destroy", false),
     witherspawn(CMIMaterial.WITHER_SKELETON_SKULL, FlagMode.Residence, "Allows or denys wither spawning", true),
@@ -125,7 +123,7 @@ public enum Flags {
     private boolean globalyEnabled = true;
 
     public static enum FlagMode {
-	Player, Residence, Both, Group
+	Player, Residence, Both
     }
 
     @Deprecated

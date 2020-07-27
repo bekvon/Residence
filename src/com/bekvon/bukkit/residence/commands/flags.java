@@ -60,7 +60,6 @@ public class flags implements cmd {
 	    c.get(pt + ".Description", fl.getDesc());
 	    String forSet = "set/pset";
 	    switch (fl.getFlagMode()) {
-	    case Group:
 	    case Player:
 		forSet = "pset";
 		break;
