@@ -78,6 +78,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1212,7 +1213,7 @@ public class ResidencePlayerListener implements Listener {
 	if (resadmin)
 	    return;
 
-	if (!heldItem.isAir() && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
+	if (heldItem.isValidItem() && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
@@ -1994,11 +1995,9 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 
 	ClaimedResidence orres = res;
-	String subzone = null;
 	if (res != null) {
 	    while (res.getSubzoneByLoc(loc) != null) {
 		res = res.getSubzoneByLoc(player.getLocation());
-		subzone = res.getName();
 	    }
 	}
 

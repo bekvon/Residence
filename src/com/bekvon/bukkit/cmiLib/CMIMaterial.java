@@ -2159,6 +2159,17 @@ public enum CMIMaterial {
 	return false;
     }
 
+    public static boolean isValidItem(Material mat) {
+	CMIMaterial m = CMIMaterial.get(mat);
+	if (m == null)
+	    return false;
+	return m.isValidItem();
+    }
+
+    public boolean isValidItem() {
+	return !this.equals(CMIMaterial.NONE) && !this.isAir() && this.getMaterial() != null;
+    }
+
     public boolean isNone() {
 	return this.equals(CMIMaterial.NONE);
     }

@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.utils.Debug;
@@ -33,6 +34,10 @@ public class WorldItemManager {
     public boolean isAllowed(Material mat, String group, String world) {
 	if (mat == null)
 	    return true;
+	
+	if (!CMIMaterial.isValidItem(mat))
+	    return true;
+	
 	for (WorldItemList list : lists) {
 	    if (!list.isAllowed(mat, world, group)) {
 		return false;

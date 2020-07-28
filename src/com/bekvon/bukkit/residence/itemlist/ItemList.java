@@ -36,11 +36,13 @@ public class ItemList {
     }
 
     public boolean contains(Material mat) {
+	if (mat == null || CMIMaterial.isAir(mat))
+	    return false;
 	return list.contains(mat);
     }
 
     public void add(Material mat) {
-	if (!list.contains(mat) && mat != null)
+	if (!list.contains(mat) && mat != null && !CMIMaterial.isAir(mat))
 	    list.add(mat);
     }
 
@@ -49,7 +51,7 @@ public class ItemList {
 	    list.remove(mat);
 	    return false;
 	}
-	if (mat != null)
+	if (mat != null && !CMIMaterial.isAir(mat))
 	    list.add(mat);
 	return true;
     }
