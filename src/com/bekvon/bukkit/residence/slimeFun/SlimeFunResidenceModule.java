@@ -8,6 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectionModule;
@@ -41,9 +42,7 @@ public class SlimeFunResidenceModule implements ProtectionModule {
 	    break;
 	case BREAK_BLOCK:
 	    Player player = Bukkit.getPlayer(p.getUniqueId());
-	    BlockBreakEvent breakEvent = new BlockBreakEvent(l.getBlock(), player);
-	    Bukkit.getServer().getPluginManager().callEvent(breakEvent);
-	    if (breakEvent.isCancelled())
+	    if (ResidenceBlockListener.cancelBlockBreak(player, l.getBlock()))
 		return false;
 	    break;
 	case PLACE_BLOCK:

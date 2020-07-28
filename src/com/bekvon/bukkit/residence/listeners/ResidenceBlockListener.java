@@ -195,31 +195,34 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isResAdminOn(player)) {
 	    return;
 	}
+	if (cancelBlockBreak(player, event.getBlock()))
+	    event.setCancelled(true);
+    }
 
-	Block block = event.getBlock();
+    public static boolean cancelBlockBreak(Player player, Block block) {
+
 	Material mat = block.getType();
 	String world = block.getWorld().getName();
 
-	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup();
-	if (plugin.getItemManager().isIgnored(mat, group, world)) {
-	    return;
+	if (Residence.getInstance().getItemManager().isIgnored(mat, group, world)) {
+	    return false;
 	}
 
-	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+	ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(block.getLocation());
 
 	if (res != null && res.getItemIgnoreList().isListed(mat))
-	    return;
+	    return false;
 
-	if (plugin.getConfigManager().enabledRentSystem() && res != null) {
-	    if (plugin.getConfigManager().preventRentModify() && res.isRented()) {
-		plugin.msg(player, lm.Rent_ModifyDeny);
-		event.setCancelled(true);
-		return;
+	if (Residence.getInstance().getConfigManager().enabledRentSystem() && res != null) {
+	    if (Residence.getInstance().getConfigManager().preventRentModify() && res.isRented()) {
+		Residence.getInstance().msg(player, lm.Rent_ModifyDeny);
+		return true;
 	    }
 	}
 
-	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
+	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(block.getLocation(), player);
 
 	boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
 
@@ -231,13 +234,13 @@ public class ResidenceBlockListener implements Listener {
 
 	if (!hasdestroy
 	    && !ResPerm.bypass_destroy.hasPermission(player, 10000L)) {
-	    plugin.msg(player, lm.Flag_Deny, Flags.destroy);
-	    event.setCancelled(true);
+	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.destroy);
+	    return true;
 	} else if (mat == Material.CHEST && !perms.playerHas(player, Flags.container, true)) {
-	    plugin.msg(player, lm.Flag_Deny, Flags.container);
-	    event.setCancelled(true);
+	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.container);
+	    return true;
 	}
-
+	return false;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
