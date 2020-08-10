@@ -250,7 +250,9 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.CARTOGRAPHY_TABLE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.FLETCHING_TABLE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.GRINDSTONE.getMaterial(), Flags.container);
-	addMaterialToUseFlag(CMIMaterial.LECTERN.getMaterial(), Flags.container);
+	
+	addMaterialToUseFlag(CMIMaterial.LECTERN.getMaterial(), Flags.use);
+	
 	addMaterialToUseFlag(CMIMaterial.LOOM.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.SMITHING_TABLE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);

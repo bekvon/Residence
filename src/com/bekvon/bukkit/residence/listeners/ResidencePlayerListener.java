@@ -78,7 +78,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -929,6 +928,7 @@ public class ResidencePlayerListener implements Listener {
 	case "FLOWER_POT":
 	case "COMMAND":
 	case "ANVIL":
+	case "LECTERN":
 	case "CHIPPED_ANVIL":
 	case "DAMAGED_ANVIL":
 	case "CAKE_BLOCK":
@@ -1183,7 +1183,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-//	Long nano = System.nanoTime();
+
 	if (event.getPlayer() == null)
 	    return;
 	// disabling event on world
@@ -1272,7 +1272,6 @@ public class ResidencePlayerListener implements Listener {
 	    if (res == null || !res.isOwner(player)) {
 
 		Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
-
 		if (result != null) {
 		    main: if (!perms.playerHas(player, result, hasuse)) {
 
