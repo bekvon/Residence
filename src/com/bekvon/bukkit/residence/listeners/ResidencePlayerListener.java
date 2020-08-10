@@ -78,6 +78,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidencePlayerListener implements Listener {
@@ -1832,16 +1833,12 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	} else {
 	    player.setAllowFlight(true);
-
-	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
-
-	    if (res != null && res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue)) {
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-		    if (player.isOnline() && res != null && res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue)) {
-			player.setAllowFlight(true);
-		    }
-		}, 20L);
-	    }
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+		ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
+		if (res != null && res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && player.isOnline()) {
+		    player.setAllowFlight(true);
+		}
+	    }, 20L);
 	}
     }
 
@@ -1850,6 +1847,7 @@ public class ResidencePlayerListener implements Listener {
 
 	ClaimedResidence res = event.getTo();
 	ClaimedResidence ResOld = event.getFrom();
+
 	Player player = event.getPlayer();
 	if (player == null)
 	    return;
@@ -2007,7 +2005,6 @@ public class ResidencePlayerListener implements Listener {
 	    currentRes.remove(uuid);
 	} else {
 	    if (res != null && ResOld.getName().equals(res.getName())) {
-
 		if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
 		    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
 		    if (!res.isOwner(player)) {
