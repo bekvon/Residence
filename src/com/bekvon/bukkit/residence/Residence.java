@@ -1232,6 +1232,8 @@ public class Residence extends JavaPlugin {
     }
 
     public boolean isResAdminOn(Player player) {
+	if (player == null)
+	    return true;
 	return resadminToggle.contains(player.getName());
     }
 

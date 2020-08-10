@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -42,6 +41,8 @@ public class SlimeFunResidenceModule implements ProtectionModule {
 	    break;
 	case BREAK_BLOCK:
 	    Player player = Bukkit.getPlayer(p.getUniqueId());
+	    if (player == null)
+		return false;
 	    if (ResidenceBlockListener.cancelBlockBreak(player, l.getBlock()))
 		return false;
 	    break;
