@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -25,7 +24,10 @@ import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.commands.pset;
+import com.bekvon.bukkit.residence.commands.set;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.Flags.FlagMode;
 import com.bekvon.bukkit.residence.containers.HelpLines;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
@@ -307,7 +309,7 @@ public class HelpEntry {
 	int neededArgPlace = args.length - 2 - i;
 
 	boolean subCommand = true;
-	if (i < args.length && tempmeinPath!= null && tempmeinPath.isConfigurationSection(args[i])) {
+	if (i < args.length && tempmeinPath != null && tempmeinPath.isConfigurationSection(args[i])) {
 	    subCommand = false;
 	    tempmeinPath = tempmeinPath.getConfigurationSection(args[i]);
 	}
@@ -403,29 +405,41 @@ public class HelpEntry {
 		    break;
 		case "[flag]":
 
-		    for (String one : FlagPermissions.getAllPosibleFlags()) {
-
-			Flags f = Flags.getFlag(one);
-
-			if (f != null) {
-			    if (!f.isGlobalyEnabled())
-				continue;
-			    subCommands.add(f.getName());
-			}
-			subCommands.add(one);
-
+		    FlagMode mode = FlagMode.Both;
+		    if (args.length > 0) {
+			if (args[0].equalsIgnoreCase(set.class.getSimpleName()))
+			    mode = FlagMode.Residence;
+			else if (args[0].equalsIgnoreCase(pset.class.getSimpleName()))
+			    mode = FlagMode.Player;
 		    }
-		    for (String one : FlagPermissions.getPosibleAreaFlags()) {
 
+		    for (String one : FlagPermissions.getAllPosibleFlags()) {
 			Flags f = Flags.getFlag(one);
 
 			if (f != null) {
+
+			    if (f.getFlagMode() != FlagMode.Both && f.getFlagMode() != mode)
+				continue;
+
 			    if (!f.isGlobalyEnabled())
 				continue;
 			    subCommands.add(f.getName());
 			}
 			subCommands.add(one);
+		    }
 
+		    for (String one : FlagPermissions.getPosibleAreaFlags()) {
+			Flags f = Flags.getFlag(one);
+			if (f != null) {
+
+			    if (f.getFlagMode() != FlagMode.Both && f.getFlagMode() != mode)
+				continue;
+
+			    if (!f.isGlobalyEnabled())
+				continue;
+			    subCommands.add(f.getName());
+			}
+			subCommands.add(one);
 		    }
 		    break;
 		case "[material]":

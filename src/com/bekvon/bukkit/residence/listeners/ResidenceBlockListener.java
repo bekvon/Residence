@@ -187,19 +187,19 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-
-	// disabling event on world
-	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
-	    return;
-	Player player = event.getPlayer();
-	if (plugin.isResAdminOn(player)) {
-	    return;
-	}
-	if (cancelBlockBreak(player, event.getBlock()))
+	if (cancelBlockBreak(event.getPlayer(), event.getBlock()))
 	    event.setCancelled(true);
     }
 
     public static boolean cancelBlockBreak(Player player, Block block) {
+
+	// disabling event on world
+	if (Residence.getInstance().isDisabledWorldListener(block.getWorld()))
+	    return false;
+
+	if (Residence.getInstance().isResAdminOn(player)) {
+	    return false;
+	}
 
 	Material mat = block.getType();
 	String world = block.getWorld().getName();
