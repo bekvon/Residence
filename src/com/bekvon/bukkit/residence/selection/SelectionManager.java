@@ -488,6 +488,8 @@ public class SelectionManager {
 	}
 
 	vMap.put(player.getUniqueId(), v);
+	if (!plugin.isEnabled())
+	    return;
 	v.setBaseShedId(Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
@@ -724,6 +726,8 @@ public class SelectionManager {
 	    }
 	}
 
+	if (!plugin.isEnabled())
+	    return false;
 	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 	    @Override
 	    public void run() {
@@ -1080,7 +1084,7 @@ public class SelectionManager {
 
     public void regenerate(CuboidArea area) {
     }
-    
+
     public void onDisable() {
 	for (Entry<UUID, Visualizer> one : vMap.entrySet()) {
 	    one.getValue().cancelAll();

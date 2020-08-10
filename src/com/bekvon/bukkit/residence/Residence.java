@@ -207,6 +207,7 @@ public class Residence extends JavaPlugin {
     protected int DespawnMobsBukkitId = -1;
 
     private boolean SlimeFun = false;
+    Metrics metrics = null;
 
     protected int autosaveBukkitId = -1;
     protected VersionChecker versionChecker;
@@ -402,6 +403,12 @@ public class Residence extends JavaPlugin {
 
 	this.getSelectionManager().onDisable();
 
+	if (this.metrics != null)
+	    try {
+		metrics.disable();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
 	if (getConfigManager().useLeases()) {
 	    server.getScheduler().cancelTask(leaseBukkitId);
 	}
@@ -560,7 +567,7 @@ public class Residence extends JavaPlugin {
 
 	    if (SlimeFun)
 		new slimeFunManager(this);
-	    
+
 	    this.getConfigManager().copyOverTranslations();
 
 	    parseHelpEntries();
@@ -797,7 +804,7 @@ public class Residence extends JavaPlugin {
 		}
 	    }
 	    try {
-		Metrics metrics = new Metrics(this);
+		metrics = new Metrics(this);
 		metrics.start();
 	    } catch (IOException e) {
 		// Failed to submit the stats :-(
