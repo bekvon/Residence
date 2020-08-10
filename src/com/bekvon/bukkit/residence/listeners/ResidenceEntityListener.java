@@ -1341,6 +1341,9 @@ public class ResidenceEntityListener implements Listener {
 
 	if (Version.isCurrentEqualOrLower(Version.v1_14_R1))
 	    return;
+	
+	if (event.getBow() == null)
+	    return;
 
 	if (event.getBow().getType() != Material.CROSSBOW)
 	    return;
