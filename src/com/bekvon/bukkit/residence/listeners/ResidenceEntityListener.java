@@ -66,6 +66,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -120,6 +121,9 @@ public class ResidenceEntityListener implements Listener {
 
     private static boolean damageableProjectile(Entity ent) {
 	if (ent instanceof Projectile && ent.getType().toString().equalsIgnoreCase("Splash_potion")) {
+
+	    if (((ThrownPotion) ent).getEffects().isEmpty())
+		return true;
 	    for (PotionEffect one : ((ThrownPotion) ent).getEffects()) {
 		for (String oneHarm : Residence.getInstance().getConfigManager().getNegativePotionEffects()) {
 		    if (oneHarm.equalsIgnoreCase(one.getType().getName()))
@@ -1341,7 +1345,7 @@ public class ResidenceEntityListener implements Listener {
 
 	if (Version.isCurrentEqualOrLower(Version.v1_14_R1))
 	    return;
-	
+
 	if (event.getBow() == null)
 	    return;
 
