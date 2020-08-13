@@ -85,6 +85,7 @@ public class ConfigManager {
     protected boolean RentPlayerAutoPay;
     protected boolean leaseAutoRenew;
     protected boolean ShortInfoUse;
+    private boolean InfoExcludeDFlags;
     protected boolean OnlyLike;
     protected int RentInformBefore;
     protected int RentInformDelay;
@@ -681,9 +682,13 @@ public class ConfigManager {
 	    FlyLandLocation.setYaw(FlyYaw.floatValue());
 	}
 
-	c.addComment("Global.Optimizations.ShortInfo.Use",
+	c.addComment("Global.Optimizations.InfoCommand.ShortInformation",
 	    "By setting this to true, when checking residence info with /res info, you will get only names in list, by hovering on them, you will get flag list");
-	ShortInfoUse = c.get("Global.Optimizations.ShortInfo.Use", true);
+	ShortInfoUse = c.get("Global.Optimizations.InfoCommand.ShortInformation",  c.getC().getBoolean("Global.Optimizations.ShortInfo.Use",true));
+	
+	c.addComment("Global.Optimizations.InfoCommand.ExcludeDefaultFlags",
+	    "When set to true default residence flags set in flags.yml file will get excluded from info command output and will not be shown","If flag gets different state then it will be shown");
+	InfoExcludeDFlags = c.get("Global.Optimizations.InfoCommand.ExcludeDefaultFlags",  false);
 
 	// Vote range
 	c.addComment("Global.Optimizations.Vote.RangeFrom", "Range players can vote to, by default its from 0 to 10 points");
@@ -2027,6 +2032,11 @@ public class ConfigManager {
     public int getSelectionNetherHeight() {
 	return SelectionNetherHeight;
     }
+
+    public boolean isInfoExcludeDFlags() {
+	return InfoExcludeDFlags;
+    }
+
 
 //    public int getTownMinRange() {
 //	return TownMinRange;

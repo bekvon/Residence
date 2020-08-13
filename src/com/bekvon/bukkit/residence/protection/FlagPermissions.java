@@ -30,6 +30,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
@@ -250,9 +251,9 @@ public class FlagPermissions {
 	addMaterialToUseFlag(CMIMaterial.CARTOGRAPHY_TABLE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.FLETCHING_TABLE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.GRINDSTONE.getMaterial(), Flags.container);
-	
+
 	addMaterialToUseFlag(CMIMaterial.LECTERN.getMaterial(), Flags.use);
-	
+
 	addMaterialToUseFlag(CMIMaterial.LOOM.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.SMITHING_TABLE.getMaterial(), Flags.container);
 	addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);
@@ -924,6 +925,9 @@ public class FlagPermissions {
     public String listFlags(Integer split, Integer totalShow) {
 	StringBuilder sbuild = new StringBuilder();
 	Set<Entry<String, Boolean>> set = cuboidFlags.entrySet();
+
+	FlagPermissions gRD = Residence.getInstance().getConfigManager().getGlobalResidenceDefaultFlags();
+
 	synchronized (set) {
 	    Iterator<Entry<String, Boolean>> it = set.iterator();
 	    int i = -1;
@@ -936,6 +940,10 @@ public class FlagPermissions {
 
 	    while (it.hasNext()) {
 		Entry<String, Boolean> next = it.next();
+
+		if (Residence.getInstance().getConfigManager().isInfoExcludeDFlags() && gRD.cuboidFlags.get(next.getKey()) != null && gRD.cuboidFlags.get(next.getKey()) == next.getValue())
+		    continue;
+
 		String fname = next.getKey();
 
 		Flags flag = Flags.getFlag(fname);

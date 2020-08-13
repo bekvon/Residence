@@ -726,12 +726,12 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (sender instanceof Player) {
 	    RawMessage rm = new RawMessage();
-	    rm.add(resNameOwner, worldInfo);
+	    rm.addText(resNameOwner).addHover(worldInfo);
 	    rm.show(sender);
 
 	    rm.clear();
 
-	    rm.add(ResFlagMsg, ResFlagList);
+	    rm.addText(ResFlagMsg).addHover(ResFlagList);
 	    rm.show(sender);
 	} else {
 	    plugin.msg(sender, resNameOwner);
