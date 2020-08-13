@@ -282,7 +282,7 @@ public class SelectionManager {
 	    return 255;
 	switch (world.getEnvironment()) {
 	case NETHER:
-	    return 128;
+	    return plugin.getConfigManager().getSelectionNetherHeight();
 	case NORMAL:
 	case THE_END:
 	    return 255;

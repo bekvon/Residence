@@ -178,6 +178,7 @@ public class ConfigManager {
     protected boolean OfflineMode = false;
     protected boolean SelectionIgnoreY = false;
     protected boolean SelectionIgnoreYInSubzone = false;
+    private int SelectionNetherHeight = 128;
     protected boolean NoCostForYBlocks = false;
     protected boolean useVisualizer;
     protected boolean DisableListeners;
@@ -563,9 +564,15 @@ public class ConfigManager {
 	    "When this set to true, selections inside existing residence will be from bottom to top of that residence",
 	    "When this set to false, selections inside existing residence will be exactly as they are");
 	SelectionIgnoreYInSubzone = c.get("Global.Selection.IgnoreYInSubzone", false);
+	
+	
+	c.addComment("Global.Selection.netherHeight",
+	    "Defines height of nether when creating residences. This mostly applies when performing commands like /res select vert or /res auto which will expand residence to defined height","This cant be higher than 255 or lower than 1");
+	SelectionNetherHeight = c.get("Global.Selection.netherHeight", 128);
+	SelectionNetherHeight = SelectionNetherHeight > 255 ? 255 : SelectionNetherHeight < 1 ? 1 : SelectionNetherHeight;
 
 	c.addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
-	    "This will lower residence price by up to 256 times, so adjust block price BEFORE enabling this");
+	    "This will lower residence price by up to 255 times, so adjust block price BEFORE enabling this");
 	NoCostForYBlocks = c.get("Global.Selection.NoCostForYBlocks", false);
 
 	c.addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
@@ -2015,6 +2022,10 @@ public class ConfigManager {
 
     public ItemStack getGuiBottonStates(FlagState state) {
 	return guiBottonStates.get(state);
+    }
+
+    public int getSelectionNetherHeight() {
+	return SelectionNetherHeight;
     }
 
 //    public int getTownMinRange() {
