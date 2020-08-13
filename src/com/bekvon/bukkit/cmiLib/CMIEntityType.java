@@ -2,16 +2,13 @@ package com.bekvon.bukkit.cmiLib;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public enum CMIEntityType {
 
@@ -256,6 +253,9 @@ public enum CMIEntityType {
     STRIDER(927, "Strider", Arrays.asList("MThhOWFkZjc4MGVjN2RkNDYyNWM5YzA3NzkwNTJlNmExNWE0NTE4NjY2MjM1MTFlNGM4MmU5NjU1NzE0YjNjMSJ9fX0=")),
     ZOGLIN(928, "Zoglin", Arrays.asList("ZTY3ZTE4NjAyZTAzMDM1YWQ2ODk2N2NlMDkwMjM1ZDg5OTY2NjNmYjllYTQ3NTc4ZDNhN2ViYmM0MmE1Y2NmOSJ9fX0=")),
 
+    // 1.16.2
+    PIGLIN_BRUTE(929, "Piglin Brute", Arrays.asList("M2UzMDBlOTAyNzM0OWM0OTA3NDk3NDM4YmFjMjllM2E0Yzg3YTg0OGM1MGIzNGMyMTI0MjcyN2I1N2Y0ZTFjZiJ9fX0=")),
+
     // if possible we can remove this string for each texture to save up some space
     // eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUv
     UNKNOWN(999, "Unknown");
@@ -265,6 +265,17 @@ public enum CMIEntityType {
     private String secondaryName;
     EntityType type = null;
     public static HashMap<String, ItemStack> cache = new HashMap<String, ItemStack>();
+    static HashMap<String, CMIEntityType> byName = new HashMap<String, CMIEntityType>();
+
+    static {
+	for (CMIEntityType one : CMIEntityType.values()) {
+	    byName.put(one.toString().replace("_", "").toLowerCase(), one);
+	    byName.put(one.getName().replace("_", "").replace(" ", "").toLowerCase(), one);
+	    byName.put(String.valueOf(one.getId()), one);
+	    if (one.secondaryName != null)
+		byName.put(one.secondaryName.replace("_", "").replace(" ", "").toLowerCase(), one);
+	}
+    }
 
     CMIEntityType(int id, String name, List<String> headTextures) {
 	this(id, name, null, headTextures);
@@ -282,11 +293,6 @@ public enum CMIEntityType {
 	this.id = id;
 	this.name = name;
 	this.secondaryName = secondaryName;
-	for (String one : headTextures) {
-	    String text = one;
-	    if (text.length() < 150)
-		text = "" + text;
-	}
     }
 
     public int getId() {
@@ -298,11 +304,8 @@ public enum CMIEntityType {
     }
 
     public static CMIEntityType getById(int id) {
-	for (CMIEntityType one : CMIEntityType.values()) {
-	    if (one.getId() == id)
-		return one;
-	}
-	return CMIEntityType.PIG;
+	CMIEntityType ttype = getByName(String.valueOf(id));
+	return ttype == null ? CMIEntityType.PIG : ttype;
     }
 
     public static CMIEntityType getByType(EntityType entity) {
@@ -331,95 +334,7 @@ public enum CMIEntityType {
     }
 
     public static CMIEntityType getByName(String name) {
-	String main = name;
-	String sub = null;
-
-	if (name.contains("_")) {
-	    main = name.split("_")[0];
-	    sub = name.split("_")[1];
-	}
-	if (name.contains(":")) {
-	    main = name.split(":")[0];
-	    sub = name.split(":")[1];
-	}
-
-	String updated = (main + (sub == null ? "" : sub)).toLowerCase();
-	String reverse = ((sub == null ? "" : sub) + main).toLowerCase();
-
-	CMIEntityType type = null;
-
-	Integer id = null;
-	try {
-	    id = Integer.parseInt(main);
-	} catch (Exception e) {
-	}
-
-	for (CMIEntityType one : CMIEntityType.values()) {
-	    if (one.name().replace("_", "").equalsIgnoreCase(updated) || one.name.replace(" ", "").equalsIgnoreCase(updated)) {
-		type = one;
-		break;
-	    }
-	}
-
-	if (type == null)
-	    for (CMIEntityType one : CMIEntityType.values()) {
-		if (one.secondaryName == null)
-		    continue;
-
-		String oneN = one.secondaryName;
-		oneN = oneN.replace("_", "");
-		if (oneN.equalsIgnoreCase(name)) {
-		    type = one;
-		    break;
-		}
-	    }
-
-	if (type == null)
-	    for (CMIEntityType one : CMIEntityType.values()) {
-		if (one.name.replace("_", "").contains(updated)) {
-		    type = one;
-		    break;
-		}
-	    }
-
-	if (sub != null) {
-	    if (type == null)
-		for (CMIEntityType one : CMIEntityType.values()) {
-		    if (one.name().replace("_", "").equalsIgnoreCase(reverse) || one.name.replace(" ", "").equalsIgnoreCase(reverse)) {
-			type = one;
-			break;
-		    }
-		}
-	    if (type == null)
-		for (CMIEntityType one : CMIEntityType.values()) {
-		    if (one.name.replace("_", "").contains(reverse)) {
-			type = one;
-			break;
-		    }
-		}
-	}
-
-	if (id != null) {
-	    if (type == null)
-		for (CMIEntityType one : CMIEntityType.values()) {
-		    if (one.getId() == id) {
-			type = one;
-			break;
-		    }
-		}
-	}
-
-	if (type == null)
-	    for (CMIEntityType one : CMIEntityType.values()) {
-		if (one.name.contains("_"))
-		    continue;
-		if (one.name.equalsIgnoreCase(main)) {
-		    type = one;
-		    break;
-		}
-	    }
-
-	return type;
+	return byName.get(name.toLowerCase().replace("_", ""));
     }
 
     public EntityType getType() {

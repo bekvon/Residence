@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 
@@ -33,7 +34,6 @@ public class CMIChatColor {
 		}
 	    }
 	}
-
 	for (float x = 0.0F; x <= 1; x += 0.1) {
 	    for (float z = 0.1F; z <= 1; z += 0.1) {
 		for (float y = 0; y <= 1; y += 0.03) {
@@ -52,6 +52,52 @@ public class CMIChatColor {
 
     public static final String colorCodePrefix = "{#";
     public static final String colorCodeSuffix = "}";
+
+    private static String charEscape(String s) {
+	StringBuffer sb = new StringBuffer();
+	for (int i = 0; i < s.length(); i++) {
+	    char ch = s.charAt(i);
+
+	    switch (ch) {
+	    case '"':
+		sb.append("\\\"");
+		break;
+	    case '\n':
+		sb.append("\\n");
+		break;
+	    case '\\':
+		sb.append("\\\\");
+		break;
+	    case '\b':
+		sb.append("\\b");
+		break;
+	    case '\f':
+		sb.append("\\f");
+		break;
+	    case '\r':
+		sb.append("\\r");
+		break;
+	    case '\t':
+		sb.append("\\t");
+		break;
+	    case '/':
+		sb.append("/");
+		break;
+	    default:
+		if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F') || (ch >= '\u2000' && ch <= '\u20FF')) {
+		    String ss = Integer.toHexString(ch);
+		    sb.append("\\u");
+		    for (int k = 0; k < 4 - ss.length(); k++) {
+			sb.append('0');
+		    }
+		    sb.append(ss.toUpperCase());
+		} else {
+		    sb.append(ch);
+		}
+	    }
+	}
+	return sb.toString();
+    }
 
     private static String escape(String text) {
 	return text.replace("#", "\\#").replace("{", "\\{").replace("}", "\\}");
@@ -89,7 +135,7 @@ public class CMIChatColor {
     public static final CMIChatColor LIGHT_PURPLE = new CMIChatColor("Light_Purple", 'd', 255, 85, 255);
     public static final CMIChatColor YELLOW = new CMIChatColor("Yellow", 'e', 255, 255, 85);
     public static final CMIChatColor WHITE = new CMIChatColor("White", 'f', 255, 255, 255);
-    public static final CMIChatColor MAGIC = new CMIChatColor("Obfuscated", 'k', false);
+    public static final CMIChatColor OBFUSCATED = new CMIChatColor("Obfuscated", 'k', false);
     public static final CMIChatColor BOLD = new CMIChatColor("Bold", 'l', false);
     public static final CMIChatColor STRIKETHROUGH = new CMIChatColor("Strikethrough", 'm', false);
     public static final CMIChatColor UNDERLINE = new CMIChatColor("Underline", 'n', false);
@@ -121,9 +167,13 @@ public class CMIChatColor {
 	this.hex = hex;
 	this.name = name;
 
-	red = Integer.valueOf(this.hex.substring(0, 2), 16);
-	green = Integer.valueOf(this.hex.substring(2, 4), 16);
-	blue = Integer.parseInt(this.hex.substring(4, 6), 16);
+	try {
+	    red = Integer.valueOf(this.hex.substring(0, 2), 16);
+	    green = Integer.valueOf(this.hex.substring(2, 4), 16);
+	    blue = Integer.parseInt(this.hex.substring(4, 6), 16);
+	} catch (Throwable e) {
+	    this.hex = null;
+	}
     }
 
     public CMIChatColor(String name, char c, Boolean color) {
@@ -159,8 +209,9 @@ public class CMIChatColor {
 	    CMIChatColor c1 = CMIChatColor.getColor(CMIChatColor.colorCodePrefix + gradientMatch.group(2).replace("#", "") + CMIChatColor.colorCodeSuffix);
 	    CMIChatColor c2 = CMIChatColor.getColor(CMIChatColor.colorCodePrefix + gradientMatch.group(5).replace("#", "") + CMIChatColor.colorCodeSuffix);
 
-	    if (c1 == null || c2 == null)
+	    if (c1 == null || c2 == null) {
 		continue;
+	    }
 
 	    String gtext = gradientMatch.group(3);
 
@@ -168,12 +219,19 @@ public class CMIChatColor {
 
 	    String updated = "";
 
+	    gtext = stripColor(gtext);
+
 	    for (int i = 0; i < gtext.length(); i++) {
 		char ch = gtext.charAt(i);
+		int length = gtext.length();
+		length = length < 2 ? 2 : length;
 
-		CMIChatColor mix = CMIChatColor.mixColors(c1, c2, (i * 100D) / (gtext.length() - 1));
+		double percent = (i * 100D) / (length - 1);
+
+		CMIChatColor mix = CMIChatColor.mixColors(c1, c2, percent);
 		updated += CMIChatColor.colorCodePrefix + mix.getHex() + CMIChatColor.colorCodeSuffix;
-		updated += ch;
+
+		updated += String.valueOf(ch);
 	    }
 
 	    if (continuous) {
@@ -262,7 +320,6 @@ public class CMIChatColor {
     public static String deColorize(String text) {
 	if (text == null)
 	    return null;
-
 	text = CMIChatColor.translate(text);
 	text = text.replace("§", "&");
 
@@ -509,7 +566,7 @@ public class CMIChatColor {
     public Color getRGBColor() {
 	if (blue < 0)
 	    return null;
-	return Color.fromBGR(blue, green, red);
+	return Color.fromRGB(red, green, blue);
     }
 
     public String getHex() {
