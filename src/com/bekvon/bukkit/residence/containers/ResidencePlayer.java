@@ -10,11 +10,16 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
+import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
+import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -530,4 +535,30 @@ public class ResidencePlayer {
     public PlayerGroup getGroups() {
 	return groups;
     }
+
+    @Deprecated
+    public boolean canBreakBlock(Location loc, boolean inform) {
+	return canBreakBlock(loc.getBlock(), inform);
+    }
+
+    public boolean canBreakBlock(Block block, boolean inform) {
+	return ResidenceBlockListener.canBreakBlock(this.getPlayer(), block, inform);
+    }
+
+    @Deprecated
+    public boolean canPlaceBlock(Location loc, boolean inform) {
+	return canPlaceBlock(loc.getBlock(), inform);
+    }
+
+    public boolean canPlaceBlock(Block block, boolean inform) {
+	return ResidenceBlockListener.canPlaceBlock(this.getPlayer(), block, inform);
+    }
+
+    public boolean canDamageEntity(Entity entity, boolean inform) { 
+	return ResidenceEntityListener.canDamageEntity(this.getPlayer(), entity, inform);
+    }
+    
+//    public boolean canDamagePlayer(Player player, boolean inform) {
+//
+//    }
 }

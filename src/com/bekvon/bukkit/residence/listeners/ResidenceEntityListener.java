@@ -61,6 +61,7 @@ import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -1359,6 +1360,126 @@ public class ResidenceEntityListener implements Listener {
 	    event.getProjectile().setMetadata(CrossbowShooter, new FixedMetadataValue(plugin, event.getEntity().getUniqueId()));
     }
 
+    public static boolean canDamageEntity(Entity damager, Entity victim, boolean inform) {
+
+	boolean tamedAnimal = isTamed(victim);
+	ClaimedResidence area = Residence.getInstance().getResidenceManager().getByLoc(victim.getLocation());
+
+	if (area != null && victim instanceof Player && damager instanceof Player) {
+	    if (area.getPermissions().has(Flags.overridepvp, false) || Residence.getInstance().getConfigManager().isOverridePvp() && area.getPermissions().has(Flags.pvp,
+		FlagCombo.OnlyFalse)) {
+		return false;
+	    }
+	}
+
+	ClaimedResidence srcarea = null;
+	if (damager != null) {
+	    srcarea = Residence.getInstance().getResidenceManager().getByLoc(damager.getLocation());
+	}
+	boolean srcpvp = true;
+	boolean allowSnowBall = false;
+	boolean isSnowBall = false;
+	boolean isOnFire = false;
+	if (srcarea != null) {
+	    srcpvp = srcarea.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone);
+	}
+
+//	    ent = attackevent.getEntity();
+	if ((victim instanceof Player || tamedAnimal) && (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager)
+	    .getShooter() instanceof Player))) || damager instanceof Firework) {
+
+	    Player attacker = null;
+	    if (damager instanceof Player) {
+		attacker = (Player) damager;
+	    } else if (damager instanceof Projectile) {
+		Projectile project = (Projectile) damager;
+		if (project.getType() == EntityType.SNOWBALL && srcarea != null) {
+		    isSnowBall = true;
+		    allowSnowBall = srcarea.getPermissions().has(Flags.snowball, FlagCombo.TrueOrNone);
+		}
+		if (project.getFireTicks() > 0)
+		    isOnFire = true;
+
+		attacker = (Player) ((Projectile) damager).getShooter();
+	    } else if (damager instanceof Firework) {
+		List<MetadataValue> meta = damager.getMetadata(CrossbowShooter);
+		if (meta != null && !meta.isEmpty()) {
+		    try {
+			String uid = meta.get(0).asString();
+			attacker = Bukkit.getPlayer(UUID.fromString(uid));
+		    } catch (Throwable e) {
+		    }
+		}
+	    }
+
+	    if (!(victim instanceof Player))
+		return true;
+
+	    if (srcarea != null && area != null && srcarea.equals(area) && attacker != null && area.isUnderRaid() && area.getRaid().onSameTeam(attacker, (Player) victim)
+		&& !ConfigManager.RaidFriendlyFire) {
+		return false;
+	    }
+
+	    if (srcarea != null && area != null && srcarea.equals(area) && attacker != null && area.isUnderRaid() && !area.getRaid().onSameTeam(attacker, (Player) victim)) {
+		return true;
+	    }
+
+	    if (srcarea != null && area != null && srcarea.equals(area) && attacker != null &&
+		srcarea.getPermissions().playerHas((Player) victim, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
+		srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
+
+		ActionBarManager.send(attacker, Residence.getInstance().getLM().getMessage(lm.General_NoFriendlyFire));
+		if (isOnFire)
+		    victim.setFireTicks(0);
+		return false;
+	    }
+
+	    if (!srcpvp && !isSnowBall || !allowSnowBall && isSnowBall) {
+		if (attacker != null && inform)
+		    Residence.getInstance().msg(attacker, lm.General_NoPVPZone);
+		if (isOnFire)
+		    victim.setFireTicks(0);
+		return false;
+	    }
+
+	    /* Check for Player vs Player */
+	    if (area == null) {
+		/* World PvP */
+		if (damager != null)
+		    if (!Residence.getInstance().getWorldFlags().getPerms(damager.getWorld().getName()).has(Flags.pvp, FlagCombo.TrueOrNone)) {
+			if (attacker != null && inform)
+			    Residence.getInstance().msg(attacker, lm.General_WorldPVPDisabled);
+			return false;
+		    }
+
+		/* Attacking from safe zone */
+		if (attacker != null) {
+		    FlagPermissions aPerm = Residence.getInstance().getPermsByLoc(attacker.getLocation());
+		    if (!aPerm.has(Flags.pvp, FlagCombo.TrueOrNone)) {
+			if (inform)
+			    Residence.getInstance().msg(attacker, lm.General_NoPVPZone);
+			return false;
+		    }
+		}
+	    } else {
+		/* Normal PvP */
+		if (!isSnowBall && !area.getPermissions().has(Flags.pvp, FlagCombo.TrueOrNone) || isSnowBall && !allowSnowBall) {
+		    if (attacker != null)
+			if (inform)
+			    Residence.getInstance().msg(attacker, lm.General_NoPVPZone);
+		    return false;
+		}
+	    }
+	    return true;
+	} else if ((victim instanceof Player || tamedAnimal) && (damager instanceof Creeper)) {
+	    if (area == null && !Residence.getInstance().getWorldFlags().getPerms(damager.getWorld().getName()).has(Flags.creeper, true) || area != null && !area.getPermissions().has(Flags.creeper,
+		true)) {
+		return false;
+	    }
+	}
+	return true;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
 	// disabling event on world
@@ -1378,7 +1499,7 @@ public class ResidenceEntityListener implements Listener {
 	    if (area != null && ent instanceof Player && damager instanceof Player) {
 		if (area.getPermissions().has(Flags.overridepvp, false) || plugin.getConfigManager().isOverridePvp() && area.getPermissions().has(Flags.pvp,
 		    FlagCombo.OnlyFalse)) {
-		    Player player = (Player) event.getEntity();
+		    Player player = (Player) ent;
 		    Damageable damage = player;
 		    damage.damage(event.getDamage());
 		    damage.setVelocity(damager.getLocation().getDirection());
@@ -1425,8 +1546,8 @@ public class ResidenceEntityListener implements Listener {
 			} catch (Throwable e) {
 			}
 		    }
-		}
-
+		}		
+		
 		if (!(ent instanceof Player))
 		    return;
 
