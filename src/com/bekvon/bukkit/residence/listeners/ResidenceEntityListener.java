@@ -1546,8 +1546,8 @@ public class ResidenceEntityListener implements Listener {
 			} catch (Throwable e) {
 			}
 		    }
-		}		
-		
+		}
+
 		if (!(ent instanceof Player))
 		    return;
 

@@ -811,7 +811,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    if (sender instanceof Player) {
 
 		RawMessage rm = new RawMessage();
-		rm.add(RentedMsg, rentableString.toString());
+		rm.addText(RentedMsg).addHover(rentableString.toString());
 		rm.show(sender);
 	    } else
 		plugin.msg(sender, RentedMsg);

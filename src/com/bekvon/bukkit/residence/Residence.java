@@ -132,8 +132,6 @@ import com.residence.zip.ZipLibrary;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectionManager;
 
 /**
  * 

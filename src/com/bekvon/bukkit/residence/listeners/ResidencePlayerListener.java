@@ -2276,8 +2276,7 @@ public class ResidencePlayerListener implements Listener {
 	Player player = event.getPlayer();
 	if (player.hasMetadata("NPC"))
 	    return;
-	if (message != null) {
-
+	if (message != null) {	   
 	    Long time = informar.get(player.getUniqueId());
 	    if (time == null || time + 100L < System.currentTimeMillis()) {
 

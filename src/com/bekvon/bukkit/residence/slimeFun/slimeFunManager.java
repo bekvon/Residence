@@ -33,9 +33,7 @@ public class slimeFunManager {
 		    Bukkit.getScheduler().cancelTask(repeat);
 		}
 	    }, 20L, 20L);
-
 	}
-
     }
 
 }

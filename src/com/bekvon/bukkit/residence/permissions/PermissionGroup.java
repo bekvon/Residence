@@ -119,7 +119,8 @@ public class PermissionGroup {
 
 	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 	    ymin = 0;
-	    ymax = 255;
+	    // This needs to be 256 to include entire height where 255 and block 0
+	    ymax = 256;
 	}
 
 	zmax = limits.getInt("Residence.MaxNorthSouth", 0);
@@ -127,7 +128,8 @@ public class PermissionGroup {
 	zmin = zmin > zmax ? zmax : zmin;
 
 	minHeight = limits.getInt("Residence.MinHeight", 0);
-	maxHeight = limits.getInt("Residence.MaxHeight", 255);
+	// This needs to be 256 to include entire height where 255 and block 0
+	maxHeight = limits.getInt("Residence.MaxHeight", 256);
 	tpaccess = limits.getBoolean("Residence.CanTeleport", false);
 
 	maxSubzones = limits.getInt("Residence.MaxSubzonesInArea", 3);

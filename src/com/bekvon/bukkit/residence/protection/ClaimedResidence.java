@@ -29,7 +29,6 @@ import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.cmiLib.TitleMessageManager;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
@@ -42,10 +41,9 @@ import com.bekvon.bukkit.residence.economy.rent.RentableLand;
 import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.ResidenceAreaAddEvent;
 import com.bekvon.bukkit.residence.event.ResidenceAreaDeleteEvent;
-import com.bekvon.bukkit.residence.event.ResidenceRaidEndEvent;
+import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRaidPreStartEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRaidStartEvent;
-import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceSizeChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceSubzoneCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceTPEvent;
@@ -55,14 +53,10 @@ import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.raid.RaidAttacker;
-import com.bekvon.bukkit.residence.raid.RaidDefender;
 import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
-import com.bekvon.bukkit.residence.utils.Debug;
-import com.bekvon.bukkit.residence.utils.Utils;
 
 public class ClaimedResidence {
 
