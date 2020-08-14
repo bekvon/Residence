@@ -189,7 +189,12 @@ public class PermissionManager {
 	    for (String key : entrys) {
 		try {
 		    i++;
-		    groups.put(key.toLowerCase(), new PermissionGroup(key.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms, i));
+
+		    PermissionGroup old = groups.getOrDefault(key.toLowerCase(), new PermissionGroup(key.toLowerCase(), null, globalFlagPerms, i));
+
+		    old.mirrorIn(nodes.getConfigurationSection(key));
+
+		    groups.put(key.toLowerCase(), old);
 		    List<String> mirrors = nodes.getConfigurationSection(key).getStringList("Mirror");
 		    for (String group : mirrors) {
 			groups.put(group.toLowerCase(), new PermissionGroup(group.toLowerCase(), nodes.getConfigurationSection(key), globalFlagPerms, i));

@@ -18,54 +18,54 @@ import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class PermissionGroup {
-    private int xmax;
-    private int ymax;
-    private int zmax;
+    private int xmax = 0;
+    private int ymax = 0;
+    private int zmax = 0;
 
-    private int xmin;
-    private int ymin;
-    private int zmin;
+    private int xmin = 0;
+    private int ymin = 0;
+    private int zmin = 0;
 
-    protected int Subzonexmax;
-    protected int Subzoneymax;
-    protected int Subzonezmax;
+    protected int Subzonexmax = 0;
+    protected int Subzoneymax = 0;
+    protected int Subzonezmax = 0;
 
-    protected int Subzonexmin;
-    protected int Subzoneymin;
-    protected int Subzonezmin;
+    protected int Subzonexmin = 0;
+    protected int Subzoneymin = 0;
+    protected int Subzonezmin = 0;
 
-    protected int resmax;
-    private double costperarea;
+    protected int resmax = 0;
+    private double costperarea = 0;
     private double sellperarea = 0;
-    protected boolean tpaccess;
-    protected int subzonedepth;
-    protected int maxSubzones;
+    protected boolean tpaccess = false;
+    protected int subzonedepth = 0;
+    protected int maxSubzones = 3;
     protected FlagPermissions flagPerms;
     protected Map<String, Boolean> creatorDefaultFlags;
 //    protected Map<String, Boolean> rentedDefaultFlags;
     protected Map<String, Map<String, Boolean>> groupDefaultFlags;
     protected Map<String, Boolean> residenceDefaultFlags;
-    protected boolean messageperms;
-    protected String defaultEnterMessage;
-    protected String defaultLeaveMessage;
-    private int maxLeaseTime;
-    private int leaseGiveTime;
-    protected double renewcostperarea;
-    protected boolean canBuy;
-    protected boolean canSell;
-    protected boolean buyIgnoreLimits;
-    protected boolean cancreate;
+    protected boolean messageperms = false;
+    protected String defaultEnterMessage = null;
+    protected String defaultLeaveMessage = null;
+    private int maxLeaseTime = 16;
+    private int leaseGiveTime = 14;
+    protected double renewcostperarea = 0.02D;
+    protected boolean canBuy = false;
+    protected boolean canSell = false;
+    protected boolean buyIgnoreLimits = false;
+    protected boolean cancreate = false;
     protected String groupname;
-    protected int maxPhysical;
-    protected boolean unstuck;
-    protected boolean kick;
-    protected int minHeight;
-    protected int maxHeight;
-    protected int maxRents;
+    protected int maxPhysical = 2;
+    protected boolean unstuck = false;
+    protected boolean kick = false;
+    protected int minHeight = 0;
+    protected int maxHeight = 256;
+    protected int maxRents = 0;
     protected int MaxRentDays = -1;
-    protected int maxRentables;
-    protected boolean selectCommandAccess;
-    protected boolean itemListAccess;
+    protected int maxRentables = 0;
+    protected boolean selectCommandAccess = true;
+    protected boolean itemListAccess = true;
     protected int priority = 0;
 
     public PermissionGroup(String name) {
@@ -101,20 +101,34 @@ public class PermissionGroup {
 	this.priority = priority;
     }
 
+    public void mirrorIn(ConfigurationSection limits) {
+	parseGroup(limits);
+    }
+
     private void parseGroup(ConfigurationSection limits) {
 	if (limits == null) {
 	    return;
 	}
-	cancreate = limits.getBoolean("Residence.CanCreate", false);
-	resmax = limits.getInt("Residence.MaxResidences", 0);
-	maxPhysical = limits.getInt("Residence.MaxAreasPerResidence", 2);
+	if (limits.contains("Residence.CanCreate"))
+	    cancreate = limits.getBoolean("Residence.CanCreate", false);
 
-	xmax = (limits.getInt("Residence.MaxEastWest", 0));
-	xmin = (limits.getInt("Residence.MinEastWest", 0));
-	xmin = (getXmin() > getXmax() ? getXmax() : getXmin());
+	if (limits.contains("Residence.MaxResidences"))
+	    resmax = limits.getInt("Residence.MaxResidences", 0);
 
-	ymax = limits.getInt("Residence.MaxUpDown", 0);
-	ymin = limits.getInt("Residence.MinUpDown", 0);
+	if (limits.contains("Residence.MaxAreasPerResidence"))
+	    maxPhysical = limits.getInt("Residence.MaxAreasPerResidence", 2);
+
+	if (limits.contains("Residence.MaxEastWest"))
+	    xmax = limits.getInt("Residence.MaxEastWest", 0);
+	if (limits.contains("Residence.MinEastWest"))
+	    xmin = limits.getInt("Residence.MinEastWest", 0);
+
+	xmin = getXmin() > getXmax() ? getXmax() : getXmin();
+
+	if (limits.contains("Residence.MaxUpDown"))
+	    ymax = limits.getInt("Residence.MaxUpDown", 0);
+	if (limits.contains("Residence.MinUpDown"))
+	    ymin = limits.getInt("Residence.MinUpDown", 0);
 	ymin = ymin > ymax ? ymax : ymin;
 
 	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
@@ -123,58 +137,88 @@ public class PermissionGroup {
 	    ymax = 256;
 	}
 
-	zmax = limits.getInt("Residence.MaxNorthSouth", 0);
-	zmin = limits.getInt("Residence.MinNorthSouth", 0);
+	if (limits.contains("Residence.MaxNorthSouth"))
+	    zmax = limits.getInt("Residence.MaxNorthSouth", 0);
+	if (limits.contains("Residence.MinNorthSouth"))
+	    zmin = limits.getInt("Residence.MinNorthSouth", 0);
 	zmin = zmin > zmax ? zmax : zmin;
 
-	minHeight = limits.getInt("Residence.MinHeight", 0);
+	if (limits.contains("Residence.MinHeight"))
+	    minHeight = limits.getInt("Residence.MinHeight", 0);
 	// This needs to be 256 to include entire height where 255 and block 0
-	maxHeight = limits.getInt("Residence.MaxHeight", 256);
-	tpaccess = limits.getBoolean("Residence.CanTeleport", false);
+	if (limits.contains("Residence.MaxHeight"))
+	    maxHeight = limits.getInt("Residence.MaxHeight", 256);
 
-	maxSubzones = limits.getInt("Residence.MaxSubzonesInArea", 3);
+	if (limits.contains("Residence.CanTeleport"))
+	    tpaccess = limits.getBoolean("Residence.CanTeleport", false);
 
-	subzonedepth = limits.getInt("Residence.SubzoneDepth", 0);
+	if (limits.contains("Residence.MaxSubzonesInArea"))
+	    maxSubzones = limits.getInt("Residence.MaxSubzonesInArea", 3);
 
-	Subzonexmax = limits.getInt("Residence.SubzoneMaxEastWest", getXmax());
+	if (limits.contains("Residence.SubzoneDepth"))
+	    subzonedepth = limits.getInt("Residence.SubzoneDepth", 0);
+
+	if (limits.contains("Residence.SubzoneMaxEastWest"))
+	    Subzonexmax = limits.getInt("Residence.SubzoneMaxEastWest", getXmax());
 	Subzonexmax = getXmax() < Subzonexmax ? getXmax() : Subzonexmax;
-	Subzonexmin = limits.getInt("Residence.SubzoneMinEastWest", 0);
+	if (limits.contains("Residence.SubzoneMinEastWest"))
+	    Subzonexmin = limits.getInt("Residence.SubzoneMinEastWest", 0);
 	Subzonexmin = Subzonexmin > Subzonexmax ? Subzonexmax : Subzonexmin;
 
-	Subzoneymax = limits.getInt("Residence.SubzoneMaxUpDown", ymax);
+	if (limits.contains("Residence.SubzoneMaxUpDown"))
+	    Subzoneymax = limits.getInt("Residence.SubzoneMaxUpDown", ymax);
 	Subzoneymax = ymax < Subzoneymax ? ymax : Subzoneymax;
-	Subzoneymin = limits.getInt("Residence.SubzoneMinUpDown", 0);
+	if (limits.contains("Residence.SubzoneMinUpDown"))
+	    Subzoneymin = limits.getInt("Residence.SubzoneMinUpDown", 0);
 	Subzoneymin = Subzoneymin > Subzoneymax ? Subzoneymax : Subzoneymin;
 
-	Subzonezmax = limits.getInt("Residence.SubzoneMaxNorthSouth", zmax);
+	if (limits.contains("Residence.SubzoneMaxNorthSouth"))
+	    Subzonezmax = limits.getInt("Residence.SubzoneMaxNorthSouth", zmax);
 	Subzonezmax = zmax < Subzonezmax ? zmax : Subzonezmax;
-	Subzonezmin = limits.getInt("Residence.SubzoneMinNorthSouth", 0);
+	if (limits.contains("Residence.SubzoneMinNorthSouth"))
+	    Subzonezmin = limits.getInt("Residence.SubzoneMinNorthSouth", 0);
 	Subzonezmin = Subzonezmin > Subzonezmax ? Subzonezmax : Subzonezmin;
 
-	messageperms = limits.getBoolean("Messaging.CanChange", false);
-	defaultEnterMessage = limits.getString("Messaging.DefaultEnter", null);
-	defaultLeaveMessage = limits.getString("Messaging.DefaultLeave", null);
-	maxLeaseTime = limits.getInt("Lease.MaxDays", 16);
-	leaseGiveTime = limits.getInt("Lease.RenewIncrement", 14);
-	maxRents = limits.getInt("Rent.MaxRents", 0);
+	if (limits.contains("Messaging.CanChange"))
+	    messageperms = limits.getBoolean("Messaging.CanChange", false);
+	if (limits.contains("Messaging.DefaultEnter"))
+	    defaultEnterMessage = limits.getString("Messaging.DefaultEnter", null);
+	if (limits.contains("Messaging.DefaultLeave"))
+	    defaultLeaveMessage = limits.getString("Messaging.DefaultLeave", null);
+	if (limits.contains("Lease.MaxDays"))
+	    maxLeaseTime = limits.getInt("Lease.MaxDays", 16);
+	if (limits.contains("Lease.RenewIncrement"))
+	    leaseGiveTime = limits.getInt("Lease.RenewIncrement", 14);
+	if (limits.contains("Rent.MaxRents"))
+	    maxRents = limits.getInt("Rent.MaxRents", 0);
 
 	if (limits.contains("Rent.MaxRentDays"))
 	    MaxRentDays = limits.getInt("Rent.MaxRentDays", -1);
 
-	maxRentables = limits.getInt("Rent.MaxRentables", 0);
-	renewcostperarea = limits.getDouble("Economy.RenewCost", 0.02D);
-	canBuy = limits.getBoolean("Economy.CanBuy", false);
-	canSell = limits.getBoolean("Economy.CanSell", false);
-	buyIgnoreLimits = limits.getBoolean("Economy.IgnoreLimits", false);
-	costperarea = limits.getDouble("Economy.BuyCost", 0);
+	if (limits.contains("Rent.MaxRentables"))
+	    maxRentables = limits.getInt("Rent.MaxRentables", 0);
+	if (limits.contains("Economy.RenewCost"))
+	    renewcostperarea = limits.getDouble("Economy.RenewCost", 0.02D);
+	if (limits.contains("Economy.CanBuy"))
+	    canBuy = limits.getBoolean("Economy.CanBuy", false);
+	if (limits.contains("Economy.CanSell"))
+	    canSell = limits.getBoolean("Economy.CanSell", false);
+	if (limits.contains("Economy.IgnoreLimits"))
+	    buyIgnoreLimits = limits.getBoolean("Economy.IgnoreLimits", false);
+	if (limits.contains("Economy.BuyCost"))
+	    costperarea = limits.getDouble("Economy.BuyCost", 0);
 
 	if (limits.contains("Economy.SellCost"))
 	    sellperarea = limits.getDouble("Economy.SellCost", 0);
 
-	unstuck = limits.getBoolean("Residence.Unstuck", false);
-	kick = limits.getBoolean("Residence.Kick", false);
-	selectCommandAccess = limits.getBoolean("Residence.SelectCommandAccess", true);
-	itemListAccess = limits.getBoolean("Residence.ItemListAccess", true);
+	if (limits.isBoolean("Economy.Unstuck"))
+	    unstuck = limits.getBoolean("Residence.Unstuck", false);
+	if (limits.contains("Residence.Kick"))
+	    kick = limits.getBoolean("Residence.Kick", false);
+	if (limits.contains("Residence.SelectCommandAccess"))
+	    selectCommandAccess = limits.getBoolean("Residence.SelectCommandAccess", true);
+	if (limits.contains("Residence.ItemListAccess"))
+	    itemListAccess = limits.getBoolean("Residence.ItemListAccess", true);
 	ConfigurationSection node = limits.getConfigurationSection("Flags.Permission");
 	Set<String> flags = null;
 	if (node != null) {
