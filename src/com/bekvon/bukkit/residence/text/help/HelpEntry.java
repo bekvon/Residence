@@ -33,6 +33,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class HelpEntry {
     protected String name;
@@ -413,6 +414,10 @@ public class HelpEntry {
 			    mode = FlagMode.Player;
 		    }
 
+		    if(args.length > 1 && Flags.getFlag(args[args.length - 2]) != null) {
+			continue;
+		    }
+		    
 		    for (String one : FlagPermissions.getAllPosibleFlags()) {
 			Flags f = Flags.getFlag(one);
 

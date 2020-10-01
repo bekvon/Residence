@@ -430,7 +430,7 @@ public class PermissionManager {
 	    if (!has && inform) {
 		boolean showPerm = ResPerm.permisiononerror.hasPermission(sender, 50000L);
 		RawMessage rm = new RawMessage();
-		rm.add(Residence.getInstance().getLM().getMessage(lms == null ? lm.General_NoPermission : lms), showPerm ? perm : null);
+		rm.addText(Residence.getInstance().getLM().getMessage(lms == null ? lm.General_NoPermission : lms)).addHover(showPerm ? perm : null);
 		rm.show(sender);
 
 		informConsole(sender, perm, informConsole);
