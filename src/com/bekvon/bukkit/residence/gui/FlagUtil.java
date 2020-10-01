@@ -2,7 +2,6 @@ package com.bekvon.bukkit.residence.gui;
 
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,11 +13,9 @@ import com.bekvon.bukkit.CMIGUI.GUIManager.GUIRows;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagUtil {
 

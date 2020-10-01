@@ -7,9 +7,6 @@ public class FlagData {
 
     private HashMap<String, ItemStack> items = new HashMap<String, ItemStack>();
 
-    public FlagData() {
-    }
-
     public void addFlagButton(String flag, ItemStack item) {
 	this.items.put(flag, item);
     }

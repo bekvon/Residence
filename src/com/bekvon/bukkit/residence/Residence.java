@@ -532,7 +532,8 @@ public class Residence extends JavaPlugin {
 		return;
 	    }
 
-	    gmanager = new PermissionManager(this);
+
+	    
 	    this.getPermissionManager().startCacheClearScheduler();
 
 	    imanager = new WorldItemManager(this);
@@ -588,8 +589,8 @@ public class Residence extends JavaPlugin {
 		case MineConomy:
 		    break;
 		case None:
-		    if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
-			ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
+		    if (this.getPermissionManager().getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
+			ResidenceVaultAdapter vault = (ResidenceVaultAdapter) this.getPermissionManager().getPermissionsPlugin();
 			if (vault.economyOK()) {
 			    economy = vault;
 			    consoleMessage("Found Vault using economy system: &5" + vault.getEconomyName());
@@ -618,8 +619,8 @@ public class Residence extends JavaPlugin {
 		    this.loadRealEconomy();
 		    break;
 		case Vault:
-		    if (gmanager.getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
-			ResidenceVaultAdapter vault = (ResidenceVaultAdapter) gmanager.getPermissionsPlugin();
+		    if (this.getPermissionManager().getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
+			ResidenceVaultAdapter vault = (ResidenceVaultAdapter) this.getPermissionManager().getPermissionsPlugin();
 			if (vault.economyOK()) {
 			    economy = vault;
 			    consoleMessage("Found Vault using economy system: &5" + vault.getEconomyName());
@@ -1020,6 +1021,8 @@ public class Residence extends JavaPlugin {
     }
 
     public PermissionManager getPermissionManager() {
+	if (gmanager == null)
+	    gmanager = new PermissionManager(this);
 	return gmanager;
     }
 
