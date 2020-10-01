@@ -40,6 +40,7 @@ import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Turtle;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Hoglin;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -90,7 +91,8 @@ public class v1_16_R2 implements NMS {
 	    ent instanceof Panda ||
 	    ent instanceof Cat ||
 	    ent instanceof Bee ||
-	    ent instanceof Strider);
+	    ent instanceof Strider||
+	    ent instanceof Hoglin);
     }
 
     @Override

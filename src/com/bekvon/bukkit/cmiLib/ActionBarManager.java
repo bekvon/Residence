@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.residence.utils.Debug;
+
 public class ActionBarManager {
     private static Object packet;
     private static Method getHandle;
@@ -63,9 +65,9 @@ public class ActionBarManager {
 	    }
 
 	    RawMessage rm = new RawMessage();
-	    rm.add(msg);
+	    rm.addText(msg);
 	    Object serialized = nmsChatSerializer.getMethod("a", String.class).invoke(null, CMIChatColor.translate(rm.getRaw()));
-	    if (Version.isCurrentHigher(Version.v1_15_R1))
+	    if (Version.isCurrentEqualOrHigher(Version.v1_16_R1))
 		packet = packetType.getConstructor(nmsIChatBaseComponent, sub, UUID.class).newInstance(serialized, consts[2], receivingPacket.getUniqueId());
 	    else if (Version.isCurrentHigher(Version.v1_11_R1)) {
 		packet = packetType.getConstructor(nmsIChatBaseComponent, sub).newInstance(serialized, consts[2]);
