@@ -27,7 +27,7 @@ public class unstuck implements cmd {
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	
-	if (!group.hasUnstuckAccess()) {
+	if (!group.hasUnstuckAccess() && !plugin.isResAdminOn(player)) {
 	    plugin.msg(player, lm.General_NoPermission);
 	    return true;
 	}
