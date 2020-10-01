@@ -532,8 +532,6 @@ public class Residence extends JavaPlugin {
 		return;
 	    }
 
-
-	    
 	    this.getPermissionManager().startCacheClearScheduler();
 
 	    imanager = new WorldItemManager(this);
@@ -566,8 +564,13 @@ public class Residence extends JavaPlugin {
 
 	    SlimeFun = Bukkit.getPluginManager().getPlugin("Slimefun") != null && Bukkit.getPluginManager().getPlugin("CS-CoreLib") != null;
 
-	    if (SlimeFun)
-		new slimeFunManager(this);
+	    if (SlimeFun) {
+		try {
+		    new slimeFunManager(this);
+		} catch (Throwable e) {
+		    e.printStackTrace();
+		}
+	    }
 
 	    this.getConfigManager().copyOverTranslations();
 
