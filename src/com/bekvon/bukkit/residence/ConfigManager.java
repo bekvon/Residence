@@ -131,6 +131,7 @@ public class ConfigManager {
     private int VisualizerFrameCap;
     private int VisualizerSidesCap;
     protected boolean flagsInherit;
+    protected boolean ignoreGroupedFlagAcess;
     protected ChatColor chatColor;
     protected boolean chatEnable;
     private ELMessageType EnterLeaveMessageType;
@@ -184,6 +185,8 @@ public class ConfigManager {
     protected boolean useVisualizer;
     protected boolean DisableListeners;
     protected boolean DisableCommands;
+
+    private boolean ignoreGroupedFlagAccess = false;
 
     //Town
 //    private boolean TownEnabled = false;
@@ -565,10 +568,10 @@ public class ConfigManager {
 	    "When this set to true, selections inside existing residence will be from bottom to top of that residence",
 	    "When this set to false, selections inside existing residence will be exactly as they are");
 	SelectionIgnoreYInSubzone = c.get("Global.Selection.IgnoreYInSubzone", false);
-	
-	
+
 	c.addComment("Global.Selection.netherHeight",
-	    "Defines height of nether when creating residences. This mostly applies when performing commands like /res select vert or /res auto which will expand residence to defined height","This cant be higher than 255 or lower than 1");
+	    "Defines height of nether when creating residences. This mostly applies when performing commands like /res select vert or /res auto which will expand residence to defined height",
+	    "This cant be higher than 255 or lower than 1");
 	SelectionNetherHeight = c.get("Global.Selection.netherHeight", 128);
 	SelectionNetherHeight = SelectionNetherHeight > 255 ? 255 : SelectionNetherHeight < 1 ? 1 : SelectionNetherHeight;
 
@@ -684,11 +687,11 @@ public class ConfigManager {
 
 	c.addComment("Global.Optimizations.InfoCommand.ShortInformation",
 	    "By setting this to true, when checking residence info with /res info, you will get only names in list, by hovering on them, you will get flag list");
-	ShortInfoUse = c.get("Global.Optimizations.InfoCommand.ShortInformation",  c.getC().getBoolean("Global.Optimizations.ShortInfo.Use",true));
-	
+	ShortInfoUse = c.get("Global.Optimizations.InfoCommand.ShortInformation", c.getC().getBoolean("Global.Optimizations.ShortInfo.Use", true));
+
 	c.addComment("Global.Optimizations.InfoCommand.ExcludeDefaultFlags",
-	    "When set to true default residence flags set in flags.yml file will get excluded from info command output and will not be shown","If flag gets different state then it will be shown");
-	InfoExcludeDFlags = c.get("Global.Optimizations.InfoCommand.ExcludeDefaultFlags",  false);
+	    "When set to true default residence flags set in flags.yml file will get excluded from info command output and will not be shown", "If flag gets different state then it will be shown");
+	InfoExcludeDFlags = c.get("Global.Optimizations.InfoCommand.ExcludeDefaultFlags", false);
 
 	// Vote range
 	c.addComment("Global.Optimizations.Vote.RangeFrom", "Range players can vote to, by default its from 0 to 10 points");
@@ -1729,6 +1732,10 @@ public class ConfigManager {
 	return flagsInherit;
     }
 
+    public boolean isIgnoreGroupedFlagAcess() {
+	return ignoreGroupedFlagAcess;
+    }
+
     public boolean chatEnabled() {
 	return chatEnable;
     }
@@ -2036,7 +2043,6 @@ public class ConfigManager {
     public boolean isInfoExcludeDFlags() {
 	return InfoExcludeDFlags;
     }
-
 
 //    public int getTownMinRange() {
 //	return TownMinRange;
