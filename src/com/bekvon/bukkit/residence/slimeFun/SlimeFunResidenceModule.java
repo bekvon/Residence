@@ -7,52 +7,59 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectionModule;
 
 public class SlimeFunResidenceModule implements ProtectionModule {
-    private Residence residence;
 
-    private final Plugin plugin;
+	private final Residence residence;
 
-    public SlimeFunResidenceModule(Plugin plugin) {
-	this.plugin = plugin;
-    }
-
-    @Override
-    public Plugin getPlugin() {
-	return this.plugin;
-    }
-
-    @Override
-    public void load() {
-	this.residence = Residence.getInstance();
-    }
-
-    @Override
-    public boolean hasPermission(OfflinePlayer p, Location l, ProtectableAction action) {
-	if (!action.isBlockAction())
-	    return true;
-
-	switch (action) {
-	case ACCESS_INVENTORIES:
-	    break;
-	case BREAK_BLOCK:
-	    Player player = Bukkit.getPlayer(p.getUniqueId());
-	    if (player == null)
-		return false;
-	    if (!ResidenceBlockListener.canBreakBlock(player, l.getBlock(), true))
-		return false;
-	    break;
-	case PLACE_BLOCK:
-	    break;
-	case PVP:
-	    break;
-	default:
-	    break;
+	public SlimeFunResidenceModule(Plugin plugin) {
+		this.residence = (Residence) plugin;
 	}
-	return true;
-    }
+
+	@Override
+	public Plugin getPlugin() {
+		return this.residence;
+	}
+
+	@Override
+	public void load() {}
+
+	@Override
+	public boolean hasPermission(OfflinePlayer op, Location loc, ProtectableAction action) {
+		if (op == null)
+			return false;
+
+		switch (action) {
+			case ACCESS_INVENTORIES:
+				ClaimedResidence res = residence.getResidenceManager().getByLoc(loc);
+				if (res != null) {
+					boolean allow = res.getPermissions().playerHas(new ResidencePlayer(op), Flags.container, false);
+
+					if (!allow)
+						residence.msg(op.getPlayer(), lm.Flag_Deny, Flags.container);
+
+					return allow;
+				}
+				break;
+			case BREAK_BLOCK:
+				Player player = Bukkit.getPlayer(op.getUniqueId());
+
+				if (player == null)
+					return false;
+
+				return ResidenceBlockListener.canBreakBlock(player, loc.getBlock(), true);
+			default:
+				break;
+		}
+
+		return true;
+	}
 }
