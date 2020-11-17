@@ -112,7 +112,7 @@ import com.bekvon.bukkit.residence.selection.WorldGuardUtil;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopSignUtil;
 import com.bekvon.bukkit.residence.signsStuff.SignUtil;
-import com.bekvon.bukkit.residence.slimeFun.slimeFunManager;
+import com.bekvon.bukkit.residence.slimeFun.SlimefunManager;
 import com.bekvon.bukkit.residence.text.Language;
 import com.bekvon.bukkit.residence.text.help.HelpEntry;
 import com.bekvon.bukkit.residence.text.help.InformationPager;
@@ -566,9 +566,9 @@ public class Residence extends JavaPlugin {
 
 	    if (SlimeFun) {
 		try {
-		    new slimeFunManager(this);
+			SlimefunManager.register(this);
 		} catch (Throwable e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 	    }
 
