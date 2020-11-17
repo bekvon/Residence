@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.cmiLib.TitleMessageManager;
 import com.bekvon.bukkit.residence.ConfigManager;
@@ -1259,15 +1260,22 @@ public class ClaimedResidence {
 
 	Location tempLoc = new Location(tpLoc.getWorld(), tpLoc.getX(), tpLoc.getY(), tpLoc.getZ());
 
-	int from = (int) tempLoc.getY();
-
 	int fallDistance = 0;
-	for (int i = 0; i < 255; i++) {
-	    tempLoc.setY(from - i);
+	for (int i = (int) tempLoc.getY(); i >= 0; i--) {
+	    if (i == 0) {
+		fallDistance = 255;
+		break;
+	    }
+	    tempLoc.setY(i);
 	    Block block = tempLoc.getBlock();
 	    if (ResidencePlayerListener.isEmptyBlock(block)) {
 		fallDistance++;
 	    } else {
+
+		if (CMIMaterial.get(block).isLava()) {
+		    fallDistance = 256;
+		}
+
 		break;
 	    }
 	}
@@ -1314,10 +1322,17 @@ public class ClaimedResidence {
 	    }
 	}
 
-	if (!plugin.getTeleportMap().containsKey(targetPlayer.getName()) && !isAdmin) {
+	ClaimedResidence old = plugin.getTeleportMap().get(targetPlayer.getName());
+	
+	if (old == null || !old.equals(this)) {
 	    int distance = isSafeTp(reqPlayer);
 	    if (distance > 6) {
-		plugin.msg(reqPlayer, lm.General_TeleportConfirm, distance);
+		if (distance == 256)
+		    plugin.msg(reqPlayer, lm.General_TeleportConfirmLava, distance);
+		else if (distance == 255)
+		    plugin.msg(reqPlayer, lm.General_TeleportConfirmVoid, distance);
+		else
+		    plugin.msg(reqPlayer, lm.General_TeleportConfirm, distance);
 		plugin.getTeleportMap().put(reqPlayer.getName(), this);
 		return;
 	    }

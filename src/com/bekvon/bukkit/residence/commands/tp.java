@@ -31,11 +31,9 @@ public class tp implements cmd {
 	    return true;
 	}
 
-	if (res.isRaidInitialized()) {
-	    if (res.getRaid().isAttacker(player)) {
-		plugin.msg(player, lm.Raid_cantDo);
-		return true;
-	    }
+	if (res.isRaidInitialized() && res.getRaid().isAttacker(player)) {
+	    plugin.msg(player, lm.Raid_cantDo);
+	    return true;
 	}
 
 	res.tpToResidence(player, player, resadmin);
