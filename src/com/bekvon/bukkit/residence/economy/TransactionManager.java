@@ -22,6 +22,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class TransactionManager implements MarketBuyInterface {
     private Set<ClaimedResidence> sellAmount;
@@ -200,7 +201,7 @@ public class TransactionManager implements MarketBuyInterface {
 	    plugin.msg(player, lm.Economy_OwnerBuyFail);
 	    return;
 	}
-	if (plugin.getResidenceManager().getOwnedZoneCount(player.getName()) >= rPlayer.getMaxRes() && !resadmin) {
+	if (plugin.getResidenceManager().getOwnedZoneCount(player.getName()) >= rPlayer.getMaxRes() && !resadmin && !group.buyLandIgnoreLimits()) {
 	    plugin.msg(player, lm.Residence_TooMany);
 	    return;
 	}

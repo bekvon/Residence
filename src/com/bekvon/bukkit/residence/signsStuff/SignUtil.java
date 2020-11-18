@@ -142,7 +142,7 @@ public class SignUtil {
 
     public void CheckSign(ClaimedResidence res) {
 	for (Signs one : res.getSignsInResidence()) {
-	    if (res != one.GetResidence())
+	    if (res != one.getResidence())
 		continue;
 	    this.SignUpdate(one);
 	}
@@ -341,11 +341,11 @@ public class SignUtil {
 
 	    signs.setLocation(new Location(world, x, y, z));
 
-	    Signs s = this.getSigns().getResSign(signs.GetLocation());
+	    Signs s = this.getSigns().getResSign(signs.getLocation());
 	    if (s == null)
 		continue;
 
-	    Location nloc = signs.GetLocation();
+	    Location nloc = signs.getLocation();
 	    Block block = nloc.getBlock();
 
 	    if (!(block.getState() instanceof Sign))

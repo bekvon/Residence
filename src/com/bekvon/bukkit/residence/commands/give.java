@@ -46,8 +46,9 @@ public class give implements cmd {
 		return false;
 	    }
 
-	    rm.add(plugin.getLM().getMessage(lm.Residence_GiveConfirm, args[0], res.getOwner(), args[1]), plugin.getLM().getMessage(lm.info_click), (resadmin ? "resadmin" : "res") + " give " + args[0]
-		+ " " + args[1] + (includeSubzones ? " -s" : "") + " -confirmed");
+	    rm.addText(plugin.getLM().getMessage(lm.Residence_GiveConfirm, args[0], res.getOwner(), args[1]))
+		.addHover(plugin.getLM().getMessage(lm.info_click))
+		.addCommand((resadmin ? "resadmin" : "res") + " give " + args[0] + " " + args[1] + (includeSubzones ? " -s" : "") + " -confirmed");
 	    rm.show(sender);
 
 	    return true;

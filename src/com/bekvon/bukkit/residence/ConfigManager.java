@@ -245,6 +245,7 @@ public class ConfigManager {
     // DynMap
     public boolean DynMapHideByDefault;
     public boolean DynMapUse;
+    public boolean BlueMapUse;
     public boolean DynMapShowFlags;
     public boolean DynMapHideHidden;
     public boolean DynMapLayer3dRegions;
@@ -1242,6 +1243,9 @@ public class ConfigManager {
 	    ActionBarOnSelection = false;
 	}
 
+	c.addComment("BlueMap.Use", "Enables or disable BlueMap Support");
+	BlueMapUse = c.get("BlueMap.Use", false);
+	
 	c.addComment("DynMap.Use", "Enables or disable DynMap Support");
 	DynMapUse = c.get("DynMap.Use", false);
 	c.addComment("DynMap.HideByDefault", "When set to true we will hide residence areas by default on dynmap window", "Residences can still be enabled throw provided DynMap option on left top side");

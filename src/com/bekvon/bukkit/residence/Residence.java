@@ -566,9 +566,9 @@ public class Residence extends JavaPlugin {
 
 	    if (SlimeFun) {
 		try {
-			SlimefunManager.register(this);
+		    SlimefunManager.register(this);
 		} catch (Throwable e) {
-			e.printStackTrace();
+		    e.printStackTrace();
 		}
 	    }
 
@@ -770,13 +770,17 @@ public class Residence extends JavaPlugin {
 	    if (getServer().getPluginManager().getPlugin("CrackShot") != null)
 		getServer().getPluginManager().registerEvents(new CrackShot(this), this);
 
-	    // DynMap
-	    Plugin dynmap = Bukkit.getPluginManager().getPlugin("dynmap");
-	    if (dynmap != null && getConfigManager().DynMapUse) {
-		DynManager = new DynMapManager(this);
-		getServer().getPluginManager().registerEvents(new DynMapListeners(this), this);
-		getDynManager().api = (DynmapAPI) dynmap;
-		getDynManager().activate();
+	    try {
+		// DynMap
+		Plugin dynmap = Bukkit.getPluginManager().getPlugin("dynmap");
+		if (dynmap != null && getConfigManager().DynMapUse) {
+		    DynManager = new DynMapManager(this);
+		    getServer().getPluginManager().registerEvents(new DynMapListeners(this), this);
+		    getDynManager().api = (DynmapAPI) dynmap;
+		    getDynManager().activate();
+		}
+	    } catch (Throwable e) {
+		e.printStackTrace();
 	    }
 
 	    int autosaveInt = getConfigManager().getAutoSaveInterval();
