@@ -1182,6 +1182,7 @@ public class ResidencePlayerListener implements Listener {
 	return block != null && block.getType().name().contains("RAIL") && item != null && item.getType().name().contains("MINECART");
     }
 
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
@@ -2276,7 +2277,7 @@ public class ResidencePlayerListener implements Listener {
 	Player player = event.getPlayer();
 	if (player.hasMetadata("NPC"))
 	    return;
-	if (message != null) {	   
+	if (message != null) {
 	    Long time = informar.get(player.getUniqueId());
 	    if (time == null || time + 100L < System.currentTimeMillis()) {
 

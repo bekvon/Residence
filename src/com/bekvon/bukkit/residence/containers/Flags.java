@@ -7,6 +7,7 @@ public enum Flags {
     admin(CMIMaterial.BEDROCK, FlagMode.Player, "Gives a player permission to change flags on a residence", true),
     animalkilling(CMIMaterial.CHICKEN, FlagMode.Both, "Allows or denys animal killing", false),
     animals(CMIMaterial.PIG_SPAWN_EGG, FlagMode.Residence, "Allows or denys animal spawns", true),
+    anchor(CMIMaterial.RESPAWN_ANCHOR, FlagMode.Both, "Allows or denys respawn anchor usage", true),
     anvilbreak(CMIMaterial.ANVIL, FlagMode.Residence, "Allows or denys anvil break in residence", true),
     backup(CMIMaterial.BOOKSHELF, FlagMode.Residence, "If set to true, restores previous look of area (WordEdit required)", false),
     bank(CMIMaterial.ENDER_CHEST, FlagMode.Both, "Allows or denys deposit/withdraw money from res bank", true),

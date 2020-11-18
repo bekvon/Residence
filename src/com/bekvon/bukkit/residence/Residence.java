@@ -85,6 +85,7 @@ import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_14;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_16;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
@@ -154,7 +155,6 @@ public class Residence extends JavaPlugin {
 
     protected ResidenceBlockListener blistener;
     protected ResidencePlayerListener plistener;
-    protected ResidencePlayerListener1_14 p1_14listener;
     protected ResidenceEntityListener elistener;
 
     protected ResidenceFixesListener flistener;
@@ -710,10 +710,14 @@ public class Residence extends JavaPlugin {
 
 		setKingdoms();
 
+		PluginManager pm = getServer().getPluginManager();
+		
 		blistener = new ResidenceBlockListener(this);
 		plistener = new ResidencePlayerListener(this);
 		if (Version.isCurrentEqualOrHigher(Version.v1_14_R1))
-		    p1_14listener = new ResidencePlayerListener1_14(this);
+		     pm.registerEvents(new ResidencePlayerListener1_14(this), this);
+		if (Version.isCurrentEqualOrHigher(Version.v1_16_R1))
+		    pm.registerEvents(new ResidencePlayerListener1_16(this), this);
 		elistener = new ResidenceEntityListener(this);
 		flistener = new ResidenceFixesListener();
 		slistener = new ResidenceRaidListener();
@@ -721,13 +725,9 @@ public class Residence extends JavaPlugin {
 		shlistener = new ShopListener(this);
 		spigotlistener = new SpigotListener();
 
-		PluginManager pm = getServer().getPluginManager();
 
 		pm.registerEvents(blistener, this);
 		pm.registerEvents(plistener, this);
-
-		if (Version.isCurrentEqualOrHigher(Version.v1_14_R1))
-		    pm.registerEvents(p1_14listener, this);
 		pm.registerEvents(elistener, this);
 		pm.registerEvents(flistener, this);
 		pm.registerEvents(shlistener, this);
