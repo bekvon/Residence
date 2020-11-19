@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -419,19 +420,19 @@ public class shop implements cmd {
 
 	c.get("vote.Description", "Vote for residence shop");
 	c.get("vote.Info", Arrays.asList("&eUsage: &6/res shop vote <residence> [amount]", "Votes for current or defined residence"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "vote"), Arrays.asList("[residence]", "10"));
+	LocaleManager.addTabCompleteSub(this, "vote", "[residence]", "10");
 
 	c.get("like.Description", "Give like for residence shop");
 	c.get("like.Info", Arrays.asList("&eUsage: &6/res shop like <residence>", "Gives like for residence shop"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "like"), Arrays.asList("[residenceshop]"));
+	LocaleManager.addTabCompleteSub(this, "like", "[residenceshop]");
 
 	c.get("votes.Description", "Shows res shop votes");
 	c.get("votes.Info", Arrays.asList("&eUsage: &6/res shop votes <residence> <page>", "Shows full vote list of current or defined residence shop"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "votes"), Arrays.asList("[residenceshop]"));
+	LocaleManager.addTabCompleteSub(this, "votes", "[residenceshop]");
 
 	c.get("likes.Description", "Shows res shop likes");
 	c.get("likes.Info", Arrays.asList("&eUsage: &6/res shop likes <residence> <page>", "Shows full like list of current or defined residence shop"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "likes"), Arrays.asList("[residenceshop]"));
+	LocaleManager.addTabCompleteSub(this, "likes", "[residenceshop]");
 
 	c.get("setdesc.Description", "Sets residence shop description");
 	c.get("setdesc.Info", Arrays.asList("&eUsage: &6/res shop setdesc [text]", "Sets residence shop description. Color code supported. For new line use /n"));
@@ -439,7 +440,7 @@ public class shop implements cmd {
 	c.get("createboard.Description", "Create res shop board");
 	c.get("createboard.Info", Arrays.asList("&eUsage: &6/res shop createboard [place]",
 	    "Creates res shop board from selected area. Place - position from which to start filling board"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "createboard"), Arrays.asList("1"));
+	LocaleManager.addTabCompleteSub(this, "createboard", "1");
 
 	c.get("deleteboard.Description", "Deletes res shop board");
 	c.get("deleteboard.Info", Arrays.asList("&eUsage: &6/res shop deleteboard", "Deletes res shop board bi right clicking on one of signs"));

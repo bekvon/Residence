@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -52,6 +53,6 @@ public class check implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Check flag state for you");
 	c.get("Info", Arrays.asList("&eUsage: &6/res check [residence] [flag] (playername)"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]", "[flag]", "[playername]"));
+	LocaleManager.addTabCompleteMain(this, "[residence]", "[flag]", "[playername]");
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -166,7 +167,7 @@ public class market implements cmd {
 	    res = null;
 	    if (args.length == 1)
 		res = plugin.getResidenceManager().getByLoc(player.getLocation());
-	    else if (args.length ==2)
+	    else if (args.length == 2)
 		res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res == null) {
 		plugin.msg(player, lm.Invalid_Residence);
@@ -417,11 +418,11 @@ public class market implements cmd {
 
 	c.get("Info.Description", "Get economy Info on residence");
 	c.get("Info.Info", Arrays.asList("&eUsage: &6/res market Info [residence]", "Shows if the Residence is for sale or for rent, and the cost."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "Info"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "Info", "[residence]");
 
 	c.get("list.Description", "Lists rentable and for sale residences.");
 	c.get("list.Info", Arrays.asList("&eUsage: &6/res market list [rent/sell]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "list"), Arrays.asList("rent%%sell"));
+	LocaleManager.addTabCompleteSub(this, "list", "rent%%sell");
 
 	c.get("list.SubCommands.rent.Description", "Lists rentable residences.");
 	c.get("list.SubCommands.rent.Info", Arrays.asList("&eUsage: &6/res market list rent"));
@@ -432,24 +433,24 @@ public class market implements cmd {
 	c.get("sell.Description", "Sell a residence");
 	c.get("sell.Info", Arrays.asList("&eUsage: &6/res market sell [residence] [amount]", "Puts a residence for sale for [amount] of money.",
 	    "Another player can buy the residence with /res market buy"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "sell"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "sell", "[residence]");
 
 	c.get("sign.Description", "Set market sign");
 	c.get("sign.Info", Arrays.asList("&eUsage: &6/res market sign [residence]", "Sets market sign you are looking at."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "sign"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "sign", "[residence]");
 
 	c.get("buy.Description", "Buy a residence");
 	c.get("buy.Info", Arrays.asList("&eUsage: &6/res market buy [residence]", "Buys a Residence if its for sale."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "buy"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "buy", "[residence]");
 
 	c.get("unsell.Description", "Stops selling a residence");
 	c.get("unsell.Info", Arrays.asList("&eUsage: &6/res market unsell [residence]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "unsell"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "unsell", "[residence]");
 
 	c.get("rent.Description", "ent a residence");
 	c.get("rent.Info", Arrays.asList("&eUsage: &6/res market rent [residence] <AutoPay>",
 	    "Rents a residence.  Autorenew can be either true or false.  If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "rent"), Arrays.asList("[cresidence]", "true%%false"));
+	LocaleManager.addTabCompleteSub(this, "rent", "[cresidence]", "true%%false");
 
 	c.get("rentable.Description", "Make a residence rentable.");
 	c.get("rentable.Info", Arrays.asList("&eUsage: &6/res market rentable [residence] [cost] [days] <AllowRenewing> <StayInMarket> <AllowAutoPay>",
@@ -457,16 +458,15 @@ public class market implements cmd {
 	    "If <AllowRenewing> is true, the residence will be able to be rented again before rent expires.",
 	    "If <StayInMarket> is true, the residence will stay in market after last renter will be removed.",
 	    "If <AllowAutoPay> is true, money for rent will be automaticaly taken from players balance if he chosen that option when renting"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "rentable"), Arrays.asList("[residence]", "1000", "7", "true", "true",
-	    "true"));
+	LocaleManager.addTabCompleteSub(this, "rentable", "[residence]", "1000", "7", "true", "true", "true");
 
 	c.get("autopay.Description", "Sets residence AutoPay to given value");
 	c.get("autopay.Info", Arrays.asList("&eUsage: &6/res market autopay <residence> [true/false]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "autopay"), Arrays.asList("[residence]%%true%%false", "true%%false"));
+	LocaleManager.addTabCompleteSub(this, "autopay", "[residence]%%true%%false", "true%%false");
 
 	c.get("payrent.Description", "Pays rent for defined residence");
 	c.get("payrent.Info", Arrays.asList("&eUsage: &6/res market payrent <residence>"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "payrent"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "payrent", "[residence]");
 
 	c.get("confirm.Description", "Confirms residence unrent/release action");
 	c.get("confirm.Info", Arrays.asList("&eUsage: &6/res market confirm"));
@@ -475,8 +475,8 @@ public class market implements cmd {
 	c.get("unrent.Info", Arrays.asList("&eUsage: &6/res market unrent [residence]",
 	    "If you are the renter, this command releases the rent on the house for you.",
 	    "If you are the owner, this command makes the residence not for rent anymore."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "release"), Arrays.asList("[residence]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "unrent"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "release", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "unrent", "[residence]");
     }
 
 }

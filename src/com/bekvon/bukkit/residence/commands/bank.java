@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -63,6 +64,6 @@ public class bank implements cmd {
 	c.get("Info", Arrays.asList("&eUsage: &6/res bank [deposit/withdraw] <residence> [amount]",
 	    "You must be standing in a Residence or provide residence name",
 	    "You must have the +bank flag."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("deposit%%withdraw", "[residence]"));
+	LocaleManager.addTabCompleteMain(this, "deposit%%withdraw", "[residence]");
     }
 }

@@ -16,7 +16,10 @@ import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceRaidEndEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRaidPreStartEvent;
+import com.bekvon.bukkit.residence.event.ResidenceRaidStartEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceRaid {
 
@@ -28,7 +31,9 @@ public class ResidenceRaid {
     private HashMap<UUID, RaidAttacker> attackers = new HashMap<UUID, RaidAttacker>();
     private HashMap<UUID, RaidDefender> defenders = new HashMap<UUID, RaidDefender>();
 
-    private int schedId = -1;
+    private int schedRaidEndId = -1;
+    private int shedRaidStartId = -1;
+    private int schedBossBarId = -1;
 
     public ResidenceRaid(ClaimedResidence res) {
 	this.res = res;
@@ -151,37 +156,29 @@ public class ResidenceRaid {
 	this.startsAt = startsAt;
     }
 
-    public int getSchedId() {
-	return schedId;
-    }
-
-    public void setSchedId(int schedId) {
-	this.schedId = schedId;
-    }
-
     public static final String bossBarPreRaidIdent = "ResidencePreRaid";
     public static final String bossBarRaidIdent = "ResidenceRaid";
 
     public void showBossBar() {
 
-	if (res.isUnderRaid()) {
-	    for (Entry<UUID, RaidAttacker> one : res.getRaid().getAttackers().entrySet()) {
+	if (isUnderRaid()) {
+	    for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
 		ResidencePlayer rPlayer = one.getValue().getPlayer();
 		if (rPlayer.isOnline())
 		    showBossbar(rPlayer, BarColor.BLUE, lm.Raid_EndsIn);
 	    }
-	    for (Entry<UUID, RaidDefender> one : res.getRaid().getDefenders().entrySet()) {
+	    for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
 		ResidencePlayer rOwner = one.getValue().getPlayer();
 		if (rOwner.isOnline())
 		    showBossbar(rOwner, BarColor.BLUE, lm.Raid_EndsIn);
 	    }
-	} else if (res.isInPreRaid()) {
-	    for (Entry<UUID, RaidAttacker> one : res.getRaid().getAttackers().entrySet()) {
+	} else if (isInPreRaid()) {
+	    for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
 		ResidencePlayer rPlayer = one.getValue().getPlayer();
 		if (rPlayer.isOnline())
 		    showBossbar(rPlayer, BarColor.GREEN, lm.Raid_StartsIn);
 	    }
-	    for (Entry<UUID, RaidDefender> one : res.getRaid().getDefenders().entrySet()) {
+	    for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
 		ResidencePlayer rOwner = one.getValue().getPlayer();
 		if (rOwner.isOnline())
 		    showBossbar(rOwner, BarColor.GREEN, lm.Raid_StartsIn);
@@ -190,15 +187,15 @@ public class ResidenceRaid {
     }
 
     private void showBossbar(ResidencePlayer rPlayer, BarColor color, lm msg) {
-	BossBarInfo barInfo = rPlayer.getBossBar(res.isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent);
+	BossBarInfo barInfo = rPlayer.getBossBar(isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent);
 	if (barInfo == null) {
-	    barInfo = new BossBarInfo(rPlayer, res.isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent) {
+	    barInfo = new BossBarInfo(rPlayer, isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent) {
 		@Override
 		public void updateCycle() {
 		    setTitleOfBar(Residence.getInstance().msg(msg, getDefenders().size(), getAttackers().size()));
 		}
 	    };
-	    Double secLeft = ((res.isUnderRaid() ? res.getRaid().getEndsAt() : res.getRaid().getStartsAt()) - System.currentTimeMillis()) / 1000D;
+	    Double secLeft = ((isUnderRaid() ? getEndsAt() : getStartsAt()) - System.currentTimeMillis()) / 1000D;
 	    barInfo.setKeepForTicks(22);
 	    barInfo.setColor(color);
 	    barInfo.setTitleOfBar(Residence.getInstance().msg(msg, getDefenders().size(), getAttackers().size()));
@@ -214,11 +211,21 @@ public class ResidenceRaid {
     public void endRaid() {
 	setEndsAt(System.currentTimeMillis());
 
-	if (getSchedId() > 0) {
+	if (this.schedRaidEndId > 0) {
 	    ResidenceRaidEndEvent End = new ResidenceRaidEndEvent(res);
 	    Bukkit.getPluginManager().callEvent(End);
-	    Bukkit.getScheduler().cancelTask(getSchedId());
-	    setSchedId(-1);
+	    Bukkit.getScheduler().cancelTask(this.schedRaidEndId);
+	    this.schedRaidEndId = -1;
+	}
+
+	if (this.shedRaidStartId > 0) {
+	    Bukkit.getScheduler().cancelTask(this.shedRaidStartId);
+	    this.shedRaidStartId = -1;
+	}
+	
+	if (this.schedBossBarId > 0) {
+	    Bukkit.getScheduler().cancelTask(this.schedBossBarId);
+	    this.schedBossBarId = -1;
 	}
 
 	setStartsAt(0L);
@@ -238,8 +245,17 @@ public class ResidenceRaid {
 	    if (RPlayer != null) {
 		RPlayer.setLastRaidAttackTimer(System.currentTimeMillis());
 		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
-		if (barInfo != null)
+		if (barInfo != null) {
+		    barInfo.cancelAutoScheduler();
+		    barInfo.remove();
 		    RPlayer.removeBossBar(barInfo);
+		}
+		barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarPreRaidIdent);
+		if (barInfo != null) {
+		    barInfo.cancelAutoScheduler();
+		    barInfo.remove();
+		    RPlayer.removeBossBar(barInfo);
+		}
 	    }
 	}
 
@@ -247,8 +263,17 @@ public class ResidenceRaid {
 	    ResidencePlayer RPlayer = one.getValue().getPlayer();
 	    if (RPlayer != null) {
 		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
-		if (barInfo != null)
+		if (barInfo != null) {
+		    barInfo.cancelAutoScheduler();
+		    barInfo.remove();
 		    RPlayer.removeBossBar(barInfo);
+		}
+		barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarPreRaidIdent);
+		if (barInfo != null) {
+		    barInfo.cancelAutoScheduler();
+		    barInfo.remove();
+		    RPlayer.removeBossBar(barInfo);
+		}
 	    }
 	}
 
@@ -256,6 +281,7 @@ public class ResidenceRaid {
 
 	clearAttackers();
 	clearDefenders();
+
     }
 
     public boolean isImmune() {
@@ -283,4 +309,97 @@ public class ResidenceRaid {
 	else
 	    this.immunityUntil = null;
     }
+
+    public boolean preStartRaid(Player attacker) {
+
+	if (isUnderRaid() || this.isInPreRaid())
+	    return false;
+
+	if (getCooldownEnd() > System.currentTimeMillis())
+	    return false;
+
+	if (attacker != null)
+	    addAttacker(attacker);
+	addDefender(res.getRPlayer().getPlayer());
+	setStartsAt(System.currentTimeMillis() + (ConfigManager.PreRaidTimer * 1000));
+	setEndsAt(getStartsAt() + (ConfigManager.RaidTimer * 1000));
+
+	ResidenceRaidPreStartEvent start = new ResidenceRaidPreStartEvent(res, getAttackers());
+
+	Bukkit.getPluginManager().callEvent(start);
+	if (start.isCancelled())
+	    return false;
+
+	if (attacker != null)
+	    Residence.getInstance().getPlayerManager().getResidencePlayer(attacker).setLastRaidAttackTimer(System.currentTimeMillis());
+	res.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
+	setImmunityUntil(ConfigManager.RaidCooldown * 1000L);
+
+	return true;
+    }
+
+
+    public boolean startRaid() {
+
+	if (!isUnderRaid() && !this.isInPreRaid())
+	    return false;
+
+	ResidenceRaidStartEvent start = new ResidenceRaidStartEvent(res, getAttackers());
+	this.shedRaidStartId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), new Runnable() {
+	    @Override
+	    public void run() {
+		Bukkit.getPluginManager().callEvent(start);
+		if (start.isCancelled())
+		    start.getRes().getRaid().endRaid();
+	    }
+	}, ((getStartsAt() - System.currentTimeMillis()) / 50));
+
+	schedBossBarId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Residence.getInstance(), new Runnable() {
+	    @Override
+	    public void run() {
+		if (!isUnderRaid() && !isInPreRaid()) {
+		    Debug.D("canceling bossbar " + schedBossBarId);
+		    Bukkit.getServer().getScheduler().cancelTask(schedBossBarId);
+		    return;
+		}
+		showBossBar();
+	    }
+	}, this.isUnderRaid() ? 20L : 0L, 20L);
+
+	this.schedRaidEndId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), new Runnable() {
+	    @Override
+	    public void run() {
+		endRaid();
+	    }
+	}, ((getEndsAt() - System.currentTimeMillis()) / 50));
+
+	return true;
+    }
+
+    public boolean isUnderRaid() {
+	return getEndsAt() > System.currentTimeMillis()
+	    && getStartsAt() < System.currentTimeMillis();
+    }
+
+    public boolean isRaidInitialized() {
+	if (isUnderRaid() || isInPreRaid())
+	    return true;
+	if (res.getParent() != null)
+	    return res.getParent().getRaid().isRaidInitialized();
+	return false;
+    }
+
+    public boolean isInPreRaid() {
+	return getEndsAt() > System.currentTimeMillis()
+	    && getStartsAt() > System.currentTimeMillis();
+    }
+
+    public boolean canRaid() {
+	return !isUnderRaid() && getCooldownEnd() < System.currentTimeMillis();
+    }
+
+    public boolean isUnderRaidCooldown() {
+	return getCooldownEnd() > System.currentTimeMillis();
+    }
+
 }

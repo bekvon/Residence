@@ -69,22 +69,22 @@ public class attack implements cmd {
 	    return null;
 	}
 
-	if (res.isUnderRaidCooldown() && !res.isInPreRaid() && !res.isUnderRaid()) {
+	if (res.getRaid().isUnderRaidCooldown() && !res.getRaid().isInPreRaid() && !res.getRaid().isUnderRaid()) {
 	    plugin.msg(player, lm.Raid_attack_cooldown, Utils.to24hourShort(res.getRaid().getCooldownEnd() - System.currentTimeMillis() + 1000L));
 	    return null;
 	}
 
-	if (res.isUnderRaid() || res.isInPreRaid()) {
+	if (res.getRaid().isUnderRaid() || res.getRaid().isInPreRaid()) {
 	    if (!res.getRaid().isAttacker(player))
 		res.getRaid().addAttacker(player);
 	    plugin.msg(player, lm.Raid_attack_Joined, res.getName());
 	    return null;
 	}
 
-	boolean started = res.preStartRaid(player);
+	boolean started = res.getRaid().preStartRaid(player);
 
 	if (started) {
-	    res.startRaid();
+	    res.getRaid().startRaid();
 	    return true;
 	}
 
@@ -95,7 +95,7 @@ public class attack implements cmd {
 
     @Override
     public void getLocale() {
-	LocaleManager.addTabComplete(this, null, "[cresidence]");
+	LocaleManager.addTabCompleteMain(this, "[cresidence]");
     }
 
 }

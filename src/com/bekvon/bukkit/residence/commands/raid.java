@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.ConfigManager;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -21,6 +22,7 @@ public class raid implements cmd {
 
     enum States {
 	start, stop, immunity, kick;
+
 	public static States getState(String name) {
 	    for (States one : States.values()) {
 		if (one.toString().equalsIgnoreCase(name))
@@ -109,6 +111,8 @@ public class raid implements cmd {
 		return true;
 	    case "clear":
 		res.getRaid().setImmunityUntil(null);
+		res.getRaid().setEndsAt(0L);
+		res.getRPlayer().setLastRaidDefendTimer(0L);
 		plugin.msg(sender, lm.Raid_notImmune);
 
 		return true;
@@ -135,7 +139,7 @@ public class raid implements cmd {
 	    }
 
 	    ResidenceRaid raid = rplayer.getJoinedRaid();
-	    if (raid == null || !raid.getRes().isUnderRaid() && !raid.getRes().isInPreRaid()) {
+	    if (raid == null || !raid.isUnderRaid() && !raid.isInPreRaid()) {
 		plugin.msg(sender, lm.Raid_NotIn);
 		return true;
 	    }
@@ -166,28 +170,45 @@ public class raid implements cmd {
 		return null;
 	    }
 
-	    if (res.isUnderRaid() || res.isInPreRaid()) {
+	    if (res.getRaid().isUnderRaid() || res.getRaid().isInPreRaid()) {
 		return null;
 	    }
 
-	    boolean started = res.preStartRaid(null);
+	    boolean started = res.getRaid().preStartRaid(null);
 
 	    if (started) {
-		res.startRaid();
+		res.getRaid().startRaid();
 		return true;
 	    }
 
 	    break;
 	case stop:
-	    break;
+
+	    res = null;
+
+	    if (args.length > 1)
+		res = plugin.getResidenceManager().getByName(args[1]);
+	    if (res == null && sender instanceof Player)
+		res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
+
+	    if (res == null) {
+		plugin.msg(sender, lm.Invalid_Residence);
+		return null;
+	    }
+
+	    if (!res.getRaid().isUnderRaid() && !res.getRaid().isInPreRaid()) {
+		plugin.msg(sender, lm.Raid_defend_notRaided);
+		return null;
+	    }
+
+	    res.getRaid().endRaid();
+	    res.getRaid().setEndsAt(0L);
+
+	    plugin.msg(sender, lm.Raid_stopped, res.getName());
+	    return true;
 	default:
 	    break;
 	}
-
-	// raid start [resname/currentres]
-	// raid stop [resname/currentres]
-	// raid kick [playerName]
-	// raid immunity [add/take/set/clear] [resname/currentres] [time]
 
 	return false;
     }
@@ -198,11 +219,11 @@ public class raid implements cmd {
 	c.get("Description", "Manage raid in residence");
 	c.get("Info", Arrays.asList("&eUsage: &6/res raid start [resname] (playerName)", "&6/res raid stop [resname]", "&6/res raid kick [playerName]",
 	    "&6/res raid immunity [add/take/set/clear] [resname/currentres] [time]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("start%%stop%%kick%%immunity"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "start"), Arrays.asList("[residence]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "stop"), Arrays.asList("[residence]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "kick"), Arrays.asList("[playername]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "immunity"), Arrays.asList("add%%take%%set%%clear", "[residence]"));
+	
+	LocaleManager.addTabCompleteSub(this, "start", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "stop", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "kick", "[playername]");
+	LocaleManager.addTabCompleteSub(this, "immunity", "add%%take%%set%%clear", "[residence]");
     }
 
 }

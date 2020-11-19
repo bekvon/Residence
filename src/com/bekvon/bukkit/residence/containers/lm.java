@@ -131,11 +131,15 @@ public enum lm {
 
     Raid_defend_Joined("&7Joined &2%1 &7defence forces!"),
     Raid_defend_Sent("&7Request to join raid defence is sent, wait for confirmation"),
+    Raid_defend_Join("&7Join &6%1 &7raid defence"),
+    Raid_defend_Invitation("&7Accept raid defend from &6%1"),
     Raid_defend_JoinedDef("&2%1&7 joined defence forces!"),
     Raid_defend_IsOffline("&cCan't join defend team while owner is offline!"),
     Raid_defend_noSelf("&cYou already defending this residence"),
     Raid_defend_notRaided("&cResidence is not under the raid"),
     Raid_defend_alreadyInAnother("&cCan't join this residence defence, you are in another one already (%1)"),
+    
+    Raid_stopped("&eRain on &6%1 &ewas stopped"),
 
     info_years("&e%1 &6years "),
     info_oneYear("&e%1 &6year "),

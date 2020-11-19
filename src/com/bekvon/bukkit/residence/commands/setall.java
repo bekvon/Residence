@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -62,6 +63,6 @@ public class setall implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Set general flags on all residences");
 	c.get("Info", Arrays.asList("&eUsage: &6/res setall [flag] [true/false/remove]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[flag]", "true%%false%%remove"));
+	LocaleManager.addTabCompleteMain(this, "[flag]", "true%%false%%remove");
     }
 }

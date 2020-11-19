@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -37,7 +38,7 @@ public class expand implements cmd {
 	    return true;
 	}
 	
-	if (res.isRaidInitialized()) {
+	if (res.getRaid().isRaidInitialized()) {
 	    plugin.msg(sender, lm.Raid_cantDo);
 	    return true;
 	}
@@ -109,7 +110,7 @@ public class expand implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Expands residence in direction you looking");
 	c.get("Info", Arrays.asList("&eUsage: &6/res expand (residence) [amount]", "Expands residence in direction you looking.", "Residence name is optional"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]%%1", "1"));
+	LocaleManager.addTabCompleteMain(this, "[residence]%%1", "1");
     }
 
 }

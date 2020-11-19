@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.ConfigManager;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -36,7 +37,7 @@ public class leaveraid implements cmd {
 
 	ResidenceRaid raid = owner.getJoinedRaid();
 
-	if (raid == null || !raid.getRes().isUnderRaid() && !raid.getRes().isInPreRaid()) {
+	if (raid == null || !raid.getRes().getRaid().isUnderRaid() && !raid.getRes().getRaid().isInPreRaid()) {
 	    plugin.msg(player, lm.Raid_NotIn);
 	    return true;
 	}
@@ -60,7 +61,7 @@ public class leaveraid implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Leave raid");
 	c.get("Info", Arrays.asList("&eUsage: &6/res leaveraid"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]%%[playername]"));
+	LocaleManager.addTabCompleteMain(this, "[cresidence]%%[playername]");
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -31,7 +32,7 @@ public class setowner implements cmd {
 
 	if (area != null) {
 
-	    if (area.isRaidInitialized() && !resadmin) {
+	    if (area.getRaid().isRaidInitialized() && !resadmin) {
 		plugin.msg(sender, lm.Raid_cantDo);
 		return true;
 	    }
@@ -65,7 +66,7 @@ public class setowner implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Change owner of a residence.");
 	c.get("Info", Arrays.asList("&eUsage: &6/resadmin setowner [residence] [player]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]"));
+	LocaleManager.addTabCompleteMain(this, "[cresidence]");
     }
 
 }

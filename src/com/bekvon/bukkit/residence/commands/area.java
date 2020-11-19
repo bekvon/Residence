@@ -130,24 +130,24 @@ public class area implements cmd {
 	c.setP(c.getPath() + "SubCommands.");
 	c.get("list.Description", "List physical areas in a residence");
 	c.get("list.Info", Arrays.asList("&eUsage: &6/res area list [residence] <page>"));
-	LocaleManager.addTabComplete(this, "list", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "list", "[residence]");
 
 	c.get("listall.Description", "List coordinates and other Info for areas");
 	c.get("listall.Info", Arrays.asList("&eUsage: &6/res area listall [residence] <page>"));
-	LocaleManager.addTabComplete(this, "listall", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "listall", "[residence]");
 
 	c.get("add.Description", "Add physical areas to a residence");
 	c.get("add.Info", Arrays.asList("&eUsage: &6/res area add [residence] [areaID]", "You must first select two points first."));
-	LocaleManager.addTabComplete(this, "add", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "add", "[residence]");
 
 	c.get("remove.Description", "Remove physical areas from a residence");
 	c.get("remove.Info", Arrays.asList("&eUsage: &6/res area remove [residence] [areaID]"));
-	LocaleManager.addTabComplete(this, "remove", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "remove", "[residence]");
 
 	c.get("replace.Description", "Replace physical areas in a residence");
 	c.get("replace.Info", Arrays.asList("&eUsage: &6/res area replace [residence] [areaID]",
 	    "You must first select two points first.", "Replacing a area will charge the difference in size if the new area is bigger."));
-	LocaleManager.addTabComplete(this, "replace", "[residence]");
+	LocaleManager.addTabCompleteSub(this, "replace", "[residence]");
 
     }
 }

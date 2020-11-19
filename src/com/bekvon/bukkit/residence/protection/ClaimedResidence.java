@@ -43,8 +43,6 @@ import com.bekvon.bukkit.residence.economy.rent.RentedLand;
 import com.bekvon.bukkit.residence.event.ResidenceAreaAddEvent;
 import com.bekvon.bukkit.residence.event.ResidenceAreaDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
-import com.bekvon.bukkit.residence.event.ResidenceRaidPreStartEvent;
-import com.bekvon.bukkit.residence.event.ResidenceRaidStartEvent;
 import com.bekvon.bukkit.residence.event.ResidenceSizeChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceSubzoneCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceTPEvent;
@@ -1286,7 +1284,7 @@ public class ClaimedResidence {
 
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
 
-	if (this.isRaidInitialized()) {
+	if (this.getRaid().isRaidInitialized()) {
 	    if (this.getRaid().isAttacker(targetPlayer)) {
 		plugin.msg(reqPlayer, lm.Raid_cantDo);
 		return;
@@ -1323,7 +1321,7 @@ public class ClaimedResidence {
 	}
 
 	ClaimedResidence old = plugin.getTeleportMap().get(targetPlayer.getName());
-	
+
 	if (old == null || !old.equals(this)) {
 	    int distance = isSafeTp(reqPlayer);
 	    if (distance > 6) {
@@ -1472,7 +1470,7 @@ public class ClaimedResidence {
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
 
-	if (this.isTopArea() && this.isUnderRaidCooldown()) {
+	if (this.isTopArea() && this.getRaid().isUnderRaidCooldown()) {
 	    root.put("LastRaid", this.getRaid().getEndsAt());
 	}
 
@@ -1830,7 +1828,7 @@ public class ClaimedResidence {
 	    return false;
 	}
 
-	if (isRaidInitialized() && !resadmin) {
+	if (this.getRaid().isRaidInitialized() && !resadmin) {
 	    plugin.msg(player, lm.Raid_cantDo);
 	    return false;
 	}
@@ -2043,102 +2041,10 @@ public class ClaimedResidence {
 //	this.town = town;
 //    }
 
-    public boolean isUnderRaid() {
-	return getRaid().getEndsAt() > System.currentTimeMillis()
-	    && getRaid().getStartsAt() < System.currentTimeMillis();
-    }
-
-    public boolean isRaidInitialized() {
-	if (isUnderRaid() || isInPreRaid())
-	    return true;
-	if (this.getParent() != null)
-	    return this.getParent().isRaidInitialized();
-	return false;
-    }
-
-    public boolean isInPreRaid() {
-	return getRaid().getEndsAt() > System.currentTimeMillis()
-	    && getRaid().getStartsAt() > System.currentTimeMillis();
-    }
-
-    public boolean canRaid() {
-	return !isUnderRaid() && this.getRaid().getCooldownEnd() < System.currentTimeMillis();
-    }
-
     public ResidenceRaid getRaid() {
 	if (raid == null)
 	    raid = new ResidenceRaid(this);
 	return raid;
-    }
-
-    public boolean isUnderRaidCooldown() {
-	return this.getRaid().getCooldownEnd() > System.currentTimeMillis();
-    }
-
-    public boolean preStartRaid(Player attacker) {
-
-	if (isUnderRaid() || this.isInPreRaid())
-	    return false;
-
-	if (this.getRaid().getCooldownEnd() > System.currentTimeMillis())
-	    return false;
-
-	if (attacker != null)
-	    getRaid().addAttacker(attacker);
-	getRaid().addDefender(this.getRPlayer().getPlayer());
-	getRaid().setStartsAt(System.currentTimeMillis() + (ConfigManager.PreRaidTimer * 1000));
-	getRaid().setEndsAt(getRaid().getStartsAt() + (ConfigManager.RaidTimer * 1000));
-
-	ResidenceRaidPreStartEvent start = new ResidenceRaidPreStartEvent(getResidence(), getRaid().getAttackers());
-
-	Bukkit.getPluginManager().callEvent(start);
-	if (start.isCancelled())
-	    return false;
-
-	if (attacker != null)
-	    plugin.getPlayerManager().getResidencePlayer(attacker).setLastRaidAttackTimer(System.currentTimeMillis());
-	this.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
-	getRaid().setImmunityUntil(ConfigManager.RaidCooldown * 1000L);
-
-	return true;
-    }
-
-    Integer repeatId = -1;
-
-    public boolean startRaid() {
-
-	if (!isUnderRaid() && !this.isInPreRaid())
-	    return false;
-
-	ResidenceRaidStartEvent start = new ResidenceRaidStartEvent(getResidence(), getRaid().getAttackers());
-	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-	    @Override
-	    public void run() {
-		Bukkit.getPluginManager().callEvent(start);
-		if (start.isCancelled())
-		    start.getRes().getRaid().endRaid();
-	    }
-	}, ((getRaid().getStartsAt() - System.currentTimeMillis()) / 50));
-
-	repeatId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-	    @Override
-	    public void run() {
-		if (!isUnderRaid() && !isInPreRaid()) {
-		    Bukkit.getServer().getScheduler().cancelTask(repeatId);
-		    return;
-		}
-		getRaid().showBossBar();
-	    }
-	}, this.isUnderRaid() ? 20L : 0L, 20L);
-
-	getRaid().setSchedId(Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-	    @Override
-	    public void run() {
-		getRaid().endRaid();
-	    }
-	}, ((getRaid().getEndsAt() - System.currentTimeMillis()) / 50)));
-
-	return true;
     }
 
     @Override
@@ -2169,9 +2075,5 @@ public class ClaimedResidence {
 	v.setAreas(getAreaArray());
 	v.setOnce(showOneTime);
 	plugin.getSelectionManager().showBounds(player, v);
-    }
-
-    private ClaimedResidence getResidence() {
-	return this;
     }
 }

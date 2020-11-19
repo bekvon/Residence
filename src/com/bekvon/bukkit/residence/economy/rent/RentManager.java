@@ -187,7 +187,7 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (res.isRaidInitialized() && !resadmin) {
+	if (res.getRaid().isRaidInitialized() && !resadmin) {
 	    plugin.msg(player, lm.Raid_cantDo);
 	    return;
 	}
@@ -259,7 +259,7 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (res.isRaidInitialized() && !resadmin) {
+	if (res.getRaid().isRaidInitialized() && !resadmin) {
 	    plugin.msg(player, lm.Raid_cantDo);
 	    return;
 	}
@@ -417,7 +417,7 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	}
 
-	if (res.isRaidInitialized() && !resadmin) {
+	if (res.getRaid().isRaidInitialized() && !resadmin) {
 	    plugin.msg(player, lm.Raid_cantDo);
 	    return;
 	}

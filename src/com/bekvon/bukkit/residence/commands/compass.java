@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -55,7 +56,7 @@ public class compass implements cmd {
     public void getLocale() {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Set compass pointer to residence location");
-	c.get("Info", Arrays.asList("&eUsage: &6/res compass <residence>"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	c.get("Info", Arrays.asList("&eUsage: &6/res compass <residence>"));	
+	LocaleManager.addTabCompleteMain(this, "[residence]");
     }
 }

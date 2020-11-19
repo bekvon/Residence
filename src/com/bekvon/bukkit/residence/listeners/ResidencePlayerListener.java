@@ -1260,7 +1260,7 @@ public class ResidencePlayerListener implements Listener {
 
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 
-	    if (res != null && res.isUnderRaid()) {
+	    if (res != null && res.getRaid().isUnderRaid()) {
 		if (res.getRaid().isDefender(player) && !ConfigManager.RaidDefenderContainerUsage) {
 		    Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
 		    if (result != null && result.equals(Flags.container)) {
@@ -1279,7 +1279,7 @@ public class ResidencePlayerListener implements Listener {
 
 			if (hasuse || result.equals(Flags.container)) {
 
-			    if (res != null && res.isUnderRaid()) {
+			    if (res != null && res.getRaid().isUnderRaid()) {
 				if (res.getRaid().isAttacker(player)) {
 				    break main;
 				}
@@ -1293,7 +1293,7 @@ public class ResidencePlayerListener implements Listener {
 
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-			    if (res != null && res.isUnderRaid()) {
+			    if (res != null && res.getRaid().isUnderRaid()) {
 				if (res.getRaid().isAttacker(player)) {
 				    break main;
 				}
@@ -1316,7 +1316,7 @@ public class ResidencePlayerListener implements Listener {
 
 			if (isCanUseEntity_BothClick(mat, block)) {
 
-			    if (res != null && res.isUnderRaid()) {
+			    if (res != null && res.getRaid().isUnderRaid()) {
 				if (res.getRaid().isAttacker(player)) {
 				    break main;
 				}
@@ -2078,7 +2078,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (move) {
 
-	    if (res.isUnderRaid()) {
+	    if (res.getRaid().isUnderRaid()) {
 		if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
 		    return true;
 		}

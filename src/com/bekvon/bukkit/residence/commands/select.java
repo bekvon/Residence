@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -214,7 +215,7 @@ public class select implements cmd {
 
 	c.get("auto.Description", "Turns on auto selection tool");
 	c.get("auto.Info", Arrays.asList("&eUsage: &6/res select auto [playername]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "auto"), Arrays.asList("[playername]"));
+	LocaleManager.addTabCompleteSub(this, "auto", "[playername]");
 
 	c.get("cost.Description", "Display selection cost");
 	c.get("cost.Info", Arrays.asList("&eUsage: &6/res select cost"));
@@ -239,7 +240,7 @@ public class select implements cmd {
 
 	c.get("residence.Description", "Select a existing area in a residence.");
 	c.get("residence.Info", Arrays.asList("&eUsage: &6/res select residence <residence>", "Selects a existing area in a residence."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "residence"), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteSub(this, "residence", "[residence]");
 
 	c.get("worldedit.Description", "Set selection using the current WorldEdit selection.");
 	c.get("worldedit.Info", Arrays.asList("&eUsage: &6/res select worldedit", "Sets selection area using the current WorldEdit selection."));

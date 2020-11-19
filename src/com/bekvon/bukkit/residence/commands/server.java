@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -30,7 +31,7 @@ public class server implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
-	
+
 	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 	res.getPermissions().setOwner(plugin.getServerLandName(), false);
 	plugin.msg(player, lm.Residence_OwnerChange, args[0], plugin.getServerLandName());
@@ -44,6 +45,6 @@ public class server implements cmd {
 
 	c.get("Description", "Make land server owned.");
 	c.get("Info", Arrays.asList("&eUsage: &6/resadmin server [residence]", "Make a residence server owned."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]"));
+	LocaleManager.addTabCompleteMain(this, "[cresidence]");
     }
 }

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.ConfigManager;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -70,7 +71,7 @@ public class raidstatus implements cmd {
 	plugin.msg(sender, "&7----------- &f" + res.getName() + "(" + res.getOwner() + ") &7-----------");
 	if (res.getRaid().isImmune()) {
 	    plugin.msg(sender, "&eImmune to raids for next: " + Utils.to24hourShort(raid.getImmunityUntil() - System.currentTimeMillis() + 1000L));
-	} else if (res.isInPreRaid()) {
+	} else if (res.getRaid().isInPreRaid()) {
 	    plugin.msg(sender, "&7Raid starts in: " + Utils.to24hourShort(raid.getStartsAt() - System.currentTimeMillis()));
 	    RawMessage rm = new RawMessage();
 	    rm.add("&7Attackers: &4" + raid.getAttackers().size(), getAttackers(raid));
@@ -78,7 +79,7 @@ public class raidstatus implements cmd {
 	    rm = new RawMessage();
 	    rm.add("&7Defenders: &2" + raid.getDefenders().size(), getDefenders(raid));
 	    rm.show(sender);
-	} else if (res.isUnderRaid()) {
+	} else if (res.getRaid().isUnderRaid()) {
 	    plugin.msg(sender, "&7Raid ends in: " + Utils.to24hourShort(raid.getEndsAt() - System.currentTimeMillis()));
 	    RawMessage rm = new RawMessage();
 	    rm.add("&7Attackers: &4" + raid.getAttackers().size(), getAttackers(raid));
@@ -133,7 +134,7 @@ public class raidstatus implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Check raid status for a residence");
 	c.get("Info", Arrays.asList("&eUsage: &6/res raidstatus (resName/playerName)"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]%%[playername]"));
+	LocaleManager.addTabCompleteMain(this, "[cresidence]%%[playername]");
     }
 
 }

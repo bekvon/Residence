@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -63,6 +64,6 @@ public class setallfor implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Set general flags on all residences owned by particular player");
 	c.get("Info", Arrays.asList("&eUsage: &6/res setallfor [playerName] [flag] [true/false/remove]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]", "[flag]", "true%%false%%remove"));
+	LocaleManager.addTabCompleteMain(this, "[playername]", "[flag]", "true%%false%%remove");
     }
 }

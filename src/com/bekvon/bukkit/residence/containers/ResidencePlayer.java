@@ -24,6 +24,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.ResidenceRaid;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
@@ -437,9 +438,10 @@ public class ResidencePlayer {
     }
 
     public void addBossBar(BossBarInfo barInfo) {
+	Debug.D("add bossbar");
 	if (!barMap.containsKey(barInfo.getNameOfBar().toLowerCase())) {
 	    barMap.put(barInfo.getNameOfBar().toLowerCase(), barInfo);
-	    Residence.getInstance().getBossBarManager().Show(barInfo);
+	    Residence.getInstance().getBossBarManager().showBar(barInfo);
 	} else {
 	    BossBarInfo old = getBossBar(barInfo.getNameOfBar().toLowerCase());
 	    if (old != null) {
@@ -474,7 +476,7 @@ public class ResidencePlayer {
 		if (barInfo.getAuto() != null)
 		    old.setAuto(barInfo.getAuto());
 	    }
-	    Residence.getInstance().getBossBarManager().Show(old);
+	    Residence.getInstance().getBossBarManager().showBar(old);
 	}
     }
 
@@ -501,7 +503,7 @@ public class ResidencePlayer {
 
     public ClaimedResidence getCurrentlyRaidedResidence() {
 	for (ClaimedResidence one : getResList()) {
-	    if (one.isUnderRaid() || one.isInPreRaid()) {
+	    if (one.getRaid().isUnderRaid() || one.getRaid().isInPreRaid()) {
 		return one;
 	    }
 	}

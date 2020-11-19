@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -39,7 +40,7 @@ public class subzone implements cmd {
 	    return true;
 	}
 
-	if (res.isRaidInitialized()) {
+	if (res.getRaid().isRaidInitialized()) {
 	    plugin.msg(sender, lm.Raid_cantDo);
 	    return true;
 	}
@@ -67,7 +68,7 @@ public class subzone implements cmd {
 	c.get("Description", "Create subzones in residences.");
 	c.get("Info", Arrays.asList("&eUsage: &6/res subzone <residence> [subzone name]",
 	    "If residence name is left off, will attempt to use residence your standing in."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteMain(this, "[residence]");
     }
 
 }

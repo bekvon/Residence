@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -43,7 +44,7 @@ public class reset implements cmd {
 		return true;
 	    }
 
-	    if (res.isRaidInitialized() && !resadmin) {
+	    if (res.getRaid().isRaidInitialized() && !resadmin) {
 		plugin.msg(sender, lm.Raid_cantDo);
 		return true;
 	    }
@@ -76,6 +77,6 @@ public class reset implements cmd {
 	c.get("Description", "Reset residence to default flags.");
 	c.get("Info", Arrays.asList("&eUsage: &6/res reset <residence/all>",
 	    "Resets the flags on a residence to their default.  You must be the owner or an admin to do this."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteMain(this, "[residence]");
     }
 }

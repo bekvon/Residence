@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -42,10 +43,10 @@ public class flags implements cmd {
 	if (c.getC().isConfigurationSection(c.getPath() + "SubCommands")) {
 	    keys = c.getC().getConfigurationSection(c.getPath() + "SubCommands").getKeys(false);
 	}
-	
+
 	String path = c.getPath() + "SubCommands.";
 	c.resetP();
-	
+
 	for (String fl : keys) {
 	    String pt = path + fl;
 //	    No translation for custom flags for now
@@ -75,9 +76,7 @@ public class flags implements cmd {
 	    keys.remove(fl.toString());
 	}
 
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "pset"), Arrays.asList("[residence]", "[flag]",
-	    "[true%%false%%remove]"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "set"), Arrays.asList("[residence]", "[flag]",
-	    "[true%%false%%remove]"));
+	LocaleManager.addTabCompleteSub(this, "pset", "[residence]", "[flag]", "[true%%false%%remove]");
+	LocaleManager.addTabCompleteSub(this, "set", "[residence]", "[flag]", "[true%%false%%remove]");
     }
 }

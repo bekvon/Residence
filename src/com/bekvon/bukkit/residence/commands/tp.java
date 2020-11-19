@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -31,7 +32,7 @@ public class tp implements cmd {
 	    return true;
 	}
 
-	if (res.isRaidInitialized() && res.getRaid().isAttacker(player)) {
+	if (res.getRaid().isRaidInitialized() && res.getRaid().isAttacker(player)) {
 	    plugin.msg(player, lm.Raid_cantDo);
 	    return true;
 	}
@@ -46,6 +47,6 @@ public class tp implements cmd {
 	c.get("Description", "Teleport to a residence");
 	c.get("Info", Arrays.asList("&eUsage: &6/res tp [residence]", "Teleports you to a residence, you must have +tp flag access or be the owner.",
 	    "Your permission group must also be allowed to teleport by the server admin."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteMain(this, "[residence]");
     }
 }

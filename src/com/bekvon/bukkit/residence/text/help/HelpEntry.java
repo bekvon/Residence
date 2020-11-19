@@ -16,7 +16,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
@@ -33,7 +32,6 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class HelpEntry {
     protected String name;
@@ -270,65 +268,60 @@ public class HelpEntry {
     public Set<String> getSubCommands(CommandSender sender, String[] args) {
 	Set<String> subCommands = new HashSet<String>();
 
-	if (!langFile.isFile())
-	    return subCommands;
+	int neededArgPlace = args.length - 2;
 
-	FileConfiguration node = new YamlConfiguration();
-	try {
-	    node.load(langFile);
-	} catch (Throwable e) {
-	    e.printStackTrace();
-	}
-
-	ConfigurationSection tempmeinPath = node.getConfigurationSection("CommandHelp.SubCommands.res.SubCommands");
-
-	if (args.length == 1) {
-	    if (tempmeinPath == null)
-		return subCommands;
-	    return tempmeinPath.getKeys(false);
-	}
-
-	boolean ok = true;
-	int i = 0;
-	while (ok) {
-
-	    if (i >= args.length)
-		break;
-
-	    if (args[i].equalsIgnoreCase(""))
-		return tempmeinPath == null ? subCommands : tempmeinPath.getKeys(false);
-
-	    if (tempmeinPath != null && !tempmeinPath.isConfigurationSection(args[i] + ".SubCommands"))
-		break;
-
-	    if (tempmeinPath != null)
-		tempmeinPath = tempmeinPath.getConfigurationSection(args[i] + ".SubCommands");
-
-	    i++;
-	}
-
-	int neededArgPlace = args.length - 2 - i;
-
-	boolean subCommand = true;
-	if (i < args.length && tempmeinPath != null && tempmeinPath.isConfigurationSection(args[i])) {
-	    subCommand = false;
-	    tempmeinPath = tempmeinPath.getConfigurationSection(args[i]);
-	}
+	if (neededArgPlace < 0)
+	    neededArgPlace = 0;
 
 	List<String> ArgsList = new ArrayList<String>();
 
-	int ii = 0;
-	for (Entry<List<String>, List<String>> one : Residence.getInstance().getLocaleManager().CommandTab.entrySet()) {
-	    List<String> list = one.getKey();
-	    if (list.size() > ii && args.length > ii && list.get(ii).equalsIgnoreCase(args[ii])) {
-		ArgsList = one.getValue();
+	if (args.length > 0) {
+	    HashMap<String, List<String>> mp = Residence.getInstance().getLocaleManager().CommandTab.get(args[0].toLowerCase());
+
+	    if (mp != null) {
+		if (neededArgPlace > 0 || args.length == 2) {
+		    List<String> mps = mp.get(args[1].toLowerCase());
+		    if (mps != null) {
+			if (args.length > 2)
+			    neededArgPlace--;
+			ArgsList = mps;
+		    } else {
+			StringBuilder st = new StringBuilder();
+			for (String one : mp.keySet()) {
+			    if (!st.toString().isEmpty())
+				st.append("%%");
+			    st.append(one);
+			}
+			ArgsList.add(st.toString());
+		    }
+		} else {
+		    if (args.length > 1 && mp.get(args[1].toLowerCase()) != null) {
+			neededArgPlace--;
+			ArgsList = mp.get(args[1].toLowerCase());
+		    } else if (mp.get("") != null) {
+			ArgsList = mp.get("");
+		    } else {
+			StringBuilder st = new StringBuilder();
+			for (String one : mp.keySet()) {
+			    if (!st.toString().isEmpty())
+				st.append("%%");
+			    st.append(one);
+			}
+			ArgsList.add(st.toString());
+		    }
+		}
+	    } else {
+		for (String one : Residence.getInstance().getLocaleManager().CommandTab.keySet()) {
+		    subCommands.add(one);
+		}
+		return subCommands;
 	    }
-	    i++;
 	}
 
 	String NeededArg = null;
-	if (neededArgPlace < ArgsList.size() && neededArgPlace >= 0)
+	if (neededArgPlace < ArgsList.size() && neededArgPlace >= 0) {
 	    NeededArg = ArgsList.get(neededArgPlace);
+	}
 
 	Player playerSender = null;
 	if (sender instanceof Player)
@@ -340,8 +333,9 @@ public class HelpEntry {
 
 	    if (NeededArg.contains("%%")) {
 		list.addAll(Arrays.asList(NeededArg.split("%%")));
-	    } else
+	    } else {
 		list.add(NeededArg);
+	    }
 
 	    for (String oneArg : list) {
 		switch (oneArg) {
@@ -414,10 +408,10 @@ public class HelpEntry {
 			    mode = FlagMode.Player;
 		    }
 
-		    if(args.length > 1 && Flags.getFlag(args[args.length - 2]) != null) {
+		    if (args.length > 1 && Flags.getFlag(args[args.length - 2]) != null) {
 			continue;
 		    }
-		    
+
 		    for (String one : FlagPermissions.getAllPosibleFlags()) {
 			Flags f = Flags.getFlag(one);
 
@@ -473,9 +467,6 @@ public class HelpEntry {
 	if (!subCommands.isEmpty()) {
 	    return subCommands;
 	}
-
-	if (subCommand)
-	    return tempmeinPath == null ? subCommands : tempmeinPath.getKeys(false);
 
 	return new HashSet<String>(Arrays.asList("?"));
     }

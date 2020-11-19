@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.ConfigManager;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -89,7 +90,7 @@ public class defend implements cmd {
 
 		ownerJoinRequests.put(target.getUniqueId(), res);
 		RawMessage rm = new RawMessage();
-		rm.add("join raid " + res.getName(), res.getName(), "res defend " + res.getName());
+		rm.addText(plugin.getLM().getMessage(lm.Raid_defend_Invitation, res.getName())).addHover(res.getName()).addCommand("res defend " + res.getName());
 		rm.show(target.getPlayer());
 		return true;
 	    }
@@ -103,12 +104,12 @@ public class defend implements cmd {
 	    return true;
 	}
 
-	if (!res.isInPreRaid() && !res.isUnderRaid()) {
+	if (!res.getRaid().isInPreRaid() && !res.getRaid().isUnderRaid()) {
 	    plugin.msg(player, lm.Raid_defend_notRaided);
 	    return true;
 	}
 
-	if (res.isUnderRaid() || res.isInPreRaid()) {
+	if (res.getRaid().isUnderRaid() || res.getRaid().isInPreRaid()) {
 
 	    ClaimedResidence req = ownerJoinRequests.get(player.getUniqueId());
 	    if (req != null && req.equals(res)) {
@@ -127,7 +128,7 @@ public class defend implements cmd {
 	    joinRequests.put(player.getUniqueId(), res);
 	    RawMessage rm = new RawMessage();
 	    plugin.msg(player, lm.Raid_defend_Sent, res.getName());
-	    rm.add("Accept raid defend from " + player.getDisplayName(), player.getName(), "res defend " + player.getName());
+	    rm.addText(plugin.getLM().getMessage(lm.Raid_defend_Invitation, player.getDisplayName())).addHover(player.getName()).addCommand("res defend " + rPlayer.getPlayer().getName());
 	    rm.show(rPlayer.getPlayer());
 	    return true;
 	}
@@ -145,7 +146,7 @@ public class defend implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Join raid defence on residence");
 	c.get("Info", Arrays.asList("&eUsage: &6/res defend [resName] (playerName)"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[cresidence]%%[playername]"));
+	LocaleManager.addTabCompleteMain(this, "[cresidence]%%[playername]");
     }
 
 }

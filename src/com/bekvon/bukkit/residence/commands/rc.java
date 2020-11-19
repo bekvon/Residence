@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -190,7 +191,7 @@ public class rc implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Joins current or defined residence chat channel");
 	c.get("Info", Arrays.asList("&eUsage: &6/res rc (residence)", "Join residence chat channel."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteMain(this, "[residence]");
 
 	c.setP(c.getPath() + "SubCommands.");
 	c.get("leave.Description", "Leaves current residence chat channel");
@@ -204,6 +205,6 @@ public class rc implements cmd {
 
 	c.get("kick.Description", "Kicks player from channel");
 	c.get("kick.Info", Arrays.asList("&eUsage: &6/res rc kick [player]", "Kicks player from channel"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName(), "kick"), Arrays.asList("[playername]"));
+	LocaleManager.addTabCompleteSub(this, "kick", "[playername]");
     }
 }

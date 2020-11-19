@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,12 +25,10 @@ import com.bekvon.bukkit.residence.containers.CommandStatus;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.utils.Debug;
-import com.google.common.util.concurrent.ListenableFutureTask;
 
 public class LocaleManager {
 
-    public HashMap<List<String>, List<String>> CommandTab = new HashMap<List<String>, List<String>>();
+    public HashMap<String, HashMap<String, List<String>>> CommandTab = new HashMap<String, HashMap<String, List<String>>>();
     private Residence plugin;
 
     public String path = "CommandHelp.SubCommands.res.SubCommands.";
@@ -39,11 +38,18 @@ public class LocaleManager {
 	this.plugin = plugin;
     }
 
-    public static void addTabComplete(Object cl, String subCmd, String... tabs) {
-	if (subCmd == null || subCmd.isEmpty())
-	    Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(cl.getClass().getSimpleName()), Arrays.asList(tabs));
-	else
-	    Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(cl.getClass().getSimpleName(), subCmd), Arrays.asList(tabs));
+    public static void addTabCompleteMain(Object cl, String... tabs) {
+	HashMap<String, List<String>> mp = new HashMap<String, List<String>>();
+	mp.put("", Arrays.asList(tabs));
+	Residence.getInstance().getLocaleManager().CommandTab.put(cl.getClass().getSimpleName().toLowerCase(), mp);
+    }
+
+    public static void addTabCompleteSub(Object cl, String subCmd, String... tabs) {
+	HashMap<String, List<String>> mp = Residence.getInstance().getLocaleManager().CommandTab.get(cl.getClass().getSimpleName().toLowerCase());
+	if (mp == null)
+	    mp = new HashMap<String, List<String>>();
+	mp.put(subCmd.toLowerCase(), Arrays.asList(tabs));
+	Residence.getInstance().getLocaleManager().CommandTab.put(cl.getClass().getSimpleName().toLowerCase(), mp);
     }
 
     private static YamlConfiguration loadConfiguration(BufferedReader in, String language) {

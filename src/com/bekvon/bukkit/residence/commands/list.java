@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -55,6 +56,6 @@ public class list implements cmd {
 	    "Lists all the residences a player owns (except hidden ones).",
 	    "If listing your own residences, shows hidden ones as well.",
 	    "To list everyones residences, use /res listall."));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[playername]", "[worldname]"));
+	LocaleManager.addTabCompleteMain(this, "[playername]", "[worldname]");
     }
 }

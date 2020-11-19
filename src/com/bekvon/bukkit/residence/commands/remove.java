@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -63,7 +64,7 @@ public class remove implements cmd {
 	    return true;
 	}
 
-	if (res.isRaidInitialized() && !resadmin) {
+	if (res.getRaid().isRaidInitialized() && !resadmin) {
 	    plugin.msg(sender, lm.Raid_noRemoval);
 	    return true;
 	}
@@ -104,6 +105,6 @@ public class remove implements cmd {
 	// Main command
 	c.get("Description", "Remove residences.");
 	c.get("Info", Arrays.asList("&eUsage: &6/res remove <residence name>"));
-	Residence.getInstance().getLocaleManager().CommandTab.put(Arrays.asList(this.getClass().getSimpleName()), Arrays.asList("[residence]"));
+	LocaleManager.addTabCompleteMain(this, "[residence]");
     }
 }

@@ -1113,7 +1113,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    return false;
 	}
 
-	if (res.isRaidInitialized() && !resadmin) {
+	if (res.getRaid().isRaidInitialized() && !resadmin) {
 	    plugin.msg(player, lm.Raid_cantDo);
 	    return false;
 	}
