@@ -139,7 +139,17 @@ public enum lm {
     Raid_defend_notRaided("&cResidence is not under the raid"),
     Raid_defend_alreadyInAnother("&cCan't join this residence defence, you are in another one already (%1)"),
     
-    Raid_stopped("&eRain on &6%1 &ewas stopped"),
+    
+    Raid_status_title("&7----------- &f%1(%2) &7-----------"),
+    Raid_status_immune("&eImmune to raids for next: %1"),
+    Raid_status_starts("&7Raid starts in: %1"),
+    Raid_status_attackers("&7Attackers: &4%1" ),
+    Raid_status_defenders("&7Defenders: &4%1"),
+    Raid_status_ends("&7Raid ends in: %1"),
+    Raid_status_canraid("&2Can be raided"),
+    Raid_status_raidin("&ePosible raid in: %1" ),
+    
+    Raid_stopped("&eRaid on &6%1 &ewas stopped"),
 
     info_years("&e%1 &6years "),
     info_oneYear("&e%1 &6year "),

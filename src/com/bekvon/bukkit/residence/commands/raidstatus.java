@@ -68,34 +68,34 @@ public class raidstatus implements cmd {
 
 	ResidenceRaid raid = res.getRaid();
 
-	plugin.msg(sender, "&7----------- &f" + res.getName() + "(" + res.getOwner() + ") &7-----------");
+	plugin.msg(sender, lm.Raid_status_title, res.getName(), res.getOwner());
 	if (res.getRaid().isImmune()) {
-	    plugin.msg(sender, "&eImmune to raids for next: " + Utils.to24hourShort(raid.getImmunityUntil() - System.currentTimeMillis() + 1000L));
+	    plugin.msg(sender, lm.Raid_status_immune, Utils.to24hourShort(raid.getImmunityUntil() - System.currentTimeMillis() + 1000L));
 	} else if (res.getRaid().isInPreRaid()) {
-	    plugin.msg(sender, "&7Raid starts in: " + Utils.to24hourShort(raid.getStartsAt() - System.currentTimeMillis()));
+	    plugin.msg(sender, lm.Raid_status_starts, Utils.to24hourShort(raid.getStartsAt() - System.currentTimeMillis()));
 	    RawMessage rm = new RawMessage();
-	    rm.add("&7Attackers: &4" + raid.getAttackers().size(), getAttackers(raid));
+	    rm.addText(plugin.getLM().getMessage(lm.Raid_status_attackers, raid.getAttackers().size())).addHover(getAttackers(raid));
 	    rm.show(sender);
 	    rm = new RawMessage();
-	    rm.add("&7Defenders: &2" + raid.getDefenders().size(), getDefenders(raid));
+	    rm.addText(plugin.getLM().getMessage(lm.Raid_status_defenders, raid.getDefenders().size())).addHover(getDefenders(raid));
 	    rm.show(sender);
 	} else if (res.getRaid().isUnderRaid()) {
-	    plugin.msg(sender, "&7Raid ends in: " + Utils.to24hourShort(raid.getEndsAt() - System.currentTimeMillis()));
+	    plugin.msg(sender, lm.Raid_status_ends, Utils.to24hourShort(raid.getEndsAt() - System.currentTimeMillis()));
 	    RawMessage rm = new RawMessage();
-	    rm.add("&7Attackers: &4" + raid.getAttackers().size(), getAttackers(raid));
+	    rm.addText(plugin.getLM().getMessage(lm.Raid_status_attackers, raid.getAttackers().size())).addHover(getAttackers(raid));
 	    rm.show(sender);
 	    rm = new RawMessage();
-	    rm.add("&7Defenders: &2" + raid.getDefenders().size(), getDefenders(raid));
+	    rm.addText(plugin.getLM().getMessage(lm.Raid_status_defenders, raid.getDefenders().size())).addHover(getDefenders(raid));
 	    rm.show(sender);
 	} else {
-	    plugin.msg(sender, raid.getCooldownEnd() < System.currentTimeMillis() ? "&2Can be raided" : "&ePosible raid in: " + Utils.to24hourShort(raid.getCooldownEnd() - System.currentTimeMillis()
-		+ 1000L));
+	    plugin.msg(sender, raid.getCooldownEnd() < System.currentTimeMillis() ? plugin.getLM().getMessage(lm.Raid_status_canraid) : plugin.getLM().getMessage(lm.Raid_status_raidin, Utils.to24hourShort(
+		raid.getCooldownEnd() - System.currentTimeMillis() + 1000L)));
 	}
 
 	return true;
     }
 
-    private String getAttackers(ResidenceRaid raid) {
+    private static String getAttackers(ResidenceRaid raid) {
 	String r = "";
 	int i = 0;
 	for (Entry<UUID, RaidAttacker> one : raid.getAttackers().entrySet()) {
@@ -112,7 +112,7 @@ public class raidstatus implements cmd {
 	return r;
     }
 
-    private String getDefenders(ResidenceRaid raid) {
+    private static String getDefenders(ResidenceRaid raid) {
 	String r = "";
 	int i = 0;
 	for (Entry<UUID, RaidDefender> one : raid.getDefenders().entrySet()) {

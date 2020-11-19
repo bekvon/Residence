@@ -15,6 +15,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.ResidenceRaid;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.TimeModifier;
 import com.bekvon.bukkit.residence.utils.Utils;
 
@@ -112,7 +113,6 @@ public class raid implements cmd {
 	    case "clear":
 		res.getRaid().setImmunityUntil(null);
 		res.getRaid().setEndsAt(0L);
-		res.getRPlayer().setLastRaidDefendTimer(0L);
 		plugin.msg(sender, lm.Raid_notImmune);
 
 		return true;
@@ -161,7 +161,7 @@ public class raid implements cmd {
 	    res = null;
 
 	    if (args.length > 1)
-		res = plugin.getResidenceManager().getByName(args[2]);
+		res = plugin.getResidenceManager().getByName(args[1]);
 	    if (res == null && sender instanceof Player)
 		res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
 
@@ -174,6 +174,10 @@ public class raid implements cmd {
 		return null;
 	    }
 
+	    res.getRaid().endRaid();
+	    res.getRaid().setEndsAt(0L);
+	    res.getRPlayer().setLastRaidDefendTimer(0L);
+	    
 	    boolean started = res.getRaid().preStartRaid(null);
 
 	    if (started) {
