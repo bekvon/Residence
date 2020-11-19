@@ -211,7 +211,7 @@ public class PermissionGroup {
 	if (limits.contains("Economy.SellCost"))
 	    sellperarea = limits.getDouble("Economy.SellCost", 0);
 
-	if (limits.isBoolean("Economy.Unstuck"))
+	if (limits.isBoolean("Residence.Unstuck"))
 	    unstuck = limits.getBoolean("Residence.Unstuck", false);
 	if (limits.contains("Residence.Kick"))
 	    kick = limits.getBoolean("Residence.Kick", false);
