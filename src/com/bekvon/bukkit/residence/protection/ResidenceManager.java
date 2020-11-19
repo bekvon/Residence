@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.protection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -751,10 +752,19 @@ public class ResidenceManager implements ResidenceInterface {
 	if (groupFlags.length() > 0)
 	    plugin.msg(sender, lm.General_GroupFlags, groupFlags);
 
-	String msg = "";
-	msg += plugin.msg(lm.General_TotalResSize, res.getTotalSize(), res.getXZSize());
+	RawMessage rm = new RawMessage();
+	rm.addText(plugin.msg(lm.General_TotalResSize, res.getTotalSize(), res.getXZSize()));
 
-	plugin.msg(sender, CMIChatColor.translate(msg));
+	try {
+	    rm.addHover(Arrays.asList(
+		plugin.msg(lm.General_ResSize_eastWest, res.getMainArea().getXSize()),
+		plugin.msg(lm.General_ResSize_northSouth, res.getMainArea().getZSize()),
+		plugin.msg(lm.General_ResSize_upDown, res.getMainArea().getYSize())));
+	} catch (Throwable e) {
+	    e.printStackTrace();
+	}
+
+	rm.show(sender);
 
 	if (plugin.getEconomyManager() != null) {
 	    plugin.msg(sender, lm.General_TotalWorth, res.getWorthByOwner(), res.getWorth());
@@ -782,8 +792,8 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	    if (sender instanceof Player) {
 
-		RawMessage rm = new RawMessage();
-		rm.add(forRentMsg, rentableString.toString());
+		rm = new RawMessage();
+		rm.addText(forRentMsg).addHover(rentableString.toString());
 		rm.show(sender);
 	    } else
 		plugin.msg(sender, forRentMsg);
@@ -810,7 +820,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    if (sender instanceof Player) {
 
-		RawMessage rm = new RawMessage();
+		rm = new RawMessage();
 		rm.addText(RentedMsg).addHover(rentableString.toString());
 		rm.show(sender);
 	    } else

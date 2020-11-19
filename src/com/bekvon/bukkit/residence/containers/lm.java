@@ -492,6 +492,9 @@ public enum lm {
 
     General_CurrentArea("&eCurrent Area: &6%1"),
     General_TotalResSize("&eTotal size: &6%1m\u00B3 (%2m\u00B2)"),
+    General_ResSize_eastWest("&eEast/West: &6%1"),
+    General_ResSize_northSouth("&eNorth/South: &6%1"),
+    General_ResSize_upDown("&eUp/Down: &6%1"),
     General_TotalWorth("&eTotal worth of residence: &6%1 &e(&6%2&e)"),
     General_TotalSubzones("&eSubzones in residence: &6%1 &e(&6%2&e)"),
     General_NotOnline("&eTarget player must be online."),
