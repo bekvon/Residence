@@ -120,7 +120,7 @@ public class CuboidArea {
 	int xsize = (highPoints.getBlockX() - lowPoints.getBlockX()) + 1;
 	int zsize = (highPoints.getBlockZ() - lowPoints.getBlockZ()) + 1;
 	if (!Residence.getInstance().getConfigManager().isNoCostForYBlocks()) {
-	    int ysize = (highPoints.getBlockY() - lowPoints.getBlockY());
+	    int ysize = (highPoints.getBlockY() - lowPoints.getBlockY()) + 1;
 	    return xsize * ysize * zsize;
 	}
 	return xsize * zsize;

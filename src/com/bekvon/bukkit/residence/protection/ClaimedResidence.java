@@ -878,11 +878,11 @@ public class ClaimedResidence {
 	long size = 0;
 	if (!plugin.getConfigManager().isNoCostForYBlocks())
 	    for (CuboidArea entry : set) {
-		size = size + entry.getSize();
+		size += entry.getSize();
 	    }
 	else
 	    for (CuboidArea entry : set) {
-		size = size + (entry.getXSize() * entry.getZSize());
+		size += (entry.getXSize() * entry.getZSize());
 	    }
 	return size;
     }
