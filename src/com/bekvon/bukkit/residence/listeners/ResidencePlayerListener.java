@@ -1182,7 +1182,6 @@ public class ResidencePlayerListener implements Listener {
 	return block != null && block.getType().name().contains("RAIL") && item != null && item.getType().name().contains("MINECART");
     }
 
-
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
@@ -1814,11 +1813,11 @@ public class ResidencePlayerListener implements Listener {
 	if (ResPerm.bypass_fly.hasPermission(player, 10000L))
 	    return;
 	if (!state) {
-	    
+
 	    // Lets not disable fly mode if player has access to fly command from another plugin
 	    if (player.hasPermission("cmi.command.fly") || player.hasPermission("essentials.fly"))
 		return;
-	    
+
 	    boolean land = player.isFlying();
 	    player.setFlying(state);
 	    player.setAllowFlight(state);
@@ -1853,7 +1852,7 @@ public class ResidencePlayerListener implements Listener {
 
 	ClaimedResidence res = event.getTo();
 	ClaimedResidence ResOld = event.getFrom();
-
+	
 	Player player = event.getPlayer();
 	if (player == null)
 	    return;
@@ -2250,6 +2249,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (event.getPlayer().hasMetadata("NPC"))
 	    return;
+	
+	currentRes.put(event.getPlayer().getUniqueId(), toRes);
+	
 	ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(fromRes, toRes, event.getPlayer());
 	plugin.getServ().getPluginManager().callEvent(chgEvent);
     }

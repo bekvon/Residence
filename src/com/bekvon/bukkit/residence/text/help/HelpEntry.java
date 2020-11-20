@@ -261,6 +261,29 @@ public class HelpEntry {
 	return entry;
     }
 
+    private static String getMp(HashMap<String, List<String>> mp) {
+	StringBuilder st = new StringBuilder();
+	for (String one : mp.keySet()) {
+	    if (!st.toString().isEmpty())
+		st.append("%%");
+	    st.append(one);
+	}
+	return st.toString();
+    }
+
+    private static String getMpEntry(HashMap<String, List<String>> mp) {
+	StringBuilder st = new StringBuilder();
+	for (Entry<String, List<String>> one : mp.entrySet()) {
+	    if (!st.toString().isEmpty())
+		st.append("%%");
+	    if (one.getKey().equalsIgnoreCase("") && !one.getValue().isEmpty())
+		st.append(one.getValue().get(0));
+	    else
+		st.append(one.getKey());
+	}
+	return st.toString();
+    }
+
     @SuppressWarnings("deprecation")
     public Set<String> getSubCommands(CommandSender sender, String[] args) {
 	Set<String> subCommands = new HashSet<String>();
@@ -274,7 +297,6 @@ public class HelpEntry {
 
 	if (args.length > 0) {
 	    HashMap<String, List<String>> mp = Residence.getInstance().getLocaleManager().CommandTab.get(args[0].toLowerCase());
-
 	    if (mp != null) {
 		if (args.length > 1) {
 		    if (args[args.length - 1].isEmpty()) {
@@ -282,16 +304,7 @@ public class HelpEntry {
 			if (ls != null) {
 			    neededArgPlace--;
 			    if (args.length == 2) {
-				StringBuilder st = new StringBuilder();
-				for (Entry<String, List<String>> one : mp.entrySet()) {
-				    if (!st.toString().isEmpty())
-					st.append("%%");
-				    if (one.getKey().equalsIgnoreCase("") && !one.getValue().isEmpty())
-					st.append(one.getValue().get(0));
-				    else
-					st.append(one.getKey());
-				}
-				ArgsList.add(st.toString());
+				ArgsList.add(getMpEntry(mp));
 			    } else
 				ArgsList = ls;
 			} else {
@@ -299,51 +312,22 @@ public class HelpEntry {
 			    if (ls != null) {
 				ArgsList = ls;
 			    } else {
-
-				StringBuilder st = new StringBuilder();
-				for (String one : mp.keySet()) {
-				    if (!st.toString().isEmpty())
-					st.append("%%");
-				    st.append(one);
-				}
-				ArgsList.add(st.toString());
-
+				ArgsList.add(getMp(mp));
 			    }
 			}
 		    } else {
 			List<String> main = mp.get("");
 			if (main != null) {
 			    if (args.length == 2) {
-				StringBuilder st = new StringBuilder();
-				for (Entry<String, List<String>> one : mp.entrySet()) {
-				    if (!st.toString().isEmpty())
-					st.append("%%");
-				    if (one.getKey().equalsIgnoreCase("") && !one.getValue().isEmpty())
-					st.append(one.getValue().get(0));
-				    else
-					st.append(one.getKey());
-				}
-				ArgsList.add(st.toString());
+				ArgsList.add(getMpEntry(mp));
 			    } else
 				ArgsList = main;
 			} else {
-			    StringBuilder st = new StringBuilder();
-			    for (String one : mp.keySet()) {
-				if (!st.toString().isEmpty())
-				    st.append("%%");
-				st.append(one);
-			    }
-			    ArgsList.add(st.toString());
+			    ArgsList.add(getMp(mp));
 			}
 		    }
 		} else {
-		    StringBuilder st = new StringBuilder();
-		    for (String one : mp.keySet()) {
-			if (!st.toString().isEmpty())
-			    st.append("%%");
-			st.append(one);
-		    }
-		    ArgsList.add(st.toString());
+		    ArgsList.add(getMp(mp));
 		}
 	    } else {
 		for (String one : Residence.getInstance().getLocaleManager().CommandTab.keySet()) {
@@ -396,9 +380,7 @@ public class HelpEntry {
 			    subCommands.add(oneRes.getName());
 			}
 		    } else {
-			ArrayList<String> resList = Residence.getInstance().getResidenceManager().getResidenceList(Residence.getInstance().getServerLandName(), true, false, false);
-			if (resList.size() > 0)
-			    subCommands.addAll(resList);
+			subCommands.addAll(Residence.getInstance().getResidenceManager().getResidenceList(Residence.getInstance().getServerLandName(), true, false, false));
 		    }
 		    break;
 		case "[cresidence]":
