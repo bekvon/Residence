@@ -741,6 +741,11 @@ public class ConfigManager {
 	TeleportTitleMessage = c.get("Global.Tp.TeleportTitleMessage", true);
 
 	Set<World> worlds = new HashSet<World>();
+
+	for (int i = 0; i < 3 && i < Bukkit.getWorlds().size(); i++) {
+	    worlds.add(Bukkit.getWorlds().get(i));
+	}
+
 	worlds.addAll(Bukkit.getWorlds());
 
 	RTeleport.clear();
