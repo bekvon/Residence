@@ -12,6 +12,8 @@ public enum Flags {
     backup(CMIMaterial.BOOKSHELF, FlagMode.Residence, "If set to true, restores previous look of area (WordEdit required)", false),
     bank(CMIMaterial.ENDER_CHEST, FlagMode.Both, "Allows or denys deposit/withdraw money from res bank", true),
     bed(CMIMaterial.WHITE_BED, FlagMode.Both, "Allows or denys players to use beds", true),
+    honey(CMIMaterial.BEEHIVE, FlagMode.Both, "Allows or denys players to get honey", true),
+    honeycomb(CMIMaterial.BEE_NEST, FlagMode.Both, "Allows or denys players to get honeycomb", true),
     beacon(CMIMaterial.BEACON, FlagMode.Both, "Allows or denys interaction with beacon", true),
     brew(CMIMaterial.BREWING_STAND, FlagMode.Both, "Allows or denys players to use brewing stands", true),
     build(CMIMaterial.BRICKS, FlagMode.Both, "Allows or denys building", false),

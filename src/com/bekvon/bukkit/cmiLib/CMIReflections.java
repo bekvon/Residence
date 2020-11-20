@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +28,7 @@ public class CMIReflections {
     private static Class<?> PacketPlayOutOpenWindow;
     private static Class<?> CraftPlayer;
     public static Class<?> nmsChatSerializer;
+    private static Class<?> CraftBeehive;
 
     static {
 	initialize();
@@ -45,6 +46,10 @@ public class CMIReflections {
 		nmsChatSerializer = getMinecraftClass("IChatBaseComponent$ChatSerializer");
 	} catch (Throwable e) {
 	    e.printStackTrace();
+	}
+	try {
+	    CraftBeehive = getBukkitClass("block.impl.CraftBeehive");
+	} catch (Throwable e) {
 	}
 	try {
 	    CraftPlayer = getBukkitClass("entity.CraftPlayer");
@@ -322,6 +327,32 @@ public class CMIReflections {
 	} catch (Exception e) {
 	    return null;
 	}
+    }
+
+    public static int getHoneyLevel(Block block) {
+	if (CMIMaterial.get(block) != CMIMaterial.BEE_NEST && CMIMaterial.get(block) != CMIMaterial.BEEHIVE)
+	    return 0;
+	try {
+	    Object nb = CraftBeehive.cast(block.getBlockData());
+	    Method method = nb.getClass().getMethod("getHoneyLevel");
+	    return (int) method.invoke(nb);
+	} catch (Throwable e) {
+	    e.printStackTrace();
+	}
+	return 0;
+    }
+
+    public static int getMaxHoneyLevel(Block block) {
+	if (CMIMaterial.get(block) != CMIMaterial.BEE_NEST && CMIMaterial.get(block) != CMIMaterial.BEEHIVE)
+	    return 0;
+	try {
+	    Object nb = CraftBeehive.cast(block.getBlockData());
+	    Method method = nb.getClass().getMethod("getMaximumHoneyLevel");
+	    return (int) method.invoke(nb);
+	} catch (Throwable e) {
+	    e.printStackTrace();
+	}
+	return 5;
     }
 
     public String getItemMinecraftNamePath(ItemStack item) {

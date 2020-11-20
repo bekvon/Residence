@@ -239,7 +239,7 @@ public enum lm {
     Residence_CantRemove("&cResidence &6%1 &ccant be removed as &6%2 &csubzone is still rented by &6%3"),
     Residence_MoveDeny("&cYou dont have movement permission for Residence &6%1"),
     Residence_TeleportNoFlag("&cYou dont have teleport access for that residence."),
-    Residence_FlagDeny("&cYou dont have &6%1 &cpermission for Residence &6%2"),
+    Residence_FlagDeny("&cYou dont have &6%1 &cpermission for &6%2 &cresidence"),
     Residence_GiveLimits("&cCannot give residence to target player, because it is outside the target players limits."),
     Residence_GiveConfirm("&7Click to confirm &6%1 &7residence transfer from &6%2 &7to &6%3"),
     Residence_Give("&eYou give residence &6%1 &eto player &6%2"),
