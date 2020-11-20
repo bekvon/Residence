@@ -1814,6 +1814,11 @@ public class ResidencePlayerListener implements Listener {
 	if (ResPerm.bypass_fly.hasPermission(player, 10000L))
 	    return;
 	if (!state) {
+	    
+	    // Lets not disable fly mode if player has access to fly command from another plugin
+	    if (player.hasPermission("cmi.command.fly") || player.hasPermission("essentials.fly"))
+		return;
+	    
 	    boolean land = player.isFlying();
 	    player.setFlying(state);
 	    player.setAllowFlight(state);
