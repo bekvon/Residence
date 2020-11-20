@@ -75,8 +75,5 @@ public class flags implements cmd {
 	    c.get(pt + ".Info", Arrays.asList("&eUsage: &6/res " + forSet + " <residence> " + fl.getName() + " true/false/remove"));
 	    keys.remove(fl.toString());
 	}
-
-	LocaleManager.addTabCompleteSub(this, "pset", "[residence]", "[flag]", "[true%%false%%remove]");
-	LocaleManager.addTabCompleteSub(this, "set", "[residence]", "[flag]", "[true%%false%%remove]");
     }
 }

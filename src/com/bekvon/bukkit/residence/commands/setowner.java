@@ -8,11 +8,9 @@ import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
-import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class setowner implements cmd {
 
@@ -36,11 +34,11 @@ public class setowner implements cmd {
 		plugin.msg(sender, lm.Raid_cantDo);
 		return true;
 	    }
- 
+
 	    if (!plugin.isPlayerExist(sender, args[1], true)) {
 		return null;
 	    }
-	    
+
 	    area.getPermissions().setOwner(args[1], true);
 	    if (plugin.getRentManager().isForRent(area.getName()))
 		plugin.getRentManager().removeRentable(area.getName());
@@ -66,7 +64,7 @@ public class setowner implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Change owner of a residence.");
 	c.get("Info", Arrays.asList("&eUsage: &6/resadmin setowner [residence] [player]"));
-	LocaleManager.addTabCompleteMain(this, "[cresidence]");
+	LocaleManager.addTabCompleteMain(this, "[cresidence]", "[playername]");
     }
 
 }

@@ -43,6 +43,6 @@ public class create implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Main command
 	c.get("Description", "Create Residences");
-	c.get("Info", Arrays.asList("&eUsage: &6/res create <residence name>"));
+	c.get("Info", Arrays.asList("&eUsage: &6/res create [residence_name]"));
     }
 }

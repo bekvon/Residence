@@ -54,7 +54,7 @@ public class setallfor implements cmd {
 		count++;
 	}
 
-	plugin.msg(sender, lm.Flag_ChangedForOne, count, resPlayer.getPlayerName());
+	plugin.msg(sender, lm.Flag_ChangedForOne, count, resPlayer.getName());
 
 	return true;
     }

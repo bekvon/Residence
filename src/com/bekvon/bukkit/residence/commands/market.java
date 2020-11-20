@@ -461,15 +461,16 @@ public class market implements cmd {
 	LocaleManager.addTabCompleteSub(this, "rentable", "[residence]", "1000", "7", "true", "true", "true");
 
 	c.get("autopay.Description", "Sets residence AutoPay to given value");
-	c.get("autopay.Info", Arrays.asList("&eUsage: &6/res market autopay <residence> [true/false]"));
+	c.get("autopay.Info", Arrays.asList("&eUsage: &6/res market autopay [residence] [true/false]"));
 	LocaleManager.addTabCompleteSub(this, "autopay", "[residence]%%true%%false", "true%%false");
 
 	c.get("payrent.Description", "Pays rent for defined residence");
-	c.get("payrent.Info", Arrays.asList("&eUsage: &6/res market payrent <residence>"));
+	c.get("payrent.Info", Arrays.asList("&eUsage: &6/res market payrent [residence]"));
 	LocaleManager.addTabCompleteSub(this, "payrent", "[residence]");
 
 	c.get("confirm.Description", "Confirms residence unrent/release action");
 	c.get("confirm.Info", Arrays.asList("&eUsage: &6/res market confirm"));
+	LocaleManager.addTabCompleteSub(this, "confirm");
 
 	c.get("unrent.Description", "Remove a residence from rent or rentable.");
 	c.get("unrent.Info", Arrays.asList("&eUsage: &6/res market unrent [residence]",

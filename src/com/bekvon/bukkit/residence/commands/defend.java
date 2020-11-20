@@ -146,7 +146,7 @@ public class defend implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Join raid defence on residence");
 	c.get("Info", Arrays.asList("&eUsage: &6/res defend [resName] (playerName)"));
-	LocaleManager.addTabCompleteMain(this, "[cresidence]%%[playername]");
+	LocaleManager.addTabCompleteMain(this, "[cresidence]%%[playername]", "[playername]");
     }
 
 }

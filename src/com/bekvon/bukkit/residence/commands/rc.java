@@ -196,12 +196,15 @@ public class rc implements cmd {
 	c.setP(c.getPath() + "SubCommands.");
 	c.get("leave.Description", "Leaves current residence chat channel");
 	c.get("leave.Info", Arrays.asList("&eUsage: &6/res rc leave", "If you are in residence chat channel then you will leave it"));
+	LocaleManager.addTabCompleteSub(this, "leave");
 
 	c.get("setcolor.Description", "Sets residence chat channel text color");
 	c.get("setcolor.Info", Arrays.asList("&eUsage: &6/res rc setcolor [colorCode]", "Sets residence chat channel text color"));
+	LocaleManager.addTabCompleteSub(this, "setcolor");
 
 	c.get("setprefix.Description", "Sets residence chat channel prefix");
 	c.get("setprefix.Info", Arrays.asList("&eUsage: &6/res rc setprefix [newName]", "Sets residence chat channel prefix"));
+	LocaleManager.addTabCompleteSub(this, "setprefix");
 
 	c.get("kick.Description", "Kicks player from channel");
 	c.get("kick.Info", Arrays.asList("&eUsage: &6/res rc kick [player]", "Kicks player from channel"));

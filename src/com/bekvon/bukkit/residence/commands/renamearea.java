@@ -40,6 +40,6 @@ public class renamearea implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	c.get("Description", "Rename area name for residence");
 	c.get("Info", Arrays.asList("&eUsage: &6/res removeworld [residence] [oldAreaName] [newAreaName]"));
-	LocaleManager.addTabCompleteMain(this, "[residence]");
+	LocaleManager.addTabCompleteMain(this, "[residence]", "[carea]");
     }
 }

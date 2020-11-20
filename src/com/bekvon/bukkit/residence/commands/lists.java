@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -73,24 +74,31 @@ public class lists implements cmd {
 	c.setP(c.getPath() + "SubCommands.");
 	c.get("add.Description", "Add a list");
 	c.get("add.Info", Arrays.asList("&eUsage: &6/res lists add <listname>"));
+	LocaleManager.addTabCompleteSub(this, "add");
 
 	c.get("remove.Description", "Remove a list");
 	c.get("remove.Info", Arrays.asList("&eUsage: &6/res lists remove <listname>"));
+	LocaleManager.addTabCompleteSub(this, "remove");
 
 	c.get("apply.Description", "Apply a list to a residence");
 	c.get("apply.Info", Arrays.asList("&eUsage: &6/res lists apply <listname> <residence>"));
+	LocaleManager.addTabCompleteSub(this, "apply", "", "[cresidence]");
 
 	c.get("set.Description", "Set a flag");
 	c.get("set.Info", Arrays.asList("&eUsage: &6/res lists set <listname> <flag> <value>"));
+	LocaleManager.addTabCompleteSub(this, "set", "", "[flag]", "true%%false%%remove");
 
 	c.get("pset.Description", "Set a player flag");
 	c.get("pset.Info", Arrays.asList("&eUsage: &6/res lists pset <listname> <player> <flag> <value>"));
+	LocaleManager.addTabCompleteSub(this, "pset", "", "[flag]", "true%%false%%remove");
 
 	c.get("gset.Description", "Set a group flag");
 	c.get("gset.Info", Arrays.asList("&eUsage: &6/res lists gset <listname> <group> <flag> <value>"));
+	LocaleManager.addTabCompleteSub(this, "gset", "", "", "[flag]", "true%%false%%remove");
 
 	c.get("view.Description", "View a list.");
 	c.get("view.Info", Arrays.asList("&eUsage: &6/res lists view <listname>"));
+	LocaleManager.addTabCompleteSub(this, "view");
     }
 
 }

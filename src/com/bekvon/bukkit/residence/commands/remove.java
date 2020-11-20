@@ -80,9 +80,9 @@ public class remove implements cmd {
 	    if (sender instanceof Player) {
 		RawMessage rm = new RawMessage();
 		if (res.isSubzone()) {
-		    rm.add(plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName()), "Click to confirm", cmd + " confirm");
+		    rm.addText(plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName())).addHover("Click to confirm").addCommand(cmd + " confirm");
 		} else {
-		    rm.add(plugin.msg(lm.Residence_DeleteConfirm, res.getResidenceName()), "Click to confirm", cmd + " confirm");
+		    rm.addText(plugin.msg(lm.Residence_DeleteConfirm, res.getResidenceName())).addHover("Click to confirm").addCommand(cmd + " confirm");
 		}
 		if (plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName()).length() > 0)
 		    rm.show(sender);
@@ -104,7 +104,7 @@ public class remove implements cmd {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Main command
 	c.get("Description", "Remove residences.");
-	c.get("Info", Arrays.asList("&eUsage: &6/res remove <residence name>"));
+	c.get("Info", Arrays.asList("&eUsage: &6/res remove [residence_name]"));
 	LocaleManager.addTabCompleteMain(this, "[residence]");
     }
 }

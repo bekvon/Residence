@@ -119,7 +119,7 @@ public class select implements cmd {
 		    return true;
 		}
 	    }
-	    
+
 	    switch (args[0].toLowerCase()) {
 	    case "expand":
 		plugin.getSelectionManager().modify(player, false, amount);
@@ -203,15 +203,18 @@ public class select implements cmd {
 	c.get("Description", "Selection Commands");
 	c.get("Info", Arrays.asList("This command selects areas for usage with residence.",
 	    "/res select [x] [y] [z] - selects a radius of blocks, with you in the middle."));
+	LocaleManager.addTabCompleteSub(this, "[x]", "[y]", "[z]");
 
 	// Sub commands
 	c.setP(c.getPath() + "SubCommands.");
 
 	c.get("coords.Description", "Display selected coordinates");
 	c.get("coords.Info", Arrays.asList("&eUsage: &6/res select coords"));
+	LocaleManager.addTabCompleteSub(this, "coords");
 
 	c.get("size.Description", "Display selected size");
 	c.get("size.Info", Arrays.asList("&eUsage: &6/res select size"));
+	LocaleManager.addTabCompleteSub(this, "size");
 
 	c.get("auto.Description", "Turns on auto selection tool");
 	c.get("auto.Info", Arrays.asList("&eUsage: &6/res select auto [playername]"));
@@ -219,24 +222,31 @@ public class select implements cmd {
 
 	c.get("cost.Description", "Display selection cost");
 	c.get("cost.Info", Arrays.asList("&eUsage: &6/res select cost"));
+	LocaleManager.addTabCompleteSub(this, "cost");
 
 	c.get("vert.Description", "Expand Selection Vertically");
 	c.get("vert.Info", Arrays.asList("&eUsage: &6/res select vert", "Will expand selection as high and as low as allowed."));
+	LocaleManager.addTabCompleteSub(this, "vert");
 
 	c.get("sky.Description", "Expand Selection to Sky");
 	c.get("sky.Info", Arrays.asList("&eUsage: &6/res select sky", "Expands as high as your allowed to go."));
+	LocaleManager.addTabCompleteSub(this, "sky");
 
 	c.get("bedrock.Description", "Expand Selection to Bedrock");
 	c.get("bedrock.Info", Arrays.asList("&eUsage: &6/res select bedrock", "Expands as low as your allowed to go."));
+	LocaleManager.addTabCompleteSub(this, "bedrock");
 
 	c.get("expand.Description", "Expand selection in a direction.");
 	c.get("expand.Info", Arrays.asList("&eUsage: &6/res select expand <amount>", "Expands <amount> in the direction your looking."));
+	LocaleManager.addTabCompleteSub(this, "expand", "5");
 
 	c.get("shift.Description", "Shift selection in a direction");
 	c.get("shift.Info", Arrays.asList("&eUsage: &6/res select shift <amount>", "Pushes your selection by <amount> in the direction your looking."));
+	LocaleManager.addTabCompleteSub(this, "shift", "5");
 
 	c.get("chunk.Description", "Select the chunk your currently in.");
 	c.get("chunk.Info", Arrays.asList("&eUsage: &6/res select chunk", "Selects the chunk your currently standing in."));
+	LocaleManager.addTabCompleteSub(this, "chunk");
 
 	c.get("residence.Description", "Select a existing area in a residence.");
 	c.get("residence.Info", Arrays.asList("&eUsage: &6/res select residence <residence>", "Selects a existing area in a residence."));
@@ -244,5 +254,6 @@ public class select implements cmd {
 
 	c.get("worldedit.Description", "Set selection using the current WorldEdit selection.");
 	c.get("worldedit.Info", Arrays.asList("&eUsage: &6/res select worldedit", "Sets selection area using the current WorldEdit selection."));
+	LocaleManager.addTabCompleteSub(this, "worldedit");
     }
 }

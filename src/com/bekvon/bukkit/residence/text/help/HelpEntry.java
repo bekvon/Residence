@@ -1,6 +1,5 @@
 package com.bekvon.bukkit.residence.text.help;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -99,7 +98,7 @@ public class HelpEntry {
 		    path = path.replace("/res ", "/resadmin ");
 
 		RawMessage rm = new RawMessage();
-		rm.add(CMIChatColor.translate("&6" + helplines.get(i).getDesc()), desc, null, path + helplines.get(i).getCommand());
+		rm.addText(CMIChatColor.translate("&6" + helplines.get(i).getDesc())).addHover(desc).addSuggestion(path + helplines.get(i).getCommand());
 		rm.show(sender);
 
 	    } else
@@ -262,8 +261,6 @@ public class HelpEntry {
 	return entry;
     }
 
-    File langFile = new File(new File(Residence.getInstance().getDataLocation(), "Language"), "English.yml");
-
     @SuppressWarnings("deprecation")
     public Set<String> getSubCommands(CommandSender sender, String[] args) {
 	Set<String> subCommands = new HashSet<String>();
@@ -279,36 +276,74 @@ public class HelpEntry {
 	    HashMap<String, List<String>> mp = Residence.getInstance().getLocaleManager().CommandTab.get(args[0].toLowerCase());
 
 	    if (mp != null) {
-		if (neededArgPlace > 0 || args.length == 2) {
-		    List<String> mps = mp.get(args[1].toLowerCase());
-		    if (mps != null) {
-			if (args.length > 2)
+		if (args.length > 1) {
+		    if (args[args.length - 1].isEmpty()) {
+			List<String> ls = mp.get(args[1].toLowerCase());
+			if (ls != null) {
 			    neededArgPlace--;
-			ArgsList = mps;
-		    } else {
-			StringBuilder st = new StringBuilder();
-			for (String one : mp.keySet()) {
-			    if (!st.toString().isEmpty())
-				st.append("%%");
-			    st.append(one);
+			    if (args.length == 2) {
+				StringBuilder st = new StringBuilder();
+				for (Entry<String, List<String>> one : mp.entrySet()) {
+				    if (!st.toString().isEmpty())
+					st.append("%%");
+				    if (one.getKey().equalsIgnoreCase("") && !one.getValue().isEmpty())
+					st.append(one.getValue().get(0));
+				    else
+					st.append(one.getKey());
+				}
+				ArgsList.add(st.toString());
+			    } else
+				ArgsList = ls;
+			} else {
+			    ls = mp.get("");
+			    if (ls != null) {
+				ArgsList = ls;
+			    } else {
+
+				StringBuilder st = new StringBuilder();
+				for (String one : mp.keySet()) {
+				    if (!st.toString().isEmpty())
+					st.append("%%");
+				    st.append(one);
+				}
+				ArgsList.add(st.toString());
+
+			    }
 			}
-			ArgsList.add(st.toString());
+		    } else {
+			List<String> main = mp.get("");
+			if (main != null) {
+			    if (args.length == 2) {
+				StringBuilder st = new StringBuilder();
+				for (Entry<String, List<String>> one : mp.entrySet()) {
+				    if (!st.toString().isEmpty())
+					st.append("%%");
+				    if (one.getKey().equalsIgnoreCase("") && !one.getValue().isEmpty())
+					st.append(one.getValue().get(0));
+				    else
+					st.append(one.getKey());
+				}
+				ArgsList.add(st.toString());
+			    } else
+				ArgsList = main;
+			} else {
+			    StringBuilder st = new StringBuilder();
+			    for (String one : mp.keySet()) {
+				if (!st.toString().isEmpty())
+				    st.append("%%");
+				st.append(one);
+			    }
+			    ArgsList.add(st.toString());
+			}
 		    }
 		} else {
-		    if (args.length > 1 && mp.get(args[1].toLowerCase()) != null) {
-			neededArgPlace--;
-			ArgsList = mp.get(args[1].toLowerCase());
-		    } else if (mp.get("") != null) {
-			ArgsList = mp.get("");
-		    } else {
-			StringBuilder st = new StringBuilder();
-			for (String one : mp.keySet()) {
-			    if (!st.toString().isEmpty())
-				st.append("%%");
-			    st.append(one);
-			}
-			ArgsList.add(st.toString());
+		    StringBuilder st = new StringBuilder();
+		    for (String one : mp.keySet()) {
+			if (!st.toString().isEmpty())
+			    st.append("%%");
+			st.append(one);
 		    }
+		    ArgsList.add(st.toString());
 		}
 	    } else {
 		for (String one : Residence.getInstance().getLocaleManager().CommandTab.keySet()) {
@@ -319,6 +354,9 @@ public class HelpEntry {
 	}
 
 	String NeededArg = null;
+
+	if (neededArgPlace < 0)
+	    neededArgPlace = 0;
 	if (neededArgPlace < ArgsList.size() && neededArgPlace >= 0) {
 	    NeededArg = ArgsList.get(neededArgPlace);
 	}
@@ -368,6 +406,16 @@ public class HelpEntry {
 			ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(((Player) sender).getLocation());
 			if (res != null) {
 			    String resName = res.getName();
+			    if (resName != null)
+				subCommands.add(resName);
+			}
+		    }
+		    break;
+		case "[carea]":
+		    if (sender instanceof Player) {
+			ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(((Player) sender).getLocation());
+			if (res != null) {
+			    String resName = res.getAreaIDbyLoc(((Player) sender).getLocation());
 			    if (resName != null)
 				subCommands.add(resName);
 			}
@@ -456,6 +504,18 @@ public class HelpEntry {
 		    for (World one : Bukkit.getWorlds()) {
 			subCommands.add(one.getName());
 		    }
+		    break;
+		case "[x]":
+		    if (playerSender != null)
+			subCommands.add(String.valueOf(playerSender.getLocation().getBlockX()));
+		    break;
+		case "[y]":
+		    if (playerSender != null)
+			subCommands.add(String.valueOf(playerSender.getLocation().getBlockY()));
+		    break;
+		case "[z]":
+		    if (playerSender != null)
+			subCommands.add(String.valueOf(playerSender.getLocation().getBlockZ()));
 		    break;
 		default:
 		    subCommands.add(oneArg);

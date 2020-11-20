@@ -96,6 +96,6 @@ public class message implements cmd {
 	c.get("Description", "Manage residence enter / leave messages");
 	c.get("Info", Arrays.asList("&eUsage: &6/res message <residence> [enter/leave] [message]",
 	    "Set the enter or leave message of a residence.", "&eUsage: &6/res message <residence> remove [enter/leave]", "Removes a enter or leave message."));
-	LocaleManager.addTabCompleteMain(this, "[cresidence]", "enter%%leave", "[enter]%%[leave]");
+	LocaleManager.addTabCompleteMain(this, "[cresidence]", "enter%%leave%%remove", "[enter]%%[leave]");
     }
 }

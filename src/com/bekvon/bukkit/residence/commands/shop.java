@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
