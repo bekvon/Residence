@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -578,5 +579,120 @@ public class PermissionManager {
 
     public boolean isSetPermission(Player player, String perm) {
 	return player.hasPermission(new Permission(perm, PermissionDefault.FALSE));
+    }
+
+    @Deprecated
+    public PermissionInfo getPermissionInfo(Player player, String perm, Long delayInMiliseconds) {
+	return getPermissionInfo(player, perm, false, delayInMiliseconds);
+    }
+
+    @Deprecated
+    public PermissionInfo getPermissionInfo(Player player, ResPerm perm) {
+	return getPermissionInfo(player, perm, 1000L);
+    }
+
+    public PermissionInfo getPermissionInfo(UUID uuid, ResPerm perm) {
+	return getPermissionInfo(uuid, perm, 1000L);
+    }
+
+    @Deprecated
+    public PermissionInfo getPermissionInfo(Player player, ResPerm perm, Long delayInMiliseconds) {
+	return getPermissionInfo(player.getUniqueId(), perm, delayInMiliseconds);
+    }
+
+    public PermissionInfo getPermissionInfo(UUID uuid, ResPerm perm, Long delayInMiliseconds) {
+	String permission = perm.getPermission(" ");
+	if (permission.endsWith(" "))
+	    permission = permission.replace(" ", "");
+	if (permission.endsWith("."))
+	    permission = permission.substring(0, permission.length() - 1);
+	return getPermissionInfo(uuid, permission, false, delayInMiliseconds);
+    }
+
+    @Deprecated
+    public PermissionInfo getPermissionInfo(Player player, String perm) {
+	return getPermissionInfo(player, perm, false, 1000L);
+    }
+
+    @Deprecated
+    public PermissionInfo getPermissionInfo(Player player, String perm, boolean force) {
+	return getPermissionInfo(player, perm, force, 1000L);
+    }
+
+    @Deprecated
+    public PermissionInfo getPermissionInfo(Player player, String perm, boolean force, Long delay) {
+	return getPermissionInfo(player.getUniqueId(), perm, force, delay);
+    }
+
+    public PermissionInfo getPermissionInfo(UUID uuid, String perm, boolean force, Long delay) {
+	perm = perm.toLowerCase();
+	if (!perm.endsWith("."))
+	    perm += ".";
+
+	if (uuid == null)
+	    return new PermissionInfo(perm, delay);
+
+	HashMap<String, PermissionInfo> c = cache.get(uuid);
+	if (c == null)
+	    c = new HashMap<String, PermissionInfo>();
+
+	PermissionInfo p = c.get(perm);
+
+	if (p == null)
+	    p = new PermissionInfo(perm, delay);
+
+	if (delay != null)
+	    p.setDelay(delay);
+
+	String pref = perm.contains(".") ? perm.split("\\.")[0] : perm;
+
+	if (force || p.isTimeToRecalculate()) {
+	    Player player = Bukkit.getPlayer(uuid);
+	    if (player != null) {
+		HashMap<String, Boolean> all = getAll(player, pref);
+
+		Double max = null;
+		Double min = null;
+		for (Entry<String, Boolean> uno : all.entrySet()) {
+		    if (!uno.getValue())
+			continue;
+
+		    if (!uno.getKey().startsWith(perm))
+			continue;
+
+		    String value = uno.getKey().replace(perm, "");
+
+		    p.addValue(value);
+		    try {
+			double t = Double.parseDouble(value);
+
+			if (max == null || t > max)
+			    max = t;
+
+			if (min == null || t < min)
+			    min = t;
+		    } catch (Exception e) {
+		    }
+
+		}
+
+		p.setMaxValue(max);
+		p.setMinValue(min);
+	    }
+	}
+	p.setLastChecked(System.currentTimeMillis());
+	c.put(perm, p);
+	cache.put(uuid, c);
+	return p;
+    }
+
+    private static HashMap<String, Boolean> getAll(Player player, String pref) {
+	pref = pref.endsWith(".") ? pref : pref + ".";
+	HashMap<String, Boolean> mine = new HashMap<String, Boolean>();
+	for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
+	    if (permission.getPermission().startsWith(pref))
+		mine.put(permission.getPermission(), permission.getValue());
+	}
+	return mine;
     }
 }

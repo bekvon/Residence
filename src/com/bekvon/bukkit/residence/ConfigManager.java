@@ -140,10 +140,7 @@ public class ConfigManager {
     protected boolean ActionBarOnSelection;
     protected boolean visualizer;
     protected int minMoveUpdate;
-    protected int MaxResCount;
-    protected int MaxRentCount;
-    protected int MaxSubzonesCount;
-    protected int MaxSubzoneDepthCount;
+
     protected int VoteRangeFrom;
     protected int HealInterval;
     protected int FeedInterval;
@@ -631,19 +628,6 @@ public class ConfigManager {
 	    "When this set to true, any teleportation to residence where player dont have tp flag, action will be denyied",
 	    "This can prevent from teleporting players to residence with 3rd party plugins like esentials /tpa");
 	BlockAnyTeleportation = c.get("Global.Optimizations.BlockAnyTeleportation", true);
-
-	c.addComment("Global.Optimizations.MaxResCount", "Set this as low as possible depending of residence.max.res.[number] permission you are using",
-	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
-	MaxResCount = c.get("Global.Optimizations.MaxResCount", 30);
-	c.addComment("Global.Optimizations.MaxRentCount", "Set this as low as possible depending of residence.max.rents.[number] permission you are using",
-	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
-	MaxRentCount = c.get("Global.Optimizations.MaxRentCount", 10);
-	c.addComment("Global.Optimizations.MaxSubzoneCount", "Set this as low as possible depending of residence.max.subzones.[number] permission you are using",
-	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
-	MaxSubzonesCount = c.get("Global.Optimizations.MaxSubzoneCount", 5);
-	c.addComment("Global.Optimizations.MaxSubzoneDepthCount", "Set this as low as possible depending of residence.max.subzonedepth.[number] permission you are using",
-	    "In example if you are giving max number of 10 for players, set it to 15, if its 30, set it to 35 just to have some small buffer in case");
-	MaxSubzoneDepthCount = c.get("Global.Optimizations.MaxSubzoneDepthCount", 5);
 
 	c.addComment("Global.Optimizations.OverridePvp", "By setting this to true, regular pvp flag will be acting as overridepvp flag",
 	    "Overridepvp flag tries to ignore any pvp protection in that residence by any other plugin");
@@ -1756,22 +1740,6 @@ public class ConfigManager {
 
     public int getMinMoveUpdateInterval() {
 	return minMoveUpdate;
-    }
-
-    public int getMaxResCount() {
-	return MaxResCount;
-    }
-
-    public int getMaxRentCount() {
-	return MaxRentCount;
-    }
-
-    public int getMaxSubzonesCount() {
-	return MaxSubzonesCount;
-    }
-
-    public int getMaxSubzoneDepthCount() {
-	return MaxSubzoneDepthCount;
     }
 
     public int getVoteRangeFrom() {

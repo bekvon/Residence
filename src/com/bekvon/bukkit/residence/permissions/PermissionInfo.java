@@ -1,5 +1,10 @@
 package com.bekvon.bukkit.residence.permissions;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.bekvon.bukkit.residence.utils.Debug;
+
 public class PermissionInfo {
 
     private String permission;
@@ -8,6 +13,8 @@ public class PermissionInfo {
     private Long lastChecked = null;
     private Double maxValue = null;
     private Double minValue = null;
+
+    private Set<String> values = new HashSet<String>();
 
     public PermissionInfo(String permission, Long delay) {
 	this.permission = permission;
@@ -50,8 +57,12 @@ public class PermissionInfo {
 	return maxValue;
     }
 
-    public Double getMaxValue(Double defaultV) {
-	return maxValue == null ? defaultV : maxValue;
+    public Double getMaxValue(double defaultV) {
+	return maxValue == null ? defaultV : maxValue > defaultV ? maxValue : defaultV;
+    }
+
+    public int getMaxValue(int defaultV) {
+	return maxValue == null ? defaultV : maxValue > defaultV ? maxValue.intValue() : defaultV;
     }
 
     public void setMaxValue(Double maxValue) {
@@ -62,8 +73,12 @@ public class PermissionInfo {
 	return minValue;
     }
 
-    public Double getMinValue(Double defaultV) {
-	return minValue == null ? defaultV : minValue;
+    public Double getMinValue(double defaultV) {
+	return minValue == null ? defaultV : minValue < defaultV ? minValue : defaultV;
+    }
+
+    public int getMinValue(int defaultV) {
+	return minValue == null ? defaultV : minValue < defaultV ? minValue.intValue() : defaultV;
     }
 
     public void setMinValue(Double minValue) {
@@ -76,6 +91,14 @@ public class PermissionInfo {
 
     public void setEnabled(boolean enabled) {
 	this.enabled = enabled;
+    }
+
+    public Set<String> getValues() {
+	return values;
+    }
+
+    public void addValue(String value) {
+	this.values.add(value);
     }
 
 }

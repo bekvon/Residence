@@ -496,7 +496,7 @@ public class PermissionGroup {
     public void printLimits(CommandSender player, OfflinePlayer target, boolean resadmin) {
 
 	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(target.getName());
-	rPlayer.forceUpdateGroup();
+	rPlayer.getGroup(true);
 	PermissionGroup group = rPlayer.getGroup();
 
 	Residence.getInstance().msg(player, lm.General_Separator);
