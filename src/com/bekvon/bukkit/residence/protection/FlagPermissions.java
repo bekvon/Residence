@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -86,6 +87,10 @@ public class FlagPermissions {
     }
 
     public static void addFlag(String flag) {
+	if (Residence.getInstance() == null) {
+	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Can't add flags (" + flag + ") to residence plugin before it was initialized");
+	    return;
+	}
 	flag = flag.toLowerCase();
 	if (!validFlags.contains(flag)) {
 	    validFlags.add(flag);
@@ -106,6 +111,10 @@ public class FlagPermissions {
     }
 
     public static void addPlayerOrGroupOnlyFlag(String flag) {
+	if (Residence.getInstance() == null) {
+	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Can't add flags (" + flag + ") to residence plugin before it was initialized");
+	    return;
+	}
 	flag = flag.toLowerCase();
 	if (!validPlayerFlags.contains(flag)) {
 	    validPlayerFlags.add(flag);
@@ -126,6 +135,10 @@ public class FlagPermissions {
     }
 
     public static void addResidenceOnlyFlag(String flag) {
+	if (Residence.getInstance() == null) {
+	    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Can't add flags (" + flag + ") to residence plugin before it was initialized");
+	    return;
+	}
 	flag = flag.toLowerCase();
 	if (!validAreaFlags.contains(flag)) {
 	    validAreaFlags.add(flag);
