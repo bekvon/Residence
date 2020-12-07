@@ -71,6 +71,7 @@ public class FileCleanUp {
 
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());
 
+	    
 	    plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
 	    i++;
 	}

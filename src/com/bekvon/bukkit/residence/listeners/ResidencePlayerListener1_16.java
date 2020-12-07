@@ -27,7 +27,7 @@ public class ResidencePlayerListener1_16 implements Listener {
 	this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteractRespawn(PlayerInteractEvent event) {
 
 	if (event.getPlayer() == null)

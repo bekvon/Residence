@@ -509,6 +509,22 @@ public class FlagPermissions {
 	return this.playerCheck(resPlayer.getPlayer(), flag.toString(), this.groupCheck(resPlayer.getGroup(), flag.toString(), this.has(flag, def)));
     }
 
+    public boolean playerHas(Player player, Flags flag, FlagCombo f) {
+	switch (f) {
+	case FalseOrNone:
+	    return !playerHas(player, flag, false);
+	case OnlyFalse:
+	    return !playerHas(player, flag, true);
+	case OnlyTrue:
+	    return playerHas(player, flag, false);
+	case TrueOrNone:
+	    return playerHas(player, flag, true);
+	default:
+	    return false;
+	}
+
+    }
+
     public boolean playerHas(Player player, Flags flag, boolean def) {
 	if (player == null)
 	    return false;
