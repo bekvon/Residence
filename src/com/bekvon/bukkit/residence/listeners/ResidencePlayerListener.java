@@ -2312,7 +2312,13 @@ public class ResidencePlayerListener implements Listener {
 			plugin.msg(player, ChatColor.YELLOW + this.insertMessages(player, res, message));
 			break;
 		    case TitleBar:
-			TitleMessageManager.send(player, ChatColor.YELLOW + insertMessages(player, res, message), null);
+			String title = ChatColor.YELLOW + insertMessages(player, res, message);
+			String subtitle = "";
+			if (title.contains("\\n")) {
+			    subtitle = ChatColor.YELLOW + title.split("\\\\n", 2)[1];
+			    title = title.split("\\\\n", 2)[0];
+			}
+			TitleMessageManager.send(player, title, subtitle);
 			break;
 		    default:
 			break;

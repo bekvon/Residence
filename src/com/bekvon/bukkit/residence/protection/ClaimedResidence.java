@@ -940,10 +940,12 @@ public class ClaimedResidence {
 
     public void setEnterLeaveMessage(CommandSender sender, String message, boolean enter, boolean resadmin) {
 	if (message != null) {
+	    message = message.replace("%subtitle%", "\\n");
 	    if (message.equals("")) {
 		message = null;
 	    }
 	}
+
 	if (sender instanceof Player) {
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer((Player) sender);
 	    PermissionGroup group = rPlayer.getGroup();
