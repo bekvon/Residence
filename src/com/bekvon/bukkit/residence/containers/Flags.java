@@ -75,6 +75,7 @@ public enum Flags {
     mobkilling(CMIMaterial.ROTTEN_FLESH, FlagMode.Both, "Allows or denys mob killing", true),
     monsters(CMIMaterial.SPAWNER, FlagMode.Residence, "Allows or denys monster spawns", true),
     move(CMIMaterial.LEATHER_BOOTS, FlagMode.Both, "Allows or denys movement in the residence", true),
+    nametag(CMIMaterial.NAME_TAG, FlagMode.Both, "Allows or denys name tag usage", true),
     nanimals(CMIMaterial.COW_SPAWN_EGG, FlagMode.Residence, "Allows or denys natural animal spawns", true),
     nmonsters(CMIMaterial.SKELETON_SPAWN_EGG, FlagMode.Residence, "Allows or denys natural monster spawns", true),
     night(CMIMaterial.BLACK_WOOL, FlagMode.Residence, "Sets night time in residence", true),

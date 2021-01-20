@@ -263,7 +263,6 @@ public class BossBarManager {
 //		public void run() {
 //
 //		    if (barInfo.getAutoId() != null) {
-//			Debug.D("show boss " + barInfo.getAutoId());
 //			Show(barInfo);
 //		    }
 //

@@ -358,7 +358,6 @@ public class ResidenceRaid {
 	    @Override
 	    public void run() {
 		if (!isUnderRaid() && !isInPreRaid()) {
-		    Debug.D("canceling bossbar " + schedBossBarId);
 		    Bukkit.getServer().getScheduler().cancelTask(schedBossBarId);
 		    return;
 		}

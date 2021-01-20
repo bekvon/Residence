@@ -162,7 +162,7 @@ public class Residence extends JavaPlugin {
     protected ResidenceRaidListener slistener;
 
     protected ResidenceCommandListener commandManager;
-
+ 
     protected BossBarManager BossBarManager;
 
     protected SpigotListener spigotlistener;

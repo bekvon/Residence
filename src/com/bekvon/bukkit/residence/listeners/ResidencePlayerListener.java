@@ -1572,6 +1572,25 @@ public class ResidencePlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerInteractAtArmoStand(PlayerInteractEntityEvent event) {
+
+	Player player = event.getPlayer();
+	if (Residence.getInstance().isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getRightClicked();
+	if (!Residence.getInstance().getNms().isArmorStandEntity(ent.getType()))
+	    return;
+
+	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
+
+	if (!perms.playerHas(player, Flags.nametag, FlagCombo.OnlyFalse)) {
+	    event.setCancelled(true);
+	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.nametag);
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerItemFrameInteract(PlayerInteractEntityEvent event) {
 	// Disabling listener if flag disabled globally
 	if (!Flags.container.isGlobalyEnabled())
@@ -1852,7 +1871,7 @@ public class ResidencePlayerListener implements Listener {
 
 	ClaimedResidence res = event.getTo();
 	ClaimedResidence ResOld = event.getFrom();
-	
+
 	Player player = event.getPlayer();
 	if (player == null)
 	    return;
@@ -2249,9 +2268,9 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (event.getPlayer().hasMetadata("NPC"))
 	    return;
-	
+
 	currentRes.put(event.getPlayer().getUniqueId(), toRes);
-	
+
 	ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(fromRes, toRes, event.getPlayer());
 	plugin.getServ().getPluginManager().callEvent(chgEvent);
     }
