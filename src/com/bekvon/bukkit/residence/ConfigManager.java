@@ -133,7 +133,7 @@ public class ConfigManager {
     private int VisualizerSidesCap;
     protected boolean flagsInherit;
     protected boolean ignoreGroupedFlagAcess;
-    protected ChatColor chatColor;
+    protected CMIChatColor chatColor;
     protected boolean chatEnable;
     private ELMessageType EnterLeaveMessageType;
 //    protected boolean actionBar;
@@ -1028,9 +1028,9 @@ public class ConfigManager {
 
 	c.addComment("Global.ResidenceChatColor", "Color of residence chat.");
 	try {
-	    chatColor = ChatColor.valueOf(c.get("Global.ResidenceChatColor", "DARK_PURPLE"));
+	    chatColor = CMIChatColor.getColor((c.get("Global.ResidenceChatColor", "DARK_PURPLE")));
 	} catch (Exception ex) {
-	    chatColor = ChatColor.DARK_PURPLE;
+	    chatColor = CMIChatColor.DARK_PURPLE;
 	}
 
 	c.addComment("Global.ResidenceChatPrefixLenght", "Max lenght of residence chat prefix including color codes");
@@ -1740,7 +1740,7 @@ public class ConfigManager {
 	return ActionBarOnSelection;
     }
 
-    public ChatColor getChatColor() {
+    public CMIChatColor getChatColor() {
 	return chatColor;
     }
 

@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.Zrips.CMI.Modules.Logs.CMIDebug;
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
@@ -104,18 +105,24 @@ public class rc implements cmd {
 
 		String posibleColor = args[1];
 
-		if (!posibleColor.contains("&"))
+		if (posibleColor.length() == 1 && !posibleColor.contains("&"))
 		    posibleColor = "&" + posibleColor;
 
-		if (posibleColor.length() != 2 || CMIChatColor.stripColor(CMIChatColor.translate(posibleColor)).length() != 0) {
+		CMIChatColor color = CMIChatColor.getColor(posibleColor);
+
+		if (color == null && posibleColor.length() > 2 && !posibleColor.startsWith(CMIChatColor.colorCodePrefix) && !posibleColor.endsWith(CMIChatColor.colorCodeSuffix))
+		    posibleColor = CMIChatColor.colorCodePrefix + posibleColor + CMIChatColor.colorCodeSuffix;
+ 
+		color = CMIChatColor.getColor(posibleColor);
+
+		if (color == null) {
 		    plugin.msg(player, lm.Chat_InvalidColor);
 		    return true;
 		}
 
-		ChatColor color = ChatColor.getByChar(posibleColor.replace("&", ""));
 		res.setChannelColor(color);
 		chat.setChannelColor(color);
-		plugin.msg(player, lm.Chat_ChangedColor, color.name());
+		plugin.msg(player, lm.Chat_ChangedColor, color.getName());
 		return true;
 	    } else if (args[0].equalsIgnoreCase("setprefix")) {
 		ChatChannel chat = plugin.getChatManager().getPlayerChannel(pname);

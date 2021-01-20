@@ -1,10 +1,10 @@
 package com.bekvon.bukkit.residence.event;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class ResidenceChatEvent extends CancellableResidencePlayerEvent {
 
@@ -20,10 +20,10 @@ public class ResidenceChatEvent extends CancellableResidencePlayerEvent {
     }
 
     protected String message;
-    ChatColor color = ChatColor.WHITE;
+    CMIChatColor color = CMIChatColor.WHITE;
     private String prefix = "";
 
-    public ResidenceChatEvent(ClaimedResidence resref, Player player, String prefix, String message, ChatColor color) {
+    public ResidenceChatEvent(ClaimedResidence resref, Player player, String prefix, String message, CMIChatColor color) {
 	super("RESIDENCE_CHAT_EVENT", resref, player);
 	this.message = message;
 	this.prefix = prefix;
@@ -46,11 +46,11 @@ public class ResidenceChatEvent extends CancellableResidencePlayerEvent {
 	message = newmessage;
     }
 
-    public ChatColor getColor() {
+    public CMIChatColor getColor() {
 	return color;
     }
 
-    public void setColor(ChatColor c) {
+    public void setColor(CMIChatColor c) {
 	color = c;
     }
 }

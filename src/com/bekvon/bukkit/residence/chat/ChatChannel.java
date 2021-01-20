@@ -1,24 +1,24 @@
 package com.bekvon.bukkit.residence.chat;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.event.ResidenceChatEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.event.ResidenceChatEvent;
 
 public class ChatChannel {
 
     protected String channelName;
     protected List<String> members;
     protected String ChatPrefix = "";
-    protected ChatColor ChannelColor = ChatColor.WHITE;
+    protected CMIChatColor ChannelColor = CMIChatColor.WHITE;
 
-    public ChatChannel(String channelName, String ChatPrefix, ChatColor chatColor) {
+    public ChatChannel(String channelName, String ChatPrefix, CMIChatColor chatColor) {
 	this.channelName = channelName;
 	this.ChatPrefix = ChatPrefix;
 	this.ChannelColor = chatColor;
@@ -33,7 +33,7 @@ public class ChatChannel {
 	this.ChatPrefix = ChatPrefix;
     }
 
-    public void setChannelColor(ChatColor ChannelColor) {
+    public void setChannelColor(CMIChatColor ChannelColor) {
 	this.ChannelColor = ChannelColor;
     }
 

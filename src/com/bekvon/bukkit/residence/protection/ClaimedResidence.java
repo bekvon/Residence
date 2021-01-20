@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.cmiLib.TitleMessageManager;
@@ -71,7 +72,7 @@ public class ClaimedResidence {
     protected String leaveMessage;
     protected String ShopDesc = null;
     protected String ChatPrefix = "";
-    protected ChatColor ChannelColor = ChatColor.WHITE;
+    protected CMIChatColor ChannelColor = CMIChatColor.WHITE;
     protected ResidenceItemList ignorelist;
     protected ResidenceItemList blacklist;
     protected boolean mainRes = false;
@@ -1525,9 +1526,9 @@ public class ClaimedResidence {
 
 	if (!ChatPrefix.equals(""))
 	    root.put("ChatPrefix", ChatPrefix);
-	if (!ChannelColor.name().equals(plugin.getConfigManager().getChatColor().name())
-	    && !ChannelColor.name().equals("WHITE")) {
-	    root.put("ChannelColor", ChannelColor.name());
+	if (!ChannelColor.getCleanName().equals(plugin.getConfigManager().getChatColor().getName())
+	    && !ChannelColor.getName().equals("WHITE")) {
+	    root.put("ChannelColor", ChannelColor.getName());
 	}
 
 	Map<String, Object> map = blacklist.save();
@@ -1768,7 +1769,7 @@ public class ClaimedResidence {
 	    res.ChatPrefix = (String) root.get("ChatPrefix");
 
 	if (root.containsKey("ChannelColor"))
-	    res.ChannelColor = ChatColor.valueOf((String) root.get("ChannelColor"));
+	    res.ChannelColor = CMIChatColor.getColor((String) root.get("ChannelColor"));
 	else {
 	    res.ChannelColor = plugin.getConfigManager().getChatColor();
 	}
@@ -1933,7 +1934,7 @@ public class ClaimedResidence {
 	return this.ChatPrefix == null ? "" : this.ChatPrefix;
     }
 
-    public void setChannelColor(ChatColor ChannelColor) {
+    public void setChannelColor(CMIChatColor ChannelColor) {
 	this.ChannelColor = ChannelColor;
     }
 
@@ -1941,7 +1942,7 @@ public class ClaimedResidence {
 	return plugin.getChatManager().getChannel(this.getName());
     }
 
-    public ChatColor getChannelColor() {
+    public CMIChatColor getChannelColor() {
 	return ChannelColor;
     }
 
