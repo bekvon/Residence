@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -406,9 +407,14 @@ public class ConfigManager {
 //	    conf.crea.createSection("Global.CompleteDisable");
 
 	if (!conf.isList("Global.TotalFlagDisabling"))
-	    conf.set("Global.TotalFlagDisabling", Arrays.asList("Completely", "Disabled", "Particular", "Flags"));
+	    conf.set("Global.TotalFlagDisabling", Arrays.asList("Completely", "Disable", "Particular", "Flags"));
 
+	TreeMap<String, Flags> sorted = new TreeMap<>(); 
 	for (Flags fl : Flags.values()) {
+	    sorted.put(fl.getName(), fl);
+	}
+	
+	for (Flags fl : sorted.values()) {
 	    if (conf.isBoolean("Global.FlagPermission." + fl))
 		continue;
 	    conf.createSection("Global.FlagPermission." + fl);
@@ -428,7 +434,7 @@ public class ConfigManager {
 
 	ConfigurationSection guiSection = conf.getConfigurationSection("Global.FlagGui");
 
-	for (Flags fl : Flags.values()) {
+	for (Flags fl : sorted.values()) {
 	    guiSection.set(fl.toString(), guiSection.get(fl.toString(), fl.getIcon().toString()));
 	}
 
