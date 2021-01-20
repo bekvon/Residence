@@ -97,6 +97,11 @@ public class ResidenceCommandListener implements CommandExecutor {
 		sendUsage(sender, command.getName());
 		return true;
 	    }
+	    
+	    if (args.length == 1 && args[0].equals("?")) {
+		return commandHelp(new String[]{"rc", "?"}, false, sender, command);
+	    }
+	    
 	    boolean respond = cmdClass.perform(Residence.getInstance(), sender, reduceArgs(args), false);
 	    if (!respond)
 		sendUsage(sender, command.getName());

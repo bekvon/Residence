@@ -914,6 +914,7 @@ public class ResidencePlayerListener implements Listener {
 
 	plugin.msg(player, lm.General_NoSpawn);
 	event.setRespawnLocation(loc);
+	
     }
 
     private boolean isContainer(Material mat, Block block) {
