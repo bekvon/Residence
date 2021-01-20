@@ -995,7 +995,7 @@ public class ResidenceEntityListener implements Listener {
 	if (ent.getType() != EntityType.WITHER)
 	    return;
 
-	if (!plugin.getPermsByLoc(ent.getLocation()).has(Flags.witherdestruction, FlagCombo.OnlyFalse))
+	if (!plugin.getPermsByLoc(event.getBlock().getLocation()).has(Flags.witherdestruction, FlagCombo.OnlyFalse))
 	    return;
 
 	event.setCancelled(true);
