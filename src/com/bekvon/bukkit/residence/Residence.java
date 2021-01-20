@@ -162,7 +162,7 @@ public class Residence extends JavaPlugin {
     protected ResidenceRaidListener slistener;
 
     protected ResidenceCommandListener commandManager;
- 
+
     protected BossBarManager BossBarManager;
 
     protected SpigotListener spigotlistener;
@@ -712,11 +712,11 @@ public class Residence extends JavaPlugin {
 		setKingdoms();
 
 		PluginManager pm = getServer().getPluginManager();
-		
+
 		blistener = new ResidenceBlockListener(this);
 		plistener = new ResidencePlayerListener(this);
 		if (Version.isCurrentEqualOrHigher(Version.v1_14_R1))
-		     pm.registerEvents(new ResidencePlayerListener1_14(this), this);
+		    pm.registerEvents(new ResidencePlayerListener1_14(this), this);
 		if (Version.isCurrentEqualOrHigher(Version.v1_15_R1))
 		    pm.registerEvents(new ResidencePlayerListener1_15(this), this);
 		if (Version.isCurrentEqualOrHigher(Version.v1_16_R1))
@@ -727,7 +727,6 @@ public class Residence extends JavaPlugin {
 
 		shlistener = new ShopListener(this);
 		spigotlistener = new SpigotListener();
-
 
 		pm.registerEvents(blistener, this);
 		pm.registerEvents(plistener, this);
@@ -1372,9 +1371,12 @@ public class Residence extends JavaPlugin {
 	try {
 	    File worldFolder = new File(saveFolder, "Worlds");
 	    if (!saveFolder.isDirectory()) {
-		this.getLogger().warning("Save directory does not exist...");
-		this.getLogger().warning("Please restart server");
-		return true;
+		saveFolder.mkdir();
+		if (!saveFolder.isDirectory()) {
+		    this.getLogger().warning("Save directory does not exist...");
+		    this.getLogger().warning("Please restart server");
+		    return true;
+		}
 	    }
 	    long time;
 	    YMLSaveHelper yml;
