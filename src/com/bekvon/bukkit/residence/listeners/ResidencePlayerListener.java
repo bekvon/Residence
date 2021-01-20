@@ -1228,8 +1228,8 @@ public class ResidencePlayerListener implements Listener {
 		CMIMaterial btype = CMIMaterial.get(block);
 		if (heldItem.equals(CMIMaterial.BONE_MEAL) && (btype == CMIMaterial.GRASS_BLOCK || btype == CMIMaterial.GRASS || btype.isSapling()) ||
 		    heldItem == CMIMaterial.COCOA_BEANS && blockM == CMIMaterial.JUNGLE_WOOD) {
-		    perms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
-		    if (!perms.playerHas(player, Flags.build, true)) {
+		    FlagPermissions tperms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
+		    if (!tperms.playerHas(player, Flags.build, true)) {
 			plugin.msg(player, lm.Flag_Deny, Flags.build);
 			event.setCancelled(true);
 			return;
@@ -1237,15 +1237,14 @@ public class ResidencePlayerListener implements Listener {
 		}
 	    }
 	    if (heldItem.equals(CMIMaterial.ARMOR_STAND) || heldItem.isBoat()) {
-		perms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
-		if (!perms.playerHas(player, Flags.build, true)) {
+		FlagPermissions tperms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
+		if (!tperms.playerHas(player, Flags.build, true)) {
 		    plugin.msg(player, lm.Flag_Deny, Flags.build);
 		    event.setCancelled(true);
 		    return;
 		}
 	    }
 	    if (placingMinecart(block, iih)) {
-		perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 		if (!perms.playerHas(player, Flags.build, true)) {
 		    plugin.msg(player, lm.Flag_Deny, Flags.build);
 		    event.setCancelled(true);
@@ -1274,14 +1273,13 @@ public class ResidencePlayerListener implements Listener {
 
 		Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
 		if (result != null) {
+
 		    main: if (!perms.playerHas(player, result, hasuse)) {
 
 			if (hasuse || result.equals(Flags.container)) {
 
-			    if (res != null && res.getRaid().isUnderRaid()) {
-				if (res.getRaid().isAttacker(player)) {
-				    break main;
-				}
+			    if (res != null && res.getRaid().isUnderRaid() && res.getRaid().isAttacker(player)) {
+				break main;
 			    }
 			    if (!ResPerm.bypass_container.hasPermission(player, 10000L)) {
 				event.setCancelled(true);
@@ -1292,10 +1290,8 @@ public class ResidencePlayerListener implements Listener {
 
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-			    if (res != null && res.getRaid().isUnderRaid()) {
-				if (res.getRaid().isAttacker(player)) {
-				    break main;
-				}
+			    if (res != null && res.getRaid().isUnderRaid() && res.getRaid().isAttacker(player)) {
+				break main;
 			    }
 
 			    switch (result) {
@@ -1315,10 +1311,8 @@ public class ResidencePlayerListener implements Listener {
 
 			if (isCanUseEntity_BothClick(mat, block)) {
 
-			    if (res != null && res.getRaid().isUnderRaid()) {
-				if (res.getRaid().isAttacker(player)) {
-				    break main;
-				}
+			    if (res != null && res.getRaid().isUnderRaid() && res.getRaid().isAttacker(player)) {
+				break main;
 			    }
 			    event.setCancelled(true);
 			    plugin.msg(player, lm.Flag_Deny, result);
