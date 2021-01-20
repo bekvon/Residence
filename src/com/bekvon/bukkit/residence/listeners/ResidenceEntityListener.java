@@ -1536,7 +1536,9 @@ public class ResidenceEntityListener implements Listener {
 		    if (project.getFireTicks() > 0)
 			isOnFire = true;
 
-		    attacker = (Player) ((Projectile) damager).getShooter();
+		    ProjectileSource shooter = ((Projectile) damager).getShooter();
+		    if (shooter instanceof Player)
+			attacker = (Player) shooter;
 		} else if (damager instanceof Firework) {
 		    List<MetadataValue> meta = damager.getMetadata(CrossbowShooter);
 		    if (meta != null && !meta.isEmpty()) {
