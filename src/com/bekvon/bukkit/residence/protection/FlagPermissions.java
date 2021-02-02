@@ -44,7 +44,7 @@ public class FlagPermissions {
     protected Map<UUID, String> cachedPlayerNameUUIDs = new ConcurrentHashMap<UUID, String>();
     protected Map<String, Map<String, Boolean>> playerFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
     protected Map<String, Map<String, Boolean>> groupFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
-    protected Map<String, Boolean> cuboidFlags = new ConcurrentHashMap<String, Boolean>();
+    public Map<String, Boolean> cuboidFlags = new ConcurrentHashMap<String, Boolean>();
     protected FlagPermissions parent;
 
     public FlagPermissions() {

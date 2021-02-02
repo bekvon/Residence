@@ -245,6 +245,7 @@ public class ConfigManager {
     public boolean DynMapUse;
 
     public boolean DynMapShowFlags;
+    public boolean DynMapExcludeDefaultFlags;
     public boolean DynMapHideHidden;
     public boolean DynMapLayer3dRegions;
     public int DynMapLayerSubZoneDepth;
@@ -1244,6 +1245,8 @@ public class ConfigManager {
 	DynMapHideByDefault = c.get("DynMap.HideByDefault", false);
 	c.addComment("DynMap.ShowFlags", "Shows or hides residence flags");
 	DynMapShowFlags = c.get("DynMap.ShowFlags", true);
+	c.addComment("DynMap.ExcludeDefaultFlags", "When enabled default flags will not be included in residence overview");
+	DynMapExcludeDefaultFlags = c.get("DynMap.ExcludeDefaultFlags", true);
 	c.addComment("DynMap.HideHidden", "If set true, residence with hidden flag set to true will be hidden from dynmap");
 	DynMapHideHidden = c.get("DynMap.HideHidden", true);
 

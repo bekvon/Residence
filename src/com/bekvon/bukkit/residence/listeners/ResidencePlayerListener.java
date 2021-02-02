@@ -658,7 +658,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (white != 0 && white >= black || black == 0)
 	    return;
-
+	Debug.D("cancel command");
 	event.setCancelled(true);
 	plugin.msg(player, lm.Residence_FlagDeny, Flags.command, res.getName());
 
@@ -2037,7 +2037,7 @@ public class ResidencePlayerListener implements Listener {
 	    this.lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
 
 	    boolean handled = handleNewLocation(player, locto, true);
-	    if (!handled) { 
+	    if (!handled) {
 		event.getVehicle().teleport(event.getFrom());
 	    }
 

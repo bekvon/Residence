@@ -20,6 +20,7 @@ import com.bekvon.bukkit.residence.economy.TransactionManager;
 import com.bekvon.bukkit.residence.economy.rent.RentManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
@@ -81,8 +82,27 @@ public class DynMapManager {
 	    "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:140%;font-weight:bold;\">%regionname%</span><br /> "
 		+ CMIChatColor.stripColor(plugin.msg(lm.General_Owner, "")) + "<span style=\"font-weight:bold;\">%playerowners%</span><br />";
 
-	if (plugin.getConfigManager().DynMapShowFlags)
-	    v += CMIChatColor.stripColor(plugin.msg(lm.General_ResidenceFlags, "")) + "<br /><span style=\"font-weight:bold;\">%flags%</span>";
+	if (plugin.getConfigManager().DynMapShowFlags) {
+
+	    ResidencePermissions residencePermissions = res.getPermissions();
+	    FlagPermissions gRD = Residence.getInstance().getConfigManager().getGlobalResidenceDefaultFlags();
+	    
+	    StringBuilder flgs = new StringBuilder();	    
+	    for (Entry<String, Boolean> one : residencePermissions.getFlags().entrySet()) {
+		if (Residence.getInstance().getConfigManager().DynMapExcludeDefaultFlags && gRD.isSet(one.getKey()) && gRD.getFlags().get(one.getKey()).equals(one.getValue())) {
+		    continue;
+		}
+		if (!flgs.toString().isEmpty())
+		    flgs.append("<br/>");
+		flgs.append(one.getKey() + ": " + one.getValue());
+	    }
+
+	    if (!flgs.toString().isEmpty()) {
+		v += CMIChatColor.stripColor(plugin.msg(lm.General_ResidenceFlags, "")) + "<br /><span style=\"font-weight:bold;\">%flags%</span>";
+		v = v.replace("%flags%", flgs.toString());
+	    }
+	}
+
 	v += "</div></div>";
 
 	if (plugin.getRentManager().isForRent(res.getName()))
@@ -108,29 +128,7 @@ public class DynMapManager {
 	v = v.replace("%entermsg%", (m != null) ? m : "");
 	m = res.getLeaveMessage();
 	v = v.replace("%leavemsg%", (m != null) ? m : "");
-	ResidencePermissions p = res.getPermissions();
-	String flgs = "";
 
-	// remake
-	Map<String, Boolean> all = plugin.getPermissionManager().getAllFlags().getFlags();
-	String[] FLAGS = new String[all.size()];
-	int ii = 0;
-	for (Entry<String, Boolean> one : all.entrySet()) {
-	    FLAGS[ii] = one.getKey();
-	    ii++;
-	}
-
-	for (int i = 0; i < FLAGS.length; i++) {
-	    if (p.isSet(FLAGS[i])) {
-		if (flgs.length() > 0)
-		    flgs += "<br/>";
-		boolean f = p.has(FLAGS[i], false);
-		flgs += FLAGS[i] + ": " + f;
-		v = v.replace("%flag." + FLAGS[i] + "%", Boolean.toString(f));
-	    } else
-		v = v.replace("%flag." + FLAGS[i] + "%", "");
-	}
-	v = v.replace("%flags%", flgs);
 	RentManager rentmgr = plugin.getRentManager();
 	TransactionManager transmgr = plugin.getTransactionManager();
 
@@ -313,7 +311,7 @@ public class DynMapManager {
 	if (set != null) {
 	    set.deleteMarkerSet();
 	    set = null;
-	} 
+	}
 	set = markerapi.getMarkerSet("residence.markerset");
 	if (set == null)
 	    set = markerapi.createMarkerSet("residence.markerset", "Residence", null, false);
