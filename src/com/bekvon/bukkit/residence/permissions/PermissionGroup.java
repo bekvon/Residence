@@ -10,6 +10,8 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.utils.Debug;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -160,13 +162,19 @@ public class PermissionGroup {
 
 	if (limits.contains("Residence.SubzoneMaxEastWest"))
 	    Subzonexmax = limits.getInt("Residence.SubzoneMaxEastWest", getXmax());
+	else
+	    Subzonexmax = getXmax();	
 	Subzonexmax = getXmax() < Subzonexmax ? getXmax() : Subzonexmax;
+	
 	if (limits.contains("Residence.SubzoneMinEastWest"))
 	    Subzonexmin = limits.getInt("Residence.SubzoneMinEastWest", 0);
 	Subzonexmin = Subzonexmin > Subzonexmax ? Subzonexmax : Subzonexmin;
 
 	if (limits.contains("Residence.SubzoneMaxUpDown"))
 	    Subzoneymax = limits.getInt("Residence.SubzoneMaxUpDown", ymax);
+	else
+	    Subzoneymax = getYmax();
+	
 	Subzoneymax = ymax < Subzoneymax ? ymax : Subzoneymax;
 	if (limits.contains("Residence.SubzoneMinUpDown"))
 	    Subzoneymin = limits.getInt("Residence.SubzoneMinUpDown", 0);
@@ -174,6 +182,8 @@ public class PermissionGroup {
 
 	if (limits.contains("Residence.SubzoneMaxNorthSouth"))
 	    Subzonezmax = limits.getInt("Residence.SubzoneMaxNorthSouth", zmax);
+	else
+	    Subzonezmax = getZmax();
 	Subzonezmax = zmax < Subzonezmax ? zmax : Subzonezmax;
 	if (limits.contains("Residence.SubzoneMinNorthSouth"))
 	    Subzonezmin = limits.getInt("Residence.SubzoneMinNorthSouth", 0);
