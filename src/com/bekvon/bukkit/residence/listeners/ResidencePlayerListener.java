@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +43,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -914,7 +916,7 @@ public class ResidencePlayerListener implements Listener {
 
 	plugin.msg(player, lm.General_NoSpawn);
 	event.setRespawnLocation(loc);
-	
+
     }
 
     private boolean isContainer(Material mat, Block block) {
@@ -1992,6 +1994,60 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.msg(player, lm.General_TeleportCanceled);
 	    if (plugin.getConfigManager().isTeleportTitleMessage())
 		TitleMessageManager.send(player, "", "");
+	}
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerMoveInVehicle(VehicleMoveEvent event) {
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getVehicle().getWorld()))
+	    return;
+
+	if (event.getVehicle().getPassenger() == null)
+	    return;
+
+	List<Entity> ent = new ArrayList<Entity>();
+
+	if (Version.isCurrentEqualOrHigher(Version.v1_9_R1))
+	    ent.addAll(event.getVehicle().getPassengers());
+	else
+	    ent.add(event.getVehicle().getPassenger());
+
+	for (Entity one : ent) {
+
+	    if (!(one instanceof Player))
+		continue;
+
+	    Player player = (Player) one;
+	    if (player == null)
+		continue;
+
+	    if (player.hasMetadata("NPC"))
+		continue;
+
+	    Location locfrom = event.getFrom();
+	    Location locto = event.getTo();
+	    if (locfrom.getBlockX() == locto.getBlockX() && locfrom.getBlockY() == locto.getBlockY() && locfrom.getBlockZ() == locto.getBlockZ())
+		continue;
+
+	    Long last = lastUpdate.get(player.getUniqueId());
+	    if (last != null && System.currentTimeMillis() - last < plugin.getConfigManager().getMinMoveUpdateInterval())
+		continue;
+
+	    this.lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
+
+	    boolean handled = handleNewLocation(player, locto, true);
+	    if (!handled) { 
+		event.getVehicle().teleport(event.getFrom());
+	    }
+
+	    if (!plugin.getTeleportDelayMap().isEmpty() && plugin.getConfigManager().getTeleportDelay() > 0 && plugin.getTeleportDelayMap().contains(player
+		.getName())) {
+		plugin.getTeleportDelayMap().remove(player.getName());
+		plugin.msg(player, lm.General_TeleportCanceled);
+		if (plugin.getConfigManager().isTeleportTitleMessage())
+		    TitleMessageManager.send(player, "", "");
+	    }
 	}
     }
 
