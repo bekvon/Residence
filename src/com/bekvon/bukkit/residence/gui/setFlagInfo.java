@@ -311,30 +311,34 @@ public class setFlagInfo {
 	else
 	    state = FlagState.FALSE;
 
-	ItemStack MiscInfo = Residence.getInstance().getConfigManager().getGuiBottonStates(state).clone();
+	ItemStack miscInfo = Residence.getInstance().getConfigManager().getGuiBottonStates(state).clone();
 
 	FlagData flagData = Residence.getInstance().getFlagUtilManager().getFlagData();
 
 	if (flagData.contains(flagName))
-	    MiscInfo = flagData.getItem(flagName).clone();
+	    miscInfo = flagData.getItem(flagName).clone();
 
 	if (state == FlagState.TRUE) {
-	    ItemMeta im = MiscInfo.getItemMeta();
-	    im.addEnchant(Enchantment.LUCK, 1, true);
-	    MiscInfo.setItemMeta(im);
+	    ItemMeta im = miscInfo.getItemMeta();
+	    if (im != null) {
+		im.addEnchant(Enchantment.LUCK, 1, true);
+		miscInfo.setItemMeta(im);
+	    }
 	} else
-	    MiscInfo.removeEnchantment(Enchantment.LUCK);
+	    miscInfo.removeEnchantment(Enchantment.LUCK);
 
-	ItemMeta MiscInfoMeta = MiscInfo.getItemMeta();
 
 	Flags flag = Flags.getFlag(flagName);
 	if (flag != null)
 	    flagName = flag.getName();
 	if (flagName == null)
 	    flagName = "Unknown";
+	
+	ItemMeta MiscInfoMeta = miscInfo.getItemMeta();
+	
 	// Can it be null?
 	if (MiscInfoMeta == null)
-	    return MiscInfo;
+	    return miscInfo;
 	MiscInfoMeta.setDisplayName(ChatColor.GREEN + flagName);
 	List<String> lore = new ArrayList<String>();
 	String variable = "";
@@ -350,14 +354,14 @@ public class setFlagInfo {
 	    break;
 	}
 	lore.add(Residence.getInstance().msg(lm.General_FlagState, variable));
-		    
+
 	if (description.containsKey(flag))
 	    lore.addAll(description.get(flag));
 	lore.addAll(Residence.getInstance().msgL(lm.Gui_Actions));
 	MiscInfoMeta.setLore(lore);
-	MiscInfo.setItemMeta(MiscInfoMeta);
+	miscInfo.setItemMeta(MiscInfoMeta);
 
-	return MiscInfo;
+	return miscInfo;
     }
 
     public List<CMIGuiButton> getButtons() {
