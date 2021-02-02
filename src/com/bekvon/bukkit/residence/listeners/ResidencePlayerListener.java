@@ -1581,7 +1581,7 @@ public class ResidencePlayerListener implements Listener {
 
 	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
 
-	if (!perms.playerHas(player, Flags.nametag, FlagCombo.OnlyFalse)) {
+	if (perms.playerHas(player, Flags.nametag, FlagCombo.OnlyFalse)) {
 	    event.setCancelled(true);
 	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.nametag);
 	}
