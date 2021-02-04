@@ -538,6 +538,9 @@ public class FlagPermissions {
 	if (player == null)
 	    return false;
 
+	if (!flag.isGlobalyEnabled())
+	    return true;
+	
 	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup(world);
 	return this.playerCheck(player, flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));

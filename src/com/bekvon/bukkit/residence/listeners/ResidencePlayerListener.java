@@ -891,6 +891,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerSpawn(PlayerRespawnEvent event) {
+
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getRespawnLocation().getWorld()))
 	    return;
@@ -1873,90 +1874,107 @@ public class ResidencePlayerListener implements Listener {
 	if (player == null)
 	    return;
 	if (res == null && ResOld != null) {
-	    if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+	    if (Flags.night.isGlobalyEnabled() && ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || Flags.day.isGlobalyEnabled() && ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		player.resetPlayerTime();
 
-	    if (ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+	    if (Flags.wspeed1.isGlobalyEnabled() && ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || Flags.wspeed2.isGlobalyEnabled() && ResOld.getPermissions().has(Flags.wspeed2,
+		FlagCombo.OnlyTrue))
 		player.setWalkSpeed(0.2F);
 
-	    if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+	    if (Flags.sun.isGlobalyEnabled() && ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || Flags.rain.isGlobalyEnabled() && ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		player.resetPlayerWeather();
 
-	    if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
+	    if (Flags.fly.isGlobalyEnabled() && ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, false);
 
-	    if (Version.isCurrentEqualOrHigher(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+	    if (Flags.glow.isGlobalyEnabled() && Version.isCurrentEqualOrHigher(Version.v1_9_R1) && ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		player.setGlowing(false);
 	}
 
 	if (res != null && ResOld != null && !res.equals(ResOld)) {
-	    if (Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
-		if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
-		    player.setGlowing(true);
-		else if (ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
-		    player.setGlowing(false);
+	    if (Flags.glow.isGlobalyEnabled()) {
+		if (Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
+		    if (res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+			player.setGlowing(true);
+		    else if (ResOld.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+			player.setGlowing(false);
+		}
 	    }
 
-	    if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
-		fly(player, true);
-	    else if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && !res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
-		fly(player, false);
+	    if (Flags.fly.isGlobalyEnabled()) {
+		if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
+		    fly(player, true);
+		else if (ResOld.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && !res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
+		    fly(player, false);
+	    }
 
-	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
-		player.setPlayerTime(6000L, false);
-	    else if (ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
-		player.resetPlayerTime();
+	    if (Flags.day.isGlobalyEnabled()) {
+		if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+		    player.setPlayerTime(6000L, false);
+		else if (ResOld.getPermissions().has(Flags.day, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+		    player.resetPlayerTime();
+	    }
 
-	    if (res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
-		player.setPlayerTime(14000L, false);
-	    else if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
-		player.resetPlayerTime();
+	    if (Flags.night.isGlobalyEnabled()) {
+		if (res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+		    player.setPlayerTime(14000L, false);
+		else if (ResOld.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+		    player.resetPlayerTime();
+	    }
 
-	    if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
-		player.setWalkSpeed(plugin.getConfigManager().getWalkSpeed1().floatValue());
-	    else if (ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
-		player.setWalkSpeed(0.2F);
+	    if (Flags.wspeed1.isGlobalyEnabled()) {
+		if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
+		    player.setWalkSpeed(plugin.getConfigManager().getWalkSpeed1().floatValue());
+		else if (ResOld.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
+		    player.setWalkSpeed(0.2F);
+	    }
 
-	    if (res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue)) {
-		player.setWalkSpeed(plugin.getConfigManager().getWalkSpeed2().floatValue());
-	    } else if (ResOld.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
-		player.setWalkSpeed(0.2F);
+	    if (Flags.wspeed2.isGlobalyEnabled()) {
+		if (res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue)) {
+		    player.setWalkSpeed(plugin.getConfigManager().getWalkSpeed2().floatValue());
+		} else if (ResOld.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+		    player.setWalkSpeed(0.2F);
+	    }
 
-	    if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue)) {
-		player.setPlayerWeather(WeatherType.CLEAR);
-	    } else if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue))
-		player.resetPlayerWeather();
+	    if (Flags.sun.isGlobalyEnabled()) {
+		if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue)) {
+		    player.setPlayerWeather(WeatherType.CLEAR);
+		} else if (ResOld.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue))
+		    player.resetPlayerWeather();
+	    }
 
-	    if (res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue)) {
-		player.setPlayerWeather(WeatherType.DOWNFALL);
-	    } else if (ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
-		player.resetPlayerWeather();
+	    if (Flags.rain.isGlobalyEnabled()) {
+		if (res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue)) {
+		    player.setPlayerWeather(WeatherType.DOWNFALL);
+		} else if (ResOld.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue) && !res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+		    player.resetPlayerWeather();
+	    }
 	}
 
 	if (res != null && ResOld == null) {
-	    if (Version.isCurrentEqualOrHigher(Version.v1_9_R1) && res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue)) {
+	    if (Flags.glow.isGlobalyEnabled() && Version.isCurrentEqualOrHigher(Version.v1_9_R1) && res.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue)) {
 		player.setGlowing(true);
 	    }
 
-	    if (res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
+	    if (Flags.fly.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
 		fly(player, true);
 
-	    if (res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+	    if (Flags.day.isGlobalyEnabled() && res.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		player.setPlayerTime(6000L, false);
 
-	    if (res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+	    if (Flags.night.isGlobalyEnabled() && res.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
 		player.setPlayerTime(14000L, false);
 
-	    if (res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
+	    if (Flags.wspeed1.isGlobalyEnabled() && res.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue))
 		player.setWalkSpeed(plugin.getConfigManager().getWalkSpeed1().floatValue());
 
-	    if (res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
+	    if (Flags.wspeed2.isGlobalyEnabled() && res.getPermissions().has(Flags.wspeed2, FlagCombo.OnlyTrue))
 		player.setWalkSpeed(plugin.getConfigManager().getWalkSpeed2().floatValue());
 
-	    if (res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue))
+	    if (Flags.sun.isGlobalyEnabled() && res.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue))
 		player.setPlayerWeather(WeatherType.CLEAR);
 
-	    if (res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
+	    if (Flags.rain.isGlobalyEnabled() && res.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		player.setPlayerWeather(WeatherType.DOWNFALL);
 	}
     }
@@ -2167,7 +2185,7 @@ public class ResidencePlayerListener implements Listener {
 
 		ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
 		boolean teleported = false;
-		if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
+		if (preRes != null && Flags.tp.isGlobalyEnabled() && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.closeInventory();
 		    teleported = teleport(player, newLoc);
@@ -2203,7 +2221,8 @@ public class ResidencePlayerListener implements Listener {
 		return teleported;
 	    }
 
-	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move.hasPermission(player, 10000L)) {
+	    if (Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move
+		.hasPermission(player, 10000L)) {
 
 		Location lastLoc = lastOutsideLoc.get(uuid);
 

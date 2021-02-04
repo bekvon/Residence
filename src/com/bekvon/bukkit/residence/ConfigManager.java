@@ -410,11 +410,11 @@ public class ConfigManager {
 	if (!conf.isList("Global.TotalFlagDisabling"))
 	    conf.set("Global.TotalFlagDisabling", Arrays.asList("Completely", "Disable", "Particular", "Flags"));
 
-	TreeMap<String, Flags> sorted = new TreeMap<>(); 
+	TreeMap<String, Flags> sorted = new TreeMap<>();
 	for (Flags fl : Flags.values()) {
 	    sorted.put(fl.getName(), fl);
 	}
-	
+
 	for (Flags fl : sorted.values()) {
 	    if (conf.isBoolean("Global.FlagPermission." + fl))
 		continue;
@@ -1315,10 +1315,16 @@ public class ConfigManager {
 	if (flags.isList("Global.TotalFlagDisabling")) {
 	    List<String> globalDisable = flags.getStringList("Global.TotalFlagDisabling");
 
+	    // Re enabling all of them before loading flags file
+	    for (Flags one : Flags.values()) {
+		one.setGlobalyEnabled(true); 
+	    }
+	    
 	    for (String fl : globalDisable) {
 		Flags flag = Flags.getFlag(fl);
-		if (flag == null)
+		if (flag == null) {
 		    continue;
+		}
 		flag.setGlobalyEnabled(false);
 	    }
 	}

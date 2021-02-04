@@ -429,6 +429,7 @@ public class ResidenceEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onWitherSpawn(CreatureSpawnEvent event) {
+
 	// Disabling listener if flag disabled globally
 	if (!Flags.witherspawn.isGlobalyEnabled())
 	    return;

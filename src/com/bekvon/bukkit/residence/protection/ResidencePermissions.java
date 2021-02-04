@@ -742,8 +742,8 @@ public class ResidencePermissions extends FlagPermissions {
 	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
 	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
-	    
-	    for (String flag : flags) {		
+
+	    for (String flag : flags) {
 		if (this.setFlag(sender, flag, state, resadmin)) {
 		    changed = true;
 		}
