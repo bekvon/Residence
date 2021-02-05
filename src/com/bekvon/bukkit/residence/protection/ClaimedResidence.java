@@ -57,6 +57,7 @@ import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ClaimedResidence {
 
@@ -1288,16 +1289,10 @@ public class ClaimedResidence {
 	boolean isAdmin = plugin.isResAdminOn(reqPlayer);
 
 	if (this.getRaid().isRaidInitialized()) {
-	    if (this.getRaid().isAttacker(targetPlayer)) {
+	    if (this.getRaid().isAttacker(targetPlayer) || this.getRaid().isDefender(targetPlayer) && !ConfigManager.RaidDefenderTeleport || !resadmin) {
 		plugin.msg(reqPlayer, lm.Raid_cantDo);
 		return;
-	    } else if (this.getRaid().isDefender(targetPlayer) && !ConfigManager.RaidDefenderTeleport) {
-		plugin.msg(reqPlayer, lm.Raid_cantDo);
-		return;
-	    } else if (!resadmin) {
-		plugin.msg(reqPlayer, lm.Raid_cantDo);
 	    }
-
 	} else {
 	    if (!resadmin && !isAdmin && !ResPerm.bypass_tp.hasPermission(reqPlayer, 10000L)
 		&& (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer)

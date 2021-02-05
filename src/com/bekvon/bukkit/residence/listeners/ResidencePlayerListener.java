@@ -976,6 +976,7 @@ public class ResidencePlayerListener implements Listener {
 
     public static boolean isEmptyBlock(Block block) {
 	CMIMaterial cb = CMIMaterial.get(block);
+	
 	switch (cb) {
 	case COBWEB:
 	case STRING:
@@ -985,6 +986,7 @@ public class ResidencePlayerListener implements Listener {
 	case TRIPWIRE:
 	case PAINTING:
 	case ITEM_FRAME:
+	case NONE:
 	    return true;
 	default:
 	    break;

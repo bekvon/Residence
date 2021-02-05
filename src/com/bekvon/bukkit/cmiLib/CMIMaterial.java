@@ -1143,7 +1143,7 @@ public enum CMIMaterial {
     WEEPING_VINES_PLANT("Weeping Vines Plant"),
     ZOGLIN_SPAWN_EGG("Zoglin Spawn Egg"),
     ZOMBIFIED_PIGLIN_SPAWN_EGG("Zombified Piglin Spawn Egg"),
-    
+
     // 1.16.2
     PIGLIN_BRUTE_SPAWN_EGG("Piglin Brute Spawn Egg"),
 
@@ -1532,6 +1532,7 @@ public enum CMIMaterial {
 	if (mat == null && Version.isCurrentEqualOrLower(Version.v1_13_R2)) {
 	    mat = get(block.getType().getId(), Version.isCurrentEqualOrHigher(Version.v1_13_R1) ? 0 : data);
 	}
+
 	return mat == null ? CMIMaterial.NONE : mat;
     }
 
