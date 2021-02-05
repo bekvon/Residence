@@ -31,15 +31,13 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class FlagPermissions {
 
     protected static ArrayList<String> validFlags = new ArrayList<>();
     protected static ArrayList<String> validPlayerFlags = new ArrayList<>();
     protected static ArrayList<String> validAreaFlags = new ArrayList<>();
-    protected static HashMap<String, ArrayList<String>> validFlagGroups = new HashMap<>();
+    protected static HashMap<String, Set<String>> validFlagGroups = new HashMap<>();
     final static Map<Material, Flags> matUseFlagList = new EnumMap<>(Material.class);
     protected Map<UUID, String> cachedPlayerNameUUIDs = new ConcurrentHashMap<UUID, String>();
     protected Map<String, Map<String, Boolean>> playerFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
@@ -154,18 +152,18 @@ public class FlagPermissions {
     }
 
     public static void addFlagToFlagGroup(String group, String flag) {
-	if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {
-	    if (!validFlagGroups.containsKey(group)) {
-		validFlagGroups.put(group, new ArrayList<String>());
-	    }
-	    ArrayList<String> flags = validFlagGroups.get(group);
-	    flags.add(flag);
+	Flags f = Flags.getFlag(flag);
+	if (f != null && !f.isGlobalyEnabled()) {
+	    return;
+	}
+	if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {	   
+	    validFlagGroups.computeIfAbsent(group, k -> new HashSet<String>()).add(flag);	    
 	}
     }
 
     public static void removeFlagFromFlagGroup(String group, String flag) {
 	if (validFlagGroups.containsKey(group)) {
-	    ArrayList<String> flags = validFlagGroups.get(group);
+	    Set<String> flags = validFlagGroups.get(group);
 	    flags.remove(flag);
 	    if (flags.isEmpty()) {
 		validFlagGroups.remove(group);
@@ -540,7 +538,7 @@ public class FlagPermissions {
 
 	if (!flag.isGlobalyEnabled())
 	    return true;
-	
+
 	ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup(world);
 	return this.playerCheck(player, flag.toString(), this.groupCheck(group, flag.toString(), this.has(flag, def)));

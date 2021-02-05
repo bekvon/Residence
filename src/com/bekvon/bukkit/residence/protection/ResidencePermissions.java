@@ -740,7 +740,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     public boolean setFlagGroup(CommandSender sender, String flaggroup, FlagState state, boolean resadmin) {
 	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
-	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
+	    Set<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
 
 	    for (String flag : flags) {
@@ -755,7 +755,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     public boolean setFlagGroupOnGroup(Player player, String flaggroup, String group, String state, boolean resadmin) {
 	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
-	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
+	    Set<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
 	    for (String flag : flags) {
 		if (this.setGroupFlag(player, group, flag, state, resadmin)) {
@@ -769,7 +769,7 @@ public class ResidencePermissions extends FlagPermissions {
 
     public boolean setFlagGroupOnPlayer(CommandSender sender, String target, String flaggroup, String state, boolean resadmin) {
 	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
-	    ArrayList<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
+	    Set<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
 	    boolean changed = false;
 	    String flagString = "";
 	    for (String flag : flags) {
