@@ -976,7 +976,7 @@ public class ResidencePlayerListener implements Listener {
 
     public static boolean isEmptyBlock(Block block) {
 	CMIMaterial cb = CMIMaterial.get(block);
-	
+
 	switch (cb) {
 	case COBWEB:
 	case STRING:
@@ -1205,7 +1205,7 @@ public class ResidencePlayerListener implements Listener {
 	if (resadmin)
 	    return;
 
-	if (heldItem.isValidItem() && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
+	if (!heldItem.isNone() && heldItem.isValidItem() && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
@@ -1872,7 +1872,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (Flags.wspeed1.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.wspeed1, FlagCombo.OnlyTrue) || Flags.wspeed2.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.wspeed2,
 		FlagCombo.OnlyTrue)) {
 		player.setWalkSpeed(0.2F);
-	    } 
+	    }
 
 	    if (Flags.sun.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || Flags.rain.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		player.resetPlayerWeather();

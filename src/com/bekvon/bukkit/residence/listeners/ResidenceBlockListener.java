@@ -640,7 +640,7 @@ public class ResidenceBlockListener implements Listener {
 		return false;
 	    }
 	}
-	if (res != null && !res.getItemBlacklist().isAllowed(mat)) {
+	if (!CMIMaterial.get(mat).isNone() && res != null && !res.getItemBlacklist().isAllowed(mat)) {
 	    if (informPlayer)
 		Residence.getInstance().msg(player, lm.General_ItemBlacklisted);
 	    return false;
