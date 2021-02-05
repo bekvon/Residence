@@ -17,6 +17,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class auto implements cmd {
 
@@ -55,39 +56,30 @@ public class auto implements cmd {
 
 	Location loc = player.getLocation();
 
-	int X = group.getMinX();
-	int Y = group.getMinY();
-	int Z = group.getMinZ();
+	int x = group.getMinX();
+	int y = group.getMinY();
+	int z = group.getMinZ();
 
 	if (lenght > 0) {
-	    if (lenght > group.getMaxX())
-		X = group.getMaxX();
-	    else
-		X = lenght;
-	    if (lenght > group.getMaxZ())
-		Z = group.getMaxZ();
-	    else
-		Z = lenght;
-	    if (lenght > group.getMaxY())
-		Y = group.getMaxY();
-	    else
-		Y = lenght;
+	    x = lenght > group.getMaxX() ? group.getMaxX() : lenght;
+	    z = lenght > group.getMaxZ() ? group.getMaxZ() : lenght;
+	    y = lenght > group.getMaxY() ? group.getMaxY() : lenght;
 	}
 
-	int rX = (X - 1) / 2;
-	int rY = (Y - 1) / 2;
-	int rZ = (Z - 1) / 2;
+	int rX = (x - 1) / 2;
+	int rY = (y - 1) / 2;
+	int rZ = (z - 1) / 2;
 
 	int minX = loc.getBlockX() - rX;
 	int maxX = loc.getBlockX() + rX;
 
-	if (maxX - minX + 1 < X)
+	if (maxX - minX + 1 < x)
 	    maxX++;
 
 	int minY = loc.getBlockY() - rY;
 	int maxY = loc.getBlockY() + rY;
 
-	if (maxY - minY + 1 < Y)
+	if (maxY - minY + 1 < y)
 	    maxY++;
 
 	if (minY < 0) {
@@ -106,13 +98,13 @@ public class auto implements cmd {
 
 	int minZ = loc.getBlockZ() - rZ;
 	int maxZ = loc.getBlockZ() + rZ;
-	if (maxZ - minZ + 1 < Z)
+	if (maxZ - minZ + 1 < z)
 	    maxZ++;
 
 	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
 	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
 
-	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true);
+	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
 
 	if (plugin.getResidenceManager().getByName(resName) != null) {
 	    for (int i = 1; i < 50; i++) {
@@ -132,7 +124,7 @@ public class auto implements cmd {
 	return true;
     }
 
-    public static void resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance) {
+    public static void resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance, int max) {
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
@@ -203,22 +195,21 @@ public class auto implements cmd {
 		continue;
 	    }
 
-	    if (c.getXSize() > group.getMaxX() - group.getMinX()) {
+	    if (max > 0 && max <= c.getXSize() || c.getXSize() > group.getMaxX() - group.getMinX()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
 		continue;
 	    }
 
-	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY())
-		if (c.getYSize() > group.getMaxY() - group.getMinY()) {
-		    locked.add(dir);
-		    dir = dir.getNext();
-		    skipped++;
-		    continue;
-		}
+	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (max > 0 && max <= c.getYSize() || c.getYSize() > group.getMaxY() - group.getMinY())) {
+		locked.add(dir);
+		dir = dir.getNext();
+		skipped++;
+		continue;
+	    }
 
-	    if (c.getZSize() > group.getMaxZ() - group.getMinZ()) {
+	    if (max > 0 && max <= c.getZSize() || c.getZSize() > group.getMaxZ() - group.getMinZ()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
