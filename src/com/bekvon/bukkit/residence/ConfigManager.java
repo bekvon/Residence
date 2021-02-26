@@ -135,6 +135,7 @@ public class ConfigManager {
     protected boolean ignoreGroupedFlagAcess;
     protected CMIChatColor chatColor;
     protected boolean chatEnable;
+    private boolean chatListening;
     private ELMessageType EnterLeaveMessageType;
 //    protected boolean actionBar;
 //    protected boolean titleMessage;
@@ -1013,8 +1014,6 @@ public class ConfigManager {
 	c.addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
 	rentCheckInterval = c.get("Global.RentCheckInterval", 10);
 
-	c.addComment("Global.ResidenceChatEnable", "Enable or disable residence chat channels.");
-	chatEnable = c.get("Global.ResidenceChatEnable", true);
 
 	ELMessageType old = c.getC().isBoolean("Global.ActionBar.General") && c.getC().getBoolean("Global.ActionBar.General") ? ELMessageType.ActionBar : ELMessageType.ChatBox;
 	old = c.getC().isBoolean("Global.TitleBar.EnterLeave") && c.getC().getBoolean("Global.TitleBar.EnterLeave") ? ELMessageType.TitleBar : old;
@@ -1027,6 +1026,9 @@ public class ConfigManager {
 
 	ActionBarOnSelection = c.get("Global.ActionBar.ShowOnSelection", true);
 
+	c.addComment("Global.ResidenceChatEnable", "Enable or disable residence chat channels.");
+	chatEnable = c.get("Global.ResidenceChatEnable", true);
+	
 	c.addComment("Global.ResidenceChatColor", "Color of residence chat.");
 	try {
 	    chatColor = CMIChatColor.getColor((c.get("Global.ResidenceChatColor", "DARK_PURPLE")));
@@ -1034,7 +1036,10 @@ public class ConfigManager {
 	    chatColor = CMIChatColor.DARK_PURPLE;
 	}
 
-	c.addComment("Global.ResidenceChatPrefixLenght", "Max lenght of residence chat prefix including color codes");
+	c.addComment("Global.ResidenceChatListening", "When enabled players with access to chat flag will be able to listen to residence chat without joining it");
+	chatListening = c.get("Global.ResidenceChatListening", false);
+	
+	c.addComment("Global.ResidenceChatPrefixLength", "Max lenght of residence chat prefix including color codes");
 	chatPrefixLength = c.get("Global.ResidenceChatPrefixLength", 16);
 
 	c.addComment("Global.AdminOnlyCommands",
@@ -2031,6 +2036,10 @@ public class ConfigManager {
 
     public boolean isInfoExcludeDFlags() {
 	return InfoExcludeDFlags;
+    }
+
+    public boolean isChatListening() {
+	return chatListening;
     }
 
 //    public int getTownMinRange() {

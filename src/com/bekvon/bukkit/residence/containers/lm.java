@@ -3,6 +3,8 @@ package com.bekvon.bukkit.residence.containers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.bekvon.bukkit.residence.Residence;
+
 public enum lm {
     Invalid_Player("&cInvalid player name..."),
     Invalid_PlayerOffline("&cPlayer is offline"),
@@ -398,6 +400,9 @@ public enum lm {
 
     Chat_ChatChannelChange("&eChanged residence chat channel to &6%1!"),
     Chat_ChatChannelLeave("&eLeft residence chat"),
+    
+    Chat_ChatMessage("%1 %2%3: %4%5"),
+    Chat_ChatListeningMessage("&2[Listening %6]%1 %2%3: %4%5"),
 
     Chat_JoinFirst("&4Join residence chat channel first..."),
     Chat_InvalidChannel("&4Invalid Channel..."),

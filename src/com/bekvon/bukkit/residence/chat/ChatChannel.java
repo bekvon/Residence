@@ -9,7 +9,11 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceChatEvent;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.sun.jna.platform.win32.LMAccess;
 
 public class ChatChannel {
 
@@ -48,9 +52,22 @@ public class ChatChannel {
 	    for (String member : members) {
 		Player player = serv.getPlayer(member);
 
-		Residence.getInstance().msg(player, cevent.getChatprefix() + " " + Residence.getInstance().getConfigManager().getChatColor() + sourcePlayer + ": " + cevent.getColor() + cevent
+		Residence.getInstance().msg(player, lm.Chat_ChatMessage, cevent.getChatprefix(), Residence.getInstance().getConfigManager().getChatColor(), sourcePlayer, cevent.getColor(), cevent
 		    .getChatMessage());
 	    }
+
+	    if (Residence.getInstance().getConfigManager().isChatListening()) {
+		cevent.getResidence().getPlayersInResidence().forEach((v) -> {
+		    if (members.contains(v.getName()))
+			return;
+		    if (!cevent.getResidence().isOwner(v) && !cevent.getResidence().getPermissions().playerHas(v, Flags.chat, FlagCombo.OnlyTrue))
+			return; 
+		    Residence.getInstance().msg(v, lm.Chat_ChatListeningMessage, cevent.getChatprefix(), Residence.getInstance().getConfigManager().getChatColor(), sourcePlayer, cevent.getColor(), cevent
+			.getChatMessage(), channelName);
+		});
+	    }
+
+		
 	    Bukkit.getConsoleSender().sendMessage("ResidentialChat[" + channelName + "] - " + sourcePlayer + ": " + CMIChatColor.stripColor(cevent.getChatMessage()));
 	});
     }
