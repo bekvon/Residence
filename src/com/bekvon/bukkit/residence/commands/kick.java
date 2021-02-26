@@ -11,6 +11,7 @@ import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -46,19 +47,19 @@ public class kick implements cmd {
 	}
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(targetplayer.getLocation());
 
-	if (res == null || !res.isOwner(player) && !resadmin) {
+	if (res == null || !res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {
 	    plugin.msg(player, lm.Residence_PlayerNotIn);
 	    return true;
 	}
 
-	if (!res.isOwner(player))
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.admin, false))
 	    return false;
 
 	if (res.getRaid().isRaidInitialized()) {
 	    plugin.msg(sender, lm.Raid_cantDo);
 	    return true;
 	}
-	
+
 	if (res.getPlayersInResidence().contains(targetplayer)) {
 
 	    if (ResPerm.command_kick_bypass.hasPermission(targetplayer)) {
