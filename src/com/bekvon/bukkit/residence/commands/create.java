@@ -29,7 +29,15 @@ public class create implements cmd {
 		plugin.getSelectionManager().worldEdit(player);
 	    }
 	}
+
 	if (plugin.getSelectionManager().hasPlacedBoth(player)) {
+
+	    if (sender instanceof Player && !plugin.getPermissionManager().isResidenceAdmin(sender) && plugin.isDisabledWorldCommand((plugin.getSelectionManager().getSelection(player))
+		.getWorld())) {
+		plugin.msg(sender, lm.General_DisabledWorld);
+		return null; 
+	    }
+
 	    plugin.getResidenceManager().addResidence(player, args[0], plugin.getSelectionManager().getPlayerLoc1(player), plugin
 		.getSelectionManager().getPlayerLoc2(player), resadmin);
 	    return true;
