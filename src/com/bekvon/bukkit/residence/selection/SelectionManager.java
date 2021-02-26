@@ -294,7 +294,27 @@ public class SelectionManager {
     }
 
     public enum Direction {
-	UP, DOWN, PLUSX, PLUSZ, MINUSX, MINUSZ
+	UP, DOWN, PLUSX, PLUSZ, MINUSX, MINUSZ;
+
+	public Direction getOpposite() {
+	    switch (this) {
+	    case DOWN:
+		return UP;
+	    case MINUSX:
+		return PLUSX;
+	    case MINUSZ:
+		return PLUSZ;
+	    case PLUSX:
+		return MINUSX;
+	    case PLUSZ:
+		return MINUSZ;
+	    case UP:
+		return DOWN;
+	    default:
+		break;
+	    }
+	    return this;
+	}
     }
 
     public SelectionManager(Server server, Residence plugin) {
@@ -997,6 +1017,8 @@ public class SelectionManager {
 	    plugin.msg(player, lm.Invalid_Direction);
 	    return false;
 	}
+	d = d.getOpposite();
+
 	CuboidArea area = this.getSelectionCuboid(player);
 	switch (d) {
 	case UP:
