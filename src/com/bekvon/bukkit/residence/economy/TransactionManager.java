@@ -22,7 +22,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class TransactionManager implements MarketBuyInterface {
     private Set<ClaimedResidence> sellAmount;

@@ -12,7 +12,6 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class AutoSelection {
 

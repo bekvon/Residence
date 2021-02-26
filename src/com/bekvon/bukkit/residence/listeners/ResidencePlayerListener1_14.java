@@ -22,16 +22,16 @@ public class ResidencePlayerListener1_14 implements Listener {
     public void onJump(PlayerTakeLecternBookEvent event) {
 
 	// disabling event on world
-	if (Residence.getInstance().isDisabledWorldListener(event.getLectern().getWorld()))
+	if (plugin.isDisabledWorldListener(event.getLectern().getWorld()))
 	    return;
-	if (Residence.getInstance().isResAdminOn(event.getPlayer())) {
+	if (plugin.isResAdminOn(event.getPlayer())) {
 	    return;
 	}
-	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(event.getLectern().getLocation(), event.getPlayer());
+	FlagPermissions perms = plugin.getPermsByLocForPlayer(event.getLectern().getLocation(), event.getPlayer());
 	
 	if (perms.playerHas(event.getPlayer(), Flags.container, FlagCombo.TrueOrNone))
 	    return;
 	event.setCancelled(true);
-	Residence.getInstance().msg(event.getPlayer(), lm.Flag_Deny, Flags.container);
+	plugin.msg(event.getPlayer(), lm.Flag_Deny, Flags.container);
     }
 }

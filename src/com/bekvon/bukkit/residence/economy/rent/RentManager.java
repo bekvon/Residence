@@ -523,7 +523,7 @@ public class RentManager implements MarketRentInterface {
 	    return;
 	removeFromRent(res);
 	rentableLand.remove(res);
-	plugin.getSignUtil().removeSign(res.getName());
+	plugin.getSignUtil().removeSign(res);
     }
 
     @Override
@@ -908,7 +908,7 @@ public class RentManager implements MarketRentInterface {
 		res.getOwner(), rentedBy);
 
 	    RawMessage rm = new RawMessage();
-	    rm.add(msg, "&2" + hover);
+	    rm.addText(msg).addHover("&2" + hover);
 
 	    if (!hover.equalsIgnoreCase("")) {
 		rm.show(player);

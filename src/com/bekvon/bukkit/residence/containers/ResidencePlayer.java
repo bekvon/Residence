@@ -21,11 +21,9 @@ import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.permissions.PermissionInfo;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.ResidenceRaid;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {

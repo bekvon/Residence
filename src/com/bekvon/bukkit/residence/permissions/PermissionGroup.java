@@ -1,8 +1,15 @@
 package com.bekvon.bukkit.residence.permissions;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -10,14 +17,6 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import com.bekvon.bukkit.residence.utils.Debug;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import org.bukkit.configuration.ConfigurationSection;
 
 public class PermissionGroup {
     private int xmax = 0;

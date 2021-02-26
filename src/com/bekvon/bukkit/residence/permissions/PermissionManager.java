@@ -474,7 +474,7 @@ public class PermissionManager {
 	    if (!has && inform) {
 		boolean showPerm = ResPerm.permisiononerror.hasPermission(sender);
 		RawMessage rm = new RawMessage();
-		rm.add(Residence.getInstance().getLM().getMessage(lm.General_NoPermission), showPerm ? perm : null);
+		rm.addText(Residence.getInstance().getLM().getMessage(lm.General_NoPermission)).addHover(showPerm ? perm : null);
 		rm.show(sender);
 
 		informConsole(sender, perm, true);
@@ -513,7 +513,7 @@ public class PermissionManager {
 	    if (output) {
 		boolean showPerm = ResPerm.permisiononerror.hasPermission(sender);
 		RawMessage rm = new RawMessage();
-		rm.add(Residence.getInstance().getLM().getMessage(lm.General_NoPermission), showPerm ? permision : null);
+		rm.addText(Residence.getInstance().getLM().getMessage(lm.General_NoPermission)).addHover(showPerm ? permision : null);
 		rm.show(sender);
 
 		informConsole(sender, permision, informConsole);

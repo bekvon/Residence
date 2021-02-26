@@ -14,16 +14,15 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.containers.Flags.FlagMode;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.containers.Flags.FlagMode;
 import com.bekvon.bukkit.residence.event.ResidenceFlagChangeEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagCheckEvent;
 import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidencePermissions extends FlagPermissions {
 

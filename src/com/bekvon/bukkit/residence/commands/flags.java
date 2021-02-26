@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
-import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;

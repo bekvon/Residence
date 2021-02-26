@@ -118,7 +118,7 @@ public class FlagUtil {
 	setFlagInfo flag = new setFlagInfo(res, player, resadmin);
 	flag.recalculate();
 	CMIGui gui = new CMIGui(player);
-	gui.setTitle(Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
+	gui.setTitle(plugin.msg(lm.Gui_Set_Title, res.getName()));
 	gui.setInvSize(GUIRows.r6);
 
 	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);

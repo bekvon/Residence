@@ -1179,7 +1179,7 @@ public class FlagPermissions {
 
     public RawMessage listPlayersFlagsRaw(String player, String text) {
 	RawMessage rm = new RawMessage();
-	rm.add(text);
+	rm.addText(text);
 	Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
 
 	synchronized (set) {
@@ -1224,8 +1224,8 @@ public class FlagPermissions {
 			else
 			    next = p1Color + next + "&r";
 		    }
-		    rm.add(next, splitBy(5, perms));
-		    rm.add(" ");
+		    rm.addText(next).addHover(splitBy(5, perms));
+		    rm.addText(" ");
 		}
 	    }
 	}

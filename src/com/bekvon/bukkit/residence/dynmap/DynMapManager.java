@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.ChatColor;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
@@ -22,7 +21,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class DynMapManager {

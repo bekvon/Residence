@@ -57,7 +57,6 @@ import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ClaimedResidence {
 
@@ -1163,9 +1162,9 @@ public class ClaimedResidence {
 	    ClaimedResidence res = getSubzones().get(i);
 	    if (res == null)
 		continue;
-	    rm.add(ChatColor.GREEN + res.getResidenceName() + ChatColor.YELLOW + " - "
-		+ plugin.msg(lm.General_Owner, res.getOwner()), "Teleport to " + res.getName(),
-		"res tp " + res.getName());
+	    rm.addText(ChatColor.GREEN + res.getResidenceName() + ChatColor.YELLOW + " - " + plugin.msg(lm.General_Owner, res.getOwner()))
+		.addHover("Teleport to " + res.getName())
+		.addCommand("res tp " + res.getName());
 	    rm.show(sender);
 	    rm.clear();
 	}

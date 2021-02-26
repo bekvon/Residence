@@ -3,8 +3,6 @@ package com.bekvon.bukkit.residence.permissions;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.bekvon.bukkit.residence.utils.Debug;
-
 public class PermissionInfo {
 
     private String permission;

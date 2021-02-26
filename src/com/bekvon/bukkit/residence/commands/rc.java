@@ -2,12 +2,9 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Zrips.CMI.Modules.Logs.CMIDebug;
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;

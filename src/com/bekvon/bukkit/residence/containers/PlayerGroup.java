@@ -96,7 +96,7 @@ public class PlayerGroup {
 		    group = one.getValue();
 		}
 	    } else {
-		OfflinePlayer offlineP = Residence.getInstance().getOfflinePlayer(resPlayer.getPlayerName());
+		OfflinePlayer offlineP = Residence.getInstance().getOfflinePlayer(resPlayer.getName());
 		if (offlineP != null)
 		    if (ResidenceVaultAdapter.hasPermission(offlineP, ResPerm.group_$1.getPermission(one.getKey()), Residence.getInstance().getConfigManager().getDefaultWorld()))
 			group = one.getValue();

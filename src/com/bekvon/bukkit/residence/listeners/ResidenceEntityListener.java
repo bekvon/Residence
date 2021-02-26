@@ -61,13 +61,11 @@ import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
-import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceEntityListener implements Listener {
 

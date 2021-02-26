@@ -19,7 +19,6 @@ import com.bekvon.bukkit.residence.event.ResidenceRaidEndEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRaidPreStartEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRaidStartEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidenceRaid {
 
