@@ -983,23 +983,38 @@ public class ClaimedResidence {
 	boolean found = false;
 	int it = 1;
 	int maxIt = newLoc.getBlockY() + 1;
-	while (it < maxIt) {
-	    it++;
 
-	    if (newLoc.getBlockY() < lowY)
-		break;
-
-	    newLoc.add(0, -1, 0);
-
-	    Block block = newLoc.getBlock();
-	    Block block2 = newLoc.clone().add(0, 1, 0).getBlock();
-	    Block block3 = newLoc.clone().add(0, -1, 0).getBlock();
-	    if (ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2)
-		&& !ResidencePlayerListener.isEmptyBlock(block3)) {
-		found = true;
-		break;
-	    }
+	try {
+	    insideLoc.getChunk().setForceLoaded(true);
+	} catch (Throwable e) {
 	}
+
+	try {
+	    while (it < maxIt) {
+		it++;
+
+		if (newLoc.getBlockY() < lowY)
+		    break;
+
+		newLoc.add(0, -1, 0);
+
+		Block block = newLoc.getBlock();
+		Block block2 = newLoc.clone().add(0, 1, 0).getBlock();
+		Block block3 = newLoc.clone().add(0, -1, 0).getBlock();
+		if (ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2)
+		    && !ResidencePlayerListener.isEmptyBlock(block3)) {
+		    found = true;
+		    break;
+		}
+	    }
+	} catch (Throwable e) {
+	}
+
+	try {
+	    insideLoc.getChunk().setForceLoaded(false);
+	} catch (Throwable e) {
+	}
+
 	if (found) {
 	    if (player != null) {
 		newLoc.setPitch(player.getLocation().getPitch());
@@ -1228,7 +1243,7 @@ public class ClaimedResidence {
 	    Location high = this.getMainArea().getHighLoc();
 	    Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2,
 		(low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high.getBlockZ()) / 2);
-	    return this.getMiddleFreeLoc(t, player);
+	    tpLoc = this.getMiddleFreeLoc(t, player);
 	}
 	return tpLoc;
     }
