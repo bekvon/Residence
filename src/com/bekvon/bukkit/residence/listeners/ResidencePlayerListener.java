@@ -643,7 +643,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (white != 0 && white >= black || black == 0)
 	    return;
-	Debug.D("cancel command");
+
 	event.setCancelled(true);
 	plugin.msg(player, lm.Residence_FlagDeny, Flags.command, res.getName());
 
@@ -1205,7 +1205,8 @@ public class ResidencePlayerListener implements Listener {
 	if (resadmin)
 	    return;
 
-	if (!heldItem.isNone() && heldItem.isValidItem() && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld().getName())) {
+	if (!heldItem.isNone() && heldItem.isValidItem() && !plugin.getItemManager().isAllowed(heldItem.getMaterial(), plugin.getPlayerManager().getResidencePlayer(player).getGroup(), player.getWorld()
+	    .getName())) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
@@ -1716,9 +1717,8 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Location loc = event.getTo();
-
+	handleNewLocation(player, loc, false);
 	if (plugin.isResAdminOn(player)) {
-	    handleNewLocation(player, loc, false);
 	    return;
 	}
 
@@ -1728,7 +1728,7 @@ public class ResidencePlayerListener implements Listener {
 	if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 	    .getCause() == TeleportCause.PLUGIN) {
 	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player)
-		&& !ResPerm.bypass_tp.hasPermission(player, 10000L)) {
+		&& !ResPerm.bypass_tp.hasPermission(player, 10000L) && !ResPerm.admin_move.hasPermission(player, 10000L)) {
 		event.setCancelled(true);
 		plugin.msg(player, lm.Residence_MoveDeny, res.getName());
 		return;
@@ -1975,7 +1975,7 @@ public class ResidencePlayerListener implements Listener {
 	}
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
@@ -2319,26 +2319,6 @@ public class ResidencePlayerListener implements Listener {
 
 	}
 	return true;
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerTeleportEvent(PlayerTeleportEvent event) {
-
-	Location from = event.getFrom();
-	Location to = event.getTo();
-
-	ClaimedResidence fromRes = plugin.getResidenceManager().getByLoc(from);
-	ClaimedResidence toRes = plugin.getResidenceManager().getByLoc(to);
-
-	if (fromRes != null && toRes != null && fromRes.equals(toRes))
-	    return;
-	if (event.getPlayer().hasMetadata("NPC"))
-	    return;
-
-	currentRes.put(event.getPlayer().getUniqueId(), toRes);
-
-	ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(fromRes, toRes, event.getPlayer());
-	plugin.getServ().getPluginManager().callEvent(chgEvent);
     }
 
     HashMap<UUID, Long> informar = new HashMap<UUID, Long>();

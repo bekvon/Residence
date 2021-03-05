@@ -79,6 +79,11 @@ public class auto implements cmd {
 	int minY = loc.getBlockY() - rY;
 	int maxY = loc.getBlockY() + rY;
 
+	if (plugin.getConfigManager().isSelectionIgnoreY()) {
+	    minY = 0;
+	    maxY = loc.getWorld().getMaxHeight();
+	}
+
 	if (maxY - minY + 1 < y)
 	    maxY++;
 

@@ -29,9 +29,9 @@ public class info implements cmd {
 	    Set<ClaimedResidence> nearby = new HashSet<ClaimedResidence>();
 
 	    Location loc = player.getLocation();
-	    for (int x = -3; x <= 3; x = x + 3) {
-		for (int z = -3; z <= 3; z = z + 3) {
-		    for (int y = -3; y <= 3; y = y + 3) {
+	    for (int x = -9; x <= 9; x = x + 3) {
+		for (int z = -9; z <= 9; z = z + 3) {
+		    for (int y = -9; y <= 9; y = y + 3) {
 			if (x == 0 && z == 0 && y == 0)
 			    continue;
 			Location l = loc.clone().add(x, y, z);
@@ -50,15 +50,15 @@ public class info implements cmd {
 		    plugin.msg(sender, lm.Invalid_Residence);
 	    }
 
-	    String list = "";
+	    StringBuilder list = new StringBuilder();
+
 	    if (!nearby.isEmpty()) {
 		for (ClaimedResidence one : nearby) {
-		    if (!list.isEmpty())
-			list += ", ";
-		    list += one.getName();
+		    if (!list.toString().isEmpty())
+			list.append(", ");
+		    list.append(one.getName());
 		}
-
-		plugin.msg(sender, lm.Residence_Near, list);
+		plugin.msg(sender, lm.Residence_Near, list.toString());
 	    }
 
 	    return true;
