@@ -16,9 +16,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
@@ -475,11 +477,11 @@ public class Residence extends JavaPlugin {
 	    this.getCommand("res").setExecutor(getCommandManager());
 	    this.getCommand("resadmin").setExecutor(getCommandManager());
 	    this.getCommand("residence").setExecutor(getCommandManager());
-	    
+
 	    this.getCommand("rc").setExecutor(getCommandManager());
 	    this.getCommand("resreload").setExecutor(getCommandManager());
 	    this.getCommand("resload").setExecutor(getCommandManager());
-	    
+
 	    TabComplete tab = new TabComplete();
 	    this.getCommand("res").setTabCompleter(tab);
 	    this.getCommand("resadmin").setTabCompleter(tab);
@@ -1370,6 +1372,8 @@ public class Residence extends JavaPlugin {
 	}
     }
 
+    public final static String saveFilePrefix = "res_";
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected boolean loadYml() throws Exception {
 	File saveFolder = new File(dataFolder, "Save");
@@ -1387,18 +1391,21 @@ public class Residence extends JavaPlugin {
 	    YMLSaveHelper yml;
 	    File loadFile;
 	    HashMap<String, Object> worlds = new HashMap<>();
-	    for (World world : getServ().getWorlds()) {
-		loadFile = new File(worldFolder, "res_" + world.getName() + ".yml");
+
+
+
+	    for (String worldName : this.getResidenceManager().getWorldNames()) {
+		loadFile = new File(worldFolder, saveFilePrefix + worldName + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-		    if (!isDisabledWorld(world))
-			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + world.getName() + "...");
+		    if (!isDisabledWorld(worldName))
+			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + worldName + "...");
 
 		    yml = new YMLSaveHelper(loadFile);
 		    yml.load();
 
 		    if (yml.getRoot().containsKey("Messages")) {
-			HashMap<Integer, MinimizeMessages> c = getResidenceManager().getCacheMessages().get(world.getName());
+			HashMap<Integer, MinimizeMessages> c = getResidenceManager().getCacheMessages().get(worldName);
 			if (c == null)
 			    c = new HashMap<Integer, MinimizeMessages>();
 			Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Messages");
@@ -1411,12 +1418,12 @@ public class Residence extends JavaPlugin {
 
 				}
 			    }
-			    getResidenceManager().getCacheMessages().put(world.getName(), c);
+			    getResidenceManager().getCacheMessages().put(worldName, c);
 			}
 		    }
 
 		    if (yml.getRoot().containsKey("Flags")) {
-			HashMap<Integer, MinimizeFlags> c = getResidenceManager().getCacheFlags().get(world.getName());
+			HashMap<Integer, MinimizeFlags> c = getResidenceManager().getCacheFlags().get(worldName);
 			if (c == null)
 			    c = new HashMap<Integer, MinimizeFlags>();
 			Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Flags");
@@ -1429,17 +1436,17 @@ public class Residence extends JavaPlugin {
 
 				}
 			    }
-			    getResidenceManager().getCacheFlags().put(world.getName(), c);
+			    getResidenceManager().getCacheFlags().put(worldName, c);
 			}
 		    }
 
-		    worlds.put(world.getName(), yml.getRoot().get("Residences"));
+		    worlds.put(worldName, yml.getRoot().get("Residences"));
 
 		    int pass = (int) (System.currentTimeMillis() - time);
 		    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-		    if (!isDisabledWorld(world))
-			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + world.getName() + " data. (" + PastTime + ")");
+		    if (!isDisabledWorld(worldName))
+			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + worldName + " data. (" + PastTime + ")");
 		}
 	    }
 

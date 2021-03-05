@@ -11,14 +11,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 public class CuboidArea {
-    private Location highPoints;
-    private Location lowPoints;
+    private Vector highPoints;
+    private Vector lowPoints;
     protected String worldName;
+    protected World world;
 
     public CuboidArea(Location startLoc, Location endLoc) {
 	int highx, highy, highz, lowx, lowy, lowz;
@@ -43,23 +46,28 @@ public class CuboidArea {
 	    highz = endLoc.getBlockZ();
 	    lowz = startLoc.getBlockZ();
 	}
-	highPoints = new Location(startLoc.getWorld(), highx, highy, highz);
-	lowPoints = new Location(startLoc.getWorld(), lowx, lowy, lowz);
+	highPoints = new Vector(highx, highy, highz);
+	lowPoints = new Vector(lowx, lowy, lowz);
 	worldName = startLoc.getWorld().getName();
+	world = startLoc.getWorld();
     }
 
     public CuboidArea() {
     }
 
     public boolean isAreaWithinArea(CuboidArea area) {
-	return (this.containsLoc(area.highPoints) && this.containsLoc(area.lowPoints));
+	return (this.containsLoc(area.highPoints, area.getWorldName()) && this.containsLoc(area.lowPoints, area.getWorldName()));
     }
 
     public boolean containsLoc(Location loc) {
+	return containsLoc(loc.toVector(), loc.getWorld().getName());
+    }
+
+    public boolean containsLoc(Vector loc, String world) {
 	if (loc == null)
 	    return false;
 
-	if (!loc.getWorld().getName().equals(worldName))
+	if (!world.equals(worldName))
 	    return false;
 
 	if (lowPoints.getBlockX() > loc.getBlockX())
@@ -87,13 +95,14 @@ public class CuboidArea {
 	if (!area.getWorld().equals(this.getWorld())) {
 	    return false;
 	}
-	if (area.containsLoc(lowPoints) || area.containsLoc(highPoints) || this.containsLoc(area.highPoints) || this.containsLoc(area.lowPoints)) {
+	if (area.containsLoc(lowPoints, getWorldName()) || area.containsLoc(highPoints, getWorldName()) || this.containsLoc(area.highPoints, getWorldName()) || this.containsLoc(area.lowPoints,
+	    getWorldName())) {
 	    return true;
 	}
 	return advCuboidCheckCollision(highPoints, lowPoints, area.highPoints, area.lowPoints);
     }
 
-    private static boolean advCuboidCheckCollision(Location A1High, Location A1Low, Location A2High, Location A2Low) {
+    private static boolean advCuboidCheckCollision(Vector A1High, Vector A1Low, Vector A2High, Vector A2Low) {
 	int A1HX = A1High.getBlockX();
 	int A1LX = A1Low.getBlockX();
 	int A1HY = A1High.getBlockY();
@@ -139,19 +148,23 @@ public class CuboidArea {
     }
 
     public Location getHighLoc() {
-	return highPoints;
+	return highPoints.toLocation(getWorld());
     }
 
     public Location getLowLoc() {
-	return lowPoints;
+	return lowPoints.toLocation(getWorld());
     }
 
     public World getWorld() {
-	return highPoints.getWorld();
+	return world;
+    }
+
+    public String getWorldName() {
+	return world != null ? world.getName() : worldName;
     }
 
     public void save(DataOutputStream out) throws IOException {
-	out.writeUTF(highPoints.getWorld().getName());
+	out.writeUTF(getWorldName());
 	out.writeInt(highPoints.getBlockX());
 	out.writeInt(highPoints.getBlockY());
 	out.writeInt(highPoints.getBlockZ());
@@ -163,16 +176,16 @@ public class CuboidArea {
     public CuboidArea load(DataInputStream in) throws IOException {
 	CuboidArea newArea = new CuboidArea();
 	Server server = Residence.getInstance().getServ();
-	World world = server.getWorld(in.readUTF());
 	int highx = in.readInt();
 	int highy = in.readInt();
 	int highz = in.readInt();
 	int lowx = in.readInt();
 	int lowy = in.readInt();
 	int lowz = in.readInt();
-	newArea.highPoints = new Location(world, highx, highy, highz);
-	newArea.lowPoints = new Location(world, lowx, lowy, lowz);
-	newArea.worldName = world.getName();
+	newArea.highPoints = new Vector(highx, highy, highz);
+	newArea.lowPoints = new Vector(lowx, lowy, lowz);
+	newArea.worldName = in.readUTF();
+	newArea.world = Bukkit.getWorld(newArea.worldName);
 	return newArea;
     }
 
@@ -191,7 +204,7 @@ public class CuboidArea {
 	return lowPoints.getBlockX() + ":" + lowPoints.getBlockY() + ":" + lowPoints.getBlockZ() + ":" + highPoints.getBlockX() + ":" + highPoints.getBlockY() + ":" + highPoints.getBlockZ();
     }
 
-    public static CuboidArea newLoad(String root, World world) throws Exception {
+    public static CuboidArea newLoad(String root, String world) throws Exception {
 	if (root == null || !root.contains(":")) {
 	    throw new Exception("Invalid residence physical location...");
 	}
@@ -204,9 +217,10 @@ public class CuboidArea {
 	    int x2 = Integer.parseInt(split[3]);
 	    int y2 = Integer.parseInt(split[4]);
 	    int z2 = Integer.parseInt(split[5]);
-	    newArea.lowPoints = new Location(world, x1, y1, z1);
-	    newArea.highPoints = new Location(world, x2, y2, z2);
-	    newArea.worldName = world.getName();
+	    newArea.lowPoints = new Vector(x1, y1, z1);
+	    newArea.highPoints = new Vector(x2, y2, z2);
+	    newArea.worldName = world;
+	    newArea.world = Bukkit.getWorld(newArea.worldName);
 	} catch (Exception e) {
 	    throw new Exception("Invalid residence physical location...");
 	}
@@ -214,7 +228,7 @@ public class CuboidArea {
 	return newArea;
     }
 
-    public static CuboidArea load(Map<String, Object> root, World world) throws Exception {
+    public static CuboidArea load(Map<String, Object> root, String world) throws Exception {
 	if (root == null) {
 	    throw new Exception("Invalid residence physical location...");
 	}
@@ -225,16 +239,17 @@ public class CuboidArea {
 	int x2 = (Integer) root.get("X2");
 	int y2 = (Integer) root.get("Y2");
 	int z2 = (Integer) root.get("Z2");
-	newArea.highPoints = new Location(world, x1, y1, z1);
-	newArea.lowPoints = new Location(world, x2, y2, z2);
-	newArea.worldName = world.getName();
+	newArea.highPoints = new Vector(x1, y1, z1);
+	newArea.lowPoints = new Vector(x2, y2, z2);
+	newArea.worldName = world;
+	newArea.world = Bukkit.getWorld(newArea.worldName);
 	return newArea;
     }
 
     public List<ChunkRef> getChunks() {
 	List<ChunkRef> chunks = new ArrayList<>();
-	Location high = this.highPoints;
-	Location low = this.lowPoints;
+	Vector high = this.highPoints;
+	Vector low = this.lowPoints;
 	int lowX = ChunkRef.getChunkCoord(low.getBlockX());
 	int lowZ = ChunkRef.getChunkCoord(low.getBlockZ());
 	int highX = ChunkRef.getChunkCoord(high.getBlockX());
@@ -249,11 +264,13 @@ public class CuboidArea {
     }
 
     public void setHighLocation(Location highLocation) {
-	this.highPoints = highLocation;
+	this.highPoints = highLocation.toVector();
+	this.world = highLocation.getWorld();
     }
 
     public void setLowLocation(Location lowLocation) {
-	this.lowPoints = lowLocation;
+	this.lowPoints = lowLocation.toVector();
+	this.world = lowLocation.getWorld();
     }
 
     public double getCost(PermissionGroup group) {

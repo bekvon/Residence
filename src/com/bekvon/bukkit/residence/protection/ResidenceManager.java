@@ -1,8 +1,10 @@
 package com.bekvon.bukkit.residence.protection;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -220,7 +222,7 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
-	ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName(), plugin);
+	ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName());
 	newRes.getPermissions().applyDefaultFlags();
 	newRes.setEnterMessage(group.getDefaultEnterMessage());
 	newRes.setLeaveMessage(group.getDefaultLeaveMessage());
@@ -852,10 +854,10 @@ public class ResidenceManager implements ResidenceInterface {
     public Map<String, Object> save() {
 	clearSaveChache();
 	Map<String, Object> worldmap = new LinkedHashMap<>();
-	for (World world : plugin.getServ().getWorlds()) {
+	for (String worldName : getWorldNames()) {
 	    Map<String, Object> resmap = new LinkedHashMap<>();
 	    for (Entry<String, ClaimedResidence> res : (new TreeMap<String, ClaimedResidence>(residences)).entrySet()) {
-		if (!res.getValue().getWorld().equals(world.getName()))
+		if (!res.getValue().getWorld().equals(worldName))
 		    continue;
 
 		try {
@@ -866,7 +868,7 @@ public class ResidenceManager implements ResidenceInterface {
 		}
 	    }
 
-	    worldmap.put(world.getName(), resmap);
+	    worldmap.put(worldName, resmap);
 	}
 	return worldmap;
     }
@@ -983,22 +985,52 @@ public class ResidenceManager implements ResidenceInterface {
 	return m.getFlags();
     }
 
+    public Set<String> getWorldNames() {
+	Set<String> worldnames = new HashSet<String>();
+	File saveFolder = new File(plugin.dataFolder, "Save");
+	try {
+	    File worldFolder = new File(saveFolder, "Worlds");
+	    if (plugin.getConfigManager().isLoadEveryWorld()) {
+		for (File f : worldFolder.listFiles()) {
+		    if (!f.isFile())
+			continue;
+		    String name = f.getName();
+		    if (!name.startsWith(Residence.saveFilePrefix))
+			continue;
+		    worldnames.add(name.substring(Residence.saveFilePrefix.length(), name.length() - 4));
+		}
+
+	    } else {
+		plugin.getServ().getWorlds().forEach((w) -> {
+		    worldnames.add(w.getName());
+		});
+	    }
+	} catch (Exception ex) {
+	    plugin.getServ().getWorlds().forEach((w) -> {
+		worldnames.add(w.getName());
+	    });
+	    Logger.getLogger(Residence.class.getName()).log(Level.SEVERE, null, ex);
+	    throw ex;
+	}
+	return worldnames;
+    }
+
     public void load(Map<String, Object> root) throws Exception {
 	if (root == null)
 	    return;
 	residences.clear();
-	for (World world : plugin.getServ().getWorlds()) {
+	for (String worldName : getWorldNames()) {
 	    long time = System.currentTimeMillis();
 
 	    @SuppressWarnings("unchecked")
-	    Map<String, Object> reslist = (Map<String, Object>) root.get(world.getName());
-	    if (!plugin.isDisabledWorld(world))
-		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + world.getName() + " data into memory...");
+	    Map<String, Object> reslist = (Map<String, Object>) root.get(worldName);
+	    if (!plugin.isDisabledWorld(worldName))
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + worldName + " data into memory...");
 	    if (reslist != null) {
 		try {
-		    chunkResidences.put(world.getName(), loadMap(world.getName(), reslist));
+		    chunkResidences.put(worldName, loadMap(worldName, reslist));
 		} catch (Exception ex) {
-		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + "Error in loading save file for world: " + world.getName());
+		    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + "Error in loading save file for world: " + worldName);
 		    if (plugin.getConfigManager().stopOnSaveError())
 			throw (ex);
 		}
@@ -1007,8 +1039,8 @@ public class ResidenceManager implements ResidenceInterface {
 	    long pass = System.currentTimeMillis() - time;
 	    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-	    if (!plugin.isDisabledWorld(world))
-		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + world.getName() + " data into memory. (" + PastTime + ") -> " + (reslist == null ? "0" : reslist.size())
+	    if (!plugin.isDisabledWorld(worldName))
+		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded " + worldName + " data into memory. (" + PastTime + ") -> " + (reslist == null ? "0" : reslist.size())
 		    + " residences");
 	}
 

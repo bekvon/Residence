@@ -642,7 +642,12 @@ public class ResidencePermissions extends FlagPermissions {
 	this.ownerUUID = ownerUUID;
     }
 
+    @Deprecated
     public String getWorld() {
+	return world;
+    }
+    
+    public String getWorldName() {
 	return world;
     }
 

@@ -71,6 +71,7 @@ public class ConfigManager {
     protected int AutoCleanUpDays;
     protected boolean AutoCleanUpRegenerate;
     protected boolean CanTeleportIncludeOwner;
+    private boolean LoadEveryWorld;
     protected CMIMaterial selectionTool;
     protected boolean adminOps;
     protected boolean AdminFullAccess;
@@ -589,6 +590,10 @@ public class ConfigManager {
 	    "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
 	infoTool = CMIMaterial.get(c.get("Global.InfoToolId", Material.STRING.toString()));
 
+	c.addComment("Global.Optimizations.LoadEveryWorld", "When enabled we will load data from every single world file even if world doesn't exist but might be loaded later on",
+	    "Usually only useful when you have multiverse plugin which loads worlds durring server work time");
+	LoadEveryWorld = c.get("Global.Optimizations.LoadEveryWorld", false);
+
 	c.addComment("Global.Optimizations.CanTeleportIncludeOwner", "This will slightly change behavior of groups file CanTeleport section which will include server owner into check",
 	    "When this is set to false and CanTeleport set to false, players will not have option to teleport to other player residences, only to their own",
 	    "When this is set to true and CanTeleport set to false, players will not have option to teleport to residences in general",
@@ -1014,7 +1019,6 @@ public class ConfigManager {
 	c.addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
 	rentCheckInterval = c.get("Global.RentCheckInterval", 10);
 
-
 	ELMessageType old = c.getC().isBoolean("Global.ActionBar.General") && c.getC().getBoolean("Global.ActionBar.General") ? ELMessageType.ActionBar : ELMessageType.ChatBox;
 	old = c.getC().isBoolean("Global.TitleBar.EnterLeave") && c.getC().getBoolean("Global.TitleBar.EnterLeave") ? ELMessageType.TitleBar : old;
 
@@ -1028,7 +1032,7 @@ public class ConfigManager {
 
 	c.addComment("Global.ResidenceChatEnable", "Enable or disable residence chat channels.");
 	chatEnable = c.get("Global.ResidenceChatEnable", true);
-	
+
 	c.addComment("Global.ResidenceChatColor", "Color of residence chat.");
 	try {
 	    chatColor = CMIChatColor.getColor((c.get("Global.ResidenceChatColor", "DARK_PURPLE")));
@@ -1038,7 +1042,7 @@ public class ConfigManager {
 
 	c.addComment("Global.ResidenceChatListening", "When enabled players with access to chat flag will be able to listen to residence chat without joining it");
 	chatListening = c.get("Global.ResidenceChatListening", false);
-	
+
 	c.addComment("Global.ResidenceChatPrefixLength", "Max lenght of residence chat prefix including color codes");
 	chatPrefixLength = c.get("Global.ResidenceChatPrefixLength", 16);
 
@@ -1322,9 +1326,9 @@ public class ConfigManager {
 
 	    // Re enabling all of them before loading flags file
 	    for (Flags one : Flags.values()) {
-		one.setGlobalyEnabled(true); 
+		one.setGlobalyEnabled(true);
 	    }
-	    
+
 	    for (String fl : globalDisable) {
 		Flags flag = Flags.getFlag(fl);
 		if (flag == null) {
@@ -2040,6 +2044,10 @@ public class ConfigManager {
 
     public boolean isChatListening() {
 	return chatListening;
+    }
+
+    public boolean isLoadEveryWorld() {
+	return LoadEveryWorld;
     }
 
 //    public int getTownMinRange() {
