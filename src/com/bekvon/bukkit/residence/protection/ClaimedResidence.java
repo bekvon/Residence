@@ -405,7 +405,7 @@ public class ClaimedResidence {
 		return false;
 	    }
 	    if (parent != null) {
-		if (!parent.containsLoc(area.getHighLoc()) || !parent.containsLoc(area.getLowLoc())) {
+		if (!parent.containsLoc(area.getHighLocation()) || !parent.containsLoc(area.getLowLocation())) {
 		    Residence.getInstance().msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
@@ -435,12 +435,12 @@ public class ClaimedResidence {
 		return false;
 	    }
 
-	    if (group.getMinHeight() > area.getLowLoc().getBlockY()) {
+	    if (group.getMinHeight() > area.getLowVector().getBlockY()) {
 		Residence.getInstance().msg(player, lm.Area_LowLimit, String.format("%d", group.getMinHeight()));
 		return false;
 	    }
 
-	    if (group.getMaxHeight() < area.getHighLoc().getBlockY()) {
+	    if (group.getMaxHeight() < area.getHighVector().getBlockY()) {
 		Residence.getInstance().msg(player, lm.Area_HighLimit, String.format("%d", group.getMaxHeight()));
 		return false;
 	    }
@@ -554,7 +554,7 @@ public class ClaimedResidence {
 		return false;
 	    }
 	    if (parent != null) {
-		if (!parent.containsLoc(newarea.getHighLoc()) || !parent.containsLoc(newarea.getLowLoc())) {
+		if (!parent.containsLoc(newarea.getHighLocation()) || !parent.containsLoc(newarea.getLowLocation())) {
 		    Residence.getInstance().msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
@@ -576,11 +576,11 @@ public class ClaimedResidence {
 		Residence.getInstance().msg(player, lm.Area_SizeLimit);
 		return false;
 	    }
-	    if (group.getMinHeight() > newarea.getLowLoc().getBlockY()) {
+	    if (group.getMinHeight() > newarea.getLowVector().getBlockY()) {
 		Residence.getInstance().msg(player, lm.Area_LowLimit, String.format("%d", group.getMinHeight()));
 		return false;
 	    }
-	    if (group.getMaxHeight() < newarea.getHighLoc().getBlockY()) {
+	    if (group.getMaxHeight() < newarea.getHighVector().getBlockY()) {
 		Residence.getInstance().msg(player, lm.Area_HighLimit, String.format("%d", group.getMaxHeight()));
 		return false;
 	    }
@@ -979,11 +979,11 @@ public class ClaimedResidence {
 	    return insideLoc;
 	}
 
-	int y = area.getHighLoc().getBlockY();
-	int lowY = area.getLowLoc().getBlockY();
+	int y = area.getHighVector().getBlockY();
+	int lowY = area.getLowVector().getBlockY();
 
-	int x = area.getLowLoc().getBlockX() + area.getXSize() / 2;
-	int z = area.getLowLoc().getBlockZ() + area.getZSize() / 2;
+	int x = area.getLowVector().getBlockX() + area.getXSize() / 2;
+	int z = area.getLowVector().getBlockZ() + area.getZSize() / 2;
 
 	Location newLoc = new Location(area.getWorld(), x + 0.5, y, z + 0.5);
 	boolean found = false;
@@ -1040,13 +1040,13 @@ public class ClaimedResidence {
 	List<RandomLoc> randomLocList = new ArrayList<RandomLoc>();
 
 	for (int z = -1; z < area.getZSize() + 2; z++) {
-	    randomLocList.add(new RandomLoc(area.getLowLoc().getX(), 0, area.getLowLoc().getZ() + z));
-	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + area.getXSize(), 0, area.getLowLoc().getZ() + z));
+	    randomLocList.add(new RandomLoc(area.getLowVector().getX(), 0, area.getLowVector().getZ() + z));
+	    randomLocList.add(new RandomLoc(area.getLowVector().getX() + area.getXSize(), 0, area.getLowVector().getZ() + z));
 	}
 
 	for (int x = -1; x < area.getXSize() + 2; x++) {
-	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ()));
-	    randomLocList.add(new RandomLoc(area.getLowLoc().getX() + x, 0, area.getLowLoc().getZ() + area.getZSize()));
+	    randomLocList.add(new RandomLoc(area.getLowVector().getX() + x, 0, area.getLowVector().getZ()));
+	    randomLocList.add(new RandomLoc(area.getLowVector().getX() + x, 0, area.getLowVector().getZ() + area.getZSize()));
 	}
 
 	Location loc = insideLoc.clone();
@@ -1070,12 +1070,12 @@ public class ClaimedResidence {
 
 	    loc.setX(x);
 	    loc.setZ(z);
-	    loc.setY(area.getHighLoc().getBlockY());
+	    loc.setY(area.getHighVector().getBlockY());
 
-	    int max = area.getHighLoc().getBlockY();
+	    int max = area.getHighVector().getBlockY();
 	    max = loc.getWorld().getEnvironment() == Environment.NETHER ? 100 : max;
 
-	    for (int i = max; i > area.getLowLoc().getY(); i--) {
+	    for (int i = max; i > area.getLowVector().getY(); i--) {
 		loc.setY(i);
 		Block block = loc.getBlock();
 		Block block2 = loc.clone().add(0, 1, 0).getBlock();
@@ -1204,8 +1204,8 @@ public class ClaimedResidence {
 	ArrayList<String> temp = new ArrayList<>();
 	for (Entry<String, CuboidArea> entry : areas.entrySet()) {
 	    CuboidArea a = entry.getValue();
-	    Location h = a.getHighLoc();
-	    Location l = a.getLowLoc();
+	    Location h = a.getHighLocation();
+	    Location l = a.getLowLocation();
 	    if (this.getPermissions().has(Flags.coords, FlagCombo.OnlyFalse))
 		temp.add(Residence.getInstance().msg(lm.Area_ListAll, entry.getKey(), 0, 0, 0, 0, 0, 0, a.getSize()));
 	    else
@@ -1243,15 +1243,15 @@ public class ClaimedResidence {
 	if (tpLoc == null) {
 	    if (this.getMainArea() == null)
 		return null;
-	    Location low = this.getMainArea().getLowLoc();
-	    Location high = this.getMainArea().getHighLoc();
+	    Location low = this.getMainArea().getLowLocation();
+	    Location high = this.getMainArea().getHighLocation();
 	    Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2,
 		(low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high.getBlockZ()) / 2);
 	    tpLoc = this.getMiddleFreeLoc(t, player).toVector();
 	}
 
 	if (tpLoc != null) {
-	    Location loc = tpLoc.toLocation(this.getMainArea().getLowLoc().getWorld());
+	    Location loc = tpLoc.toLocation(this.getMainArea().getLowLocation().getWorld());
 	    if (PitchYaw != null) {
 		loc.setPitch((float) PitchYaw.getX());
 		loc.setYaw((float) PitchYaw.getY());

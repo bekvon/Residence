@@ -29,8 +29,8 @@ public class KingdomsUtil {
 	if (area == null)
 	    return null;
 
-	Chunk loc1 = area.getLowLoc().getChunk();
-	Chunk loc2 = area.getHighLoc().getChunk();
+	Chunk loc1 = area.getLowLocation().getChunk();
+	Chunk loc2 = area.getHighLocation().getChunk();
 
 	World world = loc1.getWorld();
 

@@ -18,6 +18,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class auto implements cmd {
 
@@ -79,11 +80,6 @@ public class auto implements cmd {
 	int minY = loc.getBlockY() - rY;
 	int maxY = loc.getBlockY() + rY;
 
-	if (plugin.getConfigManager().isSelectionIgnoreY()) {
-	    minY = 0;
-	    maxY = loc.getWorld().getMaxHeight();
-	}
-
 	if (maxY - minY + 1 < y)
 	    maxY++;
 
@@ -105,6 +101,11 @@ public class auto implements cmd {
 	int maxZ = loc.getBlockZ() + rZ;
 	if (maxZ - minZ + 1 < z)
 	    maxZ++;
+
+	if (plugin.getConfigManager().isSelectionIgnoreY()) {
+	    minY = plugin.getSelectionManager().getSelection(player).getMinYAllowed();
+	    maxY = plugin.getSelectionManager().getSelection(player).getMaxYAllowed();
+	}
 
 	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
 	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
@@ -172,11 +173,11 @@ public class auto implements cmd {
 	    }
 
 	    CuboidArea c = new CuboidArea();
-	    c.setLowLocation(cuboid.getLowLoc().clone().add(-dir.getLow().getX(), -dir.getLow().getY(), -dir.getLow().getZ()));
-	    c.setHighLocation(cuboid.getHighLoc().clone().add(dir.getHigh().getX(), dir.getHigh().getY(), dir.getHigh().getZ()));
+	    c.setLowLocation(cuboid.getLowLocation().clone().add(-dir.getLow().getX(), -dir.getLow().getY(), -dir.getLow().getZ()));
+	    c.setHighLocation(cuboid.getHighLocation().clone().add(dir.getHigh().getX(), dir.getHigh().getY(), dir.getHigh().getZ()));
 
-	    if (c.getLowLoc().getY() < 0) {
-		c.getLowLoc().setY(0);
+	    if (c.getLowVector().getY() < 0) {
+		c.getLowVector().setY(0);
 		locked.add(dir);
 		dir = dir.getNext();
 		if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY())
@@ -184,8 +185,8 @@ public class auto implements cmd {
 		continue;
 	    }
 
-	    if (c.getHighLoc().getY() >= c.getWorld().getMaxHeight()) {
-		c.getHighLoc().setY(c.getWorld().getMaxHeight() - 1);
+	    if (c.getHighVector().getY() >= c.getWorld().getMaxHeight()) {
+		c.getHighVector().setY(c.getWorld().getMaxHeight() - 1);
 		locked.add(dir);
 		dir = dir.getNext();
 		if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY())
@@ -231,14 +232,13 @@ public class auto implements cmd {
 		}
 	    }
 
-	    cuboid.setLowLocation(c.getLowLoc());
-	    cuboid.setHighLocation(c.getHighLoc());
+	    cuboid.setLowLocation(c.getLowLocation());
+	    cuboid.setHighLocation(c.getHighLocation());
 
 	    dir = dir.getNext();
 	}
-
-	plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLoc());
-	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLoc());
+	plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
+	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
     }
 
     public enum direction {

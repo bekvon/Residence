@@ -229,8 +229,8 @@ public class DynMapManager {
 	    if (!isVisible(resid, res.getWorld()))
 		return;
 
-	    Location l0 = oneArea.getValue().getLowLoc();
-	    Location l1 = oneArea.getValue().getHighLoc();
+	    Location l0 = oneArea.getValue().getLowLocation();
+	    Location l1 = oneArea.getValue().getHighLocation();
 
 //	    x[0] = l0.getX();
 //	    z[0] = l0.getZ();

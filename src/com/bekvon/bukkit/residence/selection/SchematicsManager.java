@@ -36,9 +36,9 @@ public class SchematicsManager implements WESchematicManager {
 
 	CuboidArea area = res.getAreaArray()[0];
 
-	Vector bvmin = new Vector(area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
-	Vector bvmax = new Vector(area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
-	Vector origin = new Vector(area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+	Vector bvmin = new Vector(area.getLowVector().getBlockX(), area.getLowVector().getBlockY(), area.getLowVector().getBlockZ());
+	Vector bvmax = new Vector(area.getHighVector().getBlockX(), area.getHighVector().getBlockY(), area.getHighVector().getBlockZ());
+	Vector origin = new Vector(area.getLowVector().getBlockX(), area.getLowVector().getBlockY(), area.getLowVector().getBlockZ());
 
 	World bworld = Bukkit.getWorld(res.getWorld());
 

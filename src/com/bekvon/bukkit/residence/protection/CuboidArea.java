@@ -147,11 +147,19 @@ public class CuboidArea {
 	return (highPoints.getBlockZ() - lowPoints.getBlockZ()) + 1;
     }
 
-    public Location getHighLoc() {
+    public Vector getHighVector() {
+	return highPoints;
+    }
+
+    public Vector getLowVector() {
+	return lowPoints;
+    }
+
+    public Location getHighLocation() {
 	return highPoints.toLocation(getWorld());
     }
 
-    public Location getLowLoc() {
+    public Location getLowLocation() {
 	return lowPoints.toLocation(getWorld());
     }
 

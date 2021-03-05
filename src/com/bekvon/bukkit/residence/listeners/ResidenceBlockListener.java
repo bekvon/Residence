@@ -539,19 +539,19 @@ public class ResidenceBlockListener implements Listener {
 	    }
 
 	    CuboidArea c = new CuboidArea();
-	    c.setLowLocation(cuboid.getLowLoc().clone().add(-dir.getLow().getX(), -dir.getLow().getY(), -dir.getLow().getZ()));
-	    c.setHighLocation(cuboid.getHighLoc().clone().add(dir.getHigh().getX(), dir.getHigh().getY(), dir.getHigh().getZ()));
+	    c.setLowLocation(cuboid.getLowLocation().clone().add(-dir.getLow().getX(), -dir.getLow().getY(), -dir.getLow().getZ()));
+	    c.setHighLocation(cuboid.getHighLocation().clone().add(dir.getHigh().getX(), dir.getHigh().getY(), dir.getHigh().getZ()));
 
-	    if (c.getLowLoc().getY() < 0) {
-		c.getLowLoc().setY(0);
+	    if (c.getLowVector().getY() < 0) {
+		c.getLowVector().setY(0);
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
 		continue;
 	    }
 
-	    if (c.getHighLoc().getY() >= c.getWorld().getMaxHeight()) {
-		c.getHighLoc().setY(c.getWorld().getMaxHeight() - 1);
+	    if (c.getHighVector().getY() >= c.getWorld().getMaxHeight()) {
+		c.getHighVector().setY(c.getWorld().getMaxHeight() - 1);
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
@@ -596,14 +596,14 @@ public class ResidenceBlockListener implements Listener {
 		}
 	    }
 
-	    cuboid.setLowLocation(c.getLowLoc());
-	    cuboid.setHighLocation(c.getHighLoc());
+	    cuboid.setLowLocation(c.getLowLocation());
+	    cuboid.setHighLocation(c.getHighLocation());
 
 	    dir = dir.getNext();
 	}
 
-	plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLoc());
-	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLoc());
+	plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
+	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

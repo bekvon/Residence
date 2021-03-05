@@ -103,7 +103,7 @@ public class WorldEditSelectionManager extends SelectionManager {
 
     @Override
     public void regenerate(CuboidArea area) {
-	CuboidSelection selection = new CuboidSelection(area.getWorld(), area.getLowLoc(), area.getHighLoc());
+	CuboidSelection selection = new CuboidSelection(area.getWorld(), area.getLowLocation(), area.getHighLocation());
 	try {
 	    Region region = selection.getRegionSelector().getRegion();
 	    region.getWorld().regenerate(region, WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1));

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.AutoSelector;
@@ -71,8 +72,8 @@ public class AutoSelection {
 	boolean changed = false;
 
 	CuboidArea area = new CuboidArea(loc1, loc2);
-	Location hloc = area.getHighLoc();
-	Location lloc = area.getLowLoc();
+	Location hloc = area.getHighLocation();
+	Location lloc = area.getLowLocation();
 
 	if (cloc.getBlockX() < lloc.getBlockX()) {
 	    lloc.setX(cloc.getBlockX());

@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.util.Vector;
 
 import com.bekvon.bukkit.cmiLib.ActionBarManager;
 import com.bekvon.bukkit.cmiLib.CMIEffect;
@@ -109,7 +110,7 @@ public class SelectionManager {
 		if (res1 != null) {
 		    CuboidArea area = res1.getAreaByLoc(this.getBaseLoc2());
 		    if (area != null) {
-			return area.getHighLoc().getBlockY();
+			return area.getHighVector().getBlockY();
 		    }
 		}
 		break;
@@ -128,7 +129,7 @@ public class SelectionManager {
 		if (res1 != null) {
 		    CuboidArea area = res1.getAreaByLoc(getBaseLoc1());
 		    if (area != null)
-			return area.getLowLoc().getBlockY();
+			return area.getLowVector().getBlockY();
 		}
 		break;
 	    }
@@ -163,15 +164,15 @@ public class SelectionManager {
 	private void shadowSky(CuboidArea area) {
 	    if (!hasPlacedBoth())
 		return;
-	    area.setHighLocation(this.getBaseArea().getHighLoc());
-	    area.getHighLoc().setY(this.getMaxYAllowed());
+	    area.setHighLocation(this.getBaseArea().getHighLocation());
+	    area.getHighVector().setY(this.getMaxYAllowed());
 	}
 
 	private void shadowBedrock(CuboidArea area) {
 	    if (!hasPlacedBoth())
 		return;
-	    area.setLowLocation(this.getBaseArea().getLowLoc());
-	    area.getLowLoc().setY(this.getMinYAllowed());
+	    area.setLowLocation(this.getBaseArea().getLowLocation());
+	    area.getLowVector().setY(this.getMinYAllowed());
 	}
 
 	public void sky(boolean resadmin) {
@@ -181,7 +182,7 @@ public class SelectionManager {
 
 		CuboidArea base = this.getBaseArea();
 
-		int y1 = base.getLowLoc().getBlockY();
+		int y1 = base.getLowVector().getBlockY();
 
 		int newy = this.getMaxYAllowed();
 
@@ -192,8 +193,8 @@ public class SelectionManager {
 			newy = y1 + (group.getMaxY() - 1);
 		}
 
-		loc1 = base.getLowLoc();
-		loc2 = base.getHighLoc();
+		loc1 = base.getLowLocation();
+		loc2 = base.getHighLocation();
 		loc2.setY(newy);
 
 		plugin.msg(player, lm.Select_Sky);
@@ -209,7 +210,7 @@ public class SelectionManager {
 
 		CuboidArea base = this.getBaseArea();
 
-		int y2 = base.getHighLoc().getBlockY();
+		int y2 = base.getHighVector().getBlockY();
 
 		int newy = this.getMinYAllowed();
 		if (!resadmin) {
@@ -219,8 +220,8 @@ public class SelectionManager {
 			newy = y2 - (group.getMaxY() - 1);
 		}
 
-		loc1 = base.getLowLoc();
-		loc2 = base.getHighLoc();
+		loc1 = base.getLowLocation();
+		loc2 = base.getHighLocation();
 		loc1.setY(newy);
 
 		plugin.msg(player, lm.Select_Bedrock);
@@ -408,7 +409,7 @@ public class SelectionManager {
 	CuboidArea area = sel.getResizedArea();
 	if (area == null)
 	    return null;
-	return area.getLowLoc();
+	return area.getLowLocation();
     }
 
     @Deprecated
@@ -425,7 +426,7 @@ public class SelectionManager {
 	CuboidArea area = sel.getResizedArea();
 	if (area == null)
 	    return null;
-	return area.getHighLoc();
+	return area.getHighLocation();
     }
 
     @Deprecated
@@ -680,8 +681,8 @@ public class SelectionManager {
 	    for (CuboidArea area : areas) {
 		if (area == null)
 		    continue;
-		CuboidArea cuboidArea = new CuboidArea(area.getLowLoc(), area.getHighLoc());
-		cuboidArea.getHighLoc().add(1, 1, 1);
+		CuboidArea cuboidArea = new CuboidArea(area.getLowLocation(), area.getHighLocation());
+		cuboidArea.getHighVector().add(new Vector(1, 1, 1));
 
 		SelectionSides Sides = new SelectionSides();
 
@@ -692,33 +693,33 @@ public class SelectionManager {
 		double PLHZ = loc.getBlockZ() + Range;
 		double PLHY = loc.getBlockY() + Range;
 
-		if (cuboidArea.getLowLoc().getBlockX() < PLLX) {
-		    cuboidArea.getLowLoc().setX(PLLX);
+		if (cuboidArea.getLowVector().getBlockX() < PLLX) {
+		    cuboidArea.getLowVector().setX(PLLX);
 		    Sides.setWestSide(false);
 		}
 
-		if (cuboidArea.getHighLoc().getBlockX() > PLHX) {
-		    cuboidArea.getHighLoc().setX(PLHX);
+		if (cuboidArea.getHighVector().getBlockX() > PLHX) {
+		    cuboidArea.getHighVector().setX(PLHX);
 		    Sides.setEastSide(false);
 		}
 
-		if (cuboidArea.getLowLoc().getBlockZ() < PLLZ) {
-		    cuboidArea.getLowLoc().setZ(PLLZ);
+		if (cuboidArea.getLowVector().getBlockZ() < PLLZ) {
+		    cuboidArea.getLowVector().setZ(PLLZ);
 		    Sides.setNorthSide(false);
 		}
 
-		if (cuboidArea.getHighLoc().getBlockZ() > PLHZ) {
-		    cuboidArea.getHighLoc().setZ(PLHZ);
+		if (cuboidArea.getHighVector().getBlockZ() > PLHZ) {
+		    cuboidArea.getHighVector().setZ(PLHZ);
 		    Sides.setSouthSide(false);
 		}
 
-		if (cuboidArea.getLowLoc().getBlockY() < PLLY) {
-		    cuboidArea.getLowLoc().setY(PLLY);
+		if (cuboidArea.getLowVector().getBlockY() < PLLY) {
+		    cuboidArea.getLowVector().setY(PLLY);
 		    Sides.setBottomSide(false);
 		}
 
-		if (cuboidArea.getHighLoc().getBlockY() > PLHY) {
-		    cuboidArea.getHighLoc().setY(PLHY);
+		if (cuboidArea.getHighVector().getBlockY() > PLHY) {
+		    cuboidArea.getHighVector().setY(PLHY);
 		    Sides.setTopSide(false);
 		}
 
@@ -732,8 +733,8 @@ public class SelectionManager {
 		    Bukkit.getScheduler().cancelTask(v.getErrorId());
 		}
 
-		locList.addAll(GetLocationsWallsByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range));
-		errorLocList.addAll(GetLocationsCornersByData(loc, TX, TY, TZ, cuboidArea.getLowLoc().clone(), Sides, Range));
+		locList.addAll(GetLocationsWallsByData(loc, TX, TY, TZ, cuboidArea.getLowLocation().clone(), Sides, Range));
+		errorLocList.addAll(GetLocationsCornersByData(loc, TX, TY, TZ, cuboidArea.getLowLocation().clone(), Sides, Range));
 	    }
 	    v.setLoc(player.getLocation());
 	} else {
@@ -890,10 +891,10 @@ public class SelectionManager {
 
 	Selection selection = this.getSelection(player);
 
-	if (selection.getMaxYAllowed() < area.getHighLoc().getBlockY())
+	if (selection.getMaxYAllowed() < area.getHighVector().getBlockY())
 	    selection.getBaseLoc2().setY(selection.getMaxYAllowed());
 
-	if (selection.getMinYAllowed() > area.getLowLoc().getBlockY())
+	if (selection.getMinYAllowed() > area.getLowVector().getBlockY())
 	    selection.getBaseLoc1().setY(selection.getMinYAllowed());
 
 //	selection.updateBaseArea();
@@ -918,81 +919,81 @@ public class SelectionManager {
 	CuboidArea area = this.getSelectionCuboid(player);
 	switch (d) {
 	case DOWN:
-	    double oldy = area.getLowLoc().getBlockY();
+	    double oldy = area.getLowVector().getBlockY();
 	    oldy = oldy - amount;
 	    if (oldy < MIN_HEIGHT) {
 		plugin.msg(player, lm.Select_TooLow);
 		oldy = MIN_HEIGHT;
 	    }
-	    area.getLowLoc().setY(oldy);
+	    area.getLowVector().setY(oldy);
 	    if (shift) {
-		double oldy2 = area.getHighLoc().getBlockY();
+		double oldy2 = area.getHighVector().getBlockY();
 		oldy2 = oldy2 - amount;
-		area.getHighLoc().setY(oldy2);
+		area.getHighVector().setY(oldy2);
 		plugin.msg(player, lm.Shifting_Down, amount);
 	    } else
 		plugin.msg(player, lm.Expanding_Down, amount);
 	    break;
 	case MINUSX:
-	    double oldx = area.getLowLoc().getBlockX();
+	    double oldx = area.getLowVector().getBlockX();
 	    oldx = oldx - amount;
-	    area.getLowLoc().setX(oldx);
+	    area.getLowVector().setX(oldx);
 	    if (shift) {
-		double oldx2 = area.getHighLoc().getBlockX();
+		double oldx2 = area.getHighVector().getBlockX();
 		oldx2 = oldx2 - amount;
-		area.getHighLoc().setX(oldx2);
+		area.getHighVector().setX(oldx2);
 		plugin.msg(player, lm.Shifting_West, amount);
 	    } else
 		plugin.msg(player, lm.Expanding_West, amount);
 	    break;
 	case MINUSZ:
-	    double oldz = area.getLowLoc().getBlockZ();
+	    double oldz = area.getLowVector().getBlockZ();
 	    oldz = oldz - amount;
-	    area.getLowLoc().setZ(oldz);
+	    area.getLowVector().setZ(oldz);
 	    if (shift) {
-		double oldz2 = area.getHighLoc().getBlockZ();
+		double oldz2 = area.getHighVector().getBlockZ();
 		oldz2 = oldz2 - amount;
-		area.getHighLoc().setZ(oldz2);
+		area.getHighVector().setZ(oldz2);
 		plugin.msg(player, lm.Shifting_North, amount);
 	    } else
 		plugin.msg(player, lm.Expanding_North, amount);
 	    break;
 	case PLUSX:
-	    oldx = area.getHighLoc().getBlockX();
+	    oldx = area.getHighVector().getBlockX();
 	    oldx = oldx + amount;
-	    area.getHighLoc().setX(oldx);
+	    area.getHighVector().setX(oldx);
 	    if (shift) {
-		double oldx2 = area.getLowLoc().getBlockX();
+		double oldx2 = area.getLowVector().getBlockX();
 		oldx2 = oldx2 + amount;
-		area.getLowLoc().setX(oldx2);
+		area.getLowVector().setX(oldx2);
 		plugin.msg(player, lm.Shifting_East, amount);
 	    } else
 		plugin.msg(player, lm.Expanding_East, amount);
 	    break;
 	case PLUSZ:
-	    oldz = area.getHighLoc().getBlockZ();
+	    oldz = area.getHighVector().getBlockZ();
 	    oldz = oldz + amount;
-	    area.getHighLoc().setZ(oldz);
+	    area.getHighVector().setZ(oldz);
 	    if (shift) {
-		double oldz2 = area.getLowLoc().getBlockZ();
+		double oldz2 = area.getLowVector().getBlockZ();
 		oldz2 = oldz2 + amount;
-		area.getLowLoc().setZ(oldz2);
+		area.getLowVector().setZ(oldz2);
 		plugin.msg(player, lm.Shifting_South, amount);
 	    } else
 		plugin.msg(player, lm.Expanding_South, amount);
 	    break;
 	case UP:
-	    oldy = area.getHighLoc().getBlockY();
+	    oldy = area.getHighVector().getBlockY();
 	    oldy = oldy + amount;
 	    if (oldy > getMaxWorldHeight(player.getLocation().getWorld()) - 1) {
 		plugin.msg(player, lm.Select_TooHigh);
 		oldy = getMaxWorldHeight(player.getLocation().getWorld()) - 1;
 	    }
-	    area.getHighLoc().setY(oldy);
+	    area.getHighVector().setY(oldy);
 	    if (shift) {
-		double oldy2 = area.getLowLoc().getBlockY();
+		double oldy2 = area.getLowVector().getBlockY();
 		oldy2 = oldy2 + amount;
-		area.getLowLoc().setY(oldy2);
+		area.getLowVector().setY(oldy2);
 		plugin.msg(player, lm.Shifting_Up, amount);
 	    } else
 		plugin.msg(player, lm.Expanding_Up, amount);
@@ -1000,7 +1001,7 @@ public class SelectionManager {
 	default:
 	    break;
 	}
-	updateLocations(player, area.getHighLoc(), area.getLowLoc(), true);
+	updateLocations(player, area.getHighLocation(), area.getLowLocation(), true);
     }
 
     public boolean contract(Player player, double amount) {
@@ -1022,47 +1023,47 @@ public class SelectionManager {
 	CuboidArea area = this.getSelectionCuboid(player);
 	switch (d) {
 	case UP:
-	    double oldy = area.getHighLoc().getBlockY();
+	    double oldy = area.getHighVector().getBlockY();
 	    oldy = oldy - amount;
 	    if (oldy > getMaxWorldHeight(player.getLocation().getWorld()) - 1) {
 		plugin.msg(player, lm.Select_TooHigh);
 		oldy = getMaxWorldHeight(player.getLocation().getWorld()) - 1;
 	    }
-	    area.getHighLoc().setY(oldy);
+	    area.getHighVector().setY(oldy);
 	    plugin.msg(player, lm.Contracting_Down, amount);
 	    break;
 	case PLUSX:
-	    double oldx = area.getHighLoc().getBlockX();
+	    double oldx = area.getHighVector().getBlockX();
 	    oldx = oldx - amount;
-	    area.getHighLoc().setX(oldx);
+	    area.getHighVector().setX(oldx);
 	    plugin.msg(player, lm.Contracting_West, amount);
 	    break;
 	case PLUSZ:
-	    double oldz = area.getHighLoc().getBlockZ();
+	    double oldz = area.getHighVector().getBlockZ();
 	    oldz = oldz - amount;
-	    area.getHighLoc().setZ(oldz);
+	    area.getHighVector().setZ(oldz);
 	    plugin.msg(player, lm.Contracting_North, amount);
 	    break;
 	case MINUSX:
-	    oldx = area.getLowLoc().getBlockX();
+	    oldx = area.getLowVector().getBlockX();
 	    oldx = oldx + amount;
-	    area.getLowLoc().setX(oldx);
+	    area.getLowVector().setX(oldx);
 	    plugin.msg(player, lm.Contracting_East, amount);
 	    break;
 	case MINUSZ:
-	    oldz = area.getLowLoc().getBlockZ();
+	    oldz = area.getLowVector().getBlockZ();
 	    oldz = oldz + amount;
-	    area.getLowLoc().setZ(oldz);
+	    area.getLowVector().setZ(oldz);
 	    plugin.msg(player, lm.Contracting_South, amount);
 	    break;
 	case DOWN:
-	    oldy = area.getLowLoc().getBlockY();
+	    oldy = area.getLowVector().getBlockY();
 	    oldy = oldy + amount;
 	    if (oldy < MIN_HEIGHT) {
 		plugin.msg(player, lm.Select_TooLow);
 		oldy = MIN_HEIGHT;
 	    }
-	    area.getLowLoc().setY(oldy);
+	    area.getLowVector().setY(oldy);
 	    plugin.msg(player, lm.Contracting_Up, amount);
 	    break;
 	default:
@@ -1072,7 +1073,7 @@ public class SelectionManager {
 //	if (!ClaimedResidence.isBiggerThanMinSubzone(player, area, resadmin))
 //	    return false;
 
-	updateLocations(player, area.getHighLoc(), area.getLowLoc(), true);
+	updateLocations(player, area.getHighLocation(), area.getLowLocation(), true);
 	return true;
     }
 

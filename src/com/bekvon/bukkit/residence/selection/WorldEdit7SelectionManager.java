@@ -122,8 +122,8 @@ public class WorldEdit7SelectionManager extends SelectionManager {
 
 	// set up selector
 	try {
-	    sellection.selectPrimary(BlockVector3.at(area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ()), PermissiveSelectorLimits.getInstance());
-	    sellection.selectSecondary(BlockVector3.at(area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ()), PermissiveSelectorLimits.getInstance());
+	    sellection.selectPrimary(BlockVector3.at(area.getLowVector().getBlockX(), area.getLowVector().getBlockY(), area.getLowVector().getBlockZ()), PermissiveSelectorLimits.getInstance());
+	    sellection.selectSecondary(BlockVector3.at(area.getHighVector().getBlockX(), area.getHighVector().getBlockY(), area.getHighVector().getBlockZ()), PermissiveSelectorLimits.getInstance());
 	} catch (Exception | Error e) {
 	    return;
 	}

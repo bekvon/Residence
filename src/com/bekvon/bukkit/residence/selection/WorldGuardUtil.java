@@ -41,8 +41,8 @@ public class WorldGuardUtil implements WorldGuardInterface {
 	if (plugin.getWorldEdit() == null)
 	    return null;
 
-	Location loc1 = area.getLowLoc();
-	Location loc2 = area.getHighLoc();
+	Location loc1 = area.getLowLocation();
+	Location loc2 = area.getHighLocation();
 
 	String id = "icp__tempregion";
 	try {

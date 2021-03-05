@@ -536,8 +536,8 @@ public class ResidenceManager implements ResidenceInterface {
 		    @Override
 		    public void run() {
 			for (CuboidArea area : arr) {
-			    Location low = area.getLowLoc().clone();
-			    Location high = area.getHighLoc().clone();
+			    Location low = area.getLowLocation().clone();
+			    Location high = area.getHighLocation().clone();
 
 			    if (high.getBlockY() > plugin.getConfigManager().getCleanLevel()) {
 
@@ -636,8 +636,8 @@ public class ResidenceManager implements ResidenceInterface {
 
 	try {
 	    for (CuboidArea area : res.getAreaArray()) {
-		Location low = area.getLowLoc();
-		Location high = area.getHighLoc();
+		Location low = area.getLowLocation();
+		Location high = area.getHighLocation();
 		World world = low.getWorld();
 		for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
 		    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
@@ -710,8 +710,8 @@ public class ResidenceManager implements ResidenceInterface {
 
 	if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
 	    CuboidArea area = res.getAreaArray()[0];
-	    String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighLoc().getBlockX(), area.getHighLoc().getBlockY(), area.getHighLoc().getBlockZ());
-	    String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowLoc().getBlockX(), area.getLowLoc().getBlockY(), area.getLowLoc().getBlockZ());
+	    String cord1 = plugin.msg(lm.General_CoordsTop, area.getHighVector().getBlockX(), area.getHighVector().getBlockY(), area.getHighVector().getBlockZ());
+	    String cord2 = plugin.msg(lm.General_CoordsBottom, area.getLowVector().getBlockX(), area.getLowVector().getBlockY(), area.getLowVector().getBlockZ());
 	    worldInfo += CMIChatColor.translate(plugin.msg(lm.General_CoordsLiner, cord1, cord2));
 	}
 
