@@ -2119,10 +2119,12 @@ public class ResidencePlayerListener implements Listener {
 				Location lastLoc = lastOutsideLoc.get(uuid);
 				player.closeInventory();
 				boolean teleported = false;
-				if (lastLoc != null)
-				    teleported = teleport(player, lastLoc);
-				else
-				    teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
+				if (move) {
+				    if (lastLoc != null)
+					teleported = teleport(player, lastLoc);
+				    else
+					teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
+				}
 				plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
 				if (!teleported)
 				    return false;
@@ -2131,9 +2133,11 @@ public class ResidencePlayerListener implements Listener {
 			}
 			plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
 			player.closeInventory();
-			boolean teleported = teleport(player, location);
-			if (!teleported)
-			    return false;
+			if (move) {
+			    boolean teleported = teleport(player, location);
+			    if (!teleported)
+				return false;
+			}
 			player.setFlying(false);
 			player.setAllowFlight(false);
 		    }
