@@ -1000,11 +1000,10 @@ public class ResidenceManager implements ResidenceInterface {
 		    worldnames.add(name.substring(Residence.saveFilePrefix.length(), name.length() - 4));
 		}
 
-	    } else {
-		plugin.getServ().getWorlds().forEach((w) -> {
-		    worldnames.add(w.getName());
-		});
 	    }
+	    plugin.getServ().getWorlds().forEach((w) -> {
+		worldnames.add(w.getName());
+	    });
 	} catch (Exception ex) {
 	    plugin.getServ().getWorlds().forEach((w) -> {
 		worldnames.add(w.getName());

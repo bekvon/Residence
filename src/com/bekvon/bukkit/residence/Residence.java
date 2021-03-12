@@ -570,7 +570,7 @@ public class Residence extends JavaPlugin {
 		e.printStackTrace();
 	    }
 
-	    SlimeFun = Bukkit.getPluginManager().getPlugin("Slimefun") != null && Bukkit.getPluginManager().getPlugin("CS-CoreLib") != null;
+	    SlimeFun = Bukkit.getPluginManager().getPlugin("Slimefun") != null;
 
 	    if (SlimeFun) {
 		try {
