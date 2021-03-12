@@ -11,16 +11,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
@@ -66,7 +63,6 @@ import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
-import com.bekvon.bukkit.residence.containers.NMS;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
 import com.bekvon.bukkit.residence.dynmap.DynMapManager;
@@ -228,7 +224,6 @@ public class Residence extends JavaPlugin {
     private String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
     private String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
-    private NMS nms;
     private LWC lwc;
 
     public HashMap<String, Long> rtMap = new HashMap<String, Long>();
@@ -321,10 +316,6 @@ public class Residence extends JavaPlugin {
 	return API;
     }
     // API end
-
-    public NMS getNms() {
-	return nms;
-    }
 
     private Runnable doHeals = new Runnable() {
 	@Override
@@ -516,28 +507,6 @@ public class Residence extends JavaPlugin {
 			spigotPlatform = true;
 		}
 	    } catch (Exception e) {
-	    }
-
-	    String version = versionChecker.getVersion().getShortVersion();
-	    try {
-		Class<?> nmsClass;
-		if (getConfigManager().CouldronCompatibility())
-		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms.v1_7_Couldron");
-		else
-		    nmsClass = Class.forName("com.bekvon.bukkit.residence.allNms." + versionChecker.getVersion());
-		if (NMS.class.isAssignableFrom(nmsClass)) {
-		    nms = (NMS) nmsClass.getConstructor().newInstance();
-		} else {
-		    System.out.println("Something went wrong, please note down version and contact author v:" + versionChecker.getVersion());
-		    this.setEnabled(false);
-		    Bukkit.shutdown();
-		}
-	    } catch (SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | InstantiationException
-		| ClassNotFoundException e) {
-		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not compatible with this plugins version! Plugin will be disabled: " + version + " and server will shutdown");
-		this.setEnabled(false);
-		Bukkit.shutdown();
-		return;
 	    }
 
 	    this.getPermissionManager().startCacheClearScheduler();

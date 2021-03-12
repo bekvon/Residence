@@ -22,6 +22,7 @@ import org.bukkit.util.Vector;
 import com.bekvon.bukkit.cmiLib.ActionBarManager;
 import com.bekvon.bukkit.cmiLib.CMIEffect;
 import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
+import com.bekvon.bukkit.cmiLib.CMIReflections;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
@@ -836,7 +837,7 @@ public class SelectionManager {
 
 	    CMIEffect ef = new CMIEffect(effect);
 
-	    Residence.getInstance().getNms().playEffect(player, l, ef);
+	    CMIReflections.playEffect(player, l, ef);
 	}
     }
 
