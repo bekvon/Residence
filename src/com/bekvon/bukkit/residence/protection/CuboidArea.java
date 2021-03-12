@@ -155,6 +155,16 @@ public class CuboidArea {
 	return lowPoints;
     }
 
+    @Deprecated
+    public Location getHighLoc() {
+	return getHighLocation();
+    }
+
+    @Deprecated
+    public Location getLowLoc() {
+	return getLowLocation();
+    }
+
     public Location getHighLocation() {
 	return highPoints.toLocation(getWorld());
     }

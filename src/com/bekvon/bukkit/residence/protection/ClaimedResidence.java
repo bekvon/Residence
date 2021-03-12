@@ -58,6 +58,7 @@ import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Utils;
 
 public class ClaimedResidence {
 
@@ -1285,7 +1286,7 @@ public class ClaimedResidence {
 	if (player.getGameMode() == GameMode.CREATIVE)
 	    return 0;
 
-	if (Residence.getInstance().getNms().isSpectator(player.getGameMode()))
+	if (Utils.isSpectator(player.getGameMode()))
 	    return 0;
 
 	if (tpLoc == null)

@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
@@ -59,7 +60,7 @@ public class CrackShot implements Listener {
 	Entity entity = event.getVictim();
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(entity.getLocation());
 
-	if (plugin.getNms().isAnimal(entity)) {
+	if (Utils.isAnimal(entity)) {
 	    if (res != null && res.getPermissions().playerHas(cause, Flags.animalkilling, FlagCombo.OnlyFalse)) {
 		cause.sendMessage(plugin.msg(lm.Residence_FlagDeny, Flags.animalkilling, res.getName()));
 		event.setCancelled(true);
@@ -72,7 +73,7 @@ public class CrackShot implements Listener {
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
-	if (event.getVictim().getType() != EntityType.ITEM_FRAME && !plugin.getNms().isArmorStandEntity(event.getVictim().getType()))
+	if (event.getVictim().getType() != EntityType.ITEM_FRAME && !Utils.isArmorStandEntity(event.getVictim().getType()))
 	    return;
 
 	Entity dmgr = event.getDamager();

@@ -80,8 +80,8 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
+import com.bekvon.bukkit.residence.utils.Utils;
 
 public class ResidencePlayerListener implements Listener {
 
@@ -338,7 +338,7 @@ public class ResidencePlayerListener implements Listener {
 	Player player = event.getPlayer();
 	if (event.getCaught() == null)
 	    return;
-	if (plugin.getNms().isArmorStandEntity(event.getCaught().getType()) || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
+	if (Utils.isArmorStandEntity(event.getCaught().getType()) || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
 	    FlagPermissions perm = plugin.getPermsByLoc(event.getCaught().getLocation());
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getCaught().getLocation());
 	    if (perm.has(Flags.hook, FlagCombo.OnlyFalse)) {
@@ -1115,7 +1115,7 @@ public class ResidencePlayerListener implements Listener {
 		plugin.msg(player, lm.Select_PrimaryPoint, plugin.msg(lm.General_CoordsTop, loc.getBlockX(), loc.getBlockY(),
 		    loc.getBlockZ()));
 		event.setCancelled(true);
-	    } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && plugin.getNms().isMainHand(event)) {
+	    } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && Utils.isMainHand(event)) {
 		Location loc = block.getLocation();
 		plugin.getSelectionManager().placeLoc2(player, loc, true);
 		plugin.msg(player, lm.Select_SecondaryPoint, plugin.msg(lm.General_CoordsBottom, loc.getBlockX(), loc
@@ -1511,7 +1511,7 @@ public class ResidencePlayerListener implements Listener {
 	if (res == null)
 	    return;
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.dye, FlagCombo.OnlyFalse)) {
-	    ItemStack iih = plugin.getNms().itemInMainHand(player);
+	    ItemStack iih = Utils.itemInMainHand(player);
 	    ItemStack iiho = CMIReflections.getItemInOffHand(player);
 	    if (iih == null && iiho == null)
 		return;
@@ -1545,7 +1545,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.shear, FlagCombo.OnlyFalse)) {
-	    ItemStack iih = plugin.getNms().itemInMainHand(player);
+	    ItemStack iih = Utils.itemInMainHand(player);
 	    ItemStack iiho = CMIReflections.getItemInOffHand(player);
 	    if (iih == null && iiho == null)
 		return;
@@ -1565,7 +1565,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Entity ent = event.getRightClicked();
-	if (!Residence.getInstance().getNms().isArmorStandEntity(ent.getType()))
+	if (!Utils.isArmorStandEntity(ent.getType()))
 	    return;
 
 	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
@@ -1601,7 +1601,7 @@ public class ResidencePlayerListener implements Listener {
 
 //	Hanging hanging = (Hanging) ent;
 
-	Material heldItem = plugin.getNms().itemInMainHand(player).getType();
+	Material heldItem = Utils.itemInMainHand(player).getType();
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(ent.getLocation(), player);
 	String world = player.getWorld().getName();
@@ -1744,7 +1744,7 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.msg(player, lm.General_TeleportDeny, res.getName());
 	    return;
 	}
-	if (plugin.getNms().isChorusTeleport(event.getCause()) && !res.isOwner(player) && res.getPermissions().playerHas(player, Flags.chorustp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(
+	if (Utils.isChorusTeleport(event.getCause()) && !res.isOwner(player) && res.getPermissions().playerHas(player, Flags.chorustp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(
 	    player)) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.chorustp, res.getName());

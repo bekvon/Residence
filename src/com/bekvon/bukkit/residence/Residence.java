@@ -576,6 +576,7 @@ public class Residence extends JavaPlugin {
 		try {
 		    SlimefunManager.register(this);
 		} catch (Throwable e) {
+		    SlimeFun = false;
 		    e.printStackTrace();
 		}
 	    }

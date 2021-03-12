@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.utils.Utils;
 
 public class SpigotListener implements Listener {
     @SuppressWarnings("deprecation")
@@ -26,7 +27,7 @@ public class SpigotListener implements Listener {
 	if (!perms.has(Flags.nodurability, false))
 	    return;
 
-	ItemStack held = Residence.getInstance().getNms().itemInMainHand(player);
+	ItemStack held = Utils.itemInMainHand(player);
 	if (held.getType() == Material.AIR || held.getDurability() <= 0)
 	    return;
 

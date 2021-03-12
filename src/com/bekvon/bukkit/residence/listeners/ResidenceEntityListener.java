@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
@@ -17,15 +20,19 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Hanging;
+import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.NPC;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.WaterMob;
 import org.bukkit.entity.Witch;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -66,6 +73,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Utils;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -144,7 +152,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 	if (plugin.isDisabledWorldListener(entity.getWorld()))
 	    return;
-	if (!plugin.getNms().isAnimal(entity))
+	if (!Utils.isAnimal(entity))
 	    return;
 
 	if (event.getCause() == DamageCause.LIGHTNING || event.getCause() == DamageCause.FIRE_TICK) {
@@ -209,7 +217,7 @@ public class ResidenceEntityListener implements Listener {
 	Entity entity = event.getEntity();
 	if (entity == null)
 	    return;
-	if (!plugin.getNms().isAnimal(entity))
+	if (!Utils.isAnimal(entity))
 	    return;
 
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(entity.getLocation());
@@ -259,7 +267,7 @@ public class ResidenceEntityListener implements Listener {
 	Entity entity = event.getEntity();
 	if (entity == null)
 	    return;
-	if (!plugin.getNms().isAnimal(entity))
+	if (!Utils.isAnimal(entity))
 	    return;
 
 	Entity damager = event.getDamager();
@@ -408,7 +416,7 @@ public class ResidenceEntityListener implements Listener {
 
 	Entity entity = event.getEntity();
 
-	if (!plugin.getNms().isAnimal(entity))
+	if (!Utils.isAnimal(entity))
 	    return;
 
 	if (plugin.isResAdminOn(player))
@@ -481,7 +489,7 @@ public class ResidenceEntityListener implements Listener {
 	if (plugin.isDisabledWorldListener(ent.getWorld()))
 	    return;
 	FlagPermissions perms = plugin.getPermsByLoc(event.getLocation());
-	if (plugin.getNms().isAnimal(ent)) {
+	if (Utils.isAnimal(ent)) {
 	    if (!perms.has(Flags.animals, true)) {
 		event.setCancelled(true);
 		return;
@@ -1142,7 +1150,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 
 	Entity ent = event.getEntity();
-	if (!plugin.getNms().isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
+	if (!Utils.isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
 	    return;
 
 	if (!plugin.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)) {
@@ -1162,7 +1170,7 @@ public class ResidenceEntityListener implements Listener {
 	if (event.getCause() != DamageCause.BLOCK_EXPLOSION && event.getCause() != DamageCause.ENTITY_EXPLOSION)
 	    return;
 	Entity ent = event.getEntity();
-	if (!plugin.getNms().isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
+	if (!Utils.isArmorStandEntity(ent.getType()) && !(ent instanceof Arrow))
 	    return;
 
 	if (!plugin.getPermsByLoc(ent.getLocation()).has(Flags.destroy, true)) {
@@ -1265,7 +1273,7 @@ public class ResidenceEntityListener implements Listener {
 	if (event.isCancelled())
 	    return;
 
-	if (event.getEntityType() != EntityType.ENDER_CRYSTAL && event.getEntityType() != EntityType.ITEM_FRAME && !plugin.getNms().isArmorStandEntity(event
+	if (event.getEntityType() != EntityType.ENDER_CRYSTAL && event.getEntityType() != EntityType.ITEM_FRAME && !Utils.isArmorStandEntity(event
 	    .getEntityType()))
 	    return;
 

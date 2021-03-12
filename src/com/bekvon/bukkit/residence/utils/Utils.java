@@ -2,16 +2,31 @@ package com.bekvon.bukkit.residence.utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Bat;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.NPC;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.WaterMob;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 
@@ -183,5 +198,60 @@ public class Utils {
 	loc.setPitch(pitch);
 
 	return loc;
+    }
+
+    public static boolean isAnimal(Entity ent) {
+	return (ent instanceof Animals ||
+	    ent instanceof WaterMob ||
+	    ent instanceof NPC ||
+	    ent instanceof Bat ||
+	    ent instanceof Snowman ||
+	    ent instanceof IronGolem);
+    }
+
+    public static boolean isArmorStandEntity(EntityType ent) {
+	if (Version.isCurrentEqualOrLower(Version.v1_7_R4))
+	    return false;
+	return ent == org.bukkit.entity.EntityType.ARMOR_STAND;
+    }
+
+    public static boolean isSpectator(org.bukkit.GameMode mode) {
+	if (Version.isCurrentEqualOrLower(Version.v1_7_R4))
+	    return false;
+	return mode == org.bukkit.GameMode.SPECTATOR;
+    }
+
+    public static boolean isMainHand(PlayerInteractEvent event) {
+	if (Version.isCurrentEqualOrLower(Version.v1_8_R3))
+	    return true;
+	return event.getHand() == EquipmentSlot.HAND ? true : false;
+    }
+
+    public static ItemStack itemInMainHand(Player player) {
+	if (Version.isCurrentEqualOrLower(Version.v1_8_R3))
+	    return player.getInventory().getItemInHand();
+	return player.getInventory().getItemInMainHand();
+    }
+
+    public static ItemStack itemInOffHand(Player player) {
+	if (Version.isCurrentEqualOrLower(Version.v1_8_R3))
+	    return null;
+	return player.getInventory().getItemInOffHand();
+    }
+
+    public static boolean isChorusTeleport(org.bukkit.event.player.PlayerTeleportEvent.TeleportCause tpcause) {
+	if (Version.isCurrentEqualOrLower(Version.v1_8_R3))
+	    return false;
+	return tpcause == org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT;
+    }
+
+    public static List<Block> getPistonRetractBlocks(BlockPistonRetractEvent event) {
+	List<Block> blocks = new ArrayList<Block>();
+	if (Version.isCurrentEqualOrLower(Version.v1_7_R4)) {
+	    blocks.add(event.getBlock());
+	} else {
+	    blocks.addAll(event.getBlocks());
+	}
+	return blocks;
     }
 }
