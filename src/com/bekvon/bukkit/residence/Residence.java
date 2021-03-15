@@ -66,7 +66,6 @@ import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.dynmap.DynMapListeners;
 import com.bekvon.bukkit.residence.dynmap.DynMapManager;
-import com.bekvon.bukkit.residence.economy.BOSEAdapter;
 import com.bekvon.bukkit.residence.economy.BlackHoleEconomy;
 import com.bekvon.bukkit.residence.economy.CMIEconomy;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
@@ -129,7 +128,6 @@ import com.griefcraft.lwc.LWCPlugin;
 import com.residence.mcstats.Metrics;
 import com.residence.zip.ZipLibrary;
 
-import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
 
@@ -558,9 +556,6 @@ public class Residence extends JavaPlugin {
 	    if (this.getConfig().getBoolean("Global.EnableEconomy", false)) {
 		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Scanning for economy systems...");
 		switch (this.getConfigManager().getEconomyType()) {
-		case BOSEconomy:
-		    this.loadBOSEconomy();
-		    break;
 		case CMIEconomy:
 		    this.loadCMIEconomy();
 		    break;
@@ -582,9 +577,6 @@ public class Residence extends JavaPlugin {
 		    }
 		    if (economy == null) {
 			this.loadCMIEconomy();
-		    }
-		    if (economy == null) {
-			this.loadBOSEconomy();
 		    }
 		    if (economy == null) {
 			this.loadEssentialsEconomy();
@@ -1157,16 +1149,6 @@ public class Residence extends JavaPlugin {
 	}
     }
 
-    private void loadBOSEconomy() {
-	Plugin p = getServer().getPluginManager().getPlugin("BOSEconomy");
-	if (p != null) {
-	    economy = new BOSEAdapter((BOSEconomy) p);
-	    consoleMessage("Successfully linked with &5BOSEconomy");
-	} else {
-	    consoleMessage("BOSEconomy NOT found!");
-	}
-    }
-
     private void loadEssentialsEconomy() {
 	Plugin p = getServer().getPluginManager().getPlugin("Essentials");
 	if (p != null) {
@@ -1361,8 +1343,6 @@ public class Residence extends JavaPlugin {
 	    YMLSaveHelper yml;
 	    File loadFile;
 	    HashMap<String, Object> worlds = new HashMap<>();
-
-
 
 	    for (String worldName : this.getResidenceManager().getWorldNames()) {
 		loadFile = new File(worldFolder, saveFilePrefix + worldName + ".yml");
