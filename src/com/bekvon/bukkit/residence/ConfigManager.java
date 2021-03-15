@@ -160,7 +160,7 @@ public class ConfigManager {
     protected boolean preventBuildInRent;
     protected boolean PreventSubZoneRemoval;
     protected boolean stopOnSaveError;
-    protected boolean legacyperms;
+
     protected String namefix;
     protected boolean showIntervalMessages;
     protected boolean ShowNoobMessage;
@@ -951,9 +951,6 @@ public class ConfigManager {
 	c.addComment("Global.EnablePermissions", "Whether or not to use the Permissions system in conjunction with this config.");
 	c.get("Global.EnablePermissions", true);
 
-	c.addComment("Global.LegacyPermissions", "Set to true if NOT using Permissions or PermissionsBukkit, or using a really old version of Permissions");
-	legacyperms = c.get("Global.LegacyPermissions", false);
-
 	c.addComment("Global.EnableEconomy",
 	    "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
 	enableEconomy = c.get("Global.EnableEconomy", true);
@@ -1512,10 +1509,6 @@ public class ConfigManager {
 
     public boolean isTeleportTitleMessage() {
 	return TeleportTitleMessage;
-    }
-
-    public boolean useLegacyPermissions() {
-	return legacyperms;
     }
 
     public String getDefaultGroup() {

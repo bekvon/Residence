@@ -561,8 +561,6 @@ public class Residence extends JavaPlugin {
 		case Essentials:
 		    this.loadEssentialsEconomy();
 		    break;
-		case MineConomy:
-		    break;
 		case None:
 		    if (this.getPermissionManager().getPermissionsPlugin() instanceof ResidenceVaultAdapter) {
 			ResidenceVaultAdapter vault = (ResidenceVaultAdapter) this.getPermissionManager().getPermissionsPlugin();
