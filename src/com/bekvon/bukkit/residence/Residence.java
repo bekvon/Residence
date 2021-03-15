@@ -70,7 +70,6 @@ import com.bekvon.bukkit.residence.economy.BlackHoleEconomy;
 import com.bekvon.bukkit.residence.economy.CMIEconomy;
 import com.bekvon.bukkit.residence.economy.EconomyInterface;
 import com.bekvon.bukkit.residence.economy.EssentialsEcoAdapter;
-import com.bekvon.bukkit.residence.economy.IConomy5Adapter;
 import com.bekvon.bukkit.residence.economy.IConomy6Adapter;
 import com.bekvon.bukkit.residence.economy.RealShopEconomy;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
@@ -1136,8 +1135,6 @@ public class Residence extends JavaPlugin {
 	if (p != null) {
 	    if (p.getDescription().getVersion().startsWith("6")) {
 		economy = new IConomy6Adapter((com.iCo6.iConomy) p);
-	    } else if (p.getDescription().getVersion().startsWith("5")) {
-		economy = new IConomy5Adapter();
 	    } else {
 		consoleMessage("UNKNOWN iConomy version!");
 		return;
