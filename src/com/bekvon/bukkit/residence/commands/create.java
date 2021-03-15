@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.ConfigReader;
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -52,5 +53,6 @@ public class create implements cmd {
 	// Main command
 	c.get("Description", "Create Residences");
 	c.get("Info", Arrays.asList("&eUsage: &6/res create [residence_name]"));
+	LocaleManager.addTabCompleteMain(this);	
     }
 }
