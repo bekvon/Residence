@@ -29,7 +29,7 @@ public class PermissionsBukkitAdapter implements PermissionsInterface {
 		return name;
 	    }
 	}
-	if (groups.size() > 0) {
+	if (!groups.isEmpty()) {
 	    return groups.get(0).getName().toLowerCase();
 	}
 	return null;
