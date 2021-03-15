@@ -42,6 +42,7 @@ public enum Flags {
     egg(CMIMaterial.EGG, FlagMode.Both, "Allows or denys interaction with dragon egg", true),
     enchant(CMIMaterial.ENCHANTING_TABLE, FlagMode.Both, "Allows or denys players to use enchanting tables", true),
     explode(CMIMaterial.TNT_MINECART, FlagMode.Residence, "Allows or denys explosions in residences", false),
+    elytra(CMIMaterial.ELYTRA, FlagMode.Both, "Allows or denys elytra usage in residences", false),
     enderpearl(CMIMaterial.ENDER_PEARL, FlagMode.Both, "Allow or disallow teleporting to the residence with enderpearl", true),
     fallinprotection(CMIMaterial.SAND, FlagMode.Residence, "Protects from blocks falling into residence", true),
     falldamage(CMIMaterial.LEATHER_BOOTS, FlagMode.Residence, "Protects players from fall damage", true),

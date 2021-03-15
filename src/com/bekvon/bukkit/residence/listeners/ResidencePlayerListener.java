@@ -1794,7 +1794,7 @@ public class ResidencePlayerListener implements Listener {
 	    }, 20L);
     }
 
-    private static Location getSafeLocation(Location loc) {
+    public static Location getSafeLocation(Location loc) {
 
 	int curY = loc.getBlockY();
 
