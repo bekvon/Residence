@@ -58,6 +58,7 @@ import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.Utils;
 
 public class ClaimedResidence {
@@ -1326,9 +1327,8 @@ public class ClaimedResidence {
 		return;
 	    }
 	} else {
-	    if (!resadmin && !isAdmin && !ResPerm.bypass_tp.hasPermission(reqPlayer, 10000L)
-		&& (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer)
-		    && Residence.getInstance().getConfigManager().isCanTeleportIncludeOwner())) {
+	    if (!resadmin && !isAdmin && !ResPerm.bypass_tp.hasPermission(reqPlayer, 10000L) && !ResPerm.admin_tp.hasPermission(reqPlayer, 10000L)
+		&& (!this.isOwner(targetPlayer) || this.isOwner(targetPlayer) && Residence.getInstance().getConfigManager().isCanTeleportIncludeOwner())) {
 		ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(reqPlayer);
 		PermissionGroup group = rPlayer.getGroup();
 		if (!group.hasTpAccess()) {

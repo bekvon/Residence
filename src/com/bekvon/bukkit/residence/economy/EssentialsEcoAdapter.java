@@ -23,8 +23,8 @@ public class EssentialsEcoAdapter implements EconomyInterface {
     @Override
     public double getBalance(Player player) {
 	try {
-	    if (Economy.playerExists(player.getName())) {
-		return Economy.getMoney(player.getName());
+	    if (Economy.playerExists(player.getUniqueId())) {
+		return Economy.getMoneyExact(player.getUniqueId()).doubleValue();
 	    }
 	    return 0;
 	} catch (UserDoesNotExistException ex) {

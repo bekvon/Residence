@@ -21,7 +21,7 @@ public class KingdomsUtil {
 	this.plugin = residence;
     }
 
-    public Land getRegion(CuboidArea area) {
+    private Land getRegion(CuboidArea area) {
 
 	if (plugin.getKingdomsManager() == null)
 	    return null;
@@ -62,8 +62,8 @@ public class KingdomsUtil {
 
 	World world = Bukkit.getWorld(sl.getWorld());
 
-	Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), sl.getX() * 16, 0, sl.getZ() * 16);
-	Location highLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player.getName()).getWorld(), sl.getX() * 16 + 16, world.getMaxHeight(), sl.getZ() * 16 + 16);
+	Location lowLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player).getWorld(), sl.getX() * 16, 0, sl.getZ() * 16);
+	Location highLoc = new Location(plugin.getSelectionManager().getPlayerLoc1(player).getWorld(), sl.getX() * 16 + 16, world.getMaxHeight(), sl.getZ() * 16 + 16);
 	Visualizer v = new Visualizer(player);
 	v.setAreas(plugin.getSelectionManager().getSelectionCuboid(player));
 	v.setErrorAreas(new CuboidArea(lowLoc, highLoc));
