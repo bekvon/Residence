@@ -13,7 +13,6 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceChatEvent;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
-import com.sun.jna.platform.win32.LMAccess;
 
 public class ChatChannel {
 

@@ -1,7 +1,11 @@
 package com.bekvon.bukkit.residence.text.help;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -9,13 +13,14 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.Zrips.CMI.CMI;
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
+import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -282,7 +287,6 @@ public class InformationPager {
 
 		    sb.append(msg);
 		    sb.append(" \n");
-//	    sender.sendMessage(msg);
 		}
 
 		File BackupDir = new File(Residence.getInstance().getDataLocation(), "FullLists");
@@ -290,14 +294,17 @@ public class InformationPager {
 		    BackupDir.mkdir();
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+
 		File file = new File(BackupDir, dateFormat.format(date) + ".txt");
-		try {
-		    FileUtils.writeStringToFile(file, sb.toString(), "UTF-8");
-		} catch (IOException e) {
+		try (
+		    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8));) {
+		    writer.append(sb.toString());
+		    writer.flush();
+		} catch (Exception e) {
 		    e.printStackTrace();
 		}
+		
 		Bukkit.getConsoleSender().sendMessage("Saved file to FullLists folder with " + file.getName() + " name");
-		return;
 	    }
 	});
     }
@@ -337,7 +344,7 @@ public class InformationPager {
 	rm.addText(plugin.msg(lm.General_pageCount, CurrentPage, pageCount)).addHover(plugin.msg(lm.General_pageCountHover, totalEntries));
 	rm.addText(plugin.msg(pageCount > CurrentPage ? lm.General_nextPage : lm.General_nextPageOff)).addHover(
 	    pageCount > CurrentPage ? plugin.msg(lm.General_nextPageHover) : plugin.msg(lm.General_firstPageHover)).addCommand(
-	    pageCount > CurrentPage ? cmd + " " + pagePrefix + NextPage : cmd + " " + pagePrefix + 1);
+		pageCount > CurrentPage ? cmd + " " + pagePrefix + NextPage : cmd + " " + pagePrefix + 1);
 	if (pageCount != 0)
 	    rm.show(sender);
     }
