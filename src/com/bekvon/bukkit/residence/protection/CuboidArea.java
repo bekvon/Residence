@@ -24,7 +24,12 @@ public class CuboidArea {
     protected World world;
 
     public CuboidArea(Location startLoc, Location endLoc) {
+	
+	if (startLoc == null || endLoc == null)
+	    return;
+	
 	int highx, highy, highz, lowx, lowy, lowz;
+	
 	if (startLoc.getBlockX() > endLoc.getBlockX()) {
 	    highx = startLoc.getBlockX();
 	    lowx = endLoc.getBlockX();
@@ -48,8 +53,10 @@ public class CuboidArea {
 	}
 	highPoints = new Vector(highx, highy, highz);
 	lowPoints = new Vector(lowx, lowy, lowz);
-	worldName = startLoc.getWorld().getName();
-	world = startLoc.getWorld();
+
+	world = startLoc.getWorld() != null ? startLoc.getWorld() : startLoc.getWorld() != null ? startLoc.getWorld() : null;
+
+	worldName = world != null ? world.getName() : null;
     }
 
     public CuboidArea() {
