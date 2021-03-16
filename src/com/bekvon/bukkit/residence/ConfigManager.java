@@ -97,8 +97,11 @@ public class ConfigManager {
     protected int autoSaveInt;
     protected boolean NewSaveMechanic;
     private int ItemPickUpDelay;
-    private boolean AutomaticResidenceCreationCheckCollision;
-    private String AutomaticResidenceCreationIncrementFormat;
+    private boolean ARCCheckCollision;
+    private String ARCIncrementFormat;
+    private int ARCSizePercentage;
+    private int ARCSizeMin;
+    private int ARCSizeMax;
 
     private boolean ConsoleLogsShowFlagChanges = true;
 
@@ -617,11 +620,30 @@ public class ConfigManager {
 	c.addComment("Global.Optimizations.AutomaticResidenceCreation.CheckCollision",
 	    "When set to true /res auto command will check for new area collision with other residences to avoid overlapping.",
 	    "Set it to false to gain some performace but new residence can often overlap with old ones");
-	AutomaticResidenceCreationCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
+	ARCCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
 
 	c.addComment("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat",
 	    "Defines new residence name increment when using automatic residence creation command if residence with that name already exist");
-	AutomaticResidenceCreationIncrementFormat = c.get("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat", "_[number]");
+	ARCIncrementFormat = c.get("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat", "_[number]");
+
+	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Percentage",
+	    "Value between 1 and 100 which will define size of residence we will create in percentage depending on players permission group");
+	ARCSizePercentage = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Percentage", 50);
+	ARCSizePercentage = ARCSizePercentage < 1 ? 1 : ARCSizePercentage > 100 ? 100 : ARCSizePercentage;
+
+	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Min",
+	    "Value in blocks. While previous percentage will determine general size, this can be used to avoid having tiny residences",
+	    "For example if player has access to 30x30 residence and Percentage is set to 50% then instead of using 15 block size we will use 20 (default)",
+	    "Keep in mind that this will not override actual max/min residence sizes player can have");
+	ARCSizeMin = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Min", 20);
+	ARCSizeMin = ARCSizeMin < 1 ? 1 : ARCSizeMin; 
+
+	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Max",
+	    "Value in blocks. While previous percentage will determine general size, this can be used to avoid having huge residences",
+	    "For example if player has access to 500x500 residence and Percentage is set to 50% then instead of using 250 block size we will use 100 (default)",
+	    "Keep in mind that this will not override actual max/min residence sizes player can have");
+	ARCSizeMax = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Max", 100);
+	ARCSizeMax = ARCSizeMax < ARCSizeMin ? ARCSizeMin : ARCSizeMax; 
 
 //	c.addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
 //	    "You can bypass this with residence.checkbadflags permission node");
@@ -1987,14 +2009,6 @@ public class ConfigManager {
 	return ItemPickUpDelay;
     }
 
-    public boolean isAutomaticResidenceCreationCheckCollision() {
-	return AutomaticResidenceCreationCheckCollision;
-    }
-
-    public String AutomaticResidenceCreationIncrementFormat() {
-	return AutomaticResidenceCreationIncrementFormat;
-    }
-
     public boolean isConsoleLogsShowFlagChanges() {
 	return ConsoleLogsShowFlagChanges;
     }
@@ -2041,6 +2055,26 @@ public class ConfigManager {
 
     public boolean isLoadEveryWorld() {
 	return LoadEveryWorld;
+    }
+
+    public boolean isARCCheckCollision() {
+	return ARCCheckCollision;
+    }
+
+    public String ARCIncrementFormat() {
+	return ARCIncrementFormat;
+    }
+
+    public int getARCSizePercentage() {
+	return ARCSizePercentage;
+    }
+
+    public int getARCSizeMin() {
+	return ARCSizeMin;
+    }
+
+    public int getARCSizeMax() {
+	return ARCSizeMax;
     }
 
 //    public int getTownMinRange() {

@@ -18,7 +18,6 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class auto implements cmd {
 
@@ -65,6 +64,10 @@ public class auto implements cmd {
 	    x = lenght > group.getMaxX() ? group.getMaxX() : lenght;
 	    z = lenght > group.getMaxZ() ? group.getMaxZ() : lenght;
 	    y = lenght > group.getMaxY() ? group.getMaxY() : lenght;
+	} else {
+	    x = getMin(x, group.getMaxX());
+	    y = getMin(y, group.getMaxY());
+	    z = getMin(z, group.getMaxZ());
 	}
 
 	int rX = (x - 1) / 2;
@@ -114,7 +117,7 @@ public class auto implements cmd {
 
 	if (plugin.getResidenceManager().getByName(resName) != null) {
 	    for (int i = 1; i < 50; i++) {
-		String tempName = resName + plugin.getConfigManager().AutomaticResidenceCreationIncrementFormat().replace("[number]", i + "");
+		String tempName = resName + plugin.getConfigManager().ARCIncrementFormat().replace("[number]", i + "");
 		if (plugin.getResidenceManager().getByName(tempName) == null) {
 		    resName = tempName;
 		    break;
@@ -128,6 +131,25 @@ public class auto implements cmd {
 	player.performCommand((resadmin ? "resadmin" : "res") + " create " + resName);
 
 	return true;
+    }
+
+    private static int getMax(int max) {
+	int arcmin = Residence.getInstance().getConfigManager().getARCSizeMin();
+	int arcmax = Residence.getInstance().getConfigManager().getARCSizeMax();
+	int maxV = (int) (max * (Residence.getInstance().getConfigManager().getARCSizePercentage() / 100D));
+	maxV = maxV < arcmin && arcmin < max ? arcmin : maxV;
+	maxV = maxV > arcmax ? arcmax : maxV;
+	return maxV;
+    }
+
+    private static int getMin(int min, int max) {
+	int percent = (int) (max * (Residence.getInstance().getConfigManager().getARCSizePercentage() / 100D));
+	int arcmin = Residence.getInstance().getConfigManager().getARCSizeMin();
+	int arcmax = Residence.getInstance().getConfigManager().getARCSizeMax();
+	int pmin = arcmin < percent ? percent : arcmin;
+	min = min < pmin ? pmin : min;
+	min = min > arcmax ? arcmin : min;
+	return min;
     }
 
     public static void resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance, int max) {
@@ -145,9 +167,14 @@ public class auto implements cmd {
 
 	List<direction> locked = new ArrayList<direction>();
 
-	boolean checkCollision = plugin.getConfigManager().isAutomaticResidenceCreationCheckCollision();
+	boolean checkCollision = plugin.getConfigManager().isARCCheckCollision();
 	int skipped = 0;
 	int done = 0;
+
+	int maxX = getMax(group.getMaxX());
+	if (max < 0)
+	    max = maxX;
+
 	while (true) {
 	    if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 		if (dir.equals(direction.Top) || dir.equals(direction.Bottom)) {

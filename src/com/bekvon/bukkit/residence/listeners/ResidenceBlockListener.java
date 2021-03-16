@@ -519,7 +519,7 @@ public class ResidenceBlockListener implements Listener {
 
 	List<direction> locked = new ArrayList<direction>();
 
-	boolean checkCollision = plugin.getConfigManager().isAutomaticResidenceCreationCheckCollision();
+	boolean checkCollision = plugin.getConfigManager().isARCCheckCollision();
 	int skipped = 0;
 	int done = 0;
 	while (true) {
