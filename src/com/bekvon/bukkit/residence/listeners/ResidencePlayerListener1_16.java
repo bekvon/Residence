@@ -8,7 +8,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
+import com.Zrips.CMI.utils.VersionChecker.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -34,7 +36,11 @@ public class ResidencePlayerListener1_16 implements Listener {
 
 	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 	    return;
-
+	try {
+	    if (Version.isCurrentHigher(Version.v1_8_R3) && event.getHand() != EquipmentSlot.HAND)
+		return;
+	} catch (Exception e) {
+	}
 	Player player = event.getPlayer();
 
 	Block block = event.getClickedBlock();
@@ -50,7 +56,7 @@ public class ResidencePlayerListener1_16 implements Listener {
 	if (res == null)
 	    return;
 
-	if (!res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.anchor, FlagCombo.OnlyTrue)) {
+	if (!res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.anchor, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)) {
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.anchor, res.getName());
 	    event.setCancelled(true);
 	}
