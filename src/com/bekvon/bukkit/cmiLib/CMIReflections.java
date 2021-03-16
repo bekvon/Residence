@@ -64,15 +64,17 @@ public class CMIReflections {
 	} catch (Throwable e) {
 	    e.printStackTrace();
 	}
-	try {
-	    CraftParticle = getBukkitClass("CraftParticle");
-	} catch (Throwable e) {
-	    e.printStackTrace();
-	}
-	try {
-	    ParticleParam = getMinecraftClass("ParticleParam");
-	} catch (Throwable e) {
-	    e.printStackTrace();
+	if (Version.isCurrentHigher(Version.v1_12_R1)) {
+	    try {
+		CraftParticle = getBukkitClass("CraftParticle");
+	    } catch (Throwable e) {
+//	    e.printStackTrace();
+	    }
+	    try {
+		ParticleParam = getMinecraftClass("ParticleParam");
+	    } catch (Throwable e) {
+//	    e.printStackTrace();
+	    }
 	}
 	try {
 	    CraftContainer = getMinecraftClass("Container");

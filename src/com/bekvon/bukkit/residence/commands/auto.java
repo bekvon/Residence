@@ -147,9 +147,11 @@ public class auto implements cmd {
 	int arcmin = Residence.getInstance().getConfigManager().getARCSizeMin();
 	int arcmax = Residence.getInstance().getConfigManager().getARCSizeMax();
 	int pmin = arcmin < percent ? percent : arcmin;
-	min = min < pmin ? pmin : min;
-	min = min > arcmax ? arcmin : min;
-	return min;
+	int newmin = min < pmin ? pmin : min;
+	newmin = newmin > arcmax ? arcmin : newmin;
+	newmin = newmin > max ? max : newmin;
+
+	return newmin;
     }
 
     public static void resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance, int max) {

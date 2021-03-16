@@ -79,6 +79,7 @@ import com.bekvon.bukkit.residence.itemlist.WorldItemManager;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceEntityListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
+import com.bekvon.bukkit.residence.listeners.ResidenceLWCListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_14;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_15;
@@ -530,8 +531,12 @@ public class Residence extends JavaPlugin {
 	    try {
 		if (lwcp != null) {
 		    lwc = ((LWCPlugin) lwcp).getLWC();
+		    try {
+			LWC.getInstance().getModuleLoader().registerModule(this, new ResidenceLWCListener());
+		    } catch (Throwable e) {
+			e.printStackTrace();
+		    }
 		    Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " LWC hooked.");
-
 		}
 	    } catch (Throwable e) {
 		e.printStackTrace();
