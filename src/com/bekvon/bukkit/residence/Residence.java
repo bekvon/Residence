@@ -203,6 +203,7 @@ public class Residence extends JavaPlugin {
     protected int DespawnMobsBukkitId = -1;
 
     private boolean SlimeFun = false;
+    private boolean lwc = false;
     Metrics metrics = null;
 
     protected int autosaveBukkitId = -1;
@@ -529,6 +530,7 @@ public class Residence extends JavaPlugin {
 		    try {
 			ResidenceLWCListener.register(this);
 			Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " LWC hooked.");
+			lwc = true;
 		    } catch (Throwable e) {
 			e.printStackTrace();
 		    }
@@ -1925,4 +1927,7 @@ public class Residence extends JavaPlugin {
 	return SlimeFun;
     }
 
+    public boolean isLwcPresent() {
+	return lwc;
+    }
 }

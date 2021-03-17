@@ -21,6 +21,7 @@ import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRentEvent.RentEventType;
+import com.bekvon.bukkit.residence.listeners.ResidenceLWCListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -443,8 +444,8 @@ public class RentManager implements MarketRentInterface {
 
 	    boolean backup = res.getPermissions().has("backup", false);
 
-	    if (plugin.getConfigManager().isRemoveLwcOnUnrent())
-		plugin.getResidenceManager().removeLwcFromResidence(player, res);
+	    if (plugin.getConfigManager().isRemoveLwcOnUnrent() && plugin.isLwcPresent())
+		ResidenceLWCListener.removeLwcFromResidence(player, res);
 
 	    res.getPermissions().applyDefaultFlags();
 

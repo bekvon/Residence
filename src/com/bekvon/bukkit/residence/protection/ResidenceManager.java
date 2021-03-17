@@ -41,13 +41,11 @@ import com.bekvon.bukkit.residence.event.ResidenceCreationEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent.DeleteCause;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
+import com.bekvon.bukkit.residence.listeners.ResidenceLWCListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.GetTime;
-import com.griefcraft.cache.ProtectionCache;
-import com.griefcraft.lwc.LWC;
-import com.griefcraft.model.Protection;
 
 public class ResidenceManager implements ResidenceInterface {
     protected SortedMap<String, ClaimedResidence> residences;
@@ -575,8 +573,8 @@ public class ResidenceManager implements ResidenceInterface {
 		    }
 		});
 	    }
-	    if (plugin.getConfigManager().isRemoveLwcOnDelete())
-		removeLwcFromResidence(player, res);
+	    if (plugin.getConfigManager().isRemoveLwcOnDelete() && plugin.isLwcPresent())
+		ResidenceLWCListener.removeLwcFromResidence(player, res);
 	    if (regenerate) {
 		for (CuboidArea one : res.getAreaArray()) {
 		    plugin.getSelectionManager().regenerate(one);
@@ -616,53 +614,6 @@ public class ResidenceManager implements ResidenceInterface {
 			plugin.getTransactionManager().giveEconomyMoney(rPlayer.getPlayerName(), chargeamount);
 		}
 	    }
-    }
-
-    public void removeLwcFromResidence(final Player player, final ClaimedResidence res) {
-//	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-//	    @Override
-//	    public void run() {
-	long time = System.currentTimeMillis();
-	LWC lwc = com.griefcraft.lwc.LWC.getInstance();
-	if (lwc == null)
-	    return;
-	if (res == null)
-	    return;
-	int i = 0;
-
-	ProtectionCache cache = lwc.getProtectionCache();
-
-	List<Material> list = plugin.getConfigManager().getLwcMatList();
-
-	try {
-	    for (CuboidArea area : res.getAreaArray()) {
-		Location low = area.getLowLocation();
-		Location high = area.getHighLocation();
-		World world = low.getWorld();
-		for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
-		    for (int y = low.getBlockY(); y <= high.getBlockY(); y++) {
-			for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
-			    Block b = world.getBlockAt(x, y, z);
-			    if (!b.getChunk().isLoaded())
-				b.getChunk().load();
-			    if (!list.contains(b.getType()))
-				continue;
-			    Protection prot = cache.getProtection(b);
-			    if (prot == null)
-				continue;
-			    prot.remove();
-			    i++;
-			}
-		    }
-		}
-	    }
-	} catch (Exception e) {
-	}
-	if (i > 0)
-	    plugin.msg(player, lm.Residence_LwcRemoved, i, System.currentTimeMillis() - time);
-	return;
-//	    }
-//	});
     }
 
     public void removeAllByOwner(String owner) {
