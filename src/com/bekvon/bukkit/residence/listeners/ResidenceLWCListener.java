@@ -1,17 +1,14 @@
 package com.bekvon.bukkit.residence.listeners;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.griefcraft.lwc.LWC;
-import com.griefcraft.scripting.Module;
 import com.griefcraft.scripting.event.LWCAccessEvent;
 import com.griefcraft.scripting.event.LWCBlockInteractEvent;
 import com.griefcraft.scripting.event.LWCCommandEvent;
@@ -29,7 +26,11 @@ import com.griefcraft.scripting.event.LWCRedstoneEvent;
 import com.griefcraft.scripting.event.LWCReloadEvent;
 import com.griefcraft.scripting.event.LWCSendLocaleEvent;
 
-public class ResidenceLWCListener implements Module {
+public class ResidenceLWCListener implements com.griefcraft.scripting.Module {
+
+    public static void register(Plugin plugin) {
+	com.griefcraft.lwc.LWC.getInstance().getModuleLoader().registerModule(plugin, new ResidenceLWCListener());
+    }
 
     @Override
     public void load(LWC lwc) {

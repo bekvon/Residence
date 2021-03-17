@@ -122,10 +122,8 @@ import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
 import com.bekvon.bukkit.residence.utils.TabComplete;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
-//import com.bekvon.bukkit.residence.towns.TownManager;
+
 import com.earth2me.essentials.Essentials;
-import com.griefcraft.lwc.LWC;
-import com.griefcraft.lwc.LWCPlugin;
 import com.residence.mcstats.Metrics;
 import com.residence.zip.ZipLibrary;
 
@@ -222,8 +220,6 @@ public class Residence extends JavaPlugin {
 //    private String ServerLandname = "Server_Land";
     private String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
     private String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
-
-    private LWC lwc;
 
     public HashMap<String, Long> rtMap = new HashMap<String, Long>();
     public List<String> teleportDelayMap = new ArrayList<String>();
@@ -530,13 +526,12 @@ public class Residence extends JavaPlugin {
 	    Plugin lwcp = Bukkit.getPluginManager().getPlugin("LWC");
 	    try {
 		if (lwcp != null) {
-		    lwc = ((LWCPlugin) lwcp).getLWC();
 		    try {
-			LWC.getInstance().getModuleLoader().registerModule(this, new ResidenceLWCListener());
+			ResidenceLWCListener.register(this);
+			Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " LWC hooked.");
 		    } catch (Throwable e) {
 			e.printStackTrace();
 		    }
-		    Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " LWC hooked.");
 		}
 	    } catch (Throwable e) {
 		e.printStackTrace();
@@ -965,9 +960,9 @@ public class Residence extends JavaPlugin {
 	return versionChecker;
     }
 
-    public LWC getLwc() {
-	return lwc;
-    }
+//    public LWC getLwc() {
+//	return lwc;
+//    }
 
     public File getDataLocation() {
 	return dataFolder;

@@ -623,7 +623,7 @@ public class ResidenceManager implements ResidenceInterface {
 //	    @Override
 //	    public void run() {
 	long time = System.currentTimeMillis();
-	LWC lwc = plugin.getLwc();
+	LWC lwc = com.griefcraft.lwc.LWC.getInstance();
 	if (lwc == null)
 	    return;
 	if (res == null)
