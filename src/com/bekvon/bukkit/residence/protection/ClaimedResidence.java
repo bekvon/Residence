@@ -1912,12 +1912,12 @@ public class ClaimedResidence {
 
     @Deprecated
     public String getWorld() {
-	return perms.getWorld();
+	return perms.getWorldName();
     }
 
     @Deprecated
     public String getWorldName() {
-	return perms.getWorld();
+	return perms.getWorldName();
     }
 
     public ResidencePlayer getRPlayer() {

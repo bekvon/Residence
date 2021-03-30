@@ -18,15 +18,18 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
 import com.bekvon.bukkit.cmiLib.RawMessage;
+import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -45,6 +48,7 @@ import com.bekvon.bukkit.residence.listeners.ResidenceLWCListener;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 public class ResidenceManager implements ResidenceInterface {
@@ -527,12 +531,16 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    residences.remove(name.toLowerCase());
 
-	    if (plugin.getConfigManager().isUseClean() && plugin.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
+	    if (Version.isCurrentEqualOrHigher(Version.v1_13_R1) && plugin.getConfigManager().isUseClean() && plugin.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
 
 		CuboidArea[] arr = res.getAreaArray();
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		    @Override
 		    public void run() {
+			ChunkSnapshot chunkSnapshot = null;
+			int chunkX = 0;
+			int chunkZ = 0;
+			Set<Location> locations = new HashSet<Location>();
 			for (CuboidArea area : arr) {
 			    Location low = area.getLowLocation().clone();
 			    Location high = area.getHighLocation().clone();
@@ -541,35 +549,44 @@ public class ResidenceManager implements ResidenceInterface {
 
 				if (low.getBlockY() < plugin.getConfigManager().getCleanLevel())
 				    low.setY(plugin.getConfigManager().getCleanLevel());
-
 				World world = low.getWorld();
+				for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+				    for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+					int hy = world.getHighestBlockYAt(x, z);
+					if (high.getBlockY() < hy)
+					    hy = high.getBlockY();
 
-				Location temploc = new Location(world, low.getBlockX(), low.getBlockY(), low.getBlockZ());
+					int cx = Math.abs(x % 16);
+					int cz = Math.abs(z % 16);
+					if (chunkSnapshot == null || x >> 4 != chunkX || z >> 4 != chunkZ) {
+					    if (!world.getBlockAt(x, 0, z).getChunk().isLoaded()) {
+						world.getBlockAt(x, 0, z).getChunk().load();
+						chunkSnapshot = world.getBlockAt(x, 0, z).getChunk().getChunkSnapshot(false, false, false);
+						world.getBlockAt(x, 0, z).getChunk().unload();
+					    } else {
+						chunkSnapshot = world.getBlockAt(x, 0, z).getChunk().getChunkSnapshot();
+					    }
+					    chunkX = x >> 4;
+					    chunkZ = z >> 4;
+					}
 
-				Bukkit.getScheduler().runTask(plugin, () -> {
-				    Long blocks = 0L;
-				    for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
-					temploc.setX(x);
-					for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
-					    temploc.setZ(z);
-					    for (int y = low.getBlockY(); y <= world.getHighestBlockAt(x, z).getY(); y++) {
-						temploc.setY(y);
-
-						if (!temploc.getChunk().isLoaded()) {
-						    temploc.getChunk().load();
-						}
-						if (plugin.getConfigManager().getCleanBlocks().contains(temploc.getBlock().getType())) {
-						    temploc.getBlock().setType(Material.AIR);
-						}
-
-						blocks++;
+					if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+					    for (int y = low.getBlockY(); y <= hy; y++) {
+						BlockData type = chunkSnapshot.getBlockData(cx, y, cz);
+						if (!plugin.getConfigManager().getCleanBlocks().contains(type.getMaterial()))
+						    continue;
+						locations.add(new Location(world, x, y, z));
 					    }
 					}
 				    }
-				});
+				}
 			    }
 			}
-			return;
+			Bukkit.getScheduler().runTask(plugin, () -> {
+			    for (Location one : locations) {
+				one.getBlock().setType(Material.AIR);
+			    }
+			});
 		    }
 		});
 	    }

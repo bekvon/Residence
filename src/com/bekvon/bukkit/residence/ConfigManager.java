@@ -63,7 +63,7 @@ public class ConfigManager {
     protected boolean LwcOnBuy = false;
     protected boolean LwcOnUnrent = false;
     protected List<Material> LwcMatList = new ArrayList<Material>();
-    protected boolean UseClean;
+    protected boolean UseClean = false;
     protected boolean PvPFlagPrevent;
     protected boolean OverridePvp;
     protected boolean BlockAnyTeleportation;
@@ -121,7 +121,7 @@ public class ConfigManager {
     protected int FlowLevel;
     protected int PlaceLevel;
     protected int BlockFallLevel;
-    protected int CleanLevel;
+    protected int CleanLevel = 63;
     protected int NewPlayerRangeX;
     protected int NewPlayerRangeY;
     protected int NewPlayerRangeZ;
@@ -866,6 +866,7 @@ public class ConfigManager {
 	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
 	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+	    LwcMatList.clear();
 	    c.addComment("Global.Lwc.OnDelete", "Removes lwc protection from all defined objects when removing residence");
 	    LwcOnDelete = c.get("Global.Lwc.OnDelete", true);
 	    c.addComment("Global.Lwc.OnBuy", "Removes lwc protection from all defined objects when buying residence");
@@ -920,26 +921,28 @@ public class ConfigManager {
 	BlockFallLevel = c.get("Global.AntiGreef.BlockFall.Level", 62);
 	BlockFallWorlds = c.get("Global.AntiGreef.BlockFall.Worlds", Arrays.asList(defaultWorldName));
 
-	// Res cleaning
-	c.addComment("Global.AntiGreef.ResCleaning.Use",
-	    "With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
-	    "Effective way to prevent residence creating near greefing target and then remove it",
-	    "ATTENTION! Bigger residence areas could want to create bigger loads on server when cleaning up areas. So dont use this if regular player have access to huge residences. 15 million blocks would be a max limit");
-	UseClean = c.get("Global.AntiGreef.ResCleaning.Use", false);
-	c.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
-	CleanLevel = c.get("Global.AntiGreef.ResCleaning.Level", 63);
-	c.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
-	List<?> pls = c.get("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(CMIMaterial.WATER.toString(), CMIMaterial.LAVA.toString()));
-	for (Object one : pls) {
-	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
-	    if (mat != CMIMaterial.NONE && mat.getMaterial() != null)
-		CleanBlocks.add(mat.getMaterial());
+	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+	    // Res cleaning
+	    CleanBlocks.clear();
+	    c.addComment("Global.AntiGreef.ResCleaning.Use",
+		"With this set to true, after player removes its residence, all blocks listed below, will be replaced with air blocks",
+		"Effective way to prevent residence creating near greefing target and then remove it",
+		"ATTENTION! Bigger residence areas could want to create bigger loads on server when cleaning up areas. So dont use this if regular player have access to huge residences. 15 million blocks would be a max limit");
+	    UseClean = c.get("Global.AntiGreef.ResCleaning.Use", false);
+	    c.addComment("Global.AntiGreef.ResCleaning.Level", "Level from whichone you want to replace blocks");
+	    CleanLevel = c.get("Global.AntiGreef.ResCleaning.Level", 63);
+	    c.addComment("Global.AntiGreef.ResCleaning.Blocks", "Block list to be replaced", "By default only water and lava will be replaced");
+	    List<?> pls = c.get("Global.AntiGreef.ResCleaning.Blocks", Arrays.asList(CMIMaterial.WATER.toString(), CMIMaterial.LAVA.toString()));
+	    for (Object one : pls) {
+		CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
+		if (mat != CMIMaterial.NONE && mat.getMaterial() != null && !mat.isAir())
+		    CleanBlocks.add(mat.getMaterial());
+	    }
+
+	    CleanWorlds = c.get("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName));
 	}
-
-	CleanWorlds = c.get("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName));
-
-	c.addComment("Global.AntiGreef.Flags.Prevent",
-	    "By setting this to true flags from list will be protected from change while there is some one inside residence besides owner",
+	
+	c.addComment("Global.AntiGreef.Flags.Prevent", "By setting this to true flags from list will be protected from change while there is some one inside residence besides owner",
 	    "Protects in example from people inviting some one and changing pvp flag to true to kill them");
 	PvPFlagPrevent = c.get("Global.AntiGreef.Flags.Prevent", true);
 	FlagsList = c.get("Global.AntiGreef.Flags.list", Arrays.asList("pvp"));
@@ -968,29 +971,27 @@ public class ConfigManager {
 	c.addComment("Global.LeaseCheckInterval", "The interval, in minutes, between residence lease checks (if leases are enabled).");
 	leaseCheckInterval = c.get("Global.LeaseCheckInterval", 10);
 
-	c.addComment("Global.LeaseAutoRenew",
-	    "Allows leases to automatically renew so long as the player has the money, if economy is disabled, this setting does nothing.");
+	c.addComment("Global.LeaseAutoRenew", "Allows leases to automatically renew so long as the player has the money, if economy is disabled, this setting does nothing.");
 	leaseAutoRenew = c.get("Global.LeaseAutoRenew", true);
 
 	c.addComment("Global.EnablePermissions", "Whether or not to use the Permissions system in conjunction with this config.");
 	c.get("Global.EnablePermissions", true);
 
-	c.addComment("Global.EnableEconomy",
-	    "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
+	c.addComment("Global.EnableEconomy", "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
 	enableEconomy = c.get("Global.EnableEconomy", true);
 
-	c.addComment("Global.Type",
-	    "Defaults to None which will start by looking to default economy engine throw vault API and if it fails to any supported economy engine",
+	c.addComment("Global.Type", "Defaults to None which will start by looking to default economy engine throw vault API and if it fails to any supported economy engine",
 	    "Custom economy engines can be defined to access economy directly", "Supported variables: " + EconomyType.toStringLine());
 	VaultEconomy = EconomyType.getByName(c.get("Global.Type", "None"));
-	if (VaultEconomy == null) {
+	if (VaultEconomy == null)
+
+	{
 	    plugin.consoleMessage("&cCould not determine economy from " + c.get("Global.Type", "Vault"));
 	    plugin.consoleMessage("&cTrying to find suitable economy system");
 	    VaultEconomy = EconomyType.None;
 	}
 
-	c.addComment("Global.ExtraEnterMessage",
-	    "When enabled extra message will appear in chat if residence is for rent or for sell to inform how he can rent/buy residence with basic information.");
+	c.addComment("Global.ExtraEnterMessage", "When enabled extra message will appear in chat if residence is for rent or for sell to inform how he can rent/buy residence with basic information.");
 	ExtraEnterMessage = c.get("Global.ExtraEnterMessage", true);
 
 	c.addComment("Global.Sell.Subzone", "If set to true, this will allow to sell subzones. Its recommended to keep it false tho");
@@ -1027,12 +1028,10 @@ public class ConfigManager {
 	c.addComment("Global.Rent.DefaultValues.PlayerAutoPay", "If set to true, when player is not defining auto pay on renting, then this value will be used");
 	RentPlayerAutoPay = c.get("Global.Rent.DefaultValues.PlayerAutoPay", true);
 
-	c.addComment("Global.Rent.Schematics.RestoreAfterRentEnds",
-	    "EXPERIMENTAL!!! If set to true, residence will be restored to state it was when backup flag was set to true",
+	c.addComment("Global.Rent.Schematics.RestoreAfterRentEnds", "EXPERIMENTAL!!! If set to true, residence will be restored to state it was when backup flag was set to true",
 	    "For securoty reassons only players with aditional residence.backup permission node can set backup flag");
 	RestoreAfterRentEnds = c.get("Global.Rent.Schematics.RestoreAfterRentEnds", true);
-	c.addComment("Global.Rent.Schematics.SaveOnFlagChange",
-	    "When set to true, area state will be saved only when setting backup to true value",
+	c.addComment("Global.Rent.Schematics.SaveOnFlagChange", "When set to true, area state will be saved only when setting backup to true value",
 	    "When set to false, area state will be saved before each renting to have always up to date area look",
 	    "Keep in mind that when its set to false, there is slightly bigger server load as it has to save area each time when some one rents it");
 	SchematicsSaveOnFlagChange = c.get("Global.Rent.Schematics.SaveOnFlagChange", true);
@@ -1040,7 +1039,8 @@ public class ConfigManager {
 	c.addComment("Global.RentCheckInterval", "The interval, in minutes, between residence rent expiration checks (if the rent system is enabled).");
 	rentCheckInterval = c.get("Global.RentCheckInterval", 10);
 
-	ELMessageType old = c.getC().isBoolean("Global.ActionBar.General") && c.getC().getBoolean("Global.ActionBar.General") ? ELMessageType.ActionBar : ELMessageType.ChatBox;
+	ELMessageType old = c.getC().isBoolean("Global.ActionBar.General") && c.getC().getBoolean("Global.ActionBar.General") ? ELMessageType.ActionBar
+	    : ELMessageType.ChatBox;
 	old = c.getC().isBoolean("Global.TitleBar.EnterLeave") && c.getC().getBoolean("Global.TitleBar.EnterLeave") ? ELMessageType.TitleBar : old;
 
 	c.addComment("Global.Messages.GeneralMessages", "Defines where you want to send residence enter/leave/deny move and similar messages. Possible options: " + ELMessageType.getAllValuesAsString(),
@@ -1067,8 +1067,7 @@ public class ConfigManager {
 	c.addComment("Global.ResidenceChatPrefixLength", "Max lenght of residence chat prefix including color codes");
 	chatPrefixLength = c.get("Global.ResidenceChatPrefixLength", 16);
 
-	c.addComment("Global.AdminOnlyCommands",
-	    "Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.");
+	c.addComment("Global.AdminOnlyCommands", "Whether or not to ignore the usual Permission flags and only allow OPs and groups with 'residence.admin' to change residences.");
 	adminsOnly = c.get("Global.AdminOnlyCommands", false);
 
 	c.addComment("Global.AdminOPs", "Setting this to true makes server OPs admins.");
@@ -1078,8 +1077,7 @@ public class ConfigManager {
 	    "Setting this to true server administration wont need to use /resadmin command to access admin command if they are op or have residence.admin permission node.");
 	AdminFullAccess = c.get("Global.AdminFullAccess", false);
 
-	c.addComment("Global.MultiWorldPlugin",
-	    "This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.",
+	c.addComment("Global.MultiWorldPlugin", "This is the name of the plugin you use for multiworld, if you dont have a multiworld plugin you can safely ignore this.",
 	    "The only thing this does is check to make sure the multiworld plugin is enabled BEFORE Residence, to ensure properly loading residences for other worlds.");
 	multiworldPlugin = c.get("Global.MultiWorldPlugin", "Multiverse-Core");
 
@@ -1095,31 +1093,26 @@ public class ConfigManager {
 	c.addComment("Global.StopOnSaveFault", "Setting this to false will cause residence to continue to load even if a error is detected in the save file.");
 	stopOnSaveError = c.get("Global.StopOnSaveFault", true);
 
-	c.addComment(
-	    "This is the residence name filter, that filters out invalid characters.  Google 'Java RegEx' or 'Java Regular Expressions' for more info on how they work.");
+	c.addComment("This is the residence name filter, that filters out invalid characters.  Google 'Java RegEx' or 'Java Regular Expressions' for more info on how they work.");
 	namefix = c.get("Global.ResidenceNameRegex", "[^a-zA-Z0-9\\-\\_]");
 
-	c.addComment("Global.ShowIntervalMessages",
-	    "Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.");
+	c.addComment("Global.ShowIntervalMessages", "Setting this to true sends a message to the console every time Residence does a rent expire check or a lease expire check.");
 	showIntervalMessages = c.get("Global.ShowIntervalMessages", false);
 
 	c.addComment("Global.ShowNoobMessage", "Setting this to true sends a tutorial message to the new player when he places chest on ground.");
 	ShowNoobMessage = c.get("Global.ShowNoobMessage", true);
 
-	c.addComment("Global.NewPlayer", "Setting this to true creates residence around players placed chest if he don't have any.",
-	    "Only once every server restart if he still don't have any residence");
+	c.addComment("Global.NewPlayer", "Setting this to true creates residence around players placed chest if he don't have any.", "Only once every server restart if he still don't have any residence");
 	NewPlayerUse = c.get("Global.NewPlayer.Use", false);
-	c.addComment("Global.NewPlayer.Free", "Setting this to true, residence will be created for free",
-	    "By setting to false, money will be taken from player, if he has them");
+	c.addComment("Global.NewPlayer.Free", "Setting this to true, residence will be created for free", "By setting to false, money will be taken from player, if he has them");
 	NewPlayerFree = c.get("Global.NewPlayer.Free", true);
 	c.addComment("Global.NewPlayer.Range", "Range from placed chest o both sides. By setting to 5, residence will be 5+5+1 = 11 blocks wide");
 	NewPlayerRangeX = c.get("Global.NewPlayer.Range.X", 5);
 	NewPlayerRangeY = c.get("Global.NewPlayer.Range.Y", 5);
 	NewPlayerRangeZ = c.get("Global.NewPlayer.Range.Z", 5);
 
-	c.addComment("Global.CustomContainers",
-	    "Experimental - The following settings are lists of block IDs to be used as part of the checks for the 'container' and 'use' flags when using mods.");
-	pls = c.get("Global.CustomContainers", new ArrayList<String>());
+	c.addComment("Global.CustomContainers", "Experimental - The following settings are lists of block IDs to be used as part of the checks for the 'container' and 'use' flags when using mods.");
+	List<String> pls = c.get("Global.CustomContainers", new ArrayList<String>());
 	for (Object one : pls) {
 	    CMIMaterial mat = CMIMaterial.get(String.valueOf(one));
 	    if (mat != CMIMaterial.NONE)
@@ -1142,8 +1135,7 @@ public class ConfigManager {
 
 	c.addComment("Global.Visualizer.Use", "With this enabled player will see particle effects to mark selection boundaries");
 	useVisualizer = c.get("Global.Visualizer.Use", true);
-	c.addComment("Global.Visualizer.Range", "Range in blocks to draw particle effects for player",
-	    "Keep it no more as 30, as player cant see more than 16 blocks");
+	c.addComment("Global.Visualizer.Range", "Range in blocks to draw particle effects for player", "Keep it no more as 30, as player cant see more than 16 blocks");
 	VisualizerRange = c.get("Global.Visualizer.Range", 16);
 	c.addComment("Global.Visualizer.ShowFor", "For how long in miliseconds (5000 = 5sec) to show particle effects");
 	VisualizerShowFor = c.get("Global.Visualizer.ShowFor", 5000);
@@ -1158,9 +1150,7 @@ public class ConfigManager {
 	if (VisualizerCollumnSpacing < 1)
 	    VisualizerCollumnSpacing = 1;
 
-	c.addComment("Global.Visualizer.SkipBy",
-	    "Defines by how many particles we need to skip",
-	    "This will create moving particle effect and will improve overall look of selection",
+	c.addComment("Global.Visualizer.SkipBy", "Defines by how many particles we need to skip", "This will create moving particle effect and will improve overall look of selection",
 	    "By increasing this number, you can decrease update interval");
 	VisualizerSkipBy = c.get("Global.Visualizer.SkipBy", 5);
 	if (VisualizerSkipBy < 1)
@@ -1185,11 +1175,9 @@ public class ConfigManager {
 	    effectsList += one.name().toLowerCase() + ", ";
 	}
 
-	c.addComment("Global.Visualizer.Selected",
-	    "Particle effect names. possible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
+	c.addComment("Global.Visualizer.Selected", "Particle effect names. possible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
 	    " smoke, largesmoke, spell, instantSpell, mobSpell, mobSpellAmbient, witchMagic, dripWater, dripLava, angryVillager, happyVillager, townaura",
-	    " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance",
-	    "",
+	    " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance", "",
 	    "If using spigot based server different particles can be used:", effectsList);
 
 	// Frame
