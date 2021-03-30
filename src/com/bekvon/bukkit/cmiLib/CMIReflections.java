@@ -17,8 +17,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.residence.utils.Debug;
-
 public class CMIReflections {
 
     private static Class<?> CraftServerClass;

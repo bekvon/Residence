@@ -59,9 +59,9 @@ public class ConfigManager {
     protected boolean NoWaterPlace;
     protected boolean AutoCleanUp;
     protected boolean SellSubzone;
-    protected boolean LwcOnDelete;
-    protected boolean LwcOnBuy;
-    protected boolean LwcOnUnrent;
+    protected boolean LwcOnDelete = false;
+    protected boolean LwcOnBuy = false;
+    protected boolean LwcOnUnrent = false;
     protected List<Material> LwcMatList = new ArrayList<Material>();
     protected boolean UseClean;
     protected boolean PvPFlagPrevent;
@@ -636,14 +636,14 @@ public class ConfigManager {
 	    "For example if player has access to 30x30 residence and Percentage is set to 50% then instead of using 15 block size we will use 20 (default)",
 	    "Keep in mind that this will not override actual max/min residence sizes player can have");
 	ARCSizeMin = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Min", 20);
-	ARCSizeMin = ARCSizeMin < 1 ? 1 : ARCSizeMin; 
+	ARCSizeMin = ARCSizeMin < 1 ? 1 : ARCSizeMin;
 
 	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Max",
 	    "Value in blocks. While previous percentage will determine general size, this can be used to avoid having huge residences",
 	    "For example if player has access to 500x500 residence and Percentage is set to 50% then instead of using 250 block size we will use 100 (default)",
 	    "Keep in mind that this will not override actual max/min residence sizes player can have");
 	ARCSizeMax = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Max", 100);
-	ARCSizeMax = ARCSizeMax < ARCSizeMin ? ARCSizeMin : ARCSizeMax; 
+	ARCSizeMax = ARCSizeMax < ARCSizeMin ? ARCSizeMin : ARCSizeMax;
 
 //	c.addComment("Global.Optimizations.DisabledNoFlagMessage.Use", "Enable if you want to hide no flag error messages in particular worlds",
 //	    "You can bypass this with residence.checkbadflags permission node");
@@ -865,20 +865,22 @@ public class ConfigManager {
 	c.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
-	c.addComment("Global.Lwc.OnDelete", "Removes lwc protection from all defined objects when removing residence");
-	LwcOnDelete = c.get("Global.Lwc.OnDelete", true);
-	c.addComment("Global.Lwc.OnBuy", "Removes lwc protection from all defined objects when buying residence");
-	LwcOnBuy = c.get("Global.Lwc.OnBuy", true);
-	c.addComment("Global.Lwc.OnUnrent", "Removes lwc protection from all defined objects when unrenting residence");
-	LwcOnUnrent = c.get("Global.Lwc.OnUnrent", true);
+	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+	    c.addComment("Global.Lwc.OnDelete", "Removes lwc protection from all defined objects when removing residence");
+	    LwcOnDelete = c.get("Global.Lwc.OnDelete", true);
+	    c.addComment("Global.Lwc.OnBuy", "Removes lwc protection from all defined objects when buying residence");
+	    LwcOnBuy = c.get("Global.Lwc.OnBuy", true);
+	    c.addComment("Global.Lwc.OnUnrent", "Removes lwc protection from all defined objects when unrenting residence");
+	    LwcOnUnrent = c.get("Global.Lwc.OnUnrent", true);
 
-	c.addComment("Global.Lwc.MaterialList", "List of blocks you want to remove protection from");
-	for (String oneName : c.get("Global.Lwc.MaterialList", Arrays.asList("CHEST", "TRAPPED_CHEST", "furnace", "dispenser"))) {
-	    Material mat = Material.getMaterial(oneName.toUpperCase());
-	    if (mat != null)
-		LwcMatList.add(mat);
-	    else
-		Bukkit.getConsoleSender().sendMessage("Incorrect Lwc material name for " + oneName);
+	    c.addComment("Global.Lwc.MaterialList", "List of blocks you want to remove protection from");
+	    for (String oneName : c.get("Global.Lwc.MaterialList", Arrays.asList("CHEST", "TRAPPED_CHEST", "furnace", "dispenser"))) {
+		Material mat = Material.getMaterial(oneName.toUpperCase());
+		if (mat != null)
+		    LwcMatList.add(mat);
+		else
+		    Bukkit.getConsoleSender().sendMessage("Incorrect Lwc material name for " + oneName);
+	    }
 	}
 
 	// TNT explosions below 63
