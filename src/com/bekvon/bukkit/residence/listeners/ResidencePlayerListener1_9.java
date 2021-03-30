@@ -65,6 +65,9 @@ public class ResidencePlayerListener1_9 implements Listener {
 	if (!player.isGliding())
 	    return;
 
+	if (newRes == null)
+	return;
+	
 	if (newRes.getPermissions().playerHas(player, Flags.elytra, FlagCombo.TrueOrNone))
 	    return;
 
