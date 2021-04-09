@@ -12,6 +12,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
 public class limits implements cmd {
 
@@ -34,6 +35,9 @@ public class limits implements cmd {
 	if (target == null)
 	    return false;
 
+	if (!sender.getName().equalsIgnoreCase(target.getName()) && !ResPerm.command_$1_others.hasPermission(sender, this.getClass().getSimpleName()))
+	    return true;
+	
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(target.getUniqueId());
 	rPlayer.getGroup().printLimits(sender, target, rsadm);
 	return true;
