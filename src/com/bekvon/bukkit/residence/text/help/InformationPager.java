@@ -3,7 +3,6 @@ package com.bekvon.bukkit.residence.text.help;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -15,12 +14,11 @@ import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.Zrips.CMI.CMI;
 import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -61,7 +59,7 @@ public class InformationPager {
 	plugin.getInfoPageManager().ShowPagination(sender, pi, command);
     }
 
-    public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin) {
+    public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin, World world) {
 
 	int perPage = 20;
 	if (sender instanceof Player)
@@ -158,10 +156,14 @@ public class InformationPager {
 	    rm.show(sender);
 	}
 
+	String worldName = "";
+	if (world != null)
+	    worldName = " " + world.getName();
+
 	if (targetPlayer != null)
-	    ShowPagination(sender, pi, cmd + " list " + targetPlayer);
+	    ShowPagination(sender, pi, cmd + " list " + targetPlayer + worldName);
 	else
-	    ShowPagination(sender, pi, cmd + " listall");
+	    ShowPagination(sender, pi, cmd + " listall" + worldName);
     }
 
     private void printListWithDelay(final CommandSender sender, final TreeMap<String, ClaimedResidence> ownedResidences, final int start, final boolean resadmin) {
@@ -303,7 +305,7 @@ public class InformationPager {
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		
+
 		Bukkit.getConsoleSender().sendMessage("Saved file to FullLists folder with " + file.getName() + " name");
 	    }
 	});
