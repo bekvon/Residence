@@ -16,6 +16,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
+import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
@@ -50,70 +51,24 @@ public class auto implements cmd {
 	    }
 	}
 
-	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
-
-	PermissionGroup group = rPlayer.getGroup();
-
 	Location loc = player.getLocation();
 
-	int x = group.getMinX();
-	int y = group.getMinY();
-	int z = group.getMinZ();
-
-	if (lenght > 0) {
-	    x = lenght > group.getMaxX() ? group.getMaxX() : lenght;
-	    z = lenght > group.getMaxZ() ? group.getMaxZ() : lenght;
-	    y = lenght > group.getMaxY() ? group.getMaxY() : lenght;
-	} else {
-	    x = getMin(x, group.getMaxX());
-	    y = getMin(y, group.getMaxY());
-	    z = getMin(z, group.getMaxZ());
-	}
-
-	int rX = (x - 1) / 2;
-	int rY = (y - 1) / 2;
-	int rZ = (z - 1) / 2;
-
-	int minX = loc.getBlockX() - rX;
-	int maxX = loc.getBlockX() + rX;
-
-	if (maxX - minX + 1 < x)
-	    maxX++;
-
-	int minY = loc.getBlockY() - rY;
-	int maxY = loc.getBlockY() + rY;
-
-	if (maxY - minY + 1 < y)
-	    maxY++;
-
-	if (minY < 0) {
-	    maxY += -minY;
-	    minY = 0;
-	}
-
-	if (maxY > loc.getWorld().getMaxHeight()) {
-	    int dif = maxY - loc.getWorld().getMaxHeight();
-	    if (minY > 0)
-		minY -= dif;
-	    if (minY < 0)
-		minY = 0;
-	    maxY = loc.getWorld().getMaxHeight() - 1;
-	}
-
-	int minZ = loc.getBlockZ() - rZ;
-	int maxZ = loc.getBlockZ() + rZ;
-	if (maxZ - minZ + 1 < z)
-	    maxZ++;
-
+	int minY = loc.getBlockY() - 1;
+	int maxY = loc.getBlockY() + 1;
 	if (plugin.getConfigManager().isSelectionIgnoreY()) {
 	    minY = plugin.getSelectionManager().getSelection(player).getMinYAllowed();
 	    maxY = plugin.getSelectionManager().getSelection(player).getMaxYAllowed();
 	}
 
-	plugin.getSelectionManager().placeLoc1(player, new Location(loc.getWorld(), minX, minY, minZ), false);
-	plugin.getSelectionManager().placeLoc2(player, new Location(loc.getWorld(), maxX, maxY, maxZ), false);
+	plugin.getSelectionManager().placeLoc1(player, loc.clone().add(-1, minY, -1), false);
+	plugin.getSelectionManager().placeLoc2(player, loc.clone().add(1, maxY, 1), false);
 
-	resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
+	boolean result = resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
+
+	if (!result) {
+	    Residence.getInstance().msg(player, lm.Area_SizeLimit);
+	    return true;
+	}
 
 	if (plugin.getResidenceManager().getByName(resName) != null) {
 	    for (int i = 1; i < 50; i++) {
@@ -154,7 +109,7 @@ public class auto implements cmd {
 	return newmin;
     }
 
-    public static void resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance, int max) {
+    public static boolean resize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance, int max) {
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
@@ -256,8 +211,10 @@ public class auto implements cmd {
 	    if (checkBalance) {
 		if (plugin.getConfigManager().enableEconomy()) {
 		    cost = c.getCost(group);
-		    if (cost > balance)
+		    if (cost > balance) {
+			plugin.msg(player, lm.Economy_NotEnoughMoney);
 			break;
+		    }
 		}
 	    }
 
@@ -266,8 +223,24 @@ public class auto implements cmd {
 
 	    dir = dir.getNext();
 	}
+
+	int x = group.getMinX();
+	int y = group.getMinY();
+	int z = group.getMinZ();
+
+	x = getMin(x, group.getMaxX());
+	y = getMin(y, group.getMaxY());
+	z = getMin(z, group.getMaxZ());
+
 	plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
 	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
+
+	cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
+
+	if (cuboid.getXSize() < x || cuboid.getYSize() < y || cuboid.getZSize() < z)
+	    return false;
+
+	return true;
     }
 
     public enum direction {
