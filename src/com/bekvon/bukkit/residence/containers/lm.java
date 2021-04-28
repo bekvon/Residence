@@ -163,6 +163,7 @@ public enum lm {
     info_sec("&e%1 &6sec "),
 
     info_click("&7Click"),
+    info_clickToConfirm("&7Click to confirm"),
 
     server_land("Server_Land"),
 

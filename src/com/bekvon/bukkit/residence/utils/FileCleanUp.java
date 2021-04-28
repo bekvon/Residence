@@ -55,7 +55,7 @@ public class FileCleanUp {
 	    if (player == null)
 		continue;
 
-	    if (!plugin.getConfigManager().getCleanWorlds().contains(res.getWorld()))
+	    if (!plugin.getConfigManager().getCleanWorlds().contains(res.getPermissions().getWorldName().toLowerCase()))
 		continue;
 
 	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandName()))
@@ -66,7 +66,7 @@ public class FileCleanUp {
 	    if (dif < interval)
 		continue;
 
-	    if (ResidenceVaultAdapter.hasPermission(player, ResPerm.cleanbypass.getPermission(), res.getWorld()))
+	    if (ResidenceVaultAdapter.hasPermission(player, ResPerm.cleanbypass.getPermission(), res.getPermissions().getWorldName().toLowerCase()))
 		continue;
 
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());

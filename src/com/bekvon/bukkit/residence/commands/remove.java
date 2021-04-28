@@ -80,9 +80,9 @@ public class remove implements cmd {
 	    if (sender instanceof Player) {
 		RawMessage rm = new RawMessage();
 		if (res.isSubzone()) {
-		    rm.addText(plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName())).addHover("Click to confirm").addCommand(cmd + " confirm");
+		    rm.addText(plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName())).addHover(plugin.msg(lm.info_clickToConfirm)).addCommand(cmd + " confirm");
 		} else {
-		    rm.addText(plugin.msg(lm.Residence_DeleteConfirm, res.getResidenceName())).addHover("Click to confirm").addCommand(cmd + " confirm");
+		    rm.addText(plugin.msg(lm.Residence_DeleteConfirm, res.getResidenceName())).addHover(plugin.msg(lm.info_clickToConfirm)).addCommand(cmd + " confirm");
 		}
 		if (plugin.msg(lm.Subzone_DeleteConfirm, res.getResidenceName()).length() > 0)
 		    rm.show(sender);

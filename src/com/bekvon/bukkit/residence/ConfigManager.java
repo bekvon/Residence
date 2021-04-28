@@ -940,8 +940,11 @@ public class ConfigManager {
 	    }
 
 	    CleanWorlds = c.get("Global.AntiGreef.ResCleaning.Worlds", Arrays.asList(defaultWorldName));
+	    for (int i = 0; i < CleanWorlds.size(); i++) {
+		CleanWorlds.set(i, CleanWorlds.get(i).toLowerCase());
+	    }
 	}
-	
+
 	c.addComment("Global.AntiGreef.Flags.Prevent", "By setting this to true flags from list will be protected from change while there is some one inside residence besides owner",
 	    "Protects in example from people inviting some one and changing pvp flag to true to kill them");
 	PvPFlagPrevent = c.get("Global.AntiGreef.Flags.Prevent", true);
