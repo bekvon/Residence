@@ -80,6 +80,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
+import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.Utils;
 
@@ -1716,7 +1717,6 @@ public class ResidencePlayerListener implements Listener {
 	if (player.hasMetadata("NPC"))
 	    return;
 
-	    
 	Location loc = event.getTo();
 	handleNewLocation(player, loc, false);
 	if (plugin.isResAdminOn(player)) {
@@ -2072,10 +2072,8 @@ public class ResidencePlayerListener implements Listener {
 
 //	PlayerTeleportEvent ev = new PlayerTeleportEvent(player, player.getLocation(), loc);
 //	Bukkit.getServer().getPluginManager().callEvent(ev);
-	if (!player.teleport(loc))
-	    return false;
 
-	return true;
+	return player.teleport(loc);
     }
 
     public boolean handleNewLocation(final Player player, Location loc, boolean move) {
@@ -2222,6 +2220,9 @@ public class ResidencePlayerListener implements Listener {
 		return teleported;
 	    }
 
+	    Debug.D("s " + res.getName() + " " + !res.isOwner(player) + " " + !ResPerm.admin_move
+		.hasPermission(player, 10000L));
+
 	    if (Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move
 		.hasPermission(player, 10000L)) {
 
@@ -2240,20 +2241,25 @@ public class ResidencePlayerListener implements Listener {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.closeInventory();
 		    teleported = teleport(player, newLoc);
-		} else if (lastLoc != null) {
+		}
 
-		    StuckInfo info = updateStuckTeleport(player, loc);
-		    player.closeInventory();
-		    if (info != null && info.getTimesTeleported() > 5) {
-			Location newLoc = res.getOutsideFreeLoc(loc, player);
-			teleported = teleport(player, newLoc);
-		    } else {
-			teleported = teleport(player, lastLoc);
+		if (!teleported) {
+		    if (lastLoc != null) {
+			StuckInfo info = updateStuckTeleport(player, loc);
+			player.closeInventory();
+			if (info != null && info.getTimesTeleported() > 5) {
+			    Location newLoc = res.getOutsideFreeLoc(loc, player);
+			    teleported = teleport(player, newLoc);
+			} else {
+			    teleported = teleport(player, lastLoc);
+			}
 		    }
-		} else {
-		    Location newLoc = res.getOutsideFreeLoc(loc, player);
-		    player.closeInventory();
-		    teleported = teleport(player, newLoc);
+
+		    if (!teleported) {
+			Location newLoc = res.getOutsideFreeLoc(loc, player);
+			player.closeInventory();
+			teleported = teleport(player, newLoc);
+		    }
 		}
 
 		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
