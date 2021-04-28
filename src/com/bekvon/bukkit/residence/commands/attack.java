@@ -64,10 +64,10 @@ public class attack implements cmd {
 	    return null;
 	}
 
-	if (res.getRaid().isPlayerImmune()) {
+	if (res.getRaid().isPlayerImmune() && !res.getRaid().isInPreRaid() && !res.getRaid().isUnderRaid()) {
 	    plugin.msg(player, lm.Raid_attack_playerImmune, Utils.to24hourShort(res.getRaid().getPlayerImmunityUntil() - System.currentTimeMillis() + 1000L));
 	    return null;
-	}
+	} 
 
 	if (res.getRaid().isUnderRaidCooldown() && !res.getRaid().isInPreRaid() && !res.getRaid().isUnderRaid()) {
 	    plugin.msg(player, lm.Raid_attack_cooldown, Utils.to24hourShort(res.getRaid().getCooldownEnd() - System.currentTimeMillis() + 1000L));
