@@ -1824,8 +1824,8 @@ public class ResidencePlayerListener implements Listener {
 		return;
 
 	    boolean land = player.isFlying();
-	    player.setFlying(state);
-	    player.setAllowFlight(state);
+	    player.setFlying(false);
+	    player.setAllowFlight(false);
 	    if (land) {
 		Location loc = getSafeLocation(player.getLocation());
 		if (loc == null) {
@@ -1841,12 +1841,21 @@ public class ResidencePlayerListener implements Listener {
 		    player.teleport(loc);
 		}
 	    }
+	    player.setFlying(false);
+	    player.setAllowFlight(false);
 	} else {
 	    player.setAllowFlight(true);
 	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 		ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
 		if (res != null && res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && player.isOnline()) {
 		    player.setAllowFlight(true);
+		}
+		if (res == null || !res.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue) && player.isOnline()) {
+		    if (player.hasPermission("cmi.command.fly") || player.hasPermission("essentials.fly"))
+			return;
+
+		    player.setFlying(false);
+		    player.setAllowFlight(false);
 		}
 	    }, 20L);
 	}
@@ -1878,8 +1887,9 @@ public class ResidencePlayerListener implements Listener {
 	    if (Flags.sun.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.sun, FlagCombo.OnlyTrue) || Flags.rain.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.rain, FlagCombo.OnlyTrue))
 		player.resetPlayerWeather();
 
-	    if (Flags.fly.isGlobalyEnabled() && oldRes.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
+	    if (Flags.fly.isGlobalyEnabled() && oldRes.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue)) {
 		fly(player, false);
+	    }
 
 	    if (Flags.glow.isGlobalyEnabled() && Version.isCurrentEqualOrHigher(Version.v1_9_R1) && oldRes.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
 		player.setGlowing(false);
@@ -1953,8 +1963,9 @@ public class ResidencePlayerListener implements Listener {
 		player.setGlowing(true);
 	    }
 
-	    if (Flags.fly.isGlobalyEnabled() && newRes.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue))
+	    if (Flags.fly.isGlobalyEnabled() && newRes.getPermissions().playerHas(player, Flags.fly, FlagCombo.OnlyTrue)) {
 		fly(player, true);
+	    }
 
 	    if (Flags.day.isGlobalyEnabled() && newRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
 		player.setPlayerTime(6000L, false);
@@ -2188,20 +2199,24 @@ public class ResidencePlayerListener implements Listener {
 		    Location newLoc = res.getOutsideFreeLoc(loc, player);
 		    player.closeInventory();
 		    teleported = teleport(player, newLoc);
-		} else if (lastLoc != null) {
+		}
 
-		    StuckInfo info = updateStuckTeleport(player, loc);
-		    player.closeInventory();
-		    if (info != null && info.getTimesTeleported() > 5) {
-			Location newLoc = res.getOutsideFreeLoc(loc, player);
-			teleported = teleport(player, newLoc);
-		    } else {
-			teleported = teleport(player, lastLoc);
+		if (!teleported) {
+		    if (lastLoc != null) {
+			StuckInfo info = updateStuckTeleport(player, loc);
+			player.closeInventory();
+			if (info != null && info.getTimesTeleported() > 5) {
+			    Location newLoc = res.getOutsideFreeLoc(loc, player);
+			    teleported = teleport(player, newLoc);
+			} else {
+			    teleported = teleport(player, lastLoc);
+			}
 		    }
-		} else {
-		    Location newLoc = res.getOutsideFreeLoc(loc, player);
-		    player.closeInventory();
-		    teleported = teleport(player, newLoc);
+		    if (!teleported) {
+			Location newLoc = res.getOutsideFreeLoc(loc, player);
+			player.closeInventory();
+			teleported = teleport(player, newLoc);
+		    }
 		}
 
 		switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
@@ -2219,9 +2234,6 @@ public class ResidencePlayerListener implements Listener {
 		}
 		return teleported;
 	    }
-
-	    Debug.D("s " + res.getName() + " " + !res.isOwner(player) + " " + !ResPerm.admin_move
-		.hasPermission(player, 10000L));
 
 	    if (Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move
 		.hasPermission(player, 10000L)) {
