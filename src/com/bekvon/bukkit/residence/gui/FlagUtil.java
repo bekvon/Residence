@@ -92,10 +92,10 @@ public class FlagUtil {
 		    fillButtons(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() + 1), gui);
 		}
 	    };
-	    forward.setName(Residence.getInstance().msg(lm.General_nextPage));
+	    forward.setName(Residence.getInstance().msg(lm.General_nextPageGui));
 	    gui.addButton(forward);
 	    gui.updateButton(forward);
-	}
+	} 
 
 	if (pi.getCurrentPage() > 1) {
 	    ItemStack Item = new ItemStack(Material.ARROW);
@@ -105,7 +105,7 @@ public class FlagUtil {
 		    fillButtons(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() - 1), gui);
 		}
 	    };
-	    back.setName(Residence.getInstance().msg(lm.General_prevPage));
+	    back.setName(Residence.getInstance().msg(lm.General_prevPageGui));
 	    gui.addButton(back);
 	    gui.updateButton(back);
 	}
