@@ -19,6 +19,7 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class auto implements cmd {
 
@@ -59,9 +60,10 @@ public class auto implements cmd {
 	    minY = plugin.getSelectionManager().getSelection(player).getMinYAllowed();
 	    maxY = plugin.getSelectionManager().getSelection(player).getMaxYAllowed();
 	}
-
-	plugin.getSelectionManager().placeLoc1(player, loc.clone().add(-1, minY, -1), false);
-	plugin.getSelectionManager().placeLoc2(player, loc.clone().add(1, maxY, 1), false);
+	loc.setY(minY);
+	plugin.getSelectionManager().placeLoc1(player, loc.clone(), false);
+	loc.setY(maxY);
+	plugin.getSelectionManager().placeLoc2(player, loc.clone(), false);
 
 	boolean result = resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
 
@@ -164,8 +166,9 @@ public class auto implements cmd {
 		c.getLowVector().setY(0);
 		locked.add(dir);
 		dir = dir.getNext();
-		if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY())
+		if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 		    skipped++;
+		}
 		continue;
 	    }
 
@@ -173,8 +176,9 @@ public class auto implements cmd {
 		c.getHighVector().setY(c.getWorld().getMaxHeight() - 1);
 		locked.add(dir);
 		dir = dir.getNext();
-		if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY())
+		if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 		    skipped++;
+		}
 		continue;
 	    }
 
