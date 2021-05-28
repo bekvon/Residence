@@ -1,5 +1,8 @@
 package com.bekvon.bukkit.residence.containers;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.bekvon.bukkit.cmiLib.CMIMaterial;
 
 public enum Flags {
@@ -126,6 +129,7 @@ public enum Flags {
     private String desc;
     private boolean enabled;
     private boolean globalyEnabled = true;
+    private Set<String> groups = null;
 
     public static enum FlagMode {
 	Player, Residence, Both
@@ -209,5 +213,26 @@ public enum Flags {
 
     public void setIcon(CMIMaterial icon) {
 	this.icon = icon;
+    }
+
+    public boolean isInGroup(String group) {
+	if (groups == null)
+	    return false;
+
+	return groups.contains(group.toLowerCase());
+    }
+
+    public void addGroup(String group) {
+	if (groups == null)
+	    groups = new HashSet<String>();
+	groups.add(group.toLowerCase());
+    }
+
+    public Set<String> getGroups() {
+	return groups;
+    }
+
+    public void resetGroups() {
+	this.groups = null;
     }
 }

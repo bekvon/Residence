@@ -528,9 +528,19 @@ public class ConfigManager {
 	    }
 	}
 
+	for (Flags one : Flags.values()) {
+	    one.resetGroups();
+	}
+
 	for (String oneGroup : conf.getConfigurationSection("Global.GroupedFlags").getKeys(false)) {
-	    for (String OneFlag : conf.getStringList("Global.GroupedFlags." + oneGroup)) {
-		FlagPermissions.addFlagToFlagGroup(oneGroup, OneFlag);
+	    for (String oneFlag : conf.getStringList("Global.GroupedFlags." + oneGroup)) {
+
+		Flags flag = Flags.getFlag(oneFlag);
+		if (flag != null) {
+		    flag.addGroup(oneGroup);
+		}
+
+		FlagPermissions.addFlagToFlagGroup(oneGroup, oneFlag);
 	    }
 	}
     }

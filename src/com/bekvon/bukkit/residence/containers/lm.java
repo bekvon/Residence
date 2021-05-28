@@ -30,9 +30,9 @@ public enum lm {
     Invalid_Help("&cInvalid Help Page..."),
     Invalid_NameCharacters("&cName contained unallowed characters..."),
 
-     Invalid_FromConsole("&cYou can only use this in the console!"),
+    Invalid_FromConsole("&cYou can only use this in the console!"),
     Invalid_Ingame("&cYou can only use this in game!"),
-    
+
     Area_Exists("&cArea name already exists."),
     Area_Create("&eResidence Area created, ID &6%1"),
     Area_DiffWorld("&cArea is in a different world from residence."),
@@ -118,7 +118,7 @@ public enum lm {
     Raid_noRemoval("&cCan't remove residence during raid"),
     Raid_immune("&eImmune for next %1"),
     Raid_notImmune("&eNo longer immune"),
-    
+
     Raid_notInRaid("&ePlayer isn't in raid"),
 
     Raid_attack_Joined("&7Joined &2%1 &7raid!"),
@@ -140,17 +140,16 @@ public enum lm {
     Raid_defend_noSelf("&cYou already defending this residence"),
     Raid_defend_notRaided("&cResidence is not under the raid"),
     Raid_defend_alreadyInAnother("&cCan't join this residence defence, you are in another one already (%1)"),
-    
-    
+
     Raid_status_title("&7----------- &f%1(%2) &7-----------"),
     Raid_status_immune("&eImmune to raids for next: %1"),
     Raid_status_starts("&7Raid starts in: %1"),
-    Raid_status_attackers("&7Attackers: &4%1" ),
+    Raid_status_attackers("&7Attackers: &4%1"),
     Raid_status_defenders("&7Defenders: &4%1"),
     Raid_status_ends("&7Raid ends in: %1"),
     Raid_status_canraid("&2Can be raided"),
-    Raid_status_raidin("&ePosible raid in: %1" ),
-    
+    Raid_status_raidin("&ePosible raid in: %1"),
+
     Raid_stopped("&eRaid on &6%1 &ewas stopped"),
 
     info_years("&e%1 &6years "),
@@ -161,6 +160,8 @@ public enum lm {
     info_oneHour("&e%1 &6hour "),
     info_min("&e%1 &6min "),
     info_sec("&e%1 &6sec "),
+
+    info_listSplitter(", "),
 
     info_click("&7Click"),
     info_clickToConfirm("&7Click to confirm"),
@@ -248,6 +249,7 @@ public enum lm {
     Residence_Give("&eYou give residence &6%1 &eto player &6%2"),
     Residence_Recieve("&eYou have recieved residence &6%1 &efrom player &6%2"),
     Residence_ResList(" &a%1. &e%2 &e- &6%3 %4&6%5"),
+    Residence_TrustedResList(" &a%1. &f%2 &e- &6%3 %4&6%5"),
     Residence_List(" &e%2 &e- &6%3"),
     Residence_Near("&eNearby residences: &7%1"),
     Residence_TeleportNear("&eTeleported to near residence."),
@@ -401,7 +403,7 @@ public enum lm {
 
     Chat_ChatChannelChange("&eChanged residence chat channel to &6%1!"),
     Chat_ChatChannelLeave("&eLeft residence chat"),
-    
+
     Chat_ChatMessage("%1 %2%3: %4%5"),
     Chat_ChatListeningMessage("&2[Listening %6]%1 %2%3: %4%5"),
 
@@ -584,5 +586,9 @@ public enum lm {
 	if (!this.name().contains("Language.") && !this.name().contains("CommandHelp."))
 	    path = "Language." + this.name();
 	return path.replace("_", ".");
+    }
+
+    public String getMessage(Object... variables) {
+	return Residence.getInstance().getLM().getMessage(this, variables);
     }
 }

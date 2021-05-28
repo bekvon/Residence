@@ -654,7 +654,14 @@ public class Residence extends JavaPlugin {
 
 	    getLocaleManager().LoadLang(getConfigManager().getLanguage());
 	    getLM().LanguageReload();
-
+	    
+	    if (firstenable) {
+		if (!this.isEnabled()) {
+		    return;
+		}
+		FlagPermissions.initValidFlags();
+	    }
+	    
 	    try {
 		this.loadYml();
 	    } catch (Exception e) {
@@ -672,7 +679,7 @@ public class Residence extends JavaPlugin {
 		if (!this.isEnabled()) {
 		    return;
 		}
-		FlagPermissions.initValidFlags();
+//		FlagPermissions.initValidFlags();
 
 		if (smanager == null)
 		    setWorldEdit();

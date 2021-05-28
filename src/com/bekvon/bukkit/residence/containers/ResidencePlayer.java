@@ -34,6 +34,7 @@ public class ResidencePlayer {
     private UUID uuid = null;
 
     private Set<ClaimedResidence> ResidenceList = new HashSet<ClaimedResidence>();
+    private Set<ClaimedResidence> trustedList = new HashSet<ClaimedResidence>();
     private ClaimedResidence mainResidence = null;
 
     private PlayerGroup groups = null;
@@ -495,6 +496,21 @@ public class ResidencePlayer {
 	return ResidenceEntityListener.canDamageEntity(this.getPlayer(), entity, inform);
     }
 
+    public Set<ClaimedResidence> getTrustedResidenceList() {
+	return trustedList;
+    }
+
+    public void addTrustedResidence(ClaimedResidence residence) {
+	if (residence == null)
+	    return;
+	this.trustedList.add(residence);
+    }
+
+    public void removeTrustedResidence(ClaimedResidence residence) {
+	if (residence == null)
+	    return;
+	this.trustedList.remove(residence);
+    }
 //    public boolean canDamagePlayer(Player player, boolean inform) {
 //
 //    }

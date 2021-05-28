@@ -8,11 +8,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.commands.padd;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.Flags.FlagMode;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -23,6 +25,7 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidencePermissions extends FlagPermissions {
 
@@ -354,9 +357,9 @@ public class ResidencePermissions extends FlagPermissions {
 	Flags f = Flags.getFlag(flag);
 	if (f != null)
 	    flag = f.toString();
-
-	if (validFlagGroups.containsKey(flag))
+	if (validFlagGroups.containsKey(flag)) {
 	    return this.setFlagGroupOnPlayer(sender, targetPlayer, flag, flagstate, resadmin);
+	}
 	FlagState state = FlagPermissions.stringToFlagState(flagstate);
 	if (checkCanSetFlag(sender, flag, state, false, resadmin)) {
 	    ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, sender instanceof Player ? (Player) sender : null, flag,
@@ -367,6 +370,22 @@ public class ResidencePermissions extends FlagPermissions {
 	    if (super.setPlayerFlag(targetPlayer, flag, state)) {
 		if (Show)
 		    Residence.getInstance().msg(sender, lm.Flag_Set, flag, residence.getName(), flagstate);
+
+		if (f == null || f.isInGroup(padd.groupedFlag)) {
+		    boolean trusted = this.residence.isTrusted(targetPlayer);
+		    if (!state.equals(FlagState.TRUE) && !trusted) {
+			ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(targetPlayer);
+			if (rplayer != null) {
+			    rplayer.removeTrustedResidence(this.residence);
+			}
+		    } else if (state.equals(FlagState.TRUE) && trusted) {
+			ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(targetPlayer);
+			if (rplayer != null) {
+			    rplayer.addTrustedResidence(this.residence);
+			}
+		    }
+		}
+
 		return true;
 	    }
 	}
@@ -516,6 +535,21 @@ public class ResidencePermissions extends FlagPermissions {
 	Residence.getInstance().getServ().getPluginManager().callEvent(fc);
 	if (fc.isCancelled())
 	    return false;
+//	Flags f = Flags.getFlag(flag);
+//	if (f == null || f.isInGroup(padd.groupedFlag)) {
+//	    boolean trusted = this.residence.isTrusted(player);
+//	    if (!state.equals(FlagState.TRUE) && !trusted) {
+//		ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+//		if (rplayer != null) {
+//		    rplayer.removeTrustedResidence(this.residence);
+//		}
+//	    } else if (state.equals(FlagState.TRUE) && trusted) {
+//		ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+//		if (rplayer != null) {
+//		    rplayer.addTrustedResidence(this.residence);
+//		}
+//	    }
+//	}
 	return super.setPlayerFlag(player, flag, state);
     }
 
@@ -646,7 +680,7 @@ public class ResidencePermissions extends FlagPermissions {
     public String getWorld() {
 	return world;
     }
-    
+
     public String getWorldName() {
 	return world;
     }
@@ -772,23 +806,32 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setFlagGroupOnPlayer(CommandSender sender, String target, String flaggroup, String state, boolean resadmin) {
-	if (FlagPermissions.validFlagGroups.containsKey(flaggroup)) {
-	    Set<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
-	    boolean changed = false;
-	    String flagString = "";
-	    for (String flag : flags) {
-		if (this.setPlayerFlag(sender, target, flag, state, resadmin, false)) {
-		    changed = true;
-		    if (!flagString.isEmpty())
-			flagString += ", ";
-		    flagString += flag;
-		}
-	    }
-	    if (flagString.length() > 0)
-		Residence.getInstance().msg(sender, lm.Flag_Set, flagString, target, state);
-	    return changed;
+	if (!FlagPermissions.validFlagGroups.containsKey(flaggroup))
+	    return false;
+
+	Set<String> flags = FlagPermissions.validFlagGroups.get(flaggroup);
+	boolean changed = false;
+	boolean changedAll = true;
+	StringBuilder flagString = new StringBuilder();
+
+	for (String flag : flags) {
+	    if (this.setPlayerFlag(sender, target, flag, state, resadmin, false)) {
+		changed = true;
+		if (!flagString.toString().isEmpty())
+		    flagString.append(lm.info_listSplitter.getMessage());
+		flagString.append(flag);
+	    } else
+		changedAll = false;
 	}
-	return false;
+	if (changedAll) {
+	    ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(target);
+	    if (rplayer != null) {
+		rplayer.addTrustedResidence(this.residence);
+	    }
+	}
+	if (!flagString.toString().isEmpty())
+	    Residence.getInstance().msg(sender, lm.Flag_Set, flagString, target, state);
+	return changed;
     }
 
     public String getOwnerLastKnownName() {

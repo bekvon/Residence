@@ -140,12 +140,15 @@ public class InformationPager {
 
 	    String tpFlag = "";
 	    String moveFlag = "";
+	    String msg = plugin.msg(lm.Residence_ResList, y + 1, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
+
 	    if (sender instanceof Player && !res.isOwner(sender)) {
 		tpFlag = res.getPermissions().playerHas((Player) sender, Flags.tp, true) ? plugin.msg(lm.General_AllowedTeleportIcon) : plugin.msg(lm.General_BlockedTeleportIcon);
 		moveFlag = res.getPermissions().playerHas(sender.getName(), Flags.move, true) ? plugin.msg(lm.General_AllowedMovementIcon) : plugin.msg(lm.General_BlockedMovementIcon);
-	    }
 
-	    String msg = plugin.msg(lm.Residence_ResList, y + 1, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
+		if (res.isTrusted((Player) sender))
+		    msg = plugin.msg(lm.Residence_TrustedResList, y + 1, res.getName(), res.getWorld(), tpFlag + moveFlag, ExtraString);
+	    }
 
 	    RawMessage rm = new RawMessage();
 	    if (sender instanceof Player)

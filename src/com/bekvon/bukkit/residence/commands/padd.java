@@ -13,6 +13,8 @@ import com.bekvon.bukkit.residence.containers.cmd;
 
 public class padd implements cmd {
 
+    public static String groupedFlag = "trusted";
+
     @Override
     @CommandAnnotation(simple = true, priority = 400)
     public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
@@ -27,13 +29,13 @@ public class padd implements cmd {
 	if (args.length == 1) {
 	    if (!plugin.isPlayerExist(player, args[0], true))
 		return false;
-	    player.performCommand(baseCmd + " pset " + args[0] + " trusted true");
+	    player.performCommand(baseCmd + " pset " + args[0] + " " + groupedFlag + " true");
 	    return true;
 	}
 	if (args.length == 2) {
 	    if (!plugin.isPlayerExist(player, args[1], true))
 		return false;
-	    player.performCommand(baseCmd + " pset " + args[0] + " " + args[1] + " trusted true");
+	    player.performCommand(baseCmd + " pset " + args[0] + " " + args[1] + " " + groupedFlag + " true");
 	    return true;
 	}
 	return false;

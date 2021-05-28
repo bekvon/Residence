@@ -33,6 +33,7 @@ import com.bekvon.bukkit.cmiLib.TitleMessageManager;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.commands.padd;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
@@ -1802,7 +1803,7 @@ public class ClaimedResidence {
 	else {
 	    res.ChannelColor = Residence.getInstance().getConfigManager().getChatColor();
 	}
-
+	
 	return res;
     }
 
@@ -2113,5 +2114,41 @@ public class ClaimedResidence {
 	v.setAreas(getAreaArray());
 	v.setOnce(showOneTime);
 	Residence.getInstance().getSelectionManager().showBounds(player, v);
+    }
+
+    public boolean isTrusted(Player player) {
+	Set<String> flags = FlagPermissions.validFlagGroups.get(padd.groupedFlag);
+	if (flags == null || flags.isEmpty())
+	    return false;
+	boolean trusted = true;
+	for (String flag : flags) {
+	    Flags f = Flags.getFlag(flag);
+	    if (f == null) {
+		trusted = false;
+		break;
+	    }
+	    if (f != null && f.isInGroup(padd.groupedFlag) && !this.getPermissions().playerHas(player, f, FlagCombo.OnlyTrue)) {
+		trusted = false;
+		break;
+	    }
+	}
+	return trusted;
+    }
+
+    @Deprecated
+    public boolean isTrusted(String playerName) {
+	Set<String> flags = FlagPermissions.validFlagGroups.get(padd.groupedFlag);
+
+	if (flags == null || flags.isEmpty())
+	    return false;
+	boolean trusted = true;
+	for (String flag : flags) {
+	    Flags f = Flags.getFlag(flag);
+	    if (f != null && f.isInGroup(padd.groupedFlag) && !this.getPermissions().playerHas(playerName, flag, FlagCombo.OnlyTrue)) {
+		trusted = false;
+		break;
+	    }
+	}
+	return trusted;
     }
 }

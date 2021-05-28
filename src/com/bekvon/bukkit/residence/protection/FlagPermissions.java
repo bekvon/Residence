@@ -431,6 +431,7 @@ public class FlagPermissions {
 	}
 	if (map.isEmpty())
 	    this.removeAllPlayerFlags(player);
+	
 	return true;
     }
 
@@ -797,8 +798,9 @@ public class FlagPermissions {
 	}
 
 	for (Entry<String, Map<String, Boolean>> one : newperms.playerFlags.entrySet()) {
-	    if (one.getKey().length() != 32)
+	    if (one.getKey().length() != 32) {		
 		continue;
+	    }
 
 	    try {
 		UUID uuid = UUID.fromString(one.getKey());

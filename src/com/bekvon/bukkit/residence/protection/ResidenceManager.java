@@ -318,6 +318,8 @@ public class ResidenceManager implements ResidenceInterface {
 	boolean hidden = showhidden;
 	TreeMap<String, ClaimedResidence> ownedResidences = plugin.getPlayerManager().getResidencesMap(targetplayer, hidden, onlyHidden, world);
 	ownedResidences.putAll(plugin.getRentManager().getRentsMap(targetplayer, onlyHidden, world));
+	ownedResidences.putAll(plugin.getPlayerManager().getTrustedResidencesMap(targetplayer, hidden, onlyHidden, world));
+	
 	plugin.getInfoPageManager().printListInfo(sender, targetplayer, ownedResidences, page, resadmin, world);
     }
 
