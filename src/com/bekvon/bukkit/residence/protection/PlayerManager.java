@@ -294,6 +294,8 @@ public class PlayerManager implements ResidencePlayerInterface {
 
     @Override
     public ResidencePlayer getResidencePlayer(String player) {
+	if (player == null)
+	    return null;
 	Player p = Bukkit.getPlayer(player);
 	if (p != null)
 	    return getResidencePlayer(p);

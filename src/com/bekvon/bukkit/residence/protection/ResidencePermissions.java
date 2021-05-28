@@ -371,7 +371,7 @@ public class ResidencePermissions extends FlagPermissions {
 		if (Show)
 		    Residence.getInstance().msg(sender, lm.Flag_Set, flag, residence.getName(), flagstate);
 
-		if (f == null || f.isInGroup(padd.groupedFlag)) {
+		if ((f == null || f.isInGroup(padd.groupedFlag)) && targetPlayer != null) {
 		    boolean trusted = this.residence.isTrusted(targetPlayer);
 		    if (!state.equals(FlagState.TRUE) && !trusted) {
 			ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(targetPlayer);

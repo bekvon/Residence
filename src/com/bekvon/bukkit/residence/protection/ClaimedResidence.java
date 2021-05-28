@@ -2118,7 +2118,7 @@ public class ClaimedResidence {
 
     public boolean isTrusted(Player player) {
 	Set<String> flags = FlagPermissions.validFlagGroups.get(padd.groupedFlag);
-	if (flags == null || flags.isEmpty())
+	if (flags == null || flags.isEmpty() || player == null)
 	    return false;
 	boolean trusted = true;
 	for (String flag : flags) {
@@ -2139,7 +2139,7 @@ public class ClaimedResidence {
     public boolean isTrusted(String playerName) {
 	Set<String> flags = FlagPermissions.validFlagGroups.get(padd.groupedFlag);
 
-	if (flags == null || flags.isEmpty())
+	if (flags == null || flags.isEmpty() || playerName == null)
 	    return false;
 	boolean trusted = true;
 	for (String flag : flags) {
