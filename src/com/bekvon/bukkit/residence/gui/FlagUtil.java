@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.gui;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,6 +69,7 @@ public class FlagUtil {
 	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
 
 	fillButtons(flag, pi, gui);
+	gui.fillEmptyButtons();
 
 	gui.open();
 	return;
@@ -75,12 +77,12 @@ public class FlagUtil {
 
     private void fillButtons(setFlagInfo flag, PageInfo pi, CMIGui gui) {
 	gui.clearButtons();
+
 	for (CMIGuiButton one : flag.getButtons()) {
 	    if (pi.isContinue())
 		continue;
 	    if (pi.isBreak())
 		break;
-	    gui.addButton(one);
 	    gui.updateButton(one);
 	}
 
@@ -90,12 +92,12 @@ public class FlagUtil {
 		@Override
 		public void click(GUIClickType type) {
 		    fillButtons(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() + 1), gui);
+		    gui.fillEmptyButtons();
 		}
 	    };
 	    forward.setName(Residence.getInstance().msg(lm.General_nextPageGui));
-	    gui.addButton(forward);
 	    gui.updateButton(forward);
-	} 
+	}
 
 	if (pi.getCurrentPage() > 1) {
 	    ItemStack Item = new ItemStack(Material.ARROW);
@@ -103,10 +105,11 @@ public class FlagUtil {
 		@Override
 		public void click(GUIClickType type) {
 		    fillButtons(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() - 1), gui);
+
+		    gui.fillEmptyButtons();
 		}
 	    };
 	    back.setName(Residence.getInstance().msg(lm.General_prevPageGui));
-	    gui.addButton(back);
 	    gui.updateButton(back);
 	}
     }
@@ -124,7 +127,7 @@ public class FlagUtil {
 	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
 
 	fillButtons(flag, pi, gui);
-
+	gui.fillEmptyButtons();
 	gui.open();
     }
 
