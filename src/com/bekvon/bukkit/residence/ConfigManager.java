@@ -875,6 +875,10 @@ public class ConfigManager {
 	c.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
 	AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
 
+	for (int i = 0; i < AutoCleanUpWorlds.size(); i++) {
+	    AutoCleanUpWorlds.set(i, AutoCleanUpWorlds.get(i).toLowerCase());
+	}
+
 	if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
 	    LwcMatList.clear();
 	    c.addComment("Global.Lwc.OnDelete", "Removes lwc protection from all defined objects when removing residence");

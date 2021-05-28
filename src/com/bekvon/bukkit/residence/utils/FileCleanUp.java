@@ -22,7 +22,7 @@ public class FileCleanUp {
 	this.plugin = plugin;
     }
 
-    public void cleanFiles() {
+    public void cleanOldResidence() {
 
 	Map<String, ClaimedResidence> resNameList = new HashMap<String, ClaimedResidence>(plugin.getResidenceManager().getResidences());
 	int i = 0;
@@ -55,7 +55,7 @@ public class FileCleanUp {
 	    if (player == null)
 		continue;
 
-	    if (!plugin.getConfigManager().getCleanWorlds().contains(res.getPermissions().getWorldName().toLowerCase()))
+	    if (!plugin.getConfigManager().getAutoCleanUpWorlds().contains(res.getPermissions().getWorldName().toLowerCase()))
 		continue;
 
 	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandName()))

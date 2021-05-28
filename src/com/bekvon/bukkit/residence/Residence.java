@@ -673,7 +673,7 @@ public class Residence extends JavaPlugin {
 	    getSignUtil().LoadSigns();
 
 	    if (getConfigManager().isUseResidenceFileClean())
-		(new FileCleanUp(this)).cleanFiles();
+		(new FileCleanUp(this)).cleanOldResidence();
 
 	    if (firstenable) {
 		if (!this.isEnabled()) {
