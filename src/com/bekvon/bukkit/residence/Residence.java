@@ -654,14 +654,14 @@ public class Residence extends JavaPlugin {
 
 	    getLocaleManager().LoadLang(getConfigManager().getLanguage());
 	    getLM().LanguageReload();
-	    
+
 	    if (firstenable) {
 		if (!this.isEnabled()) {
 		    return;
 		}
 		FlagPermissions.initValidFlags();
 	    }
-	    
+
 	    try {
 		this.loadYml();
 	    } catch (Exception e) {
@@ -674,7 +674,7 @@ public class Residence extends JavaPlugin {
 
 	    if (getConfigManager().isUseResidenceFileClean())
 		(new FileCleanUp(this)).cleanOldResidence();
-
+	    
 	    if (firstenable) {
 		if (!this.isEnabled()) {
 		    return;
@@ -1800,6 +1800,8 @@ public class Residence extends JavaPlugin {
     }
 
     public String getPlayerName(UUID uuid) {
+	if (uuid == null)
+	    return null;
 	OfflinePlayer p = getServ().getPlayer(uuid);
 	if (p == null)
 	    p = getServ().getOfflinePlayer(uuid);

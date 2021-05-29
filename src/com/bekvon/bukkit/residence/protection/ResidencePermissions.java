@@ -659,7 +659,7 @@ public class ResidencePermissions extends FlagPermissions {
     public String getOwner() {
 	if (Residence.getInstance().getConfigManager().isOfflineMode())
 	    return ownerLastKnownName;
-	if (ownerUUID.toString().equals(Residence.getInstance().getServerLandUUID())) //check for server land
+	if (ownerUUID != null && ownerUUID.toString().equals(Residence.getInstance().getServerLandUUID())) //check for server land
 	    return Residence.getInstance().getServerLandName();
 	String name = Residence.getInstance().getPlayerName(ownerUUID);//try to find the owner's name
 	if (name == null)

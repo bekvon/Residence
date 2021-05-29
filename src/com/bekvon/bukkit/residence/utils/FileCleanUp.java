@@ -42,6 +42,7 @@ public class FileCleanUp {
 
 	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Starting auto CleanUp (" + playerMapUUID.size() + "/" + resNameList.size() + ")!");
 
+	int skipped = 0;
 	for (Entry<String, ClaimedResidence> oneName : resNameList.entrySet()) {
 	    ClaimedResidence res = oneName.getValue();
 	    if (res == null)
@@ -52,8 +53,10 @@ public class FileCleanUp {
 	    if (player == null)
 		player = playerMapNane.get(res.getOwner());
 
-	    if (player == null)
+	    if (player == null) {
+		skipped++;
 		continue;
+	    }
 
 	    if (!plugin.getConfigManager().getAutoCleanUpWorlds().contains(res.getPermissions().getWorldName().toLowerCase()))
 		continue;
@@ -71,10 +74,11 @@ public class FileCleanUp {
 
 	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());
 
-	    
 	    plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
 	    i++;
 	}
 	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Auto CleanUp deleted " + i + " residences!");
+	if (skipped > 0)
+	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Skipped " + skipped + " residences due to inability to determine residence owner.");
     }
 }
