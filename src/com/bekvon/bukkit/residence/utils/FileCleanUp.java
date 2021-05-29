@@ -43,39 +43,43 @@ public class FileCleanUp {
 	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Starting auto CleanUp (" + playerMapUUID.size() + "/" + resNameList.size() + ")!");
 
 	int skipped = 0;
-	for (Entry<String, ClaimedResidence> oneName : resNameList.entrySet()) {
-	    ClaimedResidence res = oneName.getValue();
-	    if (res == null)
-		continue;
+	try {
+	    for (Entry<String, ClaimedResidence> oneName : resNameList.entrySet()) {
+		ClaimedResidence res = oneName.getValue();
+		if (res == null)
+		    continue;
 
-	    OfflinePlayer player = playerMapUUID.get(res.getOwnerUUID());
+		OfflinePlayer player = playerMapUUID.get(res.getOwnerUUID());
 
-	    if (player == null)
-		player = playerMapNane.get(res.getOwner());
+		if (player == null)
+		    player = playerMapNane.get(res.getOwner());
 
-	    if (player == null) {
-		skipped++;
-		continue;
+		if (player == null) {
+		    skipped++;
+		    continue;
+		}
+
+		if (!plugin.getConfigManager().getAutoCleanUpWorlds().contains(res.getPermissions().getWorldName().toLowerCase()))
+		    continue;
+
+		if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandName()))
+		    continue;
+
+		long lastPlayed = player.getLastPlayed();
+		int dif = (int) ((time - lastPlayed) / 1000 / 60 / 60 / 24);
+		if (dif < interval)
+		    continue;
+
+		if (ResidenceVaultAdapter.hasPermission(player, ResPerm.cleanbypass.getPermission(), res.getPermissions().getWorldName().toLowerCase()))
+		    continue;
+
+		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());
+
+		plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
+		i++;
 	    }
-
-	    if (!plugin.getConfigManager().getAutoCleanUpWorlds().contains(res.getPermissions().getWorldName().toLowerCase()))
-		continue;
-
-	    if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandName()))
-		continue;
-
-	    long lastPlayed = player.getLastPlayed();
-	    int dif = (int) ((time - lastPlayed) / 1000 / 60 / 60 / 24);
-	    if (dif < interval)
-		continue;
-
-	    if (ResidenceVaultAdapter.hasPermission(player, ResPerm.cleanbypass.getPermission(), res.getPermissions().getWorldName().toLowerCase()))
-		continue;
-
-	    ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());
-
-	    plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
-	    i++;
+	} catch (Throwable e) {
+	    e.printStackTrace();
 	}
 	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Auto CleanUp deleted " + i + " residences!");
 	if (skipped > 0)

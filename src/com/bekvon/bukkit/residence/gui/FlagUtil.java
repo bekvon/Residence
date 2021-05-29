@@ -63,40 +63,27 @@ public class FlagUtil {
 	setFlagInfo flag = new setFlagInfo(res, player, targetPlayer, resadmin);
 	flag.recalculate();
 
-	CMIGui gui = new CMIGui(player);
-	gui.setTitle(Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
-	gui.setInvSize(GUIRows.r6);
 	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
-
-	fillButtons(flag, pi, gui);
-	gui.fillEmptyButtons();
-
-	gui.open();
+	openUI(flag, pi, player, Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
 	return;
     }
 
-    private void fillButtons(setFlagInfo flag, PageInfo pi, CMIGui gui) {
-	gui.clearButtons();
+    private void openUI(setFlagInfo flag, PageInfo pi, Player player, String title) {
 
-	for (CMIGuiButton one : flag.getButtons()) {
-	    if (pi.isContinue())
-		continue;
-	    if (pi.isBreak())
-		break;
-	    gui.updateButton(one);
-	}
+	CMIGui gui = new CMIGui(player);
+	gui.setTitle(title);
+	gui.setInvSize(GUIRows.r6);
 
 	if (pi.getCurrentPage() < pi.getTotalPages()) {
 	    ItemStack Item = new ItemStack(Material.ARROW);
 	    CMIGuiButton forward = new CMIGuiButton(53, Item) {
 		@Override
 		public void click(GUIClickType type) {
-		    fillButtons(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() + 1), gui);
-		    gui.fillEmptyButtons();
+		    openUI(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() + 1), player, title);
 		}
 	    };
 	    forward.setName(Residence.getInstance().msg(lm.General_nextPageGui));
-	    gui.updateButton(forward);
+	    gui.addButton(forward);
 	}
 
 	if (pi.getCurrentPage() > 1) {
@@ -104,31 +91,31 @@ public class FlagUtil {
 	    CMIGuiButton back = new CMIGuiButton(45, Item) {
 		@Override
 		public void click(GUIClickType type) {
-		    fillButtons(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() - 1), gui);
-
-		    gui.fillEmptyButtons();
+		    openUI(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() - 1), player, title);
 		}
 	    };
 	    back.setName(Residence.getInstance().msg(lm.General_prevPageGui));
-	    gui.updateButton(back);
+	    gui.addButton(back);
 	}
+
+	for (CMIGuiButton one : flag.getButtons()) {
+	    if (pi.isContinue())
+		continue;
+	    if (pi.isBreak())
+		break;
+	    gui.addButton(one);
+	}
+	gui.fillEmptyButtons();
+	gui.open();
     }
 
     public void openSetFlagGui(Player player, ClaimedResidence res, boolean resadmin, int page) {
 	if (player == null || !player.isOnline())
 	    return;
-
 	setFlagInfo flag = new setFlagInfo(res, player, resadmin);
 	flag.recalculate();
-	CMIGui gui = new CMIGui(player);
-	gui.setTitle(plugin.msg(lm.Gui_Set_Title, res.getName()));
-	gui.setInvSize(GUIRows.r6);
-
 	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
-
-	fillButtons(flag, pi, gui);
-	gui.fillEmptyButtons();
-	gui.open();
+	openUI(flag, pi, player, plugin.msg(lm.Gui_Set_Title, res.getName()));
     }
 
     public FlagData getFlagData() {
