@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +24,6 @@ import com.bekvon.bukkit.residence.event.ResidenceFlagEvent.FlagType;
 import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
 
 public class ResidencePermissions extends FlagPermissions {
 
@@ -535,21 +533,7 @@ public class ResidencePermissions extends FlagPermissions {
 	Residence.getInstance().getServ().getPluginManager().callEvent(fc);
 	if (fc.isCancelled())
 	    return false;
-//	Flags f = Flags.getFlag(flag);
-//	if (f == null || f.isInGroup(padd.groupedFlag)) {
-//	    boolean trusted = this.residence.isTrusted(player);
-//	    if (!state.equals(FlagState.TRUE) && !trusted) {
-//		ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
-//		if (rplayer != null) {
-//		    rplayer.removeTrustedResidence(this.residence);
-//		}
-//	    } else if (state.equals(FlagState.TRUE) && trusted) {
-//		ResidencePlayer rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
-//		if (rplayer != null) {
-//		    rplayer.addTrustedResidence(this.residence);
-//		}
-//	    }
-//	}
+
 	return super.setPlayerFlag(player, flag, state);
     }
 
@@ -640,7 +624,7 @@ public class ResidencePermissions extends FlagPermissions {
 	ownerLastKnownName = newOwner;
 	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(newOwner);
 	if (rPlayer != null)
-	    this.ownerUUID = rPlayer.getUuid();
+	    this.ownerUUID = rPlayer.getUniqueId();
 
 	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase(Residence.getInstance().getServerLandName())) {
 	    ownerUUID = UUID.fromString(Residence.getInstance().getServerLandUUID());// the UUID for server owned land
@@ -659,7 +643,9 @@ public class ResidencePermissions extends FlagPermissions {
     public String getOwner() {
 	if (Residence.getInstance().getConfigManager().isOfflineMode())
 	    return ownerLastKnownName;
-	if (ownerUUID != null && ownerUUID.toString().equals(Residence.getInstance().getServerLandUUID())) //check for server land
+	if (
+	    ownerUUID != null && 
+	    ownerUUID.toString().equals(Residence.getInstance().getServerLandUUID())) //check for server land
 	    return Residence.getInstance().getServerLandName();
 	String name = Residence.getInstance().getPlayerName(ownerUUID);//try to find the owner's name
 	if (name == null)
@@ -691,19 +677,18 @@ public class ResidencePermissions extends FlagPermissions {
 	if (!ownerUUID.toString().equals(Residence.getInstance().getTempUserUUID()))
 	    root.put("OwnerUUID", ownerUUID.toString());
 	root.put("OwnerLastKnownName", ownerLastKnownName);
-//	root.put("World", world);
 	return root;
     }
 
     public static ResidencePermissions load(String worldName, ClaimedResidence res, Map<String, Object> root) throws Exception {
 	ResidencePermissions newperms = new ResidencePermissions(res);
-	//newperms.owner = (String) root.get("Owner");
+
 	if (root.containsKey("OwnerUUID") || root.containsKey("OwnerLastKnownName")) {
 	    if (!root.containsKey("OwnerUUID"))
 		newperms.ownerUUID = UUID.fromString(Residence.getInstance().getTempUserUUID());//get empty owner UUID
 	    else
 		newperms.ownerUUID = UUID.fromString((String) root.get("OwnerUUID"));//get owner UUID
-	    //			String name = Residence.getPlayerName(newperms.ownerUUID); //try to find the current name of the owner	    
+
 	    newperms.ownerLastKnownName = (String) root.get("OwnerLastKnownName");//otherwise load last known name from file
 
 	    OfflinePlayer p = null;

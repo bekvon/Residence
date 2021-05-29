@@ -1803,7 +1803,7 @@ public class ClaimedResidence {
 	else {
 	    res.ChannelColor = Residence.getInstance().getConfigManager().getChatColor();
 	}
-	
+
 	return res;
     }
 

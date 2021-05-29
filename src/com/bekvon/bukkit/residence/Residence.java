@@ -60,6 +60,7 @@ import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
 import com.bekvon.bukkit.residence.chat.ChatManager;
+import com.bekvon.bukkit.residence.commands.padd;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
@@ -659,7 +660,17 @@ public class Residence extends JavaPlugin {
 		if (!this.isEnabled()) {
 		    return;
 		}
-		FlagPermissions.initValidFlags();
+
+		File f = new File(getDataFolder(), "flags.yml");
+		YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
+		for (String oneFlag : conf.getStringList("Global.GroupedFlags." + padd.groupedFlag)) {
+		    Flags flag = Flags.getFlag(oneFlag);
+		    if (flag != null) {
+			flag.addGroup(padd.groupedFlag);
+		    }
+		    FlagPermissions.addFlagToFlagGroup(padd.groupedFlag, oneFlag);
+		}
+
 	    }
 
 	    try {
@@ -674,12 +685,12 @@ public class Residence extends JavaPlugin {
 
 	    if (getConfigManager().isUseResidenceFileClean())
 		(new FileCleanUp(this)).cleanOldResidence();
-	    
+
 	    if (firstenable) {
 		if (!this.isEnabled()) {
 		    return;
 		}
-//		FlagPermissions.initValidFlags();
+		FlagPermissions.initValidFlags();
 
 		if (smanager == null)
 		    setWorldEdit();

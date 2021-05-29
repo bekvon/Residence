@@ -216,7 +216,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	    ClaimedResidence one = iter.next();
 	    boolean hidden = one.getPermissions().has(Flags.hidden, false);
 	    if (!showhidden && hidden)
-		continue; 
+		continue;
 	    if (onlyHidden && !hidden)
 		continue;
 	    if (world != null && !world.getName().equalsIgnoreCase(one.getWorld()))
@@ -354,24 +354,29 @@ public class PlayerManager implements ResidencePlayerInterface {
 	if (resPlayer != null) {
 	    resPlayer.addResidence(residence);
 	}
-	
+
 	// Adding trusted residences
-	if (residence.perms.playerFlags != null) {
-	    for (Entry<String, Map<String, Boolean>> one : residence.perms.playerFlags.entrySet()) {
-		String name = one.getKey();
-		if (name.length() == 36)
-		    name = residence.perms.cachedPlayerNameUUIDs.get(UUID.fromString(one.getKey()));
-		if (!residence.isTrusted(name))
-		    continue;
-		ResidencePlayer rplayer = null;
-		if (one.getKey().length() == 36)
-		    rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(UUID.fromString(one.getKey()));
-		else
-		    rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(name);
-		if (rplayer == null)
-		    continue;
-		rplayer.addTrustedResidence(residence);
+	try {
+	    if (residence.perms.playerFlags != null) {
+		for (Entry<String, Map<String, Boolean>> one : residence.perms.playerFlags.entrySet()) {
+		    String name = one.getKey();
+		    if (name.length() == 36)
+			name = residence.perms.cachedPlayerNameUUIDs.get(UUID.fromString(one.getKey()));
+
+		    if (!residence.isTrusted(name))
+			continue;
+		    ResidencePlayer rplayer = null;
+		    if (one.getKey().length() == 36)
+			rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(UUID.fromString(one.getKey()));
+		    else
+			rplayer = Residence.getInstance().getPlayerManager().getResidencePlayer(name);
+		    if (rplayer == null)
+			continue;
+		    rplayer.addTrustedResidence(residence);
+		}
 	    }
+	} catch (Throwable e) {
+	    e.printStackTrace();
 	}
     }
 
