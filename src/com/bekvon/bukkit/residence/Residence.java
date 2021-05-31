@@ -220,8 +220,8 @@ public class Residence extends JavaPlugin {
     private CMIMaterial wepid;
 
 //    private String ServerLandname = "Server_Land";
-    private String ServerLandUUID = "00000000-0000-0000-0000-000000000000";
-    private String TempUserUUID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
+    private UUID ServerLandUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private UUID TempUserUUID = UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");
 
     public HashMap<String, Long> rtMap = new HashMap<String, Long>();
     public List<String> teleportDelayMap = new ArrayList<String>();
@@ -1802,11 +1802,21 @@ public class Residence extends JavaPlugin {
 	return this.getLM().getMessage(lm.server_land);
     }
 
+    @Deprecated
     public String getServerLandUUID() {
+	return ServerLandUUID.toString();
+    }
+    
+    @Deprecated
+    public String getTempUserUUID() {
+	return TempUserUUID.toString();
+    }
+    
+    public UUID getServerUUID() {
 	return ServerLandUUID;
     }
 
-    public String getTempUserUUID() {
+    public UUID getEmptyUserUUID() {
 	return TempUserUUID;
     }
 

@@ -1675,7 +1675,11 @@ public class ClaimedResidence {
 
 	if (res.getPermissions().getOwnerLastKnownName() == null)
 	    return null;
+	if (res.perms.getOwnerUUID() == null) {
 
+	    Bukkit.getConsoleSender().sendMessage("Failed to load residence: " + res.getName());
+
+	}
 //	if (root.containsKey("TownCap")) {
 //	    String townName = (String) root.get("TownCap");
 //	    Town t = Residence.getInstance().getTownManager().getTown(townName);

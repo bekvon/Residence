@@ -73,7 +73,7 @@ public class FileCleanUp {
 		if (ResidenceVaultAdapter.hasPermission(player, ResPerm.cleanbypass.getPermission(), res.getPermissions().getWorldName().toLowerCase()))
 		    continue;
 
-		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());
+		ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getName(), player.getUniqueId());
 
 		plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
 		i++;

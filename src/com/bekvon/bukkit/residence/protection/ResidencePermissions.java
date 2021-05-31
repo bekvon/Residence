@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -641,15 +642,15 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public String getOwner() {
-	if (Residence.getInstance().getConfigManager().isOfflineMode())
-	    return ownerLastKnownName;
-	if (
-	    ownerUUID != null && 
+	if (Residence.getInstance().getConfigManager().isOfflineMode()) {
+	    return ownerLastKnownName == null ? "Unknown" : ownerLastKnownName;
+	}
+	if (ownerUUID != null &&
 	    ownerUUID.toString().equals(Residence.getInstance().getServerLandUUID())) //check for server land
 	    return Residence.getInstance().getServerLandName();
 	String name = Residence.getInstance().getPlayerName(ownerUUID);//try to find the owner's name
 	if (name == null)
-	    return ownerLastKnownName;//return last known if we cannot find it
+	    return ownerLastKnownName == null ? "Unknown" : ownerLastKnownName;//return last known if we cannot find it
 	ownerLastKnownName = name;//update last known if we did find it
 	return name;
     }
@@ -659,7 +660,8 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public void setOwnerUUID(UUID ownerUUID) {
-	this.ownerUUID = ownerUUID;
+	if (ownerUUID != null)
+	    this.ownerUUID = ownerUUID;
     }
 
     @Deprecated

@@ -514,4 +514,8 @@ public class ResidencePlayer {
 //    public boolean canDamagePlayer(Player player, boolean inform) {
 //
 //    }
+
+    public void setUuid(UUID uuid) {
+	this.uuid = uuid;
+    }
 }
