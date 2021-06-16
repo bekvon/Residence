@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -66,7 +68,8 @@ public class auto implements cmd {
 	plugin.getSelectionManager().placeLoc2(player, loc.clone(), false);
 
 	boolean result = resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
-
+	CMIDebug.d(result, plugin.getSelectionManager().getSelectionCuboid(player).getXSize(), plugin.getSelectionManager().getSelectionCuboid(player).getYSize(), plugin.getSelectionManager()
+	    .getSelectionCuboid(player).getZSize());
 	if (!result) {
 	    Residence.getInstance().msg(player, lm.Area_SizeLimit);
 	    return true;
@@ -100,6 +103,8 @@ public class auto implements cmd {
     }
 
     private static int getMin(int min, int max) {
+	if (!Residence.getInstance().getConfigManager().isARCSizeEnabled())
+	    return min;
 	int percent = (int) (max * (Residence.getInstance().getConfigManager().getARCSizePercentage() / 100D));
 	int arcmin = Residence.getInstance().getConfigManager().getARCSizeMin();
 	int arcmax = Residence.getInstance().getConfigManager().getARCSizeMax();
@@ -107,6 +112,10 @@ public class auto implements cmd {
 	int newmin = min < pmin ? pmin : min;
 	newmin = newmin > arcmax ? arcmin : newmin;
 	newmin = newmin > max ? max : newmin;
+
+	if (newmin >= max) {
+	    newmin = (int) (min + ((max - min) * (Residence.getInstance().getConfigManager().getARCSizePercentage() / 100D)));
+	}
 
 	return newmin;
     }
@@ -133,6 +142,8 @@ public class auto implements cmd {
 	int maxX = getMax(group.getMaxX());
 	if (max < 0)
 	    max = maxX;
+
+	CMIDebug.d("Max: ", max);
 
 	while (true) {
 	    if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
@@ -189,21 +200,21 @@ public class auto implements cmd {
 		continue;
 	    }
 
-	    if (max > 0 && max <= c.getXSize() || c.getXSize() > group.getMaxX() - group.getMinX()) {
+	    if (max > 0 && max < c.getXSize() || c.getXSize() > group.getMaxX() - group.getMinX()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
 		continue;
 	    }
 
-	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (max > 0 && max <= c.getYSize() || c.getYSize() > group.getMaxY() - group.getMinY())) {
+	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (max > 0 && max < c.getYSize() || c.getYSize() > group.getMaxY() - group.getMinY())) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
 		continue;
 	    }
 
-	    if (max > 0 && max <= c.getZSize() || c.getZSize() > group.getMaxZ() - group.getMinZ()) {
+	    if (max > 0 && max < c.getZSize() || c.getZSize() > group.getMaxZ() - group.getMinZ()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
@@ -241,8 +252,10 @@ public class auto implements cmd {
 
 	cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
-	if (cuboid.getXSize() < x || cuboid.getYSize() < y || cuboid.getZSize() < z)
+	if (cuboid.getXSize() < x || cuboid.getYSize() < y || cuboid.getZSize() < z) {
+	    CMIDebug.d(cuboid.getXSize() < x, cuboid.getYSize() < y, cuboid.getZSize() < z);
 	    return false;
+	}
 
 	return true;
     }
