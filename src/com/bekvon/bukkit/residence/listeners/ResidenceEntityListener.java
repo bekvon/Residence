@@ -51,6 +51,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -68,7 +69,9 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.Utils;
 
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
+import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceEntityListener implements Listener {
@@ -479,8 +482,8 @@ public class ResidenceEntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemSpawnEvent(SpawnerSpawnEvent event) {
 
-    } 
-    
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
 	// disabling event on world
@@ -676,7 +679,7 @@ public class ResidenceEntityListener implements Listener {
 
 	if (!event.getEntity().getType().equals(EntityType.ITEM_FRAME))
 	    return;
-
+ 
 	if (!event.getCause().equals(RemoveCause.PHYSICS))
 	    return;
 
@@ -1275,8 +1278,7 @@ public class ResidenceEntityListener implements Listener {
 	if (event.isCancelled())
 	    return;
 
-	if (event.getEntityType() != EntityType.ENDER_CRYSTAL && event.getEntityType() != EntityType.ITEM_FRAME && !Utils.isArmorStandEntity(event
-	    .getEntityType()))
+	if (event.getEntityType() != EntityType.ENDER_CRYSTAL && !CMIEntity.isItemFrame(event.getEntity()) && !Utils.isArmorStandEntity(event.getEntityType()))
 	    return;
 
 	Entity dmgr = event.getDamager();
@@ -1332,14 +1334,21 @@ public class ResidenceEntityListener implements Listener {
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(loc, player);
 
-	if (event.getEntityType() == EntityType.ITEM_FRAME) {
-	    ItemFrame it = (ItemFrame) event.getEntity();
-	    if (it.getItem() != null) {
-		if (!ResPerm.bypass_container.hasPermission(player, 10000L))
-		    if (!perms.playerHas(player, Flags.container, true)) {
-			event.setCancelled(true);
-			plugin.msg(player, lm.Flag_Deny, Flags.container);
-		    }
+	if (CMIEntity.isItemFrame(event.getEntity())) {
+	    ItemStack stack = null;
+	    if (event.getEntityType() == EntityType.ITEM_FRAME) {
+		ItemFrame it = (ItemFrame) event.getEntity();
+		stack = it.getItem();
+	    } else {
+		org.bukkit.entity.GlowItemFrame it = (org.bukkit.entity.GlowItemFrame) event.getEntity();
+		stack = it.getItem();
+	    }
+
+	    if (stack != null) {
+		if (!ResPerm.bypass_container.hasPermission(player, 10000L) && !perms.playerHas(player, Flags.container, true)) {
+		    event.setCancelled(true);
+		    plugin.msg(player, lm.Flag_Deny, Flags.container);
+		}
 		return;
 	    }
 	}

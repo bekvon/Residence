@@ -80,6 +80,7 @@ import com.bekvon.bukkit.residence.utils.Utils;
 import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Version.Version;
@@ -987,6 +988,7 @@ public class ResidencePlayerListener implements Listener {
 	case TRIPWIRE:
 	case PAINTING:
 	case ITEM_FRAME:
+	case GLOW_ITEM_FRAME:
 	case NONE:
 	    return true;
 	default:
@@ -1592,7 +1594,7 @@ public class ResidencePlayerListener implements Listener {
 
 	Entity ent = event.getRightClicked();
 
-	if (ent.getType() != EntityType.ITEM_FRAME) {
+	if (!CMIEntity.isItemFrame(ent)) {
 	    return;
 	}
 
@@ -1610,7 +1612,7 @@ public class ResidencePlayerListener implements Listener {
 	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup();
 
-	if (!plugin.getItemManager().isAllowed(heldItem, group, world)) {
+	if (!plugin.getItemManager().isAllowed(heldItem, group, world)) { 
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;

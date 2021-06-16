@@ -86,7 +86,7 @@ public class ResidenceBlockListener implements Listener {
 	    if (inv == null || inv.getType() != InventoryType.ANVIL || e.getInventory().getLocation() == null)
 		return;
 	} catch (Exception | NoSuchMethodError ex) {
-	    return;
+	    return; 
 	}
 	Block b = e.getInventory().getLocation().getBlock();
 	if (b == null || !CMIMaterial.isAnvil(b.getType()))
