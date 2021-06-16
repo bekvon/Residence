@@ -69,9 +69,10 @@ public class ResidencePlayerListener1_17 implements Listener {
 	if (item == null || item.getType().equals(Material.AIR))
 	    return; 
 	boolean waxed = CMIMaterial.isWaxedCopper(mat);
-	
-	if (CMIMaterial.get(item).equals(CMIMaterial.HONEYCOMB) && !waxed || item.getType().toString().contains("_AXE") && waxed && 
+
+	if ((CMIMaterial.get(item).equals(CMIMaterial.HONEYCOMB) && !waxed || item.getType().toString().contains("_AXE") && CMIMaterial.getCopperStage(mat) > 1) && 
 	    !res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.copper, FlagCombo.TrueOrNone) && !plugin.isResAdminOn(player)) {
+
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.copper, res.getName());
 	    event.setCancelled(true);
 	}

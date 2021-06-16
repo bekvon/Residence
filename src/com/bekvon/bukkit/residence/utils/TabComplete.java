@@ -12,6 +12,8 @@ import org.bukkit.util.StringUtil;
 
 import com.bekvon.bukkit.residence.Residence;
 
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 public class TabComplete implements TabCompleter {
 
     @Override

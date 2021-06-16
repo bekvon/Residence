@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
@@ -23,7 +24,8 @@ public class confirm implements cmd {
     }
 
     @Override
-    public void getLocale() {
+    public void getLocale() {	
+	LocaleManager.addTabCompleteMain(this);
     }
 
 }

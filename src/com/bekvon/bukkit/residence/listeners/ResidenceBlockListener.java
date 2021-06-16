@@ -87,7 +87,7 @@ public class ResidenceBlockListener implements Listener {
 	    if (inv == null || inv.getType() != InventoryType.ANVIL || e.getInventory().getLocation() == null)
 		return;
 	} catch (Exception | NoSuchMethodError ex) {
-	    return; 
+	    return;
 	}
 	Block b = e.getInventory().getLocation().getBlock();
 	if (b == null || !CMIMaterial.isAnvil(b.getType()))
@@ -193,6 +193,7 @@ public class ResidenceBlockListener implements Listener {
 	if (!canBreakBlock(event.getPlayer(), event.getBlock(), true))
 	    event.setCancelled(true);
     }
+
     public static boolean canBreakBlock(Player player, Block block, boolean inform) {
 
 	if (player == null)
@@ -612,7 +613,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-
+CMIDebug.d("place event", event.getBlock().getType());
 	if (!canPlaceBlock(event.getPlayer(), event.getBlock(), true))
 	    event.setCancelled(true);
     }
@@ -657,8 +658,7 @@ public class ResidenceBlockListener implements Listener {
 	    }
 	}
 
-	if (!hasplace
-	    && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
+	if (!hasplace && !ResPerm.bypass_build.hasPermission(player, 10000L)) {
 	    if (informPlayer)
 		Residence.getInstance().msg(player, lm.Flag_Deny, Flags.place);
 	    return false;

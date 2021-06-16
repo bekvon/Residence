@@ -102,6 +102,7 @@ public class ConfigManager {
     private boolean ARCCheckCollision;
     private String ARCIncrementFormat;
     private int ARCSizePercentage;
+    private boolean ARCSizeEnabled;
     private int ARCSizeMin;
     private int ARCSizeMax;
 
@@ -638,6 +639,10 @@ public class ConfigManager {
 	    "Defines new residence name increment when using automatic residence creation command if residence with that name already exist");
 	ARCIncrementFormat = c.get("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat", "_[number]");
 
+	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Enabled",
+	    "When enabled we will try to create region by defined bounds");
+	ARCSizeEnabled = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Enabled", false);
+	
 	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Percentage",
 	    "Value between 1 and 100 which will define size of residence we will create in percentage depending on players permission group");
 	ARCSizePercentage = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Percentage", 50);
@@ -2084,6 +2089,10 @@ public class ConfigManager {
 
     public int getARCSizeMax() {
 	return ARCSizeMax;
+    }
+
+    public boolean isARCSizeEnabled() {
+	return ARCSizeEnabled;
     }
 
 //    public int getTownMinRange() {

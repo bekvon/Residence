@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -74,5 +76,6 @@ public class flags implements cmd {
 	    c.get(pt + ".Info", Arrays.asList("&eUsage: &6/res " + forSet + " <residence> " + fl.getName() + " true/false/remove"));
 	    keys.remove(fl.toString());
 	}
+	LocaleManager.addTabCompleteMain(this);
     }
 }
