@@ -7,7 +7,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -174,7 +174,7 @@ public class lease implements cmd {
 	    "/res lease cost will show the cost of renewing a residence lease.", "/res lease renew will renew the residence provided you have enough money."));
 
 	// Sub commands
-	c.setP(c.getPath()+"SubCommands.");
+	c.setFullPath(c.getPath()+"SubCommands.");
 	c.get("set.Description", "Set the lease time");
 	c.get("set.Info", Arrays.asList("&eUsage: &6/resadmin lease set [residence] [#days/infinite]",
 	    "Sets the lease time to a specified number of days, or infinite."));

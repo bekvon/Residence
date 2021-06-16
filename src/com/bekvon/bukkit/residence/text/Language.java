@@ -10,7 +10,7 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
+import net.Zrips.CMILib.Colors.CMIChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;

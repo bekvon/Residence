@@ -136,9 +136,7 @@ public class CommandFiller {
 	Class<?> nmsClass = null;
 	try {
 	    nmsClass = Class.forName(packagePath + "." + cmd.toLowerCase());
-	} catch (ClassNotFoundException e) {
-	} catch (IllegalArgumentException e) {
-	} catch (SecurityException e) {
+	} catch (Throwable e) {
 	}
 	return nmsClass;
     }

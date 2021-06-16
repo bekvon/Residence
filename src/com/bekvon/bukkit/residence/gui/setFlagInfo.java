@@ -15,8 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.bekvon.bukkit.CMIGUI.CMIGuiButton;
-import com.bekvon.bukkit.CMIGUI.GUIManager.GUIClickType;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -25,6 +23,10 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
+
+import net.Zrips.CMILib.GUI.CMIGuiButton;
+import net.Zrips.CMILib.GUI.GUIManager.GUIClickType;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class setFlagInfo {
 
@@ -71,15 +73,16 @@ public class setFlagInfo {
 	    List<String> lore = new ArrayList<String>();
 	    int i = 0;
 	    String sentence = "";
-	    for (String oneWord : flag.getDesc().split(" ")) {
-		sentence += oneWord + " ";
-		if (i > 4) {
-		    lore.add(ChatColor.YELLOW + sentence);
-		    sentence = "";
-		    i = 0;
+
+		for (String oneWord : flag.getDesc().split(" ")) {
+		    sentence += oneWord + " ";
+		    if (i > 4) {
+			lore.add(ChatColor.YELLOW + sentence);
+			sentence = "";
+			i = 0;
+		    }
+		    i++;
 		}
-		i++;
-	    }
 	    lore.add(ChatColor.YELLOW + sentence);
 	    description.put(flag, lore);
 	}
@@ -327,15 +330,14 @@ public class setFlagInfo {
 	} else
 	    miscInfo.removeEnchantment(Enchantment.LUCK);
 
-
 	Flags flag = Flags.getFlag(flagName);
 	if (flag != null)
 	    flagName = flag.getName();
 	if (flagName == null)
 	    flagName = "Unknown";
-	
+
 	ItemMeta MiscInfoMeta = miscInfo.getItemMeta();
-	
+
 	// Can it be null?
 	if (MiscInfoMeta == null)
 	    return miscInfo;

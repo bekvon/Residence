@@ -1,4 +1,4 @@
-package com.bekvon.bukkit.cmiLib;
+package com.bekvon.bukkit.residence.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,6 +12,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+
+import net.Zrips.CMILib.Version.Version;
 
 public class VersionChecker {
     Residence plugin;

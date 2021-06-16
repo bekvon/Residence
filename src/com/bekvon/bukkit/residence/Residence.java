@@ -42,11 +42,6 @@ import org.dynmap.DynmapAPI;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.Version;
-import com.bekvon.bukkit.cmiLib.VersionChecker;
-import com.bekvon.bukkit.residence.BossBar.BossBarManager;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder;
 import com.bekvon.bukkit.residence.Placeholders.PlaceholderAPIHook;
 import com.bekvon.bukkit.residence.allNms.v1_10Events;
@@ -122,14 +117,17 @@ import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
 import com.bekvon.bukkit.residence.utils.TabComplete;
+import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
-
 import com.earth2me.essentials.Essentials;
 import com.residence.mcstats.Metrics;
 import com.residence.zip.ZipLibrary;
 
 import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Version.Version;
 
 /**
  * 
@@ -159,7 +157,6 @@ public class Residence extends JavaPlugin {
 
     protected ResidenceCommandListener commandManager;
 
-    protected BossBarManager BossBarManager;
 
     protected SpigotListener spigotlistener;
     protected ShopListener shlistener;
@@ -289,12 +286,6 @@ public class Residence extends JavaPlugin {
 	    MarketBuyAPI = tmanager;
 	return MarketBuyAPI;
 
-    }
-
-    public BossBarManager getBossBarManager() {
-	if (BossBarManager == null)
-	    BossBarManager = new BossBarManager(this);
-	return BossBarManager;
     }
 
     public ChatInterface getResidenceChatAPI() {

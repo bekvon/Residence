@@ -43,10 +43,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.bekvon.bukkit.cmiLib.ActionBarManager;
-import com.bekvon.bukkit.cmiLib.CMIBlock;
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.Version;
+import com.Zrips.CMI.Modules.ActionBar.ActionBarManager;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.commands.auto.direction;
@@ -60,6 +57,11 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.Utils;
+
+import net.Zrips.CMILib.ActionBar.CMIActionBar;
+import net.Zrips.CMILib.Container.CMIBlock;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
 
@@ -457,7 +459,7 @@ public class ResidenceBlockListener implements Listener {
 	}
 
 	if (cancel) {
-	    ActionBarManager.send(player, plugin.msg(lm.General_CantPlaceChest));
+	    CMIActionBar.send(player, plugin.msg(lm.General_CantPlaceChest));
 	    event.setCancelled(true);
 	}
     }

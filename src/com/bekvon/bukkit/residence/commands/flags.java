@@ -7,7 +7,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.Flags;

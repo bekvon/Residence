@@ -17,9 +17,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.RawMessage;
-import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
 import com.bekvon.bukkit.residence.commands.pset;
@@ -31,6 +28,11 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.RawMessages.RawMessage;
+import net.Zrips.CMILib.Version.Version;
 
 public class HelpEntry {
     protected String name;
@@ -70,7 +72,6 @@ public class HelpEntry {
 	path = "/" + path.replace(".", " ") + " ";
 
 	PageInfo pi = new PageInfo(linesPerPage, helplines.size(), page);
-
 	if (!pi.isPageOk()) {
 	    Residence.getInstance().msg(sender, lm.Invalid_Help);
 	    return;

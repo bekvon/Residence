@@ -5,8 +5,8 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -197,7 +197,7 @@ public class rc implements cmd {
 	c.get("Info", Arrays.asList("&eUsage: &6/res rc (residence)", "Join residence chat channel."));
 	LocaleManager.addTabCompleteMain(this, "[residence]");
 
-	c.setP(c.getPath() + "SubCommands.");
+	c.setFullPath(c.getPath() + "SubCommands.");
 	c.get("leave.Description", "Leaves current residence chat channel");
 	c.get("leave.Info", Arrays.asList("&eUsage: &6/res rc leave", "If you are in residence chat channel then you will leave it"));
 	LocaleManager.addTabCompleteSub(this, "leave");

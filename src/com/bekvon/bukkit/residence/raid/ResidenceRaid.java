@@ -12,13 +12,15 @@ import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.BossBar.BossBarInfo;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceRaidEndEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRaidPreStartEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRaidStartEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+
+import net.Zrips.CMILib.CMILib;
+import net.Zrips.CMILib.BossBar.BossBarInfo;
 
 public class ResidenceRaid {
 
@@ -186,9 +188,9 @@ public class ResidenceRaid {
     }
 
     private void showBossbar(ResidencePlayer rPlayer, BarColor color, lm msg) {
-	BossBarInfo barInfo = rPlayer.getBossBar(isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent);
+	BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(rPlayer.getPlayer(), isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent);
 	if (barInfo == null) {
-	    barInfo = new BossBarInfo(rPlayer, isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent) {
+	    barInfo = new BossBarInfo(rPlayer.getPlayer(), isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent) {
 		@Override
 		public void updateCycle() {
 		    setTitleOfBar(Residence.getInstance().msg(msg, getDefenders().size(), getAttackers().size()));
@@ -203,7 +205,7 @@ public class ResidenceRaid {
 	    barInfo.setStyle(BarStyle.SEGMENTED_20);
 	    barInfo.setAuto(20);
 
-	    rPlayer.addBossBar(barInfo);
+	    CMILib.getInstance().getBossBarManager().addBossBar(rPlayer.getPlayer(), barInfo);
 	}
     }
 
@@ -221,7 +223,7 @@ public class ResidenceRaid {
 	    Bukkit.getScheduler().cancelTask(this.shedRaidStartId);
 	    this.shedRaidStartId = -1;
 	}
-	
+
 	if (this.schedBossBarId > 0) {
 	    Bukkit.getScheduler().cancelTask(this.schedBossBarId);
 	    this.schedBossBarId = -1;
@@ -243,17 +245,17 @@ public class ResidenceRaid {
 	    ResidencePlayer RPlayer = one.getValue().getPlayer();
 	    if (RPlayer != null) {
 		RPlayer.setLastRaidAttackTimer(System.currentTimeMillis());
-		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
+		BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarRaidIdent);
 		if (barInfo != null) {
 		    barInfo.cancelAutoScheduler();
 		    barInfo.remove();
-		    RPlayer.removeBossBar(barInfo);
+		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
 		}
-		barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarPreRaidIdent);
+		barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarPreRaidIdent);
 		if (barInfo != null) {
 		    barInfo.cancelAutoScheduler();
 		    barInfo.remove();
-		    RPlayer.removeBossBar(barInfo);
+		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
 		}
 	    }
 	}
@@ -261,17 +263,17 @@ public class ResidenceRaid {
 	for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
 	    ResidencePlayer RPlayer = one.getValue().getPlayer();
 	    if (RPlayer != null) {
-		BossBarInfo barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarRaidIdent);
+		BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarRaidIdent);
 		if (barInfo != null) {
 		    barInfo.cancelAutoScheduler();
 		    barInfo.remove();
-		    RPlayer.removeBossBar(barInfo);
+		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
 		}
-		barInfo = RPlayer.getBossBar(ResidenceRaid.bossBarPreRaidIdent);
+		barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarPreRaidIdent);
 		if (barInfo != null) {
 		    barInfo.cancelAutoScheduler();
 		    barInfo.remove();
-		    RPlayer.removeBossBar(barInfo);
+		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
 		}
 	    }
 	}
@@ -336,7 +338,6 @@ public class ResidenceRaid {
 
 	return true;
     }
-
 
     public boolean startRaid() {
 

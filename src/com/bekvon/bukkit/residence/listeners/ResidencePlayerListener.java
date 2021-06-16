@@ -52,12 +52,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.cmiLib.ActionBarManager;
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.CMIReflections;
-import com.bekvon.bukkit.cmiLib.TitleMessageManager;
-import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -80,9 +74,15 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.Utils;
+
+import net.Zrips.CMILib.CMILib;
+import net.Zrips.CMILib.ActionBar.CMIActionBar;
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
+import net.Zrips.CMILib.Version.Version;
 
 public class ResidencePlayerListener implements Listener {
 
@@ -1513,7 +1513,7 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.dye, FlagCombo.OnlyFalse)) {
 	    ItemStack iih = Utils.itemInMainHand(player);
-	    ItemStack iiho = CMIReflections.getItemInOffHand(player);
+	    ItemStack iiho = CMILib.getInstance().getReflectionManager().getItemInOffHand(player);
 	    if (iih == null && iiho == null)
 		return;
 	    if (iih != null && !CMIMaterial.isDye(iih.getType()) && iiho != null && !CMIMaterial.isDye(iiho.getType()))
@@ -1547,7 +1547,7 @@ public class ResidencePlayerListener implements Listener {
 
 	if (!res.isOwner(player) && res.getPermissions().playerHas(player, Flags.shear, FlagCombo.OnlyFalse)) {
 	    ItemStack iih = Utils.itemInMainHand(player);
-	    ItemStack iiho = CMIReflections.getItemInOffHand(player);
+	    ItemStack iiho = CMILib.getInstance().getReflectionManager().getItemInOffHand(player);
 	    if (iih == null && iiho == null)
 		return;
 	    if (iih != null && !CMIMaterial.SHEARS.equals(iih.getType()) && iiho != null && !CMIMaterial.SHEARS.equals(iiho.getType()))
@@ -2019,7 +2019,7 @@ public class ResidencePlayerListener implements Listener {
 	    plugin.getTeleportDelayMap().remove(player.getName());
 	    plugin.msg(player, lm.General_TeleportCanceled);
 	    if (plugin.getConfigManager().isTeleportTitleMessage())
-		TitleMessageManager.send(player, "", "");
+		CMITitleMessage.send(player, "", "");
 	}
     }
 
@@ -2072,7 +2072,7 @@ public class ResidencePlayerListener implements Listener {
 		plugin.getTeleportDelayMap().remove(player.getName());
 		plugin.msg(player, lm.General_TeleportCanceled);
 		if (plugin.getConfigManager().isTeleportTitleMessage())
-		    TitleMessageManager.send(player, "", "");
+		    CMITitleMessage.send(player, "", "");
 	    }
 	}
     }
@@ -2224,7 +2224,7 @@ public class ResidencePlayerListener implements Listener {
 		case TitleBar:
 		    FlagPermissions perms = res.getPermissions();
 		    if (perms.has(Flags.title, FlagCombo.TrueOrNone))
-			ActionBarManager.send(player, plugin.msg(lm.Raid_cantDo));
+			CMIActionBar.send(player, plugin.msg(lm.Raid_cantDo));
 		    break;
 		case ChatBox:
 		    plugin.msg(player, lm.Raid_cantDo, orres.getName());
@@ -2279,7 +2279,7 @@ public class ResidencePlayerListener implements Listener {
 		case TitleBar:
 		    FlagPermissions perms = res.getPermissions();
 		    if (perms.has(Flags.title, FlagCombo.TrueOrNone))
-			ActionBarManager.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
+			CMIActionBar.send(player, plugin.msg(lm.Residence_MoveDeny, orres.getName()));
 		    break;
 		case ChatBox:
 		    plugin.msg(player, lm.Residence_MoveDeny, orres.getName());
@@ -2379,7 +2379,7 @@ public class ResidencePlayerListener implements Listener {
 		if (res.getPermissions().has(Flags.title, FlagCombo.TrueOrNone))
 		    switch (plugin.getConfigManager().getEnterLeaveMessageType()) {
 		    case ActionBar:
-			ActionBarManager.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
+			CMIActionBar.send(player, (new StringBuilder()).append(ChatColor.YELLOW).append(insertMessages(player, res, message))
 			    .toString());
 			break;
 		    case ChatBox:
@@ -2392,7 +2392,7 @@ public class ResidencePlayerListener implements Listener {
 			    subtitle = ChatColor.YELLOW + title.split("\\\\n", 2)[1];
 			    title = title.split("\\\\n", 2)[0];
 			}
-			TitleMessageManager.send(player, title, subtitle);
+			CMITitleMessage.send(player, title, subtitle);
 			break;
 		    default:
 			break;
@@ -2414,10 +2414,10 @@ public class ResidencePlayerListener implements Listener {
 	    if (plugin.getRentManager().isForRent(from) && !plugin.getRentManager().isRented(from)) {
 		RentableLand rentable = plugin.getRentManager().getRentableLand(from);
 		if (rentable != null)
-		    ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
+		    CMIActionBar.send(player, plugin.msg(lm.Residence_CanBeRented, from.getName(), rentable.cost, rentable.days));
 	    } else if (plugin.getTransactionManager().isForSale(from) && !res.isOwner(player)) {
 		int sale = plugin.getTransactionManager().getSaleAmount(from);
-		ActionBarManager.send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
+		CMIActionBar.send(player, plugin.msg(lm.Residence_CanBeBought, from.getName(), sale));
 	    }
 	}
 

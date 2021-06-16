@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -205,7 +205,7 @@ public class select implements cmd {
 	LocaleManager.addTabCompleteSub(this, "[x]", "[y]", "[z]");
 
 	// Sub commands
-	c.setP(c.getPath() + "SubCommands.");
+	c.setFullPath(c.getPath() + "SubCommands.");
 
 	c.get("coords.Description", "Display selected coordinates");
 	c.get("coords.Info", Arrays.asList("&eUsage: &6/res select coords"));

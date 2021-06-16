@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
+import net.Zrips.CMILib.Colors.CMIChatColor;
 
 public class Debug {
     public static void D(Object message) {

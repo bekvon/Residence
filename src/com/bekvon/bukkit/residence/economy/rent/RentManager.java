@@ -13,7 +13,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.api.MarketRentInterface;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -28,6 +27,8 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.utils.GetTime;
+
+import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class RentManager implements MarketRentInterface {
     private Set<ClaimedResidence> rentedLand;

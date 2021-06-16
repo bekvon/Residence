@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -71,7 +71,7 @@ public class lists implements cmd {
 	c.get("Description", "Predefined permission lists");
 	c.get("Info", Arrays.asList("Predefined permissions that can be applied to a residence."));
 
-	c.setP(c.getPath() + "SubCommands.");
+	c.setFullPath(c.getPath() + "SubCommands.");
 	c.get("add.Description", "Add a list");
 	c.get("add.Info", Arrays.asList("&eUsage: &6/res lists add <listname>"));
 	LocaleManager.addTabCompleteSub(this, "add");

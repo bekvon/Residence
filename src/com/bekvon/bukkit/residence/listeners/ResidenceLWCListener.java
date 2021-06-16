@@ -13,8 +13,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.bekvon.bukkit.cmiLib.CMILocation;
-import com.bekvon.bukkit.cmiLib.Version;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -39,6 +37,9 @@ import com.griefcraft.scripting.event.LWCProtectionRemovePostEvent;
 import com.griefcraft.scripting.event.LWCRedstoneEvent;
 import com.griefcraft.scripting.event.LWCReloadEvent;
 import com.griefcraft.scripting.event.LWCSendLocaleEvent;
+
+import net.Zrips.CMILib.Container.CMILocation;
+import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceLWCListener implements com.griefcraft.scripting.Module {
 

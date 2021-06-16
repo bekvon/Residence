@@ -19,10 +19,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.util.Vector;
 
-import com.bekvon.bukkit.cmiLib.ActionBarManager;
-import com.bekvon.bukkit.cmiLib.CMIEffect;
-import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
-import com.bekvon.bukkit.cmiLib.CMIReflections;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
@@ -32,6 +28,11 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+
+import net.Zrips.CMILib.CMILib;
+import net.Zrips.CMILib.ActionBar.CMIActionBar;
+import net.Zrips.CMILib.Effects.CMIEffect;
+import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
 
 public class SelectionManager {
     protected Map<UUID, Selection> selections;
@@ -472,7 +473,7 @@ public class SelectionManager {
 	if (plugin.getConfigManager().enableEconomy())
 	    Message += " " + plugin.msg(lm.General_LandCost, cuboidArea.getCost(group));
 
-	ActionBarManager.send(player, Message);
+	CMIActionBar.send(player, Message);
 
     }
 
@@ -836,7 +837,7 @@ public class SelectionManager {
 
 	    CMIEffect ef = new CMIEffect(effect);
 
-	    CMIReflections.playEffect(player, l, ef);
+	    CMILib.getInstance().getReflectionManager().playEffect(player, l, ef);
 	}
     }
 

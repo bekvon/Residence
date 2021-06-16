@@ -56,9 +56,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
 
-import com.bekvon.bukkit.cmiLib.ActionBarManager;
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.Version;
+import com.Zrips.CMI.Modules.ActionBar.ActionBarManager;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -68,6 +66,10 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.Utils;
+
+import net.Zrips.CMILib.ActionBar.CMIActionBar;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceEntityListener implements Listener {
 
@@ -1062,7 +1064,7 @@ public class ResidenceEntityListener implements Listener {
 		    ClaimedResidence srcarea = plugin.getResidenceManager().getByLoc(attacker.getLocation());
 		    if (srcarea != null && area != null && srcarea.equals(area) && srcarea.getPermissions().playerHas((Player) target, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
 			srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
-			ActionBarManager.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
+			CMIActionBar.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
 			event.setIntensity(target, 0);
 		    }
 		}
@@ -1434,7 +1436,7 @@ public class ResidenceEntityListener implements Listener {
 		srcarea.getPermissions().playerHas((Player) victim, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
 		srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
 
-		ActionBarManager.send(attacker, Residence.getInstance().getLM().getMessage(lm.General_NoFriendlyFire));
+		CMIActionBar.send(attacker, Residence.getInstance().getLM().getMessage(lm.General_NoFriendlyFire));
 		if (isOnFire)
 		    victim.setFireTicks(0);
 		return false;
@@ -1572,7 +1574,7 @@ public class ResidenceEntityListener implements Listener {
 		    srcarea.getPermissions().playerHas((Player) ent, Flags.friendlyfire, FlagCombo.OnlyFalse) &&
 		    srcarea.getPermissions().playerHas(attacker, Flags.friendlyfire, FlagCombo.OnlyFalse)) {
 
-		    ActionBarManager.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
+		    CMIActionBar.send(attacker, plugin.getLM().getMessage(lm.General_NoFriendlyFire));
 		    if (isOnFire)
 			ent.setFireTicks(0);
 		    event.setCancelled(true);

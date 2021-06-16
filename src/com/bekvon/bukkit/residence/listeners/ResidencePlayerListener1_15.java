@@ -10,13 +10,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.CMIReflections;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+
+import net.Zrips.CMILib.CMILib;
+import net.Zrips.CMILib.Items.CMIMaterial;
 
 public class ResidencePlayerListener1_15 implements Listener {
 
@@ -53,7 +54,7 @@ public class ResidencePlayerListener1_15 implements Listener {
 	CMIMaterial heldItem = CMIMaterial.get(iih);
 
 	if (heldItem.equals(CMIMaterial.GLASS_BOTTLE)) {
-	    if (CMIReflections.getHoneyLevel(block) < CMIReflections.getMaxHoneyLevel(block)) {
+	    if (CMILib.getInstance().getReflectionManager().getHoneyLevel(block) < CMILib.getInstance().getReflectionManager().getMaxHoneyLevel(block)) {
 		return;
 	    }
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
@@ -67,7 +68,7 @@ public class ResidencePlayerListener1_15 implements Listener {
 	}
 
 	if (heldItem.equals(CMIMaterial.SHEARS)) {
-	    if (CMIReflections.getHoneyLevel(block) < CMIReflections.getMaxHoneyLevel(block)) {
+	    if (CMILib.getInstance().getReflectionManager().getHoneyLevel(block) < CMILib.getInstance().getReflectionManager().getMaxHoneyLevel(block)) {
 		return;
 	    }
 	    ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());

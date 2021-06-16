@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.bukkit.command.CommandSender;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;

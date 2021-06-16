@@ -3,7 +3,8 @@ package com.bekvon.bukkit.residence.containers;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public enum Flags {
     anvil(CMIMaterial.ANVIL, FlagMode.Both, "Allows or denys interaction with anvil", true),
@@ -166,7 +167,7 @@ public enum Flags {
     }
 
     public String getDesc() {
-	return desc;
+	return this.desc;
     }
 
     public void setDesc(String desc) {

@@ -20,11 +20,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.containers.CommandStatus;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class LocaleManager {
 
@@ -103,12 +105,13 @@ public class LocaleManager {
 
 	c = null;
 	try {
-	    c = new ConfigReader("Language" + File.separator + lang + ".yml");
+	    c = new ConfigReader(Residence.getInstance(), "Language" + File.separator + lang + ".yml");
 	} catch (Exception e1) {
 	    e1.printStackTrace();
 	}
 	if (c == null)
 	    return;
+	c.load();
 	c.copyDefaults(true);
 
 	if (lang.equalsIgnoreCase(plugin.getConfigManager().getLanguage()))
@@ -144,7 +147,7 @@ public class LocaleManager {
 	c.get("CommandHelp.SubCommands.res.Info", Arrays.asList("&2Use &6/res [command] ? <page> &2to view more help Information."));
 
 	for (Entry<String, CommandStatus> cmo : plugin.getCommandFiller().getCommandMap().entrySet()) {
-	    c.setP(plugin.getLocaleManager().path + cmo.getKey() + ".");
+	    c.setFullPath(plugin.getLocaleManager().path + cmo.getKey() + ".");
 	    try {
 		Class<?> cl = Class.forName(plugin.getCommandFiller().packagePath + "." + cmo.getKey());
 		if (cmd.class.isAssignableFrom(cl)) {

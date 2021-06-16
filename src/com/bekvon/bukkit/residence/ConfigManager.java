@@ -30,11 +30,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.cmiLib.Version;
-import com.bekvon.bukkit.cmiLib.CMIEffectManager.CMIParticle;
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Version.Version;
+
 import com.bekvon.bukkit.residence.containers.ELMessageType;
 import com.bekvon.bukkit.residence.containers.EconomyType;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -551,7 +553,7 @@ public class ConfigManager {
 
 	ConfigReader c = null;
 	try {
-	    c = new ConfigReader("config.yml");
+	    c = new ConfigReader(Residence.getInstance(), "config.yml");
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}

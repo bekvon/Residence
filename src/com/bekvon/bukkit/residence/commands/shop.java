@@ -12,9 +12,6 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.ConfigReader;
-import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -27,6 +24,10 @@ import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class shop implements cmd {
 
@@ -413,7 +414,7 @@ public class shop implements cmd {
 	c.get("Info", Arrays.asList("Manages residence shop feature"));
 
 	// Sub commands
-	c.setP(c.getPath() + "SubCommands.");
+	c.setFullPath(c.getPath() + "SubCommands.");
 	c.get("list.Description", "Shows list of res shops");
 	c.get("list.Info", Arrays.asList("&eUsage: &6/res shop list", "Shows full list of all residences with shop flag"));
 

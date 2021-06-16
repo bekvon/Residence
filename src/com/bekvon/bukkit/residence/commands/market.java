@@ -9,7 +9,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -414,7 +414,7 @@ public class market implements cmd {
 	c.get("Description", "Buy, Sell, or Rent Residences");
 	c.get("Info", Arrays.asList("&eUsage: &6/res market ? for more Info"));
 
-	c.setP(c.getPath() + "SubCommands.");
+	c.setFullPath(c.getPath() + "SubCommands.");
 
 	c.get("Info.Description", "Get economy Info on residence");
 	c.get("Info.Info", Arrays.asList("&eUsage: &6/res market Info [residence]", "Shows if the Residence is for sale or for rent, and the cost."));

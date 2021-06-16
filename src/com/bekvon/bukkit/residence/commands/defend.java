@@ -10,8 +10,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
-import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
@@ -21,6 +19,9 @@ import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.RaidDefender;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class defend implements cmd {
 

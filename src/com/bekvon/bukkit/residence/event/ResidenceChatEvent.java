@@ -3,7 +3,7 @@ package com.bekvon.bukkit.residence.event;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
+import net.Zrips.CMILib.Colors.CMIChatColor;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 public class ResidenceChatEvent extends CancellableResidencePlayerEvent {

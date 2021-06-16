@@ -2,21 +2,21 @@ package com.bekvon.bukkit.residence.gui;
 
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.bekvon.bukkit.CMIGUI.CMIGui;
-import com.bekvon.bukkit.CMIGUI.CMIGuiButton;
-import com.bekvon.bukkit.CMIGUI.GUIManager.GUIClickType;
-import com.bekvon.bukkit.CMIGUI.GUIManager.GUIRows;
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.GUI.CMIGui;
+import net.Zrips.CMILib.GUI.CMIGuiButton;
+import net.Zrips.CMILib.GUI.GUIManager.GUIClickType;
+import net.Zrips.CMILib.GUI.GUIManager.GUIRows;
+import net.Zrips.CMILib.Items.CMIMaterial;
 
 public class FlagUtil {
 
@@ -30,7 +30,7 @@ public class FlagUtil {
     public void load() {
 	ConfigReader c = null;
 	try {
-	    c = new ConfigReader("flags.yml");
+	    c = new ConfigReader(Residence.getInstance(), "flags.yml");
 	} catch (Exception e1) {
 	    e1.printStackTrace();
 	}

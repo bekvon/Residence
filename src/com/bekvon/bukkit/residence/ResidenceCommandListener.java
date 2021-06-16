@@ -16,13 +16,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.RawMessage;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.event.ResidenceCommandEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
-import com.bekvon.bukkit.residence.utils.Debug;
+
+import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class ResidenceCommandListener implements CommandExecutor {
 
@@ -62,7 +63,6 @@ public class ResidenceCommandListener implements CommandExecutor {
 	    plugin.msg(sender, lm.General_DisabledWorld);
 	    return true;
 	}
-
 	if (command.getName().equals("resreload") && args.length == 0) {
 	    if (sender instanceof Player) {
 		Player player = (Player) sender;
@@ -97,11 +97,11 @@ public class ResidenceCommandListener implements CommandExecutor {
 		sendUsage(sender, command.getName());
 		return true;
 	    }
-	    
+
 	    if (args.length == 1 && args[0].equals("?")) {
-		return commandHelp(new String[]{"rc", "?"}, false, sender, command);
+		return commandHelp(new String[] { "rc", "?" }, false, sender, command);
 	    }
-	    
+
 	    boolean respond = cmdClass.perform(Residence.getInstance(), sender, reduceArgs(args), false);
 	    if (!respond)
 		sendUsage(sender, command.getName());
@@ -328,8 +328,10 @@ public class ResidenceCommandListener implements CommandExecutor {
 
 	if (command.getName().equalsIgnoreCase("res"))
 	    resadmin = false;
-	if (plugin.getHelpPages().containesEntry(helppath))
+
+	if (plugin.getHelpPages().containesEntry(helppath)) {
 	    plugin.getHelpPages().printHelp(sender, page, helppath, resadmin);
+	}
 	return true;
     }
 

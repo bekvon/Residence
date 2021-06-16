@@ -26,10 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.bekvon.bukkit.cmiLib.CMIChatColor;
-import com.bekvon.bukkit.cmiLib.CMIMaterial;
-import com.bekvon.bukkit.cmiLib.RawMessage;
-import com.bekvon.bukkit.cmiLib.TitleMessageManager;
+import com.Zrips.CMI.Modules.TitleMessages.TitleMessageManager;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
@@ -59,8 +56,12 @@ import com.bekvon.bukkit.residence.raid.ResidenceRaid;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.text.help.PageInfo;
-import com.bekvon.bukkit.residence.utils.Debug;
 import com.bekvon.bukkit.residence.utils.Utils;
+
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.RawMessages.RawMessage;
+import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 
 public class ClaimedResidence {
 
@@ -1389,7 +1390,7 @@ public class ClaimedResidence {
     }
 
     public void TpTimer(final Player player, final int t) {
-	TitleMessageManager.send(player, Residence.getInstance().msg(lm.General_TeleportTitle),
+	CMITitleMessage.send(player, Residence.getInstance().msg(lm.General_TeleportTitle),
 	    Residence.getInstance().msg(lm.General_TeleportTitleTime, t));
 	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), new Runnable() {
 	    @Override

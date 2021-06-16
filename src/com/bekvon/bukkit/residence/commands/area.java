@@ -5,13 +5,14 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.cmiLib.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 
 public class area implements cmd {
 
@@ -127,7 +128,7 @@ public class area implements cmd {
     public void getLocale() {
 	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
 	// Sub commands
-	c.setP(c.getPath() + "SubCommands.");
+	c.setFullPath(c.getPath() + "SubCommands.");
 	c.get("list.Description", "List physical areas in a residence");
 	c.get("list.Info", Arrays.asList("&eUsage: &6/res area list [residence] <page>"));
 	LocaleManager.addTabCompleteSub(this, "list", "[residence]");
