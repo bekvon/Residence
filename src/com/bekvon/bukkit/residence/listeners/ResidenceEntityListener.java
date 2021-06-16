@@ -593,6 +593,7 @@ public class ResidenceEntityListener implements Listener {
 	if (!perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true))) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Flag_Deny, Flags.place);
+	    player.updateInventory();
 	}
     }
 
