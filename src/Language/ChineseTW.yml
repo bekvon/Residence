@@ -1,8 +1,7 @@
-# 此檔案將由 Residence 自動更新，
-# 當檢查到更新版本時，你的更改將被覆蓋。
-# 如果你擁有此檔案的副本，
-# 請更改 Residence config.yml 下的 Language:。
-# Translated into Chinese Traditional by Flandre_tw
+# of this file and modify that instead. This file will be updated automatically by Residence
+# when a newer version is detected, and your changes will be overwritten.  Once you 
+# have a copy of this file, change the Language: option under the Residence config.yml
+# to whatever you named your copy.
 
 Language:
   Invalid:
@@ -56,7 +55,7 @@ Language:
     MaxPhysical: '&e你已達到了領地最大允許體積。'
     SizeLimit: '&e區域大小超出了允許的尺寸上限。'
     HighLimit: '&c你不能保護這麼高的領地，高度上限為 &6%1。'
-    LowLimit: '你不能保護這麼深的領地，深度上限為 &6%1。'
+    LowLimit: 你不能保護這麼深的領地，深度上限為 &6%1。
   Select:
     Points: '&e執行指令前要先選擇兩個點 ！'
     Overlap: '&c選擇點和區域 &6%1 &c重疊 ！'
@@ -74,7 +73,7 @@ Language:
     Secondary: '&e第二個選擇點 ： &6%1。'
     TooHigh: '&c警告，選擇區域已超過地圖頂端，現在已裁剪。'
     TooLow: '&c警告，選擇區域已超過地圖底部，現在已裁剪。'
-    TotalSize: '&e選擇區域總計尺寸 ： &6%1。'
+    TotalSize: '&e選擇區域總計尺寸 ： &6%1'
     AutoEnabled: '&e自動選擇模式&6開啟&e，輸入 &6/res select auto &e關閉。'
     AutoDisabled: '&e自動選擇模式&6關閉&e，輸入 &6/res select auto &e再次打開。'
     Disabled: '&c你沒有使用選擇指令的權限。'
@@ -415,9 +414,7 @@ Language:
     VotesTopLine: '&6%1 &7%2 評分列表 &6- &7第 &6%3 &7頁，共 &6%4 %5'
     VotesList: ' &7%1. &6%2 &7%3 &7%4'
     NoDesc: '&6沒有描述'
-    Desc: |-
-      &6描述 ： 
-      %1
+    Desc: "&6描述 ： \n%1"
     DescChange: '&6描述已更改為 ： %1。'
     ChantChange: '&4無法更改商店權限為 true （t）。'
     NewBoard: '&6成功新增商店宣傳面板。'
@@ -789,8 +786,8 @@ CommandHelp:
             rentable:
               Description: Make a residence rentable.
               Info:
-              - '&e用法 ： &6/res market rentable [領地名稱] [花費] [天數] <AllowRenewing>
-                <StayInMarket> <AllowAutoPay>'
+              - '&e用法 ： &6/res market rentable [領地名稱] [花費] [天數] <AllowRenewing> <StayInMarket>
+                <AllowAutoPay>'
               - 使領地出租以 [天數] 來計算 [花費]
               - 如果開啟 <AllowRenewing>，則在租約到期前可再次出租
               - 如果開啟 <StayInMarket>，則在租約到期後留在市場上
@@ -1612,7 +1609,7 @@ CommandHelp:
         subzone:
           Info:
           - '&e用法 ： &6/res subzone &6[領地名稱] [子區域名]'
-          - '如果領地名稱被忽略，將嘗試使用原有的領地名稱'
+          - 如果領地名稱被忽略，將嘗試使用原有的領地名稱
           Description: 在領地中建立子區域
         removeworld:
           Info:
@@ -1732,7 +1729,7 @@ CommandHelp:
           Info:
           - '&e用法 ： &6/res tp &6[領地名稱]'
           - '&e傳送到你指定的權限，你必須擁有 tp 權限或是擁有者才能執行此操作'
-          - '伺服器管理員需要給予你設定的權限'
+          - 伺服器管理員需要給予你設定的權限
           Description: 傳送到領地
         setall:
           Info:
