@@ -1614,7 +1614,7 @@ public class ResidencePlayerListener implements Listener {
 	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = resPlayer.getGroup();
 
-	if (!plugin.getItemManager().isAllowed(heldItem, group, world)) { 
+	if (!plugin.getItemManager().isAllowed(heldItem, group, world)) {
 	    plugin.msg(player, lm.General_ItemBlacklisted);
 	    event.setCancelled(true);
 	    return;
@@ -1631,7 +1631,7 @@ public class ResidencePlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 	// disabling event on world
-	CMIDebug.d("PlayerBucketEmptyEvent");
+
 	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
 	    return;
 	Player player = event.getPlayer();
@@ -1739,7 +1739,8 @@ public class ResidencePlayerListener implements Listener {
 		plugin.msg(player, lm.Residence_MoveDeny, res.getName());
 		return;
 	    }
-	} else if (event.getCause() == TeleportCause.ENDER_PEARL && res.getPermissions().playerHas(player, Flags.enderpearl, FlagCombo.OnlyFalse)) {
+	} else if (event.getCause() == TeleportCause.ENDER_PEARL && (res.getPermissions().playerHas(player, Flags.enderpearl, FlagCombo.OnlyFalse) || res.getPermissions().playerHas(player, Flags.move,
+	    FlagCombo.OnlyFalse))) {
 	    event.setCancelled(true);
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.enderpearl, res.getName());
 	    return;
@@ -2184,7 +2185,6 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (move) {
-
 	    if (res.getRaid().isUnderRaid()) {
 		if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
 		    return true;

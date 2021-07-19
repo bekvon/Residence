@@ -115,16 +115,15 @@ public class rt implements cmd {
 		return true;
 	    }
 
-	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-		@Override
-		public void run() {
-		    if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
-			plugin.msg(player, lm.RandomTeleport_TeleportStarted, lc.getX(), lc.getY(), lc.getZ(), plugin.getConfigManager().getTeleportDelay());
-			plugin.getTeleportDelayMap().add(player.getName());
-			plugin.getRandomTpManager().performDelaydTp(lc, player);
-		    } else
-			plugin.getRandomTpManager().performInstantTp(lc, player);
-		}
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+		
+		if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
+		    plugin.msg(player, lm.RandomTeleport_TeleportStarted, lc.getX(), lc.getY(), lc.getZ(), plugin.getConfigManager().getTeleportDelay());
+		    plugin.getTeleportDelayMap().add(player.getName());
+		    plugin.getRandomTpManager().performDelaydTp(lc, player);
+		} else
+		    plugin.getRandomTpManager().performInstantTp(lc, player);
+
 	    }, 1);
 
 	    CMIDebug.d(lc.toVector().toString());

@@ -42,6 +42,7 @@ public class RandomTp {
 	return false;
     }
 
+    @Deprecated
     public Location getRandomlocation(World world) {
 
 	if (world == null)
@@ -144,13 +145,13 @@ public class RandomTp {
     Random randomZ = new Random(System.nanoTime());
 
     public CompletableFuture<Location> getRandomlocationAsync(World world) {
-	return CompletableFuture.supplyAsync(() -> {return get(world);});
+	return CompletableFuture.supplyAsync(() -> get(world));
     }
 
     private Location get(World world) {
 
 	if (world == null)
-	    return null; 
+	    return null;
 
 	boolean ok = false;
 	double x = 0;
@@ -183,9 +184,7 @@ public class RandomTp {
 
 	Location loc = null;
 
-	int max = rtloc.getCenter().getWorld().getMaxHeight();
-
-	c: while (!ok) {
+	while (!ok) {
 	    tries++;
 	    if (tries > maxtries)
 		return null;
@@ -227,21 +226,6 @@ public class RandomTp {
 		    if (loc.getY() > 128)
 			continue;
 		}
-//		
-//
-//		for (int i = max; i > 0; i--) {
-//		    loc.setY(i);
-//		    Block block = loc.getBlock();
-//		    Block block2 = loc.clone().add(0, 1, 0).getBlock();
-//		    Block block3 = loc.clone().add(0, -1, 0).getBlock();
-//		    if (!ResidencePlayerListener.isEmptyBlock(block3) && ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2)) {
-//			break;
-//		    }
-//		    if (i <= 3) {
-//			loc = null;
-//			continue c;
-//		    }
-//		}
 
 		if (!ResidencePlayerListener.isEmptyBlock(loc.getBlock()))
 		    continue;
@@ -261,7 +245,6 @@ public class RandomTp {
 		break;
 
 	    } catch (Exception | Error e) {
-//		e.printStackTrace();  
 	    }
 	}
 
@@ -273,7 +256,7 @@ public class RandomTp {
 	return loc;
     }
 
-    public Location getDownLocationSimple(Location oloc) {
+    private static Location getDownLocationSimple(Location oloc) {
 	try {
 	    if (oloc == null)
 		return oloc;
