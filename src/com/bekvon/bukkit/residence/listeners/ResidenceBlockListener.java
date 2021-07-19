@@ -59,6 +59,7 @@ import com.bekvon.bukkit.residence.utils.Utils;
 
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
+import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Version.Version;
 
@@ -759,8 +760,8 @@ public class ResidenceBlockListener implements Listener {
 
 	Location origins = event.getBlock().getLocation();
 
-	int lowestY = 255;
-	int bigestY = 0;
+	int lowestY = CMIWorld.getMaxHeight(origins.getWorld());
+	int bigestY =  CMIWorld.getMinHeight(origins.getWorld());
 	int lowestX = Integer.MAX_VALUE;
 	int lowestZ = Integer.MAX_VALUE;
 	int bigestX = -Integer.MAX_VALUE;

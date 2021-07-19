@@ -31,6 +31,7 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
+import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Effects.CMIEffect;
 import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
 
@@ -40,8 +41,6 @@ public class SelectionManager {
     protected Residence plugin;
 
     private HashMap<UUID, Visualizer> vMap = new HashMap<UUID, Visualizer>();
-
-    public static final int MIN_HEIGHT = 0;
 
     Permission ignoreyPermission = new Permission(ResPerm.bypass_ignorey.getPermission(), PermissionDefault.FALSE);
     Permission ignoreyinsubzonePermission = new Permission(ResPerm.bypass_ignoreyinsubzone.getPermission(), PermissionDefault.FALSE);
@@ -124,7 +123,11 @@ public class SelectionManager {
 	    case ignoreY:
 	    case noLimits:
 	    default:
-		return 0;
+		try {
+		    return CMIWorld.getMinHeight(this.getBaseLoc1().getWorld());
+		} catch (Throwable e) {
+		    return 0;
+		}
 	    case residenceBounds:
 		ClaimedResidence res1 = plugin.getResidenceManager().getByLoc(this.getBaseLoc1());
 		if (res1 != null) {
@@ -134,7 +137,11 @@ public class SelectionManager {
 		}
 		break;
 	    }
-	    return 0;
+	    try {
+		return CMIWorld.getMinHeight(this.getBaseLoc1().getWorld());
+	    } catch (Throwable e) {
+		return 0;
+	    }
 	}
 
 	private boolean inSameResidence() {
@@ -287,12 +294,21 @@ public class SelectionManager {
 	    return plugin.getConfigManager().getSelectionNetherHeight();
 	case NORMAL:
 	case THE_END:
-	    return 255;
+
+	    try {
+		return CMIWorld.getMaxHeight(world) - 1;
+	    } catch (Throwable e) {
+		return 255;
+	    }
 	default:
 	    break;
 	}
 
-	return 255;
+	try {
+	    return CMIWorld.getMaxHeight(world) - 1;
+	} catch (Throwable e) {
+	    return 255;
+	}
     }
 
     public enum Direction {
@@ -918,6 +934,14 @@ public class SelectionManager {
 	    return;
 	}
 	CuboidArea area = this.getSelectionCuboid(player);
+
+	int MIN_HEIGHT = 0;
+
+	try {
+	    MIN_HEIGHT = CMIWorld.getMinHeight(area.getWorld());
+	} catch (Throwable e) {
+	}
+
 	switch (d) {
 	case DOWN:
 	    double oldy = area.getLowVector().getBlockY();
@@ -1058,6 +1082,12 @@ public class SelectionManager {
 	    plugin.msg(player, lm.Contracting_South, amount);
 	    break;
 	case DOWN:
+
+	    int MIN_HEIGHT = 0;
+	    try {
+		MIN_HEIGHT = CMIWorld.getMinHeight(area.getWorld());
+	    } catch (Throwable e) {
+	    }
 	    oldy = area.getLowVector().getBlockY();
 	    oldy = oldy + amount;
 	    if (oldy < MIN_HEIGHT) {

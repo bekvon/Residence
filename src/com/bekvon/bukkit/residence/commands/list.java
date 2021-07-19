@@ -6,7 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
+import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -22,6 +25,8 @@ public class list implements cmd {
 	World world = null;
 	String target = null;
 
+	CMIDebug.d(CMIWorld.getMaxHeight(Bukkit.getWorlds().get(0)));  
+	
 	c: for (int i = 0; i < args.length; i++) {
 	    try {
 		page = Integer.parseInt(args[i]);
@@ -45,7 +50,7 @@ public class list implements cmd {
 	
 	plugin.getResidenceManager().listResidences(sender, target, page, false, false, resadmin, world);
 
-	return true;
+	return true; 
     }
 
     @Override
