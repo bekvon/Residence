@@ -20,7 +20,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,20 +29,19 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-
-import net.Zrips.CMILib.Colors.CMIChatColor;
-import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
-import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Version.Version;
-
 import com.bekvon.bukkit.residence.containers.ELMessageType;
 import com.bekvon.bukkit.residence.containers.EconomyType;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import com.bekvon.bukkit.residence.utils.YmlMaker;
+
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
+import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Locale.YmlMaker;
+import net.Zrips.CMILib.Version.Version;
 
 public class ConfigManager {
     protected String defaultGroup;
@@ -570,7 +568,7 @@ public class ConfigManager {
 	UUIDConvertion = c.get("Global.UUIDConvertion", true);
 
 	c.addComment("Global.OfflineMode",
-	    "If you running offline server, better to check this as true. This will help to solve issues with changing players UUID.");
+	    "If you running offline server. Suggestion would be to keep this at false and base residence ownership from UUID and not on players name");
 	OfflineMode = c.get("Global.OfflineMode", false);
 
 	c.addComment("Global.versionCheck", "Players with residence.versioncheck permission node will be noticed about new residence version on login");

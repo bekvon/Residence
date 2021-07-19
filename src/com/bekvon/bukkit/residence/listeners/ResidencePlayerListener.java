@@ -83,6 +83,7 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
+import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidencePlayerListener implements Listener {
@@ -872,7 +873,7 @@ public class ResidencePlayerListener implements Listener {
 	plugin.getPlayerManager().playerJoin(player);
 
 	if (ResPerm.versioncheck.hasPermission(player)) {
-	    plugin.getVersionChecker().VersionCheck(player);
+	    CMIVersionChecker.VersionCheck(player, 11480, plugin.getDescription());
 	}
     }
 

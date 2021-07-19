@@ -23,9 +23,9 @@ import com.bekvon.bukkit.residence.shopStuff.Board;
 import com.bekvon.bukkit.residence.shopStuff.ShopListener;
 import com.bekvon.bukkit.residence.shopStuff.ShopVote;
 import com.bekvon.bukkit.residence.shopStuff.Vote;
-import com.bekvon.bukkit.residence.text.help.PageInfo;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 

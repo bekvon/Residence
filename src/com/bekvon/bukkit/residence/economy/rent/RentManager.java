@@ -25,9 +25,9 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
-import com.bekvon.bukkit.residence.text.help.PageInfo;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
+import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class RentManager implements MarketRentInterface {

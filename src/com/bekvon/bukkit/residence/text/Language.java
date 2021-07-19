@@ -7,15 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import net.Zrips.CMILib.Colors.CMIChatColor;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
-import com.bekvon.bukkit.residence.utils.Debug;
-import com.bekvon.bukkit.residence.utils.YmlMaker;
+
+import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Locale.YmlMaker;
 
 public class Language {
     public FileConfiguration enlocale;

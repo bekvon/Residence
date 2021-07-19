@@ -118,7 +118,6 @@ import com.bekvon.bukkit.residence.utils.FileCleanUp;
 import com.bekvon.bukkit.residence.utils.RandomTp;
 import com.bekvon.bukkit.residence.utils.Sorting;
 import com.bekvon.bukkit.residence.utils.TabComplete;
-import com.bekvon.bukkit.residence.utils.VersionChecker;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 import com.earth2me.essentials.Essentials;
 import com.residence.mcstats.Metrics;
@@ -128,6 +127,7 @@ import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
 
 /**
@@ -206,7 +206,6 @@ public class Residence extends JavaPlugin {
     Metrics metrics = null;
 
     protected int autosaveBukkitId = -1;
-    protected VersionChecker versionChecker;
     protected boolean initsuccess = false;
     public Map<String, String> deleteConfirm;
     public Map<String, String> UnrentConfirm = new HashMap<String, String>();
@@ -420,7 +419,6 @@ public class Residence extends JavaPlugin {
 	    instance = this;
 
 	    initsuccess = false;
-	    versionChecker = new VersionChecker(this);
 	    deleteConfirm = new HashMap<String, String>();
 	    resadminToggle = new ArrayList<String>();
 	    server = this.getServer();
@@ -821,7 +819,9 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().LoadShopVotes();
 	getShopSignUtilManager().LoadSigns();
 	getShopSignUtilManager().BoardUpdate();
-	getVersionChecker().VersionCheck(null);
+	
+	
+	CMIVersionChecker.VersionCheck(null, 11480, this.getDescription());
     }
 
     public void parseHelpEntries() {
@@ -970,9 +970,6 @@ public class Residence extends JavaPlugin {
 	return this;
     }
 
-    public VersionChecker getVersionChecker() {
-	return versionChecker;
-    }
 
 //    public LWC getLwc() {
 //	return lwc;
