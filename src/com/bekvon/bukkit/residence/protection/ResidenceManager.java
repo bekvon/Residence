@@ -318,7 +318,7 @@ public class ResidenceManager implements ResidenceInterface {
 	TreeMap<String, ClaimedResidence> ownedResidences = plugin.getPlayerManager().getResidencesMap(targetplayer, hidden, onlyHidden, world);
 	ownedResidences.putAll(plugin.getRentManager().getRentsMap(targetplayer, onlyHidden, world));
 	ownedResidences.putAll(plugin.getPlayerManager().getTrustedResidencesMap(targetplayer, hidden, onlyHidden, world));
-	
+
 	plugin.getInfoPageManager().printListInfo(sender, targetplayer, ownedResidences, page, resadmin, world);
     }
 
@@ -520,6 +520,9 @@ public class ResidenceManager implements ResidenceInterface {
 		return;
 	    }
 	}
+
+	if (rPlayer != null)
+	    rPlayer.forceUpdateGroup();
 
 	ResidenceDeleteEvent resevent = new ResidenceDeleteEvent(player, res, rPlayer == null ? DeleteCause.OTHER : DeleteCause.PLAYER_DELETE);
 	plugin.getServ().getPluginManager().callEvent(resevent);

@@ -54,6 +54,8 @@ public class auto implements cmd {
 	    }
 	}
 
+	Residence.getInstance().getPlayerManager().getResidencePlayer(player).forceUpdateGroup();
+		
 	Location loc = player.getLocation();
 
 	int minY = loc.getBlockY() - 1;
@@ -68,8 +70,8 @@ public class auto implements cmd {
 	plugin.getSelectionManager().placeLoc2(player, loc.clone(), false);
 
 	boolean result = resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
-	CMIDebug.d(result, plugin.getSelectionManager().getSelectionCuboid(player).getXSize(), plugin.getSelectionManager().getSelectionCuboid(player).getYSize(), plugin.getSelectionManager()
-	    .getSelectionCuboid(player).getZSize());
+	
+	
 	if (!result) {
 	    Residence.getInstance().msg(player, lm.Area_SizeLimit);
 	    return true;

@@ -277,6 +277,7 @@ public class RentManager implements MarketRentInterface {
 	}
 
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+	rPlayer.forceUpdateGroup();
 	if (!resadmin && this.getRentCount(player.getName()) >= rPlayer.getMaxRents()) {
 	    plugin.msg(player, lm.Residence_MaxRent);
 	    return;

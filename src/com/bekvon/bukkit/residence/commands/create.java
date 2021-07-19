@@ -36,8 +36,10 @@ public class create implements cmd {
 	    if (sender instanceof Player && !plugin.getPermissionManager().isResidenceAdmin(sender) && plugin.isDisabledWorldCommand((plugin.getSelectionManager().getSelection(player))
 		.getWorld())) {
 		plugin.msg(sender, lm.General_DisabledWorld);
-		return null; 
+		return null;
 	    }
+
+	    Residence.getInstance().getPlayerManager().getResidencePlayer(player).forceUpdateGroup();
 
 	    plugin.getResidenceManager().addResidence(player, args[0], plugin.getSelectionManager().getPlayerLoc1(player), plugin
 		.getSelectionManager().getPlayerLoc2(player), resadmin);
@@ -53,6 +55,6 @@ public class create implements cmd {
 	// Main command
 	c.get("Description", "Create Residences");
 	c.get("Info", Arrays.asList("&eUsage: &6/res create [residence_name]"));
-	LocaleManager.addTabCompleteMain(this);	
+	LocaleManager.addTabCompleteMain(this);
     }
 }

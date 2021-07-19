@@ -219,6 +219,10 @@ public class ResidencePlayer {
 	return getGroup(false);
     }
 
+    public PermissionGroup forceUpdateGroup() {
+	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), true);
+    }
+    
     public PermissionGroup getGroup(boolean forceUpdate) {
 	updatePlayer();
 	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), forceUpdate);
