@@ -43,7 +43,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.Zrips.CMI.Modules.ActionBar.ActionBarManager;
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.commands.auto.direction;
@@ -61,7 +60,6 @@ import com.bekvon.bukkit.residence.utils.Utils;
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -613,7 +611,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-CMIDebug.d("place event", event.getBlock().getType());
+
 	if (!canPlaceBlock(event.getPlayer(), event.getBlock(), true))
 	    event.setCancelled(true);
     }
