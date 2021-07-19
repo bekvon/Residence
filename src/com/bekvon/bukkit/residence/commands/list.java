@@ -6,15 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
-import net.Zrips.CMILib.Container.CMIWorld;
-import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Logs.CMIDebug;
-
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 
 public class list implements cmd {
 
@@ -24,8 +22,6 @@ public class list implements cmd {
 	int page = 1;
 	World world = null;
 	String target = null;
-
-	CMIDebug.d(CMIWorld.getMaxHeight(Bukkit.getWorlds().get(0)));  
 	
 	c: for (int i = 0; i < args.length; i++) {
 	    try {

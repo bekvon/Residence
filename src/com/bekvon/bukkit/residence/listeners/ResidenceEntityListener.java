@@ -49,6 +49,8 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.ItemStack;
@@ -69,6 +71,7 @@ import com.bekvon.bukkit.residence.utils.Utils;
 
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Entities.CMIEntity;
+import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Version.Version;
 
@@ -677,7 +680,7 @@ public class ResidenceEntityListener implements Listener {
 
 	if (!event.getEntity().getType().equals(EntityType.ITEM_FRAME))
 	    return;
- 
+
 	if (!event.getCause().equals(RemoveCause.PHYSICS))
 	    return;
 
@@ -1656,6 +1659,33 @@ public class ResidenceEntityListener implements Listener {
 		.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)) {
 		ent.setFireTicks(0);
 	    }
+	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerInteractAtFish(PlayerInteractEntityEvent event) {
+	if (Version.isCurrentLower(Version.v1_12_R1))
+	    return;
+	Player player = event.getPlayer();
+	if (Residence.getInstance().isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getRightClicked();
+	if (!(ent instanceof org.bukkit.entity.Fish))
+	    return;
+
+	ItemStack iih = CMIItemStack.getItemInMainHand(player);
+	if (iih == null)
+	    return;
+	
+	if (!CMIMaterial.get(iih).equals(CMIMaterial.WATER_BUCKET))
+	    return; 
+
+	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
+
+	if (!perms.playerHas(player, Flags.animalkilling, FlagCombo.TrueOrNone)) {
+	    event.setCancelled(true);
+	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.animalkilling);
 	}
     }
 }

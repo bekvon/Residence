@@ -20,7 +20,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class auto implements cmd {
 
@@ -144,8 +143,6 @@ public class auto implements cmd {
 	if (max < 0)
 	    max = maxX;
 
-	CMIDebug.d("Max: ", max);
-
 	while (true) {
 	    if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 		if (dir.equals(direction.Top) || dir.equals(direction.Bottom)) {
@@ -254,7 +251,6 @@ public class auto implements cmd {
 	cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
 	if (cuboid.getXSize() < x || cuboid.getYSize() < y || cuboid.getZSize() < z) {
-	    CMIDebug.d(cuboid.getXSize() < x, cuboid.getYSize() < y, cuboid.getZSize() < z);
 	    return false;
 	}
 

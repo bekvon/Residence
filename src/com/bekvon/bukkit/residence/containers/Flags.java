@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 
 public enum Flags {
     anvil(CMIMaterial.ANVIL, FlagMode.Both, "Allows or denys interaction with anvil", true),

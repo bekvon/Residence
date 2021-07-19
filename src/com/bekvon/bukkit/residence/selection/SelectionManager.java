@@ -244,6 +244,7 @@ public class SelectionManager {
 	    int zcoord = chunk.getZ() * 16;
 	    int xmax = xcoord + 15;
 	    int zmax = zcoord + 15;
+	    
 	    this.setBaseLoc1(new Location(player.getWorld(), xcoord, this.getMinYAllowed(), zcoord));
 	    this.setBaseLoc2(new Location(player.getWorld(), xmax, this.getMaxYAllowed(), zmax));
 	    plugin.msg(player, lm.Select_Success);
