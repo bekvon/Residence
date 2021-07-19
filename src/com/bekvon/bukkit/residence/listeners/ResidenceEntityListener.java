@@ -73,6 +73,7 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceEntityListener implements Listener {
@@ -119,7 +120,7 @@ public class ResidenceEntityListener implements Listener {
     }
 
     public static boolean isMonster(Entity ent) {
-	return (ent instanceof Monster || ent instanceof Slime || ent instanceof Ghast);
+	return (ent instanceof Monster || ent instanceof Slime || ent instanceof Ghast || Version.isCurrentEqualOrHigher(Version.v1_11_R1) && ent instanceof org.bukkit.entity.Shulker);
     }
 
     private static boolean isTamed(Entity ent) {
@@ -368,6 +369,7 @@ public class ResidenceEntityListener implements Listener {
 	    return;
 	if (plugin.isDisabledWorldListener(entity.getWorld()))
 	    return;
+
 	if (!isMonster(entity))
 	    return;
 
@@ -1677,9 +1679,9 @@ public class ResidenceEntityListener implements Listener {
 	ItemStack iih = CMIItemStack.getItemInMainHand(player);
 	if (iih == null)
 	    return;
-	
+
 	if (!CMIMaterial.get(iih).equals(CMIMaterial.WATER_BUCKET))
-	    return; 
+	    return;
 
 	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
 
