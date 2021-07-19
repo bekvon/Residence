@@ -1952,13 +1952,13 @@ public class ClaimedResidence {
 	if (p == null)
 	    return false;
 	if (Residence.getInstance().getConfigManager().isOfflineMode())
-	    return perms.getOwner().equals(p.getName());
+	    return perms.getOwner().equalsIgnoreCase(p.getName());
 	return perms.getOwnerUUID().equals(p.getUniqueId());
     }
 
     public boolean isOwner(CommandSender sender) {
 	if (Residence.getInstance().getConfigManager().isOfflineMode()) {
-	    return perms.getOwner().equals(sender.getName());
+	    return perms.getOwner().equalsIgnoreCase(sender.getName());
 	}
 	if (sender instanceof Player) {
 	    return perms.getOwnerUUID().equals(((Player) sender).getUniqueId());
