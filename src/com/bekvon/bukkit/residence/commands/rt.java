@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.commands;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,7 +9,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -16,6 +16,9 @@ import com.bekvon.bukkit.residence.containers.RandomTeleport;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class rt implements cmd {
 
@@ -98,21 +101,36 @@ public class rt implements cmd {
 	    return true;
 	}
 
-	Location loc = plugin.getRandomTpManager().getRandomlocation(wname);
-	plugin.getRandomTeleportMap().put(tPlayer.getName(), System.currentTimeMillis());
+	World worldName = wname;
+	Player player = tPlayer;
 
-	if (loc == null) {
-	    plugin.msg(sender, lm.RandomTeleport_IncorrectLocation, sec);
-	    return true;
-	}
+	CompletableFuture<Location> aloc = plugin.getRandomTpManager().getRandomlocationAsync(worldName);
 
-	if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
-	    plugin.msg(tPlayer, lm.RandomTeleport_TeleportStarted, loc.getX(), loc.getY(), loc
-		.getZ(), plugin.getConfigManager().getTeleportDelay());
-	    plugin.getTeleportDelayMap().add(tPlayer.getName());
-	    plugin.getRandomTpManager().performDelaydTp(loc, tPlayer);
-	} else
-	    plugin.getRandomTpManager().performInstantTp(loc, tPlayer);
+	aloc.thenApply(lc -> {
+
+	    plugin.getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
+
+	    if (lc == null) {
+		plugin.msg(sender, lm.RandomTeleport_IncorrectLocation, sec);
+		return true;
+	    }
+
+	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		@Override
+		public void run() {
+		    if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
+			plugin.msg(player, lm.RandomTeleport_TeleportStarted, lc.getX(), lc.getY(), lc.getZ(), plugin.getConfigManager().getTeleportDelay());
+			plugin.getTeleportDelayMap().add(player.getName());
+			plugin.getRandomTpManager().performDelaydTp(lc, player);
+		    } else
+			plugin.getRandomTpManager().performInstantTp(lc, player);
+		}
+	    }, 1);
+
+	    CMIDebug.d(lc.toVector().toString());
+
+	    return null;
+	});
 
 	return true;
     }
