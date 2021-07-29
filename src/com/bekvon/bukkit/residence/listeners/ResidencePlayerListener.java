@@ -1731,6 +1731,17 @@ public class ResidencePlayerListener implements Listener {
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
 	if (res == null)
 	    return;
+
+//	if (event.getCause() == TeleportCause.UNKNOWN) {
+//	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player)
+//		&& !ResPerm.bypass_tp.hasPermission(player, 10000L) && !ResPerm.admin_move.hasPermission(player, 10000L)) {
+//		event.setCancelled(true);
+//		Location newLoc = res.getOutsideFreeLoc(loc, player);
+//		player.teleport(newLoc);
+//		plugin.msg(player, lm.Residence_MoveDeny, res.getName());
+//		return;
+//	    }
+//	} else 
 	if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
 	    .getCause() == TeleportCause.PLUGIN) {
 	    if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player)
@@ -2106,6 +2117,7 @@ public class ResidencePlayerListener implements Listener {
 	UUID uuid = player.getUniqueId();
 
 	ClaimedResidence ResOld = currentRes.get(uuid);
+
 	if (ResOld == null) {
 	    currentRes.remove(uuid);
 	} else {
@@ -2336,10 +2348,26 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
-	lastOutsideLoc.put(uuid, loc);
+	boolean cantMove = res != null && Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player)
+	    && !ResPerm.admin_move.hasPermission(player, 10000L);
+
+	if (!cantMove) {
+	    lastOutsideLoc.put(uuid, loc);
+	}
 
 	if (!currentRes.containsKey(uuid) || ResOld != res) {
-	    currentRes.put(uuid, res);
+
+	    if (cantMove) {		
+		Location lastLoc = lastOutsideLoc.get(uuid);
+		player.closeInventory();
+		if (lastLoc != null && CMIMaterial.isAir(lastLoc.getBlock().getType()))
+		     teleport(player, lastLoc);
+		else
+		     teleport(player, res.getOutsideFreeLoc(loc, player));
+		return false;
+	    } else {
+		currentRes.put(uuid, res);
+	    }
 
 	    // New ResidenceChangedEvent
 	    ResidenceChangedEvent chgEvent = new ResidenceChangedEvent(ResOld, res, player);
