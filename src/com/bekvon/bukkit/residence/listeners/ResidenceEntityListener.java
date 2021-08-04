@@ -139,11 +139,12 @@ public class ResidenceEntityListener implements Listener {
 		}
 	    }
 	}
-	return ent instanceof Arrow || ent.getType().toString().equalsIgnoreCase("Trident") || ent.getType().toString().equalsIgnoreCase("Spectral_Arrow");
+	return ent instanceof Projectile || ent.getType().toString().equalsIgnoreCase("Trident") || ent.getType().toString().equalsIgnoreCase("Spectral_Arrow");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void AnimalKilling(EntityDamageEvent event) {
+
 	// Disabling listener if flag disabled globally
 	if (!Flags.animalkilling.isGlobalyEnabled())
 	    return;

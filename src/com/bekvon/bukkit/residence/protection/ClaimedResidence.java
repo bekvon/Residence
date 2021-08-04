@@ -1105,7 +1105,7 @@ public class ClaimedResidence {
 	    found = true;
 	    loc.add(0.5, 0.1, 0.5);
 
-	    // Incase empty space is on oposite side
+	    // In case empty space is on opposite side
 	    if (Residence.getInstance().getResidenceManager().getByLoc(loc) == this) {
 		loc.add(-1, 0, -1);
 	    }
