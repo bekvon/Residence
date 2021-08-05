@@ -1,5 +1,6 @@
 package com.bekvon.bukkit.residence;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -266,6 +267,26 @@ public class ConfigManager {
     public List<String> DynMapVisibleRegions;
     public List<String> DynMapHiddenRegions;
     // DynMap
+
+    // Pl3xMap
+    public boolean Pl3xMapHideByDefault;
+    public boolean Pl3xMapUse;
+
+    public boolean Pl3xMapShowFlags;
+    public boolean Pl3xMapExcludeDefaultFlags;
+    public boolean Pl3xMapHideHidden;
+    public int Pl3xMapLayerSubZoneDepth;
+    public Color Pl3xMapBorderColor = new Color(125, 125, 125);
+    public double Pl3xMapBorderOpacity;
+    public int Pl3xMapBorderWeight;
+    public Color Pl3xMapFillColor = new Color(125, 125, 125);
+    public double Pl3xMapFillOpacity;
+    public Color Pl3xMapFillForRent = new Color(125, 125, 125);
+    public Color Pl3xMapFillRented = new Color(125, 125, 125);
+    public Color Pl3xMapFillForSale = new Color(125, 125, 125);
+    public List<String> Pl3xMapVisibleRegions;
+    public List<String> Pl3xMapHiddenRegions;
+    // Pl3xMap
 
     // Raid
     public static boolean RaidEnabled = false;
@@ -640,7 +661,7 @@ public class ConfigManager {
 	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Enabled",
 	    "When enabled we will try to create region by defined bounds");
 	ARCSizeEnabled = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Enabled", false);
-	
+
 	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Percentage",
 	    "Value between 1 and 100 which will define size of residence we will create in percentage depending on players permission group");
 	ARCSizePercentage = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Percentage", 50);
@@ -1312,6 +1333,44 @@ public class ConfigManager {
 	c.addComment("DynMap.HiddenRegions", "Hides region on map even if its not hidden in game");
 	DynMapHiddenRegions = c.get("DynMap.HiddenRegions", new ArrayList<String>());
 
+	c.addComment("Pl3xMap.Use", "Enables or disable Pl3xMap Support");
+	Pl3xMapUse = c.get("Pl3xMap.Use", false);
+	c.addComment("Pl3xMap.HideByDefault", "When set to true we will hide residence areas by default on Pl3xMap window",
+	    "Residences can still be enabled throw provided Pl3xMap option on left top side");
+	Pl3xMapHideByDefault = c.get("Pl3xMap.HideByDefault", false);
+	c.addComment("Pl3xMap.ShowFlags", "Shows or hides residence flags");
+	Pl3xMapShowFlags = c.get("Pl3xMap.ShowFlags", true);
+	c.addComment("Pl3xMap.ExcludeDefaultFlags", "When enabled default flags will not be included in residence overview");
+	Pl3xMapExcludeDefaultFlags = c.get("Pl3xMap.ExcludeDefaultFlags", true);
+	c.addComment("Pl3xMap.HideHidden", "If set true, residence with hidden flag set to true will be hidden from Pl3xMap");
+	Pl3xMapHideHidden = c.get("Pl3xMap.HideHidden", true);
+
+//	c.addComment("Pl3xMap.Layer.3dRegions", "Enables 3D zones");
+//	Pl3xMapLayer3dRegions = c.get("Pl3xMap.Layer.3dRegions", true);
+	c.addComment("Pl3xMap.Layer.SubZoneDepth", "How deep to go into subzones to show");
+	Pl3xMapLayerSubZoneDepth = c.get("Pl3xMap.Layer.SubZoneDepth", 2);
+
+	c.addComment("Pl3xMap.Border.Color", "Color of border. Pick color from this page http://www.w3schools.com/colors/colors_picker.asp");
+
+	Pl3xMapFillColor = processColor(c.get("Pl3xMap.Border.Color", "#FF0000"));
+
+	c.addComment("Pl3xMap.Border.Opacity", "Transparency. 0.3 means that only 30% of color will be visible");
+	Pl3xMapBorderOpacity = c.get("Pl3xMap.Border.Opacity", 0.3);
+	c.addComment("Pl3xMap.Border.Weight", "Border thickness");
+	Pl3xMapBorderWeight = c.get("Pl3xMap.Border.Weight", 3);
+	Pl3xMapFillOpacity = c.get("Pl3xMap.Fill.Opacity", 0.3);
+
+	Pl3xMapFillColor = processColor(c.get("Pl3xMap.Fill.Color", "#FF0000"));
+
+	Pl3xMapFillForRent = processColor(c.get("Pl3xMap.Fill.ForRent", "#33cc33"));
+	Pl3xMapFillRented = processColor(c.get("Pl3xMap.Fill.Rented", "#99ff33"));
+	Pl3xMapFillForSale = processColor(c.get("Pl3xMap.Fill.ForSale", "#0066ff"));
+
+	c.addComment("Pl3xMap.VisibleRegions", "Shows only regions on this list");
+	Pl3xMapVisibleRegions = c.get("Pl3xMap.VisibleRegions", new ArrayList<String>());
+	c.addComment("Pl3xMap.HiddenRegions", "Hides region on map even if its not hidden in game");
+	Pl3xMapHiddenRegions = c.get("Pl3xMap.HiddenRegions", new ArrayList<String>());
+
 	c.addComment("Raid", "In development");
 
 	c.addComment("Raid.Enabled", "Determines if you want to enable raid feature for your server",
@@ -1347,6 +1406,20 @@ public class ConfigManager {
 	RaidFriendlyFire = c.get("Raid.FriendlyFire", true);
 
 	c.save();
+    }
+
+    private Color processColor(String cls) {
+	try {
+	    if (cls.startsWith("#")) {
+		cls = cls.substring(1);
+		cls = CMIChatColor.colorCodePrefix + cls + CMIChatColor.colorCodeSuffix;
+	    }
+	    CMIChatColor col = CMIChatColor.getColor(cls);
+	    if (col != null && col.getJavaColor() != null)
+		return col.getJavaColor();
+	} catch (Throwable e) {
+	}
+	return new Color(125, 125, 125);
     }
 
     public void loadFlags() {

@@ -85,6 +85,8 @@ import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_9;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
+import com.bekvon.bukkit.residence.pl3xmap.Pl3xMapListeners;
+import com.bekvon.bukkit.residence.pl3xmap.Pl3xMapManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
@@ -158,7 +160,6 @@ public class Residence extends JavaPlugin {
 
     protected ResidenceCommandListener commandManager;
 
-
     protected SpigotListener spigotlistener;
     protected ShopListener shlistener;
     protected TransactionManager tmanager;
@@ -178,6 +179,7 @@ public class Residence extends JavaPlugin {
 //    private TownManager townManager;
     protected RandomTp RandomTpManager;
     protected DynMapManager DynManager;
+    protected Pl3xMapManager Pl3xManager;
     protected Sorting SortingManager;
     protected AutoSelection AutoSelectionManager;
     protected WESchematicManager SchematicManager;
@@ -357,7 +359,6 @@ public class Residence extends JavaPlugin {
 			    } catch (IOException e) {
 				e.printStackTrace();
 			    }
-			    return;
 			}
 		    });
 		}
@@ -475,11 +476,9 @@ public class Residence extends JavaPlugin {
 	    String multiworld = getConfigManager().getMultiworldPlugin();
 	    if (multiworld != null) {
 		Plugin plugin = server.getPluginManager().getPlugin(multiworld);
-		if (plugin != null) {
-		    if (!plugin.isEnabled()) {
-			Bukkit.getConsoleSender().sendMessage(getPrefix() + " - Enabling multiworld plugin: " + multiworld);
-			server.getPluginManager().enablePlugin(plugin);
-		    }
+		if (plugin != null && !plugin.isEnabled()) {
+		    Bukkit.getConsoleSender().sendMessage(getPrefix() + " - Enabling multiworld plugin: " + multiworld);
+		    server.getPluginManager().enablePlugin(plugin);
 		}
 	    }
 
@@ -766,6 +765,19 @@ public class Residence extends JavaPlugin {
 		e.printStackTrace();
 	    }
 
+	    try {
+		// Pl3xMap
+		Plugin pl3xmap = Bukkit.getPluginManager().getPlugin("Pl3xMap");
+		if (pl3xmap != null && getConfigManager().Pl3xMapUse) {
+		    Pl3xManager = new Pl3xMapManager(this);
+		    getServer().getPluginManager().registerEvents(new Pl3xMapListeners(this), this);
+		    getPl3xManager().api = net.pl3x.map.api.Pl3xMapProvider.get();
+		    getPl3xManager().activate();
+		}
+	    } catch (Throwable e) {
+		e.printStackTrace();
+	    }
+
 	    int autosaveInt = getConfigManager().getAutoSaveInterval();
 	    if (autosaveInt < 1) {
 		autosaveInt = 1;
@@ -819,8 +831,7 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().LoadShopVotes();
 	getShopSignUtilManager().LoadSigns();
 	getShopSignUtilManager().BoardUpdate();
-	
-	
+
 	CMIVersionChecker.VersionCheck(null, 11480, this.getDescription());
     }
 
@@ -970,7 +981,6 @@ public class Residence extends JavaPlugin {
 	return this;
     }
 
-
 //    public LWC getLwc() {
 //	return lwc;
 //    }
@@ -1021,6 +1031,10 @@ public class Residence extends JavaPlugin {
 
     public DynMapManager getDynManager() {
 	return DynManager;
+    }
+
+    public Pl3xMapManager getPl3xManager() {
+	return Pl3xManager;
     }
 
     public WESchematicManager getSchematicManager() {
@@ -1799,12 +1813,12 @@ public class Residence extends JavaPlugin {
     public String getServerLandUUID() {
 	return ServerLandUUID.toString();
     }
-    
+
     @Deprecated
     public String getTempUserUUID() {
 	return TempUserUUID.toString();
     }
-    
+
     public UUID getServerUUID() {
 	return ServerLandUUID;
     }
