@@ -13,6 +13,8 @@ import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Messages.CMIMessages;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.TransactionManager;
@@ -84,8 +86,8 @@ public class DynMapManager {
 
 	    ResidencePermissions residencePermissions = res.getPermissions();
 	    FlagPermissions gRD = Residence.getInstance().getConfigManager().getGlobalResidenceDefaultFlags();
-	    
-	    StringBuilder flgs = new StringBuilder();	    
+
+	    StringBuilder flgs = new StringBuilder();
 	    for (Entry<String, Boolean> one : residencePermissions.getFlags().entrySet()) {
 		if (Residence.getInstance().getConfigManager().DynMapExcludeDefaultFlags && gRD.isSet(one.getKey()) && gRD.getFlags().get(one.getKey()).equals(one.getValue())) {
 		    continue;
@@ -323,7 +325,7 @@ public class DynMapManager {
 	set.setLayerPriority(1);
 	set.setHideByDefault(plugin.getConfigManager().DynMapHideByDefault);
 
-	Bukkit.getConsoleSender().sendMessage("[Residence] DynMap residence activated!");
+	CMIMessages.consoleMessage(Residence.getInstance().getPrefix() + " DynMap residence activated!");
 
 	for (Entry<String, ClaimedResidence> one : plugin.getResidenceManager().getResidences().entrySet()) {
 	    plugin.getDynManager().fireUpdateAdd(one.getValue(), one.getValue().getSubzoneDeep());

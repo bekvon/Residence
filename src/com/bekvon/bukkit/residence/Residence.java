@@ -897,9 +897,7 @@ public class Residence extends JavaPlugin {
     private boolean setupPlaceHolderAPI() {
 	if (!getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
 	    return false;
-	if ((new PlaceholderAPIHook(this)).register())
-	    Bukkit.getConsoleSender().sendMessage(this.getPrefix() + " PlaceholderAPI hooked.");
-	return true;
+	return new PlaceholderAPIHook(this).register();
     }
 
     public SignUtil getSignUtil() {
@@ -946,7 +944,6 @@ public class Residence extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(getPrefix() + " Found WorldEdit " + this.getWorldEdit().getDescription().getVersion());
 	    } else {
 		smanager = new SelectionManager(server, this);
-		Bukkit.getConsoleSender().sendMessage(getPrefix() + " WorldEdit NOT found!");
 	    }
 	} catch (Exception | Error e) {
 	    e.printStackTrace();
@@ -1371,7 +1368,8 @@ public class Residence extends JavaPlugin {
 		loadFile = new File(worldFolder, saveFilePrefix + worldName + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-		    if (!isDisabledWorld(worldName))
+		    
+		    if (!isDisabledWorld(worldName) && !this.getConfigManager().CleanerStartupLog)
 			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + worldName + "...");
 
 		    yml = new YMLSaveHelper(loadFile);
@@ -1420,7 +1418,7 @@ public class Residence extends JavaPlugin {
 		    int pass = (int) (System.currentTimeMillis() - time);
 		    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-		    if (!isDisabledWorld(worldName))
+		    if (!isDisabledWorld(worldName) && !this.getConfigManager().CleanerStartupLog)
 			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + worldName + " data. (" + PastTime + ")");
 		}
 	    }

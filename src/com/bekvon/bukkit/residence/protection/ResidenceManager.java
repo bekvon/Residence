@@ -995,7 +995,7 @@ public class ResidenceManager implements ResidenceInterface {
 
 	    @SuppressWarnings("unchecked")
 	    Map<String, Object> reslist = (Map<String, Object>) root.get(worldName);
-	    if (!plugin.isDisabledWorld(worldName))
+	    if (!plugin.isDisabledWorld(worldName) && !plugin.getConfigManager().CleanerStartupLog)
 		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + worldName + " data into memory...");
 	    if (reslist != null) {
 		try {

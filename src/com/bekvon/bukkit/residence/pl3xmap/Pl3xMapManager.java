@@ -20,6 +20,8 @@ import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.Messages.CMIMessages;
 import net.pl3x.map.api.Key;
 import net.pl3x.map.api.LayerProvider;
 import net.pl3x.map.api.MapWorld;
@@ -198,8 +200,7 @@ public class Pl3xMapManager {
 	if (res == null)
 	    return;
 
-	boolean hidden = res.getPermissions().has("hidden", false);
-	if (hidden && plugin.getConfigManager().Pl3xMapHideHidden) {
+	if (res.getPermissions().has("hidden", false) && plugin.getConfigManager().Pl3xMapHideHidden) {
 	    fireUpdateRemove(res, depth);
 	    return;
 	}
@@ -221,7 +222,7 @@ public class Pl3xMapManager {
 		SimpleLayerProvider prov = SimpleLayerProvider
 		    .builder("Residence")
 		    .showControls(true)
-		    .defaultHidden(false)
+		    .defaultHidden(plugin.getConfigManager().Pl3xMapHideByDefault)
 		    .layerPriority(4)
 		    .zIndex(63)
 		    .build();
@@ -321,7 +322,7 @@ public class Pl3xMapManager {
 
     public void activate() {
 
-	Bukkit.getConsoleSender().sendMessage("[Residence] Pl3xMap residence activated!");
+	CMIMessages.consoleMessage(Residence.getInstance().getPrefix() + " Pl3xMap residence activated!");
 
 	for (Entry<String, ClaimedResidence> one : plugin.getResidenceManager().getResidences().entrySet()) {
 	    fireUpdateAdd(one.getValue(), one.getValue().getSubzoneDeep());

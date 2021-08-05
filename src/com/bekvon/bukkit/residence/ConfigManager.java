@@ -73,6 +73,7 @@ public class ConfigManager {
     protected boolean AutoCleanUpRegenerate;
     protected boolean CanTeleportIncludeOwner;
     private boolean LoadEveryWorld;
+    public boolean CleanerStartupLog;
     protected CMIMaterial selectionTool;
     protected boolean adminOps;
     protected boolean AdminFullAccess;
@@ -629,6 +630,9 @@ public class ConfigManager {
 	    "Usually only useful when you have multiverse plugin which loads worlds durring server work time");
 	LoadEveryWorld = c.get("Global.Optimizations.LoadEveryWorld", false);
 
+	c.addComment("Global.Optimizations.CleanerStartupLog", "While enabled we will avoid showing extra feedback lines on startup");
+	CleanerStartupLog = c.get("Global.Optimizations.CleanerStartupLog", true);
+	
 	c.addComment("Global.Optimizations.CanTeleportIncludeOwner", "This will slightly change behavior of groups file CanTeleport section which will include server owner into check",
 	    "When this is set to false and CanTeleport set to false, players will not have option to teleport to other player residences, only to their own",
 	    "When this is set to true and CanTeleport set to false, players will not have option to teleport to residences in general",
