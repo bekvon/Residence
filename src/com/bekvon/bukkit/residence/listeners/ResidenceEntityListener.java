@@ -41,6 +41,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -97,6 +98,11 @@ public class ResidenceEntityListener implements Listener {
 	if (!perms.has(Flags.destroy, true)) {
 	    event.setCancelled(true);
 	}
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntityInteract(EntitySpawnEvent event) {
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

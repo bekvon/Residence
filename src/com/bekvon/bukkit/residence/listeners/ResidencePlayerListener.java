@@ -50,6 +50,7 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import com.bekvon.bukkit.residence.ConfigManager;
@@ -81,6 +82,7 @@ import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Entities.CMIEntity;
+import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
@@ -699,10 +701,8 @@ public class ResidencePlayerListener implements Listener {
 		}
 		return;
 	    }
-	} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-	    if (ForRent && res.isRented() && plugin.getRentManager().getRentingPlayer(res).equals(player.getName())) {
-		plugin.getRentManager().payRent(player, res, false);
-	    }
+	} else if (event.getAction() == Action.LEFT_CLICK_BLOCK && ForRent && res.isRented() && plugin.getRentManager().getRentingPlayer(res).equals(player.getName())) {
+	    plugin.getRentManager().payRent(player, res, false);
 	}
     }
 
@@ -1008,6 +1008,58 @@ public class ResidencePlayerListener implements Listener {
 
     private boolean isCanUseEntity(Material mat, Block block) {
 	return isCanUseEntity_BothClick(mat, block) || isCanUseEntity_RClickOnly(mat, block);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerEnderCrystalInteract(PlayerInteractEvent event) {
+	if (event.getPlayer() == null)
+	    return;
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+	    return;
+
+	Block block = event.getClickedBlock();
+
+	if (block == null)
+	    return;
+
+	if (block.getType() != Material.BEDROCK)
+	    return;
+
+	Player player = event.getPlayer();
+
+	ItemStack iih = null;
+
+	try {
+	    if (event.getHand() == EquipmentSlot.HAND)
+		iih = CMIItemStack.getItemInMainHand(player);
+	    else
+		iih = CMIItemStack.getItemInOffHand(player);
+	} catch (Throwable e) {
+	    iih = CMIItemStack.getItemInMainHand(player);
+	}
+
+	if (iih == null)
+	    return;
+	
+	if (!iih.getType().toString().equals("END_CRYSTAL"))
+	    return;
+	
+	if (player.hasMetadata("NPC"))
+	    return;
+	if (plugin.isResAdminOn(player))
+	    return;
+	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
+
+	boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
+	if (hasplace)
+	    return;
+
+	event.setCancelled(true);
+	plugin.msg(player, lm.Flag_Deny, Flags.build);
+	return;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -1915,13 +1967,11 @@ public class ResidencePlayerListener implements Listener {
 	}
 
 	if (newRes != null && oldRes != null && !newRes.equals(oldRes)) {
-	    if (Flags.glow.isGlobalyEnabled()) {
-		if (Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
-		    if (newRes.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
-			player.setGlowing(true);
-		    else if (oldRes.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !newRes.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
-			player.setGlowing(false);
-		}
+	    if (Flags.glow.isGlobalyEnabled() && Version.isCurrentEqualOrHigher(Version.v1_9_R1)) {
+		if (newRes.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+		    player.setGlowing(true);
+		else if (oldRes.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue) && !newRes.getPermissions().has(Flags.glow, FlagCombo.OnlyTrue))
+		    player.setGlowing(false);
 	    }
 
 	    if (Flags.fly.isGlobalyEnabled()) {
@@ -2180,7 +2230,6 @@ public class ResidencePlayerListener implements Listener {
 		@Override
 		public void run() {
 		    plugin.getAutoSelectionManager().UpdateSelection(player);
-		    return;
 		}
 	    });
 	}
@@ -2357,13 +2406,13 @@ public class ResidencePlayerListener implements Listener {
 
 	if (!currentRes.containsKey(uuid) || ResOld != res) {
 
-	    if (cantMove) {		
+	    if (cantMove) {
 		Location lastLoc = lastOutsideLoc.get(uuid);
 		player.closeInventory();
 		if (lastLoc != null && CMIMaterial.isAir(lastLoc.getBlock().getType()))
-		     teleport(player, lastLoc);
+		    teleport(player, lastLoc);
 		else
-		     teleport(player, res.getOutsideFreeLoc(loc, player));
+		    teleport(player, res.getOutsideFreeLoc(loc, player));
 		return false;
 	    } else {
 		currentRes.put(uuid, res);
