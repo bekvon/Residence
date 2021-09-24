@@ -480,7 +480,7 @@ Language:
     TeleportConfirmVoid: '&c傳送不安全，你將會掉落進 &6虛空&c，若仍要傳送請輸入 &6/res tpconfirm &c來確定操作。'
     TeleportConfirm: '&c傳送不安全，你將會掉落 &6%1 &c格高的方塊，若仍要傳送請輸入 &6/res tpconfirm &c來確定操作。'
     TeleportStarted: '&e已開始傳送到 &6%1 &e，在 &6%2 &e秒內請勿移動。'
-    TeleportTitle: '&e傳送中 ！'
+    TeleportTitle: '&e傳送中……'
     TeleportTitleTime: '&6%1'
     TeleportCanceled: '&e已取消傳送 ！'
     NoTeleportConfirm: '&e沒有需要確認的傳送 ！'
@@ -989,587 +989,587 @@ CommandHelp:
               Translated: 使用鐵砧 （anvil）
               Description: 允許 或 禁止使用鐵砧
               Info:
-              - '&e用法 ： &6/res set/pset <residence> anvil true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> anvil true/false/remove'
             admin:
               Translated: 管理權 （admin）
               Description: 給予玩家管理員權限更改領地的權限
               Info:
-              - '&e用法 ： &6/res pset <residence> admin true/false/remove'
+              - '&e用法 ： &6/res pset <領地> admin true/false/remove'
             animalkilling:
               Translated: 擊殺動物 （animalkilling）
               Description: 允許 或 禁止擊殺動物
               Info:
-              - '&e用法 ： &6/res set/pset <residence> animalkilling true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> animalkilling true/false/remove'
             animals:
               Translated: 生成動物 （animals）
               Description: 允許 或 禁止生成動物
               Info:
-              - '&e用法 ： &6/res set <residence> animals true/false/remove'
+              - '&e用法 ： &6/res set <領地> animals true/false/remove'
             anchor:
               Translated: 使用重生錨 （anchor）
               Description: 允許 或 禁止使用重生錨
               Info:
-              - '&e用法 ： &6/res set/pset <residence> anchor true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> anchor true/false/remove'
             anvilbreak:
               Translated: 鐵砧損壞 （anvilbreak）
               Description: 允許 或 禁止領地內鐵砧損壞
               Info:
-              - '&e用法 ： &6/res set <residence> anvilbreak true/false/remove'
+              - '&e用法 ： &6/res set <領地> anvilbreak true/false/remove'
             backup:
               Translated: 備份與還原 （backup）
-              Description: 如果設定為 true 則恢復先前的領地外觀 （需要 WordEdit）
+              Description: 如果設定為 true，則恢復原生的領地樣貌 （需要 WordEdit）
               Info:
-              - '&e用法 ： &6/res set <residence> backup true/false/remove'
+              - '&e用法 ： &6/res set <領地> backup true/false/remove'
             bank:
               Translated: 使用銀行 （bank）
               Description: 允許 或 禁止從領地銀行存款/取款
               Info:
-              - '&e用法 ： &6/res set/pset <residence> bank true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> bank true/false/remove'
             bed:
               Translated: 使用床 （bed）
               Description: 允許 或 禁止玩家使用床
               Info:
-              - '&e用法 ： &6/res set/pset <residence> bed true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> bed true/false/remove'
             honey:
               Translated: 摘取蜂蜜 （honey）
               Description: 允許 或 禁止玩家摘取蜂蜜
               Info:
-              - '&e用法 ： &6/res set/pset <residence> honey true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> honey true/false/remove'
             honeycomb:
               Translated: 摘取蜂巢 （honeycomb）
               Description: 允許 或 禁止玩家摘取蜂巢
               Info:
-              - '&e用法 ： &6/res set/pset <residence> honeycomb true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> honeycomb true/false/remove'
             beacon:
               Translated: 使用烽火台 （beacon）
               Description: 允許 或 禁止使用烽火台
               Info:
-              - '&e用法 ： &6/res set/pset <residence> beacon true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> beacon true/false/remove'
             brew:
               Translated: 使用釀造台 （brew）
               Description: 允許 或 禁止玩家使用釀造台
               Info:
-              - '&e用法 ： &6/res set/pset <residence> brew true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> brew true/false/remove'
             build:
               Translated: 建造 （build）
               Description: 允許 或 禁止建造
               Info:
-              - '&e用法 ： &6/res set/pset <residence> build true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> build true/false/remove'
             burn:
               Translated: 生物燃燒 （burn）
               Description: 允許 或 禁止生物在領地內燃燒
               Info:
-              - '&e用法 ： &6/res set <residence> burn true/false/remove'
+              - '&e用法 ： &6/res set <領地> burn true/false/remove'
             button:
               Translated: 使用按鈕 （button）
               Description: 允許 或 禁止玩家使用按鈕
               Info:
-              - '&e用法 ： &6/res set/pset <residence> button true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> button true/false/remove'
             cake:
-              Translated: 食用蛋糕 （cake）
+              Translated: 吃蛋糕 （cake）
               Description: 允許 或 禁止玩家吃蛋糕
               Info:
-              - '&e用法 ： &6/res set/pset <residence> cake true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> cake true/false/remove'
             canimals:
               Translated: 生成自定義動物 （canimals）
               Description: 允許 或 禁止自訂義動物生成
               Info:
-              - '&e用法 ： &6/res set <residence> canimals true/false/remove'
+              - '&e用法 ： &6/res set <領地> canimals true/false/remove'
             chorustp:
               Translated: 食用歌萊果傳送 （chorustp）
               Description: 允許 或 禁止吃歌萊果進行傳送
               Info:
-              - '&e用法 ： &6/res set/pset <residence> chorustp true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> chorustp true/false/remove'
             chat:
               Translated: 聊天 （chat）
-              Description: 允許玩家加入領地聊天頻道
+              Description: 允許 或 禁止玩家加入領地聊天頻道
               Info:
-              - '&e用法 ： &6/res set/pset <residence> chat true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> chat true/false/remove'
             cmonsters:
               Translated: 生成自訂義怪物 （cmonsters）
               Description: 允許 或 禁止自訂義怪物生成
               Info:
-              - '&e用法 ： &6/res set <residence> cmonsters true/false/remove'
+              - '&e用法 ： &6/res set <領地> cmonsters true/false/remove'
             commandblock:
               Translated: 使用指令方塊 （commandblock）
               Description: 允許 或 禁止使用指令方塊
               Info:
-              - '&e用法 ： &6/res set/pset <residence> commandblock true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> commandblock true/false/remove'
             command:
               Translated: 使用指令 （command）
               Description: 允許 或 禁止在領地內使用指令
               Info:
-              - '&e用法 ： &6/res set/pset <residence> command true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> command true/false/remove'
             container:
               Translated: 使用容器 （container）
               Description: 允許 或 禁止使用熔爐、儲物箱、發射器……
               Info:
-              - '&e用法 ： &6/res set/pset <residence> container true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> container true/false/remove'
             coords:
               Translated: 顯示座標 （coords）
               Description: 顯示領地座標
               Info:
-              - '&e用法 ： &6/res set <residence> coords true/false/remove'
+              - '&e用法 ： &6/res set <領地> coords true/false/remove'
             copper:
               Translated: 修改銅方塊 （copper）
               Description: 允許修改銅方塊
               Info:
-              - '&e用法 ： &6/res set/pset <residence> copper true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> copper true/false/remove'
             craft:
               Translated: 使用工藝界面 （craft）
-              Description: 給予工作台、附魔台、釀造台…… 權限
+              Description: 給予工作台、附魔台、釀造台…… 的權限
               Info:
-              - '&e用法 ： &6/res set <residence> craft true/false/remove'
+              - '&e用法 ： &6/res set <領地> craft true/false/remove'
             creeper:
               Translated: 苦力怕爆炸 （creeper）
               Description: 允許 或 禁止苦力怕爆炸
               Info:
-              - '&e用法 ： &6/res set <residence> creeper true/false/remove'
+              - '&e用法 ： &6/res set <領地> creeper true/false/remove'
             dragongrief:
-              Translated: 防止終界龍破壞 （dragongrief）
-              Description: 防止終界龍破壞方塊
+              Translated: 終界龍破壞 （dragongrief）
+              Description: 允許 或 禁止終界龍破壞任何方塊
               Info:
-              - '&e用法 ： &6/res set <residence> dragongrief true/false/remove'
+              - '&e用法 ： &6/res set <領地> dragongrief true/false/remove'
             day:
               Translated: 白天 （day）
               Description: 設定領地時間為白天
               Info:
-              - '&e用法 ： &6/res set <residence> day true/false/remove'
+              - '&e用法 ： &6/res set <領地> day true/false/remove'
             dye:
               Translated: 染色羊 （dye）
               Description: 允許 或 禁止羊染色
               Info:
-              - '&e用法 ： &6/res set/pset <residence> dye true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> dye true/false/remove'
             damage:
               Translated: 實體傷害 （damage）
               Description: 允許 或 禁止所有領地實體傷害
               Info:
-              - '&e用法 ： &6/res set <residence> damage true/false/remove'
+              - '&e用法 ： &6/res set <領地> damage true/false/remove'
             decay:
               Translated: 樹葉腐爛 （decay）
               Description: 允許 或 禁止領地內樹葉腐爛
               Info:
-              - '&e用法 ： &6/res set <residence> decay true/false/remove'
+              - '&e用法 ： &6/res set <領地> decay true/false/remove'
             destroy:
               Translated: 破壞 （destroy）
               Description: 允許 或 禁止破壞方塊（將覆蓋 build 權限）
               Info:
-              - '&e用法 ： &6/res set/pset <residence> destroy true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> destroy true/false/remove'
             dryup:
               Translated: 耕地乾涸 （dryup）
-              Description: 防止耕地乾涸
+              Description: 允許 或 禁止耕地乾涸
               Info:
-              - '&e用法 ： &6/res set <residence> dryup true/false/remove'
+              - '&e用法 ： &6/res set <領地> dryup true/false/remove'
             diode:
               Translated: 使用紅石中繼器 （diode）
               Description: 允許 或 禁止玩家使用紅石中繼器
               Info:
-              - '&e用法 ： &6/res set/pset <residence> diode true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> diode true/false/remove'
             door:
               Translated: 使用門 （door）
               Description: 允許 或 禁止玩家使用門或地板門
               Info:
-              - '&e用法 ： &6/res set/pset <residence> door true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> door true/false/remove'
             egg:
               Translated: 觸碰龍蛋 （egg）
               Description: 允許 或 禁止玩家觸碰龍蛋
               Info:
-              - '&e用法 ： &6/res set/pset <residence> egg true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> egg true/false/remove'
             enchant:
               Translated: 使用附魔台 （enchant）
               Description: 允許 或 禁止玩家使用附魔台
               Info:
-              - '&e用法 ： &6/res set/pset <residence> enchant true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> enchant true/false/remove'
             explode:
               Translated: 爆炸 （explode）
               Description: 允許 或 禁止在領地內爆炸
               Info:
-              - '&e用法 ： &6/res set <residence> explode true/false/remove'
+              - '&e用法 ： &6/res set <領地> explode true/false/remove'
             elytra:
               Translated: 使用鞘翅 （elytra）
               Description: 允許 或 禁止在領地內使用鞘翅
               Info:
-              - '&e用法 ： &6/res set/pset <residence> elytra true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> elytra true/false/remove'
             enderpearl:
               Translated: 使用終界珍珠傳送 （enderpearl）
               Description: 允許 或 禁止在領地內使用終界珍珠傳送
               Info:
-              - '&e用法 ： &6/res set/pset <residence> enderpearl true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> enderpearl true/false/remove'
             fallinprotection:
               Translated: 防止方塊掉落 （fallinprotection）
               Description: 防止方塊掉落領地內
               Info:
-              - '&e用法 ： &6/res set <residence> fallinprotection true/false/remove'
+              - '&e用法 ： &6/res set <領地> fallinprotection true/false/remove'
             falldamage:
-              Translated: 防止玩家摔落 （falldamage）
-              Description: 防止玩家摔落傷害
+              Translated: 玩家摔落 （falldamage）
+              Description: 允許 或 禁止玩家摔落傷害
               Info:
-              - '&e用法 ： &6/res set <residence> falldamage true/false/remove'
+              - '&e用法 ： &6/res set <領地> falldamage true/false/remove'
             feed:
               Translated: 自動回復飽食度 （feed）
-              Description: 如果設定為 true 則讓在領地內的玩家自動回復飽食度
+              Description: 如果設定為 true，則讓在領地內的玩家自動回復飽食度
               Info:
-              - '&e用法 ： &6/res set <residence> feed true/false/remove'
+              - '&e用法 ： &6/res set <領地> feed true/false/remove'
             friendlyfire:
               Translated: 友軍傷害 （friendlyfire）
               Description: 允許 或 禁止友軍傷害
               Info:
-              - '&e用法 ： &6/res pset <residence> friendlyfire true/false/remove'
+              - '&e用法 ： &6/res pset <領地> friendlyfire true/false/remove'
             fireball:
               Translated: 使用火焰彈 （fireball）
               Description: 允許 或 禁止在領地內使用火焰彈
               Info:
-              - '&e用法 ： &6/res set <residence> fireball true/false/remove'
+              - '&e用法 ： &6/res set <領地> fireball true/false/remove'
             firespread:
               Translated: 火焰蔓延 （firespread）
               Description: 允許 或 禁止火焰蔓延
               Info:
-              - '&e用法 ： &6/res set <residence> firespread true/false/remove'
+              - '&e用法 ： &6/res set <領地> firespread true/false/remove'
             flowinprotection:
               Translated: 防止外部液體流動 （flowinprotection）
               Description: 允許 或 禁止液體流入領地
               Info:
-              - '&e用法 ： &6/res set <residence> flowinprotection true/false/remove'
+              - '&e用法 ： &6/res set <領地> flowinprotection true/false/remove'
             flow:
               Translated: 內部液體流動 （flow）
               Description: 允許 或 禁止在領地內液體流動
               Info:
-              - '&e用法 ： &6/res set <residence> flow true/false/remove'
+              - '&e用法 ： &6/res set <領地> flow true/false/remove'
             flowerpot:
               Translated: 使用花盆 （flowerpot）
               Description: 允許 或 禁止使用花盆
               Info:
-              - '&e用法 ： &6/res set/pset <residence> flowerpot true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> flowerpot true/false/remove'
             grow:
               Translated: 植物生長 （grow）
               Description: 允許 或 禁止植物生長
               Info:
-              - '&e用法 ： &6/res set <residence> grow true/false/remove'
+              - '&e用法 ： &6/res set <領地> grow true/false/remove'
             glow:
               Translated: 玩家發光 （glow）
               Description: 玩家進入領地後會開始發光
               Info:
-              - '&e用法 ： &6/res set <residence> glow true/false/remove'
+              - '&e用法 ： &6/res set <領地> glow true/false/remove'
             hotfloor:
-              Translated: 防止岩漿塊傷害 （hotfloor）
-              Description: 防止踩在岩漿塊上的傷害
+              Translated: 岩漿塊傷害 （hotfloor）
+              Description: 允許 或 禁止踩在岩漿塊上的傷害
               Info:
-              - '&e用法 ： &6/res set <residence> hotfloor true/false/remove'
+              - '&e用法 ： &6/res set <領地> hotfloor true/false/remove'
             hidden:
               Translated: 隱藏領地列表 （hidden）
               Description: 在 list 或 listall 列表中隱藏領地
               Info:
-              - '&e用法 ： &6/res set <residence> hidden true/false/remove'
+              - '&e用法 ： &6/res set <領地> hidden true/false/remove'
             hook:
               Translated: 使用釣竿釣鉤實體 （hook）
               Description: 允許 或 禁止使用釣竿釣鉤實體
               Info:
-              - '&e用法 ： &6/res set/pset <residence> hook true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> hook true/false/remove'
             healing:
               Translated: 自動回復血量 （healing）
-              Description: 如果設定為 true 則讓在領地內的玩家自動回復血量
+              Description: 如果設定為 true，則讓在領地內的玩家自動回復血量
               Info:
-              - '&e用法 ： &6/res set <residence> healing true/false/remove'
+              - '&e用法 ： &6/res set <領地> healing true/false/remove'
             iceform:
-              Translated: 防止結冰 （iceform）
-              Description: 防止水結冰
+              Translated: 水結冰 （iceform）
+              Description: 允許 或 禁止水結冰
               Info:
-              - '&e用法 ： &6/res set <residence> iceform true/false/remove'
+              - '&e用法 ： &6/res set <領地> iceform true/false/remove'
             icemelt:
-              Translated: 防止融化 （icemelt）
-              Description: 防止冰融化
+              Translated: 冰融化 （icemelt）
+              Description: 允許 或 禁止冰融化
               Info:
-              - '&e用法 ： &6/res set <residence> icemelt true/false/remove'
+              - '&e用法 ： &6/res set <領地> icemelt true/false/remove'
             ignite:
               Translated: 使用打火石 （ignite）
               Description: 允許 或 禁止使用打火石
               Info:
-              - '&e用法 ： &6/res set/pset <residence> ignite true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> ignite true/false/remove'
             itemdrop:
               Translated: 物品掉落 （itemdrop）
               Description: 允許 或 禁止物品掉落
               Info:
-              - '&e用法 ： &6/res set/pset <residence> itemdrop true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> itemdrop true/false/remove'
             itempickup:
               Translated: 物品撿取 （itempickup）
               Description: 允許 或 禁止物品撿取
               Info:
-              - '&e用法 ： &6/res set/pset <residence> itempickup true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> itempickup true/false/remove'
             jump2:
               Translated: 兩格高跳躍 （jump2）
-              Description: 允許跳躍兩格高
+              Description: 允許 或 禁止跳躍兩格高
               Info:
-              - '&e用法 ： &6/res set <residence> jump2 true/false/remove'
+              - '&e用法 ： &6/res set <領地> jump2 true/false/remove'
             jump3:
               Translated: 三格高跳躍 （jump3）
-              Description: 允許跳躍三格高
+              Description: 允許 或 禁止跳躍三格高
               Info:
-              - '&e用法 ： &6/res set <residence> jump3 true/false/remove'
+              - '&e用法 ： &6/res set <領地> jump3 true/false/remove'
             keepinv:
               Translated: 防噴裝 （keepinv）
-              Description: 在玩家死後保持物品欄狀態
+              Description: 允許 或 禁止在玩家死後保持物品欄狀態
               Info:
-              - '&e用法 ： &6/res set <residence> keepinv true/false/remove'
+              - '&e用法 ： &6/res set <領地> keepinv true/false/remove'
             keepexp:
               Translated: 防噴經驗 （keepexp）
-              Description: 在玩家死後保持經驗值狀態
+              Description: 允許 或 禁止在玩家死後保持經驗值狀態
               Info:
-              - '&e用法 ： &6/res set <residence> keepexp true/false/remove'
+              - '&e用法 ： &6/res set <領地> keepexp true/false/remove'
             lavaflow:
               Translated: 內部岩漿流動 （lavaflow
               Description: 允許 或 禁止岩漿流動（將覆蓋 flow 權限）
               Info:
-              - '&e用法 ： &6/res set <residence> lavaflow true/false/remove'
+              - '&e用法 ： &6/res set <領地> lavaflow true/false/remove'
             leash:
               Translated: 使用拴繩 （leash）
               Description: 允許 或 禁止對動物使用拴繩
               Info:
-              - '&e用法 ： &6/res set/pset <residence> leash true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> leash true/false/remove'
             lever:
               Translated: 使用控制桿 （lever）
               Description: 允許 或 禁止玩家使用控制桿
               Info:
-              - '&e用法 ： &6/res set/pset <residence> lever true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> lever true/false/remove'
             mobexpdrop:
-              Translated: 防止生物死後掉落經驗 （mobexpdrop）
-              Description: 防止生物在死後掉落經驗
+              Translated: 生物死後掉落經驗 （mobexpdrop）
+              Description: 允許 或 禁止生物在死後掉落經驗
               Info:
-              - '&e用法 ： &6/res set <residence> mobexpdrop true/false/remove'
+              - '&e用法 ： &6/res set <領地> mobexpdrop true/false/remove'
             mobitemdrop:
-              Translated: 防止生物死後掉落物品 （mobitemdrop）
-              Description: 防止生物在死後掉落物品
+              Translated: 生物死後掉落物品 （mobitemdrop）
+              Description: 允許 或 禁止生物在死後掉落物品
               Info:
-              - '&e用法 ： &6/res set <residence> mobitemdrop true/false/remove'
+              - '&e用法 ： &6/res set <領地> mobitemdrop true/false/remove'
             mobkilling:
               Translated: 擊殺生物 （mobkilling）
               Description: 允許 或 禁止擊殺生物
               Info:
-              - '&e用法 ： &6/res set/pset <residence> mobkilling true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> mobkilling true/false/remove'
             monsters:
               Translated: 生成怪物 （monsters）
               Description: 允許 或 禁止生成怪物
               Info:
-              - '&e用法 ： &6/res set <residence> monsters true/false/remove'
+              - '&e用法 ： &6/res set <領地> monsters true/false/remove'
             move:
               Translated: 玩家移動 （move）
               Description: 允許 或 禁止在領地內移動
               Info:
-              - '&e用法 ： &6/res set/pset <residence> move true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> move true/false/remove'
             nametag:
               Translated: 命名 （nametag）
               Description: 允許 或 禁止使用命名牌
               Info:
-              - '&e用法 ： &6/res set/pset <residence> nametag true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> nametag true/false/remove'
             nanimals:
               Translated: 原版生物生成 （nanimals）
               Description: 允許 或 禁止原版生物生成
               Info:
-              - '&e用法 ： &6/res set <residence> nanimals true/false/remove'
+              - '&e用法 ： &6/res set <領地> nanimals true/false/remove'
             nmonsters:
               Translated: 原版怪物生成 （nmonsters）
               Description: 允許 或 禁止原版怪物生成
               Info:
-              - '&e用法 ： &6/res set <residence> nmonsters true/false/remove'
+              - '&e用法 ： &6/res set <領地> nmonsters true/false/remove'
             night:
               Translated: 夜晚 （night）
               Description: 設定領地時間為夜晚
               Info:
-              - '&e用法 ： &6/res set <residence> night true/false/remove'
+              - '&e用法 ： &6/res set <領地> night true/false/remove'
             nofly:
               Translated: 使用飛行 （nofly）
               Description: 允許 或 禁止在領地內飛行
               Info:
-              - '&e用法 ： &6/res set/pset <residence> nofly true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> nofly true/false/remove'
             fly:
               Translated: 自動飛行 （fly）
-              Description: 自動開啟或關閉領地內的玩家飛行
+              Description: 自動開啟 或 關閉領地內的玩家飛行
               Info:
-              - '&e用法 ： &6/res set/pset <residence> fly true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> fly true/false/remove'
             nomobs:
               Translated: 防止怪物進入 （nomobs）
               Description: 防止怪物進入領地，需要在配置檔案開啟 AutoMobRemoval
               Info:
-              - '&e用法 ： &6/res set <residence> nomobs true/false/remove'
+              - '&e用法 ： &6/res set <領地> nomobs true/false/remove'
             note:
               Translated: 使用音階盒 （note）
               Description: 允許 或 禁止玩家使用音階盒
               Info:
-              - '&e用法 ： &6/res set/pset <residence> note true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> note true/false/remove'
             nodurability:
               Translated: 防止物品降低耐久值 （nodurability）
               Description: 防止物品降低耐久值
               Info:
-              - '&e用法 ： &6/res set <residence> nodurability true/false/remove'
+              - '&e用法 ： &6/res set <領地> nodurability true/false/remove'
             overridepvp:
               Translated: 覆蓋戰鬥 （overridepvp）
               Description: 覆蓋任何插件的戰鬥保護
               Info:
-              - '&e用法 ： &6/res set <residence> overridepvp true/false/remove'
+              - '&e用法 ： &6/res set <領地> overridepvp true/false/remove'
             pressure:
               Translated: 使用壓力板 （pressure）
               Description: 允許 或 禁止玩家使用壓力板
               Info:
-              - '&e用法 ： &6/res set/pset <residence> pressure true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> pressure true/false/remove'
             piston:
               Translated: 使用活塞 （piston）
               Description: 允許 或 禁止在領地內使用活塞推或拉
               Info:
-              - '&e用法 ： &6/res set <residence> piston true/false/remove'
+              - '&e用法 ： &6/res set <領地> piston true/false/remove'
             pistonprotection:
-              Translated: 防止外部活塞 （pistonprotection
+              Translated: 防止外部活塞 （pistonprotection）
               Description: 允許 或 禁止活塞從領地外推或拉領地內的方塊
               Info:
-              - '&e用法 ： &6/res set <residence> pistonprotection true/false/remove'
+              - '&e用法 ： &6/res set <領地> pistonprotection true/false/remove'
             place:
               Translated: 放置 （place）
               Description: 允許 或 禁止放置方塊（將覆蓋 build 權限）
               Info:
-              - '&e用法 ： &6/res set/pset <residence> place true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> place true/false/remove'
             pvp:
               Translated: 戰鬥 （pvp）
               Description: 允許 或 禁止在領地內戰鬥
               Info:
-              - '&e用法 ： &6/res set <residence> pvp true/false/remove'
+              - '&e用法 ： &6/res set <領地> pvp true/false/remove'
             rain:
               Translated: 下雨 （rain）
               Description: 設定領地天氣為雨天
               Info:
-              - '&e用法 ： &6/res set <residence> rain true/false/remove'
+              - '&e用法 ： &6/res set <領地> rain true/false/remove'
             respawn:
               Translated: 自動重生 （respawn）
               Description: 自動重生玩家
               Info:
-              - '&e用法 ： &6/res set <residence> respawn true/false/remove'
+              - '&e用法 ： &6/res set <領地> respawn true/false/remove'
             riding:
-              Translated: 防止騎乘 （riding）
-              Description: 防止騎乘生物
+              Translated: 騎乘 （riding）
+              Description: 允許 或 禁止騎乘生物
               Info:
-              - '&e用法 ： &6/res set/pset <residence> riding true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> riding true/false/remove'
             shoot:
               Translated: 使用射擊 （shoot）
               Description: 允許 或 禁止在區域內射擊
               Info:
-              - '&e用法 ： &6/res set <residence> shoot true/false/remove'
+              - '&e用法 ： &6/res set <領地> shoot true/false/remove'
             sun:
               Translated: 晴天 （sun）
               Description: 設定領地天氣為晴天
               Info:
-              - '&e用法 ： &6/res set <residence> sun true/false/remove'
+              - '&e用法 ： &6/res set <領地> sun true/false/remove'
             shop:
               Translated: 商店 （shop）
               Description: 新增領地到指定的商店列表
               Info:
-              - '&e用法 ： &6/res set <residence> shop true/false/remove'
+              - '&e用法 ： &6/res set <領地> shop true/false/remove'
             snowtrail:
-              Translated: 防止積雪 （snowtrail）
-              Description: 防止雪人生成積雪路徑
+              Translated: 積雪 （snowtrail）
+              Description: 允許 或 禁止雪人生成積雪路徑
               Info:
-              - '&e用法 ： &6/res set <residence> snowtrail true/false/remove'
+              - '&e用法 ： &6/res set <領地> snowtrail true/false/remove'
             spread:
-              Translated: 防止方塊擴散 （spread）
-              Description: 防止草地或菌絲土擴散
+              Translated: 方塊擴散 （spread）
+              Description: 允許 或 禁止草地或菌絲土擴散
               Info:
-              - '&e用法 ： &6/res set <residence> spread true/false/remove'
+              - '&e用法 ： &6/res set <領地> spread true/false/remove'
             snowball:
-              Translated: 防止雪球擊退 （snowball）
-              Description: 防止雪球擊退
+              Translated: 雪球擊退 （snowball）
+              Description: 允許 或 禁止雪球擊退
               Info:
-              - '&e用法 ： &6/res set <residence> snowball true/false/remove'
+              - '&e用法 ： &6/res set <領地> snowball true/false/remove'
             sanimals:
               Translated: 使用生怪磚或生怪蛋生成動物 （sanimals）
               Description: 允許 或 禁止生怪磚或生怪蛋生成動物
               Info:
-              - '&e用法 ： &6/res set <residence> sanimals true/false/remove'
+              - '&e用法 ： &6/res set <領地> sanimals true/false/remove'
             shear:
               Translated: 剪羊毛 （shear）
               Description: 允許 或 禁止剪羊毛
               Info:
-              - '&e用法 ： &6/res set/pset <residence> shear true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> shear true/false/remove'
             smonsters:
               Translated: 使用生怪磚或生怪蛋生成怪物 （smonsters）
               Description: 允許 或 禁止生怪磚或生怪蛋生成怪物
               Info:
-              - '&e用法 ： &6/res set <residence> smonsters true/false/remove'
+              - '&e用法 ： &6/res set <領地> smonsters true/false/remove'
             subzone:
               Translated: 建立子區域 （subzone）
-              Description: 允許玩家建立子區域領地
+              Description: 允許 或 禁止玩家建立子區域領地
               Info:
-              - '&e用法 ： &6/res set/pset <residence> subzone true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> subzone true/false/remove'
             title:
               Translated: 加入或離開訊息 （title）
               Description: 顯示 或 隱藏領地的加入訊息
               Info:
-              - '&e用法 ： &6/res set <residence> title true/false/remove'
+              - '&e用法 ： &6/res set <領地> title true/false/remove'
             table:
               Translated: 使用工作台 （table）
               Description: 允許 或 禁止玩家使用工作台
               Info:
-              - '&e用法 ： &6/res set/pset <residence> table true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> table true/false/remove'
             tnt:
               Translated: TNT 爆炸 （tnt）
               Description: 允許 或 禁止 TNT 爆炸
               Info:
-              - '&e用法 ： &6/res set <residence> tnt true/false/remove'
+              - '&e用法 ： &6/res set <領地> tnt true/false/remove'
             tp:
               Translated: 傳送 （tp）
               Description: 允許 或 禁止傳送到領地
               Info:
-              - '&e用法 ： &6/res set/pset <residence> tp true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> tp true/false/remove'
             trade:
               Translated: 村民交易 （trade）
               Description: 允許 或 禁止在領地內與村民交易
               Info:
-              - '&e用法 ： &6/res set/pset <residence> trade true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> trade true/false/remove'
             trample:
               Translated: 踩踏破壞耕地 （trample）
               Description: 允許 或 禁止踩踏破壞耕地
               Info:
-              - '&e用法 ： &6/res set <residence> trample true/false/remove'
+              - '&e用法 ： &6/res set <領地> trample true/false/remove'
             use:
               Translated: 使用 （use）
               Description: 允許 或 禁止使用門、控制桿、按鈕……
               Info:
-              - '&e用法 ： &6/res set/pset <residence> use true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> use true/false/remove'
             vehicledestroy:
               Translated: 破壞載具 （vehicledestroy）
               Description: 允許 或 禁止破壞載具
               Info:
-              - '&e用法 ： &6/res set/pset <residence> vehicledestroy true/false/remove'
+              - '&e用法 ： &6/res set/pset <領地> vehicledestroy true/false/remove'
             witherspawn:
               Translated: 生成凋零怪 （witherspawn）
               Description: 允許 或 禁止生成凋零怪
               Info:
-              - '&e用法 ： &6/res set <residence> witherspawn true/false/remove'
+              - '&e用法 ： &6/res set <領地> witherspawn true/false/remove'
             phantomspawn:
               Translated: 生成夜魅 （phantomspawn）
               Description: 允許 或 禁止生成夜魅
               Info:
-              - '&e用法 ： &6/res set <residence> phantomspawn true/false/remove'
+              - '&e用法 ： &6/res set <領地> phantomspawn true/false/remove'
             witherdamage:
               Translated: 凋零怪傷害 （witherdamage）
               Description: 允許 或 禁止凋零怪傷害
               Info:
-              - '&e用法 ： &6/res set <residence> witherdamage true/false/remove'
+              - '&e用法 ： &6/res set <領地> witherdamage true/false/remove'
             witherdestruction:
               Translated: 凋零怪破壞方塊 （witherdestruction）
               Description: 允許 或 禁止凋零怪破壞方塊
               Info:
-              - '&e用法 ： &6/res set <residence> witherdestruction true/false/remove'
+              - '&e用法 ： &6/res set <領地> witherdestruction true/false/remove'
             waterflow:
               Translated: 水流動 （waterflow）
               Description: 允許 或 禁止水流動（將覆蓋 flow 權限）
               Info:
-              - '&e用法 ： &6/res set <residence> waterflow true/false/remove'
+              - '&e用法 ： &6/res set <領地> waterflow true/false/remove'
             wspeed1:
               Translated: 減速 （wspeed1）
               Description: 減慢在領地內的玩家行走速度
               Info:
-              - '&eUsage: &6/res set <residence> wspeed1 true/false/remove'
+              - '&eUsage: &6/res set <領地> wspeed1 true/false/remove'
             wspeed2:
               Translated: 加速 （wspeed2）
               Description: 加快在領地內的玩家行走速度
               Info:
-              - '&e用法 ： &6/res set <residence> wspeed2 true/false/remove'
+              - '&e用法 ： &6/res set <領地> wspeed2 true/false/remove'
         remove:
           Info:
           - '&e用法 ： &6/res remove &6[領地名稱]'
