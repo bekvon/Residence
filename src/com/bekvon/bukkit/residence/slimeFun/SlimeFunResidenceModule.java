@@ -13,8 +13,9 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.listeners.ResidenceBlockListener;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectionModule;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.ProtectionModule;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class SlimeFunResidenceModule implements ProtectionModule {
 
@@ -34,7 +35,7 @@ public class SlimeFunResidenceModule implements ProtectionModule {
     }
 
     @Override
-    public boolean hasPermission(OfflinePlayer op, Location loc, ProtectableAction action) {
+    public boolean hasPermission(OfflinePlayer op, Location loc, Interaction action) {
 
 	if (op == null)
 	    return false;
@@ -64,4 +65,5 @@ public class SlimeFunResidenceModule implements ProtectionModule {
 
 	return true;
     }
+
 }

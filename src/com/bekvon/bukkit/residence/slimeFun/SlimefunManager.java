@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 
 import com.bekvon.bukkit.residence.Residence;
 
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectionManager;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.ProtectionManager;
 
 public class SlimefunManager {
 
@@ -16,7 +16,7 @@ public class SlimefunManager {
     public static void register(Residence residence) {
 	Bukkit.getServer().getScheduler().runTaskTimer(residence, task -> {
 
-	    ProtectionManager manager = SlimefunPlugin.getProtectionManager();
+	    ProtectionManager manager = Slimefun.getProtectionManager();
 
 	    // Wait for protectionManager to load (loaded on first server tick)
 	    if (manager != null) {
