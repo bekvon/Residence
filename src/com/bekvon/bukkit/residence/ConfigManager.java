@@ -675,7 +675,7 @@ public class ConfigManager {
 	    "Value in blocks. While previous percentage will determine general size, this can be used to avoid having tiny residences",
 	    "For example if player has access to 30x30 residence and Percentage is set to 50% then instead of using 15 block size we will use 20 (default)",
 	    "Keep in mind that this will not override actual max/min residence sizes player can have");
-	ARCSizeMin = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Min", 20);
+	ARCSizeMin = c.get("Global.Optimizations.AutomaticResidenceCreation.Size.Min", 5);
 	ARCSizeMin = ARCSizeMin < 1 ? 1 : ARCSizeMin;
 
 	c.addComment("Global.Optimizations.AutomaticResidenceCreation.Size.Max",

@@ -53,7 +53,7 @@ public class auto implements cmd {
 	}
 
 	Residence.getInstance().getPlayerManager().getResidencePlayer(player).forceUpdateGroup();
-		
+
 	Location loc = player.getLocation();
 
 	int minY = loc.getBlockY() - 1;
@@ -68,8 +68,7 @@ public class auto implements cmd {
 	plugin.getSelectionManager().placeLoc2(player, loc.clone(), false);
 
 	boolean result = resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
-	
-	
+
 	if (!result) {
 	    Residence.getInstance().msg(player, lm.Area_SizeLimit);
 	    return true;
@@ -140,15 +139,29 @@ public class auto implements cmd {
 	int done = 0;
 
 	int maxX = getMax(group.getMaxX());
-	if (max < 0)
-	    max = maxX;
+	int maxY = getMax(group.getMaxY());
+	int maxZ = getMax(group.getMaxZ());
+
+	if (maxX > max && max > 0)
+	    maxX = max;
+	if (maxY > max && max > 0)
+	    maxY = max;
+	if (maxZ > max && max > 0)
+	    maxZ = max;
+
+	if (maxX <= 1)
+	    maxX = (group.getMaxX() - group.getMinX()) / 2 + group.getMinX();
+
+	if (maxY <= 1)
+	    maxY = (group.getMaxY() - group.getMinY()) / 2 + group.getMinY();
+
+	if (maxZ <= 1)
+	    maxZ = (group.getMaxZ() - group.getMinZ()) / 2 + group.getMinZ();
 
 	while (true) {
-	    if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
-		if (dir.equals(direction.Top) || dir.equals(direction.Bottom)) {
-		    dir = dir.getNext();
-		    continue;
-		}
+	    if (Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (dir.equals(direction.Top) || dir.equals(direction.Bottom))) {
+		dir = dir.getNext();
+		continue;
 	    }
 	    done++;
 
@@ -198,21 +211,21 @@ public class auto implements cmd {
 		continue;
 	    }
 
-	    if (max > 0 && max < c.getXSize() || c.getXSize() > group.getMaxX() - group.getMinX()) {
+	    if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > group.getMaxX()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
 		continue;
 	    }
 
-	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (max > 0 && max < c.getYSize() || c.getYSize() > group.getMaxY() - group.getMinY())) {
+	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (maxY > 0 && maxY < c.getYSize() || c.getYSize() > group.getMaxY())) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
 		continue;
 	    }
 
-	    if (max > 0 && max < c.getZSize() || c.getZSize() > group.getMaxZ() - group.getMinZ()) {
+	    if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > group.getMaxZ()) {
 		locked.add(dir);
 		dir = dir.getNext();
 		skipped++;
@@ -221,13 +234,11 @@ public class auto implements cmd {
 
 	    skipped = 0;
 
-	    if (checkBalance) {
-		if (plugin.getConfigManager().enableEconomy()) {
-		    cost = c.getCost(group);
-		    if (cost > balance) {
-			plugin.msg(player, lm.Economy_NotEnoughMoney);
-			break;
-		    }
+	    if (checkBalance && plugin.getConfigManager().enableEconomy()) {
+		cost = c.getCost(group);
+		if (cost > balance) {
+		    plugin.msg(player, lm.Economy_NotEnoughMoney);
+		    break;
 		}
 	    }
 
@@ -237,20 +248,12 @@ public class auto implements cmd {
 	    dir = dir.getNext();
 	}
 
-	int x = group.getMinX();
-	int y = group.getMinY();
-	int z = group.getMinZ();
-
-	x = getMin(x, group.getMaxX());
-	y = getMin(y, group.getMaxY());
-	z = getMin(z, group.getMaxZ());
-
 	plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
 	plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
 
 	cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
-	if (cuboid.getXSize() < x || cuboid.getYSize() < y || cuboid.getZSize() < z) {
+	if (cuboid.getXSize() > group.getMaxX() || cuboid.getYSize() > group.getMaxY() || cuboid.getZSize() > group.getMaxZ()) {
 	    return false;
 	}
 
