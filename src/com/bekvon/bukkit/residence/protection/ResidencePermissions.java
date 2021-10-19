@@ -26,6 +26,8 @@ import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 public class ResidencePermissions extends FlagPermissions {
 
     private UUID ownerUUID;
@@ -284,8 +286,8 @@ public class ResidencePermissions extends FlagPermissions {
 
 	ClaimedResidence par = this.residence.getParent();
 	Player player = (Player) sender;
-	if (par != null)
-	    if (par.getPermissions().playerHas(player, Flags.admin, FlagCombo.OnlyTrue))
+	
+	if (par != null && par.getPermissions().playerHas(player, Flags.admin, FlagCombo.OnlyTrue))
 		return true;
 
 	if (Residence.getInstance().getConfigManager().enabledRentSystem()) {
@@ -301,9 +303,11 @@ public class ResidencePermissions extends FlagPermissions {
 		return (playerHas(player, Flags.admin, FlagCombo.OnlyTrue));
 	    }
 	}
+		
 	if (requireOwner) {
 	    return (this.getOwner().equals(sender.getName()));
 	}
+
 	return (playerHas(player, Flags.admin, FlagCombo.OnlyTrue) || this.getOwner().equals(sender.getName()));
     }
 

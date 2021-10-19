@@ -9,11 +9,13 @@ import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 public class expand implements cmd {
 
@@ -37,18 +39,18 @@ public class expand implements cmd {
 	    plugin.msg(player, lm.Invalid_Residence);
 	    return true;
 	}
-	
+
 	if (res.getRaid().isRaidInitialized()) {
 	    plugin.msg(sender, lm.Raid_cantDo);
 	    return true;
 	}
-	
+
 	if (res.isSubzone() && !resadmin && !ResPerm.command_expand_subzone.hasPermission(player, lm.Subzone_CantExpand))
 	    return true;
 
 	if (!res.isSubzone() && !resadmin && !ResPerm.command_$1.hasPermission(player, lm.Residence_CantExpandResidence, this.getClass().getSimpleName()))
 	    return true;
-	
+
 	String resName = res.getName();
 	CuboidArea area = null;
 	String areaName = null;
@@ -91,10 +93,8 @@ public class expand implements cmd {
 	plugin.getSelectionManager().modify(player, false, amount);
 
 	if (plugin.getSelectionManager().hasPlacedBoth(player)) {
-	    if (plugin.getWorldEdit() != null) {
-		if (plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool())) {
-		    plugin.getSelectionManager().worldEdit(player);
-		}
+	    if (plugin.getWorldEdit() != null && plugin.getWorldEditTool().equals(plugin.getConfigManager().getSelectionTool())) {
+		plugin.getSelectionManager().worldEdit(player);
 	    }
 
 	    res.replaceArea(player, plugin.getSelectionManager().getSelectionCuboid(player), areaName, resadmin);

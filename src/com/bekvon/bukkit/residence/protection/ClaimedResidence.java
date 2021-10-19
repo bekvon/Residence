@@ -59,6 +59,7 @@ import com.bekvon.bukkit.residence.utils.Utils;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 
@@ -232,7 +233,7 @@ public class ClaimedResidence {
     }
 
     public boolean isSubzone() {
-	return parent == null ? false : true;
+	return getParent() == null ? false : true;
     }
 
     public int getSubzoneDeep() {
@@ -241,8 +242,8 @@ public class ClaimedResidence {
 
     public int getSubzoneDeep(int deep) {
 	deep++;
-	if (parent != null) {
-	    return parent.getSubzoneDeep(deep);
+	if (getParent() != null) {
+	    return getParent().getSubzoneDeep(deep);
 	}
 	return deep;
     }
@@ -375,7 +376,7 @@ public class ClaimedResidence {
 	    }
 	    return false;
 	}
-	if (parent == null) {
+	if (getParent() == null) {
 	    String collideResidence = Residence.getInstance().getResidenceManager().checkAreaCollision(area, this);
 	    ClaimedResidence cRes = Residence.getInstance().getResidenceManager().getByName(collideResidence);
 	    if (cRes != null) {
@@ -389,9 +390,9 @@ public class ClaimedResidence {
 		return false;
 	    }
 	} else {
-	    String[] szs = parent.listSubzones();
+	    String[] szs = getParent().listSubzones();
 	    for (String sz : szs) {
-		ClaimedResidence res = parent.getSubzone(sz);
+		ClaimedResidence res = getParent().getSubzone(sz);
 		if (res != null && res != this) {
 		    if (res.checkCollision(area)) {
 			if (player != null) {
@@ -407,13 +408,13 @@ public class ClaimedResidence {
 		Residence.getInstance().msg(player, lm.General_NoPermission);
 		return false;
 	    }
-	    if (parent != null) {
-		if (!parent.containsLoc(area.getHighLocation()) || !parent.containsLoc(area.getLowLocation())) {
+	    if (getParent() != null) {
+		if (!getParent().containsLoc(area.getHighLocation()) || !getParent().containsLoc(area.getLowLocation())) {
 		    Residence.getInstance().msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
-		if (!parent.getPermissions().hasResidencePermission(player, true)
-		    && !parent.getPermissions().playerHas(player, Flags.subzone, FlagCombo.OnlyTrue)) {
+		if (!getParent().getPermissions().hasResidencePermission(player, true)
+		    && !getParent().getPermissions().playerHas(player, Flags.subzone, FlagCombo.OnlyTrue)) {
 		    Residence.getInstance().msg(player, lm.Residence_ParentNoPermission);
 		    return false;
 		}
@@ -456,7 +457,7 @@ public class ClaimedResidence {
 		    return false;
 	    }
 
-	    if (chargeMoney && parent == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
+	    if (chargeMoney && getParent() == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
 		double chargeamount = area.getCost(group);
 		if (!Residence.getInstance().getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
 		    return false;
@@ -491,7 +492,7 @@ public class ClaimedResidence {
 		Residence.getInstance().msg(player, lm.Area_DiffWorld);
 	    return false;
 	}
-	if (parent == null) {
+	if (getParent() == null) {
 	    String collideResidence = Residence.getInstance().getResidenceManager().checkAreaCollision(newarea, this);
 	    ClaimedResidence cRes = Residence.getInstance().getResidenceManager().getByName(collideResidence);
 	    if (cRes != null && player != null) {
@@ -503,9 +504,9 @@ public class ClaimedResidence {
 		return false;
 	    }
 	} else {
-	    String[] szs = parent.listSubzones();
+	    String[] szs = getParent().listSubzones();
 	    for (String sz : szs) {
-		ClaimedResidence res = parent.getSubzone(sz);
+		ClaimedResidence res = getParent().getSubzone(sz);
 		if (res != null && res != this) {
 		    if (res.checkCollision(newarea)) {
 			if (player != null) {
@@ -552,17 +553,18 @@ public class ClaimedResidence {
 	}
 
 	if (!resadmin && player != null) {
-	    if (!this.perms.hasResidencePermission(player, true)) {
+
+	    if (!getPermissions().hasResidencePermission(player, true) && !getPermissions().playerHas(player, Flags.admin, FlagCombo.OnlyTrue)) {
 		Residence.getInstance().msg(player, lm.General_NoPermission);
 		return false;
 	    }
-	    if (parent != null) {
-		if (!parent.containsLoc(newarea.getHighLocation()) || !parent.containsLoc(newarea.getLowLocation())) {
+	    if (getParent() != null) {
+		if (!getParent().containsLoc(newarea.getHighLocation()) || !getParent().containsLoc(newarea.getLowLocation())) {
 		    Residence.getInstance().msg(player, lm.Area_NotWithinParent);
 		    return false;
 		}
-		if (!parent.getPermissions().hasResidencePermission(player, true)
-		    && !parent.getPermissions().playerHas(player, Flags.subzone, FlagCombo.OnlyTrue)) {
+		if (!getParent().getPermissions().hasResidencePermission(player, true)
+		    && !getParent().getPermissions().playerHas(player, Flags.subzone, FlagCombo.OnlyTrue)) {
 		    Residence.getInstance().msg(player, lm.Residence_ParentNoPermission);
 		    return false;
 		}
@@ -598,12 +600,10 @@ public class ClaimedResidence {
 		    return false;
 	    }
 
-	    if (parent == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
+	    if (getParent() == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
 		double chargeamount = newarea.getCost(group) - oldarea.getCost(group);
-		if (chargeamount > 0) {
-		    if (!Residence.getInstance().getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
-			return false;
-		    }
+		if (chargeamount > 0 && !Residence.getInstance().getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
+		    return false;
 		}
 	    }
 	}
@@ -835,8 +835,8 @@ public class ClaimedResidence {
 	Collection<CuboidArea> keys = areas.values();
 	for (CuboidArea key : keys) {
 	    if (key.containsLoc(loc)) {
-		if (parent != null)
-		    return parent.containsLoc(loc);
+		if (getParent() != null)
+		    return getParent().containsLoc(loc);
 		return true;
 	    }
 	}
@@ -852,13 +852,13 @@ public class ClaimedResidence {
     }
 
     public ClaimedResidence getTopParent() {
-	if (parent == null)
+	if (getParent() == null)
 	    return this;
-	return parent.getTopParent();
+	return getParent().getTopParent();
     }
 
     public boolean isTopArea() {
-	return parent == null;
+	return getParent() == null;
     }
 
     public boolean removeSubzone(String name) {
@@ -1230,7 +1230,7 @@ public class ClaimedResidence {
 
     public int getZoneDepth() {
 	int count = 0;
-	ClaimedResidence res = parent;
+	ClaimedResidence res = getParent();
 	while (res != null) {
 	    count++;
 	    res = res.getParent();
