@@ -208,6 +208,9 @@ public class Pl3xMapManager {
 	World world = Bukkit.getWorld(res.getPermissions().getWorldName());
 
 	MapWorld mWorld = api.getWorldIfEnabled(world).orElse(null);
+	
+	if (mWorld == null)
+	    return;
 
 	Registry<LayerProvider> registry = mWorld.layerRegistry();
 	SimpleLayerProvider provider = providers.get(res.getPermissions().getWorldName());
@@ -275,7 +278,11 @@ public class Pl3xMapManager {
 	    if (depth <= plugin.getConfigManager().Pl3xMapLayerSubZoneDepth) {
 		List<ClaimedResidence> subids = res.getSubzones();
 		for (ClaimedResidence one : subids) {
-		    handleResidenceAdd(one.getName(), one, depth + 1);
+		    try {
+			handleResidenceAdd(one.getName(), one, depth + 1);
+		    } catch (Throwable e) {
+			e.printStackTrace();
+		    }
 		}
 	    }
 	}
@@ -291,6 +298,9 @@ public class Pl3xMapManager {
 	World world = Bukkit.getWorld(res.getPermissions().getWorldName());
 
 	MapWorld mWorld = api.getWorldIfEnabled(world).orElse(null);
+	
+	if (mWorld == null)
+	    return;
 
 	Registry<LayerProvider> registry = mWorld.layerRegistry();
 	SimpleLayerProvider provider = providers.get(res.getPermissions().getWorldName());
@@ -326,7 +336,11 @@ public class Pl3xMapManager {
 
 	for (Entry<String, ClaimedResidence> one : plugin.getResidenceManager().getResidences().entrySet()) {
 	    fireUpdateAdd(one.getValue(), one.getValue().getSubzoneDeep());
-	    handleResidenceAdd(one.getValue().getName(), one.getValue(), one.getValue().getSubzoneDeep());
+	    try {
+		handleResidenceAdd(one.getValue().getName(), one.getValue(), one.getValue().getSubzoneDeep());
+	    } catch (Throwable e) {
+		e.printStackTrace();
+	    }
 	}
     }
 }
