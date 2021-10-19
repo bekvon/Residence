@@ -311,6 +311,10 @@ public enum lm {
     command_removedBlock("&eRemoved blocked command for &6%1 &eresidence"),
     command_Blocked("&eBlocked commands: &6%1"),
     command_Allowed("&eAllowed commands: &6%1"),
+    
+    command_Parsed("%1"),
+    command_PlacehlderList("&e%1. &6%2"),
+    command_PlacehlderResult(" &eresult: &6%1"),
 
     Rentable_Land("&eRentable Land: &6"),
     Rentable_AllowRenewing("&eCan Renew: &6%1"),

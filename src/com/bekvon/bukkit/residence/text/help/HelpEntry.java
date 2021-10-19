@@ -17,8 +17,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import com.Zrips.CMI.Modules.Placeholders.Placeholder.CMIPlaceholderType;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.ResidenceCommandListener;
+import com.bekvon.bukkit.residence.Placeholders.Placeholder.CMIPlaceHolders;
 import com.bekvon.bukkit.residence.commands.pset;
 import com.bekvon.bukkit.residence.commands.set;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -294,7 +296,7 @@ public class HelpEntry {
 	    neededArgPlace = 0;
 
 	List<String> ArgsList = new ArrayList<String>();
- 
+
 	if (args.length > 0) {
 	    HashMap<String, List<String>> mp = Residence.getInstance().getLocaleManager().CommandTab.get(args[0].toLowerCase());
 	    if (mp != null) {
@@ -358,7 +360,6 @@ public class HelpEntry {
 	    } else {
 		list.add(NeededArg);
 	    }
-
 
 	    for (String oneArg : list) {
 		switch (oneArg) {
@@ -429,6 +430,11 @@ public class HelpEntry {
 			subCommands.add(one.getName());
 		    }
 		    break;
+		case "[placeholder]":
+		    for (CMIPlaceHolders one : CMIPlaceHolders.values()) {
+			subCommands.add(one.getFull());
+		    }
+		    break;
 		case "[flag]":
 
 		    FlagMode mode = FlagMode.Both;
@@ -446,7 +452,7 @@ public class HelpEntry {
 		    for (String one : FlagPermissions.getAllPosibleFlags()) {
 			Flags f = Flags.getFlag(one);
 
-			if (f != null) { 
+			if (f != null) {
 
 			    if (f.getFlagMode() != FlagMode.Both && f.getFlagMode() != mode)
 				continue;
