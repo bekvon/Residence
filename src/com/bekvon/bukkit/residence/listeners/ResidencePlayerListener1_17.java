@@ -1,12 +1,17 @@
 package com.bekvon.bukkit.residence.listeners;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -27,6 +32,14 @@ public class ResidencePlayerListener1_17 implements Listener {
     public ResidencePlayerListener1_17(Residence plugin) {
 	this.plugin = plugin;
     }
+
+    private static int MAX_ENTRIES = 50;
+    public static LinkedHashMap<String, BlockData> powder_snow = new LinkedHashMap<String, BlockData>(MAX_ENTRIES + 1, .75F, false) {
+	@Override
+	protected boolean removeEldestEntry(Map.Entry<String, BlockData> eldest) {
+	    return size() > MAX_ENTRIES;
+	}
+    };
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteractRespawn(PlayerInteractEvent event) {
@@ -67,14 +80,42 @@ public class ResidencePlayerListener1_17 implements Listener {
 	}
 
 	if (item == null || item.getType().equals(Material.AIR))
-	    return; 
+	    return;
 	boolean waxed = CMIMaterial.isWaxedCopper(mat);
 
-	if ((CMIMaterial.get(item).equals(CMIMaterial.HONEYCOMB) && !waxed || item.getType().toString().contains("_AXE") && CMIMaterial.getCopperStage(mat) > 1) && 
+	if ((CMIMaterial.get(item).equals(CMIMaterial.HONEYCOMB) && !waxed || item.getType().toString().contains("_AXE") && CMIMaterial.getCopperStage(mat) > 1) &&
 	    !res.isOwner(player) && !res.getPermissions().playerHas(player, Flags.copper, FlagCombo.TrueOrNone) && !plugin.isResAdminOn(player)) {
 
 	    plugin.msg(player, lm.Residence_FlagDeny, Flags.copper, res.getName());
 	    event.setCancelled(true);
 	}
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onLandDryPhysics(BlockPhysicsEvent event) {
+
+	// Disabling listener if flag disabled globally
+	if (!Flags.place.isGlobalyEnabled())
+	    return;
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
+	    return;
+
+	if (!event.getSourceBlock().getType().equals(Material.POWDER_SNOW) || event.getBlock().getType().equals(Material.AIR) || event.getBlock().getType().equals(Material.POWDER_SNOW))
+	    return;
+
+	Block block = event.getBlock();
+	if (block == null)
+	    return;
+	
+	if (block.getLocation().getY() == event.getSourceBlock().getLocation().getY())
+	    return;
+
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+	if (res == null)
+	    return;
+
+	powder_snow.put(event.getSourceBlock().getLocation().toString(), block.getBlockData().clone());
+
     }
 }

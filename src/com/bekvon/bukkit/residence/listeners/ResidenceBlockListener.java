@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -61,6 +62,7 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -612,9 +614,22 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-
-	if (!canPlaceBlock(event.getPlayer(), event.getBlock(), true))
+	if (!canPlaceBlock(event.getPlayer(), event.getBlock(), true)) {
 	    event.setCancelled(true);
+
+	    if (Version.isCurrentEqualOrHigher(Version.v1_17_R1) && event.getBlock().getType() == Material.POWDER_SNOW) {
+
+		BlockData data = ResidencePlayerListener1_17.powder_snow.remove(event.getBlock().getLocation().toString());
+		if (data != null) {
+
+		    Block blockUnder = event.getBlock().getLocation().clone().add(0, -1, 0).getBlock();
+
+		    if (data.getMaterial().equals(blockUnder.getType())) {
+			blockUnder.setBlockData(data);
+		    }
+		}
+	    }
+	}
     }
 
     public static boolean canPlaceBlock(Player player, Block block, boolean informPlayer) {
@@ -761,7 +776,7 @@ public class ResidenceBlockListener implements Listener {
 	Location origins = event.getBlock().getLocation();
 
 	int lowestY = CMIWorld.getMaxHeight(origins.getWorld());
-	int bigestY =  CMIWorld.getMinHeight(origins.getWorld());
+	int bigestY = CMIWorld.getMinHeight(origins.getWorld());
 	int lowestX = Integer.MAX_VALUE;
 	int lowestZ = Integer.MAX_VALUE;
 	int bigestX = -Integer.MAX_VALUE;
@@ -940,6 +955,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLavaWaterFlow(BlockFromToEvent event) {
+	CMIDebug.d("BlockFromToEvent");
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
