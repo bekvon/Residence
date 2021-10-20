@@ -443,7 +443,6 @@ Language:
     TpLimit: '&e请等待 &6%1 &e秒后再传送'
     TeleportSuccess: '&e传送到 X:&6%1&e, Y:&6%2&e, Z:&6%3 &e位置'
     IncorrectLocation: '&6无法找到正确的传送位置, 请等待 &e%1 &6秒后重试.'
-    TeleportStarted: '&e传送即将开始, 在 &6%4 &e秒内不要移动.'
     WorldList: '&e可用世界: &6%1'
     Disabled: '&c在这个世界上，随机传送功能被禁用'
     TeleportStarted: '&e传送即将开始, 在 &6%4 &e秒内不要移动.'
@@ -483,9 +482,9 @@ Language:
       使用 &6/res tpconfirm &c强制传送.'
     TeleportConfirmVoid: '&c这个传送不安全，你会掉进 &6虚空&c.
       使用 &6/res tpconfirm &c强制传送.'
-    TeleportConfirm: '&c这个传送并不安全，你将会落入 &6%1 &cblocks.
+    TeleportConfirm: '&c这个传送并不安全，你将摔落 &6%1 &c个方块.
       使用 &6/res tpconfirm &c强制传送.'
-    TeleportStarted: '&e传送即将开始, 在 &6%4 &e秒内不要移动.'
+    TeleportStarted: '&e传送即将开始, 在 &6%2 &e秒内不要移动.'
     TeleportTitle: '&e传送中..'
     TeleportTitleTime: '&6%1'
     TeleportCanceled: '&e传送被取消!'
