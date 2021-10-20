@@ -1043,10 +1043,10 @@ public class ResidencePlayerListener implements Listener {
 
 	if (iih == null)
 	    return;
-	
+
 	if (!iih.getType().toString().equals("END_CRYSTAL"))
 	    return;
-	
+
 	if (player.hasMetadata("NPC"))
 	    return;
 	if (plugin.isResAdminOn(player))
@@ -1276,7 +1276,7 @@ public class ResidencePlayerListener implements Listener {
 	    if (heldItem.isDye()) {
 		CMIMaterial btype = CMIMaterial.get(block);
 		if (heldItem.equals(CMIMaterial.BONE_MEAL) && (btype == CMIMaterial.GRASS_BLOCK || btype == CMIMaterial.GRASS || btype.isSapling()) ||
-		    heldItem == CMIMaterial.COCOA_BEANS && blockM == CMIMaterial.JUNGLE_WOOD) {
+		    heldItem == CMIMaterial.COCOA_BEANS && blockM == CMIMaterial.JUNGLE_WOOD || btype == CMIMaterial.MOSS_BLOCK) {
 		    FlagPermissions tperms = plugin.getPermsByLocForPlayer(block.getRelative(event.getBlockFace()).getLocation(), player);
 		    if (!tperms.playerHas(player, Flags.build, true)) {
 			plugin.msg(player, lm.Flag_Deny, Flags.build);
