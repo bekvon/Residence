@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.RaidAttacker;
+import com.bekvon.bukkit.residence.raid.RaidDefender;
 
 public class ResidenceRaidPreStartEvent extends Event implements Cancellable {
 
@@ -48,5 +49,9 @@ public class ResidenceRaidPreStartEvent extends Event implements Cancellable {
 
     public HashMap<UUID, RaidAttacker> getAttackers() {
 	return attackers;
+    }
+
+    public HashMap<UUID, RaidDefender> getDefenders() {
+	return res.getRaid().getDefenders();
     }
 }
