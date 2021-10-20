@@ -186,6 +186,9 @@ public class PermissionManager {
 	if (!groups.containsKey(defaultGroup)) {
 	    groups.put(defaultGroup, new PermissionGroup(defaultGroup));
 	}
+
+	Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loaded (" + groups.size() + ") groups");
+
 	if (groupsFile.isConfigurationSection("GroupAssignments")) {
 	    Set<String> keys = groupsFile.getConfigurationSection("GroupAssignments").getKeys(false);
 	    if (keys != null) {
