@@ -1231,11 +1231,23 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public void removeAllFromWorld(CommandSender sender, String world) {
+	removeAllFromWorld(sender, world, null);
+    }
+
+    public void removeAllFromWorld(CommandSender sender, String world, List<String> playerExceptions) {
 	int count = 0;
 	Iterator<ClaimedResidence> it = residences.values().iterator();
 	while (it.hasNext()) {
 	    ClaimedResidence next = it.next();
-	    if (next.getWorld().equals(world)) {
+
+	    if (next.getPermissions().getWorldName().equals(world)) {
+		if (playerExceptions != null && !playerExceptions.isEmpty()) {
+		    if (playerExceptions.contains(next.getOwner().toLowerCase()))
+			continue;
+
+		    if (playerExceptions.contains(next.getOwnerUUID().toString()))
+			continue;
+		}
 		it.remove();
 		count++;
 	    }
