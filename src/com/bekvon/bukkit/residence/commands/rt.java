@@ -125,9 +125,6 @@ public class rt implements cmd {
 		    plugin.getRandomTpManager().performInstantTp(lc, player);
 
 	    }, 1);
-
-	    CMIDebug.d(lc.toVector().toString());
-
 	    return null;
 	});
 

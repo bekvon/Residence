@@ -29,6 +29,7 @@ public enum lm {
     Invalid_Page("&eInvalid Page..."),
     Invalid_Help("&cInvalid Help Page..."),
     Invalid_NameCharacters("&cName contained unallowed characters..."),
+    Invalid_PortalDestination("&cPortal destination is in restricted zone. Portal creation canceled. &7Find new location"),
 
     Invalid_FromConsole("&cYou can only use this in the console!"),
     Invalid_Ingame("&cYou can only use this in game!"),

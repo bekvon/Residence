@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -39,10 +40,13 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
 
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
@@ -62,7 +66,6 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -955,7 +958,7 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLavaWaterFlow(BlockFromToEvent event) {
-	CMIDebug.d("BlockFromToEvent");
+
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
@@ -997,6 +1000,109 @@ public class ResidenceBlockListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	if (!perms.has(Flags.firespread, true))
 	    event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockBurn(PortalCreateEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.build.isGlobalyEnabled())
+	    return;
+
+	World world = null;
+	try {
+	    world = event.getBlocks().get(0).getWorld();
+	} catch (Throwable e) {
+	    e.printStackTrace();
+	}
+
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(world))
+	    return;
+
+	if (!event.getReason().equals(CreateReason.NETHER_PAIR))
+	    return;
+
+	Player player = null;
+	// Crude attempt to get player object. Older versions will create exception of missing method
+	try {
+	    if (event.getEntity() instanceof Player)
+		player = (Player) event.getEntity();
+	} catch (Throwable e) {
+	}
+
+	ArrayList<Vector> corners = getNetherPortalCorners(event);
+
+	for (Vector one : corners) {
+	    boolean hasBuild = true;
+	    if (player != null) {
+		ClaimedResidence res = plugin.getResidenceManager().getByLoc(new Location(world, one.getX(), one.getY(), one.getZ()));
+		hasBuild = res.getPermissions().playerHas(player, Flags.build, FlagCombo.TrueOrNone);
+		if (!hasBuild) {
+		    plugin.msg(player, lm.Invalid_PortalDestination);
+		}
+	    } else {
+		FlagPermissions perms = plugin.getPermsByLoc(new Location(world, one.getX(), one.getY(), one.getZ()));
+		hasBuild = perms.has(Flags.build, true);
+	    }
+	    if (!hasBuild) {
+		event.setCancelled(true);
+		return;
+	    }
+	}
+    }
+
+    @SuppressWarnings("unchecked")
+    private static ArrayList<Vector> getNetherPortalCorners(PortalCreateEvent e) {
+	ArrayList<Vector> locs = new ArrayList<Vector>();
+
+	List<?> ls = new ArrayList<>();
+	try {
+	    if (Version.isCurrentEqualOrLower(Version.v1_13_R2))
+		ls = (ArrayList<Block>) e.getClass().getMethod("getBlocks").invoke(e);
+	    else
+		ls = (ArrayList<BlockState>) e.getClass().getMethod("getBlocks").invoke(e);
+	} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+	    e1.printStackTrace();
+	}
+
+	int lowestY = 255;
+	int bigestY = -255;
+	int lowestX = Integer.MAX_VALUE;
+	int lowestZ = Integer.MAX_VALUE;
+	int bigestX = -Integer.MAX_VALUE;
+	int bigestZ = -Integer.MAX_VALUE;
+
+	for (int i = 0; i < ls.size(); i++) {
+	    Object ob = ls.get(i);
+
+	    Location one = Version.isCurrentEqualOrHigher(Version.v1_14_R1) ? ((BlockState) ob).getLocation() : ((Block) ob).getLocation();
+
+	    if (one.getBlockY() < lowestY)
+		lowestY = one.getBlockY();
+	    if (one.getBlockX() < lowestX)
+		lowestX = one.getBlockX();
+	    if (one.getBlockZ() < lowestZ)
+		lowestZ = one.getBlockZ();
+
+	    if (one.getBlockY() > bigestY)
+		bigestY = one.getBlockY();
+	    if (one.getBlockX() > bigestX)
+		bigestX = one.getBlockX();
+	    if (one.getBlockZ() > bigestZ)
+		bigestZ = one.getBlockZ();
+	}
+
+	int height = Math.abs(bigestY - lowestY);
+	height = height < 0 ? -height : height;
+
+	// If height is 1 then its not a nether portal
+	if (height < 2)
+	    return locs;
+
+	locs.add(new Vector(lowestX, lowestY, lowestZ));
+	locs.add(new Vector(bigestX, bigestY, bigestZ));
+
+	return locs;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
