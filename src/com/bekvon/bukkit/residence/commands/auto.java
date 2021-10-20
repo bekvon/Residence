@@ -17,9 +17,11 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class auto implements cmd {
 
@@ -72,6 +74,13 @@ public class auto implements cmd {
 	if (!result) {
 	    Residence.getInstance().msg(player, lm.Area_SizeLimit);
 	    return true;
+	}
+
+	ClaimedResidence collision = Residence.getInstance().getResidenceManager().collidesWithResidence(plugin.getSelectionManager().getSelectionCuboid(player));
+	
+	if (collision != null) {
+	    Residence.getInstance().msg(player, lm.Area_Collision, collision.getResidenceName());
+	    return null;
 	}
 
 	if (plugin.getResidenceManager().getByName(resName) != null) {
