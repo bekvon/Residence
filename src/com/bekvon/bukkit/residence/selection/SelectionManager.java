@@ -289,7 +289,7 @@ public class SelectionManager {
 
     private int getMaxWorldHeight(World world) {
 	if (world == null)
-	    return 255;
+	    return 319;
 	switch (world.getEnvironment()) {
 	case NETHER:
 	    return plugin.getConfigManager().getSelectionNetherHeight();
@@ -299,7 +299,7 @@ public class SelectionManager {
 	    try {
 		return CMIWorld.getMaxHeight(world) - 1;
 	    } catch (Throwable e) {
-		return 255;
+		return 319;
 	    }
 	default:
 	    break;
@@ -308,7 +308,7 @@ public class SelectionManager {
 	try {
 	    return CMIWorld.getMaxHeight(world) - 1;
 	} catch (Throwable e) {
-	    return 255;
+	    return 319;
 	}
     }
 

@@ -1065,8 +1065,8 @@ public class ResidenceBlockListener implements Listener {
 	    e1.printStackTrace();
 	}
 
-	int lowestY = 255;
-	int bigestY = -255;
+	int lowestY = CMIWorld.getMaxHeight(e.getWorld());
+	int bigestY = -lowestY;
 	int lowestX = Integer.MAX_VALUE;
 	int lowestZ = Integer.MAX_VALUE;
 	int bigestX = -Integer.MAX_VALUE;

@@ -614,12 +614,12 @@ public class ConfigManager {
 
 	c.addComment("Global.Selection.netherHeight",
 	    "Defines height of nether when creating residences. This mostly applies when performing commands like /res select vert or /res auto which will expand residence to defined height",
-	    "This cant be higher than 255 or lower than 1");
+	    "This cant be higher than 319 or lower than 1");
 	SelectionNetherHeight = c.get("Global.Selection.netherHeight", 128);
-	SelectionNetherHeight = SelectionNetherHeight > 255 ? 255 : SelectionNetherHeight < 1 ? 1 : SelectionNetherHeight;
+	SelectionNetherHeight = SelectionNetherHeight > 319 ? 319 : SelectionNetherHeight < 1 ? 1 : SelectionNetherHeight;
 
 	c.addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
-	    "This will lower residence price by up to 255 times, so adjust block price BEFORE enabling this");
+	    "This will lower residence price by up to 319 times, so adjust block price BEFORE enabling this");
 	NoCostForYBlocks = c.get("Global.Selection.NoCostForYBlocks", false);
 
 	c.addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",

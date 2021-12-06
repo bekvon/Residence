@@ -18,6 +18,8 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 
+import net.Zrips.CMILib.Container.CMIWorld;
+
 public class PermissionGroup {
     private int xmax = 0;
     private int ymax = 0;
@@ -135,7 +137,7 @@ public class PermissionGroup {
 	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
 	    ymin = 0;
 	    // This needs to be 256 to include entire height where 255 and block 0
-	    ymax = 256;
+	    ymax = CMIWorld.getMaxHeight(Bukkit.getWorlds().get(0));
 	}
 
 	if (limits.contains("Residence.MaxNorthSouth"))
@@ -148,7 +150,7 @@ public class PermissionGroup {
 	    minHeight = limits.getInt("Residence.MinHeight", 0);
 	// This needs to be 256 to include entire height where 255 and block 0
 	if (limits.contains("Residence.MaxHeight"))
-	    maxHeight = limits.getInt("Residence.MaxHeight", 256);
+	    maxHeight = limits.getInt("Residence.MaxHeight", CMIWorld.getMaxHeight(Bukkit.getWorlds().get(0)));
 
 	if (limits.contains("Residence.CanTeleport"))
 	    tpaccess = limits.getBoolean("Residence.CanTeleport", false);

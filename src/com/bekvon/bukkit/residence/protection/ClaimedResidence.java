@@ -57,6 +57,7 @@ import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.Utils;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Logs.CMIDebug;
@@ -1295,11 +1296,11 @@ public class ClaimedResidence {
 	    return 0;
 
 	Location tempLoc = this.getTeleportLocation(player).clone();
-
+	
 	int fallDistance = 0;
-	for (int i = (int) tempLoc.getY(); i >= 0; i--) {
+	for (int i = (int) tempLoc.getY(); i >= CMIWorld.getMinHeight(tempLoc.getWorld()); i--) {
 	    if (i == 0) {
-		fallDistance = 255;
+		fallDistance = 555;
 		break;
 	    }
 	    tempLoc.setY(i);
@@ -1309,7 +1310,7 @@ public class ClaimedResidence {
 	    } else {
 
 		if (CMIMaterial.get(block).isLava()) {
-		    fallDistance = 256;
+		    fallDistance = 556;
 		}
 
 		break;
@@ -1359,9 +1360,9 @@ public class ClaimedResidence {
 	if (old == null || !old.equals(this)) {
 	    int distance = isSafeTp(reqPlayer);
 	    if (distance > 6) {
-		if (distance == 256)
+		if (distance == 556)
 		    Residence.getInstance().msg(reqPlayer, lm.General_TeleportConfirmLava, distance);
-		else if (distance == 255)
+		else if (distance == 555)
 		    Residence.getInstance().msg(reqPlayer, lm.General_TeleportConfirmVoid, distance);
 		else
 		    Residence.getInstance().msg(reqPlayer, lm.General_TeleportConfirm, distance);
