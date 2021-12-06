@@ -135,7 +135,7 @@ public class PermissionGroup {
 	ymin = ymin > ymax ? ymax : ymin;
 
 	if (Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
-	    ymin = 0;
+	    ymin = CMIWorld.getMinHeight(Bukkit.getWorlds().get(0));
 	    // This needs to be 256 to include entire height where 255 and block 0
 	    ymax = CMIWorld.getMaxHeight(Bukkit.getWorlds().get(0));
 	}

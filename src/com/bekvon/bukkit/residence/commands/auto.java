@@ -20,8 +20,8 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
+import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class auto implements cmd {
 
@@ -77,7 +77,7 @@ public class auto implements cmd {
 	}
 
 	ClaimedResidence collision = Residence.getInstance().getResidenceManager().collidesWithResidence(plugin.getSelectionManager().getSelectionCuboid(player));
-	
+
 	if (collision != null) {
 	    Residence.getInstance().msg(player, lm.Area_Collision, collision.getResidenceName());
 	    return null;
@@ -166,6 +166,8 @@ public class auto implements cmd {
 
 	if (maxZ <= 1)
 	    maxZ = (group.getMaxZ() - group.getMinZ()) / 2 + group.getMinZ();
+	
+	int minY = CMIWorld.getMinHeight(cuboid.getWorld());
 
 	while (true) {
 	    if (Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (dir.equals(direction.Top) || dir.equals(direction.Bottom))) {
@@ -193,8 +195,8 @@ public class auto implements cmd {
 	    c.setLowLocation(cuboid.getLowLocation().clone().add(-dir.getLow().getX(), -dir.getLow().getY(), -dir.getLow().getZ()));
 	    c.setHighLocation(cuboid.getHighLocation().clone().add(dir.getHigh().getX(), dir.getHigh().getY(), dir.getHigh().getZ()));
 
-	    if (c.getLowVector().getY() < 0) {
-		c.getLowVector().setY(0);
+	    if (c.getLowVector().getY() < minY) {
+		c.getLowVector().setY(minY);
 		locked.add(dir);
 		dir = dir.getNext();
 		if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY()) {
@@ -227,9 +229,9 @@ public class auto implements cmd {
 		continue;
 	    }
 
-	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (maxY > 0 && maxY < c.getYSize() || c.getYSize() > group.getMaxY())) {
+	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (maxY > 0 && maxY < c.getYSize() || c.getYSize() > group.getMaxY() + (-group.getMinY()))) {
 		locked.add(dir);
-		dir = dir.getNext();
+		dir = dir.getNext(); 
 		skipped++;
 		continue;
 	    }
@@ -262,7 +264,7 @@ public class auto implements cmd {
 
 	cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
-	if (cuboid.getXSize() > group.getMaxX() || cuboid.getYSize() > group.getMaxY() || cuboid.getZSize() > group.getMaxZ()) {
+	if (cuboid.getXSize() > group.getMaxX() || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > group.getMaxZ()) {
 	    return false;
 	}
 

@@ -298,7 +298,7 @@ public class ClaimedResidence {
 	    Residence.getInstance().msg(player, lm.Area_ToBigX, area.getXSize(), group.getMaxX());
 	    return false;
 	}
-	if (area.getYSize() > group.getMaxY()) {
+	if (area.getYSize() > group.getMaxY() + (-group.getMinY())) {
 	    Residence.getInstance().msg(player, lm.Area_ToBigY, area.getYSize(), group.getMaxY());
 	    return false;
 	}
@@ -318,7 +318,7 @@ public class ClaimedResidence {
 	    Residence.getInstance().msg(player, lm.Area_ToBigX, area.getXSize(), group.getSubzoneMaxX());
 	    return false;
 	}
-	if (area.getYSize() > group.getSubzoneMaxY()) {
+	if (area.getYSize() > group.getSubzoneMaxY() + (-group.getSubzoneMinY())) {
 	    Residence.getInstance().msg(player, lm.Area_ToBigY, area.getYSize(), group.getSubzoneMaxY());
 	    return false;
 	}
@@ -1296,7 +1296,7 @@ public class ClaimedResidence {
 	    return 0;
 
 	Location tempLoc = this.getTeleportLocation(player).clone();
-	
+
 	int fallDistance = 0;
 	for (int i = (int) tempLoc.getY(); i >= CMIWorld.getMinHeight(tempLoc.getWorld()); i--) {
 	    if (i == 0) {
