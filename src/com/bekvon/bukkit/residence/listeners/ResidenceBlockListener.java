@@ -1036,9 +1036,11 @@ public class ResidenceBlockListener implements Listener {
 	    boolean hasBuild = true;
 	    if (player != null) {
 		ClaimedResidence res = plugin.getResidenceManager().getByLoc(new Location(world, one.getX(), one.getY(), one.getZ()));
-		hasBuild = res.getPermissions().playerHas(player, Flags.build, FlagCombo.TrueOrNone);
-		if (!hasBuild) {
-		    plugin.msg(player, lm.Invalid_PortalDestination);
+		if (res != null) {
+		    hasBuild = res.getPermissions().playerHas(player, Flags.build, FlagCombo.TrueOrNone);
+		    if (!hasBuild) {
+			plugin.msg(player, lm.Invalid_PortalDestination);
+		    }
 		}
 	    } else {
 		FlagPermissions perms = plugin.getPermsByLoc(new Location(world, one.getX(), one.getY(), one.getZ()));
