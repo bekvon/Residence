@@ -66,6 +66,7 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -929,6 +930,9 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	Location location = new Location(event.getBlock().getWorld(), event.getVelocity().getBlockX(), event.getVelocity().getBlockY(), event.getVelocity().getBlockZ());
+	Location loc = event.getBlock().getLocation();
+
+	location.add(loc.clone());
 
 	ClaimedResidence targetres = plugin.getResidenceManager().getByLoc(location);
 
