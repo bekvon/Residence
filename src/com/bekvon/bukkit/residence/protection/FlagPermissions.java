@@ -157,8 +157,8 @@ public class FlagPermissions {
 	if (f != null && !f.isGlobalyEnabled()) {
 	    return;
 	}
-	if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {	   
-	    validFlagGroups.computeIfAbsent(group, k -> new HashSet<String>()).add(flag);	    
+	if (!FlagPermissions.validFlags.contains(group) && !FlagPermissions.validAreaFlags.contains(group) && !FlagPermissions.validPlayerFlags.contains(group)) {
+	    validFlagGroups.computeIfAbsent(group, k -> new HashSet<String>()).add(flag);
 	}
     }
 
@@ -432,7 +432,7 @@ public class FlagPermissions {
 	}
 	if (map.isEmpty())
 	    this.removeAllPlayerFlags(player);
-	
+
 	return true;
     }
 
@@ -799,7 +799,7 @@ public class FlagPermissions {
 	}
 
 	for (Entry<String, Map<String, Boolean>> one : newperms.playerFlags.entrySet()) {
-	    if (one.getKey().length() != 32) {		
+	    if (one.getKey().length() != 32) {
 		continue;
 	    }
 

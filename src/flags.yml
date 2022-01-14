@@ -380,6 +380,7 @@ Global:
     pistonprotection: true
     tp: true
     explode: false
+    harvest: false
   # These are default flags applied to the residence creator of any group.
   CreatorDefault:
     build: true
@@ -394,6 +395,7 @@ Global:
     trade: true
     shear: true
     leash: true
+    harvest: true
   # These are default flags applied to the residence renter of any group.
   RentedDefault:
     container: true
@@ -409,6 +411,7 @@ Global:
     leash: true
     animalkilling: true
     admin: true
+    harvest: true
   # These are grouped flags, so when using /res pset nickname redstone true, player will get all flags in list, same when setting to false or removing them.
   GroupedFlags:
     redstone:
@@ -434,6 +437,7 @@ Global:
     - shear
     - chat
     - beacon
+    - harvest
     fire:
     - ignite
     - firespread

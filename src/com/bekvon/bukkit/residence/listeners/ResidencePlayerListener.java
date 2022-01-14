@@ -1230,6 +1230,51 @@ public class ResidencePlayerListener implements Listener {
 	return block != null && block.getType().name().contains("RAIL") && item != null && item.getType().name().contains("MINECART");
     }
 
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPlayerharvest(PlayerInteractEvent event) {
+
+	if (Version.isCurrentEqualOrLower(Version.v1_16_R1))
+	    return;
+
+	if (event.getPlayer() == null)
+	    return;
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
+	    return;
+
+	if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+	    return;
+	try {
+	    if (event.getHand() != EquipmentSlot.HAND && event.getHand() != EquipmentSlot.OFF_HAND)
+		return;
+	} catch (Exception e) {
+	}
+	Player player = event.getPlayer();
+	if (plugin.isResAdminOn(player))
+	    return;
+
+	Block block = event.getClickedBlock();
+	if (block == null)
+	    return;
+
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+
+	if (res != null && res.isOwner(player))
+	    return;
+
+	CMIMaterial mat = CMIMaterial.get(block);
+
+	if (!mat.equals(CMIMaterial.SWEET_BERRY_BUSH) && !mat.equals(CMIMaterial.CAVE_VINES) && !mat.equals(CMIMaterial.CAVE_VINES_PLANT))
+	    return;
+
+	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
+
+	if (!perms.playerHas(player, Flags.harvest, true)) {
+	    plugin.msg(player, lm.Flag_Deny, Flags.harvest);
+	    event.setCancelled(true);
+	}
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
@@ -1272,6 +1317,7 @@ public class ResidencePlayerListener implements Listener {
 	CMIMaterial blockM = CMIMaterial.get(block);
 
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
+
 	if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 	    if (heldItem.isDye()) {
 		CMIMaterial btype = CMIMaterial.get(block);
