@@ -1489,7 +1489,7 @@ public class ClaimedResidence {
 
 	    removeArea(id);
 	    if (player != null)
-		Residence.getInstance().msg(player, lm.Area_Remove);
+		Residence.getInstance().msg(player, lm.Area_Remove, id);
 	} else {
 	    if (player != null)
 		Residence.getInstance().msg(player, lm.General_NoPermission);

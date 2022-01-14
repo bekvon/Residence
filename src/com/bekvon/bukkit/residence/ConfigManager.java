@@ -936,7 +936,8 @@ public class ConfigManager {
 	TNTExplodeBelowLevel = c.get("Global.AntiGreef.TNT.level", 62);
 	// Creeper explosions below 63
 	c.addComment("Global.AntiGreef.Creeper.ExplodeBelow", "When set to true will allow Creeper explode below 62 (default) level outside of residence",
-	    "This will give more realistic game play");
+	    "This will give more realistic game play",
+	    "For this to work properly you will need to disable creeper explosion in the world in general. This can be done in flags file under global world section");
 	CreeperExplodeBelow = c.get("Global.AntiGreef.Creeper.ExplodeBelow", false);
 	CreeperExplodeBelowLevel = c.get("Global.AntiGreef.Creeper.level", 62);
 	// Flow
