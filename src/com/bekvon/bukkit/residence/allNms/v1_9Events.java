@@ -18,12 +18,13 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 public class v1_9Events implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLingeringSplashPotion(LingeringPotionSplashEvent event) {
 	ProjectileHitEvent ev = event;
-
 	ThrownPotion potion = (ThrownPotion) ev.getEntity();
 
 	// disabling event on world

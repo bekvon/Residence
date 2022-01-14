@@ -1049,14 +1049,26 @@ public class ResidenceEntityListener implements Listener {
 		}
 	    }
 	}
+
 	if (!harmfull)
 	    return;
 
 	Entity ent = event.getEntity();
 	boolean srcpvp = plugin.getPermsByLoc(ent.getLocation()).has(Flags.pvp, FlagCombo.TrueOrNone);
+	boolean animalKilling = plugin.getPermsByLoc(ent.getLocation()).has(Flags.animalkilling, FlagCombo.TrueOrNone);
 	Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
+	boolean animalDamage = false;
 	while (it.hasNext()) {
 	    LivingEntity target = it.next();
+
+	    if (Utils.isAnimal(target)) {
+		if (!animalKilling) {
+		    event.setIntensity(target, 0);
+		    animalDamage = true;
+		}
+		continue;
+	    }
+
 	    if (target.getType() != EntityType.PLAYER)
 		continue;
 	    Boolean tgtpvp = plugin.getPermsByLoc(target.getLocation()).has(Flags.pvp, FlagCombo.TrueOrNone);
@@ -1083,6 +1095,10 @@ public class ResidenceEntityListener implements Listener {
 		    }
 		}
 	    }
+	}
+
+	if (!animalKilling && animalDamage && shooter instanceof Player) {
+	    Residence.getInstance().msg((Player) shooter, lm.Flag_Deny, Flags.animalkilling);
 	}
     }
 
