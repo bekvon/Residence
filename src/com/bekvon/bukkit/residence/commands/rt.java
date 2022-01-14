@@ -18,7 +18,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.Version.Version;
 
 public class rt implements cmd {
 
@@ -104,30 +104,37 @@ public class rt implements cmd {
 	World worldName = wname;
 	Player player = tPlayer;
 
-	CompletableFuture<Location> aloc = plugin.getRandomTpManager().getRandomlocationAsync(worldName);
+	if (Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
+	    Location lc = plugin.getRandomTpManager().getRandomlocationSync(worldName);
+	    teleport(sender, player, lc, sec, resadmin);
+	} else {
+	    CompletableFuture<Location> aloc = plugin.getRandomTpManager().getRandomlocationAsync(worldName);
+	    aloc.thenApply(lc -> {
+		return teleport(sender, player, lc, sec, resadmin);
+	    });
+	}
 
-	aloc.thenApply(lc -> {
+	return true;
+    }
 
-	    plugin.getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
+    private static boolean teleport(CommandSender sender, Player player, Location lc, int sec, boolean resadmin) {
 
-	    if (lc == null) {
-		plugin.msg(sender, lm.RandomTeleport_IncorrectLocation, sec);
-		return true;
-	    }
+	Residence.getInstance().getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
 
-	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-		
-		if (plugin.getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
-		    plugin.msg(player, lm.RandomTeleport_TeleportStarted, lc.getX(), lc.getY(), lc.getZ(), plugin.getConfigManager().getTeleportDelay());
-		    plugin.getTeleportDelayMap().add(player.getName());
-		    plugin.getRandomTpManager().performDelaydTp(lc, player);
-		} else
-		    plugin.getRandomTpManager().performInstantTp(lc, player);
+	if (lc == null) {
+	    Residence.getInstance().msg(sender, lm.RandomTeleport_IncorrectLocation, sec);
+	    return true;
+	}
 
-	    }, 1);
-	    return null;
-	});
+	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), () -> {
+	    if (Residence.getInstance().getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
+		Residence.getInstance().msg(player, lm.RandomTeleport_TeleportStarted, lc.getX(), lc.getY(), lc.getZ(), Residence.getInstance().getConfigManager().getTeleportDelay());
+		Residence.getInstance().getTeleportDelayMap().add(player.getName());
+		Residence.getInstance().getRandomTpManager().performDelaydTp(lc, player);
+	    } else
+		Residence.getInstance().getRandomTpManager().performInstantTp(lc, player);
 
+	}, 1);
 	return true;
     }
 

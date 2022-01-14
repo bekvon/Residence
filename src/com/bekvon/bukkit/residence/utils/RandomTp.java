@@ -144,6 +144,10 @@ public class RandomTp {
     Random randomX = new Random(System.currentTimeMillis());
     Random randomZ = new Random(System.nanoTime());
 
+    public Location getRandomlocationSync(World world) {
+	return get(world);
+    }
+
     public CompletableFuture<Location> getRandomlocationAsync(World world) {
 	return CompletableFuture.supplyAsync(() -> get(world));
     }
@@ -211,7 +215,7 @@ public class RandomTp {
 		    if (loc.getWorld().getEnvironment().equals(Environment.NETHER)) {
 			loc.setY(CMIWorld.getMaxHeight(loc.getWorld()) / 2);
 		    } else {
-			if (Version.isPaper()) {
+			if (Version.isPaper() && Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
 			    CompletableFuture<Chunk> chunkFuture = PaperLib.getChunkAtAsync(loc, true);
 			    Chunk chunk = chunkFuture.get();
 			    int y = chunk.getChunkSnapshot().getHighestBlockYAt(loc.getBlockX() & 0xF, loc.getBlockZ() & 0xF) - 1;
@@ -265,7 +269,7 @@ public class RandomTp {
 	    loc.setY(loc.getBlockY());
 
 	    if (!oloc.getWorld().getEnvironment().equals(Environment.NETHER)) {
-		if (Version.isPaper()) {
+		if (Version.isPaper() && Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
 		    CompletableFuture<Chunk> chunkFuture = PaperLib.getChunkAtAsync(loc, true);
 		    Chunk chunk = chunkFuture.get();
 		    int y = chunk.getChunkSnapshot().getHighestBlockYAt(loc.getBlockX() & 0xF, loc.getBlockZ() & 0xF) - 1;
