@@ -19,11 +19,13 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.util.Vector;
 
+import com.Zrips.CMI.events.CMISelectionEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
+import com.bekvon.bukkit.residence.event.ResidenceSelectionVisualizationEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -244,7 +246,7 @@ public class SelectionManager {
 	    int zcoord = chunk.getZ() * 16;
 	    int xmax = xcoord + 15;
 	    int zmax = zcoord + 15;
-	    
+
 	    this.setBaseLoc1(new Location(player.getWorld(), xcoord, this.getMinYAllowed(), zcoord));
 	    this.setBaseLoc2(new Location(player.getWorld(), xmax, this.getMaxYAllowed(), zmax));
 	    plugin.msg(player, lm.Select_Success);
@@ -525,6 +527,12 @@ public class SelectionManager {
 	if (tv != null) {
 	    tv.cancelAll();
 	}
+
+	ResidenceSelectionVisualizationEvent ev = new ResidenceSelectionVisualizationEvent(player, v.getAreas(), v.getErrorAreas());
+	Bukkit.getPluginManager().callEvent(ev);
+
+	if (ev.isCancelled())
+	    return;
 
 	vMap.put(player.getUniqueId(), v);
 	if (!plugin.isEnabled())
