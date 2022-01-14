@@ -26,7 +26,7 @@ Groups:
            # (Optional) The minimum number of blocks a Residence can be, High to Low (Y).
            MinUpDown: 3
            # The lowest altitude this group is allowed to protect.
-           MinHeight: 0
+           MinHeight: -64
            # The highest altitude this group is allowed to protect.
            MaxHeight: 320
             # The maximum amount of subzones can current area have.
@@ -134,7 +134,7 @@ Groups:
            MaxEastWest: 20
            MaxNorthSouth: 20
            MaxUpDown: 20
-           MinHeight: 0
+           MinHeight: -64
            MaxHeight: 320
            SubzoneDepth: 3
            CanTeleport: true
