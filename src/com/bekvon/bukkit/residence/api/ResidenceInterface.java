@@ -29,4 +29,6 @@ public interface ResidenceInterface {
     public boolean addResidence(String name, String owner, Location loc1, Location loc2);
 
     public boolean addResidence(Player player, String name, Location loc1, Location loc2, boolean resadmin);
+    
+    public boolean addResidence(Player player, String name, boolean resadmin);
 }

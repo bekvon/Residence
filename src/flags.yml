@@ -378,7 +378,7 @@ Global:
     shear: false
     leash: false
     pistonprotection: true
-    tp: true
+    tp: false
     explode: false
     harvest: false
   # These are default flags applied to the residence creator of any group.

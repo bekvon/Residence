@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,8 +25,6 @@ import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
-import net.Zrips.CMILib.Logs.CMIDebug;
-
 public class ResidencePermissions extends FlagPermissions {
 
     private UUID ownerUUID;
@@ -40,6 +37,19 @@ public class ResidencePermissions extends FlagPermissions {
 	residence = res;
     }
 
+    public ResidencePermissions(ClaimedResidence res, String creator, UUID creatorUUID, String inworld) {
+	this(res);
+	if (creatorUUID == null)
+	    ownerUUID = Residence.getInstance().getPlayerUUID(creator);
+	else
+	    ownerUUID = creatorUUID;
+	if (ownerUUID == null)
+	    ownerUUID = UUID.fromString(Residence.getInstance().getTempUserUUID());
+	this.ownerLastKnownName = creator;
+	world = inworld;
+    }
+
+    @Deprecated
     public ResidencePermissions(ClaimedResidence res, String creator, String inworld) {
 	this(res);
 	ownerUUID = Residence.getInstance().getPlayerUUID(creator);
@@ -286,9 +296,9 @@ public class ResidencePermissions extends FlagPermissions {
 
 	ClaimedResidence par = this.residence.getParent();
 	Player player = (Player) sender;
-	
+
 	if (par != null && par.getPermissions().playerHas(player, Flags.admin, FlagCombo.OnlyTrue))
-		return true;
+	    return true;
 
 	if (Residence.getInstance().getConfigManager().enabledRentSystem()) {
 	    String resname = residence.getName();
@@ -303,7 +313,7 @@ public class ResidencePermissions extends FlagPermissions {
 		return (playerHas(player, Flags.admin, FlagCombo.OnlyTrue));
 	    }
 	}
-		
+
 	if (requireOwner) {
 	    return (this.getOwner().equals(sender.getName()));
 	}
@@ -557,6 +567,7 @@ public class ResidencePermissions extends FlagPermissions {
 //	Set<Entry<String, Boolean>> dcflags = group.getDefaultCreatorFlags();
 	Set<Entry<String, Map<String, Boolean>>> dgflags = group.getDefaultGroupFlags();
 	this.applyGlobalDefaults();
+
 	for (Entry<String, Boolean> next : dflags) {
 	    if (this.checkValidFlag(next.getKey(), true)) {
 		this.setFlag(next.getKey(), next.getValue() ? FlagState.TRUE : FlagState.FALSE);
@@ -628,8 +639,10 @@ public class ResidencePermissions extends FlagPermissions {
 
 	ownerLastKnownName = newOwner;
 	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(newOwner);
-	if (rPlayer != null)
+	if (rPlayer != null) {
 	    this.ownerUUID = rPlayer.getUniqueId();
+	    ownerLastKnownName = rPlayer.getName();
+	}
 
 	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase(Residence.getInstance().getServerLandName())) {
 	    ownerUUID = UUID.fromString(Residence.getInstance().getServerLandUUID());// the UUID for server owned land
@@ -741,10 +754,7 @@ public class ResidencePermissions extends FlagPermissions {
 	FlagPermissions gCD = Residence.getInstance().getConfigManager().getGlobalCreatorDefaultFlags();
 	Map<String, FlagPermissions> gGD = Residence.getInstance().getConfigManager().getGlobalGroupDefaultFlags();
 	for (Entry<String, Boolean> entry : gRD.cuboidFlags.entrySet()) {
-	    if (entry.getValue())
-		this.setFlag(entry.getKey(), FlagState.TRUE);
-	    else
-		this.setFlag(entry.getKey(), FlagState.FALSE);
+	    this.setFlag(entry.getKey(), entry.getValue() ? FlagState.TRUE : FlagState.FALSE);
 	}
 	for (Entry<String, Boolean> entry : gCD.cuboidFlags.entrySet()) {
 	    if (entry.getValue())

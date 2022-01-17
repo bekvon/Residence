@@ -207,6 +207,12 @@ public class ClaimedResidence {
 	this(Residence.getInstance().getServerLandName(), creationWorld);
     }
 
+    public ClaimedResidence(String creator, UUID uuid, String creationWorld) {
+	perms = new ResidencePermissions(this, creator, uuid, creationWorld);
+	initialize();
+    }
+
+    @Deprecated
     public ClaimedResidence(String creator, String creationWorld) {
 	perms = new ResidencePermissions(this, creator, creationWorld);
 	initialize();

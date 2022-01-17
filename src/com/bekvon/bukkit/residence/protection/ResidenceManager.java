@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -196,7 +197,17 @@ public class ResidenceManager implements ResidenceInterface {
     }
 
     public boolean addResidence(Player player, String owner, String name, Location loc1, Location loc2, boolean resadmin) {
-	if (!plugin.validName(name)) {
+	return addResidence(player, owner, null, name, loc1, loc2, resadmin);
+    }
+
+    @Override
+    public boolean addResidence(Player player, String resName, boolean resadmin) {
+	return addResidence(player, player.getName(), player.getUniqueId(), resName, plugin.getSelectionManager().getPlayerLoc1(player), plugin
+	    .getSelectionManager().getPlayerLoc2(player), resadmin);
+    }
+
+    public boolean addResidence(Player player, String owner, UUID ownerUUId, String resName, Location loc1, Location loc2, boolean resadmin) {
+	if (!plugin.validName(resName)) {
 	    plugin.msg(player, lm.Invalid_NameCharacters);
 	    return false;
 	}
@@ -223,15 +234,15 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 
 	CuboidArea newArea = new CuboidArea(loc1, loc2);
-	ClaimedResidence newRes = new ClaimedResidence(owner, loc1.getWorld().getName());
+	ClaimedResidence newRes = new ClaimedResidence(owner, ownerUUId, loc1.getWorld().getName());
 	newRes.getPermissions().applyDefaultFlags();
 	newRes.setEnterMessage(group.getDefaultEnterMessage());
 	newRes.setLeaveMessage(group.getDefaultLeaveMessage());
-	newRes.setName(name);
+	newRes.setName(resName);
 	newRes.setCreateTime();
 
-	if (residences.containsKey(name.toLowerCase())) {
-	    plugin.msg(player, lm.Residence_AlreadyExists, residences.get(name.toLowerCase()).getResidenceName());
+	if (residences.containsKey(resName.toLowerCase())) {
+	    plugin.msg(player, lm.Residence_AlreadyExists, residences.get(resName.toLowerCase()).getResidenceName());
 	    return false;
 	}
 
@@ -240,7 +251,7 @@ public class ResidenceManager implements ResidenceInterface {
 	if (!newRes.addArea(player, newArea, "main", resadmin, false))
 	    return false;
 
-	ResidenceCreationEvent resevent = new ResidenceCreationEvent(player, name, newRes, newArea);
+	ResidenceCreationEvent resevent = new ResidenceCreationEvent(player, resName, newRes, newArea);
 	plugin.getServ().getPluginManager().callEvent(resevent);
 	if (resevent.isCancelled())
 	    return false;
@@ -254,9 +265,9 @@ public class ResidenceManager implements ResidenceInterface {
 	    }
 	}
 
-	residences.put(name.toLowerCase(), newRes);
+	residences.put(resName.toLowerCase(), newRes);
 
-	calculateChunks(name);
+	calculateChunks(resName);
 	plugin.getLeaseManager().removeExpireTime(newRes);
 	plugin.getPlayerManager().addResidence(newRes.getOwner(), newRes);
 
@@ -266,7 +277,7 @@ public class ResidenceManager implements ResidenceInterface {
 	    plugin.getSelectionManager().showBounds(player, v);
 	    plugin.getAutoSelectionManager().getList().remove(player.getUniqueId());
 	    plugin.msg(player, lm.Area_Create, "main");
-	    plugin.msg(player, lm.Residence_Create, name);
+	    plugin.msg(player, lm.Residence_Create, resName);
 	}
 	if (plugin.getConfigManager().useLeases()) {
 	    plugin.getLeaseManager().setExpireTime(player, newRes, group.getLeaseGiveTime());

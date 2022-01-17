@@ -41,8 +41,7 @@ public class create implements cmd {
 
 	    Residence.getInstance().getPlayerManager().getResidencePlayer(player).forceUpdateGroup();
 
-	    plugin.getResidenceManager().addResidence(player, args[0], plugin.getSelectionManager().getPlayerLoc1(player), plugin
-		.getSelectionManager().getPlayerLoc2(player), resadmin);
+	    plugin.getResidenceManager().addResidence(player, args[0], resadmin);
 	    return true;
 	}
 	plugin.msg(player, lm.Select_Points);
