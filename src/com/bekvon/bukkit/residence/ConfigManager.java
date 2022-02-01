@@ -944,18 +944,18 @@ public class ConfigManager {
 	c.addComment("Global.AntiGreef.Flow.Level", "Level from which one to start lava and water flow blocking", "This dont have effect in residence area");
 	FlowLevel = c.get("Global.AntiGreef.Flow.Level", 63);
 	c.addComment("Global.AntiGreef.Flow.NoLavaFlow", "With this set to true, lava flow outside residence is blocked");
-	NoLava = c.get("Global.AntiGreef.Flow.NoLavaFlow", true);
+	NoLava = c.get("Global.AntiGreef.Flow.NoLavaFlow", false);
 	c.addComment("Global.AntiGreef.Flow.NoWaterFlow", "With this set to true, water flow outside residence is blocked");
-	NoWater = c.get("Global.AntiGreef.Flow.NoWaterFlow", true);
+	NoWater = c.get("Global.AntiGreef.Flow.NoWaterFlow", false);
 	NoFlowWorlds = c.get("Global.AntiGreef.Flow.Worlds", Arrays.asList(defaultWorldName));
 
 	// Place
 	c.addComment("Global.AntiGreef.Place.Level", "Level from which one to start block lava and water place", "This don't have effect in residence area");
 	PlaceLevel = c.get("Global.AntiGreef.Place.Level", 63);
 	c.addComment("Global.AntiGreef.Place.NoLavaPlace", "With this set to true, playrs cant place lava outside residence");
-	NoLavaPlace = c.get("Global.AntiGreef.Place.NoLavaPlace", true);
-	c.addComment("Global.AntiGreef.Place.NoWaterPlace", "With this set to true, playrs cant place water outside residence");
-	NoWaterPlace = c.get("Global.AntiGreef.Place.NoWaterPlace", true);
+	NoLavaPlace = c.get("Global.AntiGreef.Place.NoLavaPlace", false);
+	c.addComment("Global.AntiGreef.Place.NoWaterPlace", "With this set to true, players cant place water outside residence");
+	NoWaterPlace = c.get("Global.AntiGreef.Place.NoWaterPlace", false);
 	NoPlaceWorlds = c.get("Global.AntiGreef.Place.Worlds", Arrays.asList(defaultWorldName));
 
 	// Sand fall

@@ -930,26 +930,21 @@ public class ResidenceBlockListener implements Listener {
 	    return;
 
 	Location location = new Location(event.getBlock().getWorld(), event.getVelocity().getBlockX(), event.getVelocity().getBlockY(), event.getVelocity().getBlockZ());
-	Location loc = event.getBlock().getLocation();
-
-	location.add(loc.clone());
 
 	ClaimedResidence targetres = plugin.getResidenceManager().getByLoc(location);
 
 	if (targetres == null && location.getBlockY() >= plugin.getConfigManager().getPlaceLevel() && plugin.getConfigManager().getNoPlaceWorlds().contains(location
 	    .getWorld().getName())) {
 	    ItemStack mat = event.getItem();
-	    if (plugin.getConfigManager().isNoLavaPlace())
-		if (mat.getType() == Material.LAVA_BUCKET) {
-		    event.setCancelled(true);
-		    return;
-		}
+	    if (plugin.getConfigManager().isNoLavaPlace() && mat.getType() == Material.LAVA_BUCKET) {
+		event.setCancelled(true);
+		return;
+	    }
 
-	    if (plugin.getConfigManager().isNoWaterPlace())
-		if (mat.getType() == Material.WATER_BUCKET) {
-		    event.setCancelled(true);
-		    return;
-		}
+	    if (plugin.getConfigManager().isNoWaterPlace() && mat.getType() == Material.WATER_BUCKET) {
+		event.setCancelled(true);
+		return;
+	    }
 	}
 
 	ClaimedResidence sourceres = plugin.getResidenceManager().getByLoc(event.getBlock().getLocation());
