@@ -1295,7 +1295,7 @@ public class ResidencePlayerListener implements Listener {
 	Material mat = block.getType();
 	if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
 	    || isCanUseEntity_BothClick(mat, block)) && !heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
-	    && !heldItem.isDye() && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
+	    && (!heldItem.isDye() && !heldItem.equals(CMIMaterial.GLOW_INK_SAC)) && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
 	    return;
 	}
 
@@ -1318,7 +1318,7 @@ public class ResidencePlayerListener implements Listener {
 	FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 
 	if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {	    
-	    if (heldItem.isDye()) {
+	    if (heldItem.isDye() || heldItem.equals(CMIMaterial.GLOW_INK_SAC)) {
 		CMIMaterial btype = CMIMaterial.get(block);
 		if (heldItem.equals(CMIMaterial.BONE_MEAL) && (btype == CMIMaterial.GRASS_BLOCK || btype == CMIMaterial.GRASS || btype.isSapling()) ||
 		    heldItem == CMIMaterial.COCOA_BEANS && blockM == CMIMaterial.JUNGLE_WOOD || btype == CMIMaterial.MOSS_BLOCK || btype.isSign()) {

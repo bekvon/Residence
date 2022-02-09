@@ -933,6 +933,9 @@ public class ResidenceBlockListener implements Listener {
 
 	ClaimedResidence targetres = plugin.getResidenceManager().getByLoc(location);
 
+	if (CMIMaterial.get(event.getBlock()) == CMIMaterial.DROPPER)
+	    return;
+
 	if (targetres == null && location.getBlockY() >= plugin.getConfigManager().getPlaceLevel() && plugin.getConfigManager().getNoPlaceWorlds().contains(location
 	    .getWorld().getName())) {
 	    ItemStack mat = event.getItem();
