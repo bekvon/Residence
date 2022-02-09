@@ -1667,7 +1667,16 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	Entity ent = event.getRightClicked();
-	if (!Utils.isArmorStandEntity(ent.getType()))
+
+	ItemStack item = CMIItemStack.getItemInMainHand(player);
+
+	try {
+	    if (event.getHand() == EquipmentSlot.OFF_HAND)
+		item = CMIItemStack.getItemInOffHand(player);
+	} catch (Throwable e) {
+	}
+
+	if (!CMIMaterial.get(item).equals(CMIMaterial.NAME_TAG))
 	    return;
 
 	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
