@@ -6,12 +6,14 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.player.PlayerBucketEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -20,10 +22,14 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 import net.Zrips.CMILib.CMILib;
+import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.Version.Version;
 
 public class ResidencePlayerListener1_17 implements Listener {
 
@@ -40,6 +46,30 @@ public class ResidencePlayerListener1_17 implements Listener {
 	    return size() > MAX_ENTRIES;
 	}
     };
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPlayerBucketEntityEvent(PlayerBucketEntityEvent event) {
+
+	Player player = event.getPlayer();
+	if (Residence.getInstance().isResAdminOn(player))
+	    return;
+
+	Entity ent = event.getEntity();
+
+	ItemStack iih = CMIItemStack.getItemInMainHand(player);
+	if (iih == null)
+	    return;
+
+	if (!CMIMaterial.get(iih).equals(CMIMaterial.WATER_BUCKET))
+	    return;
+
+	FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(ent.getLocation(), player);
+
+	if (!perms.playerHas(player, Flags.animalkilling, FlagCombo.TrueOrNone)) {
+	    event.setCancelled(true);
+	    Residence.getInstance().msg(player, lm.Flag_Deny, Flags.animalkilling);
+	}
+    }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteractRespawn(PlayerInteractEvent event) {
@@ -107,7 +137,7 @@ public class ResidencePlayerListener1_17 implements Listener {
 	Block block = event.getBlock();
 	if (block == null)
 	    return;
-	
+
 	if (block.getLocation().getY() == event.getSourceBlock().getLocation().getY())
 	    return;
 
