@@ -66,7 +66,6 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -1010,12 +1009,7 @@ public class ResidenceBlockListener implements Listener {
 	if (!Flags.build.isGlobalyEnabled())
 	    return;
 
-	World world = null;
-	try {
-	    world = event.getBlocks().get(0).getWorld();
-	} catch (Throwable e) {
-	    e.printStackTrace();
-	}
+	World world = event.getWorld();
 
 	// disabling event on world
 	if (plugin.isDisabledWorldListener(world))
