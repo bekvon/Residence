@@ -166,7 +166,7 @@ public class auto implements cmd {
 
 	if (maxZ <= 1)
 	    maxZ = (group.getMaxZ() - group.getMinZ()) / 2 + group.getMinZ();
-	
+
 	int minY = CMIWorld.getMinHeight(cuboid.getWorld());
 
 	while (true) {
@@ -195,7 +195,7 @@ public class auto implements cmd {
 	    c.setLowLocation(cuboid.getLowLocation().clone().add(-dir.getLow().getX(), -dir.getLow().getY(), -dir.getLow().getZ()));
 	    c.setHighLocation(cuboid.getHighLocation().clone().add(dir.getHigh().getX(), dir.getHigh().getY(), dir.getHigh().getZ()));
 
-	    if (c.getLowVector().getY() < minY) {
+	    if ((dir.equals(direction.Top) || dir.equals(direction.Bottom)) && c.getLowVector().getY() < minY) {
 		c.getLowVector().setY(minY);
 		locked.add(dir);
 		dir = dir.getNext();
@@ -205,7 +205,7 @@ public class auto implements cmd {
 		continue;
 	    }
 
-	    if (c.getHighVector().getY() >= c.getWorld().getMaxHeight()) {
+	    if ((dir.equals(direction.Top) || dir.equals(direction.Bottom)) && c.getHighVector().getY() >= c.getWorld().getMaxHeight()) {
 		c.getHighVector().setY(c.getWorld().getMaxHeight() - 1);
 		locked.add(dir);
 		dir = dir.getNext();
@@ -231,7 +231,7 @@ public class auto implements cmd {
 
 	    if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (maxY > 0 && maxY < c.getYSize() || c.getYSize() > group.getMaxY() + (-group.getMinY()))) {
 		locked.add(dir);
-		dir = dir.getNext(); 
+		dir = dir.getNext();
 		skipped++;
 		continue;
 	    }
