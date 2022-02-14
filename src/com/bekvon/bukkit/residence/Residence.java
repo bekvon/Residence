@@ -129,6 +129,7 @@ import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
 
@@ -214,6 +215,7 @@ public class Residence extends JavaPlugin {
     public List<String> resadminToggle;
     private ConcurrentHashMap<String, OfflinePlayer> OfflinePlayerList = new ConcurrentHashMap<String, OfflinePlayer>();
     private Map<UUID, OfflinePlayer> cachedPlayerNameUUIDs = new HashMap<UUID, OfflinePlayer>();
+    private Map<UUID, String> cachedPlayerNames = new HashMap<UUID, String>();
     private com.sk89q.worldedit.bukkit.WorldEditPlugin wep = null;
     private com.sk89q.worldguard.bukkit.WorldGuardPlugin wg = null;
     private CMIMaterial wepid;
@@ -1368,7 +1370,7 @@ public class Residence extends JavaPlugin {
 		loadFile = new File(worldFolder, saveFilePrefix + worldName + ".yml");
 		if (loadFile.isFile()) {
 		    time = System.currentTimeMillis();
-		    
+
 		    if (!isDisabledWorld(worldName) && !this.getConfigManager().CleanerStartupLog)
 			Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + worldName + "...");
 
@@ -1785,8 +1787,10 @@ public class Residence extends JavaPlugin {
     public void addOfflinePlayerToChache(OfflinePlayer player) {
 	if (player == null)
 	    return;
-	if (player.getName() != null)
+	if (player.getName() != null) {
 	    OfflinePlayerList.put(player.getName().toLowerCase(), player);
+	    cachedPlayerNames.put(player.getUniqueId(), player.getName());
+	}
 	cachedPlayerNameUUIDs.put(player.getUniqueId(), player);
     }
 
@@ -1826,13 +1830,29 @@ public class Residence extends JavaPlugin {
     }
 
     public String getPlayerName(UUID uuid) {
+	String cache = cachedPlayerNames.get(uuid);
+	if (cache != null) {
+	    return cache;
+	}
+
 	if (uuid == null)
 	    return null;
 	OfflinePlayer p = getServ().getPlayer(uuid);
 	if (p == null)
-	    p = getServ().getOfflinePlayer(uuid);
-	if (p != null)
+	    p = getOfflinePlayer(uuid);
+	if (p != null) {
+	    cachedPlayerNames.put(uuid, p.getName());
 	    return p.getName();
+	}
+
+	// Last attempt, slowest one
+	p = getServ().getOfflinePlayer(uuid);
+
+	if (p != null) {
+	    cachedPlayerNames.put(uuid, p.getName());
+	    return p.getName();
+	}
+
 	return null;
     }
 
