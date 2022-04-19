@@ -20,7 +20,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Version.Version;
-import net.Zrips.CMILib.Version.PaperMethods.BlockStateSnapshotResult;
 import net.Zrips.CMILib.Version.PaperMethods.PaperLib;
 
 public class RandomTp {
@@ -212,6 +211,7 @@ public class RandomTp {
 		}
 
 		if (loc.getY() < CMIWorld.getMinHeight(loc.getWorld()) + 4) {
+
 		    if (loc.getWorld().getEnvironment().equals(Environment.NETHER)) {
 			loc.setY(CMIWorld.getMaxHeight(loc.getWorld()) / 2);
 		    } else {
@@ -277,13 +277,13 @@ public class RandomTp {
 		    if (loc.getY() < y) {
 			return null;
 		    }
-		    loc.setY(y);
+		    loc.setY(y + 1);
 		} else {
 		    int y = loc.getWorld().getHighestBlockYAt(loc);
 		    if (loc.getY() < y) {
 			return null;
 		    }
-		    loc.setY(y);
+		    loc.setY(y + 1);
 		}
 		if (oloc.getWorld().getEnvironment().equals(Environment.THE_END) && loc.getY() < 5)
 		    return null;
