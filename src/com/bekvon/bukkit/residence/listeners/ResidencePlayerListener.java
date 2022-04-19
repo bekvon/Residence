@@ -645,7 +645,7 @@ public class ResidencePlayerListener implements Listener {
 		    break;
 		}
 	    }
-
+	
 	if (white != 0 && white >= black || black == 0)
 	    return;
 

@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -113,6 +114,24 @@ public class ResidenceManager implements ResidenceInterface {
 	if (subres == null)
 	    return res;
 	return subres;
+    }
+
+    public List<ClaimedResidence> getByChunk(Chunk chunk) {
+	List<ClaimedResidence> list = new ArrayList<ClaimedResidence>();
+	if (chunk == null)
+	    return list;
+	World world = chunk.getWorld();
+	if (world == null)
+	    return list;
+	String worldName = world.getName();
+	if (worldName == null)
+	    return list;
+	if (!chunkResidences.containsKey(worldName))
+	    return list;
+	ChunkRef chunkRef = new ChunkRef(chunk.getX(), chunk.getZ());
+	Map<ChunkRef, List<ClaimedResidence>> ChunkMap = chunkResidences.get(worldName);
+	List<ClaimedResidence> ls = ChunkMap.get(chunkRef);
+	return ls == null ? list : new ArrayList<ClaimedResidence>(ls);
     }
 
     @Override
