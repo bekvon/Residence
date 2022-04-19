@@ -258,6 +258,8 @@ public class ClaimedResidence {
     public boolean isBiggerThanMin(Player player, CuboidArea area, boolean resadmin) {
 	if (resadmin)
 	    return true;
+	if (player == null)
+	    return true;
 	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (area.getXSize() < group.getMinX()) {
@@ -278,6 +280,8 @@ public class ClaimedResidence {
     public boolean isBiggerThanMinSubzone(Player player, CuboidArea area, boolean resadmin) {
 	if (resadmin)
 	    return true;
+	if (player == null)
+	    return true; 
 	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (area.getXSize() < group.getSubzoneMinX()) {
@@ -488,6 +492,7 @@ public class ClaimedResidence {
     }
 
     public boolean replaceArea(Player player, CuboidArea newarea, String name, boolean resadmin) {
+		
 	if (!areas.containsKey(name)) {
 	    if (player != null)
 		Residence.getInstance().msg(player, lm.Area_NonExist);
@@ -1565,7 +1570,7 @@ public class ClaimedResidence {
 	if (!ChatPrefix.equals(""))
 	    root.put("ChatPrefix", ChatPrefix);
 	if (!ChannelColor.getCleanName().equals(Residence.getInstance().getConfigManager().getChatColor().getName())
-	    && !ChannelColor.getName().equals("WHITE")) {
+	    && !ChannelColor.getName().equalsIgnoreCase("WHITE")) {
 	    root.put("ChannelColor", ChannelColor.getName());
 	}
 
@@ -1641,6 +1646,7 @@ public class ClaimedResidence {
     @SuppressWarnings("unchecked")
     public static ClaimedResidence load(String worldName, Map<String, Object> root, ClaimedResidence parent,
 	Residence plugin) throws Exception {
+
 	ClaimedResidence res = new ClaimedResidence();
 	if (root == null)
 	    throw new Exception("Null residence!");
@@ -1772,13 +1778,15 @@ public class ClaimedResidence {
 	    double yaw = 0.0;
 
 	    try {
+		if (tpLoc.contains(","))
+		    tpLoc = tpLoc.replace(",", ".");
 		String[] split = tpLoc.split(":");
 		if (split.length > 4)
-		    yaw = convertDouble(split[4]);
+		    yaw = Double.parseDouble(split[4]);
 		if (split.length > 3)
-		    pitch = convertDouble(split[3]);
+		    pitch = Double.parseDouble(split[3]);
 
-		res.tpLoc = new Vector(convertDouble(split[0]), convertDouble(split[1]), convertDouble(split[2]));
+		res.tpLoc = new Vector(Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
 	    } catch (Exception e) {
 	    }
 
