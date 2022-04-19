@@ -14,6 +14,8 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 public class AutoSelection {
 
     private HashMap<UUID, AutoSelector> list = new HashMap<UUID, AutoSelector>();
@@ -40,7 +42,6 @@ public class AutoSelection {
     }
 
     public void UpdateSelection(Player player, Location targetLoc) {
-
 	if (!list.containsKey(player.getUniqueId()))
 	    return;
 

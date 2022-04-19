@@ -2280,6 +2280,7 @@ public class ResidencePlayerListener implements Listener {
 	    }
 	}
 
+
 	if (!plugin.getAutoSelectionManager().getList().isEmpty()) {
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 		@Override

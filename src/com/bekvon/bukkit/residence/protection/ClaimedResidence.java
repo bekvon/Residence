@@ -328,7 +328,8 @@ public class ClaimedResidence {
 	    Residence.getInstance().msg(player, lm.Area_ToBigX, area.getXSize(), group.getSubzoneMaxX());
 	    return false;
 	}
-	if (area.getYSize() > group.getSubzoneMaxY() + (-group.getSubzoneMinY())) {
+
+	if (area.getYSize() > group.getSubzoneMaxY() + (-group.getMinY())) {
 	    Residence.getInstance().msg(player, lm.Area_ToBigY, area.getYSize(), group.getSubzoneMaxY());
 	    return false;
 	}
@@ -444,6 +445,9 @@ public class ClaimedResidence {
 		Residence.getInstance().msg(player, lm.Area_MaxPhysical);
 		return false;
 	    }
+
+	    CuboidArea cuboid = Residence.getInstance().getSelectionManager().getSelectionCuboid(player);
+
 	    if (!this.isSubzone() && !isSmallerThanMax(player, area, resadmin)
 		|| this.isSubzone() && !isSmallerThanMaxSubzone(player, area, resadmin)) {
 		Residence.getInstance().msg(player, lm.Area_SizeLimit);
@@ -727,6 +731,7 @@ public class ClaimedResidence {
 		return false;
 	    }
 	}
+
 	ClaimedResidence newres;
 	if (player != null) {
 	    newres = new ClaimedResidence(owner, perms.getWorldName(), this);
