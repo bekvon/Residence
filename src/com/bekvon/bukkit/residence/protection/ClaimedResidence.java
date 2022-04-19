@@ -281,7 +281,7 @@ public class ClaimedResidence {
 	if (resadmin)
 	    return true;
 	if (player == null)
-	    return true; 
+	    return true;
 	ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
 	PermissionGroup group = rPlayer.getGroup();
 	if (area.getXSize() < group.getSubzoneMinX()) {
@@ -492,7 +492,7 @@ public class ClaimedResidence {
     }
 
     public boolean replaceArea(Player player, CuboidArea newarea, String name, boolean resadmin) {
-		
+
 	if (!areas.containsKey(name)) {
 	    if (player != null)
 		Residence.getInstance().msg(player, lm.Area_NonExist);
@@ -1646,7 +1646,6 @@ public class ClaimedResidence {
     @SuppressWarnings("unchecked")
     public static ClaimedResidence load(String worldName, Map<String, Object> root, ClaimedResidence parent,
 	Residence plugin) throws Exception {
-
 	ClaimedResidence res = new ClaimedResidence();
 	if (root == null)
 	    throw new Exception("Null residence!");
@@ -1718,18 +1717,18 @@ public class ClaimedResidence {
 	    res.BlockSellPrice = 0D;
 	}
 
-	World world = Residence.getInstance().getServ().getWorld(res.perms.getWorld());
+	World world = Residence.getInstance().getServ().getWorld(res.perms.getWorldName());
 
 	if (world == null && !Residence.getInstance().getConfigManager().isLoadEveryWorld())
-	    throw new Exception("Cant Find World: " + res.perms.getWorld());
+	    throw new Exception("Cant Find World: " + res.perms.getWorldName());
 
 	for (Entry<String, Object> map : areamap.entrySet()) {
 	    if (map.getValue() instanceof String) {
 		// loading new same format
-		res.areas.put(map.getKey(), CuboidArea.newLoad((String) map.getValue(), res.perms.getWorld()));
+		res.areas.put(map.getKey(), CuboidArea.newLoad((String) map.getValue(), res.perms.getWorldName()));
 	    } else {
 		// loading old format
-		res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(), res.perms.getWorld()));
+		res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(), res.perms.getWorldName()));
 	    }
 	}
 

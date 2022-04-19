@@ -25,6 +25,8 @@ import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 public class ResidencePermissions extends FlagPermissions {
 
     private UUID ownerUUID;
@@ -700,6 +702,7 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public static ResidencePermissions load(String worldName, ClaimedResidence res, Map<String, Object> root) throws Exception {
+	
 	ResidencePermissions newperms = new ResidencePermissions(res);
 
 	if (root.containsKey("OwnerUUID") || root.containsKey("OwnerLastKnownName")) {
@@ -741,10 +744,12 @@ public class ResidencePermissions extends FlagPermissions {
 	    newperms.ownerLastKnownName = Residence.getInstance().getServerLandName();
 	}
 	newperms.world = worldName;
+	
 	FlagPermissions.load(root, newperms);
 
 	if (newperms.getOwner() == null || newperms.world == null || newperms.playerFlags == null || newperms.groupFlags == null || newperms.cuboidFlags == null)
 	    throw new Exception("Invalid Residence Permissions...");
+	
 	return newperms;
     }
 

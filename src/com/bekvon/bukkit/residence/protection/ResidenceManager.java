@@ -48,6 +48,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Version.Version;
 
@@ -1037,7 +1038,7 @@ public class ResidenceManager implements ResidenceInterface {
 	int i = 0;
 	int y = 0;
 	for (Entry<String, Object> res : root.entrySet()) {
-	    if (i == 100 & plugin.getConfigManager().isUUIDConvertion())
+	    if (i == 100 && plugin.getConfigManager().isUUIDConvertion())
 		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " " + worldName + " UUID conversion done: " + y + " of " + root.size());
 	    if (i >= 100)
 		i = 0;

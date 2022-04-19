@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 import org.bukkit.command.CommandSender;
 
-import net.Zrips.CMILib.FileHandler.ConfigReader;
-
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 
 public class tool implements cmd {
 
@@ -19,7 +19,7 @@ public class tool implements cmd {
     public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 	plugin.msg(sender, lm.General_Separator);
 	plugin.msg(sender, lm.Select_Tool, plugin.getConfigManager().getSelectionTool().getName());
-	plugin.msg(sender, lm.General_InfoTool, plugin.getConfigManager().getInfoTool().getName()); 
+	plugin.msg(sender, lm.General_InfoTool, plugin.getConfigManager().getInfoTool().getName());
 	plugin.msg(sender, lm.General_Separator);
 	return true;
     }

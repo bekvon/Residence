@@ -31,6 +31,7 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class FlagPermissions {
@@ -763,6 +764,7 @@ public class FlagPermissions {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected static FlagPermissions load(Map<String, Object> root, FlagPermissions newperms) throws Exception {
+
 	if (root.containsKey("LastKnownPlayerNames"))
 	    newperms.cachedPlayerNameUUIDs = (Map) root.get("LastKnownPlayerNames");
 
@@ -905,6 +907,7 @@ public class FlagPermissions {
     }
 
     private void convertPlayerNamesToUUIDs(String OwnerName, String owneruuid) {
+
 	HashMap<String, String> converts = new HashMap<>();
 
 	List<String> Toremove = new ArrayList<String>();
@@ -933,6 +936,7 @@ public class FlagPermissions {
 		}
 	    }
 	}
+
 	for (String one : Toremove) {
 	    playerFlags.remove(one);
 	}

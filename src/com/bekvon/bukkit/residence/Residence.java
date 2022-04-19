@@ -1832,7 +1832,7 @@ public class Residence extends JavaPlugin {
     public String getPlayerName(UUID uuid) {
 	String cache = cachedPlayerNames.get(uuid);
 	if (cache != null) {
-	    return cache;
+	    return cache.equalsIgnoreCase("_UNKNOWN_") ? null : cache;
 	}
 
 	if (uuid == null)
@@ -1848,8 +1848,9 @@ public class Residence extends JavaPlugin {
 	// Last attempt, slowest one
 	p = getServ().getOfflinePlayer(uuid);
 
-	if (p != null) {
-	    cachedPlayerNames.put(uuid, p.getName());
+	if (p != null) {	    
+	    String name = p.getName() == null ? "_UNKNOWN_" : p.getName();	    
+	    cachedPlayerNames.put(uuid, name);
 	    return p.getName();
 	}
 
