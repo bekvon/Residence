@@ -7,20 +7,16 @@ import org.bukkit.entity.Player;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.extension.platform.permission.ActorSelectorLimits;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.math.Vector3;
 //import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 //import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.selector.limit.PermissiveSelectorLimits;
-import com.sk89q.worldedit.regions.selector.limit.SelectorLimits;
 import com.sk89q.worldedit.world.World;
 
 public class WorldEdit7SelectionManager extends SelectionManager {

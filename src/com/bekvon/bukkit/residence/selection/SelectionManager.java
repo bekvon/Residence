@@ -19,7 +19,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.util.Vector;
 
-import com.Zrips.CMI.events.CMISelectionEvent;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.SelectionSides;
@@ -417,6 +416,7 @@ public class SelectionManager {
 	    v.setLoc(null);
 	v.setAreas(this.getSelectionCuboid(player));
 	v.setOnce(false);
+
 	this.showBounds(player, v);
     }
 
@@ -527,26 +527,28 @@ public class SelectionManager {
 	if (tv != null) {
 	    tv.cancelAll();
 	}
+	Bukkit.getScheduler().runTask(plugin, () -> {
 
-	ResidenceSelectionVisualizationEvent ev = new ResidenceSelectionVisualizationEvent(player, v.getAreas(), v.getErrorAreas());
-	Bukkit.getPluginManager().callEvent(ev);
+	    ResidenceSelectionVisualizationEvent ev = new ResidenceSelectionVisualizationEvent(player, v.getAreas(), v.getErrorAreas());
+	    Bukkit.getPluginManager().callEvent(ev);
 
-	if (ev.isCancelled())
-	    return;
-
-	vMap.put(player.getUniqueId(), v);
-	if (!plugin.isEnabled())
-	    return;
-	v.setBaseShedId(Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-	    @Override
-	    public void run() {
-		if (!v.getAreas().isEmpty())
-		    MakeBorders(player, false);
-		if (!v.getErrorAreas().isEmpty())
-		    MakeBorders(player, true);
+	    if (ev.isCancelled())
 		return;
-	    }
-	}).getTaskId());
+
+	    vMap.put(player.getUniqueId(), v);
+	    if (!plugin.isEnabled())
+		return;
+	    v.setBaseShedId(Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+		@Override
+		public void run() {
+		    if (!v.getAreas().isEmpty())
+			MakeBorders(player, false);
+		    if (!v.getErrorAreas().isEmpty())
+			MakeBorders(player, true);
+		}
+	    }).getTaskId());
+
+	});
     }
 
     public List<Location> getLocations(Location lowLoc, Location loc, Double TX, Double TY, Double TZ, Double Range, boolean StartFromZero) {
