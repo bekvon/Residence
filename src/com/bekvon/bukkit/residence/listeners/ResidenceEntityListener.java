@@ -52,6 +52,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.ItemStack;
@@ -442,6 +443,35 @@ public class ResidenceEntityListener implements Listener {
 	}
     }
 
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onFenceLeashInteract(PlayerInteractEntityEvent event) {
+	// Disabling listener if flag disabled globally
+	if (!Flags.leash.isGlobalyEnabled())
+	    return;
+	// disabling event on world
+	if (plugin.isDisabledWorldListener(event.getRightClicked().getWorld()))
+	    return;
+	Player player = event.getPlayer();
+
+	Entity entity = event.getRightClicked();
+
+	if (entity.getType() != EntityType.LEASH_HITCH)
+	    return;
+
+	if (plugin.isResAdminOn(player))
+	    return;
+
+	ClaimedResidence res = plugin.getResidenceManager().getByLoc(entity.getLocation());
+
+	if (res == null)
+	    return;
+
+	if (res.getPermissions().playerHas(player, Flags.leash, FlagCombo.OnlyFalse)) {
+	    plugin.msg(player, lm.Residence_FlagDeny, Flags.leash, res.getName());
+	    event.setCancelled(true);
+	}
+    }
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onWitherSpawn(CreatureSpawnEvent event) {
 
