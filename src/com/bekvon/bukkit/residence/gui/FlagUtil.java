@@ -2,21 +2,24 @@ package com.bekvon.bukkit.residence.gui;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.Zrips.CMI.CMI;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
+import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.GUI.CMIGui;
 import net.Zrips.CMILib.GUI.CMIGuiButton;
 import net.Zrips.CMILib.GUI.GUIManager.GUIClickType;
 import net.Zrips.CMILib.GUI.GUIManager.GUIRows;
-import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Items.CMIAsyncHead;
 
 public class FlagUtil {
 
@@ -46,11 +49,17 @@ public class FlagUtil {
 		    continue;
 		String value = c.get("Global.FlagGui." + oneFlag, "WHITE_WOOL");
 		value = value.replace("-", ":");
-		CMIMaterial Mat = CMIMaterial.get(value);
-		if (Mat == null) {
-		    Mat = CMIMaterial.STONE;
-		}
-		ItemStack item = Mat.newItemStack();
+
+		CMIAsyncHead ahead = new CMIAsyncHead() {
+		    @Override
+		    public void afterAsyncUpdate(ItemStack item) {
+			Bukkit.getScheduler().runTask(CMI.getInstance(), () -> {
+			    flagData.addFlagButton(oneFlag.toLowerCase(), item);
+			});
+		    }
+		};
+
+		ItemStack item = CMILib.getInstance().getItemManager().getItem(value, ahead).getCMIType().newItemStack();
 		flagData.addFlagButton(oneFlag.toLowerCase(), item);
 	    }
 	}
