@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1521,11 +1522,11 @@ public class ClaimedResidence {
 	if (createTime != 0L)
 	    root.put("CreatedOn", createTime);
 
-	if (this.isTopArea() && this.getRaid().isUnderRaidCooldown()) {
+	if (this.isTopArea() && raid != null && this.getRaid().isUnderRaidCooldown()) {
 	    root.put("LastRaid", this.getRaid().getEndsAt());
 	}
 
-	if (this.isTopArea() && this.getRaid().isImmune()) {
+	if (this.isTopArea() && raid != null && this.getRaid().isImmune()) {
 	    root.put("Immunity", this.getRaid().getImmunityUntil());
 	}
 
@@ -2150,7 +2151,7 @@ public class ClaimedResidence {
 		trusted = false;
 		break;
 	    }
-	    if (f != null && f.isInGroup(padd.groupedFlag) && !this.getPermissions().playerHas(player, f, FlagCombo.OnlyTrue)) {
+	    if (f.isInGroup(padd.groupedFlag) && !this.getPermissions().playerHas(player, f, FlagCombo.OnlyTrue)) {
 		trusted = false;
 		break;
 	    }
@@ -2167,9 +2168,34 @@ public class ClaimedResidence {
 	boolean trusted = true;
 	for (String flag : flags) {
 	    Flags f = Flags.getFlag(flag);
-	    if (f != null && f.isInGroup(padd.groupedFlag) && !this.getPermissions().playerHas(playerName, flag, FlagCombo.OnlyTrue)) {
+	    if (f == null) {
 		trusted = false;
 		break;
+	    }
+	    if (f.isInGroup(padd.groupedFlag) && !lightWeightFlagCheck(playerName, flag)) {
+		trusted = false;
+		break;
+	    }
+	}
+	return trusted;
+    }
+    
+    private boolean lightWeightFlagCheck(String playerName, String flag) {	
+	Map<String, Boolean> flags = this.getPermissions().getPlayerFlags(playerName);	
+	if (flags == null || flags.isEmpty() || !flags.containsKey(flag))
+	    return false;	
+	return flags.get(flag);
+    }
+
+    public Set<ResidencePlayer> getTrustedPlayers() {
+	Set<ResidencePlayer> trusted = new HashSet<ResidencePlayer>();
+	Iterator<Entry<String, Map<String, Boolean>>> iter = this.getPermissions().getPlayerFlags().entrySet().iterator();
+	while (iter.hasNext()) {
+	    Entry<String, Map<String, Boolean>> entry = iter.next();
+	    if (isTrusted(entry.getKey())) {
+		ResidencePlayer rp = ResidencePlayer.get(entry.getKey());
+		if (rp != null)
+		    trusted.add(rp);
 	    }
 	}
 	return trusted;

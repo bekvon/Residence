@@ -141,6 +141,9 @@ import net.Zrips.CMILib.Version.Version;
 public class Residence extends JavaPlugin {
 
     private static Residence instance;
+
+    private boolean fullyLoaded = false;
+
     protected String ResidenceVersion;
     protected List<String> authlist;
     protected ResidenceManager rmanager;
@@ -835,6 +838,7 @@ public class Residence extends JavaPlugin {
 	getShopSignUtilManager().BoardUpdate();
 
 	CMIVersionChecker.VersionCheck(null, 11480, this.getDescription());
+	fullyLoaded = true;
     }
 
     public void parseHelpEntries() {
@@ -1239,7 +1243,8 @@ public class Residence extends JavaPlugin {
     private void saveYml() throws IOException {
 	File saveFolder = new File(dataFolder, "Save");
 	File worldFolder = new File(saveFolder, "Worlds");
-	worldFolder.mkdirs();
+	if (!worldFolder.isDirectory())
+	    worldFolder.mkdirs();
 	YMLSaveHelper yml;
 	Map<String, Object> save = rmanager.save();
 	for (Entry<String, Object> entry : save.entrySet()) {
@@ -1848,8 +1853,8 @@ public class Residence extends JavaPlugin {
 	// Last attempt, slowest one
 	p = getServ().getOfflinePlayer(uuid);
 
-	if (p != null) {	    
-	    String name = p.getName() == null ? "_UNKNOWN_" : p.getName();	    
+	if (p != null) {
+	    String name = p.getName() == null ? "_UNKNOWN_" : p.getName();
 	    cachedPlayerNames.put(uuid, name);
 	    return p.getName();
 	}
@@ -1985,5 +1990,9 @@ public class Residence extends JavaPlugin {
 
     public boolean isLwcPresent() {
 	return lwc;
+    }
+
+    public boolean isFullyLoaded() {
+	return fullyLoaded;
     }
 }

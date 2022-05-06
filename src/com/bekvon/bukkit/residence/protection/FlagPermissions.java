@@ -22,12 +22,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.commands.padd;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeFlags;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Items.CMIMaterial;
@@ -1217,23 +1219,22 @@ public class FlagPermissions {
 		if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))
 		    continue;
 
-		if (!perms.equals("none")) {
-		    if (random) {
-			random = false;
-			if (player.equals(next))
-			    next = ownColor + next + "&r";
-			else
-			    next = p2Color + next + "&r";
-		    } else {
-			random = true;
-			if (player.equals(next))
-			    next = ownColor + next + "&r";
-			else
-			    next = p1Color + next + "&r";
-		    }
-		    rm.addText(next).addHover(splitBy(5, perms));
-		    rm.addText(" ");
+		if (perms.equals("none"))
+		    continue;
+
+		if (player.equals(next)) {
+		    next = ownColor + next;
+		} else {
+		    if (random)
+			next = p2Color + next;
+		    else
+			next = p1Color + next;
+		    random = !random;
 		}
+
+		rm.addText(next + "&r").addHover(splitBy(5, perms));
+		rm.addText(" ");
+
 	    }
 	}
 
@@ -1353,4 +1354,7 @@ public class FlagPermissions {
 	return parent;
     }
 
+    public Map<String, Map<String, Boolean>> getPlayerFlags() {
+	return playerFlags;
+    }
 }

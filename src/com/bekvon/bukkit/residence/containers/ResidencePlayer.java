@@ -222,7 +222,7 @@ public class ResidencePlayer {
     public PermissionGroup forceUpdateGroup() {
 	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), true);
     }
-    
+
     public PermissionGroup getGroup(boolean forceUpdate) {
 	updatePlayer();
 	return getGroup(this.player != null ? player.getWorld().getName() : Residence.getInstance().getConfigManager().getDefaultWorld(), forceUpdate);
@@ -443,4 +443,17 @@ public class ResidencePlayer {
     public void setUuid(UUID uuid) {
 	this.uuid = uuid;
     }
+
+    public static ResidencePlayer get(String name) {
+	return Residence.getInstance().getPlayerManager().getResidencePlayer(name);
+    }
+
+    public static ResidencePlayer get(Player player) {
+	return Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+    }
+
+    public static ResidencePlayer get(UUID uuid) {
+	return Residence.getInstance().getPlayerManager().getResidencePlayer(uuid);
+    }
+
 }

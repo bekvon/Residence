@@ -709,7 +709,7 @@ public class ResidenceManager implements ResidenceInterface {
 	}
 	resNameOwner = CMIChatColor.translate(resNameOwner);
 
-	String worldInfo = plugin.msg(lm.General_World, perms.getWorld());
+	String worldInfo = plugin.msg(lm.General_World, perms.getWorldName());
 
 	if (res.getAreaArray().length > 0 && (res.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) && res.getPermissions().has(Flags.coords, FlagCombo.TrueOrNone) || resadmin)) {
 	    CuboidArea area = res.getAreaArray()[0];
