@@ -83,24 +83,29 @@ public class FlagUtil {
 	gui.setTitle(title);
 	gui.setInvSize(GUIRows.r6);
 
-	if (pi.getCurrentPage() < pi.getTotalPages()) {
-	    ItemStack Item = new ItemStack(Material.ARROW);
-	    CMIGuiButton forward = new CMIGuiButton(53, Item) {
+	if (pi.getTotalPages() > 1) {
+	    CMIGuiButton forward = new CMIGuiButton(53, CMILib.getInstance().getConfigManager().getGUINextPage()) {
 		@Override
 		public void click(GUIClickType type) {
-		    openUI(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() + 1), player, title);
+		    if (pi.getCurrentPage() == pi.getTotalPages())
+			openUI(flag, new PageInfo(45, flag.getButtons().size(), 1), player, title);
+		    else
+			openUI(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() + 1), player, title);
 		}
 	    };
 	    forward.setName(Residence.getInstance().msg(lm.General_nextPageGui));
 	    gui.addButton(forward);
 	}
 
-	if (pi.getCurrentPage() > 1) {
-	    ItemStack Item = new ItemStack(Material.ARROW);
-	    CMIGuiButton back = new CMIGuiButton(45, Item) {
+	if (pi.getTotalPages() > 1) {
+	    CMIGuiButton back = new CMIGuiButton(45, CMILib.getInstance().getConfigManager().getGUIPreviousPage()) {
 		@Override
 		public void click(GUIClickType type) {
-		    openUI(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() - 1), player, title);
+
+		    if (pi.getCurrentPage() == 1)
+			openUI(flag, new PageInfo(45, flag.getButtons().size(), pi.getTotalPages()), player, title);
+		    else
+			openUI(flag, new PageInfo(45, flag.getButtons().size(), pi.getCurrentPage() - 1), player, title);
 		}
 	    };
 	    back.setName(Residence.getInstance().msg(lm.General_prevPageGui));
