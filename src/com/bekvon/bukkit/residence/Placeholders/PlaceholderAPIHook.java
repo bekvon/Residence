@@ -6,6 +6,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.Placeholders.Placeholder.CMIPlaceHolders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
@@ -42,10 +43,11 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
-	CMIPlaceHolders placeHolder = CMIPlaceHolders.getByName(identifier);
+
+	CMIPlaceHolders placeHolder = CMIPlaceHolders.getByName("residence_" + identifier);
 	if (placeHolder == null) {
 	    return null;
 	}
-	return plugin.getPlaceholderAPIManager().getValue(player, placeHolder);
+	return plugin.getPlaceholderAPIManager().getValue(player, placeHolder, "residence_" + identifier);
     }
 }

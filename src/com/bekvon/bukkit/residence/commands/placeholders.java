@@ -16,6 +16,7 @@ import com.bekvon.bukkit.residence.containers.lm;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Locale.LC;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class placeholders implements cmd {
@@ -67,6 +68,7 @@ public class placeholders implements cmd {
 
 	    RawMessage rm = new RawMessage();
 	    String extra = "";
+
 	    if (player != null)
 		extra = plugin.getPlaceholderAPIManager().updatePlaceHolders(player, lm.command_PlacehlderResult.getMessage(one.getFull()));
 
