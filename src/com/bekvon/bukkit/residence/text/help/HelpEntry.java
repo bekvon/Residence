@@ -32,7 +32,9 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.CMIList;
 import net.Zrips.CMILib.Container.PageInfo;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Version.Version;
 
@@ -298,8 +300,16 @@ public class HelpEntry {
 	List<String> ArgsList = new ArrayList<String>();
 
 	if (args.length > 0) {
-	    HashMap<String, List<String>> mp = Residence.getInstance().getLocaleManager().CommandTab.get(args[0].toLowerCase());
-	    if (mp != null) {
+	    HashMap<String, List<String>> mp = new HashMap<String, List<String>>();
+	    List<String> base = new ArrayList<String>();
+	    for (Entry<String, HashMap<String, List<String>>> one : Residence.getInstance().getLocaleManager().CommandTab.entrySet()) {
+		if (one.getKey().startsWith(args[0].toLowerCase())) {
+		    mp.putAll(one.getValue());
+		    base.add(one.getKey());
+		}
+	    }
+
+	    if (!mp.isEmpty()) {
 		if (args.length > 1) {
 		    if (args[args.length - 1].isEmpty()) {
 			List<String> ls = mp.get(args[1].toLowerCase());
@@ -329,11 +339,13 @@ public class HelpEntry {
 			}
 		    }
 		} else {
+		    ArgsList.add(CMIList.listToString(base, "%%"));
 		    ArgsList.add(getMp(mp));
 		}
 	    } else {
 		for (String one : Residence.getInstance().getLocaleManager().CommandTab.keySet()) {
-		    subCommands.add(one);
+		    if (ResPerm.command_$1.hasPermission(sender, one))
+			subCommands.add(one);
 		}
 		return subCommands;
 	    }
