@@ -3,7 +3,6 @@ package com.bekvon.bukkit.residence.gui;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,6 +19,8 @@ import net.Zrips.CMILib.GUI.CMIGuiButton;
 import net.Zrips.CMILib.GUI.GUIManager.GUIClickType;
 import net.Zrips.CMILib.GUI.GUIManager.GUIRows;
 import net.Zrips.CMILib.Items.CMIAsyncHead;
+import net.Zrips.CMILib.Items.CMIItemStack;
+import net.Zrips.CMILib.Items.CMIMaterial;
 
 public class FlagUtil {
 
@@ -59,7 +60,12 @@ public class FlagUtil {
 		    }
 		};
 
-		ItemStack item = CMILib.getInstance().getItemManager().getItem(value, ahead).getCMIType().newItemStack();
+		CMIItemStack i = CMILib.getInstance().getItemManager().getItem(value, ahead);
+		
+		if (i == null)
+		    i = new CMIItemStack(CMIMaterial.STONE);
+		
+		ItemStack item = i.getItemStack();
 		flagData.addFlagButton(oneFlag.toLowerCase(), item);
 	    }
 	}
