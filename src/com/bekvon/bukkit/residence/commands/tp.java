@@ -5,13 +5,14 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.Zrips.CMILib.FileHandler.ConfigReader;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+
+import net.Zrips.CMILib.FileHandler.ConfigReader;
 
 public class tp implements cmd {
 
@@ -22,10 +23,16 @@ public class tp implements cmd {
 	    return false;
 
 	Player player = (Player) sender;
-	if (args.length != 1)
+	if (args.length != 1 && args.length != 0)
 	    return false;
 
-	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
+	ClaimedResidence res = null;
+	if (args.length > 0)
+	    res = plugin.getResidenceManager().getByName(args[0]);
+
+	if (res == null && args.length == 0) {
+	    res = plugin.getPlayerManager().getResidencePlayer(player).getMainResidence();
+	}
 
 	if (res == null) {
 	    plugin.msg(player, lm.Invalid_Residence);
