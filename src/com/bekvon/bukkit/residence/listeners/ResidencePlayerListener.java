@@ -84,7 +84,6 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
@@ -646,7 +645,7 @@ public class ResidencePlayerListener implements Listener {
 		    break;
 		}
 	    }
-	
+
 	if (white != 0 && white >= black || black == 0)
 	    return;
 
@@ -1003,7 +1002,7 @@ public class ResidencePlayerListener implements Listener {
 	    return true;
 	if (cb.isButton())
 	    return true;
-	    
+
 	return false;
     }
 
@@ -2227,59 +2226,58 @@ public class ResidencePlayerListener implements Listener {
 	    currentRes.remove(uuid);
 	} else {
 	    if (res != null && ResOld.getName().equals(res.getName())) {
-		if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
-		    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
-		    if (!res.isOwner(player)) {
-			Location lc = player.getLocation();
-			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
-			location.setPitch(lc.getPitch());
-			location.setYaw(lc.getYaw());
-			int from = location.getBlockY();
-			int maxH = from + 3;
-			if (location.getWorld().getEnvironment() == Environment.NETHER)
-			    maxH = 100;
-			else
-			    maxH = location.getWorld().getHighestBlockAt(location).getLocation().getBlockY() + 3;
-
-			for (int i = 0; i < maxH; i++) {
-			    location.setY(from - i);
-			    Block block = location.getBlock();
-			    if (!isEmptyBlock(block)) {
-				location.setY(from - i + 1);
-				break;
-			    }
-			    if (location.getBlockY() <= 0) {
-				Location lastLoc = lastOutsideLoc.get(uuid);
-				player.closeInventory();
-				boolean teleported = false;
-				if (move) {
-				    if (lastLoc != null)
-					teleported = teleport(player, lastLoc);
-				    else
-					teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
-				}
-				plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
-				if (!teleported)
-				    return false;
-				return true;
-			    }
-			}
-			plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
-			player.closeInventory();
-			if (move) {
-			    boolean teleported = teleport(player, location);
-			    if (!teleported)
-				return false;
-			}
-			player.setFlying(false);
-			player.setAllowFlight(false);
-		    }
-		}
-		lastOutsideLoc.put(uuid, loc);
-		return true;
+//		if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
+//		    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
+//		    if (!res.isOwner(player)) {
+//			Location lc = player.getLocation();
+//			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
+//			location.setPitch(lc.getPitch());
+//			location.setYaw(lc.getYaw());
+//			int from = location.getBlockY();
+//			int maxH = from + 3;
+//			if (location.getWorld().getEnvironment() == Environment.NETHER)
+//			    maxH = 100;
+//			else
+//			    maxH = location.getWorld().getHighestBlockAt(location).getLocation().getBlockY() + 3;
+//
+//			for (int i = 0; i < maxH; i++) {
+//			    location.setY(from - i);
+//			    Block block = location.getBlock();
+//			    if (!isEmptyBlock(block)) {
+//				location.setY(from - i + 1);
+//				break;
+//			    }
+//			    if (location.getBlockY() <= 0) {
+//				Location lastLoc = lastOutsideLoc.get(uuid);
+//				player.closeInventory();
+//				boolean teleported = false;
+//				if (move) {
+//				    if (lastLoc != null)
+//					teleported = teleport(player, lastLoc);
+//				    else
+//					teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
+//				}
+//				plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
+//				if (!teleported)
+//				    return false;
+//				return true;
+//			    }
+//			}
+//			plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
+//			player.closeInventory();
+//			if (move) {
+//			    boolean teleported = teleport(player, location);
+//			    if (!teleported)
+//				return false;
+//			}
+//			player.setFlying(false);
+//			player.setAllowFlight(false);
+//		    }
+//		}
+//		lastOutsideLoc.put(uuid, loc);
+//		return true;
 	    }
 	}
-
 
 	if (!plugin.getAutoSelectionManager().getList().isEmpty()) {
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -2465,10 +2463,18 @@ public class ResidencePlayerListener implements Listener {
 	    if (cantMove) {
 		Location lastLoc = lastOutsideLoc.get(uuid);
 		player.closeInventory();
-		if (lastLoc != null && CMIMaterial.isAir(lastLoc.getBlock().getType()))
-		    teleport(player, lastLoc);
-		else
+		if (lastLoc != null && CMIMaterial.isAir(lastLoc.getBlock().getType())) {
+		    Long last = lastUpdate.get(player.getUniqueId());
+		    // Fail safe in case we are triggering teleportation event check with this teleportion, we should teleport player outside residence instead of its repeating teleportation to avoid stack overflow 
+		    if (last != null && System.currentTimeMillis() - last > 45L) {
+			teleport(player, res.getOutsideFreeLoc(loc, player));
+		    } else {
+			this.lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
+			teleport(player, lastLoc);
+		    }
+		} else {
 		    teleport(player, res.getOutsideFreeLoc(loc, player));
+		}
 		return false;
 	    } else {
 		currentRes.put(uuid, res);
