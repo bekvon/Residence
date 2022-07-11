@@ -15,7 +15,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.utils.Utils;
 
 public class SpigotListener implements Listener {
-    @SuppressWarnings("deprecation")
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDamage(PlayerItemDamageEvent event) {
 	// disabling event on world
@@ -28,15 +28,13 @@ public class SpigotListener implements Listener {
 	    return;
 
 	ItemStack held = Utils.itemInMainHand(player);
-	if (held.getType() == Material.AIR || held.getDurability() <= 0)
+
+	if (held.getType() == Material.AIR)
 	    return;
 
-	if (held.getType().toString().equalsIgnoreCase("TRIDENT")) {
+	if (held.getType().toString().equalsIgnoreCase("TRIDENT"))
 	    return;
-	}
 
-	held.setDurability(held.getDurability());
-	player.setItemInHand(held);
 	event.setDamage(0);
 	event.setCancelled(true);
     }
