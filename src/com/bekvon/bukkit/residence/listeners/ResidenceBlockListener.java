@@ -66,6 +66,7 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -139,7 +140,10 @@ public class ResidenceBlockListener implements Listener {
 	// Disabling listener if flag disabled globally
 	if (!Flags.grow.isGlobalyEnabled())
 	    return;
-	if (event.getSource().getType() != Material.VINE)
+	
+	CMIMaterial type = CMIMaterial.get(event.getSource().getType());
+	
+	if (!type.equals(CMIMaterial.VINE) && !type.toString().contains("_VINES"))
 	    return;
 	if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
 	    return;
