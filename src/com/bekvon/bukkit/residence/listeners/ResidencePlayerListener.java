@@ -1,6 +1,7 @@
 package com.bekvon.bukkit.residence.listeners;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -71,9 +73,11 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
+import com.bekvon.bukkit.residence.protection.ResidenceManager.ChunkRef;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.GetTime;
 import com.bekvon.bukkit.residence.utils.Utils;
@@ -84,6 +88,7 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
@@ -2646,24 +2651,46 @@ public class ResidencePlayerListener implements Listener {
 	    return;
 
 	try {
+
+	    Set<ClaimedResidence> residences = new HashSet<ClaimedResidence>();
+
 	    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 		ClaimedResidence res = getCurrentResidence(player.getUniqueId());
-
 		if (res == null)
 		    continue;
-		if (!res.getPermissions().has(Flags.nomobs, false))
+		if (!res.getPermissions().has(Flags.nomobs, false)) {
+		    for (ClaimedResidence sub : res.getSubzonesMap().values()) {
+			if (!sub.getPermissions().has(Flags.nomobs, false)) {
+			    continue;
+			}
+			residences.add(sub);
+		    }
+		    continue;
+		}
+		residences.add(res);
+	    }
+
+	    for (ClaimedResidence res : residences) {
+		Set<Entity> entities = new HashSet<Entity>();
+
+		World world = Bukkit.getWorld(res.getWorld());
+
+		if (world == null)
 		    continue;
 
-		List<Entity> entities = Bukkit.getServer().getWorld(res.getWorld()).getEntities();
+		for (CuboidArea area : res.getAreaMap().values()) {
+		    for (ChunkRef chunk : area.getChunks()) {
+			entities.addAll(Arrays.asList(world.getChunkAt(chunk.getX(), chunk.getZ()).getEntities()));
+		    }
+		}
 		for (Entity ent : entities) {
 		    if (!ResidenceEntityListener.isMonster(ent))
 			continue;
-
-		    if (res.containsLoc(ent.getLocation())) {
-			ClaimedResidence ares = plugin.getResidenceManager().getByLoc(ent.getLocation());
-			if (ares.getPermissions().has(Flags.nomobs, FlagCombo.OnlyTrue)) {
-			    ent.remove();
-			}
+		    if (!res.containsLoc(ent.getLocation()))
+			continue;
+		    ClaimedResidence ares = plugin.getResidenceManager().getByLoc(ent.getLocation());
+		    if (ares.getPermissions().has(Flags.nomobs, FlagCombo.OnlyTrue)) {
+			ent.remove();
 		    }
 		}
 	    }

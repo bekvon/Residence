@@ -1175,6 +1175,10 @@ public class ClaimedResidence {
 	return list;
     }
 
+    public Map<String, ClaimedResidence> getSubzonesMap() {
+	return subzones;
+    }
+
     public int getSubzonesAmount(Boolean includeChild) {
 	int i = 0;
 	for (Entry<String, ClaimedResidence> res : subzones.entrySet()) {
@@ -2179,11 +2183,11 @@ public class ClaimedResidence {
 	}
 	return trusted;
     }
-    
-    private boolean lightWeightFlagCheck(String playerName, String flag) {	
-	Map<String, Boolean> flags = this.getPermissions().getPlayerFlags(playerName);	
+
+    private boolean lightWeightFlagCheck(String playerName, String flag) {
+	Map<String, Boolean> flags = this.getPermissions().getPlayerFlags(playerName);
 	if (flags == null || flags.isEmpty() || !flags.containsKey(flag))
-	    return false;	
+	    return false;
 	return flags.get(flag);
     }
 
