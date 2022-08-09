@@ -9,64 +9,69 @@ public class RealShopEconomy implements EconomyInterface {
     RealEconomy plugin;
 
     public RealShopEconomy(RealEconomy e) {
-	plugin = e;
+        plugin = e;
     }
 
     @Override
     public double getBalance(Player player) {
-	return plugin.getBalance(player.getName());
+        return plugin.getBalance(player.getName());
     }
 
     @Override
     public double getBalance(String playerName) {
-	return plugin.getBalance(playerName);
+        return plugin.getBalance(playerName);
+    }
+
+    @Override
+    public boolean canAfford(Player player, double amount) {
+        return canAfford(player.getName(), amount);
     }
 
     @Override
     public boolean canAfford(String playerName, double amount) {
-	if (plugin.getBalance(playerName) >= amount) {
-	    return true;
-	}
-	return false;
+        if (plugin.getBalance(playerName) >= amount) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean add(String playerName, double amount) {
-	plugin.setBalance(playerName, plugin.getBalance(playerName) + amount);
-	return true;
+        plugin.setBalance(playerName, plugin.getBalance(playerName) + amount);
+        return true;
     }
 
     @Override
     public boolean subtract(String playerName, double amount) {
-	if (!canAfford(playerName, amount)) {
-	    return false;
-	}
-	plugin.setBalance(playerName, plugin.getBalance(playerName) - amount);
-	return true;
+        if (!canAfford(playerName, amount)) {
+            return false;
+        }
+        plugin.setBalance(playerName, plugin.getBalance(playerName) - amount);
+        return true;
     }
 
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
-	if (!canAfford(playerFrom, amount)) {
-	    return false;
-	}
-	if (subtract(playerFrom, amount)) {
-	    if (!add(playerTo, amount)) {
-		add(playerFrom, amount);
-		return false;
-	    }
-	    return true;
-	}
-	return false;
+        if (!canAfford(playerFrom, amount)) {
+            return false;
+        }
+        if (subtract(playerFrom, amount)) {
+            if (!add(playerTo, amount)) {
+                add(playerFrom, amount);
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
     public String getName() {
-	return "RealShopEconomy";
+        return "RealShopEconomy";
     }
 
     @Override
     public String format(double amount) {
-	return plugin.format(amount);
+        return plugin.format(amount);
     }
 }

@@ -8,6 +8,8 @@ public interface EconomyInterface {
     public double getBalance(String playerName);
 
     public boolean canAfford(String playerName, double amount);
+    
+    public boolean canAfford(Player player, double amount);
 
     public boolean add(String playerName, double amount);
 

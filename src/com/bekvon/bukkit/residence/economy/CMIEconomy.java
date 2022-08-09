@@ -22,6 +22,16 @@ public class CMIEconomy implements EconomyInterface {
 	return user == null ? 0D : user.getBalance();
     }
 
+
+    @Override
+    public boolean canAfford(Player player, double amount) {
+        CMIUser user = CMI.getInstance().getPlayerManager().getUser(player);
+        if (user != null && user.getBalance() >= amount) {
+            return true;
+        }
+        return false;
+    }
+    
     @Override
     public boolean canAfford(String playerName, double amount) {
 	CMIUser user = CMI.getInstance().getPlayerManager().getUser(playerName);
