@@ -1269,10 +1269,11 @@ public class FlagPermissions {
 		if (!perms.equals("none")) {
 		    sbuild
 			.append(next)
+			.append(ChatColor.WHITE)
 			.append("[")
 			.append(ChatColor.DARK_AQUA)
-			.append(perms)
-			.append(ChatColor.RED)
+			.append(perms) 
+			.append(ChatColor.WHITE) 
 			.append("] ");
 		}
 	    }

@@ -160,6 +160,12 @@ public class ResidencePlayerListener implements Listener {
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
         if (!Flags.itempickup.isGlobalyEnabled())
             return;
+
+        // As of 1.12 version EntityPickupItemEvent event needs to be used. This is only for older servers
+        // New handling located at ResidencePlayerListener1_12
+        if (Version.isCurrentEqualOrHigher(Version.v1_12_R1))
+            return;
+
         ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getItem().getLocation());
         if (res == null)
             return;
