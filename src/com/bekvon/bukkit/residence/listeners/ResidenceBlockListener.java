@@ -1019,7 +1019,7 @@ public class ResidenceBlockListener implements Listener {
 	if (plugin.isDisabledWorldListener(world))
 	    return;
 
-	if (!event.getReason().equals(CreateReason.NETHER_PAIR))
+	if (!event.getReason().toString().equals("NETHER_PAIR"))
 	    return;
 
 	Player player = null;
