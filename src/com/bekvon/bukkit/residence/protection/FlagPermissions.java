@@ -317,8 +317,12 @@ public class FlagPermissions {
 
     protected Map<String, Boolean> getPlayerFlags(Player player, boolean allowCreate) {
 
+
         Map<String, Boolean> flags = null;
 
+        if (player == null || player.getName() == null)
+            return flags;
+        
         if (!Residence.getInstance().getConfigManager().isOfflineMode()) {
             UUID uuid = player.getUniqueId();
             flags = playerFlags.get(uuid.toString());
