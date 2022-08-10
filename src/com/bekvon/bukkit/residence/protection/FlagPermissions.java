@@ -1092,7 +1092,7 @@ public class FlagPermissions {
         String havePrefix = Residence.getInstance().getLM().getMessage(lm.Flag_havePrefix);
         String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_denyPrefix);
 
-        synchronized (flags) {
+        synchronized (set) {
             Iterator<Entry<String, Boolean>> it = set.iterator();
 
             while (it.hasNext()) {
@@ -1191,7 +1191,18 @@ public class FlagPermissions {
         return sbuild.toString();
     }
 
+    String ownColor = null;
+    String p1Color = null;
+    String p2Color = null;
+
     public RawMessage listPlayersFlagsRaw(String player, String text) {
+
+        if (ownColor == null) {
+            ownColor = lm.Flag_ownColor.getMessage();
+            p1Color = lm.Flag_p1Color.getMessage();
+            p2Color = lm.Flag_p2Color.getMessage();
+        }
+
         RawMessage rm = new RawMessage();
         rm.addText(text);
         Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
@@ -1199,51 +1210,61 @@ public class FlagPermissions {
         synchronized (set) {
             Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
             boolean random = true;
+            String addedOwn = null;
 
-            String ownColor = Residence.getInstance().getLM().getMessage(lm.Flag_ownColor);
-            String p1Color = Residence.getInstance().getLM().getMessage(lm.Flag_p1Color);
-            String p2Color = Residence.getInstance().getLM().getMessage(lm.Flag_p2Color);
+            ResidencePlayer rplayer = ResidencePlayer.get(player);
+            if (rplayer != null) {
+                Map<String, Boolean> own = playerFlags.get(rplayer.getUniqueId().toString());
+                if (own != null) {
+                    addedOwn = rplayer.getUniqueId().toString();
+                    addPlayerFlagToRM(rm, player, own, random, true);
+                }
+            }
 
             while (it.hasNext()) {
                 Entry<String, Map<String, Boolean>> nextEnt = it.next();
-                String next = nextEnt.getKey();
-
-                String perms = printPlayerFlags(nextEnt.getValue());
-                if (next.length() == 36) {
-                    String resolvedName = Residence.getInstance().getPlayerName(next);
-                    if (resolvedName != null) {
-                        try {
-                            UUID uuid = UUID.fromString(next);
-                            this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
-                        } catch (Exception e) {
-                        }
-                        next = resolvedName;
-                    }
-                }
-
-                if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))
+                if (addedOwn != null && (player.equals(nextEnt.getKey()) || addedOwn.equals(nextEnt.getKey())))
                     continue;
-
-                if (perms.equals("none"))
-                    continue;
-
-                if (player.equals(next)) {
-                    next = ownColor + next;
-                } else {
-                    if (random)
-                        next = p2Color + next;
-                    else
-                        next = p1Color + next;
-                    random = !random;
-                }
-
-                rm.addText(next + "&r").addHover(splitBy(5, perms));
-                rm.addText(" ");
-
+                addPlayerFlagToRM(rm, nextEnt.getKey(), nextEnt.getValue(), random, false);
             }
         }
 
         return rm;
+    }
+
+    private void addPlayerFlagToRM(RawMessage rm, String next, Map<String, Boolean> permMap, boolean random, boolean own) {
+
+        String perms = printPlayerFlags(permMap);
+        if (next.length() == 36) {
+            String resolvedName = Residence.getInstance().getPlayerName(next);
+            if (resolvedName != null) {
+                try {
+                    UUID uuid = UUID.fromString(next);
+                    this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
+                } catch (Exception e) {
+                }
+                next = resolvedName;
+            }
+        }
+
+        if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))
+            return;
+
+        if (perms.equals("none"))
+            return;
+
+        if (own) {
+            next = ownColor + next;
+        } else {
+            if (random)
+                next = p2Color + next;
+            else
+                next = p1Color + next;
+            random = !random;
+        }
+
+        rm.addText(next + "&r").addHover(splitBy(5, perms));
+        rm.addText(" ");
     }
 
     protected String splitBy(int by, String perms) {

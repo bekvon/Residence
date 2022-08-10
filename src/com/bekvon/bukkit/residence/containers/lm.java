@@ -169,12 +169,12 @@ public enum lm {
 
     server_land("Server_Land"),
 
-    Flag_ownColor("&4"),
+    Flag_ownColor("&7"),
     Flag_p1Color("&2"),
     Flag_p2Color("&a"),
     Flag_haveColor("&2"),
     Flag_havePrefix(""),
-    Flag_denyColor("&4"),
+    Flag_denyColor("&c"),
     Flag_denyPrefix(""),
     Flag_Set("&eFlag (&6%1&e) set for &6%2 &eto &6%3 &estate"),
     Flag_SetFailed("&cYou dont have access to &6%1 &cflag"),
