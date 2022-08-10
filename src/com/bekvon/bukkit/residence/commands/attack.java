@@ -48,6 +48,7 @@ public class attack implements cmd {
 	}
 
 	ResidencePlayer resPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+
 	if (resPlayer.getJoinedRaid() != null) {
 	    plugin.msg(player, lm.Raid_defend_alreadyInAnother, resPlayer.getJoinedRaid().getRes().getName());
 	    return null;
