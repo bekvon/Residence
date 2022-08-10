@@ -16,9 +16,11 @@ import net.Zrips.CMILib.RawMessages.RawMessageCommand;
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
+import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.cmd;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 public class info implements cmd {
 
@@ -40,7 +42,7 @@ public class info implements cmd {
                             continue;
                         Location l = loc.clone().add(x, y, z);
                         ClaimedResidence nr = plugin.getResidenceManager().getByLoc(l);
-                        if (nr != null)
+                        if (nr != null && (nr.getPermissions().has(Flags.hidden, FlagCombo.FalseOrNone) || resadmin))
                             nearby.add(nr);
                     }
                 }
