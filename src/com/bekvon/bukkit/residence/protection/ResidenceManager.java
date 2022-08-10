@@ -48,7 +48,9 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
+import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Version.Version;
@@ -749,6 +751,7 @@ public class ResidenceManager implements ResidenceInterface {
         else if (plugin.getConfigManager().isShortInfoUse() || sender instanceof Player) {
 
             RawMessage rm = perms.listPlayersFlagsRaw(sender.getName(), plugin.msg(lm.General_PlayersFlags, ""));
+            rm.addCommand("res info " + res.getName() + " -players");
             rm.show(sender);
         }
 
@@ -836,6 +839,31 @@ public class ResidenceManager implements ResidenceInterface {
         }
 
         plugin.msg(sender, lm.General_Separator);
+    }
+
+    public void printAreaPlayers(String areaname, CommandSender sender, int page) {
+        ClaimedResidence res = this.getByName(areaname);
+        if (res == null) {
+            plugin.msg(sender, lm.Invalid_Residence);
+            return;
+        }
+
+        areaname = res.getName();
+
+        plugin.msg(sender, lm.General_Separator);
+
+        ResidencePermissions perms = res.getPermissions();
+
+        perms.listPlayers(sender, null, page);
+
+        PageInfo pi = new PageInfo(10, perms.getPlayerFlags().size(), page) {
+            @Override
+            public Boolean pageChange(int page) {
+                printAreaPlayers(res.getName(), sender, page);
+                return null;
+            }
+        };
+        pi.autoPagination(sender, "res info " + areaname + " -players", "-p:");
     }
 
     public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea, boolean resadmin) {

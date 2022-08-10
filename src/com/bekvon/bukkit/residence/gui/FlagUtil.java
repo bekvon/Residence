@@ -79,7 +79,7 @@ public class FlagUtil {
 	flag.recalculate();
 
 	PageInfo pi = new PageInfo(45, flag.getButtons().size(), page);
-	openUI(flag, pi, player, Residence.getInstance().msg(lm.Gui_Set_Title, res.getName()));
+	openUI(flag, pi, player, Residence.getInstance().msg(lm.Gui_Pset_Title, res.getName(), targetPlayer));
 	return;
     }
 

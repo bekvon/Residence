@@ -169,13 +169,13 @@ public enum lm {
 
     server_land("Server_Land"),
 
-    Flag_ownColor("&7"),
     Flag_p1Color("&2"),
     Flag_p2Color("&a"),
     Flag_haveColor("&2"),
     Flag_havePrefix(""),
-    Flag_denyColor("&c"),
+    Flag_denyColor("&7"),
     Flag_denyPrefix(""),
+    Flag_others("&eand &2%1 &eothers"),
     Flag_Set("&eFlag (&6%1&e) set for &6%2 &eto &6%3 &estate"),
     Flag_SetFailed("&cYou dont have access to &6%1 &cflag"),
     Flag_CheckTrue("&eFlag &6%1 &eapplies to player &6%2 &efor residence &6%3&e, value = &6%4"),
@@ -393,8 +393,8 @@ public enum lm {
     Limits_LeaseTime("&7- &eLease Time Given on Renew:&3 %1"),
     Limits_RenewCost("&7- &eRenew Cost Per Block:&3 %1"),
 
-    Gui_Set_Title("&6%1 flags"),
-    Gui_Pset_Title("&6%1 %2 flags"),
+    Gui_Set_Title("&8%1 flags"),
+    Gui_Pset_Title("&8%1 &7%2 &6flags"),
     Gui_Actions(new ArrayList<String>(Arrays.asList("&2Left click to enable", "&cRight click to disable", "&eShift + left click to remove"))),
 
     InformationPage_Top("&e___/ &a %1 - %2 &e \\___"),

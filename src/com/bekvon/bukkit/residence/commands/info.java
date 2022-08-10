@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Locale.LC;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.RawMessages.RawMessageCommand;
 
@@ -27,7 +28,7 @@ public class info implements cmd {
     @Override
     @CommandAnnotation(simple = true, priority = 600)
     public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
-
+CMIDebug.d("?");
         if (args.length == 0 && sender instanceof Player) {
             Player player = (Player) sender;
             ClaimedResidence res = plugin.getResidenceManager().getByLoc(player.getLocation());
@@ -56,7 +57,6 @@ public class info implements cmd {
                     plugin.msg(sender, lm.Invalid_Residence);
             }
 
-
             RawMessage rm = new RawMessage();
 
             if (!nearby.isEmpty()) {
@@ -68,10 +68,10 @@ public class info implements cmd {
                     rm.addText(one.getName());
                     RawMessageCommand rmc = new RawMessageCommand() {
                         @Override
-                        public void run(CommandSender sender) {    
+                        public void run(CommandSender sender) {
                             plugin.getResidenceManager().printAreaInfo(one.getName(), sender, resadmin);
                         }
-                    };  
+                    };
                     rm.addHover(LC.info_Click.getLocale());
                     rm.addCommand(rmc);
                 }
@@ -81,6 +81,29 @@ public class info implements cmd {
             return true;
         } else if (args.length == 1) {
             plugin.getResidenceManager().printAreaInfo(args[0], sender, resadmin);
+            return true;
+        } else if (args.length == 2 || args.length == 3) {
+
+            int page = 1;
+            String playerName = null;
+            for (int i = 1; i < args.length; i++) {
+                String arg = args[i];
+                if (arg.startsWith("-p:"))
+                    try {
+                        page = Integer.parseInt(arg.replace("-p:", ""));
+                        continue;
+                    } catch (Exception e) {
+                    }
+
+                playerName = arg;
+            }
+
+            if (playerName == null)
+                return false;
+
+            if (playerName.equalsIgnoreCase("-players")) {
+                plugin.getResidenceManager().printAreaPlayers(args[0], sender, page);
+            } 
             return true;
         }
         return false;

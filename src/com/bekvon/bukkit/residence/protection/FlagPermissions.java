@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -32,7 +33,9 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Locale.LC;
 import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 
@@ -1191,14 +1194,12 @@ public class FlagPermissions {
         return sbuild.toString();
     }
 
-    String ownColor = null;
     String p1Color = null;
     String p2Color = null;
 
     public RawMessage listPlayersFlagsRaw(String player, String text) {
 
-        if (ownColor == null) {
-            ownColor = lm.Flag_ownColor.getMessage();
+        if (p1Color == null) {
             p1Color = lm.Flag_p1Color.getMessage();
             p2Color = lm.Flag_p2Color.getMessage();
         }
@@ -1206,6 +1207,9 @@ public class FlagPermissions {
         RawMessage rm = new RawMessage();
         rm.addText(text);
         Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
+
+        int playersToShow = 5;
+        int i = 0;
 
         synchronized (set) {
             Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
@@ -1217,22 +1221,132 @@ public class FlagPermissions {
                 Map<String, Boolean> own = playerFlags.get(rplayer.getUniqueId().toString());
                 if (own != null) {
                     addedOwn = rplayer.getUniqueId().toString();
-                    addPlayerFlagToRM(rm, player, own, random, true);
+                    random = addPlayerFlagToRM(rm, player, own, random);
+                    i++;
                 }
             }
 
+            StringBuilder hover = new StringBuilder();
             while (it.hasNext()) {
                 Entry<String, Map<String, Boolean>> nextEnt = it.next();
                 if (addedOwn != null && (player.equals(nextEnt.getKey()) || addedOwn.equals(nextEnt.getKey())))
                     continue;
-                addPlayerFlagToRM(rm, nextEnt.getKey(), nextEnt.getValue(), random, false);
+
+                i++;
+
+                if (i <= playersToShow)
+                    random = addPlayerFlagToRM(rm, nextEnt.getKey(), nextEnt.getValue(), random);
+                if (i == playersToShow) {
+                    rm.addText(lm.Flag_others.getMessage(set.size() - i));
+                }
+
+                if (i > playersToShow) {
+                    String next = nameUpdate(nextEnt.getKey());
+                    if (random)
+                        next = p2Color + next;
+                    else
+                        next = p1Color + next;
+                    random = !random;
+                    hover.append(next + " ");
+                }
+            }
+
+            if (!hover.toString().isEmpty()) {
+                rm.addHover(splitBy(5, hover.toString()));
             }
         }
 
         return rm;
     }
 
-    private void addPlayerFlagToRM(RawMessage rm, String next, Map<String, Boolean> permMap, boolean random, boolean own) {
+    private String nameUpdate(String next) {
+        if (next.length() == 36) {
+            String resolvedName = Residence.getInstance().getPlayerName(next);
+            if (resolvedName != null) {
+                try {
+                    UUID uuid = UUID.fromString(next);
+                    this.cachedPlayerNameUUIDs.put(uuid, resolvedName);
+                } catch (Exception e) {
+                }
+                next = resolvedName;
+            }
+        }
+        return next;
+    }
+
+    private boolean addPlayerFlagToRM(RawMessage rm, String next, Map<String, Boolean> permMap, boolean random) {
+
+        String perms = printPlayerFlags(permMap);
+
+        next = nameUpdate(next);
+
+        if (next.equalsIgnoreCase(Residence.getInstance().getServerLandName()))
+            return random;
+
+        if (perms.equals("none"))
+            return random;
+
+        if (random)
+            next = p2Color + next;
+        else
+            next = p1Color + next;
+        random = !random;
+
+        rm.addText(next + "&r").addHover(splitBy(5, perms));
+        rm.addText(" ");
+        return random;
+    }
+
+    public void listPlayers(CommandSender sender, String text, int page) {
+
+        if (p1Color == null) {
+            p1Color = lm.Flag_p1Color.getMessage();
+            p2Color = lm.Flag_p2Color.getMessage();
+        }
+
+        RawMessage rm = new RawMessage();
+        if (text != null)
+            rm.addText(text);
+        Set<Entry<String, Map<String, Boolean>>> set = playerFlags.entrySet();
+
+        PageInfo pi = new PageInfo(10, set.size(), page);
+
+        synchronized (set) {
+            Iterator<Entry<String, Map<String, Boolean>>> it = set.iterator();
+            String addedOwn = null;
+
+            ResidencePlayer rplayer = ResidencePlayer.get(sender.getName());
+            if (rplayer != null) {
+                Map<String, Boolean> own = playerFlags.get(rplayer.getUniqueId().toString());
+                if (own != null) {
+                    addedOwn = rplayer.getUniqueId().toString();
+                    if (!pi.isContinue()) {
+                        rm = new RawMessage();
+                        addPlayerFlags(rm, sender.getName(), own, pi.getPositionForOutput());
+                        rm.show(sender);
+                    }
+                }
+            }
+
+            while (it.hasNext()) {
+                if (pi.isContinue()) {
+                    it.next();
+                    continue;
+                }
+                if (pi.isBreak())
+                    break;
+                Entry<String, Map<String, Boolean>> nextEnt = it.next();
+                if (addedOwn != null && (sender.getName().equals(nextEnt.getKey()) || addedOwn.equals(nextEnt.getKey())))
+                    continue;
+                rm = new RawMessage();
+                addPlayerFlags(rm, nextEnt.getKey(), nextEnt.getValue(), pi.getPositionForOutput());
+                rm.show(sender);
+            }
+        }
+
+    }
+
+    private void addPlayerFlags(RawMessage rm, String next, Map<String, Boolean> permMap, int position) {
 
         String perms = printPlayerFlags(permMap);
         if (next.length() == 36) {
@@ -1253,35 +1367,50 @@ public class FlagPermissions {
         if (perms.equals("none"))
             return;
 
-        if (own) {
-            next = ownColor + next;
-        } else {
-            if (random)
-                next = p2Color + next;
-            else
-                next = p1Color + next;
-            random = !random;
+        rm.addText(lm.Residence_ResList.getMessage(position, next, limitTo(5, perms), "", ""));
+        rm.addCommand("res pset " + next);
+        rm.addHover(splitBy(6, perms));
+
+    }
+
+    protected String limitTo(int to, String perms) {
+        if (!perms.contains(" "))
+            return perms;
+        int i = 0;
+        StringBuilder str = new StringBuilder();
+        for (String one : perms.split(" ")) {
+            i++;
+            if (!str.toString().isEmpty())
+                str.append(LC.info_ListSpliter.getLocale());
+            str.append(one);
+            if (i >= to) {
+                str.append("...");
+                break;
+            }
         }
 
-        rm.addText(next + "&r").addHover(splitBy(5, perms));
-        rm.addText(" ");
+        return str.toString();
     }
 
     protected String splitBy(int by, String perms) {
-        if (perms.contains(" ")) {
-            String[] splited = perms.split(" ");
-            int i = 0;
-            perms = "";
-            for (String one : splited) {
-                i++;
-                perms += one + " ";
-                if (i >= by) {
-                    i = 0;
-                    perms += "\n";
-                }
+        if (!perms.contains(" "))
+            return perms;
+
+        String[] splited = perms.split(" ");
+        int i = 0;
+        perms = "";
+        StringBuilder str = new StringBuilder();
+        for (String one : splited) {
+            i++;
+            if (!str.toString().isEmpty())
+                str.append(" ");
+            str.append(one);
+            if (i % by == 0 && i < splited.length) {
+                str.append("\n");
             }
         }
-        return perms;
+
+        return str.toString();
     }
 
     public String listGroupFlags() {
