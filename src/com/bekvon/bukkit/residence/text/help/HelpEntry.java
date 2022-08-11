@@ -108,12 +108,11 @@ public class HelpEntry {
 
 	    } else
 		sender.sendMessage(CMIChatColor.translate("&6" + helplines.get(i).getDesc()));
-
 	}
 
 	String baseCmd = resadmin ? "resadmin" : "res";
-	String cmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ? " : "/" + baseCmd + " ? ";
-	Residence.getInstance().getInfoPageManager().ShowPagination(sender, pi, cmd);
+	String cmd = !name.equalsIgnoreCase("res") ? "/" + baseCmd + " " + name + " ?" : "/" + baseCmd + " ?";
+	pi.autoPagination(sender, cmd);
     }
 
     public void printHelp(CommandSender sender, int page, String path, boolean resadmin) {

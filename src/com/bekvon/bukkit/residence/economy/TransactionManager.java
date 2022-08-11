@@ -366,7 +366,7 @@ public class TransactionManager implements MarketBuyInterface {
 	for (ClaimedResidence one : toRemove) {
 	    sellAmount.remove(one);
 	}
-	plugin.getInfoPageManager().ShowPagination(player, pi, "/res market list sell");
+	pi.autoPagination(player, "/res market list sell");
     }
 
     public void clearSales() {

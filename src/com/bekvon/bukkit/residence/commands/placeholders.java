@@ -84,7 +84,7 @@ public class placeholders implements cmd {
 	}
 
 	if (player != null) {
-	    plugin.getInfoPageManager().ShowPagination(sender, pi, "res placeholders", "-p:");
+	    pi.autoPagination(sender, "res placeholders", "-p:");
 	}
 
 	return true;

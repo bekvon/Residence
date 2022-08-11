@@ -58,7 +58,8 @@ public class InformationPager {
 		sender.sendMessage(ChatColor.GREEN + lines.get(i));
 	}
 
-	plugin.getInfoPageManager().ShowPagination(sender, pi, command);
+	pi.autoPagination(sender, command);
+
     }
 
     public void printListInfo(CommandSender sender, String targetPlayer, TreeMap<String, ClaimedResidence> ownedResidences, int page, boolean resadmin, World world) {
@@ -166,9 +167,9 @@ public class InformationPager {
 	    worldName = " " + world.getName();
 
 	if (targetPlayer != null)
-	    ShowPagination(sender, pi, cmd + " list " + targetPlayer + worldName);
+	    pi.autoPagination(sender, cmd + " list " + targetPlayer + worldName);
 	else
-	    ShowPagination(sender, pi, cmd + " listall" + worldName);
+            pi.autoPagination(sender, cmd + " listall" + worldName);
     }
 
     private void printListWithDelay(final CommandSender sender, final TreeMap<String, ClaimedResidence> ownedResidences, final int start, final boolean resadmin) {
@@ -314,45 +315,5 @@ public class InformationPager {
 		Bukkit.getConsoleSender().sendMessage("Saved file to FullLists folder with " + file.getName() + " name");
 	    }
 	});
-    }
-
-    public void ShowPagination(CommandSender sender, PageInfo pi, String cmd) {
-	ShowPagination(sender, pi, cmd, null);
-    }
-
-    public void ShowPagination(CommandSender sender, PageInfo pi, Object cmd, String pagePref) {
-	ShowPagination(sender, pi.getTotalPages(), pi.getCurrentPage(), pi.getTotalEntries(), plugin.getCommandManager().getLabel() + " " + cmd.getClass().getSimpleName(), pagePref);
-    }
-
-    public void ShowPagination(CommandSender sender, PageInfo pi, String cmd, String pagePref) {
-	ShowPagination(sender, pi.getTotalPages(), pi.getCurrentPage(), pi.getTotalEntries(), cmd, pagePref);
-    }
-
-    public void ShowPagination(CommandSender sender, int pageCount, int CurrentPage, int totalEntries, String cmd, String pagePref) {
-	if (!(sender instanceof Player))
-	    return;
-	if (!cmd.startsWith("/"))
-	    cmd = "/" + cmd;
-
-	if (pageCount == 1)
-	    return;
-
-	String pagePrefix = pagePref == null ? "" : pagePref;
-
-	int NextPage = CurrentPage + 1;
-	NextPage = CurrentPage < pageCount ? NextPage : CurrentPage;
-	int Prevpage = CurrentPage - 1;
-	Prevpage = CurrentPage > 1 ? Prevpage : CurrentPage;
-
-	RawMessage rm = new RawMessage();
-	rm.addText((CurrentPage > 1 ? plugin.msg(lm.General_prevPage) : plugin.msg(lm.General_prevPageOff))).addHover(
-	    CurrentPage > 1 ? plugin.msg(lm.General_prevPageHover) : plugin.msg(lm.General_lastPageHover)).addCommand(
-		CurrentPage > 1 ? cmd + " " + pagePrefix + Prevpage : cmd + " " + pagePrefix + pageCount);
-	rm.addText(plugin.msg(lm.General_pageCount, CurrentPage, pageCount)).addHover(plugin.msg(lm.General_pageCountHover, totalEntries));
-	rm.addText(plugin.msg(pageCount > CurrentPage ? lm.General_nextPage : lm.General_nextPageOff)).addHover(
-	    pageCount > CurrentPage ? plugin.msg(lm.General_nextPageHover) : plugin.msg(lm.General_firstPageHover)).addCommand(
-		pageCount > CurrentPage ? cmd + " " + pagePrefix + NextPage : cmd + " " + pagePrefix + 1);
-	if (pageCount != 0)
-	    rm.show(sender);
     }
 }

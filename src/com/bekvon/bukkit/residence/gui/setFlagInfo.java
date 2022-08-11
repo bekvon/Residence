@@ -26,7 +26,6 @@ import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 
 import net.Zrips.CMILib.GUI.CMIGuiButton;
 import net.Zrips.CMILib.GUI.GUIManager.GUIClickType;
-import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class setFlagInfo {
 
