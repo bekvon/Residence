@@ -402,6 +402,31 @@ public class ClaimedResidence {
                 }
                 return false;
             }
+
+            if (Residence.getInstance().getConfigManager().AntiGreefRangeGap > 0) {
+                Location low = area.getLowLocation().clone();
+                Location high = area.getHighLocation().clone();
+
+                int gap = Residence.getInstance().getConfigManager().AntiGreefRangeGap;
+                low.add(-gap, -gap, -gap);
+                high.add(gap, gap, gap);
+
+                CuboidArea expanded = new CuboidArea(low, high);
+
+                collideResidence = Residence.getInstance().getResidenceManager().checkAreaCollision(expanded, this, player == null ? null : player.getUniqueId());
+                cRes = Residence.getInstance().getResidenceManager().getByName(collideResidence);
+                if (cRes != null) {
+                    if (player != null) {
+                        Residence.getInstance().msg(player, lm.Area_TooClose, gap, cRes.getName());
+                        Visualizer v = new Visualizer(player);
+                        v.setAreas(area);
+                        v.setErrorAreas(cRes);
+                        Residence.getInstance().getSelectionManager().showBounds(player, v);
+                    }
+                    return false;
+                }
+            }
+
         } else {
             String[] szs = getParent().listSubzones();
             for (String sz : szs) {
@@ -519,6 +544,30 @@ public class ClaimedResidence {
                 v.setErrorAreas(cRes.getAreaArray());
                 Residence.getInstance().getSelectionManager().showBounds(player, v);
                 return false;
+            }
+
+            if (Residence.getInstance().getConfigManager().AntiGreefRangeGap > 0) {
+                Location low = newarea.getLowLocation().clone();
+                Location high = newarea.getHighLocation().clone();
+
+                int gap = Residence.getInstance().getConfigManager().AntiGreefRangeGap;
+                low.add(-gap, -gap, -gap);
+                high.add(gap, gap, gap);
+
+                CuboidArea expanded = new CuboidArea(low, high);
+
+                collideResidence = Residence.getInstance().getResidenceManager().checkAreaCollision(expanded, this, player == null ? null : player.getUniqueId());
+                cRes = Residence.getInstance().getResidenceManager().getByName(collideResidence);
+                if (cRes != null) {
+                    if (player != null) {
+                        Residence.getInstance().msg(player, lm.Area_TooClose, gap, cRes.getName());
+                        Visualizer v = new Visualizer(player);
+                        v.setAreas(getAreaArray());
+                        v.setErrorAreas(cRes);
+                        Residence.getInstance().getSelectionManager().showBounds(player, v);
+                    }
+                    return false;
+                }
             }
         } else {
             String[] szs = getParent().listSubzones();

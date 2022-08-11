@@ -476,6 +476,18 @@ public class ResidenceManager implements ResidenceInterface {
         return null;
     }
 
+    public String checkAreaCollision(CuboidArea newarea, ClaimedResidence parentResidence, UUID ignoredOwner) {
+        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
+        for (Entry<String, ClaimedResidence> entry : set) {
+            ClaimedResidence check = entry.getValue();
+            if (check != parentResidence && check.checkCollision(newarea)) {
+                if (ignoredOwner == null || !entry.getValue().isOwner(ignoredOwner))
+                    return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     public ClaimedResidence collidesWithResidence(CuboidArea newarea) {
         Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
         for (Entry<String, ClaimedResidence> entry : set) {

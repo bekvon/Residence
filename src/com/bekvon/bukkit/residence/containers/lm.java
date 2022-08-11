@@ -38,6 +38,7 @@ public enum lm {
     Area_Create("&eResidence Area created, ID &6%1"),
     Area_DiffWorld("&cArea is in a different world from residence."),
     Area_Collision("&cArea collides with residence &6%1"),
+    Area_TooClose("&cToo close to another residence. You need atleast &e%1 &cblock gap."),
     Area_SubzoneCollision("&cArea collides with subzone &6%1"),
     Area_NonExist("&cNo such area exists."),
     Area_InvalidName("&cInvalid Area Name..."),

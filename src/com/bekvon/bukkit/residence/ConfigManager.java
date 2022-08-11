@@ -201,6 +201,8 @@ public class ConfigManager {
 //    protected boolean DisableNoFlagMessageUse;
 //    protected List<String> DisableNoFlagMessageWorlds = new ArrayList<String>();
 
+    public int AntiGreefRangeGap = 16;
+
     protected boolean TNTExplodeBelow;
     protected int TNTExplodeBelowLevel;
     protected boolean CreeperExplodeBelow;
@@ -928,6 +930,12 @@ public class ConfigManager {
                     Bukkit.getConsoleSender().sendMessage("Incorrect Lwc material name for " + oneName);
             }
         }
+
+        // TNT explosions below 63
+        c.addComment("Global.AntiGreef.RangeGap",
+            "Distance in blocks between residences to be left out", "This will prevent from residences being created back to back",
+            "In case owner of old residence and new one is the same this range restriction wont be taken into effect", "Set to 0 if you want to disable this");
+        AntiGreefRangeGap = c.get("Global.AntiGreef.RangeGap", 16);
 
         // TNT explosions below 63
         c.addComment("Global.AntiGreef.TNT.ExplodeBelow",
