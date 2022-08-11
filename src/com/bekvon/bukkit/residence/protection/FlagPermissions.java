@@ -979,9 +979,9 @@ public class FlagPermissions {
             int t = 0;
 
             String haveColor = Residence.getInstance().getLM().getMessage(lm.Flag_haveColor);
-            String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_denyColor);
+            String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_lackColor);
             String havePrefix = Residence.getInstance().getLM().getMessage(lm.Flag_havePrefix);
-            String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_denyPrefix);
+            String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_lackPrefix);
 
             while (it.hasNext()) {
                 Entry<String, Boolean> next = it.next();
@@ -1091,9 +1091,9 @@ public class FlagPermissions {
         Set<Entry<String, Boolean>> set = flags.entrySet();
 
         String haveColor = Residence.getInstance().getLM().getMessage(lm.Flag_haveColor);
-        String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_denyColor);
+        String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_lackColor);
         String havePrefix = Residence.getInstance().getLM().getMessage(lm.Flag_havePrefix);
-        String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_denyPrefix);
+        String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_lackPrefix);
 
         synchronized (set) {
             Iterator<Entry<String, Boolean>> it = set.iterator();
@@ -1444,9 +1444,9 @@ public class FlagPermissions {
             Set<Entry<String, Boolean>> set = get.entrySet();
 
             String haveColor = Residence.getInstance().getLM().getMessage(lm.Flag_haveColor);
-            String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_denyColor);
+            String denyColor = Residence.getInstance().getLM().getMessage(lm.Flag_lackColor);
             String havePrefix = Residence.getInstance().getLM().getMessage(lm.Flag_havePrefix);
-            String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_denyPrefix);
+            String denyPrefix = Residence.getInstance().getLM().getMessage(lm.Flag_lackPrefix);
 
             synchronized (get) {
                 Iterator<Entry<String, Boolean>> it = set.iterator();

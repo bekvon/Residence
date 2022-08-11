@@ -173,8 +173,8 @@ public enum lm {
     Flag_p2Color("&a"),
     Flag_haveColor("&2"),
     Flag_havePrefix(""),
-    Flag_denyColor("&7"),
-    Flag_denyPrefix(""),
+    Flag_lackColor("&7"),
+    Flag_lackPrefix(""),
     Flag_others("&eand &2%1 &eothers"),
     Flag_Set("&eFlag (&6%1&e) set for &6%2 &eto &6%3 &estate"),
     Flag_SetFailed("&cYou dont have access to &6%1 &cflag"),
@@ -198,6 +198,7 @@ public enum lm {
     Bank_Deposit("&eYou deposit &6%1 &einto the residence bank."),
     Bank_Withdraw("&eYou withdraw &6%1 &efrom the residence bank."),
     Bank_rentedWithdraw("&cCan't withdraw from rented residence bank."),
+    Bank_full("&eResidence bank is full!"),
 
     Subzone_Rename("&eRenamed subzone &6%1 &eto &6%2"),
     Subzone_Remove("&eSubzone &6%1 &eremoved."),
