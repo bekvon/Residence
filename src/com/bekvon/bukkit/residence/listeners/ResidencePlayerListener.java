@@ -667,7 +667,6 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onSignInteract(PlayerInteractEvent event) {
-
         if (event.getPlayer() == null)
             return;
         // disabling event on world

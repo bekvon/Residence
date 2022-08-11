@@ -78,6 +78,7 @@ import com.bekvon.bukkit.residence.listeners.ResidenceFixesListener;
 import com.bekvon.bukkit.residence.listeners.ResidenceLWCListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_12;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_13;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_14;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_15;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_16;
@@ -699,8 +700,10 @@ public class Residence extends JavaPlugin {
 		plistener = new ResidencePlayerListener(this);
                 if (Version.isCurrentEqualOrHigher(Version.v1_9_R1))
                     pm.registerEvents(new ResidencePlayerListener1_9(this), this);
-		if (Version.isCurrentEqualOrHigher(Version.v1_12_R1))
-		    pm.registerEvents(new ResidencePlayerListener1_12(this), this);
+                if (Version.isCurrentEqualOrHigher(Version.v1_12_R1))
+                    pm.registerEvents(new ResidencePlayerListener1_12(this), this);
+		if (Version.isCurrentEqualOrHigher(Version.v1_13_R1))
+		    pm.registerEvents(new ResidencePlayerListener1_13(this), this);
 		if (Version.isCurrentEqualOrHigher(Version.v1_14_R1))
 		    pm.registerEvents(new ResidencePlayerListener1_14(this), this);
 		if (Version.isCurrentEqualOrHigher(Version.v1_15_R1))
