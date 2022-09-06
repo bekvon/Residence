@@ -886,13 +886,9 @@ public class ClaimedResidence {
     }
 
     public boolean checkCollision(CuboidArea area) {
-        Set<String> set = areas.keySet();
-        for (String key : set) {
-            CuboidArea checkarea = areas.get(key);
-            if (checkarea != null) {
-                if (checkarea.checkCollision(area)) {
-                    return true;
-                }
+        for (CuboidArea checkarea : areas.values()) {
+            if (checkarea != null && checkarea.checkCollision(area)) {
+                return true;
             }
         }
         return false;

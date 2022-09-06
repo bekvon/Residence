@@ -488,12 +488,29 @@ public class ResidenceManager implements ResidenceInterface {
         return null;
     }
 
+    public Set<ClaimedResidence> getResidences(String worldName, List<ChunkRef> chunks) {
+
+        Map<ChunkRef, List<ClaimedResidence>> refs = chunkResidences.get(worldName);
+
+        Set<ClaimedResidence> resSet = new HashSet<ClaimedResidence>();
+
+        if (refs == null)
+            return resSet;
+
+        for (ChunkRef one : chunks) {
+            List<ClaimedResidence> res = refs.get(one);
+            if (res != null)
+                resSet.addAll(res);
+        }
+
+        return resSet;
+    }
+
     public ClaimedResidence collidesWithResidence(CuboidArea newarea) {
-        Set<Entry<String, ClaimedResidence>> set = residences.entrySet();
-        for (Entry<String, ClaimedResidence> entry : set) {
-            ClaimedResidence check = entry.getValue();
+        Set<ClaimedResidence> res = getResidences(newarea.getWorldName(), newarea.getChunks());
+        for (ClaimedResidence check : res) {
             if (check.checkCollision(newarea)) {
-                return entry.getValue();
+                return check;
             }
         }
         return null;
