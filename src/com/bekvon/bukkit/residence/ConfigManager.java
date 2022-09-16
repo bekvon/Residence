@@ -100,6 +100,7 @@ public class ConfigManager {
     protected boolean NewSaveMechanic;
     private int ItemPickUpDelay;
     private boolean ARCCheckCollision;
+    private boolean ARCOldMethod;
     private String ARCIncrementFormat;
     private int ARCSizePercentage;
     private boolean ARCSizeEnabled;
@@ -660,6 +661,10 @@ public class ConfigManager {
             "When set to true /res auto command will check for new area collision with other residences to avoid overlapping.",
             "Set it to false to gain some performace but new residence can often overlap with old ones");
         ARCCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
+
+        c.addComment("Global.Optimizations.AutomaticResidenceCreation.OldMethod",
+            "Enabled this will switch to old method for calculating new residence area", "Old method is allot less efficient, so its not recomended to be used when you have residence areas over 100");
+        ARCOldMethod = c.get("Global.Optimizations.AutomaticResidenceCreation.OldMethod", false);
 
         c.addComment("Global.Optimizations.AutomaticResidenceCreation.IncrementFormat",
             "Defines new residence name increment when using automatic residence creation command if residence with that name already exist");
@@ -2181,6 +2186,10 @@ public class ConfigManager {
 
     public boolean isARCSizeEnabled() {
         return ARCSizeEnabled;
+    }
+
+    public boolean isARCOldMethod() {
+        return ARCOldMethod;
     }
 
 //    public int getTownMinRange() {

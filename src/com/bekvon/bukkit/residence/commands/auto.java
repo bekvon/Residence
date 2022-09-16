@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -59,8 +60,8 @@ public class auto implements cmd {
 
         Location loc = player.getLocation();
 
-        int minY = loc.getBlockY() - 1;
-        int maxY = loc.getBlockY() + 1;
+        int minY = loc.getBlockY();
+        int maxY = loc.getBlockY();
         if (plugin.getConfigManager().isSelectionIgnoreY()) {
             minY = plugin.getSelectionManager().getSelection(player).getMinYAllowed();
             maxY = plugin.getSelectionManager().getSelection(player).getMaxYAllowed();
@@ -70,7 +71,16 @@ public class auto implements cmd {
         loc.setY(maxY);
         plugin.getSelectionManager().placeLoc2(player, loc.clone(), false);
 
-        boolean result = resize(plugin, player, plugin.getSelectionManager().getSelectionCuboid(player), true, lenght);
+        CuboidArea cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
+
+        boolean result = false;
+
+        if (plugin.getConfigManager().isARCOldMethod())
+            result = resize(plugin, player, cuboid, true, lenght);
+        else
+            result = optimizedResize(plugin, player, cuboid, true, lenght);
+
+        plugin.getSelectionManager().afterSelectionUpdate(player, true);
 
         if (!result) {
             Residence.getInstance().msg(player, lm.Area_SizeLimit);
@@ -260,11 +270,268 @@ public class auto implements cmd {
 
             dir = dir.getNext();
         }
-
+        CMIDebug.d("Cycles: ", done);
         plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
         plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
 
         cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
+
+        if (cuboid.getXSize() > group.getMaxX() || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > group.getMaxZ()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static void fillMaps(HashMap<direction, Integer> directionMap, HashMap<direction, Integer> maxMap, direction dir, int max, int cubeSize) {
+        int maxV = (int) ((max / 2D) - (cubeSize / 2D));
+        directionMap.put(dir, maxV);
+        maxMap.put(dir, maxV);
+    }
+
+    public static boolean optimizedResize(Residence plugin, Player player, CuboidArea cuboid, boolean checkBalance, int max) {
+
+        ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
+        PermissionGroup group = rPlayer.getGroup();
+
+        direction dir = direction.Top;
+
+        List<direction> locked = new ArrayList<direction>();
+
+        boolean checkCollision = plugin.getConfigManager().isARCCheckCollision();
+
+        if (checkCollision && plugin.getResidenceManager().collidesWithResidence(cuboid) != null) {
+            return false;
+        }
+
+        int skipped = 0;
+        int done = 0;
+
+        int maxWorldY = group.getMaxY();
+        int minWorldY = group.getMinY();
+
+        int maxX = getMax(group.getMaxX());
+        int maxY = getMax(group.getMaxY());
+        int maxZ = getMax(group.getMaxZ());
+
+        if (maxX > max && max > 0)
+            maxX = max;
+        if (maxY > max && max > 0)
+            maxY = max;
+        if (maxZ > max && max > 0)
+            maxZ = max;
+
+        if (maxX <= 1)
+            maxX = (group.getMaxX() - group.getMinX()) / 2 + group.getMinX();
+
+        if (maxY <= 1)
+            maxY = (group.getMaxY() - group.getMinY()) / 2 + group.getMinY();
+
+        if (maxZ <= 1)
+            maxZ = (group.getMaxZ() - group.getMinZ()) / 2 + group.getMinZ();
+
+        HashMap<direction, Integer> directionMap = new HashMap<direction, Integer>();
+        HashMap<direction, Integer> maxMap = new HashMap<direction, Integer>();
+        CuboidArea originalCuboid = new CuboidArea(cuboid.getLowLocation(), cuboid.getHighLocation());
+
+        int smallestRange = maxX - cuboid.getXSize() < maxY - cuboid.getYSize() ? maxX - cuboid.getXSize() : maxY - cuboid.getYSize();
+        smallestRange = smallestRange < maxZ - cuboid.getZSize() ? smallestRange : maxZ - cuboid.getZSize();
+        smallestRange = smallestRange / 4;
+
+        while (true) {
+            done++;
+
+            // fail safe if loop keeps going on
+            if (done > 100) {
+                break;
+            }
+
+            if (Math.abs(smallestRange) < 1) {
+                break;
+            }
+
+            CuboidArea c = new CuboidArea();
+            c.setLowLocation(cuboid.getLowLocation().clone().add(-smallestRange, -smallestRange, -smallestRange));
+            c.setHighLocation(cuboid.getHighLocation().clone().add(smallestRange, smallestRange, smallestRange));
+
+            if (c.getHighVector().getBlockY() > maxWorldY) {
+                c.setHighVector(c.getHighVector().setY(maxWorldY));
+            }
+
+            if (c.getLowVector().getBlockY() > maxWorldY - 1) {
+                c.setLowVector(c.getLowVector().setY(maxWorldY - 1));
+            } else if (c.getLowVector().getBlockY() < minWorldY) {
+                c.setLowVector(c.getLowVector().setY(minWorldY));
+            }
+            if (checkCollision) {
+                if (plugin.getResidenceManager().collidesWithResidence(c) != null) {
+                    smallestRange = (int) -(Math.ceil(Math.abs(smallestRange) / 2D));
+                    cuboid.setLowLocation(c.getLowLocation());
+                    cuboid.setHighLocation(c.getHighLocation());
+                    continue;
+                }
+
+                if (smallestRange == -1) {
+                    cuboid.setLowLocation(cuboid.getLowLocation().clone().add(1, 1, 1));
+                    cuboid.setHighLocation(cuboid.getHighLocation().clone().add(-1, -1, -1));
+                    break;
+                }
+            }
+
+            int sr = (int) Math.ceil(Math.abs(smallestRange) / 2D);
+
+            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > group.getMaxX()) {
+                break;
+            }
+
+            if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (maxY > 0 && maxY < c.getYSize() || c.getYSize() > group.getMaxY() + (-group.getMinY()))) {
+                break;
+            }
+
+            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > group.getMaxZ()) {
+                break;
+            }
+
+            cuboid.setLowLocation(c.getLowLocation());
+            cuboid.setHighLocation(c.getHighLocation());
+            smallestRange = sr;
+        }
+
+        if (cuboid.getXSize() < 1) {
+            int center = (int) (originalCuboid.getLowVector().getX() + ((originalCuboid.getHighVector().getX() - originalCuboid.getLowVector().getX()) / 2));
+            cuboid.getLowVector().setX(center);
+            cuboid.getHighVector().setX(center);
+        }
+
+        if (cuboid.getZSize() < 1) {
+            int center = (int) (originalCuboid.getLowVector().getZ() + ((originalCuboid.getHighVector().getZ() - originalCuboid.getLowVector().getZ()) / 2));
+            cuboid.getLowVector().setZ(center);
+            cuboid.getHighVector().setZ(center);
+        }
+
+        if (cuboid.getYSize() < 1) {
+            int center = (int) (originalCuboid.getLowVector().getY() + ((originalCuboid.getHighVector().getY() - originalCuboid.getLowVector().getY()) / 2));
+            cuboid.getLowVector().setY(center);
+            cuboid.getHighVector().setY(center);
+        }
+
+        CMIDebug.c(cuboid.getHighVector().getBlockY(), maxWorldY);
+
+        fillMaps(directionMap, maxMap, direction.East, maxX, cuboid.getXSize());
+        fillMaps(directionMap, maxMap, direction.West, maxX, cuboid.getXSize());
+
+        fillMaps(directionMap, maxMap, direction.South, maxZ, cuboid.getZSize());
+        fillMaps(directionMap, maxMap, direction.North, maxZ, cuboid.getZSize());
+
+        fillMaps(directionMap, maxMap, direction.Top, maxY, cuboid.getYSize());
+        fillMaps(directionMap, maxMap, direction.Bottom, maxY, cuboid.getYSize());
+
+        while (true) {
+            if (Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (dir.equals(direction.Top) || dir.equals(direction.Bottom))) {
+                dir = dir.getNext();
+                continue;
+            }
+            done++;
+
+            if (skipped >= 6) {
+                break;
+            }
+
+            // fail safe if loop keeps going on
+            if (done > 100) {
+                break;
+            }
+
+            if (locked.contains(dir)) {
+                dir = dir.getNext();
+                skipped++;
+                continue;
+            }
+
+            skipped = 0;
+
+            Integer offset = directionMap.get(dir);
+
+            if (Math.abs(offset) == 0) {
+                locked.add(dir);
+                dir = dir.getNext();
+                continue;
+            }
+
+            CuboidArea c = new CuboidArea();
+            c.setLowLocation(cuboid.getLowLocation().clone().add(-dir.getLow().getX() * offset, -dir.getLow().getY() * offset, -dir.getLow().getZ() * offset));
+            c.setHighLocation(cuboid.getHighLocation().clone().add(dir.getHigh().getX() * offset, dir.getHigh().getY() * offset, dir.getHigh().getZ() * offset));
+
+            if (c.getHighVector().getBlockY() > maxWorldY) {
+
+                c.setHighVector(c.getHighVector().setY(maxWorldY));
+            }
+
+            if (c.getLowVector().getBlockY() > maxWorldY - 1) {
+                c.setLowVector(c.getLowVector().setY(maxWorldY - 1));
+            } else if (c.getLowVector().getBlockY() < minWorldY) {
+                c.setLowVector(c.getLowVector().setY(minWorldY));
+            }
+
+            if (checkCollision) {
+                if (plugin.getResidenceManager().collidesWithResidence(c) != null) {
+
+                    int newOffset = (int) Math.ceil(Math.abs(offset) / 2D);
+
+                    if (newOffset < 1)
+                        newOffset = 1;
+
+                    directionMap.put(dir, -(newOffset));
+
+                    cuboid.setLowLocation(c.getLowLocation());
+                    cuboid.setHighLocation(c.getHighLocation());
+                    continue;
+                }
+            }
+
+            if (maxMap.get(dir).equals(Math.abs(offset))) {
+                locked.add(dir);
+            }
+
+            directionMap.put(dir, (int) (Math.abs(offset) / 2D));
+
+            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > group.getMaxX()) {
+                locked.add(dir);
+                dir = dir.getNext();
+                continue;
+            }
+
+            if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (maxY > 0 && maxY < c.getYSize() || c.getYSize() > group.getMaxY() + (-group.getMinY()))) {
+                locked.add(dir);
+                dir = dir.getNext();
+                continue;
+            }
+
+            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > group.getMaxZ()) {
+                locked.add(dir);
+                dir = dir.getNext();
+                continue;
+            }
+
+            if (checkBalance && plugin.getConfigManager().enableEconomy()) {
+                if (!Residence.getInstance().getEconomyManager().canAfford(player, c.getCost(group))) {
+                    plugin.msg(player, lm.Economy_NotEnoughMoney);
+                    break;
+                }
+            }
+
+            cuboid.setLowLocation(c.getLowLocation());
+            cuboid.setHighLocation(c.getHighLocation());
+
+            dir = dir.getNext();
+        }
+        CMIDebug.d("Cycles: ", done);
+        plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
+        plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
+
+        cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
+
+        CMIDebug.d("Height: ", cuboid.getHighLocation().getBlockY(), cuboid.getLowLocation().getBlockY(), "max: ", maxWorldY);
 
         if (cuboid.getXSize() > group.getMaxX() || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > group.getMaxZ()) {
             return false;
@@ -312,6 +579,7 @@ public class auto implements cmd {
             }
             return dir;
         }
+
     }
 
     @Override
