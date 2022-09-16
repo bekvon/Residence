@@ -319,7 +319,8 @@ public class ResidencePlayer {
         if (this.player == null && ofPlayer == null)
             ofPlayer = Residence.getInstance().getOfflinePlayer(userName);
         if (ofPlayer != null) {
-            this.userName = ofPlayer.getName();
+            // Update the userName from cache, avoid reading NBT cost
+            this.userName = Residence.getInstance().getPlayerName(uuid);
             this.uuid = ofPlayer.getUniqueId();
             return;
         }
