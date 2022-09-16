@@ -131,7 +131,6 @@ import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
 
