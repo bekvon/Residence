@@ -298,9 +298,17 @@ public class CuboidArea {
         this.world = highLocation.getWorld();
     }
 
+    public void setHighVector(Vector highLocation) {
+        this.highPoints = highLocation;
+    }
+
     public void setLowLocation(Location lowLocation) {
         this.lowPoints = lowLocation.toVector();
         this.world = lowLocation.getWorld();
+    }
+
+    public void setLowVector(Vector lowLocation) {
+        this.lowPoints = lowLocation;
     }
 
     public double getCost(PermissionGroup group) {

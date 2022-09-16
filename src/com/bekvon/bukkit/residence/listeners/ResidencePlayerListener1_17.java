@@ -28,8 +28,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
-import net.Zrips.CMILib.Version.Version;
 
 public class ResidencePlayerListener1_17 implements Listener {
 

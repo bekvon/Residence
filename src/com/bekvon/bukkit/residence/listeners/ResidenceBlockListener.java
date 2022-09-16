@@ -41,7 +41,6 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.world.PortalCreateEvent;
-import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -66,7 +65,6 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {

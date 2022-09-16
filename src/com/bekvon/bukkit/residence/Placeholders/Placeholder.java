@@ -401,11 +401,11 @@ public class Placeholder {
                     break;
                 case residence_user_maxew:
                     PermissionGroup group = user.getGroup();
-                    result = group.getXmin() + "-" + group.getXmax();
+                    result = group.getMinX() + "-" + user.getMaxX();
                     break;
                 case residence_user_maxns:
                     group = user.getGroup();
-                    result = group.getZmin() + "-" + group.getZmax();
+                    result = group.getMinZ() + "-" + user.getMaxZ();
                     break;
                 case residence_user_maxrentdays:
                     result = String.valueOf(user.getGroup().getMaxRentDays());
@@ -424,7 +424,7 @@ public class Placeholder {
                     break;
                 case residence_user_maxud:
                     group = user.getGroup();
-                    result = group.getYmin() + "-" + group.getYmax();
+                    result = group.getMinY() + "-" + group.getMaxY();
                     break;
                 case residence_user_current_owner:
                     ClaimedResidence res = plugin.getResidenceManager().getByLoc(user.getPlayer().getLocation());

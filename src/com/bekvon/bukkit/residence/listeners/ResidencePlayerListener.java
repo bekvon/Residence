@@ -54,6 +54,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import com.bekvon.bukkit.residence.ConfigManager;
 import com.bekvon.bukkit.residence.Residence;
@@ -88,7 +89,6 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
@@ -105,6 +105,29 @@ public class ResidencePlayerListener implements Listener {
 
     private Residence plugin;
 
+    private int locationChangeCheckId = -1;
+
+    protected Map<UUID, Long> lastCheck = new HashMap<UUID, Long>();
+    protected Map<UUID, Vector> lastLocation = new HashMap<UUID, Vector>();
+
+    private Runnable locationChangeCheck = new Runnable() {
+        @Override
+        public void run() {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                Vector locfrom = lastLocation.getOrDefault(player.getUniqueId(), player.getLocation().toVector());
+                Vector locto = player.getLocation().toVector();
+                lastLocation.put(player.getUniqueId(), locto);
+                if (locfrom.getBlockX() == locto.getBlockX() && locfrom.getBlockY() == locto.getBlockY() && locfrom.getBlockZ() == locto.getBlockZ())
+                    continue;
+                Long time = lastCheck.getOrDefault(player.getUniqueId(), 0L);
+                if (time + 1000L > System.currentTimeMillis())
+                    continue;
+                lastCheck.put(player.getUniqueId(), System.currentTimeMillis());
+                handleNewLocation(player, player.getLocation(), true);
+            }
+        }
+    };
+
     public ResidencePlayerListener(Residence plugin) {
         currentRes = new HashMap<UUID, ClaimedResidence>();
         lastUpdate = new HashMap<UUID, Long>();
@@ -117,6 +140,8 @@ public class ResidencePlayerListener implements Listener {
             lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
         }
         this.plugin = plugin;
+
+        locationChangeCheckId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, locationChangeCheck, 20L, 15 * 20L);
     }
 
     public void reload() {
@@ -130,6 +155,8 @@ public class ResidencePlayerListener implements Listener {
         for (Player player : Bukkit.getOnlinePlayers()) {
             lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
         }
+        lastCheck.clear();
+        lastLocation.clear();
     }
 
     @EventHandler
@@ -2419,6 +2446,7 @@ public class ResidencePlayerListener implements Listener {
                 default:
                     break;
                 }
+
                 return teleported;
             }
 

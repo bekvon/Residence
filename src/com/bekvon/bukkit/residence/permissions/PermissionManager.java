@@ -33,7 +33,6 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 
@@ -123,6 +122,19 @@ public class PermissionManager {
 
     private void checkPermissions() {
 	Server server = plugin.getServ();
+	
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        Plugin pl = pluginManager.getPlugin("LuckPerms");
+        if (pl != null && pl.isEnabled()) {
+            Integer ver = CMIVersionChecker.convertVersion(pl.getDescription().getVersion());
+            if (ver > 50000) {
+                perms = new LuckPerms5Adapter();
+                Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found LuckPerms5 Plugin!");
+                return;
+            }
+            plugin.consoleMessage("&cLuckPerms plugin was found but its outdated");
+        }
+        
 	Plugin p = server.getPluginManager().getPlugin("Vault");
 	if (p != null) {
 	    ResidenceVaultAdapter vault = new ResidenceVaultAdapter(server);
@@ -134,17 +146,6 @@ public class PermissionManager {
 	    Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found Vault, but Vault reported no usable permissions system...");
 	}
 
-	PluginManager pluginManager = plugin.getServer().getPluginManager();
-	Plugin pl = pluginManager.getPlugin("LuckPerms");
-	if (pl != null && pl.isEnabled()) {
-	    Integer ver = CMIVersionChecker.convertVersion(pl.getDescription().getVersion());
-	    if (ver > 50000) {
-		perms = new LuckPerms5Adapter();
-		Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Found LuckPerms5 Plugin!");
-		return;
-	    }
-	    plugin.consoleMessage("&cLuckPerms plugin was found but its outdated");
-	}
 
 	p = server.getPluginManager().getPlugin("bPermissions");
 	if (p != null) {
@@ -247,6 +248,8 @@ public class PermissionManager {
 	bypass_itempickup("Allows to bypass itempickup flag"),
 	buy("Allows to buy residence"),
 	sell("Allows to sell residence"),
+        max_res_x_$1("Defines residence size limit on X axis", "number"),
+        max_res_z_$1("Defines residence size limit on X axis", "number"),
 	max_res_unlimited("Defines residence limit as unlimited"),
 	max_res_$1("Defines residence limit", "number"),
 	max_subzones_unlimited("Defines subzone limit as unlimited"),

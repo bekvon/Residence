@@ -46,6 +46,8 @@ public class AutoSelection {
 	    return;
 
 	AutoSelector AutoSelector = list.get(player.getUniqueId());
+	
+	ResidencePlayer rplayer = ResidencePlayer.get(player);
 
 	int Curenttime = (int) (System.currentTimeMillis() - AutoSelector.getTime()) / 1000;
 
@@ -108,7 +110,7 @@ public class AutoSelection {
 
 	PermissionGroup group = AutoSelector.getGroup();
 
-	if (area.getXSize() > group.getMaxX()) {
+	if (area.getXSize() > rplayer.getMaxX()) {
 	    return;
 	}
 
@@ -116,7 +118,7 @@ public class AutoSelection {
 	    return;
 	}
 
-	if (area.getZSize() > group.getMaxZ()) {
+	if (area.getZSize() > rplayer.getMaxZ()) {
 	    return;
 	}
 
