@@ -247,6 +247,8 @@ public class PermissionManager {
 	bypass_itempickup("Allows to bypass itempickup flag"),
 	buy("Allows to buy residence"),
 	sell("Allows to sell residence"),
+        max_res_maxx_$1("Defines residence size limit on X axis", "number"),
+        max_res_maxz_$1("Defines residence size limit on X axis", "number"),
 	max_res_unlimited("Defines residence limit as unlimited"),
 	max_res_$1("Defines residence limit", "number"),
 	max_subzones_unlimited("Defines subzone limit as unlimited"),

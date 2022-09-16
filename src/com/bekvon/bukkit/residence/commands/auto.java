@@ -158,9 +158,12 @@ public class auto implements cmd {
         int skipped = 0;
         int done = 0;
 
-        int maxX = getMax(group.getMaxX());
+        int groupMaxX = rPlayer.getMaxX();
+        int groupMaxZ = rPlayer.getMaxZ();
+
+        int maxX = getMax(groupMaxX);
         int maxY = getMax(group.getMaxY());
-        int maxZ = getMax(group.getMaxZ());
+        int maxZ = getMax(groupMaxZ);
 
         if (maxX > max && max > 0)
             maxX = max;
@@ -170,13 +173,13 @@ public class auto implements cmd {
             maxZ = max;
 
         if (maxX <= 1)
-            maxX = (group.getMaxX() - group.getMinX()) / 2 + group.getMinX();
+            maxX = (rPlayer.getMaxX() - group.getMinX()) / 2 + group.getMinX();
 
         if (maxY <= 1)
             maxY = (group.getMaxY() - group.getMinY()) / 2 + group.getMinY();
 
         if (maxZ <= 1)
-            maxZ = (group.getMaxZ() - group.getMinZ()) / 2 + group.getMinZ();
+            maxZ = (rPlayer.getMaxZ() - group.getMinZ()) / 2 + group.getMinZ();
 
         int minY = CMIWorld.getMinHeight(cuboid.getWorld());
 
@@ -233,7 +236,7 @@ public class auto implements cmd {
                 continue;
             }
 
-            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > group.getMaxX()) {
+            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > groupMaxX) {
                 locked.add(dir);
                 dir = dir.getNext();
                 skipped++;
@@ -247,7 +250,7 @@ public class auto implements cmd {
                 continue;
             }
 
-            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > group.getMaxZ()) {
+            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > groupMaxZ) {
                 locked.add(dir);
                 dir = dir.getNext();
                 skipped++;
@@ -270,13 +273,13 @@ public class auto implements cmd {
 
             dir = dir.getNext();
         }
-        CMIDebug.d("Cycles: ", done);
+
         plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
         plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
 
         cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
-        if (cuboid.getXSize() > group.getMaxX() || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > group.getMaxZ()) {
+        if (cuboid.getXSize() > groupMaxX || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > groupMaxZ) {
             return false;
         }
 
@@ -310,9 +313,12 @@ public class auto implements cmd {
         int maxWorldY = group.getMaxY();
         int minWorldY = group.getMinY();
 
-        int maxX = getMax(group.getMaxX());
+        int groupMaxX = rPlayer.getMaxX();
+        int groupMaxZ = rPlayer.getMaxZ();
+
+        int maxX = getMax(groupMaxX);
         int maxY = getMax(group.getMaxY());
-        int maxZ = getMax(group.getMaxZ());
+        int maxZ = getMax(groupMaxZ);
 
         if (maxX > max && max > 0)
             maxX = max;
@@ -322,13 +328,13 @@ public class auto implements cmd {
             maxZ = max;
 
         if (maxX <= 1)
-            maxX = (group.getMaxX() - group.getMinX()) / 2 + group.getMinX();
+            maxX = (groupMaxX - group.getMinX()) / 2 + group.getMinX();
 
         if (maxY <= 1)
             maxY = (group.getMaxY() - group.getMinY()) / 2 + group.getMinY();
 
         if (maxZ <= 1)
-            maxZ = (group.getMaxZ() - group.getMinZ()) / 2 + group.getMinZ();
+            maxZ = (groupMaxZ - group.getMinZ()) / 2 + group.getMinZ();
 
         HashMap<direction, Integer> directionMap = new HashMap<direction, Integer>();
         HashMap<direction, Integer> maxMap = new HashMap<direction, Integer>();
@@ -380,7 +386,7 @@ public class auto implements cmd {
 
             int sr = (int) Math.ceil(Math.abs(smallestRange) / 2D);
 
-            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > group.getMaxX()) {
+            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > groupMaxX) {
                 break;
             }
 
@@ -388,7 +394,7 @@ public class auto implements cmd {
                 break;
             }
 
-            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > group.getMaxZ()) {
+            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > groupMaxZ) {
                 break;
             }
 
@@ -495,7 +501,7 @@ public class auto implements cmd {
 
             directionMap.put(dir, (int) (Math.abs(offset) / 2D));
 
-            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > group.getMaxX()) {
+            if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > groupMaxX) {
                 locked.add(dir);
                 dir = dir.getNext();
                 continue;
@@ -507,7 +513,7 @@ public class auto implements cmd {
                 continue;
             }
 
-            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > group.getMaxZ()) {
+            if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > groupMaxZ) {
                 locked.add(dir);
                 dir = dir.getNext();
                 continue;
@@ -525,15 +531,13 @@ public class auto implements cmd {
 
             dir = dir.getNext();
         }
-        CMIDebug.d("Cycles: ", done);
+        
         plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
         plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
 
         cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
-        CMIDebug.d("Height: ", cuboid.getHighLocation().getBlockY(), cuboid.getLowLocation().getBlockY(), "max: ", maxWorldY);
-
-        if (cuboid.getXSize() > group.getMaxX() || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > group.getMaxZ()) {
+        if (cuboid.getXSize() > groupMaxX || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > groupMaxZ) {
             return false;
         }
 

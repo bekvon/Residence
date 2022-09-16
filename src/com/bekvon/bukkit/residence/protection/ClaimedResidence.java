@@ -305,16 +305,16 @@ public class ClaimedResidence {
             return true;
         ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
         PermissionGroup group = rPlayer.getGroup();
-        if (area.getXSize() > group.getMaxX()) {
-            Residence.getInstance().msg(player, lm.Area_ToBigX, area.getXSize(), group.getMaxX());
+        if (area.getXSize() > rPlayer.getMaxX()) {
+            Residence.getInstance().msg(player, lm.Area_ToBigX, area.getXSize(), rPlayer.getMaxX());
             return false;
         }
         if (area.getYSize() > group.getMaxY() + (-group.getMinY())) {
             Residence.getInstance().msg(player, lm.Area_ToBigY, area.getYSize(), group.getMaxY());
             return false;
         }
-        if (area.getZSize() > group.getMaxZ()) {
-            Residence.getInstance().msg(player, lm.Area_ToBigZ, area.getZSize(), group.getMaxZ());
+        if (area.getZSize() > rPlayer.getMaxZ()) {
+            Residence.getInstance().msg(player, lm.Area_ToBigZ, area.getZSize(), rPlayer.getMaxZ());
             return false;
         }
         return true;
