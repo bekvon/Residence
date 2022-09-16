@@ -119,13 +119,13 @@ public class ResidencePlayer {
     public void recountMaxX() {
         int m = this.getGroup().getMaxX();
         m = m == -1 ? maxX : m;
-        this.maxX = Residence.getInstance().getPermissionManager().getPermissionInfo(this.getUniqueId(), ResPerm.max_res_maxx_$1).getMaxValue(m);
+        this.maxX = Residence.getInstance().getPermissionManager().getPermissionInfo(this.getUniqueId(), ResPerm.max_res_x_$1).getMaxValue(m);
     }
 
     public void recountMaxZ() {
         int m = this.getGroup().getMaxZ();
         m = m == -1 ? maxZ : m;
-        this.maxZ = Residence.getInstance().getPermissionManager().getPermissionInfo(this.getUniqueId(), ResPerm.max_res_maxz_$1).getMaxValue(m);
+        this.maxZ = Residence.getInstance().getPermissionManager().getPermissionInfo(this.getUniqueId(), ResPerm.max_res_z_$1).getMaxValue(m);
     }
 
     public void recountMaxRes() {
