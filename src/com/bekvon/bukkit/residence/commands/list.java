@@ -45,7 +45,7 @@ public class list implements cmd {
 	    return true;	
 	
 	plugin.getResidenceManager().listResidences(sender, target, page, false, false, resadmin, world);
-
+	 
 	return true; 
     }
 

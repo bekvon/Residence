@@ -135,7 +135,8 @@ public class ResidencePlayer {
                 this.maxRes = maxValue;
                 return;
             }
-        } else if (ofPlayer != null && ResidenceVaultAdapter.hasPermission(this.ofPlayer, ResPerm.max_res_unlimited.getPermission(), Residence.getInstance().getConfigManager().getDefaultWorld())) {
+        } else if (ofPlayer != null && Residence.getInstance().getPermissionManager().getPermissionsPlugin().hasPermission(this.ofPlayer, ResPerm.max_res_unlimited.getPermission(), Residence.getInstance()
+            .getConfigManager().getDefaultWorld())) {
             this.maxRes = maxValue;
             return;
         }
@@ -154,7 +155,8 @@ public class ResidencePlayer {
                 return;
             }
         } else {
-            if (ofPlayer != null && ResidenceVaultAdapter.hasPermission(this.ofPlayer, ResPerm.max_rents_unlimited.getPermission(), Residence.getInstance().getConfigManager().getDefaultWorld())) {
+            if (ofPlayer != null && Residence.getInstance().getPermissionManager().getPermissionsPlugin().hasPermission(this.ofPlayer, ResPerm.max_rents_unlimited.getPermission(), Residence.getInstance()
+                .getConfigManager().getDefaultWorld())) {
                 this.maxRents = maxValue;
                 return;
             }
@@ -179,7 +181,8 @@ public class ResidencePlayer {
                 return;
             }
         } else {
-            if (ofPlayer != null && ResidenceVaultAdapter.hasPermission(this.ofPlayer, ResPerm.max_subzones_unlimited.getPermission(), Residence.getInstance().getConfigManager().getDefaultWorld())) {
+            if (ofPlayer != null && Residence.getInstance().getPermissionManager().getPermissionsPlugin().hasPermission(this.ofPlayer, ResPerm.max_subzones_unlimited.getPermission(), Residence
+                .getInstance().getConfigManager().getDefaultWorld())) {
                 this.maxSubzones = maxValue;
                 return;
             }
@@ -203,7 +206,8 @@ public class ResidencePlayer {
                 return;
             }
         } else {
-            if (ofPlayer != null && ResidenceVaultAdapter.hasPermission(this.ofPlayer, ResPerm.max_subzonedepth_unlimited.getPermission(), Residence.getInstance().getConfigManager().getDefaultWorld())) {
+            if (ofPlayer != null && Residence.getInstance().getPermissionManager().getPermissionsPlugin().hasPermission(this.ofPlayer, ResPerm.max_subzonedepth_unlimited.getPermission(), Residence
+                .getInstance().getConfigManager().getDefaultWorld())) {
                 this.maxSubzoneDepth = maxValue;
                 return;
             }

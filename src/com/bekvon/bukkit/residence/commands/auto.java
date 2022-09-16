@@ -23,7 +23,6 @@ import com.bekvon.bukkit.residence.protection.CuboidArea;
 
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class auto implements cmd {
 
@@ -420,8 +419,6 @@ public class auto implements cmd {
             cuboid.getLowVector().setY(center);
             cuboid.getHighVector().setY(center);
         }
-
-        CMIDebug.c(cuboid.getHighVector().getBlockY(), maxWorldY);
 
         fillMaps(directionMap, maxMap, direction.East, maxX, cuboid.getXSize());
         fillMaps(directionMap, maxMap, direction.West, maxX, cuboid.getXSize());
