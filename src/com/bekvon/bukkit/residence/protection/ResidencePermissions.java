@@ -644,18 +644,19 @@ public class ResidencePermissions extends FlagPermissions {
 	if (rPlayer != null) {
 	    this.ownerUUID = rPlayer.getUniqueId();
 	    ownerLastKnownName = rPlayer.getName();
+	    
 	}
 
-	if (newOwner.equalsIgnoreCase("Server Land") || newOwner.equalsIgnoreCase(Residence.getInstance().getServerLandName())) {
+	if (ownerLastKnownName.equalsIgnoreCase("Server Land") || ownerLastKnownName.equalsIgnoreCase(Residence.getInstance().getServerLandName())) {
 	    ownerUUID = UUID.fromString(Residence.getInstance().getServerLandUUID());// the UUID for server owned land
 	} else {
-	    UUID playerUUID = Residence.getInstance().getPlayerUUID(newOwner);
+	    UUID playerUUID = Residence.getInstance().getPlayerUUID(ownerLastKnownName);
 	    if (playerUUID != null)
 		ownerUUID = playerUUID;
 	    else
 		ownerUUID = UUID.fromString(Residence.getInstance().getTempUserUUID());//the fake UUID used when unable to find the real one, will be updated with players real UUID when its possible to find it
 	}
-	Residence.getInstance().getPlayerManager().addResidence(newOwner, residence);
+	Residence.getInstance().getPlayerManager().addResidence(ownerLastKnownName, residence);
 	if (resetFlags)
 	    this.applyDefaultFlags();
     }
