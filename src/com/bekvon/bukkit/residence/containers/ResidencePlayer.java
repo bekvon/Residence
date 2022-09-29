@@ -68,10 +68,7 @@ public class ResidencePlayer {
     }
 
     public boolean isOnline() {
-        this.updatePlayer();
-        if (this.player != null && this.player.isOnline())
-            return true;
-        return false;
+        return this.player != null && this.player.isOnline() || Bukkit.getPlayer(this.uuid) != null;
     }
 
     public ResidencePlayer(String userName, UUID uuid) {
@@ -381,7 +378,8 @@ public class ResidencePlayer {
     }
 
     public String getName() {
-        this.updatePlayer();
+        if (player == null)
+            this.updatePlayer();
         return userName;
     }
 
@@ -396,7 +394,8 @@ public class ResidencePlayer {
     }
 
     public Player getPlayer() {
-        this.updatePlayer();
+        if (player == null)
+            this.updatePlayer();
         return player;
     }
 
