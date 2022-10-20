@@ -1623,7 +1623,7 @@ public class ClaimedResidence {
 
         if (!ChatPrefix.equals(""))
             root.put("ChatPrefix", ChatPrefix);
-        if (!ChannelColor.getCleanName().equals(Residence.getInstance().getConfigManager().getChatColor().getName())
+        if (!ChannelColor.getName().equalsIgnoreCase(Residence.getInstance().getConfigManager().getChatColor().getName())
             && !ChannelColor.getName().equalsIgnoreCase("WHITE")) {
             root.put("ChannelColor", ChannelColor.getName());
         }
