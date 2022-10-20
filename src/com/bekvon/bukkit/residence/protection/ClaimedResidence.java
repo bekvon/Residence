@@ -1595,7 +1595,8 @@ public class ClaimedResidence {
                     if (leaveMessage != null)
                         root.put("LeaveMessage", leaveMessage);
                 } else {
-                    root.put("Messages", min.getId());
+                    if (min.getId() > 1)
+                        root.put("Messages", min.getId());
                 }
             }
         } else {
@@ -1816,10 +1817,12 @@ public class ClaimedResidence {
             res.leaveMessage = (String) root.get("LeaveMessage");
 
         if (root.containsKey("Messages") && root.get("Messages") instanceof Integer) {
-            res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName,
-                (Integer) root.get("Messages"));
-            res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName,
-                (Integer) root.get("Messages"));
+            res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName, (Integer) root.get("Messages"));
+            res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName, (Integer) root.get("Messages"));
+        } else {
+            // Defaulting to first one if not present
+            res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName, 1);
+            res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName, 1);
         }
 
         res.parent = parent;
