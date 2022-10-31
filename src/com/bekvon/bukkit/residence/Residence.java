@@ -87,6 +87,7 @@ import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_9;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
 import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
+import com.bekvon.bukkit.residence.persistance.YMLSaveHelper;
 import com.bekvon.bukkit.residence.pl3xmap.Pl3xMapListeners;
 import com.bekvon.bukkit.residence.pl3xmap.Pl3xMapManager;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -1245,39 +1246,86 @@ public class Residence extends JavaPlugin {
         return resadminToggle.contains(player);
     }
 
+
+    
+
+    private final String flagsFileSuffix = "_Flags";
+    private final String messagesFileSuffix = "_Messages";
+
+    private static void saveFile(File worldFolder, String fileName, String key, Object value) throws IOException {
+        File ymlFlagsSaveLoc = new File(worldFolder, "res_" + fileName + ".yml");
+        File tmpFlagsFile = new File(worldFolder, "tmp_res_" + fileName + ".yml");
+
+        // Separate Flags file
+        YMLSaveHelper flagsTemp = new YMLSaveHelper(tmpFlagsFile);
+        flagsTemp.getRoot().put(key, value);
+        flagsTemp.save();
+
+        if (ymlFlagsSaveLoc.isFile()) {
+            File backupFolder = new File(worldFolder, "Backup");
+            backupFolder.mkdirs();
+            File backupFile = new File(backupFolder, "res_" + fileName + ".yml");
+            if (backupFile.isFile()) {
+                backupFile.delete();
+            }
+            ymlFlagsSaveLoc.renameTo(backupFile);
+        }
+        tmpFlagsFile.renameTo(ymlFlagsSaveLoc);
+    }
+
     private void saveYml() throws IOException {
         File saveFolder = new File(dataFolder, "Save");
         File worldFolder = new File(saveFolder, "Worlds");
         if (!worldFolder.isDirectory())
             worldFolder.mkdirs();
-        YMLSaveHelper yml;
+        YMLSaveHelper syml;
         Map<String, Object> save = rmanager.save();
         for (Entry<String, Object> entry : save.entrySet()) {
-            File ymlSaveLoc = new File(worldFolder, "res_" + entry.getKey() + ".yml");
-            File tmpFile = new File(worldFolder, "tmp_res_" + entry.getKey() + ".yml");
-            yml = new YMLSaveHelper(tmpFile);
-            yml.getRoot().put("Version", saveVersion);
-            World world = server.getWorld(entry.getKey());
-            if (world != null)
-                yml.getRoot().put("Seed", world.getSeed());
-            if (this.getResidenceManager().getMessageCatch(entry.getKey()) != null)
-                yml.getRoot().put("Messages", this.getResidenceManager().getMessageCatch(entry.getKey()));
-            if (this.getResidenceManager().getFlagsCatch(entry.getKey()) != null)
-                yml.getRoot().put("Flags", this.getResidenceManager().getFlagsCatch(entry.getKey()));
-            yml.getRoot().put("Residences", entry.getValue());
-            yml.save();
-            if (ymlSaveLoc.isFile()) {
-                File backupFolder = new File(worldFolder, "Backup");
-                backupFolder.mkdirs();
-                File backupFile = new File(backupFolder, "res_" + entry.getKey() + ".yml");
-                if (backupFile.isFile()) {
-                    backupFile.delete();
+
+            if (Residence.getInstance().getConfigManager().isSaveFileSplit()) {
+
+                saveFile(worldFolder, entry.getKey(), "Residences", entry.getValue());
+
+                // Separate Flags file
+                if (this.getResidenceManager().getFlagsCatch(entry.getKey()) != null)
+                    saveFile(worldFolder, entry.getKey() + flagsFileSuffix, "Flags", this.getResidenceManager().getFlagsCatch(entry.getKey()));
+
+                // Separate Messages file
+                if (this.getResidenceManager().getMessageCatch(entry.getKey()) != null)
+                    saveFile(worldFolder, entry.getKey() + messagesFileSuffix, "Messages", this.getResidenceManager().getMessageCatch(entry.getKey()));
+
+            } else {
+                // Older method saving messages and flags into same file
+                
+                File ymlSaveLoc = new File(worldFolder, "res_" + entry.getKey() + ".yml");
+                File tmpFile = new File(worldFolder, "tmp_res_" + entry.getKey() + ".yml");
+
+                syml = new YMLSaveHelper(tmpFile);
+                syml.getRoot().put("Version", saveVersion);
+                World world = server.getWorld(entry.getKey());
+                if (world != null)
+                    syml.getRoot().put("Seed", world.getSeed());
+                if (this.getResidenceManager().getMessageCatch(entry.getKey()) != null)
+                    syml.getRoot().put("Messages", this.getResidenceManager().getMessageCatch(entry.getKey()));
+                if (this.getResidenceManager().getFlagsCatch(entry.getKey()) != null)
+                    syml.getRoot().put("Flags", this.getResidenceManager().getFlagsCatch(entry.getKey()));
+
+                syml.getRoot().put("Residences", entry.getValue());
+                syml.save();
+                if (ymlSaveLoc.isFile()) {
+                    File backupFolder = new File(worldFolder, "Backup");
+                    backupFolder.mkdirs();
+                    File backupFile = new File(backupFolder, "res_" + entry.getKey() + ".yml");
+                    if (backupFile.isFile()) {
+                        backupFile.delete();
+                    }
+                    ymlSaveLoc.renameTo(backupFile);
                 }
-                ymlSaveLoc.renameTo(backupFile);
+                tmpFile.renameTo(ymlSaveLoc);
             }
-            tmpFile.renameTo(ymlSaveLoc);
         }
 
+        YMLSaveHelper yml;
         // For Sale save
         File ymlSaveLoc = new File(saveFolder, "forsale.yml");
         File tmpFile = new File(saveFolder, "tmp_forsale.yml");
@@ -1358,6 +1406,79 @@ public class Residence extends JavaPlugin {
 
     public final static String saveFilePrefix = "res_";
 
+    private void loadFlags(String worldName, YMLSaveHelper yml) {
+        if (!yml.getRoot().containsKey("Flags"))
+            return;
+
+        HashMap<Integer, MinimizeFlags> c = getResidenceManager().getCacheFlags().get(worldName);
+        if (c == null)
+            c = new HashMap<Integer, MinimizeFlags>();
+        Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Flags");
+        if (ms == null)
+            return;
+
+        for (Entry<Integer, Object> one : ms.entrySet()) {
+            try {
+                HashMap<String, Boolean> msgs = (HashMap<String, Boolean>) one.getValue();
+                c.put(one.getKey(), new MinimizeFlags(one.getKey(), msgs));
+            } catch (Exception e) {
+
+            }
+        }
+        getResidenceManager().getCacheFlags().put(worldName, c);
+    }
+
+    private void loadMessages(String worldName, YMLSaveHelper yml) {
+        if (!yml.getRoot().containsKey("Messages"))
+            return;
+
+        HashMap<Integer, MinimizeMessages> c = getResidenceManager().getCacheMessages().get(worldName);
+        if (c == null)
+            c = new HashMap<Integer, MinimizeMessages>();
+        Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Messages");
+        if (ms == null)
+            return;
+
+        for (Entry<Integer, Object> one : ms.entrySet()) {
+            try {
+                Map<String, String> msgs = (Map<String, String>) one.getValue();
+                c.put(one.getKey(), new MinimizeMessages(one.getKey(), msgs.get("EnterMessage"), msgs.get("LeaveMessage")));
+            } catch (Exception e) {
+
+            }
+        }
+        getResidenceManager().getCacheMessages().put(worldName, c);
+    }
+
+    private void loadMessagesAndFlags(String worldName, YMLSaveHelper yml, File worldFolder) {
+        loadMessages(worldName, yml);
+        loadFlags(worldName, yml);
+
+        File flagsFile = new File(worldFolder, saveFilePrefix + worldName + flagsFileSuffix + ".yml");
+        if (flagsFile.isFile()) {
+            try {
+                yml = new YMLSaveHelper(flagsFile);
+                yml.load();
+                if (yml.getRoot() != null)
+                    loadFlags(worldName, yml);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        File messagesFile = new File(worldFolder, saveFilePrefix + worldName + messagesFileSuffix + ".yml");
+        if (messagesFile.isFile()) {
+            try {
+                yml = new YMLSaveHelper(messagesFile);
+                yml.load();
+                if (yml.getRoot() != null)
+                    loadMessages(worldName, yml);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected boolean loadYml() throws Exception {
         File saveFolder = new File(dataFolder, "Save");
@@ -1378,61 +1499,28 @@ public class Residence extends JavaPlugin {
 
             for (String worldName : this.getResidenceManager().getWorldNames()) {
                 loadFile = new File(worldFolder, saveFilePrefix + worldName + ".yml");
-                if (loadFile.isFile()) {
-                    time = System.currentTimeMillis();
+                if (!loadFile.isFile())
+                    continue;
 
-                    if (!isDisabledWorld(worldName) && !this.getConfigManager().CleanerStartupLog)
-                        Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + worldName + "...");
+                time = System.currentTimeMillis();
 
-                    yml = new YMLSaveHelper(loadFile);
-                    yml.load();
-                    if (yml.getRoot() == null)
-                        continue;
+                if (!isDisabledWorld(worldName) && !this.getConfigManager().CleanerStartupLog)
+                    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loading save data for world " + worldName + "...");
 
-                    if (yml.getRoot().containsKey("Messages")) {
-                        HashMap<Integer, MinimizeMessages> c = getResidenceManager().getCacheMessages().get(worldName);
-                        if (c == null)
-                            c = new HashMap<Integer, MinimizeMessages>();
-                        Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Messages");
-                        if (ms != null) {
-                            for (Entry<Integer, Object> one : ms.entrySet()) {
-                                try {
-                                    Map<String, String> msgs = (Map<String, String>) one.getValue();
-                                    c.put(one.getKey(), new MinimizeMessages(one.getKey(), msgs.get("EnterMessage"), msgs.get("LeaveMessage")));
-                                } catch (Exception e) {
+                yml = new YMLSaveHelper(loadFile);
+                yml.load();
+                if (yml.getRoot() == null)
+                    continue;
 
-                                }
-                            }
-                            getResidenceManager().getCacheMessages().put(worldName, c);
-                        }
-                    }
+                loadMessagesAndFlags(worldName, yml, worldFolder);
 
-                    if (yml.getRoot().containsKey("Flags")) {
-                        HashMap<Integer, MinimizeFlags> c = getResidenceManager().getCacheFlags().get(worldName);
-                        if (c == null)
-                            c = new HashMap<Integer, MinimizeFlags>();
-                        Map<Integer, Object> ms = (Map<Integer, Object>) yml.getRoot().get("Flags");
-                        if (ms != null) {
-                            for (Entry<Integer, Object> one : ms.entrySet()) {
-                                try {
-                                    HashMap<String, Boolean> msgs = (HashMap<String, Boolean>) one.getValue();
-                                    c.put(one.getKey(), new MinimizeFlags(one.getKey(), msgs));
-                                } catch (Exception e) {
+                worlds.put(worldName, yml.getRoot().get("Residences"));
 
-                                }
-                            }
-                            getResidenceManager().getCacheFlags().put(worldName, c);
-                        }
-                    }
+                int pass = (int) (System.currentTimeMillis() - time);
+                String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
 
-                    worlds.put(worldName, yml.getRoot().get("Residences"));
-
-                    int pass = (int) (System.currentTimeMillis() - time);
-                    String PastTime = pass > 1000 ? String.format("%.2f", (pass / 1000F)) + " sec" : pass + " ms";
-
-                    if (!isDisabledWorld(worldName) && !this.getConfigManager().CleanerStartupLog)
-                        Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + worldName + " data. (" + PastTime + ")");
-                }
+                if (!isDisabledWorld(worldName) && !this.getConfigManager().CleanerStartupLog)
+                    Bukkit.getConsoleSender().sendMessage(getPrefix() + " Loaded " + worldName + " data. (" + PastTime + ")");
             }
 
             getResidenceManager().load(worlds);

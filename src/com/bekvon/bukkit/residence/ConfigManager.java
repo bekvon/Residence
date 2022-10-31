@@ -98,6 +98,7 @@ public class ConfigManager {
     protected int leaseCheckInterval;
     protected int autoSaveInt;
     protected boolean NewSaveMechanic;
+    private boolean saveFileSplit;
     private int ItemPickUpDelay;
     private boolean ARCCheckCollision;
     private boolean ARCOldMethod;
@@ -883,6 +884,12 @@ public class ConfigManager {
         autoSaveInt = c.get("Global.SaveInterval", 10);
         c.addComment("Global.NewSaveMechanic", "New save mechanic can minimize save file couple times and speedup save/load time in general", "Bigger files have bigger impact");
         NewSaveMechanic = c.get("Global.NewSaveMechanic", true);
+
+        // Defaulting to true from 1.19 version due to snakeyaml limiting file size to 3MB
+        c.addComment("Global.saveFileSplit", "When enabled we will split residence save files and separate residence messages and flags into their own files",
+            "This only applies while using NewSaveMechanic",
+            "STRONGLY recommended to be used on 1.19+ servers");
+        saveFileSplit = c.get("Global.saveFileSplit", Version.isCurrentEqualOrHigher(Version.v1_19_R1));
 
         c.addComment("Global.Backup.AutoCleanUp.Use",
             "Do you want to automatically remove backup files from main backup folder if they are older than defined day amount");
@@ -2190,6 +2197,10 @@ public class ConfigManager {
 
     public boolean isARCOldMethod() {
         return ARCOldMethod;
+    }
+
+    public boolean isSaveFileSplit() {
+        return saveFileSplit;
     }
 
 //    public int getTownMinRange() {
