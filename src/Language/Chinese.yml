@@ -376,9 +376,9 @@ Language:
     RenewCost: '&7- &e续租每方块花费:&3 %1'
   Gui:
     Set:
-      Title: '&6%1 权限设置菜单'
+      Title: '&6%1 的权限'
     Pset:
-      Title: '&6%1 %2 权限'
+      Title: '&6%1 在 %2 的权限'
     Actions:
     - '&2左键单击启用'
     - '&c右键单击禁用'
@@ -919,7 +919,7 @@ CommandHelp:
         mirror:
           Info:
           - '&e使用方法: &6/res mirror [来源领地] [目标领地]'
-          - 从一个领地到另一个领地的权限克隆,你必须是两个领地的所有人或管理员才能做到这一点
+          - 从一个领地到另一个领地的权限克隆, 你必须是两个领地的所有人或管理员才能做到这一点
           Description: 克隆权限
         shop:
           Description: 管理领地商店
@@ -955,7 +955,7 @@ CommandHelp:
               Description: 设置领地商店描述
               Info:
               - '&e使用方法: &6/res shop setdesc [描述文字]'
-              - 设置领地商店描述,支持颜色代码
+              - 设置领地商店描述, 支持颜色代码
                 使用 /n 可以换行
             createboard:
               Description: 创建商店宣传板
@@ -994,132 +994,127 @@ CommandHelp:
           - 大部分权限可以使用参数 true 表示允许, false 表示禁止
           SubCommands:
             anvil:
-              Translated: anvil - 允许或禁止使用铁砧
+              Translated: anvil - 使用铁砧
               Description: 允许或禁止使用铁砧
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> anvil true/false/remove=移除'
             admin:
-              Translated: admin - 给予玩家设置领地的权限
+              Translated: admin - 管理员权限
               Description: 给予玩家设置领地的权限
               Info:
               - '&e使用方法: &6/res pset <领地名称> admin true/false/remove=移除'
             animalkilling:
-              Translated: animalkilling - 允许或禁止玩家杀死动物
-              Description: 允许或禁止玩家杀死动物
+              Translated: animalkilling - 杀死动物
+              Description: 允许或禁止杀死动物
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> animalkilling true/false/remove=移除'
             animals:
-              Translated: animals - 允许或禁止动物生成
-              Description: 允许或禁止动物生成
+              Translated: animals - 生成动物
+              Description: 允许或禁止生成动物
               Info:
               - '&e使用方法: &6/res set <领地名称> animals true/false/remove=移除'
             anchor:
-              Translated: anchor - 允许或不允许使用重生锚
-              Description: 允许或不允许使用重生锚
+              Translated: anchor - 使用重生锚
+              Description: 允许或禁止使用重生锚
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> anchor true/false/remove=移除'
             anvilbreak:
-              Translated: anvilbreak - 允许或不允许在领地断砧
-              Description: 允许或不允许在领地断砧
+              Translated: anvilbreak - 开启或关闭铁砧损坏
+              Description: 开启或关闭铁砧损坏
               Info:
               - '&e使用方法: &6/res set <领地名称> anvilbreak true/false/remove=移除'
-            backup:
-              Translated: backup - 允许或禁止玩家在领地内骑马
-              Description: 允许或禁止玩家在领地内骑马
-              Info:
-              - '&e使用方法: &6/res set <领地名称> backup true/false/remove=移除'
             bank:
-              Translated: bank - 允许或禁止玩家从领地银行存/取钱
-              Description: 允许或禁止玩家从领地银行存/取钱
+              Translated: bank - 使用领地银行
+              Description: 允许或禁止从领地银行存/取钱
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> bank true/false/remove=移除'
             bed:
-              Translated: bed - 允许或禁止玩家使用床(睡觉)
-              Description: 允许或禁止玩家使用床(睡觉)
+              Translated: bed - 使用床(睡觉)
+              Description: 允许或禁止使用床(睡觉)
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> bed true/false/remove=移除'
             honey:
-              Translated: honey - 允许或不允许玩家获得蜂蜜
-              Description: 允许或不允许玩家获得蜂蜜
+              Translated: honey - 获得蜂蜜
+              Description: 允许或禁止获得蜂蜜
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> honey true/false/remove=移除'
             honeycomb:
-              Translated: honeycomb - 允许或不允许玩家获得蜂窝状物
-              Description: 允许或不允许玩家获得蜂窝状物
+              Translated: honeycomb - 获得蜜脾
+              Description: 允许或禁止获得蜜脾
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> honeycomb true/false/remove=移除'
             beacon:
-              Translated: beacon - 允许或禁止玩家与信标交互
-              Description: 允许或禁止玩家与信标交互
+              Translated: beacon - 与信标交互
+              Description: 允许或禁止与信标交互
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> beacon true/false/remove=移除'
             brew:
-              Translated: brew - 允许或禁止玩家使用酿造台
-              Description: 允许或禁止玩家使用酿造台
+              Translated: brew - 使用酿造台
+              Description: 允许或禁止使用酿造台
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> brew true/false/remove=移除'
             build:
-              Translated: build - 允许或禁止玩家在领地内建筑
-              Description: 允许或禁止玩家在领地内建筑
+              Translated: build - 建造
+              Description: 允许或禁止在领地内建造
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> build true/false/remove=移除'
             burn:
-              Translated: burn - 允许或禁止领地内的怪物燃烧
-              Description: 允许或禁止领地内的怪物燃烧
+              Translated: burn - 怪物燃烧
+              Description: 开启或关闭怪物燃烧
               Info:
               - '&e使用方法: &6/res set <领地名称> burn true/false/remove=移除'
             button:
-              Translated: button - 允许或禁止玩家使用按钮
-              Description: 允许或禁止玩家使用按钮
+              Translated: button - 使用按钮
+              Description: 允许或禁止使用按钮
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> button true/false/remove=移除'
             cake:
-              Translated: cake - 允许或禁止玩家食用蛋糕
-              Description: 允许或禁止玩家食用蛋糕
+              Translated: cake - 食用蛋糕
+              Description: 允许或禁止食用蛋糕
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> cake true/false/remove=移除'
             canimals:
-              Translated: canimals - 允许或禁止玩家食用蛋糕
-              Description: 允许或禁止玩家食用蛋糕
+              Translated: canimals - 自定义动物生成
+              Description: 允许或禁止自定义动物生成
               Info:
               - '&e使用方法: &6/res set <领地名称> canimals true/false/remove=移除'
             chorustp:
-              Translated: chorustp - 允许或禁止玩家通过紫颂果传送到领地
-              Description: 允许或禁止玩家通过紫颂果传送到领地
+              Translated: chorustp - 使用紫颂果传送
+              Description: 允许或禁止使用紫颂果传送到领地
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> chorustp true/false/remove=移除'
             chat:
-              Translated: chat - 允许或禁止玩家加入领地聊天频道
-              Description: 允许或禁止玩家加入领地聊天频道
+              Translated: chat - 加入领地聊天频道
+              Description: 允许或禁止加入领地聊天频道
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> chat true/false/remove=移除'
             cmonsters:
-              Translated: cmonsters - 允许或禁止自定义怪物生成
+              Translated: cmonsters - 自定义怪物生成
               Description: 允许或禁止自定义怪物生成
               Info:
               - '&e使用方法: &6/res set <领地名称> cmonsters true/false/remove=移除'
             commandblock:
-              Translated: commandblock - 允许或禁止与命令方块交互
+              Translated: commandblock - 与命令方块交互
               Description: 允许或禁止与命令方块交互
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> commandblock true/false/remove=移除'
             command:
-              Translated: command - 允许或禁止在领地内的命令
-              Description: 允许或不允许在领地中使用命令,需要与commandblock权限一起使用
+              Translated: command - 使用命令
+              Description: 允许或禁止在领地中使用命令, 需要与commandblock权限一起使用
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> command true/false/remove=移除'
             container:
-              Translated: container - 允许或禁止使用箱子，发射器，熔炉等容器
-              Description: 允许或禁止使用箱子，发射器，熔炉等容器...
+              Translated: container - 使用容器
+              Description: 允许或禁止使用箱子, 发射器, 熔炉等容器...
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> container true/false/remove=移除'
             coords:
-              Translated: coords - 隐藏领地坐标
-              Description: 隐藏领地坐标
+              Translated: coords - 显示或隐藏领地坐标
+              Description: 显示或隐藏领地坐标
               Info:
               - '&e使用方法: &6/res set <领地名称> coords true/false/remove=移除'
             copper:
-              Translated: copper - 允许或禁止修改铜块
+              Translated: copper - 修改铜块
               Description: 允许或禁止修改铜块
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> copper true/false/remove=移除'
@@ -1129,313 +1124,313 @@ CommandHelp:
               Info:
               - '&e使用方法: &6/res set <领地名称> craft true/false/remove=移除'
             creeper:
-              Translated: creeper - 允许或禁止苦力怕爆炸
+              Translated: creeper - 苦力怕爆炸
               Description: 允许或禁止苦力怕爆炸
               Info:
               - '&e使用方法: &6/res set <领地名称> creeper true/false/remove=移除'
             dragongrief:
-              Translated: dragongrief - 允许或禁止末影龙破坏方块
+              Translated: dragongrief - 末影龙破坏
               Description: 允许或禁止末影龙破坏方块
               Info:
               - '&e使用方法: &6/res set <领地名称> dragongrief true/false/remove=移除'
             day:
-              Translated: day - 设置领地内的时间
-              Description: 设置领地内的时间
+              Translated: day - 设置领地时间为白天
+              Description: 设置领地时间为白天
               Info:
               - '&e使用方法: &6/res set <领地名称> day true/false/remove=移除'
             dye:
-              Translated: dye - 允许或禁止给羊染色
+              Translated: dye - 给羊染色
               Description: 允许或禁止给羊染色
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> dye true/false/remove=移除'
             damage:
-              Translated: damage - 允许或禁止领地内的实体造成伤害
-              Description: 允许或禁止领地内的实体造成伤害
+              Translated: damage - 实体伤害
+              Description: 允许或禁止实体造成伤害
               Info:
               - '&e使用方法: &6/res set <领地名称> damage true/false/remove=移除'
             decay:
-              Translated: decay - 允许或禁止领地内的树叶凋落
-              Description: 允许或禁止领地内的树叶凋落
+              Translated: decay - 树叶凋落
+              Description: 开启或关闭树叶凋落
               Info:
               - '&e使用方法: &6/res set <领地名称> decay true/false/remove=移除'
             destroy:
-              Translated: destroy - 允许或禁止破坏方块，会覆盖build权限
-              Description: 允许或禁止破坏方块，会覆盖build权限
+              Translated: destroy - 破坏方块, 覆盖build权限
+              Description: 允许或禁止破坏方块, 覆盖build权限
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> destroy true/false/remove=移除'
             dryup:
-              Translated: dryup - 允许或禁止耕地干枯
-              Description: 允许或禁止耕地干枯
+              Translated: dryup - 耕地干涸
+              Description: 允许或禁止耕地干涸
               Info:
               - '&e使用方法: &6/res set <领地名称> dryup true/false/remove=移除'
             diode:
-              Translated: diode - 允许或禁止玩家使用红石中继器
-              Description: 允许或禁止玩家使用红石中继器
+              Translated: diode - 使用红石中继器
+              Description: 允许或禁止使用红石中继器
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> diode true/false/remove=移除'
             door:
-              Translated: door - 允许或禁止玩家使用门和活板门
-              Description: 允许或禁止玩家使用门和活板门
+              Translated: door - 使用门和活板门
+              Description: 允许或禁止使用门和活板门
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> door true/false/remove=移除'
             egg:
-              Translated: egg - 允许或禁止与龙蛋交互
+              Translated: egg - 与龙蛋交互
               Description: 允许或禁止与龙蛋交互
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> egg true/false/remove=移除'
             enchant:
-              Translated: enchant - 允许或禁止玩家使用附魔台
-              Description: 允许或禁止玩家使用附魔台
+              Translated: enchant - 使用附魔台
+              Description: 允许或禁止使用附魔台
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> enchant true/false/remove=移除'
             explode:
-              Translated: explode - 允许或禁止领地内的爆炸
-              Description: 允许或禁止领地内的爆炸
+              Translated: explode - 爆炸
+              Description: 允许或禁止在领地内爆炸
               Info:
               - '&e使用方法: &6/res set <领地名称> explode true/false/remove=移除'
             elytra:
-              Translated: elytra - 允许或不允许在领地中使用鞘翅
-              Description: 允许或不允许在领地中使用鞘翅
+              Translated: elytra - 使用鞘翅
+              Description: 允许或禁止在领地中使用鞘翅
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> elytra true/false/remove=移除'
             enderpearl:
-              Translated: enderpearl - 允许或禁止通过末影珍珠传送到领地
-              Description: 允许或禁止通过末影珍珠传送到领地
+              Translated: enderpearl - 使用末影珍珠传送
+              Description: 允许或禁止使用末影珍珠传送到领地
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> enderpearl true/false/remove=移除'
             fallinprotection:
-              Translated: fallinprotection - 允许或禁止方块从领地上方掉落到领地内
-              Description: 允许或禁止方块从领地上方掉落到领地内(例如沙子和沙砾)
+              Translated: fallinprotection - 阻止方块从领地外掉落到领地内
+              Description: 阻止或允许方块从领地外掉落到领地内(例如沙子和沙砾)
               Info:
               - '&e使用方法: &6/res set <领地名称> fallinprotection true/false/remove=移除'
             falldamage:
-              Translated: falldamage - 允许或禁止领地内的跌落伤害
-              Description: 允许或禁止领地内的跌落伤害
+              Translated: falldamage - 跌落伤害
+              Description: 开启或关闭跌落伤害
               Info:
               - '&e使用方法: &6/res set <领地名称> falldamage true/false/remove=移除'
             feed:
-              Translated: feed - 允许或禁止喂食
-              Description: 如果允许将使领地为其居住者提供食物
+              Translated: feed - 自动回复饱食度
+              Description: 开启或关闭为领地内玩家自动回复饱食度
               Info:
               - '&e使用方法: &6/res set <领地名称> feed true/false/remove=移除'
             friendlyfire:
-              Translated: friendlyfire - 允许或禁止友军开火(待实测)
-              Description: 允许或不允许友军开火(待实测)
+              Translated: friendlyfire - 队友伤害(待实测)
+              Description: 开启或关闭队友伤害(待实测)
               Info:
               - '&e使用方法: &6/res pset <领地名称> friendlyfire true/false/remove=移除'
             fireball:
-              Translated: fireball - 允许或禁止火球
-              Description: 允许或禁止火球,当设置为True或remove的时候为允许
+              Translated: fireball - 使用火焰弹
+              Description: 允许或禁止火焰弹, 当设置为True或remove的时候为允许
               Info:
               - '&e使用方法: &6/res set <领地名称> fireball true/false/remove=移除'
             firespread:
-              Translated: firespread - 允许或禁止火焰蔓延
-              Description: 允许或禁止火焰蔓延,当设置为True或remove的时候为允许
+              Translated: firespread - 火焰蔓延
+              Description: 允许或禁止火焰蔓延, 当设置为True或remove的时候为允许
               Info:
               - '&e使用方法: &6/res set <领地名称> firespread true/false/remove=移除'
             flowinprotection:
-              Translated: flowinprotection - 允许或禁止液体从领地外流向领地内
-              Description: 允许或禁止液体从领地外流向领地内,当设置为True或remove的时候为允许
+              Translated: flowinprotection - 阻止液体从领地外流向领地内
+              Description: 阻止或允许液体从领地外流向领地内, 当设置为True或remove的时候为允许
               Info:
               - '&e使用方法: &6/res set <领地名称> flowinprotection true/false/remove=移除'
             flow:
-              Translated: flow - 允许或禁止液体流动
-              Description: 允许或禁止液体流动
+              Translated: flow - 液体流动
+              Description: 允许或禁止领地内液体扩散
               Info:
               - '&e使用方法: &6/res set <领地名称> flow true/false/remove=移除'
             flowerpot:
-              Translated: flowerpot - 允许或禁止与花盆交互
+              Translated: flowerpot - 与花盆交互
               Description: 允许或禁止与花盆交互
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> flowerpot true/false/remove=移除'
             grow:
-              Translated: grow - 允许或禁止植物生长
+              Translated: grow - 植物生长
               Description: 允许或禁止植物生长
               Info:
               - '&e使用方法: &6/res set <领地名称> grow true/false/remove=移除'
             glow:
-              Translated: glow - 允许或禁止玩家进入领地时发光
-              Description: 允许或禁止玩家进入领地时发光
+              Translated: glow - 使玩家进入领地时发光
+              Description: 使玩家进入领地时发光
               Info:
               - '&e使用方法: &6/res set <领地名称> glow true/false/remove=移除'
             hotfloor:
-              Translated: hotfloor - 允许或禁止在岩浆方块上行走造成的伤害
-              Description: 允许或禁止在岩浆方块上行走造成的伤害
+              Translated: hotfloor - 岩浆块伤害
+              Description: 开启或关闭岩浆块造成的伤害
               Info:
               - '&e使用方法: &6/res set <领地名称> hotfloor true/false/remove=移除'
             hidden:
-              Translated: hidden -  在"list"或"listall"命令中隐藏此领地
+              Translated: hidden -  在领地列表中隐藏此领地
               Description: 在"list"或"listall"命令中隐藏此领地
               Info:
               - '&e使用方法: &6/res set <领地名称> hidden true/false/remove=移除'
             hook:
-              Translated: hook - 允许或禁止鱼竿钓到实体
-              Description: 允许或禁止鱼竿钓到实体
+              Translated: hook - 使用鱼竿钓到实体
+              Description: 允许或禁止使用鱼竿钓到实体
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> hook true/false/remove=移除'
             healing:
-              Translated: healing - 允许或禁止领地治疗领地居住者
-              Description: 允许或禁止领地治疗领地居住者
+              Translated: healing - 自动回复生命值
+              Description: 开启或关闭为领地内玩家自动回复生命值
               Info:
               - '&e使用方法: &6/res set <领地名称> healing true/false/remove=移除'
             iceform:
-              Translated: iceform - 允许或禁止结冰
-              Description: 允许或禁止结冰
+              Translated: iceform - 水结冰
+              Description: 允许或禁止水结冰
               Info:
               - '&e使用方法: &6/res set <领地名称> iceform true/false/remove=移除'
             icemelt:
-              Translated: icemelt - 允许或禁止冰融化
+              Translated: icemelt - 冰融化
               Description: 允许或禁止冰融化
               Info:
               - '&e使用方法: &6/res set <领地名称> icemelt true/false/remove=移除'
             ignite:
-              Translated: ignite - 允许或禁止点火
+              Translated: ignite - 点火
               Description: 允许或禁止点火
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> ignite true/false/remove=移除'
             itemdrop:
-              Translated: itemdrop - 允许或禁止物品掉落
+              Translated: itemdrop - 物品掉落
               Description: 允许或禁止物品掉落
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> itemdrop true/false/remove=移除'
             itempickup:
-              Translated: itempickup - 允许或拒绝领取物品
-              Description: 允许或拒绝领取物品
+              Translated: itempickup - 捡起物品
+              Description: 允许或禁止捡起物品
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> itempickup true/false/remove=移除'
             jump2:
-              Translated: jump2 - 允许或禁止玩家跳跃高度在两个方块以上
+              Translated: jump2 - 跳跃两格高
               Description: 允许或禁止玩家跳跃高度在两个方块以上
               Info:
               - '&e使用方法: &6/res set <领地名称> jump2 true/false/remove=移除'
             jump3:
-              Translated: jump3 - 允许或禁止玩家跳跃高度在三个方块以上
+              Translated: jump3 - 跳跃三格高
               Description: 允许或禁止玩家跳跃高度在三个方块以上
               Info:
               - '&e使用方法: &6/res set <领地名称> jump3 true/false/remove=移除'
             keepinv:
-              Translated: keepinv - 允许或禁止玩家在死后保留背包
-              Description: 允许或禁止玩家在死后保留背包
+              Translated: keepinv - 物品栏不掉落
+              Description: 允许或禁止玩家在死后保留物品栏
               Info:
               - '&e使用方法: &6/res set <领地名称> keepinv true/false/remove=移除'
             keepexp:
-              Translated: keepexp - 允许或禁止玩家在死后保留等级
-              Description: 允许或禁止玩家在死后保留等级
+              Translated: keepexp - 经验值不掉落
+              Description: 允许或禁止玩家在死后保留经验值
               Info:
               - '&e使用方法: &6/res set <领地名称> keepexp true/false/remove=移除'
             lavaflow:
-              Translated: lavaflow - 允许或禁止熔浆流动
-              Description: 允许或禁止熔浆流动,覆盖flow权限
+              Translated: lavaflow - 岩浆流动, 覆盖flow权限
+              Description: 允许或禁止领地内岩浆扩散, 覆盖flow权限
               Info:
               - '&e使用方法: &6/res set <领地名称> lavaflow true/false/remove=移除'
             leash:
-              Translated: leash - 允许或禁止拴绳
-              Description: 允许或禁止拴绳
+              Translated: leash - 使用拴绳
+              Description: 允许或禁止对动物使用拴绳
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> leash true/false/remove=移除'
             lever:
-              Translated: lever - 允许或禁止玩家使用拉杆
-              Description: 允许或禁止玩家使用拉杆
+              Translated: lever - 使用拉杆
+              Description: 允许或禁止使用拉杆
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> lever true/false/remove=移除'
             mobexpdrop:
-              Translated: mobexpdrop - 允许或禁止怪物经验掉落
-              Description: 允许或禁止怪物经验掉落
+              Translated: mobexpdrop - 怪物掉落经验
+              Description: 允许或禁止怪物掉落经验
               Info:
               - '&e使用方法: &6/res set <领地名称> mobexpdrop true/false/remove=移除'
             mobitemdrop:
-              Translated: mobitemdrop - 允许或禁止怪物物品掉落
-              Description: 允许或禁止怪物物品掉落
+              Translated: mobitemdrop - 怪物掉落物品
+              Description: 允许或禁止怪物掉落物品
               Info:
               - '&e使用方法: &6/res set <领地名称> mobitemdrop true/false/remove=移除'
             mobkilling:
-              Translated: mobkilling - 允许或禁止杀死怪物
+              Translated: mobkilling - 杀死怪物
               Description: 允许或禁止杀死怪物
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> mobkilling true/false/remove=移除'
             monsters:
-              Translated: monsters - 允许或禁止怪物生成
+              Translated: monsters - 怪物生成
               Description: 允许或禁止怪物生成
               Info:
               - '&e使用方法: &6/res set <领地名称> monsters true/false/remove=移除'
             move:
-              Translated: move - 允许或禁止在领地内移动
+              Translated: move - 在领地内移动
               Description: 允许或禁止在领地内移动
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> move true/false/remove=移除'
             nametag:
-              Translated: nametag - 允许或不允许使用名牌(待实测)
-              Description: 允许或不允许使用名牌(待实测)
+              Translated: nametag - 使用命名牌(待实测)
+              Description: 允许或禁止使用命名牌(待实测)
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> nametag true/false/remove=移除'
             nanimals:
-              Translated: nanimals - 允许或禁止自然的动物生成
-              Description: 允许或禁止自然的动物生成
+              Translated: nanimals - 自然生成动物
+              Description: 允许或禁止自然生成动物
               Info:
               - '&e使用方法: &6/res set <领地名称> nanimals true/false/remove=移除'
             nmonsters:
-              Translated: nmonsters - 允许或禁止自然怪物生成
-              Description: 允许或禁止自然怪物生成
+              Translated: nmonsters - 自然生成怪物
+              Description: 允许或禁止自然生成怪物
               Info:
               - '&e使用方法: &6/res set <领地名称> nmonsters true/false/remove=移除'
             night:
-              Translated: night - 设置领地的时间为晚上
-              Description: 设置领地的时间为晚上
+              Translated: night - 设置领地时间为晚上
+              Description: 设置领地时间为晚上
               Info:
               - '&e使用方法: &6/res set <领地名称> night true/false/remove=移除'
             nofly:
-              Translated: nofly - 允许或禁止玩家飞进领地
-              Description: 允许或禁止玩家飞进领地
+              Translated: nofly - 禁止在领地内飞行
+              Description: 禁止或允许在领地内飞行
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> nofly true/false/remove=移除'
             fly:
-              Translated: fly - 允许或禁止领地内飞行
-              Description: 允许或禁止领地内飞行
+              Translated: fly - 自动开启飞行
+              Description: 开启或关闭在领地内自动开启飞行
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> fly true/false/remove=移除'
             nomobs:
-              Translated: nomobs - 允许或禁止怪物进入领地
-              Description: 允许或禁止怪物进入领地
+              Translated: nomobs - 阻止怪物进入领地
+              Description: 阻止或允许怪物进入领地
               Info:
               - '&e使用方法: &6/res set <领地名称> nomobs true/false/remove=移除'
             note:
-              Translated: note - 允许或禁止玩家使用音符盒
-              Description: 允许或禁止玩家使用音符盒
+              Translated: note - 使用音符盒
+              Description: 允许或禁止使用音符盒
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> note true/false/remove=移除'
             nodurability:
-              Translated: nodurability - 允许或禁止物品耐久度损耗
-              Description: 允许或禁止物品耐久度损耗
+              Translated: nodurability - 关闭物品耐久度损耗
+              Description: 关闭或开启物品耐久度损耗
               Info:
               - '&e使用方法: &6/res set <领地名称> nodurability true/false/remove=移除'
             overridepvp:
-              Translated: overridepvp - 允许或禁止其他插件的PVP保护
-              Description: 允许或禁止其他插件的PVP保护
+              Translated: overridepvp - 其他插件的PVP保护
+              Description: 开启或关闭其他插件的PVP保护
               Info:
               - '&e使用方法: &6/res set <领地名称> overridepvp true/false/remove=移除'
             pressure:
-              Translated: pressure - 允许或禁止玩家使用压力板
-              Description: 允许或禁止玩家使用压力板
+              Translated: pressure - 使用压力板
+              Description: 允许或禁止使用压力板
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> pressure true/false/remove=移除'
             piston:
-              Translated: piston - 允许或禁止使用活塞
-              Description: 允许或禁止使用活塞
+              Translated: piston - 使用活塞
+              Description: 允许或禁止活塞工作
               Info:
               - '&e使用方法: &6/res set <领地名称> piston true/false/remove=移除'
             pistonprotection:
-              Translated: pistonprotection - 允许或禁止领地外的活塞移动至领地内
-              Description: 允许或禁止领地外的活塞移动至领地内
+              Translated: pistonprotection - 阻止领地外的活塞推/拉至领地内
+              Description: 阻止或允许领地外的活塞推/拉至领地内
               Info:
               - '&e使用方法: &6/res set <领地名称> pistonprotection true/false/remove=移除'
             place:
-              Translated: place - 允许或禁止方块的放置
-              Description: 允许或禁止方块的放置,覆盖build权限
+              Translated: place - 放置方块, 覆盖build权限
+              Description: 允许或禁止放置方块, 覆盖build权限
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> place true/false/remove=移除'
             pvp:
-              Translated: pvp - 允许或禁止领地中PVP
-              Description: 允许或禁止领地中PVP
+              Translated: pvp - PVP
+              Description: 允许或禁止PVP
               Info:
               - '&e使用方法: &6/res set <领地名称> pvp true/false/remove=移除'
             rain:
@@ -1444,23 +1439,23 @@ CommandHelp:
               Info:
               - '&e使用方法: &6/res set <领地名称> rain true/false/remove=移除'
             respawn:
-              Translated: respawn - 允许或禁止自动复活一个玩家
+              Translated: respawn - 自动复活一个玩家
               Description: 允许或禁止自动复活一个玩家
               Info:
               - '&e使用方法: &6/res set <领地名称> respawn true/false/remove=移除'
             riding:
-              Translated: riding - 允许或禁止骑马
+              Translated: riding - 骑马
               Description: 允许或禁止骑马
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> riding true/false/remove=移除'
             shoot:
-              Translated: shoot - 允许或禁止在领地内使用弓箭
-              Description: 允许或禁止在领地内使用弓箭
+              Translated: shoot - 使用弓箭射击
+              Description: 允许或禁止使用弓箭射击
               Info:
               - '&e使用方法: &6/res set <领地名称> shoot true/false/remove=移除'
             sun:
-              Translated: sun - 设置领地内的天气为天晴
-              Description: 设置领地内的天气为天晴
+              Translated: sun - 设置领地天气为晴天
+              Description: 设置领地天气为晴天
               Info:
               - '&e使用方法: &6/res set <领地名称> sun true/false/remove=移除'
             shop:
@@ -1469,12 +1464,12 @@ CommandHelp:
               Info:
               - '&e使用方法: &6/res set <领地名称> shop true/false/remove=移除'
             snowtrail:
-              Translated: snowtrail - 允许或禁止雪傀儡移动造成的雪迹
-              Description: 允许或禁止雪傀儡移动造成的雪迹
+              Translated: snowtrail - 雪傀儡生成雪迹
+              Description: 允许或禁止雪傀儡生成雪迹
               Info:
               - '&e使用方法: &6/res set <领地名称> snowtrail true/false/remove=移除'
             spread:
-              Translated: spread - 允许或禁止方块蔓延
+              Translated: spread - 方块蔓延
               Description: 允许或禁止方块蔓延
               Info:
               - '&e使用方法: &6/res set <领地名称> spread true/false/remove=移除'
@@ -1484,22 +1479,22 @@ CommandHelp:
               Info:
               - '&e使用方法: &6/res set <领地名称> snowball true/false/remove=移除'
             sanimals:
-              Translated: sanimals - 允许或禁止动物的蛋生成动物
-              Description: 允许或禁止动物的蛋生成动物
+              Translated: sanimals - 刷怪笼或刷怪蛋生成动物
+              Description: 允许或禁止刷怪笼或刷怪蛋生成动物
               Info:
               - '&e使用方法: &6/res set <领地名称> sanimals true/false/remove=移除'
             shear:
-              Translated: shear - 允许或禁止剪羊毛
+              Translated: shear - 剪羊毛
               Description: 允许或禁止剪羊毛
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> shear true/false/remove=移除'
             smonsters:
-              Translated: smonsters - 允许或禁止怪物的蛋生成怪物
-              Description: 允许或禁止怪物的蛋生成怪物
+              Translated: smonsters - 刷怪笼或刷怪蛋生成怪物
+              Description: 允许或禁止刷怪笼或刷怪蛋生成怪物
               Info:
               - '&e使用方法: &6/res set <领地名称> smonsters true/false/remove=移除'
             subzone:
-              Translated: subzone - 允许或禁止创建子领地
+              Translated: subzone - 创建子领地
               Description: 允许或禁止创建子领地
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> subzone true/false/remove=移除'
@@ -1509,28 +1504,28 @@ CommandHelp:
               Info:
               - '&e使用方法: &6/res set <领地名称> title true/false/remove=移除'
             table:
-              Translated: table - 允许或禁止玩家使用工作台
-              Description: 允许或禁止玩家使用工作台
+              Translated: table - 使用工作台
+              Description: 允许或禁止使用工作台
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> table true/false/remove=移除'
             tnt:
-              Translated: tnt - 允许或禁止TNT爆炸
+              Translated: tnt - TNT爆炸
               Description: 允许或禁止TNT爆炸
               Info:
               - '&e使用方法: &6/res set <领地名称> tnt true/false/remove=移除'
             tp:
-              Translated: tp - 允许或禁止传送到领地
+              Translated: tp - 传送到领地
               Description: 允许或禁止传送到领地
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> tp true/false/remove=移除'
             trade:
-              Translated: trade - 允许或禁止在领地内与村民进行交易
-              Description: 允许或禁止在领地内与村民进行交易
+              Translated: trade - 与村民交易
+              Description: 允许或禁止与村民交易
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> trade true/false/remove=移除'
             trample:
-              Translated: trample - 允许或禁止在领地内践踏作物
-              Description: 允许或禁止在领地内践踏作物
+              Translated: trample - 踩踏耕地
+              Description: 允许或禁止踩踏耕地
               Info:
               - '&e使用方法: &6/res set <领地名称> trample true/false/remove=移除'
             use:
@@ -1539,13 +1534,13 @@ CommandHelp:
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> use true/false/remove=移除'
             vehicledestroy:
-              Translated: vehicledestroy - 允许或禁止破坏载具
+              Translated: vehicledestroy - 破坏载具
               Description: 允许或禁止破坏载具
               Info:
               - '&e使用方法: &6/res set/pset <领地名称> vehicledestroy true/false/remove=移除'
             witherspawn:
               Translated: witherspawn - 允许或禁止凋零生成
-              Description: 允许或禁止凋零的生成
+              Description: 允许或禁止凋零生成
               Info:
               - '&e使用方法: &6/res set <领地名称> witherspawn true/false/remove=移除'
             phantomspawn:
@@ -1554,28 +1549,28 @@ CommandHelp:
               Info:
               - '&e使用方法: &6/res set <领地名称> phantomspawn true/false/remove=移除'
             witherdamage:
-              Translated: witherdamage - 允许或禁止领地内的凋零造成伤害
-              Description: 允许或禁止领地内的凋零造成伤害
+              Translated: witherdamage - 允许或禁止凋零造成伤害
+              Description: 允许或禁止凋零造成伤害
               Info:
               - '&e使用方法: &6/res set <领地名称> witherdamage true/false/remove=移除'
             witherdestruction:
-              Translated: witherdestruction - 允许或禁止领地内凋零破坏方块
-              Description: 允许或禁止领地内凋零破坏方块
+              Translated: witherdestruction - 允许或禁止凋零破坏方块
+              Description: 允许或禁止凋零破坏方块
               Info:
               - '&e使用方法: &6/res set <领地名称> witherdestruction true/false/remove=移除'
             waterflow:
-              Translated: waterflow - 允许或禁止水流
-              Description: 允许或禁止水流，覆盖flow权限
+              Translated: waterflow - 水流动, 覆盖flow权限
+              Description: 允许或禁止水扩散, 覆盖flow权限
               Info:
               - '&e使用方法: &6/res set <领地名称> waterflow true/false/remove=移除'
             wspeed1:
-              Translated: wspeed1 - 设置领地内的移动速度为0.25
-              Description: 设置领地内的移动速度为0.25
+              Translated: wspeed1 - 设置移动速度为0.25
+              Description: 设置移动速度为0.25
               Info:
               - '&e使用方法: &6/res set <领地名称> wspeed1 true/false/remove=移除'
             wspeed2:
-              Translated: wspeed2 - 设置领地内的移动速度为1.0
-              Description: 设置领地内的移动速度为1.0
+              Translated: wspeed2 - 设置移动速度为1.0
+              Description: 设置移动速度为1.0
               Info:
               - '&e使用方法: &6/res set <领地名称> wspeed2 true/false/remove=移除'
         remove:
