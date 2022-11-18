@@ -1891,6 +1891,7 @@ public class ClaimedResidence {
     }
 
     public boolean renameSubzone(Player player, String oldName, String newName, boolean resadmin) {
+
         if (!Residence.getInstance().validName(newName)) {
             Residence.getInstance().msg(player, lm.Invalid_NameCharacters);
             return false;
