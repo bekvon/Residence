@@ -472,8 +472,6 @@ public class ClaimedResidence {
                 return false;
             }
 
-            CuboidArea cuboid = Residence.getInstance().getSelectionManager().getSelectionCuboid(player);
-
             if (!this.isSubzone() && !isSmallerThanMax(player, area, resadmin)
                 || this.isSubzone() && !isSmallerThanMaxSubzone(player, area, resadmin)) {
                 Residence.getInstance().msg(player, lm.Area_SizeLimit);
@@ -498,7 +496,7 @@ public class ClaimedResidence {
                     return false;
             }
 
-            if (chargeMoney && getParent() == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
+            if (Residence.getInstance().getConfigManager().isChargeOnAreaAdd() && chargeMoney && getParent() == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
                 double chargeamount = area.getCost(group);
                 if (!Residence.getInstance().getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
                     return false;
@@ -666,7 +664,7 @@ public class ClaimedResidence {
                     return false;
             }
 
-            if (getParent() == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
+            if (Residence.getInstance().getConfigManager().isChargeOnExpansion() && getParent() == null && Residence.getInstance().getConfigManager().enableEconomy() && !resadmin) {
                 double chargeamount = newarea.getCost(group) - oldarea.getCost(group);
                 if (chargeamount > 0 && !Residence.getInstance().getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
                     return false;

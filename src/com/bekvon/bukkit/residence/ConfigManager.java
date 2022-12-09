@@ -49,6 +49,9 @@ public class ConfigManager {
     protected boolean useLeases;
     protected boolean ResMoneyBack;
     protected boolean enableEconomy;
+    protected boolean chargeOnCreation;
+    protected boolean chargeOnExpansion;
+    protected boolean chargeOnAreaAdd;
     private EconomyType VaultEconomy;
     protected boolean ExtraEnterMessage;
     protected boolean adminsOnly;
@@ -1048,6 +1051,16 @@ public class ConfigManager {
 
         c.addComment("Global.EnableEconomy", "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
         enableEconomy = c.get("Global.EnableEconomy", true);
+        
+        
+        c.addComment("Global.ChargeWhen", "Defines when we should charge money. Only works if economy is enabled");
+        c.addComment("Global.ChargeWhen.Creating", "Charges money on residence creation, this includes /res create and /res auto");
+        chargeOnCreation = c.get("Global.ChargeWhen.Creating", true);
+        c.addComment("Global.ChargeWhen.Expanding", "Charges money on residence area expansion");
+        chargeOnExpansion = c.get("Global.ChargeWhen.Expanding", true);
+        c.addComment("Global.ChargeWhen.AreaAdd", "Charges money on area addition");
+        chargeOnAreaAdd = c.get("Global.ChargeWhen.AreaAdd", true);
+        
 
         c.addComment("Global.Type", "Defaults to None which will start by looking to default economy engine throw vault API and if it fails to any supported economy engine",
             "Custom economy engines can be defined to access economy directly", "Supported variables: " + EconomyType.toStringLine());
@@ -2201,6 +2214,18 @@ public class ConfigManager {
 
     public boolean isSaveFileSplit() {
         return saveFileSplit;
+    }
+
+    public boolean isChargeOnCreation() {
+        return chargeOnCreation;
+    }
+
+    public boolean isChargeOnExpansion() {
+        return chargeOnExpansion;
+    }
+
+    public boolean isChargeOnAreaAdd() {
+        return chargeOnAreaAdd;
     }
 
 //    public int getTownMinRange() {

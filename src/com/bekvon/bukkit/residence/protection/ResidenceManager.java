@@ -278,7 +278,7 @@ public class ResidenceManager implements ResidenceInterface {
         if (resevent.isCancelled())
             return false;
 
-        if (!newRes.isSubzone() && plugin.getConfigManager().enableEconomy() && !resadmin) {
+        if (Residence.getInstance().getConfigManager().isChargeOnCreation() && !newRes.isSubzone() && plugin.getConfigManager().enableEconomy() && !resadmin) {
             double chargeamount = newArea.getCost(group);
             if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
                 // Need to remove area if we can't create residence
