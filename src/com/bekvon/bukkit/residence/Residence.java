@@ -1246,9 +1246,6 @@ public class Residence extends JavaPlugin {
         return resadminToggle.contains(player);
     }
 
-
-    
-
     private final String flagsFileSuffix = "_Flags";
     private final String messagesFileSuffix = "_Messages";
 
@@ -1282,47 +1279,32 @@ public class Residence extends JavaPlugin {
         Map<String, Object> save = rmanager.save();
         for (Entry<String, Object> entry : save.entrySet()) {
 
-            if (Residence.getInstance().getConfigManager().isSaveFileSplit()) {
+            File ymlSaveLoc = new File(worldFolder, "res_" + entry.getKey() + ".yml");
+            File tmpFile = new File(worldFolder, "tmp_res_" + entry.getKey() + ".yml");
 
-                saveFile(worldFolder, entry.getKey(), "Residences", entry.getValue());
+            syml = new YMLSaveHelper(tmpFile);
+            syml.getRoot().put("Version", saveVersion);
+            World world = server.getWorld(entry.getKey());
+            if (world != null)
+                syml.getRoot().put("Seed", world.getSeed());
+            if (this.getResidenceManager().getMessageCatch(entry.getKey()) != null)
+                syml.getRoot().put("Messages", this.getResidenceManager().getMessageCatch(entry.getKey()));
+            if (this.getResidenceManager().getFlagsCatch(entry.getKey()) != null)
+                syml.getRoot().put("Flags", this.getResidenceManager().getFlagsCatch(entry.getKey()));
 
-                // Separate Flags file
-                if (this.getResidenceManager().getFlagsCatch(entry.getKey()) != null)
-                    saveFile(worldFolder, entry.getKey() + flagsFileSuffix, "Flags", this.getResidenceManager().getFlagsCatch(entry.getKey()));
-
-                // Separate Messages file
-                if (this.getResidenceManager().getMessageCatch(entry.getKey()) != null)
-                    saveFile(worldFolder, entry.getKey() + messagesFileSuffix, "Messages", this.getResidenceManager().getMessageCatch(entry.getKey()));
-
-            } else {
-                // Older method saving messages and flags into same file
-                
-                File ymlSaveLoc = new File(worldFolder, "res_" + entry.getKey() + ".yml");
-                File tmpFile = new File(worldFolder, "tmp_res_" + entry.getKey() + ".yml");
-
-                syml = new YMLSaveHelper(tmpFile);
-                syml.getRoot().put("Version", saveVersion);
-                World world = server.getWorld(entry.getKey());
-                if (world != null)
-                    syml.getRoot().put("Seed", world.getSeed());
-                if (this.getResidenceManager().getMessageCatch(entry.getKey()) != null)
-                    syml.getRoot().put("Messages", this.getResidenceManager().getMessageCatch(entry.getKey()));
-                if (this.getResidenceManager().getFlagsCatch(entry.getKey()) != null)
-                    syml.getRoot().put("Flags", this.getResidenceManager().getFlagsCatch(entry.getKey()));
-
-                syml.getRoot().put("Residences", entry.getValue());
-                syml.save();
-                if (ymlSaveLoc.isFile()) {
-                    File backupFolder = new File(worldFolder, "Backup");
-                    backupFolder.mkdirs();
-                    File backupFile = new File(backupFolder, "res_" + entry.getKey() + ".yml");
-                    if (backupFile.isFile()) {
-                        backupFile.delete();
-                    }
-                    ymlSaveLoc.renameTo(backupFile);
+            syml.getRoot().put("Residences", entry.getValue());
+            syml.save();
+            if (ymlSaveLoc.isFile()) {
+                File backupFolder = new File(worldFolder, "Backup");
+                backupFolder.mkdirs();
+                File backupFile = new File(backupFolder, "res_" + entry.getKey() + ".yml");
+                if (backupFile.isFile()) {
+                    backupFile.delete();
                 }
-                tmpFile.renameTo(ymlSaveLoc);
+                ymlSaveLoc.renameTo(backupFile);
             }
+            tmpFile.renameTo(ymlSaveLoc);
+
         }
 
         YMLSaveHelper yml;
@@ -1454,27 +1436,31 @@ public class Residence extends JavaPlugin {
         loadMessages(worldName, yml);
         loadFlags(worldName, yml);
 
-        File flagsFile = new File(worldFolder, saveFilePrefix + worldName + flagsFileSuffix + ".yml");
-        if (flagsFile.isFile()) {
-            try {
-                yml = new YMLSaveHelper(flagsFile);
-                yml.load();
-                if (yml.getRoot() != null)
-                    loadFlags(worldName, yml);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (!yml.getRoot().containsKey("Flags")) {
+            File flagsFile = new File(worldFolder, saveFilePrefix + worldName + flagsFileSuffix + ".yml");
+            if (flagsFile.isFile()) {
+                try {
+                    yml = new YMLSaveHelper(flagsFile);
+                    yml.load();
+                    if (yml.getRoot() != null)
+                        loadFlags(worldName, yml);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        File messagesFile = new File(worldFolder, saveFilePrefix + worldName + messagesFileSuffix + ".yml");
-        if (messagesFile.isFile()) {
-            try {
-                yml = new YMLSaveHelper(messagesFile);
-                yml.load();
-                if (yml.getRoot() != null)
-                    loadMessages(worldName, yml);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (!yml.getRoot().containsKey("Messages")) {
+            File messagesFile = new File(worldFolder, saveFilePrefix + worldName + messagesFileSuffix + ".yml");
+            if (messagesFile.isFile()) {
+                try {
+                    yml = new YMLSaveHelper(messagesFile);
+                    yml.load();
+                    if (yml.getRoot() != null)
+                        loadMessages(worldName, yml);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

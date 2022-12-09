@@ -1191,7 +1191,7 @@ public class ConfigManager {
         NewPlayerUse = c.get("Global.NewPlayer.Use", false);
         c.addComment("Global.NewPlayer.Free", "Setting this to true, residence will be created for free", "By setting to false, money will be taken from player, if he has them");
         NewPlayerFree = c.get("Global.NewPlayer.Free", true);
-        c.addComment("Global.NewPlayer.Range", "Range from placed chest o both sides. By setting to 5, residence will be 5+5+1 = 11 blocks wide");
+        c.addComment("Global.NewPlayer.Range", "Range from placed chest to both sides. By setting to 5, residence will be 5+5+1 = 11 blocks wide in total");
         NewPlayerRangeX = c.get("Global.NewPlayer.Range.X", 5);
         NewPlayerRangeY = c.get("Global.NewPlayer.Range.Y", 5);
         NewPlayerRangeZ = c.get("Global.NewPlayer.Range.Z", 5);
