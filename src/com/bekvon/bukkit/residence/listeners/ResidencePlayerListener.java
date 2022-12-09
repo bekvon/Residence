@@ -1783,7 +1783,11 @@ public class ResidencePlayerListener implements Listener {
 
         Location loc = event.getBlockClicked().getLocation().clone();
 
-        loc.add(event.getBlockFace().getDirection());
+        if (Version.isCurrentHigher(Version.v1_12_R1))
+            try {
+                loc.add(event.getBlockFace().getDirection());
+            } catch (Throwable e) {
+            }
 
         ClaimedResidence res = plugin.getResidenceManager().getByLoc(loc);
         if (res != null) {
