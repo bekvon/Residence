@@ -21,7 +21,6 @@ import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.raid.ResidenceRaid;
-import com.bekvon.bukkit.residence.vaultinterface.ResidenceVaultAdapter;
 
 public class ResidencePlayer {
 
@@ -44,7 +43,7 @@ public class ResidencePlayer {
     private int maxX = -1;
     private int maxZ = -1;
 
-    private int maxValue = 9999;
+    private static final int maxValue = 9999;
 
     private Long lastRaidAttackTimer = 0L;
     private Long lastRaidDefendTimer = 0L;
@@ -367,9 +366,7 @@ public class ResidencePlayer {
     }
 
     public List<ClaimedResidence> getResList() {
-        List<ClaimedResidence> ls = new ArrayList<ClaimedResidence>();
-        ls.addAll(ResidenceList);
-        return ls;
+        return new ArrayList<ClaimedResidence>(ResidenceList);
     }
 
     @Deprecated
