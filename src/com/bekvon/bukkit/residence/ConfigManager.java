@@ -42,6 +42,7 @@ import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Locale.YmlMaker;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ConfigManager {
@@ -1251,19 +1252,23 @@ public class ConfigManager {
         if (VisualizerSidesCap < 1)
             VisualizerSidesCap = 1;
 
-        String effectsList = "";
+        StringBuilder effectsList = new StringBuilder();
+
         for (Effect one : Effect.values()) {
             if (one == null)
                 continue;
             if (one.name() == null)
                 continue;
-            effectsList += one.name().toLowerCase() + ", ";
+            if (!effectsList.toString().isEmpty())
+                effectsList.append(", ");
+             effectsList.append(one.name().toLowerCase());
         }
+
 
         c.addComment("Global.Visualizer.Selected", "Particle effect names. possible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
             " smoke, largesmoke, spell, instantSpell, mobSpell, mobSpellAmbient, witchMagic, dripWater, dripLava, angryVillager, happyVillager, townaura",
             " note, portal, enchantmenttable, flame, lava, footstep, cloud, reddust, snowballpoof, snowshovel, slime, heart, barrier", " droplet, take, mobappearance", "",
-            "If using spigot based server different particles can be used:", effectsList);
+            "If using spigot based server different particles can be used:", effectsList.toString());
 
         // Frame
         String efname = c.get("Global.Visualizer.Selected.Frame", "happyVillager");
