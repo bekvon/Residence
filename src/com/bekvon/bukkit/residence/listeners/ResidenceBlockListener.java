@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.listeners;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -421,6 +422,20 @@ public class ResidenceBlockListener implements Listener {
         MessageInformed.add(player.getName());
     }
 
+    private boolean checkBlock(ClaimedResidence orRes, Location loc, Vector offset, Material type, Player player) {
+        Block b = loc.clone().add(offset).getBlock();
+        if (b.getType() != type)
+            return false;
+        ClaimedResidence res = plugin.getResidenceManager().getByLoc(b.getLocation());
+        return res != null && !res.equals(orRes) && !res.isOwner(player) && !res.isTrusted(player);
+    }
+
+    private static final List<Vector> chestVectors = new ArrayList<Vector>(Arrays.asList(
+        new Vector(0, 0, -1),
+        new Vector(0, 0, 1),
+        new Vector(1, 0, 0),
+        new Vector(-1, 0, 0)));
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChestPlaceNearResidence(BlockPlaceEvent event) {
 
@@ -433,42 +448,21 @@ public class ResidenceBlockListener implements Listener {
             return;
 
         Block block = event.getBlock();
-        if (block.getType() != Material.CHEST && block.getType() != Material.TRAPPED_CHEST)
+
+        Material type = block.getType();
+
+        if (type != Material.CHEST && type != Material.TRAPPED_CHEST)
             return;
 
         ClaimedResidence orRes = plugin.getResidenceManager().getByLoc(block.getLocation());
 
-        boolean cancel = false;
+        for (Vector vector : chestVectors) {
+            if (!checkBlock(orRes, block.getLocation(), vector, type, player))
+                continue;
 
-        ClaimedResidence res = null;
-        Block b = block.getLocation().clone().add(0, 0, -1).getBlock();
-        if (b.getType() == block.getType()) {
-            res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
-                cancel = true;
-        }
-        b = block.getLocation().clone().add(0, 0, 1).getBlock();
-        if (b.getType() == block.getType()) {
-            res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
-                cancel = true;
-        }
-        b = block.getLocation().clone().add(1, 0, 0).getBlock();
-        if (b.getType() == block.getType()) {
-            res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
-                cancel = true;
-        }
-        b = block.getLocation().clone().add(-1, 0, 0).getBlock();
-        if (b.getType() == block.getType()) {
-            res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
-                cancel = true;
-        }
-
-        if (cancel) {
             CMIActionBar.send(player, plugin.msg(lm.General_CantPlaceChest));
             event.setCancelled(true);
+            return;
         }
     }
 
