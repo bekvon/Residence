@@ -444,25 +444,25 @@ public class ResidenceBlockListener implements Listener {
         Block b = block.getLocation().clone().add(0, 0, -1).getBlock();
         if (b.getType() == block.getType()) {
             res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes))
+            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
                 cancel = true;
         }
         b = block.getLocation().clone().add(0, 0, 1).getBlock();
         if (b.getType() == block.getType()) {
             res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes))
+            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
                 cancel = true;
         }
         b = block.getLocation().clone().add(1, 0, 0).getBlock();
         if (b.getType() == block.getType()) {
             res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes))
+            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
                 cancel = true;
         }
         b = block.getLocation().clone().add(-1, 0, 0).getBlock();
         if (b.getType() == block.getType()) {
             res = plugin.getResidenceManager().getByLoc(b.getLocation());
-            if (res != null && !res.equals(orRes))
+            if (res != null && !res.equals(orRes) && !res.isTrusted(player))
                 cancel = true;
         }
 
