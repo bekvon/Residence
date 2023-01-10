@@ -403,11 +403,11 @@ public class ClaimedResidence {
                 return false;
             }
 
-            if (Residence.getInstance().getConfigManager().AntiGreefRangeGap > 0) {
+            if (Residence.getInstance().getConfigManager().getAntiGreefRangeGaps(area.getWorldName()) > 0) {
                 Location low = area.getLowLocation().clone();
                 Location high = area.getHighLocation().clone();
 
-                int gap = Residence.getInstance().getConfigManager().AntiGreefRangeGap;
+                int gap = Residence.getInstance().getConfigManager().getAntiGreefRangeGaps(area.getWorldName());
                 low.add(-gap, -gap, -gap);
                 high.add(gap, gap, gap);
 
@@ -544,11 +544,11 @@ public class ClaimedResidence {
                 return false;
             }
 
-            if (Residence.getInstance().getConfigManager().AntiGreefRangeGap > 0) {
+            if (Residence.getInstance().getConfigManager().getAntiGreefRangeGaps(newarea.getWorldName()) > 0) {
                 Location low = newarea.getLowLocation().clone();
                 Location high = newarea.getHighLocation().clone();
 
-                int gap = Residence.getInstance().getConfigManager().AntiGreefRangeGap;
+                int gap = Residence.getInstance().getConfigManager().getAntiGreefRangeGaps(newarea.getWorldName());
                 low.add(-gap, -gap, -gap);
                 high.add(gap, gap, gap);
 

@@ -198,8 +198,6 @@ public class ConfigManager {
     protected boolean DisableListeners;
     protected boolean DisableCommands;
 
-    private boolean ignoreGroupedFlagAccess = false;
-
     //Town
 //    private boolean TownEnabled = false;
 //    private int TownMinRange = 0;
@@ -207,7 +205,7 @@ public class ConfigManager {
 //    protected boolean DisableNoFlagMessageUse;
 //    protected List<String> DisableNoFlagMessageWorlds = new ArrayList<String>();
 
-    public int AntiGreefRangeGap = 16;
+    private HashMap<String, Integer> AntiGreefRangeGaps = new HashMap<String, Integer>();
 
     protected boolean TNTExplodeBelow;
     protected int TNTExplodeBelowLevel;
@@ -941,12 +939,35 @@ public class ConfigManager {
             }
         }
 
-        c.addComment("Global.AntiGreef.RangeGap",
-            "Distance in blocks between residences to be left out", 
+        c.addComment("Global.AntiGreef.RangeGaps",
+            "Distance in blocks between residences to be left out",
             "This will prevent from residences being created back to back",
-            "In case owner of old residence and new one is the same this range restriction wont be taken into effect", 
-            "Set to 0 if you want to disable this");
-        AntiGreefRangeGap = c.get("Global.AntiGreef.RangeGap", 16);
+            "In case owner of old residence and new one is the same this range restriction wont be taken into effect",
+            "Set to 0 or an empty list if you want to disable this",
+            "Use 'all' if you want to use same limitation on all worlds",
+            "Use specific world name if you only want to use this limitation on this world",
+            "Specific world name will override 'all' value");
+
+        List<String> ls = new ArrayList<String>();
+        if (c.getC().isInt("Global.AntiGreef.RangeGap")) {
+            ls.add("all-" + c.getC().getInt("Global.AntiGreef.RangeGap"));
+            c.get("Global.AntiGreef.RangeGaps", Arrays.asList("all-" + c.getC().getInt("Global.AntiGreef.RangeGap")));
+        } else
+            ls = c.get("Global.AntiGreef.RangeGaps", Arrays.asList("all-16"));
+
+        for (String one : ls) {
+            String[] split = one.split("-");
+            if (split.length < 2)
+                continue;
+            try {
+                String worldName = one.substring(0, one.length() - split[split.length - 1].length() - 1);
+                int range = Integer.parseInt(split[split.length - 1]);
+                AntiGreefRangeGaps.put(worldName.toLowerCase(), range);
+                CMIDebug.d(worldName, range);
+            } catch (Throwable e) {
+                continue;
+            }
+        }
 
         // TNT explosions below 63
         c.addComment("Global.AntiGreef.TNT.ExplodeBelow",
@@ -1047,8 +1068,7 @@ public class ConfigManager {
 
         c.addComment("Global.EnableEconomy", "Enable / Disable Residence's Economy System (iConomy, MineConomy, Essentials, BOSEconomy, and RealEconomy supported).");
         enableEconomy = c.get("Global.EnableEconomy", true);
-        
-        
+
         c.addComment("Global.ChargeWhen", "Defines when we should charge money. Only works if economy is enabled");
         c.addComment("Global.ChargeWhen.Creating", "Charges money on residence creation, this includes /res create and /res auto");
         chargeOnCreation = c.get("Global.ChargeWhen.Creating", true);
@@ -1056,7 +1076,6 @@ public class ConfigManager {
         chargeOnExpansion = c.get("Global.ChargeWhen.Expanding", true);
         c.addComment("Global.ChargeWhen.AreaAdd", "Charges money on area addition");
         chargeOnAreaAdd = c.get("Global.ChargeWhen.AreaAdd", true);
-        
 
         c.addComment("Global.Type", "Defaults to None which will start by looking to default economy engine throw vault API and if it fails to any supported economy engine",
             "Custom economy engines can be defined to access economy directly", "Supported variables: " + EconomyType.toStringLine());
@@ -1256,9 +1275,8 @@ public class ConfigManager {
                 continue;
             if (!effectsList.toString().isEmpty())
                 effectsList.append(", ");
-             effectsList.append(one.name().toLowerCase());
+            effectsList.append(one.name().toLowerCase());
         }
-
 
         c.addComment("Global.Visualizer.Selected", "Particle effect names. possible: explode, largeexplode, hugeexplosion, fireworksSpark, splash, wake, crit, magicCrit",
             " smoke, largesmoke, spell, instantSpell, mobSpell, mobSpellAmbient, witchMagic, dripWater, dripLava, angryVillager, happyVillager, townaura",
@@ -2222,6 +2240,18 @@ public class ConfigManager {
 
     public boolean isChargeOnAreaAdd() {
         return chargeOnAreaAdd;
+    }
+
+    public int getAntiGreefRangeGaps(String worldName) {
+        if (AntiGreefRangeGaps.isEmpty() || worldName == null)
+            return 0;
+        Integer specific = AntiGreefRangeGaps.get(worldName.toLowerCase());
+        if (specific != null)
+            return specific;
+        Integer all = AntiGreefRangeGaps.get("all");
+        if (all != null)
+            return all;
+        return 0;
     }
 
 //    public int getTownMinRange() {
