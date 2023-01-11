@@ -20,9 +20,12 @@ import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.bekvon.bukkit.residence.selection.SelectionManager.Selection;
 
+import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class auto implements cmd {
 
@@ -74,10 +77,17 @@ public class auto implements cmd {
 
         boolean result = false;
 
+        CMIDebug.d("----------------");
+        CMIDebug.it();
         if (plugin.getConfigManager().isARCOldMethod())
             result = resize(plugin, player, cuboid, true, lenght);
         else
             result = optimizedResize(plugin, player, cuboid, true, lenght);
+        CMIDebug.d(CMIDebug.getIT(), "ms");
+
+        Selection selection = plugin.getSelectionManager().getSelection(player);
+
+        CMIDebug.d("X:", selection.getBaseArea().getXSize(), " Y:", selection.getBaseArea().getYSize(), " Z:", selection.getBaseArea().getZSize());
 
         plugin.getSelectionManager().afterSelectionUpdate(player, true);
 
@@ -299,6 +309,7 @@ public class auto implements cmd {
         direction dir = direction.Top;
 
         List<direction> locked = new ArrayList<direction>();
+        List<direction> permaLocked = new ArrayList<direction>();
 
         boolean checkCollision = plugin.getConfigManager().isARCCheckCollision();
 
@@ -343,6 +354,9 @@ public class auto implements cmd {
         smallestRange = smallestRange < maxZ - cuboid.getZSize() ? smallestRange : maxZ - cuboid.getZSize();
         smallestRange = smallestRange / 4;
 
+        int minYaltitude = group.getMinHeight();
+        int maxYaltitude = group.getMaxHeight();
+
         while (true) {
             done++;
 
@@ -359,14 +373,14 @@ public class auto implements cmd {
             c.setLowLocation(cuboid.getLowLocation().clone().add(-smallestRange, -smallestRange, -smallestRange));
             c.setHighLocation(cuboid.getHighLocation().clone().add(smallestRange, smallestRange, smallestRange));
 
-            if (c.getHighVector().getBlockY() > maxWorldY) {
-                c.setHighVector(c.getHighVector().setY(maxWorldY));
+            if (c.getHighVector().getBlockY() > maxYaltitude) {
+                c.setHighVector(c.getHighVector().setY(maxYaltitude));
             }
 
             if (c.getLowVector().getBlockY() > maxWorldY - 1) {
                 c.setLowVector(c.getLowVector().setY(maxWorldY - 1));
-            } else if (c.getLowVector().getBlockY() < minWorldY) {
-                c.setLowVector(c.getLowVector().setY(minWorldY));
+            } else if (c.getLowVector().getBlockY() < minYaltitude) {
+                c.setLowVector(c.getLowVector().setY(minYaltitude));
             }
             if (checkCollision) {
                 if (plugin.getResidenceManager().collidesWithResidence(c) != null) {
@@ -421,13 +435,13 @@ public class auto implements cmd {
         }
 
         fillMaps(directionMap, maxMap, direction.East, maxX, cuboid.getXSize());
-        fillMaps(directionMap, maxMap, direction.West, maxX, cuboid.getXSize());
+        fillMaps(directionMap, maxMap, direction.West, maxX + 1, cuboid.getXSize());
 
         fillMaps(directionMap, maxMap, direction.South, maxZ, cuboid.getZSize());
-        fillMaps(directionMap, maxMap, direction.North, maxZ, cuboid.getZSize());
+        fillMaps(directionMap, maxMap, direction.North, maxZ + 1, cuboid.getZSize());
 
         fillMaps(directionMap, maxMap, direction.Top, maxY, cuboid.getYSize());
-        fillMaps(directionMap, maxMap, direction.Bottom, maxY, cuboid.getYSize());
+        fillMaps(directionMap, maxMap, direction.Bottom, maxY + 1, cuboid.getYSize());
 
         while (true) {
             if (Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (dir.equals(direction.Top) || dir.equals(direction.Bottom))) {
@@ -456,6 +470,41 @@ public class auto implements cmd {
             Integer offset = directionMap.get(dir);
 
             if (Math.abs(offset) == 0) {
+
+                if (dir == direction.East && locked.contains(direction.West) && !permaLocked.contains(direction.West)) {
+                    maxMap.put(direction.West, maxX - (player.getLocation().getBlockX() - cuboid.getHighVector().getBlockX()));
+                    directionMap.put(direction.West, maxMap.get(direction.West) / 2);
+                    locked.remove(direction.West);
+                    permaLocked.add(dir);
+                }
+
+                if (dir == direction.West && locked.contains(direction.East) && !permaLocked.contains(direction.East)) {
+                    maxMap.put(direction.East, maxX - (player.getLocation().getBlockX() - cuboid.getHighVector().getBlockX()));
+                    directionMap.put(direction.East, maxMap.get(direction.East) / 2);
+                    locked.remove(direction.East);
+                    permaLocked.add(dir);
+                }
+
+                if (dir == direction.North && locked.contains(direction.South) && !permaLocked.contains(direction.South)) {
+                    maxMap.put(direction.South, maxX - (player.getLocation().getBlockZ() - cuboid.getHighVector().getBlockZ()));
+                    directionMap.put(direction.South, maxMap.get(direction.South) / 2);
+                    locked.remove(direction.South);
+                    permaLocked.add(dir);
+                }
+
+                if (dir == direction.South && locked.contains(direction.North) && !permaLocked.contains(direction.North)) {
+                    maxMap.put(direction.North, maxX - (player.getLocation().getBlockZ() - cuboid.getHighVector().getBlockZ()));
+                    directionMap.put(direction.North, maxMap.get(direction.North) / 2);
+                    locked.remove(direction.North);
+                    permaLocked.add(dir);
+                }
+
+                if (dir == direction.Top && !locked.contains(direction.Bottom) && !permaLocked.contains(direction.Bottom)) {
+                    maxMap.put(direction.Bottom, maxY - Math.abs(player.getLocation().getBlockY() - cuboid.getLowVector().getBlockY()));
+                    directionMap.put(direction.Bottom, maxMap.get(direction.Bottom) / 2);
+                    permaLocked.add(dir);
+                }
+                
                 locked.add(dir);
                 dir = dir.getNext();
                 continue;
@@ -465,62 +514,75 @@ public class auto implements cmd {
             c.setLowLocation(cuboid.getLowLocation().clone().add(-dir.getLow().getX() * offset, -dir.getLow().getY() * offset, -dir.getLow().getZ() * offset));
             c.setHighLocation(cuboid.getHighLocation().clone().add(dir.getHigh().getX() * offset, dir.getHigh().getY() * offset, dir.getHigh().getZ() * offset));
 
-            if (c.getHighVector().getBlockY() > maxWorldY) {
-
-                c.setHighVector(c.getHighVector().setY(maxWorldY));
-            }
-
-            if (c.getLowVector().getBlockY() > maxWorldY - 1) {
-                c.setLowVector(c.getLowVector().setY(maxWorldY - 1));
-            } else if (c.getLowVector().getBlockY() < minWorldY) {
-                c.setLowVector(c.getLowVector().setY(minWorldY));
-            }
-
-            if (checkCollision) {
-                if (plugin.getResidenceManager().collidesWithResidence(c) != null) {
-
-                    int newOffset = (int) Math.ceil(Math.abs(offset) / 2D);
-
-                    if (newOffset < 1)
-                        newOffset = 1;
-
-                    directionMap.put(dir, -(newOffset));
-
-                    cuboid.setLowLocation(c.getLowLocation());
-                    cuboid.setHighLocation(c.getHighLocation());
-                    continue;
+            if (c.getHighVector().getBlockY() > maxYaltitude) {
+                c.setHighVector(c.getHighVector().setY(maxYaltitude));
+                if (locked.contains(direction.Top) && !locked.contains(direction.Bottom) && !permaLocked.contains(direction.Top)) {
+                    maxMap.put(direction.Top, maxY - Math.abs(c.getHighVector().getBlockY() - player.getLocation().getBlockY()));
+                    directionMap.put(direction.Top, maxMap.get(direction.Top) / 2);
+                    locked.remove(direction.Top);
+                    permaLocked.add(direction.Bottom);
                 }
+            }
+
+            if (c.getLowVector().getBlockY() > maxYaltitude - 1) {
+                c.setLowVector(c.getLowVector().setY(maxYaltitude - 1));
+            } else if (c.getLowVector().getBlockY() < minYaltitude) {
+                c.setLowVector(c.getLowVector().setY(minYaltitude));
+                if (!locked.contains(direction.Top) && !locked.contains(direction.Bottom) && !permaLocked.contains(direction.Bottom)) {
+                    maxMap.put(direction.Bottom, maxY - Math.abs(player.getLocation().getBlockY() - c.getLowVector().getBlockY()));
+                    directionMap.put(direction.Bottom, maxMap.get(direction.Bottom) / 2);
+                    permaLocked.add(direction.Top);
+                }
+            }
+
+            if (checkCollision && plugin.getResidenceManager().collidesWithResidence(c) != null) {
+
+                int newOffset = (int) (Math.abs(offset) / 2D);
+
+                if (newOffset < 1)
+                    newOffset = 1;
+
+                directionMap.put(dir, -(newOffset));
+
+                cuboid.setLowLocation(c.getLowLocation());
+                cuboid.setHighLocation(c.getHighLocation());
+                continue;
             }
 
             if (maxMap.get(dir).equals(Math.abs(offset))) {
                 locked.add(dir);
             }
 
-            directionMap.put(dir, (int) (Math.abs(offset) / 2D));
+            double newOffset = (Math.abs(offset) / 2D);
+
+            offset = newOffset > 1 ? (int) Math.ceil(newOffset) : (int) newOffset;
+
+            directionMap.put(dir, offset);
 
             if (maxX > 0 && maxX < c.getXSize() || c.getXSize() > groupMaxX) {
-                locked.add(dir);
+                if (Math.abs(offset) < 1)
+                    locked.add(dir);
                 dir = dir.getNext();
                 continue;
             }
 
             if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (maxY > 0 && maxY < c.getYSize() || c.getYSize() > group.getMaxY() + (-group.getMinY()))) {
-                locked.add(dir);
+                if (Math.abs(offset) < 1)
+                    locked.add(dir);
                 dir = dir.getNext();
                 continue;
             }
 
             if (maxZ > 0 && maxZ < c.getZSize() || c.getZSize() > groupMaxZ) {
-                locked.add(dir);
+                if (Math.abs(offset) < 1)
+                    locked.add(dir);
                 dir = dir.getNext();
                 continue;
             }
 
-            if (checkBalance && plugin.getConfigManager().enableEconomy()) {
-                if (!Residence.getInstance().getEconomyManager().canAfford(player, c.getCost(group))) {
-                    plugin.msg(player, lm.Economy_NotEnoughMoney);
-                    break;
-                }
+            if (checkBalance && plugin.getConfigManager().enableEconomy() && !Residence.getInstance().getEconomyManager().canAfford(player, c.getCost(group))) {
+                plugin.msg(player, lm.Economy_NotEnoughMoney);
+                break;
             }
 
             cuboid.setLowLocation(c.getLowLocation());
@@ -528,17 +590,13 @@ public class auto implements cmd {
 
             dir = dir.getNext();
         }
-        
+
         plugin.getSelectionManager().placeLoc1(player, cuboid.getLowLocation());
         plugin.getSelectionManager().placeLoc2(player, cuboid.getHighLocation());
 
         cuboid = plugin.getSelectionManager().getSelectionCuboid(player);
 
-        if (cuboid.getXSize() > groupMaxX || cuboid.getYSize() > group.getMaxY() + (-group.getMinY()) || cuboid.getZSize() > groupMaxZ) {
-            return false;
-        }
-
-        return true;
+        return cuboid.getXSize() <= groupMaxX && cuboid.getYSize() <= group.getMaxY() + (-group.getMinY()) && cuboid.getZSize() <= groupMaxZ;
     }
 
     public enum direction {
