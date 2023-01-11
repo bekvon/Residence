@@ -43,7 +43,7 @@ public class auto implements cmd {
             } catch (Exception | Error e) {
 
             }
-
+ 
         if (args.length > 0 && lenght == -1)
             resName = args[0];
         else

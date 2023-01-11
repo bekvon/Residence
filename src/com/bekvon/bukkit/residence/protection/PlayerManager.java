@@ -118,7 +118,7 @@ public class PlayerManager implements ResidencePlayerInterface {
 	if (player != null)
 	    return getResidenceList(player.getUniqueId());
 	ArrayList<String> temp = new ArrayList<String>();
-	ResidencePlayer resPlayer = this.getResidencePlayer(name.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(name);
 	if (resPlayer != null) {
 	    for (ClaimedResidence one : resPlayer.getResList()) {
 		temp.add(one.getName());
@@ -136,7 +136,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public ArrayList<String> getResidenceList(String player, boolean showhidden, boolean onlyHidden) {
 	ArrayList<String> temp = new ArrayList<String>();
 //	playerJoin(player, false);
-	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player);
 	if (resPlayer == null)
 	    return temp;
 	for (ClaimedResidence one : resPlayer.getResList()) {
@@ -165,7 +165,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     // All 3 methods could be compacted into one, if needed
     public ArrayList<ClaimedResidence> getResidences(String player, boolean showhidden, boolean onlyHidden, World world) {
 	ArrayList<ClaimedResidence> temp = new ArrayList<ClaimedResidence>();
-	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player);
 	if (resPlayer == null)
 	    return temp;
 	for (ClaimedResidence one : resPlayer.getResList()) {
@@ -184,7 +184,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public TreeMap<String, ClaimedResidence> getResidencesMap(String player, boolean showhidden, boolean onlyHidden, World world) {
 	TreeMap<String, ClaimedResidence> temp = new TreeMap<String, ClaimedResidence>();
 
-	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player);
 	if (resPlayer == null) {
 	    return temp;
 	}
@@ -205,7 +205,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     public TreeMap<String, ClaimedResidence> getTrustedResidencesMap(String player, boolean showhidden, boolean onlyHidden, World world) {
 	TreeMap<String, ClaimedResidence> temp = new TreeMap<String, ClaimedResidence>();
 
-	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player);
 	if (resPlayer == null) {
 	    return temp;
 	}
@@ -411,7 +411,7 @@ public class PlayerManager implements ResidencePlayerInterface {
     }
 
     public void removeResFromPlayer(String player, ClaimedResidence residence) {
-	ResidencePlayer resPlayer = this.getResidencePlayer(player.toLowerCase());
+	ResidencePlayer resPlayer = this.getResidencePlayer(player);
 	if (resPlayer != null) {
 	    resPlayer.removeResidence(residence);
 	}

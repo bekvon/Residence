@@ -246,7 +246,7 @@ public class ResidencePermissions extends FlagPermissions {
 		if (!Residence.getInstance().getConfigManager().isOfflineMode() && !player.getUniqueId().toString().equals(ownerUUID.toString())) {
 		    Residence.getInstance().msg(player, lm.General_NoPermission);
 		    return;
-		} else if (!player.getName().equals(ownerLastKnownName)) {
+		} else if (!player.getName().equalsIgnoreCase(ownerLastKnownName)) {
 		    Residence.getInstance().msg(player, lm.General_NoPermission);
 		    return;
 		}

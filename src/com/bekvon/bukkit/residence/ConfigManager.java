@@ -601,6 +601,7 @@ public class ConfigManager {
         UUIDConvertion = c.get("Global.UUIDConvertion", true);
 
         c.addComment("Global.OfflineMode",
+            "STRONGLY not recomended to be used anymore. Only enable if you are sure you want to use this",
             "If you running offline server. Suggestion would be to keep this at false and base residence ownership from UUID and not on players name");
         OfflineMode = c.get("Global.OfflineMode", false);
 

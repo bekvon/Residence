@@ -2022,17 +2022,18 @@ public class ClaimedResidence {
         if (p == null)
             return false;
         if (Residence.getInstance().getConfigManager().isOfflineMode())
-            return perms.getOwner().equalsIgnoreCase(p.getName());
+            return perms.getOwner().equalsIgnoreCase(p.getName()) || perms.getOwnerUUID().equals(p.getUniqueId());
         return perms.getOwnerUUID().equals(p.getUniqueId());
     }
 
     public boolean isOwner(CommandSender sender) {
+        if (sender instanceof Player)
+            return isOwner((Player) sender);
+
         if (Residence.getInstance().getConfigManager().isOfflineMode()) {
             return perms.getOwner().equalsIgnoreCase(sender.getName());
         }
-        if (sender instanceof Player) {
-            return perms.getOwnerUUID().equals(((Player) sender).getUniqueId());
-        }
+        
         return true;
     }
 
