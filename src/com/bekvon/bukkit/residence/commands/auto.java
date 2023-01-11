@@ -24,7 +24,7 @@ import com.bekvon.bukkit.residence.selection.SelectionManager.Selection;
 
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class auto implements cmd {
 
@@ -76,8 +76,6 @@ public class auto implements cmd {
 
         boolean result = false;
 
-        CMIDebug.d("----------------");
-        CMIDebug.it();
         if (plugin.getConfigManager().isARCOldMethod())
             result = resize(plugin, player, cuboid, true, lenght);
         else
@@ -110,10 +108,60 @@ public class auto implements cmd {
         if (resName == null)
             resName = sender.getName() + plugin.getConfigManager().ARCIncrementFormat().replace("[number]", String.valueOf((new Random().nextInt(99950) + 50)));
 
+        Selection selection = plugin.getSelectionManager().getSelection(player);
+
+        double ratioX = getRatio(selection.getBaseArea().getXSize(), selection.getBaseArea().getYSize(), selection.getBaseArea().getZSize());
+        double ratioY = getRatio(selection.getBaseArea().getYSize(), selection.getBaseArea().getXSize(), selection.getBaseArea().getZSize());
+        double ratioZ = getRatio(selection.getBaseArea().getZSize(), selection.getBaseArea().getXSize(), selection.getBaseArea().getZSize());
+
+        String maxSide = "";
+        String minSide = "";
+
+        double maxRatio = 0;
+
+        if (ratioX > maxRatio) {
+            maxSide = "Z";
+            minSide = "X";
+            maxRatio = ratioX;
+        }
+
+        if (ratioZ > maxRatio) {
+            maxSide = "X";
+            minSide = "Z";
+            maxRatio = ratioZ;
+        }
+
+        if (ratioY > maxRatio) {
+            maxSide = "X";
+            minSide = "Y";
+            maxRatio = ratioY;
+        }
+
+        if (maxRatio > plugin.getConfigManager().getARCRatioValue()) {
+            if (plugin.getConfigManager().isARCRatioInform()) {
+                Residence.getInstance().msg(player, lm.Area_WeirdShape, maxSide, (int) (maxRatio * 100) / 100D, minSide);
+            }
+
+            if (plugin.getConfigManager().isARCRatioConfirmation()) {
+                RawMessage rm = new RawMessage();
+                rm.addText(Residence.getInstance().msg(lm.info_clickToConfirm));
+                rm.addHover(Residence.getInstance().msg(lm.info_clickToConfirm));
+                rm.addCommand((resadmin ? "resadmin" : "res") + " create " + resName);
+                rm.show(sender);
+                return true;
+            }
+        }
 
         player.performCommand((resadmin ? "resadmin" : "res") + " create " + resName);
 
         return true;
+    }
+
+    private double getRatio(int v1, int v2, int v3) {
+        double ratio = v2 / (double) v1;
+        if (v3 / v1 > ratio)
+            ratio = v3 / (double) v1;
+        return ratio;
     }
 
     private static int getMax(int max) {

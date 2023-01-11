@@ -62,6 +62,9 @@ public enum lm {
     Area_SizeLimit("&eArea size is not within your allowed limits."),
     Area_HighLimit("&cYou cannot protect this high up, your limit is &6%1"),
     Area_LowLimit("&cYou cannot protect this deep, your limit is &6%1"),
+    
+    Area_WeirdShape("&3Residence is out of regular shape. &6%1 &3side is &6%2 &3times bigger than &6%3 &3side"),
+    
 
     Select_Points("&eSelect two points first before using this command!"),
     Select_Overlap("&cSelected points overlap with &6%1 &cregion!"),

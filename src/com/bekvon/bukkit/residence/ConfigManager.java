@@ -104,6 +104,10 @@ public class ConfigManager {
     protected boolean NewSaveMechanic;
 
     private int ItemPickUpDelay;
+
+    private boolean ARCRatioInform;
+    private boolean ARCRatioConfirmation;
+    private int ARCRatioValue;
     private boolean ARCCheckCollision;
     private boolean ARCOldMethod;
     private String ARCIncrementFormat;
@@ -664,6 +668,20 @@ public class ConfigManager {
             "When set to true /res auto command will check for new area collision with other residences to avoid overlapping.",
             "Set it to false to gain some performace but new residence can often overlap with old ones");
         ARCCheckCollision = c.get("Global.Optimizations.AutomaticResidenceCreation.CheckCollision", true);
+
+        c.addComment("Global.Optimizations.AutomaticResidenceCreation.Ratio",
+            "Weird shaped residence detection when using automatic residence creation",
+            "This will inform player about residence shape being iregular cuboid before creation of it");
+        ARCRatioInform = c.get("Global.Optimizations.AutomaticResidenceCreation.Ratio.Inform", true);
+        
+        c.addComment("Global.Optimizations.AutomaticResidenceCreation.Confirmation",
+            "While enabled player will be required to click on chat message or perform /res create [resName] to finalize creation of residence when its in a weird shape");
+        ARCRatioConfirmation = c.get("Global.Optimizations.AutomaticResidenceCreation.Ratio.Confirmation", true);
+
+        c.addComment("Global.Optimizations.AutomaticResidenceCreation.Ratio.Value",
+            "Defines value of ration when residence will be counted as weird shaped ones",
+            "Value of 3 will mean that one of the sides of cuboid is atleast 3 times bigger than one of the remaining ones");
+        ARCRatioValue = c.get("Global.Optimizations.AutomaticResidenceCreation.Ratio.Value", 3);
 
         c.addComment("Global.Optimizations.AutomaticResidenceCreation.OldMethod",
             "Enabled this will switch to old method for calculating new residence area", "Old method is allot less efficient, so its not recomended to be used when you have residence areas over 100");
@@ -2252,6 +2270,18 @@ public class ConfigManager {
         if (all != null)
             return all;
         return 0;
+    }
+
+    public boolean isARCRatioInform() {
+        return ARCRatioInform;
+    }
+
+    public int getARCRatioValue() {
+        return ARCRatioValue;
+    }
+
+    public boolean isARCRatioConfirmation() {
+        return ARCRatioConfirmation;
     }
 
 //    public int getTownMinRange() {
