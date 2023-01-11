@@ -22,7 +22,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.selection.SelectionManager.Selection;
 
-import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Logs.CMIDebug;
@@ -83,11 +82,6 @@ public class auto implements cmd {
             result = resize(plugin, player, cuboid, true, lenght);
         else
             result = optimizedResize(plugin, player, cuboid, true, lenght);
-        CMIDebug.d(CMIDebug.getIT(), "ms");
-
-        Selection selection = plugin.getSelectionManager().getSelection(player);
-
-        CMIDebug.d("X:", selection.getBaseArea().getXSize(), " Y:", selection.getBaseArea().getYSize(), " Z:", selection.getBaseArea().getZSize());
 
         plugin.getSelectionManager().afterSelectionUpdate(player, true);
 
@@ -105,7 +99,7 @@ public class auto implements cmd {
 
         if (plugin.getResidenceManager().getByName(resName) != null) {
             for (int i = 1; i < 50; i++) {
-                String tempName = resName + plugin.getConfigManager().ARCIncrementFormat().replace("[number]", i + "");
+                String tempName = resName + plugin.getConfigManager().ARCIncrementFormat().replace("[number]", String.valueOf(i));
                 if (plugin.getResidenceManager().getByName(tempName) == null) {
                     resName = tempName;
                     break;
@@ -114,7 +108,8 @@ public class auto implements cmd {
         }
 
         if (resName == null)
-            resName = sender.getName() + (new Random().nextInt(99950) + 50);
+            resName = sender.getName() + plugin.getConfigManager().ARCIncrementFormat().replace("[number]", String.valueOf((new Random().nextInt(99950) + 50)));
+
 
         player.performCommand((resadmin ? "resadmin" : "res") + " create " + resName);
 
@@ -346,6 +341,8 @@ public class auto implements cmd {
         if (maxZ <= 1)
             maxZ = (groupMaxZ - group.getMinZ()) / 2 + group.getMinZ();
 
+        int gap = plugin.getConfigManager().getAntiGreefRangeGaps(cuboid.getWorldName());
+
         HashMap<direction, Integer> directionMap = new HashMap<direction, Integer>();
         HashMap<direction, Integer> maxMap = new HashMap<direction, Integer>();
         CuboidArea originalCuboid = new CuboidArea(cuboid.getLowLocation(), cuboid.getHighLocation());
@@ -383,11 +380,24 @@ public class auto implements cmd {
                 c.setLowVector(c.getLowVector().setY(minYaltitude));
             }
             if (checkCollision) {
-                if (plugin.getResidenceManager().collidesWithResidence(c) != null) {
-                    smallestRange = (int) -(Math.ceil(Math.abs(smallestRange) / 2D));
-                    cuboid.setLowLocation(c.getLowLocation());
-                    cuboid.setHighLocation(c.getHighLocation());
-                    continue;
+
+                if (gap > 0) {
+                    CuboidArea temp = new CuboidArea(c.getLowLocation().clone().add(-gap, -gap, -gap), c.getHighLocation().clone().add(gap, gap, gap));
+
+                    if (plugin.getResidenceManager().collidesWithResidence(temp) != null) {
+                        smallestRange = (int) -(Math.ceil(Math.abs(smallestRange) / 2D));
+                        cuboid.setLowLocation(c.getLowLocation());
+                        cuboid.setHighLocation(c.getHighLocation());
+                        continue;
+                    }
+
+                } else {
+                    if (plugin.getResidenceManager().collidesWithResidence(c) != null) {
+                        smallestRange = (int) -(Math.ceil(Math.abs(smallestRange) / 2D));
+                        cuboid.setLowLocation(c.getLowLocation());
+                        cuboid.setHighLocation(c.getHighLocation());
+                        continue;
+                    }
                 }
 
                 if (smallestRange == -1) {
@@ -504,7 +514,7 @@ public class auto implements cmd {
                     directionMap.put(direction.Bottom, maxMap.get(direction.Bottom) / 2);
                     permaLocked.add(dir);
                 }
-                
+
                 locked.add(dir);
                 dir = dir.getNext();
                 continue;
@@ -535,18 +545,23 @@ public class auto implements cmd {
                 }
             }
 
-            if (checkCollision && plugin.getResidenceManager().collidesWithResidence(c) != null) {
-
-                int newOffset = (int) (Math.abs(offset) / 2D);
-
-                if (newOffset < 1)
-                    newOffset = 1;
-
-                directionMap.put(dir, -(newOffset));
-
-                cuboid.setLowLocation(c.getLowLocation());
-                cuboid.setHighLocation(c.getHighLocation());
-                continue;
+            if (checkCollision) {
+                boolean collides = false;
+                if (gap > 0) {
+                    CuboidArea temp = new CuboidArea(c.getLowLocation().clone().add(-gap, -gap, -gap), c.getHighLocation().clone().add(gap, gap, gap));
+                    collides = plugin.getResidenceManager().collidesWithResidence(temp) != null;
+                } else {
+                    collides = plugin.getResidenceManager().collidesWithResidence(c) != null;
+                }
+                if (collides) {
+                    int newOffset = (int) (Math.abs(offset) / 2D);
+                    if (newOffset < 1)
+                        newOffset = 1;
+                    directionMap.put(dir, -(newOffset));
+                    cuboid.setLowLocation(c.getLowLocation());
+                    cuboid.setHighLocation(c.getHighLocation());
+                    continue;
+                }
             }
 
             if (maxMap.get(dir).equals(Math.abs(offset))) {
