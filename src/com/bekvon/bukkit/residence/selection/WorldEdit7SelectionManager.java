@@ -58,6 +58,9 @@ public class WorldEdit7SelectionManager extends SelectionManager {
         if (!hasPlacedBoth(player))
             return false;
 
+        if (!player.hasPermission("worldedit.selection.pos"))
+            return false;
+
         World w = BukkitAdapter.adapt(player.getWorld());
 
         try {
