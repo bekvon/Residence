@@ -217,6 +217,10 @@ public class ResidencePlayerListener implements Listener {
             return;
         if (!res.getPermissions().playerHas(event.getPlayer(), Flags.itemdrop, FlagCombo.OnlyFalse))
             return;
+
+        if (ResPerm.bypass_itemdrop.hasPermission(event.getPlayer(), 10000L))
+            return;
+
         event.setCancelled(true);
     }
 
