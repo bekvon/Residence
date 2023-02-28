@@ -198,6 +198,7 @@ public class ConfigManager {
     protected boolean SelectionIgnoreYInSubzone = false;
     private int SelectionNetherHeight = 128;
     protected boolean NoCostForYBlocks = false;
+    protected boolean WorldEditIntegration = false;
     protected boolean useVisualizer;
     protected boolean DisableListeners;
     protected boolean DisableCommands;
@@ -633,6 +634,9 @@ public class ConfigManager {
         c.addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
             "This will lower residence price by up to 319 times, so adjust block price BEFORE enabling this");
         NoCostForYBlocks = c.get("Global.Selection.NoCostForYBlocks", false);
+        
+        c.addComment("Global.Selection.WorldEditIntegration", "Enable or disable world edit integration into Residence plugin");
+        WorldEditIntegration = c.get("Global.Selection.WorldEditIntegration", true);
 
         c.addComment("Global.InfoToolId", "This determins which tool you can use to see info on residences, default is String.",
             "Simply equip this tool and hit a location inside the residence and it will display the info for it.");
@@ -2284,6 +2288,10 @@ public class ConfigManager {
         return ARCRatioConfirmation;
     }
 
+    public boolean isWorldEditIntegration() {
+        return WorldEditIntegration;
+    }
+    
 //    public int getTownMinRange() {
 //	return TownMinRange;
 //    }

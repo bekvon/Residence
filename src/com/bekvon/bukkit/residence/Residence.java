@@ -938,11 +938,14 @@ public class Residence extends JavaPlugin {
                 this.wep = (com.sk89q.worldedit.bukkit.WorldEditPlugin) plugin;
                 try {
                     Class.forName("com.sk89q.worldedit.bukkit.selections.Selection");
-                    smanager = new WorldEditSelectionManager(server, this);
+
+                    if (getConfigManager().isWorldEditIntegration())
+                        smanager = new WorldEditSelectionManager(server, this);
                     if (wep != null)
                         SchematicManager = new SchematicsManager(this);
                 } catch (ClassNotFoundException e) {
-                    smanager = new WorldEdit7SelectionManager(server, this);
+                    if (getConfigManager().isWorldEditIntegration())
+                        smanager = new WorldEdit7SelectionManager(server, this);
                     if (wep != null)
                         SchematicManager = new Schematics7Manager(this);
                 }
