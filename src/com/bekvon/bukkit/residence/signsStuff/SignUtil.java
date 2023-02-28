@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -163,7 +166,7 @@ public class SignUtil {
 	}
     }
 
-    public void updateSignResName(ClaimedResidence res) {
+    public void updateSignResName(ClaimedResidence res) {                
 	for (Signs one : res.getSignsInResidence()) {
 	    if (res != one.getResidence())
 		continue;

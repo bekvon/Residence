@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -101,7 +102,7 @@ public class ClaimedResidence {
 
     private ResidenceRaid raid;
 
-    private Set<Signs> signsInResidence = new HashSet<Signs>();
+    private Set<Signs> signsInResidence = Collections.synchronizedSet(new HashSet<Signs>());
 
     public String getResidenceName() {
         return resName;
