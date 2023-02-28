@@ -3,6 +3,8 @@ package com.bekvon.bukkit.residence.containers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.bukkit.command.CommandSender;
+
 import com.bekvon.bukkit.residence.Residence;
 
 public enum lm {
@@ -62,9 +64,8 @@ public enum lm {
     Area_SizeLimit("&eArea size is not within your allowed limits."),
     Area_HighLimit("&cYou cannot protect this high up, your limit is &6%1"),
     Area_LowLimit("&cYou cannot protect this deep, your limit is &6%1"),
-    
+
     Area_WeirdShape("&3Residence is out of regular shape. &6%1 &3side is &6%2 &3times bigger than &6%3 &3side"),
-    
 
     Select_Points("&eSelect two points first before using this command!"),
     Select_Overlap("&cSelected points overlap with &6%1 &cregion!"),
@@ -105,6 +106,7 @@ public enum lm {
     Sign_ForSaleResName("&0%1"),
     Sign_ForSaleBottom("&0%1m\u00B3"),
     Sign_LookAt("&cYou are not looking at sign"),
+    Sign_TooMany("&cToo many signs for this residence"),
     Sign_ResName("&0%1"),
     Sign_Owner("&0%1"),
 
@@ -317,7 +319,7 @@ public enum lm {
     command_removedBlock("&eRemoved blocked command for &6%1 &eresidence"),
     command_Blocked("&eBlocked commands: &6%1"),
     command_Allowed("&eAllowed commands: &6%1"),
-    
+
     command_Parsed("%1"),
     command_PlacehlderList("&e%1. &6%2"),
     command_PlacehlderResult(" &eresult: &6%1"),
@@ -556,34 +558,50 @@ public enum lm {
     General_World("&eWorld: &6%1"),
     General_Subzones("&eSubzones"),
     General_NewPlayerInfo(
-	"&eIf you want to create protected area for your house, please use wooden axe to select opposite sides of your home and execute command &2/res create YourResidenceName",
-	"The below lines represent various messages residence sends to the players.",
-	"Note that some messages have variables such as %1 that are inserted at runtime.");
+        "&eIf you want to create protected area for your house, please use wooden axe to select opposite sides of your home and execute command &2/res create YourResidenceName",
+        "The below lines represent various messages residence sends to the players.",
+        "Note that some messages have variables such as %1 that are inserted at runtime.");
 
     private Object text;
     private String[] comments;
 
     private lm(Object text, String... comments) {
-	this.text = text;
-	this.comments = comments;
+        this.text = text;
+        this.comments = comments;
     }
 
     public Object getText() {
-	return text;
+        return text;
     }
 
     public String[] getComments() {
-	return comments;
+        return comments;
     }
 
     public String getPath() {
-	String path = this.name();
-	if (!this.name().contains("Language.") && !this.name().contains("CommandHelp."))
-	    path = "Language." + this.name();
-	return path.replace("_", ".");
+        String path = this.name();
+        if (!this.name().contains("Language.") && !this.name().contains("CommandHelp."))
+            path = "Language." + this.name();
+        return path.replace("_", ".");
     }
 
     public String getMessage(Object... variables) {
-	return Residence.getInstance().getLM().getMessage(this, variables);
+        return Residence.getInstance().getLM().getMessage(this, variables);
+    }
+
+    public void sendMessage(CommandSender sender, Object... variables) {
+
+        if (sender == null)
+            return;
+
+        if (Residence.getInstance().getLM().containsKey(getPath())) {
+            String msg = Residence.getInstance().getLM().getMessage(this, variables);
+            if (msg.length() > 0)
+                sender.sendMessage(msg);
+        } else {
+            String msg = getPath();
+            if (msg.length() > 0)
+                sender.sendMessage(getPath());
+        }
     }
 }

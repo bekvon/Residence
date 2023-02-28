@@ -150,6 +150,12 @@ public class market implements cmd {
             boolean ForRent = res.isForRent();
 
             if (ForSale || ForRent) {
+
+                if (res.getSignsInResidence().size() >= plugin.getConfigManager().getSignsMaxPerResidence()) {
+                    lm.Sign_TooMany.sendMessage(player);
+                    return true;
+                }
+
                 signInfo.setResidence(res);
                 signInfo.setLocation(loc);
                 plugin.getSignUtil().getSigns().addSign(signInfo);

@@ -793,6 +793,11 @@ public class ResidencePlayerListener implements Listener {
             return;
         }
 
+        if (res.getSignsInResidence().size() >= plugin.getConfigManager().getSignsMaxPerResidence()) {
+            lm.Sign_TooMany.sendMessage(player);
+            return;
+        }
+
         final ClaimedResidence residence = res;
 
         signInfo.setResidence(res);

@@ -230,8 +230,9 @@ public class ConfigManager {
     protected List<String> FlagsList;
     protected List<String> NegativePotionEffects;
     protected List<String> NegativeLingeringPotionEffects;
-    private Double WalkSpeed1;
-    private Double WalkSpeed2;
+    private double WalkSpeed1;
+    private double WalkSpeed2;
+    private int SignsMaxPerResidence;
 
     protected Location KickLocation;
     protected Location FlyLandLocation;
@@ -823,6 +824,9 @@ public class ConfigManager {
         WalkSpeed2 = WalkSpeed2 < 0 ? 0 : WalkSpeed2;
         WalkSpeed2 = WalkSpeed2 > 5 ? 5 : WalkSpeed2;
         WalkSpeed2 = WalkSpeed2 / 5.0;
+        
+        SignsMaxPerResidence = c.get("Global.Signs.MaxPerResidence", 5);
+        SignsMaxPerResidence = SignsMaxPerResidence < 0 ? 0 : SignsMaxPerResidence;
 
         c.addComment("Global.MoveCheckInterval", "The interval, in milliseconds, between movement checks.", "Reducing this will increase the load on the server.",
             "Increasing this will allow players to move further in movement restricted zones before they are teleported out.");
@@ -2290,6 +2294,10 @@ public class ConfigManager {
 
     public boolean isWorldEditIntegration() {
         return WorldEditIntegration;
+    }
+
+    public int getSignsMaxPerResidence() {
+        return SignsMaxPerResidence;
     }
     
 //    public int getTownMinRange() {
