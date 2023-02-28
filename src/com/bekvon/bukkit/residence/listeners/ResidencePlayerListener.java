@@ -2514,11 +2514,22 @@ public class ResidencePlayerListener implements Listener {
                 player.closeInventory();
                 if (lastLoc != null && CMIMaterial.isAir(lastLoc.getBlock().getType())) {
                     Long last = lastUpdate.get(player.getUniqueId());
-                    // Fail safe in case we are triggering teleportation event check with this teleportion, we should teleport player outside residence instead of its repeating teleportation to avoid stack overflow 
+                    // Fail safe in case we are triggering teleportation event check with this teleportation, we should teleport player outside residence instead of its repeating teleportation to avoid stack overflow 
                     if (last != null && System.currentTimeMillis() - last > 45L) {
                         teleport(player, res.getOutsideFreeLoc(loc, player));
                     } else {
                         this.lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
+
+                        ClaimedResidence outsideRes = plugin.getResidenceManager().getByLoc(lastLoc);
+
+                        if (outsideRes != null && !Flags.move.isGlobalyEnabled() && outsideRes.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player)
+                            && !outsideRes.isOwner(player) && !ResPerm.admin_move.hasPermission(player, 10000L)) {
+                            return false;
+                        }
+
+                        if (!plugin.getPermsByLoc(lastLoc).playerHas(player, Flags.move, FlagCombo.OnlyFalse))
+                            return false;
+
                         teleport(player, lastLoc);
                     }
                 } else {
