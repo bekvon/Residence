@@ -66,6 +66,7 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -664,7 +665,7 @@ public class ResidenceBlockListener implements Listener {
         }
         FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(block.getLocation(), player);
         boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
-
+        
         if (res != null && res.getRaid().isUnderRaid()) {
             if (res.getRaid().isAttacker(player.getUniqueId()) && ConfigManager.RaidAttackerBlockPlace || res.getRaid().isDefender(player.getUniqueId()) && ConfigManager.RaidDefenderBlockPlace) {
                 hasplace = true;

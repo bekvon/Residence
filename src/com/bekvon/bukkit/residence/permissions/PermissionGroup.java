@@ -48,6 +48,12 @@ public class PermissionGroup {
 //    protected Map<String, Boolean> rentedDefaultFlags;
     protected Map<String, Map<String, Boolean>> groupDefaultFlags;
     protected Map<String, Boolean> residenceDefaultFlags;
+    
+    
+    protected Map<String, Map<String, FlagPermissions>> groupperms;
+    protected Map<String, FlagPermissions> worldperms;
+    
+    
     protected boolean messageperms = false;
     protected String defaultEnterMessage = null;
     protected String defaultLeaveMessage = null;
@@ -77,6 +83,10 @@ public class PermissionGroup {
 //	rentedDefaultFlags = new HashMap<String, Boolean>();
         residenceDefaultFlags = new HashMap<String, Boolean>();
         groupDefaultFlags = new HashMap<String, Map<String, Boolean>>();
+        
+        worldperms = new HashMap<>();
+        groupperms = new HashMap<>();
+        
         groupname = name;
     }
 

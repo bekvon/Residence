@@ -81,7 +81,7 @@ public class auto implements cmd {
             result = resize(plugin, player, cuboid, true, lenght);
         else
             result = optimizedResize(plugin, player, cuboid, true, lenght);
-CMIDebug.d(result);
+
         plugin.getSelectionManager().afterSelectionUpdate(player, true);
 
         if (!result) {

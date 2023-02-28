@@ -246,6 +246,7 @@ public class PermissionManager {
 	bypass_tp("Allows to bypass command flag"),
 	bypass_command("Allows to bypass command flag"),
 	bypass_itempickup("Allows to bypass itempickup flag"),
+        bypass_itemdrop("Allows to bypass itemdrop flag"),
 	buy("Allows to buy residence"),
 	sell("Allows to sell residence"),
         max_res_x_$1("Defines residence size limit on X axis", "number"),
