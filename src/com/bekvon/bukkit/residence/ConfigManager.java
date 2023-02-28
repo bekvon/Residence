@@ -982,7 +982,6 @@ public class ConfigManager {
                 String worldName = one.substring(0, one.length() - split[split.length - 1].length() - 1);
                 int range = Integer.parseInt(split[split.length - 1]);
                 AntiGreefRangeGaps.put(worldName.toLowerCase(), range);
-                CMIDebug.d(worldName, range);
             } catch (Throwable e) {
                 continue;
             }

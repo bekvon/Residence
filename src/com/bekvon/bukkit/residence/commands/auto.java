@@ -24,6 +24,7 @@ import com.bekvon.bukkit.residence.selection.SelectionManager.Selection;
 
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class auto implements cmd {
@@ -80,7 +81,7 @@ public class auto implements cmd {
             result = resize(plugin, player, cuboid, true, lenght);
         else
             result = optimizedResize(plugin, player, cuboid, true, lenght);
-
+CMIDebug.d(result);
         plugin.getSelectionManager().afterSelectionUpdate(player, true);
 
         if (!result) {
@@ -316,7 +317,7 @@ public class auto implements cmd {
 
                 if (!Residence.getInstance().getEconomyManager().canAfford(player, cost)) {
                     plugin.msg(player, lm.Economy_NotEnoughMoney);
-                    break;
+                    return false; 
                 }
             }
 
@@ -645,7 +646,7 @@ public class auto implements cmd {
 
             if (checkBalance && plugin.getConfigManager().enableEconomy() && !Residence.getInstance().getEconomyManager().canAfford(player, c.getCost(group))) {
                 plugin.msg(player, lm.Economy_NotEnoughMoney);
-                break;
+                return false;
             }
 
             cuboid.setLowLocation(c.getLowLocation());
