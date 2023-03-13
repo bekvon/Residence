@@ -980,7 +980,7 @@ public class ConfigManager {
             ls.add("all-" + c.getC().getInt("Global.AntiGreef.RangeGap"));
             c.get("Global.AntiGreef.RangeGaps", Arrays.asList("all-" + c.getC().getInt("Global.AntiGreef.RangeGap")));
         } else
-            ls = c.get("Global.AntiGreef.RangeGaps", Arrays.asList("all-16"));
+            ls = c.get("Global.AntiGreef.RangeGaps", Arrays.asList("all-8"));
 
         for (String one : ls) {
             String[] split = one.split("-");

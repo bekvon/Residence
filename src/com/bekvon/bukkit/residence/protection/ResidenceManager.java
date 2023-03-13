@@ -14,6 +14,11 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,19 +55,20 @@ import com.bekvon.bukkit.residence.utils.GetTime;
 
 import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.CMINumber;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceManager implements ResidenceInterface {
-    protected SortedMap<String, ClaimedResidence> residences;
+    protected ConcurrentHashMap<String, ClaimedResidence> residences;
     protected Map<String, Map<ChunkRef, List<ClaimedResidence>>> chunkResidences;
     protected List<ClaimedResidence> shops = new ArrayList<ClaimedResidence>();
     private Residence plugin;
 
     public ResidenceManager(Residence plugin) {
-        residences = new TreeMap<String, ClaimedResidence>();
+        residences = new ConcurrentHashMap<String, ClaimedResidence>();
         chunkResidences = new HashMap<String, Map<ChunkRef, List<ClaimedResidence>>>();
         shops = new ArrayList<ClaimedResidence>();
         this.plugin = plugin;
@@ -1087,7 +1093,7 @@ public class ResidenceManager implements ResidenceInterface {
                 Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + " Loading " + worldName + " data into memory...");
             if (reslist != null) {
                 try {
-                    chunkResidences.put(worldName, loadMap(worldName, reslist));
+                    chunkResidences.put(worldName, multithreadLoadMap(worldName, reslist));
                 } catch (Exception ex) {
                     Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + "Error in loading save file for world: " + worldName);
                     if (plugin.getConfigManager().stopOnSaveError())
@@ -1106,6 +1112,112 @@ public class ResidenceManager implements ResidenceInterface {
         clearLoadChache();
     }
 
+    int chunkCount = 0;
+
+    public Map<ChunkRef, List<ClaimedResidence>> multithreadLoadMap(String worldName, Map<String, Object> root) throws InterruptedException, ExecutionException {
+        Map<ChunkRef, List<ClaimedResidence>> retRes = new ConcurrentHashMap<>();
+
+        if (root == null) {
+            return retRes;
+        }
+
+        chunkCount = 0;
+
+        int numCores = Runtime.getRuntime().availableProcessors();
+        ExecutorService executorService = Executors.newFixedThreadPool(numCores);
+
+        List<Future<Void>> futures = new ArrayList<>();
+        int batchSize = (int) Math.ceil(root.entrySet().size() / (double) numCores);
+
+        batchSize = CMINumber.clamp(batchSize, 500, root.entrySet().size());
+
+        int i = 0;
+
+        List<Entry<String, Object>> batch = new ArrayList<>();
+
+        int total = root.entrySet().size() - 1;
+
+        for (Entry<String, Object> entry : root.entrySet()) {
+            batch.add(entry);
+
+            if (batch.size() < batchSize && i < total) {
+                i++;
+                continue;
+            }
+
+            List<Entry<String, Object>> currentBatch = batch;
+            batch = new ArrayList<>();
+            i++;
+
+            Future<Void> future = executorService.submit(() -> {
+                for (Entry<String, Object> currentEntry : currentBatch) {
+                    try {
+                        ClaimedResidence residence = ClaimedResidence.load(worldName, (Map<String, Object>) currentEntry.getValue(), null, plugin);
+
+                        if (residence == null) {
+                            continue;
+                        }
+
+                        if (residence.getPermissions().getOwnerUUID().toString().equals(plugin.getServerLandUUID()) &&
+                            !residence.getOwner().equalsIgnoreCase("Server land") &&
+                            !residence.getOwner().equalsIgnoreCase(plugin.getServerLandName())) {
+                            continue;
+                        }
+
+                        if (residence.getOwner().equalsIgnoreCase("Server land")) {
+                            residence.getPermissions().setOwner(plugin.getServerLandName(), false);
+                        }
+
+                        String resName = currentEntry.getKey().toLowerCase();
+
+                        int increment = getNameIncrement(resName);
+
+                        if (residence.getResidenceName() == null)
+                            residence.setName(currentEntry.getKey());
+
+                        if (increment > 0) {
+                            residence.setName(residence.getResidenceName() + increment);
+                            resName += increment;
+                        }
+
+                        for (ChunkRef chunk : getChunks(residence)) {
+                            retRes.compute(chunk, (k, v) -> {
+                                if (v == null) {
+                                    v = new ArrayList<>();
+                                }
+                                v.add(residence);
+                                return v;
+                            });
+                        }
+
+                        plugin.getPlayerManager().addResidence(residence.getOwner(), residence);
+
+                        residences.put(resName, residence);
+                    } catch (Exception ex) {
+                        Bukkit.getConsoleSender().sendMessage(plugin.getPrefix() + ChatColor.RED + " Failed to load residence (" + currentEntry.getKey() + ")! Reason:" + ex.getMessage()
+                            + " Error Log:");
+                        Logger.getLogger(ResidenceManager.class.getName()).log(Level.SEVERE, null, ex);
+                        if (plugin.getConfigManager().stopOnSaveError()) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }
+                return null;
+            });
+
+            futures.add(future);
+        }
+
+        for (Future<Void> future : futures) {
+            future.get();
+        }
+
+        executorService.shutdown();
+
+        return retRes;
+    }
+
+    // Old method for single core loading
     public Map<ChunkRef, List<ClaimedResidence>> loadMap(String worldName, Map<String, Object> root) throws Exception {
         Map<ChunkRef, List<ClaimedResidence>> retRes = new HashMap<>();
         if (root == null)
@@ -1188,9 +1300,7 @@ public class ResidenceManager implements ResidenceInterface {
 
     private static List<ChunkRef> getChunks(ClaimedResidence res) {
         List<ChunkRef> chunks = new ArrayList<>();
-        for (CuboidArea area : res.getAreaArray()) {
-            chunks.addAll(area.getChunks());
-        }
+        res.getAreaMap().values().forEach(area -> chunks.addAll(area.getChunks()));
         return chunks;
     }
 

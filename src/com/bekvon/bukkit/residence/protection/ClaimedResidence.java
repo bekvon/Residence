@@ -967,13 +967,17 @@ public class ClaimedResidence {
     }
 
     public CuboidArea[] getAreaArray() {
-        CuboidArea[] temp = new CuboidArea[areas.size()];
-        int i = 0;
-        for (CuboidArea area : areas.values()) {
-            temp[i] = area;
-            i++;
-        }
-        return temp;
+        
+        return areas.values().toArray(new CuboidArea[0]);
+        
+        
+//        CuboidArea[] temp = new CuboidArea[areas.size()];
+//        int i = 0;
+//        for (CuboidArea area : areas.values()) {
+//            temp[i] = area;
+//            i++;
+//        }
+//        return temp;
     }
 
     public Map<String, CuboidArea> getAreaMap() {

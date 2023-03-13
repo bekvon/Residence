@@ -1,14 +1,5 @@
 package com.bekvon.bukkit.residence.protection;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.ResidenceManager.ChunkRef;
-
-import net.Zrips.CMILib.Logs.CMIDebug;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,9 +7,12 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ResidenceManager.ChunkRef;
 
 public class CuboidArea {
     private Vector highPoints;
@@ -31,7 +25,12 @@ public class CuboidArea {
         if (startLoc == null || endLoc == null)
             return;
 
-        int highx, highy, highz, lowx, lowy, lowz;
+        int highx;
+        int highy;
+        int highz;
+        int lowx;
+        int lowy;
+        int lowz;
 
         if (startLoc.getBlockX() > endLoc.getBlockX()) {
             highx = startLoc.getBlockX();
@@ -186,37 +185,13 @@ public class CuboidArea {
     }
 
     public World getWorld() {
+        if (world == null && worldName != null)
+            world = Bukkit.getWorld(worldName);
         return world;
     }
 
     public String getWorldName() {
         return world != null ? world.getName() : worldName;
-    }
-
-    public void save(DataOutputStream out) throws IOException {
-        out.writeUTF(getWorldName());
-        out.writeInt(highPoints.getBlockX());
-        out.writeInt(highPoints.getBlockY());
-        out.writeInt(highPoints.getBlockZ());
-        out.writeInt(lowPoints.getBlockX());
-        out.writeInt(lowPoints.getBlockY());
-        out.writeInt(lowPoints.getBlockZ());
-    }
-
-    public CuboidArea load(DataInputStream in) throws IOException {
-        CuboidArea newArea = new CuboidArea();
-        Server server = Residence.getInstance().getServ();
-        int highx = in.readInt();
-        int highy = in.readInt();
-        int highz = in.readInt();
-        int lowx = in.readInt();
-        int lowy = in.readInt();
-        int lowz = in.readInt();
-        newArea.highPoints = new Vector(highx, highy, highz);
-        newArea.lowPoints = new Vector(lowx, lowy, lowz);
-        newArea.worldName = in.readUTF();
-        newArea.world = Bukkit.getWorld(newArea.worldName);
-        return newArea;
     }
 
     public Map<String, Object> save() {
@@ -250,7 +225,7 @@ public class CuboidArea {
             newArea.lowPoints = new Vector(x1, y1, z1);
             newArea.highPoints = new Vector(x2, y2, z2);
             newArea.worldName = world;
-            newArea.world = Bukkit.getWorld(newArea.worldName);
+//            newArea.world = Bukkit.getWorld(newArea.worldName);
         } catch (Exception e) {
             throw new Exception("Invalid residence physical location...");
         }
