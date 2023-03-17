@@ -894,8 +894,7 @@ public class ClaimedResidence {
     }
 
     public boolean containsLoc(Location loc) {
-        Collection<CuboidArea> keys = areas.values();
-        for (CuboidArea key : keys) {
+        for (CuboidArea key : areas.values()) {
             if (key.containsLoc(loc)) {
                 if (getParent() != null)
                     return getParent().containsLoc(loc);

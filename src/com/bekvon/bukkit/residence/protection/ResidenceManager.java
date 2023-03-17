@@ -96,32 +96,26 @@ public class ResidenceManager implements ResidenceInterface {
         String worldName = world.getName();
         if (worldName == null)
             return null;
-        if (!chunkResidences.containsKey(worldName))
-            return null;
-        ClaimedResidence res = null;
-        ChunkRef chunk = new ChunkRef(loc);
 
         Map<ChunkRef, List<ClaimedResidence>> ChunkMap = chunkResidences.get(worldName);
 
-        List<ClaimedResidence> chunks = ChunkMap.get(chunk);
-
-        if (chunks != null) {
-            for (ClaimedResidence entry : chunks) {
-                if (entry == null)
-                    continue;
-                if (entry.containsLoc(loc)) {
-                    res = entry;
-                    break;
-                }
-            }
-        }
-        if (res == null)
+        if (ChunkMap == null)
             return null;
 
-        ClaimedResidence subres = res.getSubzoneByLoc(loc);
-        if (subres == null)
-            return res;
-        return subres;
+        List<ClaimedResidence> residences = ChunkMap.get(new ChunkRef(loc));
+
+        if (residences == null)
+            return null;
+
+        for (ClaimedResidence residence : residences) {
+            if (residence == null)
+                continue;
+            if (residence.containsLoc(loc)) {
+                ClaimedResidence subres = residence.getSubzoneByLoc(loc);
+                return subres == null ? residence : subres;
+            }
+        }
+        return null;
     }
 
     public List<ClaimedResidence> getByChunk(Chunk chunk) {
