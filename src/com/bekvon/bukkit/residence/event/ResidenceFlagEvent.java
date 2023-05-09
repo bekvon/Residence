@@ -25,7 +25,14 @@ public class ResidenceFlagEvent extends ResidenceEvent {
     FlagType flagtype;
     FlagState flagstate;
     String flagtarget;
-
+    
+    public ResidenceFlagEvent(String eventName, ClaimedResidence resref, String flag, FlagType type, String target, boolean async) {
+        super(eventName, resref, async);
+        flagname = flag;
+        flagtype = type;
+        flagtarget = target;
+    }
+    
     public ResidenceFlagEvent(String eventName, ClaimedResidence resref, String flag, FlagType type, String target) {
 	super(eventName, resref);
 	flagname = flag;

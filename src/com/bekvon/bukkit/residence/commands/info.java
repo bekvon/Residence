@@ -58,7 +58,7 @@ public class info implements cmd {
 
             RawMessage rm = new RawMessage();
 
-            if (!nearby.isEmpty()) { 
+            if (!nearby.isEmpty()) {
                 rm.addText(plugin.msg(lm.Residence_Near, ""));
                 for (ClaimedResidence one : nearby) {
                     if (rm.getFinalLenght() > 0)
@@ -102,7 +102,7 @@ public class info implements cmd {
 
             if (playerName.equalsIgnoreCase("-players")) {
                 plugin.getResidenceManager().printAreaPlayers(args[0], sender, page);
-            } 
+            }
             return true;
         }
         return false;

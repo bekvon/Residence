@@ -18,9 +18,9 @@ public class ResidenceFlagCheckEvent extends ResidenceFlagEvent {
     private boolean override;
     private boolean overridevalue;
     boolean defaultvalue;
-
+    
     public ResidenceFlagCheckEvent(ClaimedResidence resref, String flag, FlagType type, String target, boolean defaultValue) {
-	super("RESIDENCE_FLAG_CHECK", resref, flag, type, target);
+	super("RESIDENCE_FLAG_CHECK", resref, flag, type, target, true);
 	defaultvalue = defaultValue;
 	override = false;
     }

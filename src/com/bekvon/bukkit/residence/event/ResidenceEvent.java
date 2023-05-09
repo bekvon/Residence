@@ -11,25 +11,31 @@ public class ResidenceEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-	return handlers;
+        return handlers;
     }
 
     public static HandlerList getHandlerList() {
-	return handlers;
+        return handlers;
     }
 
     ClaimedResidence res;
 
+    public ResidenceEvent(String eventName, ClaimedResidence resref, boolean async) {
+        super(async);
+        message = eventName;
+        res = resref;
+    }
+
     public ResidenceEvent(String eventName, ClaimedResidence resref) {
-	message = eventName;
-	res = resref;
+        message = eventName;
+        res = resref;
     }
 
     public String getMessage() {
-	return message;
+        return message;
     }
 
     public ClaimedResidence getResidence() {
-	return res;
+        return res;
     }
 }
