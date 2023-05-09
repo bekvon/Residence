@@ -45,7 +45,6 @@ public class SlimeFunResidenceModule implements ProtectionModule {
             CMIDebug.d(action);
             ClaimedResidence res = residence.getResidenceManager().getByLoc(loc);
             if (res != null) {
-                CMIDebug.d("?", action);
                 boolean allow = res.getPermissions().playerHas(ResidencePlayer.get(op.getUniqueId()), Flags.container, false);
                 if (!allow)
                     residence.msg(op.getPlayer(), lm.Flag_Deny, Flags.container);
@@ -56,9 +55,7 @@ public class SlimeFunResidenceModule implements ProtectionModule {
             Player player = Bukkit.getPlayer(op.getUniqueId());
             if (player == null)
                 return false;
-            boolean state = ResidenceBlockListener.canBreakBlock(player, loc.getBlock(), true);
-
-            return state;
+            return ResidenceBlockListener.canBreakBlock(player, loc.getBlock(), true);
         default:
             break;
         }

@@ -1179,8 +1179,9 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onSelection(PlayerInteractEvent event) {
+
         if (event.getPlayer() == null)
             return;
         // disabling event on world

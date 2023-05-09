@@ -90,10 +90,14 @@ public class ResidenceManager implements ResidenceInterface {
 
         if (loc == null)
             return null;
+        
         World world = loc.getWorld();
+        
         if (world == null)
             return null;
+        
         String worldName = world.getName();
+        
         if (worldName == null)
             return null;
 

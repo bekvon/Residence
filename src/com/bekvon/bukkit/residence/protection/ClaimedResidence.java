@@ -825,21 +825,13 @@ public class ClaimedResidence {
     }
 
     public ClaimedResidence getSubzoneByLoc(Location loc) {
-        Set<Entry<String, ClaimedResidence>> set = subzones.entrySet();
-        ClaimedResidence res = null;
-        for (Entry<String, ClaimedResidence> entry : set) {
-            if (entry.getValue().containsLoc(loc)) {
-                res = entry.getValue();
-                break;
-            }
+        for (Entry<String, ClaimedResidence> entry : subzones.entrySet()) {
+            if (!entry.getValue().containsLoc(loc))
+                continue;
+            ClaimedResidence subrez = entry.getValue().getSubzoneByLoc(loc);
+            return subrez == null ? entry.getValue() : subrez;
         }
-        if (res == null)
-            return null;
-        ClaimedResidence subrez = res.getSubzoneByLoc(loc);
-        if (subrez == null) {
-            return res;
-        }
-        return subrez;
+        return null;
     }
 
     public ClaimedResidence getSubzone(String subzonename) {
@@ -966,10 +958,9 @@ public class ClaimedResidence {
     }
 
     public CuboidArea[] getAreaArray() {
-        
+
         return areas.values().toArray(new CuboidArea[0]);
-        
-        
+
 //        CuboidArea[] temp = new CuboidArea[areas.size()];
 //        int i = 0;
 //        for (CuboidArea area : areas.values()) {
@@ -2037,7 +2028,7 @@ public class ClaimedResidence {
         if (Residence.getInstance().getConfigManager().isOfflineMode()) {
             return perms.getOwner().equalsIgnoreCase(sender.getName());
         }
-        
+
         return true;
     }
 

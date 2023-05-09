@@ -224,10 +224,8 @@ public class ResidenceBlockListener implements Listener {
             return true;
         }
 
-        CMIDebug.it();
         ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(block.getLocation());
-        CMIDebug.d(String.format("%,.4f", CMIDebug.getIT()), "ms");
-        
+
         if (res != null && res.getItemIgnoreList().isListed(mat))
             return true;
 
