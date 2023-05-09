@@ -1014,6 +1014,9 @@ public class ResidencePlayerListener implements Listener {
         if (m.isTrapDoor())
             return true;
 
+        if (m.isBed())
+            return true;
+
         switch (m) {
         case LEVER:
         case PISTON:
@@ -1343,6 +1346,7 @@ public class ResidencePlayerListener implements Listener {
         CMIMaterial heldItem = CMIMaterial.get(iih);
 
         Material mat = block.getType();
+
         if (!(event.getAction() == Action.PHYSICAL || (isContainer(mat, block) || isCanUseEntity_RClickOnly(mat, block)) && event.getAction() == Action.RIGHT_CLICK_BLOCK
             || isCanUseEntity_BothClick(mat, block)) && !heldItem.equals(plugin.getConfigManager().getSelectionTool()) && !heldItem.equals(plugin.getConfigManager().getInfoTool())
             && (!heldItem.isDye() && !heldItem.equals(CMIMaterial.GLOW_INK_SAC)) && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
@@ -2716,14 +2720,14 @@ public class ResidencePlayerListener implements Listener {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 ClaimedResidence res = getCurrentResidence(player.getUniqueId());
                 if (res == null)
-                    continue;                
+                    continue;
                 if (!res.getPermissions().has(Flags.safezone, FlagCombo.OnlyTrue))
-                    continue;                
+                    continue;
                 if (player.getActivePotionEffects().isEmpty())
                     continue;
-                for (PotionEffect one : player.getActivePotionEffects()) {                    
+                for (PotionEffect one : player.getActivePotionEffects()) {
                     if (plugin.getConfigManager().getNegativePotionEffects().contains(one.getType().getName().toLowerCase()))
-                        player.removePotionEffect(one.getType());                    
+                        player.removePotionEffect(one.getType());
                 }
             }
         } catch (Exception ex) {
