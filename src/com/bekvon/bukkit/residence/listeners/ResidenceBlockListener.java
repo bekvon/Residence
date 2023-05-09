@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -22,6 +23,7 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -35,10 +37,12 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.world.PortalCreateEvent;
@@ -83,6 +87,63 @@ public class ResidenceBlockListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
+    public void onAnvilInventoryClick(ProjectileHitEvent e) {
+        // Disabling listener if flag disabled globally
+        if (!Flags.button.isGlobalyEnabled())
+            return;
+
+        if (e.getHitBlock() == null)
+            return;
+
+        if (plugin.isDisabledWorldListener(e.getHitBlock().getWorld()))
+            return;
+
+        if (!(e.getEntity().getShooter() instanceof Player))
+            return;
+
+        Player player = (Player) e.getEntity().getShooter();
+
+        Block block = e.getHitBlock().getLocation().clone().add(e.getHitBlockFace().getDirection()).getBlock();
+
+        if (!CMIMaterial.isButton(block.getType()))
+            return;
+
+        FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
+
+        boolean hasuse = perms.playerHas(player, Flags.use, true);
+
+        ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+
+        Flags result = FlagPermissions.getMaterialUseFlagList().get(block.getType());
+        if (result != null) {
+            main: if (!perms.playerHas(player, result, hasuse)) {
+
+                if (res != null && res.getRaid().isUnderRaid() && res.getRaid().isAttacker(player)) {
+                    break main;
+                }
+                
+                switch (result) {
+                case button:
+                    if (ResPerm.bypass_button.hasPermission(player, 10000L))
+                        break main;
+                    break;
+                }
+
+                e.setCancelled(true);
+                plugin.msg(player, lm.Flag_Deny, result);
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    Location loc = block.getLocation().clone();
+                    loc.add(e.getHitBlockFace().getDirection());
+                    e.getEntity().teleport(loc);
+                    e.getEntity().setVelocity(e.getEntity().getVelocity().multiply(-1));
+                });
+                
+                return;
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onAnvilInventoryClick(InventoryClickEvent e) {
         // Disabling listener if flag disabled globally
         if (!Flags.anvilbreak.isGlobalyEnabled())
@@ -119,7 +180,6 @@ public class ResidenceBlockListener implements Listener {
             // Need to fix roTation issue
             b.setType(CMIMaterial.ANVIL.getMaterial());
         }
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
