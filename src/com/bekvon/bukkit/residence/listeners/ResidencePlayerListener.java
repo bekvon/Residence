@@ -2,6 +2,7 @@ package com.bekvon.bukkit.residence.listeners;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +55,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.bekvon.bukkit.residence.ConfigManager;
@@ -2701,6 +2703,27 @@ public class ResidencePlayerListener implements Listener {
                 int food = player.getFoodLevel();
                 if (food < 20 && !player.isDead()) {
                     player.setFoodLevel(food + 1);
+                }
+            }
+        } catch (Exception ex) {
+        }
+    }
+
+    public void badEffects() {
+        if (!Flags.safezone.isGlobalyEnabled())
+            return;
+        try {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                ClaimedResidence res = getCurrentResidence(player.getUniqueId());
+                if (res == null)
+                    continue;                
+                if (!res.getPermissions().has(Flags.safezone, FlagCombo.OnlyTrue))
+                    continue;                
+                if (player.getActivePotionEffects().isEmpty())
+                    continue;
+                for (PotionEffect one : player.getActivePotionEffects()) {                    
+                    if (plugin.getConfigManager().getNegativePotionEffects().contains(one.getType().getName().toLowerCase()))
+                        player.removePotionEffect(one.getType());                    
                 }
             }
         } catch (Exception ex) {

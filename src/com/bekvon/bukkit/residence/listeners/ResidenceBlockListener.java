@@ -23,7 +23,6 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -37,7 +36,6 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -70,7 +68,6 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -121,7 +118,7 @@ public class ResidenceBlockListener implements Listener {
                 if (res != null && res.getRaid().isUnderRaid() && res.getRaid().isAttacker(player)) {
                     break main;
                 }
-                
+
                 switch (result) {
                 case button:
                     if (ResPerm.bypass_button.hasPermission(player, 10000L))
@@ -137,7 +134,7 @@ public class ResidenceBlockListener implements Listener {
                     e.getEntity().teleport(loc);
                     e.getEntity().setVelocity(e.getEntity().getVelocity().multiply(-1));
                 });
-                
+
                 return;
             }
         }

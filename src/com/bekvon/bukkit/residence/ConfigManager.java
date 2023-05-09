@@ -163,6 +163,7 @@ public class ConfigManager {
     protected int VoteRangeFrom;
     protected int HealInterval;
     protected int FeedInterval;
+    protected int BadEffectRemoveInterval;
     protected int VoteRangeTo;
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalRentedDefaults;
@@ -635,7 +636,7 @@ public class ConfigManager {
         c.addComment("Global.Selection.NoCostForYBlocks", "By setting this to true, player will only pay for x*z blocks ignoring height",
             "This will lower residence price by up to 319 times, so adjust block price BEFORE enabling this");
         NoCostForYBlocks = c.get("Global.Selection.NoCostForYBlocks", false);
-        
+
         c.addComment("Global.Selection.WorldEditIntegration", "Enable or disable world edit integration into Residence plugin");
         WorldEditIntegration = c.get("Global.Selection.WorldEditIntegration", true);
 
@@ -679,7 +680,7 @@ public class ConfigManager {
             "Weird shaped residence detection when using automatic residence creation",
             "This will inform player about residence shape being iregular cuboid before creation of it");
         ARCRatioInform = c.get("Global.Optimizations.AutomaticResidenceCreation.Ratio.Inform", true);
-        
+
         c.addComment("Global.Optimizations.AutomaticResidenceCreation.Confirmation",
             "While enabled player will be required to click on chat message or perform /res create [resName] to finalize creation of residence when its in a weird shape");
         ARCRatioConfirmation = c.get("Global.Optimizations.AutomaticResidenceCreation.Ratio.Confirmation", true);
@@ -801,9 +802,10 @@ public class ConfigManager {
 
         // Healing/Feed interval
         c.addComment("Global.Optimizations.Intervals.Heal", "How often in seconds to heal/feed players in residence with appropriate flag",
-            "Bigger numbers can save some resources");
+            "Bigger numbers can save some server resources", "Set to 0 if you want to disable specific checks entirely. Recommended in case you are not using specific flags");
         HealInterval = c.get("Global.Optimizations.Intervals.Heal", 1);
         FeedInterval = c.get("Global.Optimizations.Intervals.Feed", 5);
+        BadEffectRemoveInterval = c.get("Global.Optimizations.Intervals.BadEffectRemoval", 3);
 
         // negative potion effect list
         c.addComment("Global.Optimizations.NegativePotionEffects",
@@ -824,7 +826,7 @@ public class ConfigManager {
         WalkSpeed2 = WalkSpeed2 < 0 ? 0 : WalkSpeed2;
         WalkSpeed2 = WalkSpeed2 > 5 ? 5 : WalkSpeed2;
         WalkSpeed2 = WalkSpeed2 / 5.0;
-        
+
         SignsMaxPerResidence = c.get("Global.Signs.MaxPerResidence", 5);
         SignsMaxPerResidence = SignsMaxPerResidence < 0 ? 0 : SignsMaxPerResidence;
 
@@ -1964,6 +1966,10 @@ public class ConfigManager {
         return FeedInterval;
     }
 
+    public int getBadEffectRemoveInterval() {
+        return BadEffectRemoveInterval;
+    }
+
     public int getVoteRangeTo() {
         return VoteRangeTo;
     }
@@ -2299,7 +2305,7 @@ public class ConfigManager {
     public int getSignsMaxPerResidence() {
         return SignsMaxPerResidence;
     }
-    
+
 //    public int getTownMinRange() {
 //	return TownMinRange;
 //    }

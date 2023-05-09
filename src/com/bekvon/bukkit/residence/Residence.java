@@ -206,6 +206,7 @@ public class Residence extends JavaPlugin {
     protected int rentBukkitId = -1;
     protected int healBukkitId = -1;
     protected int feedBukkitId = -1;
+    protected int effectRemoveBukkitId = -1;
 
     protected int DespawnMobsBukkitId = -1;
 
@@ -328,6 +329,13 @@ public class Residence extends JavaPlugin {
         }
     };
 
+    private Runnable removeBadEffects = new Runnable() {
+        @Override
+        public void run() {
+            plistener.badEffects();
+        }
+    };
+
     private Runnable DespawnMobs = new Runnable() {
         @Override
         public void run() {
@@ -386,6 +394,7 @@ public class Residence extends JavaPlugin {
         server.getScheduler().cancelTask(autosaveBukkitId);
         server.getScheduler().cancelTask(healBukkitId);
         server.getScheduler().cancelTask(feedBukkitId);
+        server.getScheduler().cancelTask(effectRemoveBukkitId);
 
         server.getScheduler().cancelTask(DespawnMobsBukkitId);
 
@@ -795,8 +804,14 @@ public class Residence extends JavaPlugin {
             }
             autosaveInt = autosaveInt * 60 * 20;
             autosaveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, autoSave, autosaveInt, autosaveInt);
-            healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, getConfigManager().getHealInterval() * 20);
-            feedBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doFeed, 20, getConfigManager().getFeedInterval() * 20);
+
+            if (getConfigManager().getHealInterval() > 0)
+                healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, getConfigManager().getHealInterval() * 20);
+            if (getConfigManager().getFeedInterval() > 0)
+                feedBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doFeed, 20, getConfigManager().getFeedInterval() * 20);
+            if (getConfigManager().getBadEffectRemoveInterval() > 0)
+                effectRemoveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, removeBadEffects, 20, getConfigManager().getBadEffectRemoveInterval() * 20);
+
             if (getConfigManager().AutoMobRemoval())
                 DespawnMobsBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, DespawnMobs, 20 * getConfigManager().AutoMobRemovalInterval(), 20
                     * getConfigManager().AutoMobRemovalInterval());
