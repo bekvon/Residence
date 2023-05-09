@@ -809,8 +809,8 @@ public class Residence extends JavaPlugin {
                 healBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doHeals, 20, getConfigManager().getHealInterval() * 20);
             if (getConfigManager().getFeedInterval() > 0)
                 feedBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, doFeed, 20, getConfigManager().getFeedInterval() * 20);
-            if (getConfigManager().getBadEffectRemoveInterval() > 0)
-                effectRemoveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, removeBadEffects, 20, getConfigManager().getBadEffectRemoveInterval() * 20);
+            if (getConfigManager().getSafeZoneInterval() > 0)
+                effectRemoveBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, removeBadEffects, 20, getConfigManager().getSafeZoneInterval() * 20);
 
             if (getConfigManager().AutoMobRemoval())
                 DespawnMobsBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, DespawnMobs, 20 * getConfigManager().AutoMobRemovalInterval(), 20

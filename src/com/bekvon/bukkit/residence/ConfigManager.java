@@ -163,7 +163,7 @@ public class ConfigManager {
     protected int VoteRangeFrom;
     protected int HealInterval;
     protected int FeedInterval;
-    protected int BadEffectRemoveInterval;
+    protected int SafeZoneInterval;
     protected int VoteRangeTo;
     protected FlagPermissions globalCreatorDefaults;
     protected FlagPermissions globalRentedDefaults;
@@ -805,7 +805,7 @@ public class ConfigManager {
             "Bigger numbers can save some server resources", "Set to 0 if you want to disable specific checks entirely. Recommended in case you are not using specific flags");
         HealInterval = c.get("Global.Optimizations.Intervals.Heal", 1);
         FeedInterval = c.get("Global.Optimizations.Intervals.Feed", 5);
-        BadEffectRemoveInterval = c.get("Global.Optimizations.Intervals.BadEffectRemoval", 3);
+        SafeZoneInterval = c.get("Global.Optimizations.Intervals.SafeZone", 3);
 
         // negative potion effect list
         c.addComment("Global.Optimizations.NegativePotionEffects",
@@ -1966,8 +1966,8 @@ public class ConfigManager {
         return FeedInterval;
     }
 
-    public int getBadEffectRemoveInterval() {
-        return BadEffectRemoveInterval;
+    public int getSafeZoneInterval() {
+        return SafeZoneInterval;
     }
 
     public int getVoteRangeTo() {
