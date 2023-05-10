@@ -1093,7 +1093,7 @@ public class ClaimedResidence {
     public Location getOutsideFreeLoc(Location insideLoc, Player player) {
         CuboidArea area = this.getAreaByLoc(insideLoc);
         if (area == null) {
-            return insideLoc;
+            return player.getWorld().getSpawnLocation();
         }
 
         List<RandomLoc> randomLocList = new ArrayList<RandomLoc>();
@@ -1155,7 +1155,8 @@ public class ClaimedResidence {
                 continue;
 
             ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(loc);
-            if (res != null && player != null && !res.getPermissions().playerHas(player, Flags.tp, FlagCombo.TrueOrNone) && !admin)
+            if (res != null && player != null && (!res.getPermissions().playerHas(player, Flags.tp, FlagCombo.TrueOrNone) || !res.getPermissions().playerHas(player, Flags.move, FlagCombo.TrueOrNone))
+                && !admin)
                 continue;
 
             found = true;
@@ -1169,8 +1170,12 @@ public class ClaimedResidence {
             break;
         }
 
-        if (!found && Residence.getInstance().getConfigManager().getKickLocation() != null)
-            return Residence.getInstance().getConfigManager().getKickLocation();
+        if (!found) {
+            if (Residence.getInstance().getConfigManager().getKickLocation() != null)
+                return Residence.getInstance().getConfigManager().getKickLocation();
+            // Fail safe for kick out location
+            return player.getWorld().getSpawnLocation();
+        }
         if (player != null) {
             loc.setPitch(player.getLocation().getPitch());
             loc.setYaw(player.getLocation().getYaw());

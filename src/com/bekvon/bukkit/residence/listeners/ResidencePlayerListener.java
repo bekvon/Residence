@@ -2258,13 +2258,9 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    private static boolean teleport(Player player, Location loc) {
+    private boolean teleport(Player player, Location loc) {
         if (player == null || !player.isOnline() || loc == null)
             return false;
-
-//	PlayerTeleportEvent ev = new PlayerTeleportEvent(player, player.getLocation(), loc);
-//	Bukkit.getServer().getPluginManager().callEvent(ev);
-
         return player.teleport(loc);
     }
 
