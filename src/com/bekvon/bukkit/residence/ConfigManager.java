@@ -660,7 +660,7 @@ public class ConfigManager {
         c.addComment("Global.Optimizations.DefaultWorld", "Name of your main residence world. Usually normal starting world 'World'. Capitalization essential");
         DefaultWorld = c.get("Global.Optimizations.DefaultWorld", defaultWorldName);
 
-        c.addComment("Global.Optimizations.DisabledWorlds.List", "List Of Worlds where this plugin is disabled");
+        c.addComment("Global.Optimizations.DisabledWorlds.List", "List Of Worlds where this plugin is disabled", "Make sure that world names capitalization is correct");
         DisabledWorldsList = c.get("Global.Optimizations.DisabledWorlds.List", new ArrayList<String>());
 
         c.addComment("Global.Optimizations.DisabledWorlds.DisableListeners", "Disables all listeners in included worlds");

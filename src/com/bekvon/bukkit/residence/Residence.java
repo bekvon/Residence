@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -869,9 +870,7 @@ public class Residence extends JavaPlugin {
 
             BufferedReader in = null;
             try {
-                in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
-            } catch (UnsupportedEncodingException e1) {
-                e1.printStackTrace();
+                in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), StandardCharsets.UTF_8));
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             }
@@ -893,9 +892,7 @@ public class Residence extends JavaPlugin {
 
             BufferedReader in = null;
             try {
-                in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF8"));
-            } catch (UnsupportedEncodingException e1) {
-                e1.printStackTrace();
+                in = new BufferedReader(new InputStreamReader(new FileInputStream(langFile), StandardCharsets.UTF_8));
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             }
@@ -1784,7 +1781,7 @@ public class Residence extends JavaPlugin {
                     JarEntry entry = jar.getJarEntry(jarPath);
                     if (entry != null && !entry.isDirectory()) {
                         InputStream in = jar.getInputStream(entry);
-                        InputStreamReader isr = new InputStreamReader(in, "UTF8");
+                        InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);
                         if (writeName.isFile()) {
                             if (backupOld) {
                                 if (fileBackup.isFile()) {
@@ -1796,7 +1793,7 @@ public class Residence extends JavaPlugin {
                             }
                         }
                         FileOutputStream out = new FileOutputStream(writeName);
-                        OutputStreamWriter osw = new OutputStreamWriter(out, "UTF8");
+                        OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
                         try {
                             char[] tempbytes = new char[512];
                             int readbytes = isr.read(tempbytes, 0, 512);

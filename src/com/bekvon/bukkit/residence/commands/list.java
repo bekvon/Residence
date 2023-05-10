@@ -22,7 +22,7 @@ public class list implements cmd {
 	int page = 1;
 	World world = null;
 	String target = null;
-	
+		
 	c: for (int i = 0; i < args.length; i++) {
 	    try {
 		page = Integer.parseInt(args[i]);

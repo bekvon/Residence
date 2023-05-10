@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class YMLSaveHelper {
         if (f.isFile())
             f.delete();
         FileOutputStream fout = new FileOutputStream(f);
-        OutputStreamWriter osw = new OutputStreamWriter(fout, "UTF8");
+        OutputStreamWriter osw = new OutputStreamWriter(fout, StandardCharsets.UTF_8);
         yml.dump(root, osw);
         osw.close();
     }
