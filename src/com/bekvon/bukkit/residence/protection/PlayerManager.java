@@ -191,8 +191,9 @@ public class PlayerManager implements ResidencePlayerInterface {
 
 	for (ClaimedResidence one : resPlayer.getResList()) {
 	    boolean hidden = one.getPermissions().has(Flags.hidden, false);
-	    if (!showhidden && hidden)
+	    if (!showhidden && hidden) {
 		continue;
+	    }
 	    if (onlyHidden && !hidden)
 		continue;
 	    if (world != null && !world.getName().equalsIgnoreCase(one.getWorld()))
