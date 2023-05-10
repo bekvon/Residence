@@ -16,7 +16,6 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class v1_13Events implements Listener {
 
@@ -46,7 +45,7 @@ public class v1_13Events implements Listener {
             try {
                 BlockData data = b.getBlockData();
                 Farmland farm = (Farmland) data;
-                if (farm.getMoisture() < 7) {
+                if (farm.getMoisture() < 2) {
                     farm.setMoisture(7);
                     b.setBlockData(farm);
                 }
@@ -78,9 +77,7 @@ public class v1_13Events implements Listener {
                 try {
                     BlockData data = b.getBlockData();
                     Farmland farm = (Farmland) data;
-
-                    CMIDebug.d(farm.getMoisture(), b.getLocation().toVector().toString());
-                    if (farm.getMoisture() < 7) {
+                    if (farm.getMoisture() < 2) {
                         farm.setMoisture(7);
                         b.setBlockData(farm);
                     }

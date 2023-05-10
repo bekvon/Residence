@@ -68,7 +68,6 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -935,7 +934,7 @@ public class ResidenceBlockListener implements Listener {
             Block b = event.getBlock();
             try {
                 byte value = (byte) b.getClass().getMethod("getData").invoke(b);
-                if (value < (byte) 7)
+                if (value < (byte) 2)
                     b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
                 e1.printStackTrace();
@@ -969,7 +968,7 @@ public class ResidenceBlockListener implements Listener {
             Block b = event.getBlock();
             try {
                 byte value = (byte) b.getClass().getMethod("getData").invoke(b);
-                if (value < (byte) 7)
+                if (value < (byte) 2)
                     b.getClass().getMethod("setData", byte.class).invoke(b, (byte) 7);
             } catch (Throwable e1) {
                 e1.printStackTrace();
