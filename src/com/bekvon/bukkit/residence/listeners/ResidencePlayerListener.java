@@ -631,7 +631,7 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         // Disabling listener if flag disabled globally
         if (!Flags.command.isGlobalyEnabled())
