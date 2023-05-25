@@ -39,7 +39,7 @@ public class LeaseManager {
     public boolean isLeased(ClaimedResidence res) {
 	if (res == null)
 	    return false;
-	return res.getLeaseExpireTime() != null;
+	return res.getLeaseExpireTime() > 0;
     }
 
     @Deprecated
@@ -50,8 +50,8 @@ public class LeaseManager {
     public String getExpireTime(ClaimedResidence res) {
 	if (res == null)
 	    return null;
-	Long time = res.getLeaseExpireTime();
-	if (time != null) {
+	long time = res.getLeaseExpireTime();
+	if (time > 0) {
 	    return GetTime.getTime(time);
 	}
 	return null;
@@ -143,8 +143,8 @@ public class LeaseManager {
 	    plugin.msg(player, lm.Economy_LeaseRenewMax);
 	    return;
 	}
-	Long get = res.getLeaseExpireTime();
-	if (get != null) {
+	long get = res.getLeaseExpireTime();
+	if (get > 0) {
 	    get = get + daysToMs(add);
 	    res.setLeaseExpireTime(get);
 
@@ -181,7 +181,7 @@ public class LeaseManager {
     private static int daysRemaining(ClaimedResidence res) {
 	if (res == null)
 	    return 999;
-	Long get = res.getLeaseExpireTime();
+	long get = res.getLeaseExpireTime();
 	if (get <= System.currentTimeMillis())
 	    return 0;
 	return msToDays((int) (get - System.currentTimeMillis()));

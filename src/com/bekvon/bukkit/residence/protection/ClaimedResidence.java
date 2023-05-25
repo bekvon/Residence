@@ -88,7 +88,7 @@ public class ClaimedResidence {
     protected boolean mainRes = false;
     protected long createTime = 0L;
 
-    private Long leaseExpireTime = null;
+    private long leaseExpireTime = 0;
 
     protected List<String> cmdWhiteList = new ArrayList<String>();
     protected List<String> cmdBlackList = new ArrayList<String>();
@@ -98,7 +98,7 @@ public class ClaimedResidence {
     protected RentableLand rentableland = null;
     protected RentedLand rentedland = null;
 
-    protected Integer sellPrice = -1;
+    protected int sellPrice = -1;
 
     private ResidenceRaid raid;
 
@@ -1630,7 +1630,7 @@ public class ClaimedResidence {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        
+
         if (bank.getStoredMoneyD() != 0)
             root.put("StoredMoney", bank.getStoredMoneyD());
         if (BlockSellPrice != 0D)
@@ -1848,19 +1848,29 @@ public class ClaimedResidence {
             }
         }
 
-        if (root.containsKey("EnterMessage") && root.get("EnterMessage") instanceof String)
+        CMIDebug.c(root.containsKey("EnterMessage"), root.containsKey("LeaveMessage"), root.get("EnterMessage") instanceof String);
+
+        if (root.containsKey("EnterMessage") && root.get("EnterMessage") instanceof String) {
             res.enterMessage = (String) root.get("EnterMessage");
-        if (root.containsKey("LeaveMessage") && root.get("LeaveMessage") instanceof String)
+        }
+        if (root.containsKey("LeaveMessage") && root.get("LeaveMessage") instanceof String) {
             res.leaveMessage = (String) root.get("LeaveMessage");
+        }
 
         if (root.containsKey("Messages") && root.get("Messages") instanceof Integer) {
             res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName, (Integer) root.get("Messages"));
             res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName, (Integer) root.get("Messages"));
         } else {
+            
+            
             // Defaulting to first one if not present
-            res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName, 1);
-            res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName, 1);
+            if (res.enterMessage == null)
+                res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName, 1);
+            if (res.leaveMessage == null)
+                res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName, 1);
         }
+
+        CMIDebug.c(res.enterMessage, res.leaveMessage);
 
         res.parent = parent;
 
@@ -2172,7 +2182,7 @@ public class ClaimedResidence {
         return leaseExpireTime;
     }
 
-    public void setLeaseExpireTime(Long leaseExpireTime) {
+    public void setLeaseExpireTime(long leaseExpireTime) {
         this.leaseExpireTime = leaseExpireTime;
     }
 
