@@ -425,10 +425,26 @@ public class ResidencePermissions extends FlagPermissions {
     }
 
     public boolean setGroupFlag(Player player, String group, String flag, String flagstate, boolean resadmin) {
-
         Flags f = Flags.getFlag(flag);
+        FlagState state = FlagPermissions.stringToFlagState(flagstate);
+        return setGroupFlag(player, group, f, state, resadmin);
+    }
+
+    public boolean setGroupFlag(Player player, String group, Flags f, FlagState flagstate, boolean resadmin) {
+
+        String flag = null;
         if (f != null)
             flag = f.toString();
+
+        if (flag == null) {
+            Residence.getInstance().msg(player, lm.Invalid_Flag);
+            return false;
+        }
+
+        if (flagstate.equals(FlagState.INVALID)) {
+            Residence.getInstance().msg(player, lm.Invalid_FlagState);
+            return false;
+        }
 
         if (this.residence.getRaid().isRaidInitialized() && !resadmin) {
             Residence.getInstance().msg(player, lm.Raid_noFlagChange);
@@ -436,19 +452,19 @@ public class ResidencePermissions extends FlagPermissions {
         }
 
         group = group.toLowerCase();
-        if (validFlagGroups.containsKey(flag))
-            return this.setFlagGroupOnGroup(player, flag, group, flagstate, resadmin);
-        FlagState state = FlagPermissions.stringToFlagState(flagstate);
-        if (checkCanSetFlag(player, flag, state, false, resadmin)) {
-            if (Residence.getInstance().getPermissionManager().hasGroup(group)) {
+        if (validFlagGroups.containsKey(flag)) {
+            return this.setFlagGroupOnGroup(player, flag, group, flagstate.toString(), resadmin);
+        }
 
+        if (checkCanSetFlag(player, flag, flagstate, false, resadmin)) {
+            if (Residence.getInstance().getPermissionManager().hasGroup(group)) {
                 if (!isEventCallsSuspended()) {
-                    ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, player, flag, ResidenceFlagChangeEvent.FlagType.GROUP, state, group);
+                    ResidenceFlagChangeEvent fc = new ResidenceFlagChangeEvent(residence, player, flag, ResidenceFlagChangeEvent.FlagType.GROUP, flagstate, group);
                     Residence.getInstance().getServ().getPluginManager().callEvent(fc);
                     if (fc.isCancelled())
                         return false;
                 }
-                if (super.setGroupFlag(group, flag, state)) {
+                if (super.setGroupFlag(group, flag, flagstate)) {
                     Residence.getInstance().msg(player, lm.Flag_Set, flag, residence.getName(), flagstate);
                     return true;
                 }

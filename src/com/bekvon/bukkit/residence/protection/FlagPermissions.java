@@ -179,7 +179,7 @@ public class FlagPermissions {
     }
 
     public static boolean flagGroupExists(String group) {
-        return validFlagGroups.containsKey(group);
+        return validFlagGroups.containsKey(group.toLowerCase());
     }
 
     public static void initValidFlags() {
