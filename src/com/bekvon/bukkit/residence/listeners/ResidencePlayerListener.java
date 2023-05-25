@@ -2516,14 +2516,16 @@ public class ResidencePlayerListener implements Listener {
         }
 
         if (!currentRes.containsKey(uuid) || ResOld != res) {
-
             if (cantMove) {
                 Location lastLoc = lastOutsideLoc.get(uuid);
                 player.closeInventory();
+                if (!move)
+                    return false;
+                
                 if (lastLoc != null && CMIMaterial.isAir(lastLoc.getBlock().getType())) {
                     Long last = lastUpdate.get(player.getUniqueId());
                     // Fail safe in case we are triggering teleportation event check with this teleportation, we should teleport player outside residence instead of its repeating teleportation to avoid stack overflow 
-                    if (last != null && System.currentTimeMillis() - last > 45L) {
+                    if (last != null && System.currentTimeMillis() - last < 45L) {
                         teleport(player, res.getOutsideFreeLoc(loc, player));
                     } else {
                         this.lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
