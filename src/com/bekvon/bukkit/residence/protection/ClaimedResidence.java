@@ -1848,8 +1848,6 @@ public class ClaimedResidence {
             }
         }
 
-        CMIDebug.c(root.containsKey("EnterMessage"), root.containsKey("LeaveMessage"), root.get("EnterMessage") instanceof String);
-
         if (root.containsKey("EnterMessage") && root.get("EnterMessage") instanceof String) {
             res.enterMessage = (String) root.get("EnterMessage");
         }
@@ -1861,13 +1859,16 @@ public class ClaimedResidence {
             res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName, (Integer) root.get("Messages"));
             res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName, (Integer) root.get("Messages"));
         } else {
-            
-            
+
+            PermissionGroup defaultGroup = Residence.getInstance().getPermissionManager().getDefaultGroup();
+
             // Defaulting to first one if not present
-            if (res.enterMessage == null)
-                res.enterMessage = Residence.getInstance().getResidenceManager().getChacheMessageEnter(worldName, 1);
-            if (res.leaveMessage == null)
-                res.leaveMessage = Residence.getInstance().getResidenceManager().getChacheMessageLeave(worldName, 1);
+            if (defaultGroup != null) {
+                if (res.enterMessage == null)
+                    res.enterMessage = defaultGroup.getDefaultEnterMessage();
+                if (res.leaveMessage == null)
+                    res.leaveMessage = defaultGroup.getDefaultLeaveMessage();
+            }
         }
 
         CMIDebug.c(res.enterMessage, res.leaveMessage);
