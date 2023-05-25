@@ -43,6 +43,7 @@ import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Locale.YmlMaker;
 import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.Messages.CMIMessages;
 import net.Zrips.CMILib.Version.Version;
 
 public class ConfigManager {
@@ -1186,6 +1187,10 @@ public class ConfigManager {
         try {
             chatColor = CMIChatColor.getColor((c.get("Global.ResidenceChatColor", "DARK_PURPLE")));
         } catch (Exception ex) {
+            chatColor = CMIChatColor.DARK_PURPLE;
+        }
+        if (chatColor == null) {
+            CMIMessages.consoleMessage("&cCan't find color by name for ResidenceChatColor");
             chatColor = CMIChatColor.DARK_PURPLE;
         }
 

@@ -1261,9 +1261,6 @@ public class Residence extends JavaPlugin {
         return resadminToggle.contains(player);
     }
 
-    private final String flagsFileSuffix = "_Flags";
-    private final String messagesFileSuffix = "_Messages";
-
     private static void saveFile(File worldFolder, String fileName, String key, Object value) throws IOException {
         File ymlFlagsSaveLoc = new File(worldFolder, "res_" + fileName + ".yml");
         File tmpFlagsFile = new File(worldFolder, "tmp_res_" + fileName + ".yml");
@@ -1450,34 +1447,6 @@ public class Residence extends JavaPlugin {
     private void loadMessagesAndFlags(String worldName, YMLSaveHelper yml, File worldFolder) {
         loadMessages(worldName, yml);
         loadFlags(worldName, yml);
-
-        if (!yml.getRoot().containsKey("Flags")) {
-            File flagsFile = new File(worldFolder, saveFilePrefix + worldName + flagsFileSuffix + ".yml");
-            if (flagsFile.isFile()) {
-                try {
-                    yml = new YMLSaveHelper(flagsFile);
-                    yml.load();
-                    if (yml.getRoot() != null)
-                        loadFlags(worldName, yml);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        if (!yml.getRoot().containsKey("Messages")) {
-            File messagesFile = new File(worldFolder, saveFilePrefix + worldName + messagesFileSuffix + ".yml");
-            if (messagesFile.isFile()) {
-                try {
-                    yml = new YMLSaveHelper(messagesFile);
-                    yml.load();
-                    if (yml.getRoot() != null)
-                        loadMessages(worldName, yml);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
