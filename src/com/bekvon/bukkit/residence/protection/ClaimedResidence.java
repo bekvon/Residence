@@ -1871,8 +1871,6 @@ public class ClaimedResidence {
             }
         }
 
-        CMIDebug.c(res.enterMessage, res.leaveMessage);
-
         res.parent = parent;
 
         if (root.get("TPLoc") instanceof String) {

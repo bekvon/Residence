@@ -84,6 +84,7 @@ import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_14;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_15;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_16;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_17;
+import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_20;
 import com.bekvon.bukkit.residence.listeners.ResidencePlayerListener1_9;
 import com.bekvon.bukkit.residence.listeners.SpigotListener;
 import com.bekvon.bukkit.residence.permissions.PermissionManager;
@@ -722,6 +723,9 @@ public class Residence extends JavaPlugin {
                     pm.registerEvents(new ResidencePlayerListener1_16(this), this);
                 if (Version.isCurrentEqualOrHigher(Version.v1_17_R1))
                     pm.registerEvents(new ResidencePlayerListener1_17(this), this);
+                if (Version.isCurrentEqualOrHigher(Version.v1_20_R1))
+                    pm.registerEvents(new ResidencePlayerListener1_20(this), this);
+                
                 elistener = new ResidenceEntityListener(this);
                 flistener = new ResidenceFixesListener();
                 slistener = new ResidenceRaidListener();
