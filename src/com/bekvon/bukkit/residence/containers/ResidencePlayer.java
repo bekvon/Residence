@@ -296,7 +296,8 @@ public class ResidencePlayer {
     }
 
     private void updatePlayer() {
-        player = Bukkit.getPlayer(this.uuid);
+        if (this.uuid != null)
+            player = Bukkit.getPlayer(this.uuid);
         if (player != null)
             updatePlayer(player);
         if (player != null && player.isOnline())
