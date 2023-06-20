@@ -618,8 +618,7 @@ public class ConfigManager {
             "All Residence text comes from this file. (NOT DONE YET)");
         language = c.get("Global.Language", "English");
 
-        c.addComment("Global.SelectionToolId", "Wooden Hoe is the default selection tool for Residence.",
-            "You can change it to another item ID listed here: http://www.minecraftwiki.net/wiki/Data_values");
+        c.addComment("Global.SelectionToolId", "Wooden Hoe is the default selection tool for Residence.");
         selectionTool = CMIMaterial.get(c.get("Global.SelectionToolId", CMIMaterial.WOODEN_HOE.name()));
 
         c.addComment("Global.Selection.IgnoreY", "By setting this to true, all selections will be made from bedrock to sky ignoring Y coordinates");
