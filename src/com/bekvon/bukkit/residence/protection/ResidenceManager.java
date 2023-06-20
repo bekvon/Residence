@@ -812,7 +812,7 @@ public class ResidenceManager implements ResidenceInterface {
         rm.show(sender);
 
         if (plugin.getEconomyManager() != null) {
-            plugin.msg(sender, lm.General_TotalWorth, res.getWorthByOwner(), res.getWorth());
+            plugin.msg(sender, lm.General_TotalWorth, plugin.getEconomyManager().format(res.getWorthByOwner()), plugin.getEconomyManager().format(res.getWorth()));
         }
 
         if (res.getSubzonesAmount(false) > 0)
