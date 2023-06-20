@@ -38,6 +38,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.CMINumber;
 import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Items.CMIMaterial;
@@ -292,14 +293,16 @@ public class ConfigManager {
     public boolean Pl3xMapExcludeDefaultFlags;
     public boolean Pl3xMapHideHidden;
     public int Pl3xMapLayerSubZoneDepth;
-    public Color Pl3xMapBorderColor = new Color(125, 125, 125);
-    public double Pl3xMapBorderOpacity;
+    public int Pl3xBorderColor = 0;
+    public int Pl3xFillColor = 0;
+//    public Color Pl3xMapBorderColor = new Color(125, 125, 125);
+//    public double Pl3xMapBorderOpacity;
     public int Pl3xMapBorderWeight;
-    public Color Pl3xMapFillColor = new Color(125, 125, 125);
-    public double Pl3xMapFillOpacity;
-    public Color Pl3xMapFillForRent = new Color(125, 125, 125);
-    public Color Pl3xMapFillRented = new Color(125, 125, 125);
-    public Color Pl3xMapFillForSale = new Color(125, 125, 125);
+//    public Color Pl3xMapFillColor = new Color(125, 125, 125);
+//    public double Pl3xMapFillOpacity;
+    public int Pl3xMapFillForRent = 0;
+    public int Pl3xMapFillRented = 0;
+    public int Pl3xMapFillForSale = 0;
     public List<String> Pl3xMapVisibleRegions;
     public List<String> Pl3xMapHiddenRegions;
     // Pl3xMap
@@ -441,6 +444,10 @@ public class ConfigManager {
             temp.add(Colors(part));
         }
         return temp;
+    }
+
+    private static int argb(int alpha, Color color) {
+        return alpha << 24 | color.getRed() << 16 | color.getGreen() << 8 | color.getBlue();
     }
 
     void UpdateFlagFile() {
@@ -1086,7 +1093,7 @@ public class ConfigManager {
 
         c.addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
         ResMoneyBack = c.get("Global.ResMoneyBack", false);
-        
+
         c.addComment("Global.ResBankBack", "Enable / Disable money returning from residence bank on residence removal.");
         ResBankBack = c.get("Global.ResBankBack", true);
 
@@ -1449,20 +1456,27 @@ public class ConfigManager {
 
         c.addComment("Pl3xMap.Border.Color", "Color of border. Pick color from this page http://www.w3schools.com/colors/colors_picker.asp");
 
-        Pl3xMapFillColor = processColor(c.get("Pl3xMap.Border.Color", "#FF0000"));
+        Color Pl3xFill = processColor(c.get("Pl3xMap.Border.Color", "#FF0000"));
 
         c.addComment("Pl3xMap.Border.Opacity", "Transparency. 0.3 means that only 30% of color will be visible");
-        Pl3xMapBorderOpacity = c.get("Pl3xMap.Border.Opacity", 0.3);
+        Double Pl3xMapBorderOpacity = c.get("Pl3xMap.Border.Opacity", 0.3);
+
+        Pl3xFillColor = argb(CMINumber.clamp((int) (Pl3xMapBorderOpacity * 255), 0, 255), Pl3xFill);
+
         c.addComment("Pl3xMap.Border.Weight", "Border thickness");
         Pl3xMapBorderWeight = c.get("Pl3xMap.Border.Weight", 3);
-        Pl3xMapFillOpacity = c.get("Pl3xMap.Fill.Opacity", 0.3);
+        Double Pl3xMapFillOpacity = c.get("Pl3xMap.Fill.Opacity", 0.3);
 
-        Pl3xMapFillColor = processColor(c.get("Pl3xMap.Fill.Color", "#FF0000"));
+        Color Pl3xMapFillColor = processColor(c.get("Pl3xMap.Fill.Color", "#FF0000"));
 
-        Pl3xMapFillForRent = processColor(c.get("Pl3xMap.Fill.ForRent", "#33cc33"));
-        Pl3xMapFillRented = processColor(c.get("Pl3xMap.Fill.Rented", "#99ff33"));
-        Pl3xMapFillForSale = processColor(c.get("Pl3xMap.Fill.ForSale", "#0066ff"));
+        Pl3xBorderColor = argb(CMINumber.clamp((int) (Pl3xMapFillOpacity * 255), 0, 255), Pl3xMapFillColor);
 
+        Pl3xMapFillForRent = argb(CMINumber.clamp((int) (Pl3xMapFillOpacity * 255), 0, 255), processColor(c.get("Pl3xMap.Fill.ForRent", "#33cc33")));
+        Pl3xMapFillRented = argb(CMINumber.clamp((int) (Pl3xMapFillOpacity * 255), 0, 255), processColor(c.get("Pl3xMap.Fill.Rented", "#99ff33")));
+        Pl3xMapFillForSale = argb(CMINumber.clamp((int) (Pl3xMapFillOpacity * 255), 0, 255), processColor(c.get("Pl3xMap.Fill.ForSale", "#0066ff")));
+
+        CMIDebug.d(Pl3xFillColor, Pl3xMapFillForRent, Pl3xMapFillRented, Pl3xMapFillForSale);
+        
         c.addComment("Pl3xMap.VisibleRegions", "Shows only regions on this list");
         Pl3xMapVisibleRegions = c.get("Pl3xMap.VisibleRegions", new ArrayList<String>());
         c.addComment("Pl3xMap.HiddenRegions", "Hides region on map even if its not hidden in game");

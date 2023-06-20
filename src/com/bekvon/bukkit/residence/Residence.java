@@ -136,6 +136,7 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
+import net.pl3x.map.core.Pl3xMap;
 
 /**
  * 
@@ -796,7 +797,7 @@ public class Residence extends JavaPlugin {
                 if (pl3xmap != null && getConfigManager().Pl3xMapUse) {
                     Pl3xManager = new Pl3xMapManager(this);
                     getServer().getPluginManager().registerEvents(new Pl3xMapListeners(this), this);
-                    getPl3xManager().api = net.pl3x.map.api.Pl3xMapProvider.get();
+                    getPl3xManager().api = Pl3xMap.api();
                     getPl3xManager().activate();
                 }
             } catch (Throwable e) {
