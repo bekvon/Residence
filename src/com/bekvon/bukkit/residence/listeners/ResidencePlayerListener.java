@@ -2654,6 +2654,7 @@ public class ResidencePlayerListener implements Listener {
 
     public String insertMessages(Player player, ClaimedResidence res, String message) {
         try {
+            message = message.replace("%playerDisplay", player.getDisplayName());
             message = message.replace("%player", player.getName());
             message = message.replace("%owner", res.getPermissions().getOwner());
             message = message.replace("%residence", res.getName());

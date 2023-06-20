@@ -66,7 +66,12 @@ Groups:
            # Leaving the message blank will disable it.
            DefaultEnter: "Welcome %player to %residence, owned by %owner."
            # The default leave message to apply to new Residences created by players in this group.
-           # Use %zone if you want to include only current residence name without including parent zones into name
+           # %player if you want to include players name
+           # %playerDisplay if you want to include players display name
+           # %owner if you want to include residence owner name
+           # %residence if you want to include residence name
+           # %zone if you want to include only current residence name without including parent zones into name
+           # 
            # Leaving the message blank will disable it.
            DefaultLeave: "Now leaving %residence."
        # Options relating to the Lease system.
