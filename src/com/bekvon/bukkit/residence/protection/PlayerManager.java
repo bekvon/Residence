@@ -21,6 +21,8 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 
+import net.Zrips.CMILib.Logs.CMIDebug;
+
 public class PlayerManager implements ResidencePlayerInterface {
     private ConcurrentHashMap<String, ResidencePlayer> players = new ConcurrentHashMap<String, ResidencePlayer>();
     private ConcurrentHashMap<String, ResidencePlayer> playersUuid = new ConcurrentHashMap<String, ResidencePlayer>();
@@ -296,6 +298,10 @@ public class PlayerManager implements ResidencePlayerInterface {
     public ResidencePlayer getResidencePlayer(String player) {
 	if (player == null)
 	    return null;
+	
+	if (player.equalsIgnoreCase("CONSOLE"))
+	    return null;
+	
 	Player p = Bukkit.getPlayer(player);
 	if (p != null)
 	    return getResidencePlayer(p);
