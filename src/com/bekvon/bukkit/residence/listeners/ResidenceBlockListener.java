@@ -84,11 +84,14 @@ public class ResidenceBlockListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onAnvilInventoryClick(ProjectileHitEvent e) {
+    public void onButtonHitWithProjectile(ProjectileHitEvent e) {
         // Disabling listener if flag disabled globally
         if (!Flags.button.isGlobalyEnabled())
             return;
 
+        if (Version.isCurrentEqualOrLower(Version.v1_12_R1))
+            return;
+        
         if (e.getHitBlock() == null)
             return;
 
