@@ -50,6 +50,7 @@ public class ConfigManager {
     protected String defaultGroup;
     protected boolean useLeases;
     protected boolean ResMoneyBack;
+    private boolean ResBankBack;
     protected boolean enableEconomy;
     protected boolean chargeOnCreation;
     protected boolean chargeOnExpansion;
@@ -1086,6 +1087,9 @@ public class ConfigManager {
 
         c.addComment("Global.ResMoneyBack", "Enable / Disable money returning on residence removal.");
         ResMoneyBack = c.get("Global.ResMoneyBack", false);
+        
+        c.addComment("Global.ResBankBack", "Enable / Disable money returning from residence bank on residence removal.");
+        ResBankBack = c.get("Global.ResBankBack", true);
 
         c.addComment("Global.LeaseCheckInterval", "The interval, in minutes, between residence lease checks (if leases are enabled).");
         leaseCheckInterval = c.get("Global.LeaseCheckInterval", 10);
@@ -2310,6 +2314,10 @@ public class ConfigManager {
 
     public int getSignsMaxPerResidence() {
         return SignsMaxPerResidence;
+    }
+
+    public boolean isResBankBack() {
+        return ResBankBack;
     }
 
 //    public int getTownMinRange() {

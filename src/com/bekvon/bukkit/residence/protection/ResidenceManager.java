@@ -90,14 +90,14 @@ public class ResidenceManager implements ResidenceInterface {
 
         if (loc == null)
             return null;
-        
+
         World world = loc.getWorld();
-        
+
         if (world == null)
             return null;
-        
+
         String worldName = world.getName();
-        
+
         if (worldName == null)
             return null;
 
@@ -689,7 +689,7 @@ public class ResidenceManager implements ResidenceInterface {
         plugin.getRentManager().removeRentable(name);
         plugin.getTransactionManager().removeFromSale(name);
 
-        if (!res.isServerLand())
+        if (!res.isServerLand()) {
             if (parent == null && plugin.getConfigManager().enableEconomy() && plugin.getConfigManager().useResMoneyBack()) {
                 double chargeamount = res.getWorth();
                 if (!res.isOwner(player)) {
@@ -701,6 +701,11 @@ public class ResidenceManager implements ResidenceInterface {
                         plugin.getTransactionManager().giveEconomyMoney(rPlayer.getPlayerName(), chargeamount);
                 }
             }
+
+            if (res.getBank().getStoredMoneyD() > 0 && plugin.getConfigManager().isResBankBack()) {
+                plugin.getTransactionManager().giveEconomyMoney(res.getOwner(), res.getBank().getStoredMoneyD());
+            }
+        }
     }
 
     public void removeAllByOwner(String owner) {
