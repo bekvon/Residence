@@ -287,6 +287,6 @@ public class CuboidArea {
     }
 
     public double getCost(PermissionGroup group) {
-        return (int) (getSize() * group.getCostPerBlock() * 100) / 100D;
+        return (long) (getSize() * group.getCostPerBlock() * 100) / 100D;
     }
 }
