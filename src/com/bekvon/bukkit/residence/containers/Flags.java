@@ -23,6 +23,7 @@ public enum Flags {
     build(CMIMaterial.BRICKS, FlagMode.Both, "Allows or denys building", false),
     burn(CMIMaterial.TORCH, FlagMode.Residence, "Allows or denys Mob combustion in residences", true),
     button(CMIMaterial.OAK_BUTTON, FlagMode.Both, "Allows or denys players to use buttons", true),
+    brush(CMIMaterial.BRUSH, FlagMode.Both, "Allows or denys block brushing", true),
     cake(CMIMaterial.CAKE, FlagMode.Both, "Allows or denys players to eat cake", true),
     canimals(CMIMaterial.SHEEP_SPAWN_EGG, FlagMode.Residence, "Allows or denys custom animal spawns", true),
     chorustp(CMIMaterial.CHORUS_FRUIT, FlagMode.Both, "Allow or disallow teleporting to the residence with chorus fruit", true),

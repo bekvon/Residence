@@ -751,7 +751,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onSignCreate(SignChangeEvent event) {
-        
+
         // disabling event on world
         if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
             return;
@@ -964,6 +964,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     private boolean isCanUseEntity_RClickOnly(Material mat, Block block) {
+
         switch (mat.name()) {
         case "ITEM_FRAME":
         case "CAKE":
@@ -991,6 +992,8 @@ public class ResidencePlayerListener implements Listener {
         case "ENCHANTING_TABLE":
         case "DAYLIGHT_DETECTOR":
         case "DAYLIGHT_DETECTOR_INVERTED":
+        case "SUSPICIOUS_GRAVEL":
+        case "SUSPICIOUS_SAND":
             return true;
         default:
             break;
@@ -1353,7 +1356,6 @@ public class ResidencePlayerListener implements Listener {
             && (!heldItem.isDye() && !heldItem.equals(CMIMaterial.GLOW_INK_SAC)) && !heldItem.equals(CMIMaterial.ARMOR_STAND) && !heldItem.isBoat() && !placingMinecart(block, iih)) {
             return;
         }
-
         if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 
@@ -1393,13 +1395,23 @@ public class ResidencePlayerListener implements Listener {
                     return;
                 }
             }
-            if (placingMinecart(block, iih)) {
-                if (!perms.playerHas(player, Flags.build, true)) {
-                    plugin.msg(player, lm.Flag_Deny, Flags.build);
+            if (placingMinecart(block, iih) && !perms.playerHas(player, Flags.build, true)) {
+                plugin.msg(player, lm.Flag_Deny, Flags.build);
+                event.setCancelled(true);
+                return;
+
+            }
+
+            if (heldItem.equals(CMIMaterial.BRUSH)) {
+                ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
+                if (res != null && !res.getPermissions().playerHas(player, Flags.brush, FlagCombo.OnlyTrue)) {
+                    plugin.msg(player, lm.Flag_Deny, Flags.brush);
                     event.setCancelled(true);
                     return;
+
                 }
             }
+
         }
 
         if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
@@ -1407,14 +1419,12 @@ public class ResidencePlayerListener implements Listener {
 
             ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());
 
-            if (res != null && res.getRaid().isUnderRaid()) {
-                if (res.getRaid().isDefender(player) && !ConfigManager.RaidDefenderContainerUsage) {
-                    Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
-                    if (result != null && result.equals(Flags.container)) {
-                        event.setCancelled(true);
-                        plugin.msg(player, lm.Raid_cantDo);
-                        return;
-                    }
+            if (res != null && res.getRaid().isUnderRaid() && res.getRaid().isDefender(player) && !ConfigManager.RaidDefenderContainerUsage) {
+                Flags result = FlagPermissions.getMaterialUseFlagList().get(mat);
+                if (result != null && result.equals(Flags.container)) {
+                    event.setCancelled(true);
+                    plugin.msg(player, lm.Raid_cantDo);
+                    return;
                 }
             }
 
@@ -2522,7 +2532,7 @@ public class ResidencePlayerListener implements Listener {
                 player.closeInventory();
                 if (!move)
                     return false;
-                
+
                 if (lastLoc != null && CMIMaterial.isAir(lastLoc.getBlock().getType())) {
                     Long last = lastUpdate.get(player.getUniqueId());
                     // Fail safe in case we are triggering teleportation event check with this teleportation, we should teleport player outside residence instead of its repeating teleportation to avoid stack overflow 
