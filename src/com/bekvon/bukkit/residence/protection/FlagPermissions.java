@@ -278,6 +278,8 @@ public class FlagPermissions {
         addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);
         addMaterialToUseFlag(CMIMaterial.COMPOSTER.getMaterial(), Flags.container);
         addMaterialToUseFlag(CMIMaterial.STONECUTTER.getMaterial(), Flags.container);
+        
+        addMaterialToUseFlag(CMIMaterial.CHISELED_BOOKSHELF.getMaterial(), Flags.container);
 
         addMaterialToUseFlag(Material.DISPENSER, Flags.container);
 //	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
