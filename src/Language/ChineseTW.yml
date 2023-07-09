@@ -1,7 +1,8 @@
-# of this file and modify that instead. This file will be updated automatically by Residence
-# when a newer version is detected, and your changes will be overwritten.  Once you 
-# have a copy of this file, change the Language: option under the Residence config.yml
-# to whatever you named your copy.
+# 繁體中文由 flandretw 翻譯，你可以在 GitHub、Crowdin、Discord 甚至是 Youtube 上找到我。
+# 注意如果你想修改此文件，強烈建議你複製一份這個檔案並修改它。
+# 此文件將由 Residence 自動更新。當檢查到新版本時，你的變更將被覆蓋。
+# 當擁有此檔案的副本時，變更 Residence config.yml 下的 Language: 為 ChineseTW
+# 或是你所修改過後的檔案名稱。
 
 Language:
   Invalid:
@@ -30,22 +31,23 @@ Language:
     Help: '&c無效的說明頁數……'
     NameCharacters: '&c名稱包含不允許字元……'
     PortalDestination: '&c傳送門目的地位於禁止區域內，已取消建立傳送門。&7請尋找新位置。'
-    FromConsole: '&c該指令只能在控制台執行！'
-    Ingame: '&c該指令無法在控制台執行！'
+    FromConsole: '&c此指令只能在控制台執行！'
+    Ingame: '&c此指令無法在控制台執行！'
   Area:
     Exists: '&c已存在相同區域名稱。'
     Create: '&e已建立領地 ID：&6%1&e。'
     DiffWorld: '&c區域和領地存在不同的世界。'
     Collision: '&c區域和領地 &6%1 &c衝突。'
+    TooClose: '&c太靠近另外一個領地了。你需要至少 &e%1 &c格方塊的間距。'
     SubzoneCollision: '&c區域和子區域領地 &6%1 &c衝突。'
     NonExist: '&c區域不存在。'
     InvalidName: '&c無效的區域名稱……'
-    ToSmallX: '&c你選擇的區域 &6X 軸&c方向長度（&6%1&c）過小。&e該值必須為 &6%2 &e或更大。'
-    ToSmallY: '&c你選擇的區域 &6Y 軸&c方向高度（&6%1&c）過小。&e該值必須為 &6%2 &e或更大。'
-    ToSmallZ: '&c你選擇的區域 &6Z 軸&c方向長度（&6%1&c）過小。&e該值必須為 &6%2 &e或更大。'
-    ToBigX: '&c你選擇的區域 &6X 軸&c方向長度（&6%1&c）過大。&e該值必須為 &6%2 &e或更小。'
-    ToBigY: '&c你選擇的區域 &6Y 軸&c方向高度（&6%1&c）過大。&e該值必須為 &6%2 &e或更小。'
-    ToBigZ: '&c你選擇的區域 &6Z 軸&c方向長度（&6%1&c）過大。&e該值必須為 &6%2 &e或更小。'
+    ToSmallX: '&c你選擇的區域 &6X 軸&c方向長度（&6%1&c）過小。&e此值必須為 &6%2 &e或更大。'
+    ToSmallY: '&c你選擇的區域 &6Y 軸&c方向高度（&6%1&c）過小。&e此值必須為 &6%2 &e或更大。'
+    ToSmallZ: '&c你選擇的區域 &6Z 軸&c方向長度（&6%1&c）過小。&e此值必須為 &6%2 &e或更大。'
+    ToBigX: '&c你選擇的區域 &6X 軸&c方向長度（&6%1&c）過大。&e此值必須為 &6%2 &e或更小。'
+    ToBigY: '&c你選擇的區域 &6Y 軸&c方向高度（&6%1&c）過大。&e此值必須為 &6%2 &e或更小。'
+    ToBigZ: '&c你選擇的區域 &6Z 軸&c方向長度（&6%1&c）過大。&e此值必須為 &6%2 &e或更小。'
     Rename: '&e已重新命名區域 &6%1 &e為 &6%2&e。'
     Remove: '&e已移除區域 &6%1&e……'
     Name: '&e名稱：&2%1&e。'
@@ -57,6 +59,7 @@ Language:
     SizeLimit: '&e區域大小超出了允許的尺寸上限。'
     HighLimit: '&c你不能保護這麼高的領地，高度上限為 &6%1&c。'
     LowLimit: '&c你不能保護這麼深的領地，深度上限為 &6%1&c。'
+    WeirdShape: '&3領地大小不規則。&6%1 &3邊比 &6%3 &3邊大 &6%2 &3倍。'
   Select:
     Points: '&e執行指令前要先選擇兩個點！'
     Overlap: '&c選擇點和區域 &6%1 &c重疊！'
@@ -75,8 +78,8 @@ Language:
     TooHigh: '&c警告，選擇區域已超過地圖頂部，現在已裁剪。'
     TooLow: '&c警告，選擇區域已超過地圖底部，現在已裁剪。'
     TotalSize: '&e選擇區域總計尺寸：&6%1&e。'
-    AutoEnabled: '&e自動選擇模式&6開啟&e，使用 &6/res select auto &e關閉。'
-    AutoDisabled: '&e自動選擇模式&6關閉&e，使用 &6/res select auto &e再次打開。'
+    AutoEnabled: '&e自動選擇模式&6啟用&e，使用 &6/res select auto &e停用。'
+    AutoDisabled: '&e自動選擇模式&6停用&e，使用 &6/res select auto &e再次打開。'
     Disabled: '&c你沒有使用選擇指令的權限。'
   Sign:
     Updated: '&6%1 &e已更新告示牌！'
@@ -95,12 +98,13 @@ Language:
     ForSaleTopLine: '&0出售'
     ForSalePriceLine: '&0%1'
     ForSaleResName: '&0%1'
-    ForSaleBottom: '&0%1 立方公尺'
+    ForSaleBottom: '&0%1 立方格'
     LookAt: '&c你前方沒有告示牌。'
+    TooMany: '&c此領地有太多的告示牌。'
     ResName: '&0%1'
     Owner: '&0%1'
   Raid:
-    NotEnabled: '&c尚未開啟侵略模式！'
+    NotEnabled: '&c尚未啟用侵略模式！'
     NotIn: '&c你不在侵略中！'
     CantLeave: '&c你不能在侵略中離開領地（%1）！'
     CantKick: '&c無法踢出領地擁有者（%1）！'
@@ -108,9 +112,9 @@ Language:
     StartsIn: '&7侵略開始於：[autoTimeLeft] &2防守方：%1 人 &4進攻方：%2 人'
     EndsIn: '&c侵略結束於：[autoTimeLeft] &2防守方：%1 人 &4進攻方：%2 人'
     Ended: '&7領地侵略 &4%1 &7結束！'
-    cantDo: '&c無法在領地侵略時做這件事情！'
+    cantDo: '&c無法在領地侵略時做此事情！'
     left: '&7你已離開了領地 &4%1 &7侵略！'
-    noFlagChange: '&c無法在領地侵略時修改權限！'
+    noFlagChange: '&c無法在領地侵略時變更權限！'
     noRemoval: '&c無法在領地侵略時移除領地！'
     immune: '&e設定下一波侵略 %1&e！'
     notImmune: '&e不再進行設定！'
@@ -118,9 +122,9 @@ Language:
     attack:
       Joined: '&7已加入 &2%1 &7侵略！'
       Started: '&7侵略開始！'
-      cooldown: '&c太早進行下一場領地侵略！請等候 %1！'
-      immune: '&c這個領地免除侵略！請等候 %1！'
-      playerImmune: '&c領地擁有者免除侵略！請等候 %1！'
+      cooldown: '&c太早進行下一場領地侵略！請稍候 %1！'
+      immune: '&c這個領地免除侵略！請稍候 %1！'
+      playerImmune: '&c領地擁有者免除侵略！請稍候 %1！'
       isOffline: '&c無法在領地擁有者離線時侵略！'
       noSubzones: '&c無法侵略子區域領地！'
       noSelf: '&c無法侵略你自己的領地！'
@@ -140,7 +144,7 @@ Language:
       immune: '&e對接下來的侵略免除：%1&e。'
       starts: '&7領地侵略將在以下時間後開始：%1&7。'
       attackers: '&7攻擊者：&4%1&7。'
-      defenders: '&7防守方者：&4%1&7。'
+      defenders: '&7防守方：&4%1&7。'
       ends: '&7領地侵略將在以下時間後結束：%1&7。'
       canraid: '&2可以被侵略。'
       raidin: '&e可能的侵略：%1&e。'
@@ -160,28 +164,28 @@ Language:
   server:
     land: Server_Land
   Flag:
-    ownColor: '&4'
     p1Color: '&2'
     p2Color: '&a'
     haveColor: '&2'
     havePrefix: ''
-    denyColor: '&4'
-    denyPrefix: ''
+    lackColor: '&7'
+    lackPrefix: ''
+    others: '&e和 &2%1 &e其他'
     Set: '&e領地 &6%2 &e的 &6%1 &e權限已設定為 &6%3&e。'
-    SetFailed: '&c你沒有設定&6%1&c的權限。'
+    SetFailed: '&c你沒有設定 &6%1&c 的權限。'
     CheckTrue: '&e玩家 &6%2 &e已在領地 &6%3 &e中將 &6%1 &e權限設定為 &6%4&e。'
     CheckFalse: '&e玩家 &6%2 &e沒有在領地中設定 &6%1 &e權限。'
     Cleared: '&e已清除權限。'
     RemovedAll: '&e已清除 &6%1 &e在領地 &6%2 &e的所有權限。'
     RemovedGroup: '&e已清除 &6%1 &e組在領地 &6%2 &e的所有權限。'
     Default: '&e已恢復預設權限。'
-    Deny: '&c你沒有&6%1&c的權限。'
+    Deny: '&c你沒有 &6%1&c 的權限。'
     SetDeny: '&c擁有者不能設定 &6%1 &c的權限。'
     ChangeDeny: '&c因為領地內有 &6%2 &c名玩家，所以你無法更改 &6%1 &c的權限。'
     ChangedForOne: '&e已為領地 &6%2 &e更改 &6%1 &e的權限。'
     ChangedFor: '&e已檢查 &6%2 &e領地更改 &6%1 &e的權限。'
-    reset: '&e已重新設定領地 &6%1 &e的權限。'
-    resetAll: '&e已重新設定領地 &6%1 &e的權限。'
+    reset: '&e已重設領地 &6%1 &e的權限。'
+    resetAll: '&e已重設領地 &6%1 &e的權限。'
   Bank:
     NoAccess: '&c你沒有使用銀行的權限。'
     Name: ' &e銀行：&6%1'
@@ -189,6 +193,7 @@ Language:
     Deposit: '&e你向領地銀行存款 &6%1&e。'
     Withdraw: '&e你從領地銀行中提款 &6%1&e。'
     rentedWithdraw: '&c無法向租用領地進行銀行提款。'
+    full: '&e領地銀行已滿！'
   Subzone:
     Rename: '&e子區域領地 &6%1 &e已被重新命名為 &6%2&e。'
     Remove: '&e已移除子區域領地 &6%1&e。'
@@ -201,26 +206,26 @@ Language:
     SelectInside: '&e兩個選擇點必須都在同領地內。'
     CantCreate: '&c你沒有建立子區域領地的權限。'
     CantDelete: '&c你沒有移除子區域領地的權限。'
-    CantDeleteNotOwnerOfParent: '&c你不是該子區域所在領地的擁有者，無法移除子區域。'
+    CantDeleteNotOwnerOfParent: '&c你不是此子區域所在領地的擁有者，無法移除子區域。'
     CantContract: '&c你沒有縮小子區域領地的權限。'
     CantExpand: '&c你沒有擴大子區域領地的權限。'
     DeleteConfirm: '&e如果你確定要移除子區域 &6%1&e，使用 &6/res confirm &e來確定操作。'
     OwnerChange: '&e已將子區域 &6%1 &e的擁有者更改為 &6%2&e。'
   Residence:
-    DontOwn: '&e沒有項目可以顯示。'
-    Hidden: '&e（&6隱藏&e）'
+    DontOwn: '&e沒有可供顯示的內容。'
+    Hidden: ' &e（&6隱藏&e）'
     Bought: '&e你已購買領地 &6%1&e。'
     Buy: '&6%1 &e購買了你的 &6%2 &e領地。'
     BuyTooBig: '&c你無法購買尺寸這麼大的領地。'
-    NotForSale: '&c該領地目前並未出售。'
+    NotForSale: '&c此領地目前並未出售。'
     ForSale: '&e領地 &6%1 &e現在正以 &6%2 &e的價格出售。'
-    StopSelling: '&c該領地已不再出售。'
+    StopSelling: '&c此領地已不再出售。'
     TooMany: '&c你擁有的領地數量達到了上限。'
     MaxRent: '&c你租用的領地數量達到了上限。'
-    AlreadyRent: '&c該領地已被出租……'
-    NotForRent: '&c該領地沒有出租……'
-    NotForRentOrSell: '&c該領地沒有出售或出租……'
-    NotRented: '&c該領地還沒被出租。'
+    AlreadyRent: '&c此領地已被出租……'
+    NotForRent: '&c此領地沒有出租……'
+    NotForRentOrSell: '&c此領地沒有出售或出租……'
+    NotRented: '&c此領地還沒被出租。'
     Unrent: '&e領地 &6%1 &e已取消出租。'
     RemoveRentable: '&e領地 &6%1 &e不再可供出租。'
     ForRentSuccess: '&e領地 &6%1 &e已被設定為每 &6%3 &e天以 &6%2 &e出租。'
@@ -233,9 +238,9 @@ Language:
     Rename: '&e領地 &6%1 &e已被重新命名為 &6%2'
     Remove: '&e領地 &6%1 &e已被移除……'
     CantRemove: '&c領地 &6%1 &c無法移除因為 &6%2 &c子區域還在出租給 &6%3&c。'
-    MoveDeny: '&c你沒有領地 &6%1 的移動權限。'
-    TeleportNoFlag: '&c你沒有領地的傳送權限。'
-    FlagDeny: '&c你沒有領地 &6%2 &6%1&c的權限。'
+    MoveDeny: '&c你沒有領地 &6%1 的移動（move）權限。'
+    TeleportNoFlag: '&c你沒有領地的傳送（tp）權限。'
+    FlagDeny: '&c你沒有領地 &6%2 &6%1&c 的權限。'
     GiveLimits: '&c目標玩家領地超過限制，無法給予領地。'
     GiveConfirm: '&7點擊確認將領地 &6%1 &7從 &6%2 &7轉移到 &6%3&7。'
     Give: '&e你將領地 &6%1 &e轉移到 &6%2&e。'
@@ -247,12 +252,12 @@ Language:
     TeleportNear: '&e已傳送到領地的附近。'
     SetTeleportLocation: '&e設定傳送點位置……'
     PermissionsApply: '&e已設定領地權限。'
-    NotOwner: '&c你不是該領地的擁有者。'
+    NotOwner: '&c你不是此領地的擁有者。'
     RemovePlayersResidences: '&e移除所有屬於 &6%1 &e的領地。'
     NotIn: '&c你不在領地內。'
     PlayerNotIn: '&c玩家不在領地區域內。'
     Kicked: '&e你在領地中被踢出。'
-    CantKick: '&e無法踢出該玩家。'
+    CantKick: '&e無法踢出此玩家。'
     In: '&e你目前在領地 &6%1&e。'
     OwnerChange: '&e已將領地 &6%1 &e的擁有者更改成 &6%2'
     NonAdmin: '&c你沒有領地的管理權限。'
@@ -265,7 +270,7 @@ Language:
     NoResHere: '&c領地不存在。'
     OwnerNoPermission: '&c領地擁有者沒有執行這項操作的權限。'
     ParentNoPermission: '&c你沒有設定父區域的權限。'
-    ChatDisabled: '&e已關閉領地聊天……'
+    ChatDisabled: '&e已停用領地聊天……'
     DeleteConfirm: '&e如果你確定要移除領地 &6%1&e，使用 &6/res confirm &e來確定操作。'
     ChangedMain: '&e更改主要領地到 &6%1&e。'
     LwcRemoved: '&e在 &6%2 &e毫秒內移除 &6%1 &eLwc 保護。'
@@ -275,7 +280,7 @@ Language:
     IsForSale: '&6（出售）'
     IsRented: '&6（已出租）'
   Rent:
-    Disabled: '&c已關閉出租……'
+    Disabled: '&c已停用出租……'
     DisableRenew: '&e領地 &6%1 &e不會在租約到期時自動續租。'
     EnableRenew: '&e領地 &6%1 &e將會在租約到期時自動續租。'
     NotByYou: '&c領地不是你租的。'
@@ -284,9 +289,9 @@ Language:
     OneTime: '&c無法延長領地的出租時間。'
     Extended: '&e已為領地 &6%2 &e延長租約 &6%1 &e天。'
     Expire: '&e租約到期時間：&6%1&e。'
-    AutoPayTurnedOn: '&e已&2開啟&e自動付款。'
-    AutoPayTurnedOff: '&e已&c關閉&e自動付款。'
-    ModifyDeny: '&c無法修改租用的領地。'
+    AutoPayTurnedOn: '&e已&2啟用&e自動付款。'
+    AutoPayTurnedOff: '&e已&c停用&e自動付款。'
+    ModifyDeny: '&c無法變更租用的領地。'
     Days: '&e租用天數：&6%1&e。'
     Rented: ' &6（已出租）'
     RentList: ' &6%1&e. &6%2&e（&6%3&e/&6%4&e/&6%5&e）- &6%6 &6%7'
@@ -318,7 +323,7 @@ Language:
     MoneyCredit: '&e你的帳戶收到了 &8%1&e。'
     RentReleaseInvalid: '&e領地 &6%1 &e沒有被租用或出租。'
     RentSellFail: '&c無法出售正在出租的領地。'
-    SubzoneRentSellFail: '&c無法出售，該子區域領地出租中。'
+    SubzoneRentSellFail: '&c無法出售，此子區域領地出租中。'
     ParentRentSellFail: '&c無法出售出租中的領地。'
     SubzoneSellFail: '&c無法出售子區域領地。'
     SellRentFail: '&c無法出租正在出售的領地。'
@@ -331,7 +336,7 @@ Language:
     LeaseNotExpire: '&e租約不存在或未過期。'
     LeaseRenewalCost: '&e續租 &6%1 &e的花費為 &6%2。'
     LeaseInfinite: '&e出租時間已設定為無限……'
-    MarketDisabled: '&c已關閉經濟系統。'
+    MarketDisabled: '&c已停用經濟系統。'
     SellAmount: '&e出售數量：&2%1&e。'
     SellList: ' &6%1&e. &6%2&e（&6%3&e）- &6%4&e'
     LeaseExpire: '&e租約到期時間：&2%1&e。'
@@ -385,9 +390,9 @@ Language:
     Pset:
       Title: '&6%1 %2 權限'
     Actions:
-    - '&2點擊左鍵修改為開啟'
-    - '&c點擊右鍵修改為關閉'
-    - '&eShift + 點擊左鍵修改為未設定'
+    - '&2點擊左鍵變更為啟用'
+    - '&c點擊右鍵變更為停用'
+    - '&eShift + 點擊左鍵變更為未設定'
   InformationPage:
     Top: '&e___/ &a %1 - %2 &e \___'
     TopSingle: '&e___/ &a %1 &e \___'
@@ -435,8 +440,8 @@ Language:
     Voted: '&6你給 &e%2 &6評了 &e%1 &6分。'
     Liked: '&6你對領地 &e%1 &6按讚。'
     AlreadyLiked: '&6你已對領地 &e%1 &6按讚過了。'
-    NoVotes: '&c該領地還沒有投票。'
-    CantVote: '&c該領地還沒開啟商店權限。'
+    NoVotes: '&c此領地還沒有投票。'
+    CantVote: '&c此領地還沒啟用商店權限。'
     VotedRange: '&6只能評出 &e%1 &6分到 &e%2 &6分。'
     SignLines:
       '1': '&e--== &8%1 &e==--'
@@ -445,25 +450,25 @@ Language:
       '4': '&8%1&e（&8%2&e）'
       Likes4: '&9讚：&8%2'
   RandomTeleport:
-    TpLimit: '&e傳送過於頻繁，請稍等 &6%1 &e秒後再次傳送。'
-    TeleportSuccess: '&e傳送到座標 X:&6%1 &eY:&6%2 &eZ:&6%3 &e。'
-    IncorrectLocation: '&e找不到正確的傳送座標，請稍等 &6%1 &e秒後重試。'
-    Disabled: '&c該世界關閉隨機傳送。'
+    TpLimit: '&e傳送過於頻繁，請稍候 &6%1 &e秒後再次傳送。'
+    TeleportSuccess: '&e已傳送到座標 X:&6%1 &eY:&6%2 &eZ:&6%3&e。'
+    IncorrectLocation: '&e找不到正確的傳送座標，請稍候 &6%1 &e秒後再試。'
+    Disabled: '&c此世界停用隨機傳送。'
     TeleportStarted: '&e傳送將在 &6%4 &e秒後開始，不要移動。'
-    WorldList: '&e可供使用世界：&6%1&e。'
+    WorldList: '&e可供使用的世界：&6%1&e。'
   Permissions:
     variableColor: '&f'
     permissionColor: '&6'
     cmdPermissionColor: '&2'
   General:
-    DisabledWorld: '&c該世界關閉領地。'
+    DisabledWorld: '&c此世界停用領地。'
     UseNumbers: '&c請使用數字……'
-    # Replace all text with '' to disable this message
+    # 將所有文字替換為 '' 將停用此訊息
     CantPlaceLava: '&c無法在沒有領地的地方放置岩漿。'
-    # Replace all text with '' to disable this message
+    # 將所有文字替換為 '' 將停用此訊息
     CantPlaceWater: '&c無法在沒有領地的地方放置水。'
     CantPlaceChest: '&c你沒有放置儲物箱的權限。'
-    NoPermission: '&c你沒有執行該操作的權限。'
+    NoPermission: '&c你沒有執行此操作的權限。'
     info:
       NoPlayerPermission: '&c[playerName] 沒有 [permission] 權限。'
     NoCmdPermission: '&c沒有這個指令的權限。'
@@ -475,13 +480,13 @@ Language:
     InfoTool: '&e- 資訊工具：&6%1'
     ListMaterialAdd: '&6%1 &e已被新增到領地 &6%2&e。'
     ListMaterialRemove: '&6%1 &e已從領地 &6%2 &e移除。'
-    ItemBlacklisted: '&c該處禁止使用該物品。'
-    WorldPVPDisabled: '&c已關閉世界 PVP。'
+    ItemBlacklisted: '&c此處禁止使用此物品。'
+    WorldPVPDisabled: '&c已停用世界 PVP。'
     NoPVPZone: '&c非 PVP 區域。'
     NoFriendlyFire: '&c非友軍傷害區域。'
     InvalidHelp: '&c無效說明頁數。'
     TeleportDeny: '&c沒有傳送的權限。'
-    TeleportSuccess: '&e已傳送'
+    TeleportSuccess: '&e已傳送。'
     TeleportConfirmLava: '&c傳送不安全，你將會掉進&6岩漿&c，若仍要傳送請使用 &6/res tpconfirm &c來確定操作。'
     TeleportConfirmVoid: '&c傳送不安全，你將會掉進&6虛空&c，若仍要傳送請使用 &6/res tpconfirm &c來確定操作。'
     TeleportConfirm: '&c傳送不安全，你將會掉落 &6%1 &c格高的方塊，若仍要傳送請使用 &6/res tpconfirm &c來確定操作。'
@@ -496,28 +501,14 @@ Language:
     ListCreate: '&e已建立列表 &6%1&e。'
     PhysicalAreas: '&e區域'
     CurrentArea: '&e目前區域：&6%1'
-    TotalResSize: '&e總計尺寸：&6%1 立方公尺&e（&6%2 平方公尺&e）'
+    TotalResSize: '&e總計尺寸：&6%1 立方格&e（&6%2 平方格&e）'
     ResSize:
-      eastWest: '&e東/西：&6%1'
-      northSouth: '&e北/南：&6%1'
-      upDown: '&e上/下：&6%1'
-    TotalWorth: '&e總計價值：&6%1&e（&6%2&e）'
+      eastWest: '&e東/西：&6%1 格'
+      northSouth: '&e北/南：&6%1 格'
+      upDown: '&e上/下：&6%1 格'
+    TotalWorth: '&e總計價值：&6立方格價為 %1&e（&6平方格價為 %2&e）'
     TotalSubzones: '&e子區域領地：&6%1&e（&6%2&e）'
     NotOnline: '&e目標玩家一定要在線上。'
-    prevPage: '&2----<< &6上一頁 '
-    prevPageGui: '&6上一頁 '
-    prevPageClean: '&6上 '
-    prevPageOff: '&2----<< &7上一頁 '
-    prevPageHover: '&7<<<'
-    firstPageHover: '&7|<'
-    nextPage: '&6 下一頁 &2>>----'
-    nextPageGui: '&6下一頁'
-    nextPageClean: '&6下'
-    nextPageOff: '&7 下一頁 &2>>----'
-    nextPageHover: '&7>>>'
-    lastPageHover: '&7>|'
-    pageCount: '&2%1&7/&2%2'
-    pageCountHover: '&e%1'
     GenericPages: '&e頁 &6%1 &e的 &6%2&e（&6%3&e）'
     WorldEditNotFound: '&c未偵測到 WorldEdit。'
     CoordsTop: '&eX:&6%1 &eY:&6%2 &eZ:&6%3'
@@ -527,16 +518,16 @@ Language:
     BlockedTeleportIcon: '&7T'
     AllowedMovementIcon: '&2M'
     BlockedMovementIcon: '&7M'
-    AdminToggleTurnOn: '&6已開啟&e自動管理模式'
-    AdminToggleTurnOff: '&6已關閉&e自動管理模式'
-    NoSpawn: '&e你沒有重生點&6移動&e的權限，正在重新定位。'
-    CompassTargetReset: '&e已重新設定你的羅盤。'
+    AdminToggleTurnOn: '&6已啟用&e自動管理模式'
+    AdminToggleTurnOff: '&6已停用&e自動管理模式'
+    NoSpawn: '&e你沒有重生點 &6移動（move） &e的權限，正在重新定位。'
+    CompassTargetReset: '&e已重設你的羅盤。'
     CompassTargetSet: '&e你的羅盤目前指向 &6%1&e。'
     Ignorelist: '&2忽略名單：&6'
     Blacklist: '&c黑名單：&6'
-    LandCost: '&e領地總共花費：&6%1'
-    'True': '&2開啟'
-    'False': '&c關閉'
+    LandCost: '&e領地總計花費：&6%1'
+    'True': '&2啟用'
+    'False': '&c停用'
     Removed: '&6未設定'
     FlagState: '&e權限狀態：%1'
     Land: '&e領地：&6%1'
@@ -556,9 +547,9 @@ Language:
     Owner: '&e擁有者：&6%1'
     World: '&e世界：&6%1'
     Subzones: '&e子區域'
-    # The below lines represent various messages residence sends to the players.
-    # Note that some messages have variables such as %1 that are inserted at runtime.
-    NewPlayerInfo: '&e如果要建立領地，請使用伺服器指定的工具，選擇領地的兩個對角，然後使用 &3/res create [領地名稱] &e指令。'
+    # 下面的幾行代表了領地傳送給玩家的各種訊息。
+    # 請注意，某些訊息具有在運行時插入的變量，例如 %1。
+    NewPlayerInfo: '&e如果要建立領地，請使用伺服器指定的工具選擇領地的兩個對角，然後使用指令 &2/res create [領地名稱]&e。'
 CommandHelp:
   Description: 內涵領地說明
   SubCommands:
@@ -573,9 +564,9 @@ CommandHelp:
           Description: 在你周圍建立最大允許範圍的領地
         select:
           Info:
-          - '&e該指令用於選擇領地的範圍'
-          - '&6/res select [x] [y] [z] &e- 選擇以你為中心一定範圍的方塊'
-          Description: 選擇工具指令
+          - 此指令用於選擇領地的範圍。
+          - /res select [x] [y] [z] - 選擇以你為中心一定範圍的方塊。
+          Description: 選擇指令
           SubCommands:
             coords:
               Description: 顯示已選擇區域的座標
@@ -586,7 +577,7 @@ CommandHelp:
               Info:
               - '&e用法：&6/res select size'
             auto:
-              Description: 開啟自動選擇工具
+              Description: 啟用自動選擇工具
               Info:
               - '&e用法：&6/res select auto [玩家名稱]'
             cost:
@@ -597,67 +588,67 @@ CommandHelp:
               Description: 垂直擴展選擇區域
               Info:
               - '&e用法：&6/res select vert'
-              - '&e將選擇區域擴展頂部和底部'
+              - 將選擇區域擴展頂部和底部。
             sky:
               Description: 擴展選擇區域到天空
               Info:
               - '&e用法：&6/res select sky'
-              - '&e將選擇區域擴展到頂部'
+              - 將選擇區域擴展到頂部。
             bedrock:
               Description: 擴展選擇區域到基岩
               Info:
               - '&e用法：&6/res select bedrock'
-              - '&e將選擇區域擴展到底部'
+              - 將選擇區域擴展到底部。
             expand:
               Description: 向面對的方向擴展選擇區域
               Info:
               - '&e用法：&6/res select expand <數量>'
-              - '&e向面對的方向擴展 &6<數量> &e格方塊'
+              - 向面對的方向擴展 <數量> 格方塊。
             shift:
               Description: 向面對的方向平移選擇區域
               Info:
               - '&e用法：&6/res select shift <數量>'
-              - '&e向面對的方向平移 &6<數量> &e格方塊'
+              - 向面對的方向平移 <數量> 格方塊。
             chunk:
               Description: 選擇你目前所在的區塊
               Info:
               - '&e用法：&6/res select chunk'
-              - '&e選擇你目前所在的區塊'
+              - 選擇你目前所在的區塊。
             residence:
               Description: 選擇領地中存在的區域
               Info:
               - '&e用法：&6/res select residence <領地名稱>'
-              - '&e選擇領地中存在的區域'
+              - 選擇領地中存在的區域。
             worldedit:
               Description: 使用 WorldEdit 選擇區域
               Info:
               - '&e用法：&6/res select worldedit'
-              - '&e使用 WorldEdit 選擇區域'
+              - 使用 WorldEdit 選擇區域。
         padd:
           Info:
           - '&e用法：&6/res padd <領地名稱> [玩家名稱]'
-          - '&e新增玩家的基本權限'
+          - 新增玩家的基本權限。
           Description: 新增玩家到領地
         placeholders:
           Info:
           - '&e用法：&6/res placeholders （parse） （placeholder） （玩家名稱）'
-          Description: 列出 placeholder 列表
+          Description: 列出 Placeholder 列表
           parse: '[result]'
         signconvert:
           Info:
           - '&e用法：&6/res signconvert'
-          - '&e嘗試從第三方插件轉換儲存告示牌資料'
+          - 嘗試從第三方插件轉換儲存告示牌資料。
           Description: 轉換 ResidenceSign 插件的告示牌
         listallhidden:
           Info:
-          - '&e用法：&6/res listhidden <頁數>'
-          - '&e顯示伺服器所有隱藏的領地'
+          - 用法：&6/res listhidden <頁數>
+          - 顯示伺服器所有隱藏的領地。
           Description: 顯示所有隱藏的領地
         bank:
           Info:
           - '&e用法：&6/res bank [deposit/withdraw] <領地名稱> [金額]'
-          - '&e你必須站在領地中或指定領地名稱且'
-          - '&e擁有銀行（bank）權限'
+          - 你必須站在領地中或指定領地名稱，
+          - 且擁有銀行（bank）權限。
           Description: 管理領地銀行
         create:
           Info:
@@ -666,15 +657,15 @@ CommandHelp:
         listall:
           Info:
           - '&e用法：&6/res listall <頁數> <世界名稱> <-a/-f>'
-          - '&e列出所有的領地'
+          - 列出所有的領地
           Description: 列出所有的領地
         info:
           Info:
           - '&e用法：&6/res info <領地名稱>'
-          - '&e留空 <領地名稱> 以顯示你目前所在的領地資訊'
+          - 留空 <領地名稱> 會顯示你目前所在的領地資訊。
           Description: 顯示領地的資訊
         area:
-          Description: 管理領地區域
+          Description: 管理領地區域。
           Info:
           - ''
           SubCommands:
@@ -690,7 +681,7 @@ CommandHelp:
               Description: 為領地新增區域
               Info:
               - '&e用法：&6/res area add [領地名稱] [區域 ID]'
-              - '&e必須先選中兩個選擇點'
+              - 必須先選中兩個選擇點。
             remove:
               Description: 移除領地區域
               Info:
@@ -699,12 +690,12 @@ CommandHelp:
               Description: 替換領地區域
               Info:
               - '&e用法：&6/res area replace [領地名稱] [區域 ID]'
-              - '&e必須先選中兩個選擇點'
-              - '&e如果新的區域更大，二者之間將會被填充'
+              - 必須先選中兩個選擇點。
+              - 如果新的區域更大，二者之間將會被填充。
         give:
           Info:
           - '&e用法：&6/res give <領地名稱> [玩家名稱] <-s>'
-          - '&e將你的領地轉移給目標玩家'
+          - 將你的領地轉移給目標玩家。
           Description: 給予其他玩家領地
         renamearea:
           Info:
@@ -713,8 +704,8 @@ CommandHelp:
         contract:
           Info:
           - '&e用法：&6/res contract （領地名稱） [縮小單位]'
-          - '&e向你面對的方向縮小領地，'
-          - '&e領地名稱是可選命名的'
+          - 向你面對的方向縮小領地，
+          - 領地名稱是可選的。
           Description: 向你面對的方向縮小領地
         check:
           Info:
@@ -723,14 +714,14 @@ CommandHelp:
         gset:
           Info:
           - '&e用法：&6/res gset <領地名稱> [群組] [權限] [true/false/remove]'
-          - '&e使用 &6/res flags ? &e查看權限列表'
+          - 使用 /res flags ? 查看權限列表。
           Description: 為某個組設定領地的特定權限
         list:
           Info:
           - '&e用法：&6/res list <玩家名稱> <頁數> <世界名稱>'
-          - '&e列出指定玩家擁有的所有領地（除了隱藏領地）'
-          - '&e如果顯示自己的領地，隱藏領地也會被顯示'
-          - '&e如果要列出所有玩家的領地，請使用指令 &6/res listall'
+          - 列出指定玩家擁有的所有領地（除了隱藏領地）。
+          - 如果顯示自己的領地，隱藏領地也會被顯示。
+          - 如果要列出所有玩家的領地，請使用指令 /res listall。
           Description: 顯示領地列表
         version:
           Info:
@@ -743,18 +734,18 @@ CommandHelp:
         pdel:
           Info:
           - '&e用法：&6/res pdel <領地名稱> [玩家名稱]'
-          - '&e移除玩家的基本權限'
+          - 移除玩家的基本權限。
           Description: 從領地移除玩家
         market:
           Info:
-          - '&e用法：&6/res market ? &e查看更多資訊'
+          - '&e用法：&6/res market ? &e查看更多資訊。'
           Description: 購買、出售、租用領地
           SubCommands:
             Info:
               Description: 查看領地的經濟資訊
               Info:
               - '&e用法：&6/res market Info [領地名稱]'
-              - '&e顯示領地是否正在出租、出售以及領地的花費'
+              - 顯示領地是否正在出租、出售以及領地的花費。
             list:
               Description: 顯示可出租與可出售的領地
               Info:
@@ -772,18 +763,18 @@ CommandHelp:
               Description: 出售領地
               Info:
               - '&e用法：&6/res market sell [領地名稱] [金額]'
-              - '&e將領地以 &6[金額] &e的價格出售'
-              - '&e其他玩家可以使用 &6/res market buy 購買'
+              - 將領地以 [金額] 的價格出售。
+              - 其他玩家可以使用 /res market buy 購買。
             sign:
               Description: 設定市場告示牌
               Info:
               - '&e用法：&6/res market sign [領地名稱]'
-              - '&e將看向的告示牌設定為領地市場告示牌'
+              - 將看向的告示牌設定為領地市場告示牌。
             buy:
               Description: 購買領地
               Info:
               - '&e用法：&6/res market buy [領地名稱]'
-              - '&e如果該領地正在出售，則購買這個領地'
+              - 如果此領地正在出售，則購買這個領地。
             unsell:
               Description: 取消出售領地
               Info:
@@ -792,16 +783,15 @@ CommandHelp:
               Description: 租用領地
               Info:
               - '&e用法：&6/res market rent [領地名稱] <自動續租付款>'
-              - '&e租用領地。自動續租可設定為 true 或 false，如果是 true 並且獲得領地擁有者允許，領地將會在租約到期之前自動續租'
+              - 租用領地。自動續租可設定為 true 或 false，如果是 true 並且獲得領地擁有者允許，領地將會在租約到期之前自動續租。
             rentable:
               Description: 出租領地
               Info:
-              - '&e用法：&6/res market rentable [領地名稱] [花費] [天數] <AllowRenewing> <StayInMarket>
-                <AllowAutoPay>'
-              - '&e使領地出租以 [天數] 來計算 [花費]'
-              - '&e如果開啟 <AllowRenewing>，則在租約到期前可再次出租'
-              - '&e如果開啟 <StayInMarket>，則在租約到期後留在市場上'
-              - '&e如果開啟 <AllowAutoPay>，則出租到期時直接自動續租付款'
+              - '&e用法：&6/res market rentable [領地名稱] [花費] [天數] <AllowRenewing> <StayInMarket> <AllowAutoPay>'
+              - 使領地出租以 [天數] 來計算 [花費]
+              - 如果啟用 <AllowRenewing>，則在租約到期前可再次出租。
+              - 如果啟用 <StayInMarket>，則在租約到期後留在市場上。
+              - 如果啟用 <AllowAutoPay>，則出租到期時直接自動續租付款。
             autopay:
               Description: 設定領地自動續租付款
               Info:
@@ -818,39 +808,39 @@ CommandHelp:
               Description: 取消領地租用或出租狀態
               Info:
               - '&e用法：&6/res market unrent [領地名稱]'
-              - '&e如果你是租用者，該指令將會退租領地'
-              - '&e如果你是擁有者，該指令將會收回領地'
+              - 如果你是租用者，此指令將會退租領地。
+              - 如果你是擁有者，此指令將會收回領地。
         rc:
           Info:
           - '&e用法：&6/res rc （領地名稱）'
-          - '&e加入領地聊天頻道'
+          - 加入領地聊天頻道。
           Description: 加入目前或指定的領地聊天頻道
           SubCommands:
             leave:
               Description: 離開目前的領地聊天頻道
               Info:
               - '&e用法：&6/res rc leave'
-              - '&e如果你在領地聊天頻道內，那你將離開領地聊天頻道'
+              - 如果你在領地聊天頻道內，那你將離開領地聊天頻道。
             setcolor:
               Description: 設定領地聊天頻道文字顏色
               Info:
               - '&e用法：&6/res rc setcolor [顏色代碼]'
-              - '&e設定領地聊天頻道文字顏色'
+              - 設定領地聊天頻道文字顏色。
             setprefix:
               Description: 設定領地聊天頻道前綴
               Info:
               - '&e用法：&6/res rc setprefix [新前綴]'
-              - '&e設定領地聊天頻道前綴'
+              - 設定領地聊天頻道前綴。
             kick:
               Description: 從領地聊天頻道中踢出玩家
               Info:
               - '&e用法：&6/res rc kick [玩家名稱]'
-              - '&e從領地聊天頻道中踢出玩家'
+              - 從領地聊天頻道中踢出玩家。
         expand:
           Info:
           - '&e用法：&6/res expand （領地名稱） [擴展單位]'
-          - '&e向你面對的方向擴展領地規模，'
-          - '&e領地名稱是可選命名的'
+          - 向你面對的方向擴展領地規模，
+          - 領地名稱是可選的。
           Description: 向你面對的方向擴展領地
         compass:
           Info:
@@ -858,7 +848,7 @@ CommandHelp:
           Description: 設定指向領地的羅盤
         lists:
           Info:
-          - '&e預先定義的權限列表可以被應用到領地上'
+          - 預先定義的權限列表可以被應用到領地上。
           Description: 預先指定權限列表
           SubCommands:
             add:
@@ -892,12 +882,12 @@ CommandHelp:
         reset:
           Info:
           - '&e用法：&6/res reset <領地名稱/all>'
-          - '&e將領地的所有權限重置'
+          - 將領地的所有權限重設。
           Description: 將領地設定還原為預設值
         listhidden:
           Info:
           - '&e用法：&6/res listhidden <玩家名稱> <頁數>'
-          - '&e列出玩家擁有的隱藏領地'
+          - 列出玩家擁有的隱藏領地。
           Description: 列出隱藏領地
         raid:
           Info:
@@ -909,92 +899,92 @@ CommandHelp:
         setmain:
           Info:
           - '&e用法：&6/res setmain （領地名稱）'
-          - '&e將指定的領地設為 main'
+          - 將指定的領地設為 main。
           Description: 將定義的領地名稱作為前綴顯示在聊天中
         server:
           Info:
           - '&e用法：&6/resadmin server [領地名稱]'
-          - '&e建立伺服器的領地'
+          - 建立伺服器的領地。
           Description: 建立伺服器領地
         rt:
           Info:
           - '&e用法：&6/res rt （世界名稱） （玩家名稱）'
-          - '&e傳送到指定世界的隨機位置'
+          - 傳送到指定世界的隨機位置。
           Description: 傳送到世界的隨機位置
         mirror:
           Info:
           - '&e用法：&6/res mirror [原領地名稱] [目標領地名稱]'
-          - '&e將權限從該領地鏡像到另一個領地，你必須是兩者的所有者或管理員才能執行該操作'
+          - 將權限從此領地鏡像到另一個領地，你必須是兩者的所有者或管理員才能執行此操作。
           Description: 鏡像權限
         shop:
           Info:
-          - '&e管理領地的商店功能'
+          - 管理領地的商店功能。
           Description: 管理領地商店
           SubCommands:
             list:
               Description: 顯示領地商店列表
               Info:
               - '&e用法：&6/res shop list'
-              - '&e顯示所有作為商店的領地'
+              - 顯示所有作為商店的領地。
             vote:
               Description: 為領地商店投票
               Info:
               - '&e用法：&6/res shop vote <領地名稱> [票數]'
-              - '&e為目前或指定領地商店投票'
+              - 為目前或指定領地商店投票。
             like:
               Description: 為領地商店按讚
               Info:
               - '&e用法：&6/res shop like <領地名稱>'
-              - '&e為領地商店按讚'
+              - 為領地商店按讚。
             votes:
               Description: 顯示領地商店投票
               Info:
               - '&e用法：&6/res shop votes <領地名稱> <頁數>'
-              - '&e顯示目前或指定領地商店的投票列表'
+              - 顯示目前或指定領地商店的投票列表。
             likes:
               Description: 顯示領地商店的按讚
               Info:
               - '&e用法：&6/res shop likes <領地名稱> <頁數>'
-              - '&e顯示目前或指定的領地商店按讚列表'
+              - 顯示目前或指定的領地商店按讚列表。
             setdesc:
               Description: 設定領地商店描述
               Info:
               - '&e用法：&6/res shop setdesc [文字]'
-              - '&e設定領地商店描述，並且支持顏色代碼，用 /n 表示換行'
+              - 設定領地商店描述，並且支援顏色代碼，用 /n 表示換行。
             createboard:
               Description: 建立商店宣傳面板
               Info:
               - '&e用法：&6/res shop createboard [位置]'
-              - '&e在選擇區域建立商店宣傳面板，放置位置 - 即宣傳面板的起始位置'
+              - 在選擇區域建立商店宣傳面板，放置位置 - 即宣傳面板的起始位置。
             deleteboard:
               Description: 移除商店宣傳面板
               Info:
               - '&e用法：&6/res shop deleteboard'
-              - '&e對宣傳面板的告示牌點擊右鍵以移除宣傳面板'
+              - 對宣傳面板的告示牌點擊右鍵以移除宣傳面板。
         lset:
           Info:
           - '&e用法：&6/res lset <領地名稱> [blacklist/ignorelist] [物品 ID]'
           - '&e用法：&6/res lset <領地名稱> Info'
-          - '&e將物品加入黑名單，物品將被阻止放置在領地中，'
-          - '&e將物品加入忽略名單，物品將不會被領地所保護'
+          - 將物品加入黑名單，物品將被阻止放置在領地中，
+          - 將物品加入忽略名單，物品將不會被領地所保護。
           Description: 更改黑名單和忽略名單選項
         raidstatus:
           Info:
-          - '&e用法：&6/res raidstatus （領地名稱/玩家名稱）'
+          - 用法：&6/res raidstatus （領地名稱/玩家名稱）。
           Description: 查看領地的侵略狀態
         pset:
           Info:
           - '&e用法：&6/res pset <領地名稱> [玩家名稱] [權限] [true/false/remove]'
           - '&e用法：&6/res pset <領地名稱> [玩家名稱] removeall'
-          - '&e使用 &6/res flags ? &e查看權限列表'
+          - 使用 /res flags ? 查看權限列表。
           Description: 為玩家設定領地的特定權限
         show:
           Info:
-          - '&e用法：&6/res show <領地名稱>'
+          - 用法：&6/res show <領地名稱>。
           Description: 顯示領地邊界
         flags:
           Info:
-          - '&e設定領地權限時，true 的意思為允許操作，false 的意思為禁止操作'
+          - 設定領地權限時，true 的意思為允許操作，false 的意思為禁止操作。
           Description: 權限列表
           SubCommands:
             anvil:
@@ -1027,6 +1017,11 @@ CommandHelp:
               Description: 允許或禁止領地內鐵砧損壞
               Info:
               - '&e用法：&6/res set <領地名稱> anvilbreak true/false/remove'
+            safezone:
+              Translated: 安全區域（safezone）
+              Description: 設定為 true 會使領地清除成員負面效果
+              Info:
+              - '&eUsage: &6/res set <residence> safezone true/false/remove'
             backup:
               Translated: 備份與還原（backup）
               Description: 如果設定為 true，則回復回原本的領地樣貌（需要 WordEdit）
@@ -1077,6 +1072,11 @@ CommandHelp:
               Description: 允許或禁止玩家使用按鈕
               Info:
               - '&e用法：&6/res set/pset <領地名稱> button true/false/remove'
+            brush:
+              Translated: 使用刷子（brush）
+              Description: 允許或禁止刷掃方塊
+              Info:
+              - '&e用法: &6/res set/pset <領地名稱> brush true/false/remove'
             cake:
               Translated: 吃蛋糕（cake）
               Description: 允許或禁止玩家吃蛋糕
@@ -1123,8 +1123,8 @@ CommandHelp:
               Info:
               - '&e用法：&6/res set <領地名稱> coords true/false/remove'
             copper:
-              Translated: 修改銅方塊（copper）
-              Description: 允許修改銅方塊
+              Translated: 變更銅方塊（copper）
+              Description: 允許變更銅方塊
               Info:
               - '&e用法：&6/res set/pset <領地名稱> copper true/false/remove'
             craft:
@@ -1148,7 +1148,7 @@ CommandHelp:
               Info:
               - '&e用法：&6/res set <領地名稱> day true/false/remove'
             dye:
-              Translated: 染色羊（dye）
+              Translated: 羊染色（dye）
               Description: 允許或禁止羊染色
               Info:
               - '&e用法：&6/res set/pset <領地名稱> dye true/false/remove'
@@ -1393,18 +1393,18 @@ CommandHelp:
               Info:
               - '&e用法：&6/res set <領地名稱> night true/false/remove'
             nofly:
-              Translated: 使用飛行（nofly）
+              Translated: 禁止飛行（nofly）
               Description: 允許或禁止在領地內飛行
               Info:
               - '&e用法：&6/res set/pset <領地名稱> nofly true/false/remove'
             fly:
               Translated: 自動飛行（fly）
-              Description: 自動開啟或關閉領地內的玩家飛行
+              Description: 自動啟用或停用領地內的玩家飛行
               Info:
               - '&e用法：&6/res set/pset <領地名稱> fly true/false/remove'
             nomobs:
               Translated: 防止怪物進入（nomobs）
-              Description: 防止怪物進入領地，需要在配置檔案開啟 AutoMobRemoval
+              Description: 防止怪物進入領地，需要在配置檔案啟用 AutoMobRemoval
               Info:
               - '&e用法：&6/res set <領地名稱> nomobs true/false/remove'
             note:
@@ -1429,7 +1429,6 @@ CommandHelp:
               - '&e用法：&6/res set/pset <領地名稱> pressure true/false/remove'
             piston:
               Translated: 使用活塞（piston）
-              Description: 允許或禁止在領地內使用活塞推或拉
               Info:
               - '&e用法：&6/res set <領地名稱> piston true/false/remove'
             pistonprotection:
@@ -1463,7 +1462,7 @@ CommandHelp:
               Info:
               - '&e用法：&6/res set/pset <領地名稱> riding true/false/remove'
             shoot:
-              Translated: 使用射擊（shoot）
+              Translated: 射擊（shoot）
               Description: 允許或禁止在區域內射擊
               Info:
               - '&e用法：&6/res set <領地名稱> shoot true/false/remove'
@@ -1626,23 +1625,23 @@ CommandHelp:
         subzone:
           Info:
           - '&e用法：&6/res subzone <領地名稱> [子區域名稱]'
-          - '&e如果領地名稱被忽略，將嘗試使用原有的領地名稱'
+          - 如果領地名稱被忽略，將嘗試使用原有的領地名稱。
           Description: 在領地中建立子區域
         removeworld:
           Info:
           - '&e用法：&6/res removeworld [世界名稱]'
-          - '&e該指令只能在控制台執行'
+          - 此指令只能在控制台執行。
           Description: 移除指定世界中的所有領地
         limits:
           Info:
           - '&e用法：&6/res limits （玩家名稱）'
-          - '&e顯示你在建立和管理領地方面的各種限制'
+          - 顯示你在建立和管理領地方面的各種限制。
           Description: 顯示你的領地限制
         set:
           Info:
           - '&e用法：&6/res set <領地名稱> [權限] [true/false/remove]'
-          - '&e使用 &6/res flags ? &e查看權限列表'
-          - '&e這些權限適用所有的玩家（詳見 &6/res pset ?&e）'
+          - 使用 &6/res flags ? 查看權限列表，
+          - 這些權限適用所有的玩家（詳見 /res pset ?）。
           Description: 為領地設定通用權限
         clearflags:
           Info:
@@ -1651,21 +1650,21 @@ CommandHelp:
         message:
           Info:
           - '&e用法：&6/res message <領地名稱> [enter/leave] [訊息]'
-          - '&e設定領地加入或離開的訊息'
+          - 設定領地加入或離開的訊息。
           - '&e用法：&6/res message <領地名稱> remove [enter/leave]'
-          - '&e移除加入或離開的訊息'
+          - 移除加入或離開的訊息。
           Description: 管理領地加入或離開訊息
         command:
           Info:
           - '&e用法：&6/res command <領地名稱> <allow/block/list> <指令>'
-          - '&e顯示列表，新增或移除領地中允許或禁止的指令'
-          - '&e使用「_」可包含多個變量的指令'
+          - 顯示列表，新增或移除領地中允許或禁止的指令。
+          - 使用「_」可包含多個變量的指令。
           Description: 管理允許或禁止的領地指令
         confirm:
           Description: 確認移除領地
           Info:
           - '&e用法：&6/res confirm'
-          - '&e確認移除領地'
+          - 確認移除領地。
         resadmin:
           Info:
           - '&e用法：&6/res resadmin [on/off]'
@@ -1673,20 +1672,20 @@ CommandHelp:
         tpset:
           Info:
           - '&e用法：&6/res tpset'
-          - '&e把你站的位置設定為領地的傳送點，'
-          - '&e前提是你一定要在領地內，'
-          - '&e且你還一定要是領地擁有者或者擁有管理員權限'
+          - 把你站的位置設定為領地的傳送點。
+          - 前提是你一定要在領地內，
+          - 且你還一定要是領地擁有者或者擁有管理員權限。
           Description: 設定傳送點
         tpconfirm:
           Info:
           - '&e用法：&6/res tpconfirm'
-          - '&e即使傳送點不安全，仍然強制傳送到領地'
+          - 即使傳送點不安全，仍然強制傳送到領地。
           Description: 忽略不安全傳送警告
         removeall:
           Info:
           - '&e用法：&6/res removeall [擁有者]'
-          - '&e移除自己的所有領地'
-          - '&e如果你對除你自己以外的任何人使用它，則需要 /resadmin'
+          - 移除自己的所有領地。
+          - 如果你對除你自己以外的任何人使用它，則需要 /resadmin。
           Description: 移除指定玩家的所有領地
         material:
           Info:
@@ -1695,19 +1694,19 @@ CommandHelp:
         kick:
           Info:
           - '&e用法：&6/res kick &6<玩家名稱>'
-          - '&e你必須是領地擁有者'
-          - '&e且玩家必須在線上'
+          - 你必須是領地擁有者，
+          - 且玩家必須在線上。
           Description: 踢出指定玩家
         sublist:
           Info:
           - '&e用法：&6/res sublist <領地名稱> <頁數>'
-          - '&e列出所有子區域'
+          - 列出所有子區域。
           Description: 列出所有子區域
         rename:
           Info:
           - '&e用法：&6/res rename [舊領地名稱] [新領地名稱]'
-          - '&e你必須是擁有者或管理員才能進行該項操作，'
-          - '&e新名稱不能與現有領地名稱重複'
+          - 你必須是擁有者或管理員才能進行此項操作，
+          - 新名稱不能與現有領地名稱重複。
           Description: 重新命名領地
         setallfor:
           Info:
@@ -1716,40 +1715,40 @@ CommandHelp:
         lease:
           Info:
           - '&e用法：&6/res lease [renew/cost] [領地名稱]'
-          - '&6/res lease cost &e顯示續租領地的花費'
-          - '&6/res lease renew &e將會續租指定的領地'
+          - /res lease cost 顯示續租領地的花費。
+          - /res lease renew 將會續租指定的領地。
           Description: 管理領地租約
           SubCommands:
             set:
               Description: 設定租約時間
               Info:
               - '&e用法：&6/resadmin lease set [領地名稱] [#days/infinite]'
-              - '&e將租約時間設定為特定天數或無限制'
+              - 將租約時間設定為特定天數或無限制。
             renew:
               Description: 續租租約時間
               Info:
               - '&e用法：&6/resadmin lease renew <領地名稱>'
-              - '&e續租目前或指定的領地租約'
+              - 續租目前或指定的領地租約。
             list:
               Description: 顯示目前住所的租約列表
               Info:
               - '&e用法：&6/resadmin lease list <領地名稱> <頁數>'
-              - '&e顯示目前所有子區域的租約時間'
+              - 顯示目前所有子區域的租約時間。
             expires:
               Description: 租約到期時間
               Info:
               - '&e用法：&6/resadmin lease expires <領地名稱>'
-              - '&e顯示領地租約到期的時間'
+              - 顯示領地租約到期的時間。
             cost:
               Description: 顯示續租花費
               Info:
               - '&e用法：&6/resadmin lease cost <領地名稱>'
-              - '&e顯示續租領地所需的花費'
+              - 顯示續租領地所需的花費。
         tp:
           Info:
           - '&e用法：&6/res tp [領地名稱]'
-          - '&e傳送到你指定的領地，你必須擁有傳送（tp）權限或是擁有者才能執行該操作'
-          - '&e伺服器管理員需要給予你設定的權限'
+          - 傳送到你指定的領地，你必須擁有傳送（tp）權限或是擁有者才能執行此操作。
+          - 伺服器管理員需要給予你設定的權限。
           Description: 傳送到領地
         setall:
           Info:
@@ -1763,5 +1762,5 @@ CommandHelp:
           Description: 載入領地存檔
           Info:
           - '&e用法：&6/resload'
-          - '&e該指令不安全，它不會先保存領地狀態，'
-          - '&e請確定變更完領地後再重新載入存檔'
+          - 此指令不安全，它不會先保存領地狀態，
+          - 請確定變更完領地後再重新載入存檔。
