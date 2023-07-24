@@ -41,10 +41,12 @@ public class kick implements cmd {
 	ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 
 	PermissionGroup group = rPlayer.getGroup();
+	
 	if (!group.hasKickAccess() && !resadmin) {
 	    plugin.msg(player, lm.General_NoPermission);
 	    return true;
 	}
+	
 	ClaimedResidence res = plugin.getResidenceManager().getByLoc(targetplayer.getLocation());
 
 	if (res == null || !res.isOwner(player) && !resadmin && !res.getPermissions().playerHas(player, Flags.admin, false)) {

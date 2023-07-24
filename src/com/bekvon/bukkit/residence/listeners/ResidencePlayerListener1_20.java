@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 import net.Zrips.CMILib.Items.CMIMaterial;
 
@@ -24,6 +25,7 @@ public class ResidencePlayerListener1_20 implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onSignInteract(PlayerInteractEvent event) {
+
         if (event.getPlayer() == null)
             return;
         // disabling event on world
@@ -41,12 +43,13 @@ public class ResidencePlayerListener1_20 implements Listener {
 
         FlagPermissions perms = plugin.getPermsByLocForPlayer(block.getLocation(), player);
 
-        boolean hasplace = perms.playerHas(player, Flags.place, perms.playerHas(player, Flags.build, true));
-        if (hasplace)
+        boolean hasuse = perms.playerHas(player, Flags.use, FlagCombo.TrueOrNone);
+
+        if (hasuse)
             return;
 
         event.setCancelled(true);
-        plugin.msg(player, lm.Flag_Deny, Flags.build);
+        plugin.msg(player, lm.Flag_Deny, Flags.use);
 
     }
 }
