@@ -388,7 +388,7 @@ public class ResidencePlayerListener implements Listener {
         Player player = event.getPlayer();
         if (event.getCaught() == null)
             return;
-        if (Utils.isArmorStandEntity(event.getCaught().getType()) || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) {
+        if ((Utils.isArmorStandEntity(event.getCaught().getType()) || event.getCaught() instanceof Boat || event.getCaught() instanceof LivingEntity) && !plugin.isResAdminOn(player)) {
             FlagPermissions perm = plugin.getPermsByLoc(event.getCaught().getLocation());
             ClaimedResidence res = plugin.getResidenceManager().getByLoc(event.getCaught().getLocation());
             if (perm.has(Flags.hook, FlagCombo.OnlyFalse)) {
