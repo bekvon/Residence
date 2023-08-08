@@ -1860,10 +1860,11 @@ public class ClaimedResidence {
 
             // Defaulting to first one if not present
             if (defaultGroup != null) {
-                if (res.enterMessage == null)
-                    res.enterMessage = defaultGroup.getDefaultEnterMessage();
+                if (res.enterMessage == null) {
+                    res.enterMessage = defaultGroup.getDefaultEnterMessage().replace("\n", "\\n");
+                }
                 if (res.leaveMessage == null)
-                    res.leaveMessage = defaultGroup.getDefaultLeaveMessage();
+                    res.leaveMessage = defaultGroup.getDefaultLeaveMessage().replace("\n", "\\n");
             }
         }
 
