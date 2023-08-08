@@ -62,7 +62,6 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 
@@ -1005,9 +1004,6 @@ public class ClaimedResidence {
     public void setEnterLeaveMessage(CommandSender sender, String message, boolean enter, boolean resadmin) {
         if (message != null) {
             message = message.replace("%subtitle%", "\\n");
-            if (message.equals("")) {
-                message = null;
-            }
         }
 
         if (sender instanceof Player) {
@@ -2057,7 +2053,7 @@ public class ClaimedResidence {
 
     public boolean isOwner(String name) {
         Player player = Bukkit.getPlayer(name);
-        if (player != null)
+        if (player != null && player.getName().equalsIgnoreCase(name))
             return isOwner(player);
         return perms.getOwner().equalsIgnoreCase(name);
     }

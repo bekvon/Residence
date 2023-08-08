@@ -68,6 +68,7 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIBlock;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
 
 public class ResidenceBlockListener implements Listener {
@@ -91,7 +92,7 @@ public class ResidenceBlockListener implements Listener {
 
         if (Version.isCurrentEqualOrLower(Version.v1_12_R1))
             return;
-        
+
         if (e.getHitBlock() == null)
             return;
 
@@ -306,7 +307,6 @@ public class ResidenceBlockListener implements Listener {
                 hasdestroy = true;
             }
         }
-
         if (!hasdestroy && !ResPerm.bypass_destroy.hasPermission(player, 10000L)) {
             if (inform)
                 Residence.getInstance().msg(player, lm.Flag_Deny, Flags.destroy);
@@ -316,6 +316,7 @@ public class ResidenceBlockListener implements Listener {
                 Residence.getInstance().msg(player, lm.Flag_Deny, Flags.container);
             return false;
         }
+
         return true;
     }
 
