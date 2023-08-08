@@ -967,7 +967,6 @@ public class ResidencePlayerListener implements Listener {
 
         switch (mat.name()) {
         case "ITEM_FRAME":
-        case "CAKE":
         case "BEACON":
         case "FLOWER_POT":
         case "COMMAND":
@@ -1000,8 +999,19 @@ public class ResidencePlayerListener implements Listener {
         }
 
         CMIMaterial cmat = CMIMaterial.get(mat);
-        if (cmat != null && cmat.isPotted()) {
-            return true;
+        if (cmat != null) {
+
+            if (cmat.isPotted())
+                return true;
+
+            if (cmat.isCake())
+                return true;
+
+            if (cmat.isCandle())
+                return true;
+
+            if (cmat.isCandleCake())
+                return true;
         }
 
         return plugin.getConfigManager().getCustomRightClick().contains(CMIMaterial.get(block));
@@ -1431,6 +1441,7 @@ public class ResidencePlayerListener implements Listener {
         }
 
         if (isContainer(mat, block) || isCanUseEntity(mat, block)) {
+
             boolean hasuse = perms.playerHas(player, Flags.use, true);
 
             ClaimedResidence res = plugin.getResidenceManager().getByLoc(block.getLocation());

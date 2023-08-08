@@ -236,6 +236,13 @@ public class FlagPermissions {
 
             if (one.isPotted())
                 matUseFlagList.put(one.getMaterial(), Flags.flowerpot);
+
+            if (one.isCake())
+                addMaterialToUseFlag(one.getMaterial(), Flags.cake);
+            
+            if (one.isCandle())
+                addMaterialToUseFlag(one.getMaterial(), Flags.use);
+                        
         }
 
         if (CMIMaterial.DAYLIGHT_DETECTOR.getMaterial() != null)
@@ -246,7 +253,6 @@ public class FlagPermissions {
 
         addMaterialToUseFlag(Material.LEVER, Flags.lever);
         addMaterialToUseFlag(Material.BREWING_STAND, Flags.brew);
-        addMaterialToUseFlag(Material.CAKE, Flags.cake);
         addMaterialToUseFlag(Material.NOTE_BLOCK, Flags.note);
         addMaterialToUseFlag(Material.DRAGON_EGG, Flags.egg);
         addMaterialToUseFlag(CMIMaterial.COMMAND_BLOCK.getMaterial(), Flags.commandblock);
@@ -278,7 +284,7 @@ public class FlagPermissions {
         addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);
         addMaterialToUseFlag(CMIMaterial.COMPOSTER.getMaterial(), Flags.container);
         addMaterialToUseFlag(CMIMaterial.STONECUTTER.getMaterial(), Flags.container);
-        
+
         addMaterialToUseFlag(CMIMaterial.CHISELED_BOOKSHELF.getMaterial(), Flags.container);
 
         addMaterialToUseFlag(Material.DISPENSER, Flags.container);
