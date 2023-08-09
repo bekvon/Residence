@@ -1306,9 +1306,10 @@ public class ClaimedResidence {
 //    }
 
     public Location getTeleportLocation(Player player) {
-        if (tpLoc == null) {
+        if (tpLoc == null || this.getMainArea() != null && !this.containsLoc(new Location(this.getMainArea().getWorld(), tpLoc.getX(), tpLoc.getY(), tpLoc.getZ()))) {
+            
             if (this.getMainArea() == null)
-                return null;
+                return null; 
             Location low = this.getMainArea().getLowLocation();
             Location high = this.getMainArea().getHighLocation();
             Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2,
@@ -1444,6 +1445,11 @@ public class ClaimedResidence {
         }
 
         Location loc = this.getTeleportLocation(targetPlayer);
+
+        if (Math.abs(loc.getBlockX()) > 30000000 || Math.abs(loc.getBlockY()) > 30000000) {
+            Residence.getInstance().msg(reqPlayer, lm.Invalid_Area);
+            return;
+        }
 
         if (Residence.getInstance().getConfigManager().getTeleportDelay() > 0 && !isAdmin && !bypassDelay)
             performDelaydTp(loc, targetPlayer, reqPlayer, true);
