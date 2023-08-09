@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,11 +52,9 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
-import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.CMINumber;
 import net.Zrips.CMILib.Container.PageInfo;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Version.Version;
 
@@ -114,10 +111,12 @@ public class ResidenceManager implements ResidenceInterface {
         for (ClaimedResidence residence : residences) {
             if (residence == null)
                 continue;
-            if (residence.containsLoc(loc)) {
-                ClaimedResidence subres = residence.getSubzoneByLoc(loc);
-                return subres == null ? residence : subres;
-            }
+            if (!residence.containsLoc(loc))
+                continue;
+
+            ClaimedResidence subres = residence.getSubzoneByLoc(loc);
+            return subres == null ? residence : subres;
+
         }
         return null;
     }

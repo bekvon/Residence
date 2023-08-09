@@ -1014,6 +1014,9 @@ public class ResidencePlayerListener implements Listener {
 
             if (cmat.isCandleCake())
                 return true;
+            
+            if (cmat.equals(CMIMaterial.CAMPFIRE) || cmat.equals(CMIMaterial.SOUL_CAMPFIRE))
+                return true; 
         }
 
         return plugin.getConfigManager().getCustomRightClick().contains(CMIMaterial.get(block));
@@ -2395,6 +2398,9 @@ public class ResidencePlayerListener implements Listener {
             return true;
         }
 
+        boolean cantMove = res != null && Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player)
+            && !ResPerm.admin_move.hasPermission(player, 10000L);
+        
         if (move) {
             if (res.getRaid().isUnderRaid()) {
                 if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
@@ -2451,8 +2457,7 @@ public class ResidencePlayerListener implements Listener {
                 return teleported;
             }
 
-            if (Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player) && !ResPerm.admin_move
-                .hasPermission(player, 10000L)) {
+            if (cantMove) {
 
                 Location lastLoc = lastOutsideLoc.get(uuid);
 
@@ -2548,8 +2553,6 @@ public class ResidencePlayerListener implements Listener {
             }
         }
 
-        boolean cantMove = res != null && Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player)
-            && !ResPerm.admin_move.hasPermission(player, 10000L);
 
         if (!cantMove) {
             lastOutsideLoc.put(uuid, loc);
@@ -2796,8 +2799,6 @@ public class ResidencePlayerListener implements Listener {
                 }
                 residences.add(res);
             }
-
-            CMIDebug.d(residences.size());
 
             for (ClaimedResidence res : residences) {
                 Set<Entity> entities = new HashSet<Entity>();

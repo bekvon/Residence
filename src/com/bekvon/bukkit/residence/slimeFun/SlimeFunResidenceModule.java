@@ -42,7 +42,6 @@ public class SlimeFunResidenceModule implements ProtectionModule {
 
         switch (action) {
         case INTERACT_BLOCK:
-            CMIDebug.d(action);
             ClaimedResidence res = residence.getResidenceManager().getByLoc(loc);
             if (res != null) {
                 boolean allow = res.getPermissions().playerHas(ResidencePlayer.get(op.getUniqueId()), Flags.container, false);

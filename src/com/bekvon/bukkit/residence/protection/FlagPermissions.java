@@ -34,10 +34,12 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.PageInfo;
+import net.Zrips.CMILib.Items.CMIMC;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Locale.LC;
 import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
+import net.Zrips.CMILib.Version.Version;
 
 public class FlagPermissions {
 
@@ -237,12 +239,17 @@ public class FlagPermissions {
             if (one.isPotted())
                 matUseFlagList.put(one.getMaterial(), Flags.flowerpot);
 
-            if (one.isCake())
+            if (one.containsCriteria(CMIMC.CAKE))
                 addMaterialToUseFlag(one.getMaterial(), Flags.cake);
-            
-            if (one.isCandle())
-                addMaterialToUseFlag(one.getMaterial(), Flags.use);
-                        
+
+            if (Version.isCurrentEqualOrHigher(Version.v1_17_R1)) {
+                if (one.isCandle())
+                    addMaterialToUseFlag(one.getMaterial(), Flags.use);
+
+                if (one.containsCriteria(CMIMC.CANDLECAKE))
+                    addMaterialToUseFlag(one.getMaterial(), Flags.cake);
+            }
+
         }
 
         if (CMIMaterial.DAYLIGHT_DETECTOR.getMaterial() != null)
@@ -271,21 +278,31 @@ public class FlagPermissions {
         addMaterialToUseFlag(Material.FURNACE, Flags.container);
         addMaterialToUseFlag(CMIMaterial.LEGACY_BURNING_FURNACE.getMaterial(), Flags.container);
 
-        addMaterialToUseFlag(CMIMaterial.BARREL.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.BLAST_FURNACE.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.CARTOGRAPHY_TABLE.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.FLETCHING_TABLE.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.GRINDSTONE.getMaterial(), Flags.container);
+        if (Version.isCurrentEqualOrHigher(Version.v1_14_R1)) {
+            addMaterialToUseFlag(CMIMaterial.LECTERN.getMaterial(), Flags.use);
 
-        addMaterialToUseFlag(CMIMaterial.LECTERN.getMaterial(), Flags.use);
+            addMaterialToUseFlag(CMIMaterial.BARREL.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.BLAST_FURNACE.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.CARTOGRAPHY_TABLE.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.FLETCHING_TABLE.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.GRINDSTONE.getMaterial(), Flags.container);
 
-        addMaterialToUseFlag(CMIMaterial.LOOM.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.SMITHING_TABLE.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.COMPOSTER.getMaterial(), Flags.container);
-        addMaterialToUseFlag(CMIMaterial.STONECUTTER.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.LOOM.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.SMITHING_TABLE.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.SMOKER.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.COMPOSTER.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.STONECUTTER.getMaterial(), Flags.container);
 
-        addMaterialToUseFlag(CMIMaterial.CHISELED_BOOKSHELF.getMaterial(), Flags.container);
+            addMaterialToUseFlag(CMIMaterial.CAMPFIRE.getMaterial(), Flags.use);
+        }
+
+        if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+            addMaterialToUseFlag(CMIMaterial.SOUL_CAMPFIRE.getMaterial(), Flags.use);
+        }
+
+        if (Version.isCurrentEqualOrHigher(Version.v1_20_R1)) {
+            addMaterialToUseFlag(CMIMaterial.CHISELED_BOOKSHELF.getMaterial(), Flags.container);
+        }
 
         addMaterialToUseFlag(Material.DISPENSER, Flags.container);
 //	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
