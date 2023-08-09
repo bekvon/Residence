@@ -76,8 +76,8 @@ public class ClaimedResidence {
     protected double BlockSellPrice = 0.0;
     protected Vector tpLoc;
     protected Vector PitchYaw;
-    protected String enterMessage;
-    protected String leaveMessage;
+    protected String enterMessage = null;
+    protected String leaveMessage = null;
     protected String ShopDesc = null;
     protected String ChatPrefix = "";
     protected CMIChatColor ChannelColor = CMIChatColor.WHITE;
@@ -1613,7 +1613,7 @@ public class ClaimedResidence {
                         if (leaveMessage != null)
                             root.put("LeaveMessage", leaveMessage);
                     } else {
-                        if (min.getId() > 1)
+                        if (min.getId() > 0)
                             root.put("Messages", min.getId());
                     }
                 }

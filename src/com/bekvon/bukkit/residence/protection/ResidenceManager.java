@@ -973,7 +973,7 @@ public class ResidenceManager implements ResidenceInterface {
         if (ls == null)
             return null;
         for (MinimizeMessages one : ls) {
-            Map<String, Object> root = new HashMap<>();
+            Map<String, String> root = new HashMap<>();
             root.put("EnterMessage", one.getEnter());
             root.put("LeaveMessage", one.getLeave());
             t.put(one.getId(), root);
