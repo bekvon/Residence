@@ -16,7 +16,6 @@ import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.GUI.CMIGui;
 import net.Zrips.CMILib.GUI.CMIGuiButton;
-import net.Zrips.CMILib.GUI.GUIManager.GUIClickType;
 import net.Zrips.CMILib.GUI.GUIManager.GUIRows;
 import net.Zrips.CMILib.Items.CMIAsyncHead;
 import net.Zrips.CMILib.Items.CMIItemStack;

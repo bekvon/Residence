@@ -3,6 +3,7 @@ package com.bekvon.bukkit.residence.listeners;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -56,6 +57,7 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import com.bekvon.bukkit.residence.ConfigManager;
@@ -2795,6 +2797,8 @@ public class ResidencePlayerListener implements Listener {
                 residences.add(res);
             }
 
+            CMIDebug.d(residences.size());
+
             for (ClaimedResidence res : residences) {
                 Set<Entity> entities = new HashSet<Entity>();
 
@@ -2803,11 +2807,18 @@ public class ResidencePlayerListener implements Listener {
                 if (world == null)
                     continue;
 
-                for (CuboidArea area : res.getAreaMap().values()) {
-                    for (ChunkRef chunk : area.getChunks()) {
-                        entities.addAll(Arrays.asList(world.getChunkAt(chunk.getX(), chunk.getZ()).getEntities()));
+                if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+                    for (CuboidArea area : res.getAreaMap().values()) {
+                        entities.addAll(world.getNearbyEntities(BoundingBox.of(area.getLowVector(), area.getHighVector())));
+                    }
+                } else {
+                    for (CuboidArea area : res.getAreaMap().values()) {
+                        for (ChunkRef chunk : area.getChunks()) {
+                            entities.addAll(Arrays.asList(world.getChunkAt(chunk.getX(), chunk.getZ()).getEntities()));
+                        }
                     }
                 }
+
                 for (Entity ent : entities) {
                     if (!ResidenceEntityListener.isMonster(ent))
                         continue;
