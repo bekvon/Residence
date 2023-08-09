@@ -76,7 +76,6 @@ public class ClaimedResidence {
     protected double BlockSellPrice = 0.0;
     protected Vector tpLoc;
     protected Vector PitchYaw;
-    protected World world;
     protected String enterMessage;
     protected String leaveMessage;
     protected String ShopDesc = null;
@@ -1089,7 +1088,8 @@ public class ClaimedResidence {
     public Location getOutsideFreeLoc(Location insideLoc, Player player) {
         CuboidArea area = this.getAreaByLoc(insideLoc);
         if (area == null) {
-            return player.getWorld().getSpawnLocation();
+            World bw = this.getPermissions().getBukkitWorld();
+            return bw != null ? bw.getSpawnLocation() != null ? bw.getSpawnLocation() : player.getWorld().getSpawnLocation() : player.getWorld().getSpawnLocation();
         }
 
         List<RandomLoc> randomLocList = new ArrayList<RandomLoc>();
@@ -1170,7 +1170,10 @@ public class ClaimedResidence {
             if (Residence.getInstance().getConfigManager().getKickLocation() != null)
                 return Residence.getInstance().getConfigManager().getKickLocation();
             // Fail safe for kick out location
-            return player.getWorld().getSpawnLocation();
+
+            World bw = this.getPermissions().getBukkitWorld();
+
+            return bw != null ? bw.getSpawnLocation() != null ? bw.getSpawnLocation() : player.getWorld().getSpawnLocation() : player.getWorld().getSpawnLocation();
         }
         if (player != null) {
             loc.setPitch(player.getLocation().getPitch());
@@ -1335,7 +1338,7 @@ public class ClaimedResidence {
             return;
         }
 
-        world = player.getWorld();
+//        world = player.getWorld();
         tpLoc = player.getLocation().toVector();
         PitchYaw = new Vector(player.getLocation().getPitch(), player.getLocation().getYaw(), 0);
         Residence.getInstance().msg(player, lm.Residence_SetTeleportLocation);

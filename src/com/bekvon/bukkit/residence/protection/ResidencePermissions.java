@@ -8,7 +8,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -739,6 +741,10 @@ public class ResidencePermissions extends FlagPermissions {
 
     public String getWorldName() {
         return world;
+    }
+
+    public World getBukkitWorld() {
+        return Bukkit.getWorld(world);
     }
 
     @Override
