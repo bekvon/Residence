@@ -1604,7 +1604,7 @@ public class ClaimedResidence {
 
         try {
             if (Residence.getInstance().getConfigManager().isNewSaveMechanic()) {
-                if (enterMessage != null && leaveMessage != null) {
+                if (enterMessage != null || leaveMessage != null) {
                     MinimizeMessages min = Residence.getInstance().getResidenceManager().addMessageToTempCache(this.getWorld(), enterMessage,
                         leaveMessage);
                     if (min == null) {

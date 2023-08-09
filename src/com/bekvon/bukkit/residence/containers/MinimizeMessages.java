@@ -9,8 +9,8 @@ public class MinimizeMessages {
 
     public MinimizeMessages(int id, String enter, String leave) {
         this.id = id;
-        this.enter = enter;
-        this.leave = leave;
+        this.enter = enter == null ? "" : enter;
+        this.leave = leave == null ? "" : leave;
     }
 
     public boolean same(String enter, String leave) {
