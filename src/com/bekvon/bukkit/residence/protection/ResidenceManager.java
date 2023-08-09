@@ -270,6 +270,8 @@ public class ResidenceManager implements ResidenceInterface {
             plugin.msg(player, lm.Residence_AlreadyExists, residences.get(resName.toLowerCase()).getResidenceName());
             return false;
         }
+        
+        
 
         newRes.BlockSellPrice = group.getSellPerBlock();
 
