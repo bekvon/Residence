@@ -1323,10 +1323,6 @@ public class ClaimedResidence {
         return count;
     }
 
-//    public Location getTeleportLocation() {
-//	return getTeleportLocation(null);
-//    }
-
     @Deprecated
     public Location getTeleportLocation(Player player) {
         return getTeleportLocation(player, true);
@@ -1337,11 +1333,18 @@ public class ClaimedResidence {
 
             if (this.getMainArea() == null)
                 return null;
-            Location low = this.getMainArea().getLowLocation();
-            Location high = this.getMainArea().getHighLocation();
-            Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2,
+            Vector low = this.getMainArea().getLowVector();
+            Vector high = this.getMainArea().getHighVector();
+
+            Location t = new Location(this.getMainArea().getWorld(), (low.getBlockX() + high.getBlockX()) / 2,
                 (low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high.getBlockZ()) / 2);
-            tpLoc = this.getMiddleFreeLoc(t, player, toSpawnOnFail).toVector();
+
+            t = this.getMiddleFreeLoc(t, player, toSpawnOnFail);
+
+            if (t == null)
+                return null;
+
+            tpLoc = t.toVector();
         }
 
         if (tpLoc != null) {
@@ -1385,7 +1388,10 @@ public class ClaimedResidence {
         if (tpLoc == null)
             return 0;
 
-        Location tempLoc = this.getTeleportLocation(player).clone();
+        Location tempLoc = this.getTeleportLocation(player, false);
+
+        if (tempLoc == null)
+            return 0;
 
         int fallDistance = 0;
         for (int i = (int) tempLoc.getY(); i >= CMIWorld.getMinHeight(tempLoc.getWorld()); i--) {
@@ -2231,7 +2237,13 @@ public class ClaimedResidence {
         if (loc != null) {
             return player.teleport(loc);
         }
-        return player.teleport(getOutsideFreeLoc(player.getLocation(), player));
+
+        loc = getOutsideFreeLoc(player.getLocation(), player, true);
+
+        if (loc == null)
+            return false;
+
+        return player.teleport(loc);
     }
 //    public Town getTown() {
 //	return town;

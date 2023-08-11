@@ -236,7 +236,7 @@ public class ResidenceRaid {
 	    if (player == null)
 		continue;
 	    Residence.getInstance().msg(player, lm.Raid_Ended, res.getName());
-	    Location outside = res.getOutsideFreeLoc(player.getLocation(), player);
+	    Location outside = res.getOutsideFreeLoc(player.getLocation(), player, true);
 	    if (outside != null)
 		player.teleport(outside);
 	}

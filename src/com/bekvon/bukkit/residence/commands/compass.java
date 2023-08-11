@@ -22,41 +22,41 @@ public class compass implements cmd {
     @CommandAnnotation(simple = true, priority = 3200, consoleVar = { 666 })
     public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
-	Player player = (Player) sender;
+        Player player = (Player) sender;
 
-	if (args.length != 1) {
-	    player.setCompassTarget(player.getWorld().getSpawnLocation());
-	    plugin.msg(player, lm.General_CompassTargetReset);
-	    return true;
-	}
+        if (args.length != 1) {
+            player.setCompassTarget(player.getWorld().getSpawnLocation());
+            plugin.msg(player, lm.General_CompassTargetReset);
+            return true;
+        }
 
-	if (!ResPerm.command_$1.hasPermission(sender, this.getClass().getSimpleName()))
-	    return null;
+        if (!ResPerm.command_$1.hasPermission(sender, this.getClass().getSimpleName()))
+            return null;
 
-	ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
+        ClaimedResidence res = plugin.getResidenceManager().getByName(args[0]);
 
-	if (res == null || !res.getWorld().equalsIgnoreCase(player.getWorld().getName())) {
-	    plugin.msg(player, lm.Invalid_Residence);
-	    return null;
-	}
+        if (res == null || !res.getWorld().equalsIgnoreCase(player.getWorld().getName())) {
+            plugin.msg(player, lm.Invalid_Residence);
+            return null;
+        }
 
-	CuboidArea area = res.getMainArea();
-	if (area == null)
-	    return false;
-	Location loc = res.getTeleportLocation(player);
-	if (loc == null)
-	    return false;
-	player.setCompassTarget(loc);
-	plugin.msg(player, lm.General_CompassTargetSet, args[0]);
+        CuboidArea area = res.getMainArea();
+        if (area == null)
+            return false;
+        Location loc = res.getTeleportLocation(player, false);
+        if (loc == null)
+            return false;
+        player.setCompassTarget(loc);
+        plugin.msg(player, lm.General_CompassTargetSet, args[0]);
 
-	return true;
+        return true;
     }
 
     @Override
     public void getLocale() {
-	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
-	c.get("Description", "Set compass pointer to residence location");
-	c.get("Info", Arrays.asList("&eUsage: &6/res compass <residence>"));	
-	LocaleManager.addTabCompleteMain(this, "[residence]");
+        ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+        c.get("Description", "Set compass pointer to residence location");
+        c.get("Info", Arrays.asList("&eUsage: &6/res compass <residence>"));
+        LocaleManager.addTabCompleteMain(this, "[residence]");
     }
 }

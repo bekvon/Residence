@@ -952,11 +952,12 @@ public class ResidencePlayerListener implements Listener {
         }
         res = plugin.getResidenceManager().getByLoc(loc);
         if (res != null && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse)) {
-            loc = res.getOutsideFreeLoc(loc, player);
+            loc = res.getOutsideFreeLoc(loc, player, true);
         }
 
         plugin.msg(player, lm.General_NoSpawn);
-        event.setRespawnLocation(loc);
+        if (loc != null)
+            event.setRespawnLocation(loc);
 
     }
 
@@ -1014,9 +1015,9 @@ public class ResidencePlayerListener implements Listener {
 
             if (cmat.isCandleCake())
                 return true;
-            
+
             if (cmat.equals(CMIMaterial.CAMPFIRE) || cmat.equals(CMIMaterial.SOUL_CAMPFIRE))
-                return true; 
+                return true;
         }
 
         return plugin.getConfigManager().getCustomRightClick().contains(CMIMaterial.get(block));
@@ -2400,7 +2401,7 @@ public class ResidencePlayerListener implements Listener {
 
         boolean cantMove = res != null && Flags.move.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !plugin.isResAdminOn(player) && !res.isOwner(player)
             && !ResPerm.admin_move.hasPermission(player, 10000L);
-        
+
         if (move) {
             if (res.getRaid().isUnderRaid()) {
                 if (res.getRaid().isAttacker(player.getUniqueId()) || res.getRaid().isDefender(player.getUniqueId())) {
@@ -2418,7 +2419,7 @@ public class ResidencePlayerListener implements Listener {
                 ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
                 boolean teleported = false;
                 if (preRes != null && Flags.tp.isGlobalyEnabled() && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
-                    Location newLoc = res.getOutsideFreeLoc(loc, player);
+                    Location newLoc = res.getOutsideFreeLoc(loc, player, true);
                     player.closeInventory();
                     teleported = teleport(player, newLoc);
                 }
@@ -2428,14 +2429,14 @@ public class ResidencePlayerListener implements Listener {
                         StuckInfo info = updateStuckTeleport(player, loc);
                         player.closeInventory();
                         if (info != null && info.getTimesTeleported() > 5) {
-                            Location newLoc = res.getOutsideFreeLoc(loc, player);
+                            Location newLoc = res.getOutsideFreeLoc(loc, player, true);
                             teleported = teleport(player, newLoc);
                         } else {
                             teleported = teleport(player, lastLoc);
                         }
                     }
                     if (!teleported) {
-                        Location newLoc = res.getOutsideFreeLoc(loc, player);
+                        Location newLoc = res.getOutsideFreeLoc(loc, player, true);
                         player.closeInventory();
                         teleported = teleport(player, newLoc);
                     }
@@ -2471,7 +2472,7 @@ public class ResidencePlayerListener implements Listener {
                 ClaimedResidence preRes = plugin.getResidenceManager().getByLoc(lastLoc);
                 boolean teleported = false;
                 if (preRes != null && preRes.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
-                    Location newLoc = res.getOutsideFreeLoc(loc, player);
+                    Location newLoc = res.getOutsideFreeLoc(loc, player, true);
                     player.closeInventory();
                     teleported = teleport(player, newLoc);
                 }
@@ -2481,7 +2482,7 @@ public class ResidencePlayerListener implements Listener {
                         StuckInfo info = updateStuckTeleport(player, loc);
                         player.closeInventory();
                         if (info != null && info.getTimesTeleported() > 5) {
-                            Location newLoc = res.getOutsideFreeLoc(loc, player);
+                            Location newLoc = res.getOutsideFreeLoc(loc, player, true);
                             teleported = teleport(player, newLoc);
                         } else {
                             teleported = teleport(player, lastLoc);
@@ -2489,7 +2490,7 @@ public class ResidencePlayerListener implements Listener {
                     }
 
                     if (!teleported) {
-                        Location newLoc = res.getOutsideFreeLoc(loc, player);
+                        Location newLoc = res.getOutsideFreeLoc(loc, player, true);
                         player.closeInventory();
                         teleported = teleport(player, newLoc);
                     }
@@ -2537,7 +2538,7 @@ public class ResidencePlayerListener implements Listener {
                         if (lastLoc != null)
                             teleported = teleport(player, lastLoc);
                         else
-                            teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
+                            teleported = teleport(player, res.getOutsideFreeLoc(loc, player, true));
 
                         plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
                         return teleported;
@@ -2552,7 +2553,6 @@ public class ResidencePlayerListener implements Listener {
                 player.setAllowFlight(false);
             }
         }
-
 
         if (!cantMove) {
             lastOutsideLoc.put(uuid, loc);
@@ -2569,7 +2569,7 @@ public class ResidencePlayerListener implements Listener {
                     Long last = lastUpdate.get(player.getUniqueId());
                     // Fail safe in case we are triggering teleportation event check with this teleportation, we should teleport player outside residence instead of its repeating teleportation to avoid stack overflow 
                     if (last != null && System.currentTimeMillis() - last < 45L) {
-                        teleport(player, res.getOutsideFreeLoc(loc, player));
+                        teleport(player, res.getOutsideFreeLoc(loc, player, true));
                     } else {
                         this.lastUpdate.put(player.getUniqueId(), System.currentTimeMillis());
 
@@ -2586,7 +2586,7 @@ public class ResidencePlayerListener implements Listener {
                         teleport(player, lastLoc);
                     }
                 } else {
-                    teleport(player, res.getOutsideFreeLoc(loc, player));
+                    teleport(player, res.getOutsideFreeLoc(loc, player, true));
                 }
                 return false;
             } else {
