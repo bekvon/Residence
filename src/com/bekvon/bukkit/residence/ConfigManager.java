@@ -1286,17 +1286,17 @@ public class ConfigManager {
         c.addComment("Global.Visualizer.updateInterval", "How often in ticks to update particles for player");
         VisualizerUpdateInterval = c.get("Global.Visualizer.updateInterval", 20);
         c.addComment("Global.Visualizer.RowSpacing", "Spacing in blocks between particle effects for rows");
-        VisualizerRowSpacing = c.get("Global.Visualizer.RowSpacing", 2);
+        VisualizerRowSpacing = c.get("Global.Visualizer.RowSpacing", 1);
         if (VisualizerRowSpacing < 1)
             VisualizerRowSpacing = 1;
         c.addComment("Global.Visualizer.CollumnSpacing", "Spacing in blocks between particle effects for collums");
-        VisualizerCollumnSpacing = c.get("Global.Visualizer.CollumnSpacing", 2);
+        VisualizerCollumnSpacing = c.get("Global.Visualizer.CollumnSpacing", 1);
         if (VisualizerCollumnSpacing < 1)
             VisualizerCollumnSpacing = 1;
 
         c.addComment("Global.Visualizer.SkipBy", "Defines by how many particles we need to skip", "This will create moving particle effect and will improve overall look of selection",
             "By increasing this number, you can decrease update interval");
-        VisualizerSkipBy = c.get("Global.Visualizer.SkipBy", 5);
+        VisualizerSkipBy = c.get("Global.Visualizer.SkipBy", 2);
         if (VisualizerSkipBy < 1)
             VisualizerSkipBy = 1;
 
@@ -1476,7 +1476,7 @@ public class ConfigManager {
         Pl3xMapFillForSale = argb(CMINumber.clamp((int) (Pl3xMapFillOpacity * 255), 0, 255), processColor(c.get("Pl3xMap.Fill.ForSale", "#0066ff")));
 
         CMIDebug.d(Pl3xFillColor, Pl3xMapFillForRent, Pl3xMapFillRented, Pl3xMapFillForSale);
-        
+
         c.addComment("Pl3xMap.VisibleRegions", "Shows only regions on this list");
         Pl3xMapVisibleRegions = c.get("Pl3xMap.VisibleRegions", new ArrayList<String>());
         c.addComment("Pl3xMap.HiddenRegions", "Hides region on map even if its not hidden in game");
