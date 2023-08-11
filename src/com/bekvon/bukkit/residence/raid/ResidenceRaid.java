@@ -21,6 +21,9 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.BossBar.BossBarInfo;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
+import net.Zrips.CMILib.Version.Schedulers.CMITask;
+import net.Zrips.CMILib.Version.Teleporters.CMITeleporter;
 
 public class ResidenceRaid {
 
@@ -32,32 +35,32 @@ public class ResidenceRaid {
     private HashMap<UUID, RaidAttacker> attackers = new HashMap<UUID, RaidAttacker>();
     private HashMap<UUID, RaidDefender> defenders = new HashMap<UUID, RaidDefender>();
 
-    private int schedRaidEndId = -1;
-    private int shedRaidStartId = -1;
-    private int schedBossBarId = -1;
+    private CMITask schedRaidEndId = null;
+    private CMITask shedRaidStartId = null;
+    private CMITask schedBossBarId = null;
 
     public ResidenceRaid(ClaimedResidence res) {
-	this.res = res;
+        this.res = res;
     }
 
     public boolean onSameTeam(Player player1, Player player2) {
-	return attackers.containsKey(player1.getUniqueId()) && attackers.containsKey(player2.getUniqueId()) || defenders.containsKey(player1.getUniqueId()) && defenders.containsKey(player2.getUniqueId());
+        return attackers.containsKey(player1.getUniqueId()) && attackers.containsKey(player2.getUniqueId()) || defenders.containsKey(player1.getUniqueId()) && defenders.containsKey(player2.getUniqueId());
     }
 
     public Long getEndsAt() {
-	return endsAt;
+        return endsAt;
     }
 
     public Long getCooldownEnd() {
-	return endsAt + (ConfigManager.RaidCooldown * 1000);
+        return endsAt + (ConfigManager.RaidCooldown * 1000);
     }
 
     public void setEndsAt(Long endsAt) {
-	this.endsAt = endsAt;
+        this.endsAt = endsAt;
     }
 
     public boolean isEnded() {
-	return getEndsAt() < System.currentTimeMillis();
+        return getEndsAt() < System.currentTimeMillis();
     }
 //    public Long getLastSiegeEnded() {
 //	return lastSiegeEnded;
@@ -68,93 +71,93 @@ public class ResidenceRaid {
 //    }
 
     public ClaimedResidence getRes() {
-	return res;
+        return res;
     }
 
     public HashMap<UUID, RaidDefender> getDefenders() {
-	return defenders;
+        return defenders;
     }
 
     public void addDefender(Player defender) {
-	addDefender(Residence.getInstance().getPlayerManager().getResidencePlayer(defender));
+        addDefender(Residence.getInstance().getPlayerManager().getResidencePlayer(defender));
     }
 
     public void addDefender(ResidencePlayer defender) {
-	this.attackers.remove(defender.getUniqueId());
-	this.defenders.put(defender.getUniqueId(), new RaidDefender(defender));
-	defender.setJoinedRaid(this);
+        this.attackers.remove(defender.getUniqueId());
+        this.defenders.put(defender.getUniqueId(), new RaidDefender(defender));
+        defender.setJoinedRaid(this);
     }
 
     public boolean isDefender(Player player) {
-	return isDefender(player.getUniqueId());
+        return isDefender(player.getUniqueId());
     }
 
     public boolean isDefender(UUID uuid) {
-	return defenders.containsKey(uuid);
+        return defenders.containsKey(uuid);
     }
 
     public void removeDefender(Player defender) {
-	removeDefender(Residence.getInstance().getPlayerManager().getResidencePlayer(defender));
+        removeDefender(Residence.getInstance().getPlayerManager().getResidencePlayer(defender));
     }
 
     public void removeDefender(ResidencePlayer defender) {
-	this.defenders.remove(defender.getUniqueId());
-	defender.setJoinedRaid(null);
+        this.defenders.remove(defender.getUniqueId());
+        defender.setJoinedRaid(null);
     }
 
     public boolean isAttacker(Player player) {
-	return isAttacker(player.getUniqueId());
+        return isAttacker(player.getUniqueId());
     }
 
     public boolean isAttacker(UUID uuid) {
-	return attackers.containsKey(uuid);
+        return attackers.containsKey(uuid);
     }
 
     public HashMap<UUID, RaidAttacker> getAttackers() {
-	return attackers;
+        return attackers;
     }
 
     public void clearAttackers() {
-	for (Entry<UUID, RaidAttacker> one : this.attackers.entrySet()) {
-	    one.getValue().getPlayer().setJoinedRaid(null);
-	}
-	this.attackers.clear();
+        for (Entry<UUID, RaidAttacker> one : this.attackers.entrySet()) {
+            one.getValue().getPlayer().setJoinedRaid(null);
+        }
+        this.attackers.clear();
     }
 
     public void clearDefenders() {
-	for (Entry<UUID, RaidDefender> one : this.defenders.entrySet()) {
-	    one.getValue().getPlayer().setJoinedRaid(null);
-	}
-	this.defenders.clear();
+        for (Entry<UUID, RaidDefender> one : this.defenders.entrySet()) {
+            one.getValue().getPlayer().setJoinedRaid(null);
+        }
+        this.defenders.clear();
     }
 
     public void addAttacker(Player attacker) {
-	addAttacker(Residence.getInstance().getPlayerManager().getResidencePlayer(attacker));
+        addAttacker(Residence.getInstance().getPlayerManager().getResidencePlayer(attacker));
     }
 
     public void addAttacker(ResidencePlayer attacker) {
-	this.defenders.remove(attacker.getUniqueId());
-	this.attackers.put(attacker.getUniqueId(), new RaidAttacker(attacker));
+        this.defenders.remove(attacker.getUniqueId());
+        this.attackers.put(attacker.getUniqueId(), new RaidAttacker(attacker));
 
-	attacker.setJoinedRaid(this);
+        attacker.setJoinedRaid(this);
     }
 
     public void removeAttacker(Player attacker) {
-	this.attackers.remove(attacker.getUniqueId());
-	removeAttacker(Residence.getInstance().getPlayerManager().getResidencePlayer(attacker));
+        this.attackers.remove(attacker.getUniqueId());
+        removeAttacker(Residence.getInstance().getPlayerManager().getResidencePlayer(attacker));
     }
 
     public void removeAttacker(ResidencePlayer attacker) {
-	attacker.setJoinedRaid(null);
-	this.attackers.remove(attacker.getUniqueId());
+        attacker.setJoinedRaid(null);
+        this.attackers.remove(attacker.getUniqueId());
     }
 
     public Long getStartsAt() {
-	return startsAt;
+        return startsAt;
     }
 
     public void setStartsAt(Long startsAt) {
-	this.startsAt = startsAt;
+        this.startsAt = startsAt;
     }
 
     public static final String bossBarPreRaidIdent = "ResidencePreRaid";
@@ -162,243 +165,233 @@ public class ResidenceRaid {
 
     public void showBossBar() {
 
-	if (isUnderRaid()) {
-	    for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
-		ResidencePlayer rPlayer = one.getValue().getPlayer();
-		if (rPlayer.isOnline())
-		    showBossbar(rPlayer, BarColor.BLUE, lm.Raid_EndsIn);
-	    }
-	    for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
-		ResidencePlayer rOwner = one.getValue().getPlayer();
-		if (rOwner.isOnline())
-		    showBossbar(rOwner, BarColor.BLUE, lm.Raid_EndsIn);
-	    }
-	} else if (isInPreRaid()) {
-	    for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
-		ResidencePlayer rPlayer = one.getValue().getPlayer();
-		if (rPlayer.isOnline())
-		    showBossbar(rPlayer, BarColor.GREEN, lm.Raid_StartsIn);
-	    }
-	    for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
-		ResidencePlayer rOwner = one.getValue().getPlayer();
-		if (rOwner.isOnline())
-		    showBossbar(rOwner, BarColor.GREEN, lm.Raid_StartsIn);
-	    }
-	}
+        if (isUnderRaid()) {
+            for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
+                ResidencePlayer rPlayer = one.getValue().getPlayer();
+                if (rPlayer.isOnline())
+                    showBossbar(rPlayer, BarColor.BLUE, lm.Raid_EndsIn);
+            }
+            for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
+                ResidencePlayer rOwner = one.getValue().getPlayer();
+                if (rOwner.isOnline())
+                    showBossbar(rOwner, BarColor.BLUE, lm.Raid_EndsIn);
+            }
+        } else if (isInPreRaid()) {
+            for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
+                ResidencePlayer rPlayer = one.getValue().getPlayer();
+                if (rPlayer.isOnline())
+                    showBossbar(rPlayer, BarColor.GREEN, lm.Raid_StartsIn);
+            }
+            for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
+                ResidencePlayer rOwner = one.getValue().getPlayer();
+                if (rOwner.isOnline())
+                    showBossbar(rOwner, BarColor.GREEN, lm.Raid_StartsIn);
+            }
+        }
     }
 
     private void showBossbar(ResidencePlayer rPlayer, BarColor color, lm msg) {
-	BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(rPlayer.getPlayer(), isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent);
-	if (barInfo == null) {
-	    barInfo = new BossBarInfo(rPlayer.getPlayer(), isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent) {
-		@Override
-		public void updateCycle() {
-		    setTitleOfBar(Residence.getInstance().msg(msg, getDefenders().size(), getAttackers().size()));
-		}
-	    };
-	    Double secLeft = ((isUnderRaid() ? getEndsAt() : getStartsAt()) - System.currentTimeMillis()) / 1000D;
-	    barInfo.setKeepForTicks(22);
-	    barInfo.setColor(color);
-	    barInfo.setTitleOfBar(Residence.getInstance().msg(msg, getDefenders().size(), getAttackers().size()));
-	    barInfo.setAdjustPerc(-(1D / secLeft));
-	    barInfo.setPercentage(secLeft, secLeft);
-	    barInfo.setStyle(BarStyle.SEGMENTED_20);
-	    barInfo.setAuto(20);
+        BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(rPlayer.getPlayer(), isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent);
+        if (barInfo == null) {
+            barInfo = new BossBarInfo(rPlayer.getPlayer(), isUnderRaid() ? bossBarRaidIdent : bossBarPreRaidIdent) {
+                @Override
+                public void updateCycle() {
+                    setTitleOfBar(Residence.getInstance().msg(msg, getDefenders().size(), getAttackers().size()));
+                }
+            };
+            Double secLeft = ((isUnderRaid() ? getEndsAt() : getStartsAt()) - System.currentTimeMillis()) / 1000D;
+            barInfo.setKeepForTicks(22);
+            barInfo.setColor(color);
+            barInfo.setTitleOfBar(Residence.getInstance().msg(msg, getDefenders().size(), getAttackers().size()));
+            barInfo.setAdjustPerc(-(1D / secLeft));
+            barInfo.setPercentage(secLeft, secLeft);
+            barInfo.setStyle(BarStyle.SEGMENTED_20);
+            barInfo.setAuto(20);
 
-	    CMILib.getInstance().getBossBarManager().addBossBar(rPlayer.getPlayer(), barInfo);
-	}
+            CMILib.getInstance().getBossBarManager().addBossBar(rPlayer.getPlayer(), barInfo);
+        }
     }
 
     public void endRaid() {
-	setEndsAt(System.currentTimeMillis());
+        setEndsAt(System.currentTimeMillis());
 
-	if (this.schedRaidEndId > 0) {
-	    ResidenceRaidEndEvent End = new ResidenceRaidEndEvent(res);
-	    Bukkit.getPluginManager().callEvent(End);
-	    Bukkit.getScheduler().cancelTask(this.schedRaidEndId);
-	    this.schedRaidEndId = -1;
-	}
+        if (this.schedRaidEndId != null) {
+            ResidenceRaidEndEvent End = new ResidenceRaidEndEvent(res);
+            Bukkit.getPluginManager().callEvent(End);
+            schedRaidEndId.cancel();
+            schedRaidEndId = null;
+        }
 
-	if (this.shedRaidStartId > 0) {
-	    Bukkit.getScheduler().cancelTask(this.shedRaidStartId);
-	    this.shedRaidStartId = -1;
-	}
+        if (this.shedRaidStartId != null) {
+            shedRaidStartId.cancel();
+            schedRaidEndId = null;
+        }
 
-	if (this.schedBossBarId > 0) {
-	    Bukkit.getScheduler().cancelTask(this.schedBossBarId);
-	    this.schedBossBarId = -1;
-	}
+        if (this.schedBossBarId != null) {
+            schedBossBarId.cancel();
+            schedRaidEndId = null;
+        }
 
-	setStartsAt(0L);
+        setStartsAt(0L);
 
-	for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
-	    Player player = Bukkit.getPlayer(one.getKey());
-	    if (player == null)
-		continue;
-	    Residence.getInstance().msg(player, lm.Raid_Ended, res.getName());
-	    Location outside = res.getOutsideFreeLoc(player.getLocation(), player, true);
-	    if (outside != null)
-		player.teleport(outside);
-	}
+        for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
+            Player player = Bukkit.getPlayer(one.getKey());
+            if (player == null)
+                continue;
+            Residence.getInstance().msg(player, lm.Raid_Ended, res.getName());
+            Location outside = res.getOutsideFreeLoc(player.getLocation(), player, true);
+            if (outside != null)
+                CMITeleporter.teleportAsync(player, outside);
+        }
 
-	for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
-	    ResidencePlayer RPlayer = one.getValue().getPlayer();
-	    if (RPlayer != null) {
-		RPlayer.setLastRaidAttackTimer(System.currentTimeMillis());
-		BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarRaidIdent);
-		if (barInfo != null) {
-		    barInfo.cancelAutoScheduler();
-		    barInfo.remove();
-		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
-		}
-		barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarPreRaidIdent);
-		if (barInfo != null) {
-		    barInfo.cancelAutoScheduler();
-		    barInfo.remove();
-		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
-		}
-	    }
-	}
+        for (Entry<UUID, RaidAttacker> one : getAttackers().entrySet()) {
+            ResidencePlayer RPlayer = one.getValue().getPlayer();
+            if (RPlayer != null) {
+                RPlayer.setLastRaidAttackTimer(System.currentTimeMillis());
+                BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarRaidIdent);
+                if (barInfo != null) {
+                    barInfo.cancelAutoScheduler();
+                    barInfo.remove();
+                    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
+                }
+                barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarPreRaidIdent);
+                if (barInfo != null) {
+                    barInfo.cancelAutoScheduler();
+                    barInfo.remove();
+                    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
+                }
+            }
+        }
 
-	for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
-	    ResidencePlayer RPlayer = one.getValue().getPlayer();
-	    if (RPlayer != null) {
-		BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarRaidIdent);
-		if (barInfo != null) {
-		    barInfo.cancelAutoScheduler();
-		    barInfo.remove();
-		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
-		}
-		barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarPreRaidIdent);
-		if (barInfo != null) {
-		    barInfo.cancelAutoScheduler();
-		    barInfo.remove();
-		    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
-		}
-	    }
-	}
+        for (Entry<UUID, RaidDefender> one : getDefenders().entrySet()) {
+            ResidencePlayer RPlayer = one.getValue().getPlayer();
+            if (RPlayer != null) {
+                BossBarInfo barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarRaidIdent);
+                if (barInfo != null) {
+                    barInfo.cancelAutoScheduler();
+                    barInfo.remove();
+                    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
+                }
+                barInfo = CMILib.getInstance().getBossBarManager().getBossBar(RPlayer.getPlayer(), ResidenceRaid.bossBarPreRaidIdent);
+                if (barInfo != null) {
+                    barInfo.cancelAutoScheduler();
+                    barInfo.remove();
+                    CMILib.getInstance().getBossBarManager().removeBossBar(RPlayer.getPlayer(), barInfo);
+                }
+            }
+        }
 
-	res.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
+        res.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
 
-	clearAttackers();
-	clearDefenders();
+        clearAttackers();
+        clearDefenders();
 
     }
 
     public boolean isImmune() {
-	return immunityUntil == null ? false : immunityUntil > System.currentTimeMillis();
+        return immunityUntil == null ? false : immunityUntil > System.currentTimeMillis();
     }
 
     public Long getPlayerImmunityUntil() {
-	ResidencePlayer rplayer = this.res.getRPlayer();
-	if (rplayer == null)
-	    return 0L;
-	return rplayer.getLastRaidDefendTimer() == null ? 0L : rplayer.getLastRaidDefendTimer() + (ConfigManager.RaidPlayerCooldown * 1000L);
+        ResidencePlayer rplayer = this.res.getRPlayer();
+        if (rplayer == null)
+            return 0L;
+        return rplayer.getLastRaidDefendTimer() == null ? 0L : rplayer.getLastRaidDefendTimer() + (ConfigManager.RaidPlayerCooldown * 1000L);
     }
 
     public boolean isPlayerImmune() {
-	return getPlayerImmunityUntil() > System.currentTimeMillis();
+        return getPlayerImmunityUntil() > System.currentTimeMillis();
     }
 
     public Long getImmunityUntil() {
-	return immunityUntil;
+        return immunityUntil;
     }
 
     public void setImmunityUntil(Long immunityUntil) {
-	if (immunityUntil != null && immunityUntil > System.currentTimeMillis())
-	    this.immunityUntil = immunityUntil;
-	else
-	    this.immunityUntil = null;
+        if (immunityUntil != null && immunityUntil > System.currentTimeMillis())
+            this.immunityUntil = immunityUntil;
+        else
+            this.immunityUntil = null;
     }
 
     public boolean preStartRaid(Player attacker) {
 
-	if (isUnderRaid() || this.isInPreRaid())
-	    return false;
+        if (isUnderRaid() || this.isInPreRaid())
+            return false;
 
-	if (getCooldownEnd() > System.currentTimeMillis())
-	    return false;
+        if (getCooldownEnd() > System.currentTimeMillis())
+            return false;
 
-	if (attacker != null)
-	    addAttacker(attacker);
-	addDefender(res.getRPlayer().getPlayer());
-	setStartsAt(System.currentTimeMillis() + (ConfigManager.PreRaidTimer * 1000));
-	setEndsAt(getStartsAt() + (ConfigManager.RaidTimer * 1000));
+        if (attacker != null)
+            addAttacker(attacker);
+        addDefender(res.getRPlayer().getPlayer());
+        setStartsAt(System.currentTimeMillis() + (ConfigManager.PreRaidTimer * 1000));
+        setEndsAt(getStartsAt() + (ConfigManager.RaidTimer * 1000));
 
-	ResidenceRaidPreStartEvent start = new ResidenceRaidPreStartEvent(res, getAttackers());
+        ResidenceRaidPreStartEvent start = new ResidenceRaidPreStartEvent(res, getAttackers());
 
-	Bukkit.getPluginManager().callEvent(start);
-	if (start.isCancelled())
-	    return false;
+        Bukkit.getPluginManager().callEvent(start);
+        if (start.isCancelled())
+            return false;
 
-	if (attacker != null)
-	    Residence.getInstance().getPlayerManager().getResidencePlayer(attacker).setLastRaidAttackTimer(System.currentTimeMillis());
-	res.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
-	setImmunityUntil(ConfigManager.RaidCooldown * 1000L);
+        if (attacker != null)
+            Residence.getInstance().getPlayerManager().getResidencePlayer(attacker).setLastRaidAttackTimer(System.currentTimeMillis());
+        res.getRPlayer().setLastRaidDefendTimer(System.currentTimeMillis());
+        setImmunityUntil(ConfigManager.RaidCooldown * 1000L);
 
-	return true;
+        return true;
     }
 
     public boolean startRaid() {
 
-	if (!isUnderRaid() && !this.isInPreRaid())
-	    return false;
+        if (!isUnderRaid() && !this.isInPreRaid())
+            return false;
 
-	ResidenceRaidStartEvent start = new ResidenceRaidStartEvent(res, getAttackers());
-	this.shedRaidStartId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), new Runnable() {
-	    @Override
-	    public void run() {
-		Bukkit.getPluginManager().callEvent(start);
-		if (start.isCancelled())
-		    start.getRes().getRaid().endRaid();
-	    }
-	}, ((getStartsAt() - System.currentTimeMillis()) / 50));
+        ResidenceRaidStartEvent start = new ResidenceRaidStartEvent(res, getAttackers());
+        this.shedRaidStartId = CMIScheduler.runTaskLater(() -> {
+            Bukkit.getPluginManager().callEvent(start);
+            if (start.isCancelled())
+                start.getRes().getRaid().endRaid();
+        }, ((getStartsAt() - System.currentTimeMillis()) / 50));
 
-	schedBossBarId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Residence.getInstance(), new Runnable() {
-	    @Override
-	    public void run() {
-		if (!isUnderRaid() && !isInPreRaid()) {
-		    Bukkit.getServer().getScheduler().cancelTask(schedBossBarId);
-		    return;
-		}
-		showBossBar();
-	    }
-	}, this.isUnderRaid() ? 20L : 0L, 20L);
+        schedBossBarId = CMIScheduler.scheduleSyncRepeatingTask(() -> {
+            if (!isUnderRaid() && !isInPreRaid()) {
+                schedBossBarId.cancel();
+                return;
+            }
+            showBossBar();
 
-	this.schedRaidEndId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), new Runnable() {
-	    @Override
-	    public void run() {
-		endRaid();
-	    }
-	}, ((getEndsAt() - System.currentTimeMillis()) / 50));
+        }, this.isUnderRaid() ? 20L : 0L, 20L);
 
-	return true;
+        this.schedRaidEndId = CMIScheduler.runTaskLater(() -> endRaid(), ((getEndsAt() - System.currentTimeMillis()) / 50));
+
+        return true;
     }
 
     public boolean isUnderRaid() {
-	return getEndsAt() > System.currentTimeMillis()
-	    && getStartsAt() < System.currentTimeMillis();
+        return getEndsAt() > System.currentTimeMillis()
+            && getStartsAt() < System.currentTimeMillis();
     }
 
     public boolean isRaidInitialized() {
-	if (isUnderRaid() || isInPreRaid())
-	    return true;
-	if (res.getParent() != null)
-	    return res.getParent().getRaid().isRaidInitialized();
-	return false;
+        if (isUnderRaid() || isInPreRaid())
+            return true;
+        if (res.getParent() != null)
+            return res.getParent().getRaid().isRaidInitialized();
+        return false;
     }
 
     public boolean isInPreRaid() {
-	return getEndsAt() > System.currentTimeMillis()
-	    && getStartsAt() > System.currentTimeMillis();
+        return getEndsAt() > System.currentTimeMillis()
+            && getStartsAt() > System.currentTimeMillis();
     }
 
     public boolean canRaid() {
-	return !isUnderRaid() && getCooldownEnd() < System.currentTimeMillis();
+        return !isUnderRaid() && getCooldownEnd() < System.currentTimeMillis();
     }
 
     public boolean isUnderRaidCooldown() {
-	return getCooldownEnd() > System.currentTimeMillis();
+        return getCooldownEnd() > System.currentTimeMillis();
     }
 
 }

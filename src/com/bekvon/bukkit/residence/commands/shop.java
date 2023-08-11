@@ -284,7 +284,7 @@ public class shop implements cmd {
             plugin.getShopSignUtilManager().addBoard(newTemp);
             plugin.msg(player, lm.Shop_NewBoard);
 
-            plugin.getShopSignUtilManager().BoardUpdate();
+            plugin.getShopSignUtilManager().boardUpdate();
             plugin.getShopSignUtilManager().saveSigns();
 
             return true;
@@ -402,7 +402,7 @@ public class shop implements cmd {
                     plugin.msg(player, lm.Shop_Voted, vote, resName);
             }
             plugin.getShopSignUtilManager().saveShopVotes();
-            plugin.getShopSignUtilManager().BoardUpdate();
+            plugin.getShopSignUtilManager().boardUpdate();
             return true;
         }
         return false;

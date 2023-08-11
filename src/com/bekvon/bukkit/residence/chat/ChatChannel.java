@@ -8,6 +8,8 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -41,7 +43,7 @@ public class ChatChannel {
     }
 
     public void chat(String sourcePlayer, String message) {
-	Bukkit.getScheduler().runTask(Residence.getInstance(), () -> {
+        CMIScheduler.runTask(() -> {
 	    Server serv = Residence.getInstance().getServ();
 	    ResidenceChatEvent cevent = new ResidenceChatEvent(Residence.getInstance().getResidenceManager().getByName(channelName), serv.getPlayer(sourcePlayer), this.ChatPrefix, message,
 		this.ChannelColor);

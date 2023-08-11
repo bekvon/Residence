@@ -15,6 +15,8 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,6 +66,9 @@ import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
+import net.Zrips.CMILib.Version.Version;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
+import net.Zrips.CMILib.Version.Teleporters.CMITeleporter;
 
 public class ClaimedResidence {
 
@@ -1498,14 +1503,11 @@ public class ClaimedResidence {
     public void TpTimer(final Player player, final int t) {
         CMITitleMessage.send(player, Residence.getInstance().msg(lm.General_TeleportTitle),
             Residence.getInstance().msg(lm.General_TeleportTitleTime, t));
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if (!Residence.getInstance().getTeleportDelayMap().contains(player.getName()))
-                    return;
-                if (t > 1)
-                    TpTimer(player, t - 1);
-            }
+        CMIScheduler.runTaskLater(() -> {
+            if (!Residence.getInstance().getTeleportDelayMap().contains(player.getName()))
+                return;
+            if (t > 1)
+                TpTimer(player, t - 1);
         }, 20L);
     }
 
@@ -1516,24 +1518,20 @@ public class ClaimedResidence {
         if (tpevent.isCancelled())
             return;
 
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if (targloc == null || targetPlayer == null || !targetPlayer.isOnline())
-                    return;
-                if (!Residence.getInstance().getTeleportDelayMap().contains(targetPlayer.getName())
-                    && Residence.getInstance().getConfigManager().getTeleportDelay() > 0)
-                    return;
-                else if (Residence.getInstance().getTeleportDelayMap().contains(targetPlayer.getName()))
-                    Residence.getInstance().getTeleportDelayMap().remove(targetPlayer.getName());
-                targetPlayer.closeInventory();
-                targetPlayer.teleport(targloc);
-                if (near)
-                    Residence.getInstance().msg(targetPlayer, lm.Residence_TeleportNear);
-                else
-                    Residence.getInstance().msg(targetPlayer, lm.General_TeleportSuccess);
+        CMIScheduler.runAtLocationLater(targloc, () -> {
+            if (targloc == null || targetPlayer == null || !targetPlayer.isOnline())
                 return;
-            }
+            if (!Residence.getInstance().getTeleportDelayMap().contains(targetPlayer.getName())
+                && Residence.getInstance().getConfigManager().getTeleportDelay() > 0)
+                return;
+            else if (Residence.getInstance().getTeleportDelayMap().contains(targetPlayer.getName()))
+                Residence.getInstance().getTeleportDelayMap().remove(targetPlayer.getName());
+            targetPlayer.closeInventory();
+            CMITeleporter.teleportAsync(targetPlayer, targloc);
+            if (near)
+                Residence.getInstance().msg(targetPlayer, lm.Residence_TeleportNear);
+            else
+                Residence.getInstance().msg(targetPlayer, lm.General_TeleportSuccess);
         }, Residence.getInstance().getConfigManager().getTeleportDelay() * 20L);
     }
 
@@ -1549,14 +1547,29 @@ public class ClaimedResidence {
             } catch (Throwable e) {
             }
 
-            boolean teleported = targetPlayer.teleport(targloc);
+            if (Version.isFolia()) {
 
-            if (teleported) {
-                if (near)
-                    Residence.getInstance().msg(targetPlayer, lm.Residence_TeleportNear);
-                else
-                    Residence.getInstance().msg(targetPlayer, lm.General_TeleportSuccess);
+                CompletableFuture<Boolean> future = CMITeleporter.teleportAsync(targetPlayer, targloc);
+                future.thenAccept(result -> {
+                    if (result) {
+                        if (near)
+                            Residence.getInstance().msg(targetPlayer, lm.Residence_TeleportNear);
+                        else
+                            Residence.getInstance().msg(targetPlayer, lm.General_TeleportSuccess);
+                    }
+                });
+
+            } else {
+                boolean teleported = targetPlayer.teleport(targloc);
+
+                if (teleported) {
+                    if (near)
+                        Residence.getInstance().msg(targetPlayer, lm.Residence_TeleportNear);
+                    else
+                        Residence.getInstance().msg(targetPlayer, lm.General_TeleportSuccess);
+                }
             }
+
         }
     }
 
@@ -2235,7 +2248,12 @@ public class ClaimedResidence {
         Location loc = Residence.getInstance().getConfigManager().getKickLocation();
         player.closeInventory();
         if (loc != null) {
-            return player.teleport(loc);
+            try {
+                return CMITeleporter.teleport(player, loc);
+            } catch (Throwable e) {
+                e.printStackTrace();
+                return false;
+            }
         }
 
         loc = getOutsideFreeLoc(player.getLocation(), player, true);
@@ -2243,7 +2261,12 @@ public class ClaimedResidence {
         if (loc == null)
             return false;
 
-        return player.teleport(loc);
+        try {
+            return CMITeleporter.teleport(player, loc);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 //    public Town getTown() {
 //	return town;

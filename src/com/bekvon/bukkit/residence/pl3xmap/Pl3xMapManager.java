@@ -20,6 +20,8 @@ import com.bekvon.bukkit.residence.utils.GetTime;
 
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Messages.CMIMessages;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
+import net.Zrips.CMILib.Version.Schedulers.CMITask;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.layer.Layer;
@@ -38,7 +40,7 @@ public class Pl3xMapManager {
 
     public Pl3xMap api;
 
-    private int schedId = -1;
+    private CMITask scheduler = null;
     HashMap<String, SimpleLayer> providers = new HashMap<String, SimpleLayer>();
 
     public Pl3xMapManager(Residence plugin) {
@@ -51,18 +53,10 @@ public class Pl3xMapManager {
         if (res == null)
             return;
 
-        if (schedId != -1)
-            Bukkit.getServer().getScheduler().cancelTask(schedId);
+        if (scheduler != null)
+            scheduler.cancel();
 
-        schedId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-            @Override
-            public void run() {
-                schedId = -1;
-
-                handleResidenceAdd(res.getName(), res, deep);
-                return;
-            }
-        }, 10L);
+        scheduler = CMIScheduler.runTaskLater(() -> handleResidenceAdd(res.getName(), res, deep), 10L);
     }
 
     public void fireUpdateRemove(final ClaimedResidence res, final int deep) {

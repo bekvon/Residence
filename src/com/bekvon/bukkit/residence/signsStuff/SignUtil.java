@@ -25,6 +25,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
+
 import com.bekvon.bukkit.residence.CommentedYamlConfiguration;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
@@ -135,12 +137,7 @@ public class SignUtil {
     }
 
     public void CheckSign(final ClaimedResidence res, int time) {
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-            @Override
-            public void run() {
-                CheckSign(res);
-            }
-        }, time * 1L);
+        CMIScheduler.runTaskLater(() -> CheckSign(res), time * 1L);
     }
 
     public void CheckSign(ClaimedResidence res) {

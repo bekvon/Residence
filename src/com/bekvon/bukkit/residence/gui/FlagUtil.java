@@ -20,6 +20,7 @@ import net.Zrips.CMILib.GUI.GUIManager.GUIRows;
 import net.Zrips.CMILib.Items.CMIAsyncHead;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
 
 public class FlagUtil {
 
@@ -53,9 +54,7 @@ public class FlagUtil {
                 CMIAsyncHead ahead = new CMIAsyncHead() {
                     @Override
                     public void afterAsyncUpdate(ItemStack item) {
-                        Bukkit.getScheduler().runTask(CMI.getInstance(), () -> {
-                            flagData.addFlagButton(oneFlag.toLowerCase(), item);
-                        });
+                        CMIScheduler.runTask(() -> flagData.addFlagButton(oneFlag.toLowerCase(), item));
                     }
                 };
 

@@ -57,6 +57,7 @@ import net.Zrips.CMILib.Container.CMINumber;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Version.Version;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
 
 public class ResidenceManager implements ResidenceInterface {
     protected ConcurrentHashMap<String, ClaimedResidence> residences;
@@ -270,8 +271,6 @@ public class ResidenceManager implements ResidenceInterface {
             plugin.msg(player, lm.Residence_AlreadyExists, residences.get(resName.toLowerCase()).getResidenceName());
             return false;
         }
-        
-        
 
         newRes.BlockSellPrice = group.getSellPerBlock();
 
@@ -605,60 +604,58 @@ public class ResidenceManager implements ResidenceInterface {
             if (Version.isCurrentEqualOrHigher(Version.v1_13_R1) && plugin.getConfigManager().isUseClean() && plugin.getConfigManager().getCleanWorlds().contains(res.getWorld())) {
 
                 CuboidArea[] arr = res.getAreaArray();
-                Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        ChunkSnapshot chunkSnapshot = null;
-                        int chunkX = 0;
-                        int chunkZ = 0;
-                        Set<Location> locations = new HashSet<Location>();
-                        for (CuboidArea area : arr) {
-                            Location low = area.getLowLocation().clone();
-                            Location high = area.getHighLocation().clone();
+                CMIScheduler.runTaskAsynchronously(() -> {
+                    ChunkSnapshot chunkSnapshot = null;
+                    int chunkX = 0;
+                    int chunkZ = 0;
+                    Set<Location> locations = new HashSet<Location>();
+                    for (CuboidArea area : arr) {
+                        Location low = area.getLowLocation().clone();
+                        Location high = area.getHighLocation().clone();
 
-                            if (high.getBlockY() > plugin.getConfigManager().getCleanLevel()) {
+                        if (high.getBlockY() > plugin.getConfigManager().getCleanLevel()) {
 
-                                if (low.getBlockY() < plugin.getConfigManager().getCleanLevel())
-                                    low.setY(plugin.getConfigManager().getCleanLevel());
-                                World world = low.getWorld();
-                                for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
-                                    for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
-                                        int hy = world.getHighestBlockYAt(x, z);
-                                        if (high.getBlockY() < hy)
-                                            hy = high.getBlockY();
+                            if (low.getBlockY() < plugin.getConfigManager().getCleanLevel())
+                                low.setY(plugin.getConfigManager().getCleanLevel());
+                            World world = low.getWorld();
+                            for (int x = low.getBlockX(); x <= high.getBlockX(); x++) {
+                                for (int z = low.getBlockZ(); z <= high.getBlockZ(); z++) {
+                                    int hy = world.getHighestBlockYAt(x, z);
+                                    if (high.getBlockY() < hy)
+                                        hy = high.getBlockY();
 
-                                        int cx = Math.abs(x % 16);
-                                        int cz = Math.abs(z % 16);
-                                        if (chunkSnapshot == null || x >> 4 != chunkX || z >> 4 != chunkZ) {
-                                            if (!world.getBlockAt(x, 0, z).getChunk().isLoaded()) {
-                                                world.getBlockAt(x, 0, z).getChunk().load();
-                                                chunkSnapshot = world.getBlockAt(x, 0, z).getChunk().getChunkSnapshot(false, false, false);
-                                                world.getBlockAt(x, 0, z).getChunk().unload();
-                                            } else {
-                                                chunkSnapshot = world.getBlockAt(x, 0, z).getChunk().getChunkSnapshot();
-                                            }
-                                            chunkX = x >> 4;
-                                            chunkZ = z >> 4;
+                                    int cx = Math.abs(x % 16);
+                                    int cz = Math.abs(z % 16);
+                                    if (chunkSnapshot == null || x >> 4 != chunkX || z >> 4 != chunkZ) {
+                                        if (!world.getBlockAt(x, 0, z).getChunk().isLoaded()) {
+                                            world.getBlockAt(x, 0, z).getChunk().load();
+                                            chunkSnapshot = world.getBlockAt(x, 0, z).getChunk().getChunkSnapshot(false, false, false);
+                                            world.getBlockAt(x, 0, z).getChunk().unload();
+                                        } else {
+                                            chunkSnapshot = world.getBlockAt(x, 0, z).getChunk().getChunkSnapshot();
                                         }
+                                        chunkX = x >> 4;
+                                        chunkZ = z >> 4;
+                                    }
 
-                                        if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
-                                            for (int y = low.getBlockY(); y <= hy; y++) {
-                                                BlockData type = chunkSnapshot.getBlockData(cx, y, cz);
-                                                if (!plugin.getConfigManager().getCleanBlocks().contains(type.getMaterial()))
-                                                    continue;
-                                                locations.add(new Location(world, x, y, z));
-                                            }
+                                    if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+                                        for (int y = low.getBlockY(); y <= hy; y++) {
+                                            BlockData type = chunkSnapshot.getBlockData(cx, y, cz);
+                                            if (!plugin.getConfigManager().getCleanBlocks().contains(type.getMaterial()))
+                                                continue;
+                                            locations.add(new Location(world, x, y, z));
                                         }
                                     }
                                 }
                             }
                         }
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            for (Location one : locations) {
-                                one.getBlock().setType(Material.AIR);
-                            }
-                        });
                     }
+                    CMIScheduler.runTask(() -> {
+                        for (Location one : locations) {
+                            CMIScheduler.runAtLocation(one, () -> one.getBlock().setType(Material.AIR));
+                        }
+                    });
+
                 });
             }
             if (plugin.getConfigManager().isRemoveLwcOnDelete() && plugin.isLwcPresent())

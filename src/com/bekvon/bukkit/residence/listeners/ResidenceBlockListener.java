@@ -70,6 +70,8 @@ import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Version;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
+import net.Zrips.CMILib.Version.Teleporters.CMITeleporter;
 
 public class ResidenceBlockListener implements Listener {
 
@@ -132,10 +134,10 @@ public class ResidenceBlockListener implements Listener {
 
                 e.setCancelled(true);
                 plugin.msg(player, lm.Flag_Deny, result);
-                Bukkit.getScheduler().runTask(plugin, () -> {
+                CMIScheduler.runAtLocation(block.getLocation(), () -> {
                     Location loc = block.getLocation().clone();
                     loc.add(e.getHitBlockFace().getDirection());
-                    e.getEntity().teleport(loc);
+                    CMITeleporter.teleportAsync(e.getEntity(), loc);
                     e.getEntity().setVelocity(e.getEntity().getVelocity().multiply(-1));
                 });
 

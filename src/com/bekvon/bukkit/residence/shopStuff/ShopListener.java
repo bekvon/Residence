@@ -53,7 +53,7 @@ public class ShopListener implements Listener {
 
 	if (Delete.contains(player.getName())) {
 	    Board Found = null;
-	    for (Board one : plugin.getShopSignUtilManager().GetAllBoards()) {
+	    for (Board one : plugin.getShopSignUtilManager().getAllBoards()) {
 		for (Location location : one.GetLocations()) {
 
 		    if (!loc.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()))
@@ -73,7 +73,7 @@ public class ShopListener implements Listener {
 		    break;
 	    }
 	    if (Found != null) {
-		plugin.getShopSignUtilManager().GetAllBoards().remove(Found);
+		plugin.getShopSignUtilManager().getAllBoards().remove(Found);
 		plugin.getShopSignUtilManager().saveSigns();
 		plugin.msg(player, lm.Shop_DeletedBoard);
 	    } else {
@@ -84,7 +84,7 @@ public class ShopListener implements Listener {
 	}
 
 	String resName = null;
-	for (Board one : plugin.getShopSignUtilManager().GetAllBoards()) {
+	for (Board one : plugin.getShopSignUtilManager().getAllBoards()) {
 	    resName = one.getResNameByLoc(loc);
 	    if (resName != null)
 		break;
@@ -107,7 +107,7 @@ public class ShopListener implements Listener {
 	case NEITHER:
 	case FALSE:
 	    plugin.getResidenceManager().removeShop(event.getResidence());
-	    plugin.getShopSignUtilManager().BoardUpdate();
+	    plugin.getShopSignUtilManager().boardUpdate();
 	    plugin.getShopSignUtilManager().saveSigns();
 	    break;
 	case INVALID:
@@ -117,7 +117,7 @@ public class ShopListener implements Listener {
 	    event.getResidence().getPermissions().setFlag("tp", FlagState.TRUE);
 	    event.getResidence().getPermissions().setFlag("move", FlagState.TRUE);
 	    event.getResidence().getPermissions().setFlag("pvp", FlagState.FALSE);
-	    plugin.getShopSignUtilManager().BoardUpdate();
+	    plugin.getShopSignUtilManager().boardUpdate();
 	    plugin.getShopSignUtilManager().saveSigns();
 	    break;
 	default:
@@ -131,7 +131,7 @@ public class ShopListener implements Listener {
 	    plugin.getResidenceManager().addShop(event.getResidence());
 	    plugin.getResidenceManager().removeShop(event.getOldResidenceName());
 	    plugin.getShopSignUtilManager().saveShopVotes();
-	    plugin.getShopSignUtilManager().BoardUpdateDelayed();
+	    plugin.getShopSignUtilManager().boardUpdateDelayed();
 	    plugin.getShopSignUtilManager().saveSigns();
 	}
     }
@@ -171,7 +171,7 @@ public class ShopListener implements Listener {
 
 	plugin.getResidenceManager().addShop(event.getResidence().getName());
 
-	plugin.getShopSignUtilManager().BoardUpdate();
+	plugin.getShopSignUtilManager().boardUpdate();
 	plugin.getShopSignUtilManager().saveSigns();
     }
 
@@ -184,7 +184,7 @@ public class ShopListener implements Listener {
 	    return;
 
 	plugin.getResidenceManager().removeShop(event.getResidence());
-	plugin.getShopSignUtilManager().BoardUpdate();
+	plugin.getShopSignUtilManager().boardUpdate();
 	plugin.getShopSignUtilManager().saveSigns();
     }
 }

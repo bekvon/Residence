@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Version.Teleporters.CMITeleporter;
+
 import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
@@ -71,11 +73,11 @@ public class kick implements cmd {
             Location loc = plugin.getConfigManager().getKickLocation();
             targetplayer.closeInventory();
             if (loc != null)
-                targetplayer.teleport(loc);
+                CMITeleporter.teleportAsync(targetplayer, loc);
             else {
                 loc = res.getOutsideFreeLoc(player.getLocation(), player, true);
                 if (loc != null)
-                    targetplayer.teleport(loc);
+                    CMITeleporter.teleportAsync(targetplayer, loc);
             }
             plugin.msg(targetplayer, lm.Residence_Kicked);
         }

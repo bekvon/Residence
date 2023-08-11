@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Version.Teleporters.CMITeleporter;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -39,7 +41,7 @@ public class unstuck implements cmd {
             plugin.msg(player, lm.General_Moved);
             Location loc = res.getOutsideFreeLoc(player.getLocation(), player, true);
             if (loc != null)
-                player.teleport(loc);
+                CMITeleporter.teleportAsync(player, loc);
         }
         return true;
     }

@@ -19,130 +19,131 @@ import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Version.Version;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
 
 public class rt implements cmd {
 
     @Override
     @CommandAnnotation(simple = true, priority = 2500)
     public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
-	if (args.length != 0 && args.length != 1 && args.length != 2) {
-	    return false;
-	}
+        if (args.length != 0 && args.length != 1 && args.length != 2) {
+            return false;
+        }
 
-	if (!resadmin && !ResPerm.randomtp.hasPermission(sender))
-	    return true;
+        if (!resadmin && !ResPerm.randomtp.hasPermission(sender))
+            return true;
 
-	World wname = null;
+        World wname = null;
 
-	Player tPlayer = null;
+        Player tPlayer = null;
 
-	if (args.length > 0) {
-	    c: for (int i = 0; i < args.length; i++) {
-		for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
-		    if (!one.getCenter().getWorld().getName().equalsIgnoreCase(args[i]))
-			continue;
-		    wname = one.getCenter().getWorld();
-		    continue c;
-		}
-		Player p = Bukkit.getPlayer(args[i]);
-		if (p != null)
-		    tPlayer = p;
-	    }
-	}
+        if (args.length > 0) {
+            c: for (int i = 0; i < args.length; i++) {
+                for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
+                    if (!one.getCenter().getWorld().getName().equalsIgnoreCase(args[i]))
+                        continue;
+                    wname = one.getCenter().getWorld();
+                    continue c;
+                }
+                Player p = Bukkit.getPlayer(args[i]);
+                if (p != null)
+                    tPlayer = p;
+            }
+        }
 
-	if (args.length > 0 && wname == null && tPlayer == null) {
-	    plugin.msg(sender, lm.Invalid_World);
-	    String worlds = "";
-	    for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
-		if (!worlds.isEmpty())
-		    worlds += ", ";
-		worlds += one.getCenter().getWorld().getName();
-		break;
-	    }
-	    plugin.msg(sender, lm.RandomTeleport_WorldList, worlds);
-	    return true;
-	}
+        if (args.length > 0 && wname == null && tPlayer == null) {
+            plugin.msg(sender, lm.Invalid_World);
+            String worlds = "";
+            for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
+                if (!worlds.isEmpty())
+                    worlds += ", ";
+                worlds += one.getCenter().getWorld().getName();
+                break;
+            }
+            plugin.msg(sender, lm.RandomTeleport_WorldList, worlds);
+            return true;
+        }
 
-	if (tPlayer == null && sender instanceof Player)
-	    tPlayer = (Player) sender;
+        if (tPlayer == null && sender instanceof Player)
+            tPlayer = (Player) sender;
 
-	if (wname == null && tPlayer != null)
-	    wname = tPlayer.getLocation().getWorld();
+        if (wname == null && tPlayer != null)
+            wname = tPlayer.getLocation().getWorld();
 
-	if (wname == null && tPlayer == null) {
-	    plugin.msg(sender, lm.Invalid_World);
-	    String worlds = "";
-	    for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
-		if (!worlds.isEmpty())
-		    worlds += ", ";
-		worlds += one.getCenter().getWorld().getName();
-		break;
-	    }
-	    plugin.msg(sender, lm.RandomTeleport_WorldList, worlds);
-	    return true;
-	}
+        if (wname == null && tPlayer == null) {
+            plugin.msg(sender, lm.Invalid_World);
+            String worlds = "";
+            for (RandomTeleport one : plugin.getConfigManager().getRandomTeleport()) {
+                if (!worlds.isEmpty())
+                    worlds += ", ";
+                worlds += one.getCenter().getWorld().getName();
+                break;
+            }
+            plugin.msg(sender, lm.RandomTeleport_WorldList, worlds);
+            return true;
+        }
 
-	if (tPlayer == null)
-	    return false;
+        if (tPlayer == null)
+            return false;
 
-	if (!sender.getName().equalsIgnoreCase(tPlayer.getName()) && !ResPerm.randomtp_admin.hasPermission(sender))
-	    return false;
+        if (!sender.getName().equalsIgnoreCase(tPlayer.getName()) && !ResPerm.randomtp_admin.hasPermission(sender))
+            return false;
 
-	int sec = plugin.getConfigManager().getrtCooldown();
-	if (plugin.getRandomTeleportMap().containsKey(tPlayer.getName()) && !resadmin && !ResPerm.randomtp_cooldownbypass.hasPermission(sender, false)) {
-	    if (plugin.getRandomTeleportMap().get(tPlayer.getName()) + (sec * 1000) > System.currentTimeMillis()) {
-		int left = (int) (sec - ((System.currentTimeMillis() - plugin.getRandomTeleportMap().get(tPlayer.getName())) / 1000));
-		plugin.msg(tPlayer, lm.RandomTeleport_TpLimit, left);
-		return true;
-	    }
-	}
-	if (!plugin.getRandomTpManager().isDefinedRnadomTp(wname)) {
-	    plugin.msg(sender, lm.RandomTeleport_Disabled);
-	    return true;
-	}
+        int sec = plugin.getConfigManager().getrtCooldown();
+        if (plugin.getRandomTeleportMap().containsKey(tPlayer.getName()) && !resadmin && !ResPerm.randomtp_cooldownbypass.hasPermission(sender, false)) {
+            if (plugin.getRandomTeleportMap().get(tPlayer.getName()) + (sec * 1000) > System.currentTimeMillis()) {
+                int left = (int) (sec - ((System.currentTimeMillis() - plugin.getRandomTeleportMap().get(tPlayer.getName())) / 1000));
+                plugin.msg(tPlayer, lm.RandomTeleport_TpLimit, left);
+                return true;
+            }
+        }
+        if (!plugin.getRandomTpManager().isDefinedRnadomTp(wname)) {
+            plugin.msg(sender, lm.RandomTeleport_Disabled);
+            return true;
+        }
 
-	World worldName = wname;
-	Player player = tPlayer;
+        World worldName = wname;
+        Player player = tPlayer;
 
-	if (Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
-	    Location lc = plugin.getRandomTpManager().getRandomlocationSync(worldName);
-	    teleport(sender, player, lc, sec, resadmin);
-	} else {
-	    CompletableFuture<Location> aloc = plugin.getRandomTpManager().getRandomlocationAsync(worldName);
-	    aloc.thenApply(lc -> {
-		return teleport(sender, player, lc, sec, resadmin);
-	    });
-	}
+        if (Version.isCurrentEqualOrLower(Version.v1_12_R1)) {
+            Location lc = plugin.getRandomTpManager().getRandomlocationSync(worldName);
+            teleport(sender, player, lc, sec, resadmin);
+        } else {
+            CompletableFuture<Location> aloc = plugin.getRandomTpManager().getRandomlocationAsync(worldName);
+            aloc.thenApply(lc -> {
+                return teleport(sender, player, lc, sec, resadmin);
+            });
+        }
 
-	return true;
+        return true;
     }
 
     private static boolean teleport(CommandSender sender, Player player, Location lc, int sec, boolean resadmin) {
 
-	Residence.getInstance().getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
+        Residence.getInstance().getRandomTeleportMap().put(player.getName(), System.currentTimeMillis());
 
-	if (lc == null) {
-	    Residence.getInstance().msg(sender, lm.RandomTeleport_IncorrectLocation, sec);
-	    return true;
-	}
+        if (lc == null) {
+            Residence.getInstance().msg(sender, lm.RandomTeleport_IncorrectLocation, sec);
+            return true;
+        }
 
-	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Residence.getInstance(), () -> {
-	    if (Residence.getInstance().getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
-		Residence.getInstance().msg(player, lm.RandomTeleport_TeleportStarted, lc.getX(), lc.getY(), lc.getZ(), Residence.getInstance().getConfigManager().getTeleportDelay());
-		Residence.getInstance().getTeleportDelayMap().add(player.getName());
-		Residence.getInstance().getRandomTpManager().performDelaydTp(lc, player);
-	    } else
-		Residence.getInstance().getRandomTpManager().performInstantTp(lc, player);
+        CMIScheduler.runAtLocationLater(lc, () -> {
+            if (Residence.getInstance().getConfigManager().getTeleportDelay() > 0 && !resadmin && !ResPerm.randomtp_delaybypass.hasPermission(sender, false)) {
+                Residence.getInstance().msg(player, lm.RandomTeleport_TeleportStarted, lc.getX(), lc.getY(), lc.getZ(), Residence.getInstance().getConfigManager().getTeleportDelay());
+                Residence.getInstance().getTeleportDelayMap().add(player.getName());
+                Residence.getInstance().getRandomTpManager().performDelaydTp(lc, player);
+            } else
+                Residence.getInstance().getRandomTpManager().performInstantTp(lc, player);
 
-	}, 1);
-	return true;
+        }, 1);
+        return true;
     }
 
     @Override
     public void getLocale() {
-	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
-	c.get("Description", "Teleports to random location in world");
-	c.get("Info", Arrays.asList("&eUsage: &6/res rt (worldname) (playerName)", "Teleports you to random location in defined world."));
-	LocaleManager.addTabCompleteMain(this, "[worldname]", "[playername]");
+        ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+        c.get("Description", "Teleports to random location in world");
+        c.get("Info", Arrays.asList("&eUsage: &6/res rt (worldname) (playerName)", "Teleports you to random location in defined world."));
+        LocaleManager.addTabCompleteMain(this, "[worldname]", "[playername]");
     }
 }
