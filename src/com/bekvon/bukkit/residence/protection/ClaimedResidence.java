@@ -1034,6 +1034,10 @@ public class ClaimedResidence {
     }
 
     public Location getMiddleFreeLoc(Location insideLoc, Player player) {
+        return getMiddleFreeLoc(insideLoc, player, true);
+    }
+
+    public Location getMiddleFreeLoc(Location insideLoc, Player player, boolean toSpawnOnFail) {
         if (insideLoc == null)
             return null;
         CuboidArea area = this.getAreaByLoc(insideLoc);
@@ -1090,12 +1094,19 @@ public class ClaimedResidence {
             }
             return newLoc;
         }
-        return getOutsideFreeLoc(insideLoc, player);
+        return getOutsideFreeLoc(insideLoc, player, toSpawnOnFail);
     }
 
+    @Deprecated
     public Location getOutsideFreeLoc(Location insideLoc, Player player) {
+        return getOutsideFreeLoc(insideLoc, player, true);
+    }
+
+    public Location getOutsideFreeLoc(Location insideLoc, Player player, boolean toSpawnOnFail) {
         CuboidArea area = this.getAreaByLoc(insideLoc);
         if (area == null) {
+            if (!toSpawnOnFail)
+                return null;
             World bw = this.getPermissions().getBukkitWorld();
             return bw != null ? bw.getSpawnLocation() != null ? bw.getSpawnLocation() : player.getWorld().getSpawnLocation() : player.getWorld().getSpawnLocation();
         }
@@ -1178,6 +1189,9 @@ public class ClaimedResidence {
             if (Residence.getInstance().getConfigManager().getKickLocation() != null)
                 return Residence.getInstance().getConfigManager().getKickLocation();
             // Fail safe for kick out location
+
+            if (!toSpawnOnFail)
+                return null;
 
             World bw = this.getPermissions().getBukkitWorld();
 
@@ -1313,7 +1327,12 @@ public class ClaimedResidence {
 //	return getTeleportLocation(null);
 //    }
 
+    @Deprecated
     public Location getTeleportLocation(Player player) {
+        return getTeleportLocation(player, true);
+    }
+
+    public Location getTeleportLocation(Player player, boolean toSpawnOnFail) {
         if (tpLoc == null || this.getMainArea() != null && !this.containsLoc(new Location(this.getMainArea().getWorld(), tpLoc.getX(), tpLoc.getY(), tpLoc.getZ()))) {
 
             if (this.getMainArea() == null)
@@ -1322,7 +1341,7 @@ public class ClaimedResidence {
             Location high = this.getMainArea().getHighLocation();
             Location t = new Location(low.getWorld(), (low.getBlockX() + high.getBlockX()) / 2,
                 (low.getBlockY() + high.getBlockY()) / 2, (low.getBlockZ() + high.getBlockZ()) / 2);
-            tpLoc = this.getMiddleFreeLoc(t, player).toVector();
+            tpLoc = this.getMiddleFreeLoc(t, player, toSpawnOnFail).toVector();
         }
 
         if (tpLoc != null) {
@@ -1452,7 +1471,12 @@ public class ClaimedResidence {
             Residence.getInstance().getTeleportDelayMap().add(reqPlayer.getName());
         }
 
-        Location loc = this.getTeleportLocation(targetPlayer);
+        Location loc = this.getTeleportLocation(targetPlayer, false);
+
+        if (loc == null) {
+            Residence.getInstance().msg(reqPlayer, lm.Invalid_Location);
+            return;
+        }
 
         if (Math.abs(loc.getBlockX()) > 30000000 || Math.abs(loc.getBlockZ()) > 30000000) {
             Residence.getInstance().msg(reqPlayer, lm.Invalid_Area);

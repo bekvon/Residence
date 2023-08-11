@@ -21,6 +21,7 @@ public enum lm {
     Invalid_Boolean("&cInvalid value, must be &6true(t) &cor &6false(f)"),
     Invalid_Area("&cInvalid Area..."),
     Invalid_Group("&cInvalid Group..."),
+    Invalid_Location("&cInvalid Location..."),
     Invalid_MessageType("&cMessage type must be enter or remove."),
     Invalid_Flag("&cInvalid Flag..."),
     Invalid_FlagType_Fail("&cInvalid Flag... This flag can only be used on %1"),
