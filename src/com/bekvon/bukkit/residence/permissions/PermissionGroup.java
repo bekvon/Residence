@@ -408,10 +408,14 @@ public class PermissionGroup {
     }
 
     public String getDefaultEnterMessage() {
+        if (defaultEnterMessage == null)
+            return "";
         return defaultEnterMessage;
     }
 
     public String getDefaultLeaveMessage() {
+        if (defaultLeaveMessage == null)
+            return "";
         return defaultLeaveMessage;
     }
 

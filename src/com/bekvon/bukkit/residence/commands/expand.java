@@ -82,7 +82,7 @@ public class expand implements cmd {
             return true;
         }
 
-        if (amount > 1000) {
+        if (amount > 100) {
             plugin.msg(player, lm.Invalid_Amount);
             return true;
         }
