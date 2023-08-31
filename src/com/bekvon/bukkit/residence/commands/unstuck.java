@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
 import net.Zrips.CMILib.Version.Teleporters.CMITeleporter;
 
+import com.bekvon.bukkit.residence.LocaleManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.CommandAnnotation;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
@@ -51,5 +52,6 @@ public class unstuck implements cmd {
         ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
         c.get("Description", "Teleports outside of residence");
         c.get("Info", Arrays.asList("&eUsage: &6/res unstuck"));
+        LocaleManager.addTabCompleteMain(this);
     }
 }

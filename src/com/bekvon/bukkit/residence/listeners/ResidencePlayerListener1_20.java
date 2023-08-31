@@ -36,13 +36,17 @@ public class ResidencePlayerListener1_20 implements Listener {
         FlagPermissions perms = plugin.getPermsByLocForPlayer(event.getSign().getLocation(), player);
 
         boolean hasuse = perms.playerHas(player, Flags.use, FlagCombo.TrueOrNone);
+        boolean hasBuild = perms.playerHas(player, Flags.build, FlagCombo.TrueOrNone);
 
-        if (hasuse || plugin.isResAdminOn(player))
+        if (hasuse && hasBuild || plugin.isResAdminOn(player))
             return;
 
         event.setCancelled(true);
 
-        plugin.msg(player, lm.Flag_Deny, Flags.use);
+        if (!hasuse)
+            plugin.msg(player, lm.Flag_Deny, Flags.use);
+        else
+            plugin.msg(player, lm.Flag_Deny, Flags.build);
 
     }
 }
