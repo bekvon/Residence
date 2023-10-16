@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -134,6 +135,7 @@ import fr.crafter.tickleman.realeconomy.RealEconomy;
 import fr.crafter.tickleman.realplugin.RealPlugin;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
 import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
@@ -205,7 +207,6 @@ public class Residence extends JavaPlugin {
 
     protected boolean firstenable = true;
     protected EconomyInterface economy;
-    private int saveVersion = 1;
     public File dataFolder;
     protected CMITask leaseBukkitId = null;
     protected CMITask rentBukkitId = null;
@@ -1286,6 +1287,18 @@ public class Residence extends JavaPlugin {
         tmpFlagsFile.renameTo(ymlFlagsSaveLoc);
     }
 
+    private static void saveBackup(File ymlSaveLoc, String worldName, File worldFolder) {
+        if (ymlSaveLoc.isFile()) {
+            File backupFolder = new File(worldFolder, "Backup");
+            backupFolder.mkdirs();
+            File backupFile = new File(backupFolder, "res_" + worldName + ".yml");
+            if (backupFile.isFile()) {
+                backupFile.delete();
+            }
+            ymlSaveLoc.renameTo(backupFile);
+        }
+    }
+
     private void saveYml() throws IOException {
         File saveFolder = new File(dataFolder, "Save");
         File worldFolder = new File(saveFolder, "Worlds");
@@ -1295,14 +1308,23 @@ public class Residence extends JavaPlugin {
         Map<String, Object> save = rmanager.save();
         for (Entry<String, Object> entry : save.entrySet()) {
 
+            boolean emptyRecord = false;
+            // Not saving files without any records in them. Mainly for servers with many small temporary worlds
+            try {
+                emptyRecord = ((LinkedHashMap) entry.getValue()).isEmpty();
+            } catch (Throwable e) {
+            }
+
             File ymlSaveLoc = new File(worldFolder, "res_" + entry.getKey() + ".yml");
+
+            if (emptyRecord) {
+                saveBackup(ymlSaveLoc, entry.getKey(), worldFolder);
+                continue;
+            }
+
             File tmpFile = new File(worldFolder, "tmp_res_" + entry.getKey() + ".yml");
 
             syml = new YMLSaveHelper(tmpFile);
-            syml.getRoot().put("Version", saveVersion);
-            World world = server.getWorld(entry.getKey());
-            if (world != null)
-                syml.getRoot().put("Seed", world.getSeed());
             if (this.getResidenceManager().getMessageCatch(entry.getKey()) != null)
                 syml.getRoot().put("Messages", this.getResidenceManager().getMessageCatch(entry.getKey()));
             if (this.getResidenceManager().getFlagsCatch(entry.getKey()) != null)
@@ -1310,17 +1332,10 @@ public class Residence extends JavaPlugin {
 
             syml.getRoot().put("Residences", entry.getValue());
             syml.save();
-            if (ymlSaveLoc.isFile()) {
-                File backupFolder = new File(worldFolder, "Backup");
-                backupFolder.mkdirs();
-                File backupFile = new File(backupFolder, "res_" + entry.getKey() + ".yml");
-                if (backupFile.isFile()) {
-                    backupFile.delete();
-                }
-                ymlSaveLoc.renameTo(backupFile);
-            }
-            tmpFile.renameTo(ymlSaveLoc);
 
+            saveBackup(ymlSaveLoc, entry.getKey(), worldFolder);
+
+            tmpFile.renameTo(ymlSaveLoc);
         }
 
         YMLSaveHelper yml;
@@ -1329,7 +1344,6 @@ public class Residence extends JavaPlugin {
         File tmpFile = new File(saveFolder, "tmp_forsale.yml");
         yml = new YMLSaveHelper(tmpFile);
         yml.save();
-        yml.getRoot().put("Version", saveVersion);
         yml.getRoot().put("Economy", tmanager.save());
         yml.save();
         if (ymlSaveLoc.isFile()) {
@@ -1347,7 +1361,6 @@ public class Residence extends JavaPlugin {
         ymlSaveLoc = new File(saveFolder, "leases.yml");
         tmpFile = new File(saveFolder, "tmp_leases.yml");
         yml = new YMLSaveHelper(tmpFile);
-        yml.getRoot().put("Version", saveVersion);
         yml.getRoot().put("Leases", leasemanager.save());
         yml.save();
         if (ymlSaveLoc.isFile()) {
@@ -1365,7 +1378,6 @@ public class Residence extends JavaPlugin {
         ymlSaveLoc = new File(saveFolder, "permlists.yml");
         tmpFile = new File(saveFolder, "tmp_permlists.yml");
         yml = new YMLSaveHelper(tmpFile);
-        yml.getRoot().put("Version", saveVersion);
         yml.getRoot().put("PermissionLists", pmanager.save());
         yml.save();
         if (ymlSaveLoc.isFile()) {
@@ -1383,7 +1395,6 @@ public class Residence extends JavaPlugin {
         ymlSaveLoc = new File(saveFolder, "rent.yml");
         tmpFile = new File(saveFolder, "tmp_rent.yml");
         yml = new YMLSaveHelper(tmpFile);
-        yml.getRoot().put("Version", saveVersion);
         yml.getRoot().put("RentSystem", rentmanager.save());
         yml.save();
         if (ymlSaveLoc.isFile()) {

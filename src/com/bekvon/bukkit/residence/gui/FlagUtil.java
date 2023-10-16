@@ -60,7 +60,7 @@ public class FlagUtil {
 
                 CMIItemStack i = CMILib.getInstance().getItemManager().getItem(value, ahead);
 
-                if (i == null)
+                if (i == null || i.getType() == null)
                     i = new CMIItemStack(CMIMaterial.STONE);
 
                 ItemStack item = i.getItemStack();
