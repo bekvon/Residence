@@ -72,6 +72,7 @@ import com.bekvon.bukkit.residence.utils.Utils;
 
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Entities.CMIEntity;
+import net.Zrips.CMILib.Entities.CMIEntityType;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Logs.CMIDebug;
@@ -738,8 +739,10 @@ public class ResidenceEntityListener implements Listener {
             return;
         if (plugin.isDisabledWorldListener(ent.getWorld()))
             return;
+        
+        CMIEntityType type = CMIEntityType.getByType(event.getEntity().getType());
 
-        if (!event.getEntity().getType().equals(EntityType.ITEM_FRAME))
+        if (!type.equals(CMIEntityType.ITEM_FRAME) && !type.equals(CMIEntityType.GLOW_ITEM_FRAME))
             return;
 
         if (!event.getCause().equals(RemoveCause.PHYSICS))
@@ -1040,7 +1043,7 @@ public class ResidenceEntityListener implements Listener {
                     break;
                 default:
                     if (blockperms.has(Flags.destroy, FlagCombo.OnlyFalse) || blockperms.has(Flags.explode, FlagCombo.OnlyFalse))
-                        preserve.add(block); 
+                        preserve.add(block);
                     continue;
                 }
             } else {
