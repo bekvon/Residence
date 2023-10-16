@@ -2298,11 +2298,11 @@ public class ClaimedResidence {
     }
 
     public double getWorthByOwner() {
-        return (int) ((getTotalSize() * getOwnerGroup().getCostPerBlock()) * 100) / 100D;
+        return (long) ((getTotalSize() * getOwnerGroup().getCostPerBlock()) * 100L) / 100D;
     }
 
     public double getWorth() {
-        return (int) ((getTotalSize() * getBlockSellPrice()) * 100) / 100.0;
+        return (long) ((getTotalSize() * getBlockSellPrice()) * 100L) / 100D;
     }
 
     public void showBounds(Player player, boolean showOneTime) {
