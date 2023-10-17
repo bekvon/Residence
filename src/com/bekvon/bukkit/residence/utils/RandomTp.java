@@ -252,6 +252,7 @@ public class RandomTp {
                                 continue;
 
                             int y = chunk.getChunkSnapshot().getHighestBlockYAt(loc.getBlockX() & 0xF, loc.getBlockZ() & 0xF) - 1;
+
                             loc.setY(y);
                         } else {
                             loc.setY(loc.getWorld().getHighestBlockYAt(loc));
@@ -340,7 +341,7 @@ public class RandomTp {
                     loc = location;
 
                 } else if (Version.isPaper() && Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
-                    CompletableFuture<Chunk> chunkFuture = PaperLib.getChunkAtAsync(loc, false);
+                    CompletableFuture<Chunk> chunkFuture = PaperLib.getChunkAtAsync(loc, true);
 
                     Chunk chunk = chunkFuture.get();
 
