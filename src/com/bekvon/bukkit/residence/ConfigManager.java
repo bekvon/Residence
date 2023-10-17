@@ -228,6 +228,8 @@ public class ConfigManager {
 
     protected List<String> NoFlowWorlds;
     protected List<String> AutoCleanUpWorlds;
+    private boolean AutoCleanTrasnferToUser;
+    private String AutoCleanUserName;
     protected List<String> NoPlaceWorlds;
     protected List<String> BlockFallWorlds;
     protected List<String> CleanWorlds;
@@ -957,6 +959,12 @@ public class ConfigManager {
         for (int i = 0; i < AutoCleanUpWorlds.size(); i++) {
             AutoCleanUpWorlds.set(i, AutoCleanUpWorlds.get(i).toLowerCase());
         }
+
+        c.addComment("Global.AutoCleanUp.TrasnferToUser", "When enabled we will transfer residence to defined user instead of removing it", "Defined user will be excluded from cleanup operation");
+        AutoCleanTrasnferToUser = c.get("Global.AutoCleanUp.TrasnferToUser", false);
+
+        c.addComment("Global.AutoCleanUp.UserName", "Worlds to be included in check list");
+        AutoCleanUserName = c.get("Global.AutoCleanUp.UserName", "Server_Land");
 
         if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
             LwcMatList.clear();
@@ -2331,6 +2339,14 @@ public class ConfigManager {
 
     public boolean isResBankBack() {
         return ResBankBack;
+    }
+
+    public boolean isAutoCleanTrasnferToUser() {
+        return AutoCleanTrasnferToUser;
+    }
+
+    public String getAutoCleanUserName() {
+        return AutoCleanUserName;
     }
 
 //    public int getTownMinRange() {

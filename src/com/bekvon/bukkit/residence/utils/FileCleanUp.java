@@ -67,6 +67,9 @@ public class FileCleanUp {
                 if (res.getOwner().equalsIgnoreCase("server land") || res.getOwner().equalsIgnoreCase(plugin.getServerLandName()))
                     continue;
 
+                if (res.getOwner().equalsIgnoreCase(plugin.getConfigManager().getAutoCleanUserName()))
+                    continue;
+
                 long lastPlayed = player.getLastPlayed();
                 int dif = (int) ((time - lastPlayed) / 1000 / 60 / 60 / 24);
                 if (dif < interval)
@@ -77,7 +80,14 @@ public class FileCleanUp {
 
                 ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player.getUniqueId());
 
-                plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
+                if (plugin.getConfigManager().isAutoCleanTrasnferToUser() && res.getOwner().equalsIgnoreCase(plugin.getConfigManager().getAutoCleanUserName())) {
+                    res.getPermissions().setOwner(plugin.getConfigManager().getAutoCleanUserName(), true);
+                    if (plugin.getRentManager().isForRent(res))
+                        plugin.getRentManager().removeRentable(res);
+                    if (plugin.getTransactionManager().isForSale(res))
+                        plugin.getTransactionManager().removeFromSale(res);
+                } else
+                    plugin.getResidenceManager().removeResidence(rPlayer, oneName.getValue(), true, plugin.getConfigManager().isAutoCleanUpRegenerate());
                 i++;
             }
         } catch (Throwable e) {
