@@ -1389,7 +1389,7 @@ public class ConfigManager {
             "This is quite heavy on server side, so enable only if you really need this feature");
         AutoMobRemoval = c.get("Global.AutoMobRemoval.Use", false);
         c.addComment("Global.AutoMobRemoval.Interval", "How often in seconds to check for monsters in residences. Keep it at reasonable amount");
-        AutoMobRemovalInterval = c.get("Global.AutoMobRemoval.Interval", 3);
+        AutoMobRemovalInterval = c.get("Global.AutoMobRemoval.Interval", 5);
 
         enforceAreaInsideArea = c.get("Global.EnforceAreaInsideArea", false);
         spoutEnable = c.get("Global.EnableSpout", false);

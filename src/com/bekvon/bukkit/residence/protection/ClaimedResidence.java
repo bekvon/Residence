@@ -38,6 +38,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.containers.MinimizeMessages;
 import com.bekvon.bukkit.residence.containers.RandomLoc;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
+import com.bekvon.bukkit.residence.containers.ValidLocation;
 import com.bekvon.bukkit.residence.containers.Visualizer;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.economy.ResidenceBank;
@@ -64,6 +65,7 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Container.PageInfo;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Version.Version;
@@ -1062,7 +1064,8 @@ public class ClaimedResidence {
         int maxIt = newLoc.getBlockY() + 1;
 
         try {
-            insideLoc.getChunk().setForceLoaded(true);
+            if (!Version.isFolia())
+                insideLoc.getChunk().setForceLoaded(true);
         } catch (Throwable e) {
         }
 
@@ -1078,7 +1081,11 @@ public class ClaimedResidence {
                 Block block = newLoc.getBlock();
                 Block block2 = newLoc.clone().add(0, 1, 0).getBlock();
                 Block block3 = newLoc.clone().add(0, -1, 0).getBlock();
-                if (ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2)
+
+                if (Version.isFolia()) {
+                    found = true;
+                    break;
+                } else if (ResidencePlayerListener.isEmptyBlock(block) && ResidencePlayerListener.isEmptyBlock(block2)
                     && !ResidencePlayerListener.isEmptyBlock(block3)) {
                     found = true;
                     break;
@@ -1088,7 +1095,8 @@ public class ClaimedResidence {
         }
 
         try {
-            insideLoc.getChunk().setForceLoaded(false);
+            if (!Version.isFolia())
+                insideLoc.getChunk().setForceLoaded(false);
         } catch (Throwable e) {
         }
 
@@ -1159,7 +1167,10 @@ public class ClaimedResidence {
                 Block block = loc.getBlock();
                 Block block2 = loc.clone().add(0, 1, 0).getBlock();
                 Block block3 = loc.clone().add(0, -1, 0).getBlock();
-                if (!ResidencePlayerListener.isEmptyBlock(block3) && ResidencePlayerListener.isEmptyBlock(block)
+                if (Version.isFolia()) {
+                    found = true;
+                    break;
+                } else if (!ResidencePlayerListener.isEmptyBlock(block3) && ResidencePlayerListener.isEmptyBlock(block)
                     && ResidencePlayerListener.isEmptyBlock(block2)) {
                     break;
                 }
@@ -1352,16 +1363,15 @@ public class ClaimedResidence {
             tpLoc = t.toVector();
         }
 
-        if (tpLoc != null) {
-            Location loc = tpLoc.toLocation(this.getMainArea().getLowLocation().getWorld());
-            if (PitchYaw != null) {
-                loc.setPitch((float) PitchYaw.getX());
-                loc.setYaw((float) PitchYaw.getY());
-            }
-            return loc;
-        }
+        if (tpLoc == null)
+            return null;
 
-        return null;
+        Location loc = tpLoc.toLocation(this.getMainArea().getLowLocation().getWorld());
+        if (PitchYaw != null) {
+            loc.setPitch((float) PitchYaw.getX());
+            loc.setYaw((float) PitchYaw.getY());
+        }
+        return loc;
     }
 
     public void setTpLoc(Player player, boolean resadmin) {
@@ -1483,6 +1493,11 @@ public class ClaimedResidence {
         }
 
         Location loc = this.getTeleportLocation(targetPlayer, false);
+        finalizeTP(loc, reqPlayer, targetPlayer, resadmin, bypassDelay);
+
+    }
+
+    private void finalizeTP(Location loc, Player reqPlayer, Player targetPlayer, boolean isAdmin, boolean bypassDelay) {
 
         if (loc == null) {
             Residence.getInstance().msg(reqPlayer, lm.Invalid_Location);
@@ -1543,7 +1558,8 @@ public class ClaimedResidence {
             targetPlayer.closeInventory();
 
             try {
-                targloc.getChunk().load();
+                if (!Version.isFolia())
+                    targloc.getChunk().load();
             } catch (Throwable e) {
             }
 
