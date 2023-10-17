@@ -24,7 +24,6 @@ import com.bekvon.bukkit.residence.selection.SelectionManager.Selection;
 
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class auto implements cmd {
@@ -373,7 +372,7 @@ public class auto implements cmd {
         int maxX = getMax(groupMaxX);
         int maxY = getMax(group.getMaxY());
         int maxZ = getMax(groupMaxZ);
-
+        
         if (maxX > max && max > 0)
             maxX = max;
         if (maxY > max && max > 0)

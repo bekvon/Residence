@@ -27,8 +27,6 @@ import com.bekvon.bukkit.residence.event.ResidenceOwnerChangeEvent;
 import com.bekvon.bukkit.residence.permissions.PermissionGroup;
 import com.bekvon.bukkit.residence.permissions.PermissionManager.ResPerm;
 
-import net.Zrips.CMILib.Logs.CMIDebug;
-
 public class ResidencePermissions extends FlagPermissions {
 
     private UUID ownerUUID;
@@ -50,7 +48,7 @@ public class ResidencePermissions extends FlagPermissions {
         else
             ownerUUID = creatorUUID;
         if (ownerUUID == null)
-            ownerUUID = UUID.fromString(Residence.getInstance().getTempUserUUID());
+            ownerUUID = Residence.getInstance().getEmptyUserUUID();
         this.ownerLastKnownName = creator;
         world = inworld;
     }
@@ -60,7 +58,7 @@ public class ResidencePermissions extends FlagPermissions {
         this(res);
         ownerUUID = Residence.getInstance().getPlayerUUID(creator);
         if (ownerUUID == null)
-            ownerUUID = UUID.fromString(Residence.getInstance().getTempUserUUID());
+            ownerUUID = Residence.getInstance().getEmptyUserUUID();
         this.ownerLastKnownName = creator;
         world = inworld;
     }

@@ -15,7 +15,6 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.ProtectionModule;
-import net.Zrips.CMILib.Logs.CMIDebug;
 
 public class SlimeFunResidenceModule implements ProtectionModule {
 
