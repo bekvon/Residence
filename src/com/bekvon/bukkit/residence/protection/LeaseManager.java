@@ -184,7 +184,7 @@ public class LeaseManager {
 	long get = res.getLeaseExpireTime();
 	if (get <= System.currentTimeMillis())
 	    return 0;
-	return msToDays((int) (get - System.currentTimeMillis()));
+	return msToDays(get - System.currentTimeMillis());
     }
 
     public void doExpirations() {
