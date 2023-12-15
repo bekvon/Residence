@@ -92,6 +92,7 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
@@ -635,12 +636,9 @@ public class ResidencePlayerListener implements Listener {
             return;
         Player player = event.getPlayer();
 
-        ClaimedResidence res = getCurrentResidence(player.getUniqueId());
+        FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
 
-        if (res == null)
-            return;
-
-        if (!res.getPermissions().playerHas(player, Flags.command, FlagCombo.OnlyFalse))
+        if (!perms.playerHas(player, Flags.command, FlagCombo.OnlyFalse))
             return;
 
         if (plugin.getPermissionManager().isResidenceAdmin(player))
@@ -649,11 +647,16 @@ public class ResidencePlayerListener implements Listener {
         if (ResPerm.bypass_command.hasPermission(player, 10000L))
             return;
 
+        ClaimedResidence res = getCurrentResidence(player.getUniqueId());
+
+        if (res == null) {
+            event.setCancelled(true);
+            plugin.msg(player, lm.Residence_BaseFlagDeny, Flags.command);
+            return;
+        }
+
         String msg = event.getMessage().replace(" ", "_").toLowerCase();
-
         int white = 0;
-        int black = 0;
-
         for (String oneWhite : res.getCmdWhiteList()) {
             String t = oneWhite.toLowerCase();
             if (msg.startsWith("/" + t)) {
@@ -664,6 +667,7 @@ public class ResidencePlayerListener implements Listener {
             }
         }
 
+        int black = 0;
         for (String oneBlack : res.getCmdBlackList()) {
             String t = oneBlack.toLowerCase();
             if (msg.startsWith("/" + t)) {
@@ -681,6 +685,8 @@ public class ResidencePlayerListener implements Listener {
                 if (t.equalsIgnoreCase("*")) {
                     if (msg.contains("_"))
                         black = msg.split("_").length;
+                    else
+                        black = 1;
                     break;
                 }
             }
