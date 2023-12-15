@@ -1,11 +1,16 @@
 package com.bekvon.bukkit.residence.selection;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -23,6 +28,8 @@ import com.sk89q.worldedit.regions.selector.limit.PermissiveSelectorLimits;
 import com.sk89q.worldedit.world.World;
 
 import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
+import net.Zrips.CMILib.Version.Schedulers.CMITask;
 
 public class WorldEdit7SelectionManager extends SelectionManager {
 
@@ -127,22 +134,49 @@ public class WorldEdit7SelectionManager extends SelectionManager {
         this.worldEditUpdate(player);
     }
 
+    Set<CuboidArea> queue = new HashSet<CuboidArea>();
+    CMITask task = null;
+
     @Override
     public void regenerate(CuboidArea area) {
+        queue.add(area);
+
+        if (task == null)
+            task = CMIScheduler.runTaskLater(this::nextInQueue, 1);
+    }
+
+    private void nextInQueue() {
+
+
+        if (queue.isEmpty()) {
+            task = null;
+            return;
+        }
+
+        Iterator<CuboidArea> iter = queue.iterator();
+
+        CuboidArea area = iter.next();
+        iter.remove();
+
         // Create new selector
         CuboidRegionSelector sellection = new CuboidRegionSelector(BukkitAdapter.adapt(area.getWorld()));
-
+        EditSession session = null;
         // set up selector
         try {
             sellection.selectPrimary(BlockVector3.at(area.getLowVector().getBlockX(), area.getLowVector().getBlockY(), area.getLowVector().getBlockZ()), PermissiveSelectorLimits.getInstance());
             sellection.selectSecondary(BlockVector3.at(area.getHighVector().getBlockX(), area.getHighVector().getBlockY(), area.getHighVector().getBlockZ()), PermissiveSelectorLimits.getInstance());
-        } catch (Exception | Error e) {
-            return;
-        }
-        // set up CuboidSelection
-        CuboidRegion cuboid = sellection.getIncompleteRegion();
 
-//	    Region region = selection..getRegionSelector().getRegion();
-        cuboid.getWorld().regenerate(cuboid, WorldEdit.getInstance().getEditSessionFactory().getEditSession(cuboid.getWorld(), -1));
+            // set up CuboidSelection
+            CuboidRegion cuboid = sellection.getIncompleteRegion();
+            session = WorldEdit.getInstance().newEditSessionBuilder().world(cuboid.getWorld()).build();
+            cuboid.getWorld().regenerate(cuboid, session);
+
+        } catch (Throwable e) {
+        } finally {
+            if (session != null)
+                session.close();
+        }
+
+        task = CMIScheduler.runTaskLater(this::nextInQueue, 20);
     }
 }

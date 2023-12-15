@@ -951,7 +951,9 @@ public class ConfigManager {
         AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
         c.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
         AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
-        c.addComment("Global.AutoCleanUp.Regenerate", "Do you want to regenerate old residence area", "This requires world edit to be present");
+        c.addComment("Global.AutoCleanUp.Regenerate", "Extra heavy on server and will lag it out while regeneration is ongoing", 
+            "Do you want to regenerate old residence area",
+            "This requires world edit to be present");
         AutoCleanUpRegenerate = c.get("Global.AutoCleanUp.Regenerate", false);
         c.addComment("Global.AutoCleanUp.Worlds", "Worlds to be included in check list");
         AutoCleanUpWorlds = c.get("Global.AutoCleanUp.Worlds", Arrays.asList(defaultWorldName));
@@ -963,7 +965,7 @@ public class ConfigManager {
         c.addComment("Global.AutoCleanUp.TrasnferToUser", "When enabled we will transfer residence to defined user instead of removing it", "Defined user will be excluded from cleanup operation");
         AutoCleanTrasnferToUser = c.get("Global.AutoCleanUp.TrasnferToUser", false);
 
-        c.addComment("Global.AutoCleanUp.UserName", "Worlds to be included in check list");
+        c.addComment("Global.AutoCleanUp.UserName", "Name of the user which receives removed residence");
         AutoCleanUserName = c.get("Global.AutoCleanUp.UserName", "Server_Land");
 
         if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
