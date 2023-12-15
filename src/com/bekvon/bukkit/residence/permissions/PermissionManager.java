@@ -251,7 +251,7 @@ public class PermissionManager {
         buy("Allows to buy residence"),
         sell("Allows to sell residence"),
         max_res_x_$1("Defines residence size limit on X axis", "number"),
-        max_res_z_$1("Defines residence size limit on X axis", "number"),
+        max_res_z_$1("Defines residence size limit on Z axis", "number"),
         max_res_unlimited("Defines residence limit as unlimited"),
         max_res_$1("Defines residence limit", "number"),
         max_subzones_unlimited("Defines subzone limit as unlimited"),

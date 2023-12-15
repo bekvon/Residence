@@ -191,99 +191,99 @@ public class SignUtil {
             return false;
         }
 
-        Block block = nloc.getBlock();
+        CMIScheduler.runAtLocation(nloc, () -> {
+            Block block = nloc.getBlock();
 
-        if (!CMIMaterial.isSign(block.getType())) {
-            Signs.removeSign(Sign);
-            res.getSignsInResidence().remove(Sign);
-            return false;
-        }
-
-        Sign sign = (Sign) block.getState();
-
-        String landName = res.getName();
-        if (landName == null)
-            return false;
-        if (!ForRent && !ForSale) {
-            String shortName = fixResName(landName);
-            String secondLine = null;
-            if (shortName.contains("~")) {
-                String[] lines = fixDoubleResName(landName);
-                shortName = lines[0];
-                secondLine = lines[1];
-            }
-            sign.setLine(0, plugin.msg(lm.Sign_ResName, shortName));
-            if (secondLine != null)
-                sign.setLine(1, plugin.msg(lm.Sign_ResName, secondLine));
-            sign.setLine(2, "");
-            sign.setLine(3, "");
-            sign.setLine(secondLine == null ? 1 : 2, plugin.msg(lm.Sign_Owner, res.getOwner()));
-            sign.update();
-
-//	    block.breakNaturally();
-//	    Signs.removeSign(Sign);
-            return true;
-        }
-
-        if (ForRent) {
-
-            boolean rented = res.isRented();
-
-            RentedLand rentedPlace = res.getRentedLand();
-            long time = 0L;
-            if (rentedPlace != null)
-                time = rentedPlace.endTime;
-
-            SimpleDateFormat formatter = new SimpleDateFormat(plugin.msg(lm.Sign_DateFormat));
-            formatter.setTimeZone(TimeZone.getTimeZone(plugin.getConfigManager().getTimeZone()));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(time);
-            String timeString = formatter.format(calendar.getTime());
-
-            String endDate = timeString;
-            if (time == 0L)
-                endDate = "Unknown";
-
-            if (plugin.getRentManager().getRentedAutoRepeats(res))
-                endDate = plugin.msg(lm.Sign_RentedAutorenewTrue, endDate);
-            else
-                endDate = plugin.msg(lm.Sign_RentedAutorenewFalse, endDate);
-
-            String TopLine = rented ? plugin.msg(lm.Sign_RentedTopLine, endDate) : plugin.msg(lm.Sign_ForRentTopLine);
-            sign.setLine(0, TopLine);
-
-            String infoLine = plugin.msg(rented ? lm.Sign_RentedPriceLine : lm.Sign_ForRentPriceLine, plugin.getRentManager().getCostOfRent(res), plugin
-                .getRentManager().getRentDays(res), plugin.getRentManager().getRentableRepeatable(res));
-
-            sign.setLine(1, infoLine);
-            String shortName = fixResName(landName);
-            sign.setLine(2, rented ? plugin.msg(lm.Sign_RentedResName, shortName)
-                : plugin.msg(lm.Sign_RentedResName, shortName));
-            sign.setLine(3, rented ? plugin.msg(lm.Sign_RentedBottomLine, plugin.getRentManager().getRentingPlayer(landName))
-                : plugin.msg(lm.Sign_ForRentBottomLine));
-            sign.update();
-        }
-
-        if (ForSale) {
-            String shortName = fixResName(landName);
-            String secondLine = null;
-            if (shortName.contains("~")) {
-                String[] lines = fixDoubleResName(landName);
-                shortName = lines[0];
-                secondLine = lines[1];
+            if (!CMIMaterial.isSign(block.getType())) {
+                Signs.removeSign(Sign);
+                res.getSignsInResidence().remove(Sign);
+                return;
             }
 
-            sign.setLine(0, plugin.msg(lm.Sign_ForSaleTopLine));
-            String infoLine = plugin.msg(lm.Sign_ForSalePriceLine, res.getSellPrice());
-            sign.setLine(1, infoLine);
-            sign.setLine(2, plugin.msg(lm.Sign_RentedResName, shortName));
+            Sign sign = (Sign) block.getState();
 
-            if (secondLine != null)
-                sign.setLine(3, plugin.msg(lm.Sign_RentedResName, secondLine));
-            else
-                sign.setLine(3, plugin.msg(lm.Sign_ForSaleBottom, res.getTotalSize()));
-            sign.update();
-        }
+            String landName = res.getName();
+            if (landName == null)
+                return;
+            if (!ForRent && !ForSale) {
+                String shortName = fixResName(landName);
+                String secondLine = null;
+                if (shortName.contains("~")) {
+                    String[] lines = fixDoubleResName(landName);
+                    shortName = lines[0];
+                    secondLine = lines[1];
+                }
+                sign.setLine(0, plugin.msg(lm.Sign_ResName, shortName));
+                if (secondLine != null)
+                    sign.setLine(1, plugin.msg(lm.Sign_ResName, secondLine));
+                sign.setLine(2, "");
+                sign.setLine(3, "");
+                sign.setLine(secondLine == null ? 1 : 2, plugin.msg(lm.Sign_Owner, res.getOwner()));
+                sign.update();
+
+                return;
+            }
+
+            if (ForRent) {
+
+                boolean rented = res.isRented();
+
+                RentedLand rentedPlace = res.getRentedLand();
+                long time = 0L;
+                if (rentedPlace != null)
+                    time = rentedPlace.endTime;
+
+                SimpleDateFormat formatter = new SimpleDateFormat(plugin.msg(lm.Sign_DateFormat));
+                formatter.setTimeZone(TimeZone.getTimeZone(plugin.getConfigManager().getTimeZone()));
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(time);
+                String timeString = formatter.format(calendar.getTime());
+
+                String endDate = timeString;
+                if (time == 0L)
+                    endDate = "Unknown";
+
+                if (plugin.getRentManager().getRentedAutoRepeats(res))
+                    endDate = plugin.msg(lm.Sign_RentedAutorenewTrue, endDate);
+                else
+                    endDate = plugin.msg(lm.Sign_RentedAutorenewFalse, endDate);
+
+                String TopLine = rented ? plugin.msg(lm.Sign_RentedTopLine, endDate) : plugin.msg(lm.Sign_ForRentTopLine);
+                sign.setLine(0, TopLine);
+
+                String infoLine = plugin.msg(rented ? lm.Sign_RentedPriceLine : lm.Sign_ForRentPriceLine, plugin.getRentManager().getCostOfRent(res), plugin
+                    .getRentManager().getRentDays(res), plugin.getRentManager().getRentableRepeatable(res));
+
+                sign.setLine(1, infoLine);
+                String shortName = fixResName(landName);
+                sign.setLine(2, rented ? plugin.msg(lm.Sign_RentedResName, shortName)
+                    : plugin.msg(lm.Sign_RentedResName, shortName));
+                sign.setLine(3, rented ? plugin.msg(lm.Sign_RentedBottomLine, plugin.getRentManager().getRentingPlayer(landName))
+                    : plugin.msg(lm.Sign_ForRentBottomLine));
+                sign.update();
+            }
+
+            if (ForSale) {
+                String shortName = fixResName(landName);
+                String secondLine = null;
+                if (shortName.contains("~")) {
+                    String[] lines = fixDoubleResName(landName);
+                    shortName = lines[0];
+                    secondLine = lines[1];
+                }
+
+                sign.setLine(0, plugin.msg(lm.Sign_ForSaleTopLine));
+                String infoLine = plugin.msg(lm.Sign_ForSalePriceLine, res.getSellPrice());
+                sign.setLine(1, infoLine);
+                sign.setLine(2, plugin.msg(lm.Sign_RentedResName, shortName));
+
+                if (secondLine != null)
+                    sign.setLine(3, plugin.msg(lm.Sign_RentedResName, secondLine));
+                else
+                    sign.setLine(3, plugin.msg(lm.Sign_ForSaleBottom, res.getTotalSize()));
+                sign.update();
+            }
+        });
 
         return true;
     }

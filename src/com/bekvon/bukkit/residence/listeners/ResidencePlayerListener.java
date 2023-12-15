@@ -802,7 +802,7 @@ public class ResidencePlayerListener implements Listener {
         plugin.getSignUtil().getSigns().addSign(signInfo);
         plugin.getSignUtil().saveSigns();
 
-        CMIScheduler.runLaterAsync(() -> plugin.getSignUtil().CheckSign(residence), 5L);
+        CMIScheduler.runTaskLater(() -> plugin.getSignUtil().CheckSign(residence), 5L);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
