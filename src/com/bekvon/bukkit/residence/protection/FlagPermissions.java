@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,6 +48,10 @@ public class FlagPermissions {
     protected static ArrayList<String> validPlayerFlags = new ArrayList<>();
     protected static ArrayList<String> validAreaFlags = new ArrayList<>();
     protected static HashMap<String, Set<String>> validFlagGroups = new HashMap<>();
+
+    private static List<String> globalCMDWhiteList = new ArrayList<>();
+    private static List<String> globalCMDBlackList = new ArrayList<>();
+
     final static Map<Material, Flags> matUseFlagList = new EnumMap<>(Material.class);
     protected Map<UUID, String> cachedPlayerNameUUIDs = new ConcurrentHashMap<UUID, String>();
     protected Map<String, Map<String, Boolean>> playerFlags = new ConcurrentHashMap<String, Map<String, Boolean>>();
@@ -306,6 +311,15 @@ public class FlagPermissions {
 
         addMaterialToUseFlag(Material.DISPENSER, Flags.container);
 //	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
+    }
+
+    public static void parseCommandLimits(ConfigurationSection node) {
+        if (node.isList("WhiteList")) {
+            globalCMDWhiteList = node.getStringList("WhiteList").stream().map(str -> str.replace(" ", "_").replaceAll("^/+", "")).collect(Collectors.toList());
+        }
+        if (node.isList("BlackList")) {
+            globalCMDBlackList = node.getStringList("BlackList").stream().map(str -> str.replace(" ", "_").replaceAll("^/+", "")).collect(Collectors.toList());
+        }
     }
 
     public static FlagPermissions parseFromConfigNode(String name, ConfigurationSection node) {
@@ -1538,5 +1552,13 @@ public class FlagPermissions {
 
     public Map<String, Map<String, Boolean>> getPlayerFlags() {
         return playerFlags;
+    }
+
+    public static List<String> getGlobalCMDWhiteList() {
+        return globalCMDWhiteList;
+    }
+
+    public static List<String> getGlobalCMDBlackList() {
+        return globalCMDBlackList;
     }
 }

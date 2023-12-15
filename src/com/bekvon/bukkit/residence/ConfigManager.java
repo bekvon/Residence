@@ -463,6 +463,12 @@ public class ConfigManager {
         if (!conf.isList("Global.TotalFlagDisabling"))
             conf.set("Global.TotalFlagDisabling", Arrays.asList("Completely", "Disable", "Particular", "Flags"));
 
+        if (!conf.isList("Global.CommandLimits.WhiteList"))
+            conf.set("Global.CommandLimits.WhiteList", Arrays.asList("some allowed command"));
+
+        if (!conf.isList("Global.CommandLimits.BlackList"))
+            conf.set("Global.CommandLimits.BlackList", Arrays.asList("some blocked command"));
+
         TreeMap<String, Flags> sorted = new TreeMap<>();
         for (Flags fl : Flags.values()) {
             sorted.put(fl.getName(), fl);
@@ -509,7 +515,13 @@ public class ConfigManager {
         cfg.load();
         cfg.addComment("Global", "These are Global Settings for Residence.");
         cfg.addComment("Global.Flags", "These are world flags that are applied when the player is NOT within a residence.");
-        cfg.addComment("Global.Flags.Global", "these are default for all worlds unless specified below, they can be overridden per group");
+        cfg.addComment("Global.Flags.Global", "these are default for all worlds unless specified below, they can be overridden per group",
+            "Using command: false flag will allow you to disable and allow predefined commands. Command list can be difined under CommandLimits section");
+
+        cfg.addComment("Global.CommandLimits", "Provide list of commands you want to allow or block", "This is when using 'command: false' flag for global/world flags",
+            "For example 'res create' under allow section and '*' would block everything except 'res create' command",
+            "This will NOT apply inside residences. Inside residence command limits are based on residence command flag and its set commands limits");
+
         cfg.addComment("Global.FlagPermission", "This gives permission to change certain flags to all groups, unless specifically denied to the group.");
         cfg.addComment("Global.FlagGui", "This sets GUI items to represent each flag, if not given, then gray wool will be used");
         cfg.addComment("Global.ResidenceDefault", "These are default flags applied to all residences from any user group.");
@@ -951,7 +963,7 @@ public class ConfigManager {
         AutoCleanUp = c.get("Global.AutoCleanUp.Use", false);
         c.addComment("Global.AutoCleanUp.Days", "For how long player should be offline to delete hes residence");
         AutoCleanUpDays = c.get("Global.AutoCleanUp.Days", 60);
-        c.addComment("Global.AutoCleanUp.Regenerate", "Extra heavy on server and will lag it out while regeneration is ongoing", 
+        c.addComment("Global.AutoCleanUp.Regenerate", "Extra heavy on server and will lag it out while regeneration is ongoing",
             "Do you want to regenerate old residence area",
             "This requires world edit to be present");
         AutoCleanUpRegenerate = c.get("Global.AutoCleanUp.Regenerate", false);
@@ -1561,6 +1573,14 @@ public class ConfigManager {
                 }
                 flag.setGlobalyEnabled(false);
             }
+        }
+
+        try {
+            if (flags.isConfigurationSection("Global.CommandLimits")) {
+                FlagPermissions.parseCommandLimits(flags.getConfigurationSection("Global.CommandLimits"));
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
 
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", flags.getConfigurationSection("Global"));

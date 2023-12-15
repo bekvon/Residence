@@ -626,6 +626,45 @@ public class ResidencePlayerListener implements Listener {
         }
     }
 
+    private boolean canUseCommand(String command, List<String> whiteListed, List<String> blackListed) {
+        int white = 0;
+        for (String oneWhite : whiteListed) {
+            String t = oneWhite.toLowerCase();
+            if (command.startsWith("/" + t)) {
+                if (t.contains("_") && t.split("_").length > white)
+                    white = t.split("_").length;
+                else if (white == 0)
+                    white = 1;
+            }
+        }
+
+        int black = 0;
+        for (String oneBlack : blackListed) {
+            String t = oneBlack.toLowerCase();
+            if (command.startsWith("/" + t)) {
+                if (command.contains("_"))
+                    black = t.split("_").length;
+                else
+                    black = 1;
+                break;
+            }
+        }
+
+        if (black == 0)
+            for (String oneBlack : blackListed) {
+                String t = oneBlack.toLowerCase();
+                if (t.equalsIgnoreCase("*")) {
+                    if (command.contains("_"))
+                        black = command.split("_").length;
+                    else
+                        black = 1;
+                    break;
+                }
+            }
+
+        return white != 0 && white >= black || black == 0;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         // Disabling listener if flag disabled globally
@@ -649,49 +688,17 @@ public class ResidencePlayerListener implements Listener {
 
         ClaimedResidence res = getCurrentResidence(player.getUniqueId());
 
+        String msg = event.getMessage().replace(" ", "_").toLowerCase();
+
         if (res == null) {
+            if (canUseCommand(msg, FlagPermissions.getGlobalCMDWhiteList(), FlagPermissions.getGlobalCMDBlackList()))
+                return;
             event.setCancelled(true);
             plugin.msg(player, lm.Residence_BaseFlagDeny, Flags.command);
             return;
         }
 
-        String msg = event.getMessage().replace(" ", "_").toLowerCase();
-        int white = 0;
-        for (String oneWhite : res.getCmdWhiteList()) {
-            String t = oneWhite.toLowerCase();
-            if (msg.startsWith("/" + t)) {
-                if (t.contains("_") && t.split("_").length > white)
-                    white = t.split("_").length;
-                else if (white == 0)
-                    white = 1;
-            }
-        }
-
-        int black = 0;
-        for (String oneBlack : res.getCmdBlackList()) {
-            String t = oneBlack.toLowerCase();
-            if (msg.startsWith("/" + t)) {
-                if (msg.contains("_"))
-                    black = t.split("_").length;
-                else
-                    black = 1;
-                break;
-            }
-        }
-
-        if (black == 0)
-            for (String oneBlack : res.getCmdBlackList()) {
-                String t = oneBlack.toLowerCase();
-                if (t.equalsIgnoreCase("*")) {
-                    if (msg.contains("_"))
-                        black = msg.split("_").length;
-                    else
-                        black = 1;
-                    break;
-                }
-            }
-
-        if (white != 0 && white >= black || black == 0)
+        if (canUseCommand(msg, res.getCmdWhiteList(), res.getCmdBlackList()))
             return;
 
         event.setCancelled(true);
