@@ -49,8 +49,9 @@ public class FlagPermissions {
     protected static ArrayList<String> validAreaFlags = new ArrayList<>();
     protected static HashMap<String, Set<String>> validFlagGroups = new HashMap<>();
 
-    private static List<String> globalCMDWhiteList = new ArrayList<>();
-    private static List<String> globalCMDBlackList = new ArrayList<>();
+    private List<String> CMDWhiteList = new ArrayList<>();
+    private List<String> CMDBlackList = new ArrayList<>();
+    private boolean inherit = false;
 
     final static Map<Material, Flags> matUseFlagList = new EnumMap<>(Material.class);
     protected Map<UUID, String> cachedPlayerNameUUIDs = new ConcurrentHashMap<UUID, String>();
@@ -313,12 +314,15 @@ public class FlagPermissions {
 //	addMaterialToUseFlag(CMIMaterial.CAKE.getMaterial(), Flags.cake);
     }
 
-    public static void parseCommandLimits(ConfigurationSection node) {
+    public void parseCommandLimits(ConfigurationSection node) {
         if (node.isList("WhiteList")) {
-            globalCMDWhiteList = node.getStringList("WhiteList").stream().map(str -> str.replace(" ", "_").replaceAll("^/+", "")).collect(Collectors.toList());
+            CMDWhiteList = node.getStringList("WhiteList").stream().map(str -> str.replace(" ", "_").replaceAll("^/+", "")).collect(Collectors.toList());
         }
         if (node.isList("BlackList")) {
-            globalCMDBlackList = node.getStringList("BlackList").stream().map(str -> str.replace(" ", "_").replaceAll("^/+", "")).collect(Collectors.toList());
+            CMDBlackList = node.getStringList("BlackList").stream().map(str -> str.replace(" ", "_").replaceAll("^/+", "")).collect(Collectors.toList());
+        }
+        if (node.isBoolean("Inherit")) {
+            inherit = node.getBoolean("Inherit");
         }
     }
 
@@ -1554,11 +1558,15 @@ public class FlagPermissions {
         return playerFlags;
     }
 
-    public static List<String> getGlobalCMDWhiteList() {
-        return globalCMDWhiteList;
+    public List<String> getCMDWhiteList() {
+        return CMDWhiteList;
     }
 
-    public static List<String> getGlobalCMDBlackList() {
-        return globalCMDBlackList;
+    public List<String> getCMDBlackList() {
+        return CMDBlackList;
+    }
+
+    public boolean isInheritCMDLimits() {
+        return inherit;
     }
 }

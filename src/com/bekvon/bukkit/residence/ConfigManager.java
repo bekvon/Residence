@@ -463,11 +463,14 @@ public class ConfigManager {
         if (!conf.isList("Global.TotalFlagDisabling"))
             conf.set("Global.TotalFlagDisabling", Arrays.asList("Completely", "Disable", "Particular", "Flags"));
 
-        if (!conf.isList("Global.CommandLimits.WhiteList"))
-            conf.set("Global.CommandLimits.WhiteList", Arrays.asList("some allowed command"));
+        if (!conf.isBoolean("Global.CommandLimits.Global.Inherit"))
+            conf.set("Global.CommandLimits.Global.Inherit", false);
 
-        if (!conf.isList("Global.CommandLimits.BlackList"))
-            conf.set("Global.CommandLimits.BlackList", Arrays.asList("some blocked command"));
+        if (!conf.isList("Global.CommandLimits.Global.WhiteList"))
+            conf.set("Global.CommandLimits.Global.WhiteList", Arrays.asList("some allowed command"));
+
+        if (!conf.isList("Global.CommandLimits.Global.BlackList"))
+            conf.set("Global.CommandLimits.Global.BlackList", Arrays.asList("some blocked command"));
 
         TreeMap<String, Flags> sorted = new TreeMap<>();
         for (Flags fl : Flags.values()) {
@@ -519,8 +522,11 @@ public class ConfigManager {
             "Using command: false flag will allow you to disable and allow predefined commands. Command list can be difined under CommandLimits section");
 
         cfg.addComment("Global.CommandLimits", "Provide list of commands you want to allow or block", "This is when using 'command: false' flag for global/world flags",
-            "For example 'res create' under allow section and '*' would block everything except 'res create' command",
-            "This will NOT apply inside residences. Inside residence command limits are based on residence command flag and its set commands limits");
+            "For example 'res create' under allow section and '*' would block everything except 'res create' command", "Can be defined per world just like world flags can be",
+            "This will NOT apply inside residences. Inside residence command limits are based on residence command flag and its set commands limits",
+            "Residence itself will need to have 'command: false' to override global command limits with specific to that residence ones");
+
+        cfg.addComment("Global.CommandLimits.Global.Inherit", "When enabled allowed and blocked commands inside residence will be inherited from global list and combined with residence command limits");
 
         cfg.addComment("Global.FlagPermission", "This gives permission to change certain flags to all groups, unless specifically denied to the group.");
         cfg.addComment("Global.FlagGui", "This sets GUI items to represent each flag, if not given, then gray wool will be used");
@@ -1573,14 +1579,6 @@ public class ConfigManager {
                 }
                 flag.setGlobalyEnabled(false);
             }
-        }
-
-        try {
-            if (flags.isConfigurationSection("Global.CommandLimits")) {
-                FlagPermissions.parseCommandLimits(flags.getConfigurationSection("Global.CommandLimits"));
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
 
         globalCreatorDefaults = FlagPermissions.parseFromConfigNode("CreatorDefault", flags.getConfigurationSection("Global"));

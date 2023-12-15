@@ -677,7 +677,11 @@ public class ResidencePlayerListener implements Listener {
 
         FlagPermissions perms = plugin.getPermsByLocForPlayer(player.getLocation(), player);
 
-        if (!perms.playerHas(player, Flags.command, FlagCombo.OnlyFalse))
+        FlagPermissions globalPerm = plugin.getWorldFlags().getPerms(player);
+        boolean globalLimited = globalPerm.playerHas(player, Flags.command, FlagCombo.OnlyFalse);
+        boolean areaLimited = perms.playerHas(player, Flags.command, FlagCombo.OnlyFalse);
+
+        if (!globalLimited && !areaLimited)
             return;
 
         if (plugin.getPermissionManager().isResidenceAdmin(player))
@@ -691,14 +695,30 @@ public class ResidencePlayerListener implements Listener {
         String msg = event.getMessage().replace(" ", "_").toLowerCase();
 
         if (res == null) {
-            if (canUseCommand(msg, FlagPermissions.getGlobalCMDWhiteList(), FlagPermissions.getGlobalCMDBlackList()))
+            if (!globalLimited)
+                return;
+            if (canUseCommand(msg, globalPerm.getCMDWhiteList(), globalPerm.getCMDBlackList()))
                 return;
             event.setCancelled(true);
             plugin.msg(player, lm.Residence_BaseFlagDeny, Flags.command);
             return;
         }
 
-        if (canUseCommand(msg, res.getCmdWhiteList(), res.getCmdBlackList()))
+        List<String> w = new ArrayList<String>(res.getCmdWhiteList());
+        List<String> b = new ArrayList<String>(res.getCmdBlackList());
+        
+        if (!areaLimited) { 
+            w.clear();
+            b.clear();
+        }
+
+        if (globalPerm.isInheritCMDLimits()) {
+            w.addAll(globalPerm.getCMDWhiteList());
+            b.removeAll(globalPerm.getCMDWhiteList());
+            b.addAll(globalPerm.getCMDBlackList());
+        }
+ 
+        if (canUseCommand(msg, w, b))
             return;
 
         event.setCancelled(true);
