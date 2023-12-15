@@ -36,15 +36,15 @@ public class auto implements cmd {
 
         String resName = null;
 
-        int lenght = -1;
+        int length = -1;
         if (args.length == 1)
             try {
-                lenght = Integer.parseInt(args[0]);
+                length = Integer.parseInt(args[0]);
             } catch (Exception | Error e) {
 
             }
  
-        if (args.length > 0 && lenght == -1)
+        if (args.length > 0 && length == -1)
             resName = args[0];
         else
             resName = player.getName();
@@ -52,7 +52,7 @@ public class auto implements cmd {
         if (args.length == 2) {
             resName = args[0];
             try {
-                lenght = Integer.parseInt(args[1]);
+                length = Integer.parseInt(args[1]);
             } catch (Exception ex) {
             }
         }
@@ -77,9 +77,9 @@ public class auto implements cmd {
         boolean result = false;
 
         if (plugin.getConfigManager().isARCOldMethod())
-            result = resize(plugin, player, cuboid, true, lenght);
+            result = resize(plugin, player, cuboid, true, length);
         else
-            result = optimizedResize(plugin, player, cuboid, true, lenght);
+            result = optimizedResize(plugin, player, cuboid, true, length);
 
         plugin.getSelectionManager().afterSelectionUpdate(player, true);
 
@@ -164,7 +164,9 @@ public class auto implements cmd {
         return ratio;
     }
 
-    private static int getMax(int max) {
+    private static int getMax(int max) {        
+        if (!Residence.getInstance().getConfigManager().isARCSizeEnabled())
+            return max;
         int arcmin = Residence.getInstance().getConfigManager().getARCSizeMin();
         int arcmax = Residence.getInstance().getConfigManager().getARCSizeMax();
         int maxV = (int) (max * (Residence.getInstance().getConfigManager().getARCSizePercentage() / 100D));
