@@ -183,6 +183,7 @@ public class RentManager implements MarketRentInterface {
 
     public void setForRent(Player player, ClaimedResidence res, int amount, int days, boolean AllowRenewing, boolean StayInMarket, boolean AllowAutoPay,
         boolean resadmin) {
+        if (amount < 0) return;
 
         if (res == null) {
             plugin.msg(player, lm.Invalid_Residence);

@@ -111,24 +111,28 @@ public class ResidenceVaultAdapter implements EconomyInterface, PermissionsInter
     @SuppressWarnings("deprecation")
     @Override
     public boolean canAfford(String playerName, double amount) {
+        if (amount <= 0) return false;
         return economy.has(playerName, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean add(String playerName, double amount) {
+        if (amount <= 0) return false;
         return economy.depositPlayer(playerName, amount).transactionSuccess();
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean subtract(String playerName, double amount) {
+        if (amount <= 0) return false;
         return economy.withdrawPlayer(playerName, amount).transactionSuccess();
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
+        if (amount <= 0) return false;
         if (economy.withdrawPlayer(playerFrom, amount).transactionSuccess()) {
             if (economy.depositPlayer(playerTo, amount).transactionSuccess()) {
                 return true;

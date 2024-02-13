@@ -25,6 +25,7 @@ public class CMIEconomy implements EconomyInterface {
 
     @Override
     public boolean canAfford(Player player, double amount) {
+        if (amount <= 0) return false;
         CMIUser user = CMI.getInstance().getPlayerManager().getUser(player);
         if (user != null && user.getBalance() >= amount) {
             return true;
@@ -34,6 +35,7 @@ public class CMIEconomy implements EconomyInterface {
     
     @Override
     public boolean canAfford(String playerName, double amount) {
+        if (amount <= 0) return false;
 	CMIUser user = CMI.getInstance().getPlayerManager().getUser(playerName);
 	if (user != null && user.getBalance() >= amount) {
 	    return true;
@@ -43,6 +45,7 @@ public class CMIEconomy implements EconomyInterface {
 
     @Override
     public boolean add(String playerName, double amount) {
+        if (amount <= 0) return false;
 	CMIUser user = CMI.getInstance().getPlayerManager().getUser(playerName);
 	if (user != null)
 	    user.deposit(amount);
@@ -51,6 +54,7 @@ public class CMIEconomy implements EconomyInterface {
 
     @Override
     public boolean subtract(String playerName, double amount) {
+        if (amount <= 0) return false;
 	if (!canAfford(playerName, amount)) {
 	    return false;
 	}
@@ -62,6 +66,7 @@ public class CMIEconomy implements EconomyInterface {
 
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
+        if (amount <= 0) return false;
 	if (!canAfford(playerFrom, amount)) {
 	    return false;
 	}

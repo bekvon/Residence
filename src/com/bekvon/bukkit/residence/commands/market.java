@@ -297,9 +297,17 @@ public class market implements cmd {
             plugin.msg(player, lm.Invalid_Cost);
             return true;
         }
+        if (cost <= 0) {
+            plugin.msg(player, lm.Invalid_Cost);
+            return true;
+        }
         try {
             days = Integer.parseInt(args[3]);
         } catch (Exception ex) {
+            plugin.msg(player, lm.Invalid_Days);
+            return true;
+        }
+        if (days <= 0) {
             plugin.msg(player, lm.Invalid_Days);
             return true;
         }
