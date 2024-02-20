@@ -706,8 +706,8 @@ public class ResidencePlayerListener implements Listener {
 
         List<String> w = new ArrayList<String>(res.getCmdWhiteList());
         List<String> b = new ArrayList<String>(res.getCmdBlackList());
-        
-        if (!areaLimited) { 
+
+        if (!areaLimited) {
             w.clear();
             b.clear();
         }
@@ -717,7 +717,7 @@ public class ResidencePlayerListener implements Listener {
             b.removeAll(globalPerm.getCMDWhiteList());
             b.addAll(globalPerm.getCMDBlackList());
         }
- 
+
         if (canUseCommand(msg, w, b))
             return;
 

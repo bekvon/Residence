@@ -1503,8 +1503,6 @@ public class ConfigManager {
         Pl3xMapFillRented = argb(CMINumber.clamp((int) (Pl3xMapFillOpacity * 255), 0, 255), processColor(c.get("Pl3xMap.Fill.Rented", "#99ff33")));
         Pl3xMapFillForSale = argb(CMINumber.clamp((int) (Pl3xMapFillOpacity * 255), 0, 255), processColor(c.get("Pl3xMap.Fill.ForSale", "#0066ff")));
 
-        CMIDebug.d(Pl3xFillColor, Pl3xMapFillForRent, Pl3xMapFillRented, Pl3xMapFillForSale);
-
         c.addComment("Pl3xMap.VisibleRegions", "Shows only regions on this list");
         Pl3xMapVisibleRegions = c.get("Pl3xMap.VisibleRegions", new ArrayList<String>());
         c.addComment("Pl3xMap.HiddenRegions", "Hides region on map even if its not hidden in game");

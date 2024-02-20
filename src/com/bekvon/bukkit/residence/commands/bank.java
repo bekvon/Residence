@@ -19,56 +19,56 @@ public class bank implements cmd {
     @CommandAnnotation(simple = true, priority = 3400, regVar = { 2, 3 }, consoleVar = { 2, 3 })
     public Boolean perform(Residence plugin, CommandSender sender, String[] args, boolean resadmin) {
 
-	ClaimedResidence res = null;
+        ClaimedResidence res = null;
 
-	if (args.length == 3) {
-	    res = plugin.getResidenceManager().getByName(args[1]);
-	    if (res == null) {
-		plugin.msg(sender, lm.Invalid_Residence);
-		return null;
-	    }
-	} else if (sender instanceof Player) {
-	    res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
-	}
-	if (res == null) {
-	    plugin.msg(sender, lm.Residence_NotIn);
-	    return null;
-	}
-	double amount = 0D;
-	try {
-	    if (args.length == 2)
-		amount = Double.parseDouble(args[1]);
-	    else
-		amount = Double.parseDouble(args[2]);
-	} catch (Exception ex) {
-	    plugin.msg(sender, lm.Invalid_Amount);
-	    return null;
-	}
+        if (args.length == 3) {
+            res = plugin.getResidenceManager().getByName(args[1]);
+            if (res == null) {
+                plugin.msg(sender, lm.Invalid_Residence);
+                return null;
+            }
+        } else if (sender instanceof Player) {
+            res = plugin.getResidenceManager().getByLoc(((Player) sender).getLocation());
+        }
+        if (res == null) {
+            plugin.msg(sender, lm.Residence_NotIn);
+            return null;
+        }
+        double amount = 0D;
+        try {
+            if (args.length == 2)
+                amount = Double.parseDouble(args[1]);
+            else
+                amount = Double.parseDouble(args[2]);
+        } catch (Exception ex) {
+            plugin.msg(sender, lm.Invalid_Amount);
+            return null;
+        }
 
-	if (amount <= 0){
-		plugin.msg(sender, lm.Invalid_Amount);
-		return null;
-	}
-	
-	switch(args[0].toLowerCase()) {
-	case "deposit":
-	    res.getBank().deposit(sender, amount, resadmin);
-	    return true;
-	case "withdraw":
-	    res.getBank().withdraw(sender, amount, resadmin);
-	    return true;
-	}
-	
-	return false;
+        if (amount <= 0) {
+            plugin.msg(sender, lm.Invalid_Amount);
+            return null;
+        }
+
+        switch (args[0].toLowerCase()) {
+        case "deposit":
+            res.getBank().deposit(sender, amount, resadmin);
+            return true;
+        case "withdraw":
+            res.getBank().withdraw(sender, amount, resadmin);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public void getLocale() {
-	ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
-	c.get("Description", "Manage money in a Residence");
-	c.get("Info", Arrays.asList("&eUsage: &6/res bank [deposit/withdraw] <residence> [amount]",
-	    "You must be standing in a Residence or provide residence name",
-	    "You must have the +bank flag."));
-	LocaleManager.addTabCompleteMain(this, "deposit%%withdraw", "[residence]");
+        ConfigReader c = Residence.getInstance().getLocaleManager().getLocaleConfig();
+        c.get("Description", "Manage money in a Residence");
+        c.get("Info", Arrays.asList("&eUsage: &6/res bank [deposit/withdraw] <residence> [amount]",
+            "You must be standing in a Residence or provide residence name",
+            "You must have the +bank flag."));
+        LocaleManager.addTabCompleteMain(this, "deposit%%withdraw", "[residence]");
     }
 }
