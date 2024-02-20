@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -89,10 +88,10 @@ import com.bekvon.bukkit.residence.utils.Utils;
 import net.Zrips.CMILib.CMILib;
 import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Colors.CMIChatColor;
+import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
@@ -928,6 +927,7 @@ public class ResidencePlayerListener implements Listener {
             plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, location.getWorld().getName());
             player.closeInventory();
             CMITeleporter.teleportAsync(player, location);
+
             player.setFlying(false);
             player.setAllowFlight(false);
         }
@@ -1262,14 +1262,12 @@ public class ResidencePlayerListener implements Listener {
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 Location loc = block.getLocation();
                 plugin.getSelectionManager().placeLoc1(player, loc, true);
-                plugin.msg(player, lm.Select_PrimaryPoint, plugin.msg(lm.General_CoordsTop, loc.getBlockX(), loc.getBlockY(),
-                    loc.getBlockZ()));
+                plugin.msg(player, lm.Select_PrimaryPoint, plugin.msg(lm.General_CoordsTop, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
                 event.setCancelled(true);
             } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && Utils.isMainHand(event)) {
                 Location loc = block.getLocation();
                 plugin.getSelectionManager().placeLoc2(player, loc, true);
-                plugin.msg(player, lm.Select_SecondaryPoint, plugin.msg(lm.General_CoordsBottom, loc.getBlockX(), loc
-                    .getBlockY(), loc.getBlockZ()));
+                plugin.msg(player, lm.Select_SecondaryPoint, plugin.msg(lm.General_CoordsBottom, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
                 event.setCancelled(true);
             }
 
@@ -2065,7 +2063,6 @@ public class ResidencePlayerListener implements Listener {
             // Lets not disable fly mode if player has access to fly command from another plugin
             if (player.hasPermission("cmi.command.fly") || player.hasPermission("essentials.fly"))
                 return;
-
             boolean land = player.isFlying();
             player.setFlying(false);
             player.setAllowFlight(false);
@@ -2319,6 +2316,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     private boolean teleport(Player player, Location loc) {
+
         if (player == null || !player.isOnline() || loc == null)
             return false;
 
@@ -2328,6 +2326,62 @@ public class ResidencePlayerListener implements Listener {
         }
 
         return CMITeleporter.teleport(player, loc);
+    }
+
+    private boolean checkNoFly(Player player, ClaimedResidence res, ClaimedResidence orres, Location loc) {
+
+        UUID uuid = player.getUniqueId();
+        Location location = player.getLocation().clone();
+
+        int from = location.getBlockY();
+        int to = CMIWorld.getMinHeight(loc.getWorld());
+        boolean teleported = false;
+
+        for (int i = from; i > to; i--) {
+            location.setY(i);
+            Block block = location.getBlock();
+            if (!isEmptyBlock(block)) {
+                break;
+            }
+        }
+
+        int distance = (int) (player.getLocation().getY() - location.getY());
+
+        if (distance > 4) {
+            Location lastLoc = lastOutsideLoc.get(uuid);
+            player.closeInventory();
+
+            if (lastLoc != null) {
+                res = plugin.getResidenceManager().getByLoc(lastLoc);
+                if (res != null) {
+                    if (Flags.tp.isGlobalyEnabled() && res.getPermissions().playerHas(player, Flags.tp, FlagCombo.OnlyFalse) && !ResPerm.admin_tp.hasPermission(player, 10000L)) {
+                        teleported = teleport(player, res.getOutsideFreeLoc(lastLoc, player, true));
+                    } else {
+                        player.setFlying(false);
+                        player.setAllowFlight(false);
+                    }
+                } else {
+                    teleported = teleport(player, lastLoc);
+                }
+            } else {
+                teleported = teleport(player, res.getOutsideFreeLoc(loc, player, true));
+            }
+            if (teleported) {
+                player.setFlying(false);
+                player.setAllowFlight(false);
+            }
+            plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
+
+            return teleported;
+        }
+
+        plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
+        player.closeInventory();
+
+        player.setFlying(false);
+        player.setAllowFlight(false);
+
+        return true;
     }
 
     public boolean handleNewLocation(final Player player, Location loc, boolean move) {
@@ -2348,56 +2402,11 @@ public class ResidencePlayerListener implements Listener {
             currentRes.remove(uuid);
         } else {
             if (res != null && ResOld.getName().equals(res.getName())) {
-//		if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
-//		    && !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
-//		    if (!res.isOwner(player)) {
-//			Location lc = player.getLocation();
-//			Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
-//			location.setPitch(lc.getPitch());
-//			location.setYaw(lc.getYaw());
-//			int from = location.getBlockY();
-//			int maxH = from + 3;
-//			if (location.getWorld().getEnvironment() == Environment.NETHER)
-//			    maxH = 100;
-//			else
-//			    maxH = location.getWorld().getHighestBlockAt(location).getLocation().getBlockY() + 3;
-//
-//			for (int i = 0; i < maxH; i++) {
-//			    location.setY(from - i);
-//			    Block block = location.getBlock();
-//			    if (!isEmptyBlock(block)) {
-//				location.setY(from - i + 1);
-//				break;
-//			    }
-//			    if (location.getBlockY() <= 0) {
-//				Location lastLoc = lastOutsideLoc.get(uuid);
-//				player.closeInventory();
-//				boolean teleported = false;
-//				if (move) {
-//				    if (lastLoc != null)
-//					teleported = teleport(player, lastLoc);
-//				    else
-//					teleported = teleport(player, res.getOutsideFreeLoc(loc, player));
-//				}
-//				plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
-//				if (!teleported)
-//				    return false;
-//				return true;
-//			    }
-//			}
-//			plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
-//			player.closeInventory();
-//			if (move) {
-//			    boolean teleported = teleport(player, location);
-//			    if (!teleported)
-//				return false;
-//			}
-//			player.setFlying(false);
-//			player.setAllowFlight(false);
-//		    }
-//		}
-//		lastOutsideLoc.put(uuid, loc);
-//		return true;
+                if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
+                    && !res.isOwner(player) && !ResPerm.bypass_nofly.hasPermission(player, 10000L)) {
+                    return checkNoFly(player, res, orres, loc);
+                }
+                return true;
             }
         }
 
@@ -2535,49 +2544,11 @@ public class ResidencePlayerListener implements Listener {
                 // Preventing fly in residence only when player has move permission
                 if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
                     && !ResPerm.bypass_nofly.hasPermission(player, 10000L) && !res.isOwner(player)) {
-
-                    Location lc = player.getLocation();
-                    Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
-                    location.setPitch(lc.getPitch());
-                    location.setYaw(lc.getYaw());
-                    int from = location.getBlockY();
-                    int maxH = location.getWorld().getMaxHeight() - 1;
-                    boolean teleported = false;
-
-                    for (int i = 0; i < maxH; i++) {
-                        location.setY(from - i);
-                        Block block = location.getBlock();
-                        if (!isEmptyBlock(block)) {
-                            location.setY(from - i + 1);
-                            break;
-                        }
-                        if (location.getBlockY() <= 0) {
-                            Location lastLoc = lastOutsideLoc.get(uuid);
-                            player.closeInventory();
-                            if (lastLoc != null)
-                                teleported = teleport(player, lastLoc);
-                            else
-                                teleported = teleport(player, res.getOutsideFreeLoc(loc, player, true));
-
-                            plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
-                            return teleported;
-                        }
-                    }
-                    plugin.msg(player, lm.Residence_FlagDeny, Flags.nofly, orres.getName());
-                    player.closeInventory();
-                    teleported = teleport(player, location);
-                    if (!teleported)
-                        return false;
-                    player.setFlying(false);
-                    player.setAllowFlight(false);
+                    return checkNoFly(player, res, orres, loc);
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-        }
-
-        if (!cantMove) {
-            lastOutsideLoc.put(uuid, loc);
         }
 
         if (!currentRes.containsKey(uuid) || ResOld != res) {
