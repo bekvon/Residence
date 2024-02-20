@@ -44,6 +44,11 @@ public class bank implements cmd {
 	    plugin.msg(sender, lm.Invalid_Amount);
 	    return null;
 	}
+
+	if (amount <= 0){
+		plugin.msg(sender, lm.Invalid_Amount);
+		return null;
+	}
 	
 	switch(args[0].toLowerCase()) {
 	case "deposit":
