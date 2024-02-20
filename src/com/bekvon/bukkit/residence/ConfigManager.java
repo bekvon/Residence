@@ -206,6 +206,7 @@ public class ConfigManager {
     protected boolean useVisualizer;
     protected boolean DisableListeners;
     protected boolean DisableCommands;
+    private boolean DisableResidenceCreation;
 
     //Town
 //    private boolean TownEnabled = false;
@@ -690,12 +691,14 @@ public class ConfigManager {
         DefaultWorld = c.get("Global.Optimizations.DefaultWorld", defaultWorldName);
 
         c.addComment("Global.Optimizations.DisabledWorlds.List", "List Of Worlds where this plugin is disabled", "Make sure that world names capitalization is correct");
-        DisabledWorldsList = c.get("Global.Optimizations.DisabledWorlds.List", new ArrayList<String>());
+        DisabledWorldsList = c.get("Global.Optimizations.DisabledWorlds.List", Arrays.asList("worldNamesHere"));
 
         c.addComment("Global.Optimizations.DisabledWorlds.DisableListeners", "Disables all listeners in included worlds");
         DisableListeners = c.get("Global.Optimizations.DisabledWorlds.DisableListeners", true);
-        c.addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disabled any command usage in included worlds");
+        c.addComment("Global.Optimizations.DisabledWorlds.DisableCommands", "Disables any command usage in included worlds");
         DisableCommands = c.get("Global.Optimizations.DisabledWorlds.DisableCommands", true);
+        c.addComment("Global.Optimizations.DisabledWorlds.DisableResidenceCreation", "Disables residence creation in included worlds");
+        DisableResidenceCreation = c.get("Global.Optimizations.DisabledWorlds.DisableResidenceCreation", true);
 
         c.addComment("Global.Optimizations.ItemPickUpDelay", "Delay in seconds between item pickups after residence flag prevents it", "Keep it at arround 10 sec to lower unesecery checks");
         ItemPickUpDelay = c.get("Global.Optimizations.ItemPickUpDelay", 10);
@@ -2365,6 +2368,10 @@ public class ConfigManager {
 
     public String getAutoCleanUserName() {
         return AutoCleanUserName;
+    }
+
+    public boolean isDisableResidenceCreation() {
+        return DisableResidenceCreation;
     }
 
 //    public int getTownMinRange() {

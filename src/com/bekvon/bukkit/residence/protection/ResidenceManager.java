@@ -241,6 +241,11 @@ public class ResidenceManager implements ResidenceInterface {
             plugin.msg(player, lm.Select_Points);
             return false;
         }
+        
+        if (plugin.isDisabledWorld(loc1.getWorld()) && plugin.getConfigManager().isDisableResidenceCreation()) {            
+            plugin.msg(player, lm.General_CantCreate);
+            return false;
+        }
 
         ResidencePlayer rPlayer = plugin.getPlayerManager().getResidencePlayer(player);
 

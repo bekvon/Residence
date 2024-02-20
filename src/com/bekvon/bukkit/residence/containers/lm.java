@@ -475,6 +475,7 @@ public enum lm {
     Permissions_cmdPermissionColor("&2"),
 
     General_DisabledWorld("&cResidence plugin is disabled in this world"),
+    General_CantCreate("&cCan't create residences in this world"),
     General_UseNumbers("&cPlease use numbers..."),
     General_CantPlaceLava("&cYou can't place lava outside residence and higher than &6%1 &cblock level", "Replace all text with '' to disable this message"),
     General_CantPlaceWater("&cYou can't place Water outside residence and higher than &6%1 &cblock level", "Replace all text with '' to disable this message"),

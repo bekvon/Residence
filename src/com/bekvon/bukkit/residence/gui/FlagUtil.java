@@ -2,11 +2,9 @@ package com.bekvon.bukkit.residence.gui;
 
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.Zrips.CMI.CMI;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.lm;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
