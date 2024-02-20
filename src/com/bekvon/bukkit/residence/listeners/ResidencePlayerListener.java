@@ -2534,7 +2534,7 @@ public class ResidencePlayerListener implements Listener {
 
                 // Preventing fly in residence only when player has move permission
                 if (Flags.nofly.isGlobalyEnabled() && player.isFlying() && res.getPermissions().playerHas(player, Flags.nofly, FlagCombo.OnlyTrue) && !plugin.isResAdminOn(player)
-                    && !ResPerm.bypass_nofly.hasPermission(player, 10000L) && res.isOwner(player)) {
+                    && !ResPerm.bypass_nofly.hasPermission(player, 10000L) && !res.isOwner(player)) {
 
                     Location lc = player.getLocation();
                     Location location = new Location(lc.getWorld(), lc.getX(), lc.getBlockY(), lc.getZ());
