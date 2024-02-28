@@ -92,6 +92,7 @@ import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Entities.CMIEntity;
 import net.Zrips.CMILib.Items.CMIItemStack;
 import net.Zrips.CMILib.Items.CMIMaterial;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.TitleMessages.CMITitleMessage;
 import net.Zrips.CMILib.Util.CMIVersionChecker;
 import net.Zrips.CMILib.Version.Version;
@@ -1020,6 +1021,7 @@ public class ResidencePlayerListener implements Listener {
         default:
             break;
         }
+        
 
         CMIMaterial cmat = CMIMaterial.get(mat);
         if (cmat != null) {
