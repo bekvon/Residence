@@ -33,7 +33,7 @@ public class IConomy6Adapter implements EconomyInterface {
 
     @Override
     public boolean canAfford(String playerName, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         checkExist(playerName);
         double holdings = this.getBalance(playerName);
         if (holdings >= amount) {
@@ -44,7 +44,7 @@ public class IConomy6Adapter implements EconomyInterface {
 
     @Override
     public boolean add(String playerName, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         checkExist(playerName);
         new Accounts().get(playerName).getHoldings().add(amount);
         return true;
@@ -52,7 +52,7 @@ public class IConomy6Adapter implements EconomyInterface {
 
     @Override
     public boolean subtract(String playerName, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         checkExist(playerName);
         if (this.canAfford(playerName, amount)) {
             new Accounts().get(playerName).getHoldings().subtract(amount);
@@ -63,7 +63,7 @@ public class IConomy6Adapter implements EconomyInterface {
 
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         checkExist(playerTo);
         checkExist(playerFrom);
         if (this.canAfford(playerFrom, amount)) {

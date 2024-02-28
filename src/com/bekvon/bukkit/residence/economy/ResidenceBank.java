@@ -112,7 +112,7 @@ public class ResidenceBank {
         if (Residence.getInstance().getConfigManager().BankCapacity > 0 && this.getStoredMoneyD() + amount > Residence.getInstance().getConfigManager().BankCapacity) {
             amount = Residence.getInstance().getConfigManager().BankCapacity - this.getStoredMoneyD();
             Residence.getInstance().msg(sender, lm.Bank_full);
-            if (amount <= 0) {
+            if (amount < 0) {
                 return;
             }
         }

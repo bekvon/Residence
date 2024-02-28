@@ -29,7 +29,7 @@ public class RealShopEconomy implements EconomyInterface {
 
     @Override
     public boolean canAfford(String playerName, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         if (plugin.getBalance(playerName) >= amount) {
             return true;
         }
@@ -38,14 +38,14 @@ public class RealShopEconomy implements EconomyInterface {
 
     @Override
     public boolean add(String playerName, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         plugin.setBalance(playerName, plugin.getBalance(playerName) + amount);
         return true;
     }
 
     @Override
     public boolean subtract(String playerName, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         if (!canAfford(playerName, amount)) {
             return false;
         }
@@ -55,7 +55,7 @@ public class RealShopEconomy implements EconomyInterface {
 
     @Override
     public boolean transfer(String playerFrom, String playerTo, double amount) {
-        if (amount <= 0) return false;
+        if (amount < 0) return false;
         if (!canAfford(playerFrom, amount)) {
             return false;
         }

@@ -131,7 +131,7 @@ public class TransactionManager implements MarketBuyInterface {
 		plugin.msg(player, lm.General_NoPermission);
 		return;
 	    }
-	    if (amount <= 0) {
+	    if (amount < 0) {
 		plugin.msg(player, lm.Invalid_Amount);
 		return;
 	    }

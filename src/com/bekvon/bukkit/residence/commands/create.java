@@ -30,7 +30,7 @@ public class create implements cmd {
 	    if (plugin.getWorldEditTool() == plugin.getConfigManager().getSelectionTool()) {
 		plugin.getSelectionManager().worldEdit(player);
 	    }
-	}
+	} 
 
 	if (plugin.getSelectionManager().hasPlacedBoth(player)) {
 

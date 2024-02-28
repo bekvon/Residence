@@ -24,6 +24,7 @@ import com.bekvon.bukkit.residence.selection.SelectionManager.Selection;
 
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.FileHandler.ConfigReader;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 
 public class auto implements cmd {
@@ -43,7 +44,7 @@ public class auto implements cmd {
             } catch (Exception | Error e) {
 
             }
- 
+
         if (args.length > 0 && length == -1)
             resName = args[0];
         else
@@ -110,31 +111,50 @@ public class auto implements cmd {
 
         Selection selection = plugin.getSelectionManager().getSelection(player);
 
-        double ratioX = getRatio(selection.getBaseArea().getXSize(), selection.getBaseArea().getYSize(), selection.getBaseArea().getZSize());
-        double ratioY = getRatio(selection.getBaseArea().getYSize(), selection.getBaseArea().getXSize(), selection.getBaseArea().getZSize());
-        double ratioZ = getRatio(selection.getBaseArea().getZSize(), selection.getBaseArea().getXSize(), selection.getBaseArea().getZSize());
-
         String maxSide = "";
         String minSide = "";
-
         double maxRatio = 0;
 
-        if (ratioX > maxRatio) {
-            maxSide = "Z";
-            minSide = "X";
-            maxRatio = ratioX;
-        }
+        if (plugin.getConfigManager().isSelectionIgnoreY()) {
 
-        if (ratioZ > maxRatio) {
-            maxSide = "X";
-            minSide = "Z";
-            maxRatio = ratioZ;
-        }
+            double ratioX = getRatio(selection.getBaseArea().getXSize(), selection.getBaseArea().getXSize(), selection.getBaseArea().getZSize());
+            double ratioZ = getRatio(selection.getBaseArea().getZSize(), selection.getBaseArea().getXSize(), selection.getBaseArea().getXSize());
 
-        if (ratioY > maxRatio) {
-            maxSide = "X";
-            minSide = "Y";
-            maxRatio = ratioY;
+            if (ratioX > maxRatio) {
+                maxSide = "Z";
+                minSide = "X";
+                maxRatio = ratioX;
+            }
+
+            if (ratioZ > maxRatio) {
+                maxSide = "X";
+                minSide = "Z";
+                maxRatio = ratioZ;
+            }
+
+        } else {
+
+            double ratioX = getRatio(selection.getBaseArea().getXSize(), selection.getBaseArea().getYSize(), selection.getBaseArea().getZSize());
+            double ratioY = getRatio(selection.getBaseArea().getYSize(), selection.getBaseArea().getZSize(), selection.getBaseArea().getXSize());
+            double ratioZ = getRatio(selection.getBaseArea().getZSize(), selection.getBaseArea().getYSize(), selection.getBaseArea().getXSize());
+
+            if (ratioX > maxRatio) {
+                maxSide = "Z";
+                minSide = "X";
+                maxRatio = ratioX;
+            }
+
+            if (ratioZ > maxRatio) {
+                maxSide = "X";
+                minSide = "Z";
+                maxRatio = ratioZ;
+            }
+
+            if (ratioY > maxRatio) {
+                maxSide = "X";
+                minSide = "Y";
+                maxRatio = ratioY;
+            }
         }
 
         if (maxRatio > plugin.getConfigManager().getARCRatioValue()) {
@@ -164,7 +184,7 @@ public class auto implements cmd {
         return ratio;
     }
 
-    private static int getMax(int max) {        
+    private static int getMax(int max) {
         if (!Residence.getInstance().getConfigManager().isARCSizeEnabled())
             return max;
         int arcmin = Residence.getInstance().getConfigManager().getARCSizeMin();
@@ -318,7 +338,7 @@ public class auto implements cmd {
 
                 if (!Residence.getInstance().getEconomyManager().canAfford(player, cost)) {
                     plugin.msg(player, lm.Economy_NotEnoughMoney);
-                    return false; 
+                    return false;
                 }
             }
 
@@ -374,7 +394,7 @@ public class auto implements cmd {
         int maxX = getMax(groupMaxX);
         int maxY = getMax(group.getMaxY());
         int maxZ = getMax(groupMaxZ);
-        
+
         if (maxX > max && max > 0)
             maxX = max;
         if (maxY > max && max > 0)
@@ -502,6 +522,8 @@ public class auto implements cmd {
 
         fillMaps(directionMap, maxMap, direction.Top, maxY, cuboid.getYSize());
         fillMaps(directionMap, maxMap, direction.Bottom, maxY + 1, cuboid.getYSize());
+
+        CMIDebug.d("?");
 
         while (true) {
             if (Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (dir.equals(direction.Top) || dir.equals(direction.Bottom))) {

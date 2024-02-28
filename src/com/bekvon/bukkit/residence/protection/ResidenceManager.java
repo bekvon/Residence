@@ -55,6 +55,7 @@ import com.bekvon.bukkit.residence.utils.GetTime;
 import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.CMINumber;
 import net.Zrips.CMILib.Container.PageInfo;
+import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.RawMessages.RawMessage;
 import net.Zrips.CMILib.Version.Version;
 import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
@@ -241,8 +242,8 @@ public class ResidenceManager implements ResidenceInterface {
             plugin.msg(player, lm.Select_Points);
             return false;
         }
-        
-        if (plugin.isDisabledWorld(loc1.getWorld()) && plugin.getConfigManager().isDisableResidenceCreation()) {            
+
+        if (plugin.isDisabledWorld(loc1.getWorld()) && plugin.getConfigManager().isDisableResidenceCreation()) {
             plugin.msg(player, lm.General_CantCreate);
             return false;
         }
@@ -275,7 +276,7 @@ public class ResidenceManager implements ResidenceInterface {
         if (residences.containsKey(resName.toLowerCase())) {
             plugin.msg(player, lm.Residence_AlreadyExists, residences.get(resName.toLowerCase()).getResidenceName());
             return false;
-        }
+        } 
 
         newRes.BlockSellPrice = group.getSellPerBlock();
 
@@ -289,7 +290,8 @@ public class ResidenceManager implements ResidenceInterface {
 
         if (Residence.getInstance().getConfigManager().isChargeOnCreation() && !newRes.isSubzone() && plugin.getConfigManager().enableEconomy() && !resadmin) {
             double chargeamount = newArea.getCost(group);
-            if (!plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
+
+            if (chargeamount > 0 && !plugin.getTransactionManager().chargeEconomyMoney(player, chargeamount)) {
                 // Need to remove area if we can't create residence
                 newRes.removeArea("main");
                 return false;

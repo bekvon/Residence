@@ -87,7 +87,6 @@ public class SelectionManager {
         }
 
         public selectionType getSelectionRestrictions() {
-            CMIDebug.d("restrictions", inSameResidence());
             if (inSameResidence()) {
                 if (plugin.getConfigManager().isSelectionIgnoreYInSubzone()) {
                     if (hasPlacedBoth() && !player.hasPermission(ignoreyinsubzonePermission)) {
@@ -96,10 +95,7 @@ public class SelectionManager {
                 }
             } else {
                 if (plugin.getConfigManager().isSelectionIgnoreY()) {
-                    
-            CMIDebug.d("ignore Y");
                     if (hasPlacedBoth() && !player.hasPermission(ignoreyPermission)) {
-            CMIDebug.d("return ignore Y", selectionType.ignoreY);
                         return selectionType.ignoreY;
                     }
                 }
@@ -380,7 +376,7 @@ public class SelectionManager {
     }
 
     public void placeLoc1(Player player, Location loc) {
-        placeLoc1(player, loc, false);
+        placeLoc1(player, loc, false); 
     }
 
     public void placeLoc1(Player player, Location loc, boolean show) {
