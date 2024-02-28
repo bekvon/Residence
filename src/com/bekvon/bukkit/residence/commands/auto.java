@@ -397,7 +397,7 @@ public class auto implements cmd {
 
         if (maxX > max && max > 0)
             maxX = max;
-        if (maxY > max && max > 0)
+        if (!Residence.getInstance().getConfigManager().isSelectionIgnoreY() && maxY > max && max > 0)
             maxY = max;
         if (maxZ > max && max > 0)
             maxZ = max;
