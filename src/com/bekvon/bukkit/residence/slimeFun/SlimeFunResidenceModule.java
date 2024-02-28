@@ -53,7 +53,7 @@ public class SlimeFunResidenceModule implements ProtectionModule {
             Player player = Bukkit.getPlayer(op.getUniqueId());
             if (player == null)
                 return false;
-            return ResidenceBlockListener.canBreakBlock(player, loc.getBlock(), true);
+            return ResidenceBlockListener.canBreakBlock(player, loc, true);
         default:
             break;
         }

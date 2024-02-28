@@ -265,32 +265,25 @@ public class ResidenceBlockListener implements Listener {
             event.setCancelled(true);
     }
 
+    @Deprecated
     public static boolean canBreakBlock(Player player, Block block, boolean inform) {
+        return canBreakBlock(player, block.getLocation(), inform);
+    }
+
+    public static boolean canBreakBlock(Player player, Location loc, boolean inform) {
 
         if (player == null)
             return true;
 
         // disabling event on world
-        if (Residence.getInstance().isDisabledWorldListener(block.getWorld()))
+        if (Residence.getInstance().isDisabledWorldListener(loc.getWorld()))
             return true;
 
         if (Residence.getInstance().isResAdminOn(player)) {
             return true;
         }
 
-        Material mat = block.getType();
-        String world = block.getWorld().getName();
-
-        ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
-        PermissionGroup group = resPlayer.getGroup();
-        if (Residence.getInstance().getItemManager().isIgnored(mat, group, world)) {
-            return true;
-        }
-
-        ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(block.getLocation());
-
-        if (res != null && res.getItemIgnoreList().isListed(mat))
-            return true;
+        ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(loc);
 
         if (Residence.getInstance().getConfigManager().enabledRentSystem() && res != null) {
             if (Residence.getInstance().getConfigManager().preventRentModify() && res.isRented()) {
@@ -300,7 +293,7 @@ public class ResidenceBlockListener implements Listener {
             }
         }
 
-        FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(block.getLocation(), player);
+        FlagPermissions perms = Residence.getInstance().getPermsByLocForPlayer(loc, player);
 
         boolean hasdestroy = perms.playerHas(player, Flags.destroy, perms.playerHas(player, Flags.build, true));
 
@@ -309,6 +302,21 @@ public class ResidenceBlockListener implements Listener {
                 hasdestroy = true;
             }
         }
+        Material mat = null;
+
+        if (!hasdestroy) {
+            mat = loc.getBlock().getType();
+            String world = loc.getWorld().getName();
+
+            ResidencePlayer resPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+            PermissionGroup group = resPlayer.getGroup();
+            if (Residence.getInstance().getItemManager().isIgnored(mat, group, world)) {
+                return true;
+            }
+            if (res != null && res.getItemIgnoreList().isListed(mat))
+                return true;
+        }
+
         if (!hasdestroy && !ResPerm.bypass_destroy.hasPermission(player, 10000L)) {
             if (inform)
                 Residence.getInstance().msg(player, lm.Flag_Deny, Flags.destroy);
@@ -677,21 +685,23 @@ public class ResidenceBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!canPlaceBlock(event.getPlayer(), event.getBlock(), true)) {
-            event.setCancelled(true);
 
-            if (Version.isCurrentEqualOrHigher(Version.v1_17_R1) && event.getBlock().getType() == Material.POWDER_SNOW) {
+        if (canPlaceBlock(event.getPlayer(), event.getBlock(), true))
+            return;
 
-                BlockData data = ResidencePlayerListener1_17.powder_snow.remove(event.getBlock().getLocation().toString());
-                if (data != null) {
+        event.setCancelled(true);
 
-                    Block blockUnder = event.getBlock().getLocation().clone().add(0, -1, 0).getBlock();
+        if (!Version.isCurrentEqualOrHigher(Version.v1_17_R1) || event.getBlock().getType() != Material.POWDER_SNOW)
+            return;
 
-                    if (data.getMaterial().equals(blockUnder.getType())) {
-                        blockUnder.setBlockData(data);
-                    }
-                }
-            }
+        BlockData data = ResidencePlayerListener1_17.powder_snow.remove(event.getBlock().getLocation().toString());
+        if (data == null)
+            return;
+
+        Block blockUnder = event.getBlock().getLocation().clone().add(0, -1, 0).getBlock();
+
+        if (data.getMaterial().equals(blockUnder.getType())) {
+            blockUnder.setBlockData(data);
         }
     }
 

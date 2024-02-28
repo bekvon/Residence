@@ -56,6 +56,7 @@ import com.bekvon.bukkit.residence.api.MarketRentInterface;
 import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.api.ResidenceInterface;
 import com.bekvon.bukkit.residence.api.ResidencePlayerInterface;
+import com.bekvon.bukkit.residence.bigDoors.BigDoorsManager;
 import com.bekvon.bukkit.residence.chat.ChatManager;
 import com.bekvon.bukkit.residence.commands.padd;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -218,6 +219,7 @@ public class Residence extends JavaPlugin {
     protected CMITask autosaveBukkitId = null;
 
     private boolean SlimeFun = false;
+    private boolean BigDoors = false;
     private boolean lwc = false;
     Metrics metrics = null;
 
@@ -559,6 +561,17 @@ public class Residence extends JavaPlugin {
                     SlimefunManager.register(this);
                 } catch (Throwable e) {
                     SlimeFun = false;
+                    e.printStackTrace();
+                }
+            }
+
+            BigDoors = Bukkit.getPluginManager().getPlugin("BigDoors") != null;
+
+            if (BigDoors) {
+                try {
+                    BigDoorsManager.register(this);
+                } catch (Throwable e) {
+                    BigDoors = false;
                     e.printStackTrace();
                 }
             }

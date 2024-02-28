@@ -18,7 +18,7 @@ import net.Zrips.CMILib.Version.Schedulers.CMITask;
 public class SlimefunManager {
 
     // Fail safe to avoid infinite checks
-    private final static int TRIES = 60;
+    private final static int TRIES = 3;
     private static int times = 0;
     private static CMITask task = null;
 

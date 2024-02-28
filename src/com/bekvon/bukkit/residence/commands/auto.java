@@ -523,8 +523,6 @@ public class auto implements cmd {
         fillMaps(directionMap, maxMap, direction.Top, maxY, cuboid.getYSize());
         fillMaps(directionMap, maxMap, direction.Bottom, maxY + 1, cuboid.getYSize());
 
-        CMIDebug.d("?");
-
         while (true) {
             if (Residence.getInstance().getConfigManager().isSelectionIgnoreY() && (dir.equals(direction.Top) || dir.equals(direction.Bottom))) {
                 dir = dir.getNext();
