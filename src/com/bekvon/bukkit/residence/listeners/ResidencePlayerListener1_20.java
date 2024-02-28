@@ -1,9 +1,11 @@
 package com.bekvon.bukkit.residence.listeners;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerSignOpenEvent;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -48,5 +50,30 @@ public class ResidencePlayerListener1_20 implements Listener {
         else
             plugin.msg(player, lm.Flag_Deny, Flags.build);
 
+    }
+
+    // For objects like decorative pots
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPotBreak(EntityChangeBlockEvent event) {
+
+        // disabling event on world
+        if (plugin.isDisabledWorldListener(event.getBlock().getWorld()))
+            return;
+
+        if (!(event.getEntity() instanceof Projectile))
+            return;
+
+        Projectile projectile = (Projectile) event.getEntity();
+
+        Player player = null;
+
+        if (projectile.getShooter() instanceof Player)
+            player = (Player) projectile.getShooter();
+
+        if (player != null && player.hasMetadata("NPC"))
+            return;
+
+        if (!ResidenceBlockListener.canBreakBlock(player, event.getBlock().getLocation(), true))
+            event.setCancelled(true);
     }
 }
