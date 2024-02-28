@@ -1021,7 +1021,6 @@ public class ResidencePlayerListener implements Listener {
         default:
             break;
         }
-        
 
         CMIMaterial cmat = CMIMaterial.get(mat);
         if (cmat != null) {
@@ -1944,6 +1943,7 @@ public class ResidencePlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
+
         // disabling event on world
         if (plugin.isDisabledWorldListener(event.getPlayer().getWorld()))
             return;
@@ -1972,6 +1972,7 @@ public class ResidencePlayerListener implements Listener {
 //		return;
 //	    }
 //	} else 
+
         if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.NETHER_PORTAL || event
             .getCause() == TeleportCause.PLUGIN) {
             if (res.getPermissions().playerHas(player, Flags.move, FlagCombo.OnlyFalse) && !res.isOwner(player)
@@ -2117,6 +2118,7 @@ public class ResidencePlayerListener implements Listener {
     }
 
     private void checkSpecialFlags(Player player, ClaimedResidence newRes, ClaimedResidence oldRes) {
+
         if (newRes == null && oldRes != null) {
             if (Flags.night.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) || Flags.day.isGlobalyEnabled() && oldRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
                 player.resetPlayerTime();
@@ -2154,18 +2156,22 @@ public class ResidencePlayerListener implements Listener {
                     fly(player, false);
             }
 
+            boolean updated = false;
             if (Flags.day.isGlobalyEnabled()) {
-                if (newRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+                if (newRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue)) {
+                    updated = true;
                     player.setPlayerTime(6000L, false);
-                else if (oldRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue) && !newRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue))
+                } else if (oldRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue) && !newRes.getPermissions().has(Flags.day, FlagCombo.OnlyTrue)) {
                     player.resetPlayerTime();
+                }
             }
 
             if (Flags.night.isGlobalyEnabled()) {
-                if (newRes.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+                if (newRes.getPermissions().has(Flags.night, FlagCombo.OnlyTrue)) {
                     player.setPlayerTime(14000L, false);
-                else if (oldRes.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) && !newRes.getPermissions().has(Flags.night, FlagCombo.OnlyTrue))
+                } else if (!updated && oldRes.getPermissions().has(Flags.night, FlagCombo.OnlyTrue) && !newRes.getPermissions().has(Flags.night, FlagCombo.OnlyTrue)) {
                     player.resetPlayerTime();
+                }
             }
 
             if (Flags.wspeed1.isGlobalyEnabled()) {
