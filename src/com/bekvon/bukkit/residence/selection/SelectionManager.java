@@ -35,7 +35,6 @@ import net.Zrips.CMILib.ActionBar.CMIActionBar;
 import net.Zrips.CMILib.Container.CMIWorld;
 import net.Zrips.CMILib.Effects.CMIEffect;
 import net.Zrips.CMILib.Effects.CMIEffectManager.CMIParticle;
-import net.Zrips.CMILib.Logs.CMIDebug;
 import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
 import net.Zrips.CMILib.Version.Schedulers.CMITask;
 
@@ -376,7 +375,7 @@ public class SelectionManager {
     }
 
     public void placeLoc1(Player player, Location loc) {
-        placeLoc1(player, loc, false); 
+        placeLoc1(player, loc, false);
     }
 
     public void placeLoc1(Player player, Location loc, boolean show) {
@@ -928,7 +927,12 @@ public class SelectionManager {
         showSelectionInfo(player);
     }
 
+    @Deprecated
     public void modify(Player player, boolean shift, double amount) {
+        modify(player, shift, (int) amount);
+    }
+
+    public void modify(Player player, boolean shift, int amount) {
         if (!hasPlacedBoth(player)) {
             plugin.msg(player, lm.Select_Points);
             return;
@@ -949,25 +953,21 @@ public class SelectionManager {
 
         switch (d) {
         case DOWN:
-            double oldy = area.getLowVector().getBlockY();
-            oldy = oldy - amount;
+            int oldy = area.getLowVector().getBlockY() - amount;
+
             if (oldy < MIN_HEIGHT) {
                 plugin.msg(player, lm.Select_TooLow);
                 oldy = MIN_HEIGHT;
             }
             area.getLowVector().setY(oldy);
             if (shift) {
-                double oldy2 = area.getHighVector().getBlockY();
-                oldy2 = oldy2 - amount;
-                area.getHighVector().setY(oldy2);
+                area.getHighVector().setY(area.getHighVector().getBlockY() - amount);
                 plugin.msg(player, lm.Shifting_Down, amount);
             } else
                 plugin.msg(player, lm.Expanding_Down, amount);
             break;
         case MINUSX:
-            double oldx = area.getLowVector().getBlockX();
-            oldx = oldx - amount;
-            area.getLowVector().setX(oldx);
+            area.getLowVector().setX(area.getLowVector().getBlockX() - amount);
             if (shift) {
                 double oldx2 = area.getHighVector().getBlockX();
                 oldx2 = oldx2 - amount;
@@ -977,53 +977,38 @@ public class SelectionManager {
                 plugin.msg(player, lm.Expanding_West, amount);
             break;
         case MINUSZ:
-            double oldz = area.getLowVector().getBlockZ();
-            oldz = oldz - amount;
-            area.getLowVector().setZ(oldz);
+            area.getLowVector().setZ(area.getLowVector().getBlockZ() - amount);
             if (shift) {
-                double oldz2 = area.getHighVector().getBlockZ();
-                oldz2 = oldz2 - amount;
-                area.getHighVector().setZ(oldz2);
+                area.getHighVector().setZ(area.getHighVector().getBlockZ() - amount);
                 plugin.msg(player, lm.Shifting_North, amount);
             } else
                 plugin.msg(player, lm.Expanding_North, amount);
             break;
         case PLUSX:
-            oldx = area.getHighVector().getBlockX();
-            oldx = oldx + amount;
-            area.getHighVector().setX(oldx);
+            area.getHighVector().setX(area.getHighVector().getBlockX() + amount);
             if (shift) {
-                double oldx2 = area.getLowVector().getBlockX();
-                oldx2 = oldx2 + amount;
-                area.getLowVector().setX(oldx2);
+                area.getLowVector().setX(area.getLowVector().getBlockX() + amount);
                 plugin.msg(player, lm.Shifting_East, amount);
             } else
                 plugin.msg(player, lm.Expanding_East, amount);
             break;
         case PLUSZ:
-            oldz = area.getHighVector().getBlockZ();
-            oldz = oldz + amount;
-            area.getHighVector().setZ(oldz);
+            area.getHighVector().setZ(area.getHighVector().getBlockZ() + amount);
             if (shift) {
-                double oldz2 = area.getLowVector().getBlockZ();
-                oldz2 = oldz2 + amount;
-                area.getLowVector().setZ(oldz2);
+                area.getLowVector().setZ(area.getLowVector().getBlockZ() + amount);
                 plugin.msg(player, lm.Shifting_South, amount);
             } else
                 plugin.msg(player, lm.Expanding_South, amount);
             break;
         case UP:
-            oldy = area.getHighVector().getBlockY();
-            oldy = oldy + amount;
-            if (oldy > getMaxWorldHeight(player.getLocation().getWorld()) - 1) {
+            oldy = area.getHighVector().getBlockY() + amount;
+            if (oldy > getMaxWorldHeight(player.getLocation().getWorld())) {
                 plugin.msg(player, lm.Select_TooHigh);
-                oldy = getMaxWorldHeight(player.getLocation().getWorld()) - 1;
+                oldy = getMaxWorldHeight(player.getLocation().getWorld());
             }
             area.getHighVector().setY(oldy);
             if (shift) {
-                double oldy2 = area.getLowVector().getBlockY();
-                oldy2 = oldy2 + amount;
-                area.getLowVector().setY(oldy2);
+                area.getLowVector().setY(area.getLowVector().getBlockY() + amount);
                 plugin.msg(player, lm.Shifting_Up, amount);
             } else
                 plugin.msg(player, lm.Expanding_Up, amount);
@@ -1034,11 +1019,17 @@ public class SelectionManager {
         updateLocations(player, area.getHighLocation(), area.getLowLocation(), true);
     }
 
+    @Deprecated
     public boolean contract(Player player, double amount) {
         return contract(player, amount, false);
     }
 
-    public boolean contract(Player player, double amount, @SuppressWarnings("unused") boolean resadmin) {
+    @Deprecated
+    public boolean contract(Player player, double amount, @SuppressWarnings("unused") @Deprecated boolean resadmin) {
+        return contract(player, (int) amount);
+    }
+
+    public boolean contract(Player player, int amount) {
         if (!hasPlacedBoth(player)) {
             plugin.msg(player, lm.Select_Points);
             return false;
@@ -1053,37 +1044,28 @@ public class SelectionManager {
         CuboidArea area = this.getSelectionCuboid(player);
         switch (d) {
         case UP:
-            double oldy = area.getHighVector().getBlockY();
-            oldy = oldy - amount;
-            if (oldy > getMaxWorldHeight(player.getLocation().getWorld()) - 1) {
+            double oldy = area.getHighVector().getBlockY() - amount;
+            if (oldy > getMaxWorldHeight(player.getLocation().getWorld())) {
                 plugin.msg(player, lm.Select_TooHigh);
-                oldy = getMaxWorldHeight(player.getLocation().getWorld()) - 1;
+                oldy = getMaxWorldHeight(player.getLocation().getWorld());
             }
             area.getHighVector().setY(oldy);
             plugin.msg(player, lm.Contracting_Down, amount);
             break;
         case PLUSX:
-            double oldx = area.getHighVector().getBlockX();
-            oldx = oldx - amount;
-            area.getHighVector().setX(oldx);
+            area.getHighVector().setX(area.getHighVector().getBlockX() - amount);
             plugin.msg(player, lm.Contracting_West, amount);
             break;
         case PLUSZ:
-            double oldz = area.getHighVector().getBlockZ();
-            oldz = oldz - amount;
-            area.getHighVector().setZ(oldz);
+            area.getHighVector().setZ(area.getHighVector().getBlockZ() - amount);
             plugin.msg(player, lm.Contracting_North, amount);
             break;
         case MINUSX:
-            oldx = area.getLowVector().getBlockX();
-            oldx = oldx + amount;
-            area.getLowVector().setX(oldx);
+            area.getLowVector().setX(area.getLowVector().getBlockX() + amount);
             plugin.msg(player, lm.Contracting_East, amount);
             break;
         case MINUSZ:
-            oldz = area.getLowVector().getBlockZ();
-            oldz = oldz + amount;
-            area.getLowVector().setZ(oldz);
+            area.getLowVector().setZ(area.getLowVector().getBlockZ() + amount);
             plugin.msg(player, lm.Contracting_South, amount);
             break;
         case DOWN:
@@ -1093,8 +1075,8 @@ public class SelectionManager {
                 MIN_HEIGHT = CMIWorld.getMinHeight(area.getWorld());
             } catch (Throwable e) {
             }
-            oldy = area.getLowVector().getBlockY();
-            oldy = oldy + amount;
+            oldy = area.getLowVector().getBlockY() + amount;
+
             if (oldy < MIN_HEIGHT) {
                 plugin.msg(player, lm.Select_TooLow);
                 oldy = MIN_HEIGHT;
